@@ -1,0 +1,3029 @@
+/***********************************************************************************
+* SCRAWL.JS Library 
+* SCRAWL+STACK.JS Library 
+*
+*	version 0.302 - 31 August 2013
+*	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
+*
+*   Scrawl demo website: http://scrawl.rikweb.org.uk
+*
+***********************************************************************************/
+
+1. Purpose and features
+------------------------------------------------------------------------------------
+scrawl.js is a JavaScript library which adds an API for handling and manipulating 
+HTML5 <canvas> elements in the DOM.
+
+Uses the '2d' context with each canvas element.
+
+On starting, Scrawl.js investigates the HTML DOM and automatically 
+creates controller and wrapper objects for each <canvas> element it finds.
+
+Can also generate visible canvas elements programatically, and add them 
+to the DOM.
+
+Users create sprite and gradient objects using scrawl factory functions, 
+set their styling and position, and render them onto the canvas element. 
+Creation, positioning and styling can all be handled by a single call to 
+the factory function.
+
+Sprites include: basic rectangles (Block), advanced rectangles capable of 
+displaying images and sprite animations (Picture), circles (Wheel), 
+single-line text (Phrase), and complex designs composed of lines, arcs 
+and curves (Shape).
+
+Factory functions can be used to easily create lines, curves and regular 
+shapes (triangles, stars, etc).
+
+JPG, PNG and SVG images (and videos - experimental) can be imported and 
+used by Picture sprites.
+
+Animations can be achieved by manipulating a sprite/gradient's attributes 
+within a user-coded animation loop.
+
+Scrawl.js supports all canvas 2d matrix transforms (translate, rotate, 
+etc), though moving and rotating sprites is handled directly by the 
+sprite object itself.
+
+All sprites - and even gradients - can be given drag-and-drop and 
+attach-to-mouse functionality.
+
+Scrawl sprites can be grouped together for easier manipulation.
+
+Sprites can also be linked together directly (using their pivot 
+attribute) so that positioning/moving one sprite will position/move all 
+other sprites associated with it.
+
+Full support for collision detection between, and within, sprites 
+gathered into groups. Collision fields can be generated for canvas 
+elements to constrain sprite movements.
+
+A visible canvas can be linked to additional (non-DOM/invisible) canvases 
+to create complex, multi-layered displays; these additional canvases can 
+also be manipulated for animation purposes.
+
+Canvas rendering can be simple, or it can be broken down into clear, 
+compile and show operations for more complex compositions.
+
+Includes functionality (using scrawl+stack.js) to manipulate 
+multiple visible canvas elements in 3 dimensions using CSS 3d transforms 
+- where supported by the browser.
+
+Other DOM elements - including SVG images - can be included in Scrawl 
+stacks, and manipulated via Scrawl.js functionality. 
+
+Canvases and elements in a Scrawl.js stack (including other stacks) can 
+be moved and scaled very easily.
+
+(Does not add canvas functionality to those browsers that do not support 
+the HTML5 <canvas> element. Tested in: IE9 and 10, and modern versions of 
+Firefox, Chrome, Opera, Safari for Windows.)
+
+2. Amendments to JavaScript objects
+------------------------------------------------------------------------------------
+Array.prototype.contains(arg)
+	check whether an array contains a given value
+	arg can also be a regular expression to check for partial matches
+Array.prototype.pushUnique(arg)
+	add a value to an array, if the array doesn't already include that value
+Array.prototype.removeItem(arg)
+	remove a value from an array
+	only removes the first instance of the arg in non-unique arrays
+Number.prototype.isBetween(number, number, boolean)
+	check whether a number lies between two given values (order not important)
+	if boolean == true, includes limits in check (>=, <=); otherwise excludes them (>, <)
+String.prototype.strtr(object)
+	implements the PHP strtr function in JavaScript
+	object is made up of target:newtext attributes
+	
+window.requestAnimFrame
+	automatically set to use the Paul Irish shim
+	
+window.onmousemove
+	the first time a program uses the Pad.getMouse() function, Scrawl.js 
+	attaches a small mouse tracking function to window.onmousemove
+	
+window.scrawl
+	the Scrawl.js library object
+
+
+3. Hierarchy of objects/functions (prototype chaining)
+------------------------------------------------------------------------------------
+(Common to both scrawl.js and scrawl+stack.js)
+
+Javascript Object
+	> window.scrawl
+	> Scrawl
+		> Context
+		> ScrawlImage
+		> AnimSheet
+		> Design
+			> Gradient
+			> RadialGradient
+		> Pattern
+		> SubScrawl
+			> Cell
+			> Group
+			> Point
+			> Link
+			> Scrawl3d
+				> Stack (scrawl.stack.js only)
+				> Element (scrawl.stack.js only)
+				> Pad
+			> Sprite
+				> Phrase
+				> Block
+				> Wheel
+				> Picture
+				> Shape
+				
+4. scrawl.js/scrawl+stack.js objects, functions and attributes reference
+------------------------------------------------------------------------------------
+key
+	arguments prefixed with ? are optional
+	functions marked with ~ are helper functions, not designed for general use
+	'dataObject' - a javascript object consisting of attribute:value pairs
+	CELLNAME, SPRITENAME, etc - object.name strings used as attributes in the scrawl library
+	XCOORDINATE, WIDTH, etc - number values (in px)
+	CELLNAME||[CELLNAME], etc - argument can take an object.name string, or an array of object.name strings
+
+4.1. The scrawl library
+------------------------
+window.scrawl
+	(all lowercase)
+	inherits from: JavaScript Object
+	instantiated automatically
+	
+	purpose ...
+		holds links to every substantive object created by Scrawl.js and user code
+		also holds links to key DOM objects
+		includes factory functions for creating Sprites, canvas elements, etc
+		generalist functions for loading canvases, stacks, images etc on startup, as directed by the HTML code
+		shorthand functions for rendering canvases
+		some general helper functions for testing variables that can be used by coders 
+		
+	attributes ...
+		anim						object contains name:object pairs for each instantiated animSheetObject
+		animnames					array of strings used to identify each animSheetObject
+		canvas						name:object pairs linking to each cellObject's DOM <canvas> element
+		cell						object containing name:object pairs linking to each instantiated cellObject
+		cellnames					array of strings used to identify each cellObject
+		context						name:object pairs linking to each cellObject's DOM canvas element's context engine
+		ctx							object containing name:object pairs linking to each instantiated contextObject
+		ctxnames					array of strings used to identify each contextObject
+		currentPad					the active PADNAME
+		design						object contains name:object pairs for each instantiated designObject (Gradient, RadialGradient, Pattern)
+		designnames					array of strings used to identify each designObject (Gradient, RadialGradient, Pattern)
+		dsn							name:precompiled gradient/pattern context object pairs
+		group						object containing name:object pairs linking to each instantiated groupObject
+		groupnames					array of strings used to identify each groupObject
+		image						object containing name:object pairs linking to each instantiated imageObject
+		imageData					object containing name:object pairs linking to imageData objects
+		imagenames					array of strings used to identify each imageObject
+		img							name:object pairs linking to each imageObject's DOM <img> element
+		link						object contains name:object pairs for each instantiated linkObject
+		linknames					array of strings used to identify each linkObject
+		nameslist					array of xNAMES
+		objectnames					array of strings used to identify objects not recorded elsewhere
+		pad							object containing name:object pairs linking to each instantiated padObject
+		padnames					array of strings used to identify each padObject
+		point						object cont. name:object pairs for each instantiated pointObject
+		pointnames					object cont. name:object pairs for each instantiated pointObject
+		sprite						object cont. name:object pairs for each instantiated spriteObject (Block, Phrase, Picture, Wheel, Shape)
+		spritenames					array of strings used to identify each spriteObject (Block, Phrase, Picture, Wheel, Shape)
+		type						= 'Library'
+		~ degree: 					= 180/Math.PI
+		~ mouseX					(0)
+		~ mouseY					(0)
+		~ nameslist					array of xNAMES
+		~ radian					= Math.PI/180
+		
+		(scrawl+stack.js only)
+		element						object contains name:object pairs for each instantiated elementObject
+		elementnames				array of strings used to identify each elementObject
+		elm							name:object pairs linking to each elementObject's DOM element
+		stack						object contains name:object pairs for each instantiated stackObject
+		stacknames					array of strings used to identify each stackObject
+		stk							name:object pairs linking to each stackObject's DOM <div> element
+
+	functions ...
+		addCanvasToPage(dataObject, ?STACKNAME)
+			purpose: adds a canvas element to web page, and creates a Pad controller and Cell wrappers for it
+			return: Pad object
+		addNewCell(dataObject, ?PADNAME)
+			purpose: passes on requests to Pads to generate new <canvas> elements and associated objects
+			return: scrawl.pad.addNewPad result
+		addSpritesToGroups([GROUPNAME]||GROUPNAME, [SPRITENAME]||SPRITENAME)
+			purpose: adds supplied spritenames to group.sprites attribute
+			return: true on success; false otherwise
+		addStackToPage(dataObject) - scrawl+stack.js only
+			purpose: generates a new Stack object (used by addCanvasToPage(), getCanvas() functions)
+			return: new Stack object
+		buildFields(?[CELLNAME]||CELLNAME)
+			purpose: orders all Cell objects to generate field collision tables
+			return: always true
+		clear(?commandObject, ?[PADNAME]||PADNAME)
+			purpose: ask Pads to get their Cells to clear their <canvas> elements
+			return: always true
+		compile(?commandObject, ?[PADNAME]||PADNAME)
+			purpose: ask Pads to get their Cells to draw their linked Sprites on their <canvas> elements
+			return: always true
+		deleteCells([CELLNAME]||CELLNAME)
+			purpose: deletes Cell objects and their associated paraphinalia
+			return: true on success; false otherwise
+		deleteSprite([SPRITENAME]||SPRITENAME)
+			purpose: delete sprites from the library
+			return: true on success, false otherwise
+		getImageDataValue({table:IMAGEDATANAME, channel:string, x:XCOORDINATE, y:YCOORDINATE})
+			purpose: get a value from an image data table (for Cell or Picture objects)
+			channel in ['red', 'blue', 'green', 'alpha', 'color']
+			return: value at coordinates x,y (according to channel request)
+		getImagesByClass(string)
+			purpose: generate Image objects for <img> elements identified by class
+			return: true if image elements found; false otherwise
+		initialize()
+			purpose: recover canvases, stack elements and other desired elements from the DOM
+			return: always true
+		load(arg, callback)
+			purpose: loads pre-saved sprite data into the library, ready for use
+				arg: JSON string - compressed with Scrawl bespoke encodings
+				callback: function to run after loading is completed
+			return: always true
+		makeBezier(dataObject)
+			purpose: generate bezier line (Shape) objects
+				args include: startX, startY, startControlX, startControlY, endControlX, endControlY, endX, endY (all numbers)
+			return: the new Shape object
+		makeCartesianPoints({sprite:SPRITENAME, data:[[XCOORDINATE, YCOORDINATE]], pointLabel:string, ?linkLabel:string})
+			purpose: generate Point objects from a set of cartesian (XY) coordinates
+			return: array of PointObject.name strings
+		makeEllipse(dataObject)
+			purpose: generate an ellipse Shape
+				args include: radiusX, radiusY (all numbers)
+			return: the new Shape object
+		makeLine(dataObject)
+			purpose: generate simple line (Shape) objects
+				args include: startX, startY, endX, endY (all numbers) 
+			return: the new Shape object
+		makePolarPoints({sprite:SPRITENAME, data:[[DISTANCE, ANGLE]], pointLabel:string, ?linkLabel:string})
+			purpose: generate Point objects from a set of polar (distance, angle) coordinates
+			return: array of PointObject.name strings
+		makeQuadratic(dataObject)
+			purpose: generate quadratic line (Shape) objects
+				args include: startX, startY, controlX, controlY, endX, endY (all numbers)
+			return: the new Shape object
+		makeRectangle(dataObject)
+			purpose: generate a rectangular Shape object, with optional corners
+				args include: width:number, height:number. Also 0, 1 or more of the following (all numbers) ...
+					radiusTopLeftX, radiusTopLeftY, radiusTopRightX, radiusTopRightY
+					radiusBottomRightX, radiusBottomRightY, radiusBottomLeftX, radiusBottomLeftY
+					radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft
+					radiusTopX, radiusTopY, radiusBottomX, radiusBottomY
+					radiusLeftX, radiusLeftY, radiusRightX, radiusRightY
+					radiusTop, radiusBottom
+					radiusRight, radiusLeft
+					radiusX, radiusY
+					radius
+			return: the new Shape object
+		makeRegularShape(dataObject)
+			purpose: generate Regular Shape objects - points connected by lineTo
+				args include: angle:number, sides:number (use one or the other, not both)
+			return: the new Shape object
+		newAnimSheet(dataObject)
+			purpose: library function wrapping AnimSheet() constructor
+			return: new AnimSheet object initialised to data values
+		newBlock(dataObject)
+			purpose: library function wrapping Block() constructor
+			return: new Block object initialised to data values
+		newCell(dataObject)
+			purpose: library function wrapping Cell() constructor
+			return: new Cell object initialised to data values
+		newElement(dataObject) - scrawl+stack.js only
+			purpose: library function wrapping Element() constructor
+			return: new Element object initialised to data values
+		newGradient(dataObject)
+			purpose: library function wrapping Gradient() constructor
+			return: new Gradient object initialised to data values
+		newGroup(dataObject)
+			purpose: library function wrapping Group() constructor
+			return: new Group object initialised to data values
+		newImage(dataObject)
+			purpose: library function wrapping Image() constructor
+			return: new Image object initialised to data values
+		newLink(dataObject)
+			purpose: library function wrapping Link() constructor
+			return: new Link object initialised to data values
+		newPad(dataObject)
+			purpose: library function wrapping Pad() constructor
+			return: new Pad object initialised to data values
+		newPattern(dataObject)
+			purpose: library function wrapping Pattern() constructor
+			return: new Pattern object initialised to data values
+		newPhrase(dataObject)
+			purpose: library function wrapping Phrase() constructor
+			return: new Phrase object initialised to data values
+		newPicture(dataObject)
+			purpose: library function wrapping Picture() constructor
+			return: new Picture object initialised to data values
+		newPoint(dataObject)
+			purpose: library function wrapping Point() constructor
+			return: new Point object initialised to data values
+		newRadialGradient(dataObject)
+			purpose: library function wrapping RadialGradient() constructor
+			return: new RadialGradient object initialised to data values
+		newShape(dataObject)
+			purpose: library function wrapping Shape() constructor
+			return: new Shape object initialised to data values
+		newStack(dataObject) - scrawl+stack.js only
+			purpose: library function wrapping Stack() constructor
+			return: new Stack object initialised to data values
+		newWheel(dataObject)
+			purpose: library function wrapping Wheel() constructor
+			return: new Wheel object initialised to data values
+		removeSpritesFromGroups([GROUPNAME]||GROUPNAME, [SPRITENAME]||SPRITENAME)
+			purpose: removes supplied spritenames from group.sprites attribute
+			return: true on success; false otherwise
+		render(?commandObject, ?[PADNAME]||PADNAME)
+			purpose: compounds scrawl.clear(), scrawl.compile() and scrawl.show functions into a single call
+			return: always true
+		reset()
+			purpose: reset the library properties to empty values; then call getCanvas()
+			return: always true
+		save(?arg1, ?arg2)
+			purpose: saves sprites and associated objects into a (compressed) JSON string
+				arg1: string from 'all', 'scrawl', 'sprites', [list of sprites]
+				arg2: name to be used for JSON string - stored in scrawl.object part of library
+			return: always true
+		setDisplayOffsets(?arg)
+			purpose: (re)sets display offsets for pads, elements and stacks
+			arg in ['stacks', 'elements', 'pads', 'all'] (default: 'all')
+			return: always true
+		setDrawOrder([CELLNAME]||CELLNAME, ?[PADNAME]||PADNAME)
+			purpose: passes on requests to pads to update their drawOrder property
+			return: always true
+		show(?commandObject, ?[PADNAME]||PADNAME)
+			purpose: ask Pads to draw their hidden cell <canvas> elements onto their display cell <canvas>
+			return: always true
+		~ getCanvases()
+			purpose: (from initialize) searches DOM for canvas elements and generates Pad objects for each of them
+			return: true if canvas elements found; false otherwise
+		~ getElements() - scrawl+stack.js only
+			purpose: (from initialize) searches DOM for elements with class="scrawl stack:STACKNAME"; generates Element objects
+			return: true if elements found; false otherwise
+		~ getStacks() - scrawl+stack.js only
+			purpose: (from initialize) searches DOM for elements with class="scrawlstack"; generates Stack objects
+				also generates Element objects for any stack child element that isn't a canvas
+			return: true if elements found; false otherwise
+		~ handleMouseMove(eventObject)
+			purpose: updates scrawl.mouseXY with current mouse pointer position
+			return: always true
+		~ isa(arg1, arg2)
+			purpose: variable type checker
+				arg1 - object or primative to be checked
+				arg2 in ['bool', 'boolean', 'num', 'number', 'str', 'string', 'fn', 'func', 'function', 'arr', 'array', 'date', 'obj', 'object']
+			return: true if arg1 is if type arg2; false otherwise
+		~ makeName({name:string, type:TYPE, target:string})
+			purpose: generate unique names for new Scrawl objects
+			target in scrawl.nameslist
+			return: unique name string
+		~ xt(arg)
+			purpose: variable type checker
+			return: false if typeof arg === 'undefined'; true otherwise
+		~ xta([arg])
+			purpose: variable type checker
+			return: false if any typeof arg === 'undefined'; true otherwise
+		~ xto([arg])
+			purpose: variable type checker
+			return: false if all typeof arg !== 'undefined'; true otherwise
+
+4.2. Scrawl.js objects
+------------------------
+Scrawl(dataObject)
+	(Capital S)
+	inherits from: JavaScript Object
+	not for user instantiation
+	
+	purpose ...
+		the root object for all other scrawl objects
+		gives every object its (unique) name attribute
+		also supplies title and comment attributes (very basic assistive technology)
+		provides basic getter and setter functions, a JSON-based toString function
+		sets out the cloning strategy for other objects, and restricts which object types can be cloned
+		
+	used by ...
+		all Scrawl.js objects
+	
+	attributes ...
+		comment						('') - comment string (for assistive technoligies)
+		name 						(sprite.getName()) - unique name for object
+		timestamp					(Date.now() at time of object creation)
+		title						('') - title string (for assistive technoligies)
+		
+		prototype.type 				= 'Scrawl'
+		prototype.classname 		= 'objectnames'
+		
+	functions ...
+		clone(dataObject)
+			purpose: clone scrawl objects
+			return: cloned object
+		get(ATTRIBUTE)
+			purpose: retrieve an object's attribute value
+			return: attribute value
+		set({ATTRIBUTE:value})
+			purpose: set an object's attribute values
+			return: this
+		toString()
+			purpose: render object as JSON string
+			return: JSON.stringify(this)
+		getObjectData()
+			purpose: return object in preparation for saving it using scrawl.save()
+			return: {type:TYPE, name:STRING, object:this, timestamp:DATE}
+
+Context(dataObject)
+	prototype linked to: Scrawl
+	not for user instantiation
+		generated automatically by Cell and Sprite constructors
+	
+	purpose ...
+		wraps a given context for a Cell or Sprite object
+		responsible for comparing contexts and listing changes that need to be made for successful Sprite stamping on a canvas
+		all updates to a Context object's attributes should be performed via the Sprite object's set() function
+		
+	attributes ...
+		fillStyle 					('#000000') - CSS color string
+		font						('10pt sans-serif') - CSS font string
+		globalAlpha					(1) - number (0-1)
+		globalCompositeOperation	('source-over')
+			- in ['source-over', 'source-atop', 'source-in', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'darker', 'copy', 'xor']
+		lineCap						('butt') - in ['butt', 'round', 'square']
+		lineJoin					('miter') - in ['bevel', 'round', 'miter']
+		lineWidth					(1) - number
+		miterLimit					(10) - number
+		shadowOffsetX				(0) - number
+		shadowOffsetY				(0) - number
+		shadowBlur					(0) - number
+		shadowColor					('rgba(0, 0, 0, 0)') - CSS color strong
+		strokeStyle					('#000000') - CSS color strong
+		textAlign					('start')
+			- in ['start', 'left', 'center', 'right', 'end']
+		textBaseline				('alphabetic')
+			- in ['alphabetic', 'top', 'hanging', 'middle', 'ideographic', 'bottom']
+
+		comment						- from Scrawl - not used
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl - not used
+
+		prototype.type 				= 'Context'
+		prototype.classname 		= 'ctxnames'
+		
+	functions ...
+		~ swapStyles()
+			purpose: swaps fillstyle and strokeStyle values
+			return: this
+		~ getChanges(canvasContextEngine, SCALEVALUE)
+			purpose: compares contextObject to self
+			return: object containing details of needed updates
+		~ getContextFromEngine(canvasContextObject)
+			purpose: stores current contextEngine values in self
+			return: this
+			
+		clone 						- from Scrawl
+		get 						- from Scrawl
+		getObjectData				- from Scrawl
+		set 						- from Scrawl
+		toString 					- from Scrawl
+	
+ScrawlImage(dataObject)
+	prototype linked to: Scrawl
+	not for user instantiation
+		use scrawl.getImagesByClass()
+	
+	purpose ...
+		wraps image elements imported into the scrawl library
+		
+	attributes ...
+		copyHeight					(0) - copy dimensions
+		copyX						(0) - copy dimensions
+		copyY						(0) - copy dimensions
+		copyWidth					(0) - copy dimensions
+		element						(not retained) - DOM_ImgElementObject 
+		height						(0) - actual dimensions
+		source						(null) - path-to-source-image
+		width						(0) - actual dimensions
+
+		comment						- from Scrawl - not used
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl - not used
+
+		prototype.type 				= 'Image'
+		prototype.classname 		= 'imagenames'
+		
+	functions ...
+		getImageData()
+			purpose: creates a toDataURL version of the image
+			return: toDataURL string
+		getObjectData()
+			purpose: return object in preparation for saving it using scrawl.save()
+			return: {type:TYPE, name:STRING, object:this, imageData:STRING, timestamp:DATE}
+			
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		set							- from Scrawl
+		toString					- from Scrawl
+
+AnimSheet(dataObject)
+	prototype linked to: Scrawl
+	can be instantiated directly - new AnimSheet()
+		use scrawl.newAnimSheet()
+	
+	purpose ...
+		wraps a sprite sheet image
+		acts as the link between a Picture object and the image
+		holds data about cells in the spritesheet animation
+		controls the animation playback
+		
+	attributes ...
+		currentFrame				(0) - number
+		frames						([]) 
+			- array of {x:XCOORDINATE, y:YCOORDINATE, w:WIDTH, h:HEIGHT, d:DURATION} objects
+		lastCalled					(Date.now()) - javascript date
+		loop						('end') - in ['pause', 'end', 'loop', 'reverse']
+		running						('complete') - in ['forward', 'backward', 'complete']
+		source 						(null) - IMAGENAME
+		speed						(0) - number
+
+		comment						- from Scrawl - not used
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl - not used
+
+		prototype.type 				= 'AnimSheet'
+		prototype.classname 		= 'animnames'
+		
+	functions ...
+		getData(arg)
+			purpose: update the object (loop, running); calculate current frame
+				arg in ['forward', 'backward', 'complete', 'pause', 'end', 'loop', 'reverse']
+			return: object containing current cell location (X,Y,Width,Height,Duration)
+
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl
+		toString					- from Scrawl
+
+Design(dataObject)
+	prototype linked to: Scrawl
+	not for user instantiation
+		use any gradient/pattern factory function
+		
+	purpose ...
+		defines gradients and radial gradients used with sprite objects' strokeStyle and fillStyle attributes
+		
+	note ...
+		'color' is in fact an array of simple objects comprising {color:string, stop:number} attributes
+		stops must be values between 0 and 0.9999999 - Scrawl.js doesn't (yet) play nicely with a stop value of 1
+		
+	attributes ...
+		color						([{color: 'black', stop: 0},{color: 'white', stop: 0.999999}])
+		roll						(0) - number - offset value added to color stop values
+		cell						(scrawl.pad[scrawl.currentPad].current) - CELLNAME
+		endHandleX					(0) - number - offset assigned to startX and endX values
+		endHandleY					(0) - number - offset assigned to startY and endY values
+		endX						(0) - number - end x coordinate
+		endY						(0) - number - end y coordinate
+		handleX						(0) - number - offset assigned to startX and endX values
+		handleY						(0) - number - offset assigned to startY and endY values
+		startHandleX				(0) - number - offset assigned to startX and endX values
+		startHandleY				(0) - number - offset assigned to startY and endY values
+		startX						(0) - number - start x coordinate
+		startY						(0) - number - start y coordinate
+			
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Design'
+		prototype.classname 		= 'designnames'
+		
+	functions ...
+		setDelta(dataObject)
+			purpose: add values to attributes
+				arg can include {roll, startX, startY, startRadius, endX, endY, endRadius, handleX, handleY, startHandleX, startHandleY, endHandleX, endHandleY}
+			return: this
+		update()
+			purpose: update gradient with new values
+			return: this
+
+		~ applyStops()
+			purpose: helper function
+		~ makeGradient()
+			purpose: helper function
+		~ sortStops()
+			purpose: helper function
+			
+		clone 						- from Scrawl
+		get 						- from Scrawl
+		getObjectData				- from Scrawl
+		set 						- from Scrawl
+		toString 					- from Scrawl
+		
+Gradient(dataObject)
+	prototype linked to: Design
+	can be instantiated directly - new Gradient()
+		use scrawl.newGradient()
+		
+	purpose ...
+		defines a linear gradient
+		
+	attributes ...
+		color						- from Design
+		roll						- from Design
+		cell						- from Design
+		endHandleX					- from Design
+		endHandleY					- from Design
+		endX						- from Design
+		endY						- from Design
+		handleX						- from Design
+		handleY						- from Design
+		startHandleX				- from Design
+		startHandleY				- from Design
+		startX						- from Design
+		startY						- from Design
+			
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Gradient';
+		prototype.classname 		= 'designnames';
+		
+	functions ...
+		swap()
+			purpose: swaps the start and end points of the gradient
+			return: this
+			
+		setDelta					- from Design
+		update						- from Design
+
+		clone 						- from Scrawl
+		get 						- from Scrawl
+		getObjectData				- from Scrawl
+		set 						- from Scrawl
+		toString 					- from Scrawl
+
+RadialGradient(dataObject)
+	prototype linked to: Design
+	can be instantiated directly - new RadialGradient()
+		use scrawl.newRadialGradient()
+		
+	purpose ...
+		defines a radial gradient
+		
+	attributes ...
+		endRadius					(0) - number - second circle radius
+		startRadius					(0) - number - first circle radius
+
+		color						- from Design
+		roll						- from Design
+		cell						- from Design
+		endHandleX					- from Design
+		endHandleY					- from Design
+		endX						- from Design
+		endY						- from Design
+		handleX						- from Design
+		handleY						- from Design
+		startHandleX				- from Design
+		startHandleY				- from Design
+		startX						- from Design
+		startY						- from Design
+			
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'RadialGradient'
+		prototype.classname 		= 'designnames'
+		
+	functions ...
+		swap()
+			purpose: swaps the start and end points, and radii, of the gradient
+			return: this
+			
+		setDelta					- from Design
+		update						- from Design
+
+		clone 						- from Scrawl
+		get 						- from Scrawl
+		getObjectData				- from Scrawl
+		set 						- from Scrawl
+		toString 					- from Scrawl
+
+Pattern(dataObject)
+	prototype linked to: Scrawl
+	can be instantiated directly - new Pattern()
+		use scrawl.newPattern()
+		
+	purpose ...
+		defines image-based patterns used with sprite objects' strokeStyle and fillStyle attributes
+		
+	attributes ...
+		image						(null) - IMAGENAME
+		repeat						('repeat') - in [] - currently only supports 'repeat'
+		source						(null) - string path-to-image-file
+		
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Pattern'
+		prototype.classname 		= 'designnames'
+		
+	functions ...
+		getObjectData()
+			purpose: return object in preparation for saving it using scrawl.save()
+			return: {type:TYPE, name:STRING, object:this, image:ScrawlImage.getObjectData, timestamp:DATE}
+
+		~ makeDesign()
+			purpose: generate a <canvas> context pattern object
+			return: this
+		~ setImage()
+			purpose: loads image into library (if necessary)
+			return: this
+			
+		clone 						- from Scrawl
+		get 						- from Scrawl
+		set							- from Scrawl - overridden
+		toString 					- from Scrawl
+		
+SubScrawl(dataObject)
+	prototype linked to: Scrawl
+	not for user instantiation
+	
+	purpose ...
+		supplies objects with basic positional and scaling attributes, and methods for manipulating them
+		
+	used by ...
+		Stack, Element, Pad, Cell, Group, Phrase, Block, Wheel, Picture, Shape objects
+	
+	attributes ...
+		handleX						(0) - offset value for startX attribute
+		handleY						(0) - offset value for startY attribute
+		moveHandleX					(0) - delta offset value to be applied to handleX attribute
+		moveHandleY					(0) - delta offset value to be applied to handleY attribute
+		moveStartX					(0) - delta offset value to be applied to startX attribute
+		moveStartY					(0) - delta offset value to be applied to startY attribute
+		pivot						(false) - in [POINTNAME, SPRITENAME, 'mouse']
+		scale						(1) - scale multiplier
+		startX						(0) - primary horizontal location coordinate (px)
+		startY						(0) - primary vertical location coordinate (px)
+		
+		addPathRoll					(false) - boolean - true indicates sprite is to be rolled when following path; false otherwise
+		movePathPosition			(0) - delta offset value to be applied to pathPosition attribute
+		path 						(false) - SPRITENAME of Shape sprite to be used as path object
+		pathPosition				(0) - number between 0 and 1 - indicates position along path
+		pathRoll					(0) - current tangent of sprite's position on path 
+		pathSpeedConstant			(true) - boolean - true to move sprite along path at a constant speed; false otherwise
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+		
+		prototype.type 				= 'SubScrawl'
+		prototype.classname 		= 'objectnames'
+		
+	functions ...
+		exchange(scrawlObject, arg)
+			purpose: swap this.attribute with obj.attribute
+				arg in ['start', 'moveStart', 'handle', 'moveHandle', ATTRIBUTE]
+			return: this on success; false otherwise
+		getStartX(?{x:number, y:number})
+			purpose: calculate effective startX value, given handle and offset values
+			return: number
+		getStartY(?{x:number, y:number})
+			purpose: calculate effective startY value, given handle and offset values
+			return: number
+		moveHandle(?arg)
+			purpose: adds moveHandle attributes to handle attributes
+				arg in ['x', 'y']
+			return: this
+		moveStart(?arg)
+			purpose: adds moveStart attributes to start attributes
+				arg in ['x', 'y', 'path']
+			return: this
+		reverse(arg)
+			purpose: multiply attribute supplied in arg string by -1
+				arg in ['moveStartX', 'moveStartY', 'moveStart', 'moveHandleX', 'moveHandleY', 'moveHandle', 'movePathPosition']
+			return: this
+			
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl
+		toString					- from Scrawl
+			
+Cell(dataObject)
+	prototype linked to: SubScrawl
+	not for user instantiation
+		use Pad.addNewCell(), scrawl.addNewCell()
+		
+	purpose ...
+		acts as a wrapper for each canvas element - whether it is part of the DOM or not
+		links to Scrawl sprites via Group objects
+		oversees manipulation of the canvas element's context engine
+		responsible for stamping sprites onto its canvas
+		looks after canvas (not CSS3d) transforms
+		
+	note ...
+		Context object attributes can be set via the Cell (or Pad) constructor; every Cell object is 
+		associated with a Context object for that Cell's canvas element
+		
+	attributes ...
+		actualHeight				(0) - cell height (px)
+		actualWidth					(0) - cell width (px)
+		actualX						(0) - cell starting coordinate (=== startX)
+		actualY						(0) - cell starting coordinate (=== startY) 
+		backgroundColor				('rgba(0,0,0,0)') - color string
+		canvas						(not retained) - DOM_CanvasElementObject 
+		cellX						(0) - current translate coordinate
+		cellY						(0) - current translate coordinate
+		context						(computer generated CTXNAME) - context object for this cell
+		fence						(not retained) - sprites used to define prohibited areas in the cell's collision field - SPRITENAME or [SPRITENAME] 
+		field						(not retained) - sprites used to define permitted areas in the cell's collision field - SPRITENAME or [SPRITENAME]
+		groups						([this.name, this.name+'_field', this.name+'_fence']) GROUPNAME or [GROUPNAME] 
+		height						(not retained) - sets actualHeight, sourceHeight, targetHeight to same value
+		pad							(false) - PADNAME
+		roll						(0) - current rotate value
+		rollDegree					(true) - true if using degrees, false otherwise
+		scaleX						(1) - current scale value
+		scaleY						(1) - current scale value
+		shearX						(0) - current shear value
+		shearY						(0) - current shear value
+		sourceHeight				(0) - source dimensions - a cell sets what can be copied from it
+		sourceWidth					(0) - source dimensions - a cell sets what can be copied from it
+		sourceX						(0) - source dimensions - a cell sets what can be copied from it
+		sourceY						(0) - source dimensions - a cell sets what can be copied from it
+		targetHeight				(0) - destination dimensions - a cell decides where its data will be copied to
+		targetWidth					(0) - destination dimensions - a cell decides where its data will be copied to
+		targetX						(0) - destination dimensions - a cell decides where its data will be copied to
+		targetY						(0) - destination dimensions - a cell decides where its data will be copied to
+		usePadDimensions			(true) - boolean flag; if true, use Pad object dimensions for actual/source/target height and width attributes
+		width						(not retained) - sets actualWidth, sourceWidth, targetWidth to same value
+
+		fillStyle					(retained by Context object; can be set via Cell.set())
+		font						(retained by Context object; can be set via Cell.set())
+		globalAlpha					(retained by Context object; can be set via Cell.set())
+		globalCompositeOperation	(retained by Context object; can be set via Cell.set())
+		lineCap						(retained by Context object; can be set via Cell.set())
+		lineJoin					(retained by Context object; can be set via Cell.set())
+		lineWidth					(retained by Context object; can be set via Cell.set())
+		miterLimit					(retained by Context object; can be set via Cell.set())
+		shadowOffsetX				(retained by Context object; can be set via Cell.set())
+		shadowOffsetY				(retained by Context object; can be set via Cell.set())
+		shadowBlur					(retained by Context object; can be set via Cell.set())
+		shadowColor					(retained by Context object; can be set via Cell.set())
+		strokeStyle					(retained by Context object; can be set via Cell.set())
+		textAlign					(retained by Context object; can be set via Cell.set())
+		textBaseline				(retained by Context object; can be set via Cell.set())
+
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Cell'
+		prototype.classname 		= 'cellnames'
+		
+	functions ...
+		buildField()
+			purpose: construct's the cell's field array (which is stored in scrawl.field)
+			return: this
+		checkFieldAt(XCOORDINATE, YCOORDINATE)
+			purpose: cell checks its field array for given coordinates
+			return: true/false result of check
+		checkFieldAt({x:XCOORDINATE, y:YCOORDINATE, ?test:number, channel:arg})
+			purpose: cell checks its field array for given coordinates
+				arg in ['red', 'green', 'blue', 'alpha', 'anycolor']
+			return: true/false result of check
+		clear()
+			purpose: clear the cell's entire (virtual) display
+			return: this
+		compile()
+			purpose: order contributing groups to draw themselves onto the cell/canvas element
+			return: this
+		getImageData({?name:string, ?x:number, ?y:number, ?width:number, ?height:number})
+			purpose: generate an image data table on the cell
+			return: this
+		getPadHeight()
+			purpose: retrieve linked Pad object's height attribute
+			return: this
+		getPadWidth()
+			purpose: retrieve linked Pad object's width attribute
+			return: this
+		restoreContext()
+			purpose: <canvas> context restore() operation
+			return: this
+		rotateCell({?degrees:number||?radians:number})
+			purpose: <canvas> context rotate() operation
+			return: this
+		rotateCell(number)
+			purpose: <canvas> context rotate() operation
+			return: this
+		saveContext()
+			purpose: <canvas> context save() operation
+			return: this
+		scaleCell({?x:number, ?y:number})
+			purpose: <canvas> context scale() operation
+			return: this
+		setDelta(dataObject)
+			purpose: adds item values to current attribute values
+				arg in {sourceWidth, sourceHeight, sourceX, sourceY, targetWidth, targetHeight, targetX, targetY}
+			return: this
+		setDimensions(?{width:number, height:number})
+			purpose: change size of <canvas> element
+			return: this on success; false on fail
+		spliceCell({edge:arg, ?strip:number})
+			purpose: shifts strips of the cell display from one edge to the opposite edge
+				arg in ['horizontal', 'vertical', 'top', 'bottom', 'left', 'right']
+			return: this
+		transformCell({?scaleX:number, ?scaleY:number, ?shearX:number, ?shearY:number, ?cellX:number, ?cellY:number, ?roll:number}, boolean)
+			purpose: <canvas> context setTransform() operation
+			return: this
+		translateCell({?x:number, ?y:number})
+			purpose: <canvas> context translate() operation
+			return: this
+
+		~ clearShadow()
+			purpose: acts on requests by Sprites to disable shadowing
+			return: this
+		~ copyCellToSelf(CTXNAME)
+			purpose: copies another cell's/canvas element's display to itself
+			return: this
+		~ resetRotation()
+			purpose: rotateCell() helper function
+		~ setEngine(CTXNAME, SCALEVALUE)
+			purpose: update the canvas element's 2d context engine's values; update cell's context object values in line with context elements values after updating
+			return: cell's context object
+		~ setToClearShape()
+			purpose: acts on requests by Sprites to disable fill color
+			return: this
+		
+		exchange 					- from SubScrawl (not tested for this object)
+		getStartX 					- from SubScrawl (not tested for this object)
+		getStartY 					- from SubScrawl (not tested for this object)
+		moveHandle 					- from SubScrawl (not tested for this object)
+		moveStart 					- from SubScrawl (not tested for this object)
+		reverse 					- from SubScrawl (not tested for this object)
+		
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+		
+Group(dataObject)
+	prototype linked to: SubScrawl
+	can be instantiated directly - new Group()
+		use scrawl.newGroup()
+	
+	purpose ...
+		acts as the connection between Sprite and Cell objects
+		groups Sprite objects for specific purposes
+		adds override functionality to allow sprites to be displayed and moved as a group
+		plays a key role in collision detection between Sprites
+		specialised Groups hold details of Sprites that construct a Cell object's collision field
+		may contribute to the display in more than one Cell
+		plays a role in the order in which Sprite objects are stamped onto Cell canvases
+		
+	attributes ...
+		cells						([]) - [CELLNAME]
+		method						(null) 
+			- in ['draw', 'fill', 'drawFill', 'fillDraw', 'floatOver', 'sinkInto', 'clear', 'none']
+		order						(0) - number
+		sprites 					([]) - [SPRITENAME]
+		visibility					(true) - boolean - true if visible
+
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Group'
+		prototype.classname 		= 'groupnames'
+		
+	functions ...
+		addSpritesToGroup(SPRITENAME||[SPRITENAME])
+			purpose: add Sprites to Group.sprites array
+			return: this on success; false on failure
+		checkField(?CELLNAME)
+			purpose: group checks its startXY values against given Cell's field array
+			return: true/false result of check
+		getBetweenGroupSpriteHits(GROUPNAME)
+			purpose: checks for collisions between constituent sprites and sprites of another group
+			return: array of arrays containing [SPRITENAME, SPRITENAME] data for sprites that are currently colliding with each other
+		getBetweenGroupSpriteHits(GroupObject)
+			purpose: checks for collisions between constituent sprites and sprites of another group
+			return: array of arrays containing [SPRITENAME, SPRITENAME] data for sprites that are currently colliding with each other
+		getFieldSpriteHits(?CELLNAME)
+			purpose: interrogates the cell field for each constituent sprite
+			return: array of arrays containing [SPRITENAME, {x:value, y:value}] data for sprites that have failed the field test
+		getInGroupSpriteHits()
+			purpose: checks for collisions between constituent sprites
+			return: array of arrays containing [SPRITENAME, SPRITENAME] data for sprites that are currently colliding with each other
+		getSpriteAt({x:XCOORDINATE, y:YCOORDINATE, ?test:number, ?channel:arg})
+			purpose: collision detection
+				arg in ['red', 'green', 'blue', 'alpha']
+			return: the highest order sprite in this group at given coordinates; false if none found
+		removeSpritesFromGroup(SPRITENAME||[SPRITENAME])
+			purpose: remove Sprites from Group.sprites array
+			return: this on success; false on failure
+		setDelta({?startX:number, ?startY:number, ?handleX:number, ?handleY:number})
+			purpose: adds values to attributes
+			return: this
+		setHandles({?x:arg1, ?y:arg2})
+			purpose: sets the Group.handleXY attributes
+				arg1 in ['left', 'center', 'right', number]
+				arg2 in ['top', 'center', 'bottom', number]
+			return: this
+		stamp(?arg, ?CELLNAME||[CELLNAME])
+			purpose: get visible sprites listed in Group.sprites to stamp themselves on cells, in ascending Sprite.order order
+				arg in ['draw', 'fill', 'drawFill', 'fillDraw', 'floatOver', 'sinkInto', 'clear', 'none']
+			return: this
+			
+		~ getSpriteRange(arg)
+			purpose: determines the minimum and maximum horizontal or vertical reach of constituent sprites
+				arg in ['X','Y','x','y']
+			return: {minimum:value, maximum:value}
+		~ sortSprites()
+			purpose: sort sprites in Group.sprites array in order of their Sprite.order value, ascending
+			return: nothing
+		
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl
+		toString					- from Scrawl
+
+Point(dataObject)
+	prototype linked to: SubScrawl
+	can be instantiated directly - new Point()
+		use scrawl.makeCartesianPoints(), scrawl.makePolarPoints(), scrawl.newPoint()
+	
+	purpose ...
+		defines a movable point within a Shape sprite object
+		uses polar coordinates to determine its position in relation to the Shape sprite's startXY coordinates
+		uses cartesian coordinates to determine its position in relation to a Cell's canvas's top left corner
+		
+	attributes ...
+		angle						(0) - number
+		angleDegrees				(true) - boolean - true to use degrees; false for radians
+		currentX					(0) - number
+		currentY					(0) - number
+		distance					(0) - number
+		fixed						(false) - mixed - true (to use currentXY); SPRITENAME (to use sprite's startXY); false to recalculate before drawing
+		sprite						(false) - SPRITENAME
+		startLink					(false) - LINKNAME
+		visibility					(true) - ??
+
+		handleX 					- from SubScrawl (not relevant)
+		handleY 					- from SubScrawl (not relevant)
+		moveHandleX 				- from SubScrawl (not relevant)
+		moveHandleY 				- from SubScrawl (not relevant)
+		moveStartX 					- from SubScrawl (not relevant)
+		moveStartY 					- from SubScrawl (not relevant)
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl (not relevant)
+		startY 						- from SubScrawl (not relevant)
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Point'
+		prototype.classname 		= 'pointnames'
+		
+	functions ...
+		~ getData(?{x;number, y:number})
+			purpose: initiates calculation of currentXY
+			return: dataObject containing name, currentX, currentY, startLink
+		~ recalculate(?{x;number, y:number})
+			purpose: converts polar coordinates + data on Shape current location into currentXY
+			return: this
+		~ setPolar()
+			purpose: converts cartesian coordinates into polar coordinates
+			return: this
+
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl (not relevant)
+		getStartY 					- from SubScrawl (not relevant)
+		moveHandle 					- from SubScrawl (not relevant)
+		moveStart 					- from SubScrawl (not relevant)
+		reverse 					- from SubScrawl (not relevant)
+		
+		clone						- from Scrawl
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+		
+Link(dataObject)
+	prototype linked to: SubScrawl
+	can be instantiated directly - new Link()
+		use scrawl.newLink()
+		
+	purpose ...
+		defines the type of line to be drawn between two Point objects
+		can be of the form (species): line, bezier, quadratic
+		posesses actions: 'add', 'move' (to not draw a line), 'close' (end Point is Shape object's startPoint), 'end' (for non-closed Shape objects)
+		makes use of additional control points to determine curves
+	
+	attributes ...
+		action						('add') - in ['add', 'move', 'close', 'end']
+		controlPoint1				(false) - POINTNAME
+		controlPoint2				(false) - POINTNAME
+		endPoint					(false) - POINTNAME
+		length 						(false) - number - Link's current calculated length 
+		precision 					(100) - number of segments used for calculating length
+		species						(false) - in ['line', 'quadratic', 'bezier']
+		sprite						(false) - SPRITENAME of associated Shape sprite
+		startPoint					(false) - POINTNAME
+
+		~ positions					([]) - array of JavaScript objects describing end points for each generated segment
+										{x:COORDINATE, y:COORDINATE, length:number, cumulativeLength:number}
+
+		handleX 					- from SubScrawl (not relevant)
+		handleY 					- from SubScrawl (not relevant)
+		moveHandleX 				- from SubScrawl (not relevant)
+		moveHandleY 				- from SubScrawl (not relevant)
+		moveStartX 					- from SubScrawl (not relevant)
+		moveStartY 					- from SubScrawl (not relevant)
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl (not relevant)
+		startY 						- from SubScrawl (not relevant)
+		
+		addPathRoll					- from SubScrawl (not relevant)
+		movePathPosition			- from SubScrawl (not relevant)
+		path 						- from SubScrawl (not relevant)
+		pathPosition				- from SubScrawl (not relevant)
+		pathRoll					- from SubScrawl (not relevant)
+		pathSpeedConstant			- from SubScrawl (not relevant)
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Link'
+		prototype.classname 		= 'linknames'
+		
+	functions ...
+		~ getLength()
+			purpose: triggers setPosition 
+			return: length
+		~ getPointCoordinates()
+			purpose: helper function - gets coordinates of points contributing to line
+			return: object {
+						start: {x:COORDINATE, y:COORDINATE}, 
+						end: {x:COORDINATE, y:COORDINATE},
+						control1: {x:COORDINATE, y:COORDINATE},
+						control2: {x:COORDINATE, y:COORDINATE}
+						}
+		~ getPositionOnLink(arg)
+			purpose: helper function for calculating positions
+				arg: number between 0 and 1; distance along Link
+			return: {x:COORDINATE, y:COORDINATE}
+		~ getSteadyPositionOnLink(arg)
+			purpose: helper function for calculating positions
+				arg: number between 0 and 1; distance along Link
+			return: {x:COORDINATE, y:COORDINATE}
+		~ pointOnLine(origin coordinate object, destination coordinate object, number between 0 and 1)
+			purpose: helper function
+			return: {x:COORDINATE, y:COORDINATE}
+		~ setPositions(arg)
+			purpose: calculates segment details, stored as object in Link.positions array
+				arg: precision value - number of segments to use for calculations
+			return: this
+		~ sketch(DOMCanvasContextObject, ?{x:number, y:number})
+			purpose: lay out a path for future draw/fill operations: 
+				- lineTo, quadraticCurveTo, bezierCurveTo, closePath
+			return: this
+				
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl (not relevant)
+		getStartY 					- from SubScrawl (not relevant)
+		moveHandle 					- from SubScrawl (not relevant)
+		moveStart 					- from SubScrawl (not relevant)
+		reverse 					- from SubScrawl (not relevant)
+		
+		clone						- from Scrawl
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl
+		toString					- from Scrawl
+
+Scrawl3d(dataObject)
+	prototype linked to: SubScrawl
+	not for user instantiation
+	
+	purpose ...
+		supplies most of the functionality for DOM object wrappers
+		concentrates on basic CSS-based 3d manipulations
+		does NOT handle transitions
+		
+	used by ...
+		Stack, Element, Pad objects
+
+	attributes ...
+		height						(150) - DOM element inner height (px)
+		width						(300) - DOM element inner width (px)
+		
+		- scrawl+stack.js only	
+		backfaceVisibility			('visible') DOM element style.backfaceVisibility (string)
+		displayOffsetX				(0) - horizontal offset between window and element (px)
+		displayOffsetY				(0) - vertical offset between window and element (px)
+		left						(not retained) - alias for startX (number)
+		overflow					('hidden') - stack <div> style.overflow value (string)
+		perspective					(2000) - DOM element style.perspective value (px)
+		perspectiveOrigin			(not retained) - alias for perspectiveOriginX, perspectiveOriginY (string)
+		perspectiveOriginX			('50%') - DOM element style.perspectiveOrigin x component value (string)
+		perspectiveOriginY			('50%') - DOM element style.perspectiveOrigin y component value (string)
+		pitch						(0) element's last rotateX style value (absolute degrees)
+		position					('relative'||'absolute') - DOM element style.position value (string)
+		roll						(0) element's last rotateZ style value (absolute degrees)
+		rotate						(not retained) - alias for roll (number)
+		rotateX						(not retained) - alias for pitch (number)
+		rotateY						(not retained) - alias for yaw (number)
+		rotateZ						(not retained) - alias for roll (number)
+		stack						(false) - name of parent element, if stack - computer generated - (STACKNAME) 
+		top							(not retained) - alias for startY (number)
+		transformOrigin				(not retained) - alias for transformOriginX, transformOriginY (string)
+		transformOriginX			('50%') - DOM element style.transformOrigin x component value (string)
+		transformOriginY			('50%') - DOM element style.transformOrigin y component value (string)
+		transformStyle				('preserve-3d') - DOM element style.transformStyle (string)
+		translateX					(0) element's last translateX style value (px)
+		translateY					(0) element's last translateY style value (px)
+		translateZ					(0) element's last translateZ style value (px)
+		yaw							(0) element's last rotateY style value (absolute degrees)
+		zIndex						(0) - DOM element style.zIndex value (number)
+		
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl = DOM element style.left value (px)
+		startY 						- from SubScrawl = DOM element style.top value (px)
+
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+		
+		~ isIE						(computer generated) - helper attribute
+		
+		prototype.type 				= 'Scrawl3d'
+		prototype.classname 		= 'objectnames'
+		
+	functions ...
+		getComment()
+			purpose: retrieve DOM element's user-defined 'data-comment' attribute
+			return: value
+		getBackfaceVisibility() - scrawl+stack.js only	
+			purpose: retrieve DOM element's backface-visibility style
+			return: value
+		getHeight()
+			purpose: retrieve DOM element's height attribute/style
+			return: value
+		getLeft() - alias for getStartX() - scrawl+stack.js only	
+		getOverflow() - scrawl+stack.js only	
+			purpose: retrieve DOM element's overflow style
+			return: value
+		getPerspective() - scrawl+stack.js only	
+			purpose: retrieve DOM element's perspective style
+			return: value
+		getPerspectiveOrigin() - scrawl+stack.js only	
+			purpose: retrieve DOM element's perspective-origin style
+			return: value
+		getPitch() - scrawl+stack.js only	
+			purpose: retrieve current pitch attribute
+			return: value
+		getPosition() - scrawl+stack.js only	
+			purpose: retrieve DOM element's position style
+			return: value
+		getRoll() - scrawl+stack.js only	
+			purpose: retrieve current roll attribute
+			return: value
+		getRotate() - alias for getRoll() - scrawl+stack.js only	
+		getRotateX() - alias for getPitch() - scrawl+stack.js only	
+		getRotateY() - alias for getYaw() - scrawl+stack.js only	
+		getRotateZ() - alias for getRoll() - scrawl+stack.js only	
+		getStartX() - scrawl+stack.js only	
+			purpose: retrieve DOM element's left style
+			return: value
+		getStartY() - scrawl+stack.js only	
+			purpose: retrieve DOM element's top style
+			return: value
+		getTitle()
+			purpose: retrieve DOM element's title attribute
+			return: value
+		getTop() - alias for getStartY() - scrawl+stack.js only	
+		getTransform() - scrawl+stack.js only	
+			purpose: retrieve string for applying to DOM element's transform style
+			return: value
+		getTransformOrigin() - scrawl+stack.js only	
+			purpose: retrieve DOM element's transform-origin style
+			return: value
+		getTransformStyle() - scrawl+stack.js only	
+			purpose: retrieve DOM element's transform-style style
+			return: value
+		getTranslateX() - scrawl+stack.js only	
+			purpose: retrieve current translateX attribute
+			return: value
+		getTranslateY() - scrawl+stack.js only	
+			purpose: retrieve current translateY attribute
+			return: value
+		getTranslateZ() - scrawl+stack.js only	
+			purpose: retrieve current translateZ attribute
+			return: value
+		getWidth()
+			purpose: retrieve DOM element's width attribute/style
+			return: value
+		getYaw() - scrawl+stack.js only	
+			purpose: retrieve current yaw attribute
+			return: value
+		getZIndex() - scrawl+stack.js only	
+			purpose: retrieves DOM element's z-index style
+			return: value
+		scaleDimensions(?number) - scrawl+stack.js only	
+			purpose: scales element position and dimensions
+				(does not change startX, startY, width, height or perspective attributes)
+			return: this
+		scaleStack(?number) - scrawl+stack.js only	
+			purpose: scales stack and all of its contents to argument value, or this.scale
+				(does not change startX, startY, width, height or perspective attributes)
+			return: this
+		setBackfaceVisibility(arg) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's backface-visibility style
+				arg in ['visible','hidden']
+			return: this
+		setComment(string)
+			purpose: adds a user-defined 'data-comment' attribute to DOM element
+			return: this
+		setDelta({ATTRIBUTE:value})
+			purpose: adds values to attributes
+			affected attributes - pitch, yaw, roll, translateX, translateY, translateZ, top, left
+			return: this
+		setDisplayOffsets()
+			purpose: (re)calculates DOM element's offset coordinate values
+			return: this
+		setHeight(number)
+			purpose: (re)sets DOM element's height style (for canvas elements, width/height attributes)
+			return: this
+		setLeft(number, boolean) - alias for setStartX() - scrawl+stack.js only	
+		setOverflow(string) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's overflow style
+			return: this
+		setPerspective(number) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's perspective style
+			return: this
+		setPerspectiveOrigin(object) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's perspective-origin style
+				arg is in the form {perspectiveOriginX:string, perspectiveOriginY:string}
+			return: this
+		setPerspectiveOrigin(string) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's perspective-origin style
+				arg is in the form 'PERSPECTIVE-ORIGIN-X PERSPECTIVE-ORIGIN-Y'
+			return: this
+		setPitch(number) - scrawl+stack.js only	
+			purpose: set pitch attribute
+			return: this
+		setPosition(string) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's position style
+			return: this
+		setRoll(number) - scrawl+stack.js only	
+			purpose: set roll attribute
+			return: this
+		setRotate(number) - alias for setRoll() - scrawl+stack.js only	
+		setRotateX(number) - alias for setPitch() - scrawl+stack.js only	
+		setRotateY(number) - alias for setYaw() - scrawl+stack.js only	
+		setRotateZ(number) - alias for setRoll() - scrawl+stack.js only	
+		setStartX(number, boolean) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's top style
+				if boolean true, triggers display offsets recalculation
+			return: this
+		setStartY(number, boolean) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's top style
+				if boolean true, triggers display offsets recalculation
+			return: this
+		setTitle(string)
+			purpose: (re)sets DOM element's title attribute
+			return: this
+		setTop(number, boolean) - alias for setStartY() - scrawl+stack.js only	
+		setTransform(dataObject||null) - scrawl+stack.js only	
+			purpose: sets DOM element's transform style
+				- translateX, translateY, translateZ, pitch, roll, yaw, rotateX, rotateY, rotateZ, rotate
+			return: this
+		setTransformOrigin(object) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's transform-origin style
+				arg is in the form {transformOriginX:string, transformOriginY:string}
+			return: this
+		setTransformOrigin(string) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's transform-origin style
+				arg is in the form 'TRANSFORM-ORIGIN-X TRANSFORM-ORIGIN-Y'
+			return: this
+		setTransformStyle(string) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's transform-style style
+			return: this
+		setTranslateX(number) - scrawl+stack.js only	
+			purpose: set translateX attribute
+			return: this
+		setTranslateY(number) - scrawl+stack.js only	
+			purpose: set translateY attribute
+			return: this
+		setTranslateZ(number) - scrawl+stack.js only	
+			purpose: set translateZ attribute
+			return: this
+		setWidth(number)
+			purpose: (re)sets DOM element's width attribute
+			return: this
+		setYaw(number) - scrawl+stack.js only	
+			purpose: set yaw attribute
+			return: this
+		setZIndex(number) - scrawl+stack.js only	
+			purpose: (re)sets DOM element's z-index style
+			return: this
+		shiftLeft() - scrawl+stack.js only	
+			purpose: adds moveStartX to startX and shifts stack's position accordingly
+			return: this
+		shiftPosition() - scrawl+stack.js only	
+			purpose: triggers shiftLeft(), shiftTop(); amends displayOffsetXY values
+			return: this
+		shiftTop() - scrawl+stack.js only	
+			purpose: adds moveStartY to startY and shifts stack's position accordingly
+			return: this
+			
+		~ initialize2d(dataObject)
+			purpose: helper function
+		~ initialize3d(dataObject)
+			purpose: helper function
+			
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+
+Stack(dataObject) - scrawl+stack.js only	
+	prototype linked to: Scrawl3d
+	not for user instantiation
+		use scrawl.addStackToPage()
+	
+	purpose ...
+		Scrawl wrapper for DOM elements containing other elements to be manipulated via CSS 3d
+	
+	attributes ...
+		stackElement				(not retained) - DOM element object
+		
+		backfaceVisibility			- from Scrawl3d
+		displayOffsetX				- from Scrawl3d
+		displayOffsetY				- from Scrawl3d
+		height						- from Scrawl3d
+		left						(not retained) - from Scrawl3d
+		overflow					- from Scrawl3d
+		perspective					- from Scrawl3d
+		perspectiveOrigin			(not retained) - from Scrawl3d
+		perspectiveOriginX			- from Scrawl3d
+		perspectiveOriginY			- from Scrawl3d
+		pitch						- from Scrawl3d
+		position					- from Scrawl3d
+		roll						- from Scrawl3d
+		rotate						(not retained) - from Scrawl3d
+		rotateX						(not retained) - from Scrawl3d
+		rotateY						(not retained) - from Scrawl3d
+		rotateZ						(not retained) - from Scrawl3d
+		stack						- from Scrawl3d
+		top							- from Scrawl3d
+		transformOrigin				(not retained) - from Scrawl3d
+		transformOriginX			- from Scrawl3d
+		transformOriginY			- from Scrawl3d
+		transformStyle				- from Scrawl3d
+		translateX					- from Scrawl3d
+		translateY					- from Scrawl3d
+		translateZ					- from Scrawl3d
+		width						- from Scrawl3d
+		yaw							- from Scrawl3d
+		zIndex						- from Scrawl3d
+		
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+		
+		prototype.type 				= 'Stack'
+		prototype.classname 		= 'stacknames'
+		
+	functions ...
+		addElementById(string)
+			purpose: add element with given id to stack
+			return: this
+		addElementsByClassName(string)
+			purpose: add elements with given class to stack
+			return: this
+		getElement()
+			purpose: get the actual DOM element wrapped by this object
+			return: DOM element object
+			
+		getBackfaceVisibility		- from Scrawl3d
+		getComment					- from Scrawl3d
+		getHeight					- from Scrawl3d
+		getLeft						- from Scrawl3d
+		getOverflow					- from Scrawl3d
+		getPerspective				- from Scrawl3d
+		getPerspectiveOrigin		- from Scrawl3d
+		getPitch					- from Scrawl3d
+		getPosition					- from Scrawl3d
+		getRoll						- from Scrawl3d
+		getRotate					- from Scrawl3d
+		getRotateX					- from Scrawl3d
+		getRotateY					- from Scrawl3d
+		getRotateZ					- from Scrawl3d
+		getStartX					- from Scrawl3d
+		getStartY					- from Scrawl3d
+		getTitle					- from Scrawl3d
+		getTop						- from Scrawl3d
+		getTransform				- from Scrawl3d
+		getTransformOrigin			- from Scrawl3d
+		getTransformStyle			- from Scrawl3d
+		getTranslateX				- from Scrawl3d
+		getTranslateY				- from Scrawl3d
+		getTranslateZ				- from Scrawl3d
+		getWidth					- from Scrawl3d
+		getYaw						- from Scrawl3d
+		getZIndex					- from Scrawl3d
+		scaleDimensions				- from Scrawl3d
+		scaleStack					- from Scrawl3d
+		setBackfaceVisibility		- from Scrawl3d
+		setComment					- from Scrawl3d
+		setDelta					- from Scrawl3d
+		setDisplayOffsets			- from Scrawl3d
+		setHeight					- from Scrawl3d
+		setLeft						- from Scrawl3d
+		setOverflow					- from Scrawl3d
+		setPerspective				- from Scrawl3d
+		setPerspectiveOrigin		- from Scrawl3d
+		setPitch					- from Scrawl3d
+		setPosition					- from Scrawl3d
+		setRoll						- from Scrawl3d
+		setRotate					- from Scrawl3d
+		setRotateX					- from Scrawl3d
+		setRotateY					- from Scrawl3d
+		setRotateZ					- from Scrawl3d
+		setStartX					- from Scrawl3d
+		setStartY					- from Scrawl3d
+		setTitle					- from Scrawl3d
+		setTop						- from Scrawl3d
+		setTransform				- from Scrawl3d
+		setTransformOrigin			- from Scrawl3d
+		setTransformStyle			- from Scrawl3d
+		setTranslateX				- from Scrawl3d
+		setTranslateY				- from Scrawl3d
+		setTranslateZ				- from Scrawl3d
+		setWidth					- from Scrawl3d
+		setYaw						- from Scrawl3d
+		setZIndex					- from Scrawl3d
+		shiftLeft					- from Scrawl3d
+		shiftPosition				- from Scrawl3d
+		shiftTop					- from Scrawl3d
+		
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl
+		toString					- from Scrawl
+
+Element(dataObject) - scrawl+stack.js only	
+	prototype linked to: Scrawl3d
+	not for user instantiation
+		use Stack.addElementById(), Stack.addElementByClassName()
+
+	purpose ...
+		Scrawl wrapper for DOM elements contained within Scrawl stacks
+	
+	attributes ...
+		backfaceVisibility			- from Scrawl3d
+		displayOffsetX				- from Scrawl3d
+		displayOffsetY				- from Scrawl3d
+		domElement					(not retained) - DOM element object
+		height						- from Scrawl3d
+		left						(not retained) - from Scrawl3d
+		overflow					- from Scrawl3d
+		perspective					- from Scrawl3d
+		perspectiveOrigin			(not retained) - from Scrawl3d
+		perspectiveOriginX			- from Scrawl3d
+		perspectiveOriginY			- from Scrawl3d
+		pitch						- from Scrawl3d
+		position					- from Scrawl3d
+		roll						- from Scrawl3d
+		rotate						(not retained) - from Scrawl3d
+		rotateX						(not retained) - from Scrawl3d
+		rotateY						(not retained) - from Scrawl3d
+		rotateZ						(not retained) - from Scrawl3d
+		stack						- from Scrawl3d
+		top							- from Scrawl3d
+		transformOrigin				(not retained) - from Scrawl3d
+		transformOriginX			- from Scrawl3d
+		transformOriginY			- from Scrawl3d
+		transformStyle				- from Scrawl3d
+		translateX					- from Scrawl3d
+		translateY					- from Scrawl3d
+		translateZ					- from Scrawl3d
+		width						- from Scrawl3d
+		yaw							- from Scrawl3d
+		zIndex						- from Scrawl3d
+		
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+		
+		prototype.type 				= 'Element'
+		prototype.classname 		= 'elementnames'
+		
+	functions ...
+		getElement()
+			purpose: get the actual DOM element wrapped by this object
+			return: DOM element object
+			
+		getBackfaceVisibility		- from Scrawl3d
+		getComment					- from Scrawl3d
+		getHeight					- from Scrawl3d
+		getLeft						- from Scrawl3d
+		getOverflow					- from Scrawl3d
+		getPerspective				- from Scrawl3d
+		getPerspectiveOrigin		- from Scrawl3d
+		getPitch					- from Scrawl3d
+		getPosition					- from Scrawl3d
+		getRoll						- from Scrawl3d
+		getRotate					- from Scrawl3d
+		getRotateX					- from Scrawl3d
+		getRotateY					- from Scrawl3d
+		getRotateZ					- from Scrawl3d
+		getStartX					- from Scrawl3d
+		getStartY					- from Scrawl3d
+		getTitle					- from Scrawl3d
+		getTop						- from Scrawl3d
+		getTransform				- from Scrawl3d
+		getTransformOrigin			- from Scrawl3d
+		getTransformStyle			- from Scrawl3d
+		getTranslateX				- from Scrawl3d
+		getTranslateY				- from Scrawl3d
+		getTranslateZ				- from Scrawl3d
+		getWidth					- from Scrawl3d
+		getYaw						- from Scrawl3d
+		getZIndex					- from Scrawl3d
+		scaleDimensions				- from Scrawl3d
+		scaleStack					- from Scrawl3d
+		setBackfaceVisibility		- from Scrawl3d
+		setComment					- from Scrawl3d
+		setDelta					- from Scrawl3d
+		setDisplayOffsets			- from Scrawl3d
+		setHeight					- from Scrawl3d
+		setLeft						- from Scrawl3d
+		setOverflow					- from Scrawl3d
+		setPerspective				- from Scrawl3d
+		setPerspectiveOrigin		- from Scrawl3d
+		setPitch					- from Scrawl3d
+		setPosition					- from Scrawl3d
+		setRoll						- from Scrawl3d
+		setRotate					- from Scrawl3d
+		setRotateX					- from Scrawl3d
+		setRotateY					- from Scrawl3d
+		setRotateZ					- from Scrawl3d
+		setStartX					- from Scrawl3d
+		setStartY					- from Scrawl3d
+		setTitle					- from Scrawl3d
+		setTop						- from Scrawl3d
+		setTransform				- from Scrawl3d
+		setTransformOrigin			- from Scrawl3d
+		setTransformStyle			- from Scrawl3d
+		setTranslateX				- from Scrawl3d
+		setTranslateY				- from Scrawl3d
+		setTranslateZ				- from Scrawl3d
+		setWidth					- from Scrawl3d
+		setYaw						- from Scrawl3d
+		setZIndex					- from Scrawl3d
+		shiftLeft					- from Scrawl3d
+		shiftPosition				- from Scrawl3d
+		shiftTop					- from Scrawl3d
+		
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl
+		toString					- from Scrawl
+
+Pad(dataObject){
+	prototype linked to: Scrawl3d
+	not for user instantiation
+		use scrawl.addCanvasToPage()
+	
+	purpose ...
+		controller (not wrapper) object for canvas elements included in the DOM
+		wraps the canvas element for CSS 3d functionality, if element is part of a Scrawl Stack
+		coordinates activity between visible canvas element and other (non-DOM) canvas elements that contribute to it
+		
+	note ...
+		Because the Pad constructor calls the Cell constructor as part of the construction process (Cell objects WRAP
+		a <canvas> element; Pad objects CONTROL <canvas> elements), Cell attributes can be included in the Pad constructor 
+		object and picked up by the resultant Cell objects. 
+		
+	attributes ...
+		base						(this.CELLNAME+'_base') - CELLNAME string
+		cells						([]) - [CELLNAME] string array
+		current						(this.CELLNAME+'_base') - CELLNAME string - computer-generated in constructor
+		display						(this.CELLNAME) - CELLNAME string - computer-generated in constructor
+		drawOrder					([]) - [CELLNAME] string array
+		mouseOverPad				(computer generated) - boolean true when cursor is over display canvas element
+		mouseX						(computer generated) - cursor x coordinate relative to display canvas topLeft
+		mouseY						(computer generated) - cursor y coordinate relative to display canvas topLeft
+		
+		backgroundColor				(passed on to the base and display Cell objects)
+		cellX						(passed on to the base and display Cell objects)
+		cellY						(passed on to the base and display Cell objects)
+		roll						(passed on to the base and display Cell objects)
+		rollDegree					(passed on to the base and display Cell objects)
+		scaleX						(passed on to the base and display Cell objects)
+		scaleY						(passed on to the base and display Cell objects)
+		shearX						(passed on to the base and display Cell objects)
+		shearY						(passed on to the base and display Cell objects)
+		sourceHeight				(passed on to the base and display Cell objects)
+		sourceWidth					(passed on to the base and display Cell objects)
+		sourceX						(passed on to the base and display Cell objects)
+		sourceY						(passed on to the base and display Cell objects)
+		targetHeight				(passed on to the base and display Cell objects)
+		targetWidth					(passed on to the base and display Cell objects)
+		targetX						(passed on to the base and display Cell objects)
+		targetY						(passed on to the base and display Cell objects)
+		
+		fillStyle					(passed on to the base and display Cell objects' Context object)
+		font						(passed on to the base and display Cell objects' Context object)
+		globalAlpha					(passed on to the base and display Cell objects' Context object)
+		globalCompositeOperation	(passed on to the base and display Cell objects' Context object)
+		lineCap						(passed on to the base and display Cell objects' Context object)
+		lineJoin					(passed on to the base and display Cell objects' Context object)
+		lineWidth					(passed on to the base and display Cell objects' Context object)
+		miterLimit					(passed on to the base and display Cell objects' Context object)
+		shadowOffsetX				(passed on to the base and display Cell objects' Context object)
+		shadowOffsetY				(passed on to the base and display Cell objects' Context object)
+		shadowBlur					(passed on to the base and display Cell objects' Context object)
+		shadowColor					(passed on to the base and display Cell objects' Context object)
+		strokeStyle					(passed on to the base and display Cell objects' Context object)
+		textAlign					(passed on to the base and display Cell objects' Context object)
+		textBaseline				(passed on to the base and display Cell objects' Context object)
+
+		backfaceVisibility			- from Scrawl3d - scrawl+stack.js only	
+		displayOffsetX				- from Scrawl3d - scrawl+stack.js only	
+		displayOffsetY				- from Scrawl3d - scrawl+stack.js only	
+		height						- from Scrawl3d
+		left						(not retained) - from Scrawl3d - scrawl+stack.js only	
+		overflow					- from Scrawl3d - scrawl+stack.js only	
+		perspective					- from Scrawl3d - scrawl+stack.js only	
+		perspectiveOrigin			(not retained) - from Scrawl3d - scrawl+stack.js only	
+		perspectiveOriginX			- from Scrawl3d - scrawl+stack.js only	
+		perspectiveOriginY			- from Scrawl3d - scrawl+stack.js only	
+		pitch						- from Scrawl3d - scrawl+stack.js only	
+		position					- from Scrawl3d - scrawl+stack.js only	
+		roll						- from Scrawl3d - scrawl+stack.js only	
+		rotate						(not retained) - from Scrawl3d - scrawl+stack.js only	
+		rotateX						(not retained) - from Scrawl3d - scrawl+stack.js only	
+		rotateY						(not retained) - from Scrawl3d - scrawl+stack.js only	
+		rotateZ						(not retained) - from Scrawl3d - scrawl+stack.js only	
+		stack						- from Scrawl3d - scrawl+stack.js only	
+		top							- from Scrawl3d - scrawl+stack.js only	
+		transformOrigin				(not retained) - from Scrawl3d - scrawl+stack.js only	
+		transformOriginX			- from Scrawl3d - scrawl+stack.js only	
+		transformOriginY			- from Scrawl3d - scrawl+stack.js only	
+		transformStyle				- from Scrawl3d - scrawl+stack.js only	
+		translateX					- from Scrawl3d - scrawl+stack.js only	
+		translateY					- from Scrawl3d - scrawl+stack.js only	
+		translateZ					- from Scrawl3d - scrawl+stack.js only	
+		width						- from Scrawl3d
+		yaw							- from Scrawl3d - scrawl+stack.js only	
+		zIndex						- from Scrawl3d - scrawl+stack.js only	
+		
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+		
+		prototype.type 				= 'Pad'
+		prototype.classname 		= 'padnames'
+		
+	functions ...
+		addCells(CELLNAME||[CELLNAME])
+			purpose: add (an) existing cell(s) to the Pad
+			return: this
+		addNewCell({name:string, width:number, height:number})
+			purpose: creates a new (non-visible) cell and adds it to the Pad
+			return: new Cell object; false on fail
+		buildFields()
+			purpose: instruct all associated Cell objects to build their collision fields
+			return: this
+		clear(?arg)
+			purpose: asks contributing cells to clear their displays
+				arg in ['all', 'display', 'base', 'non-base', 'current', 'non-current', 'additionals', 'non-additionals', 'none', CELLNAME, [CELLNAME]]
+			return: this
+		compile(?arg)
+			purpose: asks contributing cells to compile (draw) their displays
+				arg in ['all', 'display', 'base', 'non-base', 'current', 'non-current', 'additionals', 'non-additionals', 'none', CELLNAME, [CELLNAME]]
+			return: this
+		deleteCell(CELLNAME)
+			purpose: remove cell from scrawl library, and delete all references to it
+			return: true on success; false on fail
+		getElement()
+			purpose: get the actual DOM element wrapped by this object
+			return: DOM element object
+		getMouse()
+			purpose: return details of mouseXY coordinates over pad
+			return: {x:XCOORDINATE, y:YCOORDINATE, active:boolean}
+		makeCurrent()
+			purpose: scrawl.currentPad = this.name
+			return: this
+		render(?{clear:arg, compile:arg, show:arg})
+			purpose: combines clear, compile and show functions in a single call
+			return: this
+		setDrawOrder([CELLNAME])
+			purpose: (re)sets the order in which Cells will be drawn onto the display <canvas> in a show() operation
+			return: this
+		show(?arg)
+			purpose: copies base cell onto display cell
+				arg in ['wipe-base', 'wipe-both']
+			return: this
+			
+		getBackfaceVisibility		- from Scrawl3d - scrawl+stack.js only	
+		getComment					- from Scrawl3d
+		getHeight					- from Scrawl3d
+		getLeft						- from Scrawl3d - scrawl+stack.js only	
+		getOverflow					- from Scrawl3d - scrawl+stack.js only	
+		getPerspective				- from Scrawl3d - scrawl+stack.js only	
+		getPerspectiveOrigin		- from Scrawl3d - scrawl+stack.js only	
+		getPitch					- from Scrawl3d - scrawl+stack.js only	
+		getPosition					- from Scrawl3d - scrawl+stack.js only	
+		getRoll						- from Scrawl3d - scrawl+stack.js only	
+		getRotate					- from Scrawl3d - scrawl+stack.js only	
+		getRotateX					- from Scrawl3d - scrawl+stack.js only	
+		getRotateY					- from Scrawl3d - scrawl+stack.js only	
+		getRotateZ					- from Scrawl3d - scrawl+stack.js only	
+		getStartX					- from Scrawl3d - scrawl+stack.js only	
+		getStartY					- from Scrawl3d - scrawl+stack.js only	
+		getTitle					- from Scrawl3d
+		getTop						- from Scrawl3d - scrawl+stack.js only	
+		getTransform				- from Scrawl3d - scrawl+stack.js only	
+		getTransformOrigin			- from Scrawl3d - scrawl+stack.js only	
+		getTransformStyle			- from Scrawl3d - scrawl+stack.js only	
+		getTranslateX				- from Scrawl3d - scrawl+stack.js only	
+		getTranslateY				- from Scrawl3d - scrawl+stack.js only	
+		getTranslateZ				- from Scrawl3d - scrawl+stack.js only	
+		getWidth					- from Scrawl3d
+		getYaw						- from Scrawl3d - scrawl+stack.js only	
+		getZIndex					- from Scrawl3d - scrawl+stack.js only	
+		scaleDimensions				- from Scrawl3d - scrawl+stack.js only	
+		scaleStack					- from Scrawl3d - scrawl+stack.js only	
+		setBackfaceVisibility		- from Scrawl3d - scrawl+stack.js only	
+		setComment					- from Scrawl3d
+		setDelta					- from Scrawl3d - overridden
+		setDisplayOffsets			- from Scrawl3d
+		setHeight					- from Scrawl3d
+		setLeft						- from Scrawl3d - scrawl+stack.js only	
+		setOverflow					- from Scrawl3d - scrawl+stack.js only	
+		setPerspective				- from Scrawl3d - scrawl+stack.js only	
+		setPerspectiveOrigin		- from Scrawl3d - scrawl+stack.js only	
+		setPitch					- from Scrawl3d - scrawl+stack.js only	
+		setPosition					- from Scrawl3d - scrawl+stack.js only	
+		setRoll						- from Scrawl3d - scrawl+stack.js only	
+		setRotate					- from Scrawl3d - scrawl+stack.js only	
+		setRotateX					- from Scrawl3d - scrawl+stack.js only	
+		setRotateY					- from Scrawl3d - scrawl+stack.js only	
+		setRotateZ					- from Scrawl3d - scrawl+stack.js only	
+		setStartX					- from Scrawl3d - scrawl+stack.js only	
+		setStartY					- from Scrawl3d - scrawl+stack.js only	
+		setTitle					- from Scrawl3d
+		setTop						- from Scrawl3d - scrawl+stack.js only	
+		setTransform				- from Scrawl3d - scrawl+stack.js only	
+		setTransformOrigin			- from Scrawl3d - scrawl+stack.js only	
+		setTransformStyle			- from Scrawl3d - scrawl+stack.js only	
+		setTranslateX				- from Scrawl3d - scrawl+stack.js only	
+		setTranslateY				- from Scrawl3d - scrawl+stack.js only	
+		setTranslateZ				- from Scrawl3d - scrawl+stack.js only	
+		setWidth					- from Scrawl3d
+		setYaw						- from Scrawl3d - scrawl+stack.js only	
+		setZIndex					- from Scrawl3d - scrawl+stack.js only	
+		shiftLeft					- from Scrawl3d - scrawl+stack.js only	
+		shiftPosition				- from Scrawl3d - scrawl+stack.js only	
+		shiftTop					- from Scrawl3d - scrawl+stack.js only	
+		
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - not implemented for this object
+		get							- from Scrawl
+		getObjectData				- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+		
+Sprite(dataObject)
+	prototype linked to: SubScrawl
+	not for user instantiation
+		use any sprite factory function
+	
+	purpose ...
+		supplies the common methodology for all Scrawl sprites
+		sets up the attributes for holding a sprite's current state 
+			- position, visibility, rotation, drawing order, context, collision points and zones
+		outlines how sprites should be stamped onto a Cell's canvas
+		provides drag-and-drop functionality
+	
+	note ...
+		Context object attributes can be set via the Sprite (and thus Block, Phrase, Wheel, Picture,
+		Shape) constructor; every sprite object is associated with a Context object
+		
+	used by ...
+		Block, Phrase, Wheel, Picture, Shape objects
+		
+	attributes ...
+		collisionPoints				(['start']) 
+			- in ['all', 'corners', 'edges', 'perimeter', 'endpoints', 'north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', POINTNAME]
+		context						(computer generated CTXNAME)
+		degree						(true) - boolean - true: use degrees to calculate roll; false: use radians
+		fence						(not retained) - boolean - add sprite to target/group Cell's fence group; default: false
+		field						(not retained) - boolean - add sprite to target/group Cell's field group; default: false
+		fieldChannel				('anycolor') - color to be used when checking for collisions on a Cell's collision field
+			- in ['red', 'blue', 'green', 'alpha', 'anycolor']
+		fieldTest					(0) - minimum pass level for Cell collision field tests (0-255)
+		group						(false) - GROUPNAME - sprite's default group
+		method						(null) 
+			- in ['draw', 'fill', 'drawFill', 'fillDraw', 'floatOver', 'sinkInto', 'clear', 'none']
+		order						(0) - number - compilation order
+		roll						(0) - number - angle for rotating sprite
+		rollable					(true) - boolean - false surpresses a sprite's attempt to rotate the cell's canvas
+		target						(not retained) - alias for group
+		visibility					(true) - boolean - true on visible; false otherwise
+		
+		fillStyle					(retained by Context object; can be changed via set())
+		font						(retained by Context object; can be changed via set())
+		globalAlpha					(retained by Context object; can be changed via set())
+		globalCompositeOperation	(retained by Context object; can be changed via set())
+		lineCap						(retained by Context object; can be changed via set())
+		lineJoin					(retained by Context object; can be changed via set())
+		lineWidth					(retained by Context object; can be changed via set())
+		miterLimit					(retained by Context object; can be changed via set())
+		shadowOffsetX				(retained by Context object; can be changed via set())
+		shadowOffsetY				(retained by Context object; can be changed via set())
+		shadowBlur					(retained by Context object; can be changed via set())
+		shadowColor					(retained by Context object; can be changed via set())
+		strokeStyle					(retained by Context object; can be changed via set())
+		textAlign					(retained by Context object; can be changed via set())
+		textBaseline				(retained by Context object; can be changed via set())
+
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Sprite'
+		prototype.classname 		= 'spritenames'
+		
+	functions ...
+		addCollisionPoints(POINTNAME||[POINTNAME])
+			purpose: adds a set of collision points to the Sprite.collisionPoints attribute
+			return: this
+		addSpriteToCellFences(?CELLNAME||[CELLNAME])
+			purpose: adds the sprite to the given cell's _fence group
+			return: this
+		addSpriteToCellFields(?CELLNAME||[CELLNAME])
+			purpose: adds the sprite to the given cell's _field group
+			return: this
+		checkField({x:XCOORDINATE, y:YCOORDINATE, ?test:number, ?channel:arg, cell:CELLNAME}, ?{x:number, y:number})
+			purpose: sprite checks its getStartXY values against a cell's field array
+				arg in ['red', 'green', 'blue', 'alpha', 'anycolor']
+			return: true/false
+		dropSprite(?arg)
+			purpose: assign pivot to arg, or null
+				arg in [POINTNAME, SPRITENAME, 'mouse']
+			return: this
+		forceStamp(arg)
+			purpose: compile sprite onto a Cell <canvas> element, regardless of visibility attribute
+				arg in ['clear', 'draw', 'fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver', 'clip', 'none']
+			return: this
+		getObjectData()
+			purpose: return object in preparation for saving it using scrawl.save()
+			return: {type:TYPE, name:STRING, object:this, context:context.getObjectData(), timestamp:DATE}
+		pickupSprite({x:XCOORDINATE, y:YCOORDINATE})
+			purpose: assign pivot to 'mouse'
+			return: this
+		removeCollisionPoints(POINTNAME||[POINTNAME])
+			purpose: deletes a set of collision points from the Sprite.collisionPoints attribute
+			return: this
+		removeSpriteFromCellFences(?CELLNAME||[CELLNAME])
+			purpose: removes the sprite from the given cell's _fence group
+			return: this
+		removeSpriteFromCellFields(?CELLNAME||[CELLNAME])
+			purpose: removes the sprite from the given cell's _field group
+			return: this
+		setDelta(dataObject)		- overrides Scrawl.setDelta()
+			purpose: adds values to given attribute's current value
+				arg object can include: {startX, startY, handleX, handleY, width, height, radius, scale, roll, startAngle, endAngle, copyX, copyY, copyWidth, copyHeight}
+			return: this
+		stamp = function(item){
+			purpose: compile sprite onto a Cell <canvas> element (if visibility===true)
+				arg in ['clear', 'draw', 'fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver', 'clip', 'none']
+			return: this
+		swap()
+			purpose: swap a Sprite's stroke color with its fill color
+			return: this
+
+		~ clearShadow(canvasContextObject, CELLNAME)
+			purpose: helper function - calls Cell.clearShadow()
+			return: this
+		~ getAngle(number)
+			purpose: calculate effective angle (for Wheel and Shape sprites)
+			return: value
+		~ getGroup({?target:GROUPNAME, ?group:GROUPNAME})
+			purpose: resolves 'target' arguments for Sprite.group attribute
+			return: GROUPNAME
+		~ parseCollisionPoints(?[arg])
+			purpose: convert user-entered strings into Sprite.collisionPoint strings
+				arg in ['all', 'corners', 'edges', 'perimeter', 'north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', POINTNAME]
+			return: this
+		~ rotateCell(canvasContextObject, CELLNAME)
+			purpose: helper function - used to roll Block, Phrase, Picture sprites
+			return: this
+		~ unrotateCell(canvasContextObject, CELLNAME)
+			purpose: helper function - used to roll Block, Phrase, Picture sprites
+			return: this
+		
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - overridden
+		get							- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+
+Phrase(dataObject)
+	prototype linked to: Sprite
+	can be instantiated directly - new Phrase()
+		use scrawl.newPhrase()
+	
+	purpose ...
+		defines single-line text objects for displaying on a Cell's canvas
+		handles all related font functionality
+		performs text drawing operations on canvases
+		
+	attributes ...
+		family						('sans-serif') - string - font names
+		metrics						('pt') - string - metrics suffix
+		size						(12) - number - font size
+		style						('normal') - in CSS font-style
+		text						('') - string - text to be displayed
+		variant						('normal') - in CSS font-variant
+		weight						('normal') - in CSS font-weight
+		
+		fillStyle					- Context
+		font						- Context
+		globalAlpha					- Context
+		globalCompositeOperation	- Context
+		lineCap						- Context (not relevant)
+		lineJoin					- Context (not relevant)
+		lineWidth					- Context (not relevant)
+		miterLimit					- Context (not relevant)
+		shadowOffsetX				- Context
+		shadowOffsetY				- Context
+		shadowBlur					- Context
+		shadowColor					- Context
+		strokeStyle					- Context
+		textAlign					- Context
+		textBaseline				- Context
+
+		collisionPoints				- from Sprite
+		context						- from Sprite
+		degree						- from Sprite
+		fence						- from Sprite
+		field						- from Sprite
+		fieldChannel				- from Sprite
+		fieldTest					- from Sprite
+		group						- from Sprite
+		method						- from Sprite
+		order						- from Sprite
+		roll						- from Sprite
+		rollable					- from Sprite
+		target						- from Sprite
+		visibility					- from Sprite
+		
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Phrase'
+		prototype.classname 		= 'spritenames'
+		
+	functions ...
+		~ checkFont()
+			purpose: checks what sort of font action the constructor needs to take
+			return: this
+		~ checkHit({x:XCOORDINATE, y:YCOORDINATE}, ?{x:number, y:number})
+			purpose: calculate whether a given coordinate falls within sprite's hit zone
+			return: true on hit; false otherwise
+		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fillText with rgba(0,0,0,0)
+			return: this
+		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform clip operation on Cell canvas
+			return: this
+		~ constructFont()
+			purpose: builds a regularised context.font string from other attributes
+			return: this
+		~ deconstructFont()
+			purpose: parses the context.font string and extracts data (style, variant, weight, size, metrics, family)
+			return: this
+		~ draw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeText
+			return: this
+		~ drawFill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeText, fillText
+			return: this
+		~ fill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fillText
+			return: this
+		~ fillDraw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeText, fillText
+			return: this
+		~ floatOver(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeText, fillText
+			return: this
+		~ getCollisionPoints(?{x:number, y:number})
+			purpose: convert .collisionPoints strings into current xy coordinates
+			return: array of {x:value, y:value} coordinates
+		~ getCorners(?{x:number, y:number})
+			purpose: calculate phrase dimensions - helper function
+			return: this
+		~ getMetrics(?CELLNAME)
+			purpose: calculate Phrase width, and estimate its height
+			return: this
+		~ sinkInto(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fillText, strokeText
+			return: this
+			
+		addCollisionPoints			- from Sprite
+		addSpriteToCellFences		- from Sprite
+		addSpriteToCellFields		- from Sprite
+		checkField					- from Sprite
+		dropSprite					- from Sprite
+		forceStamp					- from Sprite
+		getObjectData				- from Sprite
+		pickupSprite				- from Sprite
+		removeCollisionPoints		- from Sprite
+		removeSpriteFromCellFences	- from Sprite
+		removeSpriteFromCellFields	- from Sprite
+		setDelta					- from Sprite
+		stamp						- from Sprite
+		swap						- from Sprite
+
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - overridden
+		get							- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+		
+Block(dataObject)
+	prototype linked to: Sprite
+	can be instantiated directly - new Block()
+		use scrawl.newBlock()
+	
+	purpose ...
+		defines 'rect' objects for displaying on a Cell's canvas
+		performs 'rect' based drawing operations on canvases
+		
+	attributes ...
+		height						(0) - number (px)
+		width						(0) - number (px)
+		
+		fillStyle					- Context
+		font						- Context (not relevant)
+		globalAlpha					- Context
+		globalCompositeOperation	- Context
+		lineCap						- Context
+		lineJoin					- Context
+		lineWidth					- Context
+		miterLimit					- Context
+		shadowOffsetX				- Context
+		shadowOffsetY				- Context
+		shadowBlur					- Context
+		shadowColor					- Context
+		strokeStyle					- Context
+		textAlign					- Context (not relevant)
+		textBaseline				- Context (not relevant)
+
+		collisionPoints				- from Sprite
+		context						- from Sprite
+		degree						- from Sprite
+		fence						- from Sprite
+		field						- from Sprite
+		fieldChannel				- from Sprite
+		fieldTest					- from Sprite
+		group						- from Sprite
+		method						- from Sprite
+		order						- from Sprite
+		roll						- from Sprite
+		rollable					- from Sprite
+		target						- from Sprite
+		visibility					- from Sprite
+		
+		handleX 					- from SubScrawl - also accepts strings: 'left', 'center', 'right'
+		handleY 					- from SubScrawl - also accepts strings: 'top', 'center', 'bottom'
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Block'
+		prototype.classname 		= 'spritenames'
+		
+	functions ...
+		~ checkHit({x:XCOORDINATE, y:YCOORDINATE}, ?{x:number, y:number})
+			purpose: calculate whether a given coordinate falls within sprite's hit zone
+			return: true on hit; false otherwise
+		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform clearRect
+			return: this
+		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform clip
+			return: this
+		~ draw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeRect
+			return: this
+		~ drawFill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeRect, fillRect
+			return: this
+		~ fill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fillRect
+			return: this
+		~ fillDraw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeRect, fillRect
+			return: this
+		~ floatOver(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeRect, fillRect
+			return: this
+		~ getCollisionPoints(?{x:number, y:number})
+			purpose: convert .collisionPoints strings into current xy coordinates
+			return: array of {x:value, y:value} coordinates
+		~ getEndX(?{x:number, y:number})
+			purpose: calculate bottom right x coordinate
+			return: number
+		~ getEndY(?{x:number, y:number})
+			purpose: calculate bottom right y coordinate
+			return: number
+		~ getHeight(?{x:number, y:number})
+			purpose: calculate apparent height
+			return: number
+		~ getWidth(?{x:number, y:number})
+			purpose: calculate apparent width
+			return: number
+		~ sinkInto(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fillRect, strokeRect
+			return: this
+			
+		addCollisionPoints			- from Sprite
+		addSpriteToCellFences		- from Sprite
+		addSpriteToCellFields		- from Sprite
+		checkField					- from Sprite
+		dropSprite					- from Sprite
+		forceStamp					- from Sprite
+		getObjectData				- from Sprite
+		pickupSprite				- from Sprite
+		removeCollisionPoints		- from Sprite
+		removeSpriteFromCellFences	- from Sprite
+		removeSpriteFromCellFields	- from Sprite
+		setDelta					- from Sprite
+		stamp						- from Sprite
+		swap						- from Sprite
+
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - overridden
+		get							- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+		
+Wheel(dataObject)
+	prototype linked to: Sprite
+	can be instantiated directly - new Wheel()
+		use scrawl.newWheel()
+	
+	purpose ...
+		defines 'arc' objects for displaying on a Cell's canvas
+		performs 'arc' based drawing operations on canvases
+		
+	attributes ...
+		checkHitUsingRadius			(true) - boolean - true to use radius collision detection; false to use isPointInPath
+		clockwise					(false) - boolean - true for anti-clockwise (I think)
+		closed						(true) - boolean - true for full circle
+		endAngle					(360) - number - angle in degrees or radians
+		includeCenter				(false) - boolean - true for wedges; false by default
+		radius						(0) - number (px)
+		startAngle					(0) - number - angle in degrees or radians
+		
+		fillStyle					- Context
+		font						- Context (not relevant)
+		globalAlpha					- Context
+		globalCompositeOperation	- Context
+		lineCap						- Context
+		lineJoin					- Context (not relevant)
+		lineWidth					- Context
+		miterLimit					- Context (not relevant)
+		shadowOffsetX				- Context
+		shadowOffsetY				- Context
+		shadowBlur					- Context
+		shadowColor					- Context
+		strokeStyle					- Context
+		textAlign					- Context (not relevant)
+		textBaseline				- Context (not relevant)
+
+		collisionPoints				- from Sprite
+		context						- from Sprite
+		degree						- from Sprite
+		fence						- from Sprite
+		field						- from Sprite
+		fieldChannel				- from Sprite
+		fieldTest					- from Sprite
+		group						- from Sprite
+		method						- from Sprite
+		order						- from Sprite
+		roll						- from Sprite
+		rollable					- from Sprite
+		target						- from Sprite
+		visibility					- from Sprite
+		
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Wheel'
+		prototype.classname 		= 'spritenames'
+		
+	functions ...
+		~ buildPath(DOMCanvasContextObject, ?{x:number, y:number})
+			purpose: builds the wheel path
+			return: this
+		~ checkHit({x:XCOORDINATE, y:YCOORDINATE, ?test:number}, ?{x:number, y:number})
+			purpose: calculate whether a given coordinate falls within sprite's hit zone
+			return: true on hit; false otherwise
+		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform arc, fill
+			return: this
+		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform clip
+			return: this
+		~ draw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform arc, stroke
+			return: this
+		~ drawFill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform arc, stroke, fill
+			return: this
+		~ fill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform arc, fill
+			return: this
+		~ fillDraw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform arc, fill, stroke
+			return: this
+		~ floatOver(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform arc, stroke, fill
+			return: this
+		~ getCollisionPoints(?{x:number, y:number})
+			purpose: convert .collisionPoints strings into current xy coordinates
+			return: array of {x:value, y:value} coordinates
+		~ sinkInto(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform arc, fill, stroke
+			return: this
+
+		addCollisionPoints			- from Sprite
+		addSpriteToCellFences		- from Sprite
+		addSpriteToCellFields		- from Sprite
+		checkField					- from Sprite
+		dropSprite					- from Sprite
+		forceStamp					- from Sprite
+		getObjectData				- from Sprite
+		pickupSprite				- from Sprite
+		removeCollisionPoints		- from Sprite
+		removeSpriteFromCellFences	- from Sprite
+		removeSpriteFromCellFields	- from Sprite
+		setDelta					- from Sprite
+		stamp						- from Sprite
+		swap						- from Sprite
+
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - overridden
+		get							- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+		
+Picture(dataObject){
+	prototype linked to: Sprite
+	can be instantiated directly - new Picture()
+		use scrawl.newPicture()
+	
+	purpose ...
+		defines rectangular image-based objects for displaying on a Cell's canvas
+		used to display both static and sprite sheet image animations
+		links to details of an image's data; can use image data (rgba data) during collision detection
+		can handle video input (experimental)
+		performs 'rect' and 'drawImage' drawing operations on canvases
+		
+	attributes ...
+		animSheet					(false) - ANIMSHEETNAME
+		checkHitUsingImageData		(false) - boolean - use image data when checking for hits
+		copyHeight					(source image copyHeight||AnimSheet frame h||cell copyHeight)
+		copyWidth					(source image copyWidth||AnimSheet frame w||cell copyWidth)
+		copyX						(source image copyX||AnimSheet frame x||cell copyX)
+		copyY						(source image copyY||AnimSheet frame y||cell copyY)
+		height						(source image height||AnimSheet frame h||cell height)
+		imageData					(false) - IMAGEDATANAME
+		imageDataChannel			('alpha') - in ['red', 'green', 'blue', 'alpha']
+		keepCopyDimensions			(true) - boolean - used only in cloning operations
+		source 						(false) - IMAGENAME
+		width						(source image width||AnimSheet frame w||cell width)
+
+		~ imageType					(computer generated)
+
+		fillStyle					- Context
+		font						- Context (not relevant)
+		globalAlpha					- Context
+		globalCompositeOperation	- Context
+		lineCap						- Context
+		lineJoin					- Context
+		lineWidth					- Context
+		miterLimit					- Context
+		shadowOffsetX				- Context
+		shadowOffsetY				- Context
+		shadowBlur					- Context
+		shadowColor					- Context
+		strokeStyle					- Context
+		textAlign					- Context (not relevant)
+		textBaseline				- Context (not relevant)
+
+		collisionPoints				- from Sprite
+		context						- from Sprite
+		degree						- from Sprite
+		fence						- from Sprite
+		field						- from Sprite
+		fieldChannel				- from Sprite
+		fieldTest					- from Sprite
+		group						- from Sprite
+		method						- from Sprite
+		order						- from Sprite
+		roll						- from Sprite
+		rollable					- from Sprite
+		target						- from Sprite
+		visibility					- from Sprite
+		
+		handleX 					- from SubScrawl - also accepts strings: 'left', 'center', 'right'
+		handleY 					- from SubScrawl - also accepts strings: 'top', 'center', 'bottom'
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		prototype.type 				= 'Picture'
+		prototype.classname 		= 'spritenames'
+		
+	functions ...
+		getImage(arg)
+			purpose: get data of current animation frame or image to be displayed
+				arg in ['forward', 'backward', 'complete', 'pause', 'end', 'loop', 'reverse']
+			return: image source object
+		getImageData()
+			purpose: generate image data for the Picture
+			return: this
+		getImageDataValue({x:XCOORDINATE, y:YCOORDINATE, ?channel:arg}, ?{x:number, y:number})
+			purpose: get a value from an image data table
+				arg in ['red', 'green', 'blue', 'alpha', 'color']
+			return: value at coordinates x,y (depending on channel)
+		getObjectData()
+			purpose: return object in preparation for saving it using scrawl.save()
+			return: {type:TYPE, name:STRING, object:this, image:image.getObjectData(), context:context.getObjectData(), timestamp:DATE}
+			
+		~ checkHit({x:XCOORDINATE, y:YCOORDINATE, ?test:number, ?channel:arg}, ?{x:number, y:number})
+			purpose: calculate whether a given coordinate falls within sprite's hit zone
+				arg in ['red', 'green', 'blue', 'alpha']
+			return: true on hit; false otherwise
+		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform clearRect
+			return: this
+		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform clip
+			return: this
+		~ draw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeRect
+			return: this
+		~ drawFill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeRect, drawImage
+			return: this
+		~ fill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform drawImage
+			return: this
+		~ fillDraw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform drawImage, strokeRect
+			return: this
+		~ fitToImageSize()
+			purpose: resets width and height to actual source image dimensions
+			return: this
+		~ floatOver(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform strokeRect, drawImage
+			return: this
+		~ getCollisionPoints(?{x:number, y:number})
+			purpose: convert .collisionPoints strings into current xy coordinates
+			return: array of {x:value, y:value} coordinates
+		~ getEndX(?{x:number, y:number})
+			purpose: calculate bottom right x coordinate
+			return: number
+		~ getEndY(?{x:number, y:number})
+			purpose: calculate bottom right y coordinate
+			return: number
+		~ getHeight(?{x:number, y:number})
+			purpose: calculate apparent height
+			return: number
+		~ getWidth(?{x:number, y:number})
+			purpose: calculate apparent width
+			return: number
+		~ sinkInto(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform drawImage, strokeRect
+			return: this
+		~ sourceImage()
+			purpose: determine whether an image comes from an <img> or <canvas> element, or is an AnimSheet
+			return: string - 'img'||'canvas'||'animation'
+		
+		addCollisionPoints			- from Sprite
+		addSpriteToCellFences		- from Sprite
+		addSpriteToCellFields		- from Sprite
+		checkField					- from Sprite
+		dropSprite					- from Sprite
+		forceStamp					- from Sprite
+		pickupSprite				- from Sprite
+		removeCollisionPoints		- from Sprite
+		removeSpriteFromCellFences	- from Sprite
+		removeSpriteFromCellFields	- from Sprite
+		setDelta					- from Sprite
+		stamp						- from Sprite
+		swap						- from Sprite
+
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - overridden
+		get							- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl
+		
+Shape(dataObject)
+	prototype linked to: Sprite
+	can be instantiated directly - new Shape()
+		for regular shapes, lines and curves, use: 
+			scrawl.makeLine() - straight lines
+			scrawl.makeBezier() - cubic bezier curves
+			scrawl.makeEllipse() - ellipses and circles
+			scrawl.makeQuadratic() - quadratic bezier curves
+			scrawl.makeRectangle() - for rectangles with rounded corners
+			scrawl.makeRegularShape() - triangles, pentangles (stars), pentagons, etc
+		for more complex shapes, use scrawl.newShape() in combination with:
+			scrawl.makeCartesianPoints()
+			scrawl.makePolarPoints()
+			scrawl.newPoint()
+			scrawl.newLink()
+	
+	purpose ...
+		defines a sprite composed of lines, quadratic and bezier curves, etc
+		holds state data for the sprite in both polar and cartesian coordinates
+		makes use of, but doesn't contain, Point and Link objects to define the sprite
+		is NOT a form of SVG wrapper
+		uses various methods to draw sprite onto a Cell's canvas
+		
+	attributes ...
+		checkHitUsingRadius			(false) - boolean - true for radius collision detection; false otherwise
+		firstPoint					(false) - POINTNAME
+		linkDurations 				([]) - holds array of Link lengths
+		linkList					([]) - holds array of LINKNAMEs
+		perimeterLength 			(false) - number - total length of Shape's visible Link objects
+		pointList 					([]) - holds array of POINTNAMEs
+
+		fillStyle					- Context
+		font						- Context (not relevant)
+		globalAlpha					- Context
+		globalCompositeOperation	- Context
+		lineCap						- Context
+		lineJoin					- Context
+		lineWidth					- Context
+		miterLimit					- Context
+		shadowOffsetX				- Context
+		shadowOffsetY				- Context
+		shadowBlur					- Context
+		shadowColor					- Context
+		strokeStyle					- Context
+		textAlign					- Context (not relevant)
+		textBaseline				- Context (not relevant)
+
+		collisionPoints				- from Sprite
+		context						- from Sprite
+		degree						- from Sprite
+		fence						- from Sprite
+		field						- from Sprite
+		fieldChannel				- from Sprite
+		fieldTest					- from Sprite
+		group						- from Sprite
+		method						- from Sprite
+		order						- from Sprite
+		roll						- from Sprite
+		rollable					- from Sprite
+		target						- from Sprite
+		visibility					- from Sprite
+		
+		handleX 					- from SubScrawl
+		handleY 					- from SubScrawl
+		moveHandleX 				- from SubScrawl
+		moveHandleY 				- from SubScrawl
+		moveStartX 					- from SubScrawl
+		moveStartY 					- from SubScrawl
+		pivot						- from SubScrawl
+		scale 						- from SubScrawl
+		startX 						- from SubScrawl
+		startY 						- from SubScrawl
+		
+		addPathRoll					- from SubScrawl
+		movePathPosition			- from SubScrawl
+		path 						- from SubScrawl
+		pathPosition				- from SubScrawl
+		pathRoll					- from SubScrawl
+		pathSpeedConstant			- from SubScrawl
+
+		comment						- from Scrawl
+		name 						- from Scrawl
+		timestamp					- from Scrawl
+		title						- from Scrawl
+
+		~ closed					(true) -helper attribute
+		~ radius					(false) - distance between startXY coordinates and furthest point (computer generated)
+
+		prototype.type 				= 'Shape'
+		prototype.classname 		= 'spritenames'
+		
+	functions ...
+		getObjectData()
+			purpose: return object in preparation for saving it using scrawl.save()
+			return: {type:TYPE, name:STRING, object:this, context:Context.getObjectData(), 
+							points:[Point.getObjectData()], links:[Link.getObjectData()], timestamp:DATE}
+		setStartTo(XOFFSET, YOFFSET)
+			purpose: moves the sprite's startXY point
+			return: nothing at the moment
+		setStartTo({x:XOFFSET, y:YOFFSET})
+			purpose: moves the sprite's startXY point
+			return: nothing at the moment
+
+		~ buildPositions()
+			purpose: helper function used to calculate .linkDurations values
+			return: this
+		~ checkHit({x:XCOORDINATE, y:YCOORDINATE, ?test:number}, ?{x:number, y:number})
+			purpose: calculate whether a given coordinate falls within sprite's hit zone
+			return: true on hit; false otherwise
+		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fill with color(rgba(0,0,0,0))
+			return: this
+		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform clip
+			return: this
+		~ draw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform stroke
+			return: this
+		~ drawFill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform stroke, fill
+			return: this
+		~ fill(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fill
+			return: this
+		~ fillDraw(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fill, stroke
+			return: this
+		~ floatOver(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform stroke, fill
+			return: this
+		~ getCollisionPoints		- uses Wheel.getCollisionPoints()
+		~ getPerimeterLength(bool)
+			purpose: if necessary (re)calculates, otherwise returns, .perimeterLength
+			return: .perimeterLength
+		~ getPerimeterPosition(number, var1, var2)
+			purpose: returns the coordinates and pathRoll value for a given distance point (from start) on the perimeter
+				number - between 0 and 1
+				var1 - boolean - on false, uses midline calculations; on true, uses distance travelled calculations
+				var2 - boolean - true to calculate pathRoll value
+			return: {x:COORDINATE, y:COORDINATE, r:PointRoll value}
+		~ getRadius(boolean)
+			purpose: calculate the Shape object's effective radius
+			return: radius value - also stores value in Shape.radius attribute
+		~ none(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: update Sprite attributes without compiling to cell
+			return: this
+		~ parseCollisionPoints(?[arg])
+			purpose: convert user-entered strings into Sprite.collisionPoint strings
+				arg in ['all', 'corners', 'edges', 'perimeter', 'endpoints', 'north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', POINTNAME]
+			return: this
+		~ prepareShape(DOMCanvasContextObject, ?{x:number, y:number})
+			purpose: starts path and asks links to complete it; beginPath(), moveTo()
+			return: passes on Link.sketch() return
+		~ sinkInto(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fill, stroke
+			return: this
+
+		addCollisionPoints			- from Sprite
+		addSpriteToCellFences		- from Sprite
+		addSpriteToCellFields		- from Sprite
+		checkField					- from Sprite
+		dropSprite					- from Sprite
+		forceStamp					- from Sprite
+		pickupSprite				- from Sprite
+		removeCollisionPoints		- from Sprite
+		removeSpriteFromCellFences	- from Sprite
+		removeSpriteFromCellFields	- from Sprite
+		setDelta					- from Sprite - overridden
+		stamp						- from Sprite
+		swap						- from Sprite
+
+		exchange 					- from SubScrawl
+		getStartX 					- from SubScrawl
+		getStartY 					- from SubScrawl
+		moveHandle 					- from SubScrawl
+		moveStart 					- from SubScrawl
+		reverse 					- from SubScrawl
+		
+		clone						- from Scrawl - overridden
+		get							- from Scrawl
+		set							- from Scrawl - overridden
+		toString					- from Scrawl

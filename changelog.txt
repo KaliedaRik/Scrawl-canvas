@@ -1,0 +1,2096 @@
+/***********************************************************************************
+* SCRAWL.JS Library 
+* SCRAWL+STACK.JS Library 
+*
+*	version 0.302 - 31 August 2013
+*	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
+*
+*   Scrawl demo website: http://scrawl.rikweb.org.uk
+*
+***********************************************************************************/
+
+Topics that I want|need to look at (in no particular order) ...
+------------------------------------------------------------------------------------
+- user accessibility issues
+- controlling videos in Picture sprites?
+- saving canvas as images (most probably via server)
+- (close to) real-time canvas editing across a network???
+
+
+CHANGE LOG
+------------------------------------------------------------------------------------
+130831
+	- created two files
+		- scrawl.js contains all the core functionality for drawing on canvases
+		- scrawl+stack.js is the full API, including stacks
+		- going to be issues about keeping both files in sync
+			- but taking out the stack stuff makes scrawl.js a smaller file (thus more competitive?)
+	- updated affected demos
+	- moved to version 0.302
+	- updated documentation
+	- updated tutorial page
+	- updated website
+	- uploaded to Sourceforge
+	
+130830
+	- complete overhaul of Pattern object
+		- now loads images supplied as a .source attribute (rather than being pre-loaded) correctly
+			- does lead to a timelag due to the use of an .onload() function
+			- timelag is solved if sprites using the pattern are part of an animation loop
+		- override the .clone() function to do a basic construction, not using any of the existing element's attributes
+			- utter cheating, but cloning leads to big problems for Patterns
+			- will eventually get rid of the .clone() altogether, once been through all demos to remove Pattern clones
+		-rewrote demo040, for the testing of stuff
+	- NEED to look at loading Picture images in similar manner
+		- at the moment, all images need to be preloaded before they can be used with Picture sprites
+		- not that it causes much of a problem for my demos, but people will be people ...
+	- saving and loading of sprites
+		- new scrawl functions - scrawl.load(), scrawl.save()
+			- saving the sprites puts a JSON string in the scrawl.object part of the library
+			- copy that string out to a DOM element and use scrawl.load(getElementById(elementID).innerHTML, function());
+			- Scrawl will reconstruct sprites (including Picture and Pattern images) from string and carry on as normal!
+		- new Scrawl.timestamp attribute
+			- so every object gets a timestamp on creation
+			- added because I have some vague ideas about comparing objects so changes can be sent over a network??
+				- can always be removed later if nothing comes of the idea
+		- new Sprite.getObjectData() function used with the scrawl.save()
+			- overridden by Pattern, Scrawl, Shape, Picture - they have special needs
+		- new Image.getImageData()
+			- returns image data in toDataURL() format (always .png)
+		- save/load only deals with sprites and stuff associated with sprites
+			- eg Point, Link, both gradients, Pattern, Image, AnimSheet, Group
+			- not touching Cells or above!
+		- NEED to include a new section in the tutorial to cover all this stuff - but where? 
+			- don't want it near the top - not that important ...
+	- RENAME: Image object becomes ScrawlImage
+		- obvious conflict with JavaScript's "new Image()" command
+	- adapted some demos (096-101 - will be renumbered later) to test the new functionality
+		- all but one (finally) works as expected in Firefox
+		- 098 - colour at mouse cursor - data tables not triggering on initial load, page has to be refreshed
+	- updated documentation
+	- updated Patterns section of tutorial
+	
+130829
+	- investigating the loading and saving of stuff ...
+	
+130828
+	- fixed new Shape factories
+		- render speeds vastly improved
+	- fixed bug in Point constructor
+		- was stopping demo045 from working
+	- coded demo104 - remake of the carousel, using an ellipse and paths as the carousel frame
+	- looking at tangents on path
+		- current most annoying bugs: 
+			- can't set .path attribute for Shape factories which use scrawl.makeCartesianPoints 
+				- (.makeLine(), .makeQuadratic(), .makeBezier(), .makeEllipse(), .makeRectangle())
+				- temporary fix: set .path attribute on sprite after it is created
+			- animating things round an ellipse Shape leads to flickering where the ellipse curves join
+				- temporary fix: add a tiny amount to the initial pathPosition eg 0.6000005 instead of 0.6
+		- added:
+			SubScrawl.pathRoll - path rotation value (degrees)
+			SubScrawl.addPathRoll - boolean: true to add the path roll value; false by default
+		- updates to:
+			Sprite.getAngle(), Sprite.stamp(), Sprite.rotateCell(), Sprite.unrotateCell(), Point.recalculate()
+		- done
+			- all sprite types will now rotate along their paths
+	- rough tests for scaling paths
+		- seems to work in demos; not fully investigated
+	- updated documentation
+	- updated tutorial
+	- moved to version 0.301
+	- updated website
+	- uploaded new version to SourceForge
+
+130827
+	- finalised initial work on path animation - the complete list of revisions is:
+		- new Shape attributes and functions:
+			.pointList - holds array of POINTNAMEs
+			.linkList - holds array of LINKNAMEs for line, quadratic and bezier Link.species
+			.linkDurations - array of Link lengths
+			.perimeterLength - total length of Shape's visible Link objects
+			.getPerimeterLength(bool)
+				- if necessary (re)calculates, otherwise returns, .perimeterLength
+				- if bool set to true, triggers recalculation
+			.buildPositions()
+				- helper function used to calculate .linkDurations values
+			.getPerimeterPosition(number, var1, var2)
+				- number between 0 and 1 - distance from first Link's start point to where measurement is to be taken
+				- var1: boolean - false, uses midline calculations; true, uses distance travelled calculations
+					- setting boolean to true will force sprite animated along path to show a constant speed
+				- var2: boolean - true to calculate pathRoll value
+				- returns {x:COORDINATE, y:COORDINATE, r:number} - r = pathRoll value
+		- amended Link and Point constructors to add references to their Shape's .pointList and .linkList attributes
+		- added new .set() functions to Link and Point, to add/delete references to Shape.pointList, .linkList
+		- new Link attributes and functions:
+			.sprite - SPRITENAME, specifically the Link's .startPoint Point's .sprite value
+			.length - Link's current calculated length
+				- if set to true in constructor, will calculate initial length
+				- NOT to be used for setting a Link's length!
+			.precision - number of segments used for calculating length; default: 100
+			.positions - array of JavaScript objects describing end points for each generated segment
+				- if set to true in constructor, will calculate initial segment lengths/coordinates
+				- .positions[0] is the Link's .startPoint coordinates
+				- object in the form of {
+					x: segment end x coordinate, 
+					y: segment end y coordinate, 
+					length: segment length,
+					cumulativeLength: length of all segments up-to-and-including this segment,
+					}
+			.pointOnLine(origin coordinate, destination coordinate, number between 0 and 1)
+				- helper function
+			.getPointCoordinates()
+				- another helper function 
+					- returns object {
+						start: {x: value, y: value}, 
+						end: {x: value, y: value},
+						control1: {x: value, y: value},
+						control2: {x: value, y: value}
+						}
+			.getPositionOnLink(number)
+				- uses midline calculations
+				- where number is between 0 and 1 - distance along Link's bezier lines to be used for generating coordinates
+					- returns object {x: value, y: value}
+			.getSteadyPositionOnLink(number)
+				- uses distance travelled calculations
+				- where number is between 0 and 1 - distance along Link to be used for generating coordinates
+					- returns object {x: value, y: value}
+			.getLength()
+				- helper function
+					- triggers this.setPositions()
+					- returns Link's current length
+			.setPositions(number)
+				- calculates segment details, stored as object in Link.positions array
+				- number represents (uses and/or sets) the Link.precision attribute
+		- demos 96-100 for testing new routines finalised
+		- added new attributes to SubScrawl:
+			.path - SPRITENAME
+			.pathPosition - number between 0 and 1
+			.movePathPosition - (very small) number between 0 and 1
+			.pathSpeedConstant - boolean - true for constant speed
+			- can now very easily associate a sprite to a Shape sprite's path, for animation
+			- amended SubScrawl.moveStart()
+				- can now take 'path' value to 'automagically' advance sprite along path
+				- no argument - does moveStart for .startX, .startY and .pathPosition
+			- amended Scrawl.stamp()
+				- will use .path value (if valid) in place of .startXY
+					- pivot still has precedence (for drag and drop, etc)
+			- various temporary demos to test coding
+				- works!
+	- added new Shape factories:
+		- scrawl.makeEllipse()
+			- produces ellipse Shapes
+				- makes use of .radiusX, .radiusY attributes (not retained) to build ellipse
+		- scrawl.makeRectangle()
+			- produces rectangles with rounded corners
+				- makes use of .width, .height to determine full width and height of sprite (not retained)
+				- for corners (not retained):
+					.radiusTopLeftX, .radiusTopLeftY, .radiusTopRightX, .radiusTopRightY
+					.radiusBottomRightX, .radiusBottomRightY, .radiusBottomLeftX, .radiusBottomLeftY
+					.radiusTopLeft, .radiusTopRight, .radiusBottomRight, .radiusBottomLeft
+					.radiusTopX, .radiusTopY, .radiusBottomX, .radiusBottomY
+					.radiusLeftX, .radiusLeftY, .radiusRightX, .radiusRightY
+					.radiusTop, .radiusBottom
+					.radiusRight, .radiusLeft
+					.radiusX, .radiusY
+					.radius
+		- ISSUE - these new factory shapes are animating very slowly
+
+130826
+	- continuing work on path animation
+		- hopefully will also lead to a new sprite factory - Oval (or Egg)
+	
+130825
+	- started work on implementing functionality to allow a sprite to animate along a Shape path
+		- lots of research on understanding maths behind bezier curves
+		- began to add attributes and functions to Line object
+		
+130824
+	- tracked down and fixed a serious bug in scrawl.deleteSprite()
+		- function wasn't deleting sprite context objects
+		
+130822
+	- minor bug fixes
+	
+130820
+	- tutorial page updates
+		- Groups section completed
+		- Sprite collision zones section - completed
+		- At-coordinate collisions section - completed
+		- Field collision section - completed
+		- Demos index - completed
+		- updated demos: 47, 60, 63, 64, 65, 66, 68, 69, 71, 72, 73, 74, 75, 76, 77, 78, 79, 84
+		- removed demos: 30, 61, 62 (blank), 67, 70, 88, 90
+	- update Scrawl.js to v0.300
+		- remove (beta) tag!
+	- test index and tutorial pages, and all remaining demos, in browsers (on fast PC)
+		- Safari for Windows (v5.1.7)
+			- index page: works to spec; very slow
+			- tutorial page: all loads fine
+			- demo failures:
+				029 - no cat
+				085 - broken - no video, no shuffling
+				general - animations a bit slow and jerky
+		- Internet Explorer (v10)
+			- index page: works to spec
+			- tutorial page: all loads fine
+			- demo failures:
+				028 - backface-visibility fail
+				087 - cube is flat, only one side shows
+				085 - video doesn't display
+				034 - clock fine; panel selector not working properly
+				general - animations good; fonts a bit weedy at times
+		- Firefox (v23.0.1)
+			- index page: 
+				- works to spec now
+					- overflow:hidden issue - directive not respected - adapted index page to hide bug
+			- tutorial page: all loads fine
+			- demo failures: none
+				general - animations good
+		- Opera (v12.16)
+			- index page: works to spec
+			- tutorial page: all loads fine
+			- demo failures:
+				028, 029, 032, 087 - Opera doesn't do CSS3 3d transforms yet
+				054 - damn cow!
+				general - animations sluggish
+		- Chrome (v28)
+			- index page: works to spec
+			- tutorial page: all loads fine
+			- demo failures:
+				089 - rotating text can be a little bit on the shaky side
+				general - animations very good
+	- update website
+	- upload v0.300 to SourceForge
+		- spam the heck out of Twitter to promote the upgrade
+	- fixed bug in scrawl.getCanvases() 
+		- canvases requiring new stacks (ie with class="stack:STACKNAME") not being set to position:absolute
+	
+130819
+	- re-tweaked the website index page - experimenting
+	- tutorial page updates
+		- AnimSheet section completed
+			- reworked both the AnimSprite and Picture functions to simplify stuff
+				- got rid of sprite-sheet specific functions
+					- handle everything now though Picture.get() and .set()
+			- as a by-blow, also gave Sprite an overriding .get() function
+				- should now be able to get styling data direct from a sprite
+		- Shape section - completed
+		- Hand-coded Shapes section - completed
+			- fiddled around with Point.fixed
+		- Gradients section - completely rewritten
+		- Pattern section - completed
+		- display cycle - completed
+		- clear - no change
+		- stamp - no change
+		- compile - completed
+		- show - no change
+		- render - completed
+		- animation - no change
+		- animating sprites - completed
+			- new demo 95 (adapted from 41, now used elsewhere)
+		- sprite pivots - completed
+		- sprite to mouse - completed
+		- drag and drop - completed
+		- cell position - completed
+		- cell transforms - completed
+		- pad transforms - no change
+		- updated demos: 
+			19, 20, 21, 22, 23, 24, 25, 26, 27, 34, 35, 36, 37, 39, 40, 42, 43, 44, 45, 46, 
+			48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 80, 81, 82, 83, 89, 91, 92, 95
+		- updated index for new Picture spritesheet animation stuff
+		
+130816-18
+	- new index page bug discovered on Firefox (18 Aug)
+		- carousel overflow:hidden style not being respected
+		- temporary fix by supplying landscape logo img element with a background-color
+	- tutorial page updates
+		- Pads and cells section - completed
+			- includes walk-through of demo037 - cloned as demo093 - magnifier over image
+		- Stacks section - completed
+			- includes walk-through of cat running through 3d terrain demo029
+		- Scrawl sprites section - completed
+		- Blocks section - completed
+		- Wheels section - completed
+		- Phrases section - completed
+		- Pictures section - completed
+		- updated demos: 5, 7, 10, 11, 13, 14, 15, 17, 18, 28, 29, 32, 33, 38, 41, 53, 85, 86, 87, 93
+		- removed demos: 4, 6, 8, 9, 12, 16 - too basic or repetitive for my needs
+		- new demo094 - examples of globalCompositeOperation
+		
+130815
+	- working on tutorial page
+		- 'HTML5 page' - completed
+		- 'Scrawl library' - deleted
+		- new 'Using Scrawl' section added to replace Scrawl library
+			- includes a complete walk-through description of implementing the carousel demo038
+		- started work on a new 'Scrawl sprites' section
+			- will remove the repetition from other sprite sections
+		- updated demos: 1, 2, 3
+	
+130814
+	- documentation overhaul completed
+		- will need a final proofread ...
+	
+130813
+	- Scrawl website index page completed!
+		- new images
+		- refined canvas examples
+		- responsive to browser capabilities and screen sizes
+	- started work on overhauling the documentation
+		- reached Cell section
+	- will need to rewrite tutorial page, in particular:
+		- stacks
+		- gradients
+	- had an idea to use a YouTube video for the Tour section
+		- more embarrassing, but a lot easier to do
+		
+130812
+	- work on the index page continues
+		- monor tweaks to various Scrawl.js functions to repair newly discovered bugs
+		
+130811
+	- still working the website index page
+		- got the non-canvas version working as designed
+			- tested in IE9, FireFox, Chrome (on Windows7 laptop)
+			- need better images!
+	- started to re-import canvas routines
+	
+130810
+	- developing new responsive website index page ...
+		- got the basics in place - it responds to resizing as I want it to ...
+		- all that's left to do is the carousel routines, and adding in the code for the various canvases
+		- fixed bug in scrawl.getStack() 
+		
+130809
+	- finished updating code base
+		- major tinkerings with scrawl.makeLine(), .makeQuadratic(), .makeBezier()
+			- all three now set their first point's .fixed attribute to the sprite's name
+		- changes to some of the object constructors
+		- overhaul of Shape object working, in particular for cloning Shape objects
+			- changes to Point and Link object code
+		- a shedload of fixes to demo code and scrawl.js code to fix all the stuff broken by the recoding exercise
+	- tested all demos in browsers
+		- Chrome
+			- all demos work
+			- animation: fast, smoothest
+		- Firefox
+			- all demos work
+			- animation: fast
+		- Safari
+			- video issues (085)
+			- all other demos work
+			- animation: slow
+		- IE10
+			- video issues (085)
+			- selector issues (034)
+			- CSS3d issues (028, [029], 032, 087)
+			- all other demos work
+			- animation: fastest
+		- Opera
+			- CSS3d not supported (028, 029, 032, 087)
+			- cow image issue (054)
+			- all other demos work
+			- animation: slowest
+	- all the changes have definitely broken the website index page!
+		
+130808
+	- review of scrawl.js internal workings
+		- decided to rationalise all the various existence tests included in the file
+			- new scrawl.xt(item) - returns false if item is undefined; true otherwise
+				- scrawl.xto([item,item,etc]) - returns false if all of the items are undefined
+				- scrawl.xta([item,item,etc]) - returns false if any of the items are undefined
+			- new scrawl.isa(item,string) - returns true if item is defined, and is of the type requested in the string
+				- string can be:
+					'bool', 'boolean'			- boolean
+					'num', 'number'				- number
+					'str', 'string'				- string
+					'fn', 'func', 'function'	- js function object
+					'arr', 'array'				- js array object
+					'date'						- js date object
+					'obj', 'object'				- user-defined object
+		- started going through code base to update all neccessary lines to use these new functions
+			- and also fix other inelegant/questionable code (eg get rid of all the try/catch stuff)
+				
+130807
+	- attempted to redesign the website index page - abandoned
+	
+130806
+	- working on Designs - gradients
+		- rewrote a lot of the Design object tree
+			- because gradients were boring
+		- specifically: changed the Design.color attribute
+			- now uses arrays of color point objects ... [{color: STRING, stop: NUMBER},{color: STRING, stop: NUMBER}, etc]
+		- added gradient animations!!!
+			- new Design.roll attribute added to color stop values to animate gradients
+			- new Design.handleX, .handleY, .handleStartX, .handleStartY, .handleEndX, .handleEndY
+				- for manipulating gradient start and end points
+			- new Design.setDelta(), .makeGradient(), .sortStops(), .applyStops() helper functions
+			- new Design.update() function to make gradient animations work
+			- complete rewrite of Design, Gradient and RadialGradient constructors
+			- fixed demos 029, 050
+			- new demo091 (concentric, animated circles at mouse) to test gradient animation
+			- new demo092 - move a spotlight over image (like in Gardens of Time)
+			- unfixed bugs:
+				- animations don't seem to work with all sprites
+					- but always seem to work on sprites generated by cloning
+				- using a color stop value of 1 can cause problems
+					- workaround by using 0.9999 instead of 1
+	- tested all demos in browsers
+		- Firefox, Chrome - all good
+		- Opera - all good except for the CSS3d stuff (and that damn cow)
+		- Safari 
+			- demo085 - won't display/play the video
+			- otherwise, all good; even fixed demo029
+		- IE10
+			028 - backface visibility doesn't work
+			029 - safari fix broke IE10; kludged a fix, but doesn't look as good as on other browsers
+			032 - not doing the CSS3d stuff
+			034 - selectors for clock still not working
+			085 - won't display/play the video
+			087 - definitely not a cube, but looks kinda pretty
+	- NEED TO:
+		- fix the index page - changes to Scrawl.js have broken it
+		- rewrite the tutorial sections on ...
+			- Starting Scrawl.js - automatic import of stacks, canvases, elements
+			- Stacks
+			- Gradients
+		- update the documentation - now a serious job
+		- when all that's done, upgrade to v0.209(beta)
+		
+130804-05
+	- working on stacks stuff
+		- new Scrawl.initialize() function for automatically populating the library object when starting Scrawl.js
+			- Scrawl.getCanvas() replaced by .getCanvases() helper function
+			- new Scrawl.getStacks(), .getElements() helper functions
+			- scans for any element on page with class='scrawlstack'
+				- imports them as stacks
+				- sets all children of stack elements to position:absolute
+			- scans for canvas elements
+				- checks to see if parent element is stack
+				- if element has class="stack:STACKNAME", appends canvas to stack element
+					- if stack doesn't exist, creates it
+			- scans for elements with classes='scrawl stack:STACKNAME'
+				- moves found elements into named stack
+		- edited Scrawl.addCanvasToPage(), .addStackToPage()
+		- developed demo090 for testing initialization changes
+	- big overhaul of the Cell object
+		- added Cell.usePadDimensions (boolean), Cell.getPadWidth(), Cell.getPadHeight()
+		- rewrote Cell constructor, Cell.copyCellToSelf()
+		- added Cell.set()
+	- overhaul of stack scaling
+		- mainly to get the frogger demo (083) working
+			- also fixed the kill frog bug in demos082-3
+	- CSS3d tinkering
+		- fixed all CSS3d demos
+			- except for 087 (spinning cube) - not working in IE10, but at least it looks pretty
+			- 034 (kaleidoscope clock) - can't get selectors to work in IE10
+			- 028 spinning card - backfaceVisibility:hidden not working for IE10
+			- 029 cat animation in 3d environment - not positioned correctly in Safari
+	
+130803
+	- MAJOR changes
+		- revising CSS3d stuff
+		- complete rewrite of Stack, Element, Pad constructors and functions
+		- rewriting all the routines for automatically picking up canvases, elements, stacks when starting Scrawl.js
+		- all CSS3d stuff now placed into Scrawl3d object
+			- parent: SubScrawl; children: Stack, Element, Pad
+		- got everything except the stack demos working again
+			- broken: 001, 002, 028, 029, 030, 031, 032, 033, 034, 083, 087
+				- also: frogger game demos (082, 083) - frog still moves after killed
+	- need to redo linking between stacks, pads and elements
+	- need to redo functions for
+		- creating new stacks
+		- creating new canvas elements
+		- moving canvases and elements into stacks
+		
+130802
+	- tinkering ... not happy with the whole stack thing
+		- need to think more about importing canvases, elements
+		- what gets turned into a stack, when, why, how
+		- will mean breaking the library, but what the heck ...
+		
+130801
+	- divided the Scrawl function into 2 separate objects, one inheriting from the other
+		- purpose: not every child needs all the functionality
+		- Scrawl looks after name, title, comment, get(), set(), clone(), toString()
+		- SubScrawl looks after everything else
+		- inheriting from Scrawl:
+			- SubScrawl; Context; Image; AnimSheet; Design (Gradient, RadialGradient, Pattern)
+		- inheriting from SubScrawl:
+			- Stack (Pad, Element); Cell; Group; Sprite (Block, Phrase, Picture, Wheel, Shape); Point; Link
+		- decided there's no need to mention this stuff in the tutorial
+	- minor edit to scrawl.getCanvas() to fix variable detritus ending up in the global scope thingy
+	- upgrade to version 0.208b
+	- updated documentation
+			
+130731
+	- finalised demo087
+		- tweaked scrawl.addNewCanvas() - now does a set() on the new Pad object
+	- upgrade to version 0.206b
+	- updated ducumentation
+	- updated tutorial page
+		- rewrite of stack section
+		- added latest demos
+		- added a demo list section
+	- uploaded revised website
+	- uploaded new version to Sourceforge
+	- sprite rolling: Phrase, Picture, Block
+		- moved sprite attributes - roll, degree, angleDegrees - into Sprite constructor
+			- so Phrase, Picture, Block inherit them
+			- angleDegrees is the Shape version of sprite.degree
+				- ancient error that needs to be rectified!
+		- new sprite helper functions: sprite.rotateCell(canvasContextObject, CELLNAMEstring), .unrotateCell(sameasbefore)
+		- recoded all the Phrase, Picture, Block stamping functions to take into account roll values
+			- .clear(), .draw(), .fill(), drawFill(), .fillDraw(), .floatOver(), .sinkInto()
+		- coded up demos 088, 089 - to test the new functionality
+		- recoded demo087 to make use of new functionality
+		- checked all other demos to see if anything broke
+			- broke the clock and vector demos (034, 059)
+				- also broke the clock on the index page
+				- fixed by adding new sprite.rollable attribute
+					- default = true; false blocks the sprite interfering with cell roll functionality
+					- in other words, if a sprite is stamped on a rotated cell, best set rollable to false to save headaches
+					- only pertinent for Phrase, Picture, Block
+	- upgrade to version 0.207b
+	- updated ducumentation
+	- updated tutorial page
+	- updated website
+	- uploaded new version to Sourceforge
+	
+130730
+	- continuing with demo087
+		- deleted stack.setPitch(), stack.setYaw(), stack.setRoll()
+		- deleted stack.setTranslateX(), stack.setTranslateY(), stack.setTranslateZ()
+	- updated demo028, 029 - changes broke them
+	- updated website home page
+		- fixed site for browsers that don't use window.matchMedia()
+			- site wasn't working for IE9
+		- fixed stack demo on webpage
+		
+130729
+	- started working on demo 087 - spinning css3d cube
+		- added stack.translateX, stack.translateY, stack.setTranslateX(), stack.setTranslateY()
+			- cuz startXY does NOT do horizontal/vertical css3d work
+		- added stack.setTransform() to handle css3d translations
+		- updated stack constructor, stack.set, stack.setDelta
+		- animation not working in IE10; does work in chrome, safari, firefox
+		
+130723
+	- coded demo 086 - interactive data graph
+		- no changes to library
+		
+130712
+	- finalised demos 084, 085
+		- experiments with importing video elements into the library as Images, and using them with Picture sprites
+		- minor bug fixes and improvements to scrawl.js
+	- updated to version 0.205(beta)
+	- updated tutorial to include video
+	- updated website
+	- uploaded new version to Sourceforge
+	
+130613
+	- finalised demo083 - making demo082 dynamically resizable
+		- fixed small bug in Element constructor that was causing elements to double their height values
+	
+130612
+	- coding demo083 - making demo082 dynamically resizable
+	
+130610
+	- debugging frogger pastiche
+		- minor bug in Block.checkHit(), Picture.checkHit() fixed
+		- final graphics for game completed
+	- updating Scrawl.js to 0.204b
+	- added demo082 (frogger) to tutorial page
+		- updated website
+		- updated documentation
+		- uploaded new version to SourceForge
+	
+130609
+	- finalising code for frogger pastiche
+	
+130608
+	- initial coding for frogger pastiche completed
+	
+130607
+	- started planning out a frogger pastiche (for demo082)
+		- fixed bug in scrawl.getImageDataValue, Picture.getImageDataValue
+		
+130603
+	- finalised demo081 - space invaders pastiche
+		- tested demo in all browsers - works
+	- upgrading library to v0.203b
+	- updated documentation
+	- adding demos 80 and 81 to tutorial page
+	- updated website
+	- uploaded new version to SourceForge
+	
+130602
+	- continuing with demo081
+		- recoded all sprite 'clear' stamping functions - to make them work
+			- now use context globalCompositeOperation = 'destination-out' - works well
+		- recoded scrawl.deleteSprite() function
+			- major bug - wasn't clearing sprites from the library
+		
+130601
+	- space invaders clone - demo081
+		- initial coding
+		- things show up on the screen; things blow other things up
+		
+130531
+	- started coding up a space invaders clone
+		- planning out the game mechanics
+		- designing graphics
+		
+130529
+	- coding demo080 - spirograph-like simulation
+		- seems to work in all browsers
+			- added the Maxthon browser to list of browsers for testing
+		
+130528
+	- Stack.scaleStack() function coded and implemented
+		- various minor changes to affected functions and classes
+		- updated homepage (now index page) to take advantage of stack scaling
+			- including importing carousel control buttons into the stack
+	- updated documentation with new functionality
+	- rewriting tutorial sections to match current functionality of library 
+		- largely done - any mistakes left on the page are probably proofing errors
+	- update to version 0.202b
+	- update website
+	- load latest version to SourceForge
+	
+130527
+	- experimenting with moveStartXY for stacks, elements, pads
+		- new Stack.shiftPosition(), shiftLeft(), shiftTop()
+		- new scaleStack() - not yet coded up
+		
+130526
+	- building an interactive, responsive design home page for the website
+		- 04 clock - done
+		- 07 3d scene - done
+			- after some glitches - perspective needs to be scaled alongside everything else
+	- testing new home page in browsers (on fast PC):
+		Safari for Windows - slow, but working as expected - except for the 3d demo (as expected: known bug)
+		Opera - as slow as Safari, but works entirely as expected
+		IE10 - entirely as expected
+		Chrome - works as expected, though slows down a bit at smaller(!) sizes
+		Firefox - works as per spec
+	- upgraded library to v0.201b
+	- uploaded new home page to website
+	- uploaded library to SourceForge
+
+130525
+	- building an interactive, responsive design home page for the website
+		- converting static canvases into their (inter)active counterparts
+			- 01 bezier curves - done
+			- 03 collisions - done
+			- 05 magnifier - done
+				- added scrawl.setDisplayOffsets(item) - item in ['all','stacks','pads','elements',null]
+					- for when things move within the stack
+			- 06 carousel - done
+			- 02 cloning - done
+				- amended Stack.setLeft(), Stack.setTop() 
+					- both now have a second argument - boolean - when true, will recalculate display offsets
+				- amended Stack.setPosition - automatically recalculates display offsets
+				- tracked down a serious bug in Picture.checkHit()
+
+130524
+	- building an interactive, responsive design home page for the website
+		- static (but responsively designed!) home page completed
+		- adapting page for websites that DO support canvas element
+			- using Modernizr to identify such websites
+		- fixed bugs in Stack.set - wasn't recognising 0 as a valid input.
+		
+130523
+	- building an interactive, responsive design home page for the website
+		- building the static site for browsers without canvas support
+		- investigating responsive design eg @media in css files
+		
+130522
+	- building an interactive, responsive design home page for the website
+		- planning the website: concept; requirements; navigation; etc.
+			- must be simple; must sell Scrawl.js rather than explain it
+				- explanations and stuff can go in other pages
+			- simple navigation - four links: 
+				- Tutorial (tutorial page)
+				- Tour (whizzy presentation page - to be coded up later)
+				- Download (SourceForge page)
+				- About - basic stuff like stable and development versions, me, etc
+			- include a scalable, flat left-to-right carousel showing example canvases at work
+			- absolutely must conform to the responsive design thingy: portrait vs landscape; different screen sizes; browser resizing; etc.
+		- creating graphics - logo, button
+		
+130521
+	- documentation rewrite completed
+		- minor bug fixes here and there - mainly to return this rather than always true
+	- upgraded Scrawl.js to v0.200(b)
+		- updated website pages to indicate that this version is 'usable'
+			- inasmuch as, function names and object attributes are going to be fixed from this point on
+	- uploaded new webpages to website
+	- uploaded to SourceForge
+	
+130520
+	- MAJOR CHANGES
+		- made Pad and Element objects children to the Stack object
+			- because there was too much CSS3 confusion between Stack/Pad/Element objects
+		- moved all the Element functions into Stack
+		- removed a barrowload of Pad functions - inherits from Stack
+		- much debugging to fix broken demos and Examples
+			- recoded a number of functions to get things working again
+			- but no amendments to the demos/examples themselves
+			- all now work as per spec in Firefox and (as far as possible) IE10
+	- continuing with the documentation overhaul
+
+130519
+	- continuing with the documentation overhaul
+
+130518
+	- demos function to load them into tutorial page
+	- complete overhaul of the documentation
+		- to bring it into line with what's real
+
+130517
+	- recoding tutorial page
+		- moved all examples into a separate javascript file
+		- code now added to tutorial page on window.onload
+	- recoding demo pages
+		- all pages now have the same format and similar CSS
+			- for presentation purposes
+	- tutorial collisions sections completed
+	- TODO:
+		- update documentation, and thoroughly recheck it
+		- review tutorial page 
+			- there's been a number of significant changes which have taken place after early sections were written.
+		- once reviews are finished, upgrade Scrawl to v0.1(b) and release it into the wild
+		- start designing a snazzier index page
+			- needs to SELL Scrawl.js, not EXPLAIN it
+			- make it simple, elegant, responsive - knockout!
+
+130516
+	- fixing barrowloads of bugs caused by yesterday's wholesale changes
+		- recoding demos and Examples
+		- tested everything in browsers until all were working again
+	- Group.groupXY renamed to Group.startXY
+		- brings groups into line with everything else
+	- new Group.addSpritesToGroup(), .removeSpritesFromGroup() functions
+	- collision demos seriously rewritten to make sense of changes
+	
+130515
+	- working on tutorial page - still finishing off the collisions sections
+		- redesigned the Cell field collision detection system
+			- added Sprite.fieldChannel, Sprite.fieldTest attributes
+			- demo079 - to test sprites using color channels in field detection stuff
+		- added directionality attributes and functions to Scrawl object
+			- which should take away a fair amount of extraneous coding in the examples and demos
+			- moved .startXY, .handleXY .scale from Sprite to Scrawl
+			- added moveStart(), moveHandle(), exchange(), reverse() functions to Scrawl
+				- NEED to recode all Examples and demos to make use of new functionality!
+				- NEED to revisit Classes that make use of .top and .left - see if startXY can replace them
+				- tested in demo079 - seems to be working okay ...
+	
+130514
+	- working on tutorial page - continuing with the collisions sections
+		- demos 076-78 - to demonstrate collision points around various sprites
+		- finished writing up Sprites collision zones tutorial section
+
+130513
+	- bug tracking ...
+		- changed:
+			- combined Group.getSpriteXRange(), getSpriteYRange() into .getSpriteRange(item)
+				- where item = 'X', 'x', 'Y', or 'y'
+				- amended Group.setHandles()
+			- Phrase.clear(), .draw(), .fill(), drawFill(), fillDraw(), .sinkInto(), .floatOver()
+				- all were failing to take .scale attribute into account when calculating font size
+		- new: 
+			- Group.getBetweenGroupSpriteHits(arg)
+				- where argument can be GROUPNAME string, or Group object
+				- returns an array of arrays, where arrays are [SPRITENAME, SPRITENAME]
+	- coded demos 73-75 to test various collision scenarios
+		- group offsets (groupXY)
+		- collisions between: Block, Phrase, Picture, Wheel, Shape
+		- wheel radius vs wheel inShape
+		- shape radius vs shape inshape
+		- Pictures using image data tables
+	- tested everything in various browsers
+		- on a good PC running Windows 7
+		- Firefox (20.0.1)
+			- all good
+		- Opera (12.15)
+			- slow on: Ex04(carousel); in fact all animations are slower than in other browsers
+			- broken on: demos028-29, 32 (CSS3d stuff), 054 (still hates that cow)
+			- otherwise, all works
+		- Safari for Windows (5.1.7)
+			- demo029 - cat still behind ground
+			- demo054 (SVG animation) not working
+			- otherwise, all good (slightly better than Firefox?)
+		- IE10 (update 10.0.4)
+			- demo028 - still need to sort out the CSS3 back image display thingy
+			- demo032 - still got the ghosting on rotating CSS3 elements
+			- demo034 - return of the dratted 'can't select options from HTML selector thingy' problem ...
+			- otherwise very good - possibly too fast?
+		- Chrome (26.0.1410.64 m)
+			- demo032 - unexplicably slooooow
+			- rest are good - still the smoothest animations
+	- updated documentation
+			
+130512
+	- experimenting with in-group and between-group collisions
+		- changed:
+			- Sprite.makeCollisionPoints() changed to Sprite.parseCollisionPoints()
+				- convert user-supplied .collisionPoint into Scrawl .collisionPoint
+					accept from user	converted to:
+					'start'				'start' (default)
+					'north'				'N'
+					'northeast'			'NE'
+					'east'				'E'
+					'southeast'			'SE'
+					'south'				'S'
+					'southwest'			'SW'
+					'west'				'W'
+					'northwest'			'NW'
+					'edges'				'N', S', 'E', 'W'
+					'corners'			'NE', SW', 'SE', 'NW'
+					'perimeter'			'N', 'NE', 'E', SW', 'W', 'SE', 'S', 'NW'
+					'center'
+					'all'
+					'endpoints'			list of POINTNAMES making up a Shape object's end points
+			- updated various .set() and .clone() methods to cover collision points
+			- sprite constructors, to take on board the needs of .collisionPoints attribute
+			- scrawl.makeLine(), .makeQuadratic(), .makeBezier(), .makeRegularShape()
+				- to get .collisionPoint data registered on the Shape object
+		- new: 
+			- Group.getFieldSpriteHits()
+				- returns an array of arrays, where arrays are [SPRITENAME, {x: coordinate, y: coordinate}]
+			- Group.getInGroupSpriteHits()
+				- returns an array of arrays, where arrays are [SPRITENAME, SPRITENAME]
+			- Phrase.getCorners() separated out of Phrase.checkHit()
+			- Phrase.getCollisionPoints()
+			- Block.getCollisionPoints()
+			- Wheel.getCollisionPoints()
+			- Shape.getCollisionPoints()
+			- Picture.getCollisionPoints()
+		- (re)coded demos 61,72 to test new functions
+			- not quite working as expected yet
+			
+130511
+	- fixed breaks in Examples and demos caused by yesterdays changes re collision detection and color retrieval
+	- new demo061 - balls and stars collisions (from Index page Example)
+		- removed collisions demo from Index page
+		- WANT TO INTERNALISE some of the sprite vs sprite collisions testing
+	- demos 062-071 for testing collisions on sprites
+		- fixed bugs in spot coordinate collisions routines
+			- more updates to scrawl.getImageDataValue(), Picture.getImageData, Picture.getImageDataValue
+				- imageData is now actual size - all tweaks for scale, offset, etc take place in the Picture functions
+				- NEED to check equivalent functions in Cell object
+	- new:
+		- Sprite.collisionPoints - an array of POINTNAMEs to be used as collision points
+		- Sprite.makeCollisionPoints(), Sprite.addCollisionPoints(), Sprite.removeCollisionPoints()
+	
+130510
+	- working on tutorial page - collisions
+		- wrote the Groups section
+	- significant updates to:
+		- scrawl.getImageDataValue()
+		- Wheel.checkHit()
+		- Picture.getImageData()
+		- Picture.getImageDataValue()
+		- Picture.checkHit()
+		- Shape.checkHit()
+		- Picture.clone() 
+			- function now accepts a 'keepCopyDimensions' flag attribute
+			- defaults to false
+	- new:
+		- Group.setDelta() - handles groupXY, handleXY
+		- Wheel.checkHitUsingRadius - boolean, default: true
+		- Picture.imageDataChannel - string, default: 'alpha'
+		- Picture.checkHitUsingImageData - boolean, default: false
+		- Shape.checkHitUsingRadius - boolean, default: false
+	- (changes supercede those made 2 days ago)
+	- updates move data on how an object is to be checked for spot collisions into object attributes
+		- no need to pass these things as part of .checkHit() functions' arguments
+		- Shape collision detection can now take into account space - using JavaScript .isPointInPath() function;
+		- Wheel collision can now use radius or .isPointInPath
+		
+130509
+	- minor editing to the website tutorial page
+	- updated website
+	
+130508
+	- fixed Picture.getImageData()
+	- recoded scrawl.getImageDataValue(object)
+		- where object includes {table: TABLENAME, x: NUMBER, y: NUMBER, channel: STRING}
+			- channel string one from: 'red', 'green', 'blue', 'alpha', 'color'
+			- all attributes required - no defaults!
+	- recoded Picture.checkHit(object)
+		- where object includes
+			x: NUMBER (required)
+			y: NUMBER (required)
+			test: NUMBER (default 200) - minimum threshhold test, values 0-254 (255 will always return false)
+			channel: STRING (default 'alpha') - one from: 'red', 'green', 'blue', 'alpha'
+		- NEED TO TEST on scaled Picture sprites with image data tables!!
+	- experimented with using image data stuff for Shape collisions
+		- couldn't figure out an efficient way to do it
+		- fixed silly bug in Shape.checkHit(), Picture.checkHit()
+	- (re)fixed Cell.rotateCell()
+	- scrawl.imageDataWebWorker officially dumped
+	- updated documentation
+		- upgraded version to v0.021(b)
+	- updated website
+		- checked all Examples and Demos in firefox
+	- uploaded new version to SourceForge
+				
+130507
+	-complete overhaul of collisions
+		- no longer using image data tables (for anything!)
+		- substantial rewrite of a number of functions dealing with collisions and detection
+		- Cell objects now get additional groups - CELLNAME_field, CELLNAME_fence
+			- rewrite of Cell constructor and Sprite functions associated with assigning sprites to field/fence
+			- retired Cell.field, Cell.fence attributes
+		- demo060 now working
+			- color picker demos not working
+			- drag and drop broken
+			
+130506
+	- recoded Cell.transformCell() to accept absolute (not relative) values
+		- fits in with Scrawl's 'absolute, not relative' worldview re cell transforms
+	- finished coding Group.getSpriteXYRange() functions
+	- experimenting with collisions - sprites as 'fields' and 'fences'
+		- added Cell.fence array
+		- rewrote scrawl.buildFields(), cell.buildField(), Sprite constructor, Sprite.setSpriteToCellFields(), Sprite.setSpriteToCellFences()
+		- the results work for Block, Wheel, Shape
+			- had to fix bug in the scrawl.makeXYZ factory methods for lines and curves (.closed always defaulted to 'true')
+		- cloned sprites weren't registering as fields or fences
+			- rewrote Sprite.clone() to accommodate .field and .fence attributes in the clone argument object
+				- can't clone them directly - .field and .fence are attributes of the Cell object, not the Sprite object
+		- should work for Picture and Phrase - needs to be tested
+		- results take (a lot of) time to calculate
+			- maybe make use of the web worker?
+				- tried it, breaks code - possibly use a callback function in Cell.getImageData?
+			- thinking of using multi-channel fields (red, green, blue) - takes just as long to calculate 3 tables as it does one.
+		- coded up demo060 for experimenting with fields/fences
+	
+130505
+	- completed cell positional animation section of tutorial
+		- moved Example12 (parallax scrolling) over to demo052
+		- updated index page - removed Examples01, 12
+	- moved Examples 02 (curves as shapes), 03 (holes in shapes), 04 (basic text), 06 (svg cow) to tutorial 
+		- as demo053, 054, 055, 056
+		- updated index page to remove Ex02, 03, 04, 06
+	- moved (now) Example03 (spinning lines) to tutorial as demo057
+		- updated index page to remove Ex03
+	- moved (now) Example04 (sprite sheet) to tutorial as demo058
+		- updated index page to remove Ex04
+	- completed cell transforms animation section of tutorial
+		- extended Cell object with new .shearXY attributes
+		- rewrote Cell.transformCell() to properly handle javascript transforms
+		- fixed bug in Cell.rotateCell()
+	- completed the animations section of the tutorial page
+	- upgraded Scrawl.js to v0.0203(b)
+	- updated documentation
+	- updated website
+	- uploaded new version to SourceForge
+	
+130504
+	- new scrawl library functions and attributes:
+		- getImageDataValue(table, items, varY)
+			- where table = nameoftable string
+			- items = object containing x and y attribute
+			- or items = number = x coordinate, varY = number = y coordinate
+			- includes error capture - returns false if:
+				- table doesn't (yet) exist
+				- arguments not good
+				- coordinates out of bounds
+		- .imageDataWebWorker
+			- path to the imageDataWebWorker.js file; default is null
+	- amended Cell.getImageData() to look for scrawl.imageDataWebWorker
+		- will use web worker when found; otherwise uses getImageData helper functions
+	- updated demo018, Example006 (both color at mouse cursor demos); example015 (cloning sprites)
+		- all now make use of web worker
+		- demo018 and Ex006 make use of scrawl.getImageDataValue()
+	- updated Picture section of tutorial to explain how to use these inovations
+	- completed drag-and-drop section of the tutorial
+		- Example015 recoded as demo050; removed from index page
+	- added Cell.setDelta() function for sourceXYWH, targetXYWH attributes
+	- working on cell positional animation section of the tutorial
+		- Example01 (cell animation) recoded as Demo051
+	
+130503
+	- fixed Chrome issue of leaving a blank line at the top of canvas
+		- amended Sprite.getStartXY functions - were adding 0.5 to positions
+	- coding Example07 (drag and drop) over as Example049
+		- fixed bugs in Picture.checkHit
+			- returns false if xy values are out of bounds for the dataImage array
+			- makes calculated xy values integers before test
+		- removed Ex07 from index page; renumbered other examples
+	- investigating the use of web workers to speed up imageDataTables creation
+		- or at least to stop the process stalling the rest of page layout and javascript stuff
+		- significant changes to Cell.getImageData() function
+			- added Cell.saveDataTables() and Cell.buildDataTables() functions
+			- new javascript file - imageDataWebWorker.js
+				- need to figure out ways of either internalising this file, or devising ways for coder to tell Scrawl where file lives
+		
+130502
+	- fixed demo047
+		- added new Group functions: .setHandles(), .getSpriteXRange(), .getSpriteYRange()
+		- amended Group.stamp(), Sprite.stamp()
+			- GROUPNAMEs can now be used as a pivot
+			- Group handleXY can be set using Group.setHandles({x: value, y: value})
+				- where x: 'left', 'center', 'right', or number
+				- where y: 'top', 'center', 'bottom', or number
+			- Group.groupXY attributes can now be used for collision detection with cell field
+	- Example018 broken (probably from yesterday's changes to Picture.clone() function)
+		- now fixed; checked against demo047 - still works
+	- other broken stuff - pivoted labels: demo007, demo013, demo014,
+		- (but not 027, 036, 046)
+		- fixed - minor amendments to Group.stamp() and Sprite.stamp()
+	- tutorial page
+		- finished coding up animating sprites, sprite pivots, sprite-to-mouse sections
+			- moved Example003 (blue wheel at mouse) over to demo048
+			- removed Example001 (spinning icons around group animation) - not as clear as demo047
+			- renumbered Examples on index page
+	- thinking about accessibility issues (after reading http://blog.smartbear.com/software-quality/bid/283454/All-About-HTML5?utm_source=html5weekly&utm_medium=email)
+		- added new .title and .comment attribute to the Scrawl object
+			- allows all Scrawl objects to have text titles and comments attached to them 
+				- might be of some help as would allow eg
+					- javascript to speak out titles/comments when mouse hovers over a sprite?
+					- dynamic 'tooltip' substitutes?
+	- updated documentation
+		- upgraded Scrawl.js to v0.0202(b)
+	- updated website
+		- testing live site in browsers:
+			- in all browsers
+				- Example03 (curves) - not triggering when user first clicks on button; repeated clicks on button breaks up the lines
+			- Firefox
+				- all working as expected (no surprise)
+			- Safari (windows)
+				- Example06 (color under mouse) - stalling (though no problems in demo018, which repeats the color under mouse thingy)
+				- Example08 (svg cow) - taking its time to load
+				- all demos - insist on opening in new browser instance, not new tab (local preferences issue?)
+				- demo029 - cat running behind ground - zIndex issue?
+			- IE10
+				- demos with text - text seems thinner than in other browsers (maybe include more reliable IE friendly font in font attribute?)
+				- demo028 (cards on y axis spin) - backface visibility issue not resolved
+				- demo032 (HTML elements) - some ghosting on spinning elements
+			- Opera
+				- Still hates the SVG cow (Ex08)
+				- Example012 (carousel) - painfully slow (on fast PC)
+				- CSS3d in stacks - not implemented in Opera
+				- generally slower on the animations compared to other browsers
+			- Chrome
+				- demo032 (animating HTML elements in stack) - runs very, very slowly
+				- demo017-018, 037 (copies part of image to Picture) - leaving visible white line at top of canvas
+	- uploaded new version to SourceForge
+	
+130501
+	- added new functionality to Point.fixed attribute
+		- setting attribute to SPRITENAME string will make the sprite act like the point's pivot
+		- coded demo046 to demonstrate it - user-defined bezier curve
+		- added text and demo to tutorial page
+	- working on demo047, Group.setHandles() - not shifting group sprites as expected ...
+		- tinkered with a new Picture.clone() function
+		
+130430
+	- cleaned up the main.js file for the website index page
+	- NAMECHANGE: 
+		- Cell.rotation changed to Cell.roll
+		- Cell.rotationDegree changed to Cell.rollDegree
+			- to match up with the rest of Scrawl
+	- tutorial page 
+		- completed display cycle sections
+		- started work on animation sections
+			- fixed small bug in Sprite.checkField() - was over-compensating for block handles
+			- coded up demo041-43 - uses Examples 1 (block anim), 6 (star anim) and 19 (pivot points anim)
+			- removed Examples 1, 6 and 19 from Index page.
+			- removed Example 11 (sprite order) from index page - too boring for words
+			- added demo44
+			- moved Example16 (snake) to demo045 - Examples 17-19 renumbered
+		- animation cycle and animating sprites sections completed
+	
+130429
+	- completed display cycle sections of the tutorial page
+		- used demo034, demo037 in the display cycle section
+		- recoded Group.stamp(), Sprite.stamp(), Sprite.forceStamp()
+			- so they only take one argument: either a method string, or an override object
+			- tested all Examples and demos in Firefox - working fine
+		
+130428
+	- completed colours and gradients section of the tutorial page
+		- fixed bug in Gradient.makeDesign()
+		- moved Examples01 and 02 over to tutorials page (as demo039, demo040)
+			- other Examples renumbered.
+		
+130427
+	- Two Month Anniversary!
+	- fixed Example17 - vectors
+		- tested in Firefox, IE10, Safari-for-Windows - works
+	- fixed demo027 - rotating star
+	- fixed demo034 - kaliedoscope clock
+	- fixed Example19 - kaliedoscope clock
+	- fixed Example20 - parallax scrolling
+		- all issues were being caused by poor coding in the Point constructor - fixed!
+	- completed making shapes section of tutorial page
+	- simplified the Image object
+		- much of this stuff now overtaken by Stack/Element
+	- upgraded Scrawl.js to version 0.02(b)
+		- all the stack and element work deserves such an upgrade
+			- need to finish collision stuff before going for v0.1(b)
+	- updated documentation
+	- updated website
+	- uploaded to SourceForge
+	- demo037 - magnifier effect
+	- demo038 - carousel selector
+		- to show off on Twitter ...
+		
+130426
+	- tutorial page
+		- finished of stack section
+			- moved Example 20 into tutorial as demo34
+		- started making shapes section
+			- new demos 35, 36
+	- somehow managed to break the shape-making factory method while fixing a bug in the Point.setPolar() method
+		- Example 17 (vectors), 19 (kclock), 20 (scrolling)
+		- Demo 27, 34
+			- vectors should be easy to fix ???! - do similar to demo 36 (which works very well)
+			- kaleidoscope clock hands too thin and short
+			- stars in parallax scrolling, star in drag/drop demo - badly out of shape
+		- can't go back to what was there before - bug was testing for 0 rather than null
+			- causes big problems when it comes to polar points based around a startXY of 0,0
+		
+130425
+	- tutorial page
+		- shifted Example21 into tutorial page (as demo33)
+		- added Element.setDimensions() function
+	- fixed mouse tracking bug for canvases in stacks
+		- added Stack.displayOffsetX, .displayOffsetY, .setDisplayOffsets()
+		- amended Pad.setDisplayOffsets() to take into account DOM changes
+		- amended scrawl.getCanvas() etc - DOM changes (specific to Scrawl.js) should trigger Pad.displayOffsetXY recalculations
+			
+130424
+	- continuing to write up Tutorial pages
+		- stack page
+			- added new Pad.setPerspective(), .setPerspectiveOrigin() functions
+				- just for IE
+	- added functions:
+		- Stack.set(), Pad.set(), Pad.setDelta()
+			- setDelta covers pitch, yaw, roll, translateZ, top, left
+	- importing HTML elements into a scrawl stack
+		- decided this needs to be done on specific stacks
+			- new Stack functions: addElementById(), addElementsByStackName()
+			- for the stackname function to work, elements need to include a class along the lines of 'stack_STACKNAME'
+		- added a new Class object: Element
+			- wrapper for all elements imported into the stack
+			- new library attributes: scrawl.element, scrawl.elm, scrawl.elementnames
+			- Element objects do much the same re CSS3d as Pad objects
+				- mostly the same attributes; mostly the same functions
+		- coded up demo032 to road test the new stuff - seems to work in browsers
+			- painfully slow in Chrome (a surprise)
+			- animations leave some trails on IE (no surprise)
+			- works well in Firefox
+			- imports work in Opera, but not CSS3d animations (no change there)
+			- works fine in Windows Safari (bound to be some z-index issues, though)
+		- need to recode Example021 to take on board these new developments
+			- and get rid of the existing Image functions for importing/manipulating images on top of the canvas
+				- which were/are no more than an ugly kludge
+		- can also reconsider recoding Example020?
+			- biggest problem for both is the existing index HTML layout - currently no stack on the index page!!!
+			
+130423
+	- working on an animated cat over a 3D(ish) terrain
+		- lots of corrections to functions coded yesterday
+		- lots of research re Firefox CSS3d and drawing order (z-index) interactions
+		- animation works in IE10, Firefox (finally), Chrome
+			- but not Safari, nor Opera (which doesn't do the CSS3d thingy yet)
+	- new functions
+		- Cell.spliceCell() - for scrolling cells
+			- recoded Example22 to take advantage of the new spliceCell function
+		- Pad.setTranslateZ() - just seems to be another form of scaling ...
+	- upgraded Scrawl.js to version 0.013(b) 
+		- still need to complete the fields stuff before going for 0.02 (or even 0.1? There's not a lot more core stuff to be done)
+	- updated documentation
+	- updated website
+	- uploaded latest version to SourceForge
+	
+130421-22
+	- playing with css3d, trying to work out ways of integrating it into Scrawl.js
+		- can also change stacking order by altering a (new) Pad.order attribute
+			- Pad.order === <canvas> element.style.zIndex value
+		- amended scrawl.getCanvas() function
+			- if a <canvas> element has a class attribute class="stack:STACKNAME"
+				- will create a div element atack with the stackname, if doesn't already exist
+				- will setup (new) div so it can handle css3d transformations in its child elements
+					- if user specifies existing (non-stack) element, up to them to create the css3d environment
+				- will move canvas element to div element, styling it so css3d operartions can be performed/displayed by it
+			- amended Pad constructor
+				- stacked display canvas elements given id=NAME_display
+			- with no stack class, Pad is created in the classical way
+		- amended the Array.contains() function - will now also search for items that match a regular expression
+			- if it finds a match, will return the first matching item, rather than true
+		- amended scrawl.addCanvasToPage() function
+			- every canvas added dynamically will automatically be given a css3d envoronment
+			- specifying stackName argument for stack div that already exists - canvas will be assigned to that stack
+		- added scrawl.addStackToPage() helper function
+	- changed Shape.skew to Shape.roll across all files
+	- added Wheel.roll attribute
+		- amended various Wheel functions to make use of this attribute
+		- updated demo011
+	- added new Stack object
+		- keeps track of perspective, perspective-origin & overflow style attributes on the containing stack div
+		- also sniffs for IE so can trigger copying of perspective attributes to canvases (if needed)
+		- new Stack functions: setPerspective(), setDimensions(), setOverflow(), setPerspectiveOrigin()
+	- added new Pad functions: getBackfaceVisibility(), setBackfaceVisibility()
+		- backfaceVisibility playing up in IE
+	- more new Pad functions: 
+		- getTransformStyle(), setTransformStyle(), getOrder(), setOrder() - for z-index
+		- setPitch(), setYaw(), setRoll()
+		- getTop(), setTop(), getLeft(), setLeft(), setPosition() - last takes (x, y), or ({x:number, y:number})
+	
+130420
+	- investigating possibilities of including css3d in Scrawl.js
+	- experiments prove that canvases can do css3d stuff
+	- fixed scrawl.render() bug
+		- if passed no arguments, scrawl will iterate through all pads listed in scrawl.padnames and get them to render
+		- fixed same bug in scrawl.clear(), scrawl.compile(), scrawl.show()
+	- possible roadmap:
+		- add perspective attribute to Pad object
+			- perspective: true - triggers DOM reconstruction to give Pad ability to do 3d transforms
+		- need some sort of stack so that Pads can be displayed over each other
+		- aim for the simpler stuff: yaw, pitch, roll
+			- where roll=skew=clock rotation (around z axis)
+			- yaw = left-right movement = horizontal rotation (movement along x axis)
+			- pitch = up-down movement = vertical rotation (movement along y axis)
+	
+130419
+	- new bug? - animations only display their ongoing results when mouse is in motion.
+		- can't get bug to repeat itself
+	- amended Shape.checkHit() - to take (x, y, test) as well as {x:val, y:val, test:val}
+	- amended Shape.setStartTo() - to take (x, y) as well as {x:val, y:val}
+	- writing up tutorial pages for the website
+		- 'Shape' page completed
+		- Demo027 coded
+	- upgrade to version 0.0123b
+	- updated documentation
+	- updated website
+	- uploaded latest version to SourceForge
+
+130418
+	- IE mouse position issue:
+		- think I've solved it - probably a html layout problem
+			- web page uses css tables, which expand/contract
+			- set a min-width on the navigation cell, which stops unexpected contractions
+				- firefox takes table instabilities into account when calculating mouse position; IE doesn't
+		- also moved the window.onmousemove event into Scrawl
+			- new scrawl.handleMouseMove() function
+			- called whenever user calls Pad.getMouse()
+	- writing up tutorial pages for the website
+		- 'Picture with sprite sheet' page completed
+		- 'Shape' page started
+		- Demo019-026 coded
+		- fixed scrawl.makeQuadratic() bug
+	- changed Shape.delta attribute to Shape.skew
+	- changed Vector object to Link object
+		- lesson learned: choose the right names for things before coding the big javascript library!
+	- updated documentation
+			
+130417
+	- writing up tutorial pages for the website
+		- fixed Scrawl.set() to return this
+		- fixed Sprite.set()
+		- 'Phrase' page completed
+		- Demo012-015 coded
+		- 'Picture' page completed
+		- Demo016-018 coded
+	- upgrade version to 0.0122(b)
+	- update documentation
+	- update website
+	- upload new version to SourceForge
+		
+130416
+	- writing up tutorial pages for the website
+		- added Scrawl.toString() method - returns JSON.stringify(this)
+			- can adapt this (later) to include ctx/design objects for cells and sprites, point/vector objects for Shapes, anim objects, etc
+			- could be the foundation for save/load operations???
+		- 'Scrawl library' page completed
+		- 'Block' page completed
+		- 'Wheel' page completed
+		- Demo004-011 coded
+		- amended Sprite.setDelta() to cover startAngle, endAngle attributes
+	- updated documentation
+	- updated website
+	- loaded latest version to sourceforge
+	- checked Examples in IE10
+		- mouse location bug hasn't gone away
+		- for most part, seems only to affect x (horizontal) position, not y
+	- fixed wheel emboss bug
+		- renamed 'emboss' drawing function to 'sinkInto'
+		- introduced new sprite drawing function - 'floatOver'
+			- all affected methods updated
+			- all new methods added where required
+			- local index and tutorial web pages updated
+			
+130415
+	- tackled mouse position problem
+		- now using code lifted from quirksmode website to keep track of mouse coordinates
+		- seems to have fixed the problem in IE9 (on laptop)
+			- not yet tested on other browsers
+	- started mapping out a possible tutorial page for the website
+		- added scrawl.addCanvasToPage(), Pad.makeCurrent() functions
+			- for adding canvas elements dynamically to a webpage, and drawing to them
+		- Demo001-003 coded
+		- 'HTML5 page' completed
+			
+130414
+	- added new pivot test to Sprite.stamp()
+		- if pivot === 'mouse' - set sprite's startXY to the mouse coordinates in relation to pad being stamped to
+		- updated Sprite.pickupSprite(), Sprite.dropSprite() functions to use pivot:'mouse'
+		- updated those Examples where a sprite is attached to the mouse cursor
+	- amended Cell object - changed .pads attribute to .pad
+		- big change, as decided against cells contributing to more than one Pad object
+			- placing a cellname in a Pad's cells array could achieve the same thing as the old .pads[] thingy?
+				- Pad.clear(), Pad.compile() - use Pad.cells to determine which cells to clear/compile
+				- Pad.show() - will only use cells listed in Pad.drawOrder (if drawOrder.length > 0)
+			- added Pad.addCells(string||[string]) function to add cellnames to Pad.cells and Pad.drawOrder
+				- will check that cells exist before adding them to attributes
+				- I 'think' Sprite.stamp() should be okay with this arrangement?
+					- uses cells listed in Group.cells to determine which cells to stamp on
+					- each cell only lists one pad to which it contributes
+					- uses that padname to call Pad.getMouse() when Sprite.pivot === 'mouse'
+						- which means Sprite will only attach to mouse on the cell's designated Pad object!?
+				- NONE OF THIS YET TESTED
+	- started coding up new Phrase functions: getMetrics(); checkHit()
+		- getMetrics() estimates text height - will no doubt run into problems when users choose to use em, %, etc
+			- seems to work okay for pt and px
+		- checkHit takes into account textBaseline and textAlign settings for the Phrase
+			- NOT TESTED beyond textBaseline:alphabetic && textAlign:left
+	- tested all the Examples in various browsers (on fast PC)
+		- Safari
+			- timed animations: 50-55fps
+			- glitch during Ex26? Browser hung when mouse reentered canvas. Couldn't get it to repeat, so discounting it for now
+			- Ex27 loaded in 1.1 secs
+		- Opera
+			- timed animations: 32-36fps
+			- Ex15 - not displaying cow properly - problem with SVG file??
+			- Ex17 - arrow out by x:-5px - fine on reload, couldn't get it to repeat ... glitch??
+			- Ex21 - again image out by x:10px - possibly a Pad.getMouse() problem? Fine when repeated Example
+			- Ex27 loaded in 1.4 secs
+		IE10
+			- mouse is definitely out by varying amounts across various Examples
+				- NEED TO REVISIT getting mouse coordinates code
+			- timed animations consistent at 64fps
+			- Ex27 loaded in 0.8 secs
+		- Chrome
+			- Glitched once on Ex26 (carousel) - couldn't get problem to replicate - click issue?
+			- Ex27 loaded in 1.4 secs
+			- some sort order issues on Ex26 sprite display (all originals & clones have order=0 except when atMouse (before being pasted)
+				- sort order changes result in some flicker in overlapping sprites
+				- easily fixed in Example ...
+			- still the smoothest scrolling for all browsers
+		- Firefox
+			- all as expected (Firefox is my goto browser during development)
+			- Ex27 loaded in 1.7 secs
+	- upgraded version to 0.012(b)
+	- updated documentation
+	- uploaded revisions to website
+	- uploaded new version to SourceForge
+		
+130413
+	- added Number.prototype.isBetween(val1, val2, boolean)
+		- got fed up doing islessThan or isGreaterThan comparisons
+		- when boolean set to true, test is minVal <= testVal <= maxVal === true
+		- otherwise test is minVal < testVal < maxVal === true
+			- also returns true if minVal === testVal === maxVal
+		- amended several Examples to make use of this feature
+	- added Sprite.pickupSprite(), Sprite.dropSprite() functions
+		- allows for sprites to be picked up without initial movement
+		- amended Example14 to make use of these functions
+	- coded new Example27 to test cloning and collision detection across all Scrawl sprites
+		- coded up Shape.clone function - overrides sprite.clone
+			- also clones points and vectors, and sets everything up so the cloned sprite is a completely separate entity from its parent
+		- amended Picture.getImageData(), Picture.checkHit()
+			- so that sprites with animation sheets only register hits on the painted bits, not the surrounding box
+			- requires user to call .getImageData() on the sprite before starting the collision detection stuff
+	- updated documentation
+	
+130412
+	- fixed bug in Sprite.clone()
+	- amended Example03 to demonstrate getter/setter methods
+	- updated documentation
+	- new version: 0.011(beta) - will move to .02(b) when the collision detection stuff is more complete
+	- updated website with revised example codes
+		- tested live website against browsers
+			- Firefox - everything works as expected at good speed (on high spec PC)
+			- Safari(Windows) - still as jittery as ever, but everything works
+			- Opera - slightly slower than Firefox, but better than has been - does NOT like Ex15; Ex17 also touch-and-go
+			- IE10 - mostly fine (and fast!)
+				- still got the issue with Ex15 - arrow does not clear from screen between angles +/- 60-120
+				- Ex20 - not able to use selectors with the mouse, only through arrows/tab/return keys
+			- Chrome - fast, smooth, works entirely as expected
+	- uploaded new version to SourceForge
+	- fixed 'bug' in Ex20
+		- IE really hates styling added dynamically via style element - all other tested browsers were fine with it
+		- solved by moving style stuff into the css file
+	- fixed 'bug' in Ex15
+		- made the arrow cell 1000x1000 - big enough not to send IE into hissyfits when the cell is rotated
+	- updated website
+	
+------------------------------------------------------------------------------------
+130411
+	- finished fixing Example17
+		- amended Phrase.deconstructFont() to fix font errors
+	- updated Examples 16, 18-22, 24-26 for the mouse tracking and webpage animation improvements 
+	- developing fields - 2D true/false arrays associated with cells
+		- for use as bounding boxes and the like
+			- uses sprites to determine which field elements are set to true
+		- added field{} to the library - fields will have same name as their associated cells
+		- added Cell.field attribute - an array of spritenames used to build the field
+			- though single sprites can be entered as a string rather than an array
+			- the boolean value 'true' can also be used
+				- sets all the elements in the cell's field to true
+		- added Cell.buildField() for constructing and populating scrawl.field entities
+			- either sets all field elements to true (when it encounters the boolean value 'true')
+			- or iterates through sprites in the field array and uses them to determine which field elements to set to true
+				- so far only coded for Block sprites (which form squares)
+				- Picture sprites will be able to use an alphaTable to set the field
+				- Wheel, Phrase and Shape sprites - no decisions yet taken on how to handle these
+		- added Sprite.setSpriteToCellFields(cells)
+			- where:
+				cell = true - add sprite to current pad's current cell's field array
+				cell = string - add sprite to the named cell's field array
+				cell = [string] - add sprite to all listed cells' field arrays
+			- called as part of the sprite constructor, when a 'field' attribute is passed to it
+		- added Cell.checkFieldAt() to return values from field at coordinatesXY
+			- will accept (x, y), or ({x:n, y:n}), or spritename
+				- amended Sprite.getStartXY functions to allow them being called without an override
+		- added Sprite.checkField() function
+			- uses getStartXY() for the checking point - thus affected by handleXY and scale values
+			- will check against all of its group's cells
+			- returns an object composed of cellname:boolean pairs
+	- testing new fields thingy in Example03
+		- added new methods to Block and Picture: getWidth(); getHeight(); getEndX(); getEndY()
+	- testing in Example04
+		- changed group.deltaXY to group.groupXY
+		- added group.getGroupX(), group.getGroupY()
+		- added group.checkField() method
+	- updated Examples 03-04, 08 for fields and boundary testing
+
+130410
+	- decided to internalise MouseXY coordinates
+		- new pad function .getMouse() 
+			- returns XY coords offset from topleft of display canvas
+			- also returns active: true if mouse is over the canvas
+			- makes use of moustrack event listener added to scrawl file, but not part of scrawl library (like requestAnimFrame)
+		- updated Examples 03-17 that involving mouse tracking 
+			- except Example 16
+			- currently debugging Example 17
+	- spent a lot of time working out an effective method for killing animations when user presses an Example button (on website)
+		- solved by making sure every animation routine has an off switch
+			- either a counter set for 1000 frames
+			- or a doAnimation[] flag
+				- Examples set doAnimation[n] to true
+				- Animation function only runs while doAnimation[n] remains true
+				- in cleanup between Examples, doAnimation reset to []
+			
+130409
+	- revisited Example14 - dragAndDrop
+		- added new method to Group object - Group.getSpriteAt({x, y, sheet, test})
+			- sheet = 'alpha', 'red', 'green', etc - imageDataTable to be checked
+			- test = numerical value 
+				- Picture: minimum value of (eg alpha level) check that needs to be passed for true result
+				- Wheel: additional distance to be added (subtracted for negative values) to sprite's radius for the check
+				- Shape: actual radius from Shape.startXY to use for the check
+				- Block: not taken into account (only does box collision detection)
+				- Phrase: not yet coded up the checkHit for phrase objects
+		- amended Picture.checkHit so it can check imageData tables for hits, if requested by user
+	- updated Example25 for the new group checking routines
+	- developed Example26 - colliding balls and stars - to test wheel/shape sprite collision detection
+		- added Wheel.checkHit() function
+	- coded Shape.checkHit()
+		- if test value supplied, use that as radius for circle collision test
+		- otherwise, use longest start/end point distance value as the radius
+	- coded Shape.getRadius()
+		- returns the effective radius of a shape sprite
+			- ie: the longest distance between a start/end point and the Shape.startXY values
+		- Shape.getRadius(true) returns the scaled effective radius
+	- upgraded Scrawl.js to version 0.0105(beta)
+	- updated documentation
+	- updated website
+	- uploaded new version to SourceForge
+	- NEW IE-related bug uncovered - Example20 - browser makes it difficult to use select dropdowns ...
+		
+130408
+	- decided to remove property error checking stuff
+		- Scrawl.checkValues() method removed
+		- Scrawl.set() method amended
+		- all objects inheriting from scrawl modified to remove the error check
+	- moved scale property into Sprite object
+		- removed scale from Phrase and Shape objects - now inherited from Sprite
+		- amended Context.getChanges for scaling
+			- 'lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur' all now scale
+				- unexpected, but tolerable, consequences for updated Example06
+	- updating Examples
+		- adapted Example06 to use scale, Pad.displayOffsetXY
+		- adapted Example07 to use Pad.displayOffsetXY
+		- adapted Example12 to use Pad.displayOffsetXY
+		- adapted Example14 to use Pad.displayOffsetXY
+		- adapted Example15 to use scale, Pad.displayOffsetXY
+		- adapted Example16 to use Pad.displayOffsetXY
+		- adapted Example17 to use Pad.displayOffsetXY
+		- adapted Example18 to use Pad.displayOffsetXY
+	- added Sprite.checkHit(x, y) method - returns false
+		- for collision detection
+		- coded Block.checkHit(), Picture.checkHit()
+			- use simple (xy) in-box collision detection
+			- takes into account handle offsets and scaling
+	- completed Example25 - carousel selector
+		- checked in websites:
+			- fine in Firefox and IE10
+			- works well in Chrome, except for delays on the click events
+			- a bit slow in Safari
+			- barely works in Opera
+	- upgraded Scrawl to version 0.0104(beta)
+	- updated documentation
+	- updated website
+	- uploaded to SourceForge
+
+130407
+	- developing Example25 - a carousel selector
+		- experimented with stretching shapes into ovals 
+			- abandoned - wasn't achieving the effect I wanted
+		- experimented with sprite handles
+	- no changes made to Scrawl.js
+	
+130406
+	- added pivot attribute to Sprite object
+		- pivot is the name of a point object
+		- when present, sprite will set its startXY attributes to point currentXY values
+		- added new method - 'none' to Sprite object
+		- added override method 'none' to Shape object
+			- doesn't draw shape, but will update currentXY values of its constituent points
+	- developed Example23 to demonstrate the use of pivots and invisible sprites
+		- rehash of example08
+	- adapted new pivot feature to also accept a sprite name (for sprite.startXY) as a legitimate value
+		- developed Example24 to demonstrate the feature
+	- added a forceStamp() method to the Sprite object
+		- allows sprites with visibility = false to be stamped into the scene
+	- checked browsers
+		- IE (10 - updated itself automatically yesterday) doesn't like Example17!
+	- upgraded to version 0.0103(beta)
+	- updated documentation
+	- updated website
+	- uploaded to SourceForge
+	
+130405
+	- fixed bugs
+		- IE was clipping Ex21 svg image rather than resizing it
+			- fixed by editing svg file to include viewBox attribute in the <svg> element
+		- all browsers were failing to position elements over the canvas browser correctly
+			- only occurred when viewing Ex20 & Ex21 on the live website
+			- fixed by changing the index.html <section> tag to a regular <div> tag
+		- no amendments to Scrawl.js required to fix bugs
+		- restored Examples 20-21 to the website
+	- coded a parallax scrolling example (as Example22)
+		- added backgroundColor attribute to Cell objects
+		- amended Cell.compile() to draw the background color, if defined
+		- tested new example in browsers - all okay
+	- updated documentation
+	- moved to version 0.0102(beta)
+	- updated website
+	- uploaded to SourceForge
+			
+130404
+	- experimented with Example15 (as Example21)
+		- get image to display directly over canvas element
+	- extended the Pad object to handle experimental outfall
+		- now includes: displayOffsetX; displayOffsetY; displayWidth; displayHeight
+			- collects this data from the display cell during construction
+		- setDisplayOffsets() - for setting/recalculating new attributes
+	- extended the Image object to handle experiments
+		- added attributes: startX; startY, handleX, handleY, offsetX, offsetY
+			- offsetXY taken directly from image's Pad object
+			- startXY can be used for directly positioning Image over (not in) canvas
+			- handleXY - values between 0-1 for offsetting Image relative to startXY
+				- this is DIFFERENT to how sprites and cells use their handleXY attributes
+		- added functions: getHandle(); changeDimensions(); update(); addOverPad()
+			- all for handling image over canvas operations
+	- updated documentation
+	- tested in browsers
+		- Example21 currently not working correctly in IE9
+	- moved to version 0.0101(beta)
+	- uploaded to SourceForge
+	- updated website
+		- examples 20 & 21 not working as expected on live website - hidden from view for now
+			- something's wrong with the absolute positioning of elements over the canvas
+		
+130403
+	- adapted Example19 (as Example20) to add HTML form controls
+	- no changes made to Scrawl.js
+
+130402
+	- investigated ways of turning Kaleidoscope Clock into an app
+		- website version works on Kindle Fire
+		- scrawl.js (mostly) working after appification via Android SDK/Eclipse
+			- initial frame not cleared when testing on virtual phone emulations
+			- initial setup skips a fair number of frames
+	- no changes to scrawl.js made to facilitate, or as a result of, the experiments
+
+130401
+	- developing standalone version of the Kaleidoscope Clock
+		- added click-to-change kaleidoscope feature
+		- made it resizable
+		- fixed bugs 
+			- can't work out how to stop segments 'wandering' over time
+	- added feature to Wheel object to create slices
+	- updated documentation
+	
+130331
+	- developed and deployed Example19 - the Kaleidoscope Clock
+		- involves cell rotation, translation, scaling
+			- for the flipping of sprites
+		- tested in browsers
+		- updated documentation
+		- uploaded to website
+		
+------------------------------------------------------------------------------------
+130330
+	- AnimSheet object completed
+		- anim{}, animnames[] added to scrawl library
+			- scrawl.reset() amended
+			- Scrawl.checkValues updated
+		- Picture object substantially amended to handle sprite sheets
+			- new functions: getImage(); changeAnimSheet(); setAnimSheetAction(); getRunningState()
+			- new property: animSheet
+	- added an 'avoid checking' flag to all constructor argument lists
+		- new objects can be built/cloned without excessively checking variables
+	- developed Example018 to test spritesheet animation
+	- tested all Examples across browsers
+		- everything renders as expected
+		- Chrome gives the smoothest animations
+		- Chrome, Firefox, IE9 are all around the 60fps mark (on high-spec PC)
+		- Safari (windows) is slower - 45-50fps
+		- Opera is very, very slow - 30fps on even the most basic animation
+		- things are slower on the laptop - Firefox runs at ~ 50fps
+	- updated documentation
+	- think I've covered enough of the basics to move to v0.01(beta) ...
+
+130329
+	- working on sprite sheets
+		- lots of coding; lots of abandoned ideas
+		
+130328
+	- fixed bug in Cell constructor
+		- was causing problems with cell-to-cell drawImage operations
+			- in every browser except firefox/IE9
+	- revisited Example09
+		- added scrawl.makeBezier(), scrawl.makeQuadratic()
+			- to simplify the creation of these sprites
+		- added scrawl.deleteSprite()
+			- can take a string name, or an array of string names
+	- revisited Example08
+		- added scrawl.makeRegularShape()
+			- can take the arguments 'sides', or 'angle'
+		- updated Example10 to make use of the new function
+	- tested in browsers
+	- advanced to v0.0051a
+	- updated website
+	- updated sourceForge
+	- started mapping out ideas on how to handle sprite sheets
+		- new object - AnimSheet - to handle frame data
+		- adapted Picture object to handle sprite sheets and the AnimSheet object
+		- Scrawl.clone, Scrawl.checkValues updated
+	- updated documentation
+		
+130327
+	- worked on moving the startXY points of Shape objects
+		- can't use handleXY for this - that's just a displacement factor
+		- Shapes use polar coordinates focussed on sprite's startXY values
+		- finalised Example16 - drawing lines on the canvas and rotating them
+	- worked on cell translation and rotation
+		- fixed Cell.translateCell and Cell.rotateCell
+		- built Example17 to demonstrate cell transformations
+			- TODO - font object not working as expected
+	- added scrawl.makeLine - for the sake of sanity
+		- line start or end points can be made static (fixed=true)
+			- now a feature of Shape, but flag held in the Point object
+	- updated the Wheel object
+		- now includes flags for direction, and whether circle is open or closed
+	- updated documentation
+	
+130326
+	- researched the use of svg images on the canvas
+		- revisited the idea of importing svg files into Scrawl as Shape objects
+			- experimented with getting data from the svg file
+			- abandoned the idea - too complex, and the results would (almost certainly) be poor
+		- looked at using svg files embedded directly in the web page
+			- managed to get this working, but only in Opera
+				- resizing such images was very problematical
+		- looked at using svg files imported via an <img> element on the web page
+			- seems to work well in all browsers tested
+			- results (in Picture objects) probably not as crisp as svg originals, eg when changing size
+	- added Example15 - using svg image via the <img> tag
+		- TODO - consider adding a scale attribute to all sprites
+			- currently only Shape has this built in
+			- a number of the examples (06, 10, 11, 15) resize their sprites as they run
+			- would save the user having to code up scaling operations
+	- updated documentation
+			
+130325
+	- all user input checking centralised into Scrawl.checkValues() method
+		- fixed Scrawl clone and set methods to use checkValues
+			- no longer needs to change the names of cloned objects in the library and elsewhere
+		- developed checks for colour input 
+			- probably overkill, but a good exercise
+			- can be removed later if impacts too much on animation speeds
+		- simplified all Scrawl objects' constructors to use checkValues
+			- setting of default values still handled by object constructors, not checkValues
+	- finished changes to the Context object
+		- now includes methods .getContextFromEngine(), .getChanges(), .swapStyles()
+			- Sprite.swap() now makes use of Context.swapStyles()
+		- Cell and Sprite objects now store the Context object name, not the context itself
+			- fixed Cell constructor to get Context to generate/register a new instance for the Cell
+			- fixed scrawl.getCanvas, scrawl.addNewCell, scrawl.deleteCells
+			- fixed Pad constructor, Pad.addNewCell
+			- Cell/Pad constructors no longer need flags, but do need a canvas element handle to act on it
+		- Context objects referenced through the scrawl library - scrawl.ctx, scrawl.ctxnames
+		- fixed Cell.setEngine
+		- added/amended Sprite.clone and Sprite.set methods
+		- fixed Sprite.stamp
+	- updated Examples
+		- stricter colour input testing now means 'red' is rejected - has to be 'Red', etc
+	- tested Scrawl in various browsers - works for all Examples
+	- moved version to 0.005a
+	- updated documentation
+		
+130324
+	- decided to rejig Scrawl's internal structure:
+		- making Cell and Sprite contexts fully independent objects
+			- new ctx object and ctxnames array in scrawl library
+		- centralising all the paramater checking into one Scrawl method
+		- mainly done as a learning experience ... and to make maintenance a little easier
+			- will probably impact on animation speeds
+				- currently doesn't work at all ...
+		
+------------------------------------------------------------------------------------
+130323
+	- coded up scrawl.compile(), Pad.compile(), Cell.compile()
+		- recoded Group to do sorting of sprites by their order parameter
+		- recoded Pad to do sorting of groups by their order parameter
+		- fixed scrawl.clone to ensure sprite renaming is registered with relevant groups
+	- added Example13 - sprite reordering, adding user function to group, scrawl.render()
+	- updated documentation
+	- started considering drag-and-drop
+		- not yet convinced it needs to be an intrinsic part of Scrawl
+		- coded up Example14 
+			- sprite selection handled by a user function added to the group
+			- drag'n'drop handled by jQuery event listeners
+	- updated website (v0.00441a)
+
+130322
+	- investigated the possibilities of importing SVG images into scrawl
+		- it's a big job
+		- worth investigating other js libraries that already have this function??
+			- flag up as a possible coding exercise for sometime in the future ...
+	- coded up getImageData function for the Cell object
+		- will grab the whole Cell display, or just a part of it
+		- takes parameters in an object: x, y, width, height, name, tables
+			- tables argument can be a string of 'all', 'red', 'blue', 'green' or 'color'
+			- or an array containing some of the above entries (except all, which gets ignored)
+		- dumps the javascript imageData object into scrawl.imageData
+		- optionally creates imageData tables (2 dimensional array) from the js imageData object
+			_red, _green, _blue, _alpha - extracted data (0-255) for each of the rgba channels
+			_color - table made up of rgba() values
+		- access imageData tables - scrawl.imageDataTables[tableName][rowPosition][columnPosition]
+			- where rowPosition === y coordinate
+			- columnPosition === x coordinate
+		- takes a long time to generate the tables: 1.5 - 2.5 secs for 750x375 image
+		- returns the general name used for the tables
+			- will generate specific tables with the names:
+				generalName_red, generalName_blue, generalName_green, generalName_alpha, generalName_color
+	- added Example12 - colour data under current mouse position
+	- adapted getImageData function to work with Picture objects
+		- captures the whole image
+			- no arguments for capturing just part of it
+			- only accepts a tables string or array
+		- returns the Picture object
+	- tested Example12a - getting imageData for Picture objects
+	- updated documentation
+	- upgraded library to v0.0044a
+	- updated SourceForge page
+	- updated website with latest version
+	- updated github
+			
+130321
+	- fixed Scrawl.set() and Scrawl.clone()
+		- both now climb the hierarchy
+		- objects that need to reset their own values after receiving new data ... do it
+			- changes are triggered by object set() methods
+			- changing data directly will often fail to be taken on board
+				- myText.set({size: 30,}); will change the Phrase object's font size 
+				- myText.size = 30; fails - object won't know to update its context.font value
+		- got rid of the Util object
+		- got rid of various flags - to simplify things for users
+		- updated Pattern object to cope with new way of cloning things
+	- tinkered with Shape and Phrase objects
+		- Shape no longer needs arrays of its vectors and points, just the name of the initial point
+		- Phrase now accepts metrics beyond 'px'
+	- Shape objects no longer responsible for drawing their paths
+		- instead, they just initiate the path drawing process
+			- process works its way down the vector chain
+		- Points are now responsible for checking their positions and reporting them back to vector objects
+			- changing Point attributes must be done via set(), not directly
+	- tested changes in various browsers
+	- Point objects now require the name of their Shape in order to work
+		- does mean that Shape objects should be set up before their associated Point and Vector objects
+	- updated documentation
+	- upgraded library to v0.0043a
+	- updated SourceForge page
+	- updated website with latest version
+	- started github repository for key files
+		
+130320
+	- developed the Phrase object for handling canvas text
+		- font data can be entered either as separate items ...
+				scrawl.newPhrase({
+						text: "Hello!",
+						weight: 'bold',
+						style: 'italic',
+						size: 40,
+						family: 'Garamond, "Times New Roman", Georgia, serif',
+						});		
+		... or as a font string:
+				scrawl.newPhrase({
+						text: "Hello!",
+						font: 'bold italic 40px Garamond, "Times New Roman", Georgia, serif',
+						});		
+		- added Example11 - animated text
+		-checked performance in the usual browsers - appears okay (but not spectacular)
+	- thought about text along path, Shape-like fonts (converted from SVG fonts), etc
+		- something for later consideration
+	- updated documentation
+	- upgraded library to v0.0042a
+	- updated SourceForge page
+	- updated website with latest version
+
+130319
+	- recoded some of the Shape/Point/Vector code
+	- added in scrawl methods to allow for a more shorthand method of creating point sets of point objects
+		- scrawl.makeCartesianPoints()
+		- scrawl.makePolarPoints()
+	- tested Shape object further
+		- see if a shape can hold more than one path (separated by moveTo() statements)
+		- see if a shape can be created with holes in it 
+			- yes, by following vector graphics conventions and doing the clockwise/anticlockwise thing
+		- added Example10 - shapes with holes in them
+	- updated documentation
+	- started thinking about Text objects
+
+130318
+	- coded up Shapes object
+		- shape's points defined by polar coordinates relative to the shape's startXY
+		- point details held in separate Point objects
+		- vector details held in separate Vector objects
+			- Point() and Vector() inherit from Scrawl(), thus have .set() and .clone() methods
+		- points and vectors are chained together
+			- shape object asks vectors to draw themselves before performing stamp() operations
+		- vectors coded: lineTo(); quadraticCurveTo(); bezierCurveTo()
+		- Shape stamp routines: clear(); clip(); draw(); fill(); drawFill(); fillDraw(); emboss()
+			- most of these not tested
+			- non-draw operations limited to 'closed' shapes - can't fill an open shape
+		- added Example08 - closed shape
+		- added Example09 - open shape
+	- checked to make sure shape objects work in other browsers - looks okay
+	- updated documentation
+	
+130317
+	- fixed Example07
+		- used bigger image to help cells avoid the edge issue evident in the browser tests
+		- used a globalCompositeOperation to build a stencil - a round magnifier in place of a square one
+		- introduced Cell.handleX, Cell.handleY for copy ofsetting
+	- coded some of the context formation events - scale, translate, rotate
+		- NOT YET TESTED, just coded
+		- decided against adding in transform()
+			- Cell.transform() just calls up the scale, rotate and translate methods
+	- added code to sprite objects to perform a clip()
+		- initial testing - not good - clip performance vs globalCompositeOperation was dire
+	- added in code to perform context save() and restore()
+		- NOT YET TESTED, just coded
+	- updated documentation
+	- drafted spec for Scrawl Shapes object
+	
+130316
+	- working on the issues surrounding multiple cells (beyond the default cells)
+	- added routines to clean Scrawl library after each website example runs
+	- replaced cloning system with one which works properly
+	- implementing website examples
+		- Example07 working
+	- testing Example07 in browsers
+		- all problems suggest more work needed on better use of canvas drawImage routines
+		- Firefox - works (mostly) as desired - magnifier image distorts on bottom/right borders of display cell
+		- Internet Explorer - works, but magnifier border out by one pixel
+		- Safari - works to a point - magnifier stops working when going beyond right/bottom borders of display cell
+		- Opera - works in same manner as Firefox
+		- Chrome - works (mostly) as expected
+			- magnifier leaves red border at top of display when moving back onto the canvas from the top
+			- magnifier image (but not border) disappears when it touches the bottom/right edges of the display cell
+	- started complete rewrite of documentation
+	- uploaded v0.004 to SourceForge
+	- updated website to v0.004
+
+130315
+	- continued working on groups
+	- implementing website examples
+		- Example04 working
+	- tested Scrawl in various browsers; fixed (where possible) bugs exposed by the exercise
+		- Firefox 19.0.2 (windows 7)
+		- Internet Explorer 9.0.8112.16421  (windows 7)
+		- Safari 5.1.7 (windows 7)
+		- Opera 12.14 (windows 7)
+		- Chrome 25.0.1364.172 m (windows 7) ... Scrawl looks best on Chrome
+	- further work on animation
+	- implementing website examples
+		- Example06 working
+		
+130314
+	- fixed patterns object
+	- implementing website examples
+		- Example02 working
+		- Example03 working
+		- Example05 working
+	- started working on Scrawl groups
+
+130313
+	- ported reusable code from v0.0031 to v0.004
+	- worked on a cloning system for Scrawl objects
+	- started work on implementing website examples
+		- Example01 - working
+
+130312
+	- encapsulated library
+	- coded up bones of the various classes
+	- worked on object inheritance
+
+130311
+	- sketched out schematic of new version
+
+------------------------------------------------------------------------------------
+130310
+	- v0.0031(alpha) abandoned - code was becoming too complex
+
+130309
+	- updated documentation
+	- fixed Scrawl.displayWipedPads() glitch
+		- coded Scrawl.wipeDisplayPads(), Scrawl.wipeCurrentPads(), Cell.wipeDisplay(), Cell.wipeCurrent()
+	- code for adding (new) cells to a pad
+		- coded Cell.set(), Cell.clone()
+		- coded Pad.add()
+		- coded Scrawl.addCell(), Scrawl.newCell()
+		- added Cell.user{} attribute
+		- tested for all six possible Pad.add() arguments
+			- ('existingCellName') 
+				- returns the named cell object
+			- ('newCellName') 
+				- returns NEW cell with name = 'newCellName'
+			- (existingCellObject)
+				- returns the named cell object
+			- (objectWithNameAttributeWhichIsNotAnExistingCellName)
+				- returns NEW cell with name = objectWithNameAttributeWhichIsNotAnExistingCellName.name
+			- (objectWith-NO-NameAttribute)
+				- returns NEW cell with name along the lines of currentCellName_xxxxxx
+				- returns NEW cell with name based around CELL_xxxxxx
+			- new cells take on board any attribute changes the user may have included in the object
+				- existing cells ignore any such changes
+		- coded Cell.resetToContext() - in case browsers differ from the Scrawl Cell/Sprite context defaults
+			- added this in to Scrawl.getCanvas() to ensure consistency from the start
+		- moved as much cell construction and registration stuff as possible into the Cell object
+			- major reconstruction to Scrawl.getCanvas()
+		- added Pad.addCells (different to Pad.add() - this one is private)
+	- added Group.user{}; coded Group.clone() - for consistency & completeness
+	- added Pad.user{}; coded Pad.set(), Pad.clone() - for consistency & completeness
+	- implemented sprite.visibility and group.visibility directives in Cell.compileSprite() and Group.render()
+	- updated documentation
+	
+130308
+	- finished coding the wheel object
+	- experimented with adding jQuery event listeners to control animations
+		- fixed: Scrawl.getCanvas() was renaming original 'canvas' to 'canvas_display'
+			- needed to be changed, as not obvious to casual users setting up jQuery listeners!
+		- removed Block.animation, Block.lineCap attributes
+	- move sprite rendering code into sprite.prototype - to keep things easier
+		- sprite.method changed from ARRAY[STRING] to STRING - to simplify stuff
+		- all the sprite-related switch material in Cell.compileSprite moved to the sprite.prototype objects
+		- added Block.stamp(), Wheel.stamp() to handle the work
+		- added doShadow attribute to Block and Wheel
+			- handles fillDraw and drawFill glitch where the shadow was being drawn twice
+	- added Block.clear(), Wheel.clear()
+		- added doFill attribute to Block and Wheel
+			- triggers a Cell.fillStyle change to transparent without changing the sprite's innate fillStyle property
+	- added Scrawl.flag{} object 
+		- was an abandoned attempt to fix the shadow problem, but may come in useful later
+			- any context attribute can now be forced by setting the appropriate Scrawl.flag to true
+				- does mirror the PadCommand force array - two systems to do the same job may be overkill
+	- added Scrawl.radian constant - eases calculation of arcs and stuff
+	- added Block.user{} and Wheel.user{} attributes
+		- a place where users can add in their own variables, which can then be cloned to new objects
+			- example004 now makes use of this feature
+				- previously just added user variables to the Sprite object - couldn't be cloned
+	- coded Cell methods fn_beginPath(), fn_arc(), fn_closePath(), fn_fill(), fn_stroke()
+	
+------------------------------------------------------------------------------------
+130307
+	- finished coding Group.render()
+		- added Group.cleanup() to clean up the mess made by Group.render() and Group.renderSpriteUp()
+		- TODO: probably better to prevent virtual Sprite/Group object registering with Scrawl
+			- no need to cleanup if no mess made in the first place
+	- developed the demonstration/testing website - currently on localhost
+	- started working on animation
+		- currently have user code animation functions outside of Scrawl
+		- added Scrawl.setCellDimensions(), Cell.setDimensions()
+			- for resizing Cells and setting their sX/sY/sW/sH/dX/dY/dW/dH attributes
+		- added Scrawl.displayWipedPads(), Pad.wipeShow()
+			- to assist user with Cell animation
+		- added requestAnimFrame (shim by Paul Irish - http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+		- TODO: displaying an example after an animation - sprites sometimes lose their borders!
+	- updated documentation
+	- version 0.003(a) - to celebrate getting things moving on the screen!
+	- started building a Wheel (circle) sprite object
+	
+130306
+	- fixed CellCommand object; changed its name to PadCommand
+		- fixed Block.draw/fill/drawFill/fillDraw() to work with PadCommand
+		- removed Block.checkRender()- no longer needed
+	- moved Cell.renderSpriteUp() to Group.renderSpriteUp() - to cleanup the purpose of Cell
+		- fixed Block.draw/fill/drawFill/fillDraw() to work with Group.renderSpriteUp()
+		- changed Pad.renderSpriteUp() to Pad.render()
+		- fixed Group.renderSpriteUp(); fixed Pad.renderSpriteUp()
+	- fixed Scrawl.displayPad() so it delegates the work to Pad objects; changed method name to displayPads()
+		- changed Pad.display() to Pad.show(); method coded
+	- added Scrawl.clearPads(); method coded
+	- added Pad.clear(); method coded
+	- added in a shedload of error checking stuff
+	- added in Scrawl.clean() - to tidy up Scrawl attributes between scene renderings
+	- added in Scrawl.cellActionRequired 
+		- used to ensure cells don't get drawn more than once in a Sprite/Group renderUp chain
+		- re-fixed Group.renderSpriteUp() and Pad.renderSpriteUp()
+	- coded Group.render()
+		- took code from Group.renderSpriteUp to make two new methods which can also be used by Group.render()
+			- Group.getPadsForRender(); Group.prepareCellActionRequired()
+	- updated documentation
+	
+130305
+	- started writing documentation before taking development forward; working on Group object
+	- uploaded work to date to SourceForge as a new project
+	
+130304
+	- MILESTONE: got boxes to show up on the canvas; 
+	
+130303
+	- started coding CellCommander and Group objects
+	
+130302
+	- import of reusable bits of v0.001 into v0.002 largely completed
+	
+130301
+	- started coding Scrawl, Pad, Cell, Block, Gradient, RadialGradient, Pattern objects
+	
+130228
+	- map out initial ideas about how to get multiple canvases to interact
+	
+130227
+	- v0.001(alpha) abandoned - was drawing boxes on canvases, but needed much more thought on structures
