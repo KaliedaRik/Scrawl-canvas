@@ -1,6 +1,6 @@
 /***********************************************************************************
 * SCRAWL+STACK.JS Library 
-*	version 0.302 - 31 August 2013
+*	version 0.303 - 3 September 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -167,11 +167,9 @@ window.scrawl = (function(){
 			return false;
 			},
 		xt: function(item){
-			//item is defined?
 			return (typeof item !== 'undefined') ? true : false;
 			},
 		xta: function(item){
-			//all items in array are defined?
 			var a = [].concat(item);
 			if(a.length > 0){
 				for(var i=0, z=a.length; i<z; i++){
@@ -184,7 +182,6 @@ window.scrawl = (function(){
 			return false;
 			},
 		xto: function(item){
-			//at least one item in array is defined?
 			var a = [].concat(item);
 			if(a.length > 0){
 				for(var i=0, z=a.length; i<z; i++){
@@ -235,10 +232,8 @@ window.scrawl = (function(){
 			var dec = item.strtr(myD);
 			var a = JSON.parse(dec);
 			var _ctx = ['fillStyle','strokeStyle','globalAlpha','globalCompositeOperation','lineWidth','lineCap','lineJoin','miterLimit','shadowOffsetX','shadowOffsetY','shadowBlur','shadowColor','font','textAlign','textBaseline'];
-			//sifting phase
 			var _image = {}, _pattern = {}, _gradient = {}, _sprite = {}, _point = {}, _link = {}, _anim = {}, _group = {};
 			var _imageNames = [], _patternNames = [], _gradientNames = [], _spriteNames = [], _pointNames = [], _linkNames = [], _animNames = [], _groupNames = [];
-			//first sift - looking for sprites, designs, points, links, groups
 			for(var i=0, z=a.length; i<z; i++){
 				switch(a[i].type){
 					case 'Pattern' :
@@ -280,7 +275,6 @@ window.scrawl = (function(){
 						break;
 					}
 				}
-			//second sift - extract image, context data
 			for(var i=0, z=_patternNames.length; i<z; i++){
 				if(_pattern[_patternNames[i]].image.type === 'Image'){
 					_pattern[_patternNames[i]].image['parent'] = _patternNames[i];
@@ -305,8 +299,6 @@ window.scrawl = (function(){
 					_sprite[_spriteNames[i]].context = _sprite[_spriteNames[i]].context.name;
 					}
 				}
-
-			//action phase - creating objects
 			var newobj, parobj;
 			for(var i=0, z=_imageNames.length; i<z; i++){
 				_image[_imageNames[i]].object.source = false;
@@ -378,8 +370,9 @@ window.scrawl = (function(){
 				};
 			if(this.nameslist.contains(o.target)){
 				var name = o.name || o.type || 'default';
-				name += (this[o.target].contains(name)) ? '_'+Math.floor(Math.random()*100000000) : '';
-				return name;
+				var nameArray = name.split('~£!');
+				var newname = (this[o.target].contains(nameArray[0])) ? nameArray[0]+'~£!'+Math.floor(Math.random()*100000000) : nameArray[0];
+				return newname;
 				}
 			return false;
 			},
@@ -544,45 +537,52 @@ window.scrawl = (function(){
 			var myFixed = items.fixed || 'none';
 			items.fixed = false;
 			var myShape = this.newShape(items);
+			var tempName = myShape.name.replace('~','_','g');
 			if(myShape){
 				this.makeCartesianPoints({
-					pointLabel: myShape.name+'_p',
-					linkLabel: myShape.name+'_v',
+					pointLabel: tempName+'_p',
+					linkLabel: tempName+'_v',
 					sprite: myShape.name,
 					data: [[items.startX, items.startY], [items.endX, items.endY]],
 					});
 				this.newLink({
-					name: myShape.name+'_v0',
+					name: tempName+'_v0',
+					sprite: myShape.name,
 					species: 'line', 
-					startPoint: myShape.name+'_p0',
-					endPoint: myShape.name+'_p1',
+					startPoint: tempName+'_p0',
+					endPoint: tempName+'_p1',
 					action: 'add',
 					precision: items.precision || false,
 					});
 				this.newLink({
-					name: myShape.name+'_v1',
+					name: tempName+'_v1',
+					sprite: myShape.name,
 					action: 'end',
 					});
-				this.link[myShape.name+'_v1'].action = 'end';		//????
+				this.link[tempName+'_v1'].action = 'end';		//????
 				myShape.set({
-					firstPoint: myShape.name+'_p0',
+					firstPoint: tempName+'_p0',
 					collisionPoints: myShape.collisionPoints,
 					});
 				switch(myFixed){
 					case 'both' :
-						this.point[myShape.name+'_p0'].fixed = true;
-						this.point[myShape.name+'_p1'].fixed = true;
+						this.point[tempName+'_p0'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					case 'start' :
-						this.point[myShape.name+'_p0'].fixed = true;
+						this.point[tempName+'_p0'].fixed = true;
 						break;
 					case 'end' :
-						this.point[myShape.name+'_p1'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					default :
-						this.point[myShape.name+'_p0'].fixed = myShape.name;
+						this.point[tempName+'_p0'].fixed = myShape.name;
 					}
-				myShape.forceStamp('none');
+				if(items.path){
+					myShape.path = false;
+					myShape.forceStamp('none');
+					myShape.path = items.path;
+					}
 				return myShape;
 				}
 			return false;
@@ -595,10 +595,11 @@ window.scrawl = (function(){
 			items.radiusY = items.radiusY || 0;
 			items.closed = true;
 			var myShape = this.newShape(items);
+			var tempName = myShape.name.replace('~','_','g');
 			if(myShape){
 				this.makeCartesianPoints({
-					pointLabel: myShape.name+'_p',
-					linkLabel: myShape.name+'_l',
+					pointLabel: tempName+'_p',
+					linkLabel: tempName+'_l',
 					sprite: myShape.name,
 					data: [
 						[(items.startX-(items.radiusX*0.55)), (items.startY-items.radiusY)],
@@ -617,48 +618,54 @@ window.scrawl = (function(){
 						],
 					});
 				this.newLink({
-					name: myShape.name+'_l0',
+					name: tempName+'_l0',
+					sprite: myShape.name,
 					species: 'bezier', 
-					startPoint: myShape.name+'_p1',
-					endPoint: myShape.name+'_p4',
-					controlPoint1: myShape.name+'_p2',
-					controlPoint2: myShape.name+'_p3',
+					startPoint: tempName+'_p1',
+					endPoint: tempName+'_p4',
+					controlPoint1: tempName+'_p2',
+					controlPoint2: tempName+'_p3',
 					precision: items.precision || false,
 					action: 'add',
 					}).clone({
-					name: myShape.name+'_l1',
-					startPoint: myShape.name+'_p4',
-					endPoint: myShape.name+'_p7',
-					controlPoint1: myShape.name+'_p5',
-					controlPoint2: myShape.name+'_p6',
+					name: tempName+'_l1',
+					startPoint: tempName+'_p4',
+					endPoint: tempName+'_p7',
+					controlPoint1: tempName+'_p5',
+					controlPoint2: tempName+'_p6',
 					}).clone({
-					name: myShape.name+'_l2',
-					startPoint: myShape.name+'_p7',
-					endPoint: myShape.name+'_p10',
-					controlPoint1: myShape.name+'_p8',
-					controlPoint2: myShape.name+'_p9',
+					name: tempName+'_l2',
+					startPoint: tempName+'_p7',
+					endPoint: tempName+'_p10',
+					controlPoint1: tempName+'_p8',
+					controlPoint2: tempName+'_p9',
 					}).clone({
-					name: myShape.name+'_l3',
-					startPoint: myShape.name+'_p10',
-					endPoint: myShape.name+'_p12',
-					controlPoint1: myShape.name+'_p11',
-					controlPoint2: myShape.name+'_p0',
+					name: tempName+'_l3',
+					startPoint: tempName+'_p10',
+					endPoint: tempName+'_p12',
+					controlPoint1: tempName+'_p11',
+					controlPoint2: tempName+'_p0',
 					});
 				this.newLink({
-					name: myShape.name+'_l4',
-					startPoint: myShape.name+'_p12',
+					name: tempName+'_l4',
+					sprite: myShape.name,
+					startPoint: tempName+'_p12',
 					action: 'close',
 					});
 				myShape.set({
-					firstPoint: myShape.name+'_p1',
+					firstPoint: tempName+'_p1',
 					collisionPoints: myShape.collisionPoints,
 					});
-				scrawl.point[myShape.name+'_p1'].set({startLink: myShape.name+'_l0'});
-				scrawl.point[myShape.name+'_p4'].set({startLink: myShape.name+'_l1'});
-				scrawl.point[myShape.name+'_p7'].set({startLink: myShape.name+'_l2'});
-				scrawl.point[myShape.name+'_p10'].set({startLink: myShape.name+'_l3'});
-				scrawl.point[myShape.name+'_p12'].set({startLink: myShape.name+'_l4'});
-				myShape.forceStamp('none');
+				scrawl.point[tempName+'_p1'].set({startLink: tempName+'_l0'});
+				scrawl.point[tempName+'_p4'].set({startLink: tempName+'_l1'});
+				scrawl.point[tempName+'_p7'].set({startLink: tempName+'_l2'});
+				scrawl.point[tempName+'_p10'].set({startLink: tempName+'_l3'});
+				scrawl.point[tempName+'_p12'].set({startLink: tempName+'_l4'});
+				if(items.path){
+					myShape.path = false;
+					myShape.forceStamp('none');
+					myShape.path = items.path;
+					}
 				return myShape;
 				}
 			return false;
@@ -672,6 +679,7 @@ window.scrawl = (function(){
 			items.radius = items.radius || 0; 
 			items.closed = true;
 			var myShape = this.newShape(items);
+			var tempName = myShape.name.replace('~','_','g');
 			if(myShape){
 				var _tlx = items.radiusTopLeftX || items.radiusTopLeft || items.radiusTopX || items.radiusLeftX || items.radiusTop || items.radiusLeft || items.radiusX || items.radius || 0;
 				var _tly = items.radiusTopLeftY || items.radiusTopLeft || items.radiusTopY || items.radiusLeftY || items.radiusTop || items.radiusLeft || items.radiusY || items.radius || 0;
@@ -683,10 +691,9 @@ window.scrawl = (function(){
 				var _bly = items.radiusBottomLeftY || items.radiusBottomLeft || items.radiusBottomY || items.radiusLeftY || items.radiusBottom || items.radiusLeft || items.radiusY || items.radius || 0;
 				var halfWidth = (items.width/2);
 				var halfHeight = (items.height/2);
-				
 				this.makeCartesianPoints({
-					pointLabel: myShape.name+'_p',
-					linkLabel: myShape.name+'_l',
+					pointLabel: tempName+'_p',
+					linkLabel: tempName+'_l',
 					sprite: myShape.name,
 					data: [
 						[items.startX + halfWidth - _trx, items.startY - halfHeight],
@@ -701,8 +708,8 @@ window.scrawl = (function(){
 						],
 					});
 				this.makeCartesianPoints({
-					pointLabel: myShape.name+'_pc',
-					linkLabel: myShape.name+'_l',
+					pointLabel: tempName+'_pc',
+					linkLabel: tempName+'_l',
 					sprite: myShape.name,
 					data: [
 						[items.startX + halfWidth - _trx + (_trx*0.55), items.startY - halfHeight],
@@ -716,96 +723,109 @@ window.scrawl = (function(){
 						],
 					});
 				this.newLink({
-					name: myShape.name+'_l4',
+					name: tempName+'_l4',
+					sprite: myShape.name,
 					species: 'bezier', 
-					startPoint: myShape.name+'_p0',
-					endPoint: myShape.name+'_p1',
-					controlPoint1: myShape.name+'_pc0',
-					controlPoint2: myShape.name+'_pc1',
+					startPoint: tempName+'_p0',
+					endPoint: tempName+'_p1',
+					controlPoint1: tempName+'_pc0',
+					controlPoint2: tempName+'_pc1',
 					precision: items.precision || false,
 					action: 'add',
 					});
 				this.newLink({
-					name: myShape.name+'_l0',
+					name: tempName+'_l0',
+					sprite: myShape.name,
 					species: 'line', 
-					startPoint: myShape.name+'_p1',
-					endPoint: myShape.name+'_p2',
+					startPoint: tempName+'_p1',
+					endPoint: tempName+'_p2',
 					precision: items.precision || false,
 					action: 'add',
 					});
 				this.newLink({
-					name: myShape.name+'_l5',
+					name: tempName+'_l5',
+					sprite: myShape.name,
 					species: 'bezier', 
-					startPoint: myShape.name+'_p2',
-					endPoint: myShape.name+'_p3',
-					controlPoint1: myShape.name+'_pc2',
-					controlPoint2: myShape.name+'_pc3',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					species: 'line', 
-					name: myShape.name+'_l1',
-					startPoint: myShape.name+'_p3',
-					endPoint: myShape.name+'_p4',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					name: myShape.name+'_l6',
-					species: 'bezier', 
-					startPoint: myShape.name+'_p4',
-					endPoint: myShape.name+'_p5',
-					controlPoint1: myShape.name+'_pc4',
-					controlPoint2: myShape.name+'_pc5',
+					startPoint: tempName+'_p2',
+					endPoint: tempName+'_p3',
+					controlPoint1: tempName+'_pc2',
+					controlPoint2: tempName+'_pc3',
 					precision: items.precision || false,
 					action: 'add',
 					});
 				this.newLink({
 					species: 'line', 
-					name: myShape.name+'_l2',
-					startPoint: myShape.name+'_p5',
-					endPoint: myShape.name+'_p6',
+					sprite: myShape.name,
+					name: tempName+'_l1',
+					startPoint: tempName+'_p3',
+					endPoint: tempName+'_p4',
 					precision: items.precision || false,
 					action: 'add',
 					});
 				this.newLink({
-					name: myShape.name+'_l7',
+					name: tempName+'_l6',
+					sprite: myShape.name,
 					species: 'bezier', 
-					startPoint: myShape.name+'_p6',
-					endPoint: myShape.name+'_p7',
-					controlPoint1: myShape.name+'_pc6',
-					controlPoint2: myShape.name+'_pc7',
+					startPoint: tempName+'_p4',
+					endPoint: tempName+'_p5',
+					controlPoint1: tempName+'_pc4',
+					controlPoint2: tempName+'_pc5',
 					precision: items.precision || false,
 					action: 'add',
 					});
 				this.newLink({
 					species: 'line', 
-					name: myShape.name+'_l3',
-					startPoint: myShape.name+'_p7',
-					endPoint: myShape.name+'_p8',
+					sprite: myShape.name,
+					name: tempName+'_l2',
+					startPoint: tempName+'_p5',
+					endPoint: tempName+'_p6',
 					precision: items.precision || false,
 					action: 'add',
 					});
 				this.newLink({
-					name: myShape.name+'_l8',
-					startPoint: myShape.name+'_p8',
+					name: tempName+'_l7',
+					sprite: myShape.name,
+					species: 'bezier', 
+					startPoint: tempName+'_p6',
+					endPoint: tempName+'_p7',
+					controlPoint1: tempName+'_pc6',
+					controlPoint2: tempName+'_pc7',
+					precision: items.precision || false,
+					action: 'add',
+					});
+				this.newLink({
+					species: 'line', 
+					sprite: myShape.name,
+					name: tempName+'_l3',
+					startPoint: tempName+'_p7',
+					endPoint: tempName+'_p8',
+					precision: items.precision || false,
+					action: 'add',
+					});
+				this.newLink({
+					name: tempName+'_l8',
+					sprite: myShape.name,
+					startPoint: tempName+'_p8',
 					action: 'close',
 					});
 				myShape.set({
-					firstPoint: myShape.name+'_p0',
+					firstPoint: tempName+'_p0',
 					collisionPoints: myShape.collisionPoints,
 					});
-				scrawl.point[myShape.name+'_p0'].set({startLink: myShape.name+'_l4'});
-				scrawl.point[myShape.name+'_p1'].set({startLink: myShape.name+'_l0'});
-				scrawl.point[myShape.name+'_p2'].set({startLink: myShape.name+'_l5'});
-				scrawl.point[myShape.name+'_p3'].set({startLink: myShape.name+'_l1'});
-				scrawl.point[myShape.name+'_p4'].set({startLink: myShape.name+'_l6'});
-				scrawl.point[myShape.name+'_p5'].set({startLink: myShape.name+'_l2'});
-				scrawl.point[myShape.name+'_p6'].set({startLink: myShape.name+'_l7'});
-				scrawl.point[myShape.name+'_p7'].set({startLink: myShape.name+'_l3'});
-				scrawl.point[myShape.name+'_p8'].set({startLink: myShape.name+'_l8'});
-				myShape.forceStamp('none');
+				scrawl.point[tempName+'_p0'].set({startLink: tempName+'_l4'});
+				scrawl.point[tempName+'_p1'].set({startLink: tempName+'_l0'});
+				scrawl.point[tempName+'_p2'].set({startLink: tempName+'_l5'});
+				scrawl.point[tempName+'_p3'].set({startLink: tempName+'_l1'});
+				scrawl.point[tempName+'_p4'].set({startLink: tempName+'_l6'});
+				scrawl.point[tempName+'_p5'].set({startLink: tempName+'_l2'});
+				scrawl.point[tempName+'_p6'].set({startLink: tempName+'_l7'});
+				scrawl.point[tempName+'_p7'].set({startLink: tempName+'_l3'});
+				scrawl.point[tempName+'_p8'].set({startLink: tempName+'_l8'});
+				if(items.path){
+					myShape.path = false;
+					myShape.forceStamp('none');
+					myShape.path = items.path;
+					}
 				return myShape;
 				}
 			return false;
@@ -824,64 +844,71 @@ window.scrawl = (function(){
 			var myFixed = items.fixed || 'none';
 			items.fixed = false;
 			var myShape = this.newShape(items);
+			var tempName = myShape.name.replace('~','_','g');
 			if(myShape){
 				this.makeCartesianPoints({
-					pointLabel: myShape.name+'_p',
-					linkLabel: myShape.name+'_v',
+					pointLabel: tempName+'_p',
+					linkLabel: tempName+'_v',
 					sprite: myShape.name,
 					data: [[items.startX, items.startY], [items.endX, items.endY]],
 					});
 				this.makeCartesianPoints({
-					pointLabel: myShape.name+'_pc',
-					linkLabel: myShape.name+'_vc',
+					pointLabel: tempName+'_pc',
+					linkLabel: tempName+'_vc',
 					sprite: myShape.name,
 					data: [[items.startControlX, items.startControlY], [items.endControlX, items.endControlY]],
 					});
 				this.newLink({
-					name: myShape.name+'_v0',
+					name: tempName+'_v0',
+					sprite: myShape.name,
 					species: 'bezier', 
-					startPoint: myShape.name+'_p0',
-					endPoint: myShape.name+'_p1',
-					controlPoint1: myShape.name+'_pc0',
-					controlPoint2: myShape.name+'_pc1',
+					startPoint: tempName+'_p0',
+					endPoint: tempName+'_p1',
+					controlPoint1: tempName+'_pc0',
+					controlPoint2: tempName+'_pc1',
 					precision: items.precision || false,
 					action: 'add',
 					});
 				this.newLink({
-					name: myShape.name+'_v1',
+					name: tempName+'_v1',
+					sprite: myShape.name,
 					action: 'end',
 					});
 				myShape.set({
-					firstPoint: myShape.name+'_p0',
+					firstPoint: tempName+'_p0',
 					collisionPoints: myShape.collisionPoints,
 					});
 				switch(myFixed){
 					case 'all' :
-						this.point[myShape.name+'_p0'].fixed = true;
-						this.point[myShape.name+'_pc0'].fixed = true;
-						this.point[myShape.name+'_pc1'].fixed = true;
-						this.point[myShape.name+'_p1'].fixed = true;
+						this.point[tempName+'_p0'].fixed = true;
+						this.point[tempName+'_pc0'].fixed = true;
+						this.point[tempName+'_pc1'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					case 'both' :
-						this.point[myShape.name+'_p0'].fixed = true;
-						this.point[myShape.name+'_p1'].fixed = true;
+						this.point[tempName+'_p0'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					case 'start' :
-						this.point[myShape.name+'_p0'].fixed = true;
+						this.point[tempName+'_p0'].fixed = true;
 						break;
 					case 'startControl' :
-						this.point[myShape.name+'_pc0'].fixed = true;
+						this.point[tempName+'_pc0'].fixed = true;
 						break;
 					case 'endControl' :
-						this.point[myShape.name+'_pc1'].fixed = true;
+						this.point[tempName+'_pc1'].fixed = true;
 						break;
 					case 'end' :
-						this.point[myShape.name+'_p1'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					default :
-						this.point[myShape.name+'_p0'].fixed = myShape.name;
+						this.point[tempName+'_p0'].fixed = myShape.name;
 					}
-				myShape.forceStamp('none');
+				if(items.path){
+					myShape.path = false;
+					myShape.forceStamp('none');
+					myShape.path = items.path;
+					}
 				return myShape;
 				}
 			return false;
@@ -898,59 +925,66 @@ window.scrawl = (function(){
 			var myFixed = items.fixed || 'none';
 			items.fixed = false;
 			var myShape = this.newShape(items);
+			var tempName = myShape.name.replace('~','_','g');
 			if(myShape){
 				this.makeCartesianPoints({
-					pointLabel: myShape.name+'_p',
-					linkLabel: myShape.name+'_v',
+					pointLabel: tempName+'_p',
+					linkLabel: tempName+'_v',
 					sprite: myShape.name,
 					data: [[items.startX, items.startY], [items.endX, items.endY]],
 					});
 				this.makeCartesianPoints({
-					pointLabel: myShape.name+'_pc',
-					linkLabel: myShape.name+'_vc',
+					pointLabel: tempName+'_pc',
+					linkLabel: tempName+'_vc',
 					sprite: myShape.name,
 					data: [[items.controlX, items.controlY]],
 					});
 				this.newLink({
-					name: myShape.name+'_v0',
+					name: tempName+'_v0',
 					species: 'quadratic', 
-					startPoint: myShape.name+'_p0',
-					endPoint: myShape.name+'_p1',
-					controlPoint1: myShape.name+'_pc0',
+					sprite: myShape.name,
+					startPoint: tempName+'_p0',
+					endPoint: tempName+'_p1',
+					controlPoint1: tempName+'_pc0',
 					precision: items.precision || false,
 					action: 'add',
 					});
 				this.newLink({
-					name: myShape.name+'_v1',
+					name: tempName+'_v1',
+					sprite: myShape.name,
 					action: 'end',
 					});
 				myShape.set({
-					firstPoint: myShape.name+'_p0',
+					firstPoint: tempName+'_p0',
 					collisionPoints: myShape.collisionPoints,
 					});
 				switch(myFixed){
 					case 'all' :
-						this.point[myShape.name+'_p0'].fixed = true;
-						this.point[myShape.name+'_pc0'].fixed = true;
-						this.point[myShape.name+'_p1'].fixed = true;
+						this.point[tempName+'_p0'].fixed = true;
+						this.point[tempName+'_pc0'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					case 'both' :
-						this.point[myShape.name+'_p0'].fixed = true;
-						this.point[myShape.name+'_p1'].fixed = true;
+						this.point[tempName+'_p0'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					case 'start' :
-						this.point[myShape.name+'_p0'].fixed = true;
+						this.point[tempName+'_p0'].fixed = true;
 						break;
 					case 'control' :
-						this.point[myShape.name+'_pc0'].fixed = true;
+						this.point[tempName+'_pc0'].fixed = true;
 						break;
 					case 'end' :
-						this.point[myShape.name+'_p1'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					default :
-						this.point[myShape.name+'_p0'].fixed = myShape.name;
+						this.point[tempName+'_p0'].fixed = myShape.name;
 					}
-				myShape.forceStamp('none');
+				if(items.path){
+					myShape.path = false;
+					myShape.forceStamp('none');
+					myShape.path = items.path;
+					}
 				return myShape;
 				}
 			return false;
@@ -971,21 +1005,23 @@ window.scrawl = (function(){
 					}
 				mySides++;
 				var myShape = this.newShape(items);
+				var tempName = myShape.name.replace('~','_','g');
 				if(myShape){
 					var myAngle = myTurn;
 					for(var i=0; i<mySides; i++){
 						this.newPoint({
-							name: myShape.name+'_p'+i,
+							name: tempName+'_p'+i,
 							sprite: myShape.name,
 							distance: items.radius,
 							angle: myAngle,
-							startLink: myShape.name+'_v'+i,
+							startLink: tempName+'_v'+i,
 							});
 						this.newLink({
-							name: myShape.name+'_v'+i,
+							name: tempName+'_v'+i,
+							sprite: myShape.name,
 							species: 'line',
-							startPoint: myShape.name+'_p'+i,
-							endPoint: myShape.name+'_p'+(i+1),
+							startPoint: tempName+'_p'+i,
+							endPoint: tempName+'_p'+(i+1),
 							action: 'add',
 							precision: items.precision || false,
 							});
@@ -993,18 +1029,19 @@ window.scrawl = (function(){
 						myAngle = myAngle%360;
 						}
 					this.newPoint({
-						name: myShape.name+'_p'+mySides,
+						name: tempName+'_p'+mySides,
 						sprite: myShape.name,
 						distance: items.radius,
 						angle: myAngle,
-						startLink: myShape.name+'_v'+mySides,
+						startLink: tempName+'_v'+mySides,
 						});
 					this.newLink({
-						name: myShape.name+'_v'+mySides,
+						name: tempName+'_v'+mySides,
+						sprite: myShape.name,
 						action: 'close',
 						});
 					myShape.set({
-						firstPoint: myShape.name+'_p0',
+						firstPoint: tempName+'_p0',
 						collisionPoints: myShape.collisionPoints,
 						});
 					myShape.forceStamp('none');
@@ -1257,6 +1294,7 @@ window.scrawl = (function(){
 				}
 			if(myItem === 'pads' || myItem === 'all'){
 				for(var i=0, z=scrawl.padnames.length; i<z; i++){
+
 					scrawl.pad[scrawl.padnames[i]].setDisplayOffsets();
 					}
 				}
@@ -2430,24 +2468,24 @@ window.scrawl = (function(){
 		fieldSprites = scrawl.group[this.name+'_field'].sprites;
 		for(var i=0, z=fieldSprites.length; i<z; i++){
 			tempsprite = scrawl.sprite[fieldSprites[i]];
-			tempfill = scrawl.ctx[tempsprite.name].fillStyle;
-			tempstroke = scrawl.ctx[tempsprite.name].strokeStyle;
-			scrawl.ctx[tempsprite.name].fillStyle = 'rgba(255,255,255,1)';
-			scrawl.ctx[tempsprite.name].strokeStyle = 'rgba(255,255,255,1)';
+			tempfill = scrawl.ctx[tempsprite.context].fillStyle;
+			tempstroke = scrawl.ctx[tempsprite.context].strokeStyle;
+			scrawl.ctx[tempsprite.context].fillStyle = 'rgba(255,255,255,1)';
+			scrawl.ctx[tempsprite.context].strokeStyle = 'rgba(255,255,255,1)';
 			tempsprite.forceStamp({method: ((tempsprite.type === 'Shape' && !tempsprite.closed) ? 'draw' : 'fill'), cells: [this.name]});
-			scrawl.ctx[tempsprite.name].fillStyle = tempfill;
-			scrawl.ctx[tempsprite.name].strokeStyle = tempstroke;
+			scrawl.ctx[tempsprite.context].fillStyle = tempfill;
+			scrawl.ctx[tempsprite.context].strokeStyle = tempstroke;
 			}
 		fenceSprites = scrawl.group[this.name+'_fence'].sprites;
 		for(var i=0, z=fenceSprites.length; i<z; i++){
 			tempsprite = scrawl.sprite[fenceSprites[i]];
-			tempfill = scrawl.ctx[tempsprite.name].fillStyle;
-			tempstroke = scrawl.ctx[tempsprite.name].strokeStyle;
-			scrawl.ctx[tempsprite.name].fillStyle = 'rgba(0,0,0,1)';
-			scrawl.ctx[tempsprite.name].strokeStyle = 'rgba(0,0,0,1)';
+			tempfill = scrawl.ctx[tempsprite.context].fillStyle;
+			tempstroke = scrawl.ctx[tempsprite.context].strokeStyle;
+			scrawl.ctx[tempsprite.context].fillStyle = 'rgba(0,0,0,1)';
+			scrawl.ctx[tempsprite.context].strokeStyle = 'rgba(0,0,0,1)';
 			tempsprite.forceStamp({method: ((tempsprite.type === 'Shape' && !tempsprite.closed) ? 'draw' : 'fill'), cells: [this.name]});
-			scrawl.ctx[tempsprite.name].fillStyle = tempfill;
-			scrawl.ctx[tempsprite.name].strokeStyle = tempstroke;
+			scrawl.ctx[tempsprite.context].fillStyle = tempfill;
+			scrawl.ctx[tempsprite.context].strokeStyle = tempstroke;
 			}
 		this.fieldLabel = this.getImageData({
 			name: 'field',
@@ -2595,6 +2633,20 @@ window.scrawl = (function(){
 		context.shadowBlur = 0.0;
 		engine.shadowColor = 'rgba(0, 0, 0, 0)';
 		context.shadowColor = 'rgba(0, 0, 0, 0)';
+		return this;
+		};
+	Cell.prototype.restoreShadow = function(spritecontext){
+		var engine = scrawl.context[this.name];
+		var context = scrawl.ctx[this.context];
+		var spritectx = scrawl.ctx[spritecontext];
+		engine.shadowOffsetX = spritectx.shadowOffsetX;
+		context.shadowOffsetX = spritectx.shadowOffsetX;
+		engine.shadowOffsetY = spritectx.shadowOffsetY;
+		context.shadowOffsetY = spritectx.shadowOffsetY;
+		engine.shadowBlur = spritectx.shadowBlur;
+		context.shadowBlur = spritectx.shadowBlur;
+		engine.shadowColor = spritectx.shadowColor;
+		context.shadowColor = spritectx.shadowColor;
 		return this;
 		};
 	Cell.prototype.setToClearShape = function(){
@@ -3210,6 +3262,12 @@ window.scrawl = (function(){
 			}
 		return this;
 		};
+	Group.prototype.moveSpriteStart = function(item){
+		for(var i=0, z=this.sprites.length; i<z; i++){
+			scrawl.sprite[this.sprites[i]].moveStart(item);
+			}
+		return this;
+		};
 		
 	function Sprite(items){
 		SubScrawl.call(this, items);
@@ -3369,10 +3427,10 @@ window.scrawl = (function(){
 	Sprite.prototype.clone = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		var a = Scrawl.prototype.clone.call(this, items);
-		delete scrawl.ctx[a.name];
-		scrawl.ctxnames.removeItem(a.name);
-		items['name'] = a.name;
-		scrawl.ctx[this.context].clone(items);
+		delete scrawl.ctx[a.context];
+		scrawl.ctxnames.removeItem(a.context);
+		var b = scrawl.ctx[this.context].clone(items);
+		a.context = b.name;
 		if(items.field){
 			a.addSpriteToCellFields();
 			}
@@ -3467,18 +3525,22 @@ window.scrawl = (function(){
 					this.startY = here.y;
 					this.pathRoll = here.r || 0;
 					}
-				switch(myMethod){
-					case 'clear' : this.clear(engine, myCell, override); break;
-					case 'draw' : this.draw(engine, myCell, override); break;
-					case 'fill' : this.fill(engine, myCell, override); break;
-					case 'drawFill' : this.drawFill(engine, myCell, override); break;
-					case 'fillDraw' : this.fillDraw(engine, myCell, override); break;
-					case 'sinkInto' : this.sinkInto(engine, myCell, override); break;
-					case 'floatOver' : this.floatOver(engine, myCell, override); break;
-					case 'clip' : this.clip(engine, myCell, override); break;
-					case 'none' : this.none(engine, myCell, override); break;
-					}
+				this.callMethod(engine, myCell, override, myMethod);
 				}
+			}
+		return this;
+		};
+	Sprite.prototype.callMethod = function(engine, myCell, override, method){
+		switch(method){
+			case 'clear' : this.clear(engine, myCell, override); break;
+			case 'draw' : this.draw(engine, myCell, override); break;
+			case 'fill' : this.fill(engine, myCell, override); break;
+			case 'drawFill' : this.drawFill(engine, myCell, override); break;
+			case 'fillDraw' : this.fillDraw(engine, myCell, override); break;
+			case 'sinkInto' : this.sinkInto(engine, myCell, override); break;
+			case 'floatOver' : this.floatOver(engine, myCell, override); break;
+			case 'clip' : this.clip(engine, myCell, override); break;
+			case 'none' : this.none(engine, myCell, override); break;
 			}
 		return this;
 		};
@@ -3568,9 +3630,10 @@ window.scrawl = (function(){
 		return scrawl.cell[myCell].checkFieldAt({x: myX, y: myY, test: myTest, channel: myChannel});
 		};
 	Sprite.prototype.clearShadow = function(ctx, cell){
-		if(scrawl.ctx[this.context].shadowOffsetX + scrawl.ctx[this.context].shadowOffsetY > 0){
-			scrawl.cell[cell].clearShadow();
-			}
+		scrawl.cell[cell].clearShadow();
+		};
+	Sprite.prototype.restoreShadow = function(ctx, cell){
+		scrawl.cell[cell].restoreShadow(this.context);
 		};
 	Sprite.prototype.getObjectData = function(){
 		return {
@@ -3592,20 +3655,66 @@ window.scrawl = (function(){
 		this.size = items.size || 12;
 		this.metrics = items.metrics || 'pt';
 		this.family = items.family || 'sans-serif';
+		this.fixedWidth = (scrawl.isa(items.fixedWidth,'bool')) ? items.fixedWidth : false;
+		this.fixedPhrase = (scrawl.isa(items.fixedPhrase,'bool')) ? items.fixedPhrase : false;
+		this.fixedWord = (scrawl.isa(items.fixedWord,'bool')) ? items.fixedWord : false;
 		this.checkFont(items.font);
-		this.getMetrics();
 		scrawl.sprite[this.name] = this;
 		scrawl.spritenames.pushUnique(this.name);
 		scrawl.group[this.group].sprites.pushUnique(this.name);
+		var tempAlign = scrawl.ctx[this.context].textAlign;
+		this.set({textAlign: 'start'});
+		this.getMetrics(scrawl.group[this.group].cells[0]);
+		this.set({textAlign: tempAlign});
+		this.head = items.head || false;
+		this.currentLine = items.currentLine || false;
+		this.multiline(items);
 		return this;
 		}
 	Phrase.prototype = Object.create(Sprite.prototype);
 	Phrase.prototype.type = 'Phrase';
 	Phrase.prototype.classname = 'spritenames';
+	Phrase.prototype.multiline = function(items){
+		if(scrawl.xt(items.text)){
+			if(items.text.indexOf('\n') >= 0){
+				if(this.lines && this.isHead){
+					for(var i=0; i<this.lines; i++){
+						scrawl.deleteSprite([this.name+'_'+i]);
+						}
+					}
+				var textArray = items.text.split('\n');
+				items['head'] = this.name;
+				this.isHead = true;
+				this.lineHeight = (scrawl.xt(items.lineHeight)) ? items.lineHeight : 1;
+				this.lines = textArray.length;
+				items['handleY'] = -(this.height * this.lineHeight * 1.5);
+				var obj;
+				for(var i=0; i<this.lines; i++){
+					items.name = this.name+'_'+i;
+					items.text = textArray[i];
+					items['currentLine'] = i;
+					items['pivot'] = (i === 0) ? this.name : this.name+'_'+(i-1);
+					obj = scrawl.newPhrase(items);
+					delete scrawl.ctx[obj.context];
+					scrawl.ctxnames.removeItem(obj.context);
+					obj.context = this.context;
+					items.name = this.name;
+					}
+				this.startY -= items.handleY;
+				}
+			}
+		};
 	Phrase.prototype.set = function(items){
 		Sprite.prototype.set.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.checkFont(items.font);
+		if(scrawl.xt(items.text)){
+			this.multiline(items);
+			var tempAlign = scrawl.ctx[this.context].textAlign;
+			this.set({textAlign: 'start'});
+			this.getMetrics(scrawl.group[this.group].cells[0]);
+			this.set({textAlign: tempAlign});
+			}
 		return this;
 		};
 	Phrase.prototype.checkFont = function(item){
@@ -3667,8 +3776,194 @@ window.scrawl = (function(){
 		scrawl.ctx[this.context].font = myFont;
 		return this;
 		};
+	Phrase.prototype.stamp = function(item){					//override object is only generated by group objects
+		if(this.isHead){
+			for(var i=0; i<this.lines; i++){
+				scrawl.sprite[this.name+'_'+i].stamp(item);
+				}
+			}
+		else{
+			if(this.visibility){
+				var ctx, engine, myCell, myMethod;
+				var override = {};
+				if(scrawl.xt(item)){
+					if(['clear','draw','fill','drawFill','fillDraw','sinkInto','floatOver','clip','none'].contains(item)){
+						override = {
+							x: 0,
+							y: 0,
+							method: item,
+							cells: scrawl.group[this.group].cells,
+							};
+						}
+					else{
+						override = {
+							x: item.x || 0,
+							y: item.y || 0,
+							method: item.method || false,
+							cells: item.cells || scrawl.group[this.group].cells,
+							};
+						}
+					}
+				else{
+					override = {
+						x: 0,
+						y: 0,
+						method: false,
+						cells: scrawl.group[this.group].cells,
+						};
+					}
+				myMethod = override.method || this.method;
+				for(var i=0, z=override.cells.length; i<z; i++){
+					ctx = scrawl.cell[override.cells[i]];
+					ctx.setEngine(this.context, this.scale);
+					engine = scrawl.context[ctx.name];
+					myCell = scrawl.cell[override.cells[i]].name;
+					var here;
+					if(this.pivot){
+						if(scrawl.pointnames.contains(this.pivot)){
+							this.startX = scrawl.point[this.pivot].currentX;
+							this.startY = scrawl.point[this.pivot].currentY;
+							}
+						else if(scrawl.spritenames.contains(this.pivot)){
+							if(this.head){
+								this.startX = scrawl.sprite[this.pivot].getStartX();
+								this.startY = scrawl.sprite[this.pivot].getStartY();
+								}
+							else{
+								this.startX = scrawl.sprite[this.pivot].startX;
+								this.startY = scrawl.sprite[this.pivot].startY;
+								}
+							}
+						else if(this.pivot === 'mouse'){
+							here = scrawl.pad[scrawl.cell[override.cells[i]].pad].getMouse();
+							if(here.active){
+								this.startX = here.x;
+								this.startY = here.y;
+								}
+							}
+						else if(scrawl.groupnames.contains(this.pivot)){
+							this.startX = scrawl.group[this.pivot].startX;
+							this.startY = scrawl.group[this.pivot].startY;
+							}
+						this.callMethod(engine, myCell, override, myMethod);
+						}
+					else if(scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape'){
+						if(this.fixedPhrase){
+							here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
+							this.startX = here.x;
+							this.startY = here.y;
+							this.pathRoll = here.r || 0;
+							this.callMethod(engine, myCell, override, myMethod);
+							}
+						else if(this.fixedWord){
+							var tempAlign = scrawl.ctx[this.context].textAlign;
+							var tempPathPosition = this.pathPosition;
+							this.width = engine.measureText(this.text+' ').width * this.scale;
+							var myText = this.text;
+							var wordArray = myText.split(' ');
+							if(wordArray.length > 0){
+								var pathLength = scrawl.sprite[this.path].getPerimeterLength();
+								var myPos, nowPos = 0, word, wordLength, tempWord;
+								var textCoverage = this.width/pathLength;
+								if(['center'].contains(tempAlign)){
+									myPos = tempPathPosition - (textCoverage/2);
+									}
+								else if(['end','right'].contains(tempAlign)){
+									myPos = tempPathPosition - textCoverage;
+									}
+								else{
+									myPos = tempPathPosition;
+									}
+								for(var i=0, z=wordArray.length; i<z; i++){
+									tempWord = wordArray[i]+' ';
+									wordLength = engine.measureText(tempWord).width * this.scale;
+									switch(tempAlign){
+										case 'left' :
+										case 'start' :
+											glyph = 0;
+											break;
+										case 'center' :
+											glyph = (wordLength/pathLength)/2;
+											break;
+										case 'right' :
+										case 'end' :
+											glyph = wordLength/pathLength;
+											break;
+										}
+									nowPos = myPos + glyph;
+									nowPos = (nowPos > 1) ? nowPos-1 : ((nowPos < 0) ? nowPos+1 : nowPos);
+									myPos += wordLength/pathLength;
+									this.text = tempWord;
+									this.pathPosition = nowPos;
+									here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
+									this.startX = here.x;
+									this.startY = here.y;
+									this.pathRoll = here.r || 0;
+									this.callMethod(engine, myCell, override, myMethod);
+									}
+								this.text = myText;
+								this.pathPosition = tempPathPosition;
+								}
+							}
+						else{
+							var tempAlign = scrawl.ctx[this.context].textAlign;
+							var myText = this.text;
+							var tempPathPosition = this.pathPosition;
+							if(!scrawl.xt(this.glyphWidths)){
+								this.getMetrics(scrawl.group[this.group].cells[0]);
+								}
+							if(this.glyphWidths.length > 0){
+								var pathLength = scrawl.sprite[this.path].getPerimeterLength();
+								var myPos, nowPos = 0, glyph;
+								var textCoverage = this.width/pathLength;
+								if(['center'].contains(tempAlign)){
+									myPos = tempPathPosition - (textCoverage/2);
+									}
+								else if(['end','right'].contains(tempAlign)){
+									myPos = tempPathPosition - textCoverage;
+									}
+								else{
+									myPos = tempPathPosition;
+									}
+								for(var i=0, z=myText.length; i<z; i++){
+									switch(tempAlign){
+										case 'left' :
+										case 'start' :
+											glyph = 0;
+											break;
+										case 'center' :
+											glyph = (this.glyphWidths[i]/pathLength)/2;
+											break;
+										case 'right' :
+										case 'end' :
+											glyph = this.glyphWidths[i]/pathLength;
+											break;
+										}
+									nowPos = myPos + glyph;
+									nowPos = (nowPos > 1) ? nowPos-1 : ((nowPos < 0) ? nowPos+1 : nowPos);
+									myPos += this.glyphWidths[i]/pathLength;
+									this.text = myText[i];
+									this.pathPosition = nowPos;
+									here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
+									this.startX = here.x;
+									this.startY = here.y;
+									this.pathRoll = here.r || 0;
+									this.callMethod(engine, myCell, override, myMethod);
+									}
+								this.text = myText;
+								this.pathPosition = tempPathPosition;
+								}
+							}
+						}
+					else{
+						this.callMethod(engine, myCell, override, myMethod);
+						}
+					}
+				}
+			}
+		return this;
+		};
 	Phrase.prototype.clear = function(ctx, cell, override){
-		this.constructFont();
 		this.rotateCell(ctx, cell);
 		ctx.globalCompositeOperation = 'destination-out';
 		ctx.fillText(this.text, this.getStartX(override), this.getStartY(override));
@@ -3677,39 +3972,36 @@ window.scrawl = (function(){
 		return this;
 		};
 	Phrase.prototype.draw = function(ctx, cell, override){
-		this.constructFont();
 		this.rotateCell(ctx, cell);
 		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
 		this.unrotateCell(ctx, cell);
 		return this;
 		};
 	Phrase.prototype.fill = function(ctx, cell, override){
-		this.constructFont();
 		this.rotateCell(ctx, cell);
 		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
 		this.unrotateCell(ctx, cell);
 		return this;
 		};
 	Phrase.prototype.drawFill = function(ctx, cell, override){
-		this.constructFont();
 		this.rotateCell(ctx, cell);
 		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
 		this.clearShadow(ctx, cell);
 		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
+		this.restoreShadow(ctx, cell);
 		this.unrotateCell(ctx, cell);
 		return this;
 		};
 	Phrase.prototype.fillDraw = function(ctx, cell, override){
-		this.constructFont();
 		this.rotateCell(ctx, cell);
 		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
 		this.clearShadow(ctx, cell);
 		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
+		this.restoreShadow(ctx, cell);
 		this.unrotateCell(ctx, cell);
 		return this;
 		};
 	Phrase.prototype.sinkInto = function(ctx, cell, override){
-		this.constructFont();
 		this.rotateCell(ctx, cell);
 		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
 		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
@@ -3717,7 +4009,6 @@ window.scrawl = (function(){
 		return this;
 		};
 	Phrase.prototype.floatOver = function(ctx, cell, override){
-		this.constructFont();
 		this.rotateCell(ctx, cell);
 		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
 		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
@@ -3725,7 +4016,6 @@ window.scrawl = (function(){
 		return this;
 		};
 	Phrase.prototype.clip = function(ctx, cell, override){
-		this.constructFont();
 		ctx.save();
 		ctx.rect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
 		ctx.clip();
@@ -3742,6 +4032,22 @@ window.scrawl = (function(){
 		myContext.textAlign = myEngine.textAlign;
 		this.width = myContext.measureText(this.text).width * this.scale;
 		this.height = this.size * this.scale;
+		if(this.path){
+			this.glyphWidths = [];
+			var myText = this.text, tempText;
+			var myTextWidth = myContext.measureText(myText).width;
+			if(this.fixedWidth){
+				for(var i=0, z=myText.length; i<z; i++){
+					this.glyphWidths.push(myTextWidth/z);
+					}
+				}
+			else{
+				for(var i=1, z=myText.length; i<=z; i++){
+					tempText = myText.substr(0, i-1)+myText.substr(i);
+					this.glyphWidths.push((myTextWidth - myContext.measureText(tempText).width));
+					}
+				}
+			}
 		myContext.font = tempFont;
 		myContext.textBaseline = tempBaseline;
 		myContext.textAlign = tempAlign;
@@ -4582,8 +4888,8 @@ window.scrawl = (function(){
 				linkVal = (linkVal < 0) ? 0 : ((linkVal > 1) ? 1 : linkVal);
 				if(steady){
 					if(roll){
-						var before = myLink.getSteadyPositionOnLink((linkVal-0.0000001 < 0) ? (linkVal-0.0000001)+1 : linkVal-0.0000001);
-						var after = myLink.getSteadyPositionOnLink((linkVal+0.0000001 > 1) ? (linkVal+0.0000001)-1 : linkVal+0.0000001);
+						var before = myLink.getSteadyPositionOnLink((linkVal-0.0000001 < 0) ? 0 : linkVal-0.0000001);
+						var after = myLink.getSteadyPositionOnLink((linkVal+0.0000001 > 1) ? 1 : linkVal+0.0000001);
 						var here = myLink.getSteadyPositionOnLink(linkVal);
 						var angle = Math.atan2(after.y-before.y, after.x-before.x)*scrawl.degree;
 						return {x:here.x, y:here.y, r:angle};
@@ -4594,8 +4900,8 @@ window.scrawl = (function(){
 					}
 				else{
 					if(roll){
-						var before = myLink.getPositionOnLink((linkVal-0.0000001 < 0) ? (linkVal-0.0000001)+1 : linkVal-0.0000001);
-						var after = myLink.getPositionOnLink((linkVal+0.0000001 > 1) ? (linkVal+0.0000001)-1 : linkVal+0.0000001);
+						var before = myLink.getPositionOnLink((linkVal-0.0000001 < 0) ? 0 : linkVal-0.0000001);
+						var after = myLink.getPositionOnLink((linkVal+0.0000001 > 1) ? 1 : linkVal+0.0000001);
 						var here = myLink.getPositionOnLink(linkVal);
 						var angle = Math.atan2(after.y-before.y, after.x-before.x)*scrawl.degree;
 						return {x:here.x, y:here.y, r:angle};
@@ -4628,13 +4934,15 @@ window.scrawl = (function(){
 				}
 			else{break;}
 			}
+		var tempCurrentName = this.name.replace('~','_','g');
+		var tempCloneName = a.name.replace('~','_','g');
 		for(var i=0, z=myPoints.length; i<z; i++){
 			tempObj = scrawl.point[myPoints[i]];
 			var b = tempObj.clone({
-				name: tempObj.name.replace(this.name,myName),
-				sprite: tempObj.sprite.replace(this.name,myName),
-				startLink: (tempObj.startLink) ? tempObj.startLink.replace(this.name,myName) : null,
-				fixed: (tempObj.fixed === this.name) ? myName : tempObj.fixed,
+				name: tempObj.name.replace(tempCurrentName,tempCloneName),
+				startLink: (tempObj.startLink) ? tempObj.startLink.replace(tempCurrentName,tempCloneName) : false,
+				sprite: tempObj.sprite.replace(this.name,a.name),
+				fixed: (tempObj.fixed === this.name) ? a.name : tempObj.fixed,
 				});
 			if(i === 0){
 				tempFirstPoint = b.name;
@@ -4642,13 +4950,12 @@ window.scrawl = (function(){
 			}
 		for(var i=0, z=myLinks.length; i<z; i++){
 			tempObj = scrawl.link[myLinks[i]];
-			tempObj.name.replace(this.name, myName);
 			var c = tempObj.clone({
-				name: tempObj.name.replace(this.name, myName),
-				startPoint: (tempObj.startPoint) ? tempObj.startPoint.replace(this.name, myName) : null,
-				endPoint: (tempObj.endPoint) ? tempObj.endPoint.replace(this.name, myName) : null,
-				controlPoint1: (tempObj.controlPoint1) ? tempObj.controlPoint1.replace(this.name, myName) : null,
-				controlPoint2: (tempObj.controlPoint2) ? tempObj.controlPoint2.replace(this.name, myName) : null,
+				name: tempObj.name.replace(tempCurrentName,tempCloneName),
+				startPoint: (tempObj.startPoint) ? tempObj.startPoint.replace(tempCurrentName,tempCloneName) : false,
+				endPoint: (tempObj.endPoint) ? tempObj.endPoint.replace(tempCurrentName,tempCloneName) : false,
+				controlPoint1: (tempObj.controlPoint1) ? tempObj.controlPoint1.replace(tempCurrentName,tempCloneName) : false,
+				controlPoint2: (tempObj.controlPoint2) ? tempObj.controlPoint2.replace(tempCurrentName,tempCloneName) : false,
 				});
 			}
 		a.firstPoint = tempFirstPoint;
@@ -5197,17 +5504,13 @@ window.scrawl = (function(){
 			if(this.image){
 				if(scrawl.img[this.image]){
 					scrawl.dsn[this.name] = ctx.createPattern(scrawl.img[this.image], this.repeat);
-					//console.log('Pattern '+[this.name]+' - makeDesign() for "'+this.image+'" succeeded');
 					return this;
 					}
-				//console.log('Pattern '+[this.name]+' - makeDesign() failed - image "'+this.image+'" not in library');
 				return this;
 				}
-			//console.log('Pattern '+[this.name]+' - makeDesign() failed - image not recorded in Pattern');
 			return this;
 			}
 		catch(e){
-			//console.log('Pattern '+[this.name]+' - makeDesign() failed - '+e.name+' error: '+e.message);
 			return this;
 			}
 		};

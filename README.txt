@@ -2,7 +2,7 @@
 * SCRAWL.JS Library 
 * SCRAWL+STACK.JS Library 
 *
-*	version 0.302 - 31 August 2013
+*	version 0.303 - 3 September 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -89,15 +89,17 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 0.302 released 31 August 2013
+VERSION 0.303 released 3 September 2013
 
     - the zip file includes:
 	
-		- scrawl.js (172kb)
-		- scrawl-min.js (140kb)
+		- scrawl.js (182kb)
+		- scrawl-min.js (148kb)
+			- will gzip to ~28kb
 		
-		- scrawl+stack.js (198kb)
-		- scrawl+stack-min.js (162kb)
+		- scrawl+stack.js (208kb)
+		- scrawl+stack-min.js (169kb)
+			- will gzip to ~32kb
 		
 		- documentation.txt
 		- changelog.txt
@@ -113,7 +115,10 @@ file called 'changelog.txt'
 All versions of scrawl.js and scrawl+stack.js can be found on their SourceForge page: 
 https://sourceforge.net/projects/scrawljs/
 
-There's also a discussion page for Scrawl.js on the SourceForge website. Please post all
+scrawl.js and scrawl+stack.js are also available for forking from GitHub: 
+https://github.com/KaliedaRik/Scrawl.js
+
+There's a discussion page for Scrawl.js on the SourceForge website. Please post all
 questions, suggestions and critiques of Scrawl.js to that page:
 https://sourceforge.net/p/scrawljs/discussion/
 
@@ -121,46 +126,12 @@ https://sourceforge.net/p/scrawljs/discussion/
 C. VERSIONS
 ------------------------------------------------------------------------------------
 
+Version 0.303 uploaded 3 September 2013
 Version 0.302 uploaded 31 August 2013
 Version 0.301 uploaded 28 August 2013
 VERSION 0.300 uploaded 20 August 2013
 
-Version 0.208(beta) uploaded 1 August 2013
-Version 0.207(beta) uploaded 31 July 2013
-Version 0.206(beta) uploaded 31 July 2013
-Version 0.205(beta) uploaded 12 July 2013
-Version 0.204(beta) uploaded 10 June 2013
-Version 0.203(beta) uploaded 3 June 2013
-Version 0.202(beta) uploaded 28 May 2013
-Version 0.201(beta) uploaded 26 May 2013
 VERSION 0.200(beta) uploaded 21 May 2013
-
-Version 0.021(beta) uploaded 8 May 2013
-Version 0.0203(beta) uploaded 5 May 2013
-Version 0.0202(beta) uploaded 2 May 2013
-Version 0.0201(beta) uploaded 29 April 2013
 VERSION 0.02(beta) uploaded 27 April 2013
-
-Version 0.013(beta) uploaded 23 April 2013
-Version 0.0123(beta) uploaded 19 April 2013
-Version 0.0122(beta) uploaded 17 April 2013
-Version 0.0121(beta) uploaded 16 April 2013
-Version 0.012(beta) uploaded 14 April 2013
-Version 0.011(beta) uploaded 12 April 2013
-Version 0.0105(beta) uploaded 9 April 2013
-Version 0.0104(beta) uploaded 8 April 2013
-Version 0.0103(beta) uploaded 6 April 2013
-Version 0.0102(beta) uploaded 5 April 2013
-Version 0.0101(beta) uploaded 4 April 2013
 VERSION 0.01(beta) uploaded 30 March 2013
-
-Version 0.0051(alpha) uploaded 28 March 2013
-Version 0.005(alpha) uploaded 25 March 2013
-Version 0.0044(alpha) uploaded 22 March 2013
-Version 0.0043(alpha) uploaded 21 March 2013
-Version 0.0042(alpha) uploaded 20 March 2013
-Version 0.0041(alpha) uploaded 18 March 2013
-Version 0.004(alpha) uploaded 16 March 2013
-Version 0.0031(alpha) uploaded 9 March 2013
-Version 0.003(alpha) uploaded 7 March 2013
 Version 0.002(alpha) uploaded 5 March 2013

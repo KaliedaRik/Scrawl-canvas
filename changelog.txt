@@ -2,7 +2,7 @@
 * SCRAWL.JS Library 
 * SCRAWL+STACK.JS Library 
 *
-*	version 0.302 - 31 August 2013
+*	version 0.303 - 3 September 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -19,6 +19,77 @@ Topics that I want|need to look at (in no particular order) ...
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+130903
+	- added Phrase.fixedWord boolean attribute
+		- for handling eg Arabic text on path
+			- method used by Scrawl to calculate glyph widths doesn't work for Arabic fonts
+				- because letters are position-sensitive - different glyphs for the same letter at beginning,middle, end of word
+		- tested; works ok.
+	- fixed scrawl.makeName()
+		- had the potential for a buffer overflow if someone cloned and recloned over and over
+		- also had to fix Sprite.clone(), Phrase.clone() to fit in with changes
+		- had to update all the scrawl.makeXXX methods
+		- tested in Firefox
+	- Phrase multiline texts
+		- Scrawl will now create and chain Phrase objects to handle multiline texts
+			- works both with the factory method and with .clone()
+			- new attributes and functions
+				Sprite.callMethod()
+				Phrase.head, .currentLine, .isHead, .lines, .lineHeight
+				Phrase.multiline()
+	- tested all demos in Firefox
+		- fixed demo081 (space invaders)
+			- aliens were not being covered by checkHitUsingImage
+				- imageData was being reset to the bomb image each time a new bomb was created
+				- solved by giving the alien template sprite a name!
+	- updated documentation
+	- updated tutorial
+		- for text along path and multiline phrases, not load/save
+	- tested new demos in other browsers
+		- IE10
+			- not keen on heavily decorated text - has issues clearing the canvas
+				- rewrote demo to keep shadow stuff away from IE
+		- Chrome
+			- letters jiggle
+			- multiline - repeated one line (of centered text)
+		- Firefox - all good
+		- Opera
+			- mangles the Arabic text, but otherwise all seems fine
+		- Safari (windows) - all seems fine
+	- upgrade to v0.303
+	- update website
+	- upload to SourceForge
+	- update GitHub
+			
+130902
+	- bugfixes: path tracking
+		- sprites no longer jump when passing from one sob-path to the next
+		- sprite.path attribute can now be set during sprite creation (not after it) for all sprites
+	- revisiting the Phrase object
+		- text-to-path functionality added
+			- major changes to Phrase object and functions
+			- added Cell.restoreShadow(), Sprite.restoreShadow()
+				- to handle bug where only initial letter of path phrases was getting a shadow (drawFill, fillDraw)
+		- demo102 to test; also amended demo061
+			- can't work out how to successfully bend Arabic fonts
+				- added Phrase.fixedWidth, .fixedPhrase in an attempt to at least make Arabic phrases track paths legibly
+		- tested in browsers
+			- chrome 
+				- has bad shaky letter syndrome
+				- apparently a known bug in chrome that nobody's bothered to fix yet
+			- all other browsers
+				- works perfectly!
+	- NEED TO:
+		- tackle multi-line text
+			- got some ideas on how to implement that easily
+			- will be able to add the lineSpacing attribute
+		- can also think of adding the letterSpacing attribute?
+		- update documentation - Phrase section, paths section
+		- upgrade to v0.303
+			
+130901
+	- started GitHub account for Scrawl
+	
 130831
 	- created two files
 		- scrawl.js contains all the core functionality for drawing on canvases

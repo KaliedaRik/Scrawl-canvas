@@ -2,7 +2,7 @@
 * SCRAWL.JS Library 
 * SCRAWL+STACK.JS Library 
 *
-*	version 0.302 - 31 August 2013
+*	version 0.303 - 3 September 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -985,6 +985,9 @@ Cell(dataObject)
 			return: this
 		~ resetRotation()
 			purpose: rotateCell() helper function
+		~ restoreShadow()
+			purpose: acts on requests by Sprites to re-enable shadowing
+			return: this
 		~ setEngine(CTXNAME, SCALEVALUE)
 			purpose: update the canvas element's 2d context engine's values; update cell's context object values in line with context elements values after updating
 			return: cell's context object
@@ -2208,6 +2211,9 @@ Sprite(dataObject)
 			purpose: swap a Sprite's stroke color with its fill color
 			return: this
 
+		~ callMethod()
+			purpose: helper function - used with Sprite.stamp()
+			return: this
 		~ clearShadow(canvasContextObject, CELLNAME)
 			purpose: helper function - calls Cell.clearShadow()
 			return: this
@@ -2220,6 +2226,9 @@ Sprite(dataObject)
 		~ parseCollisionPoints(?[arg])
 			purpose: convert user-entered strings into Sprite.collisionPoint strings
 				arg in ['all', 'corners', 'edges', 'perimeter', 'north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', POINTNAME]
+			return: this
+		~ restoreShadow()
+			purpose: requests Cell to re-enable shadowing
 			return: this
 		~ rotateCell(canvasContextObject, CELLNAME)
 			purpose: helper function - used to roll Block, Phrase, Picture sprites
@@ -2252,12 +2261,21 @@ Phrase(dataObject)
 		
 	attributes ...
 		family						('sans-serif') - string - font names
+		fixedWidth					(false) - boolean - helper attribute to speed up calculations for fixed-width fonts
+		fixedWord					(false) - boolean - when true, will treat words as single objects on path
+		fixedPhrase					(false) - string - when true, will treat entire phrase as single object on path
+		lineHeight					(1) - number - spacing between lines for a multiline Phrase
 		metrics						('pt') - string - metrics suffix
 		size						(12) - number - font size
 		style						('normal') - in CSS font-style
 		text						('') - string - text to be displayed
 		variant						('normal') - in CSS font-variant
 		weight						('normal') - in CSS font-weight
+		
+		~ currentline				(false) - number - position of this line in multiline Phrase
+		~ isHead					(false) - boolean - if true, sprite is head object of multiline Phrase chain
+		~ head						(false) - string - SPRITENAME of multiline Phrase object's head Phrase
+		~ lines						(false) - number - number of lines in a multiline Phrase sprite
 		
 		fillStyle					- Context
 		font						- Context
@@ -2359,6 +2377,9 @@ Phrase(dataObject)
 		~ getMetrics(?CELLNAME)
 			purpose: calculate Phrase width, and estimate its height
 			return: this
+		~ multiline()
+			purpose: creates and cahins together Phrase sprites to handle a multiline Phrase
+			return: this
 		~ sinkInto(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform fillText, strokeText
 			return: this
@@ -2375,7 +2396,7 @@ Phrase(dataObject)
 		removeSpriteFromCellFences	- from Sprite
 		removeSpriteFromCellFields	- from Sprite
 		setDelta					- from Sprite
-		stamp						- from Sprite
+		stamp						- from Sprite - overridden
 		swap						- from Sprite
 
 		exchange 					- from SubScrawl
