@@ -2,7 +2,7 @@
 * SCRAWL.JS Library 
 * SCRAWL+STACK.JS Library 
 *
-*	version 0.303 - 3 September 2013
+*	version 0.304 - 5 September 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -19,6 +19,50 @@ Topics that I want|need to look at (in no particular order) ...
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+130905
+	- bugfixes - animating multiline phrases
+		- rewrote Sprite.stamp(), Phrase.stamp()
+			- Sprite has new helper methods: .setStampUsingPivot(), prepareItemForStamp()
+			- for consolidating repeated code and making maintenance a lot easier
+		- rewrote Phrase.multiline()
+			- lines weren't picking up all of the head's attributes
+			- also, positioning issues
+		- edited Phrase.clone() override function
+			- because Sprite.clone wasn't triggering the final cloned object to get its font ready eg for scaling
+			- problems with double exposure
+				- more general problem, fixed by setting all line visibilities to 'false' and forceStamping them in the stamp function
+		- new Phrase .setDelta() override function
+		- MAJOR BUG fixed 
+			- scaled sprites were jumping during pickup
+				- Sprite.pickupSprite() recoded to take scaling into account
+	- added scrawl.stampBackground()
+		- for completeness
+	- had another go at improving Phrase boxing for collision detection
+		- got it working in a reasonable manner
+	- updated documentation
+	- updated tutorial
+	- upgrade to v0.304
+		
+130904
+	- made Scrawl's Array/Number/String prototype additions a little bit safer
+	- working on flips
+		- added two new attributes to Sprite objects: .flipX, .flipY
+		- added new Sprite.flipCanvas() helper function
+		- amended Sprite.callMethod() to make the magic happen
+		- updated demo062 (carousel on ellipse path) to test new features
+		- added NEW DRAWING METHOD - sprite.clearWithBackground()
+			- sprite will paint the canvas with canvas's backgroundColor before stamping itself onto it
+				- done to give the mirror effect to the carousel
+			- thus new methods for all types of sprite (Block, Phrase, Wheel, Picture, Shape)
+			- amended Sprite.stamp(), Phrase.stamp()
+		- corrected bug where cell would not draw its background color except via its compile() function
+			- new Pad.getCellsForDisplayAction()
+				- removes repeated code into its own function
+			- amended Pad.clear(), Pad.compile()
+			- added Pad.stampBackground()
+			- new Cell.stampBackground() function
+	- updated documentation
+			
 130903
 	- added Phrase.fixedWord boolean attribute
 		- for handling eg Arabic text on path

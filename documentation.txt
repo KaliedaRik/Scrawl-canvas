@@ -2,7 +2,7 @@
 * SCRAWL.JS Library 
 * SCRAWL+STACK.JS Library 
 *
-*	version 0.303 - 3 September 2013
+*	version 0.304 - 5 September 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -362,6 +362,9 @@ window.scrawl
 			return: always true
 		show(?commandObject, ?[PADNAME]||PADNAME)
 			purpose: ask Pads to draw their hidden cell <canvas> elements onto their display cell <canvas>
+			return: always true
+		stampBackground(?commandObject, ?[PADNAME]||PADNAME)
+			purpose: ask Pads to get their Cells to clear their <canvas> elements using the cells' background colors
 			return: always true
 		~ getCanvases()
 			purpose: (from initialize) searches DOM for canvas elements and generates Pad objects for each of them
@@ -970,6 +973,9 @@ Cell(dataObject)
 			purpose: shifts strips of the cell display from one edge to the opposite edge
 				arg in ['horizontal', 'vertical', 'top', 'bottom', 'left', 'right']
 			return: this
+		stampBackground()
+			purpose: clear the cell's entire (virtual) display, replacing it with the cell's background color
+			return: this
 		transformCell({?scaleX:number, ?scaleY:number, ?shearX:number, ?shearY:number, ?cellX:number, ?cellY:number, ?roll:number}, boolean)
 			purpose: <canvas> context setTransform() operation
 			return: this
@@ -1079,6 +1085,10 @@ Group(dataObject)
 			purpose: collision detection
 				arg in ['red', 'green', 'blue', 'alpha']
 			return: the highest order sprite in this group at given coordinates; false if none found
+		moveSpriteStart(arg)
+			purpose: invoke each sprite's .moveStart function
+				arg: method override ['fill', 'draw', etc)
+			return: this
 		removeSpritesFromGroup(SPRITENAME||[SPRITENAME])
 			purpose: remove Sprites from Group.sprites array
 			return: this on success; false on failure
@@ -2006,7 +2016,15 @@ Pad(dataObject){
 			purpose: copies base cell onto display cell
 				arg in ['wipe-base', 'wipe-both']
 			return: this
+		stampBackground(?arg)
+			purpose: asks contributing cells to clear their displays using their background color
+				arg in ['all', 'display', 'base', 'non-base', 'current', 'non-current', 'additionals', 'non-additionals', 'none', CELLNAME, [CELLNAME]]
+			return: this
 			
+		~ getCellsForDisplayAction()
+			purpose: helper function used with .clear(), .compile(), .stampBackground()
+			return: true on success; false on fail
+
 		getBackfaceVisibility		- from Scrawl3d - scrawl+stack.js only	
 		getComment					- from Scrawl3d
 		getHeight					- from Scrawl3d
@@ -2111,6 +2129,8 @@ Sprite(dataObject)
 		fieldChannel				('anycolor') - color to be used when checking for collisions on a Cell's collision field
 			- in ['red', 'blue', 'green', 'alpha', 'anycolor']
 		fieldTest					(0) - minimum pass level for Cell collision field tests (0-255)
+		flipX						(false) - boolean - causes the sprite to be drawn back-to-front
+		flipY						(false) - boolean - causes the sprite to be drawn upside-down
 		group						(false) - GROUPNAME - sprite's default group
 		method						(null) 
 			- in ['draw', 'fill', 'drawFill', 'fillDraw', 'floatOver', 'sinkInto', 'clear', 'none']
@@ -2182,7 +2202,7 @@ Sprite(dataObject)
 			return: this
 		forceStamp(arg)
 			purpose: compile sprite onto a Cell <canvas> element, regardless of visibility attribute
-				arg in ['clear', 'draw', 'fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver', 'clip', 'none']
+				arg in ['clear', 'clearWithBackground', 'draw', 'fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver', 'clip', 'none']
 			return: this
 		getObjectData()
 			purpose: return object in preparation for saving it using scrawl.save()
@@ -2205,7 +2225,7 @@ Sprite(dataObject)
 			return: this
 		stamp = function(item){
 			purpose: compile sprite onto a Cell <canvas> element (if visibility===true)
-				arg in ['clear', 'draw', 'fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver', 'clip', 'none']
+				arg in ['clear', 'clearWithBackground', 'draw', 'fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver', 'clip', 'none']
 			return: this
 		swap()
 			purpose: swap a Sprite's stroke color with its fill color
@@ -2217,6 +2237,9 @@ Sprite(dataObject)
 		~ clearShadow(canvasContextObject, CELLNAME)
 			purpose: helper function - calls Cell.clearShadow()
 			return: this
+		~ flipCanvas(canvasContextObject, CELLNAME)
+			purpose: helper function - flips the canvas ready for sprite to be drawn back-to-front, upside-down
+			return: this
 		~ getAngle(number)
 			purpose: calculate effective angle (for Wheel and Shape sprites)
 			return: value
@@ -2227,12 +2250,16 @@ Sprite(dataObject)
 			purpose: convert user-entered strings into Sprite.collisionPoint strings
 				arg in ['all', 'corners', 'edges', 'perimeter', 'north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', POINTNAME]
 			return: this
+		~ prepareItemForStamp()
+			purpose: helper function - for the .stamp() function
 		~ restoreShadow()
 			purpose: requests Cell to re-enable shadowing
 			return: this
 		~ rotateCell(canvasContextObject, CELLNAME)
 			purpose: helper function - used to roll Block, Phrase, Picture sprites
 			return: this
+		~ setStampUsingPivot()
+			purpose: helper function - for the .stamp() function
 		~ unrotateCell(canvasContextObject, CELLNAME)
 			purpose: helper function - used to roll Block, Phrase, Picture sprites
 			return: this
@@ -2344,6 +2371,9 @@ Phrase(dataObject)
 		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform fillText with rgba(0,0,0,0)
 			return: this
+		~ clearWithBackground(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fillText with canvas background color
+			return: this
 		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform clip operation on Cell canvas
 			return: this
@@ -2395,7 +2425,7 @@ Phrase(dataObject)
 		removeCollisionPoints		- from Sprite
 		removeSpriteFromCellFences	- from Sprite
 		removeSpriteFromCellFields	- from Sprite
-		setDelta					- from Sprite
+		setDelta					- from Sprite - overridden
 		stamp						- from Sprite - overridden
 		swap						- from Sprite
 
@@ -2487,6 +2517,9 @@ Block(dataObject)
 			return: true on hit; false otherwise
 		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform clearRect
+			return: this
+		~ clearWithBackground(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fillRect, strokeRect with canvas's background color
 			return: this
 		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform clip
@@ -2636,6 +2669,9 @@ Wheel(dataObject)
 			return: true on hit; false otherwise
 		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform arc, fill
+			return: this
+		~ clearWithBackground(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform arc, fill, stroke using canvas's background color
 			return: this
 		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform clip
@@ -2796,6 +2832,9 @@ Picture(dataObject){
 			return: true on hit; false otherwise
 		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform clearRect
+			return: this
+		~ clearWithBackground(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fillRect, strokeRect using canvas's background color
 			return: this
 		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform clip
@@ -2977,6 +3016,9 @@ Shape(dataObject)
 			return: true on hit; false otherwise
 		~ clear(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform fill with color(rgba(0,0,0,0))
+			return: this
+		~ clearWithBackground(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
+			purpose: perform fill, stroke with canvas's background color
 			return: this
 		~ clip(DOMCanvasContextObject, CELLNAME, ?{x:number, y:number})
 			purpose: perform clip

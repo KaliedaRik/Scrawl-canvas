@@ -1,6 +1,6 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
-*	version 0.303 - 3 September 2013
+*	version 0.304 - 5 September 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -8,7 +8,7 @@
 ***********************************************************************************/
 
 //various methods sourced mainly from Stack Overflow - can't remember authors ... many apologies!
-Array.prototype.contains = function(k){
+Array.prototype.contains = Array.prototype.contains || function(k){
 	if(k instanceof RegExp){
 		for(var p in this){
 			if(this[p].match(k)) return this[p];
@@ -22,14 +22,14 @@ Array.prototype.contains = function(k){
 		return false;
 		}
 	};
-Array.prototype.pushUnique = function(o){
+Array.prototype.pushUnique = Array.prototype.pushUnique || function(o){
 	if(!this.contains(o)){
 		this.push(o);
 		return true;
 		}
 	return false;
 	};
-Array.prototype.removeItem = function(o){
+Array.prototype.removeItem = Array.prototype.removeItem || function(o){
 	if(this.contains(o)){
 		var i = this.indexOf(o);
 		this.splice(i, 1);
@@ -37,7 +37,7 @@ Array.prototype.removeItem = function(o){
 		}
 	return false;
 	};
-Number.prototype.isBetween = function(a, b, e){
+Number.prototype.isBetween = Number.prototype.isBetween || function(a, b, e){
 	if(a>b){var t=a; a=b; b=t;}
 	if(e){
 		if(this >= a && this <= b){
@@ -52,7 +52,7 @@ Number.prototype.isBetween = function(a, b, e){
 		return false;
 		}
 	};
-String.prototype.strtr = function(replacePairs){
+String.prototype.strtr = String.prototype.strtr || function(replacePairs){
     "use strict";
     var str = this.toString(), key, re;
     for(key in replacePairs){
@@ -390,6 +390,16 @@ window.scrawl = (function(){
 			if(p.length > 0){
 				for(var i=0, z=p.length; i<z; i++){
 					scrawl.pad[p[i]].clear(command);
+					}
+				return true;
+				}
+			return false;
+			},
+		stampBackground: function(command, pads){
+			var p = (this.xt(pads)) ? [].concat(pads) : this.padnames;
+			if(p.length > 0){
+				for(var i=0, z=p.length; i<z; i++){
+					scrawl.pad[p[i]].stampBackground(command);
 					}
 				return true;
 				}
@@ -1570,7 +1580,7 @@ window.scrawl = (function(){
 			active: this.mouseOverPad,
 			};
 		};
-	Pad.prototype.clear = function(command){
+	Pad.prototype.getCellsForDisplayAction = function(command){
 		var temp = [];
 		if(scrawl.isa(command,'arr')){
 			temp = command;
@@ -1595,38 +1605,26 @@ window.scrawl = (function(){
 				default : temp.removeItem(this.display); break;
 				}
 			}
+		return temp;
+		};
+	Pad.prototype.clear = function(command){
+		var temp = this.getCellsForDisplayAction(command);
 		for(var i=0, z=temp.length; i<z; i++){
 			scrawl.cell[temp[i]].clear();
 			}
 		return this;
 		};
 	Pad.prototype.compile = function(command){
-		var temp = [];
-		if(scrawl.isa(command,'arr')){
-			temp = command;
-			}
-		else{
-			for(var i=0, z=this.cells.length; i<z; i++){
-				temp.push(this.cells[i]);
-				}
-			switch(command){
-				case 'all' : break;
-				case 'display' : temp = [this.display]; break;
-				case 'base' : temp = [this.base]; break;
-				case 'non-base' : temp.removeItem(this.base); break;
-				case 'current' : temp = [this.current]; break;
-				case 'non-current' : temp.removeItem(this.current); break;
-				case 'additionals' :
-					temp.removeItem(this.display);
-					temp.removeItem(this.base);
-					break;
-				case 'non-additionals' : temp = [this.display, this.base]; break;
-				case 'none' : temp = []; break;
-				default : temp.removeItem(this.display); break;
-				}
-			}
+		var temp = this.getCellsForDisplayAction(command);
 		for(var i=0, z=temp.length; i<z; i++){
 			scrawl.cell[temp[i]].compile();
+			}
+		return this;
+		};
+	Pad.prototype.stampBackground = function(command){
+		var temp = this.getCellsForDisplayAction(command);
+		for(var i=0, z=temp.length; i<z; i++){
+			scrawl.cell[temp[i]].stampBackground();
 			}
 		return this;
 		};
@@ -1945,11 +1943,7 @@ window.scrawl = (function(){
 		};
 	Cell.prototype.compile = function(){
 		if(this.backgroundColor !== 'rgba(0,0,0,0)'){
-			var ctx = scrawl.context[this.name];
-			var tempFillStyle = ctx.fillStyle;
-			ctx.fillStyle = this.backgroundColor;
-			ctx.fillRect(this.actualX-this.cellX, this.actualY-this.cellY, this.actualWidth, this.actualHeight);
-			ctx.fillStyle = tempFillStyle;
+			this.stampBackground();
 			}
 		this.groups.sort(function(a,b){
 			return scrawl.group[a].order - scrawl.group[b].order;
@@ -1959,6 +1953,14 @@ window.scrawl = (function(){
 				scrawl.group[this.groups[i]].stamp(false, this.name);
 				}
 			}
+		return this;
+		};
+	Cell.prototype.stampBackground = function(){
+		var ctx = scrawl.context[this.name];
+		var tempFillStyle = ctx.fillStyle;
+		ctx.fillStyle = this.backgroundColor;
+		ctx.fillRect(this.actualX-this.cellX, this.actualY-this.cellY, this.actualWidth, this.actualHeight);
+		ctx.fillStyle = tempFillStyle;
 		return this;
 		};
 	Cell.prototype.copyCellToSelf = function(cell){
@@ -2629,6 +2631,8 @@ window.scrawl = (function(){
 		this.rollable = (scrawl.isa(items.rollable,'bool')) ? items.rollable : true;
 		this.roll = items.roll || 0;
 		this.degree = (scrawl.isa(items.degree,'bool')) ? items.degree : true;
+		this.flipReverse = (scrawl.isa(items.flipReverse,'bool')) ? items.flipReverse : false;
+		this.flipUpend = (scrawl.isa(items.flipUpend,'bool')) ? items.flipUpend : false;
 		var myContext = new Context(items);
 		this.context = myContext.name;
 		this.group = this.getGroup(items);
@@ -2651,8 +2655,8 @@ window.scrawl = (function(){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		if(scrawl.xta([items.x,items.y])){
 			this.order += 9999;
-			this.handleX = items.x - (this.startX - this.handleX);
-			this.handleY = items.y - (this.startY - this.handleY);
+			this.handleX = (items.x - (this.startX - (this.handleX*this.scale)))/this.scale;
+			this.handleY = (items.y - (this.startY - (this.handleY*this.scale)))/this.scale;
 			this.pivot = 'mouse';
 			}
 		return this;
@@ -2811,36 +2815,68 @@ window.scrawl = (function(){
 		this.visibility = temp;
 		return this;
 		};
-	Sprite.prototype.stamp = function(item){					//override object is only generated by group objects
-		if(this.visibility){
-			var ctx, engine, myCell, myMethod;
-			var override = {};
-			if(scrawl.xt(item)){
-				if(['clear','draw','fill','drawFill','fillDraw','sinkInto','floatOver','clip','none'].contains(item)){
-					override = {
-						x: 0,
-						y: 0,
-						method: item,
-						cells: scrawl.group[this.group].cells,
-						};
-					}
-				else{
-					override = {
-						x: item.x || 0,
-						y: item.y || 0,
-						method: item.method || false,
-						cells: item.cells || scrawl.group[this.group].cells,
-						};
-					}
-				}
-			else{
+	Sprite.prototype.prepareItemForStamp = function(item){				//override object is only generated by group objects
+		var override = {};
+		if(scrawl.xt(item)){
+			if(['clear','draw','fill','drawFill','fillDraw','sinkInto','floatOver','clip','none','clearWithBackground'].contains(item)){
 				override = {
 					x: 0,
 					y: 0,
-					method: false,
+					method: item,
 					cells: scrawl.group[this.group].cells,
 					};
 				}
+			else{
+				override = {
+					x: item.x || 0,
+					y: item.y || 0,
+					method: item.method || false,
+					cells: item.cells || scrawl.group[this.group].cells,
+					};
+				}
+			}
+		else{
+			override = {
+				x: 0,
+				y: 0,
+				method: false,
+				cells: scrawl.group[this.group].cells,
+				};
+			}
+		return override;
+		};
+	Sprite.prototype.setStampUsingPivot = function(override, i){
+		if(scrawl.pointnames.contains(this.pivot)){
+			this.startX = scrawl.point[this.pivot].currentX;
+			this.startY = scrawl.point[this.pivot].currentY;
+			}
+		else if(scrawl.spritenames.contains(this.pivot)){
+			if(this.head){
+				this.startX = scrawl.sprite[this.pivot].getStartX();
+				this.startY = scrawl.sprite[this.pivot].getStartY();
+				}
+			else{
+				this.startX = scrawl.sprite[this.pivot].startX;
+				this.startY = scrawl.sprite[this.pivot].startY;
+				}
+			}
+		else if(this.pivot === 'mouse'){
+			here = scrawl.pad[scrawl.cell[override.cells[i]].pad].getMouse();
+			if(here.active){
+				this.startX = here.x;
+				this.startY = here.y;
+				}
+			}
+		else if(scrawl.groupnames.contains(this.pivot)){
+			this.startX = scrawl.group[this.pivot].startX;
+			this.startY = scrawl.group[this.pivot].startY;
+			}
+		return this;
+		};
+	Sprite.prototype.stamp = function(item){					//override object is only generated by group objects
+		if(this.visibility){
+			var ctx, engine, myCell, myMethod;
+			var override = this.prepareItemForStamp(item);
 			myMethod = override.method || this.method;
 			for(var i=0, z=override.cells.length; i<z; i++){
 				ctx = scrawl.cell[override.cells[i]];
@@ -2848,26 +2884,9 @@ window.scrawl = (function(){
 				engine = scrawl.context[ctx.name];
 				myCell = scrawl.cell[override.cells[i]].name;
 				var here;
+				var here;
 				if(this.pivot){
-					if(scrawl.pointnames.contains(this.pivot)){
-						this.startX = scrawl.point[this.pivot].currentX;
-						this.startY = scrawl.point[this.pivot].currentY;
-						}
-					else if(scrawl.spritenames.contains(this.pivot)){
-						this.startX = scrawl.sprite[this.pivot].startX;
-						this.startY = scrawl.sprite[this.pivot].startY;
-						}
-					else if(this.pivot === 'mouse'){
-						here = scrawl.pad[scrawl.cell[override.cells[i]].pad].getMouse();
-						if(here.active){
-							this.startX = here.x;
-							this.startY = here.y;
-							}
-						}
-					else if(scrawl.groupnames.contains(this.pivot)){
-						this.startX = scrawl.group[this.pivot].startX;
-						this.startY = scrawl.group[this.pivot].startY;
-						}
+					this.setStampUsingPivot(override, i);
 					}
 				else if(scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape'){
 					here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
@@ -2880,9 +2899,36 @@ window.scrawl = (function(){
 			}
 		return this;
 		};
+	Sprite.prototype.flipCanvas = function(engine, myCell){
+		var c = scrawl.cell[myCell];
+		var w = c.actualWidth, h = c.actualHeight;
+		if(this.flipReverse && this.flipUpend){
+			engine.translate(w,h);
+			engine.scale(-1,-1);
+			this.startX = w-this.startX;
+			this.startY = h-this.startY;
+			this.handleX = -this.handleX
+			this.handleY = -this.handleY
+			}
+		else if(this.flipReverse){
+			engine.translate(w,0);
+			engine.scale(-1,1);
+			this.startX = w-this.startX;
+			this.handleX = -this.handleX
+			}
+		else if(this.flipUpend){
+			engine.translate(0,h);
+			engine.scale(1,-1);
+			this.startY = h-this.startY;
+			this.handleY = -this.handleY
+			}
+		return this;
+		};
 	Sprite.prototype.callMethod = function(engine, myCell, override, method){
+		this.flipCanvas(engine, myCell);
 		switch(method){
 			case 'clear' : this.clear(engine, myCell, override); break;
+			case 'clearWithBackground' : this.clearWithBackground(engine, myCell, override); break;
 			case 'draw' : this.draw(engine, myCell, override); break;
 			case 'fill' : this.fill(engine, myCell, override); break;
 			case 'drawFill' : this.drawFill(engine, myCell, override); break;
@@ -2892,6 +2938,7 @@ window.scrawl = (function(){
 			case 'clip' : this.clip(engine, myCell, override); break;
 			case 'none' : this.none(engine, myCell, override); break;
 			}
+		this.flipCanvas(engine, myCell);
 		return this;
 		};
 	Sprite.prototype.rotateCell = function(ctx, cell){
@@ -2933,6 +2980,7 @@ window.scrawl = (function(){
 		return this;
 		};
 	Sprite.prototype.clear = function(ctx, cell, override){return this;};			//not tested for any sprite objects
+	Sprite.prototype.clearWithBackground = function(ctx, cell, override){return this;};			//not tested for any sprite objects
 	Sprite.prototype.draw = function(ctx, cell, override){return this;};
 	Sprite.prototype.fill = function(ctx, cell, override){return this;};
 	Sprite.prototype.drawFill = function(ctx, cell, override){return this;};
@@ -3013,11 +3061,11 @@ window.scrawl = (function(){
 		scrawl.spritenames.pushUnique(this.name);
 		scrawl.group[this.group].sprites.pushUnique(this.name);
 		var tempAlign = scrawl.ctx[this.context].textAlign;
+		this.head = items.head || false;
+		this.currentLine = items.currentLine || false;
 		this.set({textAlign: 'start'});
 		this.getMetrics(scrawl.group[this.group].cells[0]);
 		this.set({textAlign: tempAlign});
-		this.head = items.head || false;
-		this.currentLine = items.currentLine || false;
 		this.multiline(items);
 		return this;
 		}
@@ -3026,31 +3074,60 @@ window.scrawl = (function(){
 	Phrase.prototype.classname = 'spritenames';
 	Phrase.prototype.multiline = function(items){
 		if(scrawl.xt(items.text)){
-			if(items.text.indexOf('\n') >= 0){
-				if(this.lines && this.isHead){
-					for(var i=0; i<this.lines; i++){
-						scrawl.deleteSprite([this.name+'_'+i]);
-						}
+			if(this.lines && this.isHead){
+				for(var i=0; i<this.lines; i++){
+					scrawl.deleteSprite([this.name+'_'+i]);
 					}
+				this.isHead = false;
+				this.lines = 0;
+				}
+			if(items.text.indexOf('\n') >= 0){
 				var textArray = items.text.split('\n');
 				items['head'] = this.name;
 				this.isHead = true;
 				this.lineHeight = (scrawl.xt(items.lineHeight)) ? items.lineHeight : 1;
 				this.lines = textArray.length;
 				items['handleY'] = -(this.height * this.lineHeight * 1.5);
-				var obj;
+				items['family'] = items.family || this.family;
+				items['fixedWidth'] = items.fixedWidth || this.fixedWidth;
+				items['fixedWord'] = items.fixedWord || this.fixedWord;
+				items['fixedPhrase'] = items.fixedPhrase || this.fixedPhrase;
+				items['metrics'] = items.metrics || this.metrics;
+				items['size'] = items.size || this.size;
+				items['style'] = items.style || this.style;
+				items['variant'] = items.variant || this.variant;
+				items['weight'] = items.weight || this.weight;
+				items['flipReverse'] = items.flipReverse || this.flipReverse;
+				items['flipUpend'] = items.flipUpend || this.flipUpend;
+				items['method'] = items.method || this.method;
+				items['order'] = items.order || this.order;
+				items['roll'] = items.roll || this.roll;
+				items['rollable'] = items.rollable || this.rollable;
+				items['visibility'] = false;
+				items['scale'] = items.scale || this.scale;
+				items['addPathRoll'] = items.addPathRoll || this.addPathRoll;
+				items['pathRoll'] = items.pathRoll || this.pathRoll;
+				items['head'] = this.name;
+				items['group'] = false;
+				items['target'] = false;
+				this.lineHeight = (scrawl.xt(items.lineHeight)) ? items.lineHeight : 1;
+				this.lines = textArray.length;
+				items['pivot'] = this.name;
+				var obj, tW = 0, tH = 0;
 				for(var i=0; i<this.lines; i++){
 					items.name = this.name+'_'+i;
 					items.text = textArray[i];
 					items['currentLine'] = i;
-					items['pivot'] = (i === 0) ? this.name : this.name+'_'+(i-1);
+					items['handleY'] = -(this.lineHeight * 1.5 * this.size * i);
 					obj = scrawl.newPhrase(items);
 					delete scrawl.ctx[obj.context];
 					scrawl.ctxnames.removeItem(obj.context);
 					obj.context = this.context;
 					items.name = this.name;
 					}
-				this.startY -= items.handleY;
+				}
+			else{
+				this.text = items.text;
 				}
 			}
 		};
@@ -3059,13 +3136,36 @@ window.scrawl = (function(){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.checkFont(items.font);
 		if(scrawl.xt(items.text)){
+			var tempAlign = scrawl.ctx[this.context].textAlign;
+			this.set({textAlign: 'start'});
+			this.getMetrics(scrawl.group[this.group].cells[0]);
+			this.set({textAlign: tempAlign});
 			this.multiline(items);
+			}
+		return this;
+		};
+	Phrase.prototype.setDelta = function(items){
+		Sprite.prototype.setDelta.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xto([items.scale, items.size])){
+			this.checkFont();
 			var tempAlign = scrawl.ctx[this.context].textAlign;
 			this.set({textAlign: 'start'});
 			this.getMetrics(scrawl.group[this.group].cells[0]);
 			this.set({textAlign: tempAlign});
 			}
+		if(this.isHead){
+			for(var i=0; i<this.lines; i++){
+				scrawl.sprite[this.name+'_'+i].setDelta(items);
+				}
+			}
 		return this;
+		};
+	Phrase.prototype.clone = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var a = Sprite.prototype.clone.call(this, items);
+		a.checkFont();
+		return a;
 		};
 	Phrase.prototype.checkFont = function(item){
 		if(scrawl.xt(item)){
@@ -3127,187 +3227,145 @@ window.scrawl = (function(){
 		return this;
 		};
 	Phrase.prototype.stamp = function(item){					//override object is only generated by group objects
-		if(this.isHead){
-			for(var i=0; i<this.lines; i++){
-				scrawl.sprite[this.name+'_'+i].stamp(item);
-				}
-			}
-		else{
-			if(this.visibility){
-				var ctx, engine, myCell, myMethod;
-				var override = {};
-				if(scrawl.xt(item)){
-					if(['clear','draw','fill','drawFill','fillDraw','sinkInto','floatOver','clip','none'].contains(item)){
-						override = {
-							x: 0,
-							y: 0,
-							method: item,
-							cells: scrawl.group[this.group].cells,
-							};
+		if(this.visibility){
+			var ctx, engine, myCell, myMethod;
+			var override = this.prepareItemForStamp(item);
+			myMethod = override.method || this.method;
+			for(var i=0, z=override.cells.length; i<z; i++){
+				ctx = scrawl.cell[override.cells[i]];
+				ctx.setEngine(this.context, this.scale);
+				engine = scrawl.context[ctx.name];
+				myCell = scrawl.cell[override.cells[i]].name;
+				var here;
+				if(this.pivot){
+					this.setStampUsingPivot(override, i);
+					if(!this.isHead){
+						this.callMethod(engine, myCell, override, myMethod);
+						}
+					}
+				else if(scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape'){
+					if(this.fixedPhrase){
+						here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
+						this.startX = here.x;
+						this.startY = here.y;
+						this.pathRoll = here.r || 0;
+						if(!this.isHead){
+							this.callMethod(engine, myCell, override, myMethod);
+							}
+						}
+					else if(this.fixedWord){
+						var tempAlign = scrawl.ctx[this.context].textAlign;
+						var tempPathPosition = this.pathPosition;
+						this.width = engine.measureText(this.text+' ').width * this.scale;
+						var myText = this.text;
+						var wordArray = myText.split(' ');
+						if(wordArray.length > 0){
+							var pathLength = scrawl.sprite[this.path].getPerimeterLength();
+							var myPos, nowPos = 0, word, wordLength, tempWord;
+							var textCoverage = this.width/pathLength;
+							if(['center'].contains(tempAlign)){
+								myPos = tempPathPosition - (textCoverage/2);
+								}
+							else if(['end','right'].contains(tempAlign)){
+								myPos = tempPathPosition - textCoverage;
+								}
+							else{
+								myPos = tempPathPosition;
+								}
+							for(var i=0, z=wordArray.length; i<z; i++){
+								tempWord = wordArray[i]+' ';
+								wordLength = engine.measureText(tempWord).width * this.scale;
+								switch(tempAlign){
+									case 'left' :
+									case 'start' :
+										glyph = 0;
+										break;
+									case 'center' :
+										glyph = (wordLength/pathLength)/2;
+										break;
+									case 'right' :
+									case 'end' :
+										glyph = wordLength/pathLength;
+										break;
+									}
+								nowPos = myPos + glyph;
+								nowPos = (nowPos > 1) ? nowPos-1 : ((nowPos < 0) ? nowPos+1 : nowPos);
+								myPos += wordLength/pathLength;
+								this.text = tempWord;
+								this.pathPosition = nowPos;
+								here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
+								this.startX = here.x;
+								this.startY = here.y;
+								this.pathRoll = here.r || 0;
+								if(!this.isHead){
+									this.callMethod(engine, myCell, override, myMethod);
+									}
+								}
+							this.text = myText;
+							this.pathPosition = tempPathPosition;
+							}
 						}
 					else{
-						override = {
-							x: item.x || 0,
-							y: item.y || 0,
-							method: item.method || false,
-							cells: item.cells || scrawl.group[this.group].cells,
-							};
+						var tempAlign = scrawl.ctx[this.context].textAlign;
+						var myText = this.text;
+						var tempPathPosition = this.pathPosition;
+						if(!scrawl.xt(this.glyphWidths)){
+							this.getMetrics(scrawl.group[this.group].cells[0]);
+							}
+						if(this.glyphWidths.length > 0){
+							var pathLength = scrawl.sprite[this.path].getPerimeterLength();
+							var myPos, nowPos = 0, glyph;
+							var textCoverage = this.width/pathLength;
+							if(['center'].contains(tempAlign)){
+								myPos = tempPathPosition - (textCoverage/2);
+								}
+							else if(['end','right'].contains(tempAlign)){
+								myPos = tempPathPosition - textCoverage;
+								}
+							else{
+								myPos = tempPathPosition;
+								}
+							for(var i=0, z=myText.length; i<z; i++){
+								switch(tempAlign){
+									case 'left' :
+									case 'start' :
+										glyph = 0;
+										break;
+									case 'center' :
+										glyph = (this.glyphWidths[i]/pathLength)/2;
+										break;
+									case 'right' :
+									case 'end' :
+										glyph = this.glyphWidths[i]/pathLength;
+										break;
+									}
+								nowPos = myPos + glyph;
+								nowPos = (nowPos > 1) ? nowPos-1 : ((nowPos < 0) ? nowPos+1 : nowPos);
+								myPos += this.glyphWidths[i]/pathLength;
+								this.text = myText[i];
+								this.pathPosition = nowPos;
+								here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
+								this.startX = here.x;
+								this.startY = here.y;
+								this.pathRoll = here.r || 0;
+								if(!this.isHead){
+									this.callMethod(engine, myCell, override, myMethod);
+									}
+								}
+							this.text = myText;
+							this.pathPosition = tempPathPosition;
+							}
 						}
 					}
 				else{
-					override = {
-						x: 0,
-						y: 0,
-						method: false,
-						cells: scrawl.group[this.group].cells,
-						};
+					if(!this.isHead){
+						this.callMethod(engine, myCell, override, myMethod);
+						}
 					}
-				myMethod = override.method || this.method;
-				for(var i=0, z=override.cells.length; i<z; i++){
-					ctx = scrawl.cell[override.cells[i]];
-					ctx.setEngine(this.context, this.scale);
-					engine = scrawl.context[ctx.name];
-					myCell = scrawl.cell[override.cells[i]].name;
-					var here;
-					if(this.pivot){
-						if(scrawl.pointnames.contains(this.pivot)){
-							this.startX = scrawl.point[this.pivot].currentX;
-							this.startY = scrawl.point[this.pivot].currentY;
-							}
-						else if(scrawl.spritenames.contains(this.pivot)){
-							if(this.head){
-								this.startX = scrawl.sprite[this.pivot].getStartX();
-								this.startY = scrawl.sprite[this.pivot].getStartY();
-								}
-							else{
-								this.startX = scrawl.sprite[this.pivot].startX;
-								this.startY = scrawl.sprite[this.pivot].startY;
-								}
-							}
-						else if(this.pivot === 'mouse'){
-							here = scrawl.pad[scrawl.cell[override.cells[i]].pad].getMouse();
-							if(here.active){
-								this.startX = here.x;
-								this.startY = here.y;
-								}
-							}
-						else if(scrawl.groupnames.contains(this.pivot)){
-							this.startX = scrawl.group[this.pivot].startX;
-							this.startY = scrawl.group[this.pivot].startY;
-							}
-						this.callMethod(engine, myCell, override, myMethod);
-						}
-					else if(scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape'){
-						if(this.fixedPhrase){
-							here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
-							this.startX = here.x;
-							this.startY = here.y;
-							this.pathRoll = here.r || 0;
-							this.callMethod(engine, myCell, override, myMethod);
-							}
-						else if(this.fixedWord){
-							var tempAlign = scrawl.ctx[this.context].textAlign;
-							var tempPathPosition = this.pathPosition;
-							this.width = engine.measureText(this.text+' ').width * this.scale;
-							var myText = this.text;
-							var wordArray = myText.split(' ');
-							if(wordArray.length > 0){
-								var pathLength = scrawl.sprite[this.path].getPerimeterLength();
-								var myPos, nowPos = 0, word, wordLength, tempWord;
-								var textCoverage = this.width/pathLength;
-								if(['center'].contains(tempAlign)){
-									myPos = tempPathPosition - (textCoverage/2);
-									}
-								else if(['end','right'].contains(tempAlign)){
-									myPos = tempPathPosition - textCoverage;
-									}
-								else{
-									myPos = tempPathPosition;
-									}
-								for(var i=0, z=wordArray.length; i<z; i++){
-									tempWord = wordArray[i]+' ';
-									wordLength = engine.measureText(tempWord).width * this.scale;
-									switch(tempAlign){
-										case 'left' :
-										case 'start' :
-											glyph = 0;
-											break;
-										case 'center' :
-											glyph = (wordLength/pathLength)/2;
-											break;
-										case 'right' :
-										case 'end' :
-											glyph = wordLength/pathLength;
-											break;
-										}
-									nowPos = myPos + glyph;
-									nowPos = (nowPos > 1) ? nowPos-1 : ((nowPos < 0) ? nowPos+1 : nowPos);
-									myPos += wordLength/pathLength;
-									this.text = tempWord;
-									this.pathPosition = nowPos;
-									here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
-									this.startX = here.x;
-									this.startY = here.y;
-									this.pathRoll = here.r || 0;
-									this.callMethod(engine, myCell, override, myMethod);
-									}
-								this.text = myText;
-								this.pathPosition = tempPathPosition;
-								}
-							}
-						else{
-							var tempAlign = scrawl.ctx[this.context].textAlign;
-							var myText = this.text;
-							var tempPathPosition = this.pathPosition;
-							if(!scrawl.xt(this.glyphWidths)){
-								this.getMetrics(scrawl.group[this.group].cells[0]);
-								}
-							if(this.glyphWidths.length > 0){
-								var pathLength = scrawl.sprite[this.path].getPerimeterLength();
-								var myPos, nowPos = 0, glyph;
-								var textCoverage = this.width/pathLength;
-								if(['center'].contains(tempAlign)){
-									myPos = tempPathPosition - (textCoverage/2);
-									}
-								else if(['end','right'].contains(tempAlign)){
-									myPos = tempPathPosition - textCoverage;
-									}
-								else{
-									myPos = tempPathPosition;
-									}
-								for(var i=0, z=myText.length; i<z; i++){
-									switch(tempAlign){
-										case 'left' :
-										case 'start' :
-											glyph = 0;
-											break;
-										case 'center' :
-											glyph = (this.glyphWidths[i]/pathLength)/2;
-											break;
-										case 'right' :
-										case 'end' :
-											glyph = this.glyphWidths[i]/pathLength;
-											break;
-										}
-									nowPos = myPos + glyph;
-									nowPos = (nowPos > 1) ? nowPos-1 : ((nowPos < 0) ? nowPos+1 : nowPos);
-									myPos += this.glyphWidths[i]/pathLength;
-									this.text = myText[i];
-									this.pathPosition = nowPos;
-									here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
-									this.startX = here.x;
-									this.startY = here.y;
-									this.pathRoll = here.r || 0;
-									this.callMethod(engine, myCell, override, myMethod);
-									}
-								this.text = myText;
-								this.pathPosition = tempPathPosition;
-								}
-							}
-						}
-					else{
-						this.callMethod(engine, myCell, override, myMethod);
-						}
+				}
+			if(this.isHead){
+				for(var i=0; i<this.lines; i++){
+					scrawl.sprite[this.name+'_'+i].forceStamp(item);
 					}
 				}
 			}
@@ -3318,6 +3376,16 @@ window.scrawl = (function(){
 		ctx.globalCompositeOperation = 'destination-out';
 		ctx.fillText(this.text, this.getStartX(override), this.getStartY(override));
 		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
+		this.unrotateCell(ctx, cell);
+		return this;
+		};
+	Phrase.prototype.clearWithBackground = function(ctx, cell, override){
+		this.rotateCell(ctx, cell);
+		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
+		ctx.globalAlpha = 1;
+		ctx.fillText(this.text, this.getStartX(override), this.getStartY(override));
+		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
+		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
 		this.unrotateCell(ctx, cell);
 		return this;
 		};
@@ -3380,8 +3448,19 @@ window.scrawl = (function(){
 		myContext.font = myEngine.font;
 		myContext.textBaseline = myEngine.textBaseline;
 		myContext.textAlign = myEngine.textAlign;
-		this.width = myContext.measureText(this.text).width * this.scale;
-		this.height = this.size * this.scale;
+		if(this.isHead){
+			var tW = 0;
+			for(var i=0; i<this.lines; i++){
+				tW = (scrawl.sprite[this.name+'_'+i].width > tW) ? scrawl.sprite[this.name+'_'+i].width : tW;
+				}
+			this.width = tW;
+			this.height = this.lines * this.lineHeight * this.size * 1.5;
+			}
+		else{
+			//measures the scaled width, so need to correct for sanity!
+			this.width = myContext.measureText(this.text).width/this.scale;
+			this.height = this.size * 1.5;
+			}
 		if(this.path){
 			this.glyphWidths = [];
 			var myText = this.text, tempText;
@@ -3406,7 +3485,7 @@ window.scrawl = (function(){
 	Phrase.prototype.checkHit = function(items, override){
 		if(scrawl.xta([items.x,items.y])){
 			var d = this.getCorners(override);
-			if(items.x.isBetween(d.topLeftX, d.bottomRightX, true) && items.y.isBetween(d.topLeftY, d.bottomRightY, true)){
+			if(items.x.isBetween(d.topX, (d.topX+d.width), true) && items.y.isBetween(d.topY, (d.topY+d.height), true)){
 				return true;
 				}
 			}
@@ -3415,61 +3494,40 @@ window.scrawl = (function(){
 	Phrase.prototype.getCorners = function(override){
 		this.getMetrics();
 		var myContext = scrawl.ctx[this.context];
-		var tlx, tly, brx, bry;
+		var x, y, w, h;
 		switch(myContext.textBaseline){
-			case 'top' :
-				tly = this.getStartY(override);
-				bry = this.getStartY(override) + (this.height * 1.5);
-				break;
-			case 'hanging' :
-				tly = this.getStartY(override) - (this.height * 0.2);
-				bry = this.getStartY(override) + (this.height * 1.3);
-				break;
-			case 'middle' :
-				tly = this.getStartY(override) - (this.height * 0.75);
-				bry = this.getStartY(override) + (this.height * 0.75);
-				break;
-			case 'bottom' :
-				tly = this.getStartY(override) - (this.height * 1.5);
-				bry = this.getStartY(override);
-				break;
-			default :					//alphabetic, ideographic
-				tly = this.getStartY(override) - (this.height * 1.2);
-				bry = this.getStartY(override) + (this.height * 0.3);
+			case 'top' : y = this.getStartY(override); break;
+			case 'hanging' : y = this.getStartY(override) - (this.size * this.scale * 0.2); break;
+			case 'middle' : y = this.getStartY(override) - (this.size * this.scale * 0.75); break;
+			case 'bottom' : y = this.getStartY(override) - (this.size * this.scale * 1.5); break;
+			default : y = this.getStartY(override) - (this.size * this.scale * 1.2);
 			}
 		switch(myContext.textAlign){
-			case 'end' :
-			case 'right' :
-				tlx = this.getStartX(override) - this.width;
-				brx = this.getStartX(override);
-				break;
-			case 'center' :
-				tlx = this.getStartX(override) - (this.width/2);
-				brx = this.getStartX(override) + (this.width/2)
-				break;
-			default :					//start, left
-				tlx = this.getStartX(override);
-				brx = this.getStartX(override) + this.width;
+			case 'end' : x = this.getStartX(override) - (this.width*this.scale); break;
+			case 'right' : x = this.getStartX(override) - (this.width*this.scale); break;
+			case 'center' : x = this.getStartX(override) - ((this.width*this.scale)/2); break;
+			default : x = this.getStartX(override);
 			}
-		return {topLeftX: tlx, topLeftY: tly, bottomRightX: brx, bottomRightY: bry};
+		//correct the returns for scaling
+		return {topX: x, topY: y, width: this.width*this.scale, height: this.height*this.scale};
 		};
 	Phrase.prototype.getCollisionPoints = function(override){
 		var c = [], n;
 		var d = this.getCorners(override);
-		var hW = this.width/2;
-		var hH = this.height/2;
+		var hW = d.width/2;
+		var hH = d.height/2;
 		for(var i=0, z=this.collisionPoints.length; i<z; i++){
 			switch(this.collisionPoints[i]) {
 				case 'start' : c.push({x: parseInt(this.startX), y: parseInt(this.startY)}); break;
-				case 'center' : c.push({x: parseInt(d.topLeftX+hW), y: parseInt(d.topLeftY+hH)}); break;
-				case 'N' : c.push({x: parseInt(d.topLeftX+hW), y: parseInt(d.topLeftY)}); break;
-				case 'NE' : c.push({x: parseInt(d.bottomRightX), y: parseInt(d.topLeftY)}); break;
-				case 'E' : c.push({x: parseInt(d.bottomRightX), y: parseInt(d.topLeftY+hH)}); break;
-				case 'SE' : c.push({x: parseInt(d.bottomRightX), y: parseInt(d.bottomRightY)}); break;
-				case 'S' : c.push({x: parseInt(d.topLeftX+hW), y: parseInt(d.bottomRightY)}); break;
-				case 'SW' : c.push({x: parseInt(d.topLeftX), y: parseInt(d.bottomRightY)}); break;
-				case 'W' : c.push({x: parseInt(d.topLeftX), y: parseInt(d.topLeftY+hH)}); break;
-				case 'NW' : c.push({x: parseInt(d.topLeftX), y: parseInt(d.topLeftY)}); break;
+				case 'center' : c.push({x: parseInt(d.topX+hW), y: parseInt(d.topY+hH)}); break;
+				case 'N' : c.push({x: parseInt(d.topX+hW), y: parseInt(d.topY)}); break;
+				case 'NE' : c.push({x: parseInt(d.topX+d.width), y: parseInt(d.topY)}); break;
+				case 'E' : c.push({x: parseInt(d.topX+d.width), y: parseInt(d.topY+hH)}); break;
+				case 'SE' : c.push({x: parseInt(d.topX+d.width), y: parseInt(d.topY+d.height)}); break;
+				case 'S' : c.push({x: parseInt(d.topX+hW), y: parseInt(d.topY+d.height)}); break;
+				case 'SW' : c.push({x: parseInt(d.topX), y: parseInt(d.topY+d.height)}); break;
+				case 'W' : c.push({x: parseInt(d.topX), y: parseInt(d.topY+hH)}); break;
+				case 'NW' : c.push({x: parseInt(d.topX), y: parseInt(d.topY)}); break;
 				default :
 					if(scrawl.pointnames.contains(this.collisionPoints[i])){
 						n = scrawl.point[this.collisionPoints[i]];
@@ -3506,6 +3564,19 @@ window.scrawl = (function(){
 		scrawl.cell[cell].setToClearShape();
 		this.rotateCell(ctx, cell);
 		ctx.clearRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		this.unrotateCell(ctx, cell);
+		return this;
+		};
+	Block.prototype.clearWithBackground = function(ctx, cell, override){
+		this.rotateCell(ctx, cell);
+		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
+		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
+		ctx.globalAlpha = 1;
+		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
+		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
+		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
 		this.unrotateCell(ctx, cell);
 		return this;
 		};
@@ -3671,6 +3742,18 @@ window.scrawl = (function(){
 		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
 		return this;
 		};
+	Wheel.prototype.clearWithBackground = function(ctx, cell, override){
+		this.buildPath(ctx, override);
+		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
+		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
+		ctx.globalAlpha = 1;
+		ctx.stroke();
+		ctx.fill();
+		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
+		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
+		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
+		return this;
+		};
 	Wheel.prototype.draw = function(ctx, cell, override){
 		this.buildPath(ctx, override);
 		ctx.stroke();
@@ -3810,6 +3893,19 @@ window.scrawl = (function(){
 	Picture.prototype.clear = function(ctx, cell, override){
 		this.rotateCell(ctx, cell);
 		ctx.clearRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		this.unrotateCell(ctx, cell);
+		return this;
+		};
+	Picture.prototype.clearWithBackground = function(ctx, cell, override){
+		this.rotateCell(ctx, cell);
+		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
+		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
+		ctx.globalAlpha = 1;
+		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
+		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
+		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
 		this.unrotateCell(ctx, cell);
 		return this;
 		};
@@ -4021,7 +4117,6 @@ window.scrawl = (function(){
 	Shape.prototype.classname = 'spritenames';
 	Shape.prototype.set = function(items){
 		Sprite.prototype.set.call(this, items);
-//		this.radius = 0;
 		if(this.linkDurations.length > 0 || this.perimeterLength){
 			this.buildPositions();
 			}
@@ -4029,7 +4124,6 @@ window.scrawl = (function(){
 		};
 	Shape.prototype.setDelta = function(items){
 		Sprite.prototype.setDelta.call(this, items);
-//		this.radius = 0;
 		if(this.linkDurations.length > 0 || this.perimeterLength){
 			this.buildPositions();
 			}
@@ -4074,8 +4168,21 @@ window.scrawl = (function(){
 	Shape.prototype.clear = function(ctx, cell, override){
 		this.prepareShape(ctx, override);
 		ctx.globalCompositeOperation = 'destination-out';
+		ctx.stroke();
 		ctx.fill();
 		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
+		return this;
+		};
+	Shape.prototype.clearWithBackground = function(ctx, cell, override){
+		this.prepareShape(ctx, override);
+		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
+		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
+		ctx.globalAlpha = 1;
+		ctx.stroke();
+		ctx.fill();
+		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
+		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
+		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
 		return this;
 		};
 	Shape.prototype.fill = function(ctx, cell, override){
