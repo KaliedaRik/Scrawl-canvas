@@ -1,8 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
-* SCRAWL+STACK.JS Library 
 *
-*	version 0.304 - 5 September 2013
+*	version 1.00 - 30 October 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -89,17 +88,14 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 0.303 released 3 September 2013
+VERSION 1.00 released 30 October 2013
 
     - the zip file includes:
 	
-		- scrawl.js (186kb)
-		- scrawl-min.js (151kb)
-			- will gzip to ~28kb
-		
-		- scrawl+stack.js (211kb)
-		- scrawl+stack-min.js (172kb)
-			- will gzip to ~32kb
+		- scrawl.js (273kb)
+			- will gzip to ~45kb
+		- scrawl-min.js (174kb)
+			- will gzip to ~37kb
 		
 		- documentation.txt
 		- changelog.txt
@@ -125,14 +121,11 @@ https://sourceforge.net/p/scrawljs/discussion/
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+VERSION 1.00 uploaded 30 October 2013
 
-Version 0.304 uploaded 5 September 2013
-Version 0.303 uploaded 3 September 2013
-Version 0.302 uploaded 31 August 2013
-Version 0.301 uploaded 28 August 2013
-VERSION 0.300 uploaded 20 August 2013
-
-VERSION 0.200(beta) uploaded 21 May 2013
-VERSION 0.02(beta) uploaded 27 April 2013
-VERSION 0.01(beta) uploaded 30 March 2013
-Version 0.002(alpha) uploaded 5 March 2013
+Previous versions are not compatible with version 1.00
+	version 0.300 uploaded 20 August 2013
+	version 0.200(beta) uploaded 21 May 2013
+	version 0.02(beta) uploaded 27 April 2013
+	version 0.01(beta) uploaded 30 March 2013
+	version 0.002(alpha) uploaded 5 March 2013

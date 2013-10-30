@@ -1,6 +1,6 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
-*	version 0.304 - 5 September 2013
+*	version 1.00 - 30 October 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -52,17 +52,6 @@ Number.prototype.isBetween = Number.prototype.isBetween || function(a, b, e){
 		return false;
 		}
 	};
-String.prototype.strtr = String.prototype.strtr || function(replacePairs){
-    "use strict";
-    var str = this.toString(), key, re;
-    for(key in replacePairs){
-        if(replacePairs.hasOwnProperty(key)){
-            re = new RegExp(key, "g");
-            str = str.replace(re, replacePairs[key]);
-			}
-		}
-		return str;
-	};
 
 // requestAnimFrame from Paul Irish - http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 window.requestAnimFrame = (function(callback){
@@ -72,6 +61,7 @@ window.requestAnimFrame = (function(callback){
 window.scrawl = (function(){
 	var scrawl = {
 		type: 'Library',
+		version: '1.00',
 		object: {},
 		objectnames: [],
 		pad: {},
@@ -100,12 +90,21 @@ window.scrawl = (function(){
 		linknames: [],
 		anim: {},
 		animnames: [],
-		nameslist: ['objectnames', 'padnames', 'cellnames', 'imagenames', 'groupnames', 'designnames', 'spritenames', 'pointnames', 'linknames', 'ctxnames', 'animnames'],
+		text: {},
+		textnames: [],
+		stack: {},
+		stk: {},
+		stacknames: [],
+		element: {},
+		elm: {},
+		elementnames: [],
+		nameslist: ['objectnames', 'padnames', 'cellnames', 'imagenames', 'groupnames', 'designnames', 'spritenames', 'pointnames', 'linknames', 'ctxnames', 'animnames', 'textnames', 'stacknames', 'elementnames'],
 		radian: Math.PI/180,
-		degree: 180/Math.PI,
 		mouseX: 0,
 		mouseY: 0,
 		newPad: function(items){return new Pad(items);},
+		newStack: function(items){return new Stack(items);},
+		newElement: function(items){return new Element(items);},
 		newCell: function(items){return new Cell(items);},
 		newImage: function(items){return new ScrawlImage(items);},
 		newGroup: function(items){return new Group(items);},
@@ -113,12 +112,14 @@ window.scrawl = (function(){
 		newBlock: function(items){return new Block(items);},
 		newWheel: function(items){return new Wheel(items);},
 		newPicture: function(items){return new Picture(items);},
+		newOutline: function(items){return new Outline(items);},
 		newShape: function(items){return new Shape(items);},
 		newPoint: function(items){return new Point(items);},
 		newLink: function(items){return new Link(items);},
 		newAnimSheet: function(items){return new AnimSheet(items);},
 		newGradient: function(items){return new Gradient(items);},
 		newRadialGradient: function(items){return new RadialGradient(items);},
+		newColor: function(items){return new Color(items);},
 		newPattern: function(items){return new Pattern(items);},
 		isa: function(item, identifier){
 			if(this.xta([item, identifier])){
@@ -184,177 +185,8 @@ window.scrawl = (function(){
 				}
 			return false;
 			},
-		save: function(items, name){
-			items = (this.xt(items)) ? [].concat(items) : [];
-			if(items.length === 0 || items[0] === 'all' || items[0] === 'scrawl'){
-				items = this.designnames.concat(this.spritenames).concat(this.animnames).concat(this.groupnames);
-				}
-			else if(items[0] === 'sprites'){
-				items = this.designnames.concat(this.spritenames).concat(this.animnames).concat(this.groupnames);
-				}
-			name = (this.xt(name)) ? name : 'saved_'+Date.now();
-			var saved = [], saving;
-			for(var i=0, z=items.length; i<z; i++){
-				if(this.designnames.contains(items[i])){
-					saving = this.design[items[i]].getObjectData()
-					saved.push(saving);
-					}
-				if(this.spritenames.contains(items[i])){
-					saving = this.sprite[items[i]].getObjectData()
-					saved.push(saving);
-					}
-				if(this.animnames.contains(items[i])){
-					saving = this.anim[items[i]].getObjectData()
-					saved.push(saving);
-					}
-				if(this.groupnames.contains(items[i])){
-					saving = this.group[items[i]].getObjectData()
-					saved.push(saving);
-					}
-				}
-			saved = JSON.stringify(saved);
-			var myE = {'"action"': '°Ḁ','"addPathRoll"': '°ḁ','"angle"': '°Ḃ','"angleDegrees"': '°ḃ','"AnimSheet"': '°Ḅ','"animSheet"': '°ḅ','"Block"': '°Ḇ','"cell"': '°ḇ','"cells"': '°Ḉ','"checkHitUsingImageData"': '°ḉ','"checkHitUsingRadius"': '°Ḋ','"clockwise"': '°ḋ','"closed"': '°Ḍ','"collisionPoints"': '°ḍ','"color"': '°Ḏ','"comment"': '°ḏ','"context"': '°Ḑ','"controlPoint1"': '°ḑ','"controlPoint2"': '°Ḓ','"copyHeight"': '°ḓ','"copyWidth"': '°Ḕ','"copyX"': '°ḕ','"copyY"': '°Ḗ','"currentFrame"': '°ḗ','"currentX"': '°Ḙ','"currentY"': '°ḙ','"degree"': '°Ḛ','"distance"': '°ḛ','"element"': '°Ḝ','"endAngle"': '°ḝ','"endHandleX"': '°Ḟ','"endHandleY"': '°ḟ','"endPoint"': '°Ḡ','"endRadius"': '°ḡ','"endX"': '°Ḣ','"endY"': '°ḣ','"family"': '°Ḥ','"fence"': '°ḥ','"field"': '°Ḧ','"fieldChannel"': '°ḧ','"fieldTest"': '°Ḩ','"fillStyle"': '°ḩ','"firstPoint"': '°Ḫ','"fixed"': '°ḫ','"font"': '°Ḭ','"frames"': '°ḭ','"globalAlpha"': '°Ḯ','"globalCompositeOperation"': '°ḯ','"Gradient"': '°Ḱ','"Group"': '°ḱ','"group"': '°Ḳ','"handleX"': '°ḳ','"handleY"': '°Ḵ','"height"': '°ḵ','"Image"': '°Ḷ','"image"': '°ḷ','"imageData"': '°Ḹ','"imageDataChannel"': '°ḹ','"imageType"': '°Ḻ','"includeCenter"': '°ḻ','"keepCopyDimensions"': '°Ḽ','"lastCalled"': '°ḽ','"length"': '°Ḿ','"lineCap"': '°ḿ','"lineJoin"': '°Ṁ','"lineWidth"': '°ṁ','"Link"': '°Ṃ','"linkDurations"': '°ṃ','"linkList"': '°Ṅ','"loop"': '°ṅ','"method"': '°Ṇ','"metrics"': '°ṇ','"miterLimit"': '°Ṉ','"moveHandleX"': '°ṉ','"moveHandleY"': '°Ṋ','"movePathPosition"': '°ṋ','"moveStartX"': '°Ṍ','"moveStartY"': '°ṍ','"name"': '°Ṏ','"object"': '°ṏ','"order"': '°Ṑ','"path"': '°ṑ','"pathPosition"': '°Ṓ','"pathRoll"': '°ṓ','"pathSpeedConstant"': '°Ṕ','"Pattern"': '°ṕ','"perimeterLength"': '°Ṗ','"Phrase"': '°ṗ','"Picture"': '°Ṙ','"pivot"': '°ṙ','"Point"': '°Ṛ','"pointList"': '°ṛ','"positions"': '°Ṝ','"precision"': '°ṝ','"RadialGradient"': '°Ṟ','"radius"': '°ṟ','"repeat"': '°Ṡ','"roll"': '°ṡ','"rollable"': '°Ṣ','"running"': '°ṣ','"scale"': '°Ṥ','"shadowBlur"': '°ṥ','"shadowColor"': '°Ṧ','"shadowOffsetX"': '°ṧ','"shadowOffsetY"': '°Ṩ','"Shape"': '°ṩ','"size"': '°Ṫ','"source"': '°ṫ','"species"': '°Ṭ','"speed"': '°ṭ','"sprite"': '°Ṯ','"sprites"': '°ṯ','"startAngle"': '°Ṱ','"startHandleX"': '°ṱ','"startHandleY"': '°Ṳ','"startLink"': '°ṳ','"startPoint"': '°Ṵ','"startRadius"': '°ṵ','"startX"': '°Ṷ','"startY"': '°ṷ','"strokeStyle"': '°Ṹ','"style"': '°ṹ','"target"': '°Ṻ','"text"': '°ṻ','"textAlign"': '°Ṽ','"textBaseline"': '°ṽ','"timestamp"': '°Ṿ','"title"': '°ṿ','"type"': '°Ẁ','"variant"': '°ẁ','"visibility"': '°Ẃ','"weight"': '°ẃ','"Wheel"': '°Ẅ','"width"': '°ẅ','"#000000"': '°Ẇ','"10pt sans-serif"': '°ẇ','"source-over"': '°Ẉ','"source-atop"': '°ẉ','"source-in"': '°Ẋ','"source-out"': '°ẋ','"destination-over"': '°Ẍ','"destination-atop"': '°ẍ','"destination-in"': '°Ẏ','"destination-out"': '°ẏ','"lighter"': '°Ẑ','"darker"': '°ẑ','"copy"': '°Ẓ','"xor"': '°ẓ','"butt"': '°Ẕ','"round"': '°ẕ','"square"': '°Ā','"bevel"': '°ā','"miter"': '°Ă','"start"': '°Ą','"left"': '°ą','"center"': '°Ć','"right"': '°ć','"end"': '°Ĉ','"alphabetic"': '°ĉ','"top"': '°Ċ','"hanging"': '°ċ','"middle"': '°Č','"ideographic"': '°č','"bottom"': '°Ď','"anycolor"': '°ď','"red"': '°Đ','"green"': '°đ','"blue"': '°Ē','"alpha"': '°ē','"bold"': '°Ĕ','"italic"': '°ĕ','"normal"': '°Ė','"Context"': '°ė','"fill"': '°Ę','"draw"': '°ę','"fillDraw"': '°Ě','"drawFill"': '°ě','"sinkInto"': '°Ĝ','"floatOver"': '°ĝ','"none"': '°Ğ','"clear"': '°ğ',};
-			var enc = saved.strtr(myE);
-			this.object[name] = enc;
-			this.objectnames.push(name);
-			return true;
-			},
-		load: function(item, callback){
-			var myD = {'°Ḁ': '"action"','°ḁ': '"addPathRoll"','°Ḃ': '"angle"','°ḃ': '"angleDegrees"','°Ḅ': '"AnimSheet"','°ḅ': '"animSheet"','°Ḇ': '"Block"','°ḇ': '"cell"','°Ḉ': '"cells"','°ḉ': '"checkHitUsingImageData"','°Ḋ': '"checkHitUsingRadius"','°ḋ': '"clockwise"','°Ḍ': '"closed"','°ḍ': '"collisionPoints"','°Ḏ': '"color"','°ḏ': '"comment"','°Ḑ': '"context"','°ḑ': '"controlPoint1"','°Ḓ': '"controlPoint2"','°ḓ': '"copyHeight"','°Ḕ': '"copyWidth"','°ḕ': '"copyX"','°Ḗ': '"copyY"','°ḗ': '"currentFrame"','°Ḙ': '"currentX"','°ḙ': '"currentY"','°Ḛ': '"degree"','°ḛ': '"distance"','°Ḝ': '"element"','°ḝ': '"endAngle"','°Ḟ': '"endHandleX"','°ḟ': '"endHandleY"','°Ḡ': '"endPoint"','°ḡ': '"endRadius"','°Ḣ': '"endX"','°ḣ': '"endY"','°Ḥ': '"family"','°ḥ': '"fence"','°Ḧ': '"field"','°ḧ': '"fieldChannel"','°Ḩ': '"fieldTest"','°ḩ': '"fillStyle"','°Ḫ': '"firstPoint"','°ḫ': '"fixed"','°Ḭ': '"font"','°ḭ': '"frames"','°Ḯ': '"globalAlpha"','°ḯ': '"globalCompositeOperation"','°Ḱ': '"Gradient"','°ḱ': '"Group"','°Ḳ': '"group"','°ḳ': '"handleX"','°Ḵ': '"handleY"','°ḵ': '"height"','°Ḷ': '"Image"','°ḷ': '"image"','°Ḹ': '"imageData"','°ḹ': '"imageDataChannel"','°Ḻ': '"imageType"','°ḻ': '"includeCenter"','°Ḽ': '"keepCopyDimensions"','°ḽ': '"lastCalled"','°Ḿ': '"length"','°ḿ': '"lineCap"','°Ṁ': '"lineJoin"','°ṁ': '"lineWidth"','°Ṃ': '"Link"','°ṃ': '"linkDurations"','°Ṅ': '"linkList"','°ṅ': '"loop"','°Ṇ': '"method"','°ṇ': '"metrics"','°Ṉ': '"miterLimit"','°ṉ': '"moveHandleX"','°Ṋ': '"moveHandleY"','°ṋ': '"movePathPosition"','°Ṍ': '"moveStartX"','°ṍ': '"moveStartY"','°Ṏ': '"name"','°ṏ': '"object"','°Ṑ': '"order"','°ṑ': '"path"','°Ṓ': '"pathPosition"','°ṓ': '"pathRoll"','°Ṕ': '"pathSpeedConstant"','°ṕ': '"Pattern"','°Ṗ': '"perimeterLength"','°ṗ': '"Phrase"','°Ṙ': '"Picture"','°ṙ': '"pivot"','°Ṛ': '"Point"','°ṛ': '"pointList"','°Ṝ': '"positions"','°ṝ': '"precision"','°Ṟ': '"RadialGradient"','°ṟ': '"radius"','°Ṡ': '"repeat"','°ṡ': '"roll"','°Ṣ': '"rollable"','°ṣ': '"running"','°Ṥ': '"scale"','°ṥ': '"shadowBlur"','°Ṧ': '"shadowColor"','°ṧ': '"shadowOffsetX"','°Ṩ': '"shadowOffsetY"','°ṩ': '"Shape"','°Ṫ': '"size"','°ṫ': '"source"','°Ṭ': '"species"','°ṭ': '"speed"','°Ṯ': '"sprite"','°ṯ': '"sprites"','°Ṱ': '"startAngle"','°ṱ': '"startHandleX"','°Ṳ': '"startHandleY"','°ṳ': '"startLink"','°Ṵ': '"startPoint"','°ṵ': '"startRadius"','°Ṷ': '"startX"','°ṷ': '"startY"','°Ṹ': '"strokeStyle"','°ṹ': '"style"','°Ṻ': '"target"','°ṻ': '"text"','°Ṽ': '"textAlign"','°ṽ': '"textBaseline"','°Ṿ': '"timestamp"','°ṿ': '"title"','°Ẁ': '"type"','°ẁ': '"variant"','°Ẃ': '"visibility"','°ẃ': '"weight"','°Ẅ': '"Wheel"','°ẅ': '"width"','°Ẇ': '"#000000"','°ẇ': '"10pt sans-serif"','°Ẉ': '"source-over"','°ẉ': '"source-atop"','°Ẋ': '"source-in"','°ẋ': '"source-out"','°Ẍ': '"destination-over"','°ẍ': '"destination-atop"','°Ẏ': '"destination-in"','°ẏ': '"destination-out"','°Ẑ': '"lighter"','°ẑ': '"darker"','°Ẓ': '"copy"','°ẓ': '"xor"','°Ẕ': '"butt"','°ẕ': '"round"','°Ā': '"square"','°ā': '"bevel"','°Ă': '"miter"','°Ą': '"start"','°ą': '"left"','°Ć': '"center"','°ć': '"right"','°Ĉ': '"end"','°ĉ': '"alphabetic"','°Ċ': '"top"','°ċ': '"hanging"','°Č': '"middle"','°č': '"ideographic"','°Ď': '"bottom"','°ď': '"anycolor"','°Đ': '"red"','°đ': '"green"','°Ē': '"blue"','°ē': '"alpha"','°Ĕ': '"bold"','°ĕ': '"italic"','°Ė': '"normal"','°ė': '"Context"','°Ę': '"fill"','°ę': '"draw"','°Ě': '"fillDraw"','°ě': '"drawFill"','°Ĝ': '"sinkInto"','°ĝ': '"floatOver"','°Ğ': '"none"','°ğ': '"clear"',};
-			var dec = item.strtr(myD);
-			var a = JSON.parse(dec);
-			var _ctx = ['fillStyle','strokeStyle','globalAlpha','globalCompositeOperation','lineWidth','lineCap','lineJoin','miterLimit','shadowOffsetX','shadowOffsetY','shadowBlur','shadowColor','font','textAlign','textBaseline'];
-			var _image = {}, _pattern = {}, _gradient = {}, _sprite = {}, _point = {}, _link = {}, _anim = {}, _group = {};
-			var _imageNames = [], _patternNames = [], _gradientNames = [], _spriteNames = [], _pointNames = [], _linkNames = [], _animNames = [], _groupNames = [];
-			for(var i=0, z=a.length; i<z; i++){
-				switch(a[i].type){
-					case 'Pattern' :
-						_pattern[a[i].name] = a[i]; 
-						_patternNames.push(a[i].name);
-						break;
-					case 'Gradient' :
-					case 'RadialGradient' :
-						_gradient[a[i].name] = a[i]; 
-						_gradientNames.push(a[i].name);
-						break;
-					case 'Image' :
-						_image[a[i].name] = a[i]; 
-						_imageNames.push(a[i].name);
-						break;
-					case 'AnimSheet' :
-						_anim[a[i].name] = a[i]; 
-						_animNames.push(a[i].name);
-						break;
-					case 'Group' :
-						_group[a[i].name] = a[i]; 
-						_groupNames.push(a[i].name);
-						break;
-					case 'Shape' :
-						for(var j=0, w=a[i].points.length; j<w; j++){
-							_point[a[i].points[j].name] = a[i].points[j];
-							_pointNames.push(a[i].points[j].name);
-							}
-						for(var j=0, w=a[i].links.length; j<w; j++){
-							_link[a[i].links[j].name] = a[i].links[j];
-							_linkNames.push(a[i].links[j].name);
-							}
-					case 'Block' :
-					case 'Phrase' :
-					case 'Wheel' :
-					case 'Picture' :
-						_sprite[a[i].name] = a[i]; 
-						_spriteNames.push(a[i].name);
-						break;
-					}
-				}
-			for(var i=0, z=_patternNames.length; i<z; i++){
-				if(_pattern[_patternNames[i]].image.type === 'Image'){
-					_pattern[_patternNames[i]].image['parent'] = _patternNames[i];
-					_pattern[_patternNames[i]].image['parentType'] = _pattern[_patternNames[i]].type;
-					_image[_pattern[_patternNames[i]].image.name] = _pattern[_patternNames[i]].image;
-					_imageNames.push(_pattern[_patternNames[i]].image.name);
-					_pattern[_patternNames[i]].image = _pattern[_patternNames[i]].image.name;
-					}
-				}
-			for(var i=0, z=_spriteNames.length; i<z; i++){
-				if(this.xt(_sprite[_spriteNames[i]].image) && _sprite[_spriteNames[i]].image.type === 'Image'){
-					_sprite[_spriteNames[i]].image['parent'] = _spriteNames[i];
-					_sprite[_spriteNames[i]].image['parentType'] = _sprite[_spriteNames[i]].type;
-					_image[_sprite[_spriteNames[i]].image.name] = _sprite[_spriteNames[i]].image;
-					_imageNames.push(_sprite[_spriteNames[i]].image.name);
-					_sprite[_spriteNames[i]].source = _sprite[_spriteNames[i]].image.name;
-					}
-				if(_sprite[_spriteNames[i]].context.type === 'Context'){
-					for(var j=0, w=_ctx.length; j<w; j++){
-						_sprite[_spriteNames[i]].object[_ctx[j]] = _sprite[_spriteNames[i]].context.object[_ctx[j]];
-						}
-					_sprite[_spriteNames[i]].context = _sprite[_spriteNames[i]].context.name;
-					}
-				}
-			var newobj, parobj;
-			for(var i=0, z=_imageNames.length; i<z; i++){
-				_image[_imageNames[i]].object.source = false;
-				_image[_imageNames[i]].object.imageData = _image[_imageNames[i]].imageData;
-				newobj = this.newImage(_image[_imageNames[i]].object);
-				}
-			for(var i=0, z=_animNames.length; i<z; i++){
-				newobj = this.newAnimSheet(_anim[_animNames[i]].object);
-				}
-			for(var i=0, z=_patternNames.length; i<z; i++){
-				newobj = this.newPattern(_pattern[_patternNames[i]].object);
-				}
-			for(var i=0, z=_gradientNames.length; i<z; i++){
-				switch(_gradient[_gradientNames[i]].type){
-					case 'Gradient' :
-						newobj = this.newGradient(_gradient[_gradientNames[i]].object);
-						break;
-					case 'RadialGradient' :
-						newobj = this.newRadialGradient(_gradient[_gradientNames[i]].object);
-						break;
-					}
-				}
-			for(var i=0, z=_groupNames.length; i<z; i++){
-				if(this.groupnames.contains(_groupNames[i])){
-					for(var j=0, w=_group[_groupNames[i]].object.sprites.length; j<w; j++){
-						this.group[_groupNames[i]].sprites.pushUnique(_group[_groupNames[i]].object.sprites[j]);
-						}
-					}
-				else{
-					newobj = this.newGroup(_group[_groupNames[i]].object);
-					}
-				}
-			for(var i=0, z=_spriteNames.length; i<z; i++){
-				switch(_sprite[_spriteNames[i]].type){
-					case 'Block' :
-						newobj = this.newBlock(_sprite[_spriteNames[i]].object);
-						break;
-					case 'Phrase' :
-						newobj = this.newPhrase(_sprite[_spriteNames[i]].object);
-						break;
-					case 'Picture' :
-						newobj = this.newPicture(_sprite[_spriteNames[i]].object);
-						if(newobj.imageData){newobj.getImageData();}
-						break;
-					case 'Wheel' :
-						newobj = this.newWheel(_sprite[_spriteNames[i]].object);
-						break;
-					case 'Shape' :
-						newobj = this.newShape(_sprite[_spriteNames[i]].object);
-						break;
-					}
-				}
-			for(var i=0, z=_pointNames.length; i<z; i++){
-				newobj = this.newPoint(_point[_pointNames[i]].object);
-				}
-			for(var i=0, z=_linkNames.length; i<z; i++){
-				newobj = this.newLink(_link[_linkNames[i]].object);
-				}
-			if(callback){
-				callback();
-				}
-			return true;
-			},
 		makeName: function(item){
+			item = (this.isa(item,'obj')) ? item : {};
 			var o = {
 				name: (this.isa(item.name,'str')) ? item.name : null,
 				type: (this.isa(item.type,'str')) ? item.type : null,
@@ -367,6 +199,148 @@ window.scrawl = (function(){
 				return newname;
 				}
 			return false;
+			},
+		loadNative: function(items){
+			items = (this.isa(items,'str')) ? [items] : items;
+			if(this.isa(items,'arr')){
+				var temp;
+				for(var i=0, z=items.length; i<z; i++){
+					temp = JSON.parse(items[i]);
+					for(var j=0, w=temp.length; j<w; j++){
+						switch(temp[j].type){
+							case 'Group' :
+								if(this.groupnames.contains(temp[j].name)){
+									this.group[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newGroup(temp[j]);
+									}
+								break;
+							case 'AnimSheet' :
+								if(this.animnames.contains(temp[j].name)){
+									this.anim[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newAnimSheet(temp[j]);
+									}
+								break;
+							case 'ScrawlImage' :
+								if(this.imagenames.contains(temp[j].name)){
+									this.image[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									if(this.xt(items.element)){
+										items.element = document.getElementById(items.element);
+										}
+									this.newImage(temp[j]);
+									}
+								break;
+							case 'Gradient' :
+								if(this.designnames.contains(temp[j].name)){
+									this.design[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newGradient(temp[j]);
+									}
+								break;
+							case 'RadialGradient' :
+								if(this.designnames.contains(temp[j].name)){
+									this.design[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newRadialGradient(temp[j]);
+									}
+								break;
+							case 'Pattern' :
+								if(this.designnames.contains(temp[j].name)){
+									this.design[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newPattern(temp[j]);
+									}
+								break;
+							case 'Color' :
+								if(this.designnames.contains(temp[j].name)){
+									this.design[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newColor(temp[j]);
+									}
+								break;
+							case 'Phrase' :
+								if(this.spritenames.contains(temp[j].name)){
+									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newPhrase(temp[j]);
+									}
+								break;
+							case 'Block' :
+								if(this.spritenames.contains(temp[j].name)){
+									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newBlock(temp[j]);
+									}
+								break;
+							case 'Wheel' :
+								if(this.spritenames.contains(temp[j].name)){
+									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newWheel(temp[j]);
+									}
+								break;
+							case 'Picture' :
+								var p;
+								if(this.spritenames.contains(temp[j].name)){
+									p = this.sprite[temp[j].name];
+									p.setToDefaults().set(temp[j]);
+									}
+								else{
+									p = this.newPicture(temp[j]);
+									}
+								if(temp[j].checkHitUsingImageData){
+									p.getImageData();
+									}
+								break;
+							case 'Outline' :
+								if(this.spritenames.contains(temp[j].name)){
+									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newOutline(temp[j]);
+									}
+								break;
+							case 'Shape' :
+								if(this.spritenames.contains(temp[j].name)){
+									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newShape(temp[j]);
+									}
+								break;
+							case 'Point' :
+								if(this.pointnames.contains(temp[j].name)){
+									this.point[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newPoint(temp[j]);
+									}
+								break;
+							case 'Link' :
+								if(this.linknames.contains(temp[j].name)){
+									this.link[temp[j].name].setToDefaults().set(temp[j]);
+									}
+								else{
+									this.newLink(temp[j]);
+									}
+								break;
+							}
+						}
+					}
+				}
+			return
 			},
 		getImagesByClass: function(classtag){
 			if(classtag){
@@ -449,6 +423,7 @@ window.scrawl = (function(){
 			this.point = {}; this.pointnames = [];
 			this.link = {}; this.linknames = [];
 			this.anim = {}; this.animnames = [];
+			this.text = {}; this.textnames = [];
 			this.initialize();
 			return true;
 			},
@@ -512,7 +487,6 @@ window.scrawl = (function(){
 			if(this.isa(items.pointLabel,'str') && this.isa(items.sprite,'str') && this.isa(items.data,'arr')){
 				var v = [], temp;
 				var viz = (this.isa(items.visibility,'bool')) ? items.visibility : true;
-				var ang = (this.isa(items.degree,'bool')) ? items.degree : true;
 				var vLabel = (this.xt(items.linkLabel)) ? items.linkLabel : items.pointLabel+'_link';
 				for(var i=0, z=items.data.length; i<z; i++){
 					temp = new Point({
@@ -520,7 +494,6 @@ window.scrawl = (function(){
 						sprite: items.sprite,
 						distance: items.data[i][0] || 0,
 						angle: items.data[i][1] || 0,
-						degree: ang,
 						visibility: viz,
 						startLink: vLabel+i,
 						});
@@ -529,63 +502,289 @@ window.scrawl = (function(){
 				}
 			return v;
 			},
-		makeLine: function(items){
+		makePath: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
+			items.scaleX = items.scaleX || 1; 
+			items.scaleY = items.scaleY || 1;
 			items.startX = items.startX || 0; 
 			items.startY = items.startY || 0;
-			items.endX = items.endX || 0;
-			items.endY = items.endY || 0;
-			items.closed = false;
-			var myFixed = items.fixed || 'none';
-			items.fixed = false;
-			var myShape = this.newShape(items);
-			var tempName = myShape.name.replace('~','_','g');
-			if(myShape){
-				this.makeCartesianPoints({
-					pointLabel: tempName+'_p',
-					linkLabel: tempName+'_v',
-					sprite: myShape.name,
-					data: [[items.startX, items.startY], [items.endX, items.endY]],
-					});
-				this.newLink({
-					name: tempName+'_v0',
-					sprite: myShape.name,
-					species: 'line', 
-					startPoint: tempName+'_p0',
-					endPoint: tempName+'_p1',
-					action: 'add',
-					precision: items.precision || false,
-					});
-				this.newLink({
-					name: tempName+'_v1',
-					sprite: myShape.name,
-					action: 'end',
-					});
-				this.link[tempName+'_v1'].action = 'end';		//????
-				myShape.set({
-					firstPoint: tempName+'_p0',
-					collisionPoints: myShape.collisionPoints,
-					});
-				switch(myFixed){
-					case 'both' :
-						this.point[tempName+'_p0'].fixed = true;
-						this.point[tempName+'_p1'].fixed = true;
-						break;
-					case 'start' :
-						this.point[tempName+'_p0'].fixed = true;
-						break;
-					case 'end' :
-						this.point[tempName+'_p1'].fixed = true;
-						break;
-					default :
-						this.point[tempName+'_p0'].fixed = myShape.name;
+			items.handleX = items.handleX || 'left';
+			items.handleY = items.handleY || 'top';
+			var minX = 999999, minY = 999999, maxX = -999999, maxY = -999999;
+			var checkMinMax = function(cx,cy){
+				minX = (minX > cx) ? cx : minX;
+				minY = (minY > cy) ? cy : minY;
+				maxX = (maxX < cx) ? cx : maxX;
+				maxY = (maxY < cy) ? cy : maxY;
+				};
+			var getPathSetData = function(sim){
+				var psd = sim.match(/(-?[0-9.]+\b)/g);
+				if(psd){
+					for(var j=0, w=psd.length; j<w; j++){
+						psd[j] = parseFloat(psd[j]);
+						}
+					return psd;
 					}
-				if(items.path){
-					myShape.path = false;
-					myShape.forceStamp('none');
-					myShape.path = items.path;
+				return false;
+				};
+			var generatePoint = function(_tempname,_pcount,_shapename,_x,_y,_viz,_lcount,_sx,_sy){
+				new Point({
+					name: _tempname+'_p'+_pcount,
+					sprite: _shapename,
+					currentX: _x*_sx,
+					currentY: _y*_sy,
+					visibility: _viz,
+					startLink: _tempname+'_l'+_lcount,
+					});
+				};
+			var generateLink = function(_tempname,_lcount,_shapename,_spec,_act,_spt,_ept,_cp1,_cp2){
+				_ept = (scrawl.xt(_ept)) ? _ept : {};
+				_cp1 = (scrawl.xt(_cp1)) ? _cp1 : {};
+				_cp2 = (scrawl.xt(_cp2)) ? _cp2 : {};
+				new Link({
+					name: _tempname+'_l'+_lcount,
+					sprite: _shapename,
+					species: _spec, 
+					startPoint: _spt.name,
+					endPoint: _ept.name || false,
+					controlPoint1: _cp1.name || false,
+					controlPoint2: _cp2.name || false,
+					precision: false,
+					action: _act,
+					});
+				};
+			if(this.xt(items.data)){
+				var myShape = this.newShape(items);
+				var sn = myShape.name;
+				var tn = sn.replace('~','_','g');
+				var lib = scrawl.point;
+				var sx = items.scaleX;
+				var sy = items.scaleY;
+				if(myShape){
+					var set = items.data.match(/([A-Za-z][0-9. ,\-]*)/g);
+					var data, command, temppoint;
+					var lc = 0, pc = 0;
+					var cx = myShape.startX, cy = myShape.startY;
+					generatePoint(tn, pc, sn, cx, cy, false, lc, sx, sy); pc++;
+					for(var i=0,z=set.length; i<z; i++){
+						command = set[i][0];
+						data = getPathSetData(set[i]);
+						switch(command){
+							case 'M' :
+//NEED TO WORK OUT WHAT .dataFile did in the SVG import stuff, and how its removal will affect existing demos
+								if(i===0 && items.dataFile){
+									myShape.startX = data[0];
+									myShape.startY = data[1];
+									checkMinMax(cx,cy);
+									}
+								else{
+									cx = data[0], cy = data[1];
+									checkMinMax(cx,cy);
+									generatePoint(tn, pc, sn, cx, cy, true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, false, 'move', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									}
+								for(var k=2,v=data.length;k<v;k+=2){
+									generatePoint(tn, pc, sn, data[k], data[k+1], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									cx = data[k], cy = data[k+1];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'm' :
+								cx += data[0], cy += data[1];
+								checkMinMax(cx,cy);
+								generatePoint(tn, pc, sn, cx, cy, true, lc+1, sx, sy); pc++;
+								generateLink(tn, lc, sn, false, 'move', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+								for(var k=2,v=data.length;k<v;k+=2){
+									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									cx += data[k], cy += data[k+1];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'Z' :
+							case 'z' :
+								generatePoint(tn, pc, sn, myShape.startX, myShape.startY, false, lc+1, sx, sy); pc++;
+								generateLink(tn, lc, sn, false, 'close', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+								break;
+							case 'L' :
+								for(var k=0,v=data.length;k<v;k+=2){
+									generatePoint(tn, pc, sn, data[k], data[k+1], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									cx = data[k], cy = data[k+1];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'l' :
+								for(var k=0,v=data.length;k<v;k+=2){
+									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									cx += data[k], cy += data[k+1];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'H' :
+								for(var k=0,v=data.length;k<v;k++){
+									generatePoint(tn, pc, sn, data[k], cy, true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									cx = data[k];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'h' :
+								for(var k=0,v=data.length;k<v;k++){
+									generatePoint(tn, pc, sn, cx+data[k], cy, true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									cx += data[k];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'V' :
+								for(var k=0,v=data.length;k<v;k++){
+									generatePoint(tn, pc, sn, cx, data[k], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									cy = data[k];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'v' :
+								for(var k=0,v=data.length;k<v;k++){
+									generatePoint(tn, pc, sn, cx, cy+data[k], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
+									cy += data[k];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'C' :
+								for(var k=0,v=data.length;k<v;k+=6){
+									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+2], data[k+3], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+4], data[k+5], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
+									cx = data[k+4], cy = data[k+5];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'c' :
+								for(var k=0,v=data.length;k<v;k+=6){
+									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k+4], cy+data[k+5], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
+									cx += data[k+4], cy += data[k+5];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'S' :
+								for(var k=0,v=data.length;k<v;k+=4){
+									if(i>0 && ['C','c','S','s'].contains(set[i-1][0])){
+										lib[tn+'_p'+(pc-2)].clone({
+											name: tn+'_p'+pc,
+											currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
+											currentY: cy+(cy-lib[tn+'_p'+(pc-2)].currentY),
+											}), pc++;
+										}
+									else{
+										generatePoint(tn, pc, sn, cx, cy, false, lc+1, sx, sy); pc++;
+										}
+									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+2], data[k+3], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
+									cx = data[k+2], cy = data[k+3];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 's' :
+								for(var k=0,v=data.length;k<v;k+=4){
+									if(i>0 && ['C','c','S','s'].contains(set[i-1][0])){
+										lib[tn+'_p'+(pc-2)].clone({
+											name: tn+'_p'+pc,
+											currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
+											currentY: cy+(cy-lib[tn+'_p'+(pc-2)].currentY),
+											}), pc++;
+										}
+									else{
+										generatePoint(tn, pc, sn, cx, cy, false, lc+1, sx, sy); pc++;
+										}
+									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+2], data[k+3], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
+									cx += data[k+2], cy += data[k+3];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'Q' :
+								for(var k=0,v=data.length;k<v;k+=4){
+									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+2], data[k+3], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
+									cx = data[k+2], cy = data[k+3];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'q' :
+								for(var k=0,v=data.length;k<v;k+=4){
+									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
+									cx += data[k+2], cy += data[k+3];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 'T' :
+								for(var k=0,v=data.length;k<v;k+=2){
+									if(i>0 && ['Q','q','T','t'].contains(set[i-1][0])){
+										lib[tn+'_p'+(pc-2)].clone({
+											name: tn+'_p'+pc,
+											currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
+											currentY: cy+(cy-lib[tn+'_p'+(pc-2)].currentY),
+											}), pc++;
+										}
+									else{
+										generatePoint(tn, pc, sn, cx, cy, false, lc+1, sx, sy); pc++;
+										}
+									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
+									cx = data[k], cy = data[k+1];
+									checkMinMax(cx,cy);
+									}
+								break;
+							case 't' :
+								for(var k=0,v=data.length;k<v;k+=2){
+									if(i>0 && ['Q','q','T','t'].contains(set[i-1][0])){
+										lib[tn+'_p'+(pc-2)].clone({
+											name: tn+'_p'+pc,
+											currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
+											currentY: cy+(cy-lib[tn+'_p'+(pc-2)].currentY),
+											}), pc++;
+										}
+									else{
+										generatePoint(tn, pc, sn, cx, cy, false, lc+1, sx, sy); pc++;
+										}
+									generatePoint(tn, pc, sn, data[k], data[k+1], true, lc+1, sx, sy); pc++;
+									generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
+									cx += data[k], cy += data[k+1];
+									checkMinMax(cx,cy);
+									}
+								break;
+							default :
+							}
+						}
+					generateLink(tn, lc, sn, false, 'end', lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc)]);
+					myShape.firstPoint = tn+'_p0';
+					myShape.width = (maxX-minX)*items.scaleX;
+					myShape.height = (maxY-minY)*items.scaleY;
+					this.point[tn+'_p0'].fixed = myShape.name;
+					if(items.path){
+						myShape.path = false;
+						myShape.forceStamp('none');
+						myShape.path = items.path;
+						}
+					else{myShape.forceStamp('none');}
+					myShape.handleX = items.handleX || 'center';
+					myShape.handleY = items.handleY || 'center';
+					return myShape;
 					}
-				return myShape;
 				}
 			return false;
 			},
@@ -596,81 +795,67 @@ window.scrawl = (function(){
 			items.radiusX = items.radiusX || 0;
 			items.radiusY = items.radiusY || 0;
 			items.closed = true;
-			var myShape = this.newShape(items);
-			var tempName = myShape.name.replace('~','_','g');
-			if(myShape){
-				this.makeCartesianPoints({
-					pointLabel: tempName+'_p',
-					linkLabel: tempName+'_l',
-					sprite: myShape.name,
-					data: [
-						[(items.startX-(items.radiusX*0.55)), (items.startY-items.radiusY)],
-						[items.startX, (items.startY-items.radiusY)], 
-						[(items.startX+(items.radiusX*0.55)), (items.startY-items.radiusY)],
-						[(items.startX+items.radiusX), (items.startY-(items.radiusY*0.55))],
-						[(items.startX+items.radiusX), items.startY],
-						[(items.startX+items.radiusX), (items.startY+(items.radiusY*0.55))],
-						[(items.startX+(items.radiusX*0.55)), (items.startY+items.radiusY)],
-						[items.startX, (items.startY+items.radiusY)], 
-						[(items.startX-(items.radiusX*0.55)), (items.startY+items.radiusY)],
-						[(items.startX-items.radiusX), (items.startY+(items.radiusY*0.55))],
-						[(items.startX-items.radiusX), items.startY],
-						[(items.startX-items.radiusX), (items.startY-(items.radiusY*0.55))],
-						[items.startX, (items.startY-items.radiusY)], 
-						],
-					});
-				this.newLink({
-					name: tempName+'_l0',
-					sprite: myShape.name,
-					species: 'bezier', 
-					startPoint: tempName+'_p1',
-					endPoint: tempName+'_p4',
-					controlPoint1: tempName+'_p2',
-					controlPoint2: tempName+'_p3',
-					precision: items.precision || false,
-					action: 'add',
-					}).clone({
-					name: tempName+'_l1',
-					startPoint: tempName+'_p4',
-					endPoint: tempName+'_p7',
-					controlPoint1: tempName+'_p5',
-					controlPoint2: tempName+'_p6',
-					}).clone({
-					name: tempName+'_l2',
-					startPoint: tempName+'_p7',
-					endPoint: tempName+'_p10',
-					controlPoint1: tempName+'_p8',
-					controlPoint2: tempName+'_p9',
-					}).clone({
-					name: tempName+'_l3',
-					startPoint: tempName+'_p10',
-					endPoint: tempName+'_p12',
-					controlPoint1: tempName+'_p11',
-					controlPoint2: tempName+'_p0',
-					});
-				this.newLink({
-					name: tempName+'_l4',
-					sprite: myShape.name,
-					startPoint: tempName+'_p12',
-					action: 'close',
-					});
-				myShape.set({
-					firstPoint: tempName+'_p1',
-					collisionPoints: myShape.collisionPoints,
-					});
-				scrawl.point[tempName+'_p1'].set({startLink: tempName+'_l0'});
-				scrawl.point[tempName+'_p4'].set({startLink: tempName+'_l1'});
-				scrawl.point[tempName+'_p7'].set({startLink: tempName+'_l2'});
-				scrawl.point[tempName+'_p10'].set({startLink: tempName+'_l3'});
-				scrawl.point[tempName+'_p12'].set({startLink: tempName+'_l4'});
-				if(items.path){
-					myShape.path = false;
-					myShape.forceStamp('none');
-					myShape.path = items.path;
-					}
-				return myShape;
+			var myData = 'm';
+			var cx = items.startX;
+			var cy = items.startY;
+			var dx = items.startX;
+			var dy = items.startY-items.radiusY;
+			myData += (cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX+(items.radiusX*0.55);
+			dy = items.startY-items.radiusY;
+			myData += 'c'+(cx-dx)+','+(cy-dy);
+			dx = items.startX+items.radiusX;
+			dy = items.startY-(items.radiusY*0.55);
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			dx = items.startX+items.radiusX;
+			dy = items.startY;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX+items.radiusX;
+			dy = items.startY+(items.radiusY*0.55);
+			myData += 'c'+(cx-dx)+','+(cy-dy);
+			dx = items.startX+(items.radiusX*0.55);
+			dy = items.startY+items.radiusY;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			dx = items.startX;
+			dy = items.startY+items.radiusY;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX-(items.radiusX*0.55);
+			dy = items.startY+items.radiusY;
+			myData += 'c'+(cx-dx)+','+(cy-dy);
+			dx = items.startX-items.radiusX;
+			dy = items.startY+(items.radiusY*0.55);
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			dx = items.startX-items.radiusX;
+			dy = items.startY;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX-items.radiusX;
+			dy = items.startY-(items.radiusY*0.55);
+			myData += 'c'+(cx-dx)+','+(cy-dy);
+			dx = items.startX-(items.radiusX*0.55);
+			dy = items.startY-items.radiusY;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			dx = items.startX;
+			dy = items.startY-items.radiusY;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			myData += 'z';
+			items.data = myData;
+			var myShape;
+			if(items.outline){
+				items.data = 'M'+items.startX+','+items.startY+items.data;
+				items.handleX = items.handleX || 'left';
+				items.handleY = items.handleY || 'top';
+				myShape = this.newOutline(items);
 				}
-			return false;
+			else{
+				items.handleX = items.handleX || 'center';
+				items.handleY = items.handleY || 'center';
+				myShape = this.makePath(items);
+				}
+			return myShape;
 			},
 		makeRectangle: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
@@ -680,157 +865,93 @@ window.scrawl = (function(){
 			items.height = items.height || 0;
 			items.radius = items.radius || 0; 
 			items.closed = true;
-			var myShape = this.newShape(items);
-			var tempName = myShape.name.replace('~','_','g');
-			if(myShape){
-				var _tlx = items.radiusTopLeftX || items.radiusTopLeft || items.radiusTopX || items.radiusLeftX || items.radiusTop || items.radiusLeft || items.radiusX || items.radius || 0;
-				var _tly = items.radiusTopLeftY || items.radiusTopLeft || items.radiusTopY || items.radiusLeftY || items.radiusTop || items.radiusLeft || items.radiusY || items.radius || 0;
-				var _trx = items.radiusTopRightX || items.radiusTopRight || items.radiusTopX || items.radiusRightX || items.radiusTop || items.radiusRight || items.radiusX || items.radius || 0;
-				var _try = items.radiusTopRightY || items.radiusTopRight || items.radiusTopY || items.radiusRightY || items.radiusTop || items.radiusRight || items.radiusY || items.radius || 0;
-				var _brx = items.radiusBottomRightX || items.radiusBottomRight || items.radiusBottomX || items.radiusRightX || items.radiusBottom || items.radiusRight || items.radiusX || items.radius || 0;
-				var _bry = items.radiusBottomRightY || items.radiusBottomRight || items.radiusBottomY || items.radiusRightY || items.radiusBottom || items.radiusRight || items.radiusY || items.radius || 0;
-				var _blx = items.radiusBottomLeftX || items.radiusBottomLeft || items.radiusBottomX || items.radiusLeftX || items.radiusBottom || items.radiusLeft || items.radiusX || items.radius || 0;
-				var _bly = items.radiusBottomLeftY || items.radiusBottomLeft || items.radiusBottomY || items.radiusLeftY || items.radiusBottom || items.radiusLeft || items.radiusY || items.radius || 0;
-				var halfWidth = (items.width/2);
-				var halfHeight = (items.height/2);
-				this.makeCartesianPoints({
-					pointLabel: tempName+'_p',
-					linkLabel: tempName+'_l',
-					sprite: myShape.name,
-					data: [
-						[items.startX + halfWidth - _trx, items.startY - halfHeight],
-						[items.startX + halfWidth, items.startY - halfHeight + _try],
-						[items.startX + halfWidth, items.startY + halfHeight - _bry],
-						[items.startX + halfWidth - _brx, items.startY + halfHeight],
-						[items.startX - halfWidth + _blx, items.startY + halfHeight],
-						[items.startX - halfWidth, items.startY + halfHeight - _bly],
-						[items.startX - halfWidth, items.startY - halfHeight + _tly],
-						[items.startX - halfWidth + _tlx, items.startY - halfHeight],
-						[items.startX + halfWidth - _trx, items.startY - halfHeight]
-						],
-					});
-				this.makeCartesianPoints({
-					pointLabel: tempName+'_pc',
-					linkLabel: tempName+'_l',
-					sprite: myShape.name,
-					data: [
-						[items.startX + halfWidth - _trx + (_trx*0.55), items.startY - halfHeight],
-						[items.startX + halfWidth, items.startY - halfHeight + _try - (_try*0.55)],
-						[items.startX + halfWidth, items.startY + halfHeight - _bry + (_bry*0.55)],
-						[items.startX + halfWidth - _brx + (_brx*0.55), items.startY + halfHeight],
-						[items.startX - halfWidth + _blx - (_blx*0.55), items.startY + halfHeight],
-						[items.startX - halfWidth, items.startY + halfHeight - _bly + (_bly*0.55)],
-						[items.startX - halfWidth, items.startY - halfHeight + _tly - (_tly*0.55)],
-						[items.startX - halfWidth + _tlx - (_tlx*0.55), items.startY - halfHeight],
-						],
-					});
-				this.newLink({
-					name: tempName+'_l4',
-					sprite: myShape.name,
-					species: 'bezier', 
-					startPoint: tempName+'_p0',
-					endPoint: tempName+'_p1',
-					controlPoint1: tempName+'_pc0',
-					controlPoint2: tempName+'_pc1',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					name: tempName+'_l0',
-					sprite: myShape.name,
-					species: 'line', 
-					startPoint: tempName+'_p1',
-					endPoint: tempName+'_p2',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					name: tempName+'_l5',
-					sprite: myShape.name,
-					species: 'bezier', 
-					startPoint: tempName+'_p2',
-					endPoint: tempName+'_p3',
-					controlPoint1: tempName+'_pc2',
-					controlPoint2: tempName+'_pc3',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					species: 'line', 
-					sprite: myShape.name,
-					name: tempName+'_l1',
-					startPoint: tempName+'_p3',
-					endPoint: tempName+'_p4',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					name: tempName+'_l6',
-					sprite: myShape.name,
-					species: 'bezier', 
-					startPoint: tempName+'_p4',
-					endPoint: tempName+'_p5',
-					controlPoint1: tempName+'_pc4',
-					controlPoint2: tempName+'_pc5',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					species: 'line', 
-					sprite: myShape.name,
-					name: tempName+'_l2',
-					startPoint: tempName+'_p5',
-					endPoint: tempName+'_p6',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					name: tempName+'_l7',
-					sprite: myShape.name,
-					species: 'bezier', 
-					startPoint: tempName+'_p6',
-					endPoint: tempName+'_p7',
-					controlPoint1: tempName+'_pc6',
-					controlPoint2: tempName+'_pc7',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					species: 'line', 
-					sprite: myShape.name,
-					name: tempName+'_l3',
-					startPoint: tempName+'_p7',
-					endPoint: tempName+'_p8',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					name: tempName+'_l8',
-					sprite: myShape.name,
-					startPoint: tempName+'_p8',
-					action: 'close',
-					});
-				myShape.set({
-					firstPoint: tempName+'_p0',
-					collisionPoints: myShape.collisionPoints,
-					});
-				scrawl.point[tempName+'_p0'].set({startLink: tempName+'_l4'});
-				scrawl.point[tempName+'_p1'].set({startLink: tempName+'_l0'});
-				scrawl.point[tempName+'_p2'].set({startLink: tempName+'_l5'});
-				scrawl.point[tempName+'_p3'].set({startLink: tempName+'_l1'});
-				scrawl.point[tempName+'_p4'].set({startLink: tempName+'_l6'});
-				scrawl.point[tempName+'_p5'].set({startLink: tempName+'_l2'});
-				scrawl.point[tempName+'_p6'].set({startLink: tempName+'_l7'});
-				scrawl.point[tempName+'_p7'].set({startLink: tempName+'_l3'});
-				scrawl.point[tempName+'_p8'].set({startLink: tempName+'_l8'});
-				if(items.path){
-					myShape.path = false;
-					myShape.forceStamp('none');
-					myShape.path = items.path;
-					}
-				return myShape;
+			var _tlx = items.radiusTopLeftX || items.radiusTopLeft || items.radiusTopX || items.radiusLeftX || items.radiusTop || items.radiusLeft || items.radiusX || items.radius || 0;
+			var _tly = items.radiusTopLeftY || items.radiusTopLeft || items.radiusTopY || items.radiusLeftY || items.radiusTop || items.radiusLeft || items.radiusY || items.radius || 0;
+			var _trx = items.radiusTopRightX || items.radiusTopRight || items.radiusTopX || items.radiusRightX || items.radiusTop || items.radiusRight || items.radiusX || items.radius || 0;
+			var _try = items.radiusTopRightY || items.radiusTopRight || items.radiusTopY || items.radiusRightY || items.radiusTop || items.radiusRight || items.radiusY || items.radius || 0;
+			var _brx = items.radiusBottomRightX || items.radiusBottomRight || items.radiusBottomX || items.radiusRightX || items.radiusBottom || items.radiusRight || items.radiusX || items.radius || 0;
+			var _bry = items.radiusBottomRightY || items.radiusBottomRight || items.radiusBottomY || items.radiusRightY || items.radiusBottom || items.radiusRight || items.radiusY || items.radius || 0;
+			var _blx = items.radiusBottomLeftX || items.radiusBottomLeft || items.radiusBottomX || items.radiusLeftX || items.radiusBottom || items.radiusLeft || items.radiusX || items.radius || 0;
+			var _bly = items.radiusBottomLeftY || items.radiusBottomLeft || items.radiusBottomY || items.radiusLeftY || items.radiusBottom || items.radiusLeft || items.radiusY || items.radius || 0;
+			var halfWidth = (items.width/2);
+			var halfHeight = (items.height/2);
+			var myData = 'm';
+			var cx = items.startX;
+			var cy = items.startY;
+			var dx = items.startX-halfWidth+_tlx;
+			var dy = items.startY-halfHeight;
+			myData += (cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX+halfWidth-_trx;
+			dy = items.startY-halfHeight;
+			myData += 'l'+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX+halfWidth-_trx+(_trx*0.55);
+			dy = items.startY-halfHeight;
+			myData += 'c'+(cx-dx)+','+(cy-dy);
+			dx = items.startX+halfWidth;
+			dy = items.startY-halfHeight+_try-(_try*0.55);
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			dx = items.startX+halfWidth;
+			dy = items.startY-halfHeight+_try;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX+halfWidth;
+			dy = items.startY+halfHeight-_bry;
+			myData += 'l'+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX+halfWidth;
+			dy = items.startY+halfHeight-_bry+(_bry*0.55);
+			myData += 'c'+(cx-dx)+','+(cy-dy);
+			dx = items.startX+halfWidth-_brx+(_brx*0.55);
+			dy = items.startY+halfHeight;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			dx = items.startX+halfWidth-_brx;
+			dy = items.startY+halfHeight;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX-halfWidth+_blx;
+			dy = items.startY+halfHeight;
+			myData += 'l'+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX-halfWidth+_blx-(_blx*0.55);
+			dy = items.startY+halfHeight;
+			myData += 'c'+(cx-dx)+','+(cy-dy);
+			dx = items.startX-halfWidth;
+			dy = items.startY+halfHeight-_bly+(_bly*0.55);
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			dx = items.startX-halfWidth;
+			dy = items.startY+halfHeight-_bly;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX-halfWidth;
+			dy = items.startY-halfHeight+_tly;
+			myData += 'l'+(cx-dx)+','+(cy-dy);
+			cx = dx, cy = dy;
+			dx = items.startX-halfWidth;
+			dy = items.startY-halfHeight+_tly-(_tly*0.55);
+			myData += 'c'+(cx-dx)+','+(cy-dy);
+			dx = items.startX-halfWidth+_tlx-(_tlx*0.55);
+			dy = items.startY-halfHeight;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			dx = items.startX-halfWidth+_tlx;
+			dy = items.startY-halfHeight;
+			myData += ' '+(cx-dx)+','+(cy-dy);
+			myData += 'z';
+			items.data = myData;
+			var myShape;
+			if(items.outline){
+				items.data = 'M'+items.startX+','+items.startY+items.data;
+				items.handleX = items.handleX || 'left';
+				items.handleY = items.handleY || 'top';
+				myShape = this.newOutline(items);
 				}
-			return false;
+			else{
+				items.handleX = items.handleX || 'center';
+				items.handleY = items.handleY || 'center';
+				myShape = this.makePath(items);
+				}
+			return myShape;
 			},
 		makeBezier: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
@@ -843,77 +964,51 @@ window.scrawl = (function(){
 			items.endX = items.endX || 0;
 			items.endY = items.endY || 0;
 			items.closed = false;
+			items.handleX = items.handleX || 'left';
+			items.handleY = items.handleY || 'top';
 			var myFixed = items.fixed || 'none';
 			items.fixed = false;
-			var myShape = this.newShape(items);
-			var tempName = myShape.name.replace('~','_','g');
-			if(myShape){
-				this.makeCartesianPoints({
-					pointLabel: tempName+'_p',
-					linkLabel: tempName+'_v',
-					sprite: myShape.name,
-					data: [[items.startX, items.startY], [items.endX, items.endY]],
-					});
-				this.makeCartesianPoints({
-					pointLabel: tempName+'_pc',
-					linkLabel: tempName+'_vc',
-					sprite: myShape.name,
-					data: [[items.startControlX, items.startControlY], [items.endControlX, items.endControlY]],
-					});
-				this.newLink({
-					name: tempName+'_v0',
-					sprite: myShape.name,
-					species: 'bezier', 
-					startPoint: tempName+'_p0',
-					endPoint: tempName+'_p1',
-					controlPoint1: tempName+'_pc0',
-					controlPoint2: tempName+'_pc1',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					name: tempName+'_v1',
-					sprite: myShape.name,
-					action: 'end',
-					});
-				myShape.set({
-					firstPoint: tempName+'_p0',
-					collisionPoints: myShape.collisionPoints,
-					});
+			items.data = 	'm0,0'+
+							'c'+(items.startControlX-items.startX)+','+(items.startControlY-items.startY)+
+							' '+(items.endControlX-items.startX)+','+(items.endControlY-items.startY)+
+							' '+(items.endX-items.startX)+','+(items.endY-items.startY);
+			var myShape;
+			if(items.outline){
+				items.data = 'M'+items.startX+','+items.startY+items.data;
+				myShape = this.newOutline(items);
+				}
+			else{
+				items.line = true;
+				myShape = this.makePath(items);
+				var tempName = myShape.name.replace('~','_','g');
 				switch(myFixed){
 					case 'all' :
-						this.point[tempName+'_p0'].fixed = true;
-						this.point[tempName+'_pc0'].fixed = true;
-						this.point[tempName+'_pc1'].fixed = true;
 						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p2'].fixed = true;
+						this.point[tempName+'_p3'].fixed = true;
+						this.point[tempName+'_p4'].fixed = true;
 						break;
 					case 'both' :
-						this.point[tempName+'_p0'].fixed = true;
 						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p4'].fixed = true;
 						break;
 					case 'start' :
-						this.point[tempName+'_p0'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					case 'startControl' :
-						this.point[tempName+'_pc0'].fixed = true;
+						this.point[tempName+'_p2'].fixed = true;
 						break;
 					case 'endControl' :
-						this.point[tempName+'_pc1'].fixed = true;
+						this.point[tempName+'_p3'].fixed = true;
 						break;
 					case 'end' :
-						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p4'].fixed = true;
 						break;
 					default :
 						this.point[tempName+'_p0'].fixed = myShape.name;
 					}
-				if(items.path){
-					myShape.path = false;
-					myShape.forceStamp('none');
-					myShape.path = items.path;
-					}
-				return myShape;
 				}
-			return false;
+			return myShape;
 			},
 		makeQuadratic: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
@@ -924,72 +1019,84 @@ window.scrawl = (function(){
 			items.endX = items.endX || 0;
 			items.endY = items.endY || 0;
 			items.closed = false;
+			items.handleX = items.handleX || 'left';
+			items.handleY = items.handleY || 'top';
 			var myFixed = items.fixed || 'none';
 			items.fixed = false;
-			var myShape = this.newShape(items);
-			var tempName = myShape.name.replace('~','_','g');
-			if(myShape){
-				this.makeCartesianPoints({
-					pointLabel: tempName+'_p',
-					linkLabel: tempName+'_v',
-					sprite: myShape.name,
-					data: [[items.startX, items.startY], [items.endX, items.endY]],
-					});
-				this.makeCartesianPoints({
-					pointLabel: tempName+'_pc',
-					linkLabel: tempName+'_vc',
-					sprite: myShape.name,
-					data: [[items.controlX, items.controlY]],
-					});
-				this.newLink({
-					name: tempName+'_v0',
-					species: 'quadratic', 
-					sprite: myShape.name,
-					startPoint: tempName+'_p0',
-					endPoint: tempName+'_p1',
-					controlPoint1: tempName+'_pc0',
-					precision: items.precision || false,
-					action: 'add',
-					});
-				this.newLink({
-					name: tempName+'_v1',
-					sprite: myShape.name,
-					action: 'end',
-					});
-				myShape.set({
-					firstPoint: tempName+'_p0',
-					collisionPoints: myShape.collisionPoints,
-					});
+			items.data = 	'm0,0'+
+							'q'+(items.controlX-items.startX)+','+(items.controlY-items.startY)+
+							' '+(items.endX-items.startX)+','+(items.endY-items.startY);
+			var myShape;
+			if(items.outline){
+				items.data = 'M'+items.startX+','+items.startY+items.data;
+				myShape = this.newOutline(items);
+				}
+			else{
+				items.line = true;
+				myShape = this.makePath(items);
+				var tempName = myShape.name.replace('~','_','g');
 				switch(myFixed){
 					case 'all' :
-						this.point[tempName+'_p0'].fixed = true;
-						this.point[tempName+'_pc0'].fixed = true;
 						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p2'].fixed = true;
+						this.point[tempName+'_p3'].fixed = true;
 						break;
 					case 'both' :
-						this.point[tempName+'_p0'].fixed = true;
 						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p3'].fixed = true;
 						break;
 					case 'start' :
-						this.point[tempName+'_p0'].fixed = true;
+						this.point[tempName+'_p1'].fixed = true;
 						break;
 					case 'control' :
-						this.point[tempName+'_pc0'].fixed = true;
+						this.point[tempName+'_p2'].fixed = true;
 						break;
 					case 'end' :
-						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p3'].fixed = true;
 						break;
 					default :
 						this.point[tempName+'_p0'].fixed = myShape.name;
 					}
-				if(items.path){
-					myShape.path = false;
-					myShape.forceStamp('none');
-					myShape.path = items.path;
-					}
-				return myShape;
 				}
-			return false;
+			return myShape;
+			},
+		makeLine: function(items){
+			items = (this.isa(items,'obj')) ? items : {};
+			items.startX = items.startX || 0; 
+			items.startY = items.startY || 0;
+			items.endX = items.endX || 0;
+			items.endY = items.endY || 0;
+			items.closed = false;
+			var myFixed = items.fixed || 'none';
+			items.fixed = false;
+			items.handleX = items.handleX || 'left';
+			items.handleY = items.handleY || 'top';
+			items.data = 	'm0,0 '+(items.endX-items.startX)+','+(items.endY-items.startY);
+			var myShape;
+			if(items.outline){
+				items.data = 'M'+items.startX+','+items.startY+items.data;
+				myShape = this.newOutline(items);
+				}
+			else{
+				items.line = true;
+				myShape = this.makePath(items);
+				var tempName = myShape.name.replace('~','_','g');
+				switch(myFixed){
+					case 'both' :
+						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p2'].fixed = true;
+						break;
+					case 'start' :
+						this.point[tempName+'_p1'].fixed = true;
+						break;
+					case 'end' :
+						this.point[tempName+'_p2'].fixed = true;
+						break;
+					default :
+						this.point[tempName+'_p0'].fixed = myShape.name;
+					}
+				}
+			return myShape;
 			},
 		makeRegularShape: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
@@ -1006,49 +1113,33 @@ window.scrawl = (function(){
 					calculateSides = calculateSides%360;
 					}
 				mySides++;
-				var myShape = this.newShape(items);
-				var tempName = myShape.name.replace('~','_','g');
-				if(myShape){
-					var myAngle = myTurn;
-					for(var i=0; i<mySides; i++){
-						this.newPoint({
-							name: tempName+'_p'+i,
-							sprite: myShape.name,
-							distance: items.radius,
-							angle: myAngle,
-							startLink: tempName+'_v'+i,
-							});
-						this.newLink({
-							name: tempName+'_v'+i,
-							sprite: myShape.name,
-							species: 'line',
-							startPoint: tempName+'_p'+i,
-							endPoint: tempName+'_p'+(i+1),
-							action: 'add',
-							precision: items.precision || false,
-							});
-						myAngle += myTurn;
-						myAngle = myAngle%360;
-						}
-					this.newPoint({
-						name: tempName+'_p'+mySides,
-						sprite: myShape.name,
-						distance: items.radius,
-						angle: myAngle,
-						startLink: tempName+'_v'+mySides,
-						});
-					this.newLink({
-						name: tempName+'_v'+mySides,
-						sprite: myShape.name,
-						action: 'close',
-						});
-					myShape.set({
-						firstPoint: tempName+'_p0',
-						collisionPoints: myShape.collisionPoints,
-						});
-					myShape.forceStamp('none');
-					return myShape;
+				var myAngle = myTurn;
+				var myData = 'm', cx, cy, dx = 0, dy = 0;
+				for(var i=0; i<=mySides; i++){
+					cx = items.radius * Math.cos(myAngle * this.radian);
+					cy = items.radius * Math.sin(myAngle * this.radian);
+					myData += (cx-dx).toFixed(3)+','+(cy-dy).toFixed(3)+' ';
+					dx=cx, dy=cy;
+					myAngle += myTurn;
+					myAngle = myAngle%360;
 					}
+				myData += 'z';
+				items.data = myData;
+				var myShape;
+				if(items.outline){
+					items.data = 'M'+items.startX+','+items.startY+items.data;
+					items.handleX = items.handleX || 'left';
+					items.handleY = items.handleY || 'top';
+					myShape = this.newOutline(items);
+					}
+				else{
+					items.handleX = items.handleX || 'center';
+					items.handleY = items.handleY || 'center';
+					var myShape = this.makePath(items);
+					myShape.width = myShape.radius*2;
+					myShape.height = myShape.width;
+					}
+				return myShape;
 				}
 			return false;
 			},
@@ -1079,13 +1170,6 @@ window.scrawl = (function(){
 							this.linknames.removeItem(myLinkList[k]);
 							delete this.link[myLinkList[k]];
 							}
-						}
-					if(this.sprite[myItems[i]].collisionPoints.length > 0){
-						var myPoints = [];
-						for(var k=0, w=this.sprite[myItems[i]].collisionPoints.length; k<w; k++){
-							myPoints.push(this.sprite[myItems[i]].collisionPoints[k]);
-							}
-						this.sprite[myItems[i]].removeCollisionPoints(myPoints);
 						}
 					this.ctxnames.removeItem(myItems[i]);
 					delete this.ctx[myItems[i]];
@@ -1134,43 +1218,78 @@ window.scrawl = (function(){
 				}
 			return true;
 			},
-		addCanvasToPage: function(items){
-			var myName = scrawl.makeName({
-				name: items.canvasName || false,
-				type: 'Pad',
-				target: 'padnames',
-				});
-			var myParent = document.getElementById(items.parentElement) || document.body;
-			var myCanvas = document.createElement('canvas');
-			myCanvas.id = myName;
-			myParent.appendChild(myCanvas);
-			var DOMCanvas = document.getElementById(myName)
-			DOMCanvas.width = items.width;
-			DOMCanvas.height = items.height;
-			var myPad = scrawl.newPad({
-				canvasElement: DOMCanvas,
-				});
-			myPad.set(items);
-			myPad.setDisplayOffsets();
-			return myPad;
-			},
 		initialize: function(){
+			this.getStacks();
 			this.getCanvases();
+			this.getElements();
 			this.setDisplayOffsets('all');
 			return true;
 			},
+		getStacks: function(){
+			var s = document.getElementsByClassName("scrawlstack");
+			var stacks = [];
+			var myStack;
+			if(s.length > 0){
+				for(var i=0, z=s.length; i<z; i++){
+					stacks.push(s[i]);
+					}
+				for(var i=0, z=s.length; i<z; i++){
+					myStack = scrawl.newStack({
+						stackElement: stacks[i],
+						});
+					for(var j=0, w=scrawl.stk[myStack.name].children.length; j<w; j++){
+						scrawl.stk[myStack.name].children[j].style.position = 'absolute';
+						if(scrawl.stk[myStack.name].children[j].tagName !== 'CANVAS'){
+							scrawl.newElement({
+								domElement: scrawl.stk[myStack.name].children[j],
+								stack: myStack.name,
+								});
+							}
+						}
+					if(this.elementnames.contains(myStack.name)){
+						myStack.stack = this.element[myStack.name].stack;
+						delete this.element[myStack.name];
+						delete this.elm[myStack.name];
+						this.elementnames.removeItem(myStack.name);
+						}
+					}
+				return true;
+				}
+			console.log('scrawl.getStacks() failed to find any elements with class="scrawlstack" on the page');
+			return false;
+			},
 		getCanvases: function(){
 			var s = document.getElementsByTagName("canvas");
-			var myPad;
+			var myPad, myStack, myElement, myNewStack;
 			var canvases = [];
 			if(s.length > 0){
 				for(var i=0, z=s.length; i<z; i++){
 					canvases.push(s[i]);
 					}
 				for(var i=0, z=s.length; i<z; i++){
+					if(canvases[i].className.indexOf('stack:') !== -1){
+						myStack = canvases[i].className.match(/stack:(\w+)/);
+						if(scrawl.stacknames.contains(myStack[1])){
+							scrawl.stk[myStack[1]].appendChild(canvases[i]);
+							}
+						else{
+							myElement = document.createElement('div');
+							myElement.id = myStack[1];
+							canvases[i].parentElement.appendChild(myElement);
+							myElement.appendChild(canvases[i]);
+							myNewStack = scrawl.newStack({
+								stackElement: document.getElementById(myStack[1]),
+								});
+							}
+						}
 					myPad = scrawl.newPad({
 						canvasElement: canvases[i],
 						});
+					if(scrawl.stacknames.contains(canvases[i].parentElement.id)){
+						myPad.stack = canvases[i].parentElement.id;
+						canvases[i].style.position = 'absolute';
+						myPad.initialize3d();
+						}
 					if(i === 0){
 						scrawl.currentPad = myPad.name;
 						}
@@ -1180,9 +1299,100 @@ window.scrawl = (function(){
 			console.log('scrawl.getCanvases() failed to find any <canvas> elements on the page');
 			return false;
 			},
+		getElements: function(){
+			var s = document.getElementsByClassName("scrawl");
+			var el = [];
+			var myName, myStack;
+			if(s.length > 0){
+				for(var i=0, z=s.length; i<z; i++){
+					el.push(s[i]);
+					}
+				for(var i=0, z=s.length; i<z; i++){
+					myName = el.id || el.name || false;
+					if(!scrawl.elementnames.contains(myName)){
+						if(el[i].className.indexOf('stack:') !== -1){
+							myStack = el[i].className.match(/stack:(\w+)/);
+							if(scrawl.stacknames.contains(myStack[1])){
+								scrawl.stk[myStack[1]].appendChild(el[i]);
+								scrawl.newElement({
+									domElement: el[i],
+									stack: myStack[1],
+									});
+								}
+							}
+						}
+					}
+				return true;
+				}
+			console.log('scrawl.getElements() failed to find any elements with class="scrawl" on the page');
+			return false;
+			},
+		addCanvasToPage: function(items){
+			items = (this.isa(items,'obj')) ? items : {};
+			var myStk = false;
+			if(this.xt(items.stackName)){
+				myStk = document.getElementById(items.stackName) || false;
+				if(!myStk){
+					myStk = this.addStackToPage({
+						stackName: items.stackName, 
+						width: items.width, 
+						height: items.height, 
+						parentElement: document.getElementById(items.parentElement) || document.body,
+						});
+					}
+				items.stack = myStk.id;
+				}
+			var myParent = myStk || document.getElementById(items.parentElement) || document.body;
+			var myName = scrawl.makeName({
+				name: items.canvasName || false,
+				type: 'Pad',
+				target: 'padnames',
+				});
+			var myCanvas = document.createElement('canvas');
+			myCanvas.id = myName;
+			myParent.appendChild(myCanvas);
+			var DOMCanvas = document.getElementById(myName)
+			DOMCanvas.width = items.width;
+			DOMCanvas.height = items.height;
+			var myPad = scrawl.newPad({
+				canvasElement: DOMCanvas,
+				});
+			if(this.xt(items.position) || myStk){
+				items.position = items.position || 'absolute';
+				}
+			myPad.set(items);
+			myPad.setDisplayOffsets();
+			return myPad;
+			},
+		addStackToPage: function(items){
+			if(this.isa(items.stackName,'str') && this.xt(items.parentElement)){
+				var myElement = document.createElement('div');
+				myElement.id = items.stackName;
+				items.parentElement.appendChild(myElement);
+				items['stackElement'] = document.getElementById(items.stackName);
+				items['stack'] = (scrawl.stacknames.contains(items.parentElement.id)) ? items.parentElement.id : false;
+				var myStack = new Stack(items);
+				return scrawl.stk[myStack.name];
+				}
+			return false;
+			},
 		setDisplayOffsets: function(item){
-			for(var i=0, z=scrawl.padnames.length; i<z; i++){
-				scrawl.pad[scrawl.padnames[i]].setDisplayOffsets();
+			var myItem = item || 'all';
+			if(myItem === 'stacks' || myItem === 'all'){
+				for(var i=0, z=scrawl.stacknames.length; i<z; i++){
+					scrawl.stack[scrawl.stacknames[i]].setDisplayOffsets();
+					}
+				}
+			if(myItem === 'pads' || myItem === 'all'){
+				for(var i=0, z=scrawl.padnames.length; i<z; i++){
+
+					scrawl.pad[scrawl.padnames[i]].setDisplayOffsets();
+					}
+				}
+			if(myItem === 'elements' || myItem === 'all'){
+				for(var i=0, z=scrawl.elementnames.length; i<z; i++){
+					scrawl.element[scrawl.elementnames[i]].setDisplayOffsets();
+					}
 				}
 			return true;
 			},
@@ -1227,8 +1437,9 @@ window.scrawl = (function(){
 			return false;
 			},
 		};
-
+		
 	function Scrawl(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
 		var tempname = items.name || '';
 		items.name = scrawl.makeName({name: tempname, type: this.type, target: this.classname});
 		this.name = items.name;
@@ -1244,7 +1455,7 @@ window.scrawl = (function(){
 		};
 	Scrawl.prototype.set = function(items){
 		for(var label in items){
-			if(scrawl.xt(this[label])){
+			if(scrawl.xt(this[label]) && scrawl.xt(items[label])){
 				this[label] = items[label];
 				}
 			}
@@ -1260,10 +1471,12 @@ window.scrawl = (function(){
 			case 'Block' : a = new Block(b); break;
 			case 'Wheel' : a = new Wheel(b); break;
 			case 'Picture' : a = new Picture(b); break;
+			case 'Outline' : a = new Outline(b); break;
 			case 'Shape' : a = new Shape(b); break;
 			case 'Gradient' : a = new Gradient(b); break;
 			case 'RadialGradient' : a = new RadialGradient(b); break;
 			case 'Pattern' : a = new Pattern(b); break;
+			case 'Color' : a = new Color(b); break;
 			case 'Point' : a = new Point(b); break;
 			case 'Link' : a = new Link(b); break;
 			case 'Context' : a = new Context(b); break;
@@ -1275,17 +1488,10 @@ window.scrawl = (function(){
 	Scrawl.prototype.toString = function(){
 		return JSON.stringify(this);
 		};
-	Scrawl.prototype.getObjectData = function(){
-		return {
-			type: this.type, 
-			name: this.name, 
-			object: this, 
-			timestamp: Date.now()
-			};
-		};
 
 	function SubScrawl(items){
 		Scrawl.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.startX = items.startX || 0;
 		this.startY = items.startY || 0;
 		this.handleX = items.handleX || 0;
@@ -1327,6 +1533,34 @@ window.scrawl = (function(){
 				if(this.pathPosition > 1){this.pathPosition -= 1;}
 				if(this.pathPosition < 0){this.pathPosition += 1;}
 			}
+		if(['Block','Phrase','Wheel','Outline','Shape','Picture'].contains(this.type)){
+			this.setCurrentParameters(scrawl.group[this.group].getOverride(this.name,'none'));
+			}
+		return this;
+		};
+	SubScrawl.prototype.unmoveStart = function(item){
+		switch(item){
+			case 'x' :
+				this.startX -= this.moveStartX;
+				break;
+			case 'y' :
+				this.startY -= this.moveStartY;
+				break;
+			case 'path' :
+				this.pathPosition -= this.movePathPosition;
+				if(this.pathPosition > 1){this.pathPosition -= 1;}
+				if(this.pathPosition < 0){this.pathPosition += 1;}
+				break;
+			default :
+				this.startX -= this.moveStartX;
+				this.startY -= this.moveStartY;
+				this.pathPosition -= this.movePathPosition;
+				if(this.pathPosition > 1){this.pathPosition -= 1;}
+				if(this.pathPosition < 0){this.pathPosition += 1;}
+			}
+		if(['Block','Phrase','Wheel','Outline','Shape','Picture'].contains(this.type)){
+			this.setCurrentParameters(scrawl.group[this.group].getOverride(this.name,'none'));
+			}
 		return this;
 		};
 	SubScrawl.prototype.exchange = function(obj, item){
@@ -1363,6 +1597,9 @@ window.scrawl = (function(){
 			case 'y' : this.handleY += this.moveHandleY; break;
 			default : this.handleX += this.moveHandleX; this.handleY += this.moveHandleY;
 			}
+		if(['Block','Phrase','Wheel','Outline','Shape','Picture'].contains(this.type)){
+			this.setCurrentParameters(scrawl.group[this.group].getOverride(this.name,'none'));
+			}
 		return this;
 		};
 	SubScrawl.prototype.reverse = function(item){
@@ -1377,43 +1614,62 @@ window.scrawl = (function(){
 			}
 		return this;
 		};
+	SubScrawl.prototype.getPivotOffset = function(val,useHeight){
+		if(scrawl.xt(val)){
+			useHeight = (scrawl.isa(useHeight,'bool')) ? useHeight : false;
+			var result;
+			if((scrawl.isa(val,'str')) && !['left','center','right','top','bottom'].contains(val)){
+				result = (useHeight) ? (parseFloat(val)/100)*this.height : (parseFloat(val)/100)*this.width;
+				}
+			else{
+				switch (val){
+					case 'left' : result = 0; break;
+					case 'center' : (useHeight) ? result = this.height/2 : result = this.width/2; break;
+					case 'right' : result = this.width; break;
+					case 'top' : result = 0; break;
+					case 'bottom' : result = this.height; break;
+					default : result = val;
+					}
+				}
+			return result;
+			}
+		return 0;
+		};
 	SubScrawl.prototype.getStartX = function(override){
 		override = (scrawl.isa(override,'obj')) ? override : {};
-		var myH;
-		if(this.type === 'Block' || this.type === 'Picture'){
-			switch (this.handleX){
-				case 'left' : myH = 0; break;
-				case 'center' : myH = this.width/2; break;
-				case 'right' : myH = this.width; break;
-				default : myH = this.handleX;
-				}
+		var myH, a;
+		var myScale = this.currentScale || this.scale || 1;
+		if(this.flipReverse){
+			myH = this.getPivotOffset(this.handleX,false);
+			a = this.startX + (myH*myScale);
+			return (scrawl.xt(override.x)) ? a-override.x : a;
 			}
 		else{
-			myH = this.handleX;
+			myH = this.getPivotOffset(this.handleX,false);
+			a = this.startX - (myH*myScale);
+			return (scrawl.xt(override.x)) ? a+override.x : a;
 			}
-		var a = this.startX - (myH*this.scale);
-		return (scrawl.xt(override.x)) ? a+override.x : a;
 		};
 	SubScrawl.prototype.getStartY = function(override){
 		override = (scrawl.isa(override,'obj')) ? override : {};
-		var myH;
-		if(this.type === 'Block' || this.type === 'Picture'){
-			switch (this.handleY){
-				case 'top' : myH = 0; break;
-				case 'center' : myH = this.height/2; break;
-				case 'bottom' : myH = this.height; break;
-				default : myH = this.handleY;
-				}
+		var myH, a;
+		var myScale = this.currentScale || this.scale || 1;
+		if(this.flipUpend){
+			myH = this.getPivotOffset(this.handleY,true);
+			a = this.startY + (myH*myScale);
+			return (scrawl.xt(override.y)) ? a-override.y : a;
 			}
 		else{
-			myH = this.handleY;
+			myH = this.getPivotOffset(this.handleY,true);
+			a = this.startY - (myH*myScale);
+			return (scrawl.xt(override.y)) ? a+override.y : a;
 			}
-		var a = this.startY - (myH*this.scale);
-		return (scrawl.xt(override.y)) ? a+override.y : a;
 		};
 
 	function Scrawl3d(items){
 		SubScrawl.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+//THERE'S BETTER IE DETECTORS THAN THIS
 		this.isIE = (navigator.appName == 'Microsoft Internet Explorer') ? true : false;
 		return this;
 		}
@@ -1422,24 +1678,95 @@ window.scrawl = (function(){
 	Scrawl3d.prototype.classname = 'objectnames';
 	Scrawl3d.prototype.initialize2d = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.stack = items.stack || false;
 		this.setTitle(items.title || this.getTitle() || '');
 		this.setComment(items.comment || this.getComment() || '');
+		this.setOverflow(items.overflow || this.getOverflow() || ((this.type === 'Stack') ? 'hidden' : 'visible'));
+		this.setZIndex(items.order || items.zIndex || this.getZIndex() || 0);
 		this.setWidth(items.width || this.getWidth() || 300);
 		this.setHeight(items.height || this.getHeight() || 150);
+		this.setLeft(items.startX || items.left || this.getLeft() || 0);
+		this.setTop(items.startY || items.top || this.getTop() || 0);
+		this.setDisplayOffsets();
+		return this;
+		};
+	Scrawl3d.prototype.initialize3d = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.setPerspectiveOrigin({perspectiveOriginX: items.perspectiveOriginX, perspectiveOriginY: items.perspectiveOriginY} || items.perspectiveOrigin || this.getPerspectiveOrigin() || false);
+		this.setPerspective(items.perspective || this.getPerspective());
+		this.setTransformOrigin({transformOriginX: items.transformOriginX, transformOriginY: items.transformOriginY} || items.transformOrigin || this.getTransformOrigin() || false);
+		this.setTransformStyle(items.transformStyle || this.getTransformStyle() || 'preserve-3d');
+		this.setBackfaceVisibility(items.backfaceVisibility || this.getBackfaceVisibility() || 'visible');
+		this.setPitch(items.rotateX || items.pitch || 0);
+		this.setYaw(items.rotateY || items.yaw || 0);
+		this.setRoll(items.rotateZ || items.rotate || items.roll || 0);
+		this.setTranslateX(items.translateX || 0);
+		this.setTranslateY(items.translateY || 0);
+		this.setTranslateZ(items.translateZ || 0);
+		this.setRotateFirst(items.rotateFirst || false);
+		this.setTransform();
 		this.setDisplayOffsets();
 		return this;
 		};
 	Scrawl3d.prototype.set = function(items){
 		Scrawl.prototype.set.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
 		if(scrawl.xt(items.title)){this.setTitle(items.title);}
 		if(scrawl.xt(items.comment)){this.setComment(items.comment);}
+		if(scrawl.xt(items.overflow)){this.setOverflow(items.overflow);}
+		if(scrawl.xto([items.order,items.zIndex])){this.setZIndex(items.order || items.zIndex || 0);}
 		if(scrawl.xt(items.width)){this.setWidth(items.width);}
 		if(scrawl.xt(items.height)){this.setHeight(items.height);}
+		if(scrawl.xt(items.position)){this.setPosition(items.position);}
+		if(scrawl.xto([items.startX,items.left])){this.setLeft(items.startX || items.left || 0);}
+		if(scrawl.xto([items.startY,items.top])){this.setTop(items.startY || items.top || 0);}
+		if(scrawl.xt(items.perspective)){this.setPerspective(items.perspective);}
+		if(scrawl.xto([items.perspectiveOriginX,items.perspectiveOriginY])){
+			this.setPerspectiveOrigin({perspectiveOriginX: (items.perspectiveOriginX || this.perspectiveOriginX), perspectiveOriginY: (items.perspectiveOriginY || this.perspectiveOriginY)});
+			}
+		else if(scrawl.xt(items.perspectiveOrigin)){
+			this.setPerspectiveOrigin(items.perspectiveOrigin);
+			}
+		if(scrawl.xto([items.transformOriginX,items.transformOriginY])){
+			this.setTransformOrigin({transformOriginX: (items.transformOriginX || this.transformOriginX), transformOriginY: (items.transformOriginY || this.transformOriginY)});
+			}
+		else if(scrawl.xt(items.transformOrigin)){
+			this.setTransformOrigin(items.transformOrigin);
+			}
+		if(scrawl.xt(items.transformStyle)){this.setTransformStyle(items.transformStyle);}
+		if(scrawl.xt(items.backfaceVisibility)){this.setBackfaceVisibility(items.backfaceVisibility);}
+		if(scrawl.xto([items.rotateX,items.pitch])){this.setPitch(items.rotateX || items.pitch || 0);}
+		if(scrawl.xto([items.rotateY,items.yaw])){this.setYaw(items.rotateY || items.yaw || 0);}
+		if(scrawl.xto([items.rotateZ,items.rotate,items.roll])){this.setRoll(items.rotateZ || items.rotate || items.roll || 0);}
+		if(scrawl.xt(items.translateX)){this.setTranslateX(items.translateX);}
+		if(scrawl.xt(items.translateY)){this.setTranslateY(items.translateY);}
+		if(scrawl.xt(items.translateZ)){this.setTranslateZ(items.translateZ);}
+		if(scrawl.xto([items.rotateX,items.pitch,items.rotateY,items.yaw,items.rotateZ,items.rotate,items.roll,items.translateX,items.translateY,items.translateZ])){
+			this.setTransform();
+			}
+		if(scrawl.xto([items.startX,items.left,items.startY,items.top])){
+			this.setDisplayOffsets();
+			}
 		return this;
 		};
 	Scrawl3d.prototype.setDelta = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
 		if(scrawl.xt(items.width)){this.setWidth(this.width+items.width);}
 		if(scrawl.xt(items.height)){this.setHeight(this.height+items.height);}
+		if(scrawl.xto([items.startX,items.left])){this.setLeft(this.startX+items.startX || this.startX+items.left || this.startX);}
+		if(scrawl.xto([items.startY,items.top])){this.setTop(this.startY+items.startY || this.startY+items.top || this.startY);}
+		if(scrawl.xto([items.rotateX,items.pitch])){this.setPitch(this.pitch+items.rotateX || this.pitch+items.pitch || this.pitch);}
+		if(scrawl.xto([items.rotateY,items.yaw])){this.setYaw(this.yaw+items.rotateY || this.yaw+items.yaw || this.yaw);}
+		if(scrawl.xto([items.rotateZ,items.rotate,items.roll])){this.setRoll(this.roll+items.rotateZ || this.roll+items.rotate || this.roll+items.roll || this.roll);}
+		if(scrawl.xt(items.translateX)){this.setTranslateX(this.translateX+items.translateX);}
+		if(scrawl.xt(items.translateY)){this.setTranslateY(this.translateY+items.translateY);}
+		if(scrawl.xt(items.translateZ)){this.setTranslateZ(this.translateZ+items.translateZ);}
+		if(scrawl.xto([items.rotateX,items.pitch,items.rotateY,items.yaw,items.rotateZ,items.rotate,items.roll,items.translateX,items.translateY,items.translateZ])){
+			this.setTransform();
+			}
+		if(scrawl.xto([items.startX,items.left,items.startY,items.top])){
+			this.setDisplayOffsets();
+			}
 		return this;
 		};
 	Scrawl3d.prototype.setDisplayOffsets = function(){
@@ -1452,6 +1779,16 @@ window.scrawl = (function(){
 				this.displayOffsetY += myDisplay.offsetTop;
 				} while (myDisplay = myDisplay.offsetParent);
 			}
+		return this;
+		};
+	Scrawl3d.prototype.getPosition = function(){
+		var myDisplay = this.getElement();
+		return myDisplay.style.position || false;
+		};
+	Scrawl3d.prototype.setPosition = function(item){
+		this.position = (scrawl.xt(item)) ? item : this.position;
+		var myDisplay = this.getElement();
+		myDisplay.style.position = this.position;
 		return this;
 		};
 	Scrawl3d.prototype.getTitle = function(){
@@ -1474,6 +1811,26 @@ window.scrawl = (function(){
 		myDisplay.setAttribute('data-comment',this.comment);
 		return this;
 		};
+	Scrawl3d.prototype.getOverflow = function(){
+		var myDisplay = this.getElement();
+		return myDisplay.style.overflow || false;
+		};
+	Scrawl3d.prototype.setOverflow = function(item){
+		this.overflow = (scrawl.xt(item)) ? item : this.overflow;
+		var myDisplay = this.getElement();
+		myDisplay.style.overflow = this.overflow;
+		return this;
+		};
+	Scrawl3d.prototype.getZIndex = function(){
+		var myDisplay = this.getElement();
+		return myDisplay.style.zIndex || false;
+		};
+	Scrawl3d.prototype.setZIndex = function(item){
+		this.zIndex = item || this.zIndex || 0;
+		var myDisplay = this.getElement();
+		myDisplay.style.zIndex = this.zIndex;
+		return this;
+		};
 	Scrawl3d.prototype.getWidth = function(){
 		var myDisplay = this.getElement();
 		return myDisplay.width || myDisplay.clientWidth || parseFloat(myDisplay.style.width) || false;
@@ -1481,7 +1838,12 @@ window.scrawl = (function(){
 	Scrawl3d.prototype.setWidth = function(item){
 		this.width = (scrawl.xt(item)) ? item : this.width;
 		var myDisplay = this.getElement();
-		myDisplay.width = (this.width*this.scale);
+		if(this.type === 'Pad'){
+			myDisplay.width = (this.width*this.scale);
+			}
+		else{
+			myDisplay.style.width = (this.width*this.scale)+'px';
+			}
 		return this;
 		};
 	Scrawl3d.prototype.getHeight = function(){
@@ -1491,9 +1853,427 @@ window.scrawl = (function(){
 	Scrawl3d.prototype.setHeight = function(item){
 		this.height = (scrawl.xt(item)) ? item : this.height;
 		var myDisplay = this.getElement();
-		myDisplay.height = (this.height*this.scale);
+		if(this.type === 'Pad'){
+			myDisplay.height = (this.height*this.scale);
+			}
+		else{
+			myDisplay.style.height = (this.height*this.scale)+'px';
+			}
 		return this;
+		};
+	Scrawl3d.prototype.getStartX = function(){
+		return this.getLeft();
+		};
+	Scrawl3d.prototype.setStartX = function(item, reset){
+		return this.setLeft(item, reset);
+		};
+	Scrawl3d.prototype.getLeft = function(){
+		var myDisplay = this.getElement();
+		return parseFloat(myDisplay.style.left) || false;
+		};
+	Scrawl3d.prototype.setLeft = function(item, reset){
+		this.startX = (scrawl.xt(item)) ? item : this.startX;
+		var myDisplay = this.getElement();
+		myDisplay.style.left = (this.startX*this.scale)+'px';
+		if(scrawl.xt(reset) && reset){
+			this.setDisplayOffsets();
+			}
+		return this;
+		};
+	Scrawl3d.prototype.getStartY = function(){
+		return this.getTop();
+		};
+	Scrawl3d.prototype.setStartY = function(item, reset){
+		return this.setTop(item, reset);
+		};
+	Scrawl3d.prototype.getTop = function(){
+		var myDisplay = this.getElement();
+		return parseFloat(myDisplay.style.top) || false;
+		};
+	Scrawl3d.prototype.setTop = function(item, reset){
+		this.startY = (scrawl.xt(item)) ? item : this.startY;
+		var myDisplay = this.getElement();
+		myDisplay.style.top = (this.startY*this.scale)+'px';
+		if(scrawl.xt(reset) && reset){
+			this.setDisplayOffsets();
+			}
+		return this;
+		};
+	Scrawl3d.prototype.getPerspective = function(){
+		var myDisplay = this.getElement();
+		return parseFloat(myDisplay.style.webkitPerspective) || parseFloat(myDisplay.style.MozPerspective) || parseFloat(myDisplay.style.perspective) || false;
+		};
+	Scrawl3d.prototype.setPerspective = function(item){
+		if(this.isIE && this.type === 'Stack'){
+			for(var i=0, z=scrawl.stacknames.length; i<z; i++){
+				if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
+					scrawl.stack[scrawl.stacknames[i]].setPerspective(item);
+					}
+				}
+			}
+		this.perspective = (scrawl.xt(item)) ? item : this.perspective;
+		var myDisplay = this.getElement();
+		if(scrawl.xt(myDisplay.style.webkitPerspective)){
+			myDisplay.style.webkitPerspective = (this.perspective*this.scale)+'px';
+			}
+		else if(scrawl.xt(myDisplay.style.MozPerspective)){
+			myDisplay.style.MozPerspective = (this.perspective*this.scale)+'px';
+			}
+		else{
+			myDisplay.style.perspective = (this.perspective*this.scale)+'px';
+			}
+		return this;
+		};
+	Scrawl3d.prototype.getPerspectiveOrigin = function(){
+		var myDisplay = this.getElement();
+		return myDisplay.style.webkitPerspectiveOrigin || myDisplay.style.MozPerspectiveOrigin || myDisplay.style.perspectiveOrigin || false;
+		};
+	Scrawl3d.prototype.setPerspectiveOrigin = function(items){
+		if(this.isIE && this.type === 'Stack'){
+			for(var i=0, z=scrawl.stacknames.length; i<z; i++){
+				if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
+					scrawl.stack[scrawl.stacknames[i]].setPerspectiveOrigin(items);
+					}
+				}
+			}
+		if(scrawl.isa(items,'str')){
+			var a = items.split(' ');
+			this.perspectiveOriginX = a[0] || '50%';
+			this.perspectiveOriginY = a[1] || '50%';
+			}
+		else{
+			items = (scrawl.isa(items,'obj')) ? items : {};
+			this.perspectiveOriginX = items.perspectiveOriginX || this.perspectiveOriginX || '50%';
+			this.perspectiveOriginY = items.perspectiveOriginY || this.perspectiveOriginY || '50%';
+			}
+		var myDisplay = this.getElement();
+		if(scrawl.xt(myDisplay.style.webkitPerspectiveOrigin)){
+			myDisplay.style.webkitPerspectiveOrigin = this.perspectiveOriginX+' '+this.perspectiveOriginY;
+			}
+		else if(scrawl.xt(myDisplay.style.MozPerspectiveOrigin)){
+			myDisplay.style.MozPerspectiveOrigin = this.perspectiveOriginX+' '+this.perspectiveOriginY;
+			}
+		else{
+			myDisplay.style.perspectiveOrigin = this.perspectiveOriginX+' '+this.perspectiveOriginY;
+			}
+		return this;
+		};
+	Scrawl3d.prototype.getTransformOrigin = function(){
+		var myDisplay = this.getElement();
+		return myDisplay.style.webkitTransformOrigin || myDisplay.style.MozTransformOrigin || myDisplay.style.transformOrigin || false;
+		};
+	Scrawl3d.prototype.setTransformOrigin = function(items){
+		if(scrawl.isa(items,'str')){
+			var a = items.split(' ');
+			this.transformOriginX = a[0] || '50%';
+			this.transformOriginY = a[1] || '50%';
+			}
+		else{
+			items = (scrawl.isa(items,'obj')) ? items : {};
+			this.transformOriginX = items.transformOriginX || this.transformOriginX || '50%';
+			this.transformOriginY = items.transformOriginY || this.transformOriginY || '50%';
+			}
+		var myDisplay = this.getElement();
+		if(scrawl.xt(myDisplay.style.webkitTransformOrigin)){
+			myDisplay.style.webkitTransformOrigin = this.transformOriginX+' '+this.transformOriginY;
+			}
+		else if(scrawl.xt(myDisplay.style.MozTransformOrigin)){
+			myDisplay.style.MozTransformOrigin = this.transformOriginX+' '+this.transformOriginY;
+			}
+		else{
+			myDisplay.style.transformOrigin = this.transformOriginX+' '+this.transformOriginY;
+			}
+		return this;
+		};
+	Scrawl3d.prototype.getTransformStyle = function(){
+		var myDisplay = this.getElement();
+		return myDisplay.style.WebkitTransformStyle || myDisplay.style.MozTransformStyle || myDisplay.style.transformStyle || false;
+		};
+	Scrawl3d.prototype.setTransformStyle = function(item){
+		this.transformStyle = (scrawl.xt(item)) ? item : this.transformStyle;
+		var myDisplay = this.getElement();
+		if(scrawl.xt(myDisplay.style.WebkitTransformStyle)){
+			myDisplay.style.WebkitTransformStyle = this.transformStyle;
+			}
+		else if(scrawl.xt(myDisplay.style.MozTransformStyle)){
+			myDisplay.style.MozTransformStyle = this.transformStyle;
+			}
+		else{
+			myDisplay.style.transformStyle = this.transformStyle;
+			}
+		return this;
+		};
+	Scrawl3d.prototype.getRotateX = function(){return this.getPitch();};
+	Scrawl3d.prototype.getPitch = function(){
+		return this.pitch || false;
+		};
+	Scrawl3d.prototype.getRotateY = function(){return this.getYaw();};
+	Scrawl3d.prototype.getYaw = function(){
+		return this.yaw || false;
+		};
+	Scrawl3d.prototype.getRotateZ = function(){return this.getRoll();};
+	Scrawl3d.prototype.getRotate = function(){return this.getRoll();};
+	Scrawl3d.prototype.getRoll = function(){
+		return this.roll || false;
+		};
+	Scrawl3d.prototype.setRotateX = function(item){return this.setPitch(item);};
+	Scrawl3d.prototype.setPitch = function(item){
+		this.pitch = item || this.pitch || 0;
+		return this;
+		};
+	Scrawl3d.prototype.setRotateY = function(item){return this.setYaw(item);};
+	Scrawl3d.prototype.setYaw = function(item){
+		this.yaw = item || this.yaw || 0;
+		return this;
+		};
+	Scrawl3d.prototype.setRotateZ = function(item){return this.setRoll(item);};
+	Scrawl3d.prototype.setRotate = function(item){return this.setRoll(item);};
+	Scrawl3d.prototype.setRoll = function(item){
+		this.roll = item || this.roll || 0;
+		return this;
+		};
+	Scrawl3d.prototype.getTranslateX = function(){
+		return this.translateX || false;
+		};
+	Scrawl3d.prototype.setTranslateX = function(item){
+		this.translateX = item || this.translateX || 0;
+		return this;
+		};
+	Scrawl3d.prototype.getTranslateY = function(){
+		return this.translateY || false;
+		};
+	Scrawl3d.prototype.setTranslateY = function(item){
+		this.translateY = item || this.translateY || 0;
+		return this;
+		};
+	Scrawl3d.prototype.getTranslateZ = function(){
+		return this.translateZ || false;
+		};
+	Scrawl3d.prototype.setTranslateZ = function(item){
+		this.translateZ = item || this.translateZ || 0;
+		return this;
+		};
+	Scrawl3d.prototype.setRotateFirst = function(item){
+		this.rotateFirst = (scrawl.isa(item,'bool')) ? item : false;
+		return this;
+		};
+	Scrawl3d.prototype.getTransform = function(){
+		if(this.rotateFirst){
+			return 'rotateX('+this.pitch+'deg) rotateY('+this.yaw+'deg) rotateZ('+this.roll+'deg) translateX('+(this.translateX*this.scale)+'px) translateY('+(this.translateY*this.scale)+'px) translateZ('+(this.translateZ*this.scale)+'px)';
+			}
+		else{
+			return 'translateX('+(this.translateX*this.scale)+'px) translateY('+(this.translateY*this.scale)+'px) translateZ('+(this.translateZ*this.scale)+'px) rotateX('+this.pitch+'deg) rotateY('+this.yaw+'deg) rotateZ('+this.roll+'deg)';
+			}
+		};
+	Scrawl3d.prototype.setTransform = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.setPitch(items.pitch || items.rotateX || false);
+		this.setYaw(items.yaw || items.rotateY || false);
+		this.setRoll(items.roll || items.rotateZ || items.rotate || false);
+		this.setTranslateX(items.translateX || false);
+		this.setTranslateY(items.translateY || false);
+		this.setTranslateZ(items.translateZ || false);
+		var myDisplay = this.getElement();
+		if(scrawl.xt(myDisplay.style.webkitTransform)){
+			myDisplay.style.webkitTransform = this.getTransform();
+			}
+		else if(scrawl.xt(myDisplay.style.MozTransform)){
+			myDisplay.style.MozTransform = this.getTransform();
+			}
+		else{
+			if(this.isIE && this.type === 'Stack'){
+				myDisplay.style.transform = this.getTransform();
+				for(var i=0, z=scrawl.stacknames.length; i<z; i++){
+					if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
+						scrawl.stack[scrawl.stacknames[i]].setTransform();
+						}
+					}
+				for(var i=0, z=scrawl.elementnames.length; i<z; i++){
+					if(scrawl.element[scrawl.elementnames[i]].stack === this.name){
+						scrawl.element[scrawl.elementnames[i]].setTransform();
+						}
+					}
+				for(var i=0, z=scrawl.padnames.length; i<z; i++){
+					if(scrawl.pad[scrawl.padnames[i]].stack === this.name){
+						scrawl.pad[scrawl.padnames[i]].setTransform();
+						}
+					}
+				}
+			else{
+				myDisplay.style.transform = this.getTransform();
+				}
+			}
+		return this;
+		};
+	Scrawl3d.prototype.getBackfaceVisibility = function(){
+		var myDisplay = this.getElement();
+		return myDisplay.style.webkitBackfaceVisibility || myDisplay.style.MozBackfaceVisibility || myDisplay.style.backfaceVisibility || false;
+		};
+	Scrawl3d.prototype.setBackfaceVisibility = function(item){
+		this.backfaceVisibility = (scrawl.xt(item)) ? item : this.backfaceVisibility;
+		var myDisplay = this.getElement();
+		if(scrawl.xt(myDisplay.style.webkitBackfaceVisibility)){
+			myDisplay.style.webkitBackfaceVisibility = this.backfaceVisibility;
+			}
+		else if(scrawl.xt(myDisplay.style.MozBackfaceVisibility)){
+			myDisplay.style.MozBackfaceVisibility = this.backfaceVisibility;
+			}
+		else{
+			myDisplay.style.backfaceVisibility = this.backfaceVisibility;
+			}
+		return this;
+		};
+	Scrawl3d.prototype.shiftPosition = function(){
+		this.shiftLeft();
+		this.shiftTop();
+		this.setDisplayOffsets();
+		return this;
+		};
+	Scrawl3d.prototype.shiftLeft = function(reset){
+		this.moveStart('x');
+		this.setLeft();
+		if(scrawl.xt(reset) && reset){
+			this.setDisplayOffsets();
+			}
+		return this;
+		};
+	Scrawl3d.prototype.shiftTop = function(item, reset){
+		this.moveStart('y');
+		this.setTop();
+		if(scrawl.xt(reset) && reset){
+			this.setDisplayOffsets();
+			}
+		return this;
+		};
+	Scrawl3d.prototype.scaleStack = function(item){
+		if(this.type === 'Stack'){
+			for(var i=0, z=scrawl.stacknames.length; i<z; i++){
+				if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
+					scrawl.stack[scrawl.stacknames[i]].scaleStack(item);
+					}
+				}
+			for(var i=0, z=scrawl.elementnames.length; i<z; i++){
+				if(scrawl.element[scrawl.elementnames[i]].stack === this.name){
+					scrawl.element[scrawl.elementnames[i]].scaleDimensions(item);
+					}
+				}
+			for(var i=0, z=scrawl.padnames.length; i<z; i++){
+				if(scrawl.pad[scrawl.padnames[i]].stack === this.name){
+					scrawl.pad[scrawl.padnames[i]].scaleDimensions(item);
+					}
+				}
+			this.scaleDimensions(item);
+			}
+		return this;
+		};
+	Scrawl3d.prototype.scaleDimensions = function(item){
+		this.scale = item || this.scale;
+		this.setWidth();
+		this.setHeight();
+		this.setTop();
+		this.setLeft();
+		this.setPerspectiveOrigin();
+		this.setPerspective();
+		this.setTransformOrigin();
+		this.setTransform();
+		this.setDisplayOffsets();
+		if(this.type === 'Pad'){
+			scrawl.cell[this.display].scale = this.scale;
+			}
+		return this;
+		};
+		
+	function Stack(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xt(items.stackElement)){
+			var tempname = '';
+			if(scrawl.xto([items.stackElement.id,items.stackElement.name])){
+				tempname = items.stackElement.id || items.stackElement.name;
+				}
+			Scrawl3d.call(this, {name: tempname,});
+			scrawl.stack[this.name] = this;
+			scrawl.stk[this.name] = items.stackElement;
+			scrawl.stacknames.pushUnique(this.name);
+			scrawl.stk[this.name].style.position = 'relative';
+			scrawl.stk[this.name].id = this.name;
+			this.initialize2d(items);
+			this.initialize3d(items);
+			return this;
+			}
+		console.log('Failed to generate a Stack wrapper - no DOM element supplied'); 
+		return false;
 		}
+	Stack.prototype = Object.create(Scrawl3d.prototype);
+	Stack.prototype.type = 'Stack';
+	Stack.prototype.classname = 'stacknames';
+	Stack.prototype.getElement = function(){
+		return scrawl.stk[this.name];
+		};
+	Stack.prototype.addElementById = function(item){
+		if(scrawl.isa(item,'str')){
+			var myElement = scrawl.newElement({
+				domElement: document.getElementById(item),
+				stack: this.name,
+				});
+			scrawl.stk[this.name].appendChild(scrawl.elm[myElement.name]);
+			scrawl.elm[myElement.name] = document.getElementById(myElement.name);
+			scrawl.setDisplayOffsets('all');
+			return myElement;
+			}
+		return false;
+		};
+	Stack.prototype.addElementsByClassName = function(item){
+		if(scrawl.isa(item,'str')){
+			var myElements = [];
+			var myArray = document.getElementsByClassName(item);
+			var myElement, myElm, thisElement;
+			for(var i=0, z=myArray.length; i<z; i++){
+				thisElement = myArray[i]
+				if(thisElement.nodeName !== 'CANVAS'){
+					myElement = scrawl.newElement({
+						domElement: thisElement,
+						stack: this.name,
+						});
+					myElements.push(myElement);
+					}
+				}
+			for(var i=0, z=myElements.length; i<z; i++){
+				scrawl.stk[this.name].appendChild(scrawl.elm[myElements[i].name]);
+				scrawl.elm[myElements[i].name] = document.getElementById(myElements[i].name);
+				}
+			scrawl.setDisplayOffsets('all');
+			return myElements;
+			}
+		return false;
+		};
+	
+	function Element(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xt(items.domElement)){
+			var tempname = '';
+			if(scrawl.xto([items.domElement.id,items.domElement.name])){
+				tempname = items.domElement.id || items.domElement.name;
+				}
+			Scrawl3d.call(this, {name: tempname,});
+			scrawl.element[this.name] = this;
+			scrawl.elm[this.name] = items.domElement;
+			scrawl.elementnames.pushUnique(this.name);
+			scrawl.elm[this.name].style.position = 'absolute';
+			scrawl.elm[this.name].id = this.name;
+			this.initialize2d(items);
+			this.initialize3d(items);
+			return this;
+			}
+		console.log('Failed to generate an Element wrapper - no DOM element supplied'); 
+		return false;
+		}
+	Element.prototype = Object.create(Scrawl3d.prototype);
+	Element.prototype.type = 'Element';
+	Element.prototype.classname = 'elementnames';
+	Element.prototype.getElement = function(){
+		return scrawl.elm[this.name];
+		};
+		
 	function Pad(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		if(scrawl.xt(items.canvasElement)){
@@ -1662,8 +2442,8 @@ window.scrawl = (function(){
 	Pad.prototype.addNewCell = function(data){
 		data = (scrawl.isa(data,'obj')) ? data : {};
 		if(scrawl.xta([data.width,data.height]) && scrawl.isa(data.name,'str')){
-			data.width = parseInt(data.width);
-			data.height = parseInt(data.height);
+			data.width = parseFloat((data.width).toFixed());
+			data.height = parseFloat((data.height).toFixed());
 			var myCanvas = document.createElement('canvas');
 			myCanvas.setAttribute('id', data.name);
 			myCanvas.setAttribute('height', data.height);
@@ -1726,7 +2506,6 @@ window.scrawl = (function(){
 			this.scaleX = (scrawl.isa(items.scaleX,'num')) ? items.scaleX : 1;
 			this.scaleY = (scrawl.isa(items.scaleY,'num')) ? items.scaleY : 1;
 			this.roll = items.roll || 0;
-			this.rollDegree = (scrawl.isa(items.rollDegree,'bool')) ? items.rollDegree : true;
 			this.cellX = items.cellX || 0;
 			this.cellY = items.cellY || 0;
 			this.shearX = items.shearX || 0;
@@ -1810,7 +2589,7 @@ window.scrawl = (function(){
 		var buildFieldBlock = new Block({
 			width: this.actualWidth,
 			height: this.actualHeight,
-			target: this.name,
+			group: this.name,
 			}).stamp();
 		scrawl.deleteSprite(buildFieldBlock.name);
 		fieldSprites = scrawl.group[this.name+'_field'].sprites;
@@ -1820,7 +2599,7 @@ window.scrawl = (function(){
 			tempstroke = scrawl.ctx[tempsprite.context].strokeStyle;
 			scrawl.ctx[tempsprite.context].fillStyle = 'rgba(255,255,255,1)';
 			scrawl.ctx[tempsprite.context].strokeStyle = 'rgba(255,255,255,1)';
-			tempsprite.forceStamp({method: ((tempsprite.type === 'Shape' && !tempsprite.closed) ? 'draw' : 'fill'), cells: [this.name]});
+			tempsprite.forceStamp('fillDraw',this.name);
 			scrawl.ctx[tempsprite.context].fillStyle = tempfill;
 			scrawl.ctx[tempsprite.context].strokeStyle = tempstroke;
 			}
@@ -1831,7 +2610,7 @@ window.scrawl = (function(){
 			tempstroke = scrawl.ctx[tempsprite.context].strokeStyle;
 			scrawl.ctx[tempsprite.context].fillStyle = 'rgba(0,0,0,1)';
 			scrawl.ctx[tempsprite.context].strokeStyle = 'rgba(0,0,0,1)';
-			tempsprite.forceStamp({method: ((tempsprite.type === 'Shape' && !tempsprite.closed) ? 'draw' : 'fill'), cells: [this.name]});
+			tempsprite.forceStamp('fillDraw',this.name);
 			scrawl.ctx[tempsprite.context].fillStyle = tempfill;
 			scrawl.ctx[tempsprite.context].strokeStyle = tempstroke;
 			}
@@ -1840,81 +2619,215 @@ window.scrawl = (function(){
 			});
 		return this;
 		};
-	Cell.prototype.checkFieldAt = function(items, y){
-		if(scrawl.xt(items) && scrawl.imageData[this.fieldLabel]){
-			var myX, myY, myCoord, myChannel, myTest;
-			if(scrawl.isa(items,'str')){
-				if(scrawl.spritenames.contains(items)){
-					var mySprite = scrawl.sprite[items];
-					myX = parseInt(mySprite.getStartX());
-					myY = parseInt(mySprite.getStartY());
-					myChannel = mySprite.fieldChannel || 'anycolor';
-					myTest = mySprite.fieldTest || 0;
-					}
-				else{return false;}
+	Cell.prototype.checkFieldAt = function(items){
+//		items.coordinates - list of coordinates - sprite.getCoordinates()
+//		items.test - minimum threshhold against which the check will be made - sprite.fieldTest
+//		items.channel - one from: red, green, blue, alpha, anycolor - sprite.fieldChannel
+//		items.x, items.y - a single coordinate
+//			gonna change this:
+//				if all coordinates pass the test, return -1
+//				if a coordinate fails, return the index of that coordinate (1, 2, 3, etc)
+//				if a coordinate is out of bounds, or no coordinates are supplied, return false
+		items = (scrawl.isa(items,'obj')) ? items : false;
+		if(scrawl.xt(items.coordinates) || scrawl.xta([items.x,items.y])){
+			var myChannel = items.channel || 'anycolor';
+			var myTest = items.test || 0;
+			var x, y, coords, pos;
+			if(!scrawl.xt(items.coordinates)){
+				coords = [{
+					x: items.x || 0,
+					y: items.y || 0,
+					}];
 				}
-			else if(scrawl.isa(items,'num') && scrawl.xt(y)){
-				myX = parseInt(items);
-				myY = parseInt(y);
-				myChannel = 'anycolor';
-				myTest = 0;
+			else{
+				coords = items.coordinates;
 				}
-			else if(scrawl.xta([items.x,items.y])){
-				myX = parseInt(items.x);
-				myY = parseInt(items.y);
-				myChannel = items.channel || 'anycolor';
-				myTest = items.test || 0;
-				}
-			else{return false;}
-			var d = scrawl.imageData[this.fieldLabel].data;
-			if(myX > d.width || myY > d.height){
-				return false;
-				}
-			myCoord = ((myY * this.actualWidth) + myX) * 4;
-			switch(myChannel){
-				case 'red' : if(d[myCoord] > myTest){return true;} return false; break;
-				case 'green' : if(d[myCoord+1] > myTest){return true;} return false; break;
-				case 'blue' : if(d[myCoord+2] > myTest){return true;} return false; break;
-				case 'alpha' : if(d[myCoord+3] > myTest){return true;} return false; break;
-				case 'anycolor' :
-					if(d[myCoord] > myTest || d[myCoord+1] > myTest || d[myCoord+2] > myTest){
-						return true;
-						}
+			var d = scrawl.imageData[this.fieldLabel];
+			var result;
+			for(var i=0, z=coords.length; i<z; i++){
+				x = parseFloat((coords[i].x).toFixed());
+				y = parseFloat((coords[i].y).toFixed());
+				if(!x.isBetween(0, d.width, true) || !y.isBetween(0, d.height, true)){
 					return false;
 					break;
-				default :
-					return false;
+					}
+				else{
+					result = false;
+					pos = ((y * d.width) + x) * 4;
+					switch(myChannel){
+						case 'red' : 
+							if(d.data[pos] <= myTest){
+								return i+1;
+								}
+							break;
+						case 'green' : 
+							if(d.data[pos+1] <= myTest){
+								return i+1;
+								}
+							break;
+						case 'blue' : 
+							if(d.data[pos+2] <= myTest){
+								return i+1;
+								}
+							break;
+						case 'alpha' : 
+							if(d.data[pos+3] <= myTest){
+								return i+1;
+								}
+							break;
+						case 'anycolor' :
+							if(d.data[pos] <= myTest || d.data[pos+1] <= myTest || d.data[pos+2] <= myTest){
+								return i+1;
+								}
+							break;
+						}
+					}
 				}
+			return -1;
 			}
 		return false;
 		};
-	Cell.prototype.setEngine = function(spriteContext, scale){
-		if(scrawl.isa(spriteContext,'str')){
-			spriteContext = scrawl.ctx[spriteContext];
-			}
+	Cell.prototype.setEngine = function(sprite){
 		var myContext = scrawl.ctx[this.context];
-		var myScale = (scrawl.isa(scale,'num')) ? scale : 1;
-		var changes = spriteContext.getChanges(myContext, myScale);
+		var spriteContext = scrawl.ctx[sprite.context];
+		var changes = spriteContext.getChanges(myContext, sprite.scale, sprite.scaleOutline);
 		var engine = scrawl.context[this.name];
 		for(var item in changes){
-			switch (item) {
+			switch(item){
 				case 'name' :
 					break;
 				case 'fillStyle' :
 					if(scrawl.xt(scrawl.dsn[changes[item]])){
+						var des	= scrawl.design[changes[item]];
+						if(des.setToSprite){
+							if(scrawl.xta([sprite.currentX,sprite.currentWidth,des.startRangeX,sprite.currentY,sprite.currentHeight,des.startRangeY,des.endRangeX,des.endRangeY])){
+								if(des.type === 'Gradient'){
+									switch (sprite.type) {
+										case 'Wheel' :
+										case 'Shape' :
+											des.set({
+												startX: sprite.currentX-(sprite.currentWidth/2),
+												startY: sprite.currentY-(sprite.currentHeight/2),
+												endX: sprite.currentX+(sprite.currentWidth/2),
+												endY: sprite.currentY+(sprite.currentHeight/2),
+												}).update();
+											break;
+										default :
+											des.set({
+												startX: sprite.currentX+(sprite.currentWidth*des.startRangeX),
+												startY: sprite.currentY+(sprite.currentHeight*des.startRangeY),
+												endX: sprite.currentX+(sprite.currentWidth*des.endRangeX),
+												endY: sprite.currentY+(sprite.currentHeight*des.endRangeY),
+												}).update();
+										}
+									}
+								else{
+									switch(sprite.type){
+										case 'Wheel' :
+										case 'Shape' :
+											des.set({
+												startX: sprite.currentX,
+												startY: sprite.currentY,
+												startRadius: sprite.currentWidth/2,
+												endX: sprite.currentX,
+												endY: sprite.currentY,
+												endRadius: 0,
+												}).update();
+											break;
+										default :
+											des.set({
+												startX: sprite.currentX+(sprite.currentWidth*des.startRangeX),
+												startY: sprite.currentY+(sprite.currentHeight*des.startRangeY),
+												startRadius: ((sprite.currentWidth+sprite.currentHeight)/2)*des.startRangeRadius,
+												endX: sprite.currentX+(sprite.currentWidth*des.endRangeX),
+												endY: sprite.currentY+(sprite.currentHeight*des.endRangeY),
+												endRadius: 0,
+												}).update();
+										}
+									}
+								}
+							}
 						engine.fillStyle = scrawl.dsn[changes[item]];
+						}
+					else if(scrawl.xt(scrawl.design[changes[item]])){
+						engine.fillStyle = scrawl.design[changes[item]].get();
 						}
 					else if(scrawl.isa(changes[item],'str')){
 						engine.fillStyle = changes[item];
 						}
 					break;
+				case 'winding' :
+					engine.mozFillRule = changes[item];
+					engine.msFillRule = changes[item];
+					break;
 				case 'strokeStyle' :
 					if(scrawl.xt(scrawl.dsn[changes[item]])){
+						var des	= scrawl.design[changes[item]];
+						if(des.setToSprite){
+							if(scrawl.xta([sprite.currentX,sprite.currentWidth,des.startRangeX,sprite.currentY,sprite.currentHeight,des.startRangeY,des.endRangeX,des.endRangeY])){
+								if(des.type === 'Gradient'){
+									switch (sprite.type) {
+										case 'Wheel' :
+										case 'Shape' :
+											des.set({
+												startX: sprite.currentX-(sprite.currentWidth/2),
+												startY: sprite.currentY-(sprite.currentHeight/2),
+												endX: sprite.currentX+(sprite.currentWidth/2),
+												endY: sprite.currentY+(sprite.currentHeight/2),
+												}).update();
+											break;
+										default :
+											des.set({
+												startX: sprite.currentX+(sprite.currentWidth*des.startRangeX),
+												startY: sprite.currentY+(sprite.currentHeight*des.startRangeY),
+												endX: sprite.currentX+(sprite.currentWidth*des.endRangeX),
+												endY: sprite.currentY+(sprite.currentHeight*des.endRangeY),
+												}).update();
+										}
+									}
+								else{
+									switch(sprite.type){
+										case 'Wheel' :
+										case 'Shape' :
+											des.set({
+												startX: sprite.currentX,
+												startY: sprite.currentY,
+												startRadius: sprite.currentWidth/2,
+												endX: sprite.currentX,
+												endY: sprite.currentY,
+												endRadius: 0,
+												}).update();
+											break;
+										default :
+											des.set({
+												startX: sprite.currentX+(sprite.currentWidth*des.startRangeX),
+												startY: sprite.currentY+(sprite.currentHeight*des.startRangeY),
+												startRadius: ((sprite.currentWidth+sprite.currentHeight)/2)*des.startRangeRadius,
+												endX: sprite.currentX+(sprite.currentWidth*des.endRangeX),
+												endY: sprite.currentY+(sprite.currentHeight*des.endRangeY),
+												endRadius: 0,
+												}).update();
+										}
+									}
+								}
+							}
 						engine.strokeStyle = scrawl.dsn[changes[item]];
+						}
+					else if(scrawl.xt(scrawl.design[changes[item]])){
+						engine.strokeStyle = scrawl.design[changes[item]].get();
 						}
 					else if(scrawl.isa(changes[item],'str')){
 						engine.strokeStyle = changes[item];
 						}
+					break;
+				case 'lineDash' :
+					engine.mozDash = changes[item];
+					engine.lineDash = changes[item];
+					try{engine.setLineDash(changes[item]);}catch(e){}
+					break;
+				case 'lineDashOffset' : 
+					engine.mozDashOffset = changes[item]; 
+					engine.lineDashOffset = changes[item]; 
 					break;
 				case 'globalAlpha' : engine.globalAlpha = changes[item]; break;
 				case 'globalCompositeOperation' : engine.globalCompositeOperation = changes[item]; break;
@@ -1973,6 +2886,17 @@ window.scrawl = (function(){
 			ctx.drawImage(scrawl.canvas[cell.name], cell.sourceX, cell.sourceY, mySourceWidth, mySourceHeight, (cell.targetX-cell.handleX)*this.scale, (cell.targetY-cell.handleY)*this.scale, myTargetWidth, myTargetHeight);
 			}
 		return this;
+		};
+	Cell.prototype.getCopyScaling = function(cell){
+		cell = (scrawl.isa(cell,'str')) ? scrawl.cell[cell] : cell;
+		if(scrawl.xt(cell)){
+			var mySourceWidth = (cell.usePadDimensions) ? scrawl.pad[cell.pad].width : cell.sourceWidth;
+			var mySourceHeight = (cell.usePadDimensions) ? scrawl.pad[cell.pad].height : cell.sourceHeight;
+			var myTargetWidth = (cell.usePadDimensions) ? scrawl.pad[cell.pad].width*this.scale : cell.targetWidth*this.scale;
+			var myTargetHeight = (cell.usePadDimensions) ? scrawl.pad[cell.pad].height*this.scale : cell.targetHeight*this.scale;
+			return({w: myTargetWidth/mySourceWidth, h: myTargetHeight/mySourceHeight});
+			}
+		return false;
 		};
 	Cell.prototype.clearShadow = function(){
 		var engine = scrawl.context[this.name];
@@ -2046,20 +2970,18 @@ window.scrawl = (function(){
 		scrawl.context[this.name].translate(this.cellX, this.cellY);
 		return this;
 		};
-	Cell.prototype.rotateCell = function(values){
-		values = (scrawl.isa(values,'obj')) ? values : {rot: values,};
-		var myRotation;
-		if(scrawl.isa(values.degrees,'num')){myRotation = values.degrees; this.rollDegree = true;}
-		else if(scrawl.isa(values.radians,'num')){myRotation = values.radians; this.rollDegree = false;}
-		else if(scrawl.isa(values.rot,'num')){myRotation = values.rot;}
-		var deltaRotation = (this.rollDegree) ? (myRotation - this.roll) * scrawl.radian : myRotation - this.roll;
-		scrawl.context[this.name].rotate(deltaRotation);
-		this.roll = myRotation;
+	Cell.prototype.rotateCell = function(value){
+		if(scrawl.isa(value,'num')){
+			var deltaRotation = (value - this.roll) * scrawl.radian;
+			if(deltaRotation !== 0){
+				scrawl.context[this.name].rotate(deltaRotation);
+				}
+			this.roll = value;
+			}
 		return this;
 		};
 	Cell.prototype.resetRotation = function(){
-		var deltaRotation = (this.rollDegree) ? this.roll * scrawl.radian : this.roll;
-		scrawl.context[this.name].rotate(-deltaRotation);
+		scrawl.context[this.name].rotate(-this.roll * scrawl.radian);
 		this.roll = 0;
 		return this;
 		};
@@ -2168,12 +3090,15 @@ window.scrawl = (function(){
 		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.fillStyle = (scrawl.isa(items.fillStyle,'str')) ? items.fillStyle : '#000000';
+		this.winding = (scrawl.isa(items.winding,'str')) ? items.winding : 'nonzero';
 		this.strokeStyle = (scrawl.isa(items.strokeStyle,'str')) ? items.strokeStyle : '#000000';
 		this.globalAlpha = (scrawl.isa(items.globalAlpha,'num')) ? items.globalAlpha : 1;
 		this.globalCompositeOperation = (scrawl.isa(items.globalCompositeOperation,'str')) ? items.globalCompositeOperation : 'source-over';
 		this.lineWidth = (scrawl.isa(items.lineWidth,'num')) ? items.lineWidth : 1;
 		this.lineCap = (scrawl.isa(items.lineCap,'str')) ? items.lineCap : 'butt';
 		this.lineJoin = (scrawl.isa(items.lineJoin,'str')) ? items.lineJoin : 'miter';
+		this.lineDash = (scrawl.isa(items.lineDash,'arr')) ? items.lineDash : [];
+		this.lineDashOffset = (scrawl.isa(items.lineDashOffset,'num')) ? items.lineDashOffset : 0;
 		this.miterLimit = (scrawl.isa(items.miterLimit,'num')) ? items.miterLimit : 10;
 		this.shadowOffsetX = items.shadowOffsetX || 0;
 		this.shadowOffsetY = items.shadowOffsetY || 0;
@@ -2194,14 +3119,35 @@ window.scrawl = (function(){
 		for(var i=0, z=defaults.length; i<z; i++){
 			this[defaults[i]] = ctx[defaults[i]];
 			}
+		defaults.winding = ctx.mozFillRule || ctx.msFillRule || 'nonzero';
+		defaults.lineDash = [];
+		defaults.lineDashOffset = ctx.mozDashOffset || ctx.lineDashOffset;
 		return this;
 		};
-	Context.prototype.getChanges = function(ctx, scale){
+	Context.prototype.getChanges = function(ctx, scale, doscale){
 		var r = {};
 		for(var item in this){
-			if(['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'].contains(item)){
+			if(doscale && ['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'].contains(item)){
 				if(this[item]*scale !== ctx[item]){
 					r[item] = this[item]*scale;
+					}
+				}
+			else if(['fillStyle', 'strokeStyle'].contains(item)){
+				if(scrawl.designnames.contains(this[item])){
+					if(scrawl.design[this[item]].type === 'Color' && scrawl.design[this[item]].autoUpdate){
+						scrawl.design[this[item]].update();
+						r[item] = this[item];
+						}
+					else if(['Gradient','RadialGradient'].contains(scrawl.design[this[item]].type) && (scrawl.design[this[item]].roll || scrawl.design[this[item]].autoUpdate)){
+						scrawl.design[this[item]].update();
+						r[item] = this[item];
+						}
+					else if(this[item] !== ctx[item]){
+						r[item] = this[item];
+						}
+					}
+				else if(this[item] !== ctx[item]){
+					r[item] = this[item];
 					}
 				}
 			else{
@@ -2233,8 +3179,8 @@ window.scrawl = (function(){
 		if(scrawl.xt(items.element)){						//flag used by scrawl.getImagesByClass() when calling Image constructor
 			var myName = items.element.getAttribute('id') || items.element.getAttribute('name') || items.element.getAttribute('src');
 			this.name = scrawl.makeName({name: myName, type: this.type, target: 'imagenames'});
-			this.width = parseFloat(items.element.offsetWidth);
-			this.height = parseFloat(items.element.offsetHeight);
+			this.width = parseFloat(items.element.offsetWidth) || items.element.width || items.element.style.width || 0;
+			this.height = parseFloat(items.element.offsetHeight) || items.element.height || items.element.style.height || 0;
 			this.source = items.element.src;
 			}
 		this.copyX = items.copyX || 0;
@@ -2249,6 +3195,40 @@ window.scrawl = (function(){
 	ScrawlImage.prototype = Object.create(Scrawl.prototype);
 	ScrawlImage.prototype.type = 'Image';
 	ScrawlImage.prototype.classname = 'imagenames';
+	ScrawlImage.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//Link
+			width: (this.width !== 0) ? this.width : u,
+			height: (this.height !== 0) ? this.height : u,
+			imageData: (scrawl.xt(scrawl.imageData[this.name])) ? scrawl.imageData[this.name] : u,
+			source: (this.source) ? this.source : u,
+			element: (scrawl.xt(scrawl.img[this.name])) ? scrawl.img[this.name].id : u,
+			copyX: (this.copyX !== 0) ? this.copyX : u,
+			copyY: (this.copyY !== 0) ? this.copyY : u,
+			copyWidth: (this.copyWidth !== 0) ? this.copyWidth : u,
+			copyHeight: (this.copyHeight !== 0) ? this.copyHeight : u,
+			};
+		};
+	ScrawlImage.prototype.setToDefaults = function(){
+		this.set({
+			comment: '',
+			title: '',
+			width: 0,
+			height: 0,
+			copyX: 0,
+			copyY: 0,
+			copyWidth: 0,
+			copyHeight: 0,
+			});
+		return this;
+		};
 	ScrawlImage.prototype.getImageData = function(){
 		var c = document.createElement('canvas');
 		c.width = this.width;
@@ -2256,15 +3236,6 @@ window.scrawl = (function(){
 		var cx = c.getContext('2d');
 		cx.drawImage(scrawl.img[this.name],0,0);
 		return c.toDataURL();
-		};
-	ScrawlImage.prototype.getObjectData = function(){
-		return {
-			type: this.type, 
-			name: this.name, 
-			object: this, 
-			imageData: this.getImageData(), 
-			timestamp: Date.now()
-			};
 		};
 
 	function AnimSheet(items){
@@ -2284,6 +3255,39 @@ window.scrawl = (function(){
 	AnimSheet.prototype = Object.create(Scrawl.prototype);
 	AnimSheet.prototype.type = 'AnimSheet';
 	AnimSheet.prototype.classname = 'animnames';
+	AnimSheet.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//AnimSheet
+			sheet: (this.sheet) ? this.sheet : u,
+			frames: (this.frames.length > 0) ? this.frames : u,
+			currentFrame: (this.currentFrame !== 0) ? this.currentFrame : u,
+			speed: (this.speed !== 1) ? this.speed : u,
+			loop: (this.loop !== 'end') ? this.loop : u,
+			running: (this.running !== 'complete') ? this.running : u,
+			lastCalled: (this.lastCalled) ? this.lastCalled : u,
+			};
+		};
+	AnimSheet.prototype.setToDefaults = function(){
+		this.set({
+			comment: '',
+			title: '',
+			sheet: false,
+			frames: [],
+			currentFrame: 0,
+			speed: 1,
+			loop: 'end',
+			running: 'complete',
+			lastCalled: false,
+			});
+		return this;
+		};
 	AnimSheet.prototype.set = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		var paused = (this.loop === 'pause') ? true : false;
@@ -2375,6 +3379,10 @@ window.scrawl = (function(){
 		this.order = items.order || 0;
 		this.visibility = (scrawl.isa(items.visibility,'bool')) ? items.visibility : true;
 		this.method = items.method || false;
+		this.fieldTest = items.fieldTest || 0;
+		this.fieldChannel = items.fieldChannel || 'anycolor';
+		this.roll = items.roll || 0;
+		this.groups = (scrawl.xt(items.groups)) ? [].concat(items.groups) : [];
 		scrawl.group[this.name] = this;
 		scrawl.groupnames.pushUnique(this.name);
 		if(this.cells.length === 0){
@@ -2388,132 +3396,201 @@ window.scrawl = (function(){
 	Group.prototype = Object.create(SubScrawl.prototype);
 	Group.prototype.type = 'Group';
 	Group.prototype.classname = 'groupnames';
-	Group.prototype.setHandles = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		items.x = items.x || 'center';
-		items.y = items.y || 'center';
-		var myXRange, myYRange;
-		if(!scrawl.isa(items.x,'number')){
-			myXRange = this.getSpriteRange('X');
-			}
-		if(!scrawl.isa(items.y,'number')){
-			myYRange = this.getSpriteRange('Y');
-			}
-		switch(items.x){
-			case 'left' : this.handleX = myXRange.minimum; break;
-			case 'center' : this.handleX = myXRange.minimum + ((myXRange.maximum - myXRange.minimum)/2); break;
-			case 'right' : this.handleX = myXRange.maximum; break;
-			default : this.handleX = items.x || 0;
-			}
-		switch(items.y){
-			case 'top' : this.handleY = myYRange.minimum; break;
-			case 'center' : this.handleY = myYRange.minimum + ((myYRange.maximum - myYRange.minimum)/2); break;
-			case 'bottom' : this.handleY = myYRange.maximum; break;
-			default : this.handleY = items.y || 0;
-			}
-		return this;
-		};
-	Group.prototype.getSpriteRange = function(item){
-		var max = -9999, min = 9999, tmax, tmin, temp;
-		var suffix = (['X','Y','x','y'].contains(item)) ? item : false;
-		if(suffix){
-			var direction = (['X','x'].contains(suffix)) ? 'width' : 'height';
-			suffix = 'start' + suffix.toUpperCase();
-			for(var i=0, z=this.sprites.length; i<z; i++){
-				temp = scrawl.sprite[this.sprites[i]];
-				if(!temp.pivot){
-					switch(temp.type){
-						case 'Block' :
-						case 'Picture' :
-						case 'Phrase' :
-							tmax = temp[suffix] + (temp[direction] * temp.scale);
-							tmin = temp[suffix];
-							break;
-						case 'Wheel' :
-							tmax = temp[suffix] - (temp.radius * temp.scale);
-							tmin = temp[suffix] + (temp.radius * temp.scale);
-							break;
-						case 'Shape' :
-							var shaperad = temp.getRadius(true);
-							tmax = temp[suffix] - shaperad;
-							tmin = temp[suffix] + shaperad;
-							break;
-						default :
-							tmax = temp[suffix];
-							tmin = temp[suffix];
-						}
-					max = (tmax > max) ? tmax : max;
-					min = (tmin < min) ? tmin : min;
+	Group.prototype.exportNative = function(items){
+		items = (scrawl.xt(items)) ? items : {string: true};
+		var myItems = {
+			includeDesigns: items.includeDesigns || true,
+			includeImages: items.includeImages || false,
+			string: false,
+			};
+		var result = [], temp;
+		result.push(this.prepareForExport());
+		for(var i=0, z=this.groups.length; i<z; i++){
+			if(this.groups[i] !== this.name){
+				temp = scrawl.group[this.groups[i]].exportNative(myItems);
+				for(var j=0, w=temp.length; j<w; j++){
+					result.pushUnique(temp[j]);
 					}
 				}
-			return {minimum: min, maximum: max};
 			}
-		return false;
+		for(var i=0, z=this.sprites.length; i<z; i++){
+			temp = scrawl.sprite[this.sprites[i]].exportNative(myItems);
+			for(var j=0, w=temp.length; j<w; j++){
+				result.pushUnique(temp[j]);
+				}
+			}
+		var result2 = [];
+		var check = [];
+		for(var i=0, z=result.length; i<z; i++){
+			if(!check.contains(result[i].name)){
+				result2.push(result[i]);
+				check.push(result[i].name);
+				}
+			}
+		return (items.string) ? JSON.stringify(result2) : result2;
+		};
+	Group.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//SubScrawl
+			startX: (this.startX !== 0) ? this.startX : u,
+			startY: (this.startY !== 0) ? this.startY : u,
+			handleX: (this.handleX !== 0) ? this.handleX : u,
+			handleY: (this.handleY !== 0) ? this.handleY : u,
+			moveStartX: (this.moveStartX !== 0) ? this.moveStartX : u,
+			moveStartY: (this.moveStartY !== 0) ? this.moveStartY : u,
+			moveHandleX: (this.moveHandleX !== 0) ? this.moveHandleX : u,
+			moveHandleY: (this.moveHandleY !== 0) ? this.moveHandleY : u,
+			pivot: (this.pivot) ? this.pivot : u,
+			path: (this.path) ? this.path : u,
+			pathPosition: (this.pathPosition !== 0) ? this.pathPosition : u,
+			movePathPosition: (this.movePathPosition !== 0) ? this.movePathPosition : u,
+			pathSpeedConstant: (!this.pathSpeedConstant) ? this.pathSpeedConstant : u,
+			pathRoll: (this.pathRoll !== 0) ? this.pathRoll : u,
+			addPathRoll: (this.addPathRoll) ? this.addPathRoll : u,
+			scale: (this.scale !== 1) ? this.scale : u,
+			//Group
+			groups: (this.groups.length > 0) ? this.groups : u,
+			cells: (this.cells.length > 0) ? this.cells : u,
+			order: (this.order !== 0) ? this.order : u,
+			visibility: (!this.visibility) ? this.visibility : u,
+			isSprite: (this.isSprite) ? this.isSprite : u,
+			isMarker: (this.isMarker) ? this.isMarker : u,
+			isDefinition: (this.isDefinition) ? this.isDefinition : u,
+			method: (this.method) ? this.method : u,
+			fieldTest: (this.fieldTest !== 0) ? this.fieldTest : u,
+			fieldChannel: (this.fieldChannel !== 'anycolor') ? this.fieldChannel : u,
+			roll: (this.roll !== 0) ? this.roll : u,
+			};
+		};
+	Group.prototype.setToDefaults = function(){
+		this.set({
+			comment: '',
+			title: '',
+			startX: 0,
+			startY: 0,
+			handleX: 0,
+			handleY: 0,
+			moveStartX: 0,
+			moveStartY: 0,
+			moveHandleX: 0,
+			moveHandleY: 0,
+			pivot: false,
+			path: false,
+			pathPosition: 0,
+			movePathPosition: 0,
+			pathSpeedConstant: true,
+			pathRoll: 0,
+			addPathRoll: false,
+			scale: 1,
+			groups: [],
+			cells: [],
+			order: 0,
+			visibility: true,
+			isSprite: false,
+			isMarker: false,
+			isDefinition: false,
+			fieldTest: 0,
+			fieldChannel: 'anycolor',
+			roll: 0,
+			});
+		return this;
 		};
 	Group.prototype.sortSprites = function(){
 		this.sprites.sort(function(a,b){
 			return scrawl.sprite[a].order - scrawl.sprite[b].order;
 			});
 		};
+	Group.prototype.sortGroups = function(){
+		this.groups.sort(function(a,b){
+			return scrawl.group[a].order - scrawl.group[b].order;
+			});
+		};
+	Group.prototype.getOverride = function(sprite, myMethod, myCell){
+		myMethod = (scrawl.xt(myMethod)) ? myMethod : this.method;
+		myCell = (scrawl.xt(myCell)) ? myCell : this.cells;
+		if(!scrawl.xt(sprite) || scrawl.sprite[sprite].pivot !== this.name){
+			return {
+				x: this.getStartX(),
+				y: this.getStartY(),
+				r: this.roll,
+				s: this.scale,
+				method: myMethod,
+				cells: myCell,
+				};
+			}
+		else{
+			return {
+				x: 0,
+				y: 0,
+				r: this.roll,
+				s: this.scale,
+				method: myMethod,
+				cells: myCell,
+				};
+			}
+		};
+	Group.prototype.forceStamp = function(method, cell){
+		var temp = this.visibility;
+		this.visibility = true;
+		this.stamp(method, cell);
+		this.visibility = temp;
+		return this;
+		};
 	Group.prototype.stamp = function(method, cell){
 		this.sortSprites();
 		var myMethod = (scrawl.isa(method,'str')) ? method : this.method;
 		var myCell = (scrawl.xt(cell)) ? [].concat(cell) : this.cells;
 		for(var i=0, z=this.sprites.length; i<z; i++){
-			if(scrawl.sprite[this.sprites[i]].pivot !== this.name){
-				scrawl.sprite[this.sprites[i]].stamp({
-					x: this.getStartX(),
-					y: this.getStartY(),
-					method: myMethod,
-					cells: myCell,
-					});
-				}
-			else{
-				scrawl.sprite[this.sprites[i]].stamp({
-					x: 0,
-					y: 0,
-					method: myMethod,
-					cells: myCell,
-					});
+			scrawl.sprite[this.sprites[i]].stamp(this.getOverride(this.sprites[i], myMethod, myCell));
+			}
+		if(this.groups.length > 0){
+			this.sortGroups();
+			for(var i=0, z=this.groups.length; i<z; i++){
+				if(scrawl.group[this.groups[i]].name !== this.name){
+					scrawl.group[this.groups[i]].forceStamp(method, cell);
+					}
 				}
 			}
 		return this;
 		};
 	Group.prototype.getSpriteAt = function(items){
 		this.sortSprites();
-		for(var i=this.sprites.length-1; i>=0; i--){
-			if(scrawl.sprite[this.sprites[i]].checkHit(items, {x: this.getStartX(), y: this.getStartY()})){
-				return scrawl.sprite[this.sprites[i]];
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xta([items.x,items.y])){
+			items.pad = (scrawl.xt(items.pad)) ? items.pad : scrawl.pad[scrawl.cell[this.cells[0]].pad].name;
+			for(var i=this.sprites.length-1; i>=0; i--){
+				if(scrawl.sprite[this.sprites[i]].checkHit(items, {x: this.getStartX(), y: this.getStartY()})){
+					return scrawl.sprite[this.sprites[i]];
+					}
 				}
 			}
 		return false;
 		};
 	Group.prototype.getInGroupSpriteHits = function(){
-		var hits = [], pts = [], flag;
-		var override = {x: this.getStartX(), y: this.getStartY()};
-		for(var p=0, z=this.sprites.length; p<z; p++){
-			if(scrawl.sprite[this.sprites[p]].visibility){
-				pts[p] = scrawl.sprite[this.sprites[p]].getCollisionPoints(override);
-				}
-			}
+		var hits = [], flag;
+		var oCollisionPoints = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale};
+		var oCollisions = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale, pad: scrawl.pad[scrawl.cell[this.cells[0]].pad].name};
 		for(var i=0, z=this.sprites.length; i<z; i++){
 			if(scrawl.sprite[this.sprites[i]].visibility){
 				for(var j=i+1, w=this.sprites.length; j<w; j++){
 					if(scrawl.sprite[this.sprites[j]].visibility){
 						flag = false;
-						for(var k=0, v=k<pts[i].length; k<v; k++){
-							if(scrawl.sprite[this.sprites[j]].checkHit(pts[i][k], override)){
-								hits.push([this.sprites[i],this.sprites[j]]);
-								flag = true;
-								break;
-								}
+						if(scrawl.sprite[this.sprites[j]].checkHit({tests: scrawl.sprite[this.sprites[i]].getCollisionPoints(oCollisionPoints)}, oCollisions)){
+							hits.push([this.sprites[i],this.sprites[j]]);
+							flag = true;
+							break;
 							}
 						if(!flag){
-							for(var k=0, v=pts[j].length; k<v; k++){
-								if(scrawl.sprite[this.sprites[i]].checkHit(pts[j][k], override)){
-									hits.push([this.sprites[i],this.sprites[j]]);
-									break;
-									}
+							if(scrawl.sprite[this.sprites[i]].checkHit({tests: scrawl.sprite[this.sprites[j]].getCollisionPoints(oCollisionPoints)}, oCollisions)){
+								hits.push([this.sprites[i],this.sprites[j]]);
+								break;
 								}
 							}
 						}
@@ -2522,72 +3599,77 @@ window.scrawl = (function(){
 			}
 		return hits;
 		};
-	Group.prototype.getBetweenGroupSpriteHits = function(groupItem){
-		var hits = [], herePoints = [], therePoints = [], flag;
-		groupItem = (scrawl.isa(groupItem,'str')) ? scrawl.group[groupItem] : groupItem;
-		var thisOverride = {x: this.getStartX(), y: this.getStartY()};
-		var thatOverride = {x: groupItem.getStartX(), y: groupItem.getStartY()};
-		for(var p=0, z=this.sprites.length; p<z; p++){
-			if(scrawl.sprite[this.sprites[p]].visibility){
-				herePoints[p] = scrawl.sprite[this.sprites[p]].getCollisionPoints(thisOverride);
+	Group.prototype.getBetweenGroupSpriteHits = function(g){
+		if(scrawl.xt(g)){
+			if(scrawl.isa(g,'str')){
+				if(scrawl.groupnames.contains(g)){
+					g = scrawl.group[g];
+					}
+				else{
+					return false;
+					}
 				}
-			}
-		for(var p=0, z=groupItem.sprites.length; p<z; p++){
-			if(scrawl.sprite[groupItem.sprites[p]].visibility){
-				therePoints[p] = scrawl.sprite[groupItem.sprites[p]].getCollisionPoints(thatOverride);
+			else{
+				if(!scrawl.xt(g.type) || g.type !== 'Group'){
+					return false;
+					}
 				}
-			}
-		for(var i=0, z=this.sprites.length; i<z; i++){
-			if(scrawl.sprite[this.sprites[i]].visibility){
-				for(var j=0, w=groupItem.sprites.length; j<w; j++){
-					if(scrawl.sprite[groupItem.sprites[j]].visibility){
-						flag = false;
-						for(var k=0, v=herePoints[i].length; k<v; k++){
-							if(scrawl.sprite[groupItem.sprites[j]].checkHit(herePoints[i][k], thatOverride)){
-								hits.push([this.sprites[i],groupItem.sprites[j]]);
+			var hits = [], flag;
+			var oCollisions = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale, pad: scrawl.pad[scrawl.cell[this.cells[0]].pad].name};
+			var gCollisions = {x: g.getStartX(), y: g.getStartY(), r: this.roll, s: this.scale, pad: scrawl.pad[scrawl.cell[g.cells[0]].pad].name};
+			for(var i=0, z=this.sprites.length; i<z; i++){
+				if(scrawl.sprite[this.sprites[i]].visibility){
+					for(var j=0, w=g.sprites.length; j<w; j++){
+						if(scrawl.sprite[g.sprites[j]].visibility){
+							flag = false;
+							if(scrawl.sprite[g.sprites[j]].checkHit({tests: scrawl.sprite[this.sprites[i]].getCollisionPoints(oCollisions)}, gCollisions)){
+								hits.push([this.sprites[i],g.sprites[j]]);
 								flag = true;
-								break;
 								}
-							}
-						if(!flag){
-							for(var k=0, v=therePoints[j].length; k<v; k++){
-								if(scrawl.sprite[this.sprites[i]].checkHit(therePoints[j][k], thisOverride)){
-									hits.push([this.sprites[i],groupItem.sprites[j]]);
-									break;
+							if(!flag){
+								if(scrawl.sprite[this.sprites[i]].checkHit({tests: scrawl.sprite[g.sprites[j]].getCollisionPoints(gCollisions)}, oCollisions)){
+									hits.push([this.sprites[i],g.sprites[j]]);
 									}
 								}
 							}
 						}
 					}
 				}
+			return hits;
 			}
-		return hits;
+		return false;
 		};
 	Group.prototype.getFieldSpriteHits = function(cells){
-		var hits = [], pts = [], flag;
-		var override = {x: this.getStartX(), y: this.getStartY()};
-		for(var p=0, z=this.sprites.length; p<z; p++){
-			if(scrawl.sprite[this.sprites[p]].visibility){
-				pts[p] = scrawl.sprite[this.sprites[p]].getCollisionPoints(override);
-				}
-			}
-		for(var i=0, z=this.sprites.length; i<z; i++){
-			if(scrawl.sprite[this.sprites[i]].visibility){
-				for(var k=0, w=pts[i].length; k<w; k++){
-					pts[i][k]['cells'] = cells;
-					if(!scrawl.sprite[this.sprites[i]].checkField(pts[i][k], override)){
-						hits.push([this.sprites[i], pts[i][k]]);
-						break;
-						}
+		var results = {}, hits, result;
+		cells = (scrawl.xt(cells)) ? [].concat(cells) : [this.cells[0]];
+		var override = {
+			x: this.getStartX(),
+			y: this.getStartY(),
+			r: this.roll,
+			s: this.scale,
+			};
+		for(var i=0, z=cells.length; i<z; i++){
+			hits = [];
+			for(var j=0, w=this.sprites.length; j<w; j++){
+				result = scrawl.sprite[this.sprites[j]].checkField(cells[i], override);
+				if(scrawl.isa(result,'obj')){
+					hits.push([this.sprites[j], result]);
 					}
 				}
+			results[cells[i]] = hits;
 			}
-		return hits;
+		return (cells.length === 1) ? results[cells[0]] : results;
 		};
 	Group.prototype.checkField = function(cell){
-		var result;
-		var myCell = (scrawl.xt(cell) && scrawl.cellnames.contains(cell)) ? cell : (this.cells[0] || scrawl.pad[scrawl.currentPad].current);
-		return scrawl.cell[myCell].checkFieldAt(this.startX, this.startY);
+		var myCell = (scrawl.xt(cell) && scrawl.cellnames.contains(cell)) ? scrawl.cell[cell] : (scrawl.cell[this.cells[0]] || scrawl.cell[scrawl.pad[scrawl.currentPad].current]);
+		var coords = {x: this.startX, y: this.startY};
+		var result = myCell.checkFieldAt({
+			coordinates: [coords],
+			test: this.fieldTest,
+			channel: this.fieldChannel,
+			});
+		//returns the coordinates that FAILED the test, or true if all coordinates PASSED, or false if there was an error
+		return (result > 0) ? coords : ((result) ? true : false);
 		};
 	Group.prototype.setDelta = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
@@ -2595,15 +3677,15 @@ window.scrawl = (function(){
 		if(scrawl.xt(items.startY)){this.startY += items.startY;}
 		if(scrawl.xt(items.handleX)){this.handleX += items.handleX;}
 		if(scrawl.xt(items.handleY)){this.handleY += items.handleY;}
+		if(scrawl.xt(items.roll)){this.roll += items.roll;}
+		if(scrawl.xt(items.scale)){this.scale += items.scale;}
 		if(scrawl.xt(items.pathPosition)){this.pathPosition += items.pathPosition;}
 		return this;
 		};
 	Group.prototype.addSpritesToGroup = function(item){
 		item = (scrawl.xt(item)) ? [].concat(item) : [];
 		for(var i=0, z=item.length; i<z; i++){
-			if(scrawl.spritenames.contains(item[i])){
-				this.sprites.pushUnique(item[i]);
-				}
+			this.sprites.pushUnique(item[i]);
 			}
 		return this;
 		};
@@ -2620,6 +3702,80 @@ window.scrawl = (function(){
 			}
 		return this;
 		};
+	Group.prototype.setGroupDimensions = function(items){
+		items = (scrawl.xt(items)) ? items : {x:this.startX,y:this.startY};
+		var maxX = -9999, minX = 9999, maxY = -9999, minY = 9999, tmaxX, tminX, tmaxY, tminY, temp, px, py;
+		for(var i=0, x=this.groups.length; i<z; i++){
+			temp = scrawl.group[this.groups[i]];
+			if(!temp.isMarker && !temp.isDefinition){
+				temp.setGroupDimensions();
+				maxX = (temp.startX+temp.width > maxX) ? temp.startX+temp.width : maxX;
+				minX = (temp.startX < minX) ? temp.startX : minX;
+				maxY = (temp.startY+temp.height > maxY) ? temp.startY+temp.height : maxY;
+				minY = (temp.startY < minY) ? temp.startY : minY;
+				}
+			}
+		for(var i=0, z=this.sprites.length; i<z; i++){
+			temp = scrawl.sprite[this.sprites[i]];
+			if(!temp.pivot || !temp.path){
+				switch(temp.type){
+					case 'Block' :
+					case 'Outline' :
+					case 'Picture' :
+					case 'Phrase' :
+						tmaxX = temp.startX + (temp.width * temp.scale);
+						tminX = temp.startX;
+						tmaxY = temp.startY + (temp.height * temp.scale);
+						tminY = temp.startY;
+						break;
+					case 'Wheel' :
+						tmaxX = temp.startX + (temp.radius * temp.scale);
+						tminX = temp.startX - (temp.radius * temp.scale);
+						tmaxY = temp.startY + (temp.radius * temp.scale);
+						tminY = temp.startY - (temp.radius * temp.scale);
+						break;
+					case 'Shape' :
+						tmaxX = -9999, tmaxY = -9999, tminX = 9999, tminY = 9999;
+						for(var j=0, w=temp.pointList.length; j<w; j++){
+							px = scrawl.point[temp.pointList[j]].currentX;
+							py = scrawl.point[temp.pointList[j]].currentY;
+							tmaxX = (px > tmaxX) ? px : tmaxX;
+							tminX = (px < tminX) ? px : tminX;
+							tmaxY = (py > tmaxY) ? py : tmaxY;
+							tminY = (py < tminY) ? py : tminY;
+							}
+						break;
+					}
+				maxX = (tmaxX > maxX) ? tmaxX : maxX;
+				minX = (tminX < minX) ? tminX : minX;
+				maxY = (tmaxY > maxY) ? tmaxY : maxY;
+				minY = (tminY < minY) ? tminY : minY;
+				}
+			}
+		this.startX = items.x || minX;
+		this.startY = items.y || minY;
+		this.width = (maxX - minX);
+		this.height = (maxY - minY);
+		this.setSpritesToGroupHandle()
+		return this;
+		};
+	Group.prototype.setSpritesToGroupHandle = function(){
+		var offsetX = this.getPivotOffset(this.handleX,false);
+		var offsetY = this.getPivotOffset(this.handleY,true);
+		var s, sx, sy;
+		for(var i=0,z=this.sprites.length; i<z; i++){
+			s = scrawl.sprite[this.sprites[i]];
+			if(scrawl.spritenames.contains(s.name) && s.pivot === this.name){
+				sx = s.getPivotOffset(s.handleX,false);
+				sy = s.getPivotOffset(s.handleY,true);
+				s.set({
+					handleX: sx+offsetX,
+					handleY: sy+offsetY,
+					});
+				}
+			}
+		return this;
+		};
 		
 	function Sprite(items){
 		SubScrawl.call(this, items);
@@ -2627,12 +3783,13 @@ window.scrawl = (function(){
 		this.order = items.order || 0;
 		this.visibility = (scrawl.isa(items.visibility,'bool')) ? items.visibility : true;
 		this.method = (scrawl.isa(items.method,'str')) ? items.method : ((this.type === 'Shape' ) ? 'draw' : 'fill');
-		this.collisionPoints = this.parseCollisionPoints(items.collisionPoints || ['start']);
+		this.collisionPoints = this.parseCollisionPoints(items.collisionPoints || []);
 		this.rollable = (scrawl.isa(items.rollable,'bool')) ? items.rollable : true;
 		this.roll = items.roll || 0;
-		this.degree = (scrawl.isa(items.degree,'bool')) ? items.degree : true;
+		this.data = items.data || false;
 		this.flipReverse = (scrawl.isa(items.flipReverse,'bool')) ? items.flipReverse : false;
 		this.flipUpend = (scrawl.isa(items.flipUpend,'bool')) ? items.flipUpend : false;
+		this.scaleOutline = (scrawl.isa(items.scaleOutline,'bool')) ? items.scaleOutline : true;
 		var myContext = new Context(items);
 		this.context = myContext.name;
 		this.group = this.getGroup(items);
@@ -2644,35 +3801,303 @@ window.scrawl = (function(){
 			}
 		this.fieldChannel = (scrawl.isa(items.fieldChannel,'str')) ? items.fieldChannel : 'anycolor';
 		this.fieldTest = items.fieldTest || 0;
-		if(this.path){
+		if(scrawl.xt(items.target)){
+			this.targetGroup(items);
 			}
 		return this;
 		}
 	Sprite.prototype = Object.create(SubScrawl.prototype);
 	Sprite.prototype.type = 'Sprite';
 	Sprite.prototype.classname = 'spritenames';
+	Sprite.prototype.targetGroup = function(items){
+		this.pivot = this.group;
+		this.handleX = scrawl.group[this.group].startX - this.startX;
+		this.handleY = scrawl.group[this.group].startY - this.startY;
+		return this;
+		};
+	Sprite.prototype.exportNative = function(items){
+		items = (scrawl.xt(items)) ? items : {includeDesigns: true, includeImages: false, string: true};
+		var result = [];
+		if(items.includeDesigns){
+			var designs = items.designs || [];
+			if(scrawl.xt(this.context) && scrawl.designnames.contains(scrawl.ctx[this.context].fillStyle) && !designs.contains(scrawl.ctx[this.context].fillStyle)){
+				result.push(scrawl.design[scrawl.ctx[this.context].fillStyle].prepareForExport());
+				designs.push(scrawl.ctx[this.context].fillStyle);
+				}
+			if(scrawl.xt(this.context) && scrawl.designnames.contains(scrawl.ctx[this.context].strokeStyle) && !designs.contains(scrawl.ctx[this.context].strokeStyle)){
+				result.push(scrawl.design[scrawl.ctx[this.context].strokeStyle].prepareForExport());
+				designs.push(scrawl.ctx[this.context].strokeStyle);
+				}
+			}
+		if(items.includeImages){
+			if(scrawl.xt(this.imageData) && this.imageData && scrawl.xt(scrawl.imageData[this.imageData])){
+				result.push(scrawl.imageData[this.imageData]);
+				}
+			}
+		if(scrawl.xt(this.animSheet) && this.animSheet && scrawl.animnames.contains(this.animSheet)){
+			result.push(scrawl.anim[this.animSheet].prepareForExport());
+			}
+		result.push(this.prepareForExport());
+		return (items.string) ? JSON.stringify(result) : result;
+		};
+	Sprite.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//SubScrawl
+			startX: (this.startX !== 0) ? this.startX : u,
+			startY: (this.startY !== 0) ? this.startY : u,
+			handleX: (this.handleX !== 0) ? this.handleX : u,
+			handleY: (this.handleY !== 0) ? this.handleY : u,
+			moveStartX: (this.moveStartX !== 0) ? this.moveStartX : u,
+			moveStartY: (this.moveStartY !== 0) ? this.moveStartY : u,
+			moveHandleX: (this.moveHandleX !== 0) ? this.moveHandleX : u,
+			moveHandleY: (this.moveHandleY !== 0) ? this.moveHandleY : u,
+			pivot: (this.pivot) ? this.pivot : u,
+			path: (this.path) ? this.path : u,
+			pathPosition: (this.pathPosition !== 0) ? this.pathPosition : u,
+			movePathPosition: (this.movePathPosition !== 0) ? this.movePathPosition : u,
+			pathSpeedConstant: (!this.pathSpeedConstant) ? this.pathSpeedConstant : u,
+			pathRoll: (this.pathRoll !== 0) ? this.pathRoll : u,
+			addPathRoll: (this.addPathRoll) ? this.addPathRoll : u,
+			scale: (this.scale !== 1) ? this.scale : u,
+			//Sprite
+			order: (this.order !== 0) ? this.order : u,
+			visibility: (!this.visibility) ? this.visibility : u,
+			method: this.method,
+			collisionPoints: (scrawl.xt(this.collisionPoints) && this.collisionPoints.length > 0) ? this.collisionPoints : u,
+			rollable: (!this.rollable) ? this.rollable : u,
+			roll: (this.roll !== 0) ? this.roll : u,
+			data: (this.data) ? this.data : u,
+			flipReverse: (this.flipReverse) ? this.flipReverse : u,
+			flipUpend: (this.flipUpend) ? this.flipUpend : u,
+			scaleOutline: (!this.scaleOutline) ? this.scaleOutline : u,
+			group: this.group,
+			fieldChannel: (this.fieldChannel !== 'anycolor') ? this.fieldChannel : u,
+			fieldTest: (this.fieldTest !== 0) ? this.fieldTest : u,
+			//Phrase (text objects not saved)
+			text: (scrawl.xt(this.text) && this.text !=='') ? this.text : u,
+			style: (scrawl.xt(this.style) && this.style !== 'normal') ? this.style : u,
+			variant: (scrawl.xt(this.variant) && this.variant !== 'normal') ? this.variant : u,
+			weight: (scrawl.xt(this.weight) && this.weight !== 'normal') ? this.weight : u,
+			size: (scrawl.xt(this.size) && this.size !== 12) ? this.size : u,
+			metrics: (scrawl.xt(this.metrics) && this.metrics !== 'pt') ? this.metrics : u,
+			family: (scrawl.xt(this.family) && this.family !== 'sans-serif') ? this.family : u,
+			lineHeight: (scrawl.xt(this.lineHeight) && this.lineHeight !== 1.5) ? this.lineHeight : u,
+			backgroundColor: (scrawl.xt(this.backgroundColor) && this.backgroundColor) ? this.backgroundColor : u,
+			backgroundMargin: (scrawl.xt(this.backgroundMargin) && this.backgroundMargin !== 0) ? this.backgroundMargin : u,
+			textAlongPath: (scrawl.xt(this.textAlongPath) && this.textAlongPath !== 'phrase') ? this.textAlongPath : u,
+			fixedWidth: (scrawl.xt(this.fixedWidth) && this.fixedWidth) ? this.fixedWidth : u,
+			//Block (and other sprites)
+			width: (scrawl.xt(this.width) && this.width !== 0) ? this.width : u,
+			height: (scrawl.xt(this.height) && this.height !== 0) ? this.height : u,
+			//Wheel
+			radius: (scrawl.xt(this.radius) && this.radius !== 0) ? this.radius : u,
+			startAngle: (scrawl.xt(this.startAngle) && this.startAngle !== 0) ? this.startAngle : u,
+			endAngle: (scrawl.xt(this.endAngle) && this.endAngle !== 360) ? this.endAngle : u,
+			clockwise: (scrawl.xt(this.clockwise) && this.clockwise) ? this.clockwise : u,
+			closed: (scrawl.xt(this.closed)) ? this.closed : u,
+			includeCenter: (scrawl.xt(this.includeCenter) && this.includeCenter) ? this.includeCenter : u,
+			checkHitUsingRadius: (scrawl.xt(this.checkHitUsingRadius) && !this.checkHitUsingRadius) ? this.checkHitUsingRadius : u,
+			//Picture
+			source: (scrawl.xt(this.source) && this.source) ? this.source : u,
+			imageData: (scrawl.xt(this.imageData) && this.imageData) ? this.imageData : u,
+			imageDataChannel: (scrawl.xt(this.imageDataChannel) && this.imageDataChannel !=='alpha') ? this.imageDataChannel : u,
+			animSheet: (scrawl.xt(this.animSheet) && this.animSheet) ? this.animSheet : u,
+			imageType: (scrawl.xt(this.imageType) && this.imageType) ? this.imageType : u,
+			checkHitUsingImageData: (scrawl.xt(this.checkHitUsingImageData) && this.checkHitUsingImageData) ? this.checkHitUsingImageData : u,
+			copyX: (scrawl.xt(this.copyX)) ? this.copyX : u,
+			copyY: (scrawl.xt(this.copyY)) ? this.copyY : u,
+			copyWidth: (scrawl.xt(this.copyWidth)) ? this.copyWidth : u,
+			copyHeight: (scrawl.xt(this.copyHeight)) ? this.copyHeight : u,
+			//Shape
+			firstPoint: (scrawl.xt(this.firstPoint) && this.firstPoint) ? this.firstPoint : u,
+			line: (scrawl.xt(this.line) && this.line) ? this.line : u,
+			linkDurations: (scrawl.xt(this.linkDurations) && this.linkDurations.length > 0) ? this.linkDurations : u,
+			markStart: (scrawl.xt(this.markStart) && this.markStart) ? this.markStart : u,
+			markMid: (scrawl.xt(this.markMid) && this.markMid) ? this.markMid : u,
+			markEnd: (scrawl.xt(this.markEnd) && this.markEnd) ? this.markEnd : u,
+			//Context
+			fillStyle: (scrawl.ctx[this.context].fillStyle !== '#000000') ? scrawl.ctx[this.context].fillStyle : u,
+			winding: (scrawl.ctx[this.context].winding !== 'nonzero') ? scrawl.ctx[this.context].winding : u,
+			strokeStyle: (scrawl.ctx[this.context].strokeStyle !== '#000000') ? scrawl.ctx[this.context].strokeStyle : u,
+			globalAlpha: (scrawl.ctx[this.context].globalAlpha !== 1) ? scrawl.ctx[this.context].globalAlpha : u,
+			globalCompositeOperation: (scrawl.ctx[this.context].globalCompositeOperation !== 'source-over') ? scrawl.ctx[this.context].globalCompositeOperation : u,
+			lineWidth: (scrawl.ctx[this.context].lineWidth !== 1) ? scrawl.ctx[this.context].lineWidth : u,
+			lineCap: (scrawl.ctx[this.context].lineCap !== 'butt') ? scrawl.ctx[this.context].lineCap : u,
+			lineJoin: (scrawl.ctx[this.context].lineJoin !== 'miter') ? scrawl.ctx[this.context].lineJoin : u,
+			lineDash: (scrawl.ctx[this.context].lineDash.length > 0) ? scrawl.ctx[this.context].lineDash : u,
+			lineDashOffset: (scrawl.ctx[this.context].lineDashOffset !== 0) ? scrawl.ctx[this.context].lineDashOffset : u,
+			miterLimit: (scrawl.ctx[this.context].miterLimit !== 10) ? scrawl.ctx[this.context].miterLimit : u,
+			shadowOffsetX: (scrawl.ctx[this.context].shadowOffsetX !== 0) ? scrawl.ctx[this.context].shadowOffsetX : u,
+			shadowOffsetY: (scrawl.ctx[this.context].shadowOffsetY !== 0) ? scrawl.ctx[this.context].shadowOffsetY : u,
+			shadowBlur: (scrawl.ctx[this.context].shadowBlur !== 0) ? scrawl.ctx[this.context].shadowBlur : u,
+			shadowColor: (scrawl.ctx[this.context].shadowColor !== 'rgba(0,0,0,0)') ? scrawl.ctx[this.context].shadowColor : u,
+			font: (scrawl.ctx[this.context].font !== '10pt sans-serif') ? scrawl.ctx[this.context].font : u,
+			textAlign: (scrawl.ctx[this.context].textAlign !== 'start') ? scrawl.ctx[this.context].textAlign : u,
+			textBaseline: (scrawl.ctx[this.context].textBaseline !== 'alphabetic') ? scrawl.ctx[this.context].textBaseline : u,
+			};
+		};
+	Sprite.prototype.setToDefaults = function(){
+		var u;
+		this.set({
+			comment: '',
+			title: '',
+			startX: 0,
+			startY: 0,
+			handleX: 0,
+			handleY: 0,
+			moveStartX: 0,
+			moveStartY: 0,
+			moveHandleX: 0,
+			moveHandleY: 0,
+			pivot: false,
+			path: false,
+			pathPosition: 0,
+			movePathPosition: 0,
+			pathSpeedConstant: true,
+			pathRoll: 0,
+			addPathRoll: false,
+			scale: 1,
+			order: 0,
+			visibility: true,
+			collisionPoints: [],
+			rollable: true,
+			roll: 0,
+			data: false,
+			flipReverse: false,
+			flipUpend: false,
+			scaleOutline: true,
+			group: false,
+			fieldChannel: 'anycolor',
+			fieldTest: 0,
+			text: (scrawl.xt(this.text)) ? '' : u,
+			style: (scrawl.xt(this.style)) ? 'normal' : u,
+			variant: (scrawl.xt(this.variant)) ? 'normal' : u,
+			weight: (scrawl.xt(this.weight)) ? 'normal' : u,
+			size: (scrawl.xt(this.size)) ? 12 : u,
+			metrics: (scrawl.xt(this.metrics)) ? 'pt' : u,
+			family: (scrawl.xt(this.family)) ? 'sans-serif' : u,
+			lineHeight: (scrawl.xt(this.lineHeight)) ? 1.5 : u,
+			backgroundColor: (scrawl.xt(this.backgroundColor)) ? false : u,
+			backgroundMargin: (scrawl.xt(this.backgroundMargin)) ? 0 : u,
+			textAlongPath: (scrawl.xt(this.textAlongPath)) ? 'phrase' : u,
+			fixedWidth: (scrawl.xt(this.fixedWidth)) ? false : u,
+			width: (scrawl.xt(this.width)) ? 0 : u,
+			height: (scrawl.xt(this.height)) ? 0 : u,
+			radius: (scrawl.xt(this.radius)) ? 0 : u,
+			startAngle: (scrawl.xt(this.startAngle)) ? 0 : u,
+			endAngle: (scrawl.xt(this.endAngle)) ? 360 : u,
+			clockwise: (scrawl.xt(this.clockwise)) ? false : u,
+			closed: (scrawl.xt(this.closed)) ? false : u,
+			includeCenter: (scrawl.xt(this.includeCenter)) ? false : u,
+			checkHitUsingRadius: (scrawl.xt(this.checkHitUsingRadius)) ? true : u,
+			imageData: (scrawl.xt(this.imageData)) ? false : u,
+			imageDataChannel: (scrawl.xt(this.imageDataChannel)) ? 'alpha' : u,
+			animSheet: (scrawl.xt(this.animSheet)) ? false : u,
+			checkHitUsingImageData: (scrawl.xt(this.checkHitUsingImageData)) ? false : u,
+			copyX: (scrawl.xt(this.copyX)) ? false : u,
+			copyY: (scrawl.xt(this.copyY)) ? false : u,
+			copyWidth: (scrawl.xt(this.copyWidth)) ? false : u,
+			copyHeight: (scrawl.xt(this.copyHeight)) ? false : u,
+			firstPoint: (scrawl.xt(this.firstPoint)) ? false : u,
+			line: (scrawl.xt(this.line)) ? false : u,
+			markStart: (scrawl.xt(this.markStart)) ? false : u,
+			markMid: (scrawl.xt(this.markMid)) ? false : u,
+			markEnd: (scrawl.xt(this.markEnd)) ? false : u,
+			fillStyle: '#000000',
+			winding: 'nonzero',
+			strokeStyle: '#000000',
+			globalAlpha: 1,
+			globalCompositeOperation: 'source-over',
+			lineWidth: 1,
+			lineCap: 'butt',
+			lineJoin: 'miter',
+			lineDash: [],
+			lineDashOffset: 0,
+			miterLimit: 10,
+			shadowOffsetX: 0,
+			shadowOffsetY: 0,
+			shadowBlur: 0,
+			shadowColor: 'rgba(0,0,0,0)',
+			font: '10pt sans-serif',
+			textAlign: 'start',
+			textBaseline: 'alphabetic',
+			});
+		return this;
+		};
 	Sprite.prototype.pickupSprite = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		if(scrawl.xta([items.x,items.y])){
-			this.order += 9999;
-			this.handleX = (items.x - (this.startX - (this.handleX*this.scale)))/this.scale;
-			this.handleY = (items.y - (this.startY - (this.handleY*this.scale)))/this.scale;
+			this.mouseX = items.x || 0;
+			this.mouseY = items.y || 0;
+			this.realPivot = this.pivot;
 			this.pivot = 'mouse';
+			this.order += 9999;
 			}
 		return this;
 		};
 	Sprite.prototype.dropSprite = function(item){
-		if(this.order >= 9999){
-			this.order -= 9999;
-			this.pivot = item || null;
-			}
+		this.pivot = item || this.realPivot || false;
+		this.order -= (this.order >= 9999) ? 9999 : 0;
+		delete this.realPivot;
+		delete this.mouseX;
+		delete this.mouseY;
 		return this;
+		};
+	Sprite.prototype.clone = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var a = Scrawl.prototype.clone.call(this, items);
+		var b = scrawl.ctx[a.context];
+		var c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
+		delete c.name;
+		b.set(c);
+		delete items.name;
+		b.set(items);
+		if(scrawl.designnames.contains(b.fillStyle)){
+			if(scrawl.design[b.fillStyle].type !== 'Pattern'){
+				var f = scrawl.design[b.fillStyle].clone();
+				b.fillStyle = f.name;
+				}
+			else{
+				b.fillStyle = items.fillStyle || scrawl.ctx[this.context].fillStyle;
+				}
+			}
+		if(scrawl.designnames.contains(b.strokeStyle)){
+			if(scrawl.design[b.fillStyle].type !== 'Pattern'){
+				var s = scrawl.design[b.strokeStyle].clone();
+				b.strokeStyle = s.name;
+				}
+			else{
+				b.strokeStyle = items.strokeStyle || scrawl.ctx[this.context].strokeStyle;
+				}
+			}
+		if(items.field){
+			a.addSpriteToCellFields();
+			}
+		if(items.fence){
+			a.addSpriteToCellFences();
+			}
+		if(items.group||items.target){
+			scrawl.group[this.group].removeSpritesFromGroup(a.name);
+			a.group = this.getGroup(items);
+			scrawl.group[a.group].addSpritesToGroup(a.name);
+			if(scrawl.xt(items.target)){
+				a.targetGroup(items);
+				}
+			}
+		return a;
 		};
 	Sprite.prototype.addSpriteToCellFields = function(cells){
 		var cells = (scrawl.xt(cells)) ? [].concat(cells) : [scrawl.pad[scrawl.currentPad].current];
 		for(var i=0, z=cells.length; i<z; i++){
 			if(scrawl.cellnames.contains(cells[i])){
-				scrawl.group[cells[i]+'_field'].sprites.push(this.name);
+				scrawl.group[cells[i]+'_field'].addSpritesToGroup(this.name);
 				}
 			}
 		return this;
@@ -2681,7 +4106,7 @@ window.scrawl = (function(){
 		cells = (scrawl.xt(cells)) ? [].concat(cells) : [scrawl.pad[scrawl.currentPad].current];
 		for(var i=0, z=cells.length; i<z; i++){
 			if(scrawl.cellnames.contains(cells[i])){
-				scrawl.group[cells[i]+'_fence'].sprites.push(this.name);
+				scrawl.group[cells[i]+'_fence'].addSpritesToGroup(this.name);
 				}
 			}
 		return this;
@@ -2690,7 +4115,7 @@ window.scrawl = (function(){
 		cells = (scrawl.xt(cells)) ? [].concat(cells) : [scrawl.pad[scrawl.currentPad].current];
 		for(var i=0, z=cells.length; i<z; i++){
 			if(scrawl.cellnames.contains(cells[i])){
-				scrawl.group[cells[i]+'_field'].sprites.removeItem(this.name);
+				scrawl.group[cells[i]+'_field'].removeSpritesFromGroup(this.name);
 				}
 			}
 		return this;
@@ -2699,7 +4124,7 @@ window.scrawl = (function(){
 		cells = (scrawl.xt(cells)) ? [].concat(cells) : [scrawl.pad[scrawl.currentPad].current];
 		for(var i=0, z=cells.length; i<z; i++){
 			if(scrawl.cellnames.contains(cells[i])){
-				scrawl.group[cells[i]+'_fence'].sprites.removeItem(this.name);
+				scrawl.group[cells[i]+'_fence'].removeSpritesFromGroup(this.name);
 				}
 			}
 		return this;
@@ -2711,92 +4136,26 @@ window.scrawl = (function(){
 		if(scrawl.xt(items.collisionPoints)){this.collisionPoints = this.parseCollisionPoints(items.collisionPoints);}
 		if(scrawl.xt(items.field)){this.addSpriteToCellFields();}
 		if(scrawl.xt(items.fence)){this.addSpriteToCellFences();}
+		if(scrawl.xto([items.startX,items.handleX,items.startY,items.handleY])){
+			this.setCurrentParameters();
+			}
 		if(scrawl.xto([items.group,items.target])){
-			scrawl.group[this.group].sprites.removeItem(this.name);
+			scrawl.group[this.group].removeSpritesFromGroup(this.name);
 			this.group = this.getGroup(items);
-			scrawl.group[this.group].sprites.pushUnique(this.name);
+			scrawl.group[this.group].addSpritesToGroup(this.name);
+			if(scrawl.xt(items.target)){
+				this.targetGroup(items);
+				}
 			}
 		return this;
 		};
 	Sprite.prototype.get = function(item){
-		if(['globalAlpha','globalCompositeOperation','lineWidth','lineCap','lineJoin','miterLimit','shadowOffsetX','shadowOffsetY','shadowBlur','shadowColor','font','textAlign','textBaseline'].contains(item)){
+		if(['globalAlpha','globalCompositeOperation','lineWidth','lineCap','lineJoin','miterLimit','shadowOffsetX','shadowOffsetY','shadowBlur','shadowColor','font','textAlign','textBaseline','winding','lineDash','lineDashOffset','fillStyle','strokeStyle'].contains(item)){
 			return scrawl.ctx[this.context].get(item);
 			}
 		else{
 			return this[item];
 			}
-		};
-	Sprite.prototype.parseCollisionPoints = function(items){
-		var myItems = (scrawl.xt(items)) ? [].concat(items) : this.collisionPoints;
-		var p = [];
-		for(var i=0, z=myItems.length; i<z; i++){
-			switch(myItems[i]) {
-				case 'all' :
-					p.pushUnique('N'); p.pushUnique('NE'); p.pushUnique('E'); p.pushUnique('SE'); p.pushUnique('S');
-					p.pushUnique('SW'); p.pushUnique('W'); p.pushUnique('NW'); p.pushUnique('start'); p.pushUnique('center');
-					break;
-				case 'corners' :
-					p.pushUnique('NE'); p.pushUnique('SE'); p.pushUnique('SW'); p.pushUnique('NW');
-					break;
-				case 'edges' :
-					p.pushUnique('N'); p.pushUnique('E'); p.pushUnique('S'); p.pushUnique('W');
-					break;
-				case 'perimeter' :
-					p.pushUnique('N'); p.pushUnique('NE'); p.pushUnique('E'); p.pushUnique('SE');
-					p.pushUnique('S'); p.pushUnique('SW'); p.pushUnique('W'); p.pushUnique('NW');
-					break;
-				case 'north' : p.pushUnique('N'); break;
-				case 'northeast' : p.pushUnique('NE'); break;
-				case 'east' : p.pushUnique('E'); break;
-				case 'southeast' : p.pushUnique('SE'); break;
-				case 'south' : p.pushUnique('S'); break;
-				case 'southwest' : p.pushUnique('SW'); break;
-				case 'west' : p.pushUnique('W'); break;
-				case 'northwest' : p.pushUnique('NW'); break;
-				default : p.pushUnique(myItems[i]);
-				}
-			}
-		return p;
-		};
-	Sprite.prototype.addCollisionPoints = function(item){
-		var myPoints = (scrawl.xt(item)) ? [].concat(item) : [];
-		for(var i=0, z=myPoints.length; i<z; i++){
-			if(scrawl.pointnames.contains(myPoints[i])){
-				this.collisionPoints.pushUnique(myPoints[i]);
-				}
-			}
-		return this;
-		};
-	Sprite.prototype.removeCollisionPoints = function(item){
-		var myPoints = (scrawl.xt(item)) ? [].concat(item) : [];
-		for(var i=0, z=myPoints.length; i<z; i++){
-			this.collisionPoints.removeItem(myPoints[i]);
-			if(scrawl.pointnames.contains(myPoints[i])){
-				delete scrawl.point[myPoints[i]];
-				scrawl.pointnames.removeItem(myPoints[i]);
-				}
-			}
-		return this;
-		};
-	Sprite.prototype.clone = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		var a = Scrawl.prototype.clone.call(this, items);
-		delete scrawl.ctx[a.context];
-		scrawl.ctxnames.removeItem(a.context);
-		var b = scrawl.ctx[this.context].clone(items);
-		a.context = b.name;
-		if(items.field){
-			a.addSpriteToCellFields();
-			}
-		if(items.fence){
-			a.addSpriteToCellFences();
-			}
-		if(items.group||items.target){
-			scrawl.group[this.group].sprites.removeItem(a.name);
-			a.group = this.getGroup(items);
-			scrawl.group[a.group].sprites.pushUnique(a.name);
-			}
-		return a;
 		};
 	Sprite.prototype.swap = function(){
 		scrawl.ctx[this.context].swapStyles();
@@ -2808,63 +4167,55 @@ window.scrawl = (function(){
 		else if(scrawl.xt(items.group) && scrawl.groupnames.contains(items.group)){return items.group;}
 		else{return scrawl.pad[scrawl.currentPad].current;}
 		};
-	Sprite.prototype.forceStamp = function(item){				//override object is only generated by group objects
+	Sprite.prototype.forceStamp = function(method, cell){				//override object is only generated by group objects
 		var temp = this.visibility;
 		this.visibility = true;
-		this.stamp(item);
+		this.stamp(method, cell);
 		this.visibility = temp;
 		return this;
 		};
-	Sprite.prototype.prepareItemForStamp = function(item){				//override object is only generated by group objects
-		var override = {};
-		if(scrawl.xt(item)){
-			if(['clear','draw','fill','drawFill','fillDraw','sinkInto','floatOver','clip','none','clearWithBackground'].contains(item)){
-				override = {
-					x: 0,
-					y: 0,
-					method: item,
-					cells: scrawl.group[this.group].cells,
-					};
-				}
-			else{
-				override = {
-					x: item.x || 0,
-					y: item.y || 0,
-					method: item.method || false,
-					cells: item.cells || scrawl.group[this.group].cells,
-					};
-				}
+	Sprite.prototype.prepareStamp = function(override){
+		override = (scrawl.xt(override)) ? override : {x:0,y:0};
+		return {
+			x: (this.flipReverse) ? this.currentX - (override.x*2) : this.currentX,
+			y: (this.flipUpend) ? this.currentY - (override.y*2) : this.currentY,
+			};
+		};
+	Sprite.prototype.prepareItemForStamp = function(method, cell){
+		var override;
+		if(scrawl.xt(method)){
+			override = (scrawl.isa(method,'str')) ? scrawl.group[this.group].getOverride(this.name, method) : method;
 			}
 		else{
-			override = {
-				x: 0,
-				y: 0,
-				method: false,
-				cells: scrawl.group[this.group].cells,
-				};
+			override = scrawl.group[this.group].getOverride(this.name, this.method);
+			}
+		if(scrawl.xt(cell) && scrawl.cellnames.contains(cell)){ 
+			override.cells = [cell];
 			}
 		return override;
 		};
-	Sprite.prototype.setStampUsingPivot = function(override, i){
+	Sprite.prototype.setStampUsingPivot = function(override, cell){
+		var here, myCell;
 		if(scrawl.pointnames.contains(this.pivot)){
 			this.startX = scrawl.point[this.pivot].currentX;
 			this.startY = scrawl.point[this.pivot].currentY;
 			}
 		else if(scrawl.spritenames.contains(this.pivot)){
-			if(this.head){
-				this.startX = scrawl.sprite[this.pivot].getStartX();
-				this.startY = scrawl.sprite[this.pivot].getStartY();
-				}
-			else{
-				this.startX = scrawl.sprite[this.pivot].startX;
-				this.startY = scrawl.sprite[this.pivot].startY;
-				}
+			this.startX = scrawl.sprite[this.pivot].startX;
+			this.startY = scrawl.sprite[this.pivot].startY;
 			}
 		else if(this.pivot === 'mouse'){
-			here = scrawl.pad[scrawl.cell[override.cells[i]].pad].getMouse();
+			myCell = scrawl.cell[cell];
+			here = scrawl.pad[myCell.pad].getMouse();
+			if(!scrawl.xta([this.mouseX,this.mouseY])){
+				this.mouseX = this.startX;
+				this.mouseY = this.startY;
+				}
 			if(here.active){
-				this.startX = here.x;
-				this.startY = here.y;
+				this.startX += (here.x - this.mouseX);
+				this.startY += (here.y - this.mouseY);
+				this.mouseX = here.x;
+				this.mouseY = here.y;
 				}
 			}
 		else if(scrawl.groupnames.contains(this.pivot)){
@@ -2873,20 +4224,31 @@ window.scrawl = (function(){
 			}
 		return this;
 		};
-	Sprite.prototype.stamp = function(item){					//override object is only generated by group objects
+	Sprite.prototype.setCurrentParameters = function(override){
+		override = (scrawl.xt(override)) ? override : {x:0,y:0,r:0,s:1};
+		this.currentScale = this.scale * override.s;
+		this.currentX = this.getStartX(override);
+		this.currentY = this.getStartY(override);
+		this.currentWidth = this.width * this.currentScale;
+		this.currentHeight = this.height * this.currentScale;
+		if(scrawl.xt(this.radius)){
+			this.currentRadius = this.radius * this.currentScale;
+			}
+		this.currentRoll = this.roll + override.r;
+		return this;
+		};
+	Sprite.prototype.stamp = function(method, cell){
 		if(this.visibility){
 			var ctx, engine, myCell, myMethod;
-			var override = this.prepareItemForStamp(item);
+			var override = this.prepareItemForStamp(method, cell);
 			myMethod = override.method || this.method;
 			for(var i=0, z=override.cells.length; i<z; i++){
 				ctx = scrawl.cell[override.cells[i]];
-				ctx.setEngine(this.context, this.scale);
 				engine = scrawl.context[ctx.name];
 				myCell = scrawl.cell[override.cells[i]].name;
 				var here;
-				var here;
 				if(this.pivot){
-					this.setStampUsingPivot(override, i);
+					this.setStampUsingPivot(override, myCell);
 					}
 				else if(scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape'){
 					here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
@@ -2894,6 +4256,7 @@ window.scrawl = (function(){
 					this.startY = here.y;
 					this.pathRoll = here.r || 0;
 					}
+				this.setCurrentParameters(override);
 				this.callMethod(engine, myCell, override, myMethod);
 				}
 			}
@@ -2905,22 +4268,18 @@ window.scrawl = (function(){
 		if(this.flipReverse && this.flipUpend){
 			engine.translate(w,h);
 			engine.scale(-1,-1);
-			this.startX = w-this.startX;
-			this.startY = h-this.startY;
-			this.handleX = -this.handleX
-			this.handleY = -this.handleY
+			this.currentX = w-this.currentX;
+			this.currentY = h-this.currentY;
 			}
 		else if(this.flipReverse){
 			engine.translate(w,0);
 			engine.scale(-1,1);
-			this.startX = w-this.startX;
-			this.handleX = -this.handleX
+			this.currentX = w-this.currentX;
 			}
 		else if(this.flipUpend){
 			engine.translate(0,h);
 			engine.scale(1,-1);
-			this.startY = h-this.startY;
-			this.handleY = -this.handleY
+			this.currentY = h-this.currentY;
 			}
 		return this;
 		};
@@ -2941,53 +4300,57 @@ window.scrawl = (function(){
 		this.flipCanvas(engine, myCell);
 		return this;
 		};
-	Sprite.prototype.rotateCell = function(ctx, cell){
+	Sprite.prototype.rotateCell = function(ctx, cell, override){
 		if(scrawl.xta([ctx,cell]) && (this.rollable || this.addPathRoll)){
-			if(this.roll !== scrawl.cell[cell].roll || this.roll + this.pathRoll !== scrawl.cell[cell].roll){
-				var deltaRotation;
-				if(this.addPathRoll){
-					deltaRotation = (this.degree) ? ((this.roll + this.pathRoll) - scrawl.cell[cell].roll) * scrawl.radian : (this.roll + (this.pathRoll/scrawl.radian)) - scrawl.cell[cell].roll;
-					}
-				else{
-					deltaRotation = (this.degree) ? (this.roll - scrawl.cell[cell].roll) * scrawl.radian : this.roll - scrawl.cell[cell].roll;
-					}
-				var deltaX = this.startX - scrawl.cell[cell].cellX;
-				var deltaY = this.startY - scrawl.cell[cell].cellY;
-				ctx.translate(deltaX, deltaY);
-				ctx.rotate(deltaRotation);
-				ctx.translate(-deltaX, -deltaY);
+			if(this.currentRoll !== scrawl.cell[cell].roll || this.currentRoll + this.pathRoll !== scrawl.cell[cell].roll){
+				var deltaRotation = (this.addPathRoll) ? ((this.currentRoll + this.pathRoll) - scrawl.cell[cell].roll) * scrawl.radian : (this.currentRoll - scrawl.cell[cell].roll) * scrawl.radian;
+				this.completeRotation(ctx, cell, override, deltaRotation);
 				}
 			}
 		return this;
 		};
-	Sprite.prototype.unrotateCell = function(ctx, cell){
+	Sprite.prototype.getRotationPoint = function(override, cell){
+		var cellX, cellY, deltaX, deltaY;
+		override = (scrawl.xt(override)) ? override : {x:0,y:0};
+		if(this.flipReverse){
+			deltaX = this.currentX + (this.getPivotOffset(this.handleX)*this.currentScale) - (override.x * 2);
+			}
+		else{
+			deltaX = this.currentX + (this.getPivotOffset(this.handleX)*this.currentScale);
+			}
+		if(this.flipUpend){
+			deltaY = this.currentY + (this.getPivotOffset(this.handleY, true)*this.currentScale) - (override.y * 2);
+			}
+		else{
+			deltaY = this.currentY + (this.getPivotOffset(this.handleY, true)*this.currentScale);
+			}
+		return {x: deltaX, y: deltaY};
+		};
+	Sprite.prototype.completeRotation = function(ctx, cell, override, deltaRotation){
+		var delta = this.getRotationPoint(override, cell);
+		ctx.translate(delta.x, delta.y);
+		ctx.rotate(deltaRotation);
+		ctx.translate(-delta.x, -delta.y);
+		return this;
+		};
+	Sprite.prototype.unrotateCell = function(ctx, cell, override){
 		if(scrawl.xta([ctx,cell]) && (this.rollable || this.addPathRoll)){
-			if(this.roll !== scrawl.cell[cell].roll || this.roll + this.pathRoll !== scrawl.cell[cell].roll){
-				var deltaRotation;
-				if(this.addPathRoll){
-					deltaRotation = (this.degree) ? (scrawl.cell[cell].roll - (this.roll + this.pathRoll)) * scrawl.radian : scrawl.cell[cell].roll - (this.roll + (this.pathRoll/scrawl.radian));
-					}
-				else{
-					deltaRotation = (this.degree) ? (scrawl.cell[cell].roll - this.roll) * scrawl.radian : scrawl.cell[cell].roll - this.roll;
-					}
-				var deltaX = this.startX - scrawl.cell[cell].cellX;
-				var deltaY = this.startY - scrawl.cell[cell].cellY;
-				ctx.translate(deltaX, deltaY);
-				ctx.rotate(deltaRotation);
-				ctx.translate(-deltaX, -deltaY);
+			if(this.currentRoll !== scrawl.cell[cell].roll || this.currentRoll + this.pathRoll !== scrawl.cell[cell].roll){
+				var deltaRotation = (this.addPathRoll) ? (scrawl.cell[cell].roll - (this.currentRoll + this.pathRoll)) * scrawl.radian : (scrawl.cell[cell].roll - this.currentRoll) * scrawl.radian;
+				this.completeRotation(ctx, cell, override, deltaRotation);
 				}
 			}
 		return this;
 		};
-	Sprite.prototype.clear = function(ctx, cell, override){return this;};			//not tested for any sprite objects
-	Sprite.prototype.clearWithBackground = function(ctx, cell, override){return this;};			//not tested for any sprite objects
+	Sprite.prototype.clear = function(ctx, cell, override){return this;};
+	Sprite.prototype.clearWithBackground = function(ctx, cell, override){return this;};
 	Sprite.prototype.draw = function(ctx, cell, override){return this;};
 	Sprite.prototype.fill = function(ctx, cell, override){return this;};
 	Sprite.prototype.drawFill = function(ctx, cell, override){return this;};
 	Sprite.prototype.fillDraw = function(ctx, cell, override){return this;};
 	Sprite.prototype.sinkInto = function(ctx, cell, override){return this;};
 	Sprite.prototype.floatOver = function(ctx, cell, override){return this;};
-	Sprite.prototype.clip = function(ctx, cell, override){return this;};			//not tested for any sprite objects
+	Sprite.prototype.clip = function(ctx, cell, override){return this;};
 	Sprite.prototype.none = function(ctx, cell, override){return this;};
 	Sprite.prototype.setDelta = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
@@ -3007,25 +4370,43 @@ window.scrawl = (function(){
 		if(scrawl.xt(items.copyWidth)){this.copyWidth += items.copyWidth;}
 		if(scrawl.xt(items.copyHeight)){this.copyHeight += items.copyHeight;}
 		if(scrawl.xt(items.pathPosition)){this.pathPosition += items.pathPosition;}
+		if(scrawl.xt(items.lineDashOffset)){scrawl.ctx[this.context].lineDashOffset += items.lineDashOffset;}
 		return this;
 		};
 	Sprite.prototype.getAngle = function(v){
-		if(this.addPathRoll){
-			return (this.degree) ? (v+this.roll+this.pathRoll) * scrawl.radian : v+this.roll+(this.pathroll/scrawl.radian);
-			}
-		else{
-			return (this.degree) ? (v+this.roll) * scrawl.radian : v+this.roll;
-			}
+		return (this.addPathRoll) ? (v+this.currentRoll+this.pathRoll) * scrawl.radian : (v+this.currentRoll) * scrawl.radian;
 		};
-	Sprite.prototype.checkField = function(items, override){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		var myX, myY, myCell, myChannel, myTest;
-		var myCell = (scrawl.xt(items.cell) && scrawl.cellnames.contains(items.cell)) ? items.cell : (scrawl.group[this.group].cells[0] || scrawl.pad[scrawl.currentPad].current);
-		myX = items.x || this.startX;
-		myY = items.y || this.startY;
-		myChannel = items.channel || this.fieldChannel;
-		myTest = items.test || this.fieldTest;
-		return scrawl.cell[myCell].checkFieldAt({x: myX, y: myY, test: myTest, channel: myChannel});
+	Sprite.prototype.checkHit = function(items, override){
+		var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
+		var cell = scrawl.cell[pad.current].name;
+		var ctx = scrawl.context[pad.current];
+		var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}];
+		this.flipCanvas(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.beginPath();
+		ctx.rect(here.x, here.y, this.currentWidth, this.currentHeight);
+		var result = false;
+		for(var i=0, z=tests.length; i<z; i++){
+			result = ctx.isPointInPath(tests[i].x, tests[i].y);
+			if(result){
+				break;
+				}
+			}
+		this.unrotateCell(ctx, cell, override);
+		this.flipCanvas(ctx, cell);
+		return (result) ? tests[i] : false;
+		};
+	Sprite.prototype.checkField = function(cell, override){
+		var myCell = (scrawl.xt(cell) && scrawl.cellnames.contains(cell)) ? scrawl.cell[cell] : (scrawl.cell[scrawl.group[this.group].cells[0]] || scrawl.cell[scrawl.pad[scrawl.currentPad].current]);
+		var coords = this.getCollisionPoints(override);
+		var result = myCell.checkFieldAt({
+			coordinates: coords,
+			test: this.fieldTest,
+			channel: this.fieldChannel,
+			});
+		//returns the coordinates that FAILED the test, or true if all coordinates PASSED, or false if there was an error
+		return (result > 0) ? coords[result-1] : ((result) ? true : false);
 		};
 	Sprite.prototype.clearShadow = function(ctx, cell){
 		scrawl.cell[cell].clearShadow();
@@ -3033,16 +4414,169 @@ window.scrawl = (function(){
 	Sprite.prototype.restoreShadow = function(ctx, cell){
 		scrawl.cell[cell].restoreShadow(this.context);
 		};
-	Sprite.prototype.getObjectData = function(){
+	Sprite.prototype.getCollisionPoints = function(override){
+		override = (scrawl.xt(override)) ? override : {x:0,y:0};
+		var p = [], tempHeight, tempWidth, cr, sx, sy;
+		var leftWidth = (this.flipReverse) ? -(this.startX - this.currentX - (override.x || 0)) : this.startX - this.currentX + (override.x || 0);
+		var topHeight = (this.flipUpend) ? -(this.startY - this.currentY - (override.y || 0)) : this.startY - this.currentY + (override.y || 0);
+		cr = this.currentRoll * scrawl.radian;
+		sx = (this.flipReverse) ? this.startX + (override.x || 0) : this.startX + (override.x || 0);
+		sy = (this.flipUpend) ? this.startY + (override.y || 0) : this.startY + (override.y || 0);
+		for(var i=0, z=this.collisionPoints.length; i<z; i++){
+			switch(this.collisionPoints[i]) {
+				case 'start' : p.push({x:this.currentX,y:this.currentY}); break;
+				case 'N' : 
+					tempWidth = ((this.currentWidth/2) - leftWidth);
+					tempHeight = (0 - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				case 'NE' : 
+					tempWidth = ((this.currentWidth) - leftWidth);
+					tempHeight = (0 - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				case 'E' : 
+					tempWidth = ((this.currentWidth) - leftWidth);
+					tempHeight = ((this.currentHeight/2) - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				case 'SE' : 
+					tempWidth = ((this.currentWidth) - leftWidth);
+					tempHeight = ((this.currentHeight) - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				case 'S' : 
+					tempWidth = ((this.currentWidth/2) - leftWidth);
+					tempHeight = ((this.currentHeight) - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				case 'SW' : 
+					tempWidth = (0 - leftWidth);
+					tempHeight = ((this.currentHeight) - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				case 'W' : 
+					tempWidth = (0 - leftWidth);
+					tempHeight = ((this.currentHeight/2) - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				case 'NW' : 
+					tempWidth = (0 - leftWidth);
+					tempHeight = (0 - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				case 'center' :
+					tempWidth = ((this.currentWidth/2) - leftWidth);
+					tempHeight = ((this.currentHeight/2) - topHeight);
+					p.push(this.getRotatedCoordinates(
+						sx,
+						sy,
+						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
+						cr+(Math.atan2(tempHeight,tempWidth)))); 
+					break;
+				default :
+					if(scrawl.pointnames.contains(this.collisionPoints[i])){
+						var n = scrawl.point[this.collisionPoints[i]];
+						if(n.visibility){
+							p.push({x: n.currentX, y: n.currentY});
+							}
+						}
+				}
+			}
+		return p;
+		};
+	Sprite.prototype.getRotatedCoordinates = function(x,y,d,r){
+		r = (this.flipReverse) ? (180*scrawl.radian)-r : r;
+		r = (this.flipUpend) ? -r : r;
 		return {
-			type: this.type, 
-			name: this.name, 
-			object: this, 
-			context: scrawl.ctx[this.context].getObjectData(), 
-			timestamp: Date.now()
+			x: x+(d*Math.cos(r)),
+			y: y+(d*Math.sin(r)),
 			};
 		};
-		
+	Sprite.prototype.parseCollisionPoints = function(items){
+		var myItems = (scrawl.xt(items)) ? [].concat(items) : this.collisionPoints;
+		var p = [];
+		for(var i=0, z=myItems.length; i<z; i++){
+			switch(myItems[i].toLowerCase()) {
+				case 'all' :
+					p.pushUnique('N'); p.pushUnique('NE'); p.pushUnique('E'); p.pushUnique('SE'); p.pushUnique('S');
+					p.pushUnique('SW'); p.pushUnique('W'); p.pushUnique('NW'); p.pushUnique('start'); p.pushUnique('center');
+					break;
+				case 'corners' :
+					p.pushUnique('NE'); p.pushUnique('SE'); p.pushUnique('SW'); p.pushUnique('NW');
+					break;
+				case 'edges' :
+					p.pushUnique('N'); p.pushUnique('E'); p.pushUnique('S'); p.pushUnique('W');
+					break;
+				case 'perimeter' :
+					p.pushUnique('N'); p.pushUnique('NE'); p.pushUnique('E'); p.pushUnique('SE');
+					p.pushUnique('S'); p.pushUnique('SW'); p.pushUnique('W'); p.pushUnique('NW');
+					break;
+				case 'north' : 
+				case 'n' :
+					p.pushUnique('N'); break;
+				case 'northeast' : 
+				case 'ne' :
+					p.pushUnique('NE'); break;
+				case 'east' : 
+				case 'e' :
+					p.pushUnique('E'); break;
+				case 'southeast' : 
+				case 'se' :
+					p.pushUnique('SE'); break;
+				case 'south' : 
+				case 's' :
+					p.pushUnique('S'); break;
+				case 'southwest' : 
+				case 'sw' :
+					p.pushUnique('SW'); break;
+				case 'west' : 
+				case 'w' :
+					p.pushUnique('W'); break;
+				case 'northwest' : 
+				case 'nw' :
+					p.pushUnique('NW'); break;
+				case 'start' : 
+					p.pushUnique('start'); break;
+				case 'center' : 
+					p.pushUnique('center'); break;
+				}
+			}
+		return p;
+		};
+
 	function Phrase(items){
 		Sprite.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
@@ -3053,19 +4587,16 @@ window.scrawl = (function(){
 		this.size = items.size || 12;
 		this.metrics = items.metrics || 'pt';
 		this.family = items.family || 'sans-serif';
+		this.lineHeight = (scrawl.isa(items.lineHeight,'num')) ? items.lineHeight : 1.5;
+		this.backgroundColor = items.backgroundColor || false;
+		this.backgroundMargin = items.backgroundMargin || 0;
+		this.textAlongPath = items.textAlongPath || 'phrase';
 		this.fixedWidth = (scrawl.isa(items.fixedWidth,'bool')) ? items.fixedWidth : false;
-		this.fixedPhrase = (scrawl.isa(items.fixedPhrase,'bool')) ? items.fixedPhrase : false;
-		this.fixedWord = (scrawl.isa(items.fixedWord,'bool')) ? items.fixedWord : false;
 		this.checkFont(items.font);
 		scrawl.sprite[this.name] = this;
 		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].sprites.pushUnique(this.name);
-		var tempAlign = scrawl.ctx[this.context].textAlign;
-		this.head = items.head || false;
-		this.currentLine = items.currentLine || false;
-		this.set({textAlign: 'start'});
-		this.getMetrics(scrawl.group[this.group].cells[0]);
-		this.set({textAlign: tempAlign});
+		scrawl.group[this.group].addSpritesToGroup(this.name);
+		this.texts = [];
 		this.multiline(items);
 		return this;
 		}
@@ -3073,99 +4604,50 @@ window.scrawl = (function(){
 	Phrase.prototype.type = 'Phrase';
 	Phrase.prototype.classname = 'spritenames';
 	Phrase.prototype.multiline = function(items){
-		if(scrawl.xt(items.text)){
-			if(this.lines && this.isHead){
-				for(var i=0; i<this.lines; i++){
-					scrawl.deleteSprite([this.name+'_'+i]);
-					}
-				this.isHead = false;
-				this.lines = 0;
-				}
-			if(items.text.indexOf('\n') >= 0){
-				var textArray = items.text.split('\n');
-				items['head'] = this.name;
-				this.isHead = true;
-				this.lineHeight = (scrawl.xt(items.lineHeight)) ? items.lineHeight : 1;
-				this.lines = textArray.length;
-				items['handleY'] = -(this.height * this.lineHeight * 1.5);
-				items['family'] = items.family || this.family;
-				items['fixedWidth'] = items.fixedWidth || this.fixedWidth;
-				items['fixedWord'] = items.fixedWord || this.fixedWord;
-				items['fixedPhrase'] = items.fixedPhrase || this.fixedPhrase;
-				items['metrics'] = items.metrics || this.metrics;
-				items['size'] = items.size || this.size;
-				items['style'] = items.style || this.style;
-				items['variant'] = items.variant || this.variant;
-				items['weight'] = items.weight || this.weight;
-				items['flipReverse'] = items.flipReverse || this.flipReverse;
-				items['flipUpend'] = items.flipUpend || this.flipUpend;
-				items['method'] = items.method || this.method;
-				items['order'] = items.order || this.order;
-				items['roll'] = items.roll || this.roll;
-				items['rollable'] = items.rollable || this.rollable;
-				items['visibility'] = false;
-				items['scale'] = items.scale || this.scale;
-				items['addPathRoll'] = items.addPathRoll || this.addPathRoll;
-				items['pathRoll'] = items.pathRoll || this.pathRoll;
-				items['head'] = this.name;
-				items['group'] = false;
-				items['target'] = false;
-				this.lineHeight = (scrawl.xt(items.lineHeight)) ? items.lineHeight : 1;
-				this.lines = textArray.length;
-				items['pivot'] = this.name;
-				var obj, tW = 0, tH = 0;
-				for(var i=0; i<this.lines; i++){
-					items.name = this.name+'_'+i;
-					items.text = textArray[i];
-					items['currentLine'] = i;
-					items['handleY'] = -(this.lineHeight * 1.5 * this.size * i);
-					obj = scrawl.newPhrase(items);
-					delete scrawl.ctx[obj.context];
-					scrawl.ctxnames.removeItem(obj.context);
-					obj.context = this.context;
-					items.name = this.name;
-					}
-				}
-			else{
-				this.text = items.text;
+		for(var i=0,z=this.texts.length; i<z; i++){
+			delete scrawl.text[this.texts[i]];
+			scrawl.textnames.removeItem(this.texts[i]);
+			}
+		this.texts = [];
+		this.text = items.text || this.text;
+		var textArray = this.text.split('\n');
+		items.phrase = this.name;
+		var temp;
+		for(var i=0, z=textArray.length; i<z; i++){
+			items.name = this.name+'_'+i;
+			items.text = textArray[i];
+			if(items.text.length > 0){
+				temp = new Text(items);
 				}
 			}
+		this.getMetrics()
+		return this;
 		};
 	Phrase.prototype.set = function(items){
 		Sprite.prototype.set.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.checkFont(items.font);
-		if(scrawl.xt(items.text)){
-			var tempAlign = scrawl.ctx[this.context].textAlign;
-			this.set({textAlign: 'start'});
-			this.getMetrics(scrawl.group[this.group].cells[0]);
-			this.set({textAlign: tempAlign});
-			this.multiline(items);
+		if(items.font){
+			this.checkFont(items.font);
 			}
+		if(scrawl.xto([items.style,items.variant,items.weight,items.size,items.metrics,items.family,items.scale])){
+			this.constructFont();
+			}
+		this.getMetrics();
+		this.multiline(items);
 		return this;
 		};
 	Phrase.prototype.setDelta = function(items){
 		Sprite.prototype.setDelta.call(this, items);
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xto([items.scale, items.size])){
-			this.checkFont();
-			var tempAlign = scrawl.ctx[this.context].textAlign;
-			this.set({textAlign: 'start'});
-			this.getMetrics(scrawl.group[this.group].cells[0]);
-			this.set({textAlign: tempAlign});
+		if(scrawl.xto([items.size,items.scale])){
+			this.constructFont();
 			}
-		if(this.isHead){
-			for(var i=0; i<this.lines; i++){
-				scrawl.sprite[this.name+'_'+i].setDelta(items);
-				}
-			}
+		this.getMetrics();
 		return this;
 		};
 	Phrase.prototype.clone = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		var a = Sprite.prototype.clone.call(this, items);
-		a.checkFont();
-		return a;
+		items = (scrawl.xt(items)) ? items : {};
+		items.textAlongPath = items.textAlongPath || this.textAlongPath;
+		return Sprite.prototype.clone.call(this, items);
 		};
 	Phrase.prototype.checkFont = function(item){
 		if(scrawl.xt(item)){
@@ -3221,226 +4703,344 @@ window.scrawl = (function(){
 		if(this.style !== 'normal'){myFont += this.style+' ';}
 		if(this.variant !== 'normal'){myFont += this.variant+' ';}
 		if(this.weight !== 'normal'){myFont += this.weight+' ';}
-		myFont += (this.size * this.scale) + this.metrics + ' ';
+		if(!scrawl.xt(this.currentScalse)){
+			this.currentScale = this.scale * scrawl.group[this.group].scale;
+			}
+		myFont += (this.size * this.currentScale) + this.metrics + ' ';
 		myFont += this.family;
 		scrawl.ctx[this.context].font = myFont;
 		return this;
 		};
-	Phrase.prototype.stamp = function(item){					//override object is only generated by group objects
+	Phrase.prototype.stamp = function(item, cell){
 		if(this.visibility){
-			var ctx, engine, myCell, myMethod;
-			var override = this.prepareItemForStamp(item);
-			myMethod = override.method || this.method;
-			for(var i=0, z=override.cells.length; i<z; i++){
-				ctx = scrawl.cell[override.cells[i]];
-				ctx.setEngine(this.context, this.scale);
-				engine = scrawl.context[ctx.name];
-				myCell = scrawl.cell[override.cells[i]].name;
-				var here;
-				if(this.pivot){
-					this.setStampUsingPivot(override, i);
-					if(!this.isHead){
-						this.callMethod(engine, myCell, override, myMethod);
-						}
-					}
-				else if(scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape'){
-					if(this.fixedPhrase){
-						here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
-						this.startX = here.x;
-						this.startY = here.y;
-						this.pathRoll = here.r || 0;
-						if(!this.isHead){
-							this.callMethod(engine, myCell, override, myMethod);
-							}
-						}
-					else if(this.fixedWord){
-						var tempAlign = scrawl.ctx[this.context].textAlign;
-						var tempPathPosition = this.pathPosition;
-						this.width = engine.measureText(this.text+' ').width * this.scale;
-						var myText = this.text;
-						var wordArray = myText.split(' ');
-						if(wordArray.length > 0){
-							var pathLength = scrawl.sprite[this.path].getPerimeterLength();
-							var myPos, nowPos = 0, word, wordLength, tempWord;
-							var textCoverage = this.width/pathLength;
-							if(['center'].contains(tempAlign)){
-								myPos = tempPathPosition - (textCoverage/2);
-								}
-							else if(['end','right'].contains(tempAlign)){
-								myPos = tempPathPosition - textCoverage;
-								}
-							else{
-								myPos = tempPathPosition;
-								}
-							for(var i=0, z=wordArray.length; i<z; i++){
-								tempWord = wordArray[i]+' ';
-								wordLength = engine.measureText(tempWord).width * this.scale;
-								switch(tempAlign){
-									case 'left' :
-									case 'start' :
-										glyph = 0;
-										break;
-									case 'center' :
-										glyph = (wordLength/pathLength)/2;
-										break;
-									case 'right' :
-									case 'end' :
-										glyph = wordLength/pathLength;
-										break;
-									}
-								nowPos = myPos + glyph;
-								nowPos = (nowPos > 1) ? nowPos-1 : ((nowPos < 0) ? nowPos+1 : nowPos);
-								myPos += wordLength/pathLength;
-								this.text = tempWord;
-								this.pathPosition = nowPos;
-								here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
-								this.startX = here.x;
-								this.startY = here.y;
-								this.pathRoll = here.r || 0;
-								if(!this.isHead){
-									this.callMethod(engine, myCell, override, myMethod);
-									}
-								}
-							this.text = myText;
-							this.pathPosition = tempPathPosition;
-							}
-						}
-					else{
-						var tempAlign = scrawl.ctx[this.context].textAlign;
-						var myText = this.text;
-						var tempPathPosition = this.pathPosition;
-						if(!scrawl.xt(this.glyphWidths)){
-							this.getMetrics(scrawl.group[this.group].cells[0]);
-							}
-						if(this.glyphWidths.length > 0){
-							var pathLength = scrawl.sprite[this.path].getPerimeterLength();
-							var myPos, nowPos = 0, glyph;
-							var textCoverage = this.width/pathLength;
-							if(['center'].contains(tempAlign)){
-								myPos = tempPathPosition - (textCoverage/2);
-								}
-							else if(['end','right'].contains(tempAlign)){
-								myPos = tempPathPosition - textCoverage;
-								}
-							else{
-								myPos = tempPathPosition;
-								}
-							for(var i=0, z=myText.length; i<z; i++){
-								switch(tempAlign){
-									case 'left' :
-									case 'start' :
-										glyph = 0;
-										break;
-									case 'center' :
-										glyph = (this.glyphWidths[i]/pathLength)/2;
-										break;
-									case 'right' :
-									case 'end' :
-										glyph = this.glyphWidths[i]/pathLength;
-										break;
-									}
-								nowPos = myPos + glyph;
-								nowPos = (nowPos > 1) ? nowPos-1 : ((nowPos < 0) ? nowPos+1 : nowPos);
-								myPos += this.glyphWidths[i]/pathLength;
-								this.text = myText[i];
-								this.pathPosition = nowPos;
-								here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
-								this.startX = here.x;
-								this.startY = here.y;
-								this.pathRoll = here.r || 0;
-								if(!this.isHead){
-									this.callMethod(engine, myCell, override, myMethod);
-									}
-								}
-							this.text = myText;
-							this.pathPosition = tempPathPosition;
-							}
-						}
-					}
-				else{
-					if(!this.isHead){
-						this.callMethod(engine, myCell, override, myMethod);
-						}
-					}
+			var test = (scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape');
+			if(this.pivot || !test || this.textAlongPath === 'phrase'){
+				Sprite.prototype.stamp.call(this, item);
 				}
-			if(this.isHead){
-				for(var i=0; i<this.lines; i++){
-					scrawl.sprite[this.name+'_'+i].forceStamp(item);
-					}
+			else{
+				scrawl.text[this.texts[0]].stampAlongPath(item, cell);
 				}
 			}
 		return this;
 		};
 	Phrase.prototype.clear = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
+		var tY;
+		var o = this.getOffset();
+		this.rotateCell(ctx, cell, override);
 		ctx.globalCompositeOperation = 'destination-out';
-		ctx.fillText(this.text, this.getStartX(override), this.getStartY(override));
+		var here = this.prepareStamp(override);
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
+			scrawl.text[this.texts[i]].clear(ctx, cell, override, here.x+o.x, tY);
+			}
 		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
-		this.unrotateCell(ctx, cell);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Phrase.prototype.clearWithBackground = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
-		ctx.globalAlpha = 1;
-		ctx.fillText(this.text, this.getStartX(override), this.getStartY(override));
-		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
-		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
-		this.unrotateCell(ctx, cell);
+		var tY;
+		var o = this.getOffset();
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
+			scrawl.text[this.texts[i]].clearWithBackground(ctx, cell, override, here.x+o.x, tY);
+			}
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Phrase.prototype.draw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		this.unrotateCell(ctx, cell);
+		var tY;
+		var o = this.getOffset();
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
+		var here = this.prepareStamp(override);
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
+			scrawl.text[this.texts[i]].draw(ctx, cell, override, here.x+o.x, tY);
+			}
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Phrase.prototype.fill = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		this.unrotateCell(ctx, cell);
+		var tY;
+		var o = this.getOffset();
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
+		var here = this.prepareStamp(override);
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
+			scrawl.text[this.texts[i]].fill(ctx, cell, override, here.x+o.x, tY);
+			}
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Phrase.prototype.drawFill = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		this.clearShadow(ctx, cell);
-		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		this.restoreShadow(ctx, cell);
-		this.unrotateCell(ctx, cell);
+		var tY;
+		var o = this.getOffset();
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
+		var here = this.prepareStamp(override);
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
+			scrawl.text[this.texts[i]].drawFill(ctx, cell, override, here.x+o.x, tY);
+			}
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Phrase.prototype.fillDraw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		this.clearShadow(ctx, cell);
-		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		this.restoreShadow(ctx, cell);
-		this.unrotateCell(ctx, cell);
+		var tY;
+		var o = this.getOffset();
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
+		var here = this.prepareStamp(override);
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
+			scrawl.text[this.texts[i]].fillDraw(ctx, cell, override, here.x+o.x, tY);
+			}
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Phrase.prototype.sinkInto = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		this.unrotateCell(ctx, cell);
+		var tY;
+		var o = this.getOffset();
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
+		var here = this.prepareStamp(override);
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
+			scrawl.text[this.texts[i]].sinkInto(ctx, cell, override, here.x+o.x, tY);
+			}
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Phrase.prototype.floatOver = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.strokeText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		ctx.fillText(this.text, this.getStartX(override)+0.5, this.getStartY(override)+0.5);
-		this.unrotateCell(ctx, cell);
+		var tY;
+		var o = this.getOffset();
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
+		var here = this.prepareStamp(override);
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
+			scrawl.text[this.texts[i]].floatOver(ctx, cell, override, here.x+o.x, tY);
+			}
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Phrase.prototype.clip = function(ctx, cell, override){
-		ctx.save();
-		ctx.rect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		ctx.clip();
 		return this;
 		};
 	Phrase.prototype.getMetrics = function(cellname){
-		var myContext = (scrawl.xt(cellname)) ? scrawl.context[cellname] : scrawl.context[scrawl.pad[scrawl.currentPad].current];
+		var h = 0, w = 0;
+		for(var i=0, z=this.texts.length; i<z; i++){
+			w = (scrawl.text[this.texts[i]].width > w) ? scrawl.text[this.texts[i]].width : w;
+			h += scrawl.text[this.texts[i]].height;
+			}
+		this.width = w;
+		this.height = h;
+		return this;
+		};
+	Phrase.prototype.addBackgroundColor = function(ctx, cell, override){
+		var here = this.prepareStamp(override);
+		var backX = this.backgroundMargin;
+		var backY = this.backgroundMargin;
+		var topX = here.x - this.backgroundMargin;
+		var topY = here.y - this.backgroundMargin;
+		var w = this.currentWidth + (this.backgroundMargin*2);
+		var h = this.currentHeight + (this.backgroundMargin*2);
+		ctx.fillStyle = this.backgroundColor;
+		ctx.fillRect(topX,topY,w,h);
+		ctx.fillStyle = scrawl.ctx[this.context].fillStyle;
+		return this;
+		};
+	Phrase.prototype.getOffset = function(){
+		var myContext = scrawl.ctx[this.context];
+		var oX = 0, oY = 0;
+		switch(myContext.textAlign){
+			case 'start' :
+			case 'left' :
+				oX = 0;
+				break;
+			case 'center' :
+				oX = (this.width/2) * this.currentScale;
+				break;
+			case 'right' :
+			case 'end' :
+				oX = this.width * this.currentScale;
+				break;
+			}
+		switch(myContext.textBaseline){
+			case 'top' :
+				oY = 0;
+				break;
+			case 'hanging' :
+				oY = this.size*this.lineHeight*this.currentScale*0.1;
+				break;
+			case 'middle' :
+				oY = this.size*this.lineHeight*this.currentScale*0.5;
+				break;
+			case 'bottom' :
+				oY = this.size*this.lineHeight*this.currentScale;
+				break;
+			default: 
+				oY = this.size*this.lineHeight*this.currentScale*0.85;
+			}
+		return {x: oX, y: oY};
+		};
+		
+	function Text(items){
+		Scrawl.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.text = items.text || '';
+		this.phrase = items.phrase || false,
+		this.context = scrawl.sprite[this.phrase].context;
+		this.fixedWidth = (scrawl.isa(items.fixedWidth,'bool')) ? items.fixedWidth : false;
+		this.textAlongPath = items.textAlongPath || 'phrase';
+		scrawl.text[this.name] = this;
+		scrawl.textnames.pushUnique(this.name);
+		scrawl.sprite[this.phrase].texts.pushUnique(this.name);
+		this.getMetrics();
+		return this;
+		}
+	Text.prototype = Object.create(Scrawl.prototype);
+	Text.prototype.type = 'Text';
+	Text.prototype.classname = 'textnames';
+	Text.prototype.stampAlongPath = function(item){
+		var p, ctx, engine, override, myCell, myMethod, here, ratio, pathLength, width, pos, nowPos, oldText, x, y, r;
+		if(!scrawl.xt(this.glyphs)){
+			this.getMetrics();
+			}
+		p = scrawl.sprite[this.phrase];
+		override = p.prepareItemForStamp(item);
+		myMethod = override.method || p.method;
+		pathLength = scrawl.sprite[p.path].getPerimeterLength();
+		width = this.width*p.scale;
+		ratio = width/pathLength;
+		oldText = this.text;
+		for(var i=0, z=override.cells.length; i<z; i++){
+			ctx = scrawl.cell[override.cells[i]];
+			ctx.setEngine(p);
+			engine = scrawl.context[ctx.name];
+			myCell = scrawl.cell[override.cells[i]].name;
+			pos = p.pathPosition;
+			this.flipCanvas(engine, myCell, p);
+			for(var j=0, w=this.glyphs.length; j<w; j++){
+				if(scrawl.xt(this.glyphs[j])){
+					this.text = this.glyphs[j];
+					nowPos = pos + (((this.glyphWidths[j]/2)/width)*ratio);
+					if(!nowPos.isBetween(0,1,true)){
+						nowPos += (nowPos > 0.5) ? -1 : 1;
+						}
+					here = scrawl.sprite[p.path].getPerimeterPosition(nowPos, p.pathSpeedConstant, true);
+					x = here.x;
+					y = here.y;
+					r = here.r * scrawl.radian;
+					engine.translate(x, y);
+					engine.rotate(r);
+					engine.translate(-x, -y);
+					switch(myMethod){
+						case 'draw' : this.draw(engine, myCell, override, x, y); break;
+						case 'fill' : this.fill(engine, myCell, override, x, y); break;
+						case 'drawFill' : this.drawFill(engine, myCell, override, x, y); break;
+						case 'fillDraw' : this.fillDraw(engine, myCell, override, x, y); break;
+						case 'sinkInto' : this.sinkInto(engine, myCell, override, x, y); break;
+						case 'floatOver' : this.floatOver(engine, myCell, override, x, y); break;
+						case 'clear' : 
+						case 'clearWithBackground' : 
+						case 'clip' : 
+						case 'none' : 
+						default :
+							//do nothing
+						}
+					pos += (this.glyphWidths[j]/width)*ratio
+					if(!pos.isBetween(0,1,true)){
+						pos += (pos > 0.5) ? -1 : 1;
+						}
+					engine.translate(x, y);
+					engine.rotate(-r);
+					engine.translate(-x, -y);
+					}
+				}
+			this.flipCanvas(engine, myCell, p);
+			}
+		this.text = oldText;
+		return this;
+		};
+	Text.prototype.flipCanvas = function(engine, myCell, p){
+		var c = scrawl.cell[myCell];
+		var w = c.actualWidth, h = c.actualHeight;
+		if(p.flipReverse && p.flipUpend){
+			engine.translate(w,h);
+			engine.scale(-1,-1);
+			}
+		else if(p.flipReverse){
+			engine.translate(w,0);
+			engine.scale(-1,1);
+			}
+		else if(p.flipUpend){
+			engine.translate(0,h);
+			engine.scale(1,-1);
+			}
+		return this;
+		};
+	Text.prototype.clear = function(ctx, cell, override, x, y){
+		ctx.fillText(this.text, x, y);
+		return this;
+		};
+	Text.prototype.clearWithBackground = function(ctx, cell, override, x, y){
+		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
+		ctx.globalAlpha = 1;
+		ctx.fillText(this.text, x, y);
+		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
+		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
+		return this;
+		};
+	Text.prototype.draw = function(ctx, cell, override, x, y){
+		ctx.strokeText(this.text, x, y);
+		return this;
+		};
+	Text.prototype.fill = function(ctx, cell, override, x, y){
+		ctx.fillText(this.text, x, y);
+		return this;
+		};
+	Text.prototype.drawFill = function(ctx, cell, override, x, y){
+		var p = scrawl.sprite[this.phrase];
+		ctx.strokeText(this.text, x, y);
+		p.clearShadow(ctx, cell);
+		ctx.fillText(this.text, x, y);
+		p.restoreShadow(ctx, cell);
+		return this;
+		};
+	Text.prototype.fillDraw = function(ctx, cell, override, x, y){
+		var p = scrawl.sprite[this.phrase];
+		ctx.fillText(this.text, x, y);
+		p.clearShadow(ctx, cell);
+		ctx.strokeText(this.text, x, y);
+		p.restoreShadow(ctx, cell);
+		return this;
+		};
+	Text.prototype.sinkInto = function(ctx, cell, override, x, y){
+		ctx.fillText(this.text, x, y);
+		ctx.strokeText(this.text, x, y);
+		return this;
+		};
+	Text.prototype.floatOver = function(ctx, cell, override, x, y){
+		ctx.strokeText(this.text, x, y);
+		ctx.fillText(this.text, x, y);
+		return this;
+		};
+	Text.prototype.clip = function(ctx, cell, override){
+		return this;
+		};
+	Text.prototype.getMetrics = function(){
+		var p = scrawl.sprite[this.phrase];
+		var myContext = scrawl.context[scrawl.pad[scrawl.currentPad].current];
 		var myEngine = scrawl.ctx[this.context];
 		var tempFont = myContext.font;
 		var tempBaseline = myContext.textBaseline;
@@ -3448,32 +5048,37 @@ window.scrawl = (function(){
 		myContext.font = myEngine.font;
 		myContext.textBaseline = myEngine.textBaseline;
 		myContext.textAlign = myEngine.textAlign;
-		if(this.isHead){
-			var tW = 0;
-			for(var i=0; i<this.lines; i++){
-				tW = (scrawl.sprite[this.name+'_'+i].width > tW) ? scrawl.sprite[this.name+'_'+i].width : tW;
-				}
-			this.width = tW;
-			this.height = this.lines * this.lineHeight * this.size * 1.5;
-			}
-		else{
-			//measures the scaled width, so need to correct for sanity!
-			this.width = myContext.measureText(this.text).width/this.scale;
-			this.height = this.size * 1.5;
-			}
-		if(this.path){
+		this.width = myContext.measureText(this.text).width/p.scale;
+		this.height = p.size * 1.5;
+		if(p.path){
+			this.glyphs = [];
 			this.glyphWidths = [];
 			var myText = this.text, tempText;
-			var myTextWidth = myContext.measureText(myText).width;
-			if(this.fixedWidth){
-				for(var i=0, z=myText.length; i<z; i++){
-					this.glyphWidths.push(myTextWidth/z);
+			if(this.textAlongPath === 'word'){
+				tempText = this.text.split(' ');
+				for(var i=0, z=tempText.length; i<z; i++){
+					this.glyphs.push(tempText[i]);
+					this.glyphWidths.push(myContext.measureText(tempText[i]).width);
+					if(scrawl.xt(tempText[i+1])){
+						this.glyphs.push(' ');
+						this.glyphWidths.push(myContext.measureText(' ').width);
+						}
 					}
 				}
 			else{
-				for(var i=1, z=myText.length; i<=z; i++){
-					tempText = myText.substr(0, i-1)+myText.substr(i);
-					this.glyphWidths.push((myTextWidth - myContext.measureText(tempText).width));
+				var myTextWidth = myContext.measureText(myText).width;
+				if(this.fixedWidth){
+					for(var i=0, z=myText.length; i<z; i++){
+						this.glyphs.push(myText[i]);
+						this.glyphWidths.push(myTextWidth/z);
+						}
+					}
+				else{
+					for(var i=1, z=myText.length; i<=z; i++){
+						this.glyphs.push(myText[i-1]);
+						tempText = myText.substr(0, i-1)+myText.substr(i);
+						this.glyphWidths.push((myTextWidth - myContext.measureText(tempText).width));
+						}
 					}
 				}
 			}
@@ -3481,62 +5086,6 @@ window.scrawl = (function(){
 		myContext.textBaseline = tempBaseline;
 		myContext.textAlign = tempAlign;
 		return this;
-		};
-	Phrase.prototype.checkHit = function(items, override){
-		if(scrawl.xta([items.x,items.y])){
-			var d = this.getCorners(override);
-			if(items.x.isBetween(d.topX, (d.topX+d.width), true) && items.y.isBetween(d.topY, (d.topY+d.height), true)){
-				return true;
-				}
-			}
-		return false;
-		};
-	Phrase.prototype.getCorners = function(override){
-		this.getMetrics();
-		var myContext = scrawl.ctx[this.context];
-		var x, y, w, h;
-		switch(myContext.textBaseline){
-			case 'top' : y = this.getStartY(override); break;
-			case 'hanging' : y = this.getStartY(override) - (this.size * this.scale * 0.2); break;
-			case 'middle' : y = this.getStartY(override) - (this.size * this.scale * 0.75); break;
-			case 'bottom' : y = this.getStartY(override) - (this.size * this.scale * 1.5); break;
-			default : y = this.getStartY(override) - (this.size * this.scale * 1.2);
-			}
-		switch(myContext.textAlign){
-			case 'end' : x = this.getStartX(override) - (this.width*this.scale); break;
-			case 'right' : x = this.getStartX(override) - (this.width*this.scale); break;
-			case 'center' : x = this.getStartX(override) - ((this.width*this.scale)/2); break;
-			default : x = this.getStartX(override);
-			}
-		//correct the returns for scaling
-		return {topX: x, topY: y, width: this.width*this.scale, height: this.height*this.scale};
-		};
-	Phrase.prototype.getCollisionPoints = function(override){
-		var c = [], n;
-		var d = this.getCorners(override);
-		var hW = d.width/2;
-		var hH = d.height/2;
-		for(var i=0, z=this.collisionPoints.length; i<z; i++){
-			switch(this.collisionPoints[i]) {
-				case 'start' : c.push({x: parseInt(this.startX), y: parseInt(this.startY)}); break;
-				case 'center' : c.push({x: parseInt(d.topX+hW), y: parseInt(d.topY+hH)}); break;
-				case 'N' : c.push({x: parseInt(d.topX+hW), y: parseInt(d.topY)}); break;
-				case 'NE' : c.push({x: parseInt(d.topX+d.width), y: parseInt(d.topY)}); break;
-				case 'E' : c.push({x: parseInt(d.topX+d.width), y: parseInt(d.topY+hH)}); break;
-				case 'SE' : c.push({x: parseInt(d.topX+d.width), y: parseInt(d.topY+d.height)}); break;
-				case 'S' : c.push({x: parseInt(d.topX+hW), y: parseInt(d.topY+d.height)}); break;
-				case 'SW' : c.push({x: parseInt(d.topX), y: parseInt(d.topY+d.height)}); break;
-				case 'W' : c.push({x: parseInt(d.topX), y: parseInt(d.topY+hH)}); break;
-				case 'NW' : c.push({x: parseInt(d.topX), y: parseInt(d.topY)}); break;
-				default :
-					if(scrawl.pointnames.contains(this.collisionPoints[i])){
-						n = scrawl.point[this.collisionPoints[i]];
-						c.push({x: parseInt(n.currentX), y: parseInt(n.currentY)});
-						}
-					break;
-				}
-			}
-		return c;
 		};
 		
 	function Block(items){
@@ -3546,7 +5095,7 @@ window.scrawl = (function(){
 		this.height = items.height || 0;
 		scrawl.sprite[this.name] = this;
 		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].sprites.pushUnique(this.name);
+		scrawl.group[this.group].addSpritesToGroup(this.name);
 		return this;
 		}
 	Block.prototype = Object.create(Sprite.prototype);
@@ -3554,127 +5103,90 @@ window.scrawl = (function(){
 	Block.prototype.classname = 'spritenames';
 	Block.prototype.clip = function(ctx, cell, override){
 		ctx.save();
-		this.rotateCell(ctx, cell);
-		ctx.rect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.rect(here.x, here.y, this.currentWidth, this.currentHeight);
 		ctx.clip();
-		this.unrotateCell(ctx, cell);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Block.prototype.clear = function(ctx, cell, override){
 		scrawl.cell[cell].setToClearShape();
-		this.rotateCell(ctx, cell);
-		ctx.clearRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.clearRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Block.prototype.clearWithBackground = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
 		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
 		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
 		ctx.globalAlpha = 1;
-		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		var here = this.prepareStamp(override);
+		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
 		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
 		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
 		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
-		this.unrotateCell(ctx, cell);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Block.prototype.draw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Block.prototype.fill = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Block.prototype.drawFill = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
 		this.clearShadow(ctx, cell);
-		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Block.prototype.fillDraw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
 		this.clearShadow(ctx, cell);
-		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Block.prototype.sinkInto = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Block.prototype.floatOver = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Block.prototype.checkHit = function(items, override){
-		if(scrawl.xta([items.x,items.y])){
-			if(items.x.isBetween(this.getStartX(override), this.getStartX(override)+this.getWidth(override)-1, true)){
-				if(items.y.isBetween(this.getStartY(override), this.getStartY(override)+this.getHeight(override)-1, true)){
-					return true;
-					}
-				}
-			}
-		return false;
-		};
-	Block.prototype.getEndX = function(override){
-		return this.getStartX(override) + this.getWidth();
-		};
-	Block.prototype.getEndY = function(override){
-		return this.getStartY(override) + this.getHeight();
-		};
-	Block.prototype.getWidth = function(){
-		return this.width*this.scale;
-		};
-	Block.prototype.getHeight = function(){
-		return this.height*this.scale;
-		};
-	Block.prototype.getCollisionPoints = function(override){
-		var c = [], n;
-		var sX = this.getStartX(override);
-		var sY = this.getStartY(override);
-		var eX = this.getEndX(override);
-		var eY = this.getEndY(override);
-		var hW = this.getWidth(override)/2;
-		var hH = this.getHeight(override)/2;
-		for(var i=0, z=this.collisionPoints.length; i<z; i++){
-			switch(this.collisionPoints[i]) {
-				case 'start' : c.push({x: parseInt(this.startX), y: parseInt(this.startY)}); break;
-				case 'center' : c.push({x: parseInt(sX+hW), y: parseInt(sY+hH)}); break;
-				case 'N' : c.push({x: parseInt(sX+hW), y: parseInt(sY)}); break;
-				case 'NE' : c.push({x: parseInt(eX), y: parseInt(sY)}); break;
-				case 'E' : c.push({x: parseInt(eX), y: parseInt(sY+hH)}); break;
-				case 'SE' : c.push({x: parseInt(eX), y: parseInt(eY)}); break;
-				case 'S' : c.push({x: parseInt(sX+hW), y: parseInt(eY)}); break;
-				case 'SW' : c.push({x: parseInt(sX), y: parseInt(eY)}); break;
-				case 'W' : c.push({x: parseInt(sX), y: parseInt(sY+hH)}); break;
-				case 'NW' : c.push({x: parseInt(sX), y: parseInt(sY)}); break;
-				default :
-					if(scrawl.pointnames.contains(this.collisionPoints[i])){
-						n = scrawl.point[this.collisionPoints[i]];
-						c.push({x: parseInt(n.currentX), y: parseInt(n.currentY)});
-						}
-					break;
-				}
-			}
-		return c;
-		};
-
+		
 	function Wheel(items){
 		Sprite.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
@@ -3685,134 +5197,172 @@ window.scrawl = (function(){
 		this.closed = (scrawl.isa(items.closed,'bool')) ? items.closed : true;
 		this.includeCenter = (scrawl.isa(items.includeCenter,'bool')) ? items.includeCenter : false;
 		this.checkHitUsingRadius = (scrawl.isa(items.checkHitUsingRadius,'bool')) ? items.checkHitUsingRadius : true;
+		this.handleX = items.handleX || 'center';
+		this.handleY = items.handleY || 'center';
+		this.width = this.radius*2;
+		this.height = this.width;
 		scrawl.sprite[this.name] = this;
 		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].sprites.pushUnique(this.name);
+		scrawl.group[this.group].addSpritesToGroup(this.name);
 		return this;
 		}
 	Wheel.prototype = Object.create(Sprite.prototype);
 	Wheel.prototype.type = 'Wheel';
 	Wheel.prototype.classname = 'spritenames';
-	Wheel.prototype.getCollisionPoints = function(override){
-		var c = [], n;
-		var cX = this.getStartX(override);
-		var cY = this.getStartY(override);
-		var r = this.radius*this.scale;
-		var r2 = r*0.707;
-		for(var i=0, z=this.collisionPoints.length; i<z; i++){
-			switch(this.collisionPoints[i]) { 
-				case 'start' : c.push({x: parseInt(this.startX), y: parseInt(this.startY)}); break;
-				case 'center' : c.push({x: parseInt(cX), y: parseInt(cY)}); break;
-				case 'N' : c.push({x: parseInt(cX), y: parseInt(cY-r)}); break;
-				case 'NE' : c.push({x: parseInt(cX+r2), y: parseInt(cY-r2)}); break;
-				case 'E' : c.push({x: parseInt(cX+r), y: parseInt(cY)}); break;
-				case 'SE' : c.push({x: parseInt(cX+r2), y: parseInt(cY+r2)}); break;
-				case 'S' : c.push({x: parseInt(cX), y: parseInt(cY+r)}); break;
-				case 'SW' : c.push({x: parseInt(cX-r2), y: parseInt(cY+r2)}); break;
-				case 'W' : c.push({x: parseInt(cX-r), y: parseInt(cY)}); break;
-				case 'NW' : c.push({x: parseInt(cX-r2), y: parseInt(cY-r2)}); break;
-				default :
-					if(scrawl.pointnames.contains(this.collisionPoints[i])){
-						n = scrawl.point[this.collisionPoints[i]];
-						c.push({x: n.currentX, y: n.currentY});
-						}
-					break;
+	Wheel.prototype.checkHit = function(items, override){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}];
+		var here = this.prepareStamp(override);
+		var result = false;
+		if(this.checkHitUsingRadius){
+			var test = items.test || 0;
+			var testRadius = (test) ? test : this.currentRadius;
+			for(var i=0, z=tests.length; i<z; i++){
+				var xSquare = (tests[i].x-here.x)*(tests[i].x-here.x);
+				var ySquare = (tests[i].y-here.y)*(tests[i].y-here.y);
+				var distance = Math.sqrt(xSquare+ySquare);
+				result = (distance <= testRadius) ? true : false;
+				if(result){break;}
 				}
 			}
-		return c;
+		else{
+			var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
+			var cell = scrawl.cell[pad.current].name;
+			var ctx = scrawl.context[pad.current];
+			this.flipCanvas(ctx, cell);
+			this.buildPath(ctx, override);
+			for(var i=0, z=tests.length; i<z; i++){
+				result = ctx.isPointInPath(tests[i].x, tests[i].y);
+				if(result){break;}
+				}
+			this.flipCanvas(ctx, cell);
+			}
+		return (result) ? tests[i] : false;
 		};
-	Wheel.prototype.buildPath = function(ctx, override){
+	Wheel.prototype.getPivotOffset = function(val,useHeight){
+		if(scrawl.xt(val)){
+			var result;
+			if((scrawl.isa(val,'str')) && !['left','center','right','top','bottom'].contains(val)){
+				result = ((parseFloat(val)/100)*this.width)-this.radius;
+				}
+			else{
+				switch (val){
+					case 'left' : result = -this.radius; break;
+					case 'center' : result = 0; break;
+					case 'right' : result = this.radius; break;
+					case 'top' : result = -this.radius; break;
+					case 'bottom' : result = this.radius; break;
+					default : result = val;
+					}
+				}
+			return result;
+			}
+		return 0;
+		};
+	Wheel.prototype.buildPath = function(ctx, cell, override){
+		var here = this.prepareStamp(override);
 		ctx.beginPath();
-		ctx.arc(this.getStartX(override), this.getStartY(override), (this.radius*this.scale), this.getAngle(this.startAngle), this.getAngle(this.endAngle), this.clockwise);
-		if(this.includeCenter){ctx.lineTo(this.getStartX(override), this.getStartY(override));}
+		ctx.arc(here.x, here.y, this.currentRadius, this.getAngle(this.startAngle), this.getAngle(this.endAngle), this.clockwise);
+		if(this.includeCenter){ctx.lineTo(here.x, here.y);}
 		if(this.closed){ctx.closePath();}
 		return this;
 		};
 	Wheel.prototype.clip = function(ctx, cell, override){
-		ctx.save();
-		this.buildPath(ctx, override);
+		this.buildPath(ctx, cell, override);
 		ctx.clip();
 		return this;
 		};
 	Wheel.prototype.clear = function(ctx, cell, override){
-		this.buildPath(ctx, override);
+		this.buildPath(ctx, cell, override);
 		ctx.globalCompositeOperation = 'destination-out';
 		ctx.stroke();
-		ctx.fill();
+		ctx.fill(scrawl.ctx[this.context].winding);
 		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
 		return this;
 		};
 	Wheel.prototype.clearWithBackground = function(ctx, cell, override){
-		this.buildPath(ctx, override);
+		this.buildPath(ctx, cell, override);
 		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
 		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
 		ctx.globalAlpha = 1;
 		ctx.stroke();
-		ctx.fill();
+		ctx.fill(scrawl.ctx[this.context].winding);
 		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
 		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
 		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
 		return this;
 		};
 	Wheel.prototype.draw = function(ctx, cell, override){
-		this.buildPath(ctx, override);
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell, override);
 		ctx.stroke();
 		return this;
 		};
 	Wheel.prototype.fill = function(ctx, cell, override){
-		this.buildPath(ctx, override);
-		ctx.fill();
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell, override);
+		ctx.fill(scrawl.ctx[this.context].winding);
 		return this;
 		};
 	Wheel.prototype.drawFill = function(ctx, cell, override){
-		this.buildPath(ctx, override);
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell, override);
 		ctx.stroke();
-		if(scrawl.ctx[this.context].shadowOffsetX + scrawl.ctx[this.context].shadowOffsetY > 0){
-			scrawl.cell[cell].clearShadow();
-			}
-		ctx.fill();
+		this.clearShadow(ctx, cell);
+		ctx.fill(scrawl.ctx[this.context].winding);
 		return this;
 		};
 	Wheel.prototype.fillDraw = function(ctx, cell, override){
-		this.buildPath(ctx, override);
-		ctx.fill();
-		if(scrawl.ctx[this.context].shadowOffsetX + scrawl.ctx[this.context].shadowOffsetY > 0){
-			scrawl.cell[cell].clearShadow();
-			}
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell, override);
+		ctx.fill(scrawl.ctx[this.context].winding);
+		this.clearShadow(ctx, cell);
 		ctx.stroke();
 		return this;
 		};
 	Wheel.prototype.sinkInto = function(ctx, cell, override){
-		this.buildPath(ctx, override);
-		ctx.fill();
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell, override);
+		ctx.fill(scrawl.ctx[this.context].winding);
 		ctx.stroke();
 		return this;
 		};
 	Wheel.prototype.floatOver = function(ctx, cell, override){
-		this.buildPath(ctx, override);
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell, override);
 		ctx.stroke();
-		ctx.fill();
+		ctx.fill(scrawl.ctx[this.context].winding);
 		return this;
 		};
-	Wheel.prototype.checkHit = function(items, override){
-		if(scrawl.xta([items.x,items.y])){
-			if(this.checkHitUsingRadius){
-				var test = items.test || 0;
-				var thisX = this.getStartX(override);
-				var thisY = this.getStartY(override);
-				var myRadius = (test) ? test : this.radius*this.scale;
-				var xSquare = (items.x-thisX)*(items.x-thisX);
-				var ySquare = (items.y-thisY)*(items.y-thisY);
-				var distance = Math.sqrt(xSquare+ySquare);
-				return (distance <= myRadius) ? true : false;
-				}
-			else{
-				var ctx = scrawl.context[scrawl.cell[scrawl.group[this.group].cells[0]].name];
-				this.buildPath(ctx, override);
-				return ctx.isPointInPath(items.x, items.y);
+	Wheel.prototype.getCollisionPoints = function(override){
+		var cr, p = [];
+		var here = {
+			x: (this.flipReverse) ? this.currentX + (override.x*2) : this.currentX,
+			y: (this.flipUpend) ? this.currentY + (override.y*2) : this.currentY,
+			};
+		cr = this.currentRoll * scrawl.radian;
+		for(var i=0, z=this.collisionPoints.length; i<z; i++){
+			switch(this.collisionPoints[i]) {
+				case 'start' : p.push({x:here.x,y:here.y}); break;
+				case 'N' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(270*scrawl.radian))); break;
+				case 'NE' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(315*scrawl.radian))); break;
+				case 'E' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr)); break;
+				case 'SE' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(45*scrawl.radian))); break;
+				case 'S' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(90*scrawl.radian))); break;
+				case 'SW' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(135*scrawl.radian))); break;
+				case 'W' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(180*scrawl.radian))); break;
+				case 'NW' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(225*scrawl.radian))); break;
+				case 'center' : p.push({x:here.x,y:here.y}); break;
+				default :
+					if(scrawl.pointnames.contains(this.collisionPoints[i])){
+						var n = scrawl.point[this.collisionPoints[i]];
+						if(n.visibility){
+							p.push({x: n.currentX, y: n.currentY});
+							}
+						}
 				}
 			}
-		return false;
+		return p;
 		};
 
 	function Picture(items){
@@ -3853,7 +5403,7 @@ window.scrawl = (function(){
 			}
 		scrawl.sprite[this.name] = this;
 		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].sprites.pushUnique(this.name);
+		scrawl.group[this.group].addSpritesToGroup(this.name);
 		return this;
 		}
 	Picture.prototype = Object.create(Sprite.prototype);
@@ -3884,80 +5434,95 @@ window.scrawl = (function(){
 		};
 	Picture.prototype.clip = function(ctx, cell, override){
 		ctx.save();
-		this.rotateCell(ctx, cell);
-		ctx.rect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.rect(here.x, here.y, this.currentWidth, this.currentHeight);
 		ctx.clip();
-		this.unrotateCell(ctx, cell);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Picture.prototype.clear = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.clearRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.clearRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Picture.prototype.clearWithBackground = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
 		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
 		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
 		ctx.globalAlpha = 1;
-		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		ctx.fillRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+		var here = this.prepareStamp(override);
+		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
 		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
 		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
 		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
-		this.unrotateCell(ctx, cell);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Picture.prototype.draw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell);
-		ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-		this.unrotateCell(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
 	Picture.prototype.fill = function(ctx, cell, override){
 		if(this.imageType){
-			this.rotateCell(ctx, cell);
-			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-			this.unrotateCell(ctx, cell);
+			this.rotateCell(ctx, cell, override);
+			scrawl.cell[cell].setEngine(this);
+			var here = this.prepareStamp(override);
+			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
+			this.unrotateCell(ctx, cell, override);
 			}
 		return this;
 		};
 	Picture.prototype.drawFill = function(ctx, cell, override){
 		if(this.imageType){
-			this.rotateCell(ctx, cell);
-			ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+			this.rotateCell(ctx, cell, override);
+			scrawl.cell[cell].setEngine(this);
+			var here = this.prepareStamp(override);
+			ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
 			this.clearShadow(ctx, cell);
-			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-			this.unrotateCell(ctx, cell);
+			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
+			this.unrotateCell(ctx, cell, override);
 			}
 		return this;
 		};
 	Picture.prototype.fillDraw = function(ctx, cell, override){
 		if(this.imageType){
-			this.rotateCell(ctx, cell);
-			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
+			this.rotateCell(ctx, cell, override);
+			scrawl.cell[cell].setEngine(this);
+			var here = this.prepareStamp(override);
+			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
 			this.clearShadow(ctx, cell);
-			ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-			this.unrotateCell(ctx, cell);
+			ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+			this.unrotateCell(ctx, cell, override);
 			}
 		return this;
 		};
 	Picture.prototype.sinkInto = function(ctx, cell, override){
 		if(this.imageType){
-			this.rotateCell(ctx, cell);
-			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-			ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-			this.unrotateCell(ctx, cell);
+			this.rotateCell(ctx, cell, override);
+			scrawl.cell[cell].setEngine(this);
+			var here = this.prepareStamp(override);
+			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
+			ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+			this.unrotateCell(ctx, cell, override);
 			}
 		return this;
 		};
 	Picture.prototype.floatOver = function(ctx, cell, override){
 		if(this.imageType){
-			this.rotateCell(ctx, cell);
-			ctx.strokeRect(this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, this.getStartX(override), this.getStartY(override), this.width*this.scale, this.height*this.scale);
-			this.unrotateCell(ctx, cell);
+			this.rotateCell(ctx, cell, override);
+			scrawl.cell[cell].setEngine(this);
+			var here = this.prepareStamp(override);
+			ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
+			this.unrotateCell(ctx, cell, override);
 			}
 		return this;
 		};
@@ -3978,7 +5543,7 @@ window.scrawl = (function(){
 				height: this.copyHeight,
 				width: this.copyWidth,
 				});
-			scrawl.context[myCanvas.name].drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, 0, 0, this.copyWidth, this.copyHeight);
+			try{scrawl.context[myCanvas.name].drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, 0, 0, this.copyWidth, this.copyHeight);}catch(e){}
 			}
 		this.imageData = myCanvas.getImageData({
 			name: 'data',
@@ -3987,19 +5552,32 @@ window.scrawl = (function(){
 		return this;
 		};
 	Picture.prototype.getImageDataValue = function(items, override){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.isa(items.x,'num') && scrawl.isa(items.y,'num')){
-			var myX = parseInt(((items.x-this.getStartX(override))/this.scale)*(this.copyWidth/this.width));
-			var myY = parseInt(((items.y-this.getStartY(override))/this.scale)*(this.copyHeight/this.height));
-			var myChannel = items.channel || this.imageDataChannel;
-			return scrawl.getImageDataValue({
-				table: this.imageData,
-				x: myX,
-				y: myY,
-				channel: myChannel,
-				});
+		//very similar to .checkHit ... could be abstracted?
+		items = (scrawl.isa(items,'obj')) ? items : {x:0,y:0};
+		override = (scrawl.isa(override,'obj')) ? override : {x:0,y:0};
+		var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad] || scrawl.pad[scrawl.cell[scrawl.group[this.group].cells[0]].pad];
+		var cell = scrawl.cell[pad.current].name;
+		var ctx = scrawl.context[pad.current];
+		var d = scrawl.imageData[this.imageData]
+		this.flipCanvas(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		var result = false;
+		var c = this.getLocalRotatedPoint(override, cell, pad, items, here)
+		var myEl = (parseFloat((c.y * d.width).toFixed()) + parseFloat((c.x).toFixed())) * 4;
+		if(c.x.isBetween(0,d.width-1,true) && c.y.isBetween(0,d.height-1,true)){
+			switch(items.channel || this.imageDataChannel){
+				case 'red' : result = (scrawl.xt(d.data[myEl])) ? d.data[myEl] : false; break;
+				case 'blue' : result = (scrawl.xt(d.data[myEl+1])) ? d.data[myEl+1] : false; break;
+				case 'green' : result = (scrawl.xt(d.data[myEl+2])) ? d.data[myEl+2] : false; break;
+				case 'alpha' : result = (scrawl.xt(d.data[myEl+3])) ? d.data[myEl+3] : false; break;
+				case 'color' : result = (scrawl.xta([d.data[myEl],d.data[myEl+1],d.data[myEl+2],d.data[myEl+3]])) ? 'rgba('+d.data[myEl]+','+d.data[myEl+1]+','+d.data[myEl+2]+','+d.data[myEl+3]+')' : false; break;
+				default : result = false;
+				}
 			}
-		return false;
+		this.unrotateCell(ctx, cell, override);
+		this.flipCanvas(ctx, cell);
+		return result;
 		};
 	Picture.prototype.getImage = function(){
 		if(this.imageType === 'animation'){
@@ -4031,90 +5609,547 @@ window.scrawl = (function(){
 		};
 	Picture.prototype.checkHit = function(items, override){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xta([items.x,items.y])){
-			if(items.x.isBetween(this.getStartX(override), this.getStartX(override)+this.getWidth(override)-1, true)){
-				if(items.y.isBetween(this.getStartY(override), this.getStartY(override)+this.getHeight(override)-1, true)){
-					if(this.checkHitUsingImageData){
-						if(this.imageData && scrawl.imageData[this.imageData]){
-							var d = scrawl.imageData[this.imageData]
-							var test = (scrawl.isa(items.test,'num')) ? items.test : 200;
-							var myX, myY;
-							if(this.imageType === 'animation'){
-								myX = parseInt((((items.x-this.getStartX(override))/this.scale)*(this.copyWidth/this.width))+this.copyX);
-								myY = parseInt((((items.y-this.getStartY(override))/this.scale)*(this.copyHeight/this.height))+this.copyY);
-								}
-							else{
-								myX = parseInt(((items.x-this.getStartX(override))/this.scale)*(this.copyWidth/this.width));
-								myY = parseInt(((items.y-this.getStartY(override))/this.scale)*(this.copyHeight/this.height));
-								}
-							if(myY.isBetween(-1, d.height)){ 
-								if(myX.isBetween(-1, d.width)){ 
-									var myEl = ((myY * d.width) + myX) * 4;
-									var myChannel;
-									switch(items.channel || this.imageDataChannel){
-										case 'red' : myChannel = 0; break;
-										case 'blue' : myChannel = 1; break;
-										case 'green' : myChannel = 2; break;
-										case 'alpha' : myChannel = 3; break;
-										}
-									return (d.data[myEl+myChannel] > test) ? true : false;
-									}
-								}
-							return false;
-							}
+		if(this.checkHitUsingImageData){
+			var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
+			var cell = scrawl.cell[pad.current].name;
+			var ctx = scrawl.context[pad.current];
+			var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || 0), y: (items.y || 0)}];
+			var d = scrawl.imageData[this.imageData]
+			var test = (scrawl.isa(items.test,'num')) ? items.test : 0;
+			this.flipCanvas(ctx, cell);
+			this.rotateCell(ctx, cell, override);
+			var here = this.prepareStamp(override);
+			ctx.beginPath();
+			ctx.rect(here.x, here.y, this.currentWidth, this.currentHeight);
+			var result = false;
+			for(var i=0, z=tests.length; i<z; i++){
+				result = ctx.isPointInPath(tests[i].x, tests[i].y);
+				if(result){
+					var c = this.getLocalRotatedPoint(override, cell, pad, tests[i], here);
+					var myEl = (parseFloat((c.y * d.width).toFixed()) + parseFloat((c.x).toFixed())) * 4;
+					var myChannel;
+					switch(items.channel || this.imageDataChannel){
+						case 'red' : myChannel = 0; break;
+						case 'blue' : myChannel = 1; break;
+						case 'green' : myChannel = 2; break;
+						case 'alpha' : myChannel = 3; break;
 						}
-					return true;
+					result = (d.data[myEl+myChannel] > test) ? true : false;
+					if(result){
+						break;
+						}
+					}
+				}
+			this.unrotateCell(ctx, cell, override);
+			this.flipCanvas(ctx, cell);
+			return (result) ? tests[i] : false;
+			}
+		else{
+			return Sprite.prototype.checkHit.call(this, items, override);
+			}
+		};
+	Picture.prototype.getLocalRotatedCoordinates = function(x,y,d,r){
+		return {
+			x: x+(d*Math.cos(r)),
+			y: y+(d*Math.sin(r)),
+			};
+		};
+	Picture.prototype.getLocalRotatedPoint = function(override, cell, pad, test, here){
+		var s = this.getRotationPoint(override,cell);
+		var t, tX, tY, myX, myY;
+		tX = (this.flipReverse) ? (pad.width - test.x) - s.x : test.x - s.x;
+		tY = (this.flipUpend) ? (pad.height - test.y) - s.y : test.y - s.y;
+		t = this.getLocalRotatedCoordinates(s.x, s.y, Math.sqrt((tX*tX)+(tY*tY)), Math.atan2(tY,tX)-(this.currentRoll*scrawl.radian)); 
+		myX = (((t.x - s.x) + (s.x - here.x))/this.currentScale)*(this.copyWidth/this.width);
+		myY = (((t.y - s.y) + (s.y - here.y))/this.currentScale)*(this.copyHeight/this.height);
+		if(this.imageType === 'animation'){
+			myX += this.copyX;
+			myY += this.copyY;
+			}
+		myX = parseFloat(myX.toFixed());
+		myY = parseFloat(myY.toFixed());
+		return {x: myX, y: myY};
+		};
+		
+	function Outline(items){
+		Sprite.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.dataSet = (scrawl.xt(this.data)) ? this.buildDataSet(this.data) : false;
+		this.startX = items.startX || 0;
+		this.startY = items.startY || 0;
+		this.handleX = items.handleX || 'left';
+		this.handleY = items.handleY || 'top';
+		this.method = items.method || 'draw';
+		scrawl.sprite[this.name] = this;
+		scrawl.spritenames.pushUnique(this.name);
+		scrawl.group[this.group].addSpritesToGroup(this.name);
+		return this;
+		}
+	Outline.prototype = Object.create(Sprite.prototype);
+	Outline.prototype.type = 'Outline';
+	Outline.prototype.classname = 'spritenames';
+	Outline.prototype.set = function(items){
+		Sprite.prototype.set.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xt(items.data)){
+			this.dataSet = this.buildDataSet(this.data);
+			}
+		return this;
+		};
+	Outline.prototype.buildDataSet = function(d){
+		var myData = [];
+		var command, points, minX = 999999, minY = 999999, maxX = -999999, maxY = -999999, curX = this.startX, curY = this.startY;
+		var checkMaxMin = function(cx,cy){
+			minX = (minX > cx) ? cx : minX;
+			minY = (minY > cy) ? cy : minY;
+			maxX = (maxX < cx) ? cx : maxX;
+			maxY = (maxY < cy) ? cy : maxY;
+			};
+		var set = d.match(/([A-Za-z][0-9. ,\-]*)/g);
+		for(var i=0,z=set.length; i<z; i++){
+			command = set[i][0];
+			points = set[i].match(/(-?[0-9.]+\b)/g);
+			if(points){
+				for(var j=0, w=points.length; j<w; j++){
+					points[j] = parseFloat(points[j]);
+					}
+				switch(command){
+					case 'H' :
+						for(var j=0, w=points.length; j<w; j++){
+							curX = points[j];								checkMaxMin(curX,curY);
+							}
+						break;
+					case 'V' :
+						for(var j=0, w=points.length; j<w; j++){
+													curY = points[j];		checkMaxMin(curX,curY);
+							}
+						break;
+					case 'M' :
+						for(var j=0, w=points.length; j<w; j+=2){
+							curX = points[j];		curY = points[j+1];		checkMaxMin(curX,curY);
+							}
+					case 'L' :
+					case 'T' :
+						for(var j=0, w=points.length; j<w; j+=2){
+							curX = points[j];		curY = points[j+1];		checkMaxMin(curX,curY);
+							}
+						break;
+					case 'Q' :
+					case 'S' :
+						for(var j=0, w=points.length; j<w; j+=4){
+							curX = points[j+2]; 	curY = points[j+3];		checkMaxMin(curX,curY);
+							}
+						break;
+					case 'C' :
+						for(var j=0, w=points.length; j<w; j+=6){
+							curX = points[j+4];		curY = points[j+5];		checkMaxMin(curX,curY);
+							}
+						break;
+					case 'h' :
+						for(var j=0, w=points.length; j<w; j++){
+							curX += points[j];								checkMaxMin(curX,curY);
+							}
+						break;
+					case 'v' :
+						for(var j=0, w=points.length; j<w; j++){
+													curY += points[j];		checkMaxMin(curX,curY);
+							}
+						break;
+					case 'm' :
+					case 'l' :
+					case 't' :
+						for(var j=0, w=points.length; j<w; j+=2){
+							curX += points[j];		curY += points[j+1];	checkMaxMin(curX,curY);
+							}
+						break;
+					case 'q' :
+					case 's' :
+						for(var j=0, w=points.length; j<w; j+=4){
+							curX += points[j+2];	curY += points[j+3];	checkMaxMin(curX,curY);
+							}
+						break;
+					case 'c' :
+						for(var j=0, w=points.length; j<w; j+=6){
+							curX += points[j+4];	curY += points[j+5];	checkMaxMin(curX,curY);
+							}
+						break;
+					}
+				}
+			myData.push({c: command, p: points});
+			}
+		this.width = maxX - minX;
+		this.height = maxY - minY;
+		for(var i=0, z=myData.length; i<z; i++){
+			if(['M','L','C','Q','S','T'].contains(myData[i].c)){
+				for(var j=0, w=myData[i].p.length; j<w; j+=2){
+					myData[i].p[j] -= minX;
+					myData[i].p[j+1] -= minY;
+					}
+				}
+			if(myData[i].c === 'H'){
+				for(var j=0, w=myData[i].p.length; j<w; j++){
+					myData[i].p[j] -= minX;
+					}
+				}
+			if(myData[i].c === 'V'){
+				for(var j=0, w=myData[i].p.length; j<w; j++){
+					myData[i].p[j] -= minY;
 					}
 				}
 			}
-		return false;
+		this.compiledData = false;
+		return myData;
 		};
-	Picture.prototype.getEndX = function(override){
-		return this.getStartX(override) + this.getWidth();
+	Outline.prototype.doOutline = function(ctx,override){
+		if(!this.dataSet && this.data){
+			this.buildDataSet(this.data);
+			}
+		if(this.dataSet){
+			var here = this.prepareStamp(override);
+			var currentX = here.x, currentY = here.y;
+			var reflectX = here.x, reflectY = here.y;
+			var d, tempX, tempY;
+			ctx.beginPath();
+			if(!['M','m'].contains(this.dataSet[0].c)){
+				currentX = 0, currentY = 0;
+				reflectX = currentX, reflectY = currentY;
+				ctx.moveTo(0,0);
+				}
+			for(var i=0, z=this.dataSet.length; i<z; i++){
+				d = this.dataSet[i];
+				switch(d.c){
+					case 'M' :
+						currentX = d.p[0], currentY = d.p[1];
+						reflectX = currentX, reflectY = currentY;
+						ctx.moveTo((currentX*this.scale),(currentY*this.scale));
+						for(var k=2, v=d.p.length; k<v; k+=2){
+							currentX = d.p[k], currentY = d.p[k+1];
+							reflectX = currentX, reflectY = currentY;
+							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							}
+						break;
+					case 'm' :
+						currentX += d.p[0], currentY += d.p[1];
+						reflectX = currentX, reflectY = currentY;
+						ctx.moveTo((currentX*this.scale),(currentY*this.scale));
+						for(var k=2, v=d.p.length; k<v; k+=2){
+							currentX += d.p[k], currentY += d.p[k+1];
+							reflectX = currentX, reflectY = currentY;
+							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							}
+						break;
+					case 'Z' :
+					case 'z' :
+						ctx.closePath();
+						break;
+					case 'L' :
+						for(var k=0, v=d.p.length; k<v; k+=2){
+							currentX = d.p[k], currentY = d.p[k+1];
+							reflectX = currentX, reflectY = currentY;
+							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							}
+						break;
+					case 'l' :
+						for(var k=0, v=d.p.length; k<v; k+=2){
+							currentX += d.p[k], currentY += d.p[k+1];
+							reflectX = currentX, reflectY = currentY;
+							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							}
+						break;
+					case 'H' :
+						for(var k=0, v=d.p.length; k<v; k++){
+							currentX = d.p[k];
+							reflectX = currentX;
+							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							}
+						break;
+					case 'h' :
+						for(var k=0, v=d.p.length; k<v; k++){
+							currentX += d.p[k];
+							reflectX = currentX;
+							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							}
+						break;
+					case 'V' :
+						for(var k=0, v=d.p.length; k<v; k++){
+							currentY = d.p[k];
+							reflectY = currentY;
+							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							}
+						break;
+					case 'v' :
+						for(var k=0, v=d.p.length; k<v; k++){
+							currentY += d.p[k];
+							reflectY = currentY;
+							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							}
+						break;
+					case 'C' :
+						for(var k=0, v=d.p.length; k<v; k+=6){
+							ctx.bezierCurveTo((d.p[k]*this.scale),(d.p[k+1]*this.scale),(d.p[k+2]*this.scale),(d.p[k+3]*this.scale),(d.p[k+4]*this.scale),(d.p[k+5]*this.scale));
+							reflectX = d.p[k+2], reflectY = d.p[k+3];
+							currentX = d.p[k+4], currentY = d.p[k+5];
+							}
+						break;
+					case 'c' :
+						for(var k=0, v=d.p.length; k<v; k+=6){
+							ctx.bezierCurveTo(((currentX+d.p[k])*this.scale),((currentY+d.p[k+1])*this.scale),((currentX+d.p[k+2])*this.scale),((currentY+d.p[k+3])*this.scale),((currentX+d.p[k+4])*this.scale),((currentY+d.p[k+5])*this.scale));
+							reflectX = currentX + d.p[k+2];
+							reflectY = currentY + d.p[k+3];
+							currentX += d.p[k+4], currentY += d.p[k+5];
+							}
+						break;
+					case 'S' :
+						for(var k=0, v=d.p.length; k<v; k+=4){
+							if(i>0 && ['C','c','S','s'].contains(this.dataSet[i-1].c)){
+								tempX = currentX + (currentX - reflectX);
+								tempY = currentY + (currentY - reflectY);
+								}
+							else{tempX = currentX; tempY = currentY;}
+							ctx.bezierCurveTo((tempX*this.scale),(tempY*this.scale),(d.p[k]*this.scale),(d.p[k+1]*this.scale),(d.p[k+2]*this.scale),(d.p[k+3]*this.scale));
+							reflectX = d.p[k], reflectY = d.p[k+1];
+							currentX = d.p[k+2], currentY = d.p[k+3];
+							}
+						break;
+					case 's' :
+						for(var k=0, v=d.p.length; k<v; k+=4){
+							if(i>0 && ['C','c','S','s'].contains(this.dataSet[i-1].c)){
+								tempX = currentX + (currentX - reflectX);
+								tempY = currentY + (currentY - reflectY);
+								}
+							else{tempX = currentX; tempY = currentY;}
+							ctx.bezierCurveTo((tempX*this.scale),(tempY*this.scale),((currentX+d.p[k])*this.scale),((currentY+d.p[k+1])*this.scale),((currentX+d.p[k+2])*this.scale),((currentY+d.p[k+3])*this.scale));
+							reflectX = currentX + d.p[k], reflectY = currentY + d.p[k+1];
+							currentX += d.p[k+2], currentY += d.p[k+3];
+							}
+						break;
+					case 'Q' :
+						for(var k=0,v=d.p.length;k<v;k+=4){
+							ctx.quadraticCurveTo((d.p[k]*this.scale),(d.p[k+1]*this.scale),(d.p[k+2]*this.scale),(d.p[k+3]*this.scale));
+							reflectX = d.p[k], reflectY = d.p[k+1];
+							currentX = d.p[k+2], currentY = d.p[k+3];
+							}
+						break;
+					case 'q' :
+						for(var k=0,v=d.p.length;k<v;k+=4){
+							ctx.quadraticCurveTo(((currentX+d.p[k])*this.scale),((currentY+d.p[k+1])*this.scale),((currentX+d.p[k+2])*this.scale),((currentY+d.p[k+3])*this.scale));
+							reflectX = currentX + d.p[k];
+							reflectY = currentY + d.p[k+1];
+							currentX += d.p[k+2], currentY += d.p[k+3];
+							}
+						break;
+					case 'T' :
+						for(var k=0, v=d.p.length; k<v; k+=2){
+							if(i>0 && ['Q','q','T','t'].contains(this.dataSet[i-1].c)){
+								tempX = currentX + (currentX - reflectX);
+								tempY = currentY + (currentY - reflectY);
+								}
+							else{tempX = currentX; tempY = currentY;}
+							ctx.quadraticCurveTo((tempX*this.scale),(tempY*this.scale),(d.p[k]*this.scale),(d.p[k+1]*this.scale));
+							reflectX = tempX, reflectY = tempY;
+							currentX = d.p[k], currentY = d.p[k+1];
+							}
+						break;
+					case 't' :
+						for(var k=0, v=d.p.length; k<v; k+=2){
+							if(i>0 && ['Q','q','T','t'].contains(this.dataSet[i-1].c)){
+								tempX = currentX + (currentX - reflectX);
+								tempY = currentY + (currentY - reflectY);
+								}
+							else{tempX = currentX; tempY = currentY;}
+							ctx.quadraticCurveTo((tempX*this.scale),(tempY*this.scale),((currentX+d.p[k])*this.scale),((currentY+d.p[k+1])*this.scale));
+							reflectX = tempX, reflectY = tempY;
+							currentX += d.p[k], currentY += d.p[k+1];
+							}
+						break;
+					}
+				}
+			}
+		return this;
 		};
-	Picture.prototype.getEndY = function(override){
-		return this.getStartY(override) + this.getHeight();
+	Outline.prototype.clip = function(ctx, cell, override){
+		ctx.save();
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		ctx.clip();
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
 		};
-	Picture.prototype.getWidth = function(){
-		return this.width*this.scale;
+	Outline.prototype.clear = function(ctx, cell, override){
+		scrawl.cell[cell].setToClearShape();
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		ctx.globalCompositeOperation = 'destination-out';
+		ctx.fill(scrawl.ctx[this.context].winding);
+		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
 		};
-	Picture.prototype.getHeight = function(){
-		return this.height*this.scale;
+	Outline.prototype.clearWithBackground = function(ctx, cell, override){
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
+		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
+		ctx.globalAlpha = 1;
+		this.doOutline(ctx, override);
+		ctx.fill(scrawl.ctx[this.context].winding);
+		ctx.stroke();
+		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
+		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
+		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
 		};
-	Picture.prototype.getCollisionPoints = function(override){
-		return Block.prototype.getCollisionPoints.call(this, override);
+	Outline.prototype.draw = function(ctx, cell, override){
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		ctx.stroke();
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
 		};
-	Picture.prototype.getObjectData = function(){
-		return {
-			type: this.type, 
-			name: this.name, 
-			object: this, 
-			context: scrawl.ctx[this.context].getObjectData(), 
-			image: scrawl.image[this.source].getObjectData(), 
-			timestamp: Date.now()
-			};
+	Outline.prototype.fill = function(ctx, cell, override){
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		ctx.fill(scrawl.ctx[this.context].winding);
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
 		};
-		
+	Outline.prototype.drawFill = function(ctx, cell, override){
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		ctx.stroke();
+		this.clearShadow(ctx, cell);
+		ctx.fill(scrawl.ctx[this.context].winding);
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
+		};
+	Outline.prototype.fillDraw = function(ctx, cell, override){
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		ctx.fill(scrawl.ctx[this.context].winding);
+		this.clearShadow(ctx, cell);
+		ctx.stroke();
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
+		};
+	Outline.prototype.sinkInto = function(ctx, cell, override){
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		ctx.fill(scrawl.ctx[this.context].winding);
+		ctx.stroke();
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
+		};
+	Outline.prototype.floatOver = function(ctx, cell, override){
+		this.rotateCell(ctx, cell, override);
+		scrawl.cell[cell].setEngine(this);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		ctx.stroke();
+		ctx.fill(scrawl.ctx[this.context].winding);
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		return this;
+		};
+	Outline.prototype.checkHit = function(items, override){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
+		var cell = scrawl.cell[pad.current].name;
+		var ctx = scrawl.context[pad.current];
+		var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}];
+		this.flipCanvas(ctx, cell);
+		this.rotateCell(ctx, cell, override);
+		var here = this.prepareStamp(override);
+		ctx.translate(here.x, here.y);
+		this.doOutline(ctx, override);
+		var result = false;
+		for(var i=0, z=tests.length; i<z; i++){
+			result = ctx.isPointInPath(tests[i].x, tests[i].y);
+			if(result){
+				break;
+				}
+			}
+		ctx.translate(-here.x, -here.y);
+		this.unrotateCell(ctx, cell, override);
+		this.flipCanvas(ctx, cell);
+		return (result) ? tests[i] : false;
+		};
+
 	function Shape(items){
 		Sprite.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.firstPoint = items.firstPoint || false;
-		this.collisionPoints = this.parseCollisionPoints(items.collisionPoints || ['start']);
-		this.checkHitUsingRadius = (scrawl.isa(items.checkHitUsingRadius,'bool')) ? items.checkHitUsingRadius : false;
+		this.collisionPoints = (scrawl.xt(items.collisionPoints)) ? items.collisionPoints : [];
 		this.closed = (scrawl.isa(items.closed,'bool')) ? items.closed : true;
-		this.radius = false;
+		this.line = (scrawl.isa(items.line,'bool')) ? items.line : false;
+		this.radius = items.radius || false;
 		this.linkList = [];
 		this.linkDurations = [];
 		this.pointList = [];
 		this.perimeterLength = false;
+		this.markStart = items.markStart || items.mark || false;
+		this.markMid = items.markMid || items.mark || false;
+		this.markEnd = items.markEnd || items.mark || false;
+		this.handleX = items.handleX || 'center';
+		this.handleY = items.handleY || 'center';
+		this.width = items.width || 0;
+		this.height = items.height || 0;
 		scrawl.sprite[this.name] = this;
 		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].sprites.pushUnique(this.name);
+		scrawl.group[this.group].addSpritesToGroup(this.name);
 		return this;
 		}
 	Shape.prototype = Object.create(Sprite.prototype);
 	Shape.prototype.type = 'Shape';
 	Shape.prototype.classname = 'spritenames';
+	Shape.prototype.exportNative = function(items){
+		var result = Sprite.prototype.exportNative.call(this, items);
+		var points = this.getFullPointList();
+		for(var i=0, z=points.length; i<z; i++){
+			result.push(scrawl.point[points[i]].prepareForExport(items));
+			if(scrawl.xt(scrawl.point[points[i]].startLink) && scrawl.linknames.contains(scrawl.point[points[i]].startLink)){
+				result.push(scrawl.link[scrawl.point[points[i]].startLink].prepareForExport(items));
+				}
+			}
+		return result;
+		};
+	Shape.prototype.getRadius = function(){
+		var check = 0;
+		for(var i=0, z=this.pointList.length; i<z; i++){
+			check = (scrawl.point[this.pointList[i]].distance > check) ? scrawl.point[this.pointList[i]].distance : check;
+			}
+		this.radius = check;
+		return this.radius;
+		};
 	Shape.prototype.set = function(items){
 		Sprite.prototype.set.call(this, items);
 		if(this.linkDurations.length > 0 || this.perimeterLength){
@@ -4130,56 +6165,114 @@ window.scrawl = (function(){
 		return this;
 		};
 	Shape.prototype.parseCollisionPoints = function(items){
-		var p = Sprite.prototype.parseCollisionPoints.call(this, items);
-		if(this.firstPoint){
-			if(p.contains('endpoints')){
-				p.removeItem('endpoints');
-				var nextLink = scrawl.link[scrawl.point[this.firstPoint].startLink];
-				while(nextLink.action && ['move','add'].contains(nextLink.action)){
-					if(nextLink.endPoint){
-						p.pushUnique(nextLink.endPoint);
-						nextLink = scrawl.link[scrawl.point[nextLink.endPoint].startLink];
-						}
-					else{break;}
-					}
-				}
-			}
-		return p;
+		return this.collisionPoints;
 		};
-	Shape.prototype.getCollisionPoints = function(override){
-		return Wheel.prototype.getCollisionPoints.call(this, override);
-		};
-	Shape.prototype.prepareShape = function(ctx, override){
+	Shape.prototype.prepareShape = function(ctx, cell, override){
 		if(this.firstPoint){
 			var myPoint = scrawl.point[this.firstPoint].getData(override);
 			ctx.beginPath();
-			ctx.moveTo(myPoint.currentX, myPoint.currentY);
-			return scrawl.link[myPoint.startLink].sketch(ctx, override);
+			scrawl.link[myPoint.startLink].sketch(ctx, override);
+			}
+		return this;
+		};
+	Shape.prototype.getPivotOffset = function(val,useHeight){
+		if(scrawl.xt(val)){
+			var result;
+			if((scrawl.isa(val,'str')) && !['left','center','right','top','bottom'].contains(val)){
+				result = (useHeight) ? ((parseFloat(val)/100)*this.height)-(this.height/2) : ((parseFloat(val)/100)*this.width)-(this.width/2);
+				}
+			else{
+				switch (val){
+					case 'left' : result = -(this.width/2); break;
+					case 'center' : result = 0; break;
+					case 'right' : result = (this.width/2); break;
+					case 'top' : result = -(this.height/2); break;
+					case 'bottom' : result = (this.height/2); break;
+					default : result = val;
+					}
+				}
+			if(this.line){
+				result += (useHeight) ? (this.height/2) : (this.width/2);
+				}
+			return result;
+			}
+		return 0;
+		};
+	Shape.prototype.stampMark = function(sprite, pos, ctx, cell, override){
+		var tPath = sprite.path;
+		var tPathPosition = sprite.pathPosition;
+		var tGroup = sprite.group;
+		sprite.set({
+			path: this.name,
+			pathPosition: pos,
+			group: cell,
+			}).forceStamp();
+		sprite.set({
+			path: tPath,
+			pathPosition: tPathPosition,
+			group: tGroup,
+			});
+		};
+	Shape.prototype.addMarks = function(ctx, cell, override){
+		if(this.markStart && (scrawl.spritenames.contains(this.markStart) || scrawl.groupnames.contains(this.markStart))){
+			if(scrawl.groupnames.contains(this.markStart)){
+				for(var i=0, z=scrawl.group[this.markStart].sprites.length; i<z; i++){
+					this.stampMark(scrawl.sprite[scrawl.group[this.markStart].sprites[i]], 0, ctx, cell, override);
+					}
+				}
+			else{
+				this.stampMark(scrawl.sprite[this.markStart], 0, ctx, cell, override);
+				}
+			}
+		if(this.markMid && (scrawl.spritenames.contains(this.markMid) || scrawl.groupnames.contains(this.markMid))){
+			if(this.linkDurations.length === 0 || !this.perimeterLength){
+				this.buildPositions();
+				}
+			for(var j=0, w=this.linkDurations.length-1; j<w; j++){
+				if(scrawl.groupnames.contains(this.markMid)){
+					for(var i=0, z=scrawl.group[this.markMid].sprites.length; i<z; i++){
+						this.stampMark(scrawl.sprite[scrawl.group[this.markMid].sprites[i]], this.linkDurations[j], ctx, cell, override);
+						}
+					}
+				else{
+					this.stampMark(scrawl.sprite[this.markMid], this.linkDurations[j], ctx, cell, override);
+					}
+				}
+			}
+		if(this.markEnd && (scrawl.spritenames.contains(this.markEnd) || scrawl.groupnames.contains(this.markEnd))){
+			if(scrawl.groupnames.contains(this.markEnd)){
+				for(var i=0, z=scrawl.group[this.markEnd].sprites.length; i<z; i++){
+					this.stampMark(scrawl.sprite[scrawl.group[this.markEnd].sprites[i]], 1, ctx, cell, override);
+					}
+				}
+			else{
+				this.stampMark(scrawl.sprite[this.markEnd], 1, ctx, cell, override);
+				}
 			}
 		return false;
 		};
 	Shape.prototype.clip = function(ctx, cell, override){
 		if(this.closed){
-			this.prepareShape(ctx, override);
+			this.prepareShape(ctx, cell, override);
 			ctx.clip();
 			}
 		return this;
 		};
 	Shape.prototype.clear = function(ctx, cell, override){
-		this.prepareShape(ctx, override);
+		this.prepareShape(ctx, cell, override);
 		ctx.globalCompositeOperation = 'destination-out';
 		ctx.stroke();
-		ctx.fill();
+		ctx.fill(scrawl.ctx[this.context].winding);
 		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
 		return this;
 		};
 	Shape.prototype.clearWithBackground = function(ctx, cell, override){
-		this.prepareShape(ctx, override);
+		this.prepareShape(ctx, cell, override);
 		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
 		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
 		ctx.globalAlpha = 1;
 		ctx.stroke();
-		ctx.fill();
+		ctx.fill(scrawl.ctx[this.context].winding);
 		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
 		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
 		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
@@ -4187,123 +6280,161 @@ window.scrawl = (function(){
 		};
 	Shape.prototype.fill = function(ctx, cell, override){
 		if(this.closed){
-			this.prepareShape(ctx, override);
-			ctx.fill();
+			this.prepareShape(ctx, cell, override);
+			scrawl.cell[cell].setEngine(this);
+			ctx.fill(scrawl.ctx[this.context].winding);
+			if(this.markStart || this.markMid || this.markEnd){
+				this.addMarks(ctx, cell, override);
+				}
 			}
 		return this;
 		};
 	Shape.prototype.draw = function(ctx, cell, override){
-		this.prepareShape(ctx, override);
+		scrawl.cell[cell].setEngine(this);
+		this.prepareShape(ctx, cell, override);
 		ctx.stroke();
+		if(this.markStart || this.markMid || this.markEnd){
+			this.addMarks(ctx, cell, override);
+			}
 		return this;
 		};
 	Shape.prototype.drawFill = function(ctx, cell, override){
-		this.prepareShape(ctx, override);
+		scrawl.cell[cell].setEngine(this);
+		this.prepareShape(ctx, cell, override);
 		ctx.stroke();
 		if(this.closed){
-			scrawl.cell[cell].clearShadow();
-			ctx.fill();
+			this.clearShadow(ctx, cell);
+			ctx.fill(scrawl.ctx[this.context].winding);
 			}
 		return this;
 		};
 	Shape.prototype.fillDraw = function(ctx, cell, override){
-		this.prepareShape(ctx, override);
+		scrawl.cell[cell].setEngine(this);
+		this.prepareShape(ctx, cell, override);
 		if(this.closed){
-			ctx.fill();
-			scrawl.cell[cell].clearShadow();
+			ctx.fill(scrawl.ctx[this.context].winding);
+			this.clearShadow(ctx, cell);
 			}
 		ctx.stroke();
+		if(this.markStart || this.markMid || this.markEnd){
+			this.addMarks(ctx, cell, override);
+			}
 		return this;
 		};
 	Shape.prototype.sinkInto = function(ctx, cell, override){
-		this.prepareShape(ctx, override);
+		scrawl.cell[cell].setEngine(this);
+		this.prepareShape(ctx, cell, override);
 		if(this.closed){
-			ctx.fill();
+			ctx.fill(scrawl.ctx[this.context].winding);
 			}
 		ctx.stroke();
+		if(this.markStart || this.markMid || this.markEnd){
+			this.addMarks(ctx, cell, override);
+			}
 		return this;
 		};
 	Shape.prototype.floatOver = function(ctx, cell, override){
-		this.prepareShape(ctx, override);
+		scrawl.cell[cell].setEngine(this);
+		this.prepareShape(ctx, cell, override);
 		ctx.stroke();
 		if(this.closed){
-			ctx.fill();
+			ctx.fill(scrawl.ctx[this.context].winding);
+			}
+		if(this.markStart || this.markMid || this.markEnd){
+			this.addMarks(ctx, cell, override);
 			}
 		return this;
 		};
 	Shape.prototype.none = function(ctx, cell, override){
-		this.prepareShape(ctx, override);
+		this.prepareShape(ctx, cell, override);
 		return this;
 		};
-	Shape.prototype.setStartTo = function(items, yDelta){
-		items = (scrawl.xt(items)) ? items : {};
-		var myX, myY;
-		if(scrawl.xt(yDelta)){
-			myX = items;
-			myY = yDelta;
-			}
-		else if(scrawl.xta([items.x,items.y])){
-			myX = items.x;
-			myY = items.y;
-			}
-		if(myX && myY){
-			var myPointList = [this.firstPoint];
-			var myData = scrawl.point[this.firstPoint].getData();
-			var nextLink = scrawl.link[myData.startLink];
-			while(nextLink.action && ['move','add'].contains(nextLink.action)){
-				if(nextLink.controlPoint1){myPointList.push(nextLink.controlPoint1);}
-				if(nextLink.controlPoint2){myPointList.push(nextLink.controlPoint2);}
-				if(nextLink.endPoint){
-					myPointList.push(nextLink.endPoint);
-					nextLink = scrawl.link[scrawl.point[nextLink.endPoint].startLink];
-					}
-				else{break;}
-				}
-			this.startX = myX;
-			this.startY = myY;
-			for(var i=0, z=myPointList.length; i<z; i++){
-				if(myPointList[i]){
-					scrawl.point[myPointList[i]].setPolar();
-					}
-				}
-			}
-		return this;
-		};
-	Shape.prototype.checkHit = function(items, override){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xta([items.x,items.y])){
-			if(this.checkHitUsingRadius){
-				var test = items.test || 0;
-				var thisX = this.getStartX(override);
-				var thisY = this.getStartY(override);
-				var myRadius = (test) ? test : ((this.radius) ? this.radius : this.getRadius(true));
-				var xSquare = (items.x-thisX)*(items.x-thisX);
-				var ySquare = (items.y-thisY)*(items.y-thisY);
-				var distance = Math.sqrt(xSquare+ySquare);
-				return (distance <= myRadius) ? true : false;
-				}
-			else{
-				var ctx = scrawl.context[scrawl.cell[scrawl.group[this.group].cells[0]].name];
-				this.prepareShape(ctx, override);
-				return ctx.isPointInPath(items.x, items.y);
-				}
-			}
-		return false;
-		};
-	Shape.prototype.getRadius = function(scaled){
-		var check = 0;
+	Shape.prototype.getFullPointList = function(){
 		var myPointList = [this.firstPoint];
-		check = (!scrawl.point[this.firstPoint].fixed) ? scrawl.point[this.firstPoint].distance : 0;
-		var nextLink = scrawl.link[scrawl.point[this.firstPoint].startLink];
+		var myData = scrawl.point[this.firstPoint].getData();
+		var nextLink = scrawl.link[myData.startLink];
 		while(nextLink.action && ['move','add'].contains(nextLink.action)){
+			if(nextLink.controlPoint1){myPointList.push(nextLink.controlPoint1);}
+			if(nextLink.controlPoint2){myPointList.push(nextLink.controlPoint2);}
 			if(nextLink.endPoint){
-				check = (scrawl.point[nextLink.endPoint].distance > check) ? scrawl.point[nextLink.endPoint].distance : check;
+				myPointList.push(nextLink.endPoint);
 				nextLink = scrawl.link[scrawl.point[nextLink.endPoint].startLink];
 				}
 			else{break;}
 			}
-		this.radius = (scaled) ? check*this.scale : check;
-		return this.radius;
+		return myPointList;
+		};
+	Shape.prototype.setRotationPointTo = function(items){
+		items = (scrawl.xt(items)) ? items : {};
+		var myX = (scrawl.xt(items.x)) ? this.getPivotOffset(items.x,false) : this.getPivotOffset('center',false);
+		var myY = (scrawl.xt(items.y)) ? this.getPivotOffset(items.y,true) : this.getPivotOffset('center',true);
+		var temppath = this.path;
+		var temproll = this.roll
+		this.path = false;
+		this.roll = 0;
+		var myPointList = this.getFullPointList()
+		var tempX = this.startX, tempY = this.startY;
+		this.startX += myX;
+		this.startY += myY;
+		for(var i=0, z=myPointList.length; i<z; i++){
+			if(myPointList[i]){
+				scrawl.point[myPointList[i]].setPolar();
+				}
+			}
+		this.forceStamp('none');
+		this.startX = tempX, this.startY = tempY;
+		this.path = temppath;
+		this.roll = temproll;
+		return this;
+		};
+	Shape.prototype.checkHit = function(items, override){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
+		var cell = scrawl.cell[pad.current].name;
+		var ctx = scrawl.context[pad.current];
+		var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}];
+		this.flipCanvas(ctx, cell);
+		if(this.closed){
+//			ctx.mozFillRule = scrawl.ctx[this.context].winding;
+//			ctx.msFillRule = scrawl.ctx[this.context].winding;
+//			ctx.fill(scrawl.ctx[this.context].winding);
+			}
+		this.prepareShape(ctx, override);
+		var result = false;
+		for(var i=0, z=tests.length; i<z; i++){
+			result = ctx.isPointInPath(tests[i].x, tests[i].y);
+			if(result){
+				break;
+				}
+			}
+		if(this.closed){
+//			ctx.mozFillRule = scrawl.ctx[cell].winding;
+//			ctx.msFillRule = scrawl.ctx[cell].winding;
+//			ctx.fill(scrawl.ctx[cell].winding);
+			}
+		this.flipCanvas(ctx, cell);
+		return (result) ? tests[i] : false;
+		};
+	Shape.prototype.getCollisionPoints = function(override){
+		if(scrawl.isa(this.collisionPoints,'num')){
+			var currentPos = 0;
+			var myAdvance = 1/this.collisionPoints;
+			var point, p = [], cr;
+			var myCell = scrawl.cell[scrawl.group[this.group].cells[0]];
+			cr = this.currentRoll * scrawl.radian;
+			for(var i=0; i<this.collisionPoints; i++){
+				point = this.getPerimeterPosition(currentPos, true, cr);
+				point.x = (this.flipReverse) ? myCell.actualWidth - point.x : point.x;
+				point.y = (this.flipUpend) ? myCell.actualHeight - point.y : point.y;
+				p.push(point);
+				currentPos += myAdvance;
+				}
+			return p;
+			}
+		else{
+			var here = this.prepareStamp(override);
+			return [{x: here.x, y: here.y}];
+			}
 		};
 	Shape.prototype.getPerimeterLength = function(force){
 		if(force || !this.perimeterLength || this.linkDurations.length === 0){
@@ -4348,7 +6479,7 @@ window.scrawl = (function(){
 						var before = myLink.getSteadyPositionOnLink((linkVal-0.0000001 < 0) ? 0 : linkVal-0.0000001);
 						var after = myLink.getSteadyPositionOnLink((linkVal+0.0000001 > 1) ? 1 : linkVal+0.0000001);
 						var here = myLink.getSteadyPositionOnLink(linkVal);
-						var angle = Math.atan2(after.y-before.y, after.x-before.x)*scrawl.degree;
+						var angle = Math.atan2(after.y-before.y, after.x-before.x)/scrawl.radian;
 						return {x:here.x, y:here.y, r:angle};
 						}
 					else{
@@ -4360,7 +6491,7 @@ window.scrawl = (function(){
 						var before = myLink.getPositionOnLink((linkVal-0.0000001 < 0) ? 0 : linkVal-0.0000001);
 						var after = myLink.getPositionOnLink((linkVal+0.0000001 > 1) ? 1 : linkVal+0.0000001);
 						var here = myLink.getPositionOnLink(linkVal);
-						var angle = Math.atan2(after.y-before.y, after.x-before.x)*scrawl.degree;
+						var angle = Math.atan2(after.y-before.y, after.x-before.x)/scrawl.radian;
 						return {x:here.x, y:here.y, r:angle};
 						}
 					else{
@@ -4372,99 +6503,39 @@ window.scrawl = (function(){
 		return false;
 		};
 	Shape.prototype.clone = function(items){
-		var a = Sprite.prototype.clone.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		var tempObj, tempFirstPoint;
-		var myName = a.name;
-		var myPoints = [this.firstPoint];
-		var myData = scrawl.point[this.firstPoint].getData();
-		var myLinks = [myData.startLink];
-		var nextLink = scrawl.link[myData.startLink];
-		while(nextLink.action && ['move','add'].contains(nextLink.action)){
-			if(nextLink.controlPoint1){myPoints.push(nextLink.controlPoint1);}
-			if(nextLink.controlPoint2){myPoints.push(nextLink.controlPoint2);}
-			if(nextLink.endPoint){
-				myPoints.push(nextLink.endPoint);
-				myData = scrawl.point[nextLink.endPoint].getData();
-				myLinks.push(myData.startLink);
-				nextLink = scrawl.link[myData.startLink];
-				}
-			else{break;}
-			}
-		var tempCurrentName = this.name.replace('~','_','g');
-		var tempCloneName = a.name.replace('~','_','g');
-		for(var i=0, z=myPoints.length; i<z; i++){
-			tempObj = scrawl.point[myPoints[i]];
-			var b = tempObj.clone({
-				name: tempObj.name.replace(tempCurrentName,tempCloneName),
-				startLink: (tempObj.startLink) ? tempObj.startLink.replace(tempCurrentName,tempCloneName) : false,
-				sprite: tempObj.sprite.replace(this.name,a.name),
-				fixed: (tempObj.fixed === this.name) ? a.name : tempObj.fixed,
-				});
-			if(i === 0){
-				tempFirstPoint = b.name;
-				}
-			}
-		for(var i=0, z=myLinks.length; i<z; i++){
-			tempObj = scrawl.link[myLinks[i]];
-			var c = tempObj.clone({
-				name: tempObj.name.replace(tempCurrentName,tempCloneName),
-				startPoint: (tempObj.startPoint) ? tempObj.startPoint.replace(tempCurrentName,tempCloneName) : false,
-				endPoint: (tempObj.endPoint) ? tempObj.endPoint.replace(tempCurrentName,tempCloneName) : false,
-				controlPoint1: (tempObj.controlPoint1) ? tempObj.controlPoint1.replace(tempCurrentName,tempCloneName) : false,
-				controlPoint2: (tempObj.controlPoint2) ? tempObj.controlPoint2.replace(tempCurrentName,tempCloneName) : false,
-				});
-			}
-		a.firstPoint = tempFirstPoint;
+		var myItems = JSON.parse(JSON.stringify(this));
+		myItems.name = items.name || this.name;
+		myItems.data = items.data || this.data;
+		myItems.startX = items.startX || this.startX;
+		myItems.startY = items.startY || this.startY;
+		myItems.handleX = items.handleX || this.handleX;
+		myItems.handleY = items.handleY || this.handleY;
+		var a = scrawl.makePath(myItems);
+		var c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
+		delete c.name;
+		a.set(c);
+		delete items.name || this.name;
+		delete items.data || this.data;
+		delete items.startX || this.startX,
+		delete items.startY || this.startY,
+		delete items.handleX || this.handleX,
+		delete items.handleY || this.handleY,
+		a.set(items);
 		return a;
-		};
-	Shape.prototype.getObjectData = function(){
-		var p = [], l = [];
-		var myPoints = [this.firstPoint];
-		var myData = scrawl.point[this.firstPoint].getData();
-		var myLinks = [myData.startLink];
-		var nextLink = scrawl.link[myData.startLink];
-		while(nextLink.action && ['move','add'].contains(nextLink.action)){
-			if(nextLink.controlPoint1){myPoints.push(nextLink.controlPoint1);}
-			if(nextLink.controlPoint2){myPoints.push(nextLink.controlPoint2);}
-			if(nextLink.endPoint){
-				myPoints.push(nextLink.endPoint);
-				myData = scrawl.point[nextLink.endPoint].getData();
-				myLinks.push(myData.startLink);
-				nextLink = scrawl.link[myData.startLink];
-				}
-			else{break;}
-			}
-		for(var i=0, z=myPoints.length; i<z; i++){
-			p.push(scrawl.point[myPoints[i]].getObjectData());
-			}
-		for(var i=0, z=myLinks.length; i<z; i++){
-			l.push(scrawl.link[myLinks[i]].getObjectData());
-			}
-		return {
-			type: this.type, 
-			name: this.name, 
-			object: this, 
-			context: scrawl.ctx[this.context].getObjectData(), 
-			points: p,
-			links: l,
-			timestamp: Date.now()
-			};
 		};
 
 	function Point(items){
-		SubScrawl.call(this, items);
+		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.sprite = items.sprite || false;
-		this.distance = items.distance || 0;
-		this.angle = items.angle || 0;
-		this.degree = (scrawl.isa(items.degree,'bool')) ? items.degree : true;
+		this.distance = items.distance || false;
+		this.angle = items.angle || false;
 		this.startLink = items.startLink || false;
 		this.currentX = items.currentX || 0;
 		this.currentY = items.currentY || 0;
 		this.visibility = (scrawl.isa(items.visibility,'bool')) ? items.visibility : true;
 		this.fixed = (scrawl.isa(items.fixed,'bool')) ? items.fixed : false;
-		this.pad = items.pad || false;
 		scrawl.point[this.name] = this;
 		scrawl.pointnames.pushUnique(this.name);
 		if(this.sprite && scrawl.sprite[this.sprite].type === 'Shape'){
@@ -4472,11 +6543,46 @@ window.scrawl = (function(){
 			}
 		return this;
 		}
-	Point.prototype = Object.create(SubScrawl.prototype);
+	Point.prototype = Object.create(Scrawl.prototype);
 	Point.prototype.type = 'Point';
 	Point.prototype.classname = 'pointnames';
+	Point.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//Point
+			sprite: this.sprite,
+			distance: (this.distance) ? this.distance : u,
+			angle: (this.angle) ? this.angle : u,
+			startLink: (this.startLink) ? this.startLink : u,
+			currentX: (this.currentX !== 0) ? this.currentX : u,
+			currentY: (this.currentY !== 0) ? this.currentY : u,
+			visibility: (!this.visibility) ? this.visibility : u,
+			fixed: (this.fixed) ? this.fixed : u,
+			};
+		};
+	Point.prototype.setToDefaults = function(){
+		this.set({
+			comment: '',
+			title: '',
+			sprite: false,
+			distance: false,
+			angle: false,
+			startLink: false,
+			currentX: 0,
+			currentY: 0,
+			visibility: false,
+			fixed: false,
+			});
+		return this;
+		};
 	Point.prototype.getData = function(override){
-		if(!this.distance && !this.angle){
+		if(!scrawl.isa(this.distance,'num') && !scrawl.isa(this.angle,'num')){
 			this.setPolar();
 			}
 		this.recalculate(override);
@@ -4495,17 +6601,27 @@ window.scrawl = (function(){
 			this.setPolar();
 			}
 		if(scrawl.isa(items.sprite,'str')){
-			scrawl.sprite[mySprite].pointList.removeItem(this.name);
-			scrawl.sprite[this.sprite].pointList.pushUnique(this.name);
+			try{scrawl.sprite[this.sprite].pointList.removeItem(this.name);}catch(e){}
+			try{scrawl.sprite[items.sprite].pointList.pushUnique(this.name);}catch(e){}
+			this.sprite = items.sprite;
 			}
 		return this;
 		};
+	Point.prototype.setDelta = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(items.distance){this.distance += items.distance;}
+		if(items.angle){this.angle += items.angle;}
+		var override = (items.override) ? items.override : {x:0,y:0};
+		this.recalculate(override);
+		return this;
+		};
 	Point.prototype.recalculate = function(override){
+		var override = (override) ? override : {x:0,y:0};
 		if(scrawl.isa(this.fixed,'str') && (scrawl.spritenames.contains(this.fixed) || scrawl.pointnames.contains(this.fixed))){
 			var myPivot = scrawl.sprite[this.fixed] || scrawl.point[this.fixed];
 			if(myPivot.type === 'Point'){
-				this.currentX = myPivot.currentX;
-				this.currentY = myPivot.currentY;
+				this.currentX = myPivot.currentX + override.x;
+				this.currentY = myPivot.currentY + override.y;
 				}
 			else{
 				this.currentX = myPivot.startX;
@@ -4513,25 +6629,24 @@ window.scrawl = (function(){
 				}
 			}
 		else if(!this.fixed){
-			var obj, myStartX, myStartY, myAngle, myRadius; 
+			var obj, myAngle, myRadius, here; 
 			obj = scrawl.sprite[this.sprite];
-			myStartX = obj.getStartX(override);
-			myStartY = obj.getStartY(override);
+			here = obj.prepareStamp(override)
 			if(obj.type === 'Shape'){
 				if(obj.addPathRoll){
-					myAngle = (this.degree) ? (this.angle + obj.roll + obj.pathRoll) * scrawl.radian : this.angle + obj.roll + (obj.pathRoll/scrawl.radian);
+					myAngle = (this.angle + obj.currentRoll + obj.pathRoll) * scrawl.radian;
 					}
 				else{
-					myAngle = (this.degree) ? (this.angle + obj.roll) * scrawl.radian : this.angle + obj.roll;
+					myAngle = (this.angle + obj.currentRoll) * scrawl.radian;
 					}
 				myRadius = this.distance * obj.scale;
 				}
 			else{
-				myAngle = (this.degree) ? this.angle * scrawl.radian : this.angle;
+				myAngle = this.angle * scrawl.radian;
 				myRadius = this.distance;
 				}
-			this.currentX = myStartX + (myRadius * Math.cos(myAngle));
-			this.currentY = myStartY + (myRadius * Math.sin(myAngle));
+			this.currentX = here.x + (myRadius * Math.cos(myAngle));
+			this.currentY = here.y + (myRadius * Math.sin(myAngle));
 			}
 		return this;
 		};
@@ -4539,13 +6654,13 @@ window.scrawl = (function(){
 		var obj = scrawl.sprite[this.sprite];
 		var dx = this.currentX - obj.startX;
 		var dy = this.currentY - obj.startY;
-		this.angle = (this.degree) ? Math.atan2(dy, dx)/scrawl.radian : Math.atan2(dy, dx);
+		this.angle = Math.atan2(dy, dx)/scrawl.radian;
 		this.distance = Math.sqrt((dx*dx)+(dy*dy));
 		return this;
 		};
 
 	function Link(items){
-		SubScrawl.call(this, items);
+		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.species = items.species || false;
 		this.startPoint = items.startPoint || false;
@@ -4564,9 +6679,46 @@ window.scrawl = (function(){
 			}
 		return this;
 		}
-	Link.prototype = Object.create(SubScrawl.prototype);
+	Link.prototype = Object.create(Scrawl.prototype);
 	Link.prototype.type = 'Link';
 	Link.prototype.classname = 'linknames';
+	Link.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//Link
+			species: (this.species) ? this.species : u,
+			startPoint: (this.startPoint) ? this.startPoint : u,
+			sprite: (this.sprite) ? this.sprite : u,
+			endPoint: (this.endPoint) ? this.endPoint : u,
+			controlPoint1: (this.controlPoint1) ? this.controlPoint1 : u,
+			controlPoint2: (this.controlPoint2) ? this.controlPoint2 : u,
+			action: (this.action !== 'add') ? this.action : u,
+			precision: (this.precision !== 100) ? this.precision : u,
+			positions: (this.positions) ? true : u,
+			};
+		};
+	Link.prototype.setToDefaults = function(){
+		this.set({
+			comment: '',
+			title: '',
+			species: false,
+			startPoint: false,
+			sprite: false,
+			endPoint: false,
+			controlPoint1: false,
+			controlPoint2: false,
+			action: false,
+			precision: 100,
+			positions: false,
+			});
+		return this;
+		};
 	Link.prototype.set = function(items){
 		var mySprite = this.sprite;
 		Scrawl.prototype.set.call(this, items);
@@ -4706,7 +6858,6 @@ window.scrawl = (function(){
 		switch(this.action){
 			case 'close' :
 				ctx.closePath();
-				return true;
 				break;
 			case 'move' :
 				try{
@@ -4778,6 +6929,7 @@ window.scrawl = (function(){
 		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.color = items.color || [{color: 'black', stop: 0},{color: 'white', stop: 0.999999}];
+		this.setToSprite = (scrawl.isa(items.setToSprite,'bool')) ? items.setToSprite : false; 
 		this.roll = items.roll || 0;
 		this.cell = items.cell || scrawl.pad[scrawl.currentPad].current;
 		this.startX = items.startX || 0;
@@ -4790,11 +6942,80 @@ window.scrawl = (function(){
 		this.startHandleY = items.startHandleY || 0;
 		this.endHandleX = items.endHandleX || 0;
 		this.endHandleY = items.endHandleY || 0;
+		this.startRangeX = items.startRangeX || 0;
+		this.startRangeY = items.startRangeY || 0;
+		this.endRangeX = (scrawl.isa(items.endRangeX,'num')) ? items.endRangeX : 1;
+		this.endRangeY = (scrawl.isa(items.endRangeY,'num')) ? items.endRangeY : 0;
+		this.autoUpdate = (scrawl.isa(items.autoUpdate,'bool')) ? items.autoUpdate : false;
 		return this;
 		}
 	Design.prototype = Object.create(Scrawl.prototype);
 	Design.prototype.type = 'Design';
 	Design.prototype.classname = 'designnames';
+	Design.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//Design/Gradient/RadialGradient
+			color: (this.color) ? this.color : u,
+			setToSprite: (this.setToSprite) ? this.setToSprite : u,
+			roll: (this.roll !== 0) ? this.roll : u,
+			cell: (this.cell) ? this.cell : u,
+			startX: (this.startX !== 0) ? this.startX : u,
+			startY: (this.startY !== 0) ? this.startY : u,
+			endX: (this.endX !== 0) ? this.endX : u,
+			endY: (this.endY !== 0) ? this.endY : u,
+			handleX: (this.handleX !== 0) ? this.handleX : u,
+			handleY: (this.handleY !== 0) ? this.handleY : u,
+			startHandleX: (this.startHandleX !== 0) ? this.startHandleX : u,
+			startHandleY: (this.startHandleY !== 0) ? this.startHandleY : u,
+			endHandleX: (this.endHandleX !== 0) ? this.endHandleX : u,
+			endHandleY: (this.endHandleY !== 0) ? this.endHandleY : u,
+			startRangeX: (this.startRangeX !== 0) ? this.startRangeX : u,
+			startRangeY: (this.startRangeY !== 0) ? this.startRangeY : u,
+			endRangeX: (this.endRangeX !== 1) ? this.endRangeX : u,
+			endRangeY: (this.endRangeY !== 1) ? this.endRangeY : u,
+			autoUpdate: (this.autoUpdate) ? this.autoUpdate : u,
+			startRadius: (scrawl.xt(this.startRadius) && this.startRadius !== 0) ? this.startRadius : u,
+			endRadius: (scrawl.xt(this.endRadius) && this.endRadius !== 0) ? this.endRadius : u,
+			startRangeRadius: (scrawl.xt(this.startRangeRadius) && this.startRangeRadius !== 0.5) ? this.startRangeRadius : u,
+			endRangeRadius: (scrawl.xt(this.endRangeRadius) && this.endRangeRadius !== 0) ? this.endRangeRadius : u,
+			};
+		};
+	Design.prototype.setToDefaults = function(){
+		var u;
+		this.set({
+			comment: '',
+			title: '',
+			setToSprite: false,
+			roll: 0,
+			startX: 0,
+			startY: 0,
+			endX: 0,
+			endY: 0,
+			handleX: 0,
+			handleY: 0,
+			startHandleX: 0,
+			startHandleY: 0,
+			endHandleX: 0,
+			endHandleY: 0,
+			startRangeX: 0,
+			startRangeY: 0,
+			endRangeX: 1,
+			endRangeY: 1,
+			autoUpdate: false,
+			startRadius: (scrawl.xt(this.startRadius)) ? 0 : u,
+			endRadius: (scrawl.xt(this.endRadius)) ? 0 : u,
+			startRangeRadius: (scrawl.xt(this.startRangeRadius)) ? 0.5 : u,
+			endRangeRadius: (scrawl.xt(this.endRangeRadius)) ? 0 : u,
+			});
+		return this;
+		};
 	Design.prototype.setDelta = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		if(items.roll){this.roll += items.roll;}
@@ -4804,12 +7025,23 @@ window.scrawl = (function(){
 		if(items.endX){this.endX += items.endX;}
 		if(items.endY){this.endY += items.endY;}
 		if(items.endRadius){this.endRadius += items.endRadius;}
+		if(items.startRangeRadius){this.startRangeRadius += items.startRangeRadius;}
+		if(items.endRangeRadius){this.endRangeRadius += items.endRangeRadius;}
 		if(items.handleX){this.handleX += items.handleX;}
 		if(items.handleY){this.handleY += items.handleY;}
 		if(items.startHandleX){this.startHandleX += items.startHandleX;}
 		if(items.startHandleY){this.startHandleY += items.startHandleY;}
 		if(items.endHandleX){this.endHandleX += items.endHandleX;}
 		if(items.endHandleY){this.endHandleY += items.endHandleY;}
+		if(items.startRangeX){this.startRangeX += items.startRangeX;}
+		if(items.startRangeY){this.startRangeY += items.startRangeY;}
+		if(items.endRangeX){this.endRangeX += items.endRangeX;}
+		if(items.endRangeY){this.endRangeY += items.endRangeY;}
+		this.update();
+		return this;
+		};
+	Design.prototype.set = function(items){
+		Scrawl.prototype.set.call(this, items);
 		this.update();
 		return this;
 		};
@@ -4837,16 +7069,21 @@ window.scrawl = (function(){
 		};
 	Design.prototype.sortStops = function(){
 		for(var i=0, z=this.color.length; i<z; i++){
-			this.color[i].roll = this.roll;
+			this.color[i].stop += this.roll;
+			if(!this.color[i].stop.isBetween(0,1,true)){
+				this.color[i].stop = (this.color[i].stop > 0.5) ? this.color[i].stop-1 : this.color[i].stop+1;
+				}
+			if(this.color[i].stop <= 0){this.color[i].stop = 0.000001;}
+			else if(this.color[i].stop >= 1){this.color[i].stop = 0.999999;}
 			}
 		this.color.sort(function(a,b){
-			return (((a.stop+a.roll)-Math.floor(a.stop+a.roll)) - ((b.stop+b.roll)-Math.floor(b.stop+b.roll)));
+			return a.stop - b.stop;
 			});
 		};
 	Design.prototype.applyStops = function(){
 		if(scrawl.dsn[this.name]){
 			for(var i=0, z=this.color.length; i<z; i++){
-				scrawl.dsn[this.name].addColorStop(((this.color[i].stop+this.roll)-Math.floor(this.color[i].stop+this.roll)), this.color[i].color);
+				scrawl.dsn[this.name].addColorStop(this.color[i].stop, this.color[i].color);
 				}
 			}
 		return this;
@@ -4875,6 +7112,8 @@ window.scrawl = (function(){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.startRadius = items.startRadius || 0;
 		this.endRadius = items.endRadius || 0;
+		this.startRangeRadius = (scrawl.isa(items.startRangeRadius,'num')) ? items.startRangeRadius : 0.5;
+		this.endRangeRadius = items.endRangeRadius || 0;
 		scrawl.design[this.name] = this;
 		scrawl.designnames.pushUnique(this.name);
 		this.update();
@@ -4903,6 +7142,29 @@ window.scrawl = (function(){
 	Pattern.prototype = Object.create(Scrawl.prototype);
 	Pattern.prototype.type = 'Pattern';
 	Pattern.prototype.classname = 'designnames';
+	Pattern.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//Pattern
+			repeat: (this.repeat !== 'repeat') ? this.repeat : u,
+			image: (this.image) ? this.image : u,
+			source: (this.source) ? this.source : u,
+			};
+		};
+	Pattern.prototype.setToDefaults = function(){
+		this.set({
+			comment: '',
+			title: '',
+			repeat: 'repeat',
+			});
+		return this;
+		};
 	Pattern.prototype.setImage = function(source, name, callback){
 		if(scrawl.isa(source, 'str')){
 			var myImage = new Image();
@@ -4943,17 +7205,10 @@ window.scrawl = (function(){
 	Pattern.prototype.set = function(items){
 		Scrawl.prototype.set.call(this, items);
 		this.setImage();
-//		this.makeDesign();
 		return this;
 		};
-	Pattern.prototype.getObjectData = function(){
-		return {
-			type: this.type, 
-			name: this.name, 
-			object: this, 
-			image: scrawl.image[this.image].getObjectData(), 
-			timestamp: Date.now()
-			};
+	Pattern.prototype.get = function(){
+		return (scrawl.xt(scrawl.dsn[this.name])) ? scrawl.dsn[this.name] : 'rgba(0,0,0,0)';
 		};
 	Pattern.prototype.makeDesign = function(cell){
 		var ctx = (scrawl.xt(cell)) ? scrawl.context[cell] : scrawl.context[scrawl.pad[scrawl.currentPad].current];
@@ -4976,6 +7231,228 @@ window.scrawl = (function(){
 		return c;
 		};
 
+	function Color(items){
+		Scrawl.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.r = items.r || 0;
+		this.g = items.g || 0;
+		this.b = items.b || 0;
+		this.a = items.a || 1;
+		this.rShift = items.rShift || 0;
+		this.gShift = items.gShift || 0;
+		this.bShift = items.bShift || 0;
+		this.aShift = items.aShift || 0;
+		this.rMax = items.rMax || 255;
+		this.gMax = items.gMax || 255;
+		this.bMax = items.bMax || 255;
+		this.aMax = items.aMax || 1;
+		this.rMin = items.rMin || 0;
+		this.gMin = items.gMin || 0;
+		this.bMin = items.bMin || 0;
+		this.aMin = items.aMin || 0;
+		this.rBounce = (scrawl.isa(items.rBounce,'bool')) ? items.rBounce : false;
+		this.gBounce = (scrawl.isa(items.gBounce,'bool')) ? items.gBounce : false;
+		this.bBounce = (scrawl.isa(items.bBounce,'bool')) ? items.bBounce : false;
+		this.aBounce = (scrawl.isa(items.aBounce,'bool')) ? items.aBounce : false;
+		this.autoUpdate = (scrawl.isa(items.autoUpdate,'bool')) ? items.autoUpdate : false;
+		if(scrawl.xt(items.color)){
+			this.convert(items.color)
+			};
+		if(items.random){
+			this.generateRandomColor(items)
+			};
+		this.checkValues();
+		scrawl.design[this.name] = this;
+		scrawl.designnames.pushUnique(this.name);
+		return this;
+		}
+	Color.prototype = Object.create(Scrawl.prototype);
+	Color.prototype.type = 'Color';
+	Color.prototype.classname = 'designnames';
+	Color.prototype.prepareForExport = function(){
+		var u;
+		return {
+			//all
+			name: this.name,
+			comment: (this.comment !== '') ? this.comment : u,
+			title: (this.title !== '') ? this.title : u,
+			timestamp: this.timestamp,
+			type: this.type,
+			//Pattern
+			r: (this.r !== 0) ? this.r : u,
+			g: (this.g !== 0) ? this.g : u,
+			b: (this.b !== 0) ? this.b : u,
+			a: (this.a !== 1) ? this.a : u,
+			rShift: (this.rShift !== 0) ? this.rShift : u,
+			gShift: (this.gShift !== 0) ? this.gShift : u,
+			bShift: (this.bShift !== 0) ? this.bShift : u,
+			aShift: (this.aShift !== 0) ? this.aShift : u,
+			rMax: (this.rMax !== 255) ? this.rMax : u,
+			gMax: (this.gMax !== 255) ? this.gMax : u,
+			bMax: (this.bMax !== 255) ? this.bMax : u,
+			aMax: (this.aMax !== 1) ? this.aMax : u,
+			rMin: (this.rMin !== 0) ? this.rMin : u,
+			gMin: (this.gMin !== 0) ? this.gMin : u,
+			bMin: (this.bMin !== 0) ? this.bMin : u,
+			aMin: (this.aMin !== 0) ? this.aMin : u,
+			rBounce: (this.rBounce) ? this.rBounce : u,
+			gBounce: (this.gBounce) ? this.gBounce : u,
+			bBounce: (this.bBounce) ? this.bBounce : u,
+			aBounce: (this.aBounce) ? this.aBounce : u,
+			autoUpdate: (this.autoUpdate) ? this.autoUpdate : u,
+			};
+		};
+	Color.prototype.setToDefaults = function(){
+		this.set({
+			comment: '',
+			title: '',
+			r: 0,
+			g: 0,
+			b: 0,
+			a: 1,
+			rShift: 0,
+			gShift: 0,
+			bShift: 0,
+			aShift: 0,
+			rMax: 255,
+			gMax: 255,
+			bMax: 255,
+			aMax: 1,
+			rMin: 0,
+			gMin: 0,
+			bMin: 0,
+			aMin: 0,
+			rBounce: false,
+			gBounce: false,
+			bBounce: false,
+			aBounce: false,
+			autoUpdate: false,
+			});
+		return this;
+		};
+	Color.prototype.get = function(){
+		this.checkValues();
+		return 'rgba('+this.r+','+this.g+','+this.b+','+this.a+')';
+		};
+	Color.prototype.generateRandomColor = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.r = items.r || parseInt(((Math.random()*(this.rMax-this.rMin))+this.rMin).toFixed());
+		this.g = items.g || parseInt(((Math.random()*(this.gMax-this.gMin))+this.gMin).toFixed());
+		this.b = items.b || parseInt(((Math.random()*(this.bMax-this.bMin))+this.bMin).toFixed());
+		this.a = items.a || parseFloat(((Math.random()*(this.aMax-this.aMin))+this.aMin).toFixed(6));
+		this.checkValues();
+		return this;
+		};
+	Color.prototype.checkValues = function(){
+		this.r = (this.r > 255) ? 255 : ((this.r < 0) ? 0 : this.r);
+		this.g = (this.g > 255) ? 255 : ((this.g < 0) ? 0 : this.g);
+		this.b = (this.b > 255) ? 255 : ((this.b < 0) ? 0 : this.b);
+		this.a = (this.a > 1) ? 1 : ((this.a < 0) ? 0 : this.a);
+		return this;
+		};
+	Color.prototype.set = function(items){
+		Scrawl.prototype.set.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(items.random){
+			this.generateRandomColor(items);
+			}
+		this.checkValues();
+		return this;
+		};
+	Color.prototype.update = function(){
+		var l = ['r','g','b','a'];
+		for(var i=0, z=l.length; i<z; i++){
+			if(!(this[l[i]]+this[l[i]+'Shift']).isBetween(this[l[i]+'Max'],this[l[i]+'Min'],true)){
+				if(this[l[i]+'Bounce']){
+					this[l[i]+'Shift'] = -this[l[i]+'Shift'];
+					}
+				else{
+					this[l[i]] = (this[l[i]] > (this[l[i]+'Max']+this[l[i]+'Min'])/2) ? this[l[i]+'Max'] : this[l[i]+'Min'];
+					this[l[i]+'Shift'] = 0;
+					}
+				}
+			this[l[i]] += this[l[i]+'Shift'];
+			}
+		return this;
+		};
+	Color.prototype.setDelta = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.r += items.r || 0;
+		this.g += items.g || 0;
+		this.b += items.b || 0;
+		this.a += items.a || 0;
+		this.checkValues();
+		return this;
+		};
+	Color.prototype.convert = function(items){
+		items = (scrawl.isa(items,'str')) ? items : '';
+		if(items.length > 0){
+			items.toLowerCase();
+			var temp;
+			if(items[0] === '#'){
+				if(items.length < 5){
+					this.r = this.toDecimal(items[1]+items[1]);
+					this.g = this.toDecimal(items[2]+items[2]);
+					this.b = this.toDecimal(items[3]+items[3]);
+					}
+				else if(items.length < 8){
+					this.r = this.toDecimal(items[1]+items[2]);
+					this.g = this.toDecimal(items[3]+items[4]);
+					this.b = this.toDecimal(items[5]+items[6]);
+					}
+				}
+			else if(/rgb\(/.test(items)){
+				temp = items.match(/([0-9.]+\b)/g);
+				if(/%/.test(items)){
+					this.r = parseInt((temp[0]/100)*255,10);
+					this.g = parseInt((temp[1]/100)*255,10);
+					this.b = parseInt((temp[2]/100)*255,10);
+					}
+				else{
+					this.r = parseInt(temp[0],10);
+					this.g = parseInt(temp[1],10);
+					this.b = parseInt(temp[2],10);
+					}
+				}
+			else if(/rgba\(/.test(items)){
+				temp = items.match(/([0-9.]+\b)/g);
+				this.r = temp[0];
+				this.g = temp[1];
+				this.b = temp[2];
+				this.a = temp[3];
+				}
+			else{
+				switch(items){
+					case 'green' : 		this.r = 0;		this.g = 128;	this.b = 0;		break;
+					case 'silver' : 	this.r = 192;	this.g = 192;	this.b = 192;	break;
+					case 'lime' : 		this.r = 0;		this.g = 255;	this.b = 0;		break;
+					case 'gray' : 		this.r = 128;	this.g = 128;	this.b = 128;	break;
+					case 'grey' : 		this.r = 128;	this.g = 128;	this.b = 128;	break;
+					case 'olive' : 		this.r = 128;	this.g = 128;	this.b = 0;		break;
+					case 'white' : 		this.r = 255;	this.g = 255;	this.b = 255;	break;
+					case 'yellow' : 	this.r = 255;	this.g = 255;	this.b = 0;		break;
+					case 'maroon' : 	this.r = 128;	this.g = 0;		this.b = 0;		break;
+					case 'navy' : 		this.r = 0;		this.g = 0;		this.b = 128;	break;
+					case 'red' : 		this.r = 255;	this.g = 0;		this.b = 0;		break;
+					case 'blue' : 		this.r = 0;		this.g = 0;		this.b = 255;	break;
+					case 'purple' : 	this.r = 128;	this.g = 0;		this.b = 128;	break;
+					case 'teal' : 		this.r = 0;		this.g = 128;	this.b = 128;	break;
+					case 'fuchsia' : 	this.r = 255;	this.g = 0;		this.b = 255;	break;
+					case 'aqua' : 		this.r = 0;		this.g = 255;	this.b = 255;	break;
+					default : 			this.r = 0;		this.g = 0;		this.b = 0;		break;
+					}
+				}
+			}
+		this.checkValues();
+		return this;
+		};
+	Color.prototype.toDecimal = function(item){
+		return parseInt(item,16);
+		};
+	Color.prototype.toHex = function(item){
+		return item.toString(16);
+		};
+	
 	scrawl.initialize();
 	return scrawl;
 	}());

@@ -1,8 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
-* SCRAWL+STACK.JS Library 
 *
-*	version 0.304 - 5 September 2013
+*	version 1.00 - 30 October 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -11,14 +10,732 @@
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
+- locking X/Y sprite coordinates - eg for easing animation stuff
 - user accessibility issues
 - controlling videos in Picture sprites?
 - saving canvas as images (most probably via server)
-- (close to) real-time canvas editing across a network???
 
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+131030
+	- website index page redesigned and recoded
+		- all seems to work in latest production versions of IE10, Firefox, Opera, Chrome
+		- Safari - cat in 3D animation missing - can live with this
+		- IE10 - cloning demo - cells not being cleared as expected, but does correct itself when carousel shifts
+	- scrawl-min.js version generated
+	- OFFICIAL: updated to v1.00
+	- upload new files to Sourceforge
+	- update github
+	- update website
+	- announce to world ...
+	
+131029
+	- added .setToDefaults() functions to various objects
+		- used to set an object's attributes to default values before importing native data for that object
+			- overcomes issue of .exportNative() functions only including attributes that vary from their default values
+	- added scrawl.version attribute
+	- website tutorial page completed
+	
+131028
+	- website tutorial page
+		- all completed/recoded, except for:
+			- new sub-section on Shape markers
+			- new section on Loading/saving Groups and Sprites
+			
+131027
+	- website tutorial page
+		- 'Scrawl sprites' completed
+		- 'Block' completed
+		- 'Wheel' completed
+		- 'Phrase' completed
+		- 'Picture' completed
+		- 'Picture with sprite sheet' completed
+		- new 'Outline' section coded
+		- 'Shape' completed
+		- 'Hand-coding Shapes' completed
+
+131026
+	- website tutorial page
+		- 'Using Scrawl' completed
+		- 'Pads and Cells' completed
+		- 'Scrawl stacks' completed
+	
+131025
+	- completed updating the demos.js file
+	- investigating minification options
+		- gone with http://jscompress.com/ - which claims to use Uglify.js for minifying files
+			- tested all demos against the Scrawl minified version
+			- bug hunting ...
+				- all works in Firefox
+	- started work on updating the website tutorial page
+		- 'HTML5 page' completed
+		- 'Using Scrawl' walkthrough recoded
+	
+131024
+	- continuing the work of updating the demos.js file
+	- bug hunting ...
+				
+131023
+	- documentation update completed
+	- started the process of updating the demos.js file
+	
+131022
+	- rewrote Outline constructor and functions to remove eval
+		- eval too risky - no reasonable way to prevent 3rd parties from tampering with outline.compiledData attribute
+		- seems to work ok
+	- updating documentation
+	
+131001-21
+	- massive overhaul of the entire library
+		- sprite positioning regularised
+		- sprite collision detection regularised
+			- consistency across sprites whatever their flip or roll attributes may be
+			- Picture sprite color detection now takes into account sprite's flip and roll attributes
+			- Shape sprites no longer use NESW collision point system
+				- now expect .collisionPoints to be a number
+				- number represents the no of collision points along Shape path
+					- will allow lines/curves to have collision points strung along them
+			- checkField/checkFieldAt functions rewritten
+			- removed Sprite.addCollisionPoints(), .removeCollisionPoints() functions
+		- experimental SVG import support removed
+		- added in native import/export functions
+			- reliant on creating/parsing JSON strings of sprite, design and group objects
+			- .prepareForExport() functions for Group, Sprite, Point, Link and Design (Gradient/RadialGradient/Pattern/Color) objects
+				- only attributes not equal to default values are included in the JSON string
+			- new scrawl.importNative(string) function
+			- new Group.exportNative(), Sprite.exportNative() functions
+			- removed scrawl.save() function
+		- testing and recoding of every demo to fit the new paradigms
+			- demos 013,014,038,066,068,078,098,099,100,101 redundant
+		- reintegrated scrawl.js and scrawl+sprite.js
+			- maintaining two separate files was introducing too many stupid bugs
+			- rewrote canvas and stack discovery/import/create functions
+		- cell setEngine rewritten to fix bugs relating to .setToSprite
+		- Groups reconceived
+			- regularising towards the sprite 'default'
+				- new .roll, .fieldTest, .fieldChannel attributes
+			- offset calculation significantly rewritten
+		- Sprite constructor .target flag separated from .group attribute
+			- target now recodes objects so that they use their group as a pivot and their handle values act as offsets to the group origin point
+			- new Sprite.targetGroup() function to respond to .target flag
+		- Group.setHandles(), .getSpriteRange() functions dumped
+			- replaced by .setGroupDimensions(), .setSpritesToGroupHandle() functions
+				- Groups now have handles that work in the same manner as Sprite handles
+		- Groups can now be rotated as a single unit
+		- Sprite stamping functions overhauled
+		- All references to .degree attributes removed from code
+			- Scrawl.js is now 100% degree-based - will not accept radian values
+		- Color object rewritten to remove many bugs
+	- tested demos in Firefox, IE10, Safari(windows), Chrome, Opera
+		- got 3D cat animation working again in Firefox
+		- Opera now supports CSS3 3D transforms!!!
+		- everything seems to be working in all browsers
+			- some animations involving collisions or path animations look slow in Firefox
+			- IE10 still has CSS3 3D issues
+	- MOVING TO VERSION 1.00
+		- V1.00 IS INCOMPATIBLE WITH PREVIOUS VERSIONS
+	- updated changelog (this file) - long overdue!
+	- TODO:
+		- update documentation thoroughly
+		- update readme file
+		- update website tutorial page
+		- recode website index page
+		- make 'video' tour of Scrawl.js
+		- recode website to add a blog
+			- use blog for lessons, best practice, updates, news, etc
+		
+130930
+	- project collisionOverhaul continues ...
+		- Shapes no longer use the common collision points
+			- instead all shapes take a number for collision points
+			- points are distributed evenly around the path
+	- current issues
+		- overrides
+
+130926-27
+	- project collisionOverhaul continues ...
+
+130925
+	- fixed bug in Phrase.stamp-ing
+	- project collisionOverhaul commences ...
+		- collisions with cell fields
+		- collisions within groups
+			- currently oversensitive
+			
+130924
+	- more work on regularising Outline sprites
+	- fixing text along paths
+		- done!
+		- completely different solution to the old one
+			- though can't get it to work properly with Arabic ...
+	
+130923
+	- finally figured out what was going wrong with wheel positioning - fixed
+	- changed context .fill attribute to '.winding'
+		- to avoid all possible confusion with sprite.fill() functions
+		- need to work out how to check hits in a Shape/Outline sprite with .winding === 'evenodd'
+	- Shape sprite positioning: final decisions:
+		- all lines (via makeLine(), makeQuadratic() and makeBezier() factories) APPEAR to be centered on their startXY coords
+			- handleXY are set to 'left' and 'top' respectively
+			- new .getPivotOffset() override effectively shifts lines back and up by half their widths/heights to make illusion work
+			- new Shape.line attribute: true for line/quadratic/bezier
+				- should be set to true for hand-coded lines to get correct positioning
+		- all other Shapes are centered
+		- tested ... works
+	- fixing more demos
+		- most working up to demo 090 ...
+	
+130922
+	- Shape sprite positioning on flip, scale, roll, etc ... done
+		- finally got it working in a (reasonably) sensible manner
+	- removing collision detection options
+		- killed Shape.checkHitUsingRadius, .checkHitUsingBox
+		- killed Outline.checkHitUsingBox
+			- both sprites now rely entirely on .isPointInPath()
+	- Shape sprite positioning on flip, scale, roll, etc ... done
+	- more work on cloning
+	- much chasing down of bugs as testing changes on demos
+		- most demos were fixed by alteration of Phrase .textAlign to .handleX
+		- issue with centering circles 
+			- not happy with failure to exactly place circle centre at startXY coordinates as default
+		- some later demos were using .getCorners (which has now been dumped)
+		- big issue with placing imported Outline sprites
+		- need to do more on markers
+		- between-sprite collision detection is the next big job
+			- collisions against cell fields seems to work fine
+		- also want to get text along path working again
+			- works for single lines
+			- need to re-implement word and glyph TAP
+			
+130921
+	- rewrote sprite.pickupSprite(), sprite.dropSprite() functions
+		- because there was a much simpler solution
+		- meant abandoning much of yesterday's work
+			- but worth it
+	- introduced temporary attributes to sprites
+		- .currentX, currentY, currentWidth, .currentHeight, .currentRadius
+			- going to be used for drawing sprites
+				- cuts down on the number of calls to getStartXY
+		- .mouseX, .mouseY, .realPivot
+			- used during mouse attachment for drag-and-drop
+				- created when sprite first associates with mouse (drag)
+				- destroyed when association breaks (drop)
+	- collision detection
+		- moving away from .getCorners
+		- new collision detection system (for Blocks, Phrases, etc) uses ctx.rect() and .isPointInPath() JS functions
+			- tied to rotate and flip functions, allows for point detection in rolled sprites!
+			- extensive rewrites of related functions
+	- new Phrase attributes: .backgroundColor and .backgroundMargin
+		- for adding a background color to Phrase sprites
+			- like postIt notes ...
+			
+130920
+	- operation getCorners() & checkHit() (continued ...)
+		- Shape sprites
+			- all factory functions now produce relative paths, not absolute ones
+			- clone function corrected for minor errors
+			- all seems to be (finally) working
+				- still some issues with lines and curves
+					- hit boxes seem to be displaced a little
+					- when start and end coordinates are horizontal/vertical to each other, boxes have no width/height
+					- safest to use .checkHitUsingRadius to detect mouse
+		- Outline sprites
+			- changed factory functions to adapt the paths they create to be used by newOutline
+			- adapted the checkHit() function to take into account .roll
+		- changed Sprite.dropSprite()
+			- now takes an object rather than a string
+				{pivot:PIVOTNAME, restoreHandles:BOOLEAN}
+				- restoreHandles defaults to 'true'
+				- mainly for Shape objects
+					- when true, will restore Shape handles, but may cause some jumping when pickup/drop occurs
+					- when false, will not jump, but Shapes will now rotate around the new point
+	- operation getCorners() & checkHit() COMPLETED (for now ...)
+	- TODO
+		- restore Phrase ability to track along paths
+		- group flip
+		- group roll
+		- group clone
+		- really ought to rationalise the inGroup and betweenGroup collision detection
+			- still need to figure out how to detect collisions on rotated Block, Picture, Phrase (and Shape?) sprites
+			- maybe also Wheels, though they always rotate around their centers?
+			- think I've accomplished this for Outlines 
+				- need to check to make sure they do what I think they do ...
+		- SVG load 'style' attributes
+			- will be using them for the exporting of stuff, so will need to import them too
+		- develop .export() functions for sprites and groups, and associated stuff
+			- to make pretty SVG files that can be used with the SVGload functions
+		- check through all the SVG stuff
+			- see if there's anything else Scrawl should be capturing
+			- see if there's anything superfluous in the coding eg unused attributes
+		- check through all Demos, recoding where necessary
+		- transfer all the new stuff over to scrawl+stack.js
+			- though maybe abandon having separate files for both?
+				- maintaining 2 files is a lot of work
+				- doable if can find a way to better minimise files?
+					- really need to look at setting up Uglify.js and node.js on local network
+		- update documentation
+		- update tutorial
+		- upgrade library and release it into the wild
+
+130919
+	- operation getCorners() & checkHit() (continued ...)
+		- Picture sprites - done
+		- Outline sprites - done
+			- most Shape factory functions adapted to tale .outline attribute
+				- when set to true, will generate an Outline sprite
+				- otherwise, Shape sprite generated
+				- currently not .makeRegularShape()
+		- Shape sprites
+			- some really weird stuff going on here ...
+			- completely recoded the Shape clone function
+			- working on integrating RegularShape factory to use the makePath factory
+			- tons of tweaks to try and get (regular) shapes to behave similarly to other sprites re handles and collision zones
+			- significant issue when cloning a previously cloned Shape sprite
+				- pivot position is shifted way outside the sprite, sending it flying when rolled
+			- big issues about displaying Shapes when flipped
+
+130918
+	- operation getCorners() & checkHit()
+		- code tweaked to accommodate scaling
+			- works for Blocks
+			- Phrases playing up ...
+	- MAJOR CHANGE
+		- complete rewrite of Phrase sprite object
+			- was becoming too unwieldy and fiddly
+			- made a decision to break it into two objects
+				- Phrase object is like a shell group masquerating as a sprite
+				- NEW Text object
+					- inherits from Scrawl, not Sprite
+					- holds details of single lines of text
+					- Phrase objects include array of Text objects holding phrase text
+					- Phrases stamp by looping through their .texts array
+					- Text objects do the actual stamping
+		- new system clones perfectly
+			- old multiline Phrases were not clonable (an undiscovered bug)
+		- Phrase.getCorners() function recoded
+			- collision box now fits neatly around multiline text however it is positioned, flipped or scaled
+			- while Phrase animates rotations fantastic, the collision box doesn't (yet) rotate with the sprite
+				- also true of Blocks and Pictures
+				- will need to revisit this 'known' bug at a future date
+		- Phrase layout now makes sense
+			- handleXY controls the positioning of the Phrase sprite as a whole
+			- .textAlign manages the text justification within the Phrase
+			- .textBaseline manages the vertical positioning on the first line of text only
+				- collision box compensates for .textBaseline manipulation
+				- what was once a mystery now becomes a little clearer
+		- text flipping 
+			- .flipUpend now upends the entire Phrase, not line-by-line (as previously happened)
+		- NEED to recode the whole text along paths stuff ...
+	- operation getCorners() & checkHit() (continued ...)
+		- Wheel sprites
+			- recoded .getCorners()
+				- Wheel wasn't positioning as expected when handles changed
+					- because they were drawn from their center, not top left edge
+				- changes don't affect much stuff
+					- added code to set default handleXY to center on initialisation
+					- but when handles are used, the Wheel now acts as expected
+			- recoded .buildPath()
+				- was completely ignoring flip booleans
+					- difficult to spot, but important - now fixed
+			- recoded .checkHit()
+				- correctly picks up wheel, whatever the settings of its handles, scale or flip
+				
+130917
+	- importing SVG <image> coded up
+		- takes no account of any elements inside the element tags
+		- also doesn't care about preserving aaspect ratios
+			- may change this later after additional thought
+	- the <use> element ...
+		- Scrawl is going to ignore this element
+			- SVG uses it to place and display already defined elements
+			- Scrawl captures elements defined in the <defs> tag and places them in a group
+			- Scrawl has no interest in accurately recreating an SVG scene on the HTML5 canvas element
+				- it's purely about saving and loading Scrawl sprites using the SVG format
+	- cloning outlines
+		- coded up Outline.clone() function - overrides Sprite.clone()
+		- tested in Demo100
+	- uncovered and fixed bug in Sprite.pickupSprite()
+		- was failing when handleXY attributes set to anything except numbers
+		- Outline sprites required their own versions of .pickupSprite() and .dropSprite() - coded
+	- fixed Shape cloning bug (in Demo050)
+		- clones of clones were being displaced by handle offsets
+		- fixed by using the Outline solution for pickupSprite() and dropSprite()
+	- major undertaking to rationalise all sprite getCorners() and checkHit() functions
+		- major problems with all sprites when cloning/dragging flipped sprites
+		- first big task - align all possible collision areas with displayed sprites, whatever their flip state
+			- Block - done
+			- Phrase - done
+				- major work, as Phrases affected both by handles and by textAlign/textBaseline
+			- will need to revisit these before proceeding to make sure scaling is also covered.
+				
+130916
+	- fixing all the issues thrown up by the demos checking
+		- Shape factories fixed so that Points generated have the suffixes _p1, _p2, _p3, _p4
+			lines - 1: start; 2: end
+			quadratics - 1: start; 2: control; 3: end
+			beziers - 1: start; 2: startControl; 3: endControl; 4: end
+		- complete rewrite of the Shape.clone() function
+			- working as it should
+				- potential issues about handles when cloning a Shape and immediately giving it handles
+					- as happens in Demo050 (clone + pivot:mouse)
+		- further work with Designs
+			- animated gradients and colors will now automatically update
+				- new Design.autoUpdate attribute to trigger this behaviour
+				- rewrite of Context.getChanges function
+			- fixed the Pattern clone/update issues
+				- Demo040 returned to normality
+	- a number of demos have been rewritten to take into account changes/fixes
+		- won't be able to do this if people start using Scrawl for their project
+			- got to remember backwards compatibility!
+			- but some of the demos were written way back and kludged to fit as the library evolved
+	- executive decision re Outline markers
+		- not going to have them
+			- purpose of SVG is to store/load Scrawl sprites, not to recreate SVG scenes on the HTML canvas element
+			- Shape sprites now make use of markers; Outline sprites are intended to be a lot simpler than Shapes
+	- STILL TO DO
+		- (done) load SVG images into the image part of the library, ready for sprites to use them
+		- (dealt with) 'use' links where SVG reuses template elements
+		- (done) cloning outlines
+			- also have done nothing about updating the data attribute of cloned Shape sprites
+				- could be solved by recoding the Shape factories to use relative coordinates rather than absolute ones?
+				- is it really necessary? will only be used for SVG output, which can carry manipulation data beyond the path data
+		- Outline sprites need a thorough test regime of new demos
+		- loading attributes enclosed in an SVG 'style' attribute
+		- need a whole system of functions for exporting sprites and groups in SVG-style format
+		- serious work on Groups needed
+			- flipping
+			- cloning
+			- rolling
+			- scaling
+			- collisions as a single pseudo-sprite
+		- documentation now badly out of date
+		- tutorial will need a thorough going over
+			- which means porting over all the demos to the demos.js file
+		- need to port all changes over to the scrawl+stack.js file
+		- need to investigate better ways of minimising file size
+			- Uglify.js ... but requires node.js ... which means virtualisation stuff ...
+			
+130915
+	- marker stuff (mostly) completed
+		- tweaked scrawl.parseSVGElement()
+			- all sprite forms (except text) now respect the outline command
+				- though some will fail to produce outlines as no .data path coded for them yet
+		- scrawl.makePath() now reacts ton the .setPivotXY attributes correctly
+			- .setPivotXY attributes can now take strings, numbers or percentages
+		- new SubScrawl.getPivotOffset() helper function
+		- new Shape.stampMark() helper function
+	- worries about color opacity
+		- SVG allows fill and stroke opacities to be set separate from the color itself
+		- might be worth creating color objects for each imported sprite and varying opacity that way?
+			- not convinced we need another pair of attributes added to the factory functions ...
+	- testing all demos against enhanced library
+		- 036,059 (arrows) recoded to use .makePath() factory
+		- 053 recoded to use makePath(), .fill, .scaleOutline
+		- 044 (spinning wheel) recoded to use Color object
+		- 057 (drawing lines) recoded to make use of outlines
+		- broken: 
+			- 080 point associations
+			- 081 two bombs exploding on each other breaks game?
+			- 092, 102, 040 - completely buggered
+			- 060, 068, 084, 085 - cloning lines
+			- (done) all the collision area demos need to be speeded up significantly!
+			
+130914
+	-fixed map demo
+		- poorly planned coding in the demo, rather than a scrawl.js issue
+		- still need to look at why some Outlines are not firing when they should
+			- fixed - traced bug to Outline.checkHit()
+			- all working as should be now, and very quick!
+	- removed String.strtr() shim from Scrawl.js
+		- no more need for it, as now planning to use SVG-type files for import/export
+	- progress with markers
+		- need to sort out handles for Shape sprites
+			- does not like percentages or labels
+		- scaleX seems to be working, but not scaleY, when initially building marker sprite from SVG file
+	- housekeeping ...
+		- deleted all the .getObjectData() functions
+			- no longer required
+		- deleted all sprite .getEndX(), getEndY(), getWidth(), .getHeight() functions
+			- covered by .getCorner() functions
+			- amended all functions using the deleted functions
+	- playing with markers
+		- fixed most problems with markEnd
+			- except need to use setStartTo instead of handleXY
+				- introduce new attributes for make factories: setPivotX, setPivotY
+					- use percentages ...
+					- don't save in sprite object ...
+		
+130913
+	- fixed Point bug
+		- bug was in Point.getData()
+			- a .setPolar() call was triggered whenever .distance and .angle were not true (ie: 0, null, false)
+			- fixed the point constructor to set these attributes to false, if not supplied by the data object
+			- then checked to see if attributes were boolean false before triggering thre call to .setPolar()
+		- also fixed scrawl.make factories so only makePath (and makeRegularShape) triggered a sprite stamp to set the polar coordinates
+		- fixed bug in Shape.clone()
+			- wasn't stamping newly created clones to reset their points' attributes to the new data
+			- tested on demo061 - works
+	- import/export
+		- finally reached a workable system for exporting Shape sprites as path strings
+		- many bugs overcome
+		- Shape path data can be imported as either Shape or Outline objects
+			- shape sprites have start coordinates at the center (rectangle, ellipse, regularshape), or starting values
+			- Outline sprites fix the start coordinates to the top left hand corner of the sprite
+				- just like Blocks and Pictures
+		- fixed bug in Outline stamping methods that was sending sprites everywhere when rotated
+		- demos106 and 107 to test - currently working okay in Firefox - even when flipped
+	- TODO
+		- need to get back on track with markers
+		- need to do loads of testing on Outline collisions
+			- need to think about how to handle collisions for rotated Block, Picture and Outline shapes
+				- outlines do have the advantage of being able to test for hits within the outline
+					- but no idea how this is affected by rotations and flips
+		- more SVG stuff: 
+			- images
+			- the attributes stuff is still flaky and tempramental
+				- users will no doubt want to import badly coded SVGs ...
+		- everything needs to be documented and included in the tutorial
+			- changes will be enough to bump Scrawl up to v0.4
+		- (DONE in part) demo103 world map
+			- need to look at collision detection
+				- for some reason some of the countries are not triggering - probably a box issue?
+				- also, too slow to identify country under mouse cursor
+		
+130912
+	- fixed bug in Sprite.flipCanvas()
+		- was not handling sprite.handleXY properties properly, when set to string labels (top, left, center, etc)
+	- SubScrawl.getStartX(), .getStartY()
+		- extended the top/center/bottom/left/right values to all sprites
+		- added percentages - n% is a percentage of the width for getStartX(); likewise a percentage of the height for getStartY()
+	- new SubScrawl.getDimensions - to return the unscaled dimensions of the object
+		- overridden by Cell and Wheel
+		- used by SubScrawl.getStartXY functions
+	- converted all 'make' factories (except makeRegularShape) to use scrawl.makePath();
+	- got rid of scrawl.makePolyLine(), .makePolygon() factories
+		- for SVG stuff, converted the polyline/polygon data to path strings by adding 'M' to the data string (and 'z' for polygons)
+		- simplifies stuff
+	- lots of experimenting and thinking about SVG markers
+		- started converting sprite painting functions to acommodate marker sprites
+		- ensured that when parsing SVG, shapes within <marker> elements are given visibility:false attributes
+	- somehow managed to reintroduce the 'point not updating when moving startXY' bug ...
+		
+130911
+	- NEW SPRITE
+		- Outline
+			- much like block, except uses SVG path data to draw itself
+			- much fun to get the path parsing stuff right
+			- handleXY can take top|centre|bottom|left|right
+			- attribute .checkHitUsingBox - for quick hit checks
+				- when false (default), creates the outline and checks for point in outline thingy
+			- draws itself using canvas translate/rotate stuff
+		- tested on the WorldMap, which now loads massively quicker than when turning the path data into Shape sprites
+			- using Shapes was generating over 12000 individual point and link objects
+		- also tested for all supported letters: M m Z z L l H h V v C c S s Q q T t
+		- TODO
+			- need to investigate hits-at-location stuff
+				- because current system is a lot slower than the opposition!
+	- scrawl.loadSVG()
+		- now takes an object as its argument:
+			.loadPathsAsOutlines 
+				- when true, path elements will be turned into Outline sprites
+				- default (false) is to create Shape sprites from <path> elements
+			.classname
+				- when supplied, function will scour DOM for elements with class=CLASSNAME
+			.getInlineSVG
+				- when true, scours DOM for inline SVG elements
+				- default is false
+			.cell
+				- cell in which to load the created sprites
+				- (not yet implemented fully)
+	- STILL NEED TO CONSIDER ...
+		- SVG text
+			- including textarea
+			- ignore all attempts to account for text selection/editing or alignment/styling of individual glyphs
+		- SVG images (including video? supported by SVGTiny. But not audio)
+		- SVG linking to other websites? - not convinced Scrawl needs to support that sort of thing
+		- 'use' links where SVG reuses template elements
+		- markers at the start, end and along paths
+			- SVG Tiny doesn't appear to mention them, but they seem like fun
+				- and should be quite easy to do? Already using paths for animation stuff
+		- (DONE) Flipping Pictures associated with sprite sheets
+			- something's badly wrong with defining what gets flipped
+			- (probably) critical for game developers
+			
+130910
+	- finalised Color object
+		- functions include:
+			.get(), .set(), .setDelta(), .update(), .generateRandomColor, .convert(), .toDecimal(), .toHex() 
+		- checked random color generation, updating colors using .update()
+			- tested on amended demo050 (cloning)
+				- works in Firefox
+	- testing with very big 'SVG' - Raphael.js's worldMap
+		- fixed bug in Sprite.get()
+			- missed out fillStyle, .strokeStyle
+		- takes almost 30 seconds to convert to Shapes!
+		
+130907-09
+	- changes during the SVG investigation:
+		- dumped the scrawl.load() and scrawl.save() functions
+			- loading and saving via SVG will be a lot easier
+		- new object: Color - part of the Design suite
+			- SVG allows users to define colors in a variable for future use
+			- Scrawl does it better ...
+			- made Color objects clonable
+		- based SVG support on SVGTiny, not the full SVG
+			- principally cuz it avoids the horrors of the arc
+		- scrawl.loadSVG()
+			- takes the attributes:
+				.getInlineSVG - boolean
+					- true will load all svg files found in the DOM
+				.classname
+					- searches DOM for <object> or <embed> elements with classname
+					- extracts and processes SVG from them
+		- scrawl.getSVGByClass(classname)
+		- scrawl.parseSVGElement()
+			- helper function where all the hard work happens
+			- currently parses the following tags:
+				- svg, g, defs - each creates a group object
+				- title, desc, 
+				- solidcolor, lineargradient, radialgradient, stop
+				- rect, circle, ellipse
+				- line, polyline, polygon
+				- path - all SVGTiny path drawing syntax
+				- text 
+					- very basic so far
+					- don't want Scrawl to become a replica of SVG
+						- so not planning to take it beyond basic support
+		- additional helper functions for .parseSVGElement()
+			- getVal()
+				- converts measure strings (20px, 3em) into pixel values
+			- buildSpriteParameters
+				- a lot of work has gone into handling SVG inheritence
+				- converts SVG parameters into parameters used by Scrawl sprites
+		- scrawl.makePolyLine()
+			- new line factory
+			- takes a set of data suitable for use by the .makeCartesianPoints() factory
+			- returns new open Shape sprite
+		- scrawl.makePolygon()
+			- another new line factory
+			- uses .makePolyLine()
+			- returns a new closed Shape sprite
+		- scrawl.makePath()
+			- converts SVG path data into a new Shape sprite
+			- handles MmZzLlHhVvCcSsQqTt
+			- does NOT handle Aa - which isn't part of the SVGTiny spec
+		- the following functions completely rewritten to make use of .makePath() factory:
+			- scrawl.makeEllipse(), .makeRectangle(), .makeBezier(), .makeQuadratic(), .makeLine()
+				- rationalises factory onto a single system
+				- not yet worked out how to update .makeRegularShape() to new system
+		- extensive rewrite of Cell.setEngine()
+			- to add in some functionality lifted from SVG
+				- gradients can now be set to sprites as well as cells
+					- new Design.setToSprite attribute
+					- used with fillStyle and strokeStyle
+				- NEW FILL RULE
+					- scrawl can now handle 'evenodd' as well as the default 'nonzero'
+					- browsers implement this in different ways
+						- 'evenodd' currently works on Firefox and Chrome only
+				- LINEDASHES
+					- again, not implemented by all browsers
+		- new Context object attributes:
+			.fill 
+				- for the fill rule
+			.lineDash, .lineDashOffset
+				- for handling line dashes
+				- lineDash is an array of numbers setting out the dash pattern
+				- lineDashOfset is the offset for starting the line
+					- updated Sprite.setDelta() so lineDashOffset can be updated dynamically
+						- Scrawl now has Marching Ant lines!
+		- updated Context.getContextFromEngine()
+			- not convinced it's necessary to initialize each Context object to current canvas contextvalues ...
+		- updated Context.getChanges()
+			- to handle another new feature
+				- line and shadow scaling can be switched off by new sprite attribute flag
+		- Groups ...
+			- Groups can now be NESTED
+			- new Group attributes to handle nesting:
+				.isSprite
+					- eventual aim is to allow a group to simulate a sprite
+				.groups
+					- an array of groupnames representing subgroups
+			- new Group.sortGroups() - for sorting groups before calling them to stamp
+			- Group.getOverride()
+				- lifted out of the .stamp() method
+				- now used by sprite.getCorner functions
+					- which in turn are used by the new design-to-sprite thingy
+			- updated Group.forceStamp(), .stamp() to take these changes into account
+			- TODO
+				- needs a lot more work to make groups simulate sprites
+				- may need a complete rethink of the Group object's structure
+		- new Sprite attributes:
+			- Sprite.data
+				- used in particular by Shape sprites for storing their SVG path instructions
+					- not used beyond initializing the sprite
+					- may come in useful as part of a new load/save system
+			- Sprite.scaleOutline
+				- when true (default), lines and shadows are scaled alongside the sprite
+				- the SVG default is NOT to scale lines (I think)
+		- updated Sprite.get() to handle new Context object attributes
+		- Sprite.setDelta() now accepts changes to .lineDashOffset
+			- for the Marching Ants innit
+		- sprite .getCorners() functions calculate current effective position and dimensions for the sprite
+			- used by the context engine to recalculate gradients set to a sprite
+			- may also have broader uses for code rationalisation eg collision detection stuff
+			- Phrase.getCorners() updated
+			- new Block.getCorners(), Wheel.getCorners(), Picture.getCorners(), Shape.getCorners()
+		- fixed annoying Shape.setStartTo() bug
+			- which was causing rotated shapes to set their starts to anywhere except the place requested
+		- fixed Link.sketch() bug
+			- caused sketching to stop when the first close instruction was encountered
+			- not good for SVG imports where many close instructions can be found in a single data string
+		- Design.sortStops() function rewritten
+			- to remove any possibility of a color stop being set to exactly 0 or 1
+		- NEW Gradient/RadialGradient attributes
+			.startRangeX, .startRangeY, .endRangeX, .endRangeX
+			.startRangeRadius, .endRangeRadius
+				- the new set gradient to sprite thingy measures distances in 'percentages' of the sprite width/height
+					- thank you, SVGTiny, for that heartbreak
+		- plans for the new Color object include
+			- being able to randomly generate colors, given minmax values
+			- animating colors by changing their rgba values
+	- TODO:
+		- more SVG conversion work
+			- need to get head around whole viewbox thingy
+			- SVG elements can have a 'style' attribute
+				- doesn't seem to be part of SVGTiny, but probably worth supporting
+			- images - how are they imported? used?
+			- text - how much of their attributes stuff can be ported over?
+			- markers on paths stuff
+			- Executive Decisions: no animation stuff; no DOM interaction stuff
+		- finish work relating to Groups pretending to be sprites
+			- eg flip-as-group, roll-as-group, drag-drop-as-group, etc
+		- (DONE) finish Color object
+		- update some demos to further test/make use of this functionality
+		
+130906
+	- investigating SVG import/export (again)
+		- preparation work - created new scrawl+svg.js file for experiments
+		- amended Group
+			- new .groups array attribute
+			- new .sortGroups function
+			- amended Group.stamp() function
+				- will check to see if there are any subgroups
+				- if yes:
+					- sorts them based on their .order attribute
+					- checks to see that each subgroup is not the same as this group (to hopefully prevent immediate recursion hell)
+					- calls .stamp on each subgroup
+		- new scrawl.loadSVG() function
+			- this is where all the conversion work will take place
+			- scrawl.getSVGByClass() function - helps .loadSVG() locate SVG DOM fragments to work on
+				- SVG files can be included in the webpage either by:
+					- directly embedding the <svg> into the page
+					- <object id="cow1" data="img/cow01.svg" type="image/svg+xml" class="demo103x">
+					- <embed id="cow2" src="img/cow01.svg" type="image/svg+xml" class="demo103x">
+					- not keen on the idea of dynamically loading the file
+						- cuz experiments with images and patterns have always required an .onload thingy
+							- leads to rendering issues if image not loaded quickly enough
+			
 130905
 	- bugfixes - animating multiline phrases
 		- rewrote Sprite.stamp(), Phrase.stamp()
@@ -42,6 +759,9 @@ CHANGE LOG
 	- updated documentation
 	- updated tutorial
 	- upgrade to v0.304
+	- updated website
+	- uploaded to SourceForge
+	- updated GitHub
 		
 130904
 	- made Scrawl's Array/Number/String prototype additions a little bit safer
@@ -107,7 +827,7 @@ CHANGE LOG
 			
 130902
 	- bugfixes: path tracking
-		- sprites no longer jump when passing from one sob-path to the next
+		- sprites no longer jump when passing from one sub-path to the next
 		- sprite.path attribute can now be set during sprite creation (not after it) for all sprites
 	- revisiting the Phrase object
 		- text-to-path functionality added
