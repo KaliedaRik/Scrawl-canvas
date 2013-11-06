@@ -1,6 +1,6 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
-*	version 1.00 - 30 October 2013
+*	version 1.01 - 6 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -61,7 +61,7 @@ window.requestAnimFrame = (function(callback){
 window.scrawl = (function(){
 	var scrawl = {
 		type: 'Library',
-		version: '1.00',
+		version: '1.01',
 		object: {},
 		objectnames: [],
 		pad: {},
@@ -5366,49 +5366,80 @@ window.scrawl = (function(){
 		};
 
 	function Picture(items){
-		Sprite.call(this, items);
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.source = items.source || false;
-		this.imageData = items.imageData || false;
-		this.imageDataChannel = items.imageDataChannel || 'alpha';
-		this.animSheet = items.animSheet || false;
-		this.imageType = this.sourceImage(items.source) || false;
-		this.checkHitUsingImageData = (scrawl.isa(items.checkHitUsingImageData,'bool')) ? items.checkHitUsingImageData : false;
-		if(this.source){
-			if(this.imageType === 'img'){
-				this.width = items.width || scrawl.image[this.source].copyWidth;
-				this.height = items.height || scrawl.image[this.source].copyHeight;
-				this.copyX = items.copyX || scrawl.image[this.source].copyX;
-				this.copyY = items.copyY || scrawl.image[this.source].copyY;
-				this.copyWidth = items.copyWidth || scrawl.image[this.source].copyWidth;
-				this.copyHeight = items.copyHeight || scrawl.image[this.source].copyHeight;
-				}
-			else if(this.imageType === 'canvas'){
-				this.width = items.width || scrawl.cell[this.source].sourceWidth;
-				this.height = items.height || scrawl.cell[this.source].sourceHeight;
-				this.copyX = items.copyX || scrawl.cell[this.source].sourceX;
-				this.copyY = items.copyY || scrawl.cell[this.source].sourceY;
-				this.copyWidth = items.copyWidth || scrawl.cell[this.source].sourceWidth;
-				this.copyHeight = items.copyHeight || scrawl.cell[this.source].sourceHeight;
-				}
-			else if(this.imageType === 'animation'){
-				var myData = scrawl.anim[this.animSheet].getData();
-				this.width = items.width || myData.copyWidth;
-				this.height = items.height || myData.copyHeight;
-				this.copyX = items.copyX || myData.copyX;
-				this.copyY = items.copyY || myData.copyY;
-				this.copyWidth = items.copyWidth || myData.copyWidth;
-				this.copyHeight = items.copyHeight || myData.copyHeight;
-				}
+		if(scrawl.isa(items, 'obj') && scrawl.xt(items.url)){
+			return this.importImage(items);
 			}
-		scrawl.sprite[this.name] = this;
-		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].addSpritesToGroup(this.name);
-		return this;
+		else{
+			Sprite.call(this, items);
+			items = (scrawl.isa(items,'obj')) ? items : {};
+			this.source = items.source || false;
+			this.imageData = items.imageData || false;
+			this.imageDataChannel = items.imageDataChannel || 'alpha';
+			this.animSheet = items.animSheet || false;
+			this.imageType = this.sourceImage(items.source) || false;
+			this.checkHitUsingImageData = (scrawl.isa(items.checkHitUsingImageData,'bool')) ? items.checkHitUsingImageData : false;
+			if(this.source){
+				if(this.imageType === 'img'){
+					this.width = items.width || scrawl.image[this.source].copyWidth;
+					this.height = items.height || scrawl.image[this.source].copyHeight;
+					this.copyX = items.copyX || scrawl.image[this.source].copyX;
+					this.copyY = items.copyY || scrawl.image[this.source].copyY;
+					this.copyWidth = items.copyWidth || scrawl.image[this.source].copyWidth;
+					this.copyHeight = items.copyHeight || scrawl.image[this.source].copyHeight;
+					}
+				else if(this.imageType === 'canvas'){
+					this.width = items.width || scrawl.cell[this.source].sourceWidth;
+					this.height = items.height || scrawl.cell[this.source].sourceHeight;
+					this.copyX = items.copyX || scrawl.cell[this.source].sourceX;
+					this.copyY = items.copyY || scrawl.cell[this.source].sourceY;
+					this.copyWidth = items.copyWidth || scrawl.cell[this.source].sourceWidth;
+					this.copyHeight = items.copyHeight || scrawl.cell[this.source].sourceHeight;
+					}
+				else if(this.imageType === 'animation'){
+					var myData = scrawl.anim[this.animSheet].getData();
+					this.width = items.width || myData.copyWidth;
+					this.height = items.height || myData.copyHeight;
+					this.copyX = items.copyX || myData.copyX;
+					this.copyY = items.copyY || myData.copyY;
+					this.copyWidth = items.copyWidth || myData.copyWidth;
+					this.copyHeight = items.copyHeight || myData.copyHeight;
+					}
+				}
+			scrawl.sprite[this.name] = this;
+			scrawl.spritenames.pushUnique(this.name);
+			scrawl.group[this.group].addSpritesToGroup(this.name);
+			return this;
+			}
 		}
 	Picture.prototype = Object.create(Sprite.prototype);
 	Picture.prototype.type = 'Picture';
 	Picture.prototype.classname = 'spritenames';
+	Picture.prototype.importImage = function(items){
+		if(scrawl.isa(items, 'obj') && scrawl.xt(items.url)){
+			var myImage = new Image();
+			myImage.id = items.name || 'image'+Math.floor(Math.random()*100000000);
+			myImage.onload = function(){
+				try{
+					var iObj = scrawl.newImage({
+						name: myImage.id,
+						element: myImage,
+						});
+					delete items.url;
+					items.source = myImage.id;
+					return scrawl.newPicture(items);
+					}
+				catch(e){
+					console.log('Image <'+url+'> failed to load - '+e.name+' error: '+e.message);
+					return false;
+					}
+				};
+			myImage.src = items.url;
+			}
+		else{
+			console.log('Picture.importImage() failed - no url supplied');
+			return false;
+			}
+		};
 	Picture.prototype.clone = function(items){
 		var a = Sprite.prototype.clone.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};

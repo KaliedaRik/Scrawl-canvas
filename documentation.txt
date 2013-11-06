@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.00 - 30 October 2013
+*	version 1.01 - 6 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -2976,6 +2976,7 @@ Picture(dataObject){
 		imageDataChannel			('alpha') - in ['red', 'green', 'blue', 'alpha']
 		keepCopyDimensions			(true) - boolean - used only in cloning operations
 		source 						(false) - IMAGENAME
+		url							(not retained) - string - url of image to be loaded asynchronously
 		width						(source image width||AnimSheet frame w||cell width)
 
 		~ imageType					(computer generated)
@@ -3086,6 +3087,10 @@ Picture(dataObject){
 			purpose: helper function
 		~ getLocalRotatedPoint()
 			purpose: helper function
+		~ importImage(arg)
+			purpose: imports image, creates <img> tag for it, creates ScrawlImage object
+				arg is construction object; requires .url attribute
+			return: new Picture object, created after image has fully loaded
 		~ sinkInto(DOMCanvasContextObject, CELLNAME, override)
 			purpose: perform drawImage, strokeRect
 			return: this

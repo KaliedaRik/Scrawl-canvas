@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.00 - 30 October 2013
+*	version 1.01 - 6 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -17,6 +17,35 @@ Topics that I want|need to look at (in no particular order) ...
 
 
 CHANGE LOG
+------------------------------------------------------------------------------------
+131106
+	- added asynchronous loading of images for Picture sprite
+		- constructor's object will look for .url attribute
+			- url needs to be supplied as a string, and needs to point to web address of image
+			- url attribute not retained by sprite object!
+		- if .url exists, will call Picture.importImage() function
+			- function calls scrawl.newPicture() once image has been uploaded and stored in library
+	- move to v1.01
+	- updated tutorial
+	- updated website
+	- updated documentation
+	- uploaded to SourceForge/GitHub
+	
+131105
+	- experiments in getting scrawl canvases to run on a WordPress post
+		- needed to adapt the Wordpress theme
+			- amendments to head.php, footer.php
+			
+131104
+	- styling the new WordPress blog
+	
+131103
+	- added a WordPress blog to the scrawl website
+	- adapted index page to link to blog
+		- removed 'tour' button - the index page IS the tour
+		- removed the 'about' button and made the about text permanently visible
+		- removed button handling routines from index.js - no longer required
+		
 ------------------------------------------------------------------------------------
 131030
 	- website index page redesigned and recoded
@@ -1100,6 +1129,7 @@ CHANGE LOG
 	- fixed bug in scrawl.getCanvases() 
 		- canvases requiring new stacks (ie with class="stack:STACKNAME") not being set to position:absolute
 	
+------------------------------------------------------------------------------------
 130819
 	- re-tweaked the website index page - experimenting
 	- tutorial page updates
@@ -1423,6 +1453,7 @@ CHANGE LOG
 	- updated website
 	- uploaded new version to Sourceforge
 	
+------------------------------------------------------------------------------------
 130613
 	- finalised demo083 - making demo082 dynamically resizable
 		- fixed small bug in Element constructor that was causing elements to double their height values
@@ -1554,6 +1585,7 @@ CHANGE LOG
 			- absolutely must conform to the responsive design thingy: portrait vs landscape; different screen sizes; browser resizing; etc.
 		- creating graphics - logo, button
 		
+------------------------------------------------------------------------------------
 130521
 	- documentation rewrite completed
 		- minor bug fixes here and there - mainly to return this rather than always true
@@ -1953,6 +1985,7 @@ CHANGE LOG
 		- moved Examples01 and 02 over to tutorials page (as demo039, demo040)
 			- other Examples renumbered.
 		
+------------------------------------------------------------------------------------
 130427
 	- Two Month Anniversary!
 	- fixed Example17 - vectors
@@ -2749,6 +2782,7 @@ CHANGE LOG
 	- updated documentation
 	- drafted spec for Scrawl Shapes object
 	
+------------------------------------------------------------------------------------
 130316
 	- working on the issues surrounding multiple cells (beyond the default cells)
 	- added routines to clean Scrawl library after each website example runs
