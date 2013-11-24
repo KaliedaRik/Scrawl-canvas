@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.01 - 6 November 2013
+*	version 1.02 - 24 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -140,7 +140,7 @@ Javascript Object
 key
 	arguments prefixed with ? are optional
 	functions marked with ~ are helper functions, not designed for general use
-	'dataObject' - a javascript object consisting of attribute:value pairs
+	'dataObject' - a JavaScript object consisting of attribute:value pairs
 	CELLNAME, SPRITENAME, etc - object.name strings used as attributes in the scrawl library
 	XCOORDINATE, WIDTH, etc - number values (in px)
 	CELLNAME||[CELLNAME], etc - argument can take an object.name string, or an array of object.name strings
@@ -1182,6 +1182,10 @@ Cell(dataObject)
 		shearX						(0) - current shear value
 		shearY						(0) - current shear value
 		sourceHeight				(0) - source dimensions - a cell sets what can be copied from it
+		sourceMaxHeight				(0) - source zoom limit
+		sourceMaxWidth				(0) - source zoom limit
+		sourceMinHeight				(0) - source zoom limit
+		sourceMinWidth				(0) - source zoom limit
 		sourceWidth					(0) - source dimensions - a cell sets what can be copied from it
 		sourceX						(0) - source dimensions - a cell sets what can be copied from it
 		sourceY						(0) - source dimensions - a cell sets what can be copied from it
@@ -1304,6 +1308,10 @@ Cell(dataObject)
 			return: this
 		translateCell({?x:number, ?y:number})
 			purpose: <canvas> context translate() operation
+			return: this
+		zoom(number)
+			purpose: enlarge/shrink cell's source position/dimension to create a 'zoom' effect
+				arg is px
 			return: this
 
 		~ clearShadow()
@@ -2407,7 +2415,7 @@ Sprite(dataObject)
 			return: this
 		setDelta(dataObject)		- overrides Scrawl.setDelta()
 			purpose: adds values to given attribute's current value
-				arg object can include: {startX, startY, handleX, handleY, width, height, radius, scale, roll, startAngle, endAngle, copyX, copyY, copyWidth, copyHeight}
+				arg object can include: {startX, startY, handleX, handleY, width, height, radius, scale, roll, startAngle, endAngle, copyX, copyY, copyWidth, copyHeight, lineWidth, globalAlpha}
 			return: this
 		stamp = function(item){
 			purpose: compile sprite onto a Cell <canvas> element (if visibility===true)
@@ -2515,7 +2523,7 @@ Sprite(dataObject)
 		reverse 					- from SubScrawl
 		unmoveStart 				- from SubScrawl
 		
-		clone						- from Scrawl - overridden
+		clone						- from Scrawl - overridden {createNewContext: false} to use original Sprite's context object
 		get							- from Scrawl - overridden
 		set							- from Scrawl - overridden
 		toString					- from Scrawl

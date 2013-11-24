@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.01 - 6 November 2013
+*	version 1.02 - 24 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -18,6 +18,75 @@ Topics that I want|need to look at (in no particular order) ...
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+131124
+	- got node.js, grunt and uglify working on local development setup
+	- upgrade to version 1.02
+		- min file successfully created and tested against all demos and website
+		- documentation updated
+		- tutorial updated
+		- website updated
+		- latest version posted to SourceForge and GitHub
+		
+131123
+	- fixed bug introduced with the changes made for fixing the dynamically loaded pattern bug
+	- keyboard controls
+		- using Mousetrap.js to capture keyboard input in demo104
+		- updated demo104 to demonstrate moving around the isometric grid using the arrow keys
+		
+131122
+	- zooming cells
+		- new Cell.sourceMaxWidth, .sourceMaxHeight, .sourceMinWidth, .sourceMinHeight attributes
+		- new Cell.zoom() function
+			- only works if zoomed cell's source frame remains within its actual dimensions
+	- demo104 (zooming the isometric grid) completed
+	
+131121
+	- demo103 (isometric tiling) completed
+	
+131120
+	- began investigating methods of implementing an isometric game (like Sim City) using Scrawl
+	
+131119
+	- bugfix - loading images for use with Patterns
+		- pattern not displaying when used with single sprite on canvas
+	- added new functions: Design.delete(); Pattern.delete(); Color.delete()
+		- designs are not deleted when sprite is deleted because other sprites might be using them
+		- solves problem of deleting unwanted designs
+	- amended Sprite.setDelta()
+		- now handles .lineWidth and globalAlpha attributes
+	- blog demo - ripples across images (not posted live)
+		- more work on filters - displacement maps
+			- couldn't get them to work
+		- coded demo to use Wheel sprites for displacement
+			- not what I wanted, but does work (once new functionality added to Scrawl.js)
+		- demo not posted to live blog
+			
+131118
+	- blog demo - importing local images into a scrawl canvas
+	
+131117
+	- blog demo - dragging sprites between two separate canvases
+	
+131115
+	- more work on filters
+	- blog demo - gaussian blur on animated Picture sprite
+	
+131114
+	- blog demo - dynamic path creation
+	
+131111
+	- initial work investigating filters
+		- Scrawl does not support filters
+		- use CSS/SVG filters on the scrawl canvas to achieve a similar effect
+	- blog demo - filter on text
+		- appears as it should on FireFox, though very slow
+		- some filter effects appear in Chrome/Opera
+		- not working at all in Explorer
+		
+131107
+	- blog demo - testing animated gradients
+	- blog demo - Shape paths, text (the 'hello world' demo)
+	
 131106
 	- added asynchronous loading of images for Picture sprite
 		- constructor's object will look for .url attribute
@@ -26,6 +95,7 @@ CHANGE LOG
 		- if .url exists, will call Picture.importImage() function
 			- function calls scrawl.newPicture() once image has been uploaded and stored in library
 	- move to v1.01
+	- blog demo - import SVG image and spin it
 	- updated tutorial
 	- updated website
 	- updated documentation

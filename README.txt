@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.01 - 6 November 2013
+*	version 1.02 - 24 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,13 +84,13 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 1.00 released 30 October 2013
+VERSION 1.02 released 24 November 2013
 
     - the zip file includes:
 	
-		- scrawl.js (274kb)
+		- scrawl.js (277kb)
 			- will gzip to ~45kb
-		- scrawl-min.js (174kb)
+		- scrawl-min.js (171kb)
 			- will gzip to ~37kb
 		
 		- documentation.txt
@@ -101,7 +101,9 @@ Documentation can be found in a text file (imaginatively) called 'documentation.
 There's also a fair amount of documentation in the tutorial page on the website:
 http://scrawl.rikweb.org.uk/tutorial.html
 
-I'm keeping track of daily changes, bug fixes and additions to the libraries in a text 
+Proper inline documentation (for developers) coming soon ...
+
+I'm currently keeping track of daily changes, bug fixes and additions to the libraries in a text 
 file called 'changelog.txt'
 
 All versions of scrawl.js can be found on their SourceForge page: 
@@ -110,13 +112,18 @@ https://sourceforge.net/projects/scrawljs/
 scrawl.js is also available for forking from GitHub: 
 https://github.com/KaliedaRik/Scrawl.js
 
-There's a discussion page for Scrawl.js on the SourceForge website. Please post all
-questions, suggestions and critiques of Scrawl.js to that page:
+There's discussion pages for Scrawl.js on both the SourceForge and GitHub websites. 
+Please post all questions, suggestions and critiques of Scrawl.js to those pages:
 https://sourceforge.net/p/scrawljs/discussion/
+https://github.com/KaliedaRik/Scrawl.js/pulls
 
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 1.02 uploaded 24 November 2013
+	- added ability to delete gradient, pattern and color objects
+	- added Cell.zoom method, together with associated Cell object attributes
+	- some minor bug fixes
 Version 1.01 uploaded 6 November 2013
 	- added ability for Picture sprites to upload their images asynchronously
 VERSION 1.00 uploaded 30 October 2013

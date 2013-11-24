@@ -1,6 +1,6 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
-*	version 1.01 - 6 November 2013
+*	version 1.02 - 24 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -60,6 +60,7 @@ window.requestAnimFrame = (function(callback){
  
 window.scrawl = (function(){
 	var scrawl = {
+m: '',
 		type: 'Library',
 		version: '1.01',
 		object: {},
@@ -340,7 +341,7 @@ window.scrawl = (function(){
 						}
 					}
 				}
-			return
+			return true;
 			},
 		getImagesByClass: function(classtag){
 			if(classtag){
@@ -2495,6 +2496,10 @@ window.scrawl = (function(){
 			this.sourceY = items.sourceY || 0;
 			this.sourceWidth = items.sourceWidth || items.width || 0;
 			this.sourceHeight = items.sourceHeight || items.height || 0;
+			this.sourceMaxWidth = items.sourceMaxWidth || this.sourceWidth;
+			this.sourceMaxHeight = items.sourceMaxHeight || this.sourceHeight;
+			this.sourceMinWidth = items.sourceMinWidth || this.sourceWidth;
+			this.sourceMinHeight = items.sourceMinHeight || this.sourceHeight;
 			this.targetX = items.targetX || 0;
 			this.targetY = items.targetY || 0;
 			this.targetWidth = items.targetWidth || items.width || 0;
@@ -2583,6 +2588,37 @@ window.scrawl = (function(){
 		};
 	Cell.prototype.getPadHeight = function(){
 		return scrawl.pad[this.pad].getHeight();
+		};
+	Cell.prototype.zoom = function(item){
+		if(scrawl.isa(item,'num')){
+			var myW = this.sourceWidth + item;
+			var myH = this.sourceHeight + item;
+			if(myW.isBetween(this.sourceMinWidth,this.sourceMaxWidth,true) && myH.isBetween(this.sourceMinHeight,this.sourceMaxHeight,true)){
+				this.sourceWidth = myW;
+				var myX = this.sourceX - (item/2);
+				if(myX < 0){
+					this.sourceX = 0;
+					}
+				else if(myX > (this.actualWidth - this.sourceWidth)){
+					this.sourceX = this.actualWidth - this.sourceWidth;
+					}
+				else{
+					this.sourceX = myX;
+					}
+				this.sourceHeight = myH;
+				var myY = this.sourceY - (item/2);
+				if(myY < 0){
+					this.sourceY = 0;
+					}
+				else if(myY > (this.actualHeight - this.sourceHeight)){
+					this.sourceY = this.actualHeight - this.sourceHeight;
+					}
+				else{
+					this.sourceY = myY;
+					}
+				}
+			}
+		return this;
 		};
 	Cell.prototype.buildField = function(){
 		var fieldSprites, fenceSprites, tempsprite, tempfill, tempstroke;
@@ -2692,6 +2728,7 @@ window.scrawl = (function(){
 		var spriteContext = scrawl.ctx[sprite.context];
 		var changes = spriteContext.getChanges(myContext, sprite.scale, sprite.scaleOutline);
 		var engine = scrawl.context[this.name];
+		var tempFillStyle, tempStrokeStyle;
 		for(var item in changes){
 			switch(item){
 				case 'name' :
@@ -2747,14 +2784,15 @@ window.scrawl = (function(){
 									}
 								}
 							}
-						engine.fillStyle = scrawl.dsn[changes[item]];
+						tempFillStyle = scrawl.dsn[changes[item]];
 						}
 					else if(scrawl.xt(scrawl.design[changes[item]])){
-						engine.fillStyle = scrawl.design[changes[item]].get();
+						tempFillStyle = scrawl.design[changes[item]].get();
 						}
 					else if(scrawl.isa(changes[item],'str')){
-						engine.fillStyle = changes[item];
+						tempFillStyle = changes[item];
 						}
+					engine.fillStyle = tempFillStyle;
 					break;
 				case 'winding' :
 					engine.mozFillRule = changes[item];
@@ -2811,14 +2849,15 @@ window.scrawl = (function(){
 									}
 								}
 							}
-						engine.strokeStyle = scrawl.dsn[changes[item]];
+						tempStrokeStyle = scrawl.dsn[changes[item]];
 						}
 					else if(scrawl.xt(scrawl.design[changes[item]])){
-						engine.strokeStyle = scrawl.design[changes[item]].get();
+						tempStrokeStyle = scrawl.design[changes[item]].get();
 						}
 					else if(scrawl.isa(changes[item],'str')){
-						engine.strokeStyle = changes[item];
+						tempStrokeStyle = changes[item];
 						}
+					engine.strokeStyle = tempStrokeStyle;
 					break;
 				case 'lineDash' :
 					engine.mozDash = changes[item];
@@ -2844,7 +2883,21 @@ window.scrawl = (function(){
 				case 'textBaseline' : engine.textBaseline = changes[item]; break;
 				}
 			if(item !== 'name'){
-				myContext[item] = changes[item];
+				if(scrawl.xt(scrawl.dsn[changes[item]])){
+					if('fillStyle' === item){
+						if(engine.fillStyle === tempFillStyle){
+							myContext[item] = changes[item];
+							}
+						}
+					else if('strokeStyle' === item){
+						if(engine.strokeStyle === tempStrokeStyle){
+							myContext[item] = changes[item];
+							}
+						}
+					}
+				else{
+					myContext[item] = changes[item];
+					}
 				}
 			}
 		return engine;
@@ -3312,6 +3365,7 @@ window.scrawl = (function(){
 					break;
 				}
 			}
+		return this;
 		};
 	AnimSheet.prototype.getData = function(){
 		if(this.speed > 0){
@@ -4053,29 +4107,36 @@ window.scrawl = (function(){
 	Sprite.prototype.clone = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		var a = Scrawl.prototype.clone.call(this, items);
-		var b = scrawl.ctx[a.context];
-		var c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
-		delete c.name;
-		b.set(c);
-		delete items.name;
-		b.set(items);
-		if(scrawl.designnames.contains(b.fillStyle)){
-			if(scrawl.design[b.fillStyle].type !== 'Pattern'){
-				var f = scrawl.design[b.fillStyle].clone();
-				b.fillStyle = f.name;
+		if(!scrawl.xt(items.createNewContext) || items.createNewContext){
+			var b = scrawl.ctx[a.context];
+			var c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
+			delete c.name;
+			b.set(c);
+			delete items.name;
+			b.set(items);
+			if(scrawl.designnames.contains(b.fillStyle)){
+				if(scrawl.design[b.fillStyle].type !== 'Pattern'){
+					var f = scrawl.design[b.fillStyle].clone();
+					b.fillStyle = f.name;
+					}
+				else{
+					b.fillStyle = items.fillStyle || scrawl.ctx[this.context].fillStyle;
+					}
 				}
-			else{
-				b.fillStyle = items.fillStyle || scrawl.ctx[this.context].fillStyle;
+			if(scrawl.designnames.contains(b.strokeStyle)){
+				if(scrawl.design[b.strokeStyle].type !== 'Pattern'){
+					var s = scrawl.design[b.strokeStyle].clone();
+					b.strokeStyle = s.name;
+					}
+				else{
+					b.strokeStyle = items.strokeStyle || scrawl.ctx[this.context].strokeStyle;
+					}
 				}
 			}
-		if(scrawl.designnames.contains(b.strokeStyle)){
-			if(scrawl.design[b.fillStyle].type !== 'Pattern'){
-				var s = scrawl.design[b.strokeStyle].clone();
-				b.strokeStyle = s.name;
-				}
-			else{
-				b.strokeStyle = items.strokeStyle || scrawl.ctx[this.context].strokeStyle;
-				}
+		else{
+			delete scrawl.ctx[a.context];
+			scrawl.ctxnames.removeItem(a.context);
+			a.context = this.context;
 			}
 		if(items.field){
 			a.addSpriteToCellFields();
@@ -4371,6 +4432,8 @@ window.scrawl = (function(){
 		if(scrawl.xt(items.copyHeight)){this.copyHeight += items.copyHeight;}
 		if(scrawl.xt(items.pathPosition)){this.pathPosition += items.pathPosition;}
 		if(scrawl.xt(items.lineDashOffset)){scrawl.ctx[this.context].lineDashOffset += items.lineDashOffset;}
+		if(scrawl.xt(items.lineWidth)){scrawl.ctx[this.context].lineWidth += items.lineWidth;}
+		if(scrawl.xt(items.globalAlpha)){scrawl.ctx[this.context].globalAlpha += items.globalAlpha;}
 		return this;
 		};
 	Sprite.prototype.getAngle = function(v){
@@ -6543,15 +6606,28 @@ window.scrawl = (function(){
 		myItems.handleX = items.handleX || this.handleX;
 		myItems.handleY = items.handleY || this.handleY;
 		var a = scrawl.makePath(myItems);
-		var c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
-		delete c.name;
-		a.set(c);
-		delete items.name || this.name;
-		delete items.data || this.data;
-		delete items.startX || this.startX,
-		delete items.startY || this.startY,
-		delete items.handleX || this.handleX,
-		delete items.handleY || this.handleY,
+		if(!scrawl.xt(items.createNewContext) || items.createNewContext){
+			var c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
+			delete c.name;
+			a.set(c);
+			}
+//		else{
+//			delete scrawl.ctx[a.context];
+//			scrawl.ctxnames.removeItem(a.context);
+//			a.context = this.context;
+//			}
+//		delete items.name || this.name;
+//		delete items.data || this.data;
+//		delete items.startX || this.startX,
+//		delete items.startY || this.startY,
+//		delete items.handleX || this.handleX,
+//		delete items.handleY || this.handleY,
+		delete items.name;
+		delete items.data;
+		delete items.startX,
+		delete items.startY,
+		delete items.handleX,
+		delete items.handleY,
 		a.set(items);
 		return a;
 		};
@@ -7119,6 +7195,12 @@ window.scrawl = (function(){
 			}
 		return this;
 		};
+	Design.prototype.remove = function(){
+		delete scrawl.dsn[this.name];
+		delete scrawl.design[this.name];
+		scrawl.designnames.removeItem(this.name);
+		return true;
+		};
 		
 	function Gradient(items){
 		Design.call(this, items);
@@ -7165,8 +7247,6 @@ window.scrawl = (function(){
 		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.repeat = items.repeat || 'repeat';
-		scrawl.design[this.name] = this;
-		scrawl.designnames.pushUnique(this.name);
 		this.setImage((items.source || items.imageData || scrawl.image[items.image] || false), this.name);
 		return this;
 		}
@@ -7199,6 +7279,7 @@ window.scrawl = (function(){
 	Pattern.prototype.setImage = function(source, name, callback){
 		if(scrawl.isa(source, 'str')){
 			var myImage = new Image();
+			var that = this;
 			myImage.id = name;
 			myImage.onload = function(callback){
 				try{
@@ -7206,8 +7287,10 @@ window.scrawl = (function(){
 						name: name,
 						element: myImage,
 						});
+					scrawl.design[name] = that;
 					scrawl.design[name].image = iObj.name;
 					scrawl.design[name].source = source;
+					scrawl.designnames.pushUnique(name);
 					scrawl.design[name].makeDesign();
 					if(scrawl.isa(callback, 'fn')){
 						callback();
@@ -7223,6 +7306,8 @@ window.scrawl = (function(){
 		else if(scrawl.isa(source, 'obj')){
 			this.image = source.name;
 			this.source = source.source;
+			scrawl.design[this.name] = this;
+			scrawl.designnames.pushUnique(this.name);
 			this.makeDesign();
 			if(scrawl.isa(callback, 'fn')){
 				callback();
@@ -7260,6 +7345,12 @@ window.scrawl = (function(){
 	Pattern.prototype.clone = function(items){
 		var c = scrawl.newPattern(items);
 		return c;
+		};
+	Pattern.prototype.remove = function(){
+		delete scrawl.dsn[this.name];
+		delete scrawl.design[this.name];
+		scrawl.designnames.removeItem(this.name);
+		return true;
 		};
 
 	function Color(items){
@@ -7482,6 +7573,12 @@ window.scrawl = (function(){
 		};
 	Color.prototype.toHex = function(item){
 		return item.toString(16);
+		};
+	Color.prototype.remove = function(){
+		delete scrawl.dsn[this.name];
+		delete scrawl.design[this.name];
+		scrawl.designnames.removeItem(this.name);
+		return true;
 		};
 	
 	scrawl.initialize();
