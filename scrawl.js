@@ -1,6 +1,6 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
-*	version 1.02 - 24 November 2013
+*	version 1.03 - 28 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -2515,6 +2515,9 @@ m: '',
 			this.cellY = items.cellY || 0;
 			this.shearX = items.shearX || 0;
 			this.shearY = items.shearY || 0;
+			this.lockTo = items.lockTo || false;
+			this.globalAlpha = items.globalAlpha || 1;
+			this.globalCompositeOperation = items.globalCompositeOperation || 'source-over';
 			this.backgroundColor = (scrawl.isa(items.backgroundColor,'str')) ? items.backgroundColor : 'rgba(0,0,0,0)';
 			scrawl.canvas[this.name] = items.canvas;
 			scrawl.context[this.name] = items.canvas.getContext('2d');
@@ -2580,6 +2583,7 @@ m: '',
 			if(scrawl.xt(items.targetY)){this.targetY += items.targetY;}
 			if(scrawl.xt(items.targetWidth)){this.targetWidth += items.targetWidth;}
 			if(scrawl.xt(items.targetHeight)){this.targetHeight += items.targetHeight;}
+			if(scrawl.xt(items.globalAlpha)){this.globalAlpha += items.globalAlpha;}
 			}
 		return this;
 		};
@@ -2930,23 +2934,35 @@ m: '',
 		return this;
 		};
 	Cell.prototype.copyCellToSelf = function(cell){
-		if(scrawl.xt(cell)){
-			var ctx = scrawl.context[this.name];
-			var mySourceWidth = (cell.usePadDimensions) ? scrawl.pad[cell.pad].width : cell.sourceWidth;
-			var mySourceHeight = (cell.usePadDimensions) ? scrawl.pad[cell.pad].height : cell.sourceHeight;
-			var myTargetWidth = (cell.usePadDimensions) ? scrawl.pad[cell.pad].width*this.scale : cell.targetWidth*this.scale;
-			var myTargetHeight = (cell.usePadDimensions) ? scrawl.pad[cell.pad].height*this.scale : cell.targetHeight*this.scale;
-			ctx.drawImage(scrawl.canvas[cell.name], cell.sourceX, cell.sourceY, mySourceWidth, mySourceHeight, (cell.targetX-cell.handleX)*this.scale, (cell.targetY-cell.handleY)*this.scale, myTargetWidth, myTargetHeight);
+		cell = (scrawl.isa(cell,'str')) ? scrawl.cell[cell] : cell;
+		var myCell = (cell.lockTo) ? scrawl.cell[cell.lockTo] : cell;
+		if(scrawl.xt(myCell)){
+			var mySourceWidth = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].width : myCell.sourceWidth;
+			var mySourceHeight = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].height : myCell.sourceHeight;
+			var myTargetWidth = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].width*this.scale : myCell.targetWidth*this.scale;
+			var myTargetHeight = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].height*this.scale : myCell.targetHeight*this.scale;
+			var context = scrawl.context[this.name];
+			var ctx = scrawl.ctx[this.name];
+			if(cell.globalAlpha !== ctx.globalAlpha){
+				context.globalAlpha = cell.globalAlpha;
+				ctx.globalAlpha = cell.globalAlpha;
+				}
+			if(cell.globalCompositeOperation !== ctx.globalCompositeOperation){
+				context.globalCompositeOperation = cell.globalCompositeOperation;
+				ctx.globalCompositeOperation = cell.globalCompositeOperation;
+				}
+			context.drawImage(scrawl.canvas[cell.name], myCell.sourceX, myCell.sourceY, mySourceWidth, mySourceHeight, (myCell.targetX-cell.handleX)*this.scale, (myCell.targetY-cell.handleY)*this.scale, myTargetWidth, myTargetHeight);
 			}
 		return this;
 		};
 	Cell.prototype.getCopyScaling = function(cell){
 		cell = (scrawl.isa(cell,'str')) ? scrawl.cell[cell] : cell;
-		if(scrawl.xt(cell)){
-			var mySourceWidth = (cell.usePadDimensions) ? scrawl.pad[cell.pad].width : cell.sourceWidth;
-			var mySourceHeight = (cell.usePadDimensions) ? scrawl.pad[cell.pad].height : cell.sourceHeight;
-			var myTargetWidth = (cell.usePadDimensions) ? scrawl.pad[cell.pad].width*this.scale : cell.targetWidth*this.scale;
-			var myTargetHeight = (cell.usePadDimensions) ? scrawl.pad[cell.pad].height*this.scale : cell.targetHeight*this.scale;
+		var myCell = (cell.lockTo) ? scrawl.cell[cell.lockTo] : cell;
+		if(scrawl.xt(myCell)){
+			var mySourceWidth = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].width : myCell.sourceWidth;
+			var mySourceHeight = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].height : myCell.sourceHeight;
+			var myTargetWidth = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].width*this.scale : myCell.targetWidth*this.scale;
+			var myTargetHeight = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].height*this.scale : myCell.targetHeight*this.scale;
 			return({w: myTargetWidth/mySourceWidth, h: myTargetHeight/mySourceHeight});
 			}
 		return false;
@@ -3246,7 +3262,7 @@ m: '',
 		return this;
 		}
 	ScrawlImage.prototype = Object.create(Scrawl.prototype);
-	ScrawlImage.prototype.type = 'Image';
+	ScrawlImage.prototype.type = 'ScrawlImage';
 	ScrawlImage.prototype.classname = 'imagenames';
 	ScrawlImage.prototype.prepareForExport = function(){
 		var u;
@@ -3624,6 +3640,26 @@ m: '',
 					return scrawl.sprite[this.sprites[i]];
 					}
 				}
+			}
+		return false;
+		};
+	Group.prototype.getSpritesCollidingWith = function(sprite){
+		sprite = (scrawl.isa(sprite, 'str')) ? scrawl.sprite[sprite] : sprite; 
+		if(scrawl.spritenames.contains(sprite.name)){
+			var hits = [];
+			var oCollisionPoints = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale};
+			var oCollisions = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale, pad: scrawl.pad[scrawl.cell[this.cells[0]].pad].name};
+			var myTests = sprite.getCollisionPoints(oCollisionPoints);
+			for(var i=0, z=this.sprites.length; i<z; i++){
+				if(scrawl.sprite[this.sprites[i]].name !== sprite.name){
+					if(scrawl.sprite[this.sprites[i]].visibility){
+						if(scrawl.sprite[this.sprites[i]].checkHit({tests: myTests}, oCollisions)){
+							hits.push(this.sprites[i]);
+							}
+						}
+					}
+				}
+			return (hits.length > 0) ? hits : false;
 			}
 		return false;
 		};
@@ -6073,33 +6109,17 @@ m: '',
 		return this;
 		};
 	Outline.prototype.clear = function(ctx, cell, override){
-		scrawl.cell[cell].setToClearShape();
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
-		ctx.globalCompositeOperation = 'destination-out';
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
+		this.clip(ctx, cell, override);
+		ctx.clearRect(0,0,scrawl.cell[cell].actualWidth,scrawl.cell[cell].actualHeight);
+		ctx.restore();
 		return this;
 		};
 	Outline.prototype.clearWithBackground = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
+		this.clip(ctx, cell, override);
 		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
-		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
-		ctx.globalAlpha = 1;
-		this.doOutline(ctx, override);
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.stroke();
+		ctx.fillRect(0,0,scrawl.cell[cell].actualWidth,scrawl.cell[cell].actualHeight);
 		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
-		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
-		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
+		ctx.restore();
 		return this;
 		};
 	Outline.prototype.draw = function(ctx, cell, override){
@@ -7247,7 +7267,9 @@ m: '',
 		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		this.repeat = items.repeat || 'repeat';
-		this.setImage((items.source || items.imageData || scrawl.image[items.image] || false), this.name);
+		this.cell = items.cell || scrawl.pad[scrawl.currentPad].current;
+		//source = url string; imageData = imageData object; image = ScrawlImage.name; canvas = Cell.name
+		this.setImage((items.source || items.imageData || scrawl.image[items.image] || scrawl.cell[items.canvas] || false), items.callback);
 		return this;
 		}
 	Pattern.prototype = Object.create(Scrawl.prototype);
@@ -7266,6 +7288,8 @@ m: '',
 			repeat: (this.repeat !== 'repeat') ? this.repeat : u,
 			image: (this.image) ? this.image : u,
 			source: (this.source) ? this.source : u,
+			canvas: (this.canvas) ? this.canvas : u,
+			cell: this.cell,
 			};
 		};
 	Pattern.prototype.setToDefaults = function(){
@@ -7276,41 +7300,52 @@ m: '',
 			});
 		return this;
 		};
-	Pattern.prototype.setImage = function(source, name, callback){
+	Pattern.prototype.setImage = function(source, callback){
 		if(scrawl.isa(source, 'str')){
 			var myImage = new Image();
 			var that = this;
-			myImage.id = name;
+			myImage.id = this.name;
 			myImage.onload = function(callback){
 				try{
 					var iObj = scrawl.newImage({
-						name: name,
+						name: that.name,
 						element: myImage,
 						});
-					scrawl.design[name] = that;
-					scrawl.design[name].image = iObj.name;
-					scrawl.design[name].source = source;
-					scrawl.designnames.pushUnique(name);
-					scrawl.design[name].makeDesign();
+					scrawl.design[that.name] = that;
+					scrawl.design[that.name].image = iObj.name;
+					scrawl.design[that.name].source = source;
+					scrawl.designnames.pushUnique(that.name);
+					scrawl.design[that.name].makeDesign();
 					if(scrawl.isa(callback, 'fn')){
 						callback();
 						}
 					}
 				catch(e){
-					console.log('Pattern '+[this.name]+' - setImage() failed - '+e.name+' error: '+e.message);
-					return this;
+					console.log('Pattern '+[that.name]+' - setImage() failed - '+e.name+' error: '+e.message);
+					return that;
 					}
 				};
 			myImage.src = source;
 			}
 		else if(scrawl.isa(source, 'obj')){
-			this.image = source.name;
-			this.source = source.source;
-			scrawl.design[this.name] = this;
-			scrawl.designnames.pushUnique(this.name);
-			this.makeDesign();
-			if(scrawl.isa(callback, 'fn')){
-				callback();
+			if(source.type === 'ScrawlImage'){
+				this.image = source.name;
+				this.source = source.source;
+				scrawl.design[this.name] = this;
+				scrawl.designnames.pushUnique(this.name);
+				this.makeDesign();
+				if(scrawl.isa(callback, 'fn')){
+					callback();
+					}
+				}
+			else if(source.type === 'Cell'){
+				this.canvas = source.name;
+				scrawl.design[this.name] = this;
+				scrawl.designnames.pushUnique(this.name);
+				this.makeDesign();
+				if(scrawl.isa(callback, 'fn')){
+					callback();
+					}
 				}
 			}
 		else{
@@ -7326,15 +7361,16 @@ m: '',
 	Pattern.prototype.get = function(){
 		return (scrawl.xt(scrawl.dsn[this.name])) ? scrawl.dsn[this.name] : 'rgba(0,0,0,0)';
 		};
-	Pattern.prototype.makeDesign = function(cell){
-		var ctx = (scrawl.xt(cell)) ? scrawl.context[cell] : scrawl.context[scrawl.pad[scrawl.currentPad].current];
+	Pattern.prototype.makeDesign = function(){
+		var ctx = scrawl.context[this.cell];
 		try{
 			if(this.image){
 				if(scrawl.img[this.image]){
 					scrawl.dsn[this.name] = ctx.createPattern(scrawl.img[this.image], this.repeat);
-					return this;
 					}
-				return this;
+				}
+			else if(this.canvas){
+				scrawl.dsn[this.name] = ctx.createPattern(scrawl.canvas[this.canvas], this.repeat);
 				}
 			return this;
 			}
@@ -7351,6 +7387,10 @@ m: '',
 		delete scrawl.design[this.name];
 		scrawl.designnames.removeItem(this.name);
 		return true;
+		};
+	Pattern.prototype.update = function(){
+		this.makeDesign();
+		return this;
 		};
 
 	function Color(items){

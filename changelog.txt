@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.02 - 24 November 2013
+*	version 1.03 - 28 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -18,6 +18,48 @@ Topics that I want|need to look at (in no particular order) ...
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+131128
+	- investigating animated patterns
+		- recoded Pattern constructor and a number of of functions
+		- added Pattern.cell, Pattern.canvas
+			- .cell stores CELLNAME used when generating patterns
+				- not convinced its needed; think PatternObject is good for any context engine, once generated
+			- .canvas stores CELLNAME used as source for pattern
+		- added Pattern.update() function
+			- for consistency with other designs
+		- demo110 - using static pattern generated from canvas
+		- demo109 - using animated pattern generated from canvas
+			- big issues with animation - wont work unless sprites used in source cell also stamped on other cells
+				- absolutely no idea why this is happening
+	- upgrade to version 1.03
+		- updated documentation
+		- updated website
+		- uploaded to SourceForge/GitHub
+	
+131127
+	- demo107 (adding roads and rivers) completed
+		- finally coded up Outline.clip()
+		- updated outline.clear(), outline.clearWithBackground()
+			- both make use of Outline.clip()
+		
+131126
+	- new function - Group.getSpritesCollidingWith(SPRITENAME||Sprite)
+		- supply a sprite or sprite name and find out which sprites in the group are colliding with it
+	- new Cell attributes - Cell.globalAlpha, .globalCompositeOperation
+		- come into play during the 'show' phase of the display cycle
+		- allows entire cell to be translucent, or to be copied onto the base cell using different composite operations
+	- new Cell attribute - Cell.lockTo
+		- takes the name of a cell which this cell will use for getting source/destination values
+			- kinda like .pivot
+		- used by Cell.copyCellToSelf(), .getCopyScaling() functions
+			- allows positioning and zooming of cell to be locked to that of a different cell
+				- so coder only has to worry about positioning and zooming one cell, not all of them
+	- continuing with demo107
+	
+131125
+	- demo106 (rotating isometric grid) completed
+	- demo107 - adding roads and rivers
+	
 131124
 	- got node.js, grunt and uglify working on local development setup
 	- upgrade to version 1.02
@@ -26,12 +68,14 @@ CHANGE LOG
 		- tutorial updated
 		- website updated
 		- latest version posted to SourceForge and GitHub
-		
+	- demo 106 - rotating the isometric grid
+	
 131123
 	- fixed bug introduced with the changes made for fixing the dynamically loaded pattern bug
 	- keyboard controls
 		- using Mousetrap.js to capture keyboard input in demo104
 		- updated demo104 to demonstrate moving around the isometric grid using the arrow keys
+	- demo 105 - selecting multiple grid cells
 		
 131122
 	- zooming cells

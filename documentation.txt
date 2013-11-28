@@ -777,6 +777,10 @@ Pattern(dataObject)
 		
 	attributes ...
 		repeat						('repeat') - in [] - currently only supports 'repeat'
+		cell						(scrawl.pad[scrawl.currentPad].current) - CELLNAME
+		canvas						(see constructor flags)
+		image						(see constructor flags)
+		source						(see constructor flags)
 		
 		comment						- from Scrawl
 		name 						- from Scrawl
@@ -787,6 +791,8 @@ Pattern(dataObject)
 		prototype.classname 		= 'designnames'
 		
 	constructor flags ...
+		callback					(null) - callback function to be run once Pattern construction completes (not retained)
+		canvas						(false) - CELLNAME of cell used as source image for Pattern
 		image						(null) - IMAGENAME
 		imageData					(null) - IMAGEDATANAME
 		source						(null) - string path-to-image-file
@@ -802,6 +808,8 @@ Pattern(dataObject)
 			purpose: loads image into library (if necessary)
 			return: this
 			
+		update						- from Design - overridden
+
 		clone 						- from Scrawl - overridden
 		get 						- from Scrawl - overridden
 		set							- from Scrawl - overridden
@@ -1173,7 +1181,10 @@ Cell(dataObject)
 		cellX						(0) - current translate coordinate
 		cellY						(0) - current translate coordinate
 		context						(computer generated CTXNAME) - context object for this cell
+		globalAlpha					(1) - alpha value to use during the show() part of the Pad display cycle
+		globalCompositeOperation	('source-over') - GCO value to use during the show() part of the Pad display cycle
 		groups						([this.name, this.name+'_field', this.name+'_fence']) GROUPNAME or [GROUPNAME] 
+		lockTo						(false) - CELLNAME - use a different cell's source attributes during Pad.show()
 		pad							(false) - PADNAME
 		roll						(0) - current rotate value
 		rollDegree					(true) - true if using degrees, false otherwise
@@ -1427,6 +1438,9 @@ Group(dataObject)
 			purpose: collision detection
 				arg in ['red', 'green', 'blue', 'alpha']
 			return: the highest order sprite in this group at given coordinates; false if none found
+		getSpritesCollidingWith(SPRITENAME||Sprite)
+			purpose: collision detection
+			return: SPRITENAMES of Sprite objects colliding with argument sprite
 		moveSpriteStart(arg)
 			purpose: invoke each sprite's .moveStart function
 				arg: method override ['fill', 'draw', etc)
