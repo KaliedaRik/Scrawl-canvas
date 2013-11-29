@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.02 - 24 November 2013
+*	version 1.04 - 29 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -2337,6 +2337,8 @@ Sprite(dataObject)
 		flipReverse					(false) - boolean - causes the sprite to be drawn back-to-front
 		flipUpend					(false) - boolean - causes the sprite to be drawn upside-down
 		group						(false) - GROUPNAME - sprite's default group
+		lockX						(false) - boolean - lock sprite movement to the vertical (affects pivot and path)
+		lockY						(false) - boolean - lock sprite movement to the horizontal (affects pivot and path)
 		method						(null) 
 			- in ['draw', 'fill', 'drawFill', 'fillDraw', 'floatOver', 'sinkInto', 'clear', 'none']
 		order						(0) - number - compilation order
@@ -3407,6 +3409,7 @@ Shape(dataObject)
 	functions ...
 		getPerimeterLength(bool)
 			purpose: if necessary (re)calculates, otherwise returns, .perimeterLength
+				bool - true to force a recalculation of the path length; defaults to false
 			return: .perimeterLength
 		setRotationPointTo({x:XOFFSET, y:YOFFSET})
 			purpose: moves the sprite's startXY point

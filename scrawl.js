@@ -1,6 +1,6 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
-*	version 1.03 - 28 November 2013
+*	version 1.04 - 29 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -3880,6 +3880,8 @@ m: '',
 		this.flipReverse = (scrawl.isa(items.flipReverse,'bool')) ? items.flipReverse : false;
 		this.flipUpend = (scrawl.isa(items.flipUpend,'bool')) ? items.flipUpend : false;
 		this.scaleOutline = (scrawl.isa(items.scaleOutline,'bool')) ? items.scaleOutline : true;
+		this.lockX = (scrawl.isa(items.lockX,'bool')) ? items.lockX : false;
+		this.lockY = (scrawl.isa(items.lockY,'bool')) ? items.lockY : false;
 		var myContext = new Context(items);
 		this.context = myContext.name;
 		this.group = this.getGroup(items);
@@ -3967,6 +3969,8 @@ m: '',
 			flipReverse: (this.flipReverse) ? this.flipReverse : u,
 			flipUpend: (this.flipUpend) ? this.flipUpend : u,
 			scaleOutline: (!this.scaleOutline) ? this.scaleOutline : u,
+			lockX: (this.lockX) ? this.lockX : u,
+			lockY: (this.lockY) ? this.lockY : u,
 			group: this.group,
 			fieldChannel: (this.fieldChannel !== 'anycolor') ? this.fieldChannel : u,
 			fieldTest: (this.fieldTest !== 0) ? this.fieldTest : u,
@@ -4063,6 +4067,8 @@ m: '',
 			flipReverse: false,
 			flipUpend: false,
 			scaleOutline: true,
+			lockX: false,
+			lockY: false,
 			group: false,
 			fieldChannel: 'anycolor',
 			fieldTest: 0,
@@ -4294,12 +4300,12 @@ m: '',
 	Sprite.prototype.setStampUsingPivot = function(override, cell){
 		var here, myCell;
 		if(scrawl.pointnames.contains(this.pivot)){
-			this.startX = scrawl.point[this.pivot].currentX;
-			this.startY = scrawl.point[this.pivot].currentY;
+			this.startX = (!this.lockX) ? scrawl.point[this.pivot].currentX : this.startX;
+			this.startY = (!this.lockY) ? scrawl.point[this.pivot].currentY : this.startY;
 			}
 		else if(scrawl.spritenames.contains(this.pivot)){
-			this.startX = scrawl.sprite[this.pivot].startX;
-			this.startY = scrawl.sprite[this.pivot].startY;
+			this.startX = (!this.lockX) ? scrawl.sprite[this.pivot].startX : this.startX;
+			this.startY = (!this.lockY) ? scrawl.sprite[this.pivot].startY : this.startY;
 			}
 		else if(this.pivot === 'mouse'){
 			myCell = scrawl.cell[cell];
@@ -4309,15 +4315,15 @@ m: '',
 				this.mouseY = this.startY;
 				}
 			if(here.active){
-				this.startX += (here.x - this.mouseX);
-				this.startY += (here.y - this.mouseY);
+				this.startX += (!this.lockX) ? here.x - this.mouseX : 0;
+				this.startY += (!this.lockY) ? here.y - this.mouseY : 0;
 				this.mouseX = here.x;
 				this.mouseY = here.y;
 				}
 			}
 		else if(scrawl.groupnames.contains(this.pivot)){
-			this.startX = scrawl.group[this.pivot].startX;
-			this.startY = scrawl.group[this.pivot].startY;
+			this.startX = (!this.lockX) ? scrawl.group[this.pivot].startX : this.startX;
+			this.startY = (!this.lockY) ? scrawl.group[this.pivot].startY : this.startY;
 			}
 		return this;
 		};
@@ -4349,8 +4355,8 @@ m: '',
 					}
 				else if(scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape'){
 					here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
-					this.startX = here.x;
-					this.startY = here.y;
+					this.startX = (!this.lockX) ? here.x : this.startX;
+					this.startY = (!this.lockY) ? here.y : this.startY;
 					this.pathRoll = here.r || 0;
 					}
 				this.setCurrentParameters(override);
@@ -6631,17 +6637,6 @@ m: '',
 			delete c.name;
 			a.set(c);
 			}
-//		else{
-//			delete scrawl.ctx[a.context];
-//			scrawl.ctxnames.removeItem(a.context);
-//			a.context = this.context;
-//			}
-//		delete items.name || this.name;
-//		delete items.data || this.data;
-//		delete items.startX || this.startX,
-//		delete items.startY || this.startY,
-//		delete items.handleX || this.handleX,
-//		delete items.handleY || this.handleY,
 		delete items.name;
 		delete items.data;
 		delete items.startX,

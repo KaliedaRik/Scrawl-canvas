@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.03 - 28 November 2013
+*	version 1.04 - 29 November 2013
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,7 +84,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 1.03 released 28 November 2013
+VERSION 1.04 released 29 November 2013
 
     - the zip file includes:
 	
@@ -120,6 +120,9 @@ https://github.com/KaliedaRik/Scrawl.js/pulls
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 1.04 uploaded 29 November 2013
+	- added lockX and lockY attributes to sprite objects to constrain movement to the 
+	vertical and horizontal planes
 Version 1.03 uploaded 28 November 2013
 	- added ability for multiple cells to be zoomed simultaneously
 	- added more group collision detection functionality
