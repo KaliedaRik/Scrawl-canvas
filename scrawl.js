@@ -1,158 +1,832 @@
-/***********************************************************************************
-* SCRAWL.JS Library 
-*	version 1.04 - 29 November 2013
-*	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
-*
-*   Scrawl demo website: http://scrawl.rikweb.org.uk
-*
-***********************************************************************************/
+/**
+# SCRAWL.JS Library
 
-//various methods sourced mainly from Stack Overflow - can't remember authors ... many apologies!
-Array.prototype.contains = Array.prototype.contains || function(k){
-	if(k instanceof RegExp){
-		for(var p in this){
-			if(this[p].match(k)) return this[p];
-			}
-		return false;
-		}
-	else{
-		for(var p in this){
-			if(this[p] === k) return true;
-			}
-		return false;
-		}
-	};
-Array.prototype.pushUnique = Array.prototype.pushUnique || function(o){
-	if(!this.contains(o)){
-		this.push(o);
-		return true;
-		}
-	return false;
-	};
-Array.prototype.removeItem = Array.prototype.removeItem || function(o){
-	if(this.contains(o)){
-		var i = this.indexOf(o);
-		this.splice(i, 1);
-		return true;
-		}
-	return false;
-	};
-Number.prototype.isBetween = Number.prototype.isBetween || function(a, b, e){
-	if(a>b){var t=a; a=b; b=t;}
-	if(e){
-		if(this >= a && this <= b){
-			return true;
-			}
-		return false;
-		}
-	else{
-		if((this > a && this < b) || (this === a && this === b)){
-			return true;
-			}
-		return false;
-		}
-	};
+## Version 2.00 - 20 February 2014
+
+Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
+
+Scrawl demo website: <http://scrawl.rikweb.org.uk>
+
+## Purpose and features
+
+* Scrawl.js is a JavaScript library which adds an API for handling and manipulating HTML5 &lt;canvas&gt; elements in the DOM.
+
+* Uses the '2d' context with each canvas element.
+
+* On starting, Scrawl.js investigates the HTML DOM and automatically creates controller and wrapper objects for each &lt;canvas&gt; element it finds.
+
+* Can also generate visible canvas elements programatically, and add them to the DOM.
+
+* Users create sprite and gradient objects using scrawl factory functions, set their styling and position, and render them onto the canvas element. Creation, positioning and styling can all be handled by a single call to the factory function.
+
+* Sprites include: basic rectangles (Block), advanced rectangles capable of displaying images and sprite animations (Picture), circles (Wheel), single-line text (Phrase), and complex designs composed of lines, arcs and curves (Shape, Outline).
+
+* Factory functions can be used to easily create lines, curves and regular shapes (triangles, stars, etc).
+
+* JPG, PNG and SVG images (and videos - experimental) can be imported and used by Picture sprites.
+
+* Animations can be achieved by manipulating a sprite/gradient's attributes within a user-coded animation loop.
+
+* Scrawl.js supports all canvas 2d matrix transforms (translate, rotate, etc), though moving and rotating sprites is handled directly by the sprite object itself.
+
+* All sprites - and even gradients - can be given drag-and-drop, and attach-to-mouse, functionality.
+
+* Scrawl sprites can be grouped together for easier manipulation.
+
+* Sprites can also be linked together directly (using their pivot attribute) so that positioning/moving one sprite will position/move all other sprites associated with it.
+
+* Full support for collision detection between, and within, sprites gathered into groups. Collision fields can be generated for canvas elements to constrain sprite movements.
+
+* A visible canvas can be linked to additional (non-DOM/invisible) canvases to create complex, multi-layered displays; these additional canvases can also be manipulated for animation purposes.
+
+* Canvas rendering can be simple, or it can be broken down into clear, compile and show operations for more complex compositions.
+
+* Includes functionality to manipulate multiple visible canvas elements in 3 dimensions using CSS 3d transforms - where supported by the browser.
+
+* Other DOM elements - including SVG images - can be included in Scrawl stacks, and manipulated via Scrawl.js functionality. 
+
+* Canvases and elements in a Scrawl.js stack (including other stacks) can be moved and scaled very easily.
+
+* (Does not add canvas functionality to those browsers that do not support the HTML5 &lt;canvas&gt; element. Tested in: IE9-11, and modern versions of 
+Firefox, Chrome, Opera, Safari for Windows.)
+
+## Amendments to JavaScript objects
+
+__window.requestAnimFrame__ - automatically set to use the Paul Irish shim
+	
+__window.onmousemove__ - the first time a program uses the Pad.getMouse() function, Scrawl.js attaches a small mouse tracking function to window.onmousemove
+	
+__window.scrawl__ - the Scrawl.js library object
+
+@module scrawl
+**/
 
 // requestAnimFrame from Paul Irish - http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 window.requestAnimFrame = (function(callback){
 	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback){window.setTimeout(callback, 1000/60);};
 	})();
- 
+
+/**
+# window.scrawl
+
+_Note: use lowecase s - 'scrawl' (and no underscore)_
+
+## Purpose:
+
+* Holds links to every substantive object created by Scrawl.js and user code
+* Also holds links to key DOM objects
+* Includes factory functions for creating Sprites, canvas elements, etc
+* Generalist functions for loading canvases, stacks, images etc on startup, as directed by the HTML code
+* Shorthand functions for rendering canvases
+* Some general helper functions for testing variables that can be used by coders 
+
+@class _scrawl
+**/
 window.scrawl = (function(){
 	var scrawl = {
-m: '',
+	
+/**
+Scrawl object type
+@property type
+@type {String}
+@default Library
+@final
+**/
 		type: 'Library',
-		version: '1.01',
+		
+/**
+Scrawl.js version number
+@property version
+@type {String}
+@default 2.00
+@final
+**/
+		version: '2.00',
+		
+/**
+Contains key:value pairs for storing user-specified variables
+@property object
+@type {Object}
+**/
 		object: {},
+		
+/**
+Contains scrawl.object key Strings
+@property objectnames
+@type {Array}
+**/
 		objectnames: [],
+		
+/**
+Contains PADNAME:Object pairs for each instantiated Pad object
+@property pad
+@type {Object}
+**/
 		pad: {},
+		
+/**
+Contains scrawl.pad key Strings
+@property padnames
+@type {Array}
+**/
 		padnames: [],
+		
+/**
+The currently active PADNAME
+@property currentPad
+@type {String}
+**/
 		currentPad: null,
+		
+/**
+Contains CELLNAME:Object pairs for each instantiated Cell object
+@property cell
+@type {Object}
+**/
 		cell: {},
+		
+/**
+Contains CELLNAME:object pairs linking to each Cell object's DOM &lt;canvas&gt; element
+@property canvas
+@type {Object}
+**/
 		canvas: {},
+		
+/**
+Contains CELLNAME:Object pairs linking to each &lt;canvas&gt; element's context engine
+@property context
+@type {Object}
+**/
 		context: {},
+		
+/**
+Contains scrawl.cell key Strings
+@property cellnames
+@type {Array}
+**/
 		cellnames: [],
+		
+/**
+Contains CONTEXTNAME:Object pairs linking to each instantiated Context object
+@property ctx
+@type {Object}
+**/
 		ctx: {},
+		
+/**
+Contains scrawl.ctx key Strings
+@property ctxnames
+@type {Array}
+**/
 		ctxnames: [],
+		
+/**
+Contains SCRAWLIMAGENAME:Object pairs linking to each instantiated ScrawlImage object
+@property image
+@type {Object}
+**/
 		image: {},
+		
+/**
+Contains SCRAWLIMAGENAME:Object pairs linking to JavaScript image data objects
+@property imageData
+@type {Object}
+**/
 		imageData: {},
+		
+/**
+Contains SCRAWLIMAGENAME:object pairs linking to each scrawlImageObject's DOM &lt;img&gt;, &lt;svg&gt; or &lt;video&gt; element
+@property img
+@type {Object}
+**/
 		img: {},
+		
+/**
+Contains scrawl.image key Strings
+@property imagenames
+@type {Array}
+**/
 		imagenames: [],
+		
+/**
+Contains GROUPNAME:Object pairs linking to each instantiated Group object
+@property group
+@type {Object}
+**/
 		group: {},
+		
+/**
+Contains scrawl.group key Strings
+@property groupnames
+@type {Array}
+**/
 		groupnames: [],
+		
+/**
+Contains DESIGNNAME:Object pairs for each instantiated design object (Gradient, RadialGradient, Pattern, Color)
+@property design
+@type {Object}
+**/
 		design: {},
+		
+/**
+Contains DESIGNNAME:precompiled gradient/pattern context object pairs (Gradient, RadialGradient, Pattern)
+@property dsn
+@type {Object}
+**/
 		dsn: {},
+		
+/**
+Contains scrawl.design key Strings
+@property designnames
+@type {Array}
+**/
 		designnames: [],
+		
+/**
+Contains SPRITENAME:Object pairs for each instantiated sprite object (Block, Phrase, Picture, Wheel, Outline, Shape, Particle)
+@property sprite
+@type {Object}
+**/
 		sprite: {},
+		
+/**
+Contains scrawl.sprite key Strings
+@property spritenames
+@type {Array}
+**/
 		spritenames: [],
+		
+/**
+Contains POINTNAME:object pairs for each instantiated Point object
+@property point
+@type {Object}
+**/
 		point: {},
+		
+/**
+Contains scrawl.point key Strings
+@property pointnames
+@type {Array}
+**/
 		pointnames: [],
+		
+/**
+Contains LINKNAME:Object pairs for each instantiated Link object
+@property link
+@type {Object}
+**/
 		link: {},
+		
+/**
+Contains scrawl.link key Strings
+@property linknames
+@type {Array}
+**/
 		linknames: [],
+		
+/**
+Contains ANIMSHEETNAME:Object pairs for each instantiated AnimSheet object
+@property anim
+@type {Object}
+**/
 		anim: {},
+		
+/**
+Contains scrawl.anim key Strings
+@property animnames
+@type {Array}
+**/
 		animnames: [],
+		
+/**
+Contains ANIMATIONNAME:Object pairs for each instantiated Animation object
+@property animation
+@type {Object}
+**/
+		animation: {},
+		
+/**
+Contains scrawl.animation key Strings
+@property animationnames
+@type {Array}
+**/
+		animationnames: [],
+		
+/**
+Contains TEXTNAME:object pairs for each instantiated Text object
+@property text
+@type {Object}
+@private
+**/
 		text: {},
+		
+/**
+Contains scrawl.text key Strings
+@property textnames
+@type {Array}
+@private
+**/
 		textnames: [],
+		
+/**
+Contains STACKNAME:object pairs for each instantiated Stack object
+@property stack
+@type {Object}
+**/
 		stack: {},
+		
+/**
+Contains STACKNAME:Object pairs linking to each Stack object's DOM &lt;div&gt; element
+@property stk
+@type {Object}
+**/
 		stk: {},
+		
+/**
+Contains scrawl.stack key Strings
+@property stacknames
+@type {Array}
+**/
 		stacknames: [],
+		
+/**
+Contains ELEMENTNAME:Object pairs for each instantiated Element Object
+@property element
+@type {Object}
+**/
 		element: {},
+		
+/**
+Contains ELEMENTNAME:Object pairs linking to each Element object's DOM element
+@property elm
+@type {Object}
+**/
 		elm: {},
+		
+/**
+Contains scrawl.element key Strings
+@property elementnames
+@type {Array}
+**/
 		elementnames: [],
-		nameslist: ['objectnames', 'padnames', 'cellnames', 'imagenames', 'groupnames', 'designnames', 'spritenames', 'pointnames', 'linknames', 'ctxnames', 'animnames', 'textnames', 'stacknames', 'elementnames'],
+		
+/**
+Contains SPRINGNAME:Object pairs for each instantiated Spring object
+@property spring
+@type {Object}
+**/
+		spring: {},
+		
+/**
+Contains scrawl.spring key Strings
+@property springnames
+@type {Array}
+**/
+		springnames: [],
+		
+/**
+Contains FORCENAME:Object pairs for each instantiated Force object
+@property force
+@type {Object}
+**/
+		force: {},
+		
+/**
+Contains scrawl.force key Strings
+@property forcenames
+@type {Array}
+**/
+		forcenames: [],
+		
+/**
+Contains scrawl Object key Strings
+@property nameslist
+@type {Array}
+@private
+**/
+		nameslist: ['objectnames', 'padnames', 'cellnames', 'imagenames', 'groupnames', 'designnames', 'spritenames', 'pointnames', 'linknames', 'ctxnames', 'animnames', 'animationnames', 'textnames', 'stacknames', 'elementnames', 'springnames', 'forcenames'],
+		
+/**
+For converting between degrees and radians
+@property radian
+@type {Number}
+@default Math.PI/180
+@final
+**/
 		radian: Math.PI/180,
+		
+/**
+Holds the current cursor x position on the web page
+@property mouseX
+@type {Number}
+@private
+**/
 		mouseX: 0,
+		
+/**
+Holds the current cursor y position on the web page
+@property mouseY
+@type {Number}
+@private
+**/
 		mouseY: 0,
+		
+/**
+Contains attribute key Strings specific to the Context object 
+@property contextKeys
+@type {Array}
+@private
+**/
+		contextKeys: [],
+		
+/**
+Contains attribute key Strings specific to the AnimSheet object 
+@property animKeys
+@type {Array}
+@private
+**/
+		animKeys: [],
+		
+/**
+An Object containing OBJECTTYPE:Object pairs which in turn contain default values for each Scrawl object   
+@property d
+@type {Object}
+@private
+**/
+		d: {},
+		
+/**
+An Object containing parameter:value pairs representing the physical parameters within which a physics model operates
+@property physics
+@type {Object}
+**/
+		physics: {
+/**
+Gravity - positive values are assumed to act downwards from the top of the &lt;canvas&gt; element. Measured in meters per second squared
+@property physics.gravity
+@type Number
+@default 9.8
+**/		
+			gravity: 9.8,
+/**
+Air density, measured in kilograms per cubic meter; default is air density at seal level
+@property physics.airDensity
+@type Number
+@default 1.23
+**/		
+			airDensity: 1.23,
+/**
+Change in time since last update, measured in seconds
+@property physics.deltaTime
+@type Number
+@default 0
+**/		
+			deltaTime: 0,
+			},
+		
+/**
+A __utility__ function that adds the attributes of the additive object to those of the reference object, where those attributes don't already exist in the reference object
+@method mergeInto
+@param {Object} o1 reference object
+@param {Object} o2 additive object
+@return merged object
+**/
+		mergeInto: function(o1, o2){
+			for(var key in o2){
+				if(o2.hasOwnProperty(key) && !scrawl.xt(o1[key])){
+					o1[key] = o2[key];
+					}
+				}
+			return o1;
+			},
+			
+/**
+A __utility__ function that adds the attributes of the additive object to those of the reference object, overwriting attributes where necessary
+@method mergeOver
+@param {Object} o1 reference object
+@param {Object} o2 additive object
+@return merged object
+**/
+		mergeOver: function(o1, o2){
+			for(var key in o2){
+				if(o2.hasOwnProperty(key)){
+					o1[key] = o2[key];
+					}
+				}
+			return o1;
+			},
+			
+/**
+A __utility__ function that checks an array to see if it contains a given value
+@method contains
+@param {Array} item Reference array
+@param {Mixed} k value to be checked
+@return true if value is in array; false otherwise
+**/
+		contains: function(item, k){
+			for(var p in item){
+				if(item[p] === k) return true;
+				}
+			return false;
+			},
+
+/**
+A __utility__ function that adds a value to an array if the array doesn't already contain an element with that value
+@method pushUnique
+@param {Array} item Reference array
+@param {Mixed} o value to be added to array
+@return true if value is added to the array; false otherwise
+**/
+		pushUnique: function(item, o){
+			if(!this.contains(item, o)){
+				item.push(o);
+				return true;
+				}
+			return false;
+			},
+
+/**
+A __utility__ function that removes a value from an array
+@method removeItem
+@param {Array} item Reference array
+@param {Mixed} o value to be removed from array
+@return true if value is removed from the array; false otherwise
+**/
+		removeItem: function(item, o){
+			if(this.contains(item, o)){
+				var i = item.indexOf(o);
+				item.splice(i, 1);
+				return true;
+				}
+			return false;
+			},
+
+/**
+A __utility__ function that checks to see if a number is between two other numbers
+@method isBetween
+@param {Number} no Reference number
+@param {Number} a Minimum or maximum number
+@param {Number} b Maximum or minimum number
+@param {Boolean} [e] If true, reference number can equal maximum/minimum number; on false, number must lie between the maximum and minimum (default: false)
+@return true if value is between maximum and minimum; false otherwise
+**/
+		isBetween: function(no, a, b, e){
+			if(a>b){var t=a; a=b; b=t;}
+			if(e){
+				if(no >= a && no <= b){
+					return true;
+					}
+				return false;
+				}
+			else{
+				if((no > a && no < b) || (no === a && no === b)){
+					return true;
+					}
+				return false;
+				}
+			},
+
+/**
+A __private__ function to generate a controller object for a visible DOM &lt;canvas&gt; element
+@method newPad
+@param {Object} items Initial attribute values for new object
+@return new Pad object
+@private
+**/
 		newPad: function(items){return new Pad(items);},
+		
+/**
+A __private__ function to generate a wrapper object for a DOM &lt;div&gt; stack element
+@method newStack
+@param {Object} items Initial attribute values for new object
+@return new Stack object
+@private
+**/
 		newStack: function(items){return new Stack(items);},
+		
+/**
+A __private__ function to generate a wrapper object for a DOM element within a scrawl stack
+@method newElement
+@param {Object} items Initial attribute values for new object
+@return new Element object
+@private
+**/
 		newElement: function(items){return new Element(items);},
+		
+/**
+A __private__ function to generate a wrapper object for a DOM &lt;canvas&gt; element
+@method newCell
+@param {Object} items Initial attribute values for new object
+@return new Cell object
+@private
+**/
 		newCell: function(items){return new Cell(items);},
+		
+/**
+A __private__ function to generate a wrapper object for a DOM &lt;img&gt;, &lt;video&gt or &lt;svg&gt; element
+@method newImage
+@param {Object} items Initial attribute values for new object
+@return new ScrawlImage object
+@private
+**/
 		newImage: function(items){return new ScrawlImage(items);},
+		
+/**
+A __factory__ function to generate a new Group object
+@method newGroup
+@param {Object} items Initial attribute values for new object
+@return new Group object
+**/
 		newGroup: function(items){return new Group(items);},
+		
+/**
+A __factory__ function to generate a new Phrase sprite object
+@method newPhrase
+@param {Object} items Initial attribute values for new object
+@return new Phrase object
+**/
 		newPhrase: function(items){return new Phrase(items);},
+		
+/**
+A __factory__ function to generate a new Block sprite object
+@method newBlock
+@param {Object} items Initial attribute values for new object
+@return new Block object
+**/
 		newBlock: function(items){return new Block(items);},
+		
+/**
+A __factory__ function to generate a new Wheel sprite object
+@method newWheel
+@param {Object} items Initial attribute values for new object
+@return new Wheel object
+**/
 		newWheel: function(items){return new Wheel(items);},
+		
+/**
+A __factory__ function to generate a new Picture sprite object
+@method newPicture
+@param {Object} items Initial attribute values for new object
+@return new Picture object
+**/
 		newPicture: function(items){return new Picture(items);},
+		
+/**
+A __factory__ function to generate a new Outline sprite object
+@method newOutline
+@param {Object} items Initial attribute values for new object
+@return new Outline object
+**/
 		newOutline: function(items){return new Outline(items);},
+		
+/**
+A __private__ function to generate a new Shape sprite object; useless on its own - a Shape sprite needs Link and Point objects to determine its path
+@method newShape
+@param {Object} items Initial attribute values for new object
+@return new Shape object
+@private
+**/
 		newShape: function(items){return new Shape(items);},
+		
+/**
+A __private__ function to generate a new Point object; useless on its own - Point objects contribute to Shape objects
+@method newPoint
+@param {Object} items Initial attribute values for new object
+@return new Point object
+@private
+**/
 		newPoint: function(items){return new Point(items);},
+		
+/**
+A __private__ function to generate a new Link object; useless on its own - Link objects contribute to Shape objects
+@method newLink
+@param {Object} items Initial attribute values for new object
+@return new Link object
+@private
+**/
 		newLink: function(items){return new Link(items);},
+		
+/**
+A __factory__ function to generate a new AnimSheet object
+@method newAnimSheet
+@param {Object} items Initial attribute values for new object
+@return new AnimSheet object
+**/
 		newAnimSheet: function(items){return new AnimSheet(items);},
+		
+/**
+A __factory__ function to generate a new Animation object
+@method newAnimation
+@param {Object} items Initial attribute values for new object
+@return new Animation object
+**/
+		newAnimation: function(items){return new Animation(items);},
+		
+/**
+A __factory__ function to generate a new Gradient design object
+@method newGradient
+@param {Object} items Initial attribute values for new object
+@return new Gradient object
+**/
 		newGradient: function(items){return new Gradient(items);},
+		
+/**
+A __factory__ function to generate a new RadialGradient design object
+@method newRadialGradient
+@param {Object} items Initial attribute values for new object
+@return new RadialGradient object
+**/
 		newRadialGradient: function(items){return new RadialGradient(items);},
+		
+/**
+A __factory__ function to generate a new Color design object
+@method newColor
+@param {Object} items Initial attribute values for new object
+@return new Color object
+**/
 		newColor: function(items){return new Color(items);},
+		
+/**
+A __factory__ function to generate a new Pattern design object
+@method newPattern
+@param {Object} items Initial attribute values for new object
+@return new Pattern object
+**/
 		newPattern: function(items){return new Pattern(items);},
+		
+/**
+A __factory function__ to generate a new Particle object
+
+@method newParticle
+@param {Object} items - initial attribute values for new object
+@return new Particle object
+**/
+		newParticle: function(items){return new Particle(items);},
+		
+/**
+A __factory__ function to generate a new Vector object
+@method newVector
+@param {Object} items - initial attribute values for new object
+@return new Vector object
+**/
+		newVector: function(items){return new Vector(items);},
+		
+/**
+A __factory__ function to generate a new Quaternion object
+@method newQuaternion
+@param {Object} items - initial attribute values for new object
+@return new Quaternion object
+**/
+		newQuaternion: function(items){return new Quaternion(items);},
+		
+/**
+A __factory__ function to generate a new Spring object
+@method newSpring
+@param {Object} items - initial attribute values for new object
+@return new Spring object
+**/
+		newSpring: function(items){return new Spring(items);},
+		
+/**
+A __factory__ function to generate a new Force object
+@method newForce
+@param {Object} items - initial attribute values for new object
+@return new Force object
+**/
+		newForce: function(items){return new Force(items);},
+			
+/**
+A __utility__ function for variable type checking
+@method isa
+@param item Primative or object for identification
+@param {String} identifier One from: 'bool', 'num', 'str', 'fn', 'arr', 'date', 'obj'
+@return True if item type matches the identifier
+**/
 		isa: function(item, identifier){
 			if(this.xta([item, identifier])){
 				var myId = identifier.toLowerCase();
 				switch(myId){
-					case 'bool' :
-					case 'boolean' :
-						return (typeof item === 'boolean') ? true : false;
-						break;
 					case 'num' :
-					case 'number' :
 						return (typeof item === 'number') ? true : false;
 						break;
 					case 'str' :
-					case 'string' :
 						return (typeof item === 'string') ? true : false;
 						break;
+					case 'bool' :
+						return (typeof item === 'boolean') ? true : false;
+						break;
 					case 'fn' :
-					case 'func' :
-					case 'function' :
 						return (typeof item === 'function') ? true : false;
 						break;
 					case 'arr' :
-					case 'array' :
 						return (Object.prototype.toString.call(item) === '[object Array]') ? true : false;
+						break;
+					case 'obj' :
+						return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 						break;
 					case 'date' :
 						return (Object.prototype.toString.call(item) === '[object Date]') ? true : false;
-						break;
-					case 'obj' :
-					case 'object' :
-						return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 						break;
 					default :
 						return false;
@@ -160,9 +834,23 @@ m: '',
 				}
 			return false;
 			},
+			
+/**
+A __utility__ function for variable type checking
+@method xt
+@param item Primative or object for identification
+@return False if item is 'undefined'
+**/
 		xt: function(item){
 			return (typeof item !== 'undefined') ? true : false;
 			},
+			
+/**
+A __utility__ function for variable type checking
+@method xta
+@param {Array} item Array of primatives or objects for identification - argument can also be a String
+@return False if any item is 'undefined'
+**/
 		xta: function(item){
 			var a = [].concat(item);
 			if(a.length > 0){
@@ -175,6 +863,13 @@ m: '',
 				}
 			return false;
 			},
+			
+/**
+A __utility__ function for variable type checking
+@method xto
+@param {Array} item Array of primatives or objects for identification - argument can also be a String
+@return True if any item is not 'undefined'
+**/
 		xto: function(item){
 			var a = [].concat(item);
 			if(a.length > 0){
@@ -186,6 +881,14 @@ m: '',
 				}
 			return false;
 			},
+			
+/**
+A __private__ function to generate unique names for new Scrawl objects
+@method makeName
+@param {Object} [item] Object with attributes: name, type, target
+@return Unique generated name
+@private
+**/
 		makeName: function(item){
 			item = (this.isa(item,'obj')) ? item : {};
 			var o = {
@@ -193,163 +896,28 @@ m: '',
 				type: (this.isa(item.type,'str')) ? item.type : null,
 				target: (this.isa(item.target,'str')) ? item.target : null,
 				};
-			if(this.nameslist.contains(o.target)){
+			if(this.contains(this.nameslist, o.target)){
 				var name = o.name || o.type || 'default';
 				var nameArray = name.split('~£!');
-				var newname = (this[o.target].contains(nameArray[0])) ? nameArray[0]+'~£!'+Math.floor(Math.random()*100000000) : nameArray[0];
+				var newname = (this.contains(this[o.target], nameArray[0])) ? nameArray[0]+'~£!'+Math.floor(Math.random()*100000000) : nameArray[0];
 				return newname;
 				}
 			return false;
 			},
-		loadNative: function(items){
-			items = (this.isa(items,'str')) ? [items] : items;
-			if(this.isa(items,'arr')){
-				var temp;
-				for(var i=0, z=items.length; i<z; i++){
-					temp = JSON.parse(items[i]);
-					for(var j=0, w=temp.length; j<w; j++){
-						switch(temp[j].type){
-							case 'Group' :
-								if(this.groupnames.contains(temp[j].name)){
-									this.group[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newGroup(temp[j]);
-									}
-								break;
-							case 'AnimSheet' :
-								if(this.animnames.contains(temp[j].name)){
-									this.anim[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newAnimSheet(temp[j]);
-									}
-								break;
-							case 'ScrawlImage' :
-								if(this.imagenames.contains(temp[j].name)){
-									this.image[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									if(this.xt(items.element)){
-										items.element = document.getElementById(items.element);
-										}
-									this.newImage(temp[j]);
-									}
-								break;
-							case 'Gradient' :
-								if(this.designnames.contains(temp[j].name)){
-									this.design[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newGradient(temp[j]);
-									}
-								break;
-							case 'RadialGradient' :
-								if(this.designnames.contains(temp[j].name)){
-									this.design[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newRadialGradient(temp[j]);
-									}
-								break;
-							case 'Pattern' :
-								if(this.designnames.contains(temp[j].name)){
-									this.design[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newPattern(temp[j]);
-									}
-								break;
-							case 'Color' :
-								if(this.designnames.contains(temp[j].name)){
-									this.design[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newColor(temp[j]);
-									}
-								break;
-							case 'Phrase' :
-								if(this.spritenames.contains(temp[j].name)){
-									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newPhrase(temp[j]);
-									}
-								break;
-							case 'Block' :
-								if(this.spritenames.contains(temp[j].name)){
-									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newBlock(temp[j]);
-									}
-								break;
-							case 'Wheel' :
-								if(this.spritenames.contains(temp[j].name)){
-									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newWheel(temp[j]);
-									}
-								break;
-							case 'Picture' :
-								var p;
-								if(this.spritenames.contains(temp[j].name)){
-									p = this.sprite[temp[j].name];
-									p.setToDefaults().set(temp[j]);
-									}
-								else{
-									p = this.newPicture(temp[j]);
-									}
-								if(temp[j].checkHitUsingImageData){
-									p.getImageData();
-									}
-								break;
-							case 'Outline' :
-								if(this.spritenames.contains(temp[j].name)){
-									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newOutline(temp[j]);
-									}
-								break;
-							case 'Shape' :
-								if(this.spritenames.contains(temp[j].name)){
-									this.sprite[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newShape(temp[j]);
-									}
-								break;
-							case 'Point' :
-								if(this.pointnames.contains(temp[j].name)){
-									this.point[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newPoint(temp[j]);
-									}
-								break;
-							case 'Link' :
-								if(this.linknames.contains(temp[j].name)){
-									this.link[temp[j].name].setToDefaults().set(temp[j]);
-									}
-								else{
-									this.newLink(temp[j]);
-									}
-								break;
-							}
-						}
-					}
-				}
-			return true;
-			},
+
+/**
+A __general__ function to generate ScrawlImage wrapper objects for &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; elements identified by class string
+@method getImagesByClass
+@param {String} classtag Class string value of DOM objects to be imported into the scrawl library
+@return Array of String names; false on failure
+**/
 		getImagesByClass: function(classtag){
 			if(classtag){
-				var names = []
-				var s = document.getElementsByClassName(classtag);
+				var names = [],
+					s = document.getElementsByClassName(classtag);
 				if(s.length > 0){
-					for(var myImg, i=0, z=s.length; i<z; i++){
-						myImg = scrawl.newImage({
+					for(var i=0, z=s.length; i<z; i++){
+						var myImg = scrawl.newImage({
 							element: s[i],							//unrecorded flag for triggering Image stuff
 							});
 						names.push(myImg.name);
@@ -360,6 +928,14 @@ m: '',
 			console.log('scrawl.getImagesByClass() failed to find any <img> elements of class="'+classtag+'" on the page');
 			return false;
 			},
+
+/**
+A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&gt; elements
+@method clear
+@param {String} [command] Command String
+@param {Array} [pads] Array of PADNAMEs - can also be a String
+@return True on success; false otherwise
+**/
 		clear: function(command, pads){
 			var p = (this.xt(pads)) ? [].concat(pads) : this.padnames;
 			if(p.length > 0){
@@ -370,6 +946,14 @@ m: '',
 				}
 			return false;
 			},
+
+/**
+A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&gt; elements using their background color
+@method stampBackground
+@param {String} [command] Command String
+@param {Array} [pads] Array of PADNAMEs - can also be a String
+@return True on success; false otherwise
+**/
 		stampBackground: function(command, pads){
 			var p = (this.xt(pads)) ? [].concat(pads) : this.padnames;
 			if(p.length > 0){
@@ -380,6 +964,14 @@ m: '',
 				}
 			return false;
 			},
+
+/**
+A __display__ function to ask Pads to get their Cells to compile their scenes
+@method compile
+@param {String} [command] Command String
+@param {Array} [pads] Array of PADNAMEs - can also be a String
+@return True on success; false otherwise
+**/
 		compile: function(command, pads){
 			var p = (this.xt(pads)) ? [].concat(pads) : this.padnames;
 			if(p.length > 0){
@@ -390,6 +982,14 @@ m: '',
 				}
 			return false;
 			},
+
+/**
+A __display__ function to ask Pads to show the results of their latest display cycle
+@method show
+@param {String} [command] Command String
+@param {Array} [pads] Array of PADNAMEs - can also be a String
+@return True on success; false otherwise
+**/
 		show: function(command, pads){
 			var p = (this.xt(pads)) ? [].concat(pads) : this.padnames;
 			if(p.length > 0){
@@ -400,6 +1000,14 @@ m: '',
 				}
 			return false;
 			},
+
+/**
+A __display__ function to ask Pads to undertake a complete clear-compile-show display cycle
+@method render
+@param {Object} [command] Object with attributes: clear:COMMAND, compile:COMMAND, show:COMMAND - all are optional
+@param {Array} [pads] Array of PADNAMEs - can also be a String
+@return True on success; false otherwise
+**/
 		render: function(command, pads){
 			var p = (this.xt(pads)) ? [].concat(pads) : this.padnames;
 			if(p.length > 0){
@@ -410,7 +1018,14 @@ m: '',
 				}
 			return false;
 			},
+
+/**
+A __general__ function to reset the scrawl library properties to empty values; then call scrawl.initialize()
+@method reset
+@return Always true
+**/
 		reset: function(){
+			this.doAnimation = false;
 			this.objectnames = []; 
 			this.stack = {}; this.stk = {}; this.stacknames = [];
 			this.element = {}; this.elm = {}; this.elementnames = [];
@@ -424,14 +1039,32 @@ m: '',
 			this.point = {}; this.pointnames = [];
 			this.link = {}; this.linknames = [];
 			this.anim = {}; this.animnames = [];
+			this.animation = {}; this.animationnames = [];
 			this.text = {}; this.textnames = [];
+			this.spring = {}; this.springnames = [];
+			this.force = {}; this.forcenames = [];
 			this.initialize();
 			return true;
 			},
+
+/**
+A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects
+@method addNewCell
+@param {Object} data Initial attribute values for new object
+@param {String} pad PADNAME
+@return New Cell object
+**/
 		addNewCell: function(data, pad){
 			var p = (this.isa(pad,'str')) ? pad : this.currentPad;
 			return scrawl.pad[p].addNewCell(data);
 			},
+
+/**
+A __general__ function which deletes Cell objects and their associated paraphinalia
+@method deleteCells
+@param {Array} cells Array of CELLNAMEs - can also be a String
+@return True on success; false otherwise
+**/
 		deleteCells: function(cells){
 			if(this.xt(cells)){
 				var c = [].concat(cells)
@@ -442,20 +1075,28 @@ m: '',
 					delete this.group[c[i]];
 					delete this.group[c[i]+'_field'];
 					delete this.group[c[i]+'_fence'];
-					this.groupnames.removeItem(c[i]);
-					this.groupnames.removeItem(c[i]+'_field');
-					this.groupnames.removeItem(c[i]+'_fence');
+					scrawl.removeItem(this.groupnames, c[i]);
+					scrawl.removeItem(this.groupnames, c[i]+'_field');
+					scrawl.removeItem(this.groupnames, c[i]+'_fence');
 					delete this.context[c[i]];
 					delete this.canvas[c[i]];
 					delete this.ctx[scrawl.cell[c[i]].context];
-					this.ctxnames.removeItem(scrawl.cell[c[i]].context);
+					scrawl.removeItem(this.ctxnames, scrawl.cell[c[i]].context);
 					delete this.cell[c[i]];
-					this.cellnames.removeItem(c[i]);
+					scrawl.removeItem(this.cellnames, c[i]);
 					}
 				return true;
 				}
 			return false;
 			},
+
+/**
+A __general__ function which passes on requests to pads to update their drawOrder property
+@method setDrawOrder
+@param {Array} order Array of CELLNAMEs - Cells listed first will be drawn first (beneath other cells/layers)
+@param {Array} pads Array of PADNAMESs - can also be a String
+@return Always true
+**/
 		setDrawOrder: function(order, pads){
 			var p = (this.xt(pads)) ? [].concat(pads) : [this.currentPad];
 			for(var i=0, z=p.length; i<z; i++){
@@ -463,19 +1104,32 @@ m: '',
 				}
 			return true;
 			},
+
+/**
+A __factory__ function to generate Point objects from a set of cartesian (XY) coordinates
+
+The argument is in the form of:
+* __sprite__ SPRITENAME String
+* __data__ Array of arrays containing [xCoordinate, yCoordinate] Numbers
+* __pointLabel__ String
+* __linkLabel__ String (optional)
+@method makeCartesianPoints
+@param {Object} items Object containing attributes
+@return Array of POINTNAME Strings
+@deprecated Use other factory functions instead
+**/
 		makeCartesianPoints: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
 			if(this.isa(items.pointLabel,'str') && this.isa(items.sprite,'str') && this.isa(items.data,'arr')){
-				var v = [], temp;
-				var viz = (this.isa(items.visibility,'bool')) ? items.visibility : true;
-				var vLabel = (this.xt(items.linkLabel)) ? items.linkLabel : items.pointLabel+'_link';
+				var v = [], 
+					temp,
+					vLabel = (this.xt(items.linkLabel)) ? items.linkLabel : items.pointLabel+'_link';
 				for(var i=0, z=items.data.length; i<z; i++){
 					temp = new Point({
 						name: items.pointLabel+i,
 						sprite: items.sprite,
 						currentX: items.data[i][0] || 0,
 						currentY: items.data[i][1] || 0,
-						visibility: viz,
 						startLink: vLabel+i,
 						});
 					v.push(temp.name);
@@ -483,19 +1137,32 @@ m: '',
 				}
 			return v;
 			},
+
+/**
+A __factory__ function to generate Point objects from a set of polar (distance, angle) coordinates
+
+The argument is in the form of:
+* __sprite__ SPRITENAME String
+* __data__ Array of arrays containing [distance, angle] Numbers
+* __pointLabel__ String
+* __linkLabel__ String (optional)
+@method makePolarPoints
+@param {Object} items Object containing attributes
+@return Array of POINTNAME Strings
+@deprecated Use other factory functions instead
+**/
 		makePolarPoints: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
 			if(this.isa(items.pointLabel,'str') && this.isa(items.sprite,'str') && this.isa(items.data,'arr')){
-				var v = [], temp;
-				var viz = (this.isa(items.visibility,'bool')) ? items.visibility : true;
-				var vLabel = (this.xt(items.linkLabel)) ? items.linkLabel : items.pointLabel+'_link';
+				var	v = [],
+					temp,
+					vLabel = (this.xt(items.linkLabel)) ? items.linkLabel : items.pointLabel+'_link';
 				for(var i=0, z=items.data.length; i<z; i++){
 					temp = new Point({
 						name: items.pointLabel+i,
 						sprite: items.sprite,
 						distance: items.data[i][0] || 0,
 						angle: items.data[i][1] || 0,
-						visibility: viz,
 						startLink: vLabel+i,
 						});
 					v.push(temp.name);
@@ -503,15 +1170,49 @@ m: '',
 				}
 			return v;
 			},
+
+/**
+A __factory__ function to generate Shape sprite objects
+
+The argument can include:
+* __scaleX__ - Number, for stretching the sprite horizontally; default: 1 (not retained)
+* __scaleY__ - Number, for stretching the sprite vertically; default: 1 (not retained)
+* __data__ - String consisting of _SVGTiny_ path instructions (all commands except 'A' or 'a')
+* any other legitimate Sprite, Context or Shape attribute
+@method makePath
+@param {Object} items Object containing attributes
+@return Shape sprite object
+**/
 		makePath: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
+			//define local variables - scale
+			var minX = 999999, 
+				minY = 999999, 
+				maxX = -999999, 
+				maxY = -999999,
+				myShape, 
+				sn, 
+				tn, 
+				lib, 
+				sx, 
+				sy, 
+				set, 
+				data, 
+				command, 
+				temppoint,
+				lc = 0, 
+				pc = 0, 
+				cx = 0, 
+				cy = 0;
+			//amend argument
+			var	myPivot = (this.xt(items.pivot)) ? this.point[myPivot] || this.sprite[myPivot] : false;
+			items.start = (scrawl.xt(items.start)) ? items.start : {};
 			items.scaleX = items.scaleX || 1; 
 			items.scaleY = items.scaleY || 1;
-			items.startX = items.startX || 0; 
-			items.startY = items.startY || 0;
-			items.handleX = items.handleX || 'left';
-			items.handleY = items.handleY || 'top';
-			var minX = 999999, minY = 999999, maxX = -999999, maxY = -999999;
+			items.startX = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.x : myPivot.start.x) : (items.startX || items.start.x || 0); 
+			items.startY = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.y : myPivot.start.y) : (items.startY || items.start.y || 0); 
+			items.isLine = (scrawl.isa(items.isLine,'bool')) ? items.isLine : true;
+			//define local functions
 			var checkMinMax = function(cx,cy){
 				minX = (minX > cx) ? cx : minX;
 				minY = (minY > cy) ? cy : minY;
@@ -528,13 +1229,12 @@ m: '',
 					}
 				return false;
 				};
-			var generatePoint = function(_tempname,_pcount,_shapename,_x,_y,_viz,_lcount,_sx,_sy){
+			var generatePoint = function(_tempname,_pcount,_shapename,_x,_y,_lcount,_sx,_sy){
 				new Point({
 					name: _tempname+'_p'+_pcount,
 					sprite: _shapename,
 					currentX: _x*_sx,
 					currentY: _y*_sy,
-					visibility: _viz,
 					startLink: _tempname+'_l'+_lcount,
 					});
 				};
@@ -550,54 +1250,49 @@ m: '',
 					endPoint: _ept.name || false,
 					controlPoint1: _cp1.name || false,
 					controlPoint2: _cp2.name || false,
-					precision: false,
+					precision: items.precision || false,
 					action: _act,
 					});
 				};
+			//main code
 			if(this.xt(items.data)){
-				var myShape = this.newShape(items);
-				var sn = myShape.name;
-				var tn = sn.replace('~','_','g');
-				var lib = scrawl.point;
-				var sx = items.scaleX;
-				var sy = items.scaleY;
+				myShape = this.newShape(items);
+				sn = myShape.name;
+				tn = sn.replace('~','_','g');
+				lib = scrawl.point;
+				sx = items.scaleX;
+				sy = items.scaleY;
 				if(myShape){
-					var set = items.data.match(/([A-Za-z][0-9. ,\-]*)/g);
-					var data, command, temppoint;
-					var lc = 0, pc = 0;
-					var cx = myShape.startX, cy = myShape.startY;
-					generatePoint(tn, pc, sn, cx, cy, false, lc, sx, sy); pc++;
+					set = items.data.match(/([A-Za-z][0-9. ,\-]*)/g);
+					generatePoint(tn, pc, sn, cx, cy, lc, sx, sy); pc++;
 					for(var i=0,z=set.length; i<z; i++){
 						command = set[i][0];
 						data = getPathSetData(set[i]);
 						switch(command){
 							case 'M' :
-//NEED TO WORK OUT WHAT .dataFile did in the SVG import stuff, and how its removal will affect existing demos
-								if(i===0 && items.dataFile){
-									myShape.startX = data[0];
-									myShape.startY = data[1];
-									checkMinMax(cx,cy);
-									}
-								else{
-									cx = data[0], cy = data[1];
-									checkMinMax(cx,cy);
-									generatePoint(tn, pc, sn, cx, cy, true, lc+1, sx, sy); pc++;
-									generateLink(tn, lc, sn, false, 'move', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
-									}
+								cx = data[0], cy = data[1];
+								checkMinMax(cx,cy);
+								generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
+								generateLink(tn, lc, sn, false, 'move', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 								for(var k=2,v=data.length;k<v;k+=2){
-									generatePoint(tn, pc, sn, data[k], data[k+1], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 									cx = data[k], cy = data[k+1];
 									checkMinMax(cx,cy);
 									}
 								break;
 							case 'm' :
-								cx += data[0], cy += data[1];
+								if(i===0){
+									cx = data[0], cy = data[1];
+									}
+								else{
+									cx += data[0], cy += data[1];
+									}
 								checkMinMax(cx,cy);
-								generatePoint(tn, pc, sn, cx, cy, true, lc+1, sx, sy); pc++;
+								generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, false, 'move', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 								for(var k=2,v=data.length;k<v;k+=2){
-									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 									cx += data[k], cy += data[k+1];
 									checkMinMax(cx,cy);
@@ -605,12 +1300,12 @@ m: '',
 								break;
 							case 'Z' :
 							case 'z' :
-								generatePoint(tn, pc, sn, myShape.startX, myShape.startY, false, lc+1, sx, sy); pc++;
+								generatePoint(tn, pc, sn, myShape.start.x, myShape.start.y, lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, false, 'close', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 								break;
 							case 'L' :
 								for(var k=0,v=data.length;k<v;k+=2){
-									generatePoint(tn, pc, sn, data[k], data[k+1], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 									cx = data[k], cy = data[k+1];
 									checkMinMax(cx,cy);
@@ -618,7 +1313,7 @@ m: '',
 								break;
 							case 'l' :
 								for(var k=0,v=data.length;k<v;k+=2){
-									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 									cx += data[k], cy += data[k+1];
 									checkMinMax(cx,cy);
@@ -626,7 +1321,7 @@ m: '',
 								break;
 							case 'H' :
 								for(var k=0,v=data.length;k<v;k++){
-									generatePoint(tn, pc, sn, data[k], cy, true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], cy, lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 									cx = data[k];
 									checkMinMax(cx,cy);
@@ -634,7 +1329,7 @@ m: '',
 								break;
 							case 'h' :
 								for(var k=0,v=data.length;k<v;k++){
-									generatePoint(tn, pc, sn, cx+data[k], cy, true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k], cy, lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 									cx += data[k];
 									checkMinMax(cx,cy);
@@ -642,7 +1337,7 @@ m: '',
 								break;
 							case 'V' :
 								for(var k=0,v=data.length;k<v;k++){
-									generatePoint(tn, pc, sn, cx, data[k], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx, data[k], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 									cy = data[k];
 									checkMinMax(cx,cy);
@@ -650,7 +1345,7 @@ m: '',
 								break;
 							case 'v' :
 								for(var k=0,v=data.length;k<v;k++){
-									generatePoint(tn, pc, sn, cx, cy+data[k], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx, cy+data[k], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 									cy += data[k];
 									checkMinMax(cx,cy);
@@ -658,9 +1353,9 @@ m: '',
 								break;
 							case 'C' :
 								for(var k=0,v=data.length;k<v;k+=6){
-									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
-									generatePoint(tn, pc, sn, data[k+2], data[k+3], false, lc+1, sx, sy); pc++;
-									generatePoint(tn, pc, sn, data[k+4], data[k+5], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+4], data[k+5], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
 									cx = data[k+4], cy = data[k+5];
 									checkMinMax(cx,cy);
@@ -668,9 +1363,9 @@ m: '',
 								break;
 							case 'c' :
 								for(var k=0,v=data.length;k<v;k+=6){
-									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], false, lc+1, sx, sy); pc++;
-									generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], false, lc+1, sx, sy); pc++;
-									generatePoint(tn, pc, sn, cx+data[k+4], cy+data[k+5], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k+4], cy+data[k+5], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
 									cx += data[k+4], cy += data[k+5];
 									checkMinMax(cx,cy);
@@ -678,7 +1373,7 @@ m: '',
 								break;
 							case 'S' :
 								for(var k=0,v=data.length;k<v;k+=4){
-									if(i>0 && ['C','c','S','s'].contains(set[i-1][0])){
+									if(i>0 && this.contains(['C','c','S','s'], set[i-1][0])){
 										lib[tn+'_p'+(pc-2)].clone({
 											name: tn+'_p'+pc,
 											currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
@@ -686,10 +1381,10 @@ m: '',
 											}), pc++;
 										}
 									else{
-										generatePoint(tn, pc, sn, cx, cy, false, lc+1, sx, sy); pc++;
+										generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 										}
-									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
-									generatePoint(tn, pc, sn, data[k+2], data[k+3], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
 									cx = data[k+2], cy = data[k+3];
 									checkMinMax(cx,cy);
@@ -697,7 +1392,7 @@ m: '',
 								break;
 							case 's' :
 								for(var k=0,v=data.length;k<v;k+=4){
-									if(i>0 && ['C','c','S','s'].contains(set[i-1][0])){
+									if(i>0 && this.contains(['C','c','S','s'], set[i-1][0])){
 										lib[tn+'_p'+(pc-2)].clone({
 											name: tn+'_p'+pc,
 											currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
@@ -705,10 +1400,10 @@ m: '',
 											}), pc++;
 										}
 									else{
-										generatePoint(tn, pc, sn, cx, cy, false, lc+1, sx, sy); pc++;
+										generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 										}
-									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
-									generatePoint(tn, pc, sn, data[k+2], data[k+3], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
 									cx += data[k+2], cy += data[k+3];
 									checkMinMax(cx,cy);
@@ -716,8 +1411,8 @@ m: '',
 								break;
 							case 'Q' :
 								for(var k=0,v=data.length;k<v;k+=4){
-									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
-									generatePoint(tn, pc, sn, data[k+2], data[k+3], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
 									cx = data[k+2], cy = data[k+3];
 									checkMinMax(cx,cy);
@@ -725,8 +1420,8 @@ m: '',
 								break;
 							case 'q' :
 								for(var k=0,v=data.length;k<v;k+=4){
-									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], false, lc+1, sx, sy); pc++;
-									generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
 									cx += data[k+2], cy += data[k+3];
 									checkMinMax(cx,cy);
@@ -734,7 +1429,7 @@ m: '',
 								break;
 							case 'T' :
 								for(var k=0,v=data.length;k<v;k+=2){
-									if(i>0 && ['Q','q','T','t'].contains(set[i-1][0])){
+									if(i>0 && this.contains(['Q','q','T','t'], set[i-1][0])){
 										lib[tn+'_p'+(pc-2)].clone({
 											name: tn+'_p'+pc,
 											currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
@@ -742,9 +1437,9 @@ m: '',
 											}), pc++;
 										}
 									else{
-										generatePoint(tn, pc, sn, cx, cy, false, lc+1, sx, sy); pc++;
+										generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 										}
-									generatePoint(tn, pc, sn, data[k], data[k+1], false, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
 									cx = data[k], cy = data[k+1];
 									checkMinMax(cx,cy);
@@ -752,7 +1447,7 @@ m: '',
 								break;
 							case 't' :
 								for(var k=0,v=data.length;k<v;k+=2){
-									if(i>0 && ['Q','q','T','t'].contains(set[i-1][0])){
+									if(i>0 && this.contains(['Q','q','T','t'], set[i-1][0])){
 										lib[tn+'_p'+(pc-2)].clone({
 											name: tn+'_p'+pc,
 											currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
@@ -760,9 +1455,9 @@ m: '',
 											}), pc++;
 										}
 									else{
-										generatePoint(tn, pc, sn, cx, cy, false, lc+1, sx, sy); pc++;
+										generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 										}
-									generatePoint(tn, pc, sn, data[k], data[k+1], true, lc+1, sx, sy); pc++;
+									generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 									generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
 									cx += data[k], cy += data[k+1];
 									checkMinMax(cx,cy);
@@ -772,35 +1467,46 @@ m: '',
 							}
 						}
 					generateLink(tn, lc, sn, false, 'end', lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc)]);
-					myShape.firstPoint = tn+'_p0';
-					myShape.width = (maxX-minX)*items.scaleX;
-					myShape.height = (maxY-minY)*items.scaleY;
-					this.point[tn+'_p0'].fixed = myShape.name;
-					if(items.path){
-						myShape.path = false;
-						myShape.forceStamp('none');
-						myShape.path = items.path;
-						}
-					else{myShape.forceStamp('none');}
-					myShape.handleX = items.handleX || 'center';
-					myShape.handleY = items.handleY || 'center';
+					myShape.set({
+						firstPoint: tn + '_p0',
+						width: (maxX - minX) * items.scaleX,
+						height: (maxY - minY) * items.scaleY,
+						});
+					myShape.buildPositions();
 					return myShape;
 					}
 				}
 			return false;
 			},
+
+/**
+A __factory__ function to generate elliptical Shape or Outline sprite objects
+
+The argument can include:
+* __radiusX__ - Number, horizontal radius of ellipse; default: 0 (not retained)
+* __radiusY__ - Number, vertical radius of ellipse; default: 0 (not retained)
+* __outline__ - Boolean, true to create Outline; false (default) to create Shape (not retained)
+* any other legitimate Sprite, Context or Shape/Outline attribute
+@method makeEllipse
+@param {Object} items Object containing attributes
+@return Shape or Outline sprite object
+**/
 		makeEllipse: function(items){
+			//amend argument
 			items = (this.isa(items,'obj')) ? items : {};
 			items.startX = items.startX || 0; 
 			items.startY = items.startY || 0;
 			items.radiusX = items.radiusX || 0;
 			items.radiusY = items.radiusY || 0;
 			items.closed = true;
-			var myData = 'm';
-			var cx = items.startX;
-			var cy = items.startY;
-			var dx = items.startX;
-			var dy = items.startY-items.radiusY;
+			//define local variables
+			var	myData = 'm',
+				cx = items.startX,
+				cy = items.startY,
+				dx = items.startX,
+				dy = items.startY-items.radiusY,
+				myShape;
+			//function code
 			myData += (cx-dx)+','+(cy-dy);
 			cx = dx, cy = dy;
 			dx = items.startX+(items.radiusX*0.55);
@@ -843,22 +1549,26 @@ m: '',
 			dy = items.startY-items.radiusY;
 			myData += ' '+(cx-dx)+','+(cy-dy);
 			myData += 'z';
+			items.isLine = false;
 			items.data = myData;
-			var myShape;
-			if(items.outline){
-				items.data = 'M'+items.startX+','+items.startY+items.data;
-				items.handleX = items.handleX || 'left';
-				items.handleY = items.handleY || 'top';
-				myShape = this.newOutline(items);
-				}
-			else{
-				items.handleX = items.handleX || 'center';
-				items.handleY = items.handleY || 'center';
-				myShape = this.makePath(items);
-				}
-			return myShape;
+			return (items.outline) ? this.newOutline(items) : this.makePath(items);
 			},
+
+/**
+A __factory__ function to generate rectangular Shape or Outline sprite objects, with optional rounded corners
+
+The argument can include:
+* __width__ - Number, default: 0
+* __height__ - Number, default: 0
+* also, 0, 1 or more of the following __radius__ attributes (all Number, default: radius=0): radiusTopLeftX, radiusTopLeftY, radiusTopRightX, radiusTopRightY, radiusBottomRightX, radiusBottomRightY, radiusBottomLeftX, radiusBottomLeftY, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft, radiusTopX, radiusTopY, radiusBottomX, radiusBottomY, radiusLeftX, radiusLeftY, radiusRightX, radiusRightY, radiusTop, radiusBottom, radiusRight, radiusLeft, radiusX, radiusY, radius (not retained)
+* __outline__ - Boolean, true to create Outline; false (default) to create Shape (not retained)
+* any other legitimate Sprite, Context or Shape/Outline attribute
+@method makeRectangle
+@param {Object} items Object containing attributes
+@return Shape or Outline sprite object
+**/
 		makeRectangle: function(items){
+			//amend argument
 			items = (this.isa(items,'obj')) ? items : {};
 			items.startX = items.startX || 0; 
 			items.startY = items.startY || 0;
@@ -866,21 +1576,24 @@ m: '',
 			items.height = items.height || 0;
 			items.radius = items.radius || 0; 
 			items.closed = true;
-			var _tlx = items.radiusTopLeftX || items.radiusTopLeft || items.radiusTopX || items.radiusLeftX || items.radiusTop || items.radiusLeft || items.radiusX || items.radius || 0;
-			var _tly = items.radiusTopLeftY || items.radiusTopLeft || items.radiusTopY || items.radiusLeftY || items.radiusTop || items.radiusLeft || items.radiusY || items.radius || 0;
-			var _trx = items.radiusTopRightX || items.radiusTopRight || items.radiusTopX || items.radiusRightX || items.radiusTop || items.radiusRight || items.radiusX || items.radius || 0;
-			var _try = items.radiusTopRightY || items.radiusTopRight || items.radiusTopY || items.radiusRightY || items.radiusTop || items.radiusRight || items.radiusY || items.radius || 0;
-			var _brx = items.radiusBottomRightX || items.radiusBottomRight || items.radiusBottomX || items.radiusRightX || items.radiusBottom || items.radiusRight || items.radiusX || items.radius || 0;
-			var _bry = items.radiusBottomRightY || items.radiusBottomRight || items.radiusBottomY || items.radiusRightY || items.radiusBottom || items.radiusRight || items.radiusY || items.radius || 0;
-			var _blx = items.radiusBottomLeftX || items.radiusBottomLeft || items.radiusBottomX || items.radiusLeftX || items.radiusBottom || items.radiusLeft || items.radiusX || items.radius || 0;
-			var _bly = items.radiusBottomLeftY || items.radiusBottomLeft || items.radiusBottomY || items.radiusLeftY || items.radiusBottom || items.radiusLeft || items.radiusY || items.radius || 0;
-			var halfWidth = (items.width/2);
-			var halfHeight = (items.height/2);
-			var myData = 'm';
-			var cx = items.startX;
-			var cy = items.startY;
-			var dx = items.startX-halfWidth+_tlx;
-			var dy = items.startY-halfHeight;
+			//define local variables - warning: everything inverts - top->bottom, left->right, etc
+			var	_brx = items.radiusTopLeftX || items.radiusTopLeft || items.radiusTopX || items.radiusLeftX || items.radiusTop || items.radiusLeft || items.radiusX || items.radius || 0,
+				_bry = items.radiusTopLeftY || items.radiusTopLeft || items.radiusTopY || items.radiusLeftY || items.radiusTop || items.radiusLeft || items.radiusY || items.radius || 0,
+				_blx = items.radiusTopRightX || items.radiusTopRight || items.radiusTopX || items.radiusRightX || items.radiusTop || items.radiusRight || items.radiusX || items.radius || 0,
+				_bly = items.radiusTopRightY || items.radiusTopRight || items.radiusTopY || items.radiusRightY || items.radiusTop || items.radiusRight || items.radiusY || items.radius || 0,
+				_tlx = items.radiusBottomRightX || items.radiusBottomRight || items.radiusBottomX || items.radiusRightX || items.radiusBottom || items.radiusRight || items.radiusX || items.radius || 0,
+				_tly = items.radiusBottomRightY || items.radiusBottomRight || items.radiusBottomY || items.radiusRightY || items.radiusBottom || items.radiusRight || items.radiusY || items.radius || 0,
+				_trx = items.radiusBottomLeftX || items.radiusBottomLeft || items.radiusBottomX || items.radiusLeftX || items.radiusBottom || items.radiusLeft || items.radiusX || items.radius || 0,
+				_try = items.radiusBottomLeftY || items.radiusBottomLeft || items.radiusBottomY || items.radiusLeftY || items.radiusBottom || items.radiusLeft || items.radiusY || items.radius || 0,
+				halfWidth = (items.width/2),
+				halfHeight = (items.height/2),
+				myData = 'm',
+				cx = items.startX,
+				cy = items.startY,
+				dx = items.startX-halfWidth+_tlx,
+				dy = items.startY-halfHeight,
+				myShape;
+			//function code
 			myData += (cx-dx)+','+(cy-dy);
 			cx = dx, cy = dy;
 			dx = items.startX+halfWidth-_trx;
@@ -939,22 +1652,31 @@ m: '',
 			dy = items.startY-halfHeight;
 			myData += ' '+(cx-dx)+','+(cy-dy);
 			myData += 'z';
+			items.isLine = false;
 			items.data = myData;
-			var myShape;
-			if(items.outline){
-				items.data = 'M'+items.startX+','+items.startY+items.data;
-				items.handleX = items.handleX || 'left';
-				items.handleY = items.handleY || 'top';
-				myShape = this.newOutline(items);
-				}
-			else{
-				items.handleX = items.handleX || 'center';
-				items.handleY = items.handleY || 'center';
-				myShape = this.makePath(items);
-				}
-			return myShape;
+			return (items.outline) ? this.newOutline(items) : this.makePath(items);
 			},
+
+/**
+A __factory__ function to generate bezier curve Shape or Outline sprite objects
+
+The argument can include:
+* __startX__ - Number; default: 0
+* __startY__ - Number; default: 0
+* __startControlX__ - Number; default: 0 (not retained)
+* __startControlY__ - Number; default: 0 (not retained)
+* __endControlX__ - Number; default: 0 (not retained)
+* __endControlY__ - Number; default: 0 (not retained)
+* __endX__ - Number; default: 0 (not retained)
+* __endY__ - Number; default: 0 (not retained)
+* __outline__ - Boolean, true to create Outline; false (default) to create Shape 
+* any other legitimate Sprite, Context or Shape/Outline attribute
+@method makeBezier
+@param {Object} items Object containing attributes
+@return Shape or Outline sprite object
+**/
 		makeBezier: function(items){
+			//amend argument
 			items = (this.isa(items,'obj')) ? items : {};
 			items.startX = items.startX || 0; 
 			items.startY = items.startY || 0;
@@ -967,51 +1689,71 @@ m: '',
 			items.closed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
-			var myFixed = items.fixed || 'none';
+			//define local variables
+			var	myFixed = items.fixed || 'none',
+				myShape, 
+				data, 
+				tempName;
+			//function code
 			items.fixed = false;
-			items.data = 	'm0,0'+
-							'c'+(items.startControlX-items.startX)+','+(items.startControlY-items.startY)+
-							' '+(items.endControlX-items.startX)+','+(items.endControlY-items.startY)+
-							' '+(items.endX-items.startX)+','+(items.endY-items.startY);
-			var myShape;
+			data = 'm0,0c'+
+				(items.startControlX-items.startX)+','+(items.startControlY-items.startY)+' '+
+				(items.endControlX-items.startX)+','+(items.endControlY-items.startY)+' '+
+				(items.endX-items.startX)+','+(items.endY-items.startY);
+			items.data = data;
+			items.isLine = true;
 			if(items.outline){
-				items.data = 'M'+items.startX+','+items.startY+items.data;
 				myShape = this.newOutline(items);
 				}
 			else{
-				items.line = true;
 				myShape = this.makePath(items);
-				var tempName = myShape.name.replace('~','_','g');
+				tempName = myShape.name.replace('~','_','g');
 				switch(myFixed){
 					case 'all' :
-						this.point[tempName+'_p1'].fixed = true;
-						this.point[tempName+'_p2'].fixed = true;
-						this.point[tempName+'_p3'].fixed = true;
-						this.point[tempName+'_p4'].fixed = true;
+						this.point[tempName+'_p1'].setToFixed(items.startX, items.startY);
+						this.point[tempName+'_p2'].setToFixed(items.startControlX, items.startControlY);
+						this.point[tempName+'_p3'].setToFixed(items.endControlX, items.endControlY);
+						this.point[tempName+'_p4'].setToFixed(items.endX, items.endY);
 						break;
 					case 'both' :
-						this.point[tempName+'_p1'].fixed = true;
-						this.point[tempName+'_p4'].fixed = true;
+						this.point[tempName+'_p1'].setToFixed(items.startX, items.startY);
+						this.point[tempName+'_p4'].setToFixed(items.endX, items.endY);
 						break;
 					case 'start' :
-						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p1'].setToFixed(items.startX, items.startY);
 						break;
 					case 'startControl' :
-						this.point[tempName+'_p2'].fixed = true;
+						this.point[tempName+'_p2'].setToFixed(items.startControlX, items.startControlY);
 						break;
 					case 'endControl' :
-						this.point[tempName+'_p3'].fixed = true;
+						this.point[tempName+'_p3'].setToFixed(items.endControlX, items.endControlY);
 						break;
 					case 'end' :
-						this.point[tempName+'_p4'].fixed = true;
+						this.point[tempName+'_p4'].setToFixed(items.endX, items.endY);
 						break;
-					default :
-						this.point[tempName+'_p0'].fixed = myShape.name;
 					}
 				}
 			return myShape;
 			},
+
+/**
+A __factory__ function to generate quadratic curve Shape or Outline sprite objects
+
+The argument can include:
+* __startX__ - Number; default: 0
+* __startY__ - Number; default: 0
+* __controlX__ - Number; default: 0 (not retained)
+* __controlY__ - Number; default: 0 (not retained)
+* __endX__ - Number; default: 0 (not retained)
+* __endY__ - Number; default: 0 (not retained)
+* __outline__ - Boolean, true to create Outline; false (default) to create Shape 
+* any other legitimate Sprite, Context or Shape/Outline attribute
+@method makeQuadratic
+@param {Object} items Object containing attributes
+@return Shape or Outline sprite object
+**/
 		makeQuadratic: function(items){
+			//amend argument
 			items = (this.isa(items,'obj')) ? items : {};
 			items.startX = items.startX || 0; 
 			items.startY = items.startY || 0;
@@ -1022,173 +1764,220 @@ m: '',
 			items.closed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
-			var myFixed = items.fixed || 'none';
+			//define local variables
+			var myFixed = items.fixed || 'none',
+				data, 
+				myShape, 
+				tempName;
+			//function code
+			data = 	'm0,0q'+
+				(items.controlX-items.startX)+','+(items.controlY-items.startY)+' '+
+				(items.endX-items.startX)+','+(items.endY-items.startY);
 			items.fixed = false;
-			items.data = 	'm0,0'+
-							'q'+(items.controlX-items.startX)+','+(items.controlY-items.startY)+
-							' '+(items.endX-items.startX)+','+(items.endY-items.startY);
-			var myShape;
+			items.data = data;
+			items.isLine = true;
 			if(items.outline){
-				items.data = 'M'+items.startX+','+items.startY+items.data;
 				myShape = this.newOutline(items);
 				}
 			else{
-				items.line = true;
 				myShape = this.makePath(items);
-				var tempName = myShape.name.replace('~','_','g');
+				tempName = myShape.name.replace('~','_','g');
 				switch(myFixed){
 					case 'all' :
-						this.point[tempName+'_p1'].fixed = true;
-						this.point[tempName+'_p2'].fixed = true;
-						this.point[tempName+'_p3'].fixed = true;
+						this.point[tempName+'_p1'].setToFixed(items.startX, items.startY);
+						this.point[tempName+'_p2'].setToFixed(items.controlX, items.controlY);
+						this.point[tempName+'_p3'].setToFixed(items.endX, items.endY);
 						break;
 					case 'both' :
-						this.point[tempName+'_p1'].fixed = true;
-						this.point[tempName+'_p3'].fixed = true;
+						this.point[tempName+'_p1'].setToFixed(items.startX, items.startY);
+						this.point[tempName+'_p3'].setToFixed(items.endX, items.endY);
 						break;
 					case 'start' :
-						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p1'].setToFixed(items.startX, items.startY);
 						break;
 					case 'control' :
-						this.point[tempName+'_p2'].fixed = true;
+						this.point[tempName+'_p2'].setToFixed(items.controlX, items.controlY);
 						break;
 					case 'end' :
-						this.point[tempName+'_p3'].fixed = true;
+						this.point[tempName+'_p3'].setToFixed(items.endX, items.endY);
 						break;
-					default :
-						this.point[tempName+'_p0'].fixed = myShape.name;
 					}
 				}
 			return myShape;
 			},
+
+/**
+A __factory__ function to generate straight line Shape or Outline sprite objects
+
+The argument can include:
+* __startX__ - Number; default: 0
+* __startY__ - Number; default: 0
+* __endX__ - Number; default: 0 (not retained)
+* __endY__ - Number; default: 0 (not retained)
+* __outline__ - Boolean, true to create Outline; false (default) to create Shape 
+* any other legitimate Sprite, Context or Shape/Outline attribute
+@method makeLine
+@param {Object} items Object containing attributes
+@return Shape or Outline sprite object
+**/
 		makeLine: function(items){
+			//amend argument
 			items = (this.isa(items,'obj')) ? items : {};
 			items.startX = items.startX || 0; 
 			items.startY = items.startY || 0;
 			items.endX = items.endX || 0;
 			items.endY = items.endY || 0;
 			items.closed = false;
-			var myFixed = items.fixed || 'none';
-			items.fixed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
-			items.data = 	'm0,0 '+(items.endX-items.startX)+','+(items.endY-items.startY);
-			var myShape;
+			//define local variables
+			var myFixed = items.fixed || 'none',
+				data, 
+				myShape, 
+				tempName;
+			//function code
+			data = 	'm0,0 '+(items.endX-items.startX)+','+(items.endY-items.startY);
+			items.fixed = false;
+			items.data = data;
+			items.isLine = true;
 			if(items.outline){
-				items.data = 'M'+items.startX+','+items.startY+items.data;
 				myShape = this.newOutline(items);
 				}
 			else{
-				items.line = true;
 				myShape = this.makePath(items);
-				var tempName = myShape.name.replace('~','_','g');
+				tempName = myShape.name.replace('~','_','g');
 				switch(myFixed){
 					case 'both' :
-						this.point[tempName+'_p1'].fixed = true;
-						this.point[tempName+'_p2'].fixed = true;
+						this.point[tempName+'_p1'].setToFixed(items.startX, items.startY);
+						this.point[tempName+'_p2'].setToFixed(items.endX, items.endY);
 						break;
 					case 'start' :
-						this.point[tempName+'_p1'].fixed = true;
+						this.point[tempName+'_p1'].setToFixed(items.startX, items.startY);
 						break;
 					case 'end' :
-						this.point[tempName+'_p2'].fixed = true;
+						this.point[tempName+'_p2'].setToFixed(items.endX, items.endY);
 						break;
-					default :
-						this.point[tempName+'_p0'].fixed = myShape.name;
 					}
 				}
 			return myShape;
 			},
+
+/**
+A __factory__ function to generate straight-edged regular shapes such as triangles, stars, hexagons, etc
+
+The argument can include:
+* __angle__ - Number; eg an angle of 72 produces a pentagon, while 144 produces a five-pointed star - default: 0
+* __sides__ - Number; number of sides to the regular shape - default: 0
+* __outline__ - Number; default: 0
+* __radius__ - Number; default: 0 (not retained)
+* __outline__ - Boolean, true to create Outline; false (default) to create Shape 
+* any other legitimate Sprite, Context or Shape/Outline attribute
+
+_(Either the 'angle' attribute or the 'sides' attribute (but not both) must be included in the argument object)_
+
+@method makeRegularShape
+@param {Object} items Object containing attributes
+@return Shape or Outline sprite object
+**/
 		makeRegularShape: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
 			if(this.xto([items.sides, items.angle])){
+				//amend argument
 				items.startX = items.startX || 0;
 				items.startY = items.startY || 0;
-				items.radius = (this.isa(items.radius,'num')) ? items.radius : 20;
+				items.radius = items.radius || 20;
 				items.closed = true;
-				var myTurn = (items.sides) ? 360/items.sides : items.angle;
-				var mySides = 0, calculateSides = myTurn;
-				while(calculateSides > 0.000001 && mySides<360){
-					mySides++;
-					calculateSides += myTurn;
-					calculateSides = calculateSides%360;
-					}
-				mySides++;
-				var myAngle = myTurn;
-				var myData = 'm', cx, cy, dx = 0, dy = 0;
-				for(var i=0; i<=mySides; i++){
-					cx = items.radius * Math.cos(myAngle * this.radian);
-					cy = items.radius * Math.sin(myAngle * this.radian);
-					myData += (cx-dx).toFixed(3)+','+(cy-dy).toFixed(3)+' ';
-					dx=cx, dy=cy;
-					myAngle += myTurn;
-					myAngle = myAngle%360;
-					}
-				myData += 'z';
-				items.data = myData;
-				var myShape;
-				if(items.outline){
-					items.data = 'M'+items.startX+','+items.startY+items.data;
-					items.handleX = items.handleX || 'left';
-					items.handleY = items.handleY || 'top';
-					myShape = this.newOutline(items);
-					}
-				else{
-					items.handleX = items.handleX || 'center';
-					items.handleY = items.handleY || 'center';
-					var myShape = this.makePath(items);
-					myShape.width = myShape.radius*2;
-					myShape.height = myShape.width;
-					}
-				return myShape;
+				//define local variables - default to square (diamond)
+				// - known bug: items.sides has difficulty exiting the loop, hence the count<1000 limit
+				var	turn = (scrawl.isa(items.sides,'num') && items.sides > 1) ? 360/items.sides : ((scrawl.isa(items.angle,'num') && items.angle > 0) ? items.angle : 4),
+					currentAngle = 0,
+					count = 0,
+					point = new Vector({x: items.radius}),
+					tPoint, 
+					oPoint, 
+					cPoint, 
+					test,
+					data = 'm';
+				//function code
+				cPoint = point.getRotate(currentAngle)
+				data += ''+cPoint.x.toFixed(4)+','+cPoint.y.toFixed(4)+' ';
+				oPoint = cPoint.getVector();
+				do{
+					count++;
+					currentAngle += turn;
+					currentAngle = currentAngle % 360;
+					tPoint = point.getRotate(currentAngle);
+					cPoint = tPoint.getVectorSubtract(oPoint);
+					data += ''+cPoint.x.toFixed(4)+','+cPoint.y.toFixed(4)+' ';
+					oPoint = tPoint.getVector();
+					test = currentAngle.toFixed(0);
+					}while(test !== '0' && count < 1000);
+				data += 'z';
+				items.data = data;
+				items.isLine = false;
+				return (scrawl.xt(items.outline) && items.outline) ? this.newOutline(items) : this.makePath(items);
 				}
 			return false;
 			},
+
+/**
+A __general__ function to delete sprite objects
+@method deleteSprite
+@param {Array} items Array of SPRITENAME Strings - can also be a String
+@return True on success, false otherwise
+**/
 		deleteSprite: function(items){
-			var myItems = [].concat(items);
+			//define local variables
+			var	myItems = (scrawl.isa(items, 'str')) ? [items] : [].concat(items),
+				myPointList, 
+				myLinkList,
+				myCtx,
+				search,
+				mySprite;
+			//function code
 			for(var i=0, z=myItems.length; i<z; i++){
-				if(this.spritenames.contains(myItems[i])){
-					if(this.sprite[myItems[i]].type === 'Shape'){
-						var myPointList = [this.sprite[myItems[i]].firstPoint];
-						var myData = this.point[this.sprite[myItems[i]].firstPoint].getData();
-						var myLinkList = [myData.startLink];
-						var nextLink = this.link[myData.startLink];
-						while(nextLink.action && ['move','add'].contains(nextLink.action)){
-							if(nextLink.controlPoint1){myPointList.push(nextLink.controlPoint1);}
-							if(nextLink.controlPoint2){myPointList.push(nextLink.controlPoint2);}
-							if(nextLink.endPoint){
-								myPointList.push(nextLink.endPoint);
-								myLinkList.push(this.point[nextLink.endPoint].startLink);
-								nextLink = this.link[this.point[nextLink.endPoint].startLink];
-								}
-							else{break;}
+				if(this.contains(this.spritenames, myItems[i])){
+					mySprite = this.sprite[myItems[i]];
+					if(mySprite.type === 'Shape'){
+						myPointList = mySprite.getFullPointList();
+						myLinkList = mySprite.getFullLinkList();
+						for(var j=0, w=myPointList.length; j<w; j++){
+							this.removeItem(this.pointnames, myPointList[j]);
+							delete this.point[myPointList[j]];
 							}
-						for(var k=0, w=myPointList.length; k<w; k++){
-							this.pointnames.removeItem(myPointList[k]);
-							delete this.point[myPointList[k]];
-							}
-						for(var k=0, w=myLinkList.length; k<w; k++){
-							this.linknames.removeItem(myLinkList[k]);
-							delete this.link[myLinkList[k]];
+						for(var j=0, w=myLinkList.length; j<w; j++){
+							this.removeItem(this.linknames, myLinkList[j]);
+							delete this.link[myLinkList[j]];
 							}
 						}
-					this.ctxnames.removeItem(myItems[i]);
-					delete this.ctx[myItems[i]];
-					this.spritenames.removeItem(myItems[i]);
+					myCtx = mySprite.context;
+					this.removeItem(this.ctxnames, myCtx);
+					delete this.ctx[myCtx];
+					this.removeItem(this.spritenames, myItems[i]);
 					delete this.sprite[myItems[i]];
 					for(var j =0, v=this.groupnames.length; j<v; j++){
-						this.group[this.groupnames[j]].sprites.removeItem(myItems[i]);
+						this.removeItem(this.group[this.groupnames[j]].sprites, myItems[i]);
 						}
 					}
 				}
 			return true;
 			},
+
+/**
+A __general__ function which adds supplied spritenames to Group.sprites attribute
+@method addSpritesToGroups
+@param {Array} groups Array of GROUPNAME Strings - can also be a String
+@param {Array} sprites Array of SPRITENAME Strings - can also be a String
+@return True on success, false otherwise
+**/
 		addSpritesToGroups: function(groups, sprites){
 			if(this.xta([groups,sprites])){
-				var myGroups = [].concat(groups);
-				var mySprites = [].concat(sprites);
+				//define local variables
+				var	myGroups = [].concat(groups),
+					mySprites = [].concat(sprites);
+				//function code
 				for(var i=0, z=myGroups.length; i<z; i++){
-					if(this.groupnames.contains(myGroups[i])){
+					if(this.contains(this.groupnames, myGroups[i])){
 						this.group[myGroups[i]].addSpritesToGroup(mySprites);
 						}
 					}
@@ -1196,12 +1985,22 @@ m: '',
 				}
 			return false;
 			},
+
+/**
+A __general__ function which removes supplied spritenames from Group.sprites attribute
+@method removeSpritesFromGroups
+@param {Array} groups Array of GROUPNAME Strings - can also be a String
+@param {Array} sprites Array of SPRITENAME Strings - can also be a String
+@return True on success, false otherwise
+**/
 		removeSpritesFromGroups: function(groups, sprites){
 			if(this.xta([groups,sprites])){
-				var myGroups = [].concat(groups);
-				var mySprites = [].concat(sprites);
+				//define local variables
+				var	myGroups = [].concat(groups),
+					mySprites = [].concat(sprites);
+				//function code
 				for(var i=0, z=myGroups.length; i<z; i++){
-					if(this.groupnames.contains(myGroups[i])){
+					if(this.contains(this.groupnames, myGroups[i])){
 						this.group[myGroups[i]].removeSpritesFromGroup(mySprites);
 						}
 					}
@@ -1209,6 +2008,13 @@ m: '',
 				}
 			return false;
 			},
+
+/**
+A __general__ function which asks Cell objects to generate field collision tables
+@method buildFields
+@param {Array} [items] Array of CELLNAME Strings - can also be a String
+@return Always true
+**/
 		buildFields: function(items){
 			var myCells = (this.xt(items)) ? [].concat(items) : [this.pad[this.currentPad].current];
 			if(items === 'all'){
@@ -1219,17 +2025,34 @@ m: '',
 				}
 			return true;
 			},
+
+/**
+A __general__ function to recover canvases, stack elements and other desired elements from the DOM
+@method initialize
+@return Always true
+**/
 		initialize: function(){
 			this.getStacks();
 			this.getCanvases();
 			this.getElements();
 			this.setDisplayOffsets('all');
+			this.doAnimation = true;
+			this.animationLoop();
 			return true;
 			},
+
+/**
+A __private__ function that searches the DOM for elements with class="scrawlstack"; generates Stack objects
+@method getStacks
+@return True on success; false otherwise
+@private
+**/
 		getStacks: function(){
-			var s = document.getElementsByClassName("scrawlstack");
-			var stacks = [];
-			var myStack;
+			//define local variables
+			var	s = document.getElementsByClassName("scrawlstack"),
+				stacks = [],
+				myStack;
+			//function code
 			if(s.length > 0){
 				for(var i=0, z=s.length; i<z; i++){
 					stacks.push(s[i]);
@@ -1247,11 +2070,11 @@ m: '',
 								});
 							}
 						}
-					if(this.elementnames.contains(myStack.name)){
+					if(this.contains(this.elementnames, myStack.name)){
 						myStack.stack = this.element[myStack.name].stack;
 						delete this.element[myStack.name];
 						delete this.elm[myStack.name];
-						this.elementnames.removeItem(myStack.name);
+						this.removeItem(this.elementnames, myStack.name);
 						}
 					}
 				return true;
@@ -1259,10 +2082,22 @@ m: '',
 			console.log('scrawl.getStacks() failed to find any elements with class="scrawlstack" on the page');
 			return false;
 			},
+
+/**
+A __private__ function that searches the DOM for canvas elements and generates Pad/Cell/Context objects for each of them
+@method getCanvases
+@return True on success; false otherwise
+@private
+**/
 		getCanvases: function(){
-			var s = document.getElementsByTagName("canvas");
-			var myPad, myStack, myElement, myNewStack;
-			var canvases = [];
+			//define local variables
+			var	s = document.getElementsByTagName("canvas"),
+				myPad, 
+				myStack, 
+				myElement, 
+				myNewStack,
+				canvases = [];
+			//function code
 			if(s.length > 0){
 				for(var i=0, z=s.length; i<z; i++){
 					canvases.push(s[i]);
@@ -1270,7 +2105,7 @@ m: '',
 				for(var i=0, z=s.length; i<z; i++){
 					if(canvases[i].className.indexOf('stack:') !== -1){
 						myStack = canvases[i].className.match(/stack:(\w+)/);
-						if(scrawl.stacknames.contains(myStack[1])){
+						if(this.contains(this.stacknames, myStack[1])){
 							scrawl.stk[myStack[1]].appendChild(canvases[i]);
 							}
 						else{
@@ -1286,10 +2121,9 @@ m: '',
 					myPad = scrawl.newPad({
 						canvasElement: canvases[i],
 						});
-					if(scrawl.stacknames.contains(canvases[i].parentElement.id)){
+					if(this.contains(this.stacknames, canvases[i].parentElement.id)){
 						myPad.stack = canvases[i].parentElement.id;
 						canvases[i].style.position = 'absolute';
-						myPad.initialize3d();
 						}
 					if(i === 0){
 						scrawl.currentPad = myPad.name;
@@ -1300,20 +2134,30 @@ m: '',
 			console.log('scrawl.getCanvases() failed to find any <canvas> elements on the page');
 			return false;
 			},
+
+/**
+A __private__ function that searches the DOM for elements with class="scrawl stack:STACKNAME"; generates Element objects
+@method getElements
+@return True on success; false otherwise
+@private
+**/
 		getElements: function(){
-			var s = document.getElementsByClassName("scrawl");
-			var el = [];
-			var myName, myStack;
+			//define local variables
+			var	s = document.getElementsByClassName("scrawl"),
+				el = [],
+				myName, 
+				myStack;
+			//function code
 			if(s.length > 0){
 				for(var i=0, z=s.length; i<z; i++){
 					el.push(s[i]);
 					}
 				for(var i=0, z=s.length; i<z; i++){
 					myName = el.id || el.name || false;
-					if(!scrawl.elementnames.contains(myName)){
+					if(!this.contains(this.elementnames, myName)){
 						if(el[i].className.indexOf('stack:') !== -1){
 							myStack = el[i].className.match(/stack:(\w+)/);
-							if(scrawl.stacknames.contains(myStack[1])){
+							if(this.contains(this.stacknames, myStack[1])){
 								scrawl.stk[myStack[1]].appendChild(el[i]);
 								scrawl.newElement({
 									domElement: el[i],
@@ -1328,75 +2172,155 @@ m: '',
 			console.log('scrawl.getElements() failed to find any elements with class="scrawl" on the page');
 			return false;
 			},
+
+/**
+A __general__ function to add a visible &lt;canvas&gt; element to the web page, and create a Pad controller and Cell wrappers for it
+
+The argument object should include the following attributes:
+
+* __stackName__ (String) - STACKNAME of existing or new stack (optional)
+* __parentElement__ - (String) CSS #id of parent element, or the DOM element itself; default: document.body
+* any other legitimate Pad and/or Cell object attribute
+@method addCanvasToPage
+@param {Object} items Object containing new Cell's parameters
+@return Pad object
+**/
 		addCanvasToPage: function(items){
 			items = (this.isa(items,'obj')) ? items : {};
-			var myStk = false;
+			//define local variables
+			var	myStk = false,
+				myParent, 
+				myName, 
+				myCanvas, 
+				DOMCanvas, 
+				myPad,
+				stackParent;
+			//function code
 			if(this.xt(items.stackName)){
 				myStk = document.getElementById(items.stackName) || false;
 				if(!myStk){
+					if(!scrawl.xt(items.parentElement)){
+						stackParent = document.body;
+						}
+					else{
+						stackParent = (scrawl.isa(items.parentElement,'str')) ? document.getElementById(items.parentElement) : items.parentElement;
+						}
 					myStk = this.addStackToPage({
 						stackName: items.stackName, 
 						width: items.width, 
 						height: items.height, 
-						parentElement: document.getElementById(items.parentElement) || document.body,
+						parentElement: stackParent,
 						});
 					}
-				items.stack = myStk.id;
+				items.stack = myStk.name;
 				}
-			var myParent = myStk || document.getElementById(items.parentElement) || document.body;
-			var myName = scrawl.makeName({
-				name: items.canvasName || false,
+			myParent = scrawl.stk[(myStk.name || myStk.id)] || document.getElementById(items.parentElement) || document.body;
+			myName = scrawl.makeName({
+				name: items.canvasName || items.name || false,
 				type: 'Pad',
 				target: 'padnames',
 				});
-			var myCanvas = document.createElement('canvas');
+			myCanvas = document.createElement('canvas');
 			myCanvas.id = myName;
 			myParent.appendChild(myCanvas);
-			var DOMCanvas = document.getElementById(myName)
+			DOMCanvas = document.getElementById(myName)
 			DOMCanvas.width = items.width;
 			DOMCanvas.height = items.height;
-			var myPad = scrawl.newPad({
+			myPad = scrawl.newPad({
 				canvasElement: DOMCanvas,
 				});
 			if(this.xt(items.position) || myStk){
 				items.position = items.position || 'absolute';
 				}
+			items.stack = (items.stackName) ? items.stackName : '';
 			myPad.set(items);
-			myPad.setDisplayOffsets();
+			this.setDisplayOffsets();
 			return myPad;
 			},
+
+/**
+A __general__ function to generates a new Stack object, together with a new DOM &lt;div&gt; element to act as the stack
+
+The argument object should include the following attributes:
+
+* __stackName__ (String) - STACKNAME of existing or new stack (optional)
+* __parentElement__ - (String) CSS #id of parent element, or the DOM element itself; default: document.body
+* any other legitimate Stack object attribute
+@method addStackToPage
+@param {Object} items Object containing new Stack's parameters
+@return New stack object
+**/
 		addStackToPage: function(items){
 			if(this.isa(items.stackName,'str') && this.xt(items.parentElement)){
-				var myElement = document.createElement('div');
+				//define local variables
+				var myElement,
+					myStack;
+				items.parentElement = (scrawl.isa(items.parentElement,'str')) ? document.getElementById(items.parentElement) : items.parentElement;
+				//function code
+				myElement = document.createElement('div');
 				myElement.id = items.stackName;
 				items.parentElement.appendChild(myElement);
 				items['stackElement'] = document.getElementById(items.stackName);
-				items['stack'] = (scrawl.stacknames.contains(items.parentElement.id)) ? items.parentElement.id : false;
-				var myStack = new Stack(items);
-				return scrawl.stk[myStack.name];
+				myStack = new Stack(items);
+				myStack.stack = (this.contains(this.stacknames, items.parentElement.id)) ? items.parentElement.id : '';
+				return myStack;
 				}
 			return false;
 			},
+
+/**
+A __general__ function to reset display offsets for all pads, stacks and elements
+
+The argument is an optional String - permitted values include 'stack', 'pad', 'element'; default: 'all'
+@method setDisplayOffsets
+@param {String} [item] Command string detailing which element types are to be set
+@return Always true
+**/
 		setDisplayOffsets: function(item){
-			var myItem = item || 'all';
-			if(myItem === 'stacks' || myItem === 'all'){
+			item = (scrawl.xt(item)) ? item : 'all';
+			if(item === 'stack' || item === 'all'){
 				for(var i=0, z=scrawl.stacknames.length; i<z; i++){
 					scrawl.stack[scrawl.stacknames[i]].setDisplayOffsets();
 					}
 				}
-			if(myItem === 'pads' || myItem === 'all'){
+			if(item === 'pad' || item === 'all'){
 				for(var i=0, z=scrawl.padnames.length; i<z; i++){
-
 					scrawl.pad[scrawl.padnames[i]].setDisplayOffsets();
 					}
 				}
-			if(myItem === 'elements' || myItem === 'all'){
+			if(item === 'element' || item === 'all'){
 				for(var i=0, z=scrawl.elementnames.length; i<z; i++){
 					scrawl.element[scrawl.elementnames[i]].setDisplayOffsets();
 					}
 				}
 			return true;
 			},
+
+/**
+A __display__ function to move DOM elements within a Stack
+@method renderElements
+@return Always true
+**/
+		renderElements: function(){
+			for(var i=0, z=scrawl.stacknames.length; i<z; i++){
+				scrawl.stack[scrawl.stacknames[i]].renderElement();
+				}
+			for(var i=0, z=scrawl.padnames.length; i<z; i++){
+				scrawl.pad[scrawl.padnames[i]].renderElement();
+				}
+			for(var i=0, z=scrawl.elementnames.length; i<z; i++){
+				scrawl.element[scrawl.elementnames[i]].renderElement();
+				}
+			return true;
+			},
+
+/**
+A __private__ function which updates scrawl.mouseX, scrawl.mouseY with current mouse position in the current document
+@method handleMouseMove
+@param {Object} [e] window.event
+@return Always true
+@private
+**/
 		handleMouseMove: function(e){
 			if (!e) var e = window.event;
 			if (e.pageX || e.pageY){
@@ -1409,19 +2333,35 @@ m: '',
 				}
 			return true;
 			},
+
+/**
+A __private__ function which retrieves a value from a Cell object's image data table 
+
+Argument takes the form:
+* {table:IMAGEDATANAME, channel:String, x:XCOORDINATE, y:YCOORDINATE}
+* where channel attribute can be one of 'red', 'blue', 'green', 'alpha', 'color'
+@method getImageDataValue
+@param {Object} items Object argument
+@return Channel value (Number) at coordinates, or pixel color (String) at coordinates; false on failure
+@private
+**/
 		getImageDataValue: function(items){
 			if(this.xta([items.table, items.channel]) && this.isa(items.x,'num') && this.isa(items.y,'num')){
-				var myTable = scrawl.imageData[items.table];
+				//define local variables
+				var	myTable,
+					myEl,
+					result,
+					myChannel;
+				//function code
+				myTable = scrawl.imageData[items.table];
 				if(myTable){
-					if(items.y.isBetween(-1, myTable.height)){ 
-						if(items.x.isBetween(-1, myTable.width)){ 
-							var myEl = ((items.y * myTable.width) + items.x) * 4;
-							var result;
+					if(scrawl.isBetween(items.y, -1, myTable.height)){ 
+						if(scrawl.isBetween(items.x, -1, myTable.width)){ 
+							myEl = ((items.y * myTable.width) + items.x) * 4;
 							if(items.channel === 'color'){
 								result = 'rgba('+myTable.data[myEl]+','+myTable.data[myEl+1]+','+myTable.data[myEl+2]+','+myTable.data[myEl+3]+')';
 								}
 							else{
-								var myChannel;
 								switch(items.channel){
 									case 'red' : myChannel = 0; break;
 									case 'blue' : myChannel = 1; break;
@@ -1437,779 +2377,3205 @@ m: '',
 				}
 			return false;
 			},
-		};
-		
+
+/**
+A __general__ function to undertake a round of calculations for Spring objects
+@method updateSprings
+@param {Array} [items] Array of SPRINGNAMES; defaults to all Spring objects
+@return True on success; false otherwise
+**/
+		updateSprings: function(items){
+			if(this.springnames.length > 0){
+				//define local variables
+				var s = [];
+				//function code
+				items = (this.isa(items,'arr')) ? items : this.springnames;
+				for(var i=0, z=items.length; i<z; i++){
+					s.push((this.isa(items[i],'obj')) ? items[i] : ((this.isa(items[i],'str')) ? this.spring[items[i]] : false));
+					}
+				for(var i=0, z=s.length; i<z; i++){
+					if(s[i]){
+						s[i].update();
+						}
+					}
+				return true;
+				}
+			return false;
+			},
+
+/**
+A __load__ function
+
+Argument should be a JSON String, or an Array of JSON Strings, of objects to be loaded or updated
+@method load
+@param {Array} item Array of JSON Strings; alternatively, a JSON String
+@return Always true
+**/
+		load: function(item){
+			var a,			//object from item
+				type,
+				b,			//existing object settings
+				c,			//defaults
+				k;			//a keys
+			if(this.isa(item, 'str')){
+				item = [item];
+				}
+			for(var i=0, z=item.length; i<z; i++){
+				if(this.isa(item[i],'str')){
+					a = JSON.parse(item[i]);
+					if(this.xt(a.type)){
+						type = a.type.toLowerCase();
+						if(this.contains(this[a.classname], a.name)){
+							//update
+							b = this[type][a.name].parse();
+							c = this.d[a.type];
+							k = Object.keys(b);
+							for(var j=0, w=k.length; j<w; j++){
+								if(!this.xt(a[k])){
+									a[k] = c[k];
+									}
+								}
+							this[type][a.name].set(a);
+							}
+						else{
+							//create
+							switch(type){
+								case 'pad' : 
+									this.addCanvasToPage(a); 
+									this.currentPad = a.name;
+									break;
+								case 'cell' : 
+									if(scrawl.xt(a.pad) && this.contains(this.padnames, a.pad)  && !this.contains(this.pad[a.pad].cells, a.name)){
+										this.pad[a.pad].addNewCell(a); 
+										}
+									break;
+								case 'spriteimage' : new SpriteImage(a); break;
+								case 'animsheet' : new AnimSheet(a); break;
+								case 'group' : new Group(a); break;
+								case 'block' : new Block(a); break;
+								case 'wheel' : new Wheel(a); break;
+								case 'phrase' : new Phrase(a); break;
+								case 'picture' : new Picture(a); break;
+								case 'outline' : new Outline(a); break;
+								case 'shape' : this.makePath(a); break;
+								case 'gradient' : new Gradient(a); break;
+								case 'radialgradient' : new RadialGradient(a); break;
+								case 'pattern' : new Pattern(a); break;
+								case 'color' : new Color(a); break;
+								case 'particle' : new Particle(a); break;
+								case 'spring' : new Spring(a); break;
+								}
+							}
+						}
+					}
+				}
+			return true;
+			},
+
+/**
+A __save__ function
+
+Argument should be a String literal: 'pads', 'groups', 'sprites', 'designs', 'animsheets'
+
+_Note: this function does not check for duplicate objects_
+@method save
+@param {string} item A String literal: 'pads', 'cells', 'groups', 'sprites', 'designs', 'animsheets', 'springs'
+@return Array of saved data
+**/
+		save: function(item){
+			var results = [];
+			switch(item){
+				case 'pads' :
+					for(var i=0, z=this.padnames.length; i<z; i++){
+						results = results.concat(this.pad[this.padnames[i]].toString());
+						}
+					break;
+				case 'cells' :
+					for(var i=0, z=this.cellnames.length; i<z; i++){
+						results = results.concat(this.cell[this.cellnames[i]].toString());
+						}
+					break;
+				case 'groups' :
+					for(var i=0, z=this.groupnames.length; i<z; i++){
+						results = results.concat(this.group[this.groupnames[i]].toString());
+						}
+					break;
+				case 'sprites' :
+					for(var i=0, z=this.spritenames.length; i<z; i++){
+						results = results.concat(this.sprite[this.spritenames[i]].toString());
+						}
+					break;
+				case 'designs' :
+					for(var i=0, z=this.designnames.length; i<z; i++){
+						results = results.concat(this.design[this.designnames[i]].toString());
+						}
+					break;
+				case 'animsheets' :
+					for(var i=0, z=this.animnames.length; i<z; i++){
+						results = results.concat(this.anim[this.animnames[i]].toString());
+						}
+					break;
+				case 'springs' :
+					for(var i=0, z=this.springnames.length; i<z; i++){
+						results = results.concat(this.spring[this.springnames[i]].toString());
+						}
+					break;
+				}
+			return results;
+			},
+
+/**
+A __utility__ function to construct a quaternion from pitch/yaw/roll values
+
+Argument should be an object containing values for pitch, yaw and roll, in degrees
+
+@method makeQuaternion
+@param {Object} items Argument object
+@return new Quaternion object
+**/
+		makeQuaternion: function(item){
+			return Quaternion.prototype.makeQuaternion(items);
+			},
+
+/**
+Animation flag: set to false to stop animation loop
+@property doAnimation
+@type {Boolean}
+**/
+		doAnimation: false,
+
+/**
+Animate array consists of an array of ANIMATIONNAME Strings
+@property animate
+@type {Array}
+**/
+		animate: [],
+
+/**
+The Scrawl animation loop
+
+Animation loop is invoked automatically as part of the initialization process
+
+Scrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the __scrawl.animate__ Array
+
+All animation can be halted by setting the __scrawl.doAnimation__ flag to false
+
+To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnimation_ to true and call __scrawl.animationLoop()
+
+@method animationLoop
+@return Recursively calls itself - never returns
+**/
+		animationLoop: function(){
+			for(var i=0, z=scrawl.animate.length; i<z; i++){
+				if(scrawl.animate[i]){
+					scrawl.animation[scrawl.animate[i]].fn();
+					}
+				}
+			if(scrawl.doAnimation){
+				window.requestAnimFrame(function(){
+					scrawl.animationLoop();
+					});
+				}
+			},
+
+		};		//end of scrawl object
+	
+/**
+# Scrawl 
+
+_Note: capital S_
+	
+## Instantiation
+
+* This object should never be instantiated by users
+	
+## Purpose
+
+* the root object for all other scrawl objects (except Vectors)
+* gives every object its (unique) name attribute
+* also supplies title and comment attributes (very basic assistive technology)
+* provides basic getter and setter functions, and a JSON-based toString function
+* sets out the cloning strategy for other objects, and restricts which object types can be cloned
+@class Scrawl
+@constructor
+@chainable
+@param {Object} [items] Key:value Object argument for setting attributes
+@return this
+**/		
 	function Scrawl(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		var tempname = items.name || '';
-		items.name = scrawl.makeName({name: tempname, type: this.type, target: this.classname});
-		this.name = items.name;
-		this.comment = items.comment || '';
-		this.title = items.title || '';
-		this.timestamp = Date.now();
+/**
+Unique identifier for each object; default: computer-generated String based on Object's type
+@property name
+@type String
+**/		
+		this.name = scrawl.makeName({name: items.name || '', type: this.type, target: this.classname});
 		return this;
 		}
+/**
+@property type
+@type String
+@default 'Scrawl'
+@final
+**/		
 	Scrawl.prototype.type = 'Scrawl';
 	Scrawl.prototype.classname = 'objectnames';
-	Scrawl.prototype.get = function(item){
-		return this[item];
-		};
-	Scrawl.prototype.set = function(items){
-		for(var label in items){
-			if(scrawl.xt(this[label]) && scrawl.xt(items[label])){
-				this[label] = items[label];
-				}
-			}
-		return this
-		};
-	Scrawl.prototype.clone = function(items){
-		var a;
-		var b = JSON.parse(JSON.stringify(this));
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		b.name = items.name || b.name;
-		switch(this.type){
-			case 'Phrase' : a = new Phrase(b); break;
-			case 'Block' : a = new Block(b); break;
-			case 'Wheel' : a = new Wheel(b); break;
-			case 'Picture' : a = new Picture(b); break;
-			case 'Outline' : a = new Outline(b); break;
-			case 'Shape' : a = new Shape(b); break;
-			case 'Gradient' : a = new Gradient(b); break;
-			case 'RadialGradient' : a = new RadialGradient(b); break;
-			case 'Pattern' : a = new Pattern(b); break;
-			case 'Color' : a = new Color(b); break;
-			case 'Point' : a = new Point(b); break;
-			case 'Link' : a = new Link(b); break;
-			case 'Context' : a = new Context(b); break;
-			case 'AnimSheet' : a = new AnimSheet(b); break;
-			}
-		a.set(items);
-		return a;
-		};
-	Scrawl.prototype.toString = function(){
-		return JSON.stringify(this);
+	scrawl.d.Scrawl = {
+		//name is deliberately left out of the defaults - can never be a default name
+/**
+Comment, for accessibility
+@property comment
+@type String
+@default ''
+**/		
+		comment: '',
+/**
+Title, for accessibility
+@property title
+@type String
+@default ''
+**/		
+		title: '',
+/**
+Creation timestamp
+@property timestamp
+@type String
+@default ''
+**/		
+		timestamp: '',
 		};
 
-	function SubScrawl(items){
-		Scrawl.call(this, items);
+/**
+Retrieve an attribute value
+@method get
+@param {String} item Attribute key
+@return Attribute value
+**/
+	Scrawl.prototype.get = function(item){
+		return this[item] || scrawl.d[this.type][item];
+		};
+
+/**
+Set attribute values
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return this
+@chainable
+**/
+	Scrawl.prototype.set = function(items){
+		for(var i in items){
+			if(scrawl.xt(scrawl.d[this.type][i])){
+				this[i] = items[i];
+				}
+			}
+		return this;
+		};
+
+/**
+Clone a Scrawl.js object, optionally altering attribute values in the cloned object
+
+The following objects can be cloned: 
+
+* AnimSheet
+* Block
+* Color
+* Context
+* Gradient
+* Link
+* Outline
+* Particle
+* Pattern
+* Picture
+* Phrase
+* Point
+* RadialGradient
+* Shape
+* Spring
+* Vector
+* Wheel
+@method clone
+@param {Object} items Object containing attribute key:value pairs; will overwrite existing values in the cloned, but not the source, Object
+@return Cloned object
+@chainable
+**/
+	Scrawl.prototype.clone = function(items){
+		var b = scrawl.mergeOver(this.parse(), ((scrawl.isa(items,'obj')) ? items : {}));
+		delete b.context;	//required for successful cloning of sprites
+		switch(this.type){
+			case 'Phrase' : return new Phrase(b); break;
+			case 'Block' : return new Block(b); break;
+			case 'Wheel' : return new Wheel(b); break;
+			case 'Picture' : return new Picture(b); break;
+			case 'Outline' : return new Outline(b); break;
+			case 'Shape' : return scrawl.makePath(b); break;
+			case 'Gradient' : return new Gradient(b); break;
+			case 'RadialGradient' : return new RadialGradient(b); break;
+			case 'Pattern' : return new Pattern(items); break;
+			case 'Color' : return new Color(b); break;
+			case 'Point' : return new Point(b); break;
+			case 'Link' : return new Link(b); break;
+			case 'Context' : return new Context(b); break;
+			case 'AnimSheet' : return new AnimSheet(b); break;
+			case 'Particle' : return new Particle(b); break;
+			case 'Vector' : return new Vector(b); break;
+			case 'Spring' : return new Spring(b); break;
+			}
+		return false;
+		};
+
+/**
+Turn the object into a JSON String
+@method toString
+@return JSON string of non-default value attributes
+**/
+	Scrawl.prototype.toString = function(){
+		var keys = Object.keys(scrawl.d[this.type]),
+			result = {};
+		result.type = this.type;
+		result.classname = this.classname;
+		result.name = this.name;
+		for(var i = 0, z = keys.length; i < z; i++){
+			if(scrawl.xt(this[keys[i]]) && this[keys[i]] !== scrawl.d[this.type][keys[i]]){
+				result[keys[i]] = this[keys[i]];
+				}
+			}
+		return JSON.stringify(result);
+		};
+
+/**
+Produces a copy (not clone) of the object
+@method parse
+@return JSON.parse(JSON.stringify(this))
+**/
+	Scrawl.prototype.parse = function(){
+		return JSON.parse(JSON.stringify(this));
+		};
+
+/**
+# Vector
+
+## Instantiation
+
+* scrawl.newVector()
+
+## Purpose
+
+* To hold vector (coordinate, movement) data
+@class Vector
+@constructor
+@param {Object} [items] Key:value Object argument for setting attributes
+@return this
+@chainable
+**/		
+	function Vector(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.startX = items.startX || 0;
-		this.startY = items.startY || 0;
-		this.handleX = items.handleX || 0;
-		this.handleY = items.handleY || 0;
-		this.moveStartX = items.moveStartX || 0;
-		this.moveStartY = items.moveStartY || 0;
-		this.moveHandleX = items.moveHandleX || 0;
-		this.moveHandleY = items.moveHandleY || 0;
-		this.pivot = items.pivot || false;
-		this.path = items.path || false;
-		this.pathPosition = items.pathPosition || 0;
-		this.movePathPosition = items.movePathPosition || 0;
-		this.pathSpeedConstant = (scrawl.isa(items.pathSpeedConstant,'bool')) ? items.pathSpeedConstant : true;
-		this.pathRoll = 0;
-		this.addPathRoll = (scrawl.isa(items.addPathRoll,'bool')) ? items.addPathRoll : false;
-		this.scale = (scrawl.isa(items.scale,'num')) ? items.scale : 1;
+		this.x = items.x || 0;
+		this.y = items.y || 0;
+		this.z = items.z || 0;
+		return this;
+		}
+	Vector.prototype = Object.create(Object.prototype);
+/**
+@property type
+@type String
+@default 'Vector'
+@final
+**/
+	Vector.prototype.type = 'Vector';
+	scrawl.d.Vector = {
+/**
+X coordinate (px)
+@property x
+@type Number
+@default 0
+**/		
+		x: 0,
+/**
+Y coodinate (px)
+@property y
+@type Number
+@default 0
+**/		
+		y: 0,
+/**
+Z coordinate (px)
+@property z
+@type Number
+@default 0
+**/		
+		z: 0,
+		};
+
+/**
+Set the Vector's coordinates to values that will result in the given magnitude
+@method setMagnitudeTo
+@param {Number} item New magnitude
+@return This
+@chainable
+**/
+	Vector.prototype.setMagnitudeTo = function(item){
+		this.normalize();
+		this.scalarMultiply(item);
+		if(this.getMagnitude() !== item){
+			this.normalize();
+			this.scalarMultiply(item);
+			if(this.getMagnitude() !== item){
+				this.normalize();
+				this.scalarMultiply(item);
+				}
+			}
+		return this;
+		};
+
+/**
+Normalize the Vector to a unit vector
+@method normalize
+@return This on success; false if magnitude == 0
+@chainable
+**/
+	Vector.prototype.normalize = function(){
+		var m = this.getMagnitude();
+		if(m > 0){
+			this.x /= m;
+			this.y /= m;
+			this.z /= m;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Set attributes to new values
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+	Vector.prototype.set = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.x = items.x || 0;
+		this.y = items.y || 0;
+		this.z = items.z || 0;
+		return this;
+		};
+
+/**
+Return a normalized (unit) copy of the Vector
+@method getNormal
+@return Amended copy of this; or false if magnitude === 0
+@chainable
+**/
+	Vector.prototype.getNormal = function(){
+		var m = this.getMagnitude();
+		if(m > 0){
+			return new Vector({
+				x: this.x/m,
+				y: this.y/m,
+				z: this.z/m,
+				});
+			}
+		return false;
+		};
+
+/**
+Rotate the Vector by a given angle
+@method rotate
+@param {Number} angle Rotation angle (in degrees)
+@return This on success; false otherwise
+@chainable
+**/
+	Vector.prototype.rotate = function(angle){
+		if(scrawl.xt(angle)){
+			var a = Math.atan2(this.y, this.x);
+			a += (angle * scrawl.radian);
+			var m = this.getMagnitude();
+			this.x = m * Math.cos(a);
+			this.y = m * Math.sin(a);
+			return this;
+			}
+		return false;
+		};
+
+/**
+Rotate a copy of the vector by a given angle
+@method getRotate
+@param {Number} angle Rotation angle (in degrees)
+@return Amended copy of this on success; false otherwise
+@chainable
+**/
+	Vector.prototype.getRotate = function(angle){
+		if(scrawl.xt(angle)){
+			var a = Math.atan2(this.y, this.x);
+			a += (angle * scrawl.radian);
+			var m = this.getMagnitude();
+			return new Vector({
+				x: m * Math.cos(a),
+				y: m * Math.sin(a),
+				});
+			}
+		return false;
+		};
+
+/**
+Rotate the Vector by 180 degrees
+@method reverse
+@return {Object} This on success; false otherwise
+@chainable
+**/
+	Vector.prototype.reverse = function(){
+		this.x = -this.x;
+		this.y = -this.y;
+		this.z = -this.z;
+		return this;
+		};
+
+/**
+Compare two Vector objects for equality
+@method isEqual
+@return True if all attributes match; false otherwise
+**/
+	Vector.prototype.isEqual = function(item){
+		if(scrawl.isa(item,'obj') && scrawl.xt(item.type) && item.type === 'Vector'){
+			if(this.x === item.x && this.y === item.y && this.z === item.z){
+				return true;
+				}
+			}
+		return false;
+		};
+
+/**
+Comparea vector-like object to this one for equality
+@method isLike
+@return True if all attributes match; false otherwise
+**/
+	Vector.prototype.isLike = function(item){
+		if(scrawl.isa(item,'obj')){
+			if(this.x === item.x && this.y === item.y && this.z === item.z){
+				return true;
+				}
+			}
+		return false;
+		};
+
+/**
+Rotate a copy of the Vector by 180 degrees
+@method getReverse
+@return Amended copy of this on success; false otherwise
+@chainable
+**/
+	Vector.prototype.getReverse = function(){
+		return new Vector({
+			x: -this.x,
+			y: -this.y,
+			z: -this.z,
+			});
+		};
+
+/**
+Add a Vector to this Vector
+	
+@method vectorAdd
+@param {Vector} item Vector to be added to this; can also be an Object with x, y and z attributes (all optional)
+@return This on success; false otherwise
+@chainable
+**/
+	Vector.prototype.vectorAdd = function(item){
+		if(scrawl.isa(item,'obj')){
+			this.x += item.x || 0;
+			this.y += item.y || 0;
+			this.z += item.z || 0;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Subtract a Vector from this Vector
+@method vectorSubtract
+@param {Object} item Vector to be subtracted from this; can also be an Object with x, y and z attributes (all optional)
+@return This on success; false otherwise
+@chainable
+**/
+	Vector.prototype.vectorSubtract = function(item){
+		if(scrawl.isa(item,'obj')){
+			this.x -= item.x || 0;
+			this.y -= item.y || 0;
+			this.z -= item.z || 0;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Multiply a Vector with this Vector
+@method vectorMultiply
+@param {Object} item Vector to be multiplied with this; can also be an Object with x, y and z attributes (all optional)
+@return This on success; false otherwise
+@chainable
+**/
+	Vector.prototype.vectorMultiply = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Vector'){
+			this.x *= item.x || 1;
+			this.y *= item.y || 1;
+			this.z *= item.z || 1;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Divide a Vector into this Vector
+@method vectorDivide
+@param {Object} item Vector to be divided into this; can also be an Object with x, y and z attributes (all optional)
+@return This on success; false otherwise
+@chainable
+**/
+	Vector.prototype.vectorDivide = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Vector'){
+			this.x /= ((item.x || 0) !== 0) ? item.x : 1;
+			this.y /= ((item.y || 0) !== 0) ? item.y : 1;
+			this.z /= ((item.z || 0) !== 0) ? item.z : 1;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Multiply this Vector by a scalar value
+@method scalarMultiply
+@param {Number} item Multiplier scalar
+@return This on success; false otherwise
+@chainable
+**/
+	Vector.prototype.scalarMultiply = function(item){
+		if(scrawl.isa(item,'num')){
+			this.x *= item;
+			this.y *= item;
+			this.z *= item;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Divide this Vector by a scalar value
+@method scalarDivide
+@param {Number} item Division scalar
+@return This on success; false otherwise
+@chainable
+**/
+	Vector.prototype.scalarDivide = function(item){
+		if(scrawl.isa(item,'num') && item !== 0){
+			this.x /= item;
+			this.y /= item;
+			this.z /= item;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Retrieve Vector's magnitude value
+@method getMagnitude
+@return Magnitude
+**/
+	Vector.prototype.getMagnitude = function(){
+		return Math.sqrt((this.x*this.x) + (this.y*this.y) + (this.z*this.z));
+		};
+
+/**
+Check to see if Vector is a zero vector
+@method checkNotZero 
+@return True if vector is non-zero; false otherwise
+**/
+	Vector.prototype.checkNotZero = function(){
+		if(this.x || this.y || this.z){
+			return true;
+			}
+		return false;
+		};
+
+/**
+Return a clone of this Vector
+@method getVector
+@return Clone of this Vector
+**/
+	Vector.prototype.getVector = function(){
+		return new Vector({
+			x: this.x, 
+			y: this.y, 
+			z: this.z
+			});
+		};
+
+/**
+Alias of Vector.getReverse()
+@method getConjugate
+@return Amended copy of this on success; false otherwise
+@chainable
+@deprecated
+**/
+	Vector.prototype.getConjugate = function(){
+		return this.getReverse();
+		};
+
+/**
+Add a Vector to a copy of this, or another, vector
+@method getVectorAdd
+@param {Object} u Vector to be added to source Vector; can also be an Object with x, y and z attributes (all optional)
+@param {Vector} [v] Source Vector (by default: this)
+@return Amended copy of source Vector on success; false otherwise
+@chainable
+**/
+	Vector.prototype.getVectorAdd = function(u, v){
+		if(scrawl.isa(u,'obj')){
+			v = (scrawl.isa(v,'obj') && v.type === 'Vector') ? v : this;
+			return new Vector({
+				x: v.x + (u.x || 0),
+				y: v.y + (u.y || 0),
+				z: v.z + (u.z || 0),
+				});
+			}
+		return false;
+		};
+
+/**
+Subtract a Vector from a copy of this, or another, Vector
+@method getVectorSubtract
+@param {Object} u Vector to be subtracted from source Vector; can also be an Object with x, y and z attributes (all optional)
+@param {Vector} [v] Source Vector (by default: this)
+@return Amended copy of source Vector on success; false otherwise
+@chainable
+**/
+	Vector.prototype.getVectorSubtract = function(u, v){
+		if(scrawl.isa(u,'obj')){
+			v = (scrawl.isa(v,'obj') && v.type === 'Vector') ? v : this;
+			return new Vector({
+				x: v.x - (u.x || 0),
+				y: v.y - (u.y || 0),
+				z: v.z - (u.z || 0),
+				});
+			}
+		return false;
+		};
+
+/**
+Multiply a Vector with a copy of this, or another, Vector
+@method getVectorMultiply
+@param {Object} u Vector to be multiplied with source Vector; can also be an Object with x, y and z attributes (all optional)
+@param {Vector} [v] Source Vector (by default: this)
+@return Amended copy of source Vector on success; false otherwise
+@chainable
+**/
+	Vector.prototype.getVectorMultiply = function(u, v){
+		if(scrawl.isa(u,'obj')){
+			v = (scrawl.isa(v,'obj') && v.type === 'Vector') ? v : this;
+			return new Vector({
+				x: v.x * (u.x || 1),
+				y: v.y * (u.y || 1),
+				z: v.z * (u.z || 1),
+				});
+			}
+		return false;
+		};
+
+/**
+Divide a Vector into a copy of this, or another, Vector
+
+Arithmetic is v/u, not u/v
+
+@method getVectorDivide
+@param {Object} u Vector to be divided into source Vector; can also be an Object with x, y and z attributes (all optional)
+@param {Vector} [v] Source vector (by default: this)
+@return Amended copy of source Vector on success; false otherwise
+@chainable
+**/
+	Vector.prototype.getVectorDivide = function(u, v){
+		if(scrawl.isa(u,'obj')){
+			v = (scrawl.isa(v,'obj') && v.type === 'Vector') ? v : this;
+			return new Vector({
+				x: ((u.x || 0) !== 0) ? v.x / (u.x || 1) : v.x,
+				y: ((u.y || 0) !== 0) ? v.y / (u.y || 1) : v.y,
+				z: ((u.z || 0) !== 0) ? v.z / (u.z || 1) : v.z,
+				});
+			}
+		return false;
+		};
+
+/**
+Multiply a copy of this Vector by a scalar value
+@method getScalarMultiply
+@param {Number} item Scalar value
+@return Amended copy of this on success; false otherwise
+@chainable
+**/
+	Vector.prototype.getScalarMultiply = function(item){
+		if(scrawl.isa(item,'num')){
+			return new Vector({
+				x: this.x * item,
+				y: this.y * item,
+				z: this.z * item,
+				});
+			}
+		return false;
+		};
+
+/**
+Divide a scalar value into a copy of this Vector
+@method getScalarDivide
+@param {Number} item Scalar value
+@return Amended copy of this on success; false otherwise
+@chainable
+**/
+	Vector.prototype.getScalarDivide = function(item){
+		if(scrawl.isa(item,'num')){
+			return new Vector({
+				x: this.x / item,
+				y: this.y / item,
+				z: this.z / item,
+				});
+			}
+		return false;
+		};
+
+/**
+Obtain the cross product of one Vector and a copy of this, or another, Vector
+
+Arithmetic is v(crossProduct)u, not u(crossProduct)v
+
+@method getCrossProduct
+@param {Object} u Vector to be used to calculate cross product; can also be an Object with x, y and z attributes (all optional)
+@param {Vector} [v] Source vector (by default: this)
+@return New cross product Vector; false on failure
+@chainable
+**/
+	Vector.prototype.getCrossProduct = function(u, v){
+		if(scrawl.isa(u,'obj') && u.type === 'Vector'){
+			v = (scrawl.isa(v,'obj') && v.type === 'Vector') ? v : this;
+			var v1x = v.x || 0;
+			var v1y = v.y || 0;
+			var v1z = v.z || 0;
+			var v2x = u.x || 0;
+			var v2y = u.y || 0;
+			var v2z = u.z || 0;
+			return new Vector({
+				x: (v1y*v2z) - (v1z*v2y),
+				y: -(v1x*v2z) + (v1z*v2x),
+				z: (v1x*v2y) + (v1y*v2x),
+				});
+			}
+		return false;
+		};
+
+/**
+Obtain the dot product of one Vector and this, or another, Vector
+
+Arithmetic is v(dotProduct)u, not u(dotProduct)v
+
+@method getDotProduct
+@param {Object} u Vector to be used to calculate dot product; can also be an Object with x, y and z attributes (all optional)
+@param {Vector} [v] Source vector (by default: this)
+@return Dot product result; false on failure
+**/
+	Vector.prototype.getDotProduct = function(u, v){
+		if(scrawl.isa(u,'obj') && u.type === 'Vector'){
+			v = (scrawl.isa(v,'obj') && v.type === 'Vector') ? v : this;
+			return ((u.x || 0) * (v.x || 0)) + ((u.y || 0) * (v.y || 0)) + ((u.z || 0) * (v.z || 0));
+			}
+		return false;
+		};
+
+/**
+Obtain the triple scalar product of two Vectors and this, or a third, Vector
+@method getTripleScalarProduct
+@param {Object} u First vector to be used to calculate triple scalar product; can also be an Object with x, y and z attributes (all optional)
+@param {Object} v Second vector to be used to calculate triple scalar product; can also be an Object with x, y and z attributes (all optional)
+@param {Vector} [w] Third vector to be used to calculate triple scalar product (by default: this)
+@return Triple scalar product result; false on failure
+**/
+	Vector.prototype.getTripleScalarProduct = function(u, v, w){
+		if(scrawl.isa(u,'obj') && u.type === 'Vector' && scrawl.isa(v,'obj') && v.type === 'Vector'){
+			w = (scrawl.xt(w)) ? ((scrawl.isa(w,'obj')) ? w : {}) : this;
+			var ux = u.x || 0;
+			var uy = u.y || 0;
+			var uz = u.z || 0;
+			var vx = v.x || 0;
+			var vy = v.y || 0;
+			var vz = v.z || 0;
+			var wx = w.x || 0;
+			var wy = w.y || 0;
+			var wz = w.z || 0;
+			return (ux*((vy*wz)-(vz*wy))) + (uy*(-(vx*wz)+(vz*wx))) + (uz*((vx*wy)-(vy*wx)));
+			}
+		return false;
+		};
+
+/**
+Rotate a Vector object by a Quaternion rotation
+@method quaternionMultiply
+@param {Quaternion} item Quaternion object
+@param {Number} [mag] Magnitude value to which Vector needs to be set after rotation
+@return This
+@chainable
+**/
+	Vector.prototype.quaternionMultiply = function(item, mag){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			mag = (scrawl.xt(mag)) ? mag : this.getMagnitude();
+			var conjugate = item.getConjugate();
+			var result = item.getVectorMultiply(this);
+			result.quaternionMultiply(conjugate);
+			this.x = result.v.x;
+			this.y = result.v.y;
+			this.z = result.v.z;
+			this.setMagnitudeTo(mag);
+			return this;
+			}
+		return false;
+		};
+
+/**
+Rotate a Vector object by a Quaternion rotation
+@method quaternionMultiply
+@param {Quaternion} item Quaternion object
+@param {Number} [mag] Magnitude value to which Vector needs to be set after rotation
+@return Rotated Vector object
+**/
+	Vector.prototype.getQuaternionMultiply = function(item, mag){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			mag = (scrawl.xt(mag)) ? mag : this.getMagnitude();
+			var conjugate = item.getConjugate();
+			var result = item.getVectorMultiply(this);
+			result.quaternionMultiply(conjugate);
+			result.v.setMagnitudeTo(mag);
+			return result.v;
+			}
+		return false;
+		};
+
+/**
+# Quaternion
+
+## Instantiation
+
+* scrawl.newQuaternion()
+
+## Purpose
+
+* To hold quaternion (3d rotation) data
+@class Quaternion
+@constructor
+@param {Object} [items] Key:value Object argument for setting attributes
+@return this
+@chainable
+**/		
+	function Quaternion(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var vector = (scrawl.xt(items.v)) ? items.v : {};
+		this.n = items.n || 1;
+		this.v = new Vector({
+			x: vector.x || 0,
+			y: vector.y || 0,
+			z: vector.z || 0,
+			})
+		return this;
+		}
+	Quaternion.prototype = Object.create(Object.prototype);
+/**
+@property type
+@type String
+@default 'Quaternion'
+@final
+**/
+	Quaternion.prototype.type = 'Quaternion';
+	scrawl.d.Quaternion = {
+/**
+3d rotation value
+@property n
+@type Number
+@default 1
+**/		
+		n: 1,
+/**
+3d rotation axis
+@property v
+@type Vector
+@default {x:0, y:0, z:0}
+**/		
+		v: {x:0,y:0,z:0},
+		};
+
+/**
+Calculate magnitude of a quaternion
+@method getMagnitude
+@return Magnitude value
+**/
+	Quaternion.prototype.getMagnitude = function(){
+		return Math.sqrt((this.n*this.n) + (this.v.x*this.v.x) + (this.v.y*this.v.y) + (this.v.z*this.v.z));
+		};
+
+/**
+Normalize the quaternion
+@method normalize
+@return This
+@chainable
+**/
+	Quaternion.prototype.normalize = function(){
+		var mag = this.getMagnitude();
+		if(mag !== 0){
+			this.n /= mag;
+			this.v.x /= mag;
+			this.v.y /= mag;
+			this.v.z /= mag;
+			}
+		return this;
+		};
+
+/**
+Normalize the quaternion
+@method getNormal
+@return Normalized quaternion
+**/
+	Quaternion.prototype.getNormal = function(){
+		var mag = this.getMagnitude();
+		if(mag !== 0){
+			return new Quaternion({
+				n: this.n/mag,
+				v: new Vector({
+					x: this.v.x/mag,
+					y: this.v.y/mag,
+					z: this.v.z/mag,
+					}),
+				});
+			}
+		return false;
+		};
+
+/**
+Check to see if quaternion is a unit quaternion, within permitted tolerance
+@method checkNormal
+@param {Number} [tolerance] Tolerance value; default: 0
+@return True if quaternion is a normalized quaternion; false otherwise
+**/
+	Quaternion.prototype.checkNormal = function(tolerance){
+		tolerance = (scrawl.xt(tolerance)) ? tolerance : 0;
+		var check = this.n + this.v.x + this.v.y + this.v.z;
+		if(check >= 1-tolerance && check <= 1+tolerance){
+			return true;
+			}
+		return false;
+		};
+
+/**
+Retrieve quaternion's vector (rotation axis) component
+@method getVector
+@return Vector component
+**/
+	Quaternion.prototype.getVector = function(){
+		return this.v.getVector();
+		};
+
+/**
+Retrieve quaternion's scalar (rotation around axis) component
+@method getScalar
+@return Number - scalar component of this quaternion
+**/
+	Quaternion.prototype.getScalar = function(){
+		return this.n;
+		};
+
+/**
+Add a quaternion to this quaternion
+@method quaternionAdd
+@param {Quaternion} item Quaternion to be added to this quaternion
+@return This on success; false otherwise
+@chainable
+**/
+	Quaternion.prototype.quaternionAdd = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			this.n += item.n || 0;
+			this.v.x += item.v.x || 0;
+			this.v.y += item.v.y || 0;
+			this.v.z += item.v.z || 0;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Subtract a quaternion from this quaternion
+@method quaternionSubtract
+@param {Quaternion} item Quaternion to be subtracted from this quaternion
+@return This on success; false otherwise
+@chainable
+**/
+	Quaternion.prototype.quaternionSubtract = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			this.n -= item.n || 0;
+			this.v.x -= item.v.x || 0;
+			this.v.y -= item.v.y || 0;
+			this.v.z -= item.v.z || 0;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Multiply quaternion by a scalar value
+@method scalarMultiply
+@param {Number} item Value to multiply quaternion by
+@return This on success; false otherwise
+@chainable
+**/
+	Quaternion.prototype.scalarMultiply = function(item){
+		if(scrawl.isa(item,'num')){
+			this.n *= item;
+			this.v.x *= item;
+			this.v.y *= item;
+			this.v.z *= item;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Divide quaternion by a scalar value
+@method scalarDivide
+@param {Number} item Value to divide quaternion by
+@return This on success; false otherwise
+@chainable
+**/
+	Quaternion.prototype.scalarDivide = function(item){
+		if(scrawl.isa(item,'num') && item !== 0){
+			this.n /= item;
+			this.v.x /= item;
+			this.v.y /= item;
+			this.v.z /= item;
+			return this;
+			}
+		return false;
+		};
+
+/**
+Get the conjugate (reversed) value for this quaternion
+@method getConjugate
+@return Conjugated quaternion
+**/
+	Quaternion.prototype.getConjugate = function(){
+		return new Quaternion({
+			n: this.n,
+			v: new Vector({
+				x: -this.x,
+				y: -this.y,
+				z: -this.z,
+				}),
+			});
+		};
+
+/**
+Add a quaternion to this quaternion
+@method getQuaternionAdd
+@param {Quaternion} item Quaternion to be added to this quaternion
+@return New quaternion on success; false otherwise
+**/
+	Quaternion.prototype.getQuaternionAdd = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			return new Quaternion({
+				n: this.n + item.n,
+				v: new Vector({
+					x: this.v.x + item.v.x,
+					y: this.v.y + item.v.y,
+					z: this.v.z + item.v.z,
+					}),
+				});
+			}
+		return false;
+		};
+
+/**
+Subtract a quaternion from this quaternion
+@method getQuaternionSubtract
+@param {Quaternion} item Quaternion to be subtracted from this quaternion
+@return New quaternion on success; false otherwise
+**/
+	Quaternion.prototype.getQuaternionSubtract = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			return new Quaternion({
+				n: this.n - item.n,
+				v: new Vector({
+					x: this.v.x - item.v.x,
+					y: this.v.y - item.v.y,
+					z: this.v.z - item.v.z,
+					}),
+				});
+			}
+		return false;
+		};
+
+/**
+Multiply quaternion by a scalar value
+@method getScalarMultiply
+@param {Number} item Value to multiply quaternion by
+@return New quaternion on success; false otherwise
+**/
+	Quaternion.prototype.getScalarMultiply = function(item){
+		if(scrawl.isa(item,'num')){
+			return new Quaternion({
+				n: this.n * item,
+				v: new Vector({
+					x: this.v.x * item,
+					y: this.v.y * item,
+					z: this.v.z * item,
+					}),
+				});
+			}
+		return false;
+		};
+
+/**
+Divide quaternion by a scalar value
+@method getScalarDivide
+@param {Number} item Value to divide quaternion by
+@return New quaternion on success; false otherwise
+**/
+	Quaternion.prototype.getScalarDivide = function(item){
+		if(scrawl.isa(item,'num') && item !== 0){
+			return new Quaternion({
+				n: this.n / item,
+				v: new Vector({
+					x: this.v.x / item,
+					y: this.v.y / item,
+					z: this.v.z / item,
+					}),
+				});
+			}
+		return false;
+		};
+
+/**
+Multiply this quaternion by a second quaternion
+
+_Quaternion multiplication is not comutative - arithmetic is this*item, not item*this_
+@method quaternionMultiply
+@param {Quaternion} item Quaternion to multiply this quaternion by
+@return This on success; false otherwise
+@chainable
+**/
+	Quaternion.prototype.quaternionMultiply = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			var n1 = this.n,
+				x1 = this.v.x,
+				y1 = this.v.y,
+				z1 = this.v.z,
+				n2 = item.n,
+				x2 = item.v.x,
+				y2 = item.v.y,
+				z2 = item.v.z;
+			this.n = (n1*n2) - (x1*x2) - (y1*y2) - (z1*z2);
+			this.v.x = (n1*x2) + (x1*n2) + (y1*z2) - (z1*y2);
+			this.v.y = (n1*y2) + (y1*n2) + (z1*x2) - (x1*z2);
+			this.v.z = (n1*z2) + (z1*n2) + (x1*y2) - (y1*x2);
+			return this;
+			}
+		return false;
+		};
+
+/**
+Multiply this quaternion by a second quaternion
+
+_Quaternion multiplication is not comutative - arithmetic is this*item, not item*this_
+@method getQuaternionMultiply
+@param {Quaternion} item Quaternion to multiply this quaternion by
+@return New quaternion on success; false otherwise
+@chainable
+**/
+	Quaternion.prototype.getQuaternionMultiply = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			var n1 = this.n,
+				x1 = this.v.x,
+				y1 = this.v.y,
+				z1 = this.v.z,
+				n2 = item.n,
+				x2 = item.v.x,
+				y2 = item.v.y,
+				z2 = item.v.z,
+				q = new Quaternion({
+					n: (n1*n2) - (x1*x2) - (y1*y2) - (z1*z2),
+					v: new Vector({
+						x: (n1*x2) + (x1*n2) + (y1*z2) - (z1*y2),
+						y: (n1*y2) + (y1*n2) + (z1*x2) - (x1*z2),
+						z: (n1*z2) + (z1*n2) + (x1*y2) - (y1*x2),
+						}),
+					});
+			return q;
+			}
+		return false;
+		};
+
+/**
+Multiply this quaternion by a Vector
+
+_Quaternion multiplication is not comutative - arithmetic is this*item, not item*this_
+@method getVectorMultiply
+@param {Vector} item Vector to multiply this quaternion by
+@return New quaternion on success; false otherwise
+**/
+	Quaternion.prototype.getVectorMultiply = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Vector'){
+			var n1 = this.n,
+				x1 = this.v.x,
+				y1 = this.v.y,
+				z1 = this.v.z,
+				x2 = item.x,
+				y2 = item.y,
+				z2 = item.z,
+				q = new Quaternion({
+					n: -((x1*x2) + (y1*y2) + (z1*z2)),
+					v: new Vector({
+						x: (n1*x2) + (y1*z2) - (z1*y2),
+						y: (n1*y2) + (z1*x2) - (x1*z2),
+						z: (n1*z2) + (x1*y2) - (y1*x2),
+						}),
+					});
+			return q;
+			}
+		return false;
+		};
+
+/**
+Multiply this quaternion by a Vector
+
+_Quaternion multiplication is not comutative - arithmetic is this*item, not item*this_
+@method getVectorMultiply
+@param {Vector} item Vector to multiply this quaternion by
+@return This on success; false otherwise
+@chainable
+**/
+	Quaternion.prototype.vectorMultiply = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Vector'){
+			var n1 = this.n,
+				x1 = this.v.x,
+				y1 = this.v.y,
+				z1 = this.v.z,
+				x2 = item.x,
+				y2 = item.y,
+				z2 = item.z;
+			this.n = -((x1*x2) + (y1*y2) + (z1*z2));
+			this.v.x = (n1*x2) + (y1*z2) - (z1*y2);
+			this.v.y = (n1*y2) + (z1*x2) - (x1*z2);
+			this.v.z = (n1*z2) + (x1*y2) - (y1*x2);
+			return this;
+			}
+		return false;
+		};
+
+/**
+Retrieve rotational component of this quaternion
+@method getAngle
+@param {Boolean} [degree] Returns rotation in degrees if true; false (radians) by default
+@return Rotation angle
+**/
+	Quaternion.prototype.getAngle = function(degree){
+		degree = (scrawl.xt(degree)) ? degree : false;
+		var result = 2 * Math.acos(this.n);
+		return (degree) ? result * (1/scrawl.radian) : result;
+		};
+
+/**
+Retrieve axis component of this quaternion
+@method getAxis
+@return Normalized Vector
+**/
+	Quaternion.prototype.getAxis = function(){
+		var vector = this.getVector(),
+			magnitude = this.getMagnitude();
+		return (magnitude !==0) ? vector.scalarDivide(magnitude) : vector;
+		};
+
+/**
+Rotate this quaternion by another quaternion
+@method quaternionRotate
+@param {Quaternion} item Quaternion to rotate this quaternion by
+@return Rotated quaternion
+**/
+	Quaternion.prototype.quaternionRotate = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Quaternion'){
+			var conjugate = this.getConjugate(),
+				result = this.getQuaternionMultiply(item);
+			return result.quaternionMultiply(conjugate);
+			}
+		return false;
+		};
+
+/**
+Rotate a Vector by this quaternion
+@method vectorRotate
+@param {Vector} item Vector to be rotated by this quaternion
+@return Rotated Vector
+**/
+	Quaternion.prototype.vectorRotate = function(item){
+		if(scrawl.isa(item,'obj') && item.type === 'Vector'){
+			var conjugate = this.getConjugate(),
+				temp = this.getVectorMultiply(item),
+				result = temp.quaternionMultiply(conjugate);
+			return result.getVector();
+			}
+		return false;
+		};
+
+/**
+Build a quaternion from Euler angle values
+
+Argument object can be in the form, where all values (which default to 0) are in degrees:
+* {pitch:Number, yaw:Number, roll:Number}
+* {x:Number, y:Number, z:Number}
+* or a mixture of the two
+@method makeQuaternion
+@param {Object} [items] Key:value Object argument for setting attributes
+@return New quaternion
+**/
+	Quaternion.prototype.makeQuaternion = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {}; 
+		var pitch = (items.pitch || items.x || 0) * scrawl.radian,
+			yaw = (items.yaw || items.y || 0) * scrawl.radian,
+			roll = (items.roll || items.z || 0) * scrawl.radian,
+			qPitch = new Quaternion({
+				n: Math.cos(pitch/2),
+				v: new Vector({
+					x: Math.sin(pitch/2),
+					}),
+				}),
+			qYaw = new Quaternion({
+				n: Math.cos(yaw/2),
+				v: new Vector({
+					y: Math.sin(yaw/2),
+					}),
+				}),
+			qRoll = new Quaternion({
+				n: Math.cos(roll/2),
+				v: new Vector({
+					z: Math.sin(roll/2),
+					}),
+				}),
+			qResult1 = qYaw.getQuaternionMultiply(qPitch),
+			qResult2 = qResult1.getQuaternionMultiply(qRoll);
+		qResult2.normalize();
+		return qResult2;
+		};
+
+/**
+Retrieve rotations (Euler angles) from a quaternion
+@method getEulerAngles
+@return Object in the form {pitch:Number, yaw:Number, roll:Number}
+**/
+	Quaternion.prototype.getEulerAngles = function(){
+		var q00 = this.n * this.n;
+		var q11 = this.v.x * this.v.x;
+		var q22 = this.v.y * this.v.y;
+		var q33 = this.v.z * this.v.z;
+		var r11 = q00 + q11 - q22 - q33;
+		var r21 = 2 * ((this.v.x * this.v.y) + (this.n * this.v.z));
+		var r31 = 2 * ((this.v.x * this.v.z) - (this.n * this.v.y));
+		var r32 = 2 * ((this.v.y * this.v.z) + (this.n * this.v.x));
+		var r33 = q00 - q11 - q22 + q33;
+		var temp = Math.abs(r31);
+		var deg = 1/scrawl.radian;
+		var result = {};
+		if(temp > 0.999999){
+			var r12 = 2 * ((this.v.x * this.v.y) - (this.n * this.v.z));
+			var r13 = 2 * ((this.v.x * this.v.z) + (this.n * this.v.y));
+			result.pitch = 0.0;
+			result.yaw = (-(Math.pi/2)*(r31/temp))*deg;
+			result.roll = (Math.atan2(-r12,(-r31*r13)))*deg;
+			}
+		else{
+			result.pitch = (Math.atan2(r32, r33))*deg;
+			result.yaw = (Math.asin(-r31))*deg;
+			result.roll = (Math.atan2(r21, r11))*deg;
+			}
+		return result;
+		};
+
+/**
+# SubScrawl
+	
+## Instantiation
+
+* This object should never be instantiated by users
+
+## Purpose
+
+* supplies objects with basic positional and scaling attributes, and methods for manipulating them
+* start coordinates are relative to the top left corner of the object's Cell
+* delta and handle coordinates are relative to the object's start coordinate
+* pathPlace values are between 0 and 1, representing the distance along a Shape path
+
+@class SubScrawl
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
+	function SubScrawl(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var temp;
+		Scrawl.call(this, items);
+		temp = (scrawl.isa(items.start,'obj')) ? items.start : {};
+		this.start = new Vector({
+			x: (scrawl.xt(items.startX)) ? items.startX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+			y: (scrawl.xt(items.startY)) ? items.startY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+			});
+		temp = (scrawl.isa(items.delta,'obj')) ? items.delta : {};
+		this.delta = new Vector({
+			x: (scrawl.xt(items.deltaX)) ? items.deltaX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+			y: (scrawl.xt(items.deltaY)) ? items.deltaY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+			});
+		temp = (scrawl.isa(items.handle,'obj')) ? items.handle : {};
+		this.handle = new Vector({
+			x: (scrawl.xt(items.handleX)) ? items.handleX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+			y: (scrawl.xt(items.handleY)) ? items.handleY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+			});
+		this.pivot = items.pivot || scrawl.d[this.type].pivot;
+		this.path = items.path || scrawl.d[this.type].path;
+		this.pathRoll = items.pathRoll || scrawl.d[this.type].pathRoll;
+		this.addPathRoll = items.addPathRoll || scrawl.d[this.type].addPathRoll;
+		this.pathSpeedConstant = (scrawl.isa(items.pathSpeedConstant,'bool')) ? items.pathSpeedConstant : scrawl.d[this.type].pathSpeedConstant;
+		this.pathPlace = items.pathPlace || scrawl.d[this.type].pathPlace;
+		this.deltaPathPlace = items.deltaPathPlace || scrawl.d[this.type].deltaPathPlace;
+		this.scale = (scrawl.isa(items.scale,'num')) ? items.scale : scrawl.d[this.type].scale;
 		return this;
 		}
 	SubScrawl.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'SubScrawl'
+@final
+**/
 	SubScrawl.prototype.type = 'SubScrawl';
 	SubScrawl.prototype.classname = 'objectnames';
-	SubScrawl.prototype.moveStart = function(item){
-		switch(item){
-			case 'x' :
-				this.startX += this.moveStartX;
-				break;
-			case 'y' :
-				this.startY += this.moveStartY;
-				break;
-			case 'path' :
-				this.pathPosition += this.movePathPosition;
-				if(this.pathPosition > 1){this.pathPosition -= 1;}
-				if(this.pathPosition < 0){this.pathPosition += 1;}
-				break;
-			default :
-				this.startX += this.moveStartX;
-				this.startY += this.moveStartY;
-				this.pathPosition += this.movePathPosition;
-				if(this.pathPosition > 1){this.pathPosition -= 1;}
-				if(this.pathPosition < 0){this.pathPosition += 1;}
-			}
-		if(['Block','Phrase','Wheel','Outline','Shape','Picture'].contains(this.type)){
-			this.setCurrentParameters(scrawl.group[this.group].getOverride(this.name,'none'));
-			}
-		return this;
+	scrawl.d.SubScrawl = {
+/**
+The coordinate Vector representing the object's rotation/flip point
+
+SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
+
+* __startX__ - (Number) the x coordinate of the object's rotation/flip point, in pixels, from the left side of the object's cell
+* __startY__ - (Number) the y coordinate of the object's rotation/flip point, in pixels, from the top side of the object's cell
+
+@property start
+@type Vector
+**/		
+		start: {x:0,y:0,z:0},
+/**
+A change Vector which can be applied to the object's rotation/flip point
+
+SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
+
+* __deltaX__ - (Number) a horizontal change value, in pixels
+* __deltaY__ - (Number) a vertical change value, in pixels
+
+@property delta
+@type Vector
+**/		
+		delta: {x:0,y:0,z:0},
+/**
+An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
+
+SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
+
+* __handleX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'
+* __handleY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'
+
+Where values are Numbers, handle can be treated like any other Vector
+
+@property handle
+@type Object
+**/		
+		handle: {x:0,y:0,z:0},
+/**
+The SPRITENAME or POINTNAME of a sprite or Point object to be used for setting this object's start point
+@property pivot
+@type String
+@default ''
+**/		
+		pivot: '',
+/**
+The SPRITENAME of a Shape sprite whose path is used to calculate this object's start point
+@property path
+@type String
+@default ''
+**/		
+		path: '',
+/**
+A value between 0 and 1 to represent the distance along a Shape object's path, where 0 is the path start and 1 is the path end
+@property pathPlace
+@type Number
+@default 0
+**/
+		pathPlace: 0,
+/**
+A change value which can be applied to the object's pathPlace attribute
+@property deltaPathPlace
+@type Number
+@default 0
+**/
+		deltaPathPlace: 0,
+/**
+The object's scale value - larger values increase the object's size
+@property scale
+@type Number
+@default 1
+**/
+		scale: 1,
+/**
+A flag to determine whether the object will calculate its position along a Shape path in a regular (true), or simple (false), manner
+@property pathSpeedConstant
+@type Boolean
+@default true
+**/		
+		pathSpeedConstant: true,
+/**
+The rotation value (in degrees) of an object's current position along a Shape path
+@property pathRoll
+@type Number
+@default 0
+**/		
+		pathRoll: 0,
+/**
+A flag to determine whether the object will calculate the rotation value of its current position along a Shape path
+@property addPathRoll
+@type Boolean
+@default false
+**/		
+		addPathRoll: false,
 		};
-	SubScrawl.prototype.unmoveStart = function(item){
-		switch(item){
-			case 'x' :
-				this.startX -= this.moveStartX;
-				break;
-			case 'y' :
-				this.startY -= this.moveStartY;
-				break;
-			case 'path' :
-				this.pathPosition -= this.movePathPosition;
-				if(this.pathPosition > 1){this.pathPosition -= 1;}
-				if(this.pathPosition < 0){this.pathPosition += 1;}
-				break;
-			default :
-				this.startX -= this.moveStartX;
-				this.startY -= this.moveStartY;
-				this.pathPosition -= this.movePathPosition;
-				if(this.pathPosition > 1){this.pathPosition -= 1;}
-				if(this.pathPosition < 0){this.pathPosition += 1;}
-			}
-		if(['Block','Phrase','Wheel','Outline','Shape','Picture'].contains(this.type)){
-			this.setCurrentParameters(scrawl.group[this.group].getOverride(this.name,'none'));
-			}
-		return this;
-		};
-	SubScrawl.prototype.exchange = function(obj, item){
-		if(scrawl.isa(obj,'obj')){
-			var temp;
-			switch(item){
-				case 'start' :
-					temp = this.startX; this.startX = obj.startX; obj.startX = temp;
-					temp = this.startY; this.startY = obj.startY; obj.startY = temp;
-					break;
-				case 'moveStart' :
-					temp = this.moveStartX; this.moveStartX = obj.moveStartX; obj.moveStartX = temp;
-					temp = this.moveStartY; this.moveStartY = obj.moveStartY; obj.moveStartY = temp;
-					break;
-				case 'handle' :
-					temp = this.handleX; this.handleX = obj.handleX; obj.handleX = temp;
-					temp = this.handleY; this.handleY = obj.handleY; obj.handleY = temp;
-					break;
-				case 'moveHandle' :
-					temp = this.moveHandleX; this.moveHandleX = obj.moveHandleX; obj.moveHandleX = temp;
-					temp = this.moveHandleY; this.moveHandleY = obj.moveHandleY; obj.moveHandleY = temp;
-					break;
-				default :
-					if(scrawl.xt(this[item]) && scrawl.xt(obj[item])){
-						temp = this[item]; this[item] = obj[item]; obj[item] = temp;
-						}
-				}
-			}
-		return this;
-		};
-	SubScrawl.prototype.moveHandle = function(item){
-		switch(item){
-			case 'x' : this.handleX += this.moveHandleX; break;
-			case 'y' : this.handleY += this.moveHandleY; break;
-			default : this.handleX += this.moveHandleX; this.handleY += this.moveHandleY;
-			}
-		if(['Block','Phrase','Wheel','Outline','Shape','Picture'].contains(this.type)){
-			this.setCurrentParameters(scrawl.group[this.group].getOverride(this.name,'none'));
-			}
-		return this;
-		};
-	SubScrawl.prototype.reverse = function(item){
-		switch(item){
-			case 'moveStartX' : this.moveStartX = -this.moveStartX; break;
-			case 'moveStartY' : this.moveStartY = -this.moveStartY; break;
-			case 'moveStart' : this.moveStartX = -this.moveStartX; this.moveStartY = -this.moveStartY; break;
-			case 'moveHandleX' : this.moveHandleX = -this.moveHandleX; break;
-			case 'moveHandleY' : this.moveHandleY = -this.moveHandleY; break;
-			case 'moveHandle' : this.moveHandleX = -this.moveHandleX; this.moveHandleY = -this.moveHandleY; break;
-			case 'movePath' : this.movePathPosition = -this.movePathPosition; break;
-			}
-		return this;
-		};
-	SubScrawl.prototype.getPivotOffset = function(val,useHeight){
-		if(scrawl.xt(val)){
-			useHeight = (scrawl.isa(useHeight,'bool')) ? useHeight : false;
-			var result;
-			if((scrawl.isa(val,'str')) && !['left','center','right','top','bottom'].contains(val)){
-				result = (useHeight) ? (parseFloat(val)/100)*this.height : (parseFloat(val)/100)*this.width;
-				}
-			else{
-				switch (val){
-					case 'left' : result = 0; break;
-					case 'center' : (useHeight) ? result = this.height/2 : result = this.width/2; break;
-					case 'right' : result = this.width; break;
-					case 'top' : result = 0; break;
-					case 'bottom' : result = this.height; break;
-					default : result = val;
+	scrawl.mergeInto(scrawl.d.SubScrawl, scrawl.d.Scrawl);
+
+/**
+Turn the object into a JSON String
+@method toString
+@return JSON string of non-default value attributes
+**/
+	SubScrawl.prototype.toString = function(){
+		var keys = Object.keys(scrawl.d[this.type]),
+			result = {};
+		result.type = this.type;
+		result.classname = this.classname;
+		result.name = this.name;
+		for(var i = 0, z = keys.length; i < z; i++){
+			if(scrawl.contains(['start', 'delta', 'handle'], keys[i])){
+				if(!this[keys[i]].isLike(scrawl.d[this.type][keys[i]])){
+					result[keys[i]] = this[keys[i]];
 					}
 				}
-			return result;
+			else if(scrawl.xt(this[keys[i]]) && this[keys[i]] !== scrawl.d[this.type][keys[i]]){
+				result[keys[i]] = this[keys[i]];
+				}
 			}
-		return 0;
+		return JSON.stringify(result);
 		};
-	SubScrawl.prototype.getStartX = function(override){
-		override = (scrawl.isa(override,'obj')) ? override : {};
-		var myH, a;
-		var myScale = this.currentScale || this.scale || 1;
-		if(this.flipReverse){
-			myH = this.getPivotOffset(this.handleX,false);
-			a = this.startX + (myH*myScale);
-			return (scrawl.xt(override.x)) ? a-override.x : a;
+		
+/**
+Overrides Scrawl.get(), to allow users to get values for startX, startY, deltaX, deltaY, handleX, handleY
+@method get
+@param {String} get Attribute key
+@return Attribute value
+**/
+	SubScrawl.prototype.get = function(item){
+		var u;
+		if(scrawl.contains(['startX','startY','handleX','handleY','deltaX','deltaY'], item)){
+			switch(item){
+				case 'startX' : return this.start.x; break;
+				case 'startY' : return this.start.y; break;
+				case 'handleX' : return this.handle.x; break;
+				case 'handleY' : return this.handle.y; break;
+				case 'deltaX' : return this.delta.x; break;
+				case 'deltaY' : return this.delta.y; break;
+				}
+			}
+		else if(scrawl.contains(['start','handle','delta'], item)){
+			switch(item){
+				case 'start' : return this.start.getVector(); break;
+				case 'handle' : return this.handle.getVector(); break;
+				case 'delta' : return this.delta.getVector(); break;
+				}
 			}
 		else{
-			myH = this.getPivotOffset(this.handleX,false);
-			a = this.startX - (myH*myScale);
-			return (scrawl.xt(override.x)) ? a+override.x : a;
-			}
-		};
-	SubScrawl.prototype.getStartY = function(override){
-		override = (scrawl.isa(override,'obj')) ? override : {};
-		var myH, a;
-		var myScale = this.currentScale || this.scale || 1;
-		if(this.flipUpend){
-			myH = this.getPivotOffset(this.handleY,true);
-			a = this.startY + (myH*myScale);
-			return (scrawl.xt(override.y)) ? a-override.y : a;
-			}
-		else{
-			myH = this.getPivotOffset(this.handleY,true);
-			a = this.startY - (myH*myScale);
-			return (scrawl.xt(override.y)) ? a+override.y : a;
+			return Scrawl.prototype.get.call(this, item);
 			}
 		};
 
+/**
+Overrides Scrawl.set(), to allow users to set the start, delta and handle attributes using startX, startY, deltaX, deltaY, handleX, handleY
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	SubScrawl.prototype.set = function(items){
+		items = (scrawl.xt(items)) ? items : {};
+		Scrawl.prototype.set.call(this, items);
+		if(!this.start.type || this.start.type !== 'Vector'){
+			this.start = new Vector(items.start || this.start);
+			}
+		if(scrawl.xto([items.startX, items.startY])){
+			this.start.x = (scrawl.xt(items.startX)) ? items.startX : this.start.x;
+			this.start.y = (scrawl.xt(items.startY)) ? items.startY : this.start.y;
+			}
+		if(!this.delta.type || this.delta.type !== 'Vector'){
+			this.delta = new Vector(items.delta || this.delta);
+			}
+		if(scrawl.xto([items.deltaX, items.deltaY])){
+			this.delta.x = (scrawl.xt(items.deltaX)) ? items.deltaX : this.delta.x;
+			this.delta.y = (scrawl.xt(items.deltaY)) ? items.deltaY : this.delta.y;
+			}
+		if(!this.handle.type || this.handle.type !== 'Vector'){
+			this.handle = new Vector(items.handle || this.handle);
+			}
+		if(scrawl.xto([items.handleX, items.handleY])){
+			this.handle.x = (scrawl.xt(items.handleX)) ? items.handleX : this.handle.x;
+			this.handle.y = (scrawl.xt(items.handleY)) ? items.handleY : this.handle.y;
+			}
+		return this;
+		};
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	SubScrawl.prototype.setDelta = function(items){
+		var temp;
+		if(scrawl.xto([items.start, items.startX, items.startY])){
+			temp = (scrawl.isa(items.start,'obj')) ? items.start : {};
+			this.start.x += (scrawl.xt(items.startX)) ? items.startX : ((scrawl.xt(temp.x)) ? temp.x : this.start.x);
+			this.start.y += (scrawl.xt(items.startY)) ? items.startY : ((scrawl.xt(temp.y)) ? temp.y : this.start.y);
+			}
+		if(scrawl.xto([items.delta, items.deltaX, items.deltaY])){
+			temp = (scrawl.isa(items.delta,'obj')) ? items.delta : {};
+			this.delta.x += (scrawl.xt(items.deltaX)) ? items.deltaX : ((scrawl.xt(temp.x)) ? temp.x : this.delta.x);
+			this.delta.y += (scrawl.xt(items.deltaY)) ? items.deltaY : ((scrawl.xt(temp.y)) ? temp.y : this.delta.y);
+			}
+		if(scrawl.xto([items.handle, items.handleX, items.handleY]) && scrawl.isa(this.handle.x,'num') && scrawl.isa(this.handle.y,'num')){
+			temp = (scrawl.isa(items.handle,'obj')) ? items.handle : {};
+			this.handle.x += (scrawl.xt(items.handleX)) ? items.handleX : ((scrawl.xt(temp.x)) ? temp.x : this.handle.x);
+			this.handle.y += (scrawl.xt(items.handleY)) ? items.handleY : ((scrawl.xt(temp.y)) ? temp.y : this.handle.y);
+			}
+		if(items.pathPlace){
+			this.pathPlace += items.pathPlace;
+			}
+		if(items.deltaPathPlace){
+			this.deltaPathPlace += items.deltaPathPlace;
+			}
+		if(items.scale){
+			this.scale += items.scale;
+			}
+		return this;
+		};
+
+/**
+Overrides Scrawl.clone()
+
+The following objects can be cloned: 
+
+* Block
+* Outline
+* Picture
+* Phrase
+* Shape
+* Wheel
+@method clone
+@param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
+@return Cloned object
+@chainable
+**/
+	SubScrawl.prototype.clone = function(items){
+		var a = Scrawl.prototype.clone.call(this,items),
+			temp;
+		temp = (scrawl.isa(items.start,'obj')) ? items.start : {};
+		a.start = new Vector({
+			x: (scrawl.xt(items.startX)) ? items.startX : ((scrawl.xt(temp.x)) ? temp.x : a.start.x),
+			y: (scrawl.xt(items.startY)) ? items.startY : ((scrawl.xt(temp.y)) ? temp.y : a.start.y),
+			});
+		temp = (scrawl.isa(items.delta,'obj')) ? items.delta : {};
+		a.delta = new Vector({
+			x: (scrawl.xt(items.deltaX)) ? items.deltaX : ((scrawl.xt(temp.x)) ? temp.x : a.delta.x),
+			y: (scrawl.xt(items.deltaY)) ? items.deltaY : ((scrawl.xt(temp.y)) ? temp.y : a.delta.y),
+			});
+		temp = (scrawl.isa(items.handle,'obj')) ? items.handle : {};
+		a.handle = new Vector({
+			x: (scrawl.xt(items.handleX)) ? items.handleX : ((scrawl.xt(temp.x)) ? temp.x : a.handle.x),
+			y: (scrawl.xt(items.handleY)) ? items.handleY : ((scrawl.xt(temp.y)) ? temp.y : a.handle.y),
+			});
+		return a;
+		};
+
+/**
+Adds delta values to the start vector; adds deltaPathPlace to pathPlace
+
+Permitted argument values include 
+* 'x' - delta.x added to start.x
+* 'y' - delta.y added to start.y
+* 'path' - deltaPathPlace added to pathPlace 
+* undefined: all values are amended
+@method updateStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
+	SubScrawl.prototype.updateStart = function(item){
+		switch(item){
+			case 'x' :
+				this.start.x += this.delta.x || 0;
+				break;
+			case 'y' :
+				this.start.y += this.delta.y || 0;
+				break;
+			case 'path' :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				break;
+			default :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				this.start.vectorAdd(this.delta);
+			}
+		return this;
+		};
+
+/**
+Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
+
+Permitted argument values include 
+* 'x' - delta.x subtracted from start.x
+* 'y' - delta.y subtracted from start.y
+* 'path' - deltaPathPlace subtracted from pathPlace 
+* undefined: all values are amended
+@method revertStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
+	SubScrawl.prototype.revertStart = function(item){
+		switch(item){
+			case 'x' :
+				this.start.x -= this.delta.x || 0;
+				break;
+			case 'y' :
+				this.start.y -= this.delta.y || 0;
+				break;
+			case 'path' :
+				this.pathPlace -= this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				break;
+			default :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				this.start.vectorSubtract(this.delta);
+			}
+		return this;
+		};
+
+/**
+Swaps the values of an attribute between two objects
+@method exchange
+@param {Object} obj Object with which this object will swap attribute values
+@param {String} item Attribute to be swapped
+@return This
+@chainable
+**/
+	SubScrawl.prototype.exchange = function(obj, item){
+		if(scrawl.isa(obj,'obj')){
+			var temp = this.get(item); 
+			this[item] = obj.get(item); 
+			obj[item] = temp;
+			}
+		return this;
+		};
+
+/**
+Changes the sign (+/-) of specified attribute values
+@method reverse
+@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
+@return This
+@chainable
+**/
+	SubScrawl.prototype.reverse = function(item){
+		switch(item){
+			case 'deltaX' : 
+				this.delta.x = -this.delta.x; break;
+			case 'deltaY' : 
+				this.delta.y = -this.delta.y; break;
+			case 'delta' : 
+				this.delta.reverse(); break;
+			case 'deltaPathPlace' : 
+				this.deltaPathPlace = -this.deltaPathPlace; break;
+			default : 
+				this.deltaPathPlace = -this.deltaPathPlace;
+				this.delta.reverse();
+			}
+		return this;
+		};
+
+/**
+Calculates the pixels value of the object's handle attribute
+
+* doesn't take into account the object's scaling or orientation
+* (badly named function - getPivotOffsetVector has nothing to do with pivots)
+
+@method getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where sprite drawing should start
+@private
+**/
+	SubScrawl.prototype.getPivotOffsetVector = function(){
+		//result defaults to numerical offsets
+		var result = this.handle.getVector(),
+			height = this.height || this.get('height'),
+			width = this.width || this.get('width');
+		//calculate percentage offsets
+		if((scrawl.isa(this.handle.x,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.handle.x)){
+			result.x = (parseFloat(this.handle.x)/100) * width;
+			}
+		else{
+			switch (this.handle.x){
+				//calculate string offsets
+				case 'left' : result.x = 0; break;
+				case 'center' : result.x = width/2; break;
+				case 'right' : result.x = width; break;
+				}
+			}
+		if((scrawl.isa(this.handle.y,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.handle.y)){
+			result.y = (parseFloat(this.handle.y)/100) * height;
+			}
+		else{
+			switch (this.handle.y){
+				//calculate string offsets
+				case 'top' : result.y = 0; break;
+				case 'center' : result.y = height/2; break;
+				case 'bottom' : result.y = height; break;
+				}
+			}
+		return result;
+		};
+
+/**
+Calculates the pixels value of the object's handle attribute
+@method getOffsetStartVector
+@return Final offset values (as a Vector) to determine where sprite drawing should start
+**/
+	SubScrawl.prototype.getOffsetStartVector = function(){
+		var sx = (scrawl.isa(this.handle.x,'str')) ? this.scale : 1,
+			sy = (scrawl.isa(this.handle.y,'str')) ? this.scale : 1,
+			myH = this.getPivotOffsetVector();
+			myH.x *= sx;
+			myH.y *= sy;
+		return myH.reverse();
+		};
+
+/**
+Performs this.start.getVector();
+@method getStartVector
+@return Copy of this.start
+@chainable
+@deprecated
+**/
+	SubScrawl.prototype.getStartVector = function(){console.log(this.name,'.getStartVector() called - should use .start.getVector() instead',this.start);return this.start.getVector();};
+
+/**
+Performs this.getPivotOffsetVector();
+@method getHandleVector
+@return Calculated offset values to help determine where sprite drawing should start
+@private
+@deprecated
+**/
+	SubScrawl.prototype.getHandleVector = function(){return this.getPivotOffsetVector();};
+
+/**
+Performs this.delta.getVector();
+@method getDeltaVector
+@return Copy of this.delta
+@chainable
+@deprecated
+**/
+	SubScrawl.prototype.getDeltaVector = function(){console.log(this.name,'.getDeltaVector() called - should use .delta.getVector() instead',this.delta);return this.delta.getVector();};
+
+/**
+# Scrawl3d
+	
+## Instantiation
+
+* This object should never be instantiated by users
+
+## Purpose
+
+* supplies DOM elements with basic positional and rotational attributes, and methods for manipulating them
+
+## Positioning 
+
+All DOM elements in a stack can be positioned absolutely, or relatively, positioned; coordinates are measured (in pixels) from the top left corner of the stack element
+
+### Absolute positioning
+
+* object's __start__ Vector coordinate represents an element's rotation/reflection point
+* object's __handle__ Vector equates to the element's _transformOrigin_ style
+* element's _top_ and _left_ style values are calculated in line with the object's start and handle attribute values
+
+### Relative positioning
+
+* relative positioning is achieved by setting an element's __path__ or _pivot__ attributes to the name of a Scrawl sprite (or Point)
+* see Sprite objects page for more details on relative positioning
+* elements can also be moved relative to their object's _start_ coordinates via the __translate__ Vector, which equates to the the element's _translate_ style attribute
+* the translate Vector can be set via the pseudo-attributes __translateX__, __translateY__ and __translateZ__
+
+### Rotational positioning
+
+Scrawl stacks can be set up to display elements in three dimensions by setting their __perspective__ attribute (a Vector) - see the Stack object for more details
+
+Element rotation data is stored in the __rotation__ attribute; rotational change data is stored in __deltaRotation - both are Quaternion objects. The values in these quaternions can be changed by using the following pseudo-attributes in factory and set functions:
+
+* __pitch__ - rotation around the x axis
+* __yaw__ - rotation around the y axis
+* __roll__ - rotation around the z axis
+* __deltaPitch__ - change in rotation around the x axis
+* __deltaYaw__ - change in rotation around the y axis
+* __deltaRoll__ - change in rotation around the z axis
+
+@class Scrawl3d
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Scrawl3d(items){
-		SubScrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-//THERE'S BETTER IE DETECTORS THAN THIS
-		this.isIE = (navigator.appName == 'Microsoft Internet Explorer') ? true : false;
+		var temp;
+		Scrawl.call(this, items);
+		temp = (scrawl.isa(items.start,'obj')) ? items.start : {};
+		this.start = new Vector({
+			x: (scrawl.xt(items.startX)) ? items.startX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+			y: (scrawl.xt(items.startY)) ? items.startY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+			});
+		temp = (scrawl.isa(items.delta,'obj')) ? items.delta : {};
+		this.delta = new Vector({
+			x: (scrawl.xt(items.deltaX)) ? items.deltaX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+			y: (scrawl.xt(items.deltaY)) ? items.deltaY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+			});
+		temp = (scrawl.isa(items.handle,'obj')) ? items.handle : {};
+		this.handle = new Vector({
+			x: (scrawl.xt(items.handleX)) ? items.handleX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+			y: (scrawl.xt(items.handleY)) ? items.handleY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+			});
+		if(scrawl.xto([items.handleX, items.handleY, items.handle])){
+			this.setTransformOrigin();
+			}
+		temp = (scrawl.isa(items.translate,'obj')) ? items.translate : {};
+		this.translate = new Vector({
+			x: (scrawl.xt(items.translateX)) ? items.translateX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+			y: (scrawl.xt(items.translateY)) ? items.translateY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+			z: (scrawl.xt(items.translateZ)) ? items.translateZ : ((scrawl.xt(temp.y)) ? temp.y : 0),
+			});
+		this.pivot = items.pivot || scrawl.d[this.type].pivot;
+		this.path = items.path || scrawl.d[this.type].path;
+		this.pathRoll = items.pathRoll || scrawl.d[this.type].pathRoll;
+		this.addPathRoll = items.addPathRoll || scrawl.d[this.type].addPathRoll;
+		this.pathSpeedConstant = (scrawl.isa(items.pathSpeedConstant,'bool')) ? items.pathSpeedConstant : scrawl.d[this.type].pathSpeedConstant;
+		this.pathPlace = items.pathPlace || scrawl.d[this.type].pathPlace;
+		this.deltaPathPlace = items.deltaPathPlace || scrawl.d[this.type].deltaPathPlace;
+		this.lockX = items.lockX || scrawl.d[this.type].lockX;
+		this.lockY = items.lockY || scrawl.d[this.type].lockY;
+		this.scale = (scrawl.isa(items.scale,'num')) ? items.scale : scrawl.d[this.type].scale;
+		this.visibility = (scrawl.isa(items.visibility,'bool')) ? items.visibility : scrawl.d[this.type].visibility;
+		this.rotation = Quaternion.prototype.makeQuaternion({
+			pitch: items.pitch || 0,
+			yaw: items.yaw || 0,
+			roll: items.roll || 0,
+			});
+		this.deltaRotation = Quaternion.prototype.makeQuaternion({
+			pitch: items.deltaPitch || 0,
+			yaw: items.deltaYaw || 0,
+			roll: items.deltaRoll || 0,
+			});
+		this.rotationTolerance = items.rotationTolerance || 0.001
 		return this;
 		}
-	Scrawl3d.prototype = Object.create(SubScrawl.prototype);
+	Scrawl3d.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'SubScrawl'
+@final
+**/
 	Scrawl3d.prototype.type = 'Scrawl3d';
 	Scrawl3d.prototype.classname = 'objectnames';
-	Scrawl3d.prototype.initialize2d = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.stack = items.stack || false;
-		this.setTitle(items.title || this.getTitle() || '');
-		this.setComment(items.comment || this.getComment() || '');
-		this.setOverflow(items.overflow || this.getOverflow() || ((this.type === 'Stack') ? 'hidden' : 'visible'));
-		this.setZIndex(items.order || items.zIndex || this.getZIndex() || 0);
-		this.setWidth(items.width || this.getWidth() || 300);
-		this.setHeight(items.height || this.getHeight() || 150);
-		this.setLeft(items.startX || items.left || this.getLeft() || 0);
-		this.setTop(items.startY || items.top || this.getTop() || 0);
-		this.setDisplayOffsets();
-		return this;
+	scrawl.d.Scrawl3d = {
+/**
+The coordinate Vector representing the object's rotation/flip point
+
+Scrawl3d, and all Objects that prototype chain to Scrawl3d, supports the following 'virtual' attributes for this attribute:
+
+* __startX__ - (Mixed) the x coordinate of the object's rotation/flip point, in pixels, from the left side of the object's stack
+* __startY__ - (Mixed) the y coordinate of the object's rotation/flip point, in pixels, from the top side of the object's stack
+
+This attribute's attributes accepts absolute number values (in pixels), or string percentages where the percentage is relative to the container stack's width or height, or string literals which again refer to the containing stack's dimensions:
+
+* _startX_ - 'left', 'right' or 'center'
+* _startY_ - 'top', 'bottom' or 'center'
+
+Where values are Numbers, handle can be treated like any other Vector
+@property start
+@type Vector
+**/		
+		start: {x:0,y:0,z:0},
+/**
+A change Vector which can be applied to the object's rotation/flip point
+
+Scrawl3d, and all Objects that prototype chain to Scrawl3d, supports the following 'virtual' attributes for this attribute:
+
+* __deltaX__ - (Number) a horizontal change value, in pixels
+* __deltaY__ - (Number) a vertical change value, in pixels
+
+@property delta
+@type Vector
+**/		
+		delta: {x:0,y:0,z:0},
+/**
+A change Vector for translating elements away from their start coordinate
+
+Scrawl3d, and all Objects that prototype chain to Scrawl3d, supports the following 'virtual' attributes for this attribute:
+
+* __translateX__ - (Number) movement along the x axis, in pixels
+* __translateY__ - (Number) movement along the y axis, in pixels
+* __translateZ__ - (Number) movement along the z axis, in pixels
+
+@property translate
+@type Vector
+**/		
+		translate: {x:0,y:0,z:0},
+/**
+Element width
+@property width
+@type Number
+@default 300
+**/		
+		width: 300,
+/**
+Element height
+@property height
+@type Number
+@default 150
+**/		
+		height: 150,
+/**
+An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
+
+Scrawl3d, and all Objects that prototype chain to Scrawl3d, supports the following 'virtual' attributes for this attribute:
+
+* __handleX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'
+* __handleY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'
+
+Where values are Numbers, handle can be treated like any other Vector
+
+@property handle
+@type Object
+**/		
+		handle: {x:'center',y:'center',z:0},
+/**
+The SPRITENAME or POINTNAME of a sprite or Point object to be used for setting this object's start point
+@property pivot
+@type String
+@default ''
+**/		
+		pivot: '',
+/**
+The element's parent stack's STACKNAME
+@property stack
+@type String
+@default ''
+**/		
+		stack: '',
+/**
+The SPRITENAME of a Shape sprite whose path is used to calculate this object's start point
+@property path
+@type String
+@default ''
+**/		
+		path: '',
+/**
+A value between 0 and 1 to represent the distance along a Shape object's path, where 0 is the path start and 1 is the path end
+@property pathPlace
+@type Number
+@default 0
+**/
+		pathPlace: 0,
+/**
+A change value which can be applied to the object's pathPlace attribute
+@property deltaPathPlace
+@type Number
+@default 0
+**/
+		deltaPathPlace: 0,
+/**
+The object's scale value - larger values increase the object's size
+@property scale
+@type Number
+@default 1
+**/
+		scale: 1,
+/**
+A flag to determine whether the object will calculate its position along a Shape path in a regular (true), or simple (false), manner
+@property pathSpeedConstant
+@type Boolean
+@default true
+**/		
+		pathSpeedConstant: true,
+/**
+The rotation value (in degrees) of an object's current position along a Shape path
+@property pathRoll
+@type Number
+@default 0
+**/		
+		pathRoll: 0,
+/**
+A flag to determine whether the object will calculate the rotation value of its current position along a Shape path
+@property addPathRoll
+@type Boolean
+@default false
+**/		
+		addPathRoll: false,
+/**
+When true, element ignores horizontal placement data via pivot and path attributes
+@property lockX
+@type Boolean
+@default false
+**/		
+		lockX: false,
+/**
+When true, element ignores vertical placement data via pivot and path attributes
+@property lockY
+@type Boolean
+@default false
+**/		
+		lockY: false,
+/**
+Element rotation around its transform (start) coordinate
+@property rotation
+@type Quaternion
+@default Unit quaternion with no rotation
+**/		
+		rotation: {n:1,v:{x:0,y:0,z:0}},
+/**
+Element's delta (change in) rotation around its transform (start) coordinate
+@property deltaRotation
+@type Quaternion
+@default Unit quaternion with no rotation
+**/		
+		deltaRotation: {n:1,v:{x:0,y:0,z:0}},
+/**
+Element's rotation tolerance - all Quaternions need to be unit quaternions; this value represents the acceptable tolerance away from the norm
+@property rotationTolerance
+@type Number
+@default 0.001
+**/		
+		rotationTolerance: 0.001,
+/**
+A flag to determine whether an element displays itself
+@property visibility
+@type Boolean
+@default true
+**/		
+		visibility: true,
 		};
-	Scrawl3d.prototype.initialize3d = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.setPerspectiveOrigin({perspectiveOriginX: items.perspectiveOriginX, perspectiveOriginY: items.perspectiveOriginY} || items.perspectiveOrigin || this.getPerspectiveOrigin() || false);
-		this.setPerspective(items.perspective || this.getPerspective());
-		this.setTransformOrigin({transformOriginX: items.transformOriginX, transformOriginY: items.transformOriginY} || items.transformOrigin || this.getTransformOrigin() || false);
-		this.setTransformStyle(items.transformStyle || this.getTransformStyle() || 'preserve-3d');
-		this.setBackfaceVisibility(items.backfaceVisibility || this.getBackfaceVisibility() || 'visible');
-		this.setPitch(items.rotateX || items.pitch || 0);
-		this.setYaw(items.rotateY || items.yaw || 0);
-		this.setRoll(items.rotateZ || items.rotate || items.roll || 0);
-		this.setTranslateX(items.translateX || 0);
-		this.setTranslateY(items.translateY || 0);
-		this.setTranslateZ(items.translateZ || 0);
-		this.setRotateFirst(items.rotateFirst || false);
-		this.setTransform();
-		this.setDisplayOffsets();
-		return this;
+	scrawl.mergeInto(scrawl.d.SubScrawl, scrawl.d.Scrawl);
+
+/**
+Turn the object into a JSON String
+@method toString
+@return JSON string of non-default value attributes
+**/
+	Scrawl3d.prototype.toString = function(){
+		var keys = Object.keys(scrawl.d[this.type]),
+			result = {},
+			temp;
+		result.type = this.type;
+		result.classname = this.classname;
+		result.name = this.name;
+		for(var i = 0, z = keys.length; i < z; i++){
+			if(scrawl.contains(['start', 'delta', 'handle', 'perspective', 'translate'], keys[i])){
+				if(!this[keys[i]].isLike(scrawl.d[this.type][keys[i]])){
+					result[keys[i]] = this[keys[i]];
+					}
+				}
+			if(keys[i] === 'rotation'){
+				temp = this.rotation.getEulerAngles();
+				if(temp.pitch !== 0){result.pitch = temp.pitch;}
+				if(temp.yaw !== 0){result.yaw = temp.yaw;}
+				if(temp.roll !== 0){result.roll = temp.roll;}
+				}
+			if(keys[i] === 'deltaRotation'){
+				temp = this.rotation.getEulerAngles();
+				if(temp.pitch !== 0){result.deltaPitch = temp.pitch;}
+				if(temp.yaw !== 0){result.deltaYaw = temp.yaw;}
+				if(temp.roll !== 0){result.deltaRoll = temp.roll;}
+				}
+			else if(scrawl.xt(this[keys[i]]) && this[keys[i]] !== scrawl.d[this.type][keys[i]]){
+				result[keys[i]] = this[keys[i]];
+				}
+			}
+		return JSON.stringify(result);
 		};
+
+/**
+Overrides Scrawl.get(), to allow users to get values for startX, startY, deltaX, deltaY, handleX, handleY, translateX, translateY, translateZ
+@method get
+@param {String} get Attribute key
+@return Attribute value
+**/
+	Scrawl3d.prototype.get = function(item){
+		var u, 
+			el = this.getElement();
+		if(scrawl.contains(['startX','startY','handleX','handleY','deltaX','deltaY','translateX','translateY','translateZ'], item)){
+			switch(item){
+				case 'startX' : return this.start.x; break;
+				case 'startY' : return this.start.y; break;
+				case 'handleX' : return this.handle.x; break;
+				case 'handleY' : return this.handle.y; break;
+				case 'deltaX' : return this.delta.x; break;
+				case 'deltaY' : return this.delta.y; break;
+				case 'translateX' : return this.translate.x; break;
+				case 'translateY' : return this.translate.y; break;
+				case 'translateZ' : return this.translate.z; break;
+				}
+			}
+		else if(scrawl.contains(['start','handle','delta','translate'], item)){
+			switch(item){
+				case 'start' : return this.start.getVector(); break;
+				case 'handle' : return this.handle.getVector(); break;
+				case 'delta' : return this.delta.getVector(); break;
+				case 'translate' : return this.translate.getVector(); break;
+				}
+			}
+		else if(scrawl.contains(['width','height'], item)){
+			switch(item){
+				case 'width' : 
+					if(scrawl.xt(this.width)){
+						return this.width;
+						}
+					else{
+						switch(this.type){
+							case 'Pad' : 
+								return parseFloat(el.width) || scrawl.d[this.type].width; 
+								break;
+							default: 
+								return parseFloat(el.style.width) || parseFloat(el.clientWidth) || scrawl.d[this.type].width; 
+							}
+						}
+					break;
+				case 'height' : 
+					if(scrawl.xt(this.height)){
+						return this.height;
+						}
+					else{
+						switch(this.type){
+							case 'Pad' : 
+								return parseFloat(el.height) || scrawl.d[this.type].height; 
+								break;
+							default: 
+								return parseFloat(el.style.height) || parseFloat(el.clientHeight) || scrawl.d[this.type].height; 
+							}
+						}
+					break;
+				}
+			}
+		else if(item === 'position'){
+			return el.style.position;
+			}
+		else if(item === 'overflow'){
+			return el.style.overflow;
+			}
+		else if(item === 'backfaceVisibility'){
+			return el.style.backfaceVisibility;
+			}
+		else{
+			return Scrawl.prototype.get.call(this, item);
+			}
+		};
+
+/**
+Overrides Scrawl.set(), to allow users to set the start, delta and handle attributes using startX, startY, deltaX, deltaY, handleX, handleY
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Scrawl3d.prototype.set = function(items){
+		items = (scrawl.xt(items)) ? items : {};
+		var el = this.getElement(),
+			temp;
 		Scrawl.prototype.set.call(this, items);
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xt(items.title)){this.setTitle(items.title);}
-		if(scrawl.xt(items.comment)){this.setComment(items.comment);}
-		if(scrawl.xt(items.overflow)){this.setOverflow(items.overflow);}
-		if(scrawl.xto([items.order,items.zIndex])){this.setZIndex(items.order || items.zIndex || 0);}
-		if(scrawl.xt(items.width)){this.setWidth(items.width);}
-		if(scrawl.xt(items.height)){this.setHeight(items.height);}
-		if(scrawl.xt(items.position)){this.setPosition(items.position);}
-		if(scrawl.xto([items.startX,items.left])){this.setLeft(items.startX || items.left || 0);}
-		if(scrawl.xto([items.startY,items.top])){this.setTop(items.startY || items.top || 0);}
-		if(scrawl.xt(items.perspective)){this.setPerspective(items.perspective);}
-		if(scrawl.xto([items.perspectiveOriginX,items.perspectiveOriginY])){
-			this.setPerspectiveOrigin({perspectiveOriginX: (items.perspectiveOriginX || this.perspectiveOriginX), perspectiveOriginY: (items.perspectiveOriginY || this.perspectiveOriginY)});
+		if(!this.start.type || this.start.type !== 'Vector'){
+			this.start = new Vector(items.start || this.start);
 			}
-		else if(scrawl.xt(items.perspectiveOrigin)){
-			this.setPerspectiveOrigin(items.perspectiveOrigin);
+		if(scrawl.xto([items.startX, items.startY])){
+			this.start.x = (scrawl.xt(items.startX)) ? items.startX : this.start.x;
+			this.start.y = (scrawl.xt(items.startY)) ? items.startY : this.start.y;
 			}
-		if(scrawl.xto([items.transformOriginX,items.transformOriginY])){
-			this.setTransformOrigin({transformOriginX: (items.transformOriginX || this.transformOriginX), transformOriginY: (items.transformOriginY || this.transformOriginY)});
+		if(!this.delta.type || this.delta.type !== 'Vector'){
+			this.delta = new Vector(items.delta || this.delta);
 			}
-		else if(scrawl.xt(items.transformOrigin)){
-			this.setTransformOrigin(items.transformOrigin);
+		if(scrawl.xto([items.deltaX, items.deltaY])){
+			this.delta.x = (scrawl.xt(items.deltaX)) ? items.deltaX : this.delta.x;
+			this.delta.y = (scrawl.xt(items.deltaY)) ? items.deltaY : this.delta.y;
 			}
-		if(scrawl.xt(items.transformStyle)){this.setTransformStyle(items.transformStyle);}
-		if(scrawl.xt(items.backfaceVisibility)){this.setBackfaceVisibility(items.backfaceVisibility);}
-		if(scrawl.xto([items.rotateX,items.pitch])){this.setPitch(items.rotateX || items.pitch || 0);}
-		if(scrawl.xto([items.rotateY,items.yaw])){this.setYaw(items.rotateY || items.yaw || 0);}
-		if(scrawl.xto([items.rotateZ,items.rotate,items.roll])){this.setRoll(items.rotateZ || items.rotate || items.roll || 0);}
-		if(scrawl.xt(items.translateX)){this.setTranslateX(items.translateX);}
-		if(scrawl.xt(items.translateY)){this.setTranslateY(items.translateY);}
-		if(scrawl.xt(items.translateZ)){this.setTranslateZ(items.translateZ);}
-		if(scrawl.xto([items.rotateX,items.pitch,items.rotateY,items.yaw,items.rotateZ,items.rotate,items.roll,items.translateX,items.translateY,items.translateZ])){
-			this.setTransform();
+		if(!this.translate.type || this.translate.type !== 'Vector'){
+			this.translate = new Vector(items.translate || this.translate);
 			}
-		if(scrawl.xto([items.startX,items.left,items.startY,items.top])){
+		if(scrawl.xto([items.translateX, items.translateY, items.translateZ])){
+			this.translate.x = (scrawl.xt(items.translateX)) ? items.translateX : this.translate.x;
+			this.translate.y = (scrawl.xt(items.translateY)) ? items.translateY : this.translate.y;
+			this.translate.z = (scrawl.xt(items.translateZ)) ? items.translateZ : this.translate.z;
+			}
+		if(!this.handle.type || this.handle.type !== 'Vector'){
+			this.handle = new Vector(items.handle || this.handle);
+			}
+		if(scrawl.xto([items.handleX, items.handleY])){
+			this.handle.x = (scrawl.xt(items.handleX)) ? items.handleX : this.handle.x;
+			this.handle.y = (scrawl.xt(items.handleY)) ? items.handleY : this.handle.y;
+			}
+		if(scrawl.xto([items.pitch, items.yaw, items.roll])){
+			this.rotation = Quaternion.prototype.makeQuaternion({
+				pitch: items.pitch || 0,
+				yaw: items.yaw || 0,
+				roll: items.roll || 0,
+				});
+			}
+		if(scrawl.xto([items.deltaPitch, items.deltaYaw, items.deltaRoll])){
+			this.deltaRotation = Quaternion.prototype.makeQuaternion({
+				pitch: items.deltaPitch || 0,
+				yaw: items.deltaYaw || 0,
+				roll: items.deltaRoll || 0,
+				});
+			}
+		if(scrawl.xto([items.width, items.height, items.scale])){
+			this.setDimensions();
+			}
+		if(scrawl.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale])){
+			delete this.offset;
+			}
+		if(scrawl.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start])){
 			this.setDisplayOffsets();
 			}
+		if(scrawl.xto([items.handleX, items.handleY, items.handle])){
+			this.setTransformOrigin();
+			}
+		if(scrawl.xto([items.title, items.comment])){
+			this.setAccessibility(items);
+			}
+		this.setStyles(items);
 		return this;
 		};
-	Scrawl3d.prototype.setDelta = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xt(items.width)){this.setWidth(this.width+items.width);}
-		if(scrawl.xt(items.height)){this.setHeight(this.height+items.height);}
-		if(scrawl.xto([items.startX,items.left])){this.setLeft(this.startX+items.startX || this.startX+items.left || this.startX);}
-		if(scrawl.xto([items.startY,items.top])){this.setTop(this.startY+items.startY || this.startY+items.top || this.startY);}
-		if(scrawl.xto([items.rotateX,items.pitch])){this.setPitch(this.pitch+items.rotateX || this.pitch+items.pitch || this.pitch);}
-		if(scrawl.xto([items.rotateY,items.yaw])){this.setYaw(this.yaw+items.rotateY || this.yaw+items.yaw || this.yaw);}
-		if(scrawl.xto([items.rotateZ,items.rotate,items.roll])){this.setRoll(this.roll+items.rotateZ || this.roll+items.rotate || this.roll+items.roll || this.roll);}
-		if(scrawl.xt(items.translateX)){this.setTranslateX(this.translateX+items.translateX);}
-		if(scrawl.xt(items.translateY)){this.setTranslateY(this.translateY+items.translateY);}
-		if(scrawl.xt(items.translateZ)){this.setTranslateZ(this.translateZ+items.translateZ);}
-		if(scrawl.xto([items.rotateX,items.pitch,items.rotateY,items.yaw,items.rotateZ,items.rotate,items.roll,items.translateX,items.translateY,items.translateZ])){
-			this.setTransform();
+
+/**
+Handles the setting of element title and data-comment attributes
+@method setAccessibility
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.setAccessibility = function(items){
+		items = (scrawl.xt(items)) ? items : {};
+		var el = this.getElement();
+		if(scrawl.xt(items.title)){
+			this.title = items.title;
+			el.title = this.title;
 			}
-		if(scrawl.xto([items.startX,items.left,items.startY,items.top])){
-			this.setDisplayOffsets();
-			}
-		return this;
-		};
-	Scrawl3d.prototype.setDisplayOffsets = function(){
-		this.displayOffsetX = 0;
-		this.displayOffsetY = 0;
-		var myDisplay = this.getElement();
-		if(myDisplay.offsetParent){
-			do{
-				this.displayOffsetX += myDisplay.offsetLeft;
-				this.displayOffsetY += myDisplay.offsetTop;
-				} while (myDisplay = myDisplay.offsetParent);
+		if(scrawl.xt(items.comment)){
+			this.comment = items.comment;
+			el.setAttribute('data-comment', this.comment);
 			}
 		return this;
 		};
-	Scrawl3d.prototype.getPosition = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.style.position || false;
-		};
-	Scrawl3d.prototype.setPosition = function(item){
-		this.position = (scrawl.xt(item)) ? item : this.position;
-		var myDisplay = this.getElement();
-		myDisplay.style.position = this.position;
-		return this;
-		};
-	Scrawl3d.prototype.getTitle = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.title || false;
-		};
-	Scrawl3d.prototype.setTitle = function(item){
-		this.title = (scrawl.xt(item)) ? item : this.title;
-		var myDisplay = this.getElement();
-		myDisplay.title = this.title;
-		return this;
-		};
-	Scrawl3d.prototype.getComment = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.getAttribute('data-comment') || false;
-		};
-	Scrawl3d.prototype.setComment = function(item){
-		this.comment = (scrawl.xt(item)) ? item : this.comment;
-		var myDisplay = this.getElement();
-		myDisplay.setAttribute('data-comment',this.comment);
-		return this;
-		};
-	Scrawl3d.prototype.getOverflow = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.style.overflow || false;
-		};
-	Scrawl3d.prototype.setOverflow = function(item){
-		this.overflow = (scrawl.xt(item)) ? item : this.overflow;
-		var myDisplay = this.getElement();
-		myDisplay.style.overflow = this.overflow;
-		return this;
-		};
-	Scrawl3d.prototype.getZIndex = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.style.zIndex || false;
-		};
-	Scrawl3d.prototype.setZIndex = function(item){
-		this.zIndex = item || this.zIndex || 0;
-		var myDisplay = this.getElement();
-		myDisplay.style.zIndex = this.zIndex;
-		return this;
-		};
-	Scrawl3d.prototype.getWidth = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.width || myDisplay.clientWidth || parseFloat(myDisplay.style.width) || false;
-		};
-	Scrawl3d.prototype.setWidth = function(item){
-		this.width = (scrawl.xt(item)) ? item : this.width;
-		var myDisplay = this.getElement();
-		if(this.type === 'Pad'){
-			myDisplay.width = (this.width*this.scale);
+
+/**
+Handles the setting of position, transformOrigin, backfaceVisibility, margin, border, padding
+@method setStyles
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.setStyles = function(items){
+		items = (scrawl.xt(items)) ? items : {};
+		var el = this.getElement();
+		if(scrawl.xt(items.position)){
+			el.style.position = items.position;
 			}
-		else{
-			myDisplay.style.width = (this.width*this.scale)+'px';
+		if(scrawl.xt(items.overflow)){
+			el.style.overflow = items.overflow;
 			}
-		return this;
-		};
-	Scrawl3d.prototype.getHeight = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.height || myDisplay.clientHeight || parseFloat(myDisplay.style.height) || false;
-		};
-	Scrawl3d.prototype.setHeight = function(item){
-		this.height = (scrawl.xt(item)) ? item : this.height;
-		var myDisplay = this.getElement();
-		if(this.type === 'Pad'){
-			myDisplay.height = (this.height*this.scale);
+		if(scrawl.xt(items.backfaceVisibility)){
+			el.style.WebkitBackfaceVisibility = items.backfaceVisibility;
+			el.style.mozBackfaceVisibility = items.backfaceVisibility;
+			el.style.backfaceVisibility = items.backfaceVisibility;
 			}
-		else{
-			myDisplay.style.height = (this.height*this.scale)+'px';
+		if(scrawl.xt(items.margin)){
+			el.style.margin = items.margin;
 			}
-		return this;
-		};
-	Scrawl3d.prototype.getStartX = function(){
-		return this.getLeft();
-		};
-	Scrawl3d.prototype.setStartX = function(item, reset){
-		return this.setLeft(item, reset);
-		};
-	Scrawl3d.prototype.getLeft = function(){
-		var myDisplay = this.getElement();
-		return parseFloat(myDisplay.style.left) || false;
-		};
-	Scrawl3d.prototype.setLeft = function(item, reset){
-		this.startX = (scrawl.xt(item)) ? item : this.startX;
-		var myDisplay = this.getElement();
-		myDisplay.style.left = (this.startX*this.scale)+'px';
-		if(scrawl.xt(reset) && reset){
-			this.setDisplayOffsets();
+		if(scrawl.xt(items.border)){
+			el.style.border = items.border;
 			}
-		return this;
-		};
-	Scrawl3d.prototype.getStartY = function(){
-		return this.getTop();
-		};
-	Scrawl3d.prototype.setStartY = function(item, reset){
-		return this.setTop(item, reset);
-		};
-	Scrawl3d.prototype.getTop = function(){
-		var myDisplay = this.getElement();
-		return parseFloat(myDisplay.style.top) || false;
-		};
-	Scrawl3d.prototype.setTop = function(item, reset){
-		this.startY = (scrawl.xt(item)) ? item : this.startY;
-		var myDisplay = this.getElement();
-		myDisplay.style.top = (this.startY*this.scale)+'px';
-		if(scrawl.xt(reset) && reset){
-			this.setDisplayOffsets();
+		if(scrawl.xt(items.padding)){
+			el.style.padding = items.padding;
 			}
-		return this;
-		};
-	Scrawl3d.prototype.getPerspective = function(){
-		var myDisplay = this.getElement();
-		return parseFloat(myDisplay.style.webkitPerspective) || parseFloat(myDisplay.style.MozPerspective) || parseFloat(myDisplay.style.perspective) || false;
-		};
-	Scrawl3d.prototype.setPerspective = function(item){
-		if(this.isIE && this.type === 'Stack'){
-			for(var i=0, z=scrawl.stacknames.length; i<z; i++){
-				if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
-					scrawl.stack[scrawl.stacknames[i]].setPerspective(item);
-					}
-				}
-			}
-		this.perspective = (scrawl.xt(item)) ? item : this.perspective;
-		var myDisplay = this.getElement();
-		if(scrawl.xt(myDisplay.style.webkitPerspective)){
-			myDisplay.style.webkitPerspective = (this.perspective*this.scale)+'px';
-			}
-		else if(scrawl.xt(myDisplay.style.MozPerspective)){
-			myDisplay.style.MozPerspective = (this.perspective*this.scale)+'px';
-			}
-		else{
-			myDisplay.style.perspective = (this.perspective*this.scale)+'px';
-			}
-		return this;
-		};
-	Scrawl3d.prototype.getPerspectiveOrigin = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.style.webkitPerspectiveOrigin || myDisplay.style.MozPerspectiveOrigin || myDisplay.style.perspectiveOrigin || false;
-		};
-	Scrawl3d.prototype.setPerspectiveOrigin = function(items){
-		if(this.isIE && this.type === 'Stack'){
-			for(var i=0, z=scrawl.stacknames.length; i<z; i++){
-				if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
-					scrawl.stack[scrawl.stacknames[i]].setPerspectiveOrigin(items);
-					}
-				}
-			}
-		if(scrawl.isa(items,'str')){
-			var a = items.split(' ');
-			this.perspectiveOriginX = a[0] || '50%';
-			this.perspectiveOriginY = a[1] || '50%';
-			}
-		else{
-			items = (scrawl.isa(items,'obj')) ? items : {};
-			this.perspectiveOriginX = items.perspectiveOriginX || this.perspectiveOriginX || '50%';
-			this.perspectiveOriginY = items.perspectiveOriginY || this.perspectiveOriginY || '50%';
-			}
-		var myDisplay = this.getElement();
-		if(scrawl.xt(myDisplay.style.webkitPerspectiveOrigin)){
-			myDisplay.style.webkitPerspectiveOrigin = this.perspectiveOriginX+' '+this.perspectiveOriginY;
-			}
-		else if(scrawl.xt(myDisplay.style.MozPerspectiveOrigin)){
-			myDisplay.style.MozPerspectiveOrigin = this.perspectiveOriginX+' '+this.perspectiveOriginY;
-			}
-		else{
-			myDisplay.style.perspectiveOrigin = this.perspectiveOriginX+' '+this.perspectiveOriginY;
-			}
-		return this;
-		};
-	Scrawl3d.prototype.getTransformOrigin = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.style.webkitTransformOrigin || myDisplay.style.MozTransformOrigin || myDisplay.style.transformOrigin || false;
-		};
-	Scrawl3d.prototype.setTransformOrigin = function(items){
-		if(scrawl.isa(items,'str')){
-			var a = items.split(' ');
-			this.transformOriginX = a[0] || '50%';
-			this.transformOriginY = a[1] || '50%';
-			}
-		else{
-			items = (scrawl.isa(items,'obj')) ? items : {};
-			this.transformOriginX = items.transformOriginX || this.transformOriginX || '50%';
-			this.transformOriginY = items.transformOriginY || this.transformOriginY || '50%';
-			}
-		var myDisplay = this.getElement();
-		if(scrawl.xt(myDisplay.style.webkitTransformOrigin)){
-			myDisplay.style.webkitTransformOrigin = this.transformOriginX+' '+this.transformOriginY;
-			}
-		else if(scrawl.xt(myDisplay.style.MozTransformOrigin)){
-			myDisplay.style.MozTransformOrigin = this.transformOriginX+' '+this.transformOriginY;
-			}
-		else{
-			myDisplay.style.transformOrigin = this.transformOriginX+' '+this.transformOriginY;
-			}
-		return this;
-		};
-	Scrawl3d.prototype.getTransformStyle = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.style.WebkitTransformStyle || myDisplay.style.MozTransformStyle || myDisplay.style.transformStyle || false;
-		};
-	Scrawl3d.prototype.setTransformStyle = function(item){
-		this.transformStyle = (scrawl.xt(item)) ? item : this.transformStyle;
-		var myDisplay = this.getElement();
-		if(scrawl.xt(myDisplay.style.WebkitTransformStyle)){
-			myDisplay.style.WebkitTransformStyle = this.transformStyle;
-			}
-		else if(scrawl.xt(myDisplay.style.MozTransformStyle)){
-			myDisplay.style.MozTransformStyle = this.transformStyle;
-			}
-		else{
-			myDisplay.style.transformStyle = this.transformStyle;
-			}
-		return this;
-		};
-	Scrawl3d.prototype.getRotateX = function(){return this.getPitch();};
-	Scrawl3d.prototype.getPitch = function(){
-		return this.pitch || false;
-		};
-	Scrawl3d.prototype.getRotateY = function(){return this.getYaw();};
-	Scrawl3d.prototype.getYaw = function(){
-		return this.yaw || false;
-		};
-	Scrawl3d.prototype.getRotateZ = function(){return this.getRoll();};
-	Scrawl3d.prototype.getRotate = function(){return this.getRoll();};
-	Scrawl3d.prototype.getRoll = function(){
-		return this.roll || false;
-		};
-	Scrawl3d.prototype.setRotateX = function(item){return this.setPitch(item);};
-	Scrawl3d.prototype.setPitch = function(item){
-		this.pitch = item || this.pitch || 0;
-		return this;
-		};
-	Scrawl3d.prototype.setRotateY = function(item){return this.setYaw(item);};
-	Scrawl3d.prototype.setYaw = function(item){
-		this.yaw = item || this.yaw || 0;
-		return this;
-		};
-	Scrawl3d.prototype.setRotateZ = function(item){return this.setRoll(item);};
-	Scrawl3d.prototype.setRotate = function(item){return this.setRoll(item);};
-	Scrawl3d.prototype.setRoll = function(item){
-		this.roll = item || this.roll || 0;
-		return this;
-		};
-	Scrawl3d.prototype.getTranslateX = function(){
-		return this.translateX || false;
-		};
-	Scrawl3d.prototype.setTranslateX = function(item){
-		this.translateX = item || this.translateX || 0;
-		return this;
-		};
-	Scrawl3d.prototype.getTranslateY = function(){
-		return this.translateY || false;
-		};
-	Scrawl3d.prototype.setTranslateY = function(item){
-		this.translateY = item || this.translateY || 0;
-		return this;
-		};
-	Scrawl3d.prototype.getTranslateZ = function(){
-		return this.translateZ || false;
-		};
-	Scrawl3d.prototype.setTranslateZ = function(item){
-		this.translateZ = item || this.translateZ || 0;
-		return this;
-		};
-	Scrawl3d.prototype.setRotateFirst = function(item){
-		this.rotateFirst = (scrawl.isa(item,'bool')) ? item : false;
-		return this;
-		};
-	Scrawl3d.prototype.getTransform = function(){
-		if(this.rotateFirst){
-			return 'rotateX('+this.pitch+'deg) rotateY('+this.yaw+'deg) rotateZ('+this.roll+'deg) translateX('+(this.translateX*this.scale)+'px) translateY('+(this.translateY*this.scale)+'px) translateZ('+(this.translateZ*this.scale)+'px)';
-			}
-		else{
-			return 'translateX('+(this.translateX*this.scale)+'px) translateY('+(this.translateY*this.scale)+'px) translateZ('+(this.translateZ*this.scale)+'px) rotateX('+this.pitch+'deg) rotateY('+this.yaw+'deg) rotateZ('+this.roll+'deg)';
-			}
-		};
-	Scrawl3d.prototype.setTransform = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.setPitch(items.pitch || items.rotateX || false);
-		this.setYaw(items.yaw || items.rotateY || false);
-		this.setRoll(items.roll || items.rotateZ || items.rotate || false);
-		this.setTranslateX(items.translateX || false);
-		this.setTranslateY(items.translateY || false);
-		this.setTranslateZ(items.translateZ || false);
-		var myDisplay = this.getElement();
-		if(scrawl.xt(myDisplay.style.webkitTransform)){
-			myDisplay.style.webkitTransform = this.getTransform();
-			}
-		else if(scrawl.xt(myDisplay.style.MozTransform)){
-			myDisplay.style.MozTransform = this.getTransform();
-			}
-		else{
-			if(this.isIE && this.type === 'Stack'){
-				myDisplay.style.transform = this.getTransform();
-				for(var i=0, z=scrawl.stacknames.length; i<z; i++){
-					if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
-						scrawl.stack[scrawl.stacknames[i]].setTransform();
-						}
-					}
-				for(var i=0, z=scrawl.elementnames.length; i<z; i++){
-					if(scrawl.element[scrawl.elementnames[i]].stack === this.name){
-						scrawl.element[scrawl.elementnames[i]].setTransform();
-						}
-					}
-				for(var i=0, z=scrawl.padnames.length; i<z; i++){
-					if(scrawl.pad[scrawl.padnames[i]].stack === this.name){
-						scrawl.pad[scrawl.padnames[i]].setTransform();
-						}
-					}
+		if(scrawl.xt(items.visibility)){
+			if(scrawl.isa(items.visibility, 'str')){
+				this.visibility = (!scrawl.contains(['hidden', 'none'], items.visibility)) ? true : false;
 				}
 			else{
-				myDisplay.style.transform = this.getTransform();
+				this.visibility = (items.visibility) ? true : false;
+				}
+			if(this.stack){
+				el.style.opacity = (this.visibility) ? 1 : 0;
+				}
+			else{
+				el.style.display = (this.visibility) ? 'block' : 'none';
 				}
 			}
 		return this;
 		};
-	Scrawl3d.prototype.getBackfaceVisibility = function(){
-		var myDisplay = this.getElement();
-		return myDisplay.style.webkitBackfaceVisibility || myDisplay.style.MozBackfaceVisibility || myDisplay.style.backfaceVisibility || false;
-		};
-	Scrawl3d.prototype.setBackfaceVisibility = function(item){
-		this.backfaceVisibility = (scrawl.xt(item)) ? item : this.backfaceVisibility;
-		var myDisplay = this.getElement();
-		if(scrawl.xt(myDisplay.style.webkitBackfaceVisibility)){
-			myDisplay.style.webkitBackfaceVisibility = this.backfaceVisibility;
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.setDelta = function(items){
+		var temp;
+		if(scrawl.xto([items.start, items.startX, items.startY])){
+			temp = (scrawl.isa(items.start,'obj')) ? items.start : {};
+			this.start.x += (scrawl.xt(items.startX)) ? items.startX : ((scrawl.xt(temp.x)) ? temp.x : 0);
+			this.start.y += (scrawl.xt(items.startY)) ? items.startY : ((scrawl.xt(temp.y)) ? temp.y : 0);
 			}
-		else if(scrawl.xt(myDisplay.style.MozBackfaceVisibility)){
-			myDisplay.style.MozBackfaceVisibility = this.backfaceVisibility;
+		if(scrawl.xto([items.delta, items.deltaX, items.deltaY])){
+			temp = (scrawl.isa(items.delta,'obj')) ? items.delta : {};
+			this.delta.x += (scrawl.xt(items.deltaX)) ? items.deltaX : ((scrawl.xt(temp.x)) ? temp.x : 0);
+			this.delta.y += (scrawl.xt(items.deltaY)) ? items.deltaY : ((scrawl.xt(temp.y)) ? temp.y : 0);
+			}
+		if(scrawl.xto([items.translate, items.translateX, items.translateY])){
+			temp = (scrawl.isa(items.translate,'obj')) ? items.translate : {};
+			this.translate.x += (scrawl.xt(items.translateX)) ? items.translateX : ((scrawl.xt(temp.x)) ? temp.x : 0);
+			this.translate.y += (scrawl.xt(items.translateY)) ? items.translateY : ((scrawl.xt(temp.y)) ? temp.y : 0);
+			this.translate.z += (scrawl.xt(items.translateZ)) ? items.translateZ : ((scrawl.xt(temp.z)) ? temp.z : 0);
+			}
+		if(scrawl.xto([items.handle, items.handleX, items.handleY]) && scrawl.isa(this.handle.x,'num') && scrawl.isa(this.handle.y,'num')){
+			temp = (scrawl.isa(items.handle,'obj')) ? items.handle : {};
+			this.handle.x += (scrawl.xt(items.handleX)) ? items.handleX : ((scrawl.xt(temp.x)) ? temp.x : 0);
+			this.handle.y += (scrawl.xt(items.handleY)) ? items.handleY : ((scrawl.xt(temp.y)) ? temp.y : 0);
+			}
+		if(items.pathPlace){
+			this.pathPlace += items.pathPlace;
+			}
+		if(items.deltaPathPlace){
+			this.deltaPathPlace += items.deltaPathPlace;
+			}
+		if(items.scale){
+			this.scale += items.scale;
+			}
+		if(scrawl.xto([items.pitch, items.yaw, items.roll])){
+			temp = Quaternion.prototype.makeQuaternion({
+				pitch: items.pitch || 0,
+				yaw: items.yaw || 0,
+				roll: items.roll || 0,
+				});
+			this.rotation.quaternionMultiply(temp);
+			}
+		if(scrawl.xto([items.deltaPitch, items.deltaYaw, items.deltaRoll])){
+			temp = Quaternion.prototype.makeQuaternion({
+				pitch: items.deltaPitch || 0,
+				yaw: items.deltaYaw || 0,
+				roll: items.deltaRoll || 0,
+				});
+			this.deltaRotation.quaternionMultiply(temp);
+			}
+		if(scrawl.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale])){
+			delete this.offset;
+			}
+		if(scrawl.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start])){
+			this.setDisplayOffsets();
+			}
+		if(scrawl.xto([items.handleX, items.handleY, items.handle])){
+			this.setTransformOrigin();
+			}
+		if(scrawl.xto([items.width, items.height, items.scale])){
+			this.setDimensions();
+			}
+		return this;
+		};
+
+/**
+Adds delta values to the start vector; adds deltaPathPlace to pathPlace
+
+Permitted argument values include 
+* 'x' - delta.x added to start.x
+* 'y' - delta.y added to start.y
+* 'path' - deltaPathPlace added to pathPlace 
+* undefined: all values are amended
+@method updateStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.updateStart = function(item){
+		switch(item){
+			case 'x' :
+				if(scrawl.isa(this.start.x,'num')){this.start.x += this.delta.x || 0};
+				break;
+			case 'y' :
+				if(scrawl.isa(this.start.y,'num')){this.start.y += this.delta.y || 0;}
+				break;
+			case 'path' :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				break;
+			case 'rotation' :
+				this.rotation = this.deltaRotation.getQuaternionMultiply(this.rotation);
+			default :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				this.rotation = this.deltaRotation.getQuaternionMultiply(this.rotation);
+				if(scrawl.isa(this.start.x,'num') && scrawl.isa(this.start.y,'num')){this.start.vectorAdd(this.delta);}
+			}
+		this.setDisplayOffsets();
+		return this;
+		};
+
+/**
+Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
+
+Permitted argument values include 
+* 'x' - delta.x subtracted from start.x
+* 'y' - delta.y subtracted from start.y
+* 'path' - deltaPathPlace subtracted from pathPlace 
+* undefined: all values are amended
+@method revertStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.revertStart = function(item){
+		switch(item){
+			case 'x' :
+				this.start.x -= this.delta.x || 0;
+				break;
+			case 'y' :
+				this.start.y -= this.delta.y || 0;
+				break;
+			case 'rotation' :
+				this.rotation = this.deltaRotation.getConjugate().quaternionMultiply(this.rotation);
+			case 'path' :
+				this.pathPlace -= this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				break;
+			default :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				this.rotation = this.deltaRotation.getConjugate().quaternionMultiply(this.rotation);
+				this.start.vectorSubtract(this.delta);
+			}
+		this.setDisplayOffsets();
+		return this;
+		};
+
+/**
+Changes the sign (+/-) of specified attribute values
+@method reverse
+@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.reverse = function(item){
+		switch(item){
+			case 'deltaX' : 
+				this.delta.x = -this.delta.x; break;
+			case 'deltaY' : 
+				this.delta.y = -this.delta.y; break;
+			case 'delta' : 
+				this.delta.reverse(); break;
+			case 'deltaPathPlace' : 
+				this.deltaPathPlace = -this.deltaPathPlace; break;
+			default : 
+				this.deltaPathPlace = -this.deltaPathPlace;
+				this.delta.reverse();
+			}
+		return this;
+		};
+
+/**
+Calculates the pixels value of the object's handle attribute
+
+* doesn't take into account the object's scaling or orientation
+* (badly named function - getPivotOffsetVector has nothing to do with pivots)
+
+@method getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where sprite drawing should start
+@private
+**/
+	Scrawl3d.prototype.getPivotOffsetVector = function(){
+		//result defaults to numerical offsets
+		var result = this.handle.getVector(),
+			height = this.height || this.get('height'),
+			width = this.width || this.get('width');
+		//calculate percentage offsets
+		if((scrawl.isa(result.x,'str')) && !scrawl.contains(['left','center','right','top','bottom'], result.x)){
+			result.x = (parseFloat(result.x)/100) * width;
 			}
 		else{
-			myDisplay.style.backfaceVisibility = this.backfaceVisibility;
-			}
-		return this;
-		};
-	Scrawl3d.prototype.shiftPosition = function(){
-		this.shiftLeft();
-		this.shiftTop();
-		this.setDisplayOffsets();
-		return this;
-		};
-	Scrawl3d.prototype.shiftLeft = function(reset){
-		this.moveStart('x');
-		this.setLeft();
-		if(scrawl.xt(reset) && reset){
-			this.setDisplayOffsets();
-			}
-		return this;
-		};
-	Scrawl3d.prototype.shiftTop = function(item, reset){
-		this.moveStart('y');
-		this.setTop();
-		if(scrawl.xt(reset) && reset){
-			this.setDisplayOffsets();
-			}
-		return this;
-		};
-	Scrawl3d.prototype.scaleStack = function(item){
-		if(this.type === 'Stack'){
-			for(var i=0, z=scrawl.stacknames.length; i<z; i++){
-				if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
-					scrawl.stack[scrawl.stacknames[i]].scaleStack(item);
-					}
+			switch (result.x){
+				//calculate string offsets
+				case 'left' : result.x = 0; break;
+				case 'center' : result.x = width/2; break;
+				case 'right' : result.x = width; break;
 				}
-			for(var i=0, z=scrawl.elementnames.length; i<z; i++){
-				if(scrawl.element[scrawl.elementnames[i]].stack === this.name){
-					scrawl.element[scrawl.elementnames[i]].scaleDimensions(item);
-					}
-				}
-			for(var i=0, z=scrawl.padnames.length; i<z; i++){
-				if(scrawl.pad[scrawl.padnames[i]].stack === this.name){
-					scrawl.pad[scrawl.padnames[i]].scaleDimensions(item);
-					}
-				}
-			this.scaleDimensions(item);
 			}
-		return this;
-		};
-	Scrawl3d.prototype.scaleDimensions = function(item){
-		this.scale = item || this.scale;
-		this.setWidth();
-		this.setHeight();
-		this.setTop();
-		this.setLeft();
-		this.setPerspectiveOrigin();
-		this.setPerspective();
-		this.setTransformOrigin();
-		this.setTransform();
-		this.setDisplayOffsets();
-		if(this.type === 'Pad'){
-			scrawl.cell[this.display].scale = this.scale;
+		if((scrawl.isa(result.y,'str')) && !scrawl.contains(['left','center','right','top','bottom'], result.y)){
+			result.y = (parseFloat(result.y)/100) * height;
 			}
-		return this;
+		else{
+			switch (result.y){
+				//calculate string offsets
+				case 'top' : result.y = 0; break;
+				case 'center' : result.y = height/2; break;
+				case 'bottom' : result.y = height; break;
+				}
+			}
+		return result;
 		};
+
+/**
+Calculates the pixels value of the object's start attribute
+
+* doesn't take into account the object's scaling or orientation
+
+@method getStartValues
+@return A Vector of calculated values to help determine where sprite drawing should start
+@private
+**/
+	Scrawl3d.prototype.getStartValues = function(){
+		//result defaults to numerical offsets
+		var result = this.start.getVector(),
+			height = (this.stack) ? scrawl.stack[this.stack].get('height') : this.height || this.get('height'),
+			width = (this.stack) ? scrawl.stack[this.stack].get('width') : this.width || this.get('width');
+		//calculate percentage offsets
+		if((scrawl.isa(result.x,'str')) && !scrawl.contains(['left','center','right','top','bottom'], result.x)){
+			result.x = (parseFloat(result.x)/100) * width;
+			}
+		else{
+			switch (this.start.x){
+				//calculate string offsets
+				case 'left' : result.x = 0; break;
+				case 'center' : result.x = width/2; break;
+				case 'right' : result.x = width; break;
+				}
+			}
+		if((scrawl.isa(result.y,'str')) && !scrawl.contains(['left','center','right','top','bottom'], result.y)){
+			result.y = (parseFloat(result.y)/100) * height;
+			}
+		else{
+			switch (this.start.y){
+				//calculate string offsets
+				case 'top' : result.y = 0; break;
+				case 'center' : result.y = height/2; break;
+				case 'bottom' : result.y = height; break;
+				}
+			}
+		return result;
+		};
+
+/**
+Calculates the pixels value of the object's handle attribute
+@method getOffsetStartVector
+@return Final offset values (as a Vector) to determine where sprite drawing should start
+**/
+	Scrawl3d.prototype.getOffsetStartVector = function(){
+		var sx = (scrawl.isa(this.handle.x,'str')) ? this.scale : 1,
+			sy = (scrawl.isa(this.handle.y,'str')) ? this.scale : 1,
+			myH = this.getPivotOffsetVector();
+		myH.x *= sx;
+		myH.y *= sy;
+		return myH.reverse();
+		};
+
+/**
+Reposition an element within its stack by changing 'left' and 'top' style attributes; rotate it using matrix3d transform
+@method renderElement
+@return This left
+@chainable
+**/
+	Scrawl3d.prototype.renderElement = function(){
+		var el = this.getElement(),
+			temp = '',
+			m = [];
+		if(!scrawl.xt(this.offset)){
+			this.offset = this.getOffsetStartVector();
+			}
+		if(this.path){
+			this.setStampUsingPath();
+			}
+		else if(this.pivot){
+			this.setStampUsingPivot();
+			}
+		this.updateStart();
 		
+		if(this.rotation.getMagnitude() !== 1){
+			this.rotation.normalize();
+			}
+		
+		m.push(Math.round(this.translate.x * this.scale));
+		m.push(Math.round(this.translate.y * this.scale));
+		m.push(Math.round(this.translate.z * this.scale));
+		m.push(this.rotation.v.x);
+		m.push(this.rotation.v.y);
+		m.push(this.rotation.v.z);
+		m.push(this.rotation.getAngle(false));
+
+		for(var i = 0, z = m.length; i < z; i++){
+			if(scrawl.isBetween(m[i], 0.000000001,-0.000000001)){
+				m[i] = 0;
+				}
+			}
+		temp += 'translate3d('+m[0]+'px,'+m[1]+'px,'+m[2]+'px) rotate3d('+m[3]+','+m[4]+','+m[5]+','+m[6]+'rad)';
+			
+		el.style.mozTransform = temp;
+		el.style.webkitTransform = temp;
+		el.style.msTransform = temp;
+		el.style.oTransform = temp;
+		el.style.transform = temp;
+
+		temp = this.getStartValues(); 
+		
+		el.style.left = ((temp.x * this.scale) + this.offset.x)+'px';
+		el.style.top = ((temp.y * this.scale) + this.offset.y)+'px';
+		return this;
+		};
+
+/**
+Calculate start Vector in reference to a Shape sprite object's path
+@method setStampUsingPath
+@return This
+@chainable
+@private
+**/
+	Scrawl3d.prototype.setStampUsingPath = function(){
+		var here,
+			angles;
+		if(scrawl.contains(scrawl.spritenames, this.path) && scrawl.sprite[this.path].type === 'Shape'){
+			here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+			this.start.x = (!this.lockX) ? here.x : this.start.x;
+			this.start.y = (!this.lockY) ? here.y : this.start.y;
+			this.pathRoll = here.r || 0;
+			if(this.addPathRoll && this.pathRoll){
+				angles = this.rotation.getEulerAngles();
+				this.setDelta({
+					roll: this.pathRoll - angles.roll,
+					});
+				}
+			}
+		return this;
+		};
+
+/**
+Calculate start Vector in reference to a sprite or Point object's position
+@method setStampUsingPivot
+@return This
+@chainable
+@private
+**/
+	Scrawl3d.prototype.setStampUsingPivot = function(){
+		var	here,
+			myCell,
+			myP,
+			myPVector,
+			pSprite,
+			temp;
+		if(scrawl.contains(scrawl.pointnames, this.pivot)){
+			myP = scrawl.point[this.pivot];
+			pSprite = scrawl.sprite[myP.sprite];
+			myPVector = myP.getCurrentCoordinates().rotate(pSprite.roll).vectorAdd(pSprite.getStartValues());
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(scrawl.contains(scrawl.spritenames, this.pivot)){
+			myP = scrawl.sprite[this.pivot];
+			myPVector = (myP.type === 'Particle') ? myP.get('position') : myP.getStartValues();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(scrawl.contains(scrawl.padnames, this.pivot)){
+			myP = scrawl.pad[this.pivot];
+			myPVector = myP.getStartValues();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(scrawl.contains(scrawl.elementnames, this.pivot)){
+			myP = scrawl.element[this.pivot];
+			myPVector = myP.getStartValues();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(this.pivot === 'mouse'){
+			if(this.stack){
+				here = scrawl.stack[this.stack].getMouse();
+				temp = this.getStartValues(); 
+				if(!scrawl.xta([this.mouseX,this.mouseY])){
+					this.mouseX = temp.x;
+					this.mouseY = temp.y;
+					}
+				if(here.active){
+					this.start.x = (!this.lockX) ? temp.x + here.x - this.mouseX : this.start.x;
+					this.start.y = (!this.lockY) ? temp.y + here.y - this.mouseY : this.start.y;
+					this.mouseX = here.x;
+					this.mouseY = here.y;
+					}
+				}
+			}
+		return this;
+		};
+
+/**
+Set the transform origin style attribute
+@method setTransformOrigin
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.setTransformOrigin = function(){
+		var el = this.getElement(),
+			x = (scrawl.isa(this.handle.x,'str')) ? this.handle.x : (this.handle.x * this.scale)+'px',
+			y = (scrawl.isa(this.handle.y,'str')) ? this.handle.y : (this.handle.y * this.scale)+'px',
+			t = x+' '+y;
+		el.style.mozTransformOrigin = t;
+		el.style.webkitTransformOrigin = t;
+		el.style.msTransformOrigin = t;
+		el.style.oTransformOrigin = t;
+		el.style.transformOrigin = t;
+		return this;
+		};
+
+/**
+Calculate the element's display offset values
+@method setDisplayOffsets
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.setDisplayOffsets = function(){
+		var dox = 0,
+			doy = 0,
+			myDisplay = this.getElement();
+		if(myDisplay.offsetParent){
+			do{
+				dox += myDisplay.offsetLeft;
+				doy += myDisplay.offsetTop;
+				} while (myDisplay = myDisplay.offsetParent);
+			}
+		this.offset = this.getOffsetStartVector();
+		this.displayOffsetX = dox;
+		this.displayOffsetY = doy;
+		return this;
+		};
+
+/**
+Retrieve details of the Mouse cursor position in relation to the element's top left hand corner. Most useful for determining mouse cursor position over Stack and Pad (visible &lt;canvas&gt;) elements.
+
+_Note: if changes are made elsewhere to the web page (DOM) after the page loads, the function .getDisplayOffsets() will need to be called to recalculate the element's position within the page - failure to do so will lead to this function returning incorrect data. getDisplayOffsets() does not need to be called during/after page scrolling._
+
+The returned object is a Vector containing the mouse cursor's current x and y coordinates in relation to the element's top left corner _if_ the cursor is hovering over the stack, together with the following additional attributes:
+
+* __active__ - set to true if mouse is hovering over the element; false otherwise
+* __type__ - element's type ('stack', 'element', 'pad')
+* __source__ - element's name attribute
+@method getMouse
+@return Vector containing localized mouse coordinates and a Boolean 'active' attribute flag 
+**/
+	Scrawl3d.prototype.getMouse = function(){
+		var result = new Vector(),
+			maxX,
+			maxY,
+			mop = false;
+		if(!window.onmousemove){
+			window.onmousemove = scrawl.handleMouseMove;
+			}
+		maxX = this.displayOffsetX + (this.width * this.scale);
+		maxY = this.displayOffsetY + (this.height * this.scale);
+		if(scrawl.mouseX >= this.displayOffsetX && scrawl.mouseX <= maxX && scrawl.mouseY >= this.displayOffsetY && scrawl.mouseY <= maxY){
+			mop = true;
+			}
+		result.x = (mop) ? (scrawl.mouseX - this.displayOffsetX) * (1/this.scale) : 0;
+		result.y = (mop) ? (scrawl.mouseY - this.displayOffsetY) * (1/this.scale) : 0;
+		result.active = mop;
+		result.source = this.name;
+		result.type = this.type.toLowerCase();
+		return result;
+		};
+
+/**
+Scale element dimensions (width, height)
+@method scaleDimensions
+@param {Number} item Scale value
+@return This
+@chainable
+**/
+	Scrawl3d.prototype.scaleDimensions = function(item){
+		if(scrawl.isa(item,'num')){
+			this.scale = item,
+			this.setDimensions();
+			}
+		return this;
+		};
+
+/**
+Helper function - set element dimensions (width, height)
+@method setDimensions
+@return This
+@chainable
+@private
+**/
+	Scrawl3d.prototype.setDimensions = function(){
+		var el = this.getElement();
+		switch(this.type){
+			case 'Pad' : 
+				el.width = this.width * this.scale; 
+				el.height = this.height * this.scale; 
+				break;
+			default: 
+				el.style.width = (this.width * this.scale)+'px'; 
+				el.style.height = (this.height * this.scale)+'px'; 
+			}
+		return this;
+		};
+
+/**
+# Stack
+	
+## Instantiation
+
+* scrawl.addStackToPage()
+
+## Purpose
+
+* add/manipulate perspective data to a DOM element
+
+@class Stack
+@constructor
+@extends Scrawl3d
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Stack(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		Scrawl3d.call(this, items);
 		if(scrawl.xt(items.stackElement)){
-			var tempname = '';
+			var tempname = '',
+				temp;
 			if(scrawl.xto([items.stackElement.id,items.stackElement.name])){
 				tempname = items.stackElement.id || items.stackElement.name;
 				}
 			Scrawl3d.call(this, {name: tempname,});
 			scrawl.stack[this.name] = this;
 			scrawl.stk[this.name] = items.stackElement;
-			scrawl.stacknames.pushUnique(this.name);
-			scrawl.stk[this.name].style.position = 'relative';
+			scrawl.pushUnique(scrawl.stacknames, this.name);
 			scrawl.stk[this.name].id = this.name;
-			this.initialize2d(items);
-			this.initialize3d(items);
+			scrawl.stk[this.name].style.position = 'relative';
+			this.setDisplayOffsets();
+			temp = (scrawl.isa(items.perspective,'obj')) ? items.perspective : {};
+			this.perspective = new Vector({
+				x: (scrawl.xt(items.perspectiveX)) ? items.perspectiveX : ((scrawl.xt(temp.x)) ? temp.x : 'center'),
+				y: (scrawl.xt(items.perspectiveY)) ? items.perspectiveY : ((scrawl.xt(temp.y)) ? temp.y : 'center'),
+				z: (scrawl.xt(items.perspectiveZ)) ? items.perspectiveZ : ((scrawl.xt(temp.z)) ? temp.z : 0),
+				});
+			this.width = items.width || this.get('width');
+			this.height = items.height || this.get('height');
+			this.setDimensions()
+			this.setPerspective();
+			this.setStyles(items);
+			if(scrawl.xto([items.title, items.comment])){
+				this.setAccessibility(items);
+				}
 			return this;
 			}
 		console.log('Failed to generate a Stack wrapper - no DOM element supplied'); 
 		return false;
 		}
 	Stack.prototype = Object.create(Scrawl3d.prototype);
+/**
+@property type
+@type String
+@default 'Stack'
+@final
+**/
 	Stack.prototype.type = 'Stack';
 	Stack.prototype.classname = 'stacknames';
+	scrawl.d.Stack = {
+/**
+An Object (in fact, a Vector) containing perspective details for the stack element. 
+
+the Stack constructor, and set() function, supports the following 'virtual' attributes for this attribute:
+
+* __perspectiveX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'
+* __perspectiveY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'
+* __perspectiveZ__ - (Number) perspective depth, in pixels
+@property perspective
+@type Object
+**/		
+		perspective: {x:'center',y:'center',z:0},
+		};
+	scrawl.mergeInto(scrawl.d.Stack, scrawl.d.Scrawl3d);
+
+/**
+Return the DOM element wrapped by this object
+@method getElement
+@return Element
+**/
 	Stack.prototype.getElement = function(){
 		return scrawl.stk[this.name];
 		};
+
+/**
+Overrides Scrawl3d.set(), to allow users to set the start, delta and handle attributes using startX, startY, deltaX, deltaY, handleX, handleY
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Stack.prototype.set = function(items){
+		items = (scrawl.xt(items)) ? items : {};
+		Scrawl3d.prototype.set.call(this, items);
+		if(scrawl.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])){
+			if(!this.perspective.type || this.perspective.type !== 'Vector'){
+				this.perspective = new Vector(items.perspective || this.perspective);
+				}
+			this.perspective.x = (scrawl.xt(items.perspectiveX)) ? items.perspectiveX : this.perspective.x;
+			this.perspective.y = (scrawl.xt(items.perspectiveY)) ? items.perspectiveY : this.perspective.y;
+			this.perspective.z = (scrawl.xt(items.perspectiveZ)) ? items.perspectiveZ : this.perspective.z;
+			this.setPerspective();
+			}
+		return this;
+		};
+
+/**
+Import elements into the stack DOM object, and create element object wrappers for them
+@method addElementById
+@param {String} DOM element id String
+@return Element wrapper object on success; false otherwise
+**/
 	Stack.prototype.addElementById = function(item){
 		if(scrawl.isa(item,'str')){
 			var myElement = scrawl.newElement({
@@ -2218,11 +5584,17 @@ m: '',
 				});
 			scrawl.stk[this.name].appendChild(scrawl.elm[myElement.name]);
 			scrawl.elm[myElement.name] = document.getElementById(myElement.name);
-			scrawl.setDisplayOffsets('all');
 			return myElement;
 			}
 		return false;
 		};
+
+/**
+Import elements into the stack DOM object, and create element object wrappers for them
+@method addElementsByClassName
+@param {String} DOM element class String
+@return Array of element wrapper objects on success; false otherwise
+**/
 	Stack.prototype.addElementsByClassName = function(item){
 		if(scrawl.isa(item,'str')){
 			var myElements = [];
@@ -2242,14 +5614,151 @@ m: '',
 				scrawl.stk[this.name].appendChild(scrawl.elm[myElements[i].name]);
 				scrawl.elm[myElements[i].name] = document.getElementById(myElements[i].name);
 				}
-			scrawl.setDisplayOffsets('all');
+//			scrawl.setDisplayOffsets('all');
 			return myElements;
 			}
 		return false;
 		};
+
+/**
+Move DOM elements within a Stack
+@method renderElements
+@return Always true
+**/
+	Stack.prototype.renderElements = function(){
+		var temp;
+		for(var i=0, z=scrawl.stacknames.length; i<z; i++){
+			temp = scrawl.stack[scrawl.stacknames[i]];
+			if(temp.stack === this.name){
+				temp.renderElement();
+				}
+			}
+		for(var i=0, z=scrawl.padnames.length; i<z; i++){
+			temp = scrawl.pad[scrawl.padnames[i]];
+			if(temp.stack === this.name){
+				temp.renderElement();
+				}
+			}
+		for(var i=0, z=scrawl.elementnames.length; i<z; i++){
+			temp = scrawl.element[scrawl.elementnames[i]];
+			if(temp.stack === this.name){
+				temp.renderElement();
+				}
+			}
+		return true;
+		};
+
+/**
+Parse the perspective Vector attribute
+@method parsePerspective
+@return Object containing offset values (in pixels)
+@private
+**/
+	Stack.prototype.parsePerspective = function(){
+		//result defaults to numerical offsets
+		var result = this.perspective.getVector(),
+			height = this.height || this.get('height'),
+			width = this.width || this.get('width');
+		//calculate percentage offsets
+		if((scrawl.isa(this.perspective.x,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.perspective.x)){
+			result.x = (parseFloat(this.perspective.x)/100) * width;
+			}
+		else{
+			switch (this.perspective.x){
+				//calculate string offsets
+				case 'left' : result.x = 0; break;
+				case 'center' : result.x = width/2; break;
+				case 'right' : result.x = width; break;
+				}
+			}
+		if((scrawl.isa(this.perspective.y,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.perspective.y)){
+			result.y = (parseFloat(this.perspective.y)/100) * height;
+			}
+		else{
+			switch (this.perspective.y){
+				//calculate string offsets
+				case 'top' : result.y = 0; break;
+				case 'center' : result.y = height/2; break;
+				case 'bottom' : result.y = height; break;
+				}
+			}
+		return result;
+		};
+
+/**
+Calculates the pixels value of the object's perspective attribute
+@method setPerspective
+@return Set the Stack element's perspective point
+**/
+	Stack.prototype.setPerspective = function(){
+		var sx = (scrawl.isa(this.perspective.x,'str')) ? this.scale : 1,
+			sy = (scrawl.isa(this.perspective.y,'str')) ? this.scale : 1,
+			myH = this.parsePerspective(),
+			el = this.getElement();
+		myH.x *= sx;
+		myH.y *= sy;
+		myH.z *= sx;
+		el.style.mozPerspectiveOrigin = myH.x+'px '+myH.y+'px';
+		el.style.webkitPerspectiveOrigin = myH.x+'px '+myH.y+'px';
+		el.style.perspectiveOrigin = myH.x+'px '+myH.y+'px';
+		el.style.mozPerspective = myH.z+'px';
+		el.style.webkitPerspective = myH.z+'px';
+		el.style.perspective = myH.z+'px';
+		};
+		
+/**
+Scale the stack, and all objects contained in stack
+@method scaleStack
+@param {Number} item Scale value
+@return This
+@chainable
+**/
+	Stack.prototype.scaleStack = function(item){
+		if(scrawl.isa(item,'num') && this.type === 'Stack'){
+			for(var i=0, z=scrawl.stacknames.length; i<z; i++){
+				if(scrawl.stack[scrawl.stacknames[i]].stack === this.name){
+					scrawl.stack[scrawl.stacknames[i]].scaleStack(item);
+					}
+				}
+			for(var i=0, z=scrawl.elementnames.length; i<z; i++){
+				if(scrawl.element[scrawl.elementnames[i]].stack === this.name){
+					scrawl.element[scrawl.elementnames[i]].scaleDimensions(item);
+					}
+				}
+			for(var i=0, z=scrawl.padnames.length; i<z; i++){
+				if(scrawl.pad[scrawl.padnames[i]].stack === this.name){
+					scrawl.pad[scrawl.padnames[i]].scaleDimensions(item);
+					}
+				}
+			this.scaleDimensions(item);
+			if(this.type === 'Stack'){
+				this.setPerspective();
+				}
+			}
+		return this;
+		};
+
+/**
+# Element
 	
+## Instantiation
+
+* Stack.addElementById()
+* Stack.addElementsByClassNames()
+
+## Purpose
+
+* provide a wrapper object for a DOM element
+
+@class Element
+@constructor
+@extends Scrawl3d
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Element(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		Scrawl3d.call(this, items);
 		if(scrawl.xt(items.domElement)){
 			var tempname = '';
 			if(scrawl.xto([items.domElement.id,items.domElement.name])){
@@ -2258,61 +5767,119 @@ m: '',
 			Scrawl3d.call(this, {name: tempname,});
 			scrawl.element[this.name] = this;
 			scrawl.elm[this.name] = items.domElement;
-			scrawl.elementnames.pushUnique(this.name);
-			scrawl.elm[this.name].style.position = 'absolute';
+			scrawl.pushUnique(scrawl.elementnames, this.name);
 			scrawl.elm[this.name].id = this.name;
-			this.initialize2d(items);
-			this.initialize3d(items);
+			scrawl.elm[this.name].style.position = 'absolute';
+			this.stack = items.stack || '';
+			this.width = items.width || this.get('width');
+			this.height = items.height || this.get('height');
+			this.setDimensions()
+			this.setDisplayOffsets();
+			this.setStyles(items);
+			if(scrawl.xto([items.title, items.comment])){
+				this.setAccessibility(items);
+				}
 			return this;
 			}
 		console.log('Failed to generate an Element wrapper - no DOM element supplied'); 
 		return false;
 		}
 	Element.prototype = Object.create(Scrawl3d.prototype);
+/**
+@property type
+@type String
+@default 'Element'
+@final
+**/
 	Element.prototype.type = 'Element';
 	Element.prototype.classname = 'elementnames';
+	scrawl.d.Element = {
+		};
+	scrawl.mergeInto(scrawl.d.Element, scrawl.d.Scrawl3d);
+
+/**
+Return the DOM element wrapped by this object
+@method getElement
+@return Element
+**/
 	Element.prototype.getElement = function(){
 		return scrawl.elm[this.name];
 		};
 		
+/**
+# Pad
+	
+## Instantiation
+
+* created automatically for any &lt;canvas&gt; element found on the web page when it loads
+* also, scrawl.addCanvasToPage()
+* should not be instantiated directly by users
+
+## Purpose
+
+* controller (not wrapper) object for canvas elements included in the DOM
+* wraps the canvas element for CSS 3d functionality, if element is part of a Scrawl Stack
+* coordinates activity between visible canvas element and other (non-DOM) canvas elements that contribute to it
+
+Because the Pad constructor calls the Cell constructor as part of the construction process (Cell objects __wrap__ &lt;canvas&gt; elements; Pad objects __control__ &lt;canvas&gt; elements), Cell attributes can be included in the Pad constructor object and picked up by the resultant Cell objects.
+
+@class Pad
+@constructor
+@extends Scrawl3d
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Pad(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		Scrawl3d.call(this, items);
+		var tempname,
+			myCell,
+			baseCanvas,
+			myCellBase;
 		if(scrawl.xt(items.canvasElement)){
 			scrawl.canvas['PadConstructorTemporaryCanvas'] = items.canvasElement;
 			this.display = 'PadConstructorTemporaryCanvas';
-			var tempname = '';
+			tempname = '';
 			if(scrawl.xto([items.canvasElement.id,items.canvasElement.name])){
 				tempname = items.canvasElement.id || items.canvasElement.name;
 				}
 			(tempname.match(/_display$/)) ? Scrawl3d.call(this, {name: tempname.substr(0,tempname.length-8),}) : Scrawl3d.call(this, {name: tempname,});
 			if(!items.canvasElement.id){items.canvasElement.id = tempname;}
-			if(!scrawl.cellnames.contains(this.name)){
+			if(!scrawl.contains(scrawl.cellnames, this.name)){
 				this.cells = [];
 				this.drawOrder = [];
 				scrawl.pad[this.name] = this;
-				scrawl.padnames.pushUnique(this.name);
+				scrawl.pushUnique(scrawl.padnames, this.name);
 				if(items.length > 1){
 					this.set(items);
 					}
-				var myCell = new Cell({
+				myCell = new Cell({
 					name: tempname,
 					pad: this.name,
 					canvas: items.canvasElement,
 					});
-				this.cells.pushUnique(myCell.name);
+				scrawl.pushUnique(this.cells, myCell.name);
 				this.display = myCell.name;
 				delete scrawl.canvas.PadConstructorTemporaryCanvas;
-				var baseCanvas = items.canvasElement.cloneNode(true);
+				baseCanvas = items.canvasElement.cloneNode(true);
 				baseCanvas.setAttribute('id', this.name+'_base');
-				var myCellBase = new Cell({
+				myCellBase = new Cell({
 					name: this.name+'_base',
 					pad: this.name,
 					canvas: baseCanvas,
+					backgroundColor: items.backgroundColor,
 					});
-				this.cells.pushUnique(myCellBase.name);
+				scrawl.pushUnique(this.cells, myCellBase.name);
 				this.base = myCellBase.name;
 				this.current = myCellBase.name;
-				this.initialize2d();
+				this.width = items.width || this.get('width');
+				this.height = items.height || this.get('height');
+				this.setDimensions()
+				this.setDisplayOffsets();
+				this.setStyles(items);
+				if(scrawl.xto([items.title, items.comment])){
+					this.setAccessibility(items);
+					}
 				return this;
 				}
 			}
@@ -2320,49 +5887,229 @@ m: '',
 		return false;
 		}
 	Pad.prototype = Object.create(Scrawl3d.prototype);
+/**
+@property type
+@type String
+@default 'Pad'
+@final
+**/
 	Pad.prototype.type = 'Pad';
 	Pad.prototype.classname = 'padnames';
+	scrawl.d.Pad = {
+/**
+Array of CELLNAME Strings determining the order in which non-display &lt;canvas&gt; elements are to be copied onto the display &lt;canvas&gt;
+@property drawOrder
+@type Array
+@default []
+**/
+		drawOrder: [],
+/**
+Array of CELLNAME Strings associated with this Pad
+@property cells
+@type Array
+@default []
+**/
+		cells: [],
+/**
+Pad's display (visible) &lt;canvas&gt; element - CELLNAME
+@property display
+@type String
+@default ''
+**/
+		display: '',
+/**
+Pad's base (hidden) &lt;canvas&gt; element - CELLNAME
+@property base
+@type String
+@default ''
+**/
+		base: '',
+/**
+Pad's currently active &lt;canvas&gt; element - CELLNAME
+@property current
+@type String
+@default ''
+@deprecated
+**/
+		current: '',
+/**
+Current horizontal position of the mouse cursor in relation to the Pad's visible &lt;canvas&gt; element's top left corner
+@property mouseX
+@type Number
+@default 0
+**/
+		mouseX: 0,
+/**
+Current vertical position of the mouse cursor in relation to the Pad's visible &lt;canvas&gt; element's top left corner
+@property mouseY
+@type Number
+@default 0
+**/
+		mouseY: 0,
+/**
+Flag indicating whether the mouse cursor is hovering over the Pad's visible &lt;canvas&gt; element
+@property mouseOverPad
+@type Boolean
+@default false
+**/
+		mouseOverPad: false,
+		};
+	scrawl.mergeInto(scrawl.d.Pad, scrawl.d.Scrawl3d);
+
+/**
+Turn the object into a JSON String
+@method toString
+@param {Boolean} [noexternalobjects] True to exclude external objects such as sprites, designs and groups
+@return Array of JSON strings of non-default value attributes
+**/
+	Pad.prototype.toString = function(noexternalobjects){
+		var keys = Object.keys(scrawl.d[this.type]),
+			result = {},
+			resarray = [],
+			groups = [],
+			sprites = [],
+			ctx,
+			designs = [];
+		result.type = this.type;
+		result.classname = this.classname;
+		result.name = this.name;
+		result.parentElement = scrawl.canvas[this.name].parentElement.id;
+		for(var i = 0, z = keys.length; i < z; i++){
+			if(scrawl.contains(['start', 'delta', 'handle'], keys[i])){
+				if(!this[keys[i]].isLike(scrawl.d[this.type][keys[i]])){
+					result[keys[i]] = this[keys[i]];
+					}
+				}
+			else if(scrawl.xt(this[keys[i]]) && this[keys[i]] !== scrawl.d[this.type][keys[i]]){
+				result[keys[i]] = this[keys[i]];
+				}
+			}
+		delete result.displayOffsetX;
+		delete result.displayOffsetY;
+		resarray.push(JSON.stringify(result));
+		if(!noexternalobjects){
+			for(var i=0, z=this.cells.length; i<z; i++){
+				for(var j=0, w=scrawl.cell[this.cells[i]].groups.length; j<w; j++){
+					scrawl.pushUnique(groups, scrawl.cell[this.cells[i]].groups[j]);
+					}
+				resarray.push(scrawl.cell[this.cells[i]].toString(true));
+				}
+			for(var i=0, z=groups.length; i<z; i++){
+				for(var j=0, w=scrawl.group[groups[i]].sprites.length; j<w; j++){
+					scrawl.pushUnique(sprites, scrawl.group[groups[i]].sprites[j]);
+					}
+				resarray.push(scrawl.group[groups[i]].toString(true));
+				}
+			for(var i=0, z=sprites.length; i<z; i++){
+				ctx = scrawl.ctx[scrawl.sprite[sprites[i]].context];
+				if(scrawl.contains(scrawl.designnames, ctx.fillStyle)){
+					scrawl.pushUnique(designs, ctx.fillStyle);
+					}
+				if(scrawl.contains(scrawl.designnames, ctx.strokeStyle)){
+					scrawl.pushUnique(designs, ctx.strokeStyle);
+					}
+				if(scrawl.contains(scrawl.designnames, ctx.shadowColor)){
+					scrawl.pushUnique(designs, ctx.shadowColor);
+					}
+				}
+			for(var i=0, z=designs.length; i<z; i++){
+				resarray.push(scrawl.design[designs[i]].toString());
+				}
+			for(var i=0, z=sprites.length; i<z; i++){
+				resarray.push(scrawl.sprite[sprites[i]].toString(true));
+				}
+			}
+		return resarray;
+		};
+		
+/**
+Retrieve Pad's visible &lt;canvas&gt; element object
+@method getElement
+@return DOM element object
+@private
+**/
 	Pad.prototype.getElement = function(){
 		return scrawl.canvas[this.display];
 		};
+
+/**
+Overrides Scrawl3d.set(), to allow users to set Pad.drawOrder correctly, and also cascade Pad.scale changes to associated Cell obhjects
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Pad.prototype.set = function(items){
 		Scrawl3d.prototype.set.call(this, items);
-		scrawl.cell[this.display].set(items);
-		scrawl.cell[this.base].set(items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.setDrawOrder(items.drawOrder || []);
+		this.setDrawOrder(items.drawOrder || this.get('drawOrder'));
 		if(scrawl.isa(items.scale,'num')){
 			scrawl.cell[this.display].scale = items.scale;
 			this.scale = items.scale;
 			}
+		if(scrawl.xt(items.width)){
+			scrawl.cell[this.display].set({
+				width: items.width,
+				});
+			this.width = items.width;
+			}
+		if(scrawl.xt(items.height)){
+			scrawl.cell[this.display].set({
+				height: items.height,
+				});
+			this.height = items.height;
+			}
+		if(scrawl.xto([items.start,items.startX,items.startY,items.handle,items.handleX,items.handleY,items.scale,items.width,items.height])){
+			this.setDisplayOffsets();
+			}
+		if(scrawl.xto([items.backgroundColor, items.globalAlpha, items.globalCompositeOperation])){
+			var cell = scrawl.cell[this.base];
+			scrawl.cell[this.base].set({
+				backgroundColor: (items.backgroundColor) ? items.backgroundColor : cell.backgroundColor,
+				globalAlpha: (items.globalAlpha) ? items.globalAlpha : cell.globalAlpha,
+				globalCompositeOperation: (items.globalCompositeOperation) ? items.globalCompositeOperation : cell.globalCompositeOperation,
+				});
+			}
 		return this;
 		};
+
+/**
+Set the drawOrder attribute
+@method setDrawOrder
+@param {Array} items Array of CELLNAME Strings; alternatively, supply a CELLNAME String argument
+@return This
+@chainable
+**/
 	Pad.prototype.setDrawOrder = function(order){
 		this.drawOrder = (scrawl.xt(order)) ? [].concat(order) : [];
 		return this;
 		};
-	Pad.prototype.getMouse = function(){
-		if(!window.onmousemove){
-			window.onmousemove = scrawl.handleMouseMove;
-			}
-		if(scrawl.mouseX.isBetween(this.displayOffsetX, this.displayOffsetX+(this.width*this.scale), true) && scrawl.mouseY.isBetween(this.displayOffsetY, this.displayOffsetY+(this.height*this.scale), true)){
-			this.mouseX = (scrawl.mouseX - this.displayOffsetX) * (1/this.scale);
-			this.mouseY = (scrawl.mouseY - this.displayOffsetY) * (1/this.scale);
-			this.mouseOverPad = true;
-			}
-		else{
-			this.mouseX = 0;
-			this.mouseY = 0;
-			this.mouseOverPad = false;
-			}
-		return {
-			x: this.mouseX,
-			y: this.mouseY,
-			active: this.mouseOverPad,
-			};
-		};
+
+/**
+Display helper function - determines which Cell &lt;canvas&gt; elements need to be manipulated in line with the supplied 'command' argument
+
+Argument String can be in the form of:
+
+* 'all' - for all canvases
+* 'display' - for the display canvas only
+* 'base' - for the base canvas only
+* 'non-base' for all canvases except the base canvas
+* 'current' - for the current canvas only
+* 'non-current' - for all canvases except the current canvas
+* 'additionals' - for all canvases except the display and base canvases
+* 'non-additionals' - for the display and base canvases only
+* 'none' - for no canvases
+* the __default__ is to return an Array containing all canvases except the display canvas
+
+The argument can also be an Array of CELLNAME strings 
+
+@method getCellsForDisplayAction
+@param {String} [command] Command String; or alternatively an Array of CELLNAME Strings
+@return Array of CELLNAME Strings
+@private
+**/
 	Pad.prototype.getCellsForDisplayAction = function(command){
-		var temp = [];
+		var	temp = [];
 		if(scrawl.isa(command,'arr')){
 			temp = command;
 			}
@@ -2374,20 +6121,44 @@ m: '',
 				case 'all' : break;
 				case 'display' : temp = [this.display]; break;
 				case 'base' : temp = [this.base]; break;
-				case 'non-base' : temp.removeItem(this.base); break;
+				case 'non-base' : scrawl.removeItem(temp, this.base); break;
 				case 'current' : temp = [this.current]; break;
-				case 'non-current' : temp.removeItem(this.current); break;
+				case 'non-current' : scrawl.removeItem(temp, this.current); break;
 				case 'additionals' :
-					temp.removeItem(this.display);
-					temp.removeItem(this.base);
+					scrawl.removeItem(temp, this.display);
+					scrawl.removeItem(temp, this.base);
 					break;
 				case 'non-additionals' : temp = [this.display, this.base]; break;
 				case 'none' : temp = []; break;
-				default : temp.removeItem(this.display); break;
+				default : scrawl.removeItem(temp, this.display); break;
 				}
 			}
 		return temp;
 		};
+
+/**
+Display function - requests Cells to clear their &lt;canvas&gt; element
+
+Argument String can be in the form of:
+
+* 'all' - for all canvases
+* 'display' - for the display canvas only
+* 'base' - for the base canvas only
+* 'non-base' for all canvases except the base canvas
+* 'current' - for the current canvas only
+* 'non-current' - for all canvases except the current canvas
+* 'additionals' - for all canvases except the display and base canvases
+* 'non-additionals' - for the display and base canvases only
+* 'none' - for no canvases
+* the __default__ is to return an Array containing all canvases except the display canvas
+
+The argument can also be an Array of CELLNAME strings 
+
+@method clear
+@param {String} [command] Command String; or alternatively an Array of CELLNAME Strings
+@return This
+@chainable
+**/
 	Pad.prototype.clear = function(command){
 		var temp = this.getCellsForDisplayAction(command);
 		for(var i=0, z=temp.length; i<z; i++){
@@ -2395,6 +6166,30 @@ m: '',
 			}
 		return this;
 		};
+
+/**
+Display function - requests Cells to compile their &lt;canvas&gt; element
+
+Argument String can be in the form of:
+
+* 'all' - for all canvases
+* 'display' - for the display canvas only
+* 'base' - for the base canvas only
+* 'non-base' for all canvases except the base canvas
+* 'current' - for the current canvas only
+* 'non-current' - for all canvases except the current canvas
+* 'additionals' - for all canvases except the display and base canvases
+* 'non-additionals' - for the display and base canvases only
+* 'none' - for no canvases
+* the __default__ is to return an Array containing all canvases except the display canvas
+
+The argument can also be an Array of CELLNAME strings 
+
+@method compile
+@param {String} [command] Command String; or alternatively an Array of CELLNAME Strings
+@return This
+@chainable
+**/
 	Pad.prototype.compile = function(command){
 		var temp = this.getCellsForDisplayAction(command);
 		for(var i=0, z=temp.length; i<z; i++){
@@ -2402,6 +6197,30 @@ m: '',
 			}
 		return this;
 		};
+
+/**
+Display function - requests Cells to clear their &lt;canvas&gt; element using their backgroundColor
+
+Argument String can be in the form of:
+
+* 'all' - for all canvases
+* 'display' - for the display canvas only
+* 'base' - for the base canvas only
+* 'non-base' for all canvases except the base canvas
+* 'current' - for the current canvas only
+* 'non-current' - for all canvases except the current canvas
+* 'additionals' - for all canvases except the display and base canvases
+* 'non-additionals' - for the display and base canvases only
+* 'none' - for no canvases
+* the __default__ is to return an Array containing all canvases except the display canvas
+
+The argument can also be an Array of CELLNAME strings 
+
+@method stampBackground
+@param {String} [command] Command String; or alternatively an Array of CELLNAME Strings
+@return This
+@chainable
+**/
 	Pad.prototype.stampBackground = function(command){
 		var temp = this.getCellsForDisplayAction(command);
 		for(var i=0, z=temp.length; i<z; i++){
@@ -2409,6 +6228,24 @@ m: '',
 			}
 		return this;
 		};
+
+/**
+Display function - Pad tells its visible &lt;canvas&gt; element to clear itself and then copy associated canvases onto itself
+
+Argument String can be in the form of:
+
+* 'wipe-base' - base canvas is cleared before copy operation starts
+* 'wipe both' - both the base canvas and the display canvas are cleared before the copy operation starts
+* the __default__ is to only clear the display canvas before the copy operation starts
+
+Canvases are copied onto the _base_ (not display) canvas in the order supplied by the Pad.drawOrder Array. This means that anything drawn on the base canvas will be at the bottom of the eventual scene.
+
+The base canvas is then copied onto the display canvas, as the last copy operation.
+@method show
+@param {String} [command] Command String
+@return This
+@chainable
+**/
 	Pad.prototype.show = function(command){
 		switch(command){
 			case 'wipe-base' :
@@ -2427,9 +6264,23 @@ m: '',
 				scrawl.cell[this.base].copyCellToSelf(scrawl.cell[this.drawOrder[i]]);
 				}
 			}
-		scrawl.cell[this.display].copyCellToSelf(scrawl.cell[this.base]);
+		scrawl.cell[this.display].copyCellToSelf(scrawl.cell[this.base], true);
 		return this;
 		};
+
+/**
+Display function - Pad tells its associated Cell objects to undertake a complete clear-compile-show display cycle
+
+Argument Object can have the following (optional) attributes:
+
+* clear:COMMAND
+* compile:COMMAND
+* show:COMMAND
+@method render
+@param {Object} [command] Command Object
+@return This
+@chainable
+**/
 	Pad.prototype.render = function(command){
 		command = (scrawl.isa(command,'obj')) ? command : {};
 		command.clear = (scrawl.xt(command.clear)) ? command.clear : null;
@@ -2440,100 +6291,216 @@ m: '',
 		this.show(command.show);
 		return this;
 		};
+
+/**
+Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and add it to this Pad
+@method addNewCell
+@param {Object} data Object containing attribute data for the new canvas
+@return New Cell object; false on failure
+**/
 	Pad.prototype.addNewCell = function(data){
+		var	myCanvas,
+			myCell;
 		data = (scrawl.isa(data,'obj')) ? data : {};
-		if(scrawl.xta([data.width,data.height]) && scrawl.isa(data.name,'str')){
-			data.width = parseFloat((data.width).toFixed());
-			data.height = parseFloat((data.height).toFixed());
-			var myCanvas = document.createElement('canvas');
+		if(scrawl.isa(data.name,'str')){
+			data.width = Math.round(data.width) || this.width;
+			data.height = Math.round(data.height) || this.height;
+			myCanvas = document.createElement('canvas');
 			myCanvas.setAttribute('id', data.name);
 			myCanvas.setAttribute('height', data.height);
 			myCanvas.setAttribute('width', data.width);
 			data['pad'] = this.name;
 			data['canvas'] = myCanvas;
-			var myCell = new Cell(data);
-			this.cells.pushUnique(myCell.name);
+			myCell = new Cell(data);
+			scrawl.pushUnique(this.cells, myCell.name);
 			return myCell;
 			}
 		return false;
 		};
+
+/**
+Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this Pad
+@method addCells
+@param {Array} items An Array of CELLNAME Strings; alternatively the argument can be a single CELLNAME String
+@return This
+@chainable
+**/
 	Pad.prototype.addCells = function(items){
 		items = [].concat(items);
 		for(var i=0, z=items.length; i<z; i++){
-			if(scrawl.cellnames.contains(items[i])){
+			if(scrawl.contains(scrawl.cellnames, items[i])){
 				this.cells.push(items[i]);
 				this.drawOrder.push(items[i]);
 				}
 			}
 		return this;
 		};
+
+/**
+Remove a &lt;canvas&gt; element, and its Cell wrapper, from this Pad
+
+_Note: does not delete the canvas, or the Cell object, from the scrawl library_
+@method deleteCell
+@param {String} cell CELLNAME String
+@return This on success; false otherwise
+@chainable
+**/
 	Pad.prototype.deleteCell = function(cell){
 		if(scrawl.isa(cell,'str')){
-			this.cells.removeItem(cell);
-			if(this.display === cell){this.display = false;}
-			if(this.current === cell){this.current = false;}
-			if(this.base === cell){this.base = false;}
+			scrawl.removeItem(this.cells, cell);
+			if(this.display === cell){this.display = this.current;}
+			if(this.base === cell){this.base = this.current;}
+			if(this.current === cell){this.current = this.base;}
 			return this;
 			}
 		return false;
 		};
+
+/**
+Set scrawl.currentPad attribute to this Pad's PADNAME String
+@method makeCurrent
+@return This
+@chainable
+**/
 	Pad.prototype.makeCurrent = function(){
 		scrawl.currentPad = this.name;
 		return this;
 		};
+
+/**
+Orders all Cell objects associated with this Pad to (re)create their field collision image maps
+@method buildFields
+@return This
+@chainable
+**/
 	Pad.prototype.buildFields = function(){
 		for(var i=0, z=this.cells.length; i<z; i++){
 			scrawl.cell[this.cells[i]].buildField();
 			}
 		return this;
 		};
-		
+
+/**
+Handles the setting of element title and data-comment attributes
+
+* Title text is assigned to the display canvas's title attribute
+* Comments are placed between the display canvas element's tags, within &lt;p&gt; tags - this will remove any existing content between the canvas tags
+
+(Overrides Scrawl3d.setAccessibility)
+@method setAccessibility
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Pad.prototype.setAccessibility = function(items){
+		items = (scrawl.xt(items)) ? items : {};
+		var el = this.getElement();
+		if(scrawl.xt(items.title)){
+			this.title = items.title;
+			el.title = this.title;
+			}
+		if(scrawl.xt(items.comment)){
+			this.comment = items.comment;
+			el.setAttribute('data-comment', this.comment);
+			el.innerHTML = '<p>'+this.comment+'</p>';
+			}
+		return this;
+		};
+
+/**
+# Cell
+	
+## Instantiation
+
+* created automatically for any &lt;canvas&gt; element found on the web page when it loads
+* scrawl.addCanvasToPage()
+* scrawl.addNewCell()
+* Pad.addNewCell()
+* should not be instantiated directly by users
+
+## Purpose
+
+* Acts as a wrapper for each &lt;canvas&gt; element - whether that canvas is part of the DOM or not
+* Oversees manipulation of the &lt;canvas&gt; element's context engine
+* Responsible clearing &lt;canvas&gt; elements, and for copying one &lt;canvas&gt; to another
+* Includes functionality to pivot, path, flip, lock and roll cell positioning in the display scene
+* Controls scrolling and zoom effects between &lt;canvas&gt; elements
+* Builds &lt;canvas&gt; element collision fields from sprite data
+* Undertakes collision detection between sprites and a collision field
+
+_Note: A Cell is entirely responsible for determining what portion of its &lt;canvas&gt; element's content will be copied to another &lt;canvas&gt; and where that copy will appear on the destination &lt;canvas&gt;._
+@class Cell
+@constructor
+@extends SubScrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Cell(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var temp;
+		SubScrawl.call(this, items);							//handles items.start, items.startX, items.startY
+		Scrawl.prototype.set.call(this, items);
+		var myContext;
 		if(scrawl.xta([items,items.canvas])){					//flag used by Pad constructor when calling Cell constructor
-			SubScrawl.call(this, items);
-			this.pad = items.pad || false;
-			this.sourceX = items.sourceX || 0;
-			this.sourceY = items.sourceY || 0;
-			this.sourceWidth = items.sourceWidth || items.width || 0;
-			this.sourceHeight = items.sourceHeight || items.height || 0;
-			this.sourceMaxWidth = items.sourceMaxWidth || this.sourceWidth;
-			this.sourceMaxHeight = items.sourceMaxHeight || this.sourceHeight;
-			this.sourceMinWidth = items.sourceMinWidth || this.sourceWidth;
-			this.sourceMinHeight = items.sourceMinHeight || this.sourceHeight;
-			this.targetX = items.targetX || 0;
-			this.targetY = items.targetY || 0;
-			this.targetWidth = items.targetWidth || items.width || 0;
-			this.targetHeight = items.targetHeight || items.height || 0;
-			this.actualX = items.actualX || 0;
-			this.actualY = items.actualY || 0;
-			this.actualWidth = items.actualWidth || items.width || 0;
-			this.actualHeight = items.actualHeight || items.height || 0;
-			this.scaleX = (scrawl.isa(items.scaleX,'num')) ? items.scaleX : 1;
-			this.scaleY = (scrawl.isa(items.scaleY,'num')) ? items.scaleY : 1;
-			this.roll = items.roll || 0;
-			this.cellX = items.cellX || 0;
-			this.cellY = items.cellY || 0;
-			this.shearX = items.shearX || 0;
-			this.shearY = items.shearY || 0;
-			this.lockTo = items.lockTo || false;
-			this.globalAlpha = items.globalAlpha || 1;
-			this.globalCompositeOperation = items.globalCompositeOperation || 'source-over';
-			this.backgroundColor = (scrawl.isa(items.backgroundColor,'str')) ? items.backgroundColor : 'rgba(0,0,0,0)';
 			scrawl.canvas[this.name] = items.canvas;
 			scrawl.context[this.name] = items.canvas.getContext('2d');
 			scrawl.cell[this.name] = this;
-			scrawl.cellnames.pushUnique(this.name);
-			var myContext = new Context({name: this.name,});
+			scrawl.pushUnique(scrawl.cellnames, this.name);
+			this.pad = items.pad || false;
+			temp = (scrawl.isa(items.source,'obj')) ? items.source : {};
+			this.source = new Vector({
+				x: (scrawl.xt(items.sourceX)) ? items.sourceX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+				y: (scrawl.xt(items.sourceY)) ? items.sourceY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+				});
+			temp = (scrawl.isa(items.sourceDelta,'obj')) ? items.sourceDelta : {};
+			this.sourceDelta = new Vector({
+				x: (scrawl.xt(items.sourceDeltaX)) ? items.sourceDeltaX : ((scrawl.xt(temp.x)) ? temp.x : 0),
+				y: (scrawl.xt(items.sourceDeltaY)) ? items.sourceDeltaY : ((scrawl.xt(temp.y)) ? temp.y : 0),
+				});
+/**
+The coordinate Vector representing the Cell's target position on the &lt;canvas&gt; to which it is to be copied
+
+Cell supports the following 'virtual' attributes for this attribute:
+
+* __startX__ or __targetX__ - (Number) the x coordinate on the destination &lt;canvas&gt;
+* __startY__ or __targetY__ - (Number) the y coordinate on the destination &lt;canvas&gt;
+
+@property start
+@type Vector
+**/		
+			this.actualWidth = items.actualWidth || items.width || scrawl.canvas[this.name].width;
+			this.actualHeight = items.actualHeight || items.height || scrawl.canvas[this.name].height;
+			this.sourceWidth = this.actualWidth;
+			this.sourceHeight = this.actualHeight;
+			this.targetWidth = this.actualWidth;
+			this.targetHeight = this.actualHeight;
+			this.setDimensions(items);
+			if(scrawl.xto([items.targetX, items.targetY])){
+				this.start.x = (scrawl.xt(items.targetX)) ? items.targetX : this.start.x;
+				this.start.y = (scrawl.xt(items.targetY)) ? items.targetY : this.start.y;
+				}
+			if(scrawl.xto([items.sourceWidth, items.sourceHeight, items.targetWidth, items.targetHeight, items.width, items.height])){
+				this.sourceWidth = items.sourceWidth || items.width || this.sourceWidth;
+				this.sourceHeight = items.sourceHeight || items.height || this.sourceHeight;
+				this.targetWidth = items.targetWidth || items.width || this.targetWidth;
+				this.targetHeight = items.targetHeight || items.height || this.targetHeight;
+				}
+			this.usePadDimensions = (scrawl.isa(items.usePadDimensions,'bool')) ? items.usePadDimensions : ((scrawl.xto([items.sourceWidth, items.sourceHeight, items.targetWidth, items.targetHeight, items.width, items.height])) ? false : true);
+			myContext = new Context({name: this.name, cell: scrawl.context[this.name]});
 			this.context = myContext.name;
-			scrawl.ctx[this.context].getContextFromEngine(scrawl.context[this.name]);
-			this.groups = (scrawl.xt(items.groups)) ? [].concat(items.groups) : [];
+			this.flipUpend = scrawl.xt(items.flipUpend) ? items.flipUpend : scrawl.d.Cell.flipUpend;
+			this.flipReverse = scrawl.xt(items.flipReverse) ? items.flipReverse : scrawl.d.Cell.flipReverse;
+			this.lockX = scrawl.xt(items.lockX) ? items.lockX : scrawl.d.Cell.lockX;
+			this.lockY = scrawl.xt(items.lockY) ? items.lockY : scrawl.d.Cell.lockY;
+			this.roll = items.roll || scrawl.d.Cell.roll;
+			this.groups = (scrawl.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
 			new Group({
 				name: this.name,
-				cells: [this.name],
+				cell: this.name,
 				});
 			new Group({
 				name: this.name+'_field',
-				cells: [this.name],
+				cell: this.name,
 				visibility: false,
 				});
 			if(items.field){
@@ -2541,96 +6508,633 @@ m: '',
 				}
 			new Group({
 				name: this.name+'_fence',
-				cells: [this.name],
+				cell: this.name,
 				visibility: false,
 				});
 			if(items.fence){
 				scrawl.group[this.name+'_fence'].sprites = [].concat(items.fence);
 				}
-			this.usePadDimensions = (scrawl.isa(items.usePadDimensions,'bool')) ? items.usePadDimensions : ((this.sourceWidth === 0 && this.sourceHeight === 0 && this.targetWidth === 0 && this.targetHeight === 0 && this.actualWidth === 0 && this.actualHeight === 0) ? true : false);
-			this.setDimensions(items);
-			if(this.scaleX !== 1 || this.scaleY !== 1 || this.shearX || this.shearY || this.cellX || this.cellY || this.roll){
-				this.transformCell();
-				}
 			return this;
 			}
 		console.log('Cell constructor encountered an error: no canvas element supplied to it');
 		return false;
+//updateStart
 		}
 	Cell.prototype = Object.create(SubScrawl.prototype);
+
+/**
+@property type
+@type String
+@default 'Cell'
+@final
+**/		
 	Cell.prototype.type = 'Cell';
 	Cell.prototype.classname = 'cellnames';
+	scrawl.d.Cell = {
+/**
+PADNAME of the Pad object to which this Cell belongs
+@property pad
+@type String
+@default ''
+**/
+		pad: '',
+/**
+The coordinate Vector representing the Cell's copy source position on its &lt;canvas&gt;
+
+Cell supports the following 'virtual' attributes for this attribute:
+
+* __sourceX__ - (Number) the x coordinate on the source &lt;canvas&gt;
+* __sourceY__ - (Number) the y coordinate on the source &lt;canvas&gt;
+
+@property source
+@type Vector
+**/		
+		source: {x:0,y:0,z:0},
+/**
+A change Vector which can be applied to the Cell's copy source point
+
+Cell supports the following 'virtual' attributes for this attribute:
+
+* __sourceDeltaX__ - (Number) a horizontal change value, in pixels
+* __sourceDeltaY__ - (Number) a vertical change value, in pixels
+@property sourceDelta
+@type Vector
+**/		
+		sourceDelta: {x:0,y:0,z:0},
+/**
+Copy width, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;
+@property sourceWidth
+@type Number
+@default 0
+**/
+		sourceWidth: 0,
+/**
+Copy height, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;
+@property sourceHeight
+@type Number
+@default 0
+**/
+		sourceHeight: 0,
+/**
+Maximum permitted source width, in pixels (Cell.zoom)
+@property sourceMaxWidth
+@type Number
+@default 0
+**/
+		sourceMaxWidth: 0,
+/**
+Maximum permitted source height, in pixels (Cell.zoom)
+@property sourceMaxHeight
+@type Number
+@default 0
+**/
+		sourceMaxHeight: 0,
+/**
+Minimum permitted source width, in pixels (Cell.zoom)
+@property sourceMinWidth
+@type Number
+@default 0
+**/
+		sourceMinWidth: 0,
+/**
+Minimum permitted source height, in pixels (Cell.zoom)
+@property sourceMinHeight
+@type Number
+@default 0
+**/
+		sourceMinHeight: 0,
+/**
+Paste width, in pixels. Determines where, and at what scale, the copied portion of this Cell's &lt;canvas&gt; will appear on the target Cell's &lt;canvas&gt;
+@property targetWidth
+@type Number
+@default 0
+**/
+		targetWidth: 0,
+/**
+Paste height, in pixels. Determines where, and at what scale, the copied portion of this Cell's &lt;canvas&gt; will appear on the target Cell's &lt;canvas&gt;
+@property targetHeight
+@type Number
+@default 0
+**/
+		targetHeight: 0,
+/**
+DOM &lt;canvas&gt; element's width (not CSS width)
+
+_Never change this attribute directly_
+@property actualWidth
+@type Number
+@default 0
+**/
+		actualWidth: 0,
+/**
+DOM &lt;canvas&gt; element's height (not CSS height)
+
+_Never change this attribute directly_
+@property actualHeight
+@type Number
+@default 0
+**/
+		actualHeight: 0,
+/**
+Lock this Cell to another Cell, to allow zooming between them; permitted String: CELLNAME
+@property lockTo
+@type String
+@default ''
+**/
+		lockTo: '',
+/**
+@property fieldLabel
+@type String
+@default ''
+**/
+		fieldLabel: '',
+/**
+Transparency level to be used when copying this Cell's &lt;canvas&gt; element to another &lt;canvas&gt;. Permitted values are between 0 (fully transparent) and 1 (fully opaque)
+@property globalAlpha
+@type Number
+@default 1
+**/
+		globalAlpha: 1,
+/**
+Composition method to be used when copying this Cell's &lt;canvas&gt; element to another &lt;canvas&gt;. Permitted values include
+
+* 'source-over'
+* 'source-atop'
+* 'source-in'
+* 'source-out'
+* 'destination-over'
+* 'destination-atop'
+* 'destination-in'
+* 'destination-out'
+* 'lighter'
+* 'darker'
+* 'copy'
+* 'xor'
+
+_Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers_
+@property globalCompositeOperation
+@type String
+@default 'source-over'
+**/
+		globalCompositeOperation: 'source-over',
+/**
+DOM &lt;canvas&gt; element's background color; use any permitted CSS color String
+
+_Background colors are achieved via JavaScript canvas API drawing methods. Setting the CSS backgroundColor attribute on a &lt;canvas&gt; element is not recommended_
+@property backgroundColor
+@type String
+@default 'rgba(0,0,0,0)'
+**/
+		backgroundColor: 'rgba(0,0,0,0)',
+/**
+CTXNAME of this Cell's Context object
+
+_Cells use a Context object to keep track of the settings supplied to its &lt;canvas&gt; element's 2d context engine_
+@property context
+@type String
+@default ''
+@private
+**/
+		context: '',
+/**
+Array of GROUPNAMES that contribute to building this Cell's scene
+@property groups
+@type Array
+@default []
+**/
+		groups: [],
+/**
+Pad dimension flag: when true, instructs the Cell to use its Pad object's dimensions as its source dimensions (sourceWidth, sourceHeight)
+@property usePadDimensions
+@type Boolean
+@default false
+@private
+**/
+		usePadDimensions: false,
+/**
+Reflection flag; set to true to flip Cell along the Y axis
+@property flipReverse
+@type Boolean
+@default false
+**/
+		flipReverse: false,
+/**
+Reflection flag; set to true to flip Cell along the X axis
+@property flipUpend
+@type Boolean
+@default false
+**/
+		flipUpend: false,
+/**
+Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis
+@property lockX
+@type Boolean
+@default false
+**/
+		lockX: false,
+/**
+Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis
+@property lockY
+@type Boolean
+@default false
+**/
+		lockY: false,
+/**
+Cell rotation (in degrees)
+@property roll
+@type Number
+@default 0
+**/
+		roll: 0,
+		};
+	scrawl.mergeInto(scrawl.d.Cell, scrawl.d.SubScrawl);
+
+/**
+Turn the object into a JSON String
+@method toString
+@param {Boolean} [noexternalobjects] True to exclude external objects such as sprites, designs and groups
+@return Array of JSON strings of non-default value attributes
+**/
+	Cell.prototype.toString = function(noexternalobjects){
+		var keys = Object.keys(scrawl.d[this.type]),
+			result = {},
+			resarray = [],
+			sprites = [],
+			ctx,
+			designs = [];
+		result.type = this.type;
+		result.classname = this.classname;
+		result.name = this.name;
+		for(var i = 0, z = keys.length; i < z; i++){
+			if(scrawl.contains(['start', 'delta', 'handle', 'source', 'sourceDelta'], keys[i])){
+				if(!this[keys[i]].isLike(scrawl.d[this.type][keys[i]])){
+					result[keys[i]] = this[keys[i]];
+					}
+				}
+			else if(scrawl.xt(this[keys[i]]) && this[keys[i]] !== scrawl.d[this.type][keys[i]]){
+				result[keys[i]] = this[keys[i]];
+				}
+			}
+		resarray.push(JSON.stringify(result));
+		if(!noexternalobjects){
+			for(var i=0, z=this.groups.length; i<z; i++){
+				for(var j=0, w=scrawl.group[this.groups[i]].sprites.length; j<w; j++){
+					scrawl.pushUnique(sprites, scrawl.group[this.groups[i]].sprites[j]);
+					}
+				resarray.push(scrawl.group[this.groups[i]].toString(true));
+				}
+			for(var i=0, z=sprites.length; i<z; i++){
+				ctx = scrawl.ctx[scrawl.sprite[sprites[i]].context];
+				if(scrawl.contains(scrawl.designnames, ctx.fillStyle)){
+					scrawl.pushUnique(designs, ctx.fillStyle);
+					}
+				if(scrawl.contains(scrawl.designnames, ctx.strokeStyle)){
+					scrawl.pushUnique(designs, ctx.strokeStyle);
+					}
+				if(scrawl.contains(scrawl.designnames, ctx.shadowColor)){
+					scrawl.pushUnique(designs, ctx.shadowColor);
+					}
+				}
+			for(var i=0, z=designs.length; i<z; i++){
+				resarray.push(scrawl.design[designs[i]].toString());
+				}
+			for(var i=0, z=sprites.length; i<z; i++){
+				resarray.push(scrawl.sprite[sprites[i]].toString(true));
+				}
+			}
+		return resarray;
+		};
+		
+/**
+Overrides SubScrawl.get(), to allow users to get values for sourceX, sourceY, sourceDeltaX, sourceDeltaY, startX, startY, targetX, targetY, deltaX, deltaY, handleX, handleY
+@method get
+@param {String} item Attribute key
+@return Attribute value
+**/
+	Cell.prototype.get = function(item){
+		if(scrawl.contains(['targetX', 'targetY', 'sourceX', 'sourceY', 'sourceDeltaX', 'sourceDeltaY'], item)){
+			switch(item){
+				case 'targetX' : return this.start.x; break;
+				case 'targetY' : return this.start.y; break;
+				case 'sourceX' : return this.source.x; break;
+				case 'sourceY' : return this.source.y; break;
+				case 'sourceDeltaX' : return this.sourceDelta.x; break;
+				case 'sourceDeltaY' : return this.sourceDelta.y; break;
+				}
+			}
+		else if(scrawl.contains(['target', 'source', 'sourceDelta'], item)){
+			switch(item){
+				case 'target' : return this.start.getVector(); break;
+				case 'source' : return this.source.getVector(); break;
+				case 'sourceDelta' : return this.sourceDelta.getVector(); break;
+				}
+			}
+		else if(scrawl.contains(['width', 'height'], item)){
+			switch(item){
+				case 'width' : return (this.usePadDimensions) ? this.getPadWidth() : this.actualWidth; break;
+				case 'height' : return (this.usePadDimensions) ? this.getPadHeight() : this.actualHeight; break;
+				}
+			}
+		else{
+			return SubScrawl.prototype.get.call(this, item);
+			}
+		};
+
+/**
+Overrides SubScrawl.set(), to allow users to set the start, delta, handle, source and sourceDelta attributes using startX, startY, targetX, targetY, deltaX, deltaY, handleX, handleY, sourceX, sourceY, sourceDeltaX, sourceDeltaY.
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Cell.prototype.set = function(items){
-		Scrawl.prototype.set.call(this, items);
-		scrawl.ctx[this.context].set(items);
-		if(scrawl.xt(items)){
-			if(scrawl.xto([items.width,items.height,items.actualWidth,items.actualHeight])){
-				this.setDimensions(items);
-				}
-			if(scrawl.xto([items.cellY,items.roll,items.scaleX,items.scaleY,items.shearX,items.shearY,items.cellX])){
-				this.transformCell();
-				}
+		var temp;
+		SubScrawl.prototype.set.call(this, items);				//handles items.start, items.startX, items.startY, items.delta, items.deltaX, items.deltaY
+		items = (scrawl.isa(items,'obj')) ? items : {}
+		if(scrawl.xto([items.target, items.targetX, items.targetY])){
+			temp = (scrawl.xt(items.target)) ? items.target : {};
+			this.start.x = items.targetX || temp.x || this.start.x;
+			this.start.y = items.targetY || temp.y || this.start.y;
+			}
+		if(scrawl.xto([items.source, items.sourceX, items.sourceY])){
+			temp = (scrawl.xt(items.source)) ? items.source : {};
+			this.source.x = items.sourceX || temp.x || this.source.x;
+			this.source.y = items.sourceY || temp.y || this.source.y;
+			}
+		if(scrawl.xto([items.sourceDelta, items.sourceDeltaX, items.sourceDeltaY])){
+			temp = (scrawl.xt(items.sourceDelta)) ? items.sourceDelta : {};
+			this.sourceDelta.x = items.sourceDeltaX || temp.x || this.sourceDelta.x;
+			this.sourceDelta.y = items.sourceDeltaY || temp.y || this.sourceDelta.y;
+			}
+		if(scrawl.xto([items.sourceWidth, items.sourceHeight, items.targetWidth, items.targetHeight, items.width, items.height])){
+			this.sourceWidth = items.sourceWidth || items.width || this.sourceWidth;
+			this.sourceHeight = items.sourceHeight || items.height || this.sourceHeight;
+			this.targetWidth = items.targetWidth || items.width || this.targetWidth;
+			this.targetHeight = items.targetHeight || items.height || this.targetHeight;
+			}
+		if(scrawl.xto([items.width,items.height,items.actualWidth,items.actualHeight])){
+			this.actualWidth = items.actualWidth || items.width || this.actualWidth;
+			this.actualHeight = items.actualHeight || items.height || this.actualHeight;
+			this.setDimensions(items);
 			}
 		return this;
 		};
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+
+Overrides SubScrawl.setDelta to allow changes to be made using attributes: source, sourceX, sourceY, sourceDelta, sourceDeltaX, sourceDeltaY, sourceWidth, sourceHeight, start, startX, startY, target, targetX, targetY, delta, deltaX, deltaY, targetWidth, targetHeight, globalAlpha
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Cell.prototype.setDelta = function(items){
-		if(scrawl.xt(items)){
-			if(scrawl.xt(items.sourceX)){this.sourceX += items.sourceX;}
-			if(scrawl.xt(items.sourceY)){this.sourceY += items.sourceY;}
-			if(scrawl.xt(items.sourceWidth)){this.sourceWidth += items.sourceWidth;}
-			if(scrawl.xt(items.sourceHeight)){this.sourceHeight += items.sourceHeight;}
-			if(scrawl.xt(items.targetX)){this.targetX += items.targetX;}
-			if(scrawl.xt(items.targetY)){this.targetY += items.targetY;}
-			if(scrawl.xt(items.targetWidth)){this.targetWidth += items.targetWidth;}
-			if(scrawl.xt(items.targetHeight)){this.targetHeight += items.targetHeight;}
-			if(scrawl.xt(items.globalAlpha)){this.globalAlpha += items.globalAlpha;}
+		var temp;
+		SubScrawl.prototype.setDelta.call(this, items);			//handles items.start, items.startX, items.startY, items.delta, items.deltaX, items.deltaY
+		if(scrawl.xto([items.source, items.sourceX, items.sourceY])){
+			temp = (scrawl.xt(items.source)) ? items.source : {};
+			this.source.x += items.sourceX || temp.x || 0;
+			this.source.y += items.sourceY || temp.y || 0;
+			}
+		if(scrawl.xto([items.sourceDelta, items.sourceDeltaX, items.sourceDeltaY])){
+			temp = (scrawl.xt(items.sourceDelta)) ? items.sourceDelta : {};
+			this.sourceDelta.x += items.sourceDeltaX || temp.x || 0;
+			this.sourceDelta.y += items.sourceDeltaY || temp.y || 0;
+			}
+		if(scrawl.xto([items.sourceWidth, items.sourceHeight])){
+			this.sourceWidth += items.sourceWidth || 0;
+			this.sourceHeight += items.sourceHeight || 0;
+			}
+		if(scrawl.xto([items.target, items.targetX, items.targetY])){
+			temp = (scrawl.xt(items.target)) ? items.target : {};
+			this.start.x += items.targetX || temp.x || 0;
+			this.start.y += items.targetY || temp.y || 0;
+			}
+		if(scrawl.xto([items.targetWidth, items.targetHeight])){
+			this.targetWidth += items.targetWidth || 0;
+			this.targetHeight += items.targetHeight || 0;
+			}
+		if(scrawl.xt(items.globalAlpha)){
+			this.globalAlpha += items.globalAlpha;
 			}
 		return this;
 		};
 	Cell.prototype.getPadWidth = function(){
-		return scrawl.pad[this.pad].getWidth();
+		return scrawl.pad[this.pad].get('width');
 		};
 	Cell.prototype.getPadHeight = function(){
-		return scrawl.pad[this.pad].getHeight();
+		return scrawl.pad[this.pad].get('height');
 		};
+		
+/**
+Adds delta values to the start vector; adds sourceDelta values to the source vector; adds deltaPathPlace to pathPlace
+
+Permitted argument values include 
+* 'x' - delta.x added to start.x; deltaSource.x added to source.x
+* 'y' - delta.y added to start.y; deltaSource.y added to source.y
+* 'start', 'target' - delta added to start
+* 'source' - deltaSource added to source
+* 'path' - deltaPathPlace added to pathPlace 
+* undefined: all values are amended
+@method updateStart
+@param {String} [item] String used to limit this function's actions
+@return This
+@chainable
+**/
+	Cell.prototype.updateStart = function(item){
+		switch(item){
+			case 'x' :
+				this.start.x += this.delta.x || 0;
+				this.source.x += this.deltaSource.x || 0;
+				break;
+			case 'y' :
+				this.start.y += this.delta.y || 0;
+				this.source.y += this.deltaSource.y || 0;
+				break;
+			case 'start' :
+			case 'target' :
+				this.start.vectorAdd(this.delta);
+				break;
+			case 'source' :
+				this.source.vectorAdd(this.sourceDelta);
+				break;
+			case 'path' :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				break;
+			default :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				this.start.vectorAdd(this.delta);
+				this.source.vectorAdd(this.sourceDelta);
+			}
+		return this;
+		};
+
+/**
+Subtracts delta values from the start vector; subtracts sourceDelta values from the source vector; subtracts deltaPathPlace to pathPlace
+
+Permitted argument values include 
+* 'x' - delta.x subtracted from start.x; deltaSource.x subtracted from source.x
+* 'y' - delta.y subtracted from start.y; deltaSource.y subtracted from source.y
+* 'start', 'target' - delta subtracted from start
+* 'source' - deltaSource subtracted from source
+* 'path' - deltaPathPlace subtracted from pathPlace 
+* undefined: all values are amended
+@method revertStart
+@param {String} [item] String used to limit this function's actions
+@return This
+@chainable
+**/
+	Cell.prototype.revertStart = function(item){
+		switch(item){
+			case 'x' :
+				this.start.x -= this.delta.x || 0;
+				this.source.x -= this.deltaSource.x || 0;
+				break;
+			case 'y' :
+				this.start.y -= this.delta.y || 0;
+				this.source.y -= this.deltaSource.y || 0;
+				break;
+			case 'start' :
+			case 'target' :
+				this.start.vectorSubtract(this.delta);
+				break;
+			case 'source' :
+				this.source.vectorSubtract(this.sourceDelta);
+				break;
+			case 'path' :
+				this.pathPlace -= this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				break;
+			default :
+				this.pathPlace -= this.deltaPathPlace;
+				if(this.pathPlace > 1){this.pathPlace -= 1;}
+				if(this.pathPlace < 0){this.pathPlace += 1;}
+				this.start.vectorSubtract(this.delta);
+				this.source.vectorSubtract(this.sourceDelta);
+			}
+		return this;
+		};
+
+/**
+Calculates the pixels value of the Cell's target attribute
+
+* doesn't take into account the object's scaling or orientation
+* (badly named function - getPivotOffsetVector has nothing to do with pivots)
+
+@method getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where sprite drawing should start
+@private
+**/
+	Cell.prototype.getPivotOffsetVector = function(){
+		//result defaults to numerical offsets
+		var result = this.handle.getVector(),
+			height = this.targetHeight || this.get('height'),
+			width = this.targetWidth || this.get('width');
+		//calculate percentage offsets
+		if((scrawl.isa(this.handle.x,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.handle.x)){
+			result.x = (parseFloat(this.handle.x)/100) * width;
+			}
+		else{
+			switch (this.handle.x){
+				//calculate string offsets
+				case 'left' : result.x = 0; break;
+				case 'center' : result.x = width/2; break;
+				case 'right' : result.x = width; break;
+				}
+			}
+		if((scrawl.isa(this.handle.y,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.handle.y)){
+			result.y = (parseFloat(this.handle.y)/100) * height;
+			}
+		else{
+			switch (this.handle.y){
+				//calculate string offsets
+				case 'top' : result.y = 0; break;
+				case 'center' : result.y = height/2; break;
+				case 'bottom' : result.y = height; break;
+				}
+			}
+		return result;
+		};
+
+/**
+Zooms one cell in relation to another cell
+@method zoom
+@param {Number} item Number of pixels to amend the zoomed cell's start and dimensions by
+@return This
+@chainable
+**/
 	Cell.prototype.zoom = function(item){
 		if(scrawl.isa(item,'num')){
-			var myW = this.sourceWidth + item;
-			var myH = this.sourceHeight + item;
-			if(myW.isBetween(this.sourceMinWidth,this.sourceMaxWidth,true) && myH.isBetween(this.sourceMinHeight,this.sourceMaxHeight,true)){
-				this.sourceWidth = myW;
-				var myX = this.sourceX - (item/2);
+			var	sWidth = this.sourceWidth,
+				sHeight = this.sourceHeight,
+				aWidth = this.actualWidth,
+				aHeight = this.actualHeight,
+				minWidth = this.get('sourceMinWidth') || this.sourceWidth,
+				minHeight = this.get('sourceMinHeight') || this.sourceHeight,
+				maxWidth = this.get('sourceMaxWidth') || this.sourceWidth,
+				maxHeight = this.get('sourceMaxHeight') || this.sourceHeight,
+				sx = this.source.x,
+				sy = this.source.y,
+				myW = sWidth + item,
+				myH = sHeight + item,
+				myX,
+				myY;
+			if(scrawl.isBetween(myW, minWidth, maxWidth, true) && scrawl.isBetween(myH, minHeight, maxHeight, true)){
+				sWidth = myW;
+				myX = sx - (item/2);
 				if(myX < 0){
-					this.sourceX = 0;
+					sx = 0;
 					}
-				else if(myX > (this.actualWidth - this.sourceWidth)){
-					this.sourceX = this.actualWidth - this.sourceWidth;
+				else if(myX > (aWidth - sWidth)){
+					sx = aWidth - sWidth;
 					}
 				else{
-					this.sourceX = myX;
+					sx = myX;
 					}
-				this.sourceHeight = myH;
-				var myY = this.sourceY - (item/2);
+				sHeight = myH;
+				myY = sy - (item/2);
 				if(myY < 0){
-					this.sourceY = 0;
+					sy = 0;
 					}
-				else if(myY > (this.actualHeight - this.sourceHeight)){
-					this.sourceY = this.actualHeight - this.sourceHeight;
+				else if(myY > (aHeight - sHeight)){
+					sy = aHeight - sHeight;
 					}
 				else{
-					this.sourceY = myY;
+					sy = myY;
 					}
+				this.source.x = sx;
+				this.source.y = sy;
+				this.sourceWidth = sWidth;
+				this.sourceHeight = sHeight;
 				}
 			}
 		return this;
 		};
+
+/**
+Builds a collision map image from sprites, for use in sprite field collision detection functions
+@method buildField
+@return This
+@chainable
+**/
 	Cell.prototype.buildField = function(){
-		var fieldSprites, fenceSprites, tempsprite, tempfill, tempstroke;
-		var buildFieldBlock = new Block({
-			width: this.actualWidth,
-			height: this.actualHeight,
-			group: this.name,
-			}).stamp();
+		var	fieldSprites = [],
+			fenceSprites = [],
+			tempsprite = '',
+			tempfill,
+			tempstroke,
+			buildFieldBlock = new Block({
+				width: this.actualWidth,
+				height: this.actualHeight,
+				group: this.name,
+				});
+		buildFieldBlock.stamp();
 		scrawl.deleteSprite(buildFieldBlock.name);
 		fieldSprites = scrawl.group[this.name+'_field'].sprites;
 		for(var i=0, z=fieldSprites.length; i<z; i++){
@@ -2654,359 +7158,467 @@ m: '',
 			scrawl.ctx[tempsprite.context].fillStyle = tempfill;
 			scrawl.ctx[tempsprite.context].strokeStyle = tempstroke;
 			}
-		this.fieldLabel = this.getImageData({
-			name: 'field',
+		this.set({
+			fieldLabel: this.getImageData({
+				name: 'field',
+				}),
 			});
 		return this;
 		};
+
+/**
+Cell field collision detection function
+
+Argument should be in the form of:
+
+* {channel:String, test:Number, coordinates:Array of Vectors, x:Number, y:Number}
+
+Where:
+
+* __channel__ (optional) can be 'red', 'green', 'blue', 'alpha', or 'anycolor' (default)
+* __test__ (optional) can be a value between 0 and 254 (default: 0)
+* __coordinates__ (optional) is an array of Vector coordinates, in pixels, relative to the Cell's &lt;canvas&gt; element's top left corner
+* __x__ (optional) is the horizontal coordinate, in pixels, relative to the Cell's top left corner
+* __y__ (optional) is the vertical coordinate, in pixels, relative to the Cell's top left corner
+
+Either include a single coordinate (x, y), or an array of coordinate Vectors
+
+Test will return: 
+* false if it encounters a coordinate outside the bou8ds of its image map
+* true if all coordinates exceed the test level (thus a sprite testing in the red channel will report true if it is entirely within a red part of the collision map
+* the first coordinate that falls below, or equals, the test level
+@method checkFieldAt
+@param {Object} items Argument containing details of how and where to check the cell's collision map image
+@return Vector of first the first coordinates to 'pass' the test
+@private
+**/
 	Cell.prototype.checkFieldAt = function(items){
-//		items.coordinates - list of coordinates - sprite.getCoordinates()
-//		items.test - minimum threshhold against which the check will be made - sprite.fieldTest
-//		items.channel - one from: red, green, blue, alpha, anycolor - sprite.fieldChannel
-//		items.x, items.y - a single coordinate
-//			gonna change this:
-//				if all coordinates pass the test, return -1
-//				if a coordinate fails, return the index of that coordinate (1, 2, 3, etc)
-//				if a coordinate is out of bounds, or no coordinates are supplied, return false
 		items = (scrawl.isa(items,'obj')) ? items : false;
-		if(scrawl.xt(items.coordinates) || scrawl.xta([items.x,items.y])){
-			var myChannel = items.channel || 'anycolor';
-			var myTest = items.test || 0;
-			var x, y, coords, pos;
-			if(!scrawl.xt(items.coordinates)){
-				coords = [{
-					x: items.x || 0,
-					y: items.y || 0,
-					}];
+		var	myChannel = items.channel || 'anycolor',
+			myTest = items.test || 0,
+			x, 
+			y, 
+			coords = (items.coordinates) ? items.coordinates : [{x: items.x || 0, y: items.y || 0}], 
+			pos,
+			d,
+			fieldLabel = this.get('fieldLabel');
+		d = scrawl.imageData[fieldLabel];
+		for(var i=0, z=coords.length; i<z; i++){
+			x = Math.round(coords[i].x);
+			y = Math.round(coords[i].y);
+			if(!scrawl.isBetween(x, 0, d.width, true) || !scrawl.isBetween(y, 0, d.height, true)){
+				return false;
+				break;
 				}
 			else{
-				coords = items.coordinates;
-				}
-			var d = scrawl.imageData[this.fieldLabel];
-			var result;
-			for(var i=0, z=coords.length; i<z; i++){
-				x = parseFloat((coords[i].x).toFixed());
-				y = parseFloat((coords[i].y).toFixed());
-				if(!x.isBetween(0, d.width, true) || !y.isBetween(0, d.height, true)){
-					return false;
-					break;
-					}
-				else{
-					result = false;
-					pos = ((y * d.width) + x) * 4;
-					switch(myChannel){
-						case 'red' : 
-							if(d.data[pos] <= myTest){
-								return i+1;
-								}
-							break;
-						case 'green' : 
-							if(d.data[pos+1] <= myTest){
-								return i+1;
-								}
-							break;
-						case 'blue' : 
-							if(d.data[pos+2] <= myTest){
-								return i+1;
-								}
-							break;
-						case 'alpha' : 
-							if(d.data[pos+3] <= myTest){
-								return i+1;
-								}
-							break;
-						case 'anycolor' :
-							if(d.data[pos] <= myTest || d.data[pos+1] <= myTest || d.data[pos+2] <= myTest){
-								return i+1;
-								}
-							break;
-						}
+				pos = ((y * d.width) + x) * 4;
+				switch(myChannel){
+					case 'red' : 
+						if(d.data[pos] <= myTest){
+							return coords[i];
+							}
+						break;
+					case 'green' : 
+						if(d.data[pos+1] <= myTest){
+							return coords[i];
+							}
+						break;
+					case 'blue' : 
+						if(d.data[pos+2] <= myTest){
+							return coords[i];
+							}
+						break;
+					case 'alpha' : 
+						if(d.data[pos+3] <= myTest){
+							return coords[i];
+							}
+						break;
+					case 'anycolor' :
+						if(d.data[pos] <= myTest || d.data[pos+1] <= myTest || d.data[pos+2] <= myTest){
+							return coords[i];
+							}
+						break;
 					}
 				}
-			return -1;
 			}
-		return false;
+		return true;
 		};
+
+/**
+Set the Cell's &lt;canvas&gt; element's context engine to the specification supplied by the sprite about to be drawn on the canvas
+@method setEngine
+@param {Sprite} sprite Sprite object
+@return Sprite object
+@private
+**/
 	Cell.prototype.setEngine = function(sprite){
-		var myContext = scrawl.ctx[this.context];
-		var spriteContext = scrawl.ctx[sprite.context];
-		var changes = spriteContext.getChanges(myContext, sprite.scale, sprite.scaleOutline);
-		var engine = scrawl.context[this.name];
-		var tempFillStyle, tempStrokeStyle;
-		for(var item in changes){
-			switch(item){
-				case 'name' :
-					break;
-				case 'fillStyle' :
-					if(scrawl.xt(scrawl.dsn[changes[item]])){
-						var des	= scrawl.design[changes[item]];
-						if(des.setToSprite){
-							if(scrawl.xta([sprite.currentX,sprite.currentWidth,des.startRangeX,sprite.currentY,sprite.currentHeight,des.startRangeY,des.endRangeX,des.endRangeY])){
-								if(des.type === 'Gradient'){
-									switch (sprite.type) {
-										case 'Wheel' :
-										case 'Shape' :
-											des.set({
-												startX: sprite.currentX-(sprite.currentWidth/2),
-												startY: sprite.currentY-(sprite.currentHeight/2),
-												endX: sprite.currentX+(sprite.currentWidth/2),
-												endY: sprite.currentY+(sprite.currentHeight/2),
-												}).update();
-											break;
-										default :
-											des.set({
-												startX: sprite.currentX+(sprite.currentWidth*des.startRangeX),
-												startY: sprite.currentY+(sprite.currentHeight*des.startRangeY),
-												endX: sprite.currentX+(sprite.currentWidth*des.endRangeX),
-												endY: sprite.currentY+(sprite.currentHeight*des.endRangeY),
-												}).update();
+		if(!sprite.fastStamp){
+			var myContext = scrawl.ctx[this.context],
+				spriteContext = scrawl.ctx[sprite.context],
+				engine,
+				tempFillStyle, 
+				tempStrokeStyle, 
+				des,
+				changes = spriteContext.getChanges(myContext, sprite.scale, sprite.scaleOutline);
+			if(changes){
+				delete changes.count;
+				engine = scrawl.context[this.name];
+				for(var item in changes){
+					des = false;
+					if(item[0] < 'm'){
+						if(item[0] < 'l'){
+							switch(item){
+								case 'fillStyle' :
+									if(scrawl.xt(scrawl.design[changes[item]])){
+										des	= scrawl.design[changes[item]];
+										if(scrawl.contains(['Gradient','RadialGradient'], des.type)){
+											des.update(sprite.name,this.name);
+											}
+										tempFillStyle = des.getData();
 										}
-									}
-								else{
-									switch(sprite.type){
-										case 'Wheel' :
-										case 'Shape' :
-											des.set({
-												startX: sprite.currentX,
-												startY: sprite.currentY,
-												startRadius: sprite.currentWidth/2,
-												endX: sprite.currentX,
-												endY: sprite.currentY,
-												endRadius: 0,
-												}).update();
-											break;
-										default :
-											des.set({
-												startX: sprite.currentX+(sprite.currentWidth*des.startRangeX),
-												startY: sprite.currentY+(sprite.currentHeight*des.startRangeY),
-												startRadius: ((sprite.currentWidth+sprite.currentHeight)/2)*des.startRangeRadius,
-												endX: sprite.currentX+(sprite.currentWidth*des.endRangeX),
-												endY: sprite.currentY+(sprite.currentHeight*des.endRangeY),
-												endRadius: 0,
-												}).update();
+									else{
+										tempFillStyle = changes[item];
 										}
-									}
+									engine.fillStyle = tempFillStyle;
+									break;
+								case 'font' : engine.font = changes[item]; break;
+								case 'globalAlpha' : engine.globalAlpha = changes[item]; break;
+								case 'globalCompositeOperation' : engine.globalCompositeOperation = changes[item]; break;
 								}
 							}
-						tempFillStyle = scrawl.dsn[changes[item]];
-						}
-					else if(scrawl.xt(scrawl.design[changes[item]])){
-						tempFillStyle = scrawl.design[changes[item]].get();
-						}
-					else if(scrawl.isa(changes[item],'str')){
-						tempFillStyle = changes[item];
-						}
-					engine.fillStyle = tempFillStyle;
-					break;
-				case 'winding' :
-					engine.mozFillRule = changes[item];
-					engine.msFillRule = changes[item];
-					break;
-				case 'strokeStyle' :
-					if(scrawl.xt(scrawl.dsn[changes[item]])){
-						var des	= scrawl.design[changes[item]];
-						if(des.setToSprite){
-							if(scrawl.xta([sprite.currentX,sprite.currentWidth,des.startRangeX,sprite.currentY,sprite.currentHeight,des.startRangeY,des.endRangeX,des.endRangeY])){
-								if(des.type === 'Gradient'){
-									switch (sprite.type) {
-										case 'Wheel' :
-										case 'Shape' :
-											des.set({
-												startX: sprite.currentX-(sprite.currentWidth/2),
-												startY: sprite.currentY-(sprite.currentHeight/2),
-												endX: sprite.currentX+(sprite.currentWidth/2),
-												endY: sprite.currentY+(sprite.currentHeight/2),
-												}).update();
-											break;
-										default :
-											des.set({
-												startX: sprite.currentX+(sprite.currentWidth*des.startRangeX),
-												startY: sprite.currentY+(sprite.currentHeight*des.startRangeY),
-												endX: sprite.currentX+(sprite.currentWidth*des.endRangeX),
-												endY: sprite.currentY+(sprite.currentHeight*des.endRangeY),
-												}).update();
-										}
-									}
-								else{
-									switch(sprite.type){
-										case 'Wheel' :
-										case 'Shape' :
-											des.set({
-												startX: sprite.currentX,
-												startY: sprite.currentY,
-												startRadius: sprite.currentWidth/2,
-												endX: sprite.currentX,
-												endY: sprite.currentY,
-												endRadius: 0,
-												}).update();
-											break;
-										default :
-											des.set({
-												startX: sprite.currentX+(sprite.currentWidth*des.startRangeX),
-												startY: sprite.currentY+(sprite.currentHeight*des.startRangeY),
-												startRadius: ((sprite.currentWidth+sprite.currentHeight)/2)*des.startRangeRadius,
-												endX: sprite.currentX+(sprite.currentWidth*des.endRangeX),
-												endY: sprite.currentY+(sprite.currentHeight*des.endRangeY),
-												endRadius: 0,
-												}).update();
-										}
-									}
+						else{
+							switch(item){
+								case 'lineCap' : engine.lineCap = changes[item]; break;
+								case 'lineDash' :
+									engine.mozDash = changes[item];
+									engine.lineDash = changes[item];
+									try{engine.setLineDash(changes[item]);}catch(e){}
+									break;
+								case 'lineDashOffset' : 
+									engine.mozDashOffset = changes[item]; 
+									engine.lineDashOffset = changes[item]; 
+									break;
+								case 'lineJoin' : engine.lineJoin = changes[item]; break;
+								case 'lineWidth' : engine.lineWidth = changes[item]; break;
 								}
 							}
-						tempStrokeStyle = scrawl.dsn[changes[item]];
 						}
-					else if(scrawl.xt(scrawl.design[changes[item]])){
-						tempStrokeStyle = scrawl.design[changes[item]].get();
-						}
-					else if(scrawl.isa(changes[item],'str')){
-						tempStrokeStyle = changes[item];
-						}
-					engine.strokeStyle = tempStrokeStyle;
-					break;
-				case 'lineDash' :
-					engine.mozDash = changes[item];
-					engine.lineDash = changes[item];
-					try{engine.setLineDash(changes[item]);}catch(e){}
-					break;
-				case 'lineDashOffset' : 
-					engine.mozDashOffset = changes[item]; 
-					engine.lineDashOffset = changes[item]; 
-					break;
-				case 'globalAlpha' : engine.globalAlpha = changes[item]; break;
-				case 'globalCompositeOperation' : engine.globalCompositeOperation = changes[item]; break;
-				case 'lineWidth' : engine.lineWidth = changes[item]; break;
-				case 'lineCap' : engine.lineCap = changes[item]; break;
-				case 'lineJoin' : engine.lineJoin = changes[item]; break;
-				case 'miterLimit' : engine.miterLimit = changes[item]; break;
-				case 'shadowOffsetX' : engine.shadowOffsetX = changes[item]; break;
-				case 'shadowOffsetY' : engine.shadowOffsetY = changes[item]; break;
-				case 'shadowBlur' : engine.shadowBlur = changes[item]; break;
-				case 'shadowColor' : engine.shadowColor = changes[item]; break;
-				case 'font' : engine.font = changes[item]; break;
-				case 'textAlign' : engine.textAlign = changes[item]; break;
-				case 'textBaseline' : engine.textBaseline = changes[item]; break;
-				}
-			if(item !== 'name'){
-				if(scrawl.xt(scrawl.dsn[changes[item]])){
-					if('fillStyle' === item){
-						if(engine.fillStyle === tempFillStyle){
-							myContext[item] = changes[item];
+					else{
+						if(item[0] == 's'){
+							switch(item){
+								case 'shadowBlur' : engine.shadowBlur = changes[item]; break;
+								case 'shadowColor' : engine.shadowColor = changes[item]; break;
+								case 'shadowOffsetX' : engine.shadowOffsetX = changes[item]; break;
+								case 'shadowOffsetY' : engine.shadowOffsetY = changes[item]; break;
+								case 'strokeStyle' :
+									if(scrawl.xt(scrawl.design[changes[item]])){
+										des	= scrawl.design[changes[item]];
+										if(scrawl.contains(['Gradient','RadialGradient'], des.type)){
+											des.update(sprite.name,this.name);
+											}
+										tempStrokeStyle = des.getData();
+										}
+									else{
+										tempStrokeStyle = changes[item];
+										}
+									engine.strokeStyle = tempStrokeStyle;
+									break;
+								}
+							}
+						else{
+							switch(item){
+								case 'miterLimit' : engine.miterLimit = changes[item]; break;
+								case 'textAlign' : engine.textAlign = changes[item]; break;
+								case 'textBaseline' : engine.textBaseline = changes[item]; break;
+								case 'winding' :
+									engine.mozFillRule = changes[item];
+									engine.msFillRule = changes[item];
+									break;
+								}
 							}
 						}
-					else if('strokeStyle' === item){
-						if(engine.strokeStyle === tempStrokeStyle){
-							myContext[item] = changes[item];
-							}
-						}
-					}
-				else{
 					myContext[item] = changes[item];
 					}
 				}
 			}
-		return engine;
+		return sprite;
 		};
+
+/**
+Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
+@method clear
+@return This
+@chainable
+**/
 	Cell.prototype.clear = function(){
 		var ctx = scrawl.context[this.name];
-		ctx.clearRect(this.actualX-this.cellX, this.actualY-this.cellY, this.actualWidth*this.scale, this.actualHeight*this.scale);
+		ctx.setTransform(1,0,0,1,0,0);
+		ctx.clearRect(0, 0, this.actualWidth, this.actualHeight);
 		return this;
 		};
+
+/**
+Prepare to draw sprites onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
+@method compile
+@return This
+@chainable
+**/
 	Cell.prototype.compile = function(){
-		if(this.backgroundColor !== 'rgba(0,0,0,0)'){
+		if(this.get('backgroundColor') !== 'rgba(0,0,0,0)'){
 			this.stampBackground();
 			}
 		this.groups.sort(function(a,b){
 			return scrawl.group[a].order - scrawl.group[b].order;
 			});
 		for(var i=0, z=this.groups.length; i<z; i++){
-			if(scrawl.group[this.groups[i]].visibility){
+			if(scrawl.group[this.groups[i]].get('visibility')){
 				scrawl.group[this.groups[i]].stamp(false, this.name);
 				}
 			}
 		return this;
 		};
+
+/**
+Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.fillRect(), using the cell's .backgroundColor attribute
+@method stampBackground
+@return This
+@chainable
+**/
 	Cell.prototype.stampBackground = function(){
-		var ctx = scrawl.context[this.name];
-		var tempFillStyle = ctx.fillStyle;
-		ctx.fillStyle = this.backgroundColor;
-		ctx.fillRect(this.actualX-this.cellX, this.actualY-this.cellY, this.actualWidth, this.actualHeight);
+		var	ctx = scrawl.context[this.name],
+			fill = this.get('backgroundColor'),
+			w = this.actualWidth,
+			h = this.actualHeight,
+			tempFillStyle = ctx.fillStyle;
+		ctx.setTransform(1,0,0,1,0,0);
+		ctx.fillStyle = fill;
+		ctx.fillRect(0, 0, w, h);
 		ctx.fillStyle = tempFillStyle;
 		return this;
 		};
-	Cell.prototype.copyCellToSelf = function(cell){
-		cell = (scrawl.isa(cell,'str')) ? scrawl.cell[cell] : cell;
-		var myCell = (cell.lockTo) ? scrawl.cell[cell.lockTo] : cell;
-		if(scrawl.xt(myCell)){
-			var mySourceWidth = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].width : myCell.sourceWidth;
-			var mySourceHeight = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].height : myCell.sourceHeight;
-			var myTargetWidth = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].width*this.scale : myCell.targetWidth*this.scale;
-			var myTargetHeight = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].height*this.scale : myCell.targetHeight*this.scale;
-			var context = scrawl.context[this.name];
-			var ctx = scrawl.ctx[this.name];
-			if(cell.globalAlpha !== ctx.globalAlpha){
-				context.globalAlpha = cell.globalAlpha;
-				ctx.globalAlpha = cell.globalAlpha;
+
+/**
+Cell copy helper function
+@method setStampUsingPivot
+@return This
+@chainable
+@private
+**/
+	Cell.prototype.setStampUsingPivot = function(){
+		var	here,
+			myCell,
+			myP,
+			myPVector,
+			pSprite,
+			myPad,
+			base;
+		if(scrawl.contains(scrawl.pointnames, this.pivot)){
+			myP = scrawl.point[this.pivot];
+			pSprite = scrawl.sprite[myP.sprite];
+			myPVector = myP.getCurrentCoordinates().rotate(pSprite.roll).vectorAdd(pSprite.start);
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(scrawl.contains(scrawl.spritenames, this.pivot)){
+			myP = scrawl.sprite[this.pivot];
+			myPVector = (myP.type === 'Particle') ? myP.get('position') : myP.start.getVector();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(this.pivot === 'mouse'){
+			myPad = scrawl.pad[this.pad];
+			base = scrawl.cell[myPad.base];
+			here = myPad.getMouse();
+			if(myPad.width !== base.actualWidth){
+				here.x /= (myPad.width/base.actualWidth);
 				}
-			if(cell.globalCompositeOperation !== ctx.globalCompositeOperation){
-				context.globalCompositeOperation = cell.globalCompositeOperation;
-				ctx.globalCompositeOperation = cell.globalCompositeOperation;
+			if(myPad.height !== base.actualHeight){
+				here.y /= (myPad.height/base.actualHeight);
 				}
-			context.drawImage(scrawl.canvas[cell.name], myCell.sourceX, myCell.sourceY, mySourceWidth, mySourceHeight, (myCell.targetX-cell.handleX)*this.scale, (myCell.targetY-cell.handleY)*this.scale, myTargetWidth, myTargetHeight);
+			if(!scrawl.xta([this.mouseX,this.mouseY])){
+				this.mouseX = this.start.x;
+				this.mouseY = this.start.y;
+				}
+			if(here.active){
+				this.start.x = (!this.lockX) ? this.start.x + here.x - this.mouseX : this.start.x;
+				this.start.y = (!this.lockY) ? this.start.y + here.y - this.mouseY : this.start.y;
+				this.mouseX = here.x;
+				this.mouseY = here.y;
+				}
 			}
 		return this;
 		};
-	Cell.prototype.getCopyScaling = function(cell){
-		cell = (scrawl.isa(cell,'str')) ? scrawl.cell[cell] : cell;
-		var myCell = (cell.lockTo) ? scrawl.cell[cell.lockTo] : cell;
-		if(scrawl.xt(myCell)){
-			var mySourceWidth = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].width : myCell.sourceWidth;
-			var mySourceHeight = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].height : myCell.sourceHeight;
-			var myTargetWidth = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].width*this.scale : myCell.targetWidth*this.scale;
-			var myTargetHeight = (myCell.usePadDimensions) ? scrawl.pad[myCell.pad].height*this.scale : myCell.targetHeight*this.scale;
-			return({w: myTargetWidth/mySourceWidth, h: myTargetHeight/mySourceHeight});
-			}
-		return false;
+
+/**
+Cell copy helper function
+@method rotateDestination
+@param {Object} engine Javascript canvas context object
+@return This
+@chainable
+@private
+**/
+	Cell.prototype.rotateDestination = function(engine){
+		var myA = (this.flipReverse) ? -1 : 1,
+			myD = (this.flipUpend) ? -1 : 1,
+			deltaRotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * scrawl.radian : this.roll * scrawl.radian,
+			cos = Math.cos(deltaRotation),
+			sin = Math.sin(deltaRotation);
+		engine.setTransform((cos * myA), (sin * myA), (-sin * myD), (cos * myD), this.start.x, this.start.y);
+		return this;
 		};
+
+/**
+Cell copy helper function
+@method prepareToCopyCell
+@param {Object} engine Javascript canvas context object
+@return This
+@chainable
+@private
+**/
+	Cell.prototype.prepareToCopyCell = function(engine){
+		var	here;
+		if(!this.offset){
+			this.offset = this.getOffsetStartVector();
+			}
+		if(this.pivot){
+			this.setStampUsingPivot();
+			}
+		else if(scrawl.contains(scrawl.spritenames, this.path) && scrawl.sprite[this.path].type === 'Shape'){
+			here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+			this.start.x = (!this.lockX) ? here.x : this.start.x;
+			this.start.y = (!this.lockY) ? here.y : this.start.y;
+			this.pathRoll = here.r || 0;
+			}
+		this.rotateDestination(engine);
+		return this;
+		};
+
+/**
+Cell copy helper function
+@method copyCellToSelf
+@param {String} cell CELLNAME of cell to be copied onto this cell's &lt;canvas&gt; element
+@param {Boolean} [usePadScale] Set to true when copying cells onto the display canvas; false otherwise
+@return This
+@chainable
+@private
+**/
+	Cell.prototype.copyCellToSelf = function(cell, usePadScale){
+		cell = (scrawl.isa(cell,'str')) ? scrawl.cell[cell] : cell;
+		usePadScale = (scrawl.xt(usePadScale)) ? usePadScale : false;
+		var	lockTo = cell.get('lockTo'),
+			myCell = (lockTo) ? scrawl.cell[lockTo] : cell;
+		if(scrawl.xt(myCell)){
+			var	usePadDimensions = myCell.usePadDimensions,
+				pad = scrawl.pad[myCell.pad],
+				padWidth = pad.width,
+				padHeight = pad.height,
+				scale = (usePadScale) ? pad.scale : this.scale,
+				sourceX = myCell.source.x || this.source.x,
+				sourceY = myCell.source.y || this.source.y,
+				sourceWidth = myCell.sourceWidth || this.sourceWidth,
+				sourceHeight = myCell.sourceHeight || this.sourceHeight,
+				targetWidth = (usePadDimensions) ? padWidth * scale : myCell.targetWidth * scale,
+				targetHeight = (usePadDimensions) ? padHeight * scale : myCell.targetHeight * scale,
+				context = scrawl.context[this.name],
+				ctx = scrawl.ctx[this.name],
+				cga = myCell.get('globalAlpha'),
+				xga = ctx.get('globalAlpha'),
+				cgco = myCell.get('globalCompositeOperation'),
+				xgco = ctx.get('globalCompositeOperation');
+			if(cga !== xga){
+				context.globalAlpha = cga;
+				ctx.set({globalAlpha: cga});
+				}
+			if(cgco !== xgco){
+				context.globalCompositeOperation = cgco;
+				ctx.set({globalCompositeOperation: cgco});
+				}
+			scrawl.context[myCell.name].setTransform(1,0,0,1,0,0);
+			myCell.prepareToCopyCell(context);
+			context.drawImage(scrawl.canvas[myCell.name], sourceX, sourceY, sourceWidth, sourceHeight, myCell.offset.x, myCell.offset.y, targetWidth, targetHeight);
+			}
+		return this;
+		};
+
+/**
+Sprite stamp helper function
+@method clearShadow
+@return This
+@chainable
+@private
+**/
 	Cell.prototype.clearShadow = function(){
-		var engine = scrawl.context[this.name];
-		var context = scrawl.ctx[this.context];
+		var	engine = scrawl.context[this.name],
+			context = scrawl.ctx[this.context];
 		engine.shadowOffsetX = 0.0;
-		context.shadowOffsetX = 0.0;
 		engine.shadowOffsetY = 0.0;
-		context.shadowOffsetY = 0.0;
 		engine.shadowBlur = 0.0;
-		context.shadowBlur = 0.0;
-		engine.shadowColor = 'rgba(0, 0, 0, 0)';
-		context.shadowColor = 'rgba(0, 0, 0, 0)';
+		context.set({
+			shadowOffsetX: 0.0,
+			shadowOffsetY: 0.0,
+			shadowBlur: 0.0,
+			});
 		return this;
 		};
+
+/**
+Sprite stamp helper function
+@method restoreShadow
+@return This
+@chainable
+@private
+**/
 	Cell.prototype.restoreShadow = function(spritecontext){
-		var engine = scrawl.context[this.name];
-		var context = scrawl.ctx[this.context];
-		var spritectx = scrawl.ctx[spritecontext];
-		engine.shadowOffsetX = spritectx.shadowOffsetX;
-		context.shadowOffsetX = spritectx.shadowOffsetX;
-		engine.shadowOffsetY = spritectx.shadowOffsetY;
-		context.shadowOffsetY = spritectx.shadowOffsetY;
-		engine.shadowBlur = spritectx.shadowBlur;
-		context.shadowBlur = spritectx.shadowBlur;
-		engine.shadowColor = spritectx.shadowColor;
-		context.shadowColor = spritectx.shadowColor;
+		var	engine = scrawl.context[this.name],
+			context = scrawl.ctx[this.context],
+			s = scrawl.ctx[spritecontext],
+			sx = s.get('shadowOffsetX'),
+			sy = s.get('shadowOffsetY'),
+			sb = s.get('shadowBlur');
+		engine.shadowOffsetX = sx;
+		engine.shadowOffsetY = sy;
+		engine.shadowBlur = sb;
+		context.set({
+			shadowOffsetX: sx,
+			shadowOffsetY: sy,
+			shadowBlur: sb,
+			});
 		return this;
 		};
+
+/**
+Sprite stamp helper function
+@method setToClearShape
+@return This
+@chainable
+@private
+**/
 	Cell.prototype.setToClearShape = function(){
-		var engine = scrawl.context[this.name];
-		var context = scrawl.ctx[this.context];
-		engine.fillStyle = 'rgba(0, 0, 0, 0)'
-		context.fillStyle = 'rgba(0, 0, 0, 0)'
-		engine.strokeStyle = 'rgba(0, 0, 0, 0)'
-		context.strokeStyle = 'rgba(0, 0, 0, 0)'
-		engine.shadowColor = 'rgba(0, 0, 0, 0)'
-		context.shadowColor = 'rgba(0, 0, 0, 0)'
+		var	engine = scrawl.context[this.name],
+			context = scrawl.ctx[this.context];
+		engine.fillStyle = 'rgba(0, 0, 0, 0)';
+		engine.strokeStyle = 'rgba(0, 0, 0, 0)';
+		engine.shadowColor = 'rgba(0, 0, 0, 0)';
+		context.set({
+			fillStyle: 'rgba(0, 0, 0, 0)',
+			strokeStyle: 'rgba(0, 0, 0, 0)',
+			shadowColor: 'rgba(0, 0, 0, 0)',
+			});
 		return this;
 		};
+
+/**
+Amend the physical dimensions of the Cell's &lt;canvas&gt; element
+
+Omitting the argument will force the &lt;canvas&gt; to set itself to its Pad object's dimensions
+@method setDimensions
+@param {Object} [items] Argument with __width__ and/or __height__ attributes, in pixels
+@return This
+@chainable
+**/
 	Cell.prototype.setDimensions = function(items){
-		var myWidth, myHeight;
+		var	myWidth,
+			myHeight;
 		if(scrawl.xt(items) && !this.usePadDimensions){
 			myWidth = items.width || items.actualWidth || this.actualWidth;
 			myHeight = items.height || items.actualHeight || this.actualHeight;
@@ -3017,225 +7629,565 @@ m: '',
 			}
 		scrawl.canvas[this.name].width = myWidth;
 		scrawl.canvas[this.name].height = myHeight;
-		this.actualWidth = myWidth;
-		this.actualHeight = myHeight;
+		Scrawl.prototype.set.call(this,{
+			actualWidth: myWidth,
+			actualHeight: myHeight,
+			});
 		return this;
 		};
-	Cell.prototype.scaleCell = function(values){
-		values = (scrawl.isa(values,'obj')) ? values : {};
-		if(scrawl.isa(values.x,'num')){this.scaleX = values.x;}
-		if(scrawl.isa(values.y,'num')){this.scaleY = values.y;}
-		if(scrawl.isa(values.scaleX,'num')){this.scaleX = values.scaleX;}
-		if(scrawl.isa(values.scaleY,'num')){this.scaleY = values.scaleY;}
-		scrawl.context[this.name].scale(this.scaleX, this.scaleY);
-		return this;
-		};
-	Cell.prototype.translateCell = function(values){
-		values = (scrawl.isa(values,'obj')) ? values : {};
-		if(scrawl.isa(values.x,'num')){this.cellX = values.x;}
-		if(scrawl.isa(values.y,'num')){this.cellY = values.y;}
-		if(scrawl.isa(values.cellX,'num')){this.cellX = values.cellX;}
-		if(scrawl.isa(values.cellY,'num')){this.cellY = values.cellY;}
-		scrawl.context[this.name].translate(this.cellX, this.cellY);
-		return this;
-		};
-	Cell.prototype.rotateCell = function(value){
-		if(scrawl.isa(value,'num')){
-			var deltaRotation = (value - this.roll) * scrawl.radian;
-			if(deltaRotation !== 0){
-				scrawl.context[this.name].rotate(deltaRotation);
-				}
-			this.roll = value;
-			}
-		return this;
-		};
-	Cell.prototype.resetRotation = function(){
-		scrawl.context[this.name].rotate(-this.roll * scrawl.radian);
-		this.roll = 0;
-		return this;
-		};
-	Cell.prototype.transformCell = function(items, rollFirst){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		var myRollFirst = (scrawl.isa(rollFirst,'bool')) ? rollFirst : false;
-		this.scaleX = items.scaleX || this.scaleX;
-		this.scaleY = items.scaleY || this.scaleY;
-		this.shearX = items.shearX || this.shearX;
-		this.shearY = items.shearY || this.shearY;
-		this.cellX = items.cellX || this.cellX;
-		this.cellY = items.cellY || this.cellY;
-		items['roll'] = items.roll || this.roll || 0;
-		this.rollDegree = (scrawl.isa(items.rollDegree,'bool')) ? items.rollDegree : this.rollDegree;
-		if(myRollFirst){
-			this.rotateCell(items.roll);
-			scrawl.context[this.name].setTransform(this.scaleX, this.shearX, this.shearY, this.scaleY, this.cellX, this.cellY);
-			}
-		else{
-			scrawl.context[this.name].setTransform(this.scaleX, this.shearX, this.shearY, this.scaleY, this.cellX, this.cellY);
-			this.rotateCell(items.roll);
-			}
-		return this;
-		};
+
+/**
+Perform a JavaScript ctx.save() operation
+@method saveContext
+@return This
+@chainable
+**/
 	Cell.prototype.saveContext = function(){
 		scrawl.context[this.name].save();
 		return this;
 		};
+
+/**
+Perform a JavaScript ctx.restore() operation
+@method restoreContext
+@return This
+@chainable
+**/
 	Cell.prototype.restoreContext = function(){
 		scrawl.context[this.name].restore();
 		return this;
 		};
+
+/**
+Capture an image of the cell's &lt;canvas&gt; element using the JavaScript ctx.getImageData() operation
+
+Argument is an Object in the form:
+
+* {x:Number, y:Number, width:Number, height:Number}
+
+Default values are:
+
+* {0, 0, this.actualWidth, this.actualHeight}
+
+@method getImageData
+@param {Object} dimensions Details of the &lt;canvas&gt; area to be saved
+@return String label pointing to where the image has been saved in the scrawl library - scrawl.imageData[STRING]
+**/
 	Cell.prototype.getImageData = function(dimensions){
-		var myLabel, myX, myY, myW, myH;
 		dimensions = (scrawl.isa(dimensions,'obj')) ? dimensions : {};
-		myX = (scrawl.isa(dimensions.x,'num')) ? dimensions.x : this.actualX;
-		myY = (scrawl.isa(dimensions.y,'num')) ? dimensions.y : this.actualY;
-		myW = (scrawl.isa(dimensions.width,'num')) ? dimensions.width : this.actualWidth;
-		myH = (scrawl.isa(dimensions.height,'num')) ? dimensions.height : this.actualHeight;
-		myLabel = (scrawl.isa(dimensions.name,'str')) ? this.name+'_'+dimensions.name : this.name+'_imageData';
+		var	myLabel = (scrawl.isa(dimensions.name,'str')) ? this.name+'_'+dimensions.name : this.name+'_imageData',
+			myX = (scrawl.isa(dimensions.x,'num')) ? dimensions.x : 0,
+			myY = (scrawl.isa(dimensions.y,'num')) ? dimensions.y : 0,
+			myW = (scrawl.isa(dimensions.width,'num')) ? dimensions.width : this.actualWidth,
+			myH = (scrawl.isa(dimensions.height,'num')) ? dimensions.height : this.actualHeight;
 		scrawl.imageData[myLabel] = scrawl.context[this.name].getImageData(myX, myY, myW, myH);
 		return myLabel;
 		};
+
+/**
+Perform a splice-shift-join operation on the &lt;canvas&gt; element's current scene
+
+Argument is an Object in the form:
+
+* {edge:String, strip:Number}
+
+Permitted values for the argument Object's attributes are:
+
+* __edge__ - one from 'horizontal', 'vertical', 'top', 'bottom', 'left', 'right'
+* __strip__ - a width/height Number (in pixels) of the strip that is to be moved from the named edge of the &lt;canvas&gt; to the opposite edge
+
+_Note that this function is only effective in achieving a parallax effect if the user never clears or updates the cell's &lt;canvas&gt; element, and takes steps to shift the cell's source vector appropriately each time the splice operation is performed_
+
+@method spliceCell
+@param {Object} items Object containing data for the splice operation
+@return This
+@chainable
+**/
 	Cell.prototype.spliceCell = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(['horizontal','vertical','top','bottom','left','right'].contains(items.edge)){
-			var myStrip, myRemains, myEdge, stripSlice, remainsSlice;
-			var ctx = scrawl.context[this.name];
+		if(scrawl.contains(['horizontal','vertical','top','bottom','left','right'], items.edge)){
+			var	myStrip, 
+				myRemains, 
+				myEdge, 
+				height = this.actualHeight,
+				width = this.actualWidth,
+				c,
+				e,
+				canvas = scrawl.canvas[this.name],
+				ctx = scrawl.context[this.name];
+			c = document.createElement('canvas');
+			c.width = width;
+			c.height = height;
+			e = c.getContext('2d');
+			ctx.setTransform(1,0,0,1,0,0);
 			switch(items.edge){
 				case 'horizontal' :
-					myStrip = myRemains = this.actualWidth/2;
+					myStrip = myRemains = width/2;
 					myEdge = 'left';
 					break;
 				case 'vertical' :
-					myStrip = myRemains = this.actualHeight/2;
+					myStrip = myRemains = height/2;
 					myEdge = 'top';
 					break;
 				case 'top' :
 				case 'bottom' :
 					myStrip = items.strip || 20;
-					myRemains = this.actualHeight - myStrip;
+					myRemains = height - myStrip;
 					myEdge = items.edge;
 					break;
 				case 'left' :
 				case 'right' :
 					myStrip = items.strip || 20;
-					myRemains = this.actualWidth - myStrip;
+					myRemains = width - myStrip;
 					myEdge = items.edge;
 					break;
 				}
+
 			switch(myEdge){
 				case 'top' :
-					stripSlice = ctx.getImageData(0,0,this.actualWidth,myStrip);
-					remainsSlice = ctx.getImageData(0,myStrip,this.actualWidth,myRemains);
-					ctx.clearRect(0,0,this.actualWidth,this.actualHeight);
-					ctx.putImageData(remainsSlice,0,0);
-					ctx.putImageData(stripSlice,0,myRemains);
+					e.drawImage(canvas, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
+					e.drawImage(canvas, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
 					break;
 				case 'bottom' :
-					remainsSlice = ctx.getImageData(0,0,this.actualWidth,myRemains);
-					stripSlice = ctx.getImageData(0,myRemains,this.actualWidth,myStrip);
-					ctx.clearRect(0,0,this.actualWidth,this.actualHeight);
-					ctx.putImageData(stripSlice,0,0);
-					ctx.putImageData(remainsSlice,0,myStrip);
+					e.drawImage(canvas, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
+					e.drawImage(canvas, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
 					break;
 				case 'left' :
-					stripSlice = ctx.getImageData(0,0,myStrip,this.actualHeight);
-					remainsSlice = ctx.getImageData(myStrip,0,myRemains,this.actualHeight);
-					ctx.clearRect(0,0,this.actualWidth,this.actualHeight);
-					ctx.putImageData(remainsSlice,0,0);
-					ctx.putImageData(stripSlice,myRemains,0);
+					e.drawImage(canvas, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
+					e.drawImage(canvas, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
 					break;
 				case 'right' :
-					remainsSlice = ctx.getImageData(0,0,myRemains,this.actualHeight);
-					stripSlice = ctx.getImageData(myRemains,0,myStrip,this.actualHeight);
-					ctx.clearRect(0,0,this.actualWidth,this.actualHeight);
-					ctx.putImageData(stripSlice,0,0);
-					ctx.putImageData(remainsSlice,myStrip,0);
+					e.drawImage(canvas, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
+					e.drawImage(canvas, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
 					break;
 				}
+			ctx.clearRect(0, 0, width, height);
+			ctx.drawImage(c, 0, 0, width, height);
 			}
 		return this;
 		};
 		
+/**
+# Context
+	
+## Instantiation
+
+* This object should never be instantiated by users
+
+## Purpose
+
+* wraps a given context for a Cell or Sprite object
+* responsible for comparing contexts and listing changes that need to be made for successful Sprite stamping on a canvas
+* all updates to a Context object's attributes should be performed via the Sprite object's set() function
+
+@class Context
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Context(items){
-		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.fillStyle = (scrawl.isa(items.fillStyle,'str')) ? items.fillStyle : '#000000';
-		this.winding = (scrawl.isa(items.winding,'str')) ? items.winding : 'nonzero';
-		this.strokeStyle = (scrawl.isa(items.strokeStyle,'str')) ? items.strokeStyle : '#000000';
-		this.globalAlpha = (scrawl.isa(items.globalAlpha,'num')) ? items.globalAlpha : 1;
-		this.globalCompositeOperation = (scrawl.isa(items.globalCompositeOperation,'str')) ? items.globalCompositeOperation : 'source-over';
-		this.lineWidth = (scrawl.isa(items.lineWidth,'num')) ? items.lineWidth : 1;
-		this.lineCap = (scrawl.isa(items.lineCap,'str')) ? items.lineCap : 'butt';
-		this.lineJoin = (scrawl.isa(items.lineJoin,'str')) ? items.lineJoin : 'miter';
-		this.lineDash = (scrawl.isa(items.lineDash,'arr')) ? items.lineDash : [];
-		this.lineDashOffset = (scrawl.isa(items.lineDashOffset,'num')) ? items.lineDashOffset : 0;
-		this.miterLimit = (scrawl.isa(items.miterLimit,'num')) ? items.miterLimit : 10;
-		this.shadowOffsetX = items.shadowOffsetX || 0;
-		this.shadowOffsetY = items.shadowOffsetY || 0;
-		this.shadowBlur = items.shadowBlur || 0;
-		this.shadowColor = (scrawl.isa(items.shadowColor,'str')) ? items.shadowColor : 'rgba(0,0,0,0)';
-		this.font = (scrawl.isa(items.font,'str')) ? items.font : '10pt sans-serif';
-		this.textAlign = (scrawl.isa(items.textAlign,'str')) ? items.textAlign : 'start';
-		this.textBaseline = (scrawl.isa(items.textBaseline,'str')) ? items.textBaseline : 'alphabetic';
+		Scrawl.call(this, items);
+		if(items.cell){
+			this.getContextFromEngine(items.cell);
+			}
+		else{
+			this.set(items);
+			}
 		scrawl.ctx[this.name] = this;
-		scrawl.ctxnames.pushUnique(this.name);
+		scrawl.pushUnique(scrawl.ctxnames, this.name);
 		return this;
 		}
 	Context.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Context'
+@final
+**/		
 	Context.prototype.type = 'Context';
 	Context.prototype.classname = 'ctxnames';
-	Context.prototype.getContextFromEngine = function(ctx){
-		var defaults = ['fillStyle', 'strokeStyle', 'globalAlpha', 'globalCompositeOperation', 'lineWidth', 'lineCap', 'lineJoin', 'miterLimit', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur', 'shadowColor', 'font', 'textAlign', 'textBaseline'];
-		for(var i=0, z=defaults.length; i<z; i++){
-			this[defaults[i]] = ctx[defaults[i]];
+	scrawl.d.Context = {
+
+/**
+Color, gradient or pattern used to fill a sprite. Can be:
+
+* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
+* COLORNAME String
+* GRADIENTNAME String
+* RADIALGRADIENTNAME String
+* PATTERNNAME String
+@property fillStyle
+@type String
+@default '#000000'
+**/		
+		fillStyle: '#000000',
+
+/**
+Shape and Outline sprite fill method. Can be:
+
+* 'nonzero' - all areas enclosed by the sprite's path are flooded
+* 'evenodd' - only 'odd' areas of the sprite's path are flooded
+@property winding
+@type String
+@default 'nonzero'
+**/		
+		winding: 'nonzero',
+
+/**
+Color, gradient or pattern used to outline a sprite. Can be:
+
+* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
+* COLORNAME String
+* GRADIENTNAME String
+* RADIALGRADIENTNAME String
+* PATTERNNAME String
+@property strokeStyle
+@type String
+@default '#000000'
+**/		
+		strokeStyle: '#000000',
+
+/**
+Sprite transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
+@property globalAlpha
+@type Number
+@default 1
+**/		
+		globalAlpha: 1,
+
+/**
+Compositing method for applying the sprite to an existing Cell (&lt;canvas&gt;) display. Permitted values include
+
+* 'source-over'
+* 'source-atop'
+* 'source-in'
+* 'source-out'
+* 'destination-over'
+* 'destination-atop'
+* 'destination-in'
+* 'destination-out'
+* 'lighter'
+* 'darker'
+* 'copy'
+* 'xor'
+
+_Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers_
+
+@property globalCompositeOperation
+@type String
+@default 'source-over'
+**/		
+		globalCompositeOperation: 'source-over',
+
+/**
+Line width, in pixels
+@property lineWidth
+@type Number
+@default 1
+**/		
+		lineWidth: 1,
+
+/**
+Line cap styling. Permitted values include:
+
+* 'butt'
+* 'round'
+* 'square'
+
+@property lineCap
+@type String
+@default 'butt'
+**/		
+		lineCap: 'butt',
+
+/**
+Line join styling. Permitted values include:
+
+* 'miter'
+* 'round'
+* 'bevel'
+
+@property lineJoin
+@type String
+@default 'miter'
+**/		
+		lineJoin: 'miter',
+
+/**
+Line dash format - an array of Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern
+@property lineDash
+@type Array
+@default []
+**/		
+		lineDash: [],
+
+/**
+Line dash offset - distance along the sprite's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect
+@property lineDashOffset
+@type Number
+@default 0
+**/		
+		lineDashOffset: 0,
+
+/**
+miterLimit - affecting the 'pointiness' of the line join where two lines join at an acute angle
+@property miterLimit
+@type Number
+@default 10
+**/		
+		miterLimit: 10,
+
+/**
+Horizontal offset of a sprite's shadow, in pixels
+@property shadowOffsetX
+@type Number
+@default 0
+**/		
+		shadowOffsetX: 0,
+
+/**
+Vertical offset of a sprite's shadow, in pixels
+@property shadowOffsetY
+@type Number
+@default 0
+**/		
+		shadowOffsetY: 0,
+
+/**
+Blur border for a sprite's shadow, in pixels
+@property shadowBlur
+@type Number
+@default 0
+**/		
+		shadowBlur: 0,
+
+/**
+Color, gradient or pattern used for sprite shadow effect. Can be:
+
+* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
+* COLORNAME String
+@property shadowColor
+@type String
+@default 'rgba(0,0,0,0)'
+**/		
+		shadowColor: 'rgba(0,0,0,0)',
+
+/**
+Cascading Style Sheet font String, for Phrase sprites
+@property font
+@type String
+@default '10pt sans-serif'
+**/		
+		font: '10pt sans-serif',
+
+/**
+Text alignment for multi-line Phrase sprites. Permitted values include:
+
+* 'start'
+* 'left'
+* 'center'
+* 'right'
+* 'end'
+
+@property textAlign
+@type String
+@default 'start'
+**/		
+		textAlign: 'start',
+
+/**
+Text baseline value for single-line Phrase sprites set to follow a Shape sprite path. Permitted values include:
+
+* 'alphabetic'
+* 'top'
+* 'hanging'
+* 'middle'
+* 'ideographic'
+* 'bottom'
+
+@property textBaseline
+@type String
+@default 'alphabetic'
+**/		
+		textBaseline: 'alphabetic',
+		};
+	scrawl.contextKeys = Object.keys(scrawl.d.Context);
+	scrawl.mergeInto(scrawl.d.Context, scrawl.d.Scrawl);
+
+/**
+Turn the object into a JSON String; doesn't include name and type attributes
+@method toString
+@return JSON string of non-default value attributes
+**/
+	Context.prototype.toString = function(){
+		var result = {};
+		for(var i = 0, z = scrawl.contextKeys.length; i < z; i++){
+			if(scrawl.contextKeys[i] === 'lineDash'){
+				if(scrawl.xt(this.lineDash) && this.lineDash.length > 0){
+					result.lineDash = this.lineDash;
+					}
+				}
+			else if(scrawl.xt(this[scrawl.contextKeys[i]]) && this[scrawl.contextKeys[i]] !== scrawl.d.Context[scrawl.contextKeys[i]]){
+				result[scrawl.contextKeys[i]] = this[scrawl.contextKeys[i]];
+				}
 			}
-		defaults.winding = ctx.mozFillRule || ctx.msFillRule || 'nonzero';
-		defaults.lineDash = [];
-		defaults.lineDashOffset = ctx.mozDashOffset || ctx.lineDashOffset;
+		return JSON.stringify(result);
+		};
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function - lineDashOffset, lineWidth, globalAlpha
+
+(Only for use by Context objects)
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+@private
+**/
+	Context.prototype.setDelta = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xt(items.lineDashOffset)){
+			if(!scrawl.xt(this.lineDashOffset)){
+				this.lineDashOffset = scrawl.d.Context.lineDashOffset;
+				}
+			this.lineDashOffset += items.lineDashOffset;
+			}
+		if(scrawl.xt(items.lineWidth)){
+			if(!scrawl.xt(this.lineWidth)){
+				this.lineWidth = scrawl.d.Context.lineWidth;
+				}
+			this.lineWidth += items.lineWidth;
+			}
+		if(scrawl.xt(items.globalAlpha)){
+			if(!scrawl.xt(this.globalAlpha)){
+				this.globalAlpha = scrawl.d.Context.globalAlpha;
+				}
+			this.globalAlpha += items.globalAlpha;
+			}
 		return this;
 		};
+
+/**
+Interrogates a &lt;canvas&gt; element's context engine and populates its own attributes with returned values
+
+(Only for use by Context objects)
+@method getContextFromEngine
+@param {Object} ctx &lt;canvas&gt; element context engine Object
+@return This
+@chainable
+@private
+**/
+	Context.prototype.getContextFromEngine = function(ctx){
+		//only called for cell contexts, which require all attributes to be set
+		for(var i=0, z=scrawl.contextKeys.length; i<z; i++){
+			this[scrawl.contextKeys[i]] = ctx[scrawl.contextKeys[i]];
+			}
+		this.winding = ctx.mozFillRule || ctx.msFillRule || 'nonzero';
+		this.lineDash = ctx.lineDash || [];
+		this.lineDashOffset = ctx.mozDashOffset || ctx.lineDashOffset || 0;
+		return this;
+		};
+
+/**
+Interrogates a &lt;canvas&gt; element's context engine and populates its own attributes with returned values
+
+(Only for use by Context objects)
+@method getChanges
+@param {Object} ctx &lt;canvas&gt; element context engine Object
+@return This
+@chainable
+@private
+**/
 	Context.prototype.getChanges = function(ctx, scale, doscale){
-		var r = {};
-		for(var item in this){
-			if(doscale && ['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'].contains(item)){
-				if(this[item]*scale !== ctx[item]){
-					r[item] = this[item]*scale;
+		var	r = {},
+			count = 0,
+			temp,
+			tempCol;
+		for(var i=0, z=scrawl.contextKeys.length; i<z; i++){
+			temp = this.get(scrawl.contextKeys[i]);
+			//handle scalable items
+			if(scrawl.contains(['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'], scrawl.contextKeys[i])){
+				if(doscale){
+					if(temp * scale !== ctx[scrawl.contextKeys[i]]){
+						r[scrawl.contextKeys[i]] = temp * scale;
+						count++;
+						}
+					}
+				else{
+					if(temp !== ctx[scrawl.contextKeys[i]]){
+						r[scrawl.contextKeys[i]] = temp;
+						count++;
+						}
 					}
 				}
-			else if(['fillStyle', 'strokeStyle'].contains(item)){
-				if(scrawl.designnames.contains(this[item])){
-					if(scrawl.design[this[item]].type === 'Color' && scrawl.design[this[item]].autoUpdate){
-						scrawl.design[this[item]].update();
-						r[item] = this[item];
-						}
-					else if(['Gradient','RadialGradient'].contains(scrawl.design[this[item]].type) && (scrawl.design[this[item]].roll || scrawl.design[this[item]].autoUpdate)){
-						scrawl.design[this[item]].update();
-						r[item] = this[item];
-						}
-					else if(this[item] !== ctx[item]){
-						r[item] = this[item];
-						}
-					}
-				else if(this[item] !== ctx[item]){
-					r[item] = this[item];
+			//handle fillStyle, strokeStyle, shadowColor that use Color design objects
+			else if(scrawl.contains(['fillStyle', 'strokeStyle', 'shadowColor'], scrawl.contextKeys[i]) && scrawl.contains(scrawl.designnames, temp) && scrawl.design[temp].type === 'Color'){
+				tempCol = scrawl.design[temp].getData();
+				if(tempCol !== ctx[scrawl.contextKeys[i]]){
+					r[scrawl.contextKeys[i]] = tempCol;
+					count++;
 					}
 				}
+			//handle fillStyle, strokeStyle that use RadialGradient, Gradient design objects
+			else if(scrawl.contains(['fillStyle', 'strokeStyle'], scrawl.contextKeys[i]) && scrawl.contains(scrawl.designnames, temp) && scrawl.contains(['Gradient','RadialGradient'], scrawl.design[temp].type) && scrawl.design[temp].autoUpdate){
+				r[scrawl.contextKeys[i]] = temp;
+				count++;
+				}
+			//handle linedash - an array that needs deep inspection to check for difference
+			else if(scrawl.contains(['lineDash'], scrawl.contextKeys[i]) && scrawl.xt(ctx.lineDash)){
+				if(temp.length !== ctx.lineDash.length){
+					r.lineDash = temp;
+					count++;
+					}
+				else{
+					for(var j=0, w=temp.length; j<w; j++){
+						if(temp[j] !== ctx.lineDash[j]){
+							r.lineDash = temp;
+							count++;
+							break;
+							}
+						}
+					}
+				}
+			//exclude items that have no equivalent in the context engine
+			else if(scrawl.contains(['name', 'timestamp'], scrawl.contextKeys[i])){}
+			//capture all other changes
 			else{
-				if(this[item] !== ctx[item]){
-					r[item] = this[item];
+				if(temp !== ctx[scrawl.contextKeys[i]]){
+					r[scrawl.contextKeys[i]] = temp;
+					count++;
 					}
 				}
 			}
-		return r;
+		return (count > 0) ? r : false;
 		};
-	Context.prototype.swapStyles = function(){
-		var temp = this.fillStyle; this.fillStyle = this.strokeStyle; this.strokeStyle = temp;
-		};
+		
+/**
+# ScrawlImage
 	
+## Instantiation
+
+* scrawl.getImagesByClass()
+
+## Purpose
+
+* Wraps DOM image elements imported into the scrawl library - &lt;img&gt;, &lt;video&gt;, &lt;svg&gt;
+* Used by __Picture__ sprites and __Pattern__ designs
+* Users should not interact directly with this object
+
+@class ScrawlImage
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function ScrawlImage(items){
-		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.width = items.width || 0;
-		this.height = items.height || 0;
+		Scrawl.call(this, items);
+		this.width = items.width || scrawl.d.ScrawlImage.width;
+		this.height = items.height || scrawl.d.ScrawlImage.height;
 		if(scrawl.xt(items.imageData)){						//flag used by scrawl.addScrawlImage() when calling Image constructor
 			var c = document.createElement('img');
 			c.id = this.name;
@@ -3252,64 +8204,117 @@ m: '',
 			this.height = parseFloat(items.element.offsetHeight) || items.element.height || items.element.style.height || 0;
 			this.source = items.element.src;
 			}
-		this.copyX = items.copyX || 0;
-		this.copyY = items.copyY || 0;
-		this.copyWidth = items.copyWidth || this.width || 0;
-		this.copyHeight = items.copyHeight || this.height || 0;
+		this.copyX = items.copyX || 0,
+		this.copyY = items.copyY || 0,
+		this.copyWidth = items.copyWidth ||  this.width,
+		this.copyHeight = items.copyHeight ||  this.height,
 		scrawl.img[this.name] = items.element;
 		scrawl.image[this.name] = this;
-		scrawl.imagenames.pushUnique(this.name);
+		scrawl.pushUnique(scrawl.imagenames, this.name);
 		return this;
 		}
 	ScrawlImage.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'ScrawlImage'
+@final
+**/
 	ScrawlImage.prototype.type = 'ScrawlImage';
 	ScrawlImage.prototype.classname = 'imagenames';
-	ScrawlImage.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//Link
-			width: (this.width !== 0) ? this.width : u,
-			height: (this.height !== 0) ? this.height : u,
-			imageData: (scrawl.xt(scrawl.imageData[this.name])) ? scrawl.imageData[this.name] : u,
-			source: (this.source) ? this.source : u,
-			element: (scrawl.xt(scrawl.img[this.name])) ? scrawl.img[this.name].id : u,
-			copyX: (this.copyX !== 0) ? this.copyX : u,
-			copyY: (this.copyY !== 0) ? this.copyY : u,
-			copyWidth: (this.copyWidth !== 0) ? this.copyWidth : u,
-			copyHeight: (this.copyHeight !== 0) ? this.copyHeight : u,
-			};
+	scrawl.d.ScrawlImage = {
+/**
+DOM image actual width, in pixels
+@property width
+@type Number
+@default 0
+**/
+		width: 0,
+/**
+DOM image actual height, in pixels
+@property height
+@type Number
+@default 0
+**/
+		height: 0,
+/**
+Path to image location on server
+@property source
+@type String
+@default 0
+**/
+		source: '',
+/**
+Copy image - horizontal start coordinate from top left corner of image, in pixels
+@property copyX
+@type Number
+@default 0
+**/
+		copyX: 0,
+/**
+Copy image - vertical start coordinate from top left corner of image, in pixels
+@property copyY
+@type Number
+@default 0
+**/
+		copyY: 0,
+/**
+Copy image - width, in pixels
+@property copyWidth
+@type Number
+@default 0
+**/
+		copyWidth:  0,
+/**
+Copy image - height, in pixels
+@property copyHeight
+@type Number
+@default 0
+**/
+		copyHeight:  0,
 		};
-	ScrawlImage.prototype.setToDefaults = function(){
-		this.set({
-			comment: '',
-			title: '',
-			width: 0,
-			height: 0,
-			copyX: 0,
-			copyY: 0,
-			copyWidth: 0,
-			copyHeight: 0,
-			});
-		return this;
-		};
+	scrawl.mergeInto(scrawl.d.ScrawlImage, scrawl.d.Scrawl);
+
+/**
+Get image data - uses JavScript canvas API function ctx.toDataURL()
+
+_Note: does not save the data in the scrawl library_
+@method getImageData
+@return data.URL data
+@private
+**/
 	ScrawlImage.prototype.getImageData = function(){
-		var c = document.createElement('canvas');
+		var	c = document.createElement('canvas'),
+			cx = c.getContext('2d');
 		c.width = this.width;
 		c.height = this.height;
-		var cx = c.getContext('2d');
-		cx.drawImage(scrawl.img[this.name],0,0);
+		cx.drawImage(scrawl.img[this.name], 0, 0);
 		return c.toDataURL();
 		};
 
+/**
+# AnimSheet
+	
+## Instantiation
+
+* scrawl.newAnimSheet()
+
+## Purpose
+
+* wraps a sprite sheet image
+* acts as the link between a Picture object and the sprite images on the sprite sheet
+* holds data about cells in the spritesheet animation
+* controls the animation playback
+
+@class AnimSheet
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function AnimSheet(items){
-		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		Scrawl.call(this, items);
 		this.sheet = items.sheet || items.source || false;
 		this.frames = (scrawl.xt(items.frames)) ? [].concat(items.frames) : [];
 		this.currentFrame = items.currentFrame || 0;
@@ -3318,45 +8323,102 @@ m: '',
 		this.running = (scrawl.isa(items.running,'str')) ? items.running : 'complete';
 		this.lastCalled = (scrawl.xt(items.lastCalled)) ? items.lastCalled : Date.now();
 		scrawl.anim[this.name] = this;
-		scrawl.animnames.pushUnique(this.name);
+		scrawl.pushUnique(scrawl.animnames, this.name);
 		return this;
 		}
 	AnimSheet.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'AnimSheet'
+@final
+**/		
 	AnimSheet.prototype.type = 'AnimSheet';
 	AnimSheet.prototype.classname = 'animnames';
-	AnimSheet.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//AnimSheet
-			sheet: (this.sheet) ? this.sheet : u,
-			frames: (this.frames.length > 0) ? this.frames : u,
-			currentFrame: (this.currentFrame !== 0) ? this.currentFrame : u,
-			speed: (this.speed !== 1) ? this.speed : u,
-			loop: (this.loop !== 'end') ? this.loop : u,
-			running: (this.running !== 'complete') ? this.running : u,
-			lastCalled: (this.lastCalled) ? this.lastCalled : u,
-			};
+	scrawl.d.AnimSheet = {
+/**
+SCRAWLIMAGENAME String
+@property sheet
+@type String
+@default ''
+**/
+		sheet: '',
+/**
+An Array of animation frame data Objects, to be used for producing an animation sequence. Each Object in the Array has the following form:
+
+* {x:Number, y:Number, w:Number, h:Number, d:Number}
+
+... where:
+
+* __x__ and __y__ represent the starting coordinates for the animation frame, in pixels, from the top left corner of the image
+* __w__ and __h__ represent the dimensions of the animation frame, in pixels
+* __d__ is the duration for each frame, in milliseconds
+
+Animation frames are played in the order they are presented in this Array
+@property frames
+@type Array
+@default []
+**/
+		frames: [],
+/**
+The current frame of the animation, from frame 0
+@property currentFrame
+@type Number
+@default 0
+**/
+		currentFrame: 0,
+/**
+The speed at which the animation is to play. Values less than 1 will slow the animation, while values greater than one will speed it up. Setting the speed to 0 will pause the animation
+@property speed
+@type Number
+@default 1
+**/
+		speed: 1,
+/**
+Playback String; permitted values include:
+
+* 'pause' - pause the animation on the current frame
+* 'end' - play the animation once (default)
+* 'loop' - play the animation continuously 
+* 'reverse' - reverse the direction in which the animation runs
+@property loop
+@type String
+@default 'end'
+**/
+		loop: 'end',
+/**
+Animation running String: permitted values include:
+
+* 'forward' - play the animation from the first frame towards the last frame
+* 'backward' - play the animation from the last frame towards the first frame
+* 'complete' - animation has reached the last (or first) frame and has completed
+@property running
+@type String
+@default 'complete'
+**/
+		running: 'complete',
+/**
+Datestamp when AnimSheet.getData() function was last called
+@property lastCalled
+@type Date
+@default 0
+@private
+**/
+		lastCalled: 0,
 		};
-	AnimSheet.prototype.setToDefaults = function(){
-		this.set({
-			comment: '',
-			title: '',
-			sheet: false,
-			frames: [],
-			currentFrame: 0,
-			speed: 1,
-			loop: 'end',
-			running: 'complete',
-			lastCalled: false,
-			});
-		return this;
-		};
+	scrawl.animKeys = Object.keys(scrawl.d.AnimSheet);
+	scrawl.mergeInto(scrawl.d.AnimSheet, scrawl.d.Scrawl);
+
+/**
+Set attribute values - will also set the __currentFrame__ attribute to the appropriate value when the running __attribute__ is changed
+
+(Only used by AnimSheet objects)
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+@private
+**/
 	AnimSheet.prototype.set = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		var paused = (this.loop === 'pause') ? true : false;
@@ -3383,6 +8445,15 @@ m: '',
 			}
 		return this;
 		};
+
+/**
+Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, copyHeight:Number}, representing the coordinates and dimensions of the current frame to be displayed by a Picture sprite
+
+(Only used by AnimSheet objects)
+@method getData
+@return Data object
+@private
+**/
 	AnimSheet.prototype.getData = function(){
 		if(this.speed > 0){
 			var interval = this.frames[this.currentFrame].d/this.speed;
@@ -3441,219 +8512,265 @@ m: '',
 			};
 		};
 
+/**
+# Group
+	
+## Instantiation
+
+* scrawl.newGroup()
+
+## Purpose
+
+* plays a key role in collision detection between Sprites
+* groups Sprite objects for specific purposes
+
+@class Group
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Group(items){
-		SubScrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		Scrawl.call(this, items);
 		this.sprites = (scrawl.xt(items.sprites)) ? [].concat(items.sprites) : [];
-		this.cells = (scrawl.xt(items.cells)) ? [].concat(items.cells) : [];
+		this.cell = items.cell || scrawl.pad[scrawl.currentPad].current;
 		this.order = items.order || 0;
 		this.visibility = (scrawl.isa(items.visibility,'bool')) ? items.visibility : true;
-		this.method = items.method || false;
-		this.fieldTest = items.fieldTest || 0;
-		this.fieldChannel = items.fieldChannel || 'anycolor';
-		this.roll = items.roll || 0;
-		this.groups = (scrawl.xt(items.groups)) ? [].concat(items.groups) : [];
+		this.spriteSort = (scrawl.isa(items.spriteSort,'bool')) ? items.spriteSort : true;
+		this.regionRadius = items.regionRadius || 0;
 		scrawl.group[this.name] = this;
-		scrawl.groupnames.pushUnique(this.name);
-		if(this.cells.length === 0){
-			this.cells.push(scrawl.pad[scrawl.currentPad].base);
-			}
-		for(var i=0, z=this.cells.length; i<z; i++){
-			scrawl.cell[this.cells[i]].groups.pushUnique(this.name);
-			}
+		scrawl.pushUnique(scrawl.groupnames, this.name);
+		scrawl.pushUnique(scrawl.cell[this.cell].groups, this.name);
 		return this;
 		}
-	Group.prototype = Object.create(SubScrawl.prototype);
+	Group.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Group'
+@final
+**/		
 	Group.prototype.type = 'Group';
 	Group.prototype.classname = 'groupnames';
-	Group.prototype.exportNative = function(items){
-		items = (scrawl.xt(items)) ? items : {string: true};
-		var myItems = {
-			includeDesigns: items.includeDesigns || true,
-			includeImages: items.includeImages || false,
-			string: false,
-			};
-		var result = [], temp;
-		result.push(this.prepareForExport());
-		for(var i=0, z=this.groups.length; i<z; i++){
-			if(this.groups[i] !== this.name){
-				temp = scrawl.group[this.groups[i]].exportNative(myItems);
-				for(var j=0, w=temp.length; j<w; j++){
-					result.pushUnique(temp[j]);
+	scrawl.d.Group = {
+/**
+ Array of SPRITENAME Strings of sprites that comprise this Group
+@property sprites
+@type Array
+@default []
+**/
+		sprites: [],
+/**
+CELLNAME of the default Cell object to which this group is associated
+@property cell
+@type String
+@default ''
+**/
+		cell: '',
+/**
+Group order value - lower order Groups are drawn on &lt;canvas&gt; elements before higher order Groups
+@property order
+@type Number
+@default 0
+**/
+		order: 0,
+/**
+Visibility flag - Group sprites will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
+@property visibility
+@type Boolean
+@default true
+**/
+		visibility: true,
+/**
+Sorting flag - when set to true, Groups will sort their constituent sprite object according to their sprite.order attribute for each iteration of the display cycle
+@property spriteSort
+@type Boolean
+@default true
+**/
+		spriteSort: true,
+/**
+Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked sprite is to the current reference sprite; when set to 0, this collision check step is skipped and all sprites move on to the next step
+@property regionRadius
+@type Number
+@default 0
+**/
+		regionRadius: 0,
+		};
+	scrawl.mergeInto(scrawl.d.Group, scrawl.d.Scrawl);
+
+/**
+Turn the object into a JSON String
+
+Automatically removes the sprites attribute from the result; when loading, existing sprites need to be re-added to the group
+@method toString
+@param {Boolean} [nosprites] True to exclude the sprites attribute; false will return an array containing this and each of the sprites in the sprites array
+@return Array of JSON strings of non-default value attributes
+**/
+	Group.prototype.toString = function(nosprites){
+		var keys = Object.keys(scrawl.d[this.type]),
+			result = {},
+			resarray = [],
+			ctx,
+			designs = [];
+		result.type = this.type;
+		result.classname = this.classname;
+		result.name = this.name;
+		for(var i = 0, z = keys.length; i < z; i++){
+			if(scrawl.xt(this[keys[i]]) && this[keys[i]] !== scrawl.d[this.type][keys[i]]){
+				result[keys[i]] = this[keys[i]];
+				}
+			}
+		delete result.sprites;
+		resarray.push(JSON.stringify(result));
+		if(!nosprites){
+			for(var i=0, z=this.sprites.length; i<z; i++){
+				ctx = scrawl.ctx[scrawl.sprite[this.sprites[i]].context];
+				if(scrawl.contains(scrawl.designnames, ctx.fillStyle)){
+					scrawl.pushUnique(designs, ctx.fillStyle);
+					}
+				if(scrawl.contains(scrawl.designnames, ctx.strokeStyle)){
+					scrawl.pushUnique(designs, ctx.strokeStyle);
+					}
+				if(scrawl.contains(scrawl.designnames, ctx.shadowColor)){
+					scrawl.pushUnique(designs, ctx.shadowColor);
 					}
 				}
-			}
-		for(var i=0, z=this.sprites.length; i<z; i++){
-			temp = scrawl.sprite[this.sprites[i]].exportNative(myItems);
-			for(var j=0, w=temp.length; j<w; j++){
-				result.pushUnique(temp[j]);
+			for(var i=0, z=designs.length; i<z; i++){
+				resarray.push(scrawl.design[designs[i]].toString());
+				}
+			for(var i=0, z=this.sprites.length; i<z; i++){
+				resarray.push(scrawl.sprite[this.sprites[i]].toString(true));
 				}
 			}
-		var result2 = [];
-		var check = [];
-		for(var i=0, z=result.length; i<z; i++){
-			if(!check.contains(result[i].name)){
-				result2.push(result[i]);
-				check.push(result[i].name);
+		return resarray;
+		};
+		
+/**
+Turn the object into a JSON String
+
+Retains the sprites attribute Array; does not include any other objects in the return Array
+@method save
+@return Array of JSON Strings
+**/
+	Group.prototype.save = function(){
+		var keys = Object.keys(scrawl.d[this.type]),
+			result = {};
+		result.type = this.type;
+		result.classname = this.classname;
+		result.name = this.name;
+		for(var i = 0, z = keys.length; i < z; i++){
+			if(scrawl.xt(this[keys[i]]) && this[keys[i]] !== scrawl.d[this.type][keys[i]]){
+				result[keys[i]] = this[keys[i]];
 				}
 			}
-		return (items.string) ? JSON.stringify(result2) : result2;
+		return [JSON.stringify(result)];
 		};
-	Group.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//SubScrawl
-			startX: (this.startX !== 0) ? this.startX : u,
-			startY: (this.startY !== 0) ? this.startY : u,
-			handleX: (this.handleX !== 0) ? this.handleX : u,
-			handleY: (this.handleY !== 0) ? this.handleY : u,
-			moveStartX: (this.moveStartX !== 0) ? this.moveStartX : u,
-			moveStartY: (this.moveStartY !== 0) ? this.moveStartY : u,
-			moveHandleX: (this.moveHandleX !== 0) ? this.moveHandleX : u,
-			moveHandleY: (this.moveHandleY !== 0) ? this.moveHandleY : u,
-			pivot: (this.pivot) ? this.pivot : u,
-			path: (this.path) ? this.path : u,
-			pathPosition: (this.pathPosition !== 0) ? this.pathPosition : u,
-			movePathPosition: (this.movePathPosition !== 0) ? this.movePathPosition : u,
-			pathSpeedConstant: (!this.pathSpeedConstant) ? this.pathSpeedConstant : u,
-			pathRoll: (this.pathRoll !== 0) ? this.pathRoll : u,
-			addPathRoll: (this.addPathRoll) ? this.addPathRoll : u,
-			scale: (this.scale !== 1) ? this.scale : u,
-			//Group
-			groups: (this.groups.length > 0) ? this.groups : u,
-			cells: (this.cells.length > 0) ? this.cells : u,
-			order: (this.order !== 0) ? this.order : u,
-			visibility: (!this.visibility) ? this.visibility : u,
-			isSprite: (this.isSprite) ? this.isSprite : u,
-			isMarker: (this.isMarker) ? this.isMarker : u,
-			isDefinition: (this.isDefinition) ? this.isDefinition : u,
-			method: (this.method) ? this.method : u,
-			fieldTest: (this.fieldTest !== 0) ? this.fieldTest : u,
-			fieldChannel: (this.fieldChannel !== 'anycolor') ? this.fieldChannel : u,
-			roll: (this.roll !== 0) ? this.roll : u,
-			};
-		};
-	Group.prototype.setToDefaults = function(){
-		this.set({
-			comment: '',
-			title: '',
-			startX: 0,
-			startY: 0,
-			handleX: 0,
-			handleY: 0,
-			moveStartX: 0,
-			moveStartY: 0,
-			moveHandleX: 0,
-			moveHandleY: 0,
-			pivot: false,
-			path: false,
-			pathPosition: 0,
-			movePathPosition: 0,
-			pathSpeedConstant: true,
-			pathRoll: 0,
-			addPathRoll: false,
-			scale: 1,
-			groups: [],
-			cells: [],
-			order: 0,
-			visibility: true,
-			isSprite: false,
-			isMarker: false,
-			isDefinition: false,
-			fieldTest: 0,
-			fieldChannel: 'anycolor',
-			roll: 0,
-			});
-		return this;
-		};
+		
+/**
+Sprite sorting routine - sprites are sorted according to their sprite.order attribute value, in ascending order
+@method sortSprites
+@return Nothing
+@private
+**/
 	Group.prototype.sortSprites = function(){
-		this.sprites.sort(function(a,b){
-			return scrawl.sprite[a].order - scrawl.sprite[b].order;
-			});
-		};
-	Group.prototype.sortGroups = function(){
-		this.groups.sort(function(a,b){
-			return scrawl.group[a].order - scrawl.group[b].order;
-			});
-		};
-	Group.prototype.getOverride = function(sprite, myMethod, myCell){
-		myMethod = (scrawl.xt(myMethod)) ? myMethod : this.method;
-		myCell = (scrawl.xt(myCell)) ? myCell : this.cells;
-		if(!scrawl.xt(sprite) || scrawl.sprite[sprite].pivot !== this.name){
-			return {
-				x: this.getStartX(),
-				y: this.getStartY(),
-				r: this.roll,
-				s: this.scale,
-				method: myMethod,
-				cells: myCell,
-				};
-			}
-		else{
-			return {
-				x: 0,
-				y: 0,
-				r: this.roll,
-				s: this.scale,
-				method: myMethod,
-				cells: myCell,
-				};
+		if(this.spriteSort){
+			this.sprites.sort(function(a,b){
+				return scrawl.sprite[a].order - scrawl.sprite[b].order;
+				});
 			}
 		};
+
+/**
+Tell the Group to ask _all_ of its constituent sprites to draw themselves on a &lt;canvas&gt; element, regardless of their visibility
+@method forceStamp
+@param {String} [method] Drawing method String
+@param {String} [cell] CELLNAME of cell on which sprites are to draw themselves
+@return This
+@chainable
+**/
 	Group.prototype.forceStamp = function(method, cell){
 		var temp = this.visibility;
-		this.visibility = true;
+		if(!temp){
+			this.set({visibility: true});
+			}
 		this.stamp(method, cell);
-		this.visibility = temp;
+		this.set({visibility: temp});
 		return this;
 		};
+
+/**
+Tell the Group to ask its constituent sprites to draw themselves on a &lt;canvas&gt; element; only sprites whose visibility attribute is set to true will comply
+@method stamp
+@param {String} [method] Drawing method String
+@param {String} [cell] CELLNAME of cell on which sprites are to draw themselves
+@return This
+@chainable
+**/
 	Group.prototype.stamp = function(method, cell){
-		this.sortSprites();
-		var myMethod = (scrawl.isa(method,'str')) ? method : this.method;
-		var myCell = (scrawl.xt(cell)) ? [].concat(cell) : this.cells;
-		for(var i=0, z=this.sprites.length; i<z; i++){
-			scrawl.sprite[this.sprites[i]].stamp(this.getOverride(this.sprites[i], myMethod, myCell));
-			}
-		if(this.groups.length > 0){
-			this.sortGroups();
-			for(var i=0, z=this.groups.length; i<z; i++){
-				if(scrawl.group[this.groups[i]].name !== this.name){
-					scrawl.group[this.groups[i]].forceStamp(method, cell);
-					}
+		if(this.visibility){
+			this.sortSprites();
+			for(var i=0, z=this.sprites.length; i<z; i++){
+				scrawl.sprite[this.sprites[i]].stamp(method, cell);
 				}
 			}
 		return this;
 		};
+
+/**
+Check all sprites in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the sprites have been sorted; the sprite Object with the highest order value that is colliding with the coordinate is returned
+@method getSpriteAt
+@param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
+@return Sprite object, or false if no sprites are colliding with the coordinate
+**/
 	Group.prototype.getSpriteAt = function(items){
-		this.sortSprites();
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xta([items.x,items.y])){
-			items.pad = (scrawl.xt(items.pad)) ? items.pad : scrawl.pad[scrawl.cell[this.cells[0]].pad].name;
-			for(var i=this.sprites.length-1; i>=0; i--){
-				if(scrawl.sprite[this.sprites[i]].checkHit(items, {x: this.getStartX(), y: this.getStartY()})){
-					return scrawl.sprite[this.sprites[i]];
+		var coordinate = new Vector(items),
+			sprite,
+			pad,
+			cell,
+			result;
+		if(scrawl.xta([items.source,items.type])){
+			pad = scrawl[items.type][items.source];
+			cell = scrawl.cell[this.cell];
+			if(pad.width !== cell.actualWidth){
+				coordinate.x /= (pad.width/cell.actualWidth);
+				}
+			if(pad.height !== cell.actualHeight){
+				coordinate.y /= (pad.height/cell.actualHeight);
+				}
+			}
+		this.sortSprites();
+		for(var i=this.sprites.length-1; i>=0; i--){
+			sprite = scrawl.sprite[this.sprites[i]];
+			if(this.regionRadius){
+				result = sprite.start.getVectorSubtract(coordinate);
+				if(result.getMagnitude() > this.regionRadius){
+					continue;
 					}
+				}
+			if(sprite.checkHit(coordinate)){
+				return sprite;
 				}
 			}
 		return false;
 		};
+
+/**
+Check all sprites in the Group to see if they are colliding with the supplied sprite object. An Array of all sprite objects colliding with the reference sprite will be returned
+@method getSpritesCollidingWith
+@param {String} sprite SPRITENAME String of the reference sprite; alternatively the sprite Object itself can be passed as the argument
+@return Array of visible sprite Objects currently colliding with the reference sprite
+**/
 	Group.prototype.getSpritesCollidingWith = function(sprite){
 		sprite = (scrawl.isa(sprite, 'str')) ? scrawl.sprite[sprite] : sprite; 
-		if(scrawl.spritenames.contains(sprite.name)){
-			var hits = [];
-			var oCollisionPoints = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale};
-			var oCollisions = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale, pad: scrawl.pad[scrawl.cell[this.cells[0]].pad].name};
-			var myTests = sprite.getCollisionPoints(oCollisionPoints);
+		if(scrawl.contains(scrawl.spritenames, sprite.name)){
+			var	hits = [],
+				myTests = sprite.getCollisionPoints();
 			for(var i=0, z=this.sprites.length; i<z; i++){
 				if(scrawl.sprite[this.sprites[i]].name !== sprite.name){
-					if(scrawl.sprite[this.sprites[i]].visibility){
-						if(scrawl.sprite[this.sprites[i]].checkHit({tests: myTests}, oCollisions)){
+					if(scrawl.sprite[this.sprites[i]].get('visibility')){
+						if(scrawl.sprite[this.sprites[i]].checkHit({tests: myTests})){
 							hits.push(this.sprites[i]);
 							}
 						}
@@ -3663,25 +8780,46 @@ m: '',
 			}
 		return false;
 		};
+
+/**
+Check all sprites in the Group against each other to see if they are in collision
+@method getInGroupSpriteHits
+@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of sprites currently in collision
+**/
 	Group.prototype.getInGroupSpriteHits = function(){
-		var hits = [], flag;
-		var oCollisionPoints = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale};
-		var oCollisions = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale, pad: scrawl.pad[scrawl.cell[this.cells[0]].pad].name};
+		var	hits = [],
+			cPoints = {},
+			cViz = {},
+			temp,
+			ts1,
+			ts2,
+			tresult;
 		for(var i=0, z=this.sprites.length; i<z; i++){
-			if(scrawl.sprite[this.sprites[i]].visibility){
+			temp = scrawl.sprite[this.sprites[i]];
+			cViz[temp.name] = temp.visibility;
+			if(cViz[temp.name]){
+				cPoints[temp.name] = temp.getCollisionPoints();
+				}
+			}
+		for(var i=0, z=this.sprites.length; i<z; i++){
+			if(cViz[this.sprites[i]]){
+				ts1 = scrawl.sprite[this.sprites[i]].start;
 				for(var j=i+1, w=this.sprites.length; j<w; j++){
-					if(scrawl.sprite[this.sprites[j]].visibility){
-						flag = false;
-						if(scrawl.sprite[this.sprites[j]].checkHit({tests: scrawl.sprite[this.sprites[i]].getCollisionPoints(oCollisionPoints)}, oCollisions)){
-							hits.push([this.sprites[i],this.sprites[j]]);
-							flag = true;
-							break;
-							}
-						if(!flag){
-							if(scrawl.sprite[this.sprites[i]].checkHit({tests: scrawl.sprite[this.sprites[j]].getCollisionPoints(oCollisionPoints)}, oCollisions)){
-								hits.push([this.sprites[i],this.sprites[j]]);
-								break;
+					if(cViz[this.sprites[j]]){
+						ts2 = scrawl.sprite[this.sprites[j]].start;
+						if(this.regionRadius){
+							tresult = ts1.getVectorSubtract(ts2).getMagnitude();
+							if(tresult > this.regionRadius){
+								continue;
 								}
+							}
+						if(scrawl.sprite[this.sprites[j]].checkHit({tests: cPoints[this.sprites[i]]})){
+							hits.push([this.sprites[i],this.sprites[j]]);
+							continue;
+							}
+						if(scrawl.sprite[this.sprites[i]].checkHit({tests: cPoints[this.sprites[j]]})){
+							hits.push([this.sprites[i],this.sprites[j]]);
+							continue;
 							}
 						}
 					}
@@ -3689,10 +8827,24 @@ m: '',
 			}
 		return hits;
 		};
+
+/**
+Check all sprites in this Group against all sprites in the argument Group, to see if they are in collision
+@method getBetweenGroupSpriteHits
+@param {String} g GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument
+@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of sprites currently in collision
+**/
 	Group.prototype.getBetweenGroupSpriteHits = function(g){
+		var	hits = [],
+			cPoints = {},
+			cViz = {},
+			temp,
+			ts1,
+			ts2,
+			tresult;
 		if(scrawl.xt(g)){
 			if(scrawl.isa(g,'str')){
-				if(scrawl.groupnames.contains(g)){
+				if(scrawl.contains(scrawl.groupnames, g)){
 					g = scrawl.group[g];
 					}
 				else{
@@ -3704,22 +8856,39 @@ m: '',
 					return false;
 					}
 				}
-			var hits = [], flag;
-			var oCollisions = {x: this.getStartX(), y: this.getStartY(), r: this.roll, s: this.scale, pad: scrawl.pad[scrawl.cell[this.cells[0]].pad].name};
-			var gCollisions = {x: g.getStartX(), y: g.getStartY(), r: this.roll, s: this.scale, pad: scrawl.pad[scrawl.cell[g.cells[0]].pad].name};
 			for(var i=0, z=this.sprites.length; i<z; i++){
-				if(scrawl.sprite[this.sprites[i]].visibility){
+				temp = scrawl.sprite[this.sprites[i]];
+				cViz[temp.name] = temp.visibility;
+				if(cViz[temp.name]){
+					cPoints[temp.name] = temp.getCollisionPoints();
+					}
+				}
+			for(var i=0, z=g.sprites.length; i<z; i++){
+				temp = scrawl.sprite[g.sprites[i]];
+				cViz[temp.name] = temp.visibility;
+				if(cViz[temp.name]){
+					cPoints[temp.name] = temp.getCollisionPoints();
+					}
+				}
+			for(var i=0, z=this.sprites.length; i<z; i++){
+				if(cViz[this.sprites[i]]){
+					ts1 = scrawl.sprite[this.sprites[i]].start;
 					for(var j=0, w=g.sprites.length; j<w; j++){
-						if(scrawl.sprite[g.sprites[j]].visibility){
-							flag = false;
-							if(scrawl.sprite[g.sprites[j]].checkHit({tests: scrawl.sprite[this.sprites[i]].getCollisionPoints(oCollisions)}, gCollisions)){
-								hits.push([this.sprites[i],g.sprites[j]]);
-								flag = true;
-								}
-							if(!flag){
-								if(scrawl.sprite[this.sprites[i]].checkHit({tests: scrawl.sprite[g.sprites[j]].getCollisionPoints(gCollisions)}, oCollisions)){
-									hits.push([this.sprites[i],g.sprites[j]]);
+						if(cViz[g.sprites[j]]){
+							ts2 = scrawl.sprite[g.sprites[j]].start;
+							if(this.regionRadius){
+								tresult = ts1.getVectorSubtract(ts2).getMagnitude();
+								if(tresult > this.regionRadius){
+									continue;
 									}
+								}
+							if(scrawl.sprite[g.sprites[j]].checkHit({tests: cPoints[this.sprites[i]]})){
+								hits.push([this.sprites[i],g.sprites[j]]);
+								continue;
+								}
+							if(scrawl.sprite[this.sprites[i]].checkHit({tests: cPoints[g.sprites[j]]})){
+								hits.push([this.sprites[i],g.sprites[j]]);
+								continue;
 								}
 							}
 						}
@@ -3729,1031 +8898,1607 @@ m: '',
 			}
 		return false;
 		};
-	Group.prototype.getFieldSpriteHits = function(cells){
-		var results = {}, hits, result;
-		cells = (scrawl.xt(cells)) ? [].concat(cells) : [this.cells[0]];
-		var override = {
-			x: this.getStartX(),
-			y: this.getStartY(),
-			r: this.roll,
-			s: this.scale,
-			};
-		for(var i=0, z=cells.length; i<z; i++){
-			hits = [];
-			for(var j=0, w=this.sprites.length; j<w; j++){
-				result = scrawl.sprite[this.sprites[j]].checkField(cells[i], override);
-				if(scrawl.isa(result,'obj')){
-					hits.push([this.sprites[j], result]);
-					}
+
+/**
+Check all sprites in this Group against a &lt;canvas&gt; element's collision field image
+
+If no argument is supplied, the Group's default Cell's &lt;canvas&gt; element will be used for the check
+
+An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the sprite that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring
+@method getFieldSpriteHits
+@param {String} [cell] CELLNAME of Cell whose &lt;canvas&gt; element is to be used for the check
+@return Array of [SPRITENAME, Vector] Arrays
+**/
+	Group.prototype.getFieldSpriteHits = function(cell){
+		cell = (scrawl.xt(cell)) ? cell : this.cell;
+		var	hits = [],
+			result;
+		for(var j=0, w=this.sprites.length; j<w; j++){
+			result = scrawl.sprite[this.sprites[j]].checkField(cell);
+			if(!scrawl.isa(result,'bool')){
+				hits.push([this.sprites[j], result]);
 				}
-			results[cells[i]] = hits;
 			}
-		return (cells.length === 1) ? results[cells[0]] : results;
+		return hits;
 		};
-	Group.prototype.checkField = function(cell){
-		var myCell = (scrawl.xt(cell) && scrawl.cellnames.contains(cell)) ? scrawl.cell[cell] : (scrawl.cell[this.cells[0]] || scrawl.cell[scrawl.pad[scrawl.currentPad].current]);
-		var coords = {x: this.startX, y: this.startY};
-		var result = myCell.checkFieldAt({
-			coordinates: [coords],
-			test: this.fieldTest,
-			channel: this.fieldChannel,
-			});
-		//returns the coordinates that FAILED the test, or true if all coordinates PASSED, or false if there was an error
-		return (result > 0) ? coords : ((result) ? true : false);
-		};
-	Group.prototype.setDelta = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xt(items.startX)){this.startX += items.startX;}
-		if(scrawl.xt(items.startY)){this.startY += items.startY;}
-		if(scrawl.xt(items.handleX)){this.handleX += items.handleX;}
-		if(scrawl.xt(items.handleY)){this.handleY += items.handleY;}
-		if(scrawl.xt(items.roll)){this.roll += items.roll;}
-		if(scrawl.xt(items.scale)){this.scale += items.scale;}
-		if(scrawl.xt(items.pathPosition)){this.pathPosition += items.pathPosition;}
-		return this;
-		};
+
+/**
+Add sprites to the Group
+@method addSpritesToGroup
+@param {Array} item Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument
+@return This
+@chainable
+**/
 	Group.prototype.addSpritesToGroup = function(item){
 		item = (scrawl.xt(item)) ? [].concat(item) : [];
 		for(var i=0, z=item.length; i<z; i++){
-			this.sprites.pushUnique(item[i]);
+			scrawl.pushUnique(this.sprites, item[i]);
 			}
 		return this;
 		};
+
+/**
+Remove sprites from the Group
+@method removeSpritesFromGroup
+@param {Array} item Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument
+@return This
+@chainable
+**/
 	Group.prototype.removeSpritesFromGroup = function(item){
 		item = (scrawl.xt(item)) ? [].concat(item) : [];
 		for(var i=0, z=item.length; i<z; i++){
-			this.sprites.removeItem(item[i]);
+			scrawl.removeItem(this.sprites, item[i]);
 			}
 		return this;
 		};
-	Group.prototype.moveSpriteStart = function(item){
+
+/**
+Ask all sprites in the Group to perform an updateStart() operation
+
+Each sprite will add their delta values to their start Vector, and/or add deltaPathPlace from pathPlace
+@method updateStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
+	Group.prototype.updateStart = function(item){
 		for(var i=0, z=this.sprites.length; i<z; i++){
-			scrawl.sprite[this.sprites[i]].moveStart(item);
+			scrawl.sprite[this.sprites[i]].updateStart(item);
 			}
 		return this;
 		};
-	Group.prototype.setGroupDimensions = function(items){
-		items = (scrawl.xt(items)) ? items : {x:this.startX,y:this.startY};
-		var maxX = -9999, minX = 9999, maxY = -9999, minY = 9999, tmaxX, tminX, tmaxY, tminY, temp, px, py;
-		for(var i=0, x=this.groups.length; i<z; i++){
-			temp = scrawl.group[this.groups[i]];
-			if(!temp.isMarker && !temp.isDefinition){
-				temp.setGroupDimensions();
-				maxX = (temp.startX+temp.width > maxX) ? temp.startX+temp.width : maxX;
-				minX = (temp.startX < minX) ? temp.startX : minX;
-				maxY = (temp.startY+temp.height > maxY) ? temp.startY+temp.height : maxY;
-				minY = (temp.startY < minY) ? temp.startY : minY;
-				}
-			}
+
+/**
+Ask all sprites in the Group to perform a revertStart() operation
+
+Each sprite will subtract their delta values to their start Vector, and/or subtract deltaPathPlace from pathPlace
+@method revertStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
+	Group.prototype.revertStart = function(item){
 		for(var i=0, z=this.sprites.length; i<z; i++){
-			temp = scrawl.sprite[this.sprites[i]];
-			if(!temp.pivot || !temp.path){
-				switch(temp.type){
-					case 'Block' :
-					case 'Outline' :
-					case 'Picture' :
-					case 'Phrase' :
-						tmaxX = temp.startX + (temp.width * temp.scale);
-						tminX = temp.startX;
-						tmaxY = temp.startY + (temp.height * temp.scale);
-						tminY = temp.startY;
-						break;
-					case 'Wheel' :
-						tmaxX = temp.startX + (temp.radius * temp.scale);
-						tminX = temp.startX - (temp.radius * temp.scale);
-						tmaxY = temp.startY + (temp.radius * temp.scale);
-						tminY = temp.startY - (temp.radius * temp.scale);
-						break;
-					case 'Shape' :
-						tmaxX = -9999, tmaxY = -9999, tminX = 9999, tminY = 9999;
-						for(var j=0, w=temp.pointList.length; j<w; j++){
-							px = scrawl.point[temp.pointList[j]].currentX;
-							py = scrawl.point[temp.pointList[j]].currentY;
-							tmaxX = (px > tmaxX) ? px : tmaxX;
-							tminX = (px < tminX) ? px : tminX;
-							tmaxY = (py > tmaxY) ? py : tmaxY;
-							tminY = (py < tminY) ? py : tminY;
-							}
-						break;
+			scrawl.sprite[this.sprites[i]].revertStart(item);
+			}
+		return this;
+		};
+
+/**
+Ask all sprites in the group to perform a reverse() operation
+
+Each sprite will change the sign (+/-) of specified attribute values
+@method reverse
+@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
+@return This
+@chainable
+**/
+	Group.prototype.reverse = function(item){
+		for(var i=0, z=this.sprites.length; i<z; i++){
+			scrawl.sprite[this.sprites[i]].reverse(item);
+			}
+		return this;
+		};
+
+/**
+Ask all sprites in the Group to perform a setDelta() operation
+
+The following sprite attributes can be amended by this function: startX, startY, scale, roll.
+@method updateSpritesBy
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+	Group.prototype.updateSpritesBy = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		for(var i=0, z=this.sprites.length; i<z; i++){
+			scrawl.sprite[this.sprites[i]].setDelta({
+				startX: items.x || items.startX || 0,
+				startY: items.y || items.startY || 0,
+				scale: items.scale || 0,
+				roll: items.roll || 0,
+				});
+			}
+		return this;
+		};
+
+/**
+Ask all sprites in the Group to perform a set() operation
+@method setSpritesTo
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+	Group.prototype.setSpritesTo = function(items){
+		for(var i=0, z=this.sprites.length; i<z; i++){
+			scrawl.sprite[this.sprites[i]].set(items);
+			}
+		return this;
+		};
+
+/**
+Require all sprites in the Group to set their pivot attribute to the supplied POINTNAME or SPRITENAME string, and set their handle Vector to reflect the current vector between that sprite or Point object's start Vector and their own Vector
+
+This has the effect of turning a set of disparate sprites into a single, coordinated group.
+@method pivotSpritesTo
+@param {String} item SPRITENAME or POINTNAME String
+@return This
+@chainable
+**/
+	Group.prototype.pivotSpritesTo = function(item){
+		item = (scrawl.isa(item,'str')) ? item : false;
+		var p,
+			pStart,
+			sprite,
+			sv;
+		if(item){
+			p = scrawl.sprite[item] || scrawl.point[item] || false;
+			if(p){
+				pStart = (p.type === 'Point') ? p.get('current') : p.start.getVector();
+				for(var i=0, z=this.sprites.length; i<z; i++){
+					sprite = scrawl.sprite[this.sprites[i]];
+					sv = sprite.start.getVector();
+					sv.vectorSubtract(pStart);
+					sprite.set({
+						pivot: item,
+						handleX : -sv.x,
+						handleY: -sv.y,
+						});
 					}
-				maxX = (tmaxX > maxX) ? tmaxX : maxX;
-				minX = (tminX < minX) ? tminX : minX;
-				maxY = (tmaxY > maxY) ? tmaxY : maxY;
-				minY = (tminY < minY) ? tminY : minY;
-				}
-			}
-		this.startX = items.x || minX;
-		this.startY = items.y || minY;
-		this.width = (maxX - minX);
-		this.height = (maxY - minY);
-		this.setSpritesToGroupHandle()
-		return this;
-		};
-	Group.prototype.setSpritesToGroupHandle = function(){
-		var offsetX = this.getPivotOffset(this.handleX,false);
-		var offsetY = this.getPivotOffset(this.handleY,true);
-		var s, sx, sy;
-		for(var i=0,z=this.sprites.length; i<z; i++){
-			s = scrawl.sprite[this.sprites[i]];
-			if(scrawl.spritenames.contains(s.name) && s.pivot === this.name){
-				sx = s.getPivotOffset(s.handleX,false);
-				sy = s.getPivotOffset(s.handleY,true);
-				s.set({
-					handleX: sx+offsetX,
-					handleY: sy+offsetY,
-					});
 				}
 			}
 		return this;
 		};
 		
+/**
+# Sprite
+	
+## Instantiation
+
+* This object should never be instantiated by users
+
+## Purpose
+
+* Supplies the common methodology for all Scrawl sprites: Phrase, Block, Wheel, Picture, Outline, Shape
+* Sets up the attributes for holding a sprite's current state: position, visibility, rotation, drawing order, context, collision points and zones
+* Describes how sprites should be stamped onto a Cell's canvas
+* Provides drag-and-drop functionality
+
+In addition to the listed attributes, the Sprite constructor (and the clone function) can take the additional attributes, which are not preserved:
+
+* __field__ - the CELLNAME of a Cell object to whose collision field image this sprite will contribute as a 'field', an area where sprites WILL NOT report a collision with the field
+* __fence__ - the CELLNAME of a Cell object to whose collision field image this sprite will contribute as a 'fence', an area where sprites WILL report a collision with the field
+
+@class Sprite
+@constructor
+@extends SubScrawl
+@uses Context
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Sprite(items){
-		SubScrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.order = items.order || 0;
-		this.visibility = (scrawl.isa(items.visibility,'bool')) ? items.visibility : true;
-		this.method = (scrawl.isa(items.method,'str')) ? items.method : ((this.type === 'Shape' ) ? 'draw' : 'fill');
-		this.collisionPoints = this.parseCollisionPoints(items.collisionPoints || []);
-		this.rollable = (scrawl.isa(items.rollable,'bool')) ? items.rollable : true;
-		this.roll = items.roll || 0;
-		this.data = items.data || false;
-		this.flipReverse = (scrawl.isa(items.flipReverse,'bool')) ? items.flipReverse : false;
-		this.flipUpend = (scrawl.isa(items.flipUpend,'bool')) ? items.flipUpend : false;
-		this.scaleOutline = (scrawl.isa(items.scaleOutline,'bool')) ? items.scaleOutline : true;
-		this.lockX = (scrawl.isa(items.lockX,'bool')) ? items.lockX : false;
-		this.lockY = (scrawl.isa(items.lockY,'bool')) ? items.lockY : false;
+		SubScrawl.call(this, items);
+		items.name = this.name;
 		var myContext = new Context(items);
 		this.context = myContext.name;
 		this.group = this.getGroup(items);
-		if(items.field){
-			this.addSpriteToCellFields(items.target || items.group);
+		this.flipUpend = items.flipUpend || false;
+		this.flipReverse = items.flipReverse || false;
+		this.lockX = items.lockX || false;
+		this.lockY = items.lockY || false;
+		this.fastStamp = items.fastStamp || false;
+		this.scaleOutline = (scrawl.isa(items.scaleOutline,'bool')) ? items.scaleOutline : true;
+		this.roll = items.roll || 0;
+		this.order = items.order || 0;
+		this.visibility = (scrawl.isa(items.visibility,'bool')) ? items.visibility : true;
+		this.method = items.method || scrawl.d[this.type].method;
+		if(scrawl.xt(items.field)){
+			this.addSpriteToCellFields();
 			}
-		if(items.fence){
-			this.addSpriteToCellFences(items.target || items.group);
-			}
-		this.fieldChannel = (scrawl.isa(items.fieldChannel,'str')) ? items.fieldChannel : 'anycolor';
-		this.fieldTest = items.fieldTest || 0;
-		if(scrawl.xt(items.target)){
-			this.targetGroup(items);
+		if(scrawl.xt(items.fence)){
+			this.addSpriteToCellFences();
 			}
 		return this;
 		}
 	Sprite.prototype = Object.create(SubScrawl.prototype);
+/**
+@property type
+@type String
+@default 'Sprite'
+@final
+**/		
 	Sprite.prototype.type = 'Sprite';
 	Sprite.prototype.classname = 'spritenames';
-	Sprite.prototype.targetGroup = function(items){
-		this.pivot = this.group;
-		this.handleX = scrawl.group[this.group].startX - this.startX;
-		this.handleY = scrawl.group[this.group].startY - this.startY;
+	scrawl.d.Sprite = {
+/**
+Sprite order value - lower order sprites are drawn on &lt;canvas&gt; elements before higher order sprites
+@property order
+@type Number
+@default 0
+**/
+		order: 0,
+/**
+Visibility flag - sprites will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
+@property visibility
+@type Boolean
+@default true
+**/
+		visibility: true,
+/**
+Sprite drawing method. A sprite can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
+
+* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
+* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
+* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the sprite's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+
+_Note: not all sprites support all of these operations_
+@property method
+@type String
+@default 'fill'
+**/
+		method: 'fill',
+/**
+Current rotation of the sprite, in degrees
+@property roll
+@type Number
+@default 0
+**/
+		roll: 0,
+/**
+Current SVGTiny data string for the sprite - not supported by all sprite objects
+@property data
+@type String
+@default ''
+**/
+		data: '',
+/**
+Sprite radius, in pixels - not supported by all sprite objects
+@property radius
+@type Number
+@default 0
+**/
+		radius: 0,
+/**
+Sprite width, in pixels
+@property width
+@type Number
+@default 0
+**/
+		width: 0,
+/**
+Sprite height, in pixels
+@property height
+@type Number
+@default 0
+**/
+		height: 0,
+/**
+Reflection flag; set to true to flip sprite along the Y axis
+@property flipReverse
+@type Boolean
+@default false
+**/
+		flipReverse: false,
+/**
+Reflection flag; set to true to flip sprite along the X axis
+@property flipUpend
+@type Boolean
+@default false
+**/
+		flipUpend: false,
+/**
+Scaling flag; set to true to ensure lineWidth scales in line with the scale attribute value
+@property scaleOutline
+@type Boolean
+@default true
+**/
+		scaleOutline: true,
+/**
+Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis
+@property lockX
+@type Boolean
+@default false
+**/
+		lockX: false,
+/**
+Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis
+@property lockY
+@type Boolean
+@default false
+**/
+		lockY: false,
+/**
+Display cycle flag; if set to true, sprite will not change the &lt;canvas&gt; element's context engine's settings before drawing itself on the cell
+@property fastStamp
+@type Boolean
+@default false
+**/
+		fastStamp: false,
+/**
+CTXNAME of this Sprite's Context object
+@property context
+@type String
+@default ''
+@private
+**/
+		context: '',
+/**
+GROUPNAME String for this sprite's default group
+
+_Note: a sprite can belong to more than one group by being added to other Group objects via the __scrawl.addSpritesToGroups()__ and __Group.addSpriteToGroup()__ functions_
+@property group
+@type String
+@default ''
+**/
+		group: '',
+/**
+Channel to be checked during Cell field collision detection. Permitted values include: 'red', 'blue', 'green', 'alpha', 'anycolor'
+@property fieldChannel
+@type String
+@default 'anycolor'
+**/
+		fieldChannel: 'anycolor',
+/**
+Test threshhold to be applied during Cell field collision detection. Permitted values can range between 0 and 254
+@property fieldTest
+@type Number
+@default 0
+**/
+		fieldTest: 0,
+/**
+Array of collision point vectors for this sprite. These Vectors are generated automatically during sprite construction, or after using the set function.
+@property collisionVectors
+@type Array
+@default []
+**/
+		collisionVectors: [],
+/**
+A mixed type Array determining which collision points will be generated for this sprite.
+
+Sprite Objects vary in what values can be included in this array. Permitted values include:
+
+* String literals detailing the position of collision points on the sprite's perimeter (Block, Wheel, Phrase, Picture, Outline) - 'all', 'corners', 'edges', 'perimeter', 'north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'
+* Integer Number (greater than 1) for the number of collision points to be spaced around the sprite's perimeter/path (Wheel, Shape)
+* Float Number (between 0 and 1) tp place a collision point at a particular distance along a sprite's path (Shape)
+@property collisionPoints
+@type Array
+@default []
+**/
+		collisionPoints: [],
+		};
+	scrawl.mergeInto(scrawl.d.Sprite, scrawl.d.SubScrawl);
+
+/**
+Constructor helper function - register sprite object in the scrawl library
+@method registerInLibrary
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.registerInLibrary = function(){
+		scrawl.sprite[this.name] = this;
+		scrawl.pushUnique(scrawl.spritenames, this.name);
+		scrawl.group[this.group].addSpritesToGroup(this.name);
+		if(scrawl.xt(this.collisionPoints)){
+			this.collisionPoints = (scrawl.isa(this.collisionPoints, 'arr')) ? this.collisionPoints : [this.collisionPoints];
+			this.collisionPoints = this.parseCollisionPoints(this.collisionPoints);
+			}
+		return this;
+		}
+
+/**
+Turn the object into a JSON String
+@method toString
+@return JSON string of non-default value attributes, including non-default context values
+**/
+	Sprite.prototype.toString = function(noexternalobjects){
+		var keys = Object.keys(scrawl.d[this.type]),
+			result = {},
+			ctx,
+			ctxArray,
+			designs = [],
+			resarray = [];
+		result.type = this.type;
+		result.classname = this.classname;
+		result.name = this.name;
+		if(!noexternalobjects){
+			ctx = scrawl.ctx[this.context];
+			if(scrawl.contains(scrawl.designnames, ctx.fillStyle)){
+				scrawl.pushUnique(designs, ctx.fillStyle);
+				}
+			if(scrawl.contains(scrawl.designnames, ctx.strokeStyle)){
+				scrawl.pushUnique(designs, ctx.strokeStyle);
+				}
+			if(scrawl.contains(scrawl.designnames, ctx.shadowColor)){
+				scrawl.pushUnique(designs, ctx.shadowColor);
+				}
+			for(var i=0, z=designs.length; i<z; i++){
+				resarray.push(scrawl.design[designs[i]].toString());
+				}
+			}
+		for(var i = 0, z = keys.length; i < z; i++){
+			if(scrawl.contains(['start', 'delta', 'handle'], keys[i])){
+				if(!this[keys[i]].isLike(scrawl.d[this.type][keys[i]])){
+					result[keys[i]] = this[keys[i]];
+					}
+				}
+			else if(keys[i] === 'context'){
+				ctx = JSON.parse(scrawl.ctx[this.context].toString());
+				ctxArray = Object.keys(ctx);
+				for(var j = 0, w = ctxArray.length; j < w; j++){
+					result[ctxArray[j]] = ctx[ctxArray[j]];
+					}
+				}
+			else if(scrawl.contains(['collisionVectors','dataSet','pointList','firstPoint','linkList','linkDurations','perimeterLength','style','variant','weight','size','metrics','family','texts'], keys[i])){
+				//do nothing
+				}
+			else if(scrawl.xt(this[keys[i]]) && this[keys[i]] !== scrawl.d[this.type][keys[i]]){
+				result[keys[i]] = this[keys[i]];
+				}
+			}
+		if(this.type === 'Picture'){
+			result.url = scrawl.image[this.source].source;
+			}
+		resarray.push(JSON.stringify(result).replace('\\n', '\\\\n'));		//replace required for multiline Phrase sprites
+		return resarray
+		};
+		
+/**
+Overrides SubScrawl.get()
+
+Allows users to retrieve a sprite's Context object's values via the sprite
+@method get
+@param {String} item attribute key string
+@return Attribute value
+**/
+	Sprite.prototype.get = function(item){
+		//retrieve title, comment, timestamp - which might otherwise be returned with the context object's values
+		if(scrawl.xt(scrawl.d.Scrawl[item])){
+			return Scrawl.prototype.get.call(this, item);
+			}
+		//context attributes
+		else if(scrawl.xt(scrawl.d.Context[item])){
+			return scrawl.ctx[this.context].get(item);
+			}
+		//sprite attributes
+		else{
+			return SubScrawl.prototype.get.call(this, item);
+			}
+		};
+
+/**
+Overrides SubScrawl.set()
+
+Allows users to:
+* set a sprite's Context object's values via the sprite
+* shift a sprite between groups
+* add a sprite to a Cell object's fence or field group (Cell collision map generation)
+* reset and recalculate collision point data
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Sprite.prototype.set = function(items){
+		SubScrawl.prototype.set.call(this, items);
+		scrawl.ctx[this.context].set(items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xto([items.collisionPoints,items.field,items.fence,items.group])){
+			if(scrawl.xt(items.collisionPoints)){
+				this.collisionPoints = (scrawl.isa(items.collisionPoints, 'arr')) ? items.collisionPoints : [items.collisionPoints];
+				this.collisionPoints = this.parseCollisionPoints(this.collisionPoints);
+				delete this.collisionVectors;
+				}
+			if(scrawl.xt(items.field)){
+				this.addSpriteToCellFields();
+				}
+			if(scrawl.xt(items.fence)){
+				this.addSpriteToCellFences();
+				}
+			if(scrawl.xt(items.group)){
+				scrawl.group[this.group].removeSpritesFromGroup(this.name);
+				this.group = this.getGroup(items.group);
+				scrawl.group[this.group].addSpritesToGroup(this.name);
+				}
+			}
+		if(scrawl.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale])){
+			delete this.offset;
+			}
 		return this;
 		};
-	Sprite.prototype.exportNative = function(items){
-		items = (scrawl.xt(items)) ? items : {includeDesigns: true, includeImages: false, string: true};
-		var result = [];
-		if(items.includeDesigns){
-			var designs = items.designs || [];
-			if(scrawl.xt(this.context) && scrawl.designnames.contains(scrawl.ctx[this.context].fillStyle) && !designs.contains(scrawl.ctx[this.context].fillStyle)){
-				result.push(scrawl.design[scrawl.ctx[this.context].fillStyle].prepareForExport());
-				designs.push(scrawl.ctx[this.context].fillStyle);
-				}
-			if(scrawl.xt(this.context) && scrawl.designnames.contains(scrawl.ctx[this.context].strokeStyle) && !designs.contains(scrawl.ctx[this.context].strokeStyle)){
-				result.push(scrawl.design[scrawl.ctx[this.context].strokeStyle].prepareForExport());
-				designs.push(scrawl.ctx[this.context].strokeStyle);
-				}
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+
+Allows users to amend a sprite's Context object's values via the sprite, in addition to its own attribute values
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Sprite.prototype.setDelta = function(items){
+		SubScrawl.prototype.setDelta.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var ctx = scrawl.ctx[this.context];
+		if(scrawl.xto([items.lineDashOffset,items.lineWidth,items.globalAlpha])){
+			ctx.setDelta(items);
 			}
-		if(items.includeImages){
-			if(scrawl.xt(this.imageData) && this.imageData && scrawl.xt(scrawl.imageData[this.imageData])){
-				result.push(scrawl.imageData[this.imageData]);
-				}
+		this.roll += items.roll || 0;
+		if(scrawl.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale])){
+			delete this.offset;
 			}
-		if(scrawl.xt(this.animSheet) && this.animSheet && scrawl.animnames.contains(this.animSheet)){
-			result.push(scrawl.anim[this.animSheet].prepareForExport());
-			}
-		result.push(this.prepareForExport());
-		return (items.string) ? JSON.stringify(result) : result;
-		};
-	Sprite.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//SubScrawl
-			startX: (this.startX !== 0) ? this.startX : u,
-			startY: (this.startY !== 0) ? this.startY : u,
-			handleX: (this.handleX !== 0) ? this.handleX : u,
-			handleY: (this.handleY !== 0) ? this.handleY : u,
-			moveStartX: (this.moveStartX !== 0) ? this.moveStartX : u,
-			moveStartY: (this.moveStartY !== 0) ? this.moveStartY : u,
-			moveHandleX: (this.moveHandleX !== 0) ? this.moveHandleX : u,
-			moveHandleY: (this.moveHandleY !== 0) ? this.moveHandleY : u,
-			pivot: (this.pivot) ? this.pivot : u,
-			path: (this.path) ? this.path : u,
-			pathPosition: (this.pathPosition !== 0) ? this.pathPosition : u,
-			movePathPosition: (this.movePathPosition !== 0) ? this.movePathPosition : u,
-			pathSpeedConstant: (!this.pathSpeedConstant) ? this.pathSpeedConstant : u,
-			pathRoll: (this.pathRoll !== 0) ? this.pathRoll : u,
-			addPathRoll: (this.addPathRoll) ? this.addPathRoll : u,
-			scale: (this.scale !== 1) ? this.scale : u,
-			//Sprite
-			order: (this.order !== 0) ? this.order : u,
-			visibility: (!this.visibility) ? this.visibility : u,
-			method: this.method,
-			collisionPoints: (scrawl.xt(this.collisionPoints) && this.collisionPoints.length > 0) ? this.collisionPoints : u,
-			rollable: (!this.rollable) ? this.rollable : u,
-			roll: (this.roll !== 0) ? this.roll : u,
-			data: (this.data) ? this.data : u,
-			flipReverse: (this.flipReverse) ? this.flipReverse : u,
-			flipUpend: (this.flipUpend) ? this.flipUpend : u,
-			scaleOutline: (!this.scaleOutline) ? this.scaleOutline : u,
-			lockX: (this.lockX) ? this.lockX : u,
-			lockY: (this.lockY) ? this.lockY : u,
-			group: this.group,
-			fieldChannel: (this.fieldChannel !== 'anycolor') ? this.fieldChannel : u,
-			fieldTest: (this.fieldTest !== 0) ? this.fieldTest : u,
-			//Phrase (text objects not saved)
-			text: (scrawl.xt(this.text) && this.text !=='') ? this.text : u,
-			style: (scrawl.xt(this.style) && this.style !== 'normal') ? this.style : u,
-			variant: (scrawl.xt(this.variant) && this.variant !== 'normal') ? this.variant : u,
-			weight: (scrawl.xt(this.weight) && this.weight !== 'normal') ? this.weight : u,
-			size: (scrawl.xt(this.size) && this.size !== 12) ? this.size : u,
-			metrics: (scrawl.xt(this.metrics) && this.metrics !== 'pt') ? this.metrics : u,
-			family: (scrawl.xt(this.family) && this.family !== 'sans-serif') ? this.family : u,
-			lineHeight: (scrawl.xt(this.lineHeight) && this.lineHeight !== 1.5) ? this.lineHeight : u,
-			backgroundColor: (scrawl.xt(this.backgroundColor) && this.backgroundColor) ? this.backgroundColor : u,
-			backgroundMargin: (scrawl.xt(this.backgroundMargin) && this.backgroundMargin !== 0) ? this.backgroundMargin : u,
-			textAlongPath: (scrawl.xt(this.textAlongPath) && this.textAlongPath !== 'phrase') ? this.textAlongPath : u,
-			fixedWidth: (scrawl.xt(this.fixedWidth) && this.fixedWidth) ? this.fixedWidth : u,
-			//Block (and other sprites)
-			width: (scrawl.xt(this.width) && this.width !== 0) ? this.width : u,
-			height: (scrawl.xt(this.height) && this.height !== 0) ? this.height : u,
-			//Wheel
-			radius: (scrawl.xt(this.radius) && this.radius !== 0) ? this.radius : u,
-			startAngle: (scrawl.xt(this.startAngle) && this.startAngle !== 0) ? this.startAngle : u,
-			endAngle: (scrawl.xt(this.endAngle) && this.endAngle !== 360) ? this.endAngle : u,
-			clockwise: (scrawl.xt(this.clockwise) && this.clockwise) ? this.clockwise : u,
-			closed: (scrawl.xt(this.closed)) ? this.closed : u,
-			includeCenter: (scrawl.xt(this.includeCenter) && this.includeCenter) ? this.includeCenter : u,
-			checkHitUsingRadius: (scrawl.xt(this.checkHitUsingRadius) && !this.checkHitUsingRadius) ? this.checkHitUsingRadius : u,
-			//Picture
-			source: (scrawl.xt(this.source) && this.source) ? this.source : u,
-			imageData: (scrawl.xt(this.imageData) && this.imageData) ? this.imageData : u,
-			imageDataChannel: (scrawl.xt(this.imageDataChannel) && this.imageDataChannel !=='alpha') ? this.imageDataChannel : u,
-			animSheet: (scrawl.xt(this.animSheet) && this.animSheet) ? this.animSheet : u,
-			imageType: (scrawl.xt(this.imageType) && this.imageType) ? this.imageType : u,
-			checkHitUsingImageData: (scrawl.xt(this.checkHitUsingImageData) && this.checkHitUsingImageData) ? this.checkHitUsingImageData : u,
-			copyX: (scrawl.xt(this.copyX)) ? this.copyX : u,
-			copyY: (scrawl.xt(this.copyY)) ? this.copyY : u,
-			copyWidth: (scrawl.xt(this.copyWidth)) ? this.copyWidth : u,
-			copyHeight: (scrawl.xt(this.copyHeight)) ? this.copyHeight : u,
-			//Shape
-			firstPoint: (scrawl.xt(this.firstPoint) && this.firstPoint) ? this.firstPoint : u,
-			line: (scrawl.xt(this.line) && this.line) ? this.line : u,
-			linkDurations: (scrawl.xt(this.linkDurations) && this.linkDurations.length > 0) ? this.linkDurations : u,
-			markStart: (scrawl.xt(this.markStart) && this.markStart) ? this.markStart : u,
-			markMid: (scrawl.xt(this.markMid) && this.markMid) ? this.markMid : u,
-			markEnd: (scrawl.xt(this.markEnd) && this.markEnd) ? this.markEnd : u,
-			//Context
-			fillStyle: (scrawl.ctx[this.context].fillStyle !== '#000000') ? scrawl.ctx[this.context].fillStyle : u,
-			winding: (scrawl.ctx[this.context].winding !== 'nonzero') ? scrawl.ctx[this.context].winding : u,
-			strokeStyle: (scrawl.ctx[this.context].strokeStyle !== '#000000') ? scrawl.ctx[this.context].strokeStyle : u,
-			globalAlpha: (scrawl.ctx[this.context].globalAlpha !== 1) ? scrawl.ctx[this.context].globalAlpha : u,
-			globalCompositeOperation: (scrawl.ctx[this.context].globalCompositeOperation !== 'source-over') ? scrawl.ctx[this.context].globalCompositeOperation : u,
-			lineWidth: (scrawl.ctx[this.context].lineWidth !== 1) ? scrawl.ctx[this.context].lineWidth : u,
-			lineCap: (scrawl.ctx[this.context].lineCap !== 'butt') ? scrawl.ctx[this.context].lineCap : u,
-			lineJoin: (scrawl.ctx[this.context].lineJoin !== 'miter') ? scrawl.ctx[this.context].lineJoin : u,
-			lineDash: (scrawl.ctx[this.context].lineDash.length > 0) ? scrawl.ctx[this.context].lineDash : u,
-			lineDashOffset: (scrawl.ctx[this.context].lineDashOffset !== 0) ? scrawl.ctx[this.context].lineDashOffset : u,
-			miterLimit: (scrawl.ctx[this.context].miterLimit !== 10) ? scrawl.ctx[this.context].miterLimit : u,
-			shadowOffsetX: (scrawl.ctx[this.context].shadowOffsetX !== 0) ? scrawl.ctx[this.context].shadowOffsetX : u,
-			shadowOffsetY: (scrawl.ctx[this.context].shadowOffsetY !== 0) ? scrawl.ctx[this.context].shadowOffsetY : u,
-			shadowBlur: (scrawl.ctx[this.context].shadowBlur !== 0) ? scrawl.ctx[this.context].shadowBlur : u,
-			shadowColor: (scrawl.ctx[this.context].shadowColor !== 'rgba(0,0,0,0)') ? scrawl.ctx[this.context].shadowColor : u,
-			font: (scrawl.ctx[this.context].font !== '10pt sans-serif') ? scrawl.ctx[this.context].font : u,
-			textAlign: (scrawl.ctx[this.context].textAlign !== 'start') ? scrawl.ctx[this.context].textAlign : u,
-			textBaseline: (scrawl.ctx[this.context].textBaseline !== 'alphabetic') ? scrawl.ctx[this.context].textBaseline : u,
-			};
-		};
-	Sprite.prototype.setToDefaults = function(){
-		var u;
-		this.set({
-			comment: '',
-			title: '',
-			startX: 0,
-			startY: 0,
-			handleX: 0,
-			handleY: 0,
-			moveStartX: 0,
-			moveStartY: 0,
-			moveHandleX: 0,
-			moveHandleY: 0,
-			pivot: false,
-			path: false,
-			pathPosition: 0,
-			movePathPosition: 0,
-			pathSpeedConstant: true,
-			pathRoll: 0,
-			addPathRoll: false,
-			scale: 1,
-			order: 0,
-			visibility: true,
-			collisionPoints: [],
-			rollable: true,
-			roll: 0,
-			data: false,
-			flipReverse: false,
-			flipUpend: false,
-			scaleOutline: true,
-			lockX: false,
-			lockY: false,
-			group: false,
-			fieldChannel: 'anycolor',
-			fieldTest: 0,
-			text: (scrawl.xt(this.text)) ? '' : u,
-			style: (scrawl.xt(this.style)) ? 'normal' : u,
-			variant: (scrawl.xt(this.variant)) ? 'normal' : u,
-			weight: (scrawl.xt(this.weight)) ? 'normal' : u,
-			size: (scrawl.xt(this.size)) ? 12 : u,
-			metrics: (scrawl.xt(this.metrics)) ? 'pt' : u,
-			family: (scrawl.xt(this.family)) ? 'sans-serif' : u,
-			lineHeight: (scrawl.xt(this.lineHeight)) ? 1.5 : u,
-			backgroundColor: (scrawl.xt(this.backgroundColor)) ? false : u,
-			backgroundMargin: (scrawl.xt(this.backgroundMargin)) ? 0 : u,
-			textAlongPath: (scrawl.xt(this.textAlongPath)) ? 'phrase' : u,
-			fixedWidth: (scrawl.xt(this.fixedWidth)) ? false : u,
-			width: (scrawl.xt(this.width)) ? 0 : u,
-			height: (scrawl.xt(this.height)) ? 0 : u,
-			radius: (scrawl.xt(this.radius)) ? 0 : u,
-			startAngle: (scrawl.xt(this.startAngle)) ? 0 : u,
-			endAngle: (scrawl.xt(this.endAngle)) ? 360 : u,
-			clockwise: (scrawl.xt(this.clockwise)) ? false : u,
-			closed: (scrawl.xt(this.closed)) ? false : u,
-			includeCenter: (scrawl.xt(this.includeCenter)) ? false : u,
-			checkHitUsingRadius: (scrawl.xt(this.checkHitUsingRadius)) ? true : u,
-			imageData: (scrawl.xt(this.imageData)) ? false : u,
-			imageDataChannel: (scrawl.xt(this.imageDataChannel)) ? 'alpha' : u,
-			animSheet: (scrawl.xt(this.animSheet)) ? false : u,
-			checkHitUsingImageData: (scrawl.xt(this.checkHitUsingImageData)) ? false : u,
-			copyX: (scrawl.xt(this.copyX)) ? false : u,
-			copyY: (scrawl.xt(this.copyY)) ? false : u,
-			copyWidth: (scrawl.xt(this.copyWidth)) ? false : u,
-			copyHeight: (scrawl.xt(this.copyHeight)) ? false : u,
-			firstPoint: (scrawl.xt(this.firstPoint)) ? false : u,
-			line: (scrawl.xt(this.line)) ? false : u,
-			markStart: (scrawl.xt(this.markStart)) ? false : u,
-			markMid: (scrawl.xt(this.markMid)) ? false : u,
-			markEnd: (scrawl.xt(this.markEnd)) ? false : u,
-			fillStyle: '#000000',
-			winding: 'nonzero',
-			strokeStyle: '#000000',
-			globalAlpha: 1,
-			globalCompositeOperation: 'source-over',
-			lineWidth: 1,
-			lineCap: 'butt',
-			lineJoin: 'miter',
-			lineDash: [],
-			lineDashOffset: 0,
-			miterLimit: 10,
-			shadowOffsetX: 0,
-			shadowOffsetY: 0,
-			shadowBlur: 0,
-			shadowColor: 'rgba(0,0,0,0)',
-			font: '10pt sans-serif',
-			textAlign: 'start',
-			textBaseline: 'alphabetic',
-			});
 		return this;
 		};
+
+/**
+Overrides SubScrawl.clone()
+@method clone
+@param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
+@return Cloned object
+@chainable
+**/
+	Sprite.prototype.clone = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var a,
+			b,
+			c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
+		delete c.name;
+		b = scrawl.mergeInto(items, c);
+		delete b.context;
+		a = SubScrawl.prototype.clone.call(this, b);
+		if(scrawl.xt(items.createNewContext) && !items.createNewContext){
+			delete scrawl.ctx[a.context];
+			scrawl.removeItem(scrawl.ctxnames, a.context);
+			a.context = this.context;
+			}
+		return a;
+		};
+
+/**
+Set sprite's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999
+@method pickupSprite
+@param {Vector} items Coordinate vector; alternatively an object with {x, y} attributes can be used
+@return This
+@chainable
+**/
 	Sprite.prototype.pickupSprite = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		var coordinate = new Vector(items),
+			pad,
+			cell;
+		if(scrawl.xta([items.source,items.type])){
+			pad = scrawl[items.type][items.source];
+			cell = scrawl.cell[scrawl.group[this.group].cell];
+			if(pad.width !== cell.actualWidth){
+				coordinate.x /= (pad.width/cell.actualWidth);
+				}
+			if(pad.height !== cell.actualHeight){
+				coordinate.y /= (pad.height/cell.actualHeight);
+				}
+			}
 		if(scrawl.xta([items.x,items.y])){
-			this.mouseX = items.x || 0;
-			this.mouseY = items.y || 0;
+			this.mouseX = coordinate.x || 0;
+			this.mouseY = coordinate.y || 0;
 			this.realPivot = this.pivot;
-			this.pivot = 'mouse';
-			this.order += 9999;
+			this.set({
+				pivot: 'mouse',
+				order: this.order + 9999,
+				});
 			}
 		return this;
 		};
+
+/**
+Revert pickupSprite() actions, ensuring sprite is left where the user drops it
+@method dropSprite
+@param {String} [items] Alternative pivot String
+@return This
+@chainable
+**/
 	Sprite.prototype.dropSprite = function(item){
-		this.pivot = item || this.realPivot || false;
-		this.order -= (this.order >= 9999) ? 9999 : 0;
+		var order = this.order;
+		this.set({
+			pivot: item || this.realPivot || false,
+			order: (order >= 9999) ? order - 9999 : 0,
+			});
 		delete this.realPivot;
 		delete this.mouseX;
 		delete this.mouseY;
 		return this;
 		};
-	Sprite.prototype.clone = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		var a = Scrawl.prototype.clone.call(this, items);
-		if(!scrawl.xt(items.createNewContext) || items.createNewContext){
-			var b = scrawl.ctx[a.context];
-			var c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
-			delete c.name;
-			b.set(c);
-			delete items.name;
-			b.set(items);
-			if(scrawl.designnames.contains(b.fillStyle)){
-				if(scrawl.design[b.fillStyle].type !== 'Pattern'){
-					var f = scrawl.design[b.fillStyle].clone();
-					b.fillStyle = f.name;
-					}
-				else{
-					b.fillStyle = items.fillStyle || scrawl.ctx[this.context].fillStyle;
-					}
-				}
-			if(scrawl.designnames.contains(b.strokeStyle)){
-				if(scrawl.design[b.strokeStyle].type !== 'Pattern'){
-					var s = scrawl.design[b.strokeStyle].clone();
-					b.strokeStyle = s.name;
-					}
-				else{
-					b.strokeStyle = items.strokeStyle || scrawl.ctx[this.context].strokeStyle;
-					}
-				}
-			}
-		else{
-			delete scrawl.ctx[a.context];
-			scrawl.ctxnames.removeItem(a.context);
-			a.context = this.context;
-			}
-		if(items.field){
-			a.addSpriteToCellFields();
-			}
-		if(items.fence){
-			a.addSpriteToCellFences();
-			}
-		if(items.group||items.target){
-			scrawl.group[this.group].removeSpritesFromGroup(a.name);
-			a.group = this.getGroup(items);
-			scrawl.group[a.group].addSpritesToGroup(a.name);
-			if(scrawl.xt(items.target)){
-				a.targetGroup(items);
-				}
-			}
-		return a;
-		};
+
+/**
+Add this sprite to a (range of) Cell object field groups
+@method addSpriteToCellFields
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
 	Sprite.prototype.addSpriteToCellFields = function(cells){
-		var cells = (scrawl.xt(cells)) ? [].concat(cells) : [scrawl.pad[scrawl.currentPad].current];
+		cells = (scrawl.xt(cells)) ? [].concat(cells) : [this.group];
 		for(var i=0, z=cells.length; i<z; i++){
-			if(scrawl.cellnames.contains(cells[i])){
+			if(scrawl.contains(scrawl.cellnames, cells[i])){
 				scrawl.group[cells[i]+'_field'].addSpritesToGroup(this.name);
 				}
 			}
 		return this;
 		};
+
+/**
+Add this sprite to a (range of) Cell object fence groups
+@method addSpriteToCellFences
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
 	Sprite.prototype.addSpriteToCellFences = function(cells){
-		cells = (scrawl.xt(cells)) ? [].concat(cells) : [scrawl.pad[scrawl.currentPad].current];
+		cells = (scrawl.xt(cells)) ? [].concat(cells) : [this.group];
 		for(var i=0, z=cells.length; i<z; i++){
-			if(scrawl.cellnames.contains(cells[i])){
+			if(scrawl.contains(scrawl.cellnames, cells[i])){
 				scrawl.group[cells[i]+'_fence'].addSpritesToGroup(this.name);
 				}
 			}
 		return this;
 		};
+
+/**
+Remove this sprite from a (range of) Cell object field groups
+@method removeSpriteFromCellFields
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
 	Sprite.prototype.removeSpriteFromCellFields = function(cells){
-		cells = (scrawl.xt(cells)) ? [].concat(cells) : [scrawl.pad[scrawl.currentPad].current];
+		cells = (scrawl.xt(cells)) ? [].concat(cells) : [this.group];
 		for(var i=0, z=cells.length; i<z; i++){
-			if(scrawl.cellnames.contains(cells[i])){
+			if(scrawl.contains(scrawl.cellnames, cells[i])){
 				scrawl.group[cells[i]+'_field'].removeSpritesFromGroup(this.name);
 				}
 			}
 		return this;
 		};
+
+/**
+Remove this sprite from a (range of) Cell object fence groups
+@method removeSpriteFromCellFences
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
 	Sprite.prototype.removeSpriteFromCellFences = function(cells){
-		cells = (scrawl.xt(cells)) ? [].concat(cells) : [scrawl.pad[scrawl.currentPad].current];
+		cells = (scrawl.xt(cells)) ? [].concat(cells) : [this.group];
 		for(var i=0, z=cells.length; i<z; i++){
-			if(scrawl.cellnames.contains(cells[i])){
+			if(scrawl.contains(scrawl.cellnames, cells[i])){
 				scrawl.group[cells[i]+'_fence'].removeSpritesFromGroup(this.name);
 				}
 			}
 		return this;
 		};
-	Sprite.prototype.set = function(items){
-		Scrawl.prototype.set.call(this, items);
-		scrawl.ctx[this.context].set(items);
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xt(items.collisionPoints)){this.collisionPoints = this.parseCollisionPoints(items.collisionPoints);}
-		if(scrawl.xt(items.field)){this.addSpriteToCellFields();}
-		if(scrawl.xt(items.fence)){this.addSpriteToCellFences();}
-		if(scrawl.xto([items.startX,items.handleX,items.startY,items.handleY])){
-			this.setCurrentParameters();
-			}
-		if(scrawl.xto([items.group,items.target])){
-			scrawl.group[this.group].removeSpritesFromGroup(this.name);
-			this.group = this.getGroup(items);
-			scrawl.group[this.group].addSpritesToGroup(this.name);
-			if(scrawl.xt(items.target)){
-				this.targetGroup(items);
-				}
-			}
-		return this;
-		};
-	Sprite.prototype.get = function(item){
-		if(['globalAlpha','globalCompositeOperation','lineWidth','lineCap','lineJoin','miterLimit','shadowOffsetX','shadowOffsetY','shadowBlur','shadowColor','font','textAlign','textBaseline','winding','lineDash','lineDashOffset','fillStyle','strokeStyle'].contains(item)){
-			return scrawl.ctx[this.context].get(item);
-			}
-		else{
-			return this[item];
-			}
-		};
-	Sprite.prototype.swap = function(){
-		scrawl.ctx[this.context].swapStyles();
-		return this;
-		};
+
+/**
+Constructor helper function - discover this sprite's default group affiliation
+@method getGroup
+@param {Object} [items] Constructor argument
+@return GROUPNAME String
+@private
+**/
 	Sprite.prototype.getGroup = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xt(items.target) && scrawl.groupnames.contains(items.target)){return items.target;}
-		else if(scrawl.xt(items.group) && scrawl.groupnames.contains(items.group)){return items.group;}
-		else{return scrawl.pad[scrawl.currentPad].current;}
+		if(scrawl.xt(items.group) && scrawl.contains(scrawl.groupnames, items.group)){
+			return items.group;
+			}
+		else{
+			return scrawl.pad[scrawl.currentPad].current;
+			}
 		};
-	Sprite.prototype.forceStamp = function(method, cell){				//override object is only generated by group objects
+
+/**
+Stamp function - instruct sprite to draw itself on a Cell's &lt;canvas&gt; element, regardless of the setting of its visibility attribute
+
+Permitted methods include:
+
+* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
+* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
+* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the sprite's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+@method forceStamp
+@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
+@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+**/
+	Sprite.prototype.forceStamp = function(method, cell){
 		var temp = this.visibility;
 		this.visibility = true;
 		this.stamp(method, cell);
 		this.visibility = temp;
 		return this;
 		};
-	Sprite.prototype.prepareStamp = function(override){
-		override = (scrawl.xt(override)) ? override : {x:0,y:0};
-		return {
-			x: (this.flipReverse) ? this.currentX - (override.x*2) : this.currentX,
-			y: (this.flipUpend) ? this.currentY - (override.y*2) : this.currentY,
-			};
+
+/**
+Stamp helper function - get handle offset values
+@method prepareStamp
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.prepareStamp = function(){
+		if(!this.offset){
+			this.offset = this.getOffsetStartVector();
+			}
+		return this.offset;
 		};
-	Sprite.prototype.prepareItemForStamp = function(method, cell){
-		var override;
-		if(scrawl.xt(method)){
-			override = (scrawl.isa(method,'str')) ? scrawl.group[this.group].getOverride(this.name, method) : method;
+
+/**
+Stamp helper function - set this sprite's start values to its pivot sprite/point start value
+
+Takes into account sprite lock flag settings
+@method setStampUsingPivot
+@param {String} [cell] CELLNAME String
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.setStampUsingPivot = function(cell){
+		var	here,
+			myCell,
+			myPad,
+			myP,
+			myPVector,
+			pSprite;
+		if(scrawl.contains(scrawl.pointnames, this.pivot)){
+			myP = scrawl.point[this.pivot];
+			pSprite = scrawl.sprite[myP.sprite];
+			myPVector = myP.getCurrentCoordinates().rotate(pSprite.roll).vectorAdd(pSprite.start);
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 			}
-		else{
-			override = scrawl.group[this.group].getOverride(this.name, this.method);
-			}
-		if(scrawl.xt(cell) && scrawl.cellnames.contains(cell)){ 
-			override.cells = [cell];
-			}
-		return override;
-		};
-	Sprite.prototype.setStampUsingPivot = function(override, cell){
-		var here, myCell;
-		if(scrawl.pointnames.contains(this.pivot)){
-			this.startX = (!this.lockX) ? scrawl.point[this.pivot].currentX : this.startX;
-			this.startY = (!this.lockY) ? scrawl.point[this.pivot].currentY : this.startY;
-			}
-		else if(scrawl.spritenames.contains(this.pivot)){
-			this.startX = (!this.lockX) ? scrawl.sprite[this.pivot].startX : this.startX;
-			this.startY = (!this.lockY) ? scrawl.sprite[this.pivot].startY : this.startY;
+		else if(scrawl.contains(scrawl.spritenames, this.pivot)){
+			myP = scrawl.sprite[this.pivot];
+			myPVector = (myP.type === 'Particle') ? myP.get('position') : myP.start.getVector();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 			}
 		else if(this.pivot === 'mouse'){
 			myCell = scrawl.cell[cell];
-			here = scrawl.pad[myCell.pad].getMouse();
+			myPad = scrawl.pad[myCell.pad];
+			here = myPad.getMouse();
+			if(myPad.width !== myCell.actualWidth){
+				here.x /= (myPad.width/myCell.actualWidth);
+				}
+			if(myPad.height !== myCell.actualHeight){
+				here.y /= (myPad.height/myCell.actualHeight);
+				}
 			if(!scrawl.xta([this.mouseX,this.mouseY])){
-				this.mouseX = this.startX;
-				this.mouseY = this.startY;
+				this.mouseX = this.start.x;
+				this.mouseY = this.start.y;
 				}
 			if(here.active){
-				this.startX += (!this.lockX) ? here.x - this.mouseX : 0;
-				this.startY += (!this.lockY) ? here.y - this.mouseY : 0;
+				this.start.x = (!this.lockX) ? this.start.x + here.x - this.mouseX : this.start.x;
+				this.start.y = (!this.lockY) ? this.start.y + here.y - this.mouseY : this.start.y;
 				this.mouseX = here.x;
 				this.mouseY = here.y;
 				}
 			}
-		else if(scrawl.groupnames.contains(this.pivot)){
-			this.startX = (!this.lockX) ? scrawl.group[this.pivot].startX : this.startX;
-			this.startY = (!this.lockY) ? scrawl.group[this.pivot].startY : this.startY;
-			}
 		return this;
 		};
-	Sprite.prototype.setCurrentParameters = function(override){
-		override = (scrawl.xt(override)) ? override : {x:0,y:0,r:0,s:1};
-		this.currentScale = this.scale * override.s;
-		this.currentX = this.getStartX(override);
-		this.currentY = this.getStartY(override);
-		this.currentWidth = this.width * this.currentScale;
-		this.currentHeight = this.height * this.currentScale;
-		if(scrawl.xt(this.radius)){
-			this.currentRadius = this.radius * this.currentScale;
-			}
-		this.currentRoll = this.roll + override.r;
-		return this;
-		};
+
+/**
+Stamp function - instruct sprite to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true
+
+Permitted methods include:
+
+* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
+* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
+* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the sprite's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+@method stamp
+@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
+@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+**/
 	Sprite.prototype.stamp = function(method, cell){
 		if(this.visibility){
-			var ctx, engine, myCell, myMethod;
-			var override = this.prepareItemForStamp(method, cell);
-			myMethod = override.method || this.method;
-			for(var i=0, z=override.cells.length; i<z; i++){
-				ctx = scrawl.cell[override.cells[i]];
-				engine = scrawl.context[ctx.name];
-				myCell = scrawl.cell[override.cells[i]].name;
-				var here;
-				if(this.pivot){
-					this.setStampUsingPivot(override, myCell);
-					}
-				else if(scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape'){
-					here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPosition, this.pathSpeedConstant, this.addPathRoll);
-					this.startX = (!this.lockX) ? here.x : this.startX;
-					this.startY = (!this.lockY) ? here.y : this.startY;
-					this.pathRoll = here.r || 0;
-					}
-				this.setCurrentParameters(override);
-				this.callMethod(engine, myCell, override, myMethod);
+			var	myCell = (scrawl.isa(cell,'str') && scrawl.contains(scrawl.cellnames, cell)) ? scrawl.cell[cell] : scrawl.cell[scrawl.group[this.group].cell],
+				engine = scrawl.context[myCell.name],
+				myMethod = (scrawl.isa(method,'str')) ? method : this.method,
+				here;
+			if(this.pivot){
+				this.setStampUsingPivot(myCell.name);
 				}
+			else if(scrawl.contains(scrawl.spritenames, this.path) && scrawl.sprite[this.path].type === 'Shape'){
+				here = scrawl.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+				this.start.x = (!this.lockX) ? here.x : this.start.x;
+				this.start.y = (!this.lockY) ? here.y : this.start.y;
+				this.pathRoll = here.r || 0;
+				}
+			this.callMethod(engine, myCell.name, myMethod);
 			}
 		return this;
 		};
-	Sprite.prototype.flipCanvas = function(engine, myCell){
-		var c = scrawl.cell[myCell];
-		var w = c.actualWidth, h = c.actualHeight;
-		if(this.flipReverse && this.flipUpend){
-			engine.translate(w,h);
-			engine.scale(-1,-1);
-			this.currentX = w-this.currentX;
-			this.currentY = h-this.currentY;
-			}
-		else if(this.flipReverse){
-			engine.translate(w,0);
-			engine.scale(-1,1);
-			this.currentX = w-this.currentX;
-			}
-		else if(this.flipUpend){
-			engine.translate(0,h);
-			engine.scale(1,-1);
-			this.currentY = h-this.currentY;
-			}
-		return this;
-		};
-	Sprite.prototype.callMethod = function(engine, myCell, override, method){
-		this.flipCanvas(engine, myCell);
+
+/**
+Stamp helper function - direct sprite to the required drawing method function
+@method callMethod
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} engine JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.callMethod = function(engine, cell, method){
 		switch(method){
-			case 'clear' : this.clear(engine, myCell, override); break;
-			case 'clearWithBackground' : this.clearWithBackground(engine, myCell, override); break;
-			case 'draw' : this.draw(engine, myCell, override); break;
-			case 'fill' : this.fill(engine, myCell, override); break;
-			case 'drawFill' : this.drawFill(engine, myCell, override); break;
-			case 'fillDraw' : this.fillDraw(engine, myCell, override); break;
-			case 'sinkInto' : this.sinkInto(engine, myCell, override); break;
-			case 'floatOver' : this.floatOver(engine, myCell, override); break;
-			case 'clip' : this.clip(engine, myCell, override); break;
-			case 'none' : this.none(engine, myCell, override); break;
-			}
-		this.flipCanvas(engine, myCell);
-		return this;
-		};
-	Sprite.prototype.rotateCell = function(ctx, cell, override){
-		if(scrawl.xta([ctx,cell]) && (this.rollable || this.addPathRoll)){
-			if(this.currentRoll !== scrawl.cell[cell].roll || this.currentRoll + this.pathRoll !== scrawl.cell[cell].roll){
-				var deltaRotation = (this.addPathRoll) ? ((this.currentRoll + this.pathRoll) - scrawl.cell[cell].roll) * scrawl.radian : (this.currentRoll - scrawl.cell[cell].roll) * scrawl.radian;
-				this.completeRotation(ctx, cell, override, deltaRotation);
-				}
+			case 'clear' : this.clear(engine, cell); break;
+			case 'clearWithBackground' : this.clearWithBackground(engine, cell); break;
+			case 'draw' : this.draw(engine, cell); break;
+			case 'fill' : this.fill(engine, cell); break;
+			case 'drawFill' : this.drawFill(engine, cell); break;
+			case 'fillDraw' : this.fillDraw(engine, cell); break;
+			case 'sinkInto' : this.sinkInto(engine, cell); break;
+			case 'floatOver' : this.floatOver(engine, cell); break;
+			case 'clip' : this.clip(engine, cell); break;
+			case 'none' : this.none(engine, cell); break;
 			}
 		return this;
 		};
-	Sprite.prototype.getRotationPoint = function(override, cell){
-		var cellX, cellY, deltaX, deltaY;
-		override = (scrawl.xt(override)) ? override : {x:0,y:0};
-		if(this.flipReverse){
-			deltaX = this.currentX + (this.getPivotOffset(this.handleX)*this.currentScale) - (override.x * 2);
-			}
-		else{
-			deltaX = this.currentX + (this.getPivotOffset(this.handleX)*this.currentScale);
-			}
-		if(this.flipUpend){
-			deltaY = this.currentY + (this.getPivotOffset(this.handleY, true)*this.currentScale) - (override.y * 2);
-			}
-		else{
-			deltaY = this.currentY + (this.getPivotOffset(this.handleY, true)*this.currentScale);
-			}
-		return {x: deltaX, y: deltaY};
-		};
-	Sprite.prototype.completeRotation = function(ctx, cell, override, deltaRotation){
-		var delta = this.getRotationPoint(override, cell);
-		ctx.translate(delta.x, delta.y);
-		ctx.rotate(deltaRotation);
-		ctx.translate(-delta.x, -delta.y);
+
+/**
+Stamp helper function - rotate and position canvas ready for drawing sprite
+@method rotateCell
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.rotateCell = function(ctx){
+		var myA = (this.flipReverse) ? -1 : 1,
+			myD = (this.flipUpend) ? -1 : 1,
+			deltaRotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * scrawl.radian : this.roll * scrawl.radian,
+			cos = Math.cos(deltaRotation),
+			sin = Math.sin(deltaRotation);
+		ctx.setTransform((cos * myA), (sin * myA), (-sin * myD), (cos * myD), this.start.x, this.start.y);
 		return this;
 		};
-	Sprite.prototype.unrotateCell = function(ctx, cell, override){
-		if(scrawl.xta([ctx,cell]) && (this.rollable || this.addPathRoll)){
-			if(this.currentRoll !== scrawl.cell[cell].roll || this.currentRoll + this.pathRoll !== scrawl.cell[cell].roll){
-				var deltaRotation = (this.addPathRoll) ? (scrawl.cell[cell].roll - (this.currentRoll + this.pathRoll)) * scrawl.radian : (scrawl.cell[cell].roll - this.currentRoll) * scrawl.radian;
-				this.completeRotation(ctx, cell, override, deltaRotation);
-				}
-			}
+
+/**
+Stamp helper function - perform a 'clear' method draw
+
+_Note: not supported by this object_
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.clear = function(ctx, cell){return this;};
+
+/**
+Stamp helper function - perform a 'clearWithBackground' method draw
+
+_Note: not supported by this object_
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.clearWithBackground = function(ctx, cell){return this;};
+
+/**
+
+_Note: not supported by this object_
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.draw = function(ctx, cell){return this;};
+
+/**
+Stamp helper function - perform a 'fill' method draw
+
+_Note: not supported by this object_
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.fill = function(ctx, cell){return this;};
+
+/**
+Stamp helper function - perform a 'drawFill' method draw
+
+_Note: not supported by this object_
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.drawFill = function(ctx, cell){return this;};
+
+/**
+Stamp helper function - perform a 'fillDraw' method draw
+
+_Note: not supported by this object_
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.fillDraw = function(ctx, cell){return this;};
+
+/**
+Stamp helper function - perform a 'sinkInto' method draw
+
+_Note: not supported by this object_
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.sinkInto = function(ctx, cell){return this;};
+
+/**
+Stamp helper function - perform a 'floatOver' method draw
+
+_Note: not supported by this object_
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.floatOver = function(ctx, cell){return this;};
+
+/**
+Stamp helper function - perform a 'clip' method draw
+
+_Note: not tested - use at own risk!_
+@method clip
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.clip = function(ctx, cell){return this;};
+
+/**
+Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this sprite's context values, but not defining or drawing the sprite on the canvas.
+@method none
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.none = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
 		return this;
 		};
-	Sprite.prototype.clear = function(ctx, cell, override){return this;};
-	Sprite.prototype.clearWithBackground = function(ctx, cell, override){return this;};
-	Sprite.prototype.draw = function(ctx, cell, override){return this;};
-	Sprite.prototype.fill = function(ctx, cell, override){return this;};
-	Sprite.prototype.drawFill = function(ctx, cell, override){return this;};
-	Sprite.prototype.fillDraw = function(ctx, cell, override){return this;};
-	Sprite.prototype.sinkInto = function(ctx, cell, override){return this;};
-	Sprite.prototype.floatOver = function(ctx, cell, override){return this;};
-	Sprite.prototype.clip = function(ctx, cell, override){return this;};
-	Sprite.prototype.none = function(ctx, cell, override){return this;};
-	Sprite.prototype.setDelta = function(items){
+
+/**
+Translate a Cell coordinate into a coordinate centered on this sprite's start coordinate
+@method getLocalCoordinate
+@param {Vector} items Cell coordinate
+@return Localised Vector coordinate
+**/
+	Sprite.prototype.getLocalCoordinate = function(items){
+		//corrects for scaling, rotation and flip; return value in px relative to sprite.start at roll=0, scale=1
+		//currently only used by Picture.getImageDataValue() and indirectly by Picture.checkHit()
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xt(items.startX)){this.startX += items.startX;}
-		if(scrawl.xt(items.startY)){this.startY += items.startY;}
-		if(scrawl.xt(items.handleX)){this.handleX += items.handleX;}
-		if(scrawl.xt(items.handleY)){this.handleY += items.handleY;}
-		if(scrawl.xt(items.width)){this.width += items.width;}
-		if(scrawl.xt(items.height)){this.height += items.height;}
-		if(scrawl.xt(items.radius)){this.radius += items.radius;}
-		if(scrawl.xt(items.scale)){this.scale += items.scale;}
-		if(scrawl.xt(items.roll)){this.roll += items.roll;}
-		if(scrawl.xt(items.startAngle)){this.startAngle += items.startAngle;}
-		if(scrawl.xt(items.endAngle)){this.endAngle += items.endAngle;}
-		if(scrawl.xt(items.copyX)){this.copyX += items.copyX;}
-		if(scrawl.xt(items.copyY)){this.copyY += items.copyY;}
-		if(scrawl.xt(items.copyWidth)){this.copyWidth += items.copyWidth;}
-		if(scrawl.xt(items.copyHeight)){this.copyHeight += items.copyHeight;}
-		if(scrawl.xt(items.pathPosition)){this.pathPosition += items.pathPosition;}
-		if(scrawl.xt(items.lineDashOffset)){scrawl.ctx[this.context].lineDashOffset += items.lineDashOffset;}
-		if(scrawl.xt(items.lineWidth)){scrawl.ctx[this.context].lineWidth += items.lineWidth;}
-		if(scrawl.xt(items.globalAlpha)){scrawl.ctx[this.context].globalAlpha += items.globalAlpha;}
-		return this;
+		var original = new Vector({x: items.x || 0, y: items.y || 0}),
+			offset = this.getPivotOffsetVector();
+		original.vectorSubtract(this.start);
+		original.scalarDivide(this.scale);
+		original.rotate(-this.roll);
+		original.x = (this.flipReverse) ? -original.x : original.x;
+		original.y = (this.flipUpend) ? -original.y : original.y;
+		original.vectorAdd(offset);
+		return original;
 		};
-	Sprite.prototype.getAngle = function(v){
-		return (this.addPathRoll) ? (v+this.currentRoll+this.pathRoll) * scrawl.radian : (v+this.currentRoll) * scrawl.radian;
-		};
-	Sprite.prototype.checkHit = function(items, override){
-		var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
-		var cell = scrawl.cell[pad.current].name;
-		var ctx = scrawl.context[pad.current];
-		var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}];
-		this.flipCanvas(ctx, cell);
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
+
+/**
+Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+
+Argument object contains the following attributes:
+
+* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
+* __x__ - X coordinate
+* __y__ - Y coordinate
+
+Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+@method checkHit
+@param {Object} items Argument object
+@return The first coordinate to fall within the sprite's path; false if none fall within the path
+**/
+	Sprite.prototype.checkHit = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var	pad = scrawl.pad[scrawl.currentPad],
+			ctx = scrawl.context[pad.current],
+			tests = (scrawl.xt(items.tests)) ? [].concat(items.tests) : [{x: (items.x || false), y: (items.y || false)}],
+			here,
+			result;
+		this.rotateCell(ctx);
+		here = this.prepareStamp();
 		ctx.beginPath();
-		ctx.rect(here.x, here.y, this.currentWidth, this.currentHeight);
-		var result = false;
+		ctx.rect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		for(var i=0, z=tests.length; i<z; i++){
 			result = ctx.isPointInPath(tests[i].x, tests[i].y);
 			if(result){
 				break;
 				}
 			}
-		this.unrotateCell(ctx, cell, override);
-		this.flipCanvas(ctx, cell);
 		return (result) ? tests[i] : false;
 		};
-	Sprite.prototype.checkField = function(cell, override){
-		var myCell = (scrawl.xt(cell) && scrawl.cellnames.contains(cell)) ? scrawl.cell[cell] : (scrawl.cell[scrawl.group[this.group].cells[0]] || scrawl.cell[scrawl.pad[scrawl.currentPad].current]);
-		var coords = this.getCollisionPoints(override);
-		var result = myCell.checkFieldAt({
-			coordinates: coords,
-			test: this.fieldTest,
-			channel: this.fieldChannel,
+
+/**
+Check this sprite's collision Vectors against a Cell object's collision field image to see if any of them are colliding with the Cell's field sprites
+@method checkField
+@param {String} [cell] CELLNAME String of the Cell to be checked against
+@return First Vector coordinate to 'pass' the Cell.checkFieldAt() function's test; true if none pass; false if the test parameters are out of bounds
+**/
+	Sprite.prototype.checkField = function(cell){
+		var	myCell = (cell) ? scrawl.cell[cell] : scrawl.cell[scrawl.group[this.group].cell];
+		return myCell.checkFieldAt({
+			coordinates: this.getCollisionPoints(),
+			test: this.get('fieldTest'),
+			channel: this.get('fieldChannel'),
 			});
-		//returns the coordinates that FAILED the test, or true if all coordinates PASSED, or false if there was an error
-		return (result > 0) ? coords[result-1] : ((result) ? true : false);
 		};
+
+/**
+Calculate an appropriate 'bounce' - altering the sprite's delta attribute values - following an adverse sprite.checkField() function result
+
+This method attempts to produce a realistic bounce away from both straight and curved surfaces
+@method bounceOnFieldCollision
+@param {String} collision Collision point Vector
+@param {String} [cell] CELLNAME String of the Cell to be checked against
+@return This
+@chainable
+**/
+	Sprite.prototype.bounceOnFieldCollision = function(collision, cell){
+		var	myCell = (cell) ? scrawl.cell[cell] : scrawl.cell[scrawl.group[this.group].cell],
+			start = this.start.getVector(),
+			collisionStartVector = collision.getVectorSubtract(start),//.scalarMultiply(1.1),
+			testVector,
+			topVector = collisionStartVector.getVector(),
+			bottomVector = collisionStartVector.getVector(),
+			topFlag = false,
+			bottomFlag = false,
+			fieldAngle,
+			turn,
+			directionAngle,
+			fieldTest = this.get('fieldTest'),
+			fieldChannel = this.get('fieldChannel'),
+			counter = 0,
+			cfa = function(){
+				var r = myCell.checkFieldAt({
+					coordinates: [testVector.vectorAdd(start)],
+					test: fieldTest,
+					channel: fieldChannel,
+					});
+				return r;
+				};
+		do{
+			testVector = topVector.rotate(-10).getVector();
+			topFlag = cfa();
+			counter++;
+			}while(counter < 36 && topFlag !== true);
+		counter = 0;
+		do{
+			testVector = topVector.rotate(1).getVector();
+			topFlag = cfa();
+			counter++;
+			}while(counter <= 10 && topFlag === true);
+		counter = 0;
+		do{
+			testVector = bottomVector.rotate(10).getVector();
+			bottomFlag = cfa();
+			counter++;
+			}while(counter < 36 && bottomFlag !== true);
+		counter = 0;
+		do{
+			testVector = bottomVector.rotate(-1).getVector();
+			bottomFlag = cfa();
+			counter++;
+			}while(counter <= 10 && bottomFlag === true);
+		topVector.vectorAdd(start);
+		bottomVector.vectorAdd(start);
+		fieldAngle = (Math.atan2((topVector.y - bottomVector.y), (topVector.x - bottomVector.x))/scrawl.radian);
+		directionAngle = Math.atan2(this.delta.y,this.delta.x)/scrawl.radian;
+		turn = (fieldAngle - directionAngle) * 2;
+		this.delta.rotate(turn);
+		return this;
+		};
+
+/**
+Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)
+@method clearShadow
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
 	Sprite.prototype.clearShadow = function(ctx, cell){
-		scrawl.cell[cell].clearShadow();
+		var c = scrawl.ctx[this.context];
+		if(c.shadowOffsetX || c.shadowOffsetY || c.shadowBlur){
+			scrawl.cell[cell].clearShadow();
+			}
+		return this;
 		};
+
+/**
+Stamp helper function - clear shadow parameters during a multi draw operation (Phrase text-along-path drawFill and fillDraw methods)
+@method restoreShadow
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
 	Sprite.prototype.restoreShadow = function(ctx, cell){
-		scrawl.cell[cell].restoreShadow(this.context);
+		var c = scrawl.ctx[this.context];
+		if(c.shadowOffsetX || c.shadowOffsetY || c.shadowBlur){
+			scrawl.cell[cell].restoreShadow(this.context);
+			}
+		return this;
 		};
-	Sprite.prototype.getCollisionPoints = function(override){
-		override = (scrawl.xt(override)) ? override : {x:0,y:0};
-		var p = [], tempHeight, tempWidth, cr, sx, sy;
-		var leftWidth = (this.flipReverse) ? -(this.startX - this.currentX - (override.x || 0)) : this.startX - this.currentX + (override.x || 0);
-		var topHeight = (this.flipUpend) ? -(this.startY - this.currentY - (override.y || 0)) : this.startY - this.currentY + (override.y || 0);
-		cr = this.currentRoll * scrawl.radian;
-		sx = (this.flipReverse) ? this.startX + (override.x || 0) : this.startX + (override.x || 0);
-		sy = (this.flipUpend) ? this.startY + (override.y || 0) : this.startY + (override.y || 0);
-		for(var i=0, z=this.collisionPoints.length; i<z; i++){
-			switch(this.collisionPoints[i]) {
-				case 'start' : p.push({x:this.currentX,y:this.currentY}); break;
-				case 'N' : 
-					tempWidth = ((this.currentWidth/2) - leftWidth);
-					tempHeight = (0 - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				case 'NE' : 
-					tempWidth = ((this.currentWidth) - leftWidth);
-					tempHeight = (0 - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				case 'E' : 
-					tempWidth = ((this.currentWidth) - leftWidth);
-					tempHeight = ((this.currentHeight/2) - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				case 'SE' : 
-					tempWidth = ((this.currentWidth) - leftWidth);
-					tempHeight = ((this.currentHeight) - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				case 'S' : 
-					tempWidth = ((this.currentWidth/2) - leftWidth);
-					tempHeight = ((this.currentHeight) - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				case 'SW' : 
-					tempWidth = (0 - leftWidth);
-					tempHeight = ((this.currentHeight) - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				case 'W' : 
-					tempWidth = (0 - leftWidth);
-					tempHeight = ((this.currentHeight/2) - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				case 'NW' : 
-					tempWidth = (0 - leftWidth);
-					tempHeight = (0 - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				case 'center' :
-					tempWidth = ((this.currentWidth/2) - leftWidth);
-					tempHeight = ((this.currentHeight/2) - topHeight);
-					p.push(this.getRotatedCoordinates(
-						sx,
-						sy,
-						Math.sqrt((tempHeight*tempHeight)+(tempWidth*tempWidth)),
-						cr+(Math.atan2(tempHeight,tempWidth)))); 
-					break;
-				default :
-					if(scrawl.pointnames.contains(this.collisionPoints[i])){
-						var n = scrawl.point[this.collisionPoints[i]];
-						if(n.visibility){
-							p.push({x: n.currentX, y: n.currentY});
-							}
-						}
+
+/**
+Calculate the current positions of this sprite's collision Vectors, taking into account the sprite's current position, roll and scale
+@method getCollisionPoints
+@return Array of coordinate Vectors
+**/
+	Sprite.prototype.getCollisionPoints = function(){
+		var	p = [],
+			v,
+			c;
+		if(!scrawl.xt(this.collisionVectors)){
+			if(scrawl.xt(this.collisionPoints)){
+				this.buildCollisionVectors();
 				}
 			}
-		return p;
+		c = this.collisionVectors || false;
+		if(c){
+			for(var i=0, z=c.length; i<z; i++){
+				v = c[i].getVector();
+				v.x = (this.flipReverse) ? -v.x : v.x;
+				v.y = (this.flipUpend) ? -v.y : v.y;
+				if(this.roll){
+					v.rotate(this.roll);
+					}
+				if(this.scale !== 1){
+					v.scalarMultiply(this.scale);
+					}
+				v.vectorAdd(this.start);
+				p.push(v);
+				}
+			return p;
+			}
+		return [];
 		};
-	Sprite.prototype.getRotatedCoordinates = function(x,y,d,r){
-		r = (this.flipReverse) ? (180*scrawl.radian)-r : r;
-		r = (this.flipUpend) ? -r : r;
-		return {
-			x: x+(d*Math.cos(r)),
-			y: y+(d*Math.sin(r)),
-			};
+
+/**
+Collision detection helper function
+
+Parses the collisionPoints array to generate coordinate Vectors representing the sprite's collision points
+@method buildCollisionVectors
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
+	Sprite.prototype.buildCollisionVectors = function(items){
+		var	p, 
+			o = this.getPivotOffsetVector(),
+			w = this.width,
+			h = this.height;
+		if(scrawl.xt(items)){
+			p = this.parseCollisionPoints(items);
+			}
+		else{
+			p = this.collisionPoints;
+			}
+		this.collisionVectors = [];
+		for(var i=0, z=p.length; i<z; i++){
+			if(scrawl.isa(p[i], 'str')){
+				switch(p[i]) {
+					case 'start' : 	this.collisionVectors.push(new Vector()); break;
+					case 'N' : 		this.collisionVectors.push(new Vector({	x: (w/2)-o.x,	y: -o.y,		})); break;
+					case 'NE' : 	this.collisionVectors.push(new Vector({	x: w-o.x,		y: -o.y,		})); break;
+					case 'E' : 		this.collisionVectors.push(new Vector({	x: w-o.x,		y: (h/2)-o.y,	})); break;
+					case 'SE' : 	this.collisionVectors.push(new Vector({	x: w-o.x,		y: h-o.y,		})); break;
+					case 'S' : 		this.collisionVectors.push(new Vector({	x: (w/2)-o.x,	y: h-o.y,		})); break;
+					case 'SW' : 	this.collisionVectors.push(new Vector({	x: -o.x,		y: h-o.y,		})); break;
+					case 'W' : 		this.collisionVectors.push(new Vector({	x: -o.x,		y: (h/2)-o.y,	})); break;
+					case 'NW' : 	this.collisionVectors.push(new Vector({	x: -o.x,		y: -o.y,		})); break;
+					case 'center' :	this.collisionVectors.push(new Vector({	x: (w/2)-o.x,	y: (h/2)-o.y,	})); break;
+					}
+				}
+			else if(scrawl.isa(p[i], 'obj') && p[i].type === 'Vector'){
+				this.collisionVectors.push(p[i]);
+				}
+			}
+		return this;
 		};
+
+/**
+Collision detection helper function
+
+Parses user input for the collisionPoint attribute
+@method parseCollisionPoints
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
 	Sprite.prototype.parseCollisionPoints = function(items){
-		var myItems = (scrawl.xt(items)) ? [].concat(items) : this.collisionPoints;
-		var p = [];
+		var myItems = (scrawl.xt(items)) ? [].concat(items) : [],
+			p = [];
 		for(var i=0, z=myItems.length; i<z; i++){
-			switch(myItems[i].toLowerCase()) {
-				case 'all' :
-					p.pushUnique('N'); p.pushUnique('NE'); p.pushUnique('E'); p.pushUnique('SE'); p.pushUnique('S');
-					p.pushUnique('SW'); p.pushUnique('W'); p.pushUnique('NW'); p.pushUnique('start'); p.pushUnique('center');
-					break;
-				case 'corners' :
-					p.pushUnique('NE'); p.pushUnique('SE'); p.pushUnique('SW'); p.pushUnique('NW');
-					break;
-				case 'edges' :
-					p.pushUnique('N'); p.pushUnique('E'); p.pushUnique('S'); p.pushUnique('W');
-					break;
-				case 'perimeter' :
-					p.pushUnique('N'); p.pushUnique('NE'); p.pushUnique('E'); p.pushUnique('SE');
-					p.pushUnique('S'); p.pushUnique('SW'); p.pushUnique('W'); p.pushUnique('NW');
-					break;
-				case 'north' : 
-				case 'n' :
-					p.pushUnique('N'); break;
-				case 'northeast' : 
-				case 'ne' :
-					p.pushUnique('NE'); break;
-				case 'east' : 
-				case 'e' :
-					p.pushUnique('E'); break;
-				case 'southeast' : 
-				case 'se' :
-					p.pushUnique('SE'); break;
-				case 'south' : 
-				case 's' :
-					p.pushUnique('S'); break;
-				case 'southwest' : 
-				case 'sw' :
-					p.pushUnique('SW'); break;
-				case 'west' : 
-				case 'w' :
-					p.pushUnique('W'); break;
-				case 'northwest' : 
-				case 'nw' :
-					p.pushUnique('NW'); break;
-				case 'start' : 
-					p.pushUnique('start'); break;
-				case 'center' : 
-					p.pushUnique('center'); break;
+			if(scrawl.isa(myItems[i], 'str')){
+				switch(myItems[i].toLowerCase()) {
+					case 'all' :
+						scrawl.pushUnique(p, 'N'); scrawl.pushUnique(p, 'NE'); scrawl.pushUnique(p, 'E'); scrawl.pushUnique(p, 'SE'); scrawl.pushUnique(p, 'S');
+						scrawl.pushUnique(p, 'SW'); scrawl.pushUnique(p, 'W'); scrawl.pushUnique(p, 'NW'); scrawl.pushUnique(p, 'start'); scrawl.pushUnique(p, 'center');
+						break;
+					case 'corners' :
+						scrawl.pushUnique(p, 'NE'); scrawl.pushUnique(p, 'SE'); scrawl.pushUnique(p, 'SW'); scrawl.pushUnique(p, 'NW');
+						break;
+					case 'edges' :
+						scrawl.pushUnique(p, 'N'); scrawl.pushUnique(p, 'E'); scrawl.pushUnique(p, 'S'); scrawl.pushUnique(p, 'W');
+						break;
+					case 'perimeter' :
+						scrawl.pushUnique(p, 'N'); scrawl.pushUnique(p, 'NE'); scrawl.pushUnique(p, 'E'); scrawl.pushUnique(p, 'SE');
+						scrawl.pushUnique(p, 'S'); scrawl.pushUnique(p, 'SW'); scrawl.pushUnique(p, 'W'); scrawl.pushUnique(p, 'NW');
+						break;
+					case 'north' : 
+					case 'n' :
+						scrawl.pushUnique(p, 'N'); break;
+					case 'northeast' : 
+					case 'ne' :
+						scrawl.pushUnique(p, 'NE'); break;
+					case 'east' : 
+					case 'e' :
+						scrawl.pushUnique(p, 'E'); break;
+					case 'southeast' : 
+					case 'se' :
+						scrawl.pushUnique(p, 'SE'); break;
+					case 'south' : 
+					case 's' :
+						scrawl.pushUnique(p, 'S'); break;
+					case 'southwest' : 
+					case 'sw' :
+						scrawl.pushUnique(p, 'SW'); break;
+					case 'west' : 
+					case 'w' :
+						scrawl.pushUnique(p, 'W'); break;
+					case 'northwest' : 
+					case 'nw' :
+						scrawl.pushUnique(p, 'NW'); break;
+					case 'start' : 
+						scrawl.pushUnique(p, 'start'); break;
+					case 'center' : 
+						scrawl.pushUnique(p, 'center'); break;
+					}
+				}
+			else if(scrawl.isa(myItems[i], 'num')){
+				p.push(myItems[i]);
+				}
+			else if(scrawl.isa(myItems[i], 'obj') && myItems[i].type === 'Vector'){
+				p.push(myItems[i]);
 				}
 			}
+		this.collisionPoints = p;
 		return p;
 		};
 
+/**
+# Phrase
+	
+## Instantiation
+
+* scrawl.newPhrase()
+
+## Purpose
+
+* Defines text objects for displaying on a Cell's canvas
+* Handles all related font functionality
+* Performs text drawing operations on canvases
+
+@class Phrase
+@constructor
+@extends Sprite
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Phrase(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
 		Sprite.call(this, items);
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.text = items.text || '';
-		this.style = items.style || 'normal';
-		this.variant = items.variant || 'normal';
-		this.weight = items.weight || 'normal';
-		this.size = items.size || 12;
-		this.metrics = items.metrics || 'pt';
-		this.family = items.family || 'sans-serif';
-		this.lineHeight = (scrawl.isa(items.lineHeight,'num')) ? items.lineHeight : 1.5;
-		this.backgroundColor = items.backgroundColor || false;
-		this.backgroundMargin = items.backgroundMargin || 0;
-		this.textAlongPath = items.textAlongPath || 'phrase';
-		this.fixedWidth = (scrawl.isa(items.fixedWidth,'bool')) ? items.fixedWidth : false;
-		this.checkFont(items.font);
-		scrawl.sprite[this.name] = this;
-		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].addSpritesToGroup(this.name);
-		this.texts = [];
-		this.multiline(items);
-		return this;
-		}
-	Phrase.prototype = Object.create(Sprite.prototype);
-	Phrase.prototype.type = 'Phrase';
-	Phrase.prototype.classname = 'spritenames';
-	Phrase.prototype.multiline = function(items){
-		for(var i=0,z=this.texts.length; i<z; i++){
-			delete scrawl.text[this.texts[i]];
-			scrawl.textnames.removeItem(this.texts[i]);
-			}
-		this.texts = [];
-		this.text = items.text || this.text;
-		var textArray = this.text.split('\n');
-		items.phrase = this.name;
-		var temp;
-		for(var i=0, z=textArray.length; i<z; i++){
-			items.name = this.name+'_'+i;
-			items.text = textArray[i];
-			if(items.text.length > 0){
-				temp = new Text(items);
-				}
-			}
-		this.getMetrics()
-		return this;
-		};
-	Phrase.prototype.set = function(items){
-		Sprite.prototype.set.call(this, items);
-		items = (scrawl.isa(items,'obj')) ? items : {};
+		SubScrawl.prototype.set.call(this, items);
+		this.registerInLibrary();
+		this.lineHeight = items.lineHeight || scrawl.d.Phrase.lineHeight;
 		if(items.font){
 			this.checkFont(items.font);
 			}
-		if(scrawl.xto([items.style,items.variant,items.weight,items.size,items.metrics,items.family,items.scale])){
-			this.constructFont();
-			}
-		this.getMetrics();
+		this.constructFont();
+		this.size = this.get('size');
 		this.multiline(items);
+		this.getMetrics();
+		return this;
+		}
+	Phrase.prototype = Object.create(Sprite.prototype);
+/**
+@property type
+@type String
+@default 'Phrase'
+@final
+**/		
+	Phrase.prototype.type = 'Phrase';
+	Phrase.prototype.classname = 'spritenames';
+	scrawl.d.Phrase = {
+/**
+Text string to be displayed - for multiline text, insert __\n__ where the text line breaks
+@property text
+@type String
+@default ''
+**/
+		text: '',
+/**
+Font style property - any permitted CSS style String (eg 'italic')
+@property style
+@type String
+@default 'normal'
+**/
+		style: 'normal',
+/**
+Font variant property - any permitted CSS variant String (eg 'small-caps')
+@property variant
+@type String
+@default 'normal'
+**/
+		variant: 'normal',
+/**
+Font weight property - any permitted CSS weight String or number (eg 'bold', 700)
+@property weight
+@type String
+@default 'normal'
+**/
+		weight: 'normal',
+/**
+Font size
+@property size
+@type Number
+@default 12
+**/
+		size: 12,
+/**
+Font metrics property - any permitted CSS metrics String (eg 'pt', 'px')
+@property metrics
+@type String
+@default 'pt'
+**/
+		metrics: 'pt',
+/**
+Font family property - any permitted CSS font family String
+
+_Note: a font needs to be pre-loaded by the web page before the &lt;canvas&gt; element can successfully use it_
+@property family
+@type String
+@default 'sans-serif'
+**/
+		family: 'sans-serif',
+/**
+Multiline text - line height
+@property lineHeight
+@type Number
+@default 1.5
+**/
+		lineHeight: 1.5,
+/**
+Background color - any permitted CSS Color string
+@property backgroundColor
+@type String
+@default ''
+**/
+		backgroundColor: '',
+/**
+Background margin - additional padding around the text (in pixels), colored in by the background color
+@property backgroundMargin
+@type Number
+@default 0
+**/
+		backgroundMargin: 0,
+/**
+Text along path parameter - when placing text along a path, the text can be positioned in phrase blocks, word blocks or by individual letters. Permitted values: 'phrase', 'word', 'glyph' (for individual letters)
+@property textAlongPath
+@type String
+@default 'phrase'
+**/
+		textAlongPath: 'phrase',
+/**
+Fixed width attribute for text along path. When using fixed width (monospace) fonts, set this flag to true for faster rendering
+@property fixedWidth
+@type Boolean
+@default false
+**/
+		fixedWidth: false,
+/**
+Array of TEXTNANE strings
+
+Users should never interfere with Text objects, as they are destroyed and recreated after every Phrase.set() and Phrase.setDelta() function call
+@property texts
+@type Array
+@default []
+@private
+**/
+		texts: [],
+		};
+	scrawl.mergeInto(scrawl.d.Phrase, scrawl.d.Sprite);
+
+/**
+Overrides Sprite.set()
+
+Allows users to:
+* set a sprite's Context object's values via the sprite
+* shift a sprite between groups
+* add a sprite to a Cell object's fence or field group (Cell collision map generation)
+* reset and recalculate collision point data
+* alter the font either by the font attribute, or by individual font content attributes
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Phrase.prototype.set = function(items){
+		Sprite.prototype.set.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.lineHeight = items.lineHeight || this.lineHeight;
+		if(items.font){
+			this.checkFont(items.font);
+			delete this.offset;
+			}
+		if(items.text || items.size || items.scale){
+			delete this.offset;
+			}
+		this.constructFont();
+		this.size = this.get('size');
+		this.multiline(items);
+		this.getMetrics();
 		return this;
 		};
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+
+Allows users to amend a sprite's Context object's values via the sprite, in addition to its own attribute values
+
+Overrides Sprite.detDelta()
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Phrase.prototype.setDelta = function(items){
 		Sprite.prototype.setDelta.call(this, items);
-		if(scrawl.xto([items.size,items.scale])){
+		if(items.text){
+			delete this.offset;
+			}
+		if(items.size || items.scale){
 			this.constructFont();
+			delete this.offset;
 			}
 		this.getMetrics();
 		return this;
 		};
+
+/**
+Overrides Sprite.clone()
+@method clone
+@param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
+@return Cloned object
+@chainable
+**/
 	Phrase.prototype.clone = function(items){
-		items = (scrawl.xt(items)) ? items : {};
-		items.textAlongPath = items.textAlongPath || this.textAlongPath;
+		items.texts = [];
 		return Sprite.prototype.clone.call(this, items);
 		};
+
+/**
+Helper function - creates Text objects for each line of text in a multiline Phrase
+@method multiline
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.multiline = function(items){
+		var	text = ''+(items.text || this.get('text')),
+			textArray = text.split('\n');
+		if(scrawl.xt(this.texts)){
+			for(var i=0,z=this.texts.length; i<z; i++){
+				delete scrawl.text[this.texts[i]];
+				scrawl.removeItem(scrawl.textnames, this.texts[i]);
+				}
+			}
+		this.texts = [];
+		items.phrase = this.name;
+		for(var i=0, z=textArray.length; i<z; i++){
+			items.text = textArray[i];
+			if(items.text.length > 0){
+				new Text(items);
+				}
+			}
+		this.text = text;
+		return this;
+		};
+
+/**
+Helper function - checks to see if font needs to be (re)constructed from its parts
+@method checkFont
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+@private
+**/
 	Phrase.prototype.checkFont = function(item){
 		if(scrawl.xt(item)){
 			this.deconstructFont();
@@ -4761,344 +10506,671 @@ m: '',
 		this.constructFont();
 		return this;
 		};
+
+/**
+Helper function - creates font-related attributes from sprite's Context object's font attribute
+@method deconstructFont
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+@private
+**/
 	Phrase.prototype.deconstructFont = function(){
-		var myFont = scrawl.ctx[this.context].font;
-		var res;
-		if(/italic/i.test(myFont)) {this.style = 'italic';}
-		else if(/oblique/i.test(myFont)) {this.style = 'oblique';}
+		var	myFont = scrawl.ctx[this.context].font, 
+			res,
+			exclude = [100, 200, 300, 400, 500, 600, 700, 800, 900, 'italic', 'oblique', 'small-caps', 'bold', 'bolder', 'lighter', 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'],
+			myFamily,
+			myFontArray,
+			style = this.get('style'),
+			variant = this.get('variant'),
+			weight = this.get('weight'),
+			size = this.get('size'),
+			metrics = this.get('metrics'),
+			family = this.get('family');
+		if(/italic/i.test(myFont)) {style = 'italic';}
+		else if(/oblique/i.test(myFont)) {style = 'oblique';}
 		else{this.style = 'normal';}
-		if(/small-caps/i.test(myFont)) {this.variant = 'small-caps';}
-		else{this.variant = 'normal';}
-		if(/bold/i.test(myFont)) {this.weight = 'bold';}
-		else if(/bolder/i.test(myFont)) {this.weight = 'bolder';}
-		else if(/lighter/i.test(myFont)) {this.weight = 'lighter';}
+		if(/small-caps/i.test(myFont)) {variant = 'small-caps';}
+		else{variant = 'normal';}
+		if(/bold/i.test(myFont)) {weight = 'bold';}
+		else if(/bolder/i.test(myFont)) {weight = 'bolder';}
+		else if(/lighter/i.test(myFont)) {weight = 'lighter';}
 		else if(/([1-9]00)/i.test(myFont)) {
 			res = myFont.match(/([1-9]00)/i);
-			this.weight = res[1];
+			weight = res[1];
 			}
-		else{this.weight = 'normal';}
+		else{weight = 'normal';}
+		res = false;
 		if(/(\d+)(%|in|cm|mm|em|ex|pt|pc|ex)?/i.test(myFont)) {
-			res = myFont.match(/(\d+)(%|in|cm|mm|em|ex|pt|pc|ex|px)?/i);
-			this.size = parseFloat(res[1]);
-			this.metrics = res[2];
+			res = myFont.match(/(\d+)(%|in|cm|mm|em|ex|pt|pc|ex|px)/i);
+			size = parseFloat(res[1]);
+			metrics = res[2];
 			}
-		else if(/xx-small/i.test(myFont)) {this.size = 3; this.metrics = 'pt';}
-		else if(/x-small/i.test(myFont)) {this.size = 6; this.metrics = 'pt';}
-		else if(/small/i.test(myFont)) {this.size = 9; this.metrics = 'pt';}
-		else if(/medium/i.test(myFont)) {this.size = 12; this.metrics = 'pt';}
-		else if(/large/i.test(myFont)) {this.size = 15; this.metrics = 'pt';}
-		else if(/x-large/i.test(myFont)) {this.size = 18; this.metrics = 'pt';}
-		else if(/xx-large/i.test(myFont)) {this.size = 21; this.metrics = 'pt';}
-		else{this.size = 12; this.metrics = 'pt';}
-		var myFamily = '', myFontArray = myFont.split(' ');
-		var exclude = [100, 200, 300, 400, 500, 600, 700, 800, 900, 'italic', 'oblique', 'small-caps', 'bold', 'bolder', 'lighter', 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'];
+		else if(/xx-small/i.test(myFont)) {size = 3; metrics = 'pt';}
+		else if(/x-small/i.test(myFont)) {size = 6; metrics = 'pt';}
+		else if(/small/i.test(myFont)) {size = 9; metrics = 'pt';}
+		else if(/medium/i.test(myFont)) {size = 12; metrics = 'pt';}
+		else if(/large/i.test(myFont)) {size = 15; metrics = 'pt';}
+		else if(/x-large/i.test(myFont)) {size = 18; metrics = 'pt';}
+		else if(/xx-large/i.test(myFont)) {size = 21; metrics = 'pt';}
+		else{size = 12; metrics = 'pt';}
+		myFamily = ''; 
+		myFontArray = myFont.split(' ');
 		for(var i=0, z=myFontArray.length; i<z; i++){
-			if(!exclude.contains(myFontArray[i])){
+			if(!scrawl.contains(exclude, myFontArray[i])){
 				if(!myFontArray[i].match(/[^\/](\d)+(%|in|cm|mm|em|ex|pt|pc|ex)?/i)){
 					myFamily += myFontArray[i]+' ';
 					}
 				}
 			}
 		if(!myFamily){myFamily = 'Verdana, Geneva, sans-serif';}
-		this.family = myFamily;
+		family = myFamily;
+		Scrawl.prototype.set.call(this, {
+			style: style,
+			variant: variant,
+			weight: weight,
+			size: size,
+			metrics: metrics,
+			family: family,
+			});
 		return this;
 		};
+
+/**
+Helper function - creates sprite's Context object's phrase attribute from other font-related attributes
+@method constructFont
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+@private
+**/
 	Phrase.prototype.constructFont = function(){
-		var myFont = '';
-		if(this.style !== 'normal'){myFont += this.style+' ';}
-		if(this.variant !== 'normal'){myFont += this.variant+' ';}
-		if(this.weight !== 'normal'){myFont += this.weight+' ';}
-		if(!scrawl.xt(this.currentScalse)){
-			this.currentScale = this.scale * scrawl.group[this.group].scale;
-			}
-		myFont += (this.size * this.currentScale) + this.metrics + ' ';
-		myFont += this.family;
+		var myFont = '',
+			style = this.get('style'),
+			variant = this.get('variant'),
+			weight = this.get('weight'),
+			size = this.get('size'),
+			metrics = this.get('metrics'),
+			family = this.get('family');
+		if(style !== 'normal'){myFont += style+' ';}
+		if(variant !== 'normal'){myFont += variant+' ';}
+		if(weight !== 'normal'){myFont += weight+' ';}
+		myFont += (size * this.scale) + metrics + ' ';
+		myFont += family;
 		scrawl.ctx[this.context].font = myFont;
 		return this;
 		};
-	Phrase.prototype.stamp = function(item, cell){
+
+/**
+Stamp function - instruct sprite to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true
+
+Overrides Sprite.stamp(). Permitted methods include:
+
+* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
+* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
+* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the sprite's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+@method stamp
+@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
+@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+**/
+	Phrase.prototype.stamp = function(method, cell){
+		var test;
 		if(this.visibility){
-			var test = (scrawl.spritenames.contains(this.path) && scrawl.sprite[this.path].type === 'Shape');
-			if(this.pivot || !test || this.textAlongPath === 'phrase'){
-				Sprite.prototype.stamp.call(this, item);
+			test = (scrawl.contains(scrawl.spritenames, this.path) && scrawl.sprite[this.path].type === 'Shape');
+			if(this.pivot || !test || this.get('textAlongPath') === 'phrase'){
+				Sprite.prototype.stamp.call(this, method, cell);
 				}
 			else{
-				scrawl.text[this.texts[0]].stampAlongPath(item, cell);
+				scrawl.text[this.texts[0]].stampAlongPath(method, cell);
 				}
 			}
 		return this;
 		};
-	Phrase.prototype.clear = function(ctx, cell, override){
-		var tY;
-		var o = this.getOffset();
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.clear = function(ctx, cell){
+		var	tX, 
+			tY,
+			o = this.getOffset(),
+			here = this.prepareStamp(),
+			textY = this.size * this.lineHeight * this.scale;
+		scrawl.cell[cell].setEngine(this);
 		ctx.globalCompositeOperation = 'destination-out';
-		var here = this.prepareStamp(override);
+		this.rotateCell(ctx);
+		tX = here.x + o.x;
 		for(var i=0, z=this.texts.length; i<z; i++){
-			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
-			scrawl.text[this.texts[i]].clear(ctx, cell, override, here.x+o.x, tY);
+			tY = here.y + (textY * i) + o.y;
+			scrawl.text[this.texts[i]].clear(ctx, cell, tX, tY);
 			}
-		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
-		this.unrotateCell(ctx, cell, override);
+		ctx.globalCompositeOperation = scrawl.ctx[cell].get('globalCompositeOperation');
 		return this;
 		};
-	Phrase.prototype.clearWithBackground = function(ctx, cell, override){
-		var tY;
-		var o = this.getOffset();
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		for(var i=0, z=this.texts.length; i<z; i++){
-			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
-			scrawl.text[this.texts[i]].clearWithBackground(ctx, cell, override, here.x+o.x, tY);
-			}
-		this.unrotateCell(ctx, cell, override);
-		return this;
-		};
-	Phrase.prototype.draw = function(ctx, cell, override){
-		var tY;
-		var o = this.getOffset();
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.clearWithBackground = function(ctx, cell){
+		var	tX, 
+			tY,
+			o = this.getOffset(),
+			here = this.prepareStamp(),
+			textY = this.size * this.lineHeight * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
-		var here = this.prepareStamp(override);
+		this.rotateCell(ctx);
+		tX = here.x + o.x;
 		for(var i=0, z=this.texts.length; i<z; i++){
-			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
-			scrawl.text[this.texts[i]].draw(ctx, cell, override, here.x+o.x, tY);
+			tY = here.y + (textY * i) + o.y;
+			scrawl.text[this.texts[i]].clearWithBackground(ctx, cell, tX, tY);
 			}
-		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Phrase.prototype.fill = function(ctx, cell, override){
-		var tY;
-		var o = this.getOffset();
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.draw = function(ctx, cell){
+		var	tX, 
+			tY,
+			o = this.getOffset(),
+			here = this.prepareStamp(),
+			textY = this.size * this.lineHeight * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
-		var here = this.prepareStamp(override);
-		for(var i=0, z=this.texts.length; i<z; i++){
-			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
-			scrawl.text[this.texts[i]].fill(ctx, cell, override, here.x+o.x, tY);
+		this.rotateCell(ctx);
+		if(scrawl.xt(this.backgroundColor)){
+			this.addBackgroundColor(ctx, here);
 			}
-		this.unrotateCell(ctx, cell, override);
+		tX = here.x + o.x;
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (textY * i) + o.y;
+			scrawl.text[this.texts[i]].draw(ctx, cell, tX, tY);
+			}
 		return this;
 		};
-	Phrase.prototype.drawFill = function(ctx, cell, override){
-		var tY;
-		var o = this.getOffset();
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.fill = function(ctx, cell){
+		var	tX, 
+			tY,
+			o = this.getOffset(),
+			here = this.prepareStamp(),
+			textY = this.size * this.lineHeight * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
-		var here = this.prepareStamp(override);
-		for(var i=0, z=this.texts.length; i<z; i++){
-			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
-			scrawl.text[this.texts[i]].drawFill(ctx, cell, override, here.x+o.x, tY);
+		this.rotateCell(ctx);
+		if(scrawl.xt(this.backgroundColor)){
+			this.addBackgroundColor(ctx, here);
 			}
-		this.unrotateCell(ctx, cell, override);
+		tX = here.x + o.x;
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (textY * i) + o.y;
+			scrawl.text[this.texts[i]].fill(ctx, cell, tX, tY);
+			}
 		return this;
 		};
-	Phrase.prototype.fillDraw = function(ctx, cell, override){
-		var tY;
-		var o = this.getOffset();
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.drawFill = function(ctx, cell){
+		var	tX, 
+			tY,
+			o = this.getOffset(),
+			here = this.prepareStamp(),
+			textY = this.size * this.lineHeight * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
-		var here = this.prepareStamp(override);
-		for(var i=0, z=this.texts.length; i<z; i++){
-			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
-			scrawl.text[this.texts[i]].fillDraw(ctx, cell, override, here.x+o.x, tY);
+		this.rotateCell(ctx);
+		if(scrawl.xt(this.backgroundColor)){
+			this.addBackgroundColor(ctx, here);
 			}
-		this.unrotateCell(ctx, cell, override);
+		tX = here.x + o.x;
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (textY * i) + o.y;
+			scrawl.text[this.texts[i]].drawFill(ctx, cell, tX, tY, this);
+			}
 		return this;
 		};
-	Phrase.prototype.sinkInto = function(ctx, cell, override){
-		var tY;
-		var o = this.getOffset();
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.fillDraw = function(ctx, cell){
+		var	tX, 
+			tY,
+			o = this.getOffset(),
+			here = this.prepareStamp(),
+			textY = this.size * this.lineHeight * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
-		var here = this.prepareStamp(override);
-		for(var i=0, z=this.texts.length; i<z; i++){
-			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
-			scrawl.text[this.texts[i]].sinkInto(ctx, cell, override, here.x+o.x, tY);
+		this.rotateCell(ctx);
+		if(scrawl.xt(this.backgroundColor)){
+			this.addBackgroundColor(ctx, here);
 			}
-		this.unrotateCell(ctx, cell, override);
+		tX = here.x + o.x;
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (textY * i) + o.y;
+			scrawl.text[this.texts[i]].fillDraw(ctx, cell, here.x+o.x, tY, this);
+			}
 		return this;
 		};
-	Phrase.prototype.floatOver = function(ctx, cell, override){
-		var tY;
-		var o = this.getOffset();
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.sinkInto = function(ctx, cell){
+		var	tX, 
+			tY,
+			o = this.getOffset(),
+			here = this.prepareStamp(),
+			textY = this.size * this.lineHeight * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		if(this.backgroundColor){this.addBackgroundColor(ctx, cell, override);}
-		var here = this.prepareStamp(override);
-		for(var i=0, z=this.texts.length; i<z; i++){
-			tY = here.y + (this.size*this.lineHeight*this.currentScale*i) + o.y;
-			scrawl.text[this.texts[i]].floatOver(ctx, cell, override, here.x+o.x, tY);
+		this.rotateCell(ctx);
+		if(scrawl.xt(this.backgroundColor)){
+			this.addBackgroundColor(ctx, here);
 			}
-		this.unrotateCell(ctx, cell, override);
+		tX = here.x + o.x;
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (textY * i) + o.y;
+			scrawl.text[this.texts[i]].sinkInto(ctx, cell, here.x+o.x, tY);
+			}
 		return this;
 		};
-	Phrase.prototype.clip = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.floatOver = function(ctx, cell){
+		var	tX, 
+			tY,
+			o = this.getOffset(),
+			here = this.prepareStamp(),
+			textY = this.size * this.lineHeight * this.scale;
+		scrawl.cell[cell].setEngine(this);
+		this.rotateCell(ctx);
+		if(scrawl.xt(this.backgroundColor)){
+			addBackgroundColor(ctx, here);
+			}
+		tX = here.x + o.x;
+		for(var i=0, z=this.texts.length; i<z; i++){
+			tY = here.y + (textY * i) + o.y;
+			scrawl.text[this.texts[i]].floatOver(ctx, cell, here.x+o.x, tY);
+			}
 		return this;
 		};
+
+/**
+Helper function - calculate sprite's width and height attributes, taking into account font size, scaling, etc
+@method getMetrics
+@param {String} cellname CELLNAME String (any &lt;canvas&gt; will do for this function)
+@return This
+@chainable
+@private
+**/
 	Phrase.prototype.getMetrics = function(cellname){
-		var h = 0, w = 0;
-		for(var i=0, z=this.texts.length; i<z; i++){
-			w = (scrawl.text[this.texts[i]].width > w) ? scrawl.text[this.texts[i]].width : w;
-			h += scrawl.text[this.texts[i]].height;
+		var	h = 0,
+			w = 0,
+			texts = this.texts;
+		for(var i=0, z=texts.length; i<z; i++){
+			w = (scrawl.text[texts[i]].get('width') > w) ? scrawl.text[texts[i]].width : w;
+			h += scrawl.text[texts[i]].get('height');
 			}
 		this.width = w;
 		this.height = h;
 		return this;
 		};
-	Phrase.prototype.addBackgroundColor = function(ctx, cell, override){
-		var here = this.prepareStamp(override);
-		var backX = this.backgroundMargin;
-		var backY = this.backgroundMargin;
-		var topX = here.x - this.backgroundMargin;
-		var topY = here.y - this.backgroundMargin;
-		var w = this.currentWidth + (this.backgroundMargin*2);
-		var h = this.currentHeight + (this.backgroundMargin*2);
+
+/**
+Drawing function - stamps a background block onto the &lt;canvas&gt; element
+@method addBackgroundColor
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {Vector} here Start coordinates for rectangle
+@return This
+@chainable
+@private
+**/
+	Phrase.prototype.addBackgroundColor = function(ctx, here){
+		var margin = this.get('backgroundMargin'),
+			topX = here.x - margin,
+			topY = here.y - margin,
+			w = (this.width * this.scale) + (margin*2),
+			h = (this.height * this.scale) + (margin*2);
 		ctx.fillStyle = this.backgroundColor;
-		ctx.fillRect(topX,topY,w,h);
-		ctx.fillStyle = scrawl.ctx[this.context].fillStyle;
+		ctx.fillRect(topX, topY, w, h);
+		ctx.fillStyle = scrawl.ctx[this.context].get('fillStyle');
 		return this;
 		};
+
+/**
+Drawing function - get sprite offset values
+
+Returns an object with coordinates __x__ and __y__
+@method getOffset
+@return JavaScript object
+@private
+**/
 	Phrase.prototype.getOffset = function(){
-		var myContext = scrawl.ctx[this.context];
-		var oX = 0, oY = 0;
-		switch(myContext.textAlign){
+		var myContext = scrawl.ctx[this.context],
+			oX = 0,
+			oY = 0;
+		switch(myContext.get('textAlign')){
 			case 'start' :
 			case 'left' :
 				oX = 0;
 				break;
 			case 'center' :
-				oX = (this.width/2) * this.currentScale;
+				oX = (this.width/2) * this.scale;
 				break;
 			case 'right' :
 			case 'end' :
-				oX = this.width * this.currentScale;
+				oX = this.width * this.scale;
 				break;
 			}
-		switch(myContext.textBaseline){
+		switch(myContext.get('textBaseline')){
 			case 'top' :
 				oY = 0;
 				break;
 			case 'hanging' :
-				oY = this.size*this.lineHeight*this.currentScale*0.1;
+				oY = this.size * this.lineHeight * this.scale * 0.1;
 				break;
 			case 'middle' :
-				oY = this.size*this.lineHeight*this.currentScale*0.5;
+				oY = this.size * this.lineHeight * this.scale * 0.5;
 				break;
 			case 'bottom' :
-				oY = this.size*this.lineHeight*this.currentScale;
+				oY = this.size * this.lineHeight * this.scale;
 				break;
 			default: 
-				oY = this.size*this.lineHeight*this.currentScale*0.85;
+				oY = this.size * this.lineHeight * this.scale * 0.85;
 			}
 		return {x: oX, y: oY};
 		};
 		
+/**
+# Text
+	
+## Instantiation
+
+* This object should never be instantiated by users
+* Objects created via Phrase object
+
+## Purpose
+
+* Display single lines of text within a Phrase, or along a Shape path
+* Each time the Phrase object text changes, the associated Text objects are destroyed and regenerated from scratch
+
+@class Text
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+@private
+**/		
 	function Text(items){
-		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.text = items.text || '';
-		this.phrase = items.phrase || false,
+		Scrawl.call(this, items);
+		this.text = items.text || scrawl.d.Text.text;
+		this.phrase = items.phrase || scrawl.d.Text.phrase;
 		this.context = scrawl.sprite[this.phrase].context;
-		this.fixedWidth = (scrawl.isa(items.fixedWidth,'bool')) ? items.fixedWidth : false;
-		this.textAlongPath = items.textAlongPath || 'phrase';
+		this.fixedWidth = (scrawl.isa(items.fixedWidth,'bool')) ? items.fixedWidth : scrawl.d.Text.fixedWidth;
+		this.textAlongPath = items.textAlongPath || scrawl.d.Text.textAlongPath;
 		scrawl.text[this.name] = this;
-		scrawl.textnames.pushUnique(this.name);
-		scrawl.sprite[this.phrase].texts.pushUnique(this.name);
+		scrawl.pushUnique(scrawl.textnames, this.name);
+		scrawl.pushUnique(scrawl.sprite[this.phrase].texts, this.name);
 		this.getMetrics();
 		return this;
 		}
 	Text.prototype = Object.create(Scrawl.prototype);
+
+/**
+@property type
+@type String
+@default 'Text'
+@final
+**/		
 	Text.prototype.type = 'Text';
 	Text.prototype.classname = 'textnames';
-	Text.prototype.stampAlongPath = function(item){
-		var p, ctx, engine, override, myCell, myMethod, here, ratio, pathLength, width, pos, nowPos, oldText, x, y, r;
+	scrawl.d.Text = {
+/**
+Text to be displayed
+@property text
+@type String
+@default ''
+@private
+**/
+		text: '',
+/**
+PHRASENAME String of parent Phrase object
+@property phrase
+@type String
+@default ''
+@private
+**/
+		phrase: '',
+/**
+CONTEXTNAME String of parent phrase's Context object
+@property context
+@type String
+@default ''
+@private
+**/
+		context: '',
+/**
+fixedWidth value of parent Phrase object
+@property fixedWidth
+@type Boolean
+@default false
+@private
+**/
+		fixedWidth: false,
+/**
+Text along path value of parent Phrase object
+@property textAlongPath
+@type String
+@default 'phrase'
+@private
+**/
+		textAlongPath: 'phrase',
+/**
+Text line width, accounting for font, scale, etc
+@property width
+@type Number
+@default 0
+@private
+**/
+		width: 0,
+/**
+Text line height, accounting for font, scale, lineHeight, etc
+@property height
+@type Number
+@default 0
+@private
+**/
+		height: 0,
+/**
+Glyphs array
+@property glyphs
+@type Array
+@default []
+@private
+**/
+		glyphs: [],
+/**
+Glyph widths array
+@property glyphWidths
+@type Array
+@default []
+@private
+**/
+		glyphWidths: [],
+		};
+	scrawl.mergeInto(scrawl.d.Text, scrawl.d.Scrawl);
+
+/**
+Stamp function - stamp phrases, words or individual glyphs (letters and spaces) along a Shape sprite path
+
+Permitted methods include:
+
+* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
+* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
+* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the sprite's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+@method stampAlongPath
+@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
+@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Text.prototype.stampAlongPath = function(method, cell){
+		var	p = scrawl.sprite[this.phrase];
+		method = (scrawl.isa(method,'str')) ? method : p.method;
+		cell = (scrawl.isa(cell,'str') && scrawl.contains(scrawl.cellnames, cell)) ? cell : scrawl.cell[scrawl.group[p.group].cell];
+		var engine = scrawl.context[cell],
+			myCell = scrawl.cell[cell],
+			here,
+			pathLength = scrawl.sprite[p.path].getPerimeterLength(),
+			width = this.width * p.scale,
+			ratio = width/pathLength,
+			pos = p.pathPlace,
+			nowPos,
+			oldText = this.text,
+			x,
+			y,
+			r;
 		if(!scrawl.xt(this.glyphs)){
 			this.getMetrics();
 			}
-		p = scrawl.sprite[this.phrase];
-		override = p.prepareItemForStamp(item);
-		myMethod = override.method || p.method;
-		pathLength = scrawl.sprite[p.path].getPerimeterLength();
-		width = this.width*p.scale;
-		ratio = width/pathLength;
-		oldText = this.text;
-		for(var i=0, z=override.cells.length; i<z; i++){
-			ctx = scrawl.cell[override.cells[i]];
-			ctx.setEngine(p);
-			engine = scrawl.context[ctx.name];
-			myCell = scrawl.cell[override.cells[i]].name;
-			pos = p.pathPosition;
-			this.flipCanvas(engine, myCell, p);
-			for(var j=0, w=this.glyphs.length; j<w; j++){
-				if(scrawl.xt(this.glyphs[j])){
-					this.text = this.glyphs[j];
-					nowPos = pos + (((this.glyphWidths[j]/2)/width)*ratio);
-					if(!nowPos.isBetween(0,1,true)){
-						nowPos += (nowPos > 0.5) ? -1 : 1;
-						}
-					here = scrawl.sprite[p.path].getPerimeterPosition(nowPos, p.pathSpeedConstant, true);
-					x = here.x;
-					y = here.y;
-					r = here.r * scrawl.radian;
-					engine.translate(x, y);
-					engine.rotate(r);
-					engine.translate(-x, -y);
-					switch(myMethod){
-						case 'draw' : this.draw(engine, myCell, override, x, y); break;
-						case 'fill' : this.fill(engine, myCell, override, x, y); break;
-						case 'drawFill' : this.drawFill(engine, myCell, override, x, y); break;
-						case 'fillDraw' : this.fillDraw(engine, myCell, override, x, y); break;
-						case 'sinkInto' : this.sinkInto(engine, myCell, override, x, y); break;
-						case 'floatOver' : this.floatOver(engine, myCell, override, x, y); break;
-						case 'clear' : 
-						case 'clearWithBackground' : 
-						case 'clip' : 
-						case 'none' : 
-						default :
-							//do nothing
-						}
-					pos += (this.glyphWidths[j]/width)*ratio
-					if(!pos.isBetween(0,1,true)){
-						pos += (pos > 0.5) ? -1 : 1;
-						}
-					engine.translate(x, y);
-					engine.rotate(-r);
-					engine.translate(-x, -y);
+		myCell.setEngine(p);
+		for(var j=0, w=this.glyphs.length; j<w; j++){
+			if(scrawl.xt(this.glyphs[j])){
+				this.text = this.glyphs[j];
+				nowPos = pos + (((this.glyphWidths[j]/2)/width)*ratio);
+				if(!scrawl.isBetween(nowPos, 0, 1, true)){
+					nowPos += (nowPos > 0.5) ? -1 : 1;
+					}
+				here = scrawl.sprite[p.path].getPerimeterPosition(nowPos, p.pathSpeedConstant, true);
+				x = here.x;
+				y = here.y;
+				r = here.r * scrawl.radian;
+				engine.setTransform(1,0,0,1,0,0);
+				engine.translate(x, y);
+				engine.rotate(r);
+				engine.translate(-x, -y);
+				switch(method){
+					case 'draw' : this.draw(engine, cell, x, y); break;
+					case 'fill' : this.fill(engine, cell, x, y); break;
+					case 'drawFill' : this.drawFill(engine, cell, x, y, p); break;
+					case 'fillDraw' : this.fillDraw(engine, cell, x, y, p); break;
+					case 'sinkInto' : this.sinkInto(engine, cell, x, y); break;
+					case 'floatOver' : this.floatOver(engine, cell, x, y); break;
+					case 'clear' : 
+					case 'clearWithBackground' : 
+					case 'clip' : 
+					case 'none' : 
+					default :
+						//do nothing
+					}
+				pos += (this.glyphWidths[j]/width)*ratio
+				if(!scrawl.isBetween(pos, 0, 1, true)){
+					pos += (pos > 0.5) ? -1 : 1;
 					}
 				}
-			this.flipCanvas(engine, myCell, p);
 			}
 		this.text = oldText;
 		return this;
 		};
-	Text.prototype.flipCanvas = function(engine, myCell, p){
-		var c = scrawl.cell[myCell];
-		var w = c.actualWidth, h = c.actualHeight;
-		if(p.flipReverse && p.flipUpend){
-			engine.translate(w,h);
-			engine.scale(-1,-1);
-			}
-		else if(p.flipReverse){
-			engine.translate(w,0);
-			engine.scale(-1,1);
-			}
-		else if(p.flipUpend){
-			engine.translate(0,h);
-			engine.scale(1,-1);
-			}
-		return this;
-		};
-	Text.prototype.clear = function(ctx, cell, override, x, y){
+
+/**
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@return This
+@chainable
+@private
+**/
+	Text.prototype.clear = function(ctx, cell, x, y){
 		ctx.fillText(this.text, x, y);
 		return this;
 		};
-	Text.prototype.clearWithBackground = function(ctx, cell, override, x, y){
+
+/**
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@return This
+@chainable
+@private
+**/
+	Text.prototype.clearWithBackground = function(ctx, cell, x, y){
 		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
 		ctx.globalAlpha = 1;
 		ctx.fillText(this.text, x, y);
@@ -5106,59 +11178,154 @@ m: '',
 		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
 		return this;
 		};
-	Text.prototype.draw = function(ctx, cell, override, x, y){
+
+/**
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@return This
+@chainable
+@private
+**/
+	Text.prototype.draw = function(ctx, cell, x, y){
 		ctx.strokeText(this.text, x, y);
 		return this;
 		};
-	Text.prototype.fill = function(ctx, cell, override, x, y){
+
+/**
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@return This
+@chainable
+@private
+**/
+	Text.prototype.fill = function(ctx, cell, x, y){
 		ctx.fillText(this.text, x, y);
 		return this;
 		};
-	Text.prototype.drawFill = function(ctx, cell, override, x, y){
-		var p = scrawl.sprite[this.phrase];
+
+/**
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@param {Phrase} p Parent Phrase sprite object
+@return This
+@chainable
+@private
+**/
+	Text.prototype.drawFill = function(ctx, cell, x, y, p){
 		ctx.strokeText(this.text, x, y);
 		p.clearShadow(ctx, cell);
 		ctx.fillText(this.text, x, y);
 		p.restoreShadow(ctx, cell);
 		return this;
 		};
-	Text.prototype.fillDraw = function(ctx, cell, override, x, y){
-		var p = scrawl.sprite[this.phrase];
+
+/**
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@param {Phrase} p Parent Phrase sprite object
+@return This
+@chainable
+@private
+**/
+	Text.prototype.fillDraw = function(ctx, cell, x, y, p){
 		ctx.fillText(this.text, x, y);
 		p.clearShadow(ctx, cell);
 		ctx.strokeText(this.text, x, y);
 		p.restoreShadow(ctx, cell);
 		return this;
 		};
-	Text.prototype.sinkInto = function(ctx, cell, override, x, y){
+
+/**
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@return This
+@chainable
+@private
+**/
+	Text.prototype.sinkInto = function(ctx, cell, x, y){
 		ctx.fillText(this.text, x, y);
 		ctx.strokeText(this.text, x, y);
 		return this;
 		};
-	Text.prototype.floatOver = function(ctx, cell, override, x, y){
+
+/**
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@return This
+@chainable
+@private
+**/
+	Text.prototype.floatOver = function(ctx, cell, x, y){
 		ctx.strokeText(this.text, x, y);
 		ctx.fillText(this.text, x, y);
 		return this;
 		};
-	Text.prototype.clip = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Number} x Glyph horizontal coordinate
+@param {Number} y Glyph vertical coordinate
+@return This
+@chainable
+@private
+**/
+	Text.prototype.clip = function(ctx, cell, x, y){
 		return this;
 		};
+
+/**
+Calculate metrics for each phrase, word or glyph in the glyphs array
+@method getMetrics
+@return This
+@chainable
+@private
+**/
 	Text.prototype.getMetrics = function(){
-		var p = scrawl.sprite[this.phrase];
-		var myContext = scrawl.context[scrawl.pad[scrawl.currentPad].current];
-		var myEngine = scrawl.ctx[this.context];
-		var tempFont = myContext.font;
-		var tempBaseline = myContext.textBaseline;
-		var tempAlign = myContext.textAlign;
-		myContext.font = myEngine.font;
-		myContext.textBaseline = myEngine.textBaseline;
-		myContext.textAlign = myEngine.textAlign;
+		var	p = scrawl.sprite[this.phrase],
+			myContext = scrawl.context[scrawl.pad[scrawl.currentPad].current],
+			myEngine = scrawl.ctx[this.context],
+			tempFont = myContext.font,
+			tempBaseline = myContext.textBaseline,
+			tempAlign = myContext.textAlign,
+			myText,
+			myTextWidth,
+			tempText;
+		myContext.font = myEngine.get('font');
+		myContext.textBaseline = myEngine.get('textBaseline');
+		myContext.textAlign = myEngine.get('textAlign');
 		this.width = myContext.measureText(this.text).width/p.scale;
-		this.height = p.size * 1.5;
+		this.height = p.size * p.lineHeight;
 		if(p.path){
 			this.glyphs = [];
 			this.glyphWidths = [];
-			var myText = this.text, tempText;
+			myText = this.text;
 			if(this.textAlongPath === 'word'){
 				tempText = this.text.split(' ');
 				for(var i=0, z=tempText.length; i<z; i++){
@@ -5171,7 +11338,7 @@ m: '',
 					}
 				}
 			else{
-				var myTextWidth = myContext.measureText(myText).width;
+				myTextWidth = myContext.measureText(myText).width;
 				if(this.fixedWidth){
 					for(var i=0, z=myText.length; i<z; i++){
 						this.glyphs.push(myText[i]);
@@ -5193,332 +11360,984 @@ m: '',
 		return this;
 		};
 		
+/**
+# Block
+	
+## Instantiation
+
+* scrawl.newBlock()
+
+## Purpose
+
+* Defines 'rect' objects for displaying on a Cell's canvas
+* Performs 'rect' based drawing operations on canvases
+
+@class Block
+@constructor
+@extends Sprite
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Block(items){
-		Sprite.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.width = items.width || 0;
-		this.height = items.height || 0;
-		scrawl.sprite[this.name] = this;
-		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].addSpritesToGroup(this.name);
+		Sprite.call(this, items);
+		SubScrawl.prototype.set.call(this, items);
+		this.width = items.width || scrawl.d.Block.width;
+		this.height = items.height || scrawl.d.Block.height;
+		this.registerInLibrary();
+		scrawl.pushUnique(scrawl.group[this.group].sprites, this.name);
 		return this;
 		}
 	Block.prototype = Object.create(Sprite.prototype);
+/**
+@property type
+@type String
+@default 'Block'
+@final
+**/		
 	Block.prototype.type = 'Block';
 	Block.prototype.classname = 'spritenames';
-	Block.prototype.clip = function(ctx, cell, override){
+	scrawl.d.Block = {
+		width: 0,
+		height: 0,
+		};
+	scrawl.mergeInto(scrawl.d.Block, scrawl.d.Sprite);
+
+/**
+Overrides Sprite.set()
+
+Allows users to:
+* set a sprite's Context object's values via the sprite
+* shift a sprite between groups
+* add a sprite to a Cell object's fence or field group (Cell collision map generation)
+* reset and recalculate collision point data
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Block.prototype.set = function(items){
+		Sprite.prototype.set.call(this, items);
+		this.width = items.width || this.width;
+		this.height = items.height || this.height;
+		return this;
+		};
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+
+Allows users to amend a sprite's Context object's values via the sprite, in addition to its own attribute values
+
+Overrides Sprite.detDelta()
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Block.prototype.setDelta = function(items){
+		Sprite.prototype.setDelta.call(this, items);
+		if(scrawl.xt(items.width)){this.width += items.width;}
+		if(scrawl.xt(items.height)){this.height += items.height;}
+		return this;
+		};
+
+/**
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@return This
+@chainable
+@private
+**/
+	Block.prototype.clip = function(ctx, cell){
+		var here = this.prepareStamp();
 		ctx.save();
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		ctx.rect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.rotateCell(ctx);
+		ctx.beginPath();
+		ctx.rect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		ctx.clip();
-		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Block.prototype.clear = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Block.prototype.clear = function(ctx, cell){
+		var here = this.prepareStamp();
 		scrawl.cell[cell].setToClearShape();
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		ctx.clearRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+		this.rotateCell(ctx);
+		ctx.clearRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		return this;
 		};
-	Block.prototype.clearWithBackground = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
-		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
+
+/**
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Block.prototype.clearWithBackground = function(ctx, cell){
+		var myCell = scrawl.cell[cell],
+			bg = myCell.get('backgroundColor'),
+			myCellCtx = scrawl.ctx[cell],
+			fillStyle = myCellCtx.get('fillStyle'),
+			strokeStyle = myCellCtx.get('strokeStyle'),
+			globalAlpha = myCellCtx.get('globalAlpha'),
+			here = this.prepareStamp(),
+			width = this.width * this.scale,
+			height = this.height * this.scale;
+		this.rotateCell(ctx);
+		ctx.fillStyle = bg;
+		ctx.strokeStyle = bg;
 		ctx.globalAlpha = 1;
-		var here = this.prepareStamp(override);
-		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
-		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
-		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
-		this.unrotateCell(ctx, cell, override);
+		ctx.strokeRect(here.x, here.y, width, height);
+		ctx.fillRect(here.x, here.y, width, height);
+		ctx.fillStyle = fillStyle;
+		ctx.strokeStyle = strokeStyle;
+		ctx.globalAlpha = globalAlpha;
 		return this;
 		};
-	Block.prototype.draw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Block.prototype.draw = function(ctx, cell){
+		var here = this.prepareStamp();
 		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+		this.rotateCell(ctx);
+		ctx.strokeRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		return this;
 		};
-	Block.prototype.fill = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Block.prototype.fill = function(ctx, cell){
+		var here = this.prepareStamp();
 		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+		this.rotateCell(ctx);
+		ctx.fillRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		return this;
 		};
-	Block.prototype.drawFill = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Block.prototype.drawFill = function(ctx, cell){
+		var here = this.prepareStamp(),
+			width = this.width * this.scale,
+			height = this.height * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.rotateCell(ctx);
+		ctx.strokeRect(here.x, here.y, width, height);
 		this.clearShadow(ctx, cell);
-		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+		ctx.fillRect(here.x, here.y, width, height);
 		return this;
 		};
-	Block.prototype.fillDraw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Block.prototype.fillDraw = function(ctx, cell){
+		var here = this.prepareStamp(),
+			width = this.width * this.scale,
+			height = this.height * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.rotateCell(ctx);
+		ctx.fillRect(here.x, here.y, width, height);
 		this.clearShadow(ctx, cell);
-		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+		ctx.strokeRect(here.x, here.y, width, height);
 		return this;
 		};
-	Block.prototype.sinkInto = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Block.prototype.sinkInto = function(ctx, cell){
+		var here = this.prepareStamp(),
+			width = this.width * this.scale,
+			height = this.height * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+		this.rotateCell(ctx);
+		ctx.fillRect(here.x, here.y, width, height);
+		ctx.strokeRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		return this;
 		};
-	Block.prototype.floatOver = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Block.prototype.floatOver = function(ctx, cell){
+		var here = this.prepareStamp(),
+			width = this.width * this.scale,
+			height = this.height * this.scale;
 		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+		this.rotateCell(ctx);
+		ctx.strokeRect(here.x, here.y, width, height);
+		ctx.fillRect(here.x, here.y, width, height);
 		return this;
 		};
-		
+
+/**
+# Wheel
+	
+## Instantiation
+
+* scrawl.newWheel()
+
+## Purpose
+
+* Defines 'arc' objects for displaying on a Cell's canvas
+* Performs 'arc' based drawing operations on canvases
+
+@class Wheel
+@constructor
+@extends Sprite
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Wheel(items){
-		Sprite.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.radius = items.radius || 0;
-		this.startAngle = items.startAngle || 0;
-		this.endAngle = (scrawl.isa(items.endAngle,'num')) ? items.endAngle : 360;
-		this.clockwise = (scrawl.isa(items.clockwise,'bool')) ? items.clockwise : false;
-		this.closed = (scrawl.isa(items.closed,'bool')) ? items.closed : true;
-		this.includeCenter = (scrawl.isa(items.includeCenter,'bool')) ? items.includeCenter : false;
-		this.checkHitUsingRadius = (scrawl.isa(items.checkHitUsingRadius,'bool')) ? items.checkHitUsingRadius : true;
-		this.handleX = items.handleX || 'center';
-		this.handleY = items.handleY || 'center';
-		this.width = this.radius*2;
+		Sprite.call(this, items);
+		SubScrawl.prototype.set.call(this, items);
+		this.radius = items.radius || scrawl.d.Wheel.radius;
+		this.width = this.radius * 2;
 		this.height = this.width;
-		scrawl.sprite[this.name] = this;
-		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].addSpritesToGroup(this.name);
+		this.checkHitUsingRadius = (scrawl.isa(items.checkHitUsingRadius,'bool')) ? items.checkHitUsingRadius : scrawl.d.Wheel.checkHitUsingRadius;
+		this.closed = (scrawl.isa(items.closed,'bool')) ? items.closed : scrawl.d.Wheel.closed;
+		this.includeCenter = (scrawl.isa(items.includeCenter,'bool')) ? items.includeCenter : scrawl.d.Wheel.includeCenter;
+		this.clockwise = (scrawl.isa(items.clockwise,'bool')) ? items.clockwise : scrawl.d.Wheel.clockwise;
+		this.registerInLibrary();
+		scrawl.pushUnique(scrawl.group[this.group].sprites, this.name);
 		return this;
 		}
 	Wheel.prototype = Object.create(Sprite.prototype);
+
+/**
+@property type
+@type String
+@default 'Wheel'
+@final
+**/		
 	Wheel.prototype.type = 'Wheel';
 	Wheel.prototype.classname = 'spritenames';
-	Wheel.prototype.checkHit = function(items, override){
+	scrawl.d.Wheel = {
+		radius: 0,
+/**
+Angle of the path's start point, from due east, in degrees
+@property startAngle
+@type Number
+@default 0
+**/
+		startAngle: 0,
+/**
+Angle of the path's end point, from due east, in degrees
+@property endAngle
+@type Number
+@default 360
+**/
+		endAngle: 360,
+/**
+Drawing flag - true to draw the arc in a clockwise direction; false for anti-clockwise
+@property clockwise
+@type Boolean
+@default false
+**/
+		clockwise: false,
+/**
+Drawing flag - true to close the path; false to keep the path open
+@property closed
+@type Boolean
+@default true
+**/
+		closed: true,
+/**
+Drawing flag - true to include the center in the path (for wedge shapes); false for circles
+@property includeCenter
+@type Boolean
+@default false
+**/
+		includeCenter: false,
+/**
+Collision calculation flag - true to use a simple radius check; false to use the JavaScript isPointInPath() function
+@property checkHitUsingRadius
+@type Boolean
+@default true
+**/
+		checkHitUsingRadius: true,
+		width: 0,
+		height: 0,
+		};
+	scrawl.mergeInto(scrawl.d.Wheel, scrawl.d.Sprite);
+
+/**
+Overrides Sprite.set()
+
+Allows users to:
+* set a sprite's Context object's values via the sprite
+* shift a sprite between groups
+* add a sprite to a Cell object's fence or field group (Cell collision map generation)
+* reset and recalculate collision point data
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Wheel.prototype.set = function(items){
+		Sprite.prototype.set.call(this, items);
+		this.radius = items.radius || this.radius;
+		this.width = this.radius * 2;
+		this.height = this.width;
+		return this;
+		};
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+
+Allows users to amend a sprite's Context object's values via the sprite, in addition to its own attribute values
+
+Overrides Sprite.detDelta()
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Wheel.prototype.setDelta = function(items){
+		Sprite.prototype.setDelta.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}];
-		var here = this.prepareStamp(override);
-		var result = false;
+		var f = {};
+		if(scrawl.xt(items.radius)){
+			this.radius += items.radius;
+			this.width = this.radius * 2;
+			this.height = this.width;
+			}
+		if(scrawl.xt(items.startAngle)){f.startAngle = this.get('startAngle') + items.startAngle;}
+		if(scrawl.xt(items.endAngle)){f.endAngle = this.get('endAngle') + items.endAngle;}
+		this.set(f);
+		return this;
+		};
+
+/**
+Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+
+Argument object contains the following attributes:
+
+* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
+* __x__ - X coordinate
+* __y__ - Y coordinate
+* __pad__ - PADNAME String
+
+Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+
+If the __checkHitUsingRadius__ attribute is true, collisions will be detected using a simple distance comparison; otherwise the JavaScript isPointInPath() function will be invoked
+@method checkHit
+@param {Object} items Argument object
+@return The first coordinate to fall within the sprite's path; false if none fall within the path
+**/
+	Wheel.prototype.checkHit = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var	tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}],
+			result = false,
+			myX,
+			myY,
+			distance,
+			test,
+			testRadius,
+			pad,
+			cell,
+			ctx;
 		if(this.checkHitUsingRadius){
-			var test = items.test || 0;
-			var testRadius = (test) ? test : this.currentRadius;
+			test = items.test || 0;
+			testRadius = (test) ? test : this.radius * this.scale;
 			for(var i=0, z=tests.length; i<z; i++){
-				var xSquare = (tests[i].x-here.x)*(tests[i].x-here.x);
-				var ySquare = (tests[i].y-here.y)*(tests[i].y-here.y);
-				var distance = Math.sqrt(xSquare+ySquare);
+				myX = tests[i].x - this.start.x;
+				myY = tests[i].y - this.start.y;
+				distance = Math.sqrt((myX * myX) + (myY * myY));
 				result = (distance <= testRadius) ? true : false;
 				if(result){break;}
 				}
 			}
 		else{
-			var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
-			var cell = scrawl.cell[pad.current].name;
-			var ctx = scrawl.context[pad.current];
-			this.flipCanvas(ctx, cell);
-			this.buildPath(ctx, override);
+			pad = scrawl.pad[items.pad] || scrawl.pad[scrawl.currentPad];
+			cell = scrawl.cell[pad.current].name;
+			ctx = scrawl.context[pad.current];
+			this.buildPath(ctx, cell);
 			for(var i=0, z=tests.length; i<z; i++){
 				result = ctx.isPointInPath(tests[i].x, tests[i].y);
 				if(result){break;}
 				}
-			this.flipCanvas(ctx, cell);
 			}
 		return (result) ? tests[i] : false;
 		};
-	Wheel.prototype.getPivotOffset = function(val,useHeight){
-		if(scrawl.xt(val)){
-			var result;
-			if((scrawl.isa(val,'str')) && !['left','center','right','top','bottom'].contains(val)){
-				result = ((parseFloat(val)/100)*this.width)-this.radius;
-				}
-			else{
-				switch (val){
-					case 'left' : result = -this.radius; break;
-					case 'center' : result = 0; break;
-					case 'right' : result = this.radius; break;
-					case 'top' : result = -this.radius; break;
-					case 'bottom' : result = this.radius; break;
-					default : result = val;
-					}
-				}
-			return result;
+
+/**
+Calculates the pixels value of the object's handle attribute
+
+* doesn't take into account the object's scaling or orientation
+* (badly named function - getPivotOffsetVector has nothing to do with pivots)
+
+@method getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where sprite drawing should start
+@private
+**/
+	Wheel.prototype.getPivotOffsetVector = function(){
+		var result = this.handle.getVector();
+		if((scrawl.isa(this.handle.x,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.handle.x)){
+			result.x = ((parseFloat(this.handle.x)/100) * this.width)  - this.radius;
 			}
-		return 0;
+		else{
+			switch (this.handle.x){
+				case 'left' : result.x = -this.radius; break;
+				case 'center' : result.x = 0; break;
+				case 'right' : result.x = this.radius; break;
+				}
+			}
+		if((scrawl.isa(this.handle.y,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.handle.y)){
+			result.y = ((parseFloat(this.handle.y)/100) * this.height) - this.radius;
+			}
+		else{
+			switch (this.handle.y){
+				case 'top' : result.y = -this.radius; break;
+				case 'center' : result.y = 0; break;
+				case 'bottom' : result.y = this.radius; break;
+				}
+			}
+		return result;
 		};
-	Wheel.prototype.buildPath = function(ctx, cell, override){
-		var here = this.prepareStamp(override);
+
+/**
+Helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
+@method buildPath
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.buildPath = function(ctx, cell){
+		var here = this.prepareStamp(),
+			startAngle = this.get('startAngle'),
+			endAngle = this.get('endAngle');
+		this.rotateCell(ctx, cell);
 		ctx.beginPath();
-		ctx.arc(here.x, here.y, this.currentRadius, this.getAngle(this.startAngle), this.getAngle(this.endAngle), this.clockwise);
+		ctx.arc(here.x, here.y, (this.radius * this.scale), (startAngle * scrawl.radian), (endAngle * scrawl.radian), this.clockwise);
 		if(this.includeCenter){ctx.lineTo(here.x, here.y);}
 		if(this.closed){ctx.closePath();}
 		return this;
 		};
-	Wheel.prototype.clip = function(ctx, cell, override){
-		this.buildPath(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.clip = function(ctx, cell){
+		this.buildPath(ctx, cell);
 		ctx.clip();
 		return this;
 		};
-	Wheel.prototype.clear = function(ctx, cell, override){
-		this.buildPath(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.clear = function(ctx, cell){
 		ctx.globalCompositeOperation = 'destination-out';
+		this.buildPath(ctx, cell);
 		ctx.stroke();
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
+		ctx.fill();
+		ctx.globalCompositeOperation = scrawl.ctx[cell].get('globalCompositeOperation');
 		return this;
-		};
-	Wheel.prototype.clearWithBackground = function(ctx, cell, override){
-		this.buildPath(ctx, cell, override);
-		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
-		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
-		ctx.globalAlpha = 1;
-		ctx.stroke();
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
-		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
-		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
-		return this;
-		};
-	Wheel.prototype.draw = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.buildPath(ctx, cell, override);
-		ctx.stroke();
-		return this;
-		};
-	Wheel.prototype.fill = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.buildPath(ctx, cell, override);
-		ctx.fill(scrawl.ctx[this.context].winding);
-		return this;
-		};
-	Wheel.prototype.drawFill = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.buildPath(ctx, cell, override);
-		ctx.stroke();
-		this.clearShadow(ctx, cell);
-		ctx.fill(scrawl.ctx[this.context].winding);
-		return this;
-		};
-	Wheel.prototype.fillDraw = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.buildPath(ctx, cell, override);
-		ctx.fill(scrawl.ctx[this.context].winding);
-		this.clearShadow(ctx, cell);
-		ctx.stroke();
-		return this;
-		};
-	Wheel.prototype.sinkInto = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.buildPath(ctx, cell, override);
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.stroke();
-		return this;
-		};
-	Wheel.prototype.floatOver = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.buildPath(ctx, cell, override);
-		ctx.stroke();
-		ctx.fill(scrawl.ctx[this.context].winding);
-		return this;
-		};
-	Wheel.prototype.getCollisionPoints = function(override){
-		var cr, p = [];
-		var here = {
-			x: (this.flipReverse) ? this.currentX + (override.x*2) : this.currentX,
-			y: (this.flipUpend) ? this.currentY + (override.y*2) : this.currentY,
-			};
-		cr = this.currentRoll * scrawl.radian;
-		for(var i=0, z=this.collisionPoints.length; i<z; i++){
-			switch(this.collisionPoints[i]) {
-				case 'start' : p.push({x:here.x,y:here.y}); break;
-				case 'N' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(270*scrawl.radian))); break;
-				case 'NE' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(315*scrawl.radian))); break;
-				case 'E' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr)); break;
-				case 'SE' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(45*scrawl.radian))); break;
-				case 'S' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(90*scrawl.radian))); break;
-				case 'SW' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(135*scrawl.radian))); break;
-				case 'W' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(180*scrawl.radian))); break;
-				case 'NW' : p.push(this.getRotatedCoordinates(here.x,here.y,this.currentRadius,cr+(225*scrawl.radian))); break;
-				case 'center' : p.push({x:here.x,y:here.y}); break;
-				default :
-					if(scrawl.pointnames.contains(this.collisionPoints[i])){
-						var n = scrawl.point[this.collisionPoints[i]];
-						if(n.visibility){
-							p.push({x: n.currentX, y: n.currentY});
-							}
-						}
-				}
-			}
-		return p;
 		};
 
+/**
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.clearWithBackground = function(ctx, cell){
+		var myCell = scrawl.cell[cell],
+			bc = myCell.get('backgroundColor'),
+			myCellCtx = scrawl.ctx[cell],
+			fillStyle = myCellCtx.get('fillStyle'),
+			strokeStyle = myCellCtx.get('strokeStyle'),
+			globalAlpha = myCellCtx.get('globalAlpha');
+		ctx.fillStyle = bc;
+		ctx.strokeStyle = bc;
+		ctx.globalAlpha = 1;
+		this.buildPath(ctx, cell);
+		ctx.stroke();
+		ctx.fill();
+		ctx.fillStyle = fillStyle;
+		ctx.strokeStyle = strokeStyle;
+		ctx.globalAlpha = globalAlpha;
+		return this;
+		};
+
+/**
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.draw = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell);
+		ctx.stroke();
+		return this;
+		};
+
+/**
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.fill = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell);
+		ctx.fill();
+		return this;
+		};
+
+/**
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.drawFill = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell);
+		ctx.stroke();
+		this.clearShadow(ctx, cell);
+		ctx.fill();
+		return this;
+		};
+
+/**
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.fillDraw = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell);
+		ctx.fill();
+		this.clearShadow(ctx, cell);
+		ctx.stroke();
+		return this;
+		};
+
+/**
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.sinkInto = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell);
+		ctx.fill();
+		ctx.stroke();
+		return this;
+		};
+
+/**
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.floatOver = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
+		this.buildPath(ctx, cell);
+		ctx.stroke();
+		ctx.fill();
+		return this;
+		};
+
+/**
+Collision detection helper function
+
+Parses the collisionPoints array to generate coordinate Vectors representing the sprite's collision points
+@method buildCollisionVectors
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
+	Wheel.prototype.buildCollisionVectors = function(items){
+		var	p,
+			v = new Vector({x: this.radius, y: 0}),
+			r,
+			res;
+		if(scrawl.xt(items)){
+			p = this.parseCollisionPoints(items);
+			}
+		else{
+			p = this.collisionPoints;
+			}
+		this.collisionVectors = [];
+		for(var i=0, z=p.length; i<z; i++){
+			if(scrawl.isa(p[i], 'num') && p[i] > 1){
+				r = 360/Math.floor(p[i]);
+				for(var j=0; j<p[i]; j++){
+					this.collisionVectors.push(v.getVector().rotate(r*j));
+					}
+				}
+			else if(scrawl.isa(p[i], 'str')){
+				switch(p[i]) {
+					case 'start' : 	res = new Vector(); break;
+					case 'N' : 		res = v.getVector().rotate(-90); break;
+					case 'NE' : 	res = v.getVector().rotate(-45); break;
+					case 'E' : 		res = v.getVector(); break;
+					case 'SE' : 	res = v.getVector().rotate(45); break;
+					case 'S' : 		res = v.getVector().rotate(90); break;
+					case 'SW' : 	res = v.getVector().rotate(135); break;
+					case 'W' : 		res = v.getVector().rotate(180); break;
+					case 'NW' : 	res = v.getVector().rotate(-135); break;
+					case 'center' :	res = new Vector(); break;
+					}
+				this.collisionVectors.push(res);
+				}
+			else if(scrawl.isa(p[i], 'obj') && p[i].type === 'Vector'){
+				this.collisionVectors.push(p[i]);
+				}
+			}
+		return this;
+		};
+
+/**
+# Picture
+	
+## Instantiation
+
+* scrawl.newPicture()
+
+## Purpose
+
+* Defines rectangular image-based objects for displaying on a Cell's canvas
+* Used to display both static and sprite sheet image animations
+* Links to details of an image's data; can use image data (rgba data) during collision detection
+* Can handle video input (experimental)
+* Performs 'rect' and 'drawImage' drawing operations on canvases
+
+@class Picture
+@constructor
+@extends Sprite
+@uses AnimSheet
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Picture(items){
 		if(scrawl.isa(items, 'obj') && scrawl.xt(items.url)){
 			return this.importImage(items);
 			}
 		else{
-			Sprite.call(this, items);
 			items = (scrawl.isa(items,'obj')) ? items : {};
+			Sprite.call(this, items);
+			SubScrawl.prototype.set.call(this, items);
+			var s,
+				w,
+				h,
+				x,
+				y;
 			this.source = items.source || false;
-			this.imageData = items.imageData || false;
-			this.imageDataChannel = items.imageDataChannel || 'alpha';
-			this.animSheet = items.animSheet || false;
 			this.imageType = this.sourceImage(items.source) || false;
-			this.checkHitUsingImageData = (scrawl.isa(items.checkHitUsingImageData,'bool')) ? items.checkHitUsingImageData : false;
 			if(this.source){
 				if(this.imageType === 'img'){
-					this.width = items.width || scrawl.image[this.source].copyWidth;
-					this.height = items.height || scrawl.image[this.source].copyHeight;
-					this.copyX = items.copyX || scrawl.image[this.source].copyX;
-					this.copyY = items.copyY || scrawl.image[this.source].copyY;
-					this.copyWidth = items.copyWidth || scrawl.image[this.source].copyWidth;
-					this.copyHeight = items.copyHeight || scrawl.image[this.source].copyHeight;
+					s = scrawl.image[this.source];
+					w = s.get('copyWidth');
+					h = s.get('copyHeight');
+					x = s.get('copyX');
+					y = s.get('copyY');
 					}
 				else if(this.imageType === 'canvas'){
-					this.width = items.width || scrawl.cell[this.source].sourceWidth;
-					this.height = items.height || scrawl.cell[this.source].sourceHeight;
-					this.copyX = items.copyX || scrawl.cell[this.source].sourceX;
-					this.copyY = items.copyY || scrawl.cell[this.source].sourceY;
-					this.copyWidth = items.copyWidth || scrawl.cell[this.source].sourceWidth;
-					this.copyHeight = items.copyHeight || scrawl.cell[this.source].sourceHeight;
+					s = scrawl.cell[this.source];
+					w = s.sourceWidth;
+					h = s.sourceHeight;
+					x = s.source.x;
+					y = s.source.y;
 					}
 				else if(this.imageType === 'animation'){
-					var myData = scrawl.anim[this.animSheet].getData();
-					this.width = items.width || myData.copyWidth;
-					this.height = items.height || myData.copyHeight;
-					this.copyX = items.copyX || myData.copyX;
-					this.copyY = items.copyY || myData.copyY;
-					this.copyWidth = items.copyWidth || myData.copyWidth;
-					this.copyHeight = items.copyHeight || myData.copyHeight;
+					s = scrawl.anim[this.get('animSheet')].getData();
+					w = s.copyWidth;
+					h = s.copyHeight;
+					x = s.copyX;
+					y = s.copyY;
 					}
+				this.width = items.width || w;
+				this.height = items.height || h;
+				this.copyX = items.copyX || x;
+				this.copyY = items.copyY || y;
+				this.copyWidth = items.copyWidth || w;
+				this.copyHeight = items.copyHeight || h;
 				}
-			scrawl.sprite[this.name] = this;
-			scrawl.spritenames.pushUnique(this.name);
-			scrawl.group[this.group].addSpritesToGroup(this.name);
+			this.registerInLibrary();
+			scrawl.pushUnique(scrawl.group[this.group].sprites, this.name);
 			return this;
 			}
 		}
 	Picture.prototype = Object.create(Sprite.prototype);
+
+/**
+@property type
+@type String
+@default 'Picture'
+@final
+**/		
 	Picture.prototype.type = 'Picture';
 	Picture.prototype.classname = 'spritenames';
+	scrawl.d.Picture = {
+/**
+SCRAWLIMAGE String - source image for this sprite
+@property source
+@type String
+@default ''
+**/
+		source: '',
+/**
+IMAGEDATANAME String - name of the Image Data object
+
+Calculated automatically by Scrawl following a .getImageData() call
+@property imageData
+@type String
+@default ''
+**/
+		imageData: '',
+/**
+Collision attribute - name of channel to be checked against during collision detection
+
+Permitted values: 'red', 'blue', 'green', 'alpha'
+@property imageDataChannel
+@type String
+@default 'alpha'
+**/
+		imageDataChannel: 'alpha',
+/**
+ANIMSHEET String - Sprite sheet image linked to this sprite
+@property animSheet
+@type String
+@default ;;
+**/
+		animSheet: '',
+/**
+Identifier String - permitted values include: 'animation', 'canvas', 'img'
+
+Detected automatically by scrawl during sprite construction
+@property imageType
+@type String
+@default ''
+@private
+**/
+		imageType: '',
+/**
+Collision flag - when true, Picture sprite will use imageData to determine whether a collision has occured; when false, a simpler box collision system is used
+@property checkHitUsingImageData
+@type Boolean
+@default false
+**/
+		checkHitUsingImageData: false,
+		width: 0,
+		height: 0,
+/**
+Image display - horizontal offset, in pixels, from the image's top left corner
+@property copyX
+@type Number
+@default 0
+**/
+		copyX: 0,
+/**
+Image display - vertical offset, in pixels, from the image's top left corner
+@property copyY
+@type Number
+@default 0
+**/
+		copyY: 0,
+/**
+Image display - width, in pixels, from copy start point
+@property copyWidth
+@type Number
+@default 0
+**/
+		copyWidth: 0,
+/**
+Image display - height, in pixels, from copy start point
+@property copyHeight
+@type Number
+@default 0
+**/
+		copyHeight: 0,
+/**
+Asynchronous loading of image file from the server - path/to/image file
+
+_Not retained by object_
+@property url
+@type String
+@default ''
+**/
+/**
+Asynchronous loading of image file from the server - function to run once image has successfully loaded
+
+_Not retained by object_
+@property callback
+@type Function
+@default undefined
+**/
+		};
+	scrawl.mergeInto(scrawl.d.Picture, scrawl.d.Sprite);
+	Picture.prototype.get = function(item){
+		if(scrawl.contains(scrawl.animKeys, item)){
+			return scrawl.anim[this.animSheet].get(item);
+			}
+		else{
+			return Sprite.prototype.get.call(this, item);
+			}
+		};
+
+/**
+Overrides Sprite.set()
+
+Allows users to:
+* set a sprite's Context object's values via the sprite
+* set the sprite's AnimSheet  object's values via the sprite
+* shift a sprite between groups
+* add a sprite to a Cell object's fence or field group (Cell collision map generation)
+* reset and recalculate collision point data
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Picture.prototype.set = function(items){
+		Sprite.prototype.set.call(this, items);
+		if(scrawl.xt(this.animSheet)){
+			scrawl.anim[this.animSheet].set(items);
+			}
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.width = items.width || this.width;
+		this.height = items.height || this.height;
+		this.copyX = items.copyX || this.copyX;
+		this.copyY = items.copyY || this.copyY;
+		this.copyWidth = items.copyWidth || this.copyWidth;
+		this.copyHeight = items.copyHeight || this.copyHeight;
+		return this;
+		};
+
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+
+Allows users to amend a sprite's Context object's values via the sprite, in addition to its own attribute values
+
+Overrides Sprite.detDelta()
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Picture.prototype.setDelta = function(items){
+		Sprite.prototype.setDelta.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xt(items.width)){this.width += items.width;}
+		if(scrawl.xt(items.height)){this.height += items.height;}
+		if(scrawl.xt(items.copyX)){this.copyX += items.copyX;}
+		if(scrawl.xt(items.copyY)){this.copyY += items.copyY;}
+		if(scrawl.xt(items.copyWidth)){this.copyWidth += items.copyWidth;}
+		if(scrawl.xt(items.copyHeight)){this.copyHeight += items.copyHeight;}
+		return this;
+		};
+
+/**
+Constructor helper function
+
+Loads an image from an URL path, creates a ScrawlImage wrapper for it and then creates the Picture sprite
+
+_Note: this function is asynchronous_
+@method importImage
+@param {Object} items Object consisting of key:value attributes
+@return New Picture object; false on failure
+@chainable
+@private
+**/
 	Picture.prototype.importImage = function(items){
 		if(scrawl.isa(items, 'obj') && scrawl.xt(items.url)){
 			var myImage = new Image();
@@ -5528,16 +12347,29 @@ m: '',
 					var iObj = scrawl.newImage({
 						name: myImage.id,
 						element: myImage,
-						});
+						}),
+						url = items.url;
 					delete items.url;
 					items.source = myImage.id;
-					return scrawl.newPicture(items);
+					var s = scrawl.newPicture(items);
+					if(scrawl.isa(items.callback,'fn')){
+						items.callback.call(s);
+						}
+					return s;
 					}
 				catch(e){
 					console.log('Image <'+url+'> failed to load - '+e.name+' error: '+e.message);
 					return false;
 					}
 				};
+/**
+Path to image, for use when dynamically importing images for use by the sprite
+
+Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
+@property url
+@type String
+@default ''
+**/
 			myImage.src = items.url;
 			}
 		else{
@@ -5545,6 +12377,14 @@ m: '',
 			return false;
 			}
 		};
+
+/**
+Overrides Sprite.clone()
+@method clone
+@param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
+@return Cloned object
+@chainable
+**/
 	Picture.prototype.clone = function(items){
 		var a = Sprite.prototype.clone.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
@@ -5553,156 +12393,316 @@ m: '',
 			}
 		return a;
 		};
+
+/**
+Clone helper function
+@method fitToImageSize
+@return This
+@chainable
+@private
+**/
 	Picture.prototype.fitToImageSize = function(){
 		if(this.imageType === 'img'){
-			this.copyWidth = scrawl.image[this.source].copyWidth;
-			this.copyHeight = scrawl.image[this.source].copyHeight;
-			this.copyX = scrawl.image[this.source].copyX;
-			this.copyY = scrawl.image[this.source].copyY;
+			var img = scrawl.image[this.source];
+			this.set({
+				copyWidth: img.get('copyWidth'),
+				copyHeight: img.get('copyHeight'),
+				copyX: img.get('copyX'),
+				copyY: img.get('copyY'),
+				});
 			}
 		return this;
 		};
+
+/**
+Constructor and clone helper function
+@method sourceImage
+@return Correct imageType attribute value for this sprite
+@private
+**/
 	Picture.prototype.sourceImage = function(){
-		if(this.animSheet && scrawl.imagenames.contains(this.source)){return 'animation';}
-		if(scrawl.imagenames.contains(this.source)){return 'img';}
-		if(scrawl.cellnames.contains(this.source)){return 'canvas';}
+		if(this.get('animSheet') && scrawl.contains(scrawl.imagenames, this.source)){return 'animation';}
+		if(scrawl.contains(scrawl.imagenames, this.source)){return 'img';}
+		if(scrawl.contains(scrawl.cellnames, this.source)){return 'canvas';}
 		return false;
 		};
-	Picture.prototype.clip = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.clip = function(ctx, cell){
+		var here = this.prepareStamp();
 		ctx.save();
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		ctx.rect(here.x, here.y, this.currentWidth, this.currentHeight);
+		this.rotateCell(ctx);
+		ctx.beginPath();
+		ctx.rect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		ctx.clip();
-		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Picture.prototype.clear = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		ctx.clearRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.clear = function(ctx, cell){
+		var here = this.prepareStamp();
+		this.rotateCell(ctx);
+		ctx.clearRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		return this;
 		};
-	Picture.prototype.clearWithBackground = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.clearWithBackground = function(ctx, cell){
+		var here = this.prepareStamp(),
+			width = this.width * this.scale,
+			height = this.height * this.scale;
+		this.rotateCell(ctx);
 		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
 		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
 		ctx.globalAlpha = 1;
-		var here = this.prepareStamp(override);
-		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		ctx.fillRect(here.x, here.y, this.currentWidth, this.currentHeight);
+		ctx.strokeRect(here.x, here.y, width, height);
+		ctx.fillRect(here.x, here.y, width, height);
 		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
 		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
 		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
-		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Picture.prototype.draw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.draw = function(ctx, cell){
+		var here = this.prepareStamp();
+		this.rotateCell(ctx);
 		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-		this.unrotateCell(ctx, cell, override);
+		ctx.strokeRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 		return this;
 		};
-	Picture.prototype.fill = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.fill = function(ctx, cell){
+		var here;
 		if(this.imageType){
-			this.rotateCell(ctx, cell, override);
+			here = this.prepareStamp();
+			this.rotateCell(ctx);
 			scrawl.cell[cell].setEngine(this);
-			var here = this.prepareStamp(override);
-			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
-			this.unrotateCell(ctx, cell, override);
+			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 			}
 		return this;
 		};
-	Picture.prototype.drawFill = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.drawFill = function(ctx, cell){
+		var here,
+			width,
+			height;
 		if(this.imageType){
-			this.rotateCell(ctx, cell, override);
+			here = this.prepareStamp();
+			width = this.width * this.scale;
+			height = this.height * this.scale;
+			this.rotateCell(ctx);
 			scrawl.cell[cell].setEngine(this);
-			var here = this.prepareStamp(override);
-			ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
+			ctx.strokeRect(here.x, here.y, width, height);
 			this.clearShadow(ctx, cell);
-			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
-			this.unrotateCell(ctx, cell, override);
+			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, width, height);
 			}
 		return this;
 		};
-	Picture.prototype.fillDraw = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.fillDraw = function(ctx, cell){
+		var here,
+			width,
+			height;
 		if(this.imageType){
-			this.rotateCell(ctx, cell, override);
+			here = this.prepareStamp();
+			width = this.width * this.scale;
+			height = this.height * this.scale;
+			this.rotateCell(ctx);
 			scrawl.cell[cell].setEngine(this);
-			var here = this.prepareStamp(override);
-			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
+			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, width, height);
 			this.clearShadow(ctx, cell);
-			ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-			this.unrotateCell(ctx, cell, override);
+			ctx.strokeRect(here.x, here.y, width, height);
 			}
 		return this;
 		};
-	Picture.prototype.sinkInto = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.sinkInto = function(ctx, cell){
+		var here,
+			width,
+			height;
 		if(this.imageType){
-			this.rotateCell(ctx, cell, override);
+			here = this.prepareStamp();
+			width = this.width * this.scale;
+			height = this.height * this.scale;
+			this.rotateCell(ctx);
 			scrawl.cell[cell].setEngine(this);
-			var here = this.prepareStamp(override);
-			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
-			ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-			this.unrotateCell(ctx, cell, override);
+			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, width, height);
+			ctx.strokeRect(here.x, here.y, width, height);
 			}
 		return this;
 		};
-	Picture.prototype.floatOver = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Picture.prototype.floatOver = function(ctx, cell){
+		var here,
+			width,
+			height;
 		if(this.imageType){
-			this.rotateCell(ctx, cell, override);
+			here = this.prepareStamp();
+			width = this.width * this.scale;
+			height = this.height * this.scale;
+			this.rotateCell(ctx);
 			scrawl.cell[cell].setEngine(this);
-			var here = this.prepareStamp(override);
-			ctx.strokeRect(here.x, here.y, this.currentWidth, this.currentHeight);
-			try{ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, this.currentWidth, this.currentHeight);}catch(e){}
-			this.unrotateCell(ctx, cell, override);
+			ctx.strokeRect(here.x, here.y, width, height);
+			ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, width, height);
 			}
 		return this;
 		};
-	Picture.prototype.getImageData = function(){
-		var myCanvas, myImage;
+
+/**
+Load the Picture sprite's image data (via JavaScript getImageData() function) into the scrawl library
+@method getImageData
+@param {String} [label] IMAGEDATANAME - default: PICTURENAME_data
+@return This
+@chainable
+**/
+	Picture.prototype.getImageData = function(label){
+		label = (scrawl.xt(label)) ? label : 'data';
+		var	myCanvas,
+			myImage,
+			w,
+			h;
 		if(this.imageType === 'animation' && scrawl.image[this.source]){
 			myImage = scrawl.image[this.source];
 			myCanvas = scrawl.addNewCell({
 				name: this.name,
-				height: myImage.height,
-				width: myImage.width,
+				width: myImage.get('width'),
+				height: myImage.get('height'),
 				});
 			scrawl.context[myCanvas.name].drawImage(scrawl.img[this.source], 0, 0);
 			}
 		else{
+			w = this.copyWidth;
+			h = this.copyHeight;
 			myCanvas = scrawl.addNewCell({
 				name: this.name,
-				height: this.copyHeight,
-				width: this.copyWidth,
+				width: w,
+				height: h,
 				});
-			try{scrawl.context[myCanvas.name].drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, 0, 0, this.copyWidth, this.copyHeight);}catch(e){}
+			try{scrawl.context[myCanvas.name].drawImage(this.getImage(), this.copyX, this.copyY, w, h, 0, 0, w, h);}catch(e){console.log(this.name+' failed getImageData');}
 			}
-		this.imageData = myCanvas.getImageData({
-			name: 'data',
+		this.set({
+			imageData: myCanvas.getImageData({
+				name: label,
+				}),
 			});
 		scrawl.deleteCells([myCanvas.name]);
 		return this;
 		};
-	Picture.prototype.getImageDataValue = function(items, override){
-		//very similar to .checkHit ... could be abstracted?
-		items = (scrawl.isa(items,'obj')) ? items : {x:0,y:0};
-		override = (scrawl.isa(override,'obj')) ? override : {x:0,y:0};
-		var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad] || scrawl.pad[scrawl.cell[scrawl.group[this.group].cells[0]].pad];
-		var cell = scrawl.cell[pad.current].name;
-		var ctx = scrawl.context[pad.current];
-		var d = scrawl.imageData[this.imageData]
-		this.flipCanvas(ctx, cell);
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		var result = false;
-		var c = this.getLocalRotatedPoint(override, cell, pad, items, here)
-		var myEl = (parseFloat((c.y * d.width).toFixed()) + parseFloat((c.x).toFixed())) * 4;
-		if(c.x.isBetween(0,d.width-1,true) && c.y.isBetween(0,d.height-1,true)){
-			switch(items.channel || this.imageDataChannel){
+
+/**
+Get the pixel color or channel data from Picture object's image at given coordinate
+
+Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha', 'color' (default)
+@method getImageDataValue
+@param {Object} items Coordinate Vector or Object
+@return Color value at coordinate; false if no color found
+**/
+	Picture.prototype.getImageDataValue = function(items){
+		var	coords = this.getLocalCoordinate(items),
+			d = scrawl.imageData[this.get('imageData')],
+			myX,
+			myY,
+			myData,
+			copyScaleX,
+			copyScaleY,
+			result,
+			myEl,
+			imageDataChannel = this.get('imageDataChannel');
+		if(this.imageType === 'animation' && scrawl.image[this.source]){
+			myData = scrawl.anim[this.get('animSheet')].getData();
+			copyScaleX = this.width/myData.copyWidth;
+			copyScaleY = this.height/myData.copyHeight;
+			myX = Math.round((coords.x/copyScaleX) + myData.copyX);
+			myY = Math.round((coords.y/copyScaleY) + myData.copyY);
+			}
+		else{
+			copyScaleX = this.width/this.copyWidth;
+			copyScaleY = this.height/this.copyHeight;
+			myX = Math.round(coords.x/copyScaleX);
+			myY = Math.round(coords.y/copyScaleY);
+			}
+		result = false;
+		myEl = ((myY * d.width) + myX) * 4;
+		if(scrawl.isBetween(myX, 0, d.width-1, true) && scrawl.isBetween(myY, 0, d.height-1, true)){
+			switch(items.channel || imageDataChannel){
 				case 'red' : result = (scrawl.xt(d.data[myEl])) ? d.data[myEl] : false; break;
 				case 'blue' : result = (scrawl.xt(d.data[myEl+1])) ? d.data[myEl+1] : false; break;
 				case 'green' : result = (scrawl.xt(d.data[myEl+2])) ? d.data[myEl+2] : false; break;
@@ -5711,137 +12711,210 @@ m: '',
 				default : result = false;
 				}
 			}
-		this.unrotateCell(ctx, cell, override);
-		this.flipCanvas(ctx, cell);
 		return result;
 		};
+
+/**
+Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for sprite sheet images
+@method getImage
+@return Image Object
+@private
+**/
 	Picture.prototype.getImage = function(){
 		if(this.imageType === 'animation'){
+			//animSheet always set if imageType === 'animation'
 			var myData = scrawl.anim[this.animSheet].getData();
-			this.copyX = myData.copyX;
-			this.copyY = myData.copyY;
-			this.copyWidth = myData.copyWidth;
-			this.copyHeight = myData.copyHeight;
+			this.set({
+				copyX: myData.copyX,
+				copyY: myData.copyY,
+				copyWidth: myData.copyWidth,
+				copyHeight: myData.copyHeight,
+				});
 			return scrawl.img[this.source];
 			}
 		else{
 			return scrawl[this.imageType][this.source];
 			}
 		};
-	Picture.prototype.set = function(items){
-		Sprite.prototype.set.call(this, items);
-		if(scrawl.xto([items.sheet,items.frames,items.currentFrame,items.speed,items.loop,items.running,items.lastCalled])){
-			scrawl.anim[this.animSheet].set(items);
-			}
-		return this;
-		};
-	Picture.prototype.get = function(item){
-		if(['sheet','frames','currentFrame','speed','loop','running','lastCalled'].contains(item)){
-			return scrawl.anim[this.animSheet].get(item);
-			}
-		else{
-			return Sprite.prototype.get.call(this, item);
-			}
-		};
-	Picture.prototype.checkHit = function(items, override){
+
+/**
+Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+
+Argument object contains the following attributes:
+
+* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
+* __x__ - X coordinate
+* __y__ - Y coordinate
+
+Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+@method checkHit
+@param {Object} items Argument object
+@return The first coordinate to fall within the sprite's path; false if none fall within the path
+**/
+	Picture.prototype.checkHit = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		var	hit = Sprite.prototype.checkHit.call(this, items),
+			c,
+			test;
 		if(this.checkHitUsingImageData){
-			var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
-			var cell = scrawl.cell[pad.current].name;
-			var ctx = scrawl.context[pad.current];
-			var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || 0), y: (items.y || 0)}];
-			var d = scrawl.imageData[this.imageData]
-			var test = (scrawl.isa(items.test,'num')) ? items.test : 0;
-			this.flipCanvas(ctx, cell);
-			this.rotateCell(ctx, cell, override);
-			var here = this.prepareStamp(override);
-			ctx.beginPath();
-			ctx.rect(here.x, here.y, this.currentWidth, this.currentHeight);
-			var result = false;
-			for(var i=0, z=tests.length; i<z; i++){
-				result = ctx.isPointInPath(tests[i].x, tests[i].y);
-				if(result){
-					var c = this.getLocalRotatedPoint(override, cell, pad, tests[i], here);
-					var myEl = (parseFloat((c.y * d.width).toFixed()) + parseFloat((c.x).toFixed())) * 4;
-					var myChannel;
-					switch(items.channel || this.imageDataChannel){
-						case 'red' : myChannel = 0; break;
-						case 'blue' : myChannel = 1; break;
-						case 'green' : myChannel = 2; break;
-						case 'alpha' : myChannel = 3; break;
-						}
-					result = (d.data[myEl+myChannel] > test) ? true : false;
-					if(result){
-						break;
-						}
+			if(hit){
+				hit.x = parseInt(hit.x);
+				hit.y = parseInt(hit.y);
+				c = this.getImageDataValue(hit);
+				if(this.get('imageDataChannel') === 'color'){
+					return (c === 'rgba(0,0,0,0)') ? false : hit;
+					}
+				else{
+					test = (scrawl.isa(items.test,'num')) ? items.test : 0;
+					return (c > test) ? hit : false;
 					}
 				}
-			this.unrotateCell(ctx, cell, override);
-			this.flipCanvas(ctx, cell);
-			return (result) ? tests[i] : false;
 			}
-		else{
-			return Sprite.prototype.checkHit.call(this, items, override);
-			}
+		return hit;
 		};
-	Picture.prototype.getLocalRotatedCoordinates = function(x,y,d,r){
-		return {
-			x: x+(d*Math.cos(r)),
-			y: y+(d*Math.sin(r)),
-			};
-		};
-	Picture.prototype.getLocalRotatedPoint = function(override, cell, pad, test, here){
-		var s = this.getRotationPoint(override,cell);
-		var t, tX, tY, myX, myY;
-		tX = (this.flipReverse) ? (pad.width - test.x) - s.x : test.x - s.x;
-		tY = (this.flipUpend) ? (pad.height - test.y) - s.y : test.y - s.y;
-		t = this.getLocalRotatedCoordinates(s.x, s.y, Math.sqrt((tX*tX)+(tY*tY)), Math.atan2(tY,tX)-(this.currentRoll*scrawl.radian)); 
-		myX = (((t.x - s.x) + (s.x - here.x))/this.currentScale)*(this.copyWidth/this.width);
-		myY = (((t.y - s.y) + (s.y - here.y))/this.currentScale)*(this.copyHeight/this.height);
-		if(this.imageType === 'animation'){
-			myX += this.copyX;
-			myY += this.copyY;
-			}
-		myX = parseFloat(myX.toFixed());
-		myY = parseFloat(myY.toFixed());
-		return {x: myX, y: myY};
-		};
-		
+
+/**
+# Outline
+	
+## Instantiation
+
+* scrawl.makeLine() - straight lines
+* scrawl.makeBezier() - cubic bezier curves
+* scrawl.makeEllipse() - ellipses and circles
+* scrawl.makeQuadratic() - quadratic bezier curves
+* scrawl.makeRectangle() - for rectangles with rounded corners
+* scrawl.makeRegularShape() - triangles, pentangles (stars), pentagons, etc
+* scrawl.newOutline() - Irregular, path-based shapes
+
+## Purpose
+
+* Defines a sprite composed of lines, quadratic and bezier curves, etc
+* See also Shape object, which achieves a similar thing in a different way
+
+@class Outline
+@constructor
+@extends Sprite
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Outline(items){
-		Sprite.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.dataSet = (scrawl.xt(this.data)) ? this.buildDataSet(this.data) : false;
-		this.startX = items.startX || 0;
-		this.startY = items.startY || 0;
-		this.handleX = items.handleX || 'left';
-		this.handleY = items.handleY || 'top';
-		this.method = items.method || 'draw';
-		scrawl.sprite[this.name] = this;
-		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].addSpritesToGroup(this.name);
+		Sprite.call(this, items);
+		SubScrawl.prototype.set.call(this, items);
+		this.isLine = (scrawl.isa(items.isLine,'bool')) ? items.isLine : true;
+		this.dataSet = (scrawl.xt(this.data)) ? this.buildDataSet(this.data) : '';
+		this.registerInLibrary();
+		scrawl.pushUnique(scrawl.group[this.group].sprites, this.name);
 		return this;
 		}
 	Outline.prototype = Object.create(Sprite.prototype);
+/**
+@property type
+@type String
+@default 'Outline'
+@final
+**/		
 	Outline.prototype.type = 'Outline';
 	Outline.prototype.classname = 'spritenames';
+	scrawl.d.Outline = {
+/**
+Path data string - uses SVGTiny Path.d format
+@property data
+@type String
+@default ''
+**/
+		data: '',
+/**
+Interpreted path data - calculated by scrawl from the data attribute
+@property dataSet
+@type Array
+@default false
+@private
+**/
+		dataSet: false,
+/**
+Drawing flag - when set to true, will treat the first drawing (not positioning) data point as the start point
+
+Generally this is set automatically as part of an outline factory function
+@property isLine
+@type Boolean
+@default true
+**/
+		isLine: true,
+/**
+Outline sprite default method attribute is 'draw', not 'fill'
+@property method
+@type String
+@default 'draw'
+**/
+		method: 'draw',
+		};
+	scrawl.mergeInto(scrawl.d.Outline, scrawl.d.Sprite);
+
+/**
+Overrides Sprite.set()
+
+Allows users to:
+* set a sprite's Context object's values via the sprite
+* shift a sprite between groups
+* add a sprite to a Cell object's fence or field group (Cell collision map generation)
+* reset and recalculate collision point data
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Outline.prototype.set = function(items){
 		Sprite.prototype.set.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
 		if(scrawl.xt(items.data)){
 			this.dataSet = this.buildDataSet(this.data);
+			delete this.offset;
 			}
 		return this;
 		};
+
+/**
+Calculates the pixels value of the object's handle attribute
+
+* doesn't take into account the object's scaling or orientation
+* (badly named function - getPivotOffsetVector has nothing to do with pivots)
+
+@method getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where sprite drawing should start
+@private
+**/
+	Outline.prototype.getPivotOffsetVector = function(){
+		return Shape.prototype.getPivotOffsetVector.call(this);
+		}
+
+/**
+Constructor, clone and set helper function
+
+Create native path data from data attribute String
+
+@method buildDataSet
+@param {String} d Path string
+@return Native path data
+@private
+**/
 	Outline.prototype.buildDataSet = function(d){
-		var myData = [];
-		var command, points, minX = 999999, minY = 999999, maxX = -999999, maxY = -999999, curX = this.startX, curY = this.startY;
-		var checkMaxMin = function(cx,cy){
-			minX = (minX > cx) ? cx : minX;
-			minY = (minY > cy) ? cy : minY;
-			maxX = (maxX < cx) ? cx : maxX;
-			maxY = (maxY < cy) ? cy : maxY;
-			};
-		var set = d.match(/([A-Za-z][0-9. ,\-]*)/g);
+		var	myData = [], 
+			command, 
+			points, 
+			minX = 999999, 
+			minY = 999999, 
+			maxX = -999999, 
+			maxY = -999999, 
+			curX = this.start.x, 
+			curY = this.start.y,
+			set = d.match(/([A-Za-z][0-9. ,\-]*)/g),
+			checkMaxMin = function(cx,cy){
+				minX = (minX > cx) ? cx : minX;
+				minY = (minY > cy) ? cy : minY;
+				maxX = (maxX < cx) ? cx : maxX;
+				maxY = (maxY < cy) ? cy : maxY;
+				};
 		for(var i=0,z=set.length; i<z; i++){
 			command = set[i][0];
 			points = set[i].match(/(-?[0-9.]+\b)/g);
@@ -5913,10 +12986,8 @@ m: '',
 				}
 			myData.push({c: command, p: points});
 			}
-		this.width = maxX - minX;
-		this.height = maxY - minY;
 		for(var i=0, z=myData.length; i<z; i++){
-			if(['M','L','C','Q','S','T'].contains(myData[i].c)){
+			if(scrawl.contains(['M','L','C','Q','S','T'], myData[i].c)){
 				for(var j=0, w=myData[i].p.length; j<w; j+=2){
 					myData[i].p[j] -= minX;
 					myData[i].p[j+1] -= minY;
@@ -5933,23 +13004,39 @@ m: '',
 					}
 				}
 			}
-		this.compiledData = false;
+		this.width = maxX - minX;
+		this.height = maxY - minY;
 		return myData;
 		};
-	Outline.prototype.doOutline = function(ctx,override){
+
+/**
+Helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
+@method doOutline
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.doOutline = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
 		if(!this.dataSet && this.data){
 			this.buildDataSet(this.data);
 			}
 		if(this.dataSet){
-			var here = this.prepareStamp(override);
-			var currentX = here.x, currentY = here.y;
-			var reflectX = here.x, reflectY = here.y;
-			var d, tempX, tempY;
+			var here = this.prepareStamp(),
+				currentX = 0,
+				currentY = 0,
+				reflectX = 0,
+				reflectY = 0,
+				d, 
+				tempX, 
+				tempY;
+			this.rotateCell(ctx);
+			ctx.translate(here.x,here.y);
 			ctx.beginPath();
-			if(!['M','m'].contains(this.dataSet[0].c)){
-				currentX = 0, currentY = 0;
-				reflectX = currentX, reflectY = currentY;
-				ctx.moveTo(0,0);
+			if(!scrawl.contains(['M'], this.dataSet[0].c)){
+				ctx.moveTo(currentX,currentY);
 				}
 			for(var i=0, z=this.dataSet.length; i<z; i++){
 				d = this.dataSet[i];
@@ -5957,21 +13044,21 @@ m: '',
 					case 'M' :
 						currentX = d.p[0], currentY = d.p[1];
 						reflectX = currentX, reflectY = currentY;
-						ctx.moveTo((currentX*this.scale),(currentY*this.scale));
+						ctx.moveTo((currentX * this.scale),(currentY * this.scale));
 						for(var k=2, v=d.p.length; k<v; k+=2){
 							currentX = d.p[k], currentY = d.p[k+1];
 							reflectX = currentX, reflectY = currentY;
-							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							ctx.lineTo((currentX * this.scale),(currentY * this.scale));
 							}
 						break;
 					case 'm' :
 						currentX += d.p[0], currentY += d.p[1];
 						reflectX = currentX, reflectY = currentY;
-						ctx.moveTo((currentX*this.scale),(currentY*this.scale));
+						ctx.moveTo((currentX * this.scale),(currentY * this.scale));
 						for(var k=2, v=d.p.length; k<v; k+=2){
 							currentX += d.p[k], currentY += d.p[k+1];
 							reflectX = currentX, reflectY = currentY;
-							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							ctx.lineTo((currentX * this.scale),(currentY * this.scale));
 							}
 						break;
 					case 'Z' :
@@ -5982,54 +13069,54 @@ m: '',
 						for(var k=0, v=d.p.length; k<v; k+=2){
 							currentX = d.p[k], currentY = d.p[k+1];
 							reflectX = currentX, reflectY = currentY;
-							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							ctx.lineTo((currentX * this.scale),(currentY * this.scale));
 							}
 						break;
 					case 'l' :
 						for(var k=0, v=d.p.length; k<v; k+=2){
 							currentX += d.p[k], currentY += d.p[k+1];
 							reflectX = currentX, reflectY = currentY;
-							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							ctx.lineTo((currentX * this.scale),(currentY * this.scale));
 							}
 						break;
 					case 'H' :
 						for(var k=0, v=d.p.length; k<v; k++){
 							currentX = d.p[k];
 							reflectX = currentX;
-							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							ctx.lineTo((currentX * this.scale),(currentY * this.scale));
 							}
 						break;
 					case 'h' :
 						for(var k=0, v=d.p.length; k<v; k++){
 							currentX += d.p[k];
 							reflectX = currentX;
-							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							ctx.lineTo((currentX * this.scale),(currentY * this.scale));
 							}
 						break;
 					case 'V' :
 						for(var k=0, v=d.p.length; k<v; k++){
 							currentY = d.p[k];
 							reflectY = currentY;
-							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							ctx.lineTo((currentX * this.scale),(currentY * this.scale));
 							}
 						break;
 					case 'v' :
 						for(var k=0, v=d.p.length; k<v; k++){
 							currentY += d.p[k];
 							reflectY = currentY;
-							ctx.lineTo((currentX*this.scale),(currentY*this.scale));
+							ctx.lineTo((currentX * this.scale),(currentY * this.scale));
 							}
 						break;
 					case 'C' :
 						for(var k=0, v=d.p.length; k<v; k+=6){
-							ctx.bezierCurveTo((d.p[k]*this.scale),(d.p[k+1]*this.scale),(d.p[k+2]*this.scale),(d.p[k+3]*this.scale),(d.p[k+4]*this.scale),(d.p[k+5]*this.scale));
+							ctx.bezierCurveTo((d.p[k] * this.scale),(d.p[k+1] * this.scale),(d.p[k+2] * this.scale),(d.p[k+3] * this.scale),(d.p[k+4] * this.scale),(d.p[k+5] * this.scale));
 							reflectX = d.p[k+2], reflectY = d.p[k+3];
 							currentX = d.p[k+4], currentY = d.p[k+5];
 							}
 						break;
 					case 'c' :
 						for(var k=0, v=d.p.length; k<v; k+=6){
-							ctx.bezierCurveTo(((currentX+d.p[k])*this.scale),((currentY+d.p[k+1])*this.scale),((currentX+d.p[k+2])*this.scale),((currentY+d.p[k+3])*this.scale),((currentX+d.p[k+4])*this.scale),((currentY+d.p[k+5])*this.scale));
+							ctx.bezierCurveTo(((currentX+d.p[k]) * this.scale),((currentY+d.p[k+1]) * this.scale),((currentX+d.p[k+2]) * this.scale),((currentY+d.p[k+3]) * this.scale),((currentX+d.p[k+4]) * this.scale),((currentY+d.p[k+5]) * this.scale));
 							reflectX = currentX + d.p[k+2];
 							reflectY = currentY + d.p[k+3];
 							currentX += d.p[k+4], currentY += d.p[k+5];
@@ -6037,38 +13124,38 @@ m: '',
 						break;
 					case 'S' :
 						for(var k=0, v=d.p.length; k<v; k+=4){
-							if(i>0 && ['C','c','S','s'].contains(this.dataSet[i-1].c)){
+							if(i>0 && scrawl.contains(['C','c','S','s'], this.dataSet[i-1].c)){
 								tempX = currentX + (currentX - reflectX);
 								tempY = currentY + (currentY - reflectY);
 								}
 							else{tempX = currentX; tempY = currentY;}
-							ctx.bezierCurveTo((tempX*this.scale),(tempY*this.scale),(d.p[k]*this.scale),(d.p[k+1]*this.scale),(d.p[k+2]*this.scale),(d.p[k+3]*this.scale));
+							ctx.bezierCurveTo((tempX * this.scale),(tempY * this.scale),(d.p[k] * this.scale),(d.p[k+1] * this.scale),(d.p[k+2] * this.scale),(d.p[k+3] * this.scale));
 							reflectX = d.p[k], reflectY = d.p[k+1];
 							currentX = d.p[k+2], currentY = d.p[k+3];
 							}
 						break;
 					case 's' :
 						for(var k=0, v=d.p.length; k<v; k+=4){
-							if(i>0 && ['C','c','S','s'].contains(this.dataSet[i-1].c)){
+							if(i>0 && scrawl.contains(['C','c','S','s'], this.dataSet[i-1].c)){
 								tempX = currentX + (currentX - reflectX);
 								tempY = currentY + (currentY - reflectY);
 								}
 							else{tempX = currentX; tempY = currentY;}
-							ctx.bezierCurveTo((tempX*this.scale),(tempY*this.scale),((currentX+d.p[k])*this.scale),((currentY+d.p[k+1])*this.scale),((currentX+d.p[k+2])*this.scale),((currentY+d.p[k+3])*this.scale));
+							ctx.bezierCurveTo((tempX * this.scale),(tempY * this.scale),((currentX+d.p[k]) * this.scale),((currentY+d.p[k+1]) * this.scale),((currentX+d.p[k+2]) * this.scale),((currentY+d.p[k+3]) * this.scale));
 							reflectX = currentX + d.p[k], reflectY = currentY + d.p[k+1];
 							currentX += d.p[k+2], currentY += d.p[k+3];
 							}
 						break;
 					case 'Q' :
 						for(var k=0,v=d.p.length;k<v;k+=4){
-							ctx.quadraticCurveTo((d.p[k]*this.scale),(d.p[k+1]*this.scale),(d.p[k+2]*this.scale),(d.p[k+3]*this.scale));
+							ctx.quadraticCurveTo((d.p[k] * this.scale),(d.p[k+1] * this.scale),(d.p[k+2] * this.scale),(d.p[k+3] * this.scale));
 							reflectX = d.p[k], reflectY = d.p[k+1];
 							currentX = d.p[k+2], currentY = d.p[k+3];
 							}
 						break;
 					case 'q' :
 						for(var k=0,v=d.p.length;k<v;k+=4){
-							ctx.quadraticCurveTo(((currentX+d.p[k])*this.scale),((currentY+d.p[k+1])*this.scale),((currentX+d.p[k+2])*this.scale),((currentY+d.p[k+3])*this.scale));
+							ctx.quadraticCurveTo(((currentX+d.p[k]) * this.scale),((currentY+d.p[k+1]) * this.scale),((currentX+d.p[k+2]) * this.scale),((currentY+d.p[k+3]) * this.scale));
 							reflectX = currentX + d.p[k];
 							reflectY = currentY + d.p[k+1];
 							currentX += d.p[k+2], currentY += d.p[k+3];
@@ -6076,24 +13163,24 @@ m: '',
 						break;
 					case 'T' :
 						for(var k=0, v=d.p.length; k<v; k+=2){
-							if(i>0 && ['Q','q','T','t'].contains(this.dataSet[i-1].c)){
+							if(i>0 && scrawl.contains(['Q','q','T','t'], this.dataSet[i-1].c)){
 								tempX = currentX + (currentX - reflectX);
 								tempY = currentY + (currentY - reflectY);
 								}
 							else{tempX = currentX; tempY = currentY;}
-							ctx.quadraticCurveTo((tempX*this.scale),(tempY*this.scale),(d.p[k]*this.scale),(d.p[k+1]*this.scale));
+							ctx.quadraticCurveTo((tempX * this.scale),(tempY * this.scale),(d.p[k] * this.scale),(d.p[k+1] * this.scale));
 							reflectX = tempX, reflectY = tempY;
 							currentX = d.p[k], currentY = d.p[k+1];
 							}
 						break;
 					case 't' :
 						for(var k=0, v=d.p.length; k<v; k+=2){
-							if(i>0 && ['Q','q','T','t'].contains(this.dataSet[i-1].c)){
+							if(i>0 && scrawl.contains(['Q','q','T','t'], this.dataSet[i-1].c)){
 								tempX = currentX + (currentX - reflectX);
 								tempY = currentY + (currentY - reflectY);
 								}
 							else{tempX = currentX; tempY = currentY;}
-							ctx.quadraticCurveTo((tempX*this.scale),(tempY*this.scale),((currentX+d.p[k])*this.scale),((currentY+d.p[k+1])*this.scale));
+							ctx.quadraticCurveTo((tempX * this.scale),(tempY * this.scale),((currentX+d.p[k]) * this.scale),((currentY+d.p[k+1]) * this.scale));
 							reflectX = tempX, reflectY = tempY;
 							currentX += d.p[k], currentY += d.p[k+1];
 							}
@@ -6103,890 +13190,1568 @@ m: '',
 			}
 		return this;
 		};
-	Outline.prototype.clip = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.clip = function(ctx, cell){
 		ctx.save();
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
+		this.doOutline(ctx);
 		ctx.clip();
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Outline.prototype.clear = function(ctx, cell, override){
-		this.clip(ctx, cell, override);
-		ctx.clearRect(0,0,scrawl.cell[cell].actualWidth,scrawl.cell[cell].actualHeight);
+
+/**
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.clear = function(ctx, cell){
+		var c = scrawl.cell[cell];
+		this.clip(ctx, cell);
+		ctx.clearRect(0, 0, c.get('actualWidth'), c.get('.actualHeight'));
 		ctx.restore();
 		return this;
 		};
-	Outline.prototype.clearWithBackground = function(ctx, cell, override){
-		this.clip(ctx, cell, override);
-		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
-		ctx.fillRect(0,0,scrawl.cell[cell].actualWidth,scrawl.cell[cell].actualHeight);
-		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
+
+/**
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.clearWithBackground = function(ctx, cell){
+		var c = scrawl.cell[cell];
+		this.clip(ctx, cell);
+		ctx.fillStyle = c.backgroundColor;
+		ctx.fillRect(0, 0, c.get('actualWidth'), c.get('actualHeight'));
+		ctx.fillStyle = scrawl.ctx[cell].get('fillStyle');
 		ctx.restore();
 		return this;
 		};
-	Outline.prototype.draw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
+
+/**
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.draw = function(ctx, cell){
+		this.doOutline(ctx, cell);
 		ctx.stroke();
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Outline.prototype.fill = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.fill = function(ctx, cell){
+		this.doOutline(ctx, cell);
+		ctx.fill(scrawl.ctx[this.context].get('winding'));
 		return this;
 		};
-	Outline.prototype.drawFill = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
+
+/**
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.drawFill = function(ctx, cell){
+		this.doOutline(ctx, cell);
 		ctx.stroke();
 		this.clearShadow(ctx, cell);
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
+		ctx.fill(scrawl.ctx[this.context].get('winding'));
 		return this;
 		};
-	Outline.prototype.fillDraw = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
-		ctx.fill(scrawl.ctx[this.context].winding);
+
+/**
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.fillDraw = function(ctx, cell){
+		this.doOutline(ctx, cell);
+		ctx.fill(scrawl.ctx[this.context].get('winding'));
 		this.clearShadow(ctx, cell);
 		ctx.stroke();
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Outline.prototype.sinkInto = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
-		ctx.fill(scrawl.ctx[this.context].winding);
+
+/**
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.sinkInto = function(ctx, cell){
+		this.doOutline(ctx, cell);
+		ctx.fill(scrawl.ctx[this.context].get('winding'));
 		ctx.stroke();
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
 		return this;
 		};
-	Outline.prototype.floatOver = function(ctx, cell, override){
-		this.rotateCell(ctx, cell, override);
-		scrawl.cell[cell].setEngine(this);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
+
+/**
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Outline.prototype.floatOver = function(ctx, cell){
+		this.doOutline(ctx, cell);
 		ctx.stroke();
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
+		ctx.fill(scrawl.ctx[this.context].get('winding'));
 		return this;
 		};
-	Outline.prototype.checkHit = function(items, override){
+
+/**
+Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+
+Argument object contains the following attributes:
+
+* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
+* __x__ - X coordinate
+* __y__ - Y coordinate
+
+Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+@method checkHit
+@param {Object} items Argument object
+@return The first coordinate to fall within the sprite's path; false if none fall within the path
+**/
+	Outline.prototype.checkHit = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
-		var cell = scrawl.cell[pad.current].name;
-		var ctx = scrawl.context[pad.current];
-		var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}];
-		this.flipCanvas(ctx, cell);
-		this.rotateCell(ctx, cell, override);
-		var here = this.prepareStamp(override);
-		ctx.translate(here.x, here.y);
-		this.doOutline(ctx, override);
-		var result = false;
+		var	pad = scrawl.pad[scrawl.currentPad], 
+			cell = scrawl.cell[pad.current].name,
+			ctx = scrawl.context[pad.current],
+			tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}],
+			result = false;
+		this.doOutline(ctx, cell);
 		for(var i=0, z=tests.length; i<z; i++){
 			result = ctx.isPointInPath(tests[i].x, tests[i].y);
 			if(result){
 				break;
 				}
 			}
-		ctx.translate(-here.x, -here.y);
-		this.unrotateCell(ctx, cell, override);
-		this.flipCanvas(ctx, cell);
 		return (result) ? tests[i] : false;
 		};
 
+/**
+# Shape
+	
+## Instantiation
+
+* scrawl.makeLine() - straight lines
+* scrawl.makeBezier() - cubic bezier curves
+* scrawl.makeEllipse() - ellipses and circles
+* scrawl.makeQuadratic() - quadratic bezier curves
+* scrawl.makeRectangle() - for rectangles with rounded corners
+* scrawl.makeRegularShape() - triangles, pentangles (stars), pentagons, etc
+* scrawl.makePath() - Irregular, path-based shapes
+
+## Purpose
+
+* Defines a sprite composed of lines, quadratic and bezier curves, etc
+* Makes use of, but doesn't contain, Point and Link objects to define the sprite
+* Can be used as a path for placing and animating other sprites
+* Point objects can be used as pivots by other sprites
+
+@class Shape
+@constructor
+@extends Sprite
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Shape(items){
-		Sprite.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.firstPoint = items.firstPoint || false;
-		this.collisionPoints = (scrawl.xt(items.collisionPoints)) ? items.collisionPoints : [];
-		this.closed = (scrawl.isa(items.closed,'bool')) ? items.closed : true;
-		this.line = (scrawl.isa(items.line,'bool')) ? items.line : false;
-		this.radius = items.radius || false;
+		Sprite.call(this, items);
+		SubScrawl.prototype.set.call(this, items);
+		this.isLine = (scrawl.isa(items.isLine,'bool')) ? items.isLine : true;
 		this.linkList = [];
 		this.linkDurations = [];
 		this.pointList = [];
-		this.perimeterLength = false;
-		this.markStart = items.markStart || items.mark || false;
-		this.markMid = items.markMid || items.mark || false;
-		this.markEnd = items.markEnd || items.mark || false;
-		this.handleX = items.handleX || 'center';
-		this.handleY = items.handleY || 'center';
-		this.width = items.width || 0;
-		this.height = items.height || 0;
-		scrawl.sprite[this.name] = this;
-		scrawl.spritenames.pushUnique(this.name);
-		scrawl.group[this.group].addSpritesToGroup(this.name);
+		this.registerInLibrary();
+		scrawl.pushUnique(scrawl.group[this.group].sprites, this.name);
 		return this;
 		}
 	Shape.prototype = Object.create(Sprite.prototype);
+/**
+@property type
+@type String
+@default 'Shape'
+@final
+**/		
 	Shape.prototype.type = 'Shape';
 	Shape.prototype.classname = 'spritenames';
-	Shape.prototype.exportNative = function(items){
-		var result = Sprite.prototype.exportNative.call(this, items);
-		var points = this.getFullPointList();
-		for(var i=0, z=points.length; i<z; i++){
-			result.push(scrawl.point[points[i]].prepareForExport(items));
-			if(scrawl.xt(scrawl.point[points[i]].startLink) && scrawl.linknames.contains(scrawl.point[points[i]].startLink)){
-				result.push(scrawl.link[scrawl.point[points[i]].startLink].prepareForExport(items));
-				}
-			}
-		return result;
+	scrawl.d.Shape = {
+/**
+POINTNAME of the Point object that commences the drawing operation
+
+Set automatically by Shape creation factory functions
+@property firstPoint
+@type String
+@default ''
+@private
+**/
+		firstPoint: '',
+/**
+Drawing flag - when set to true, will treat the first drawing (not positioning) data point as the start point
+
+Generally this is set automatically as part of an outline factory function
+@property isLine
+@type Boolean
+@default true
+**/
+		isLine: true,
+/**
+Drawing flag - when true, path will be closed
+
+_Note: this attribute must be set to true for those drawing methods that use a fill flood as part of their operation
+@property closed
+@type Boolean
+@default true
+**/
+		closed: true,
+		radius: false,
+/**
+Array of LINKNAME Strings for Link objects associated with this Shape sprite
+@property linkList
+@type Array
+@default []
+@private
+**/
+		linkList: [],
+/**
+Array of length (Number) values for each Link object associated with this Shape sprite
+@property linkDurations
+@type Array
+@default []
+@private
+**/
+		linkDurations: [],
+/**
+Array of POINTNAME Strings for Point objects associated with this Shape sprite
+@property pointList
+@type Array
+@default []
+@private
+**/
+		pointList: [],
+/**
+Path length - calculated automatically by scrawl
+
+_Note: this value will be affected by the value of the precision attribute - hiher precisions lead to more accurate perimeterLength values, particularly along curves_
+@property perimeterLength
+@type Number
+@default 0
+**/
+		perimeterLength: 0,
+/**
+Shape marker sprites - SPRITENAME String of sprite used at start of the Shape's path
+@property markStart
+@type String
+@default ''
+**/
+		markStart: '',
+/**
+Shape marker sprites - SPRITENAME String of sprite used at the line/curve joints along the Shape's path
+@property markMid
+@type String
+@default ''
+**/
+		markMid: '',
+/**
+Shape marker sprites - SPRITENAME String of sprite used at end of the Shape's path
+@property markEnd
+@type String
+@default ''
+**/
+		markEnd: '',
+/**
+Shape marker sprites - SPRITENAME String of sprite used as the fallback when markStart, markMid or markEnd attributes are not set
+@property mark
+@type String
+@default ''
+**/
+		mark: '',
+		width: 0,
+		height: 0,
+/**
+Shape sprite default method attribute is 'draw', not 'fill'
+@property method
+@type String
+@default 'draw'
+**/
+		method: 'draw',
+/**
+Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure sprites will follow the path more accurately
+@property precision
+@type Number
+@default 10
+**/
+		precision: 10,
 		};
-	Shape.prototype.getRadius = function(){
-		var check = 0;
-		for(var i=0, z=this.pointList.length; i<z; i++){
-			check = (scrawl.point[this.pointList[i]].distance > check) ? scrawl.point[this.pointList[i]].distance : check;
-			}
-		this.radius = check;
-		return this.radius;
-		};
-	Shape.prototype.set = function(items){
-		Sprite.prototype.set.call(this, items);
-		if(this.linkDurations.length > 0 || this.perimeterLength){
-			this.buildPositions();
-			}
-		return this;
-		};
-	Shape.prototype.setDelta = function(items){
-		Sprite.prototype.setDelta.call(this, items);
-		if(this.linkDurations.length > 0 || this.perimeterLength){
-			this.buildPositions();
-			}
-		return this;
-		};
-	Shape.prototype.parseCollisionPoints = function(items){
-		return this.collisionPoints;
-		};
-	Shape.prototype.prepareShape = function(ctx, cell, override){
+	scrawl.mergeInto(scrawl.d.Shape, scrawl.d.Sprite);
+
+/**
+Helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
+@method prepareShape
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.prepareShape = function(ctx, cell){
+		scrawl.cell[cell].setEngine(this);
 		if(this.firstPoint){
-			var myPoint = scrawl.point[this.firstPoint].getData(override);
+			var here = this.prepareStamp();
+			this.rotateCell(ctx);
+			ctx.translate(here.x,here.y);
 			ctx.beginPath();
-			scrawl.link[myPoint.startLink].sketch(ctx, override);
+			scrawl.link[scrawl.point[this.firstPoint].startLink].sketch(ctx);
 			}
 		return this;
 		};
-	Shape.prototype.getPivotOffset = function(val,useHeight){
-		if(scrawl.xt(val)){
-			var result;
-			if((scrawl.isa(val,'str')) && !['left','center','right','top','bottom'].contains(val)){
-				result = (useHeight) ? ((parseFloat(val)/100)*this.height)-(this.height/2) : ((parseFloat(val)/100)*this.width)-(this.width/2);
+
+/**
+Calculates the pixels value of the object's handle attribute
+
+* doesn't take into account the object's scaling or orientation
+* (badly named function - getPivotOffsetVector has nothing to do with pivots)
+
+@method getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where sprite drawing should start
+@private
+**/
+	Shape.prototype.getPivotOffsetVector = function(){
+		if(this.isLine){
+			return Sprite.prototype.getPivotOffsetVector.call(this);
+			}
+		else{
+			var result = this.handle.getVector();
+			if((scrawl.isa(this.handle.x,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.handle.x)){
+				result.x = ((parseFloat(this.handle.x)/100) * this.width)  - (this.width/2);
 				}
 			else{
-				switch (val){
-					case 'left' : result = -(this.width/2); break;
-					case 'center' : result = 0; break;
-					case 'right' : result = (this.width/2); break;
-					case 'top' : result = -(this.height/2); break;
-					case 'bottom' : result = (this.height/2); break;
-					default : result = val;
+				switch (this.handle.x){
+					case 'left' : result.x = -(this.width/2); break;
+					case 'center' : result.x = 0; break;
+					case 'right' : result.x = this.width/2; break;
 					}
 				}
-			if(this.line){
-				result += (useHeight) ? (this.height/2) : (this.width/2);
+			if((scrawl.isa(this.handle.y,'str')) && !scrawl.contains(['left','center','right','top','bottom'], this.handle.y)){
+				result.y = ((parseFloat(this.handle.y)/100) * this.height) - (this.height/2);
+				}
+			else{
+				switch (this.handle.y){
+					case 'top' : result.y = -(this.height/2); break;
+					case 'center' : result.y = 0; break;
+					case 'bottom' : result.y = this.height/2; break;
+					}
 				}
 			return result;
 			}
-		return 0;
 		};
-	Shape.prototype.stampMark = function(sprite, pos, ctx, cell, override){
-		var tPath = sprite.path;
-		var tPathPosition = sprite.pathPosition;
-		var tGroup = sprite.group;
-		sprite.set({
-			path: this.name,
-			pathPosition: pos,
-			group: cell,
-			}).forceStamp();
-		sprite.set({
-			path: tPath,
-			pathPosition: tPathPosition,
-			group: tGroup,
-			});
-		};
-	Shape.prototype.addMarks = function(ctx, cell, override){
-		if(this.markStart && (scrawl.spritenames.contains(this.markStart) || scrawl.groupnames.contains(this.markStart))){
-			if(scrawl.groupnames.contains(this.markStart)){
-				for(var i=0, z=scrawl.group[this.markStart].sprites.length; i<z; i++){
-					this.stampMark(scrawl.sprite[scrawl.group[this.markStart].sprites[i]], 0, ctx, cell, override);
+
+/**
+Display helper function
+
+Stamp mark sprites onto Shape path
+
+@method stampMark
+@param {Sprite} sprite Sprite object to be stamped
+@param {Number} pos Path position (between 0 and 1)
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.stampMark = function(sprite, pos, ctx, cell){
+		var	tPath,
+			tPathPosition,
+			tGroup,
+			tPivot,
+			links,
+			link,
+			point;
+		if(pos === 'mid'){
+			links = this.get('linkList');
+			tPivot = sprite.pivot;
+			tGroup = sprite.group;
+			for(var i=0, z=links.length; i<z; i++){
+				link = scrawl.link[links[i]];
+				point = scrawl.point[link.get('endPoint')];
+				if(scrawl.xt(point) && scrawl.contains(['move','add'], link.get('action'))){
+					sprite.set({
+						pivot: point.name,
+						group: cell,
+						}).forceStamp();
 					}
 				}
-			else{
-				this.stampMark(scrawl.sprite[this.markStart], 0, ctx, cell, override);
+			sprite.set({
+				pivot: tPivot,
+				group: tGroup,
+				});
+			}
+		else{
+			tPath = sprite.path;
+			tPathPosition = sprite.pathPlace;
+			tGroup = sprite.group;
+			sprite.set({
+				path: this.name,
+				pathPlace: pos,
+				group: cell,
+				}).forceStamp();
+			sprite.set({
+				path: tPath,
+				pathPlace: tPathPosition,
+				group: tGroup,
+				});
+			}
+		return this;
+		};
+
+/**
+Display helper function
+
+Prepare mark sprites for stamping onto Shape path
+
+@method addMarks
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.addMarks = function(ctx, cell){
+		var mark = this.get('mark'),
+			markStart = this.get('markStart'),
+			markMid = this.get('markMid'),
+			markEnd = this.get('markEnd'),
+			myMark = false,
+			sprite,
+			linkDurations;
+		if(mark || markStart || markMid || markEnd){
+			this.buildPositions();
+			linkDurations = this.get('linkDurations');
+			myMark = markStart || mark || false;
+			if(myMark && scrawl.contains(scrawl.spritenames, myMark)){
+				this.stampMark(scrawl.sprite[myMark], 0, ctx, cell);
+				}
+			myMark = markMid || mark || false;
+			if(myMark && scrawl.contains(scrawl.spritenames, myMark)){
+				sprite = scrawl.sprite[myMark];
+				for(var j=0, w=linkDurations.length-1; j<w; j++){
+					this.stampMark(sprite, linkDurations[j], ctx, cell);
+					}
+				}
+			myMark = markEnd || mark || false;
+			if(myMark && scrawl.contains(scrawl.spritenames, myMark)){
+				this.stampMark(scrawl.sprite[myMark], 1, ctx, cell);
 				}
 			}
-		if(this.markMid && (scrawl.spritenames.contains(this.markMid) || scrawl.groupnames.contains(this.markMid))){
-			if(this.linkDurations.length === 0 || !this.perimeterLength){
-				this.buildPositions();
-				}
-			for(var j=0, w=this.linkDurations.length-1; j<w; j++){
-				if(scrawl.groupnames.contains(this.markMid)){
-					for(var i=0, z=scrawl.group[this.markMid].sprites.length; i<z; i++){
-						this.stampMark(scrawl.sprite[scrawl.group[this.markMid].sprites[i]], this.linkDurations[j], ctx, cell, override);
-						}
-					}
-				else{
-					this.stampMark(scrawl.sprite[this.markMid], this.linkDurations[j], ctx, cell, override);
-					}
-				}
-			}
-		if(this.markEnd && (scrawl.spritenames.contains(this.markEnd) || scrawl.groupnames.contains(this.markEnd))){
-			if(scrawl.groupnames.contains(this.markEnd)){
-				for(var i=0, z=scrawl.group[this.markEnd].sprites.length; i<z; i++){
-					this.stampMark(scrawl.sprite[scrawl.group[this.markEnd].sprites[i]], 1, ctx, cell, override);
-					}
-				}
-			else{
-				this.stampMark(scrawl.sprite[this.markEnd], 1, ctx, cell, override);
-				}
-			}
-		return false;
+		return this;
 		};
-	Shape.prototype.clip = function(ctx, cell, override){
+
+/**
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.clip = function(ctx, cell){
 		if(this.closed){
-			this.prepareShape(ctx, cell, override);
+			this.prepareShape(ctx, cell);
 			ctx.clip();
 			}
 		return this;
 		};
-	Shape.prototype.clear = function(ctx, cell, override){
-		this.prepareShape(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.clear = function(ctx, cell){
+		this.prepareShape(ctx, cell);
 		ctx.globalCompositeOperation = 'destination-out';
 		ctx.stroke();
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.globalCompositeOperation = scrawl.ctx[cell].globalCompositeOperation;
+		ctx.fill(scrawl.ctx[this.context].get('winding'));
+		ctx.globalCompositeOperation = scrawl.ctx[cell].get('globalCompositeOperation');
 		return this;
 		};
-	Shape.prototype.clearWithBackground = function(ctx, cell, override){
-		this.prepareShape(ctx, cell, override);
-		ctx.fillStyle = scrawl.cell[cell].backgroundColor;
-		ctx.strokeStyle = scrawl.cell[cell].backgroundColor;
+
+/**
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.clearWithBackground = function(ctx, cell){
+		var c = scrawl.cell[cell],
+			bc = c.get('backgroundColor'),
+			cx = scrawl.ctx[cell],
+			fillStyle = cx.get('fillStyle'),
+			strokeStyle = cx.get('strokeStyle'),
+			ga = cx.get('globalAlpha');
+		this.prepareShape(ctx, cell);
+		ctx.fillStyle = bc;
+		ctx.strokeStyle = bc;
 		ctx.globalAlpha = 1;
 		ctx.stroke();
-		ctx.fill(scrawl.ctx[this.context].winding);
-		ctx.fillStyle = scrawl.ctx[cell].fillStyle;
-		ctx.strokeStyle = scrawl.ctx[cell].strokeStyle;
-		ctx.globalAlpha = scrawl.ctx[cell].globalAlpha;
+		ctx.fill(scrawl.ctx[this.context].get('winding'));
+		ctx.fillStyle = fillStyle;
+		ctx.strokeStyle = strokeStyle;
+		ctx.globalAlpha = globalAlpha;
 		return this;
 		};
-	Shape.prototype.fill = function(ctx, cell, override){
-		if(this.closed){
-			this.prepareShape(ctx, cell, override);
-			scrawl.cell[cell].setEngine(this);
-			ctx.fill(scrawl.ctx[this.context].winding);
-			if(this.markStart || this.markMid || this.markEnd){
-				this.addMarks(ctx, cell, override);
-				}
+
+/**
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.fill = function(ctx, cell){
+		if(this.get('closed')){
+			this.prepareShape(ctx, cell);
+			ctx.fill(scrawl.ctx[this.context].get('winding'));
+			this.addMarks(ctx, cell);
 			}
 		return this;
 		};
-	Shape.prototype.draw = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.prepareShape(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.draw = function(ctx, cell){
+		this.prepareShape(ctx, cell);
 		ctx.stroke();
-		if(this.markStart || this.markMid || this.markEnd){
-			this.addMarks(ctx, cell, override);
-			}
+		this.addMarks(ctx, cell);
 		return this;
 		};
-	Shape.prototype.drawFill = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.prepareShape(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.drawFill = function(ctx, cell){
+		this.prepareShape(ctx, cell);
 		ctx.stroke();
-		if(this.closed){
+		if(this.get('closed')){
 			this.clearShadow(ctx, cell);
-			ctx.fill(scrawl.ctx[this.context].winding);
+			ctx.fill(scrawl.ctx[this.context].get('winding'));
 			}
+		this.addMarks(ctx, cell);
 		return this;
 		};
-	Shape.prototype.fillDraw = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.prepareShape(ctx, cell, override);
-		if(this.closed){
-			ctx.fill(scrawl.ctx[this.context].winding);
+
+/**
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.fillDraw = function(ctx, cell){
+		this.prepareShape(ctx, cell);
+		if(this.get('closed')){
+			ctx.fill(scrawl.ctx[this.context].get('winding'));
 			this.clearShadow(ctx, cell);
 			}
 		ctx.stroke();
-		if(this.markStart || this.markMid || this.markEnd){
-			this.addMarks(ctx, cell, override);
-			}
+		this.addMarks(ctx, cell);
 		return this;
 		};
-	Shape.prototype.sinkInto = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.prepareShape(ctx, cell, override);
-		if(this.closed){
-			ctx.fill(scrawl.ctx[this.context].winding);
+
+/**
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.sinkInto = function(ctx, cell){
+		this.prepareShape(ctx, cell);
+		if(this.get('closed')){
+			ctx.fill(scrawl.ctx[this.context].get('winding'));
 			}
 		ctx.stroke();
-		if(this.markStart || this.markMid || this.markEnd){
-			this.addMarks(ctx, cell, override);
-			}
+		this.addMarks(ctx, cell);
 		return this;
 		};
-	Shape.prototype.floatOver = function(ctx, cell, override){
-		scrawl.cell[cell].setEngine(this);
-		this.prepareShape(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.floatOver = function(ctx, cell){
+		this.prepareShape(ctx, cell);
 		ctx.stroke();
-		if(this.closed){
-			ctx.fill(scrawl.ctx[this.context].winding);
+		if(this.get('closed')){
+			ctx.fill(scrawl.ctx[this.context].get('winding'));
 			}
-		if(this.markStart || this.markMid || this.markEnd){
-			this.addMarks(ctx, cell, override);
-			}
+		this.addMarks(ctx, cell);
 		return this;
 		};
-	Shape.prototype.none = function(ctx, cell, override){
-		this.prepareShape(ctx, cell, override);
+
+/**
+Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this sprite's context values and defining the sprites path, on the canvas, but not drawing (fill stroke) the sprite.
+@method none
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.none = function(ctx, cell){
+		this.prepareShape(ctx, cell);
 		return this;
 		};
+
+/**
+@method getFullPointList
+@return Array containing POINTNAME Strings of all Point objects associated with this Shape object
+**/
 	Shape.prototype.getFullPointList = function(){
-		var myPointList = [this.firstPoint];
-		var myData = scrawl.point[this.firstPoint].getData();
-		var nextLink = scrawl.link[myData.startLink];
-		while(nextLink.action && ['move','add'].contains(nextLink.action)){
-			if(nextLink.controlPoint1){myPointList.push(nextLink.controlPoint1);}
-			if(nextLink.controlPoint2){myPointList.push(nextLink.controlPoint2);}
-			if(nextLink.endPoint){
-				myPointList.push(nextLink.endPoint);
-				nextLink = scrawl.link[scrawl.point[nextLink.endPoint].startLink];
+		var myPointList = [],
+			search = new RegExp(this.name + '_.*');
+		for(var i=0, z=scrawl.pointnames.length; i<z; i++){
+			if(search.test(scrawl.pointnames[i])){
+				myPointList.push(scrawl.pointnames[i]);
 				}
-			else{break;}
 			}
 		return myPointList;
 		};
-	Shape.prototype.setRotationPointTo = function(items){
-		items = (scrawl.xt(items)) ? items : {};
-		var myX = (scrawl.xt(items.x)) ? this.getPivotOffset(items.x,false) : this.getPivotOffset('center',false);
-		var myY = (scrawl.xt(items.y)) ? this.getPivotOffset(items.y,true) : this.getPivotOffset('center',true);
-		var temppath = this.path;
-		var temproll = this.roll
-		this.path = false;
-		this.roll = 0;
-		var myPointList = this.getFullPointList()
-		var tempX = this.startX, tempY = this.startY;
-		this.startX += myX;
-		this.startY += myY;
-		for(var i=0, z=myPointList.length; i<z; i++){
-			if(myPointList[i]){
-				scrawl.point[myPointList[i]].setPolar();
+
+/**
+@method getFullLinkList
+@return Array containing LINKNAME Strings of all Link objects associated with this Shape object
+**/
+	Shape.prototype.getFullLinkList = function(){
+		var myLinkList = [],
+			search = new RegExp(this.name + '_.*');
+		for(var i=0, z=scrawl.linknames.length; i<z; i++){
+			if(search.test(scrawl.linknames[i])){
+				myLinkList.push(scrawl.linknames[i]);
 				}
 			}
-		this.forceStamp('none');
-		this.startX = tempX, this.startY = tempY;
-		this.path = temppath;
-		this.roll = temproll;
-		return this;
+		return myLinkList;
 		};
-	Shape.prototype.checkHit = function(items, override){
+
+/**
+Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+
+Argument object contains the following attributes:
+
+* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
+* __x__ - X coordinate
+* __y__ - Y coordinate
+
+Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+@method checkHit
+@param {Object} items Argument object
+@return The first coordinate to fall within the sprite's path; false if none fall within the path
+**/
+	Shape.prototype.checkHit = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		var pad = scrawl.pad[items.pad] || scrawl.pad[override.pad];
-		var cell = scrawl.cell[pad.current].name;
-		var ctx = scrawl.context[pad.current];
-		var tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}];
-		this.flipCanvas(ctx, cell);
-		if(this.closed){
-//			ctx.mozFillRule = scrawl.ctx[this.context].winding;
-//			ctx.msFillRule = scrawl.ctx[this.context].winding;
-//			ctx.fill(scrawl.ctx[this.context].winding);
-			}
-		this.prepareShape(ctx, override);
-		var result = false;
+		var pad = scrawl.pad[items.pad] || scrawl.pad[scrawl.currentPad],
+			cell = scrawl.cell[pad.current].name,
+			ctx = scrawl.context[pad.current],
+			tests = (scrawl.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}],
+			result = false,
+			winding,
+			closed = this.get('closed');
+		this.prepareShape(ctx, cell);
 		for(var i=0, z=tests.length; i<z; i++){
 			result = ctx.isPointInPath(tests[i].x, tests[i].y);
 			if(result){
 				break;
 				}
 			}
-		if(this.closed){
-//			ctx.mozFillRule = scrawl.ctx[cell].winding;
-//			ctx.msFillRule = scrawl.ctx[cell].winding;
-//			ctx.fill(scrawl.ctx[cell].winding);
-			}
-		this.flipCanvas(ctx, cell);
 		return (result) ? tests[i] : false;
 		};
-	Shape.prototype.getCollisionPoints = function(override){
-		if(scrawl.isa(this.collisionPoints,'num')){
-			var currentPos = 0;
-			var myAdvance = 1/this.collisionPoints;
-			var point, p = [], cr;
-			var myCell = scrawl.cell[scrawl.group[this.group].cells[0]];
-			cr = this.currentRoll * scrawl.radian;
-			for(var i=0; i<this.collisionPoints; i++){
-				point = this.getPerimeterPosition(currentPos, true, cr);
-				point.x = (this.flipReverse) ? myCell.actualWidth - point.x : point.x;
-				point.y = (this.flipUpend) ? myCell.actualHeight - point.y : point.y;
-				p.push(point);
-				currentPos += myAdvance;
+
+/**
+Collision detection helper function
+
+Parses the collisionPoints array to generate coordinate Vectors representing the sprite's collision points
+@method buildCollisionVectors
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.buildCollisionVectors = function(items){
+		var	p = (scrawl.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,
+			myAdvance,
+			point,
+			currentPos = 0;
+		this.collisionVectors = [];
+		for(var i=0, z=p.length; i<z; i++){
+			if(scrawl.isa(p[i], 'num') && p[i] >= 0){
+				if(p[i] > 1){
+					//regular points along the path
+					myAdvance = 1/p[i];
+					for(var j=0; j<p[i]; j++){
+						point = this.getPerimeterPosition(currentPos, true, false, true);
+						this.collisionVectors.push(point);
+						currentPos += myAdvance;
+						}
+					}
+				else{
+					//a point at a specific position on the path
+					point = this.getPerimeterPosition(p[i], true, false, true);
+					this.collisionVectors.push(point);
+					}
 				}
-			return p;
-			}
-		else{
-			var here = this.prepareStamp(override);
-			return [{x: here.x, y: here.y}];
-			}
-		};
-	Shape.prototype.getPerimeterLength = function(force){
-		if(force || !this.perimeterLength || this.linkDurations.length === 0){
-			this.buildPositions();
-			}
-		return this.perimeterLength;
-		};
-	Shape.prototype.buildPositions = function(){
-		for(var i=0, z=this.linkList.length; i<z; i++){
-			scrawl.link[this.linkList[i]].setPositions();
-			}
-		this.linkDurations = [];
-		var cumLen = 0, len, myLink;
-		for(var i=0, z=this.linkList.length; i<z; i++){
-			myLink = scrawl.link[this.linkList[i]];
-			len = myLink.positions[myLink.precision].cumulativeLength;
-			cumLen += len;
-			this.linkDurations.push(cumLen);
-			}
-		this.perimeterLength = cumLen;
-		for(var i=0, z=this.linkList.length; i<z; i++){
-			this.linkDurations[i] = this.linkDurations[i]/this.perimeterLength;
+			else if(scrawl.isa(p[i], 'str')){
+				switch(p[i]) {
+					case 'start' : 	this.collisionVectors.push(new Vector()); break;
+					}
+				}
+			else if(scrawl.isa(p[i], 'obj') && p[i].type === 'Vector'){
+				this.collisionVectors.push(p[i]);
+				}
 			}
 		return this;
 		};
-	Shape.prototype.getPerimeterPosition = function(val, steady, roll){
+
+/**
+Calculate and return Shape object's path length
+
+Accuracy of returned value depends on the setting of the __precision__ attribute; lower precision is less accurate for curves
+@method getPerimeterLength
+@param {Boolean} [force] If set to true, forces a complete recalculation
+@return Path length, in pixels
+**/
+	Shape.prototype.getPerimeterLength = function(force){
+		if(force || !this.get('perimeterLength') || this.get('linkDurations').length === 0){
+			this.buildPositions();
+			}
+		return this.get('perimeterLength');
+		};
+
+/**
+Helper function - calculate the positions and lengths of the Shape's constituent Point and Link objects
+@method buildPositions
+@return This
+@chainable
+@private
+**/
+	Shape.prototype.buildPositions = function(){
+		var linkList = this.get('linkList'),
+			linkDurations = [],
+			cumLen = 0, 
+			len, 
+			myLink,
+			tPos;
+		for(var i=0, z=linkList.length; i<z; i++){
+			scrawl.link[linkList[i]].setPositions();
+			}
+		for(var i=0, z=linkList.length; i<z; i++){
+			myLink = scrawl.link[linkList[i]];
+			tPos = myLink.get('positions');
+			len = tPos[tPos.length - 1].cumulativeLength;
+			cumLen += len;
+			linkDurations.push(cumLen);
+			}
+		for(var i=0, z=linkList.length; i<z; i++){
+			linkDurations[i] /= cumLen;
+			}
+		Scrawl.prototype.set.call(this, {
+			perimeterLength: cumLen,
+			linkDurations: linkDurations,
+			});
+		return this;
+		};
+
+/**
+Calculate coordinates of point at given distance along the Shape sprite's path
+@method getPerimeterPosition
+@param {Number} [val] Distance along path, between 0 (start) and 1 (end); default: 1
+@param {Boolean} [steady] Steady flag - if true, return 'steady calculation' coordinates; otherwise return 'simple calculation' coordinates. Default: true
+@param {Boolean} [roll] Roll flag - if true, return tangent angle (degrees) at that point along the path. Default: false
+@param {Boolean} [local] Local flag - if true, return coordinate Vector relative to Sprite start parameter; otherwise return Cell coordinate Vector. Default: false
+@return Vector coordinates
+**/
+	Shape.prototype.getPerimeterPosition = function(val, steady, roll, local){
+		val = (scrawl.isa(val,'num')) ? val : 1;
+		steady = (scrawl.isa(steady,'bool')) ? steady : true;
+		roll = (scrawl.isa(roll,'num') && roll) ? true : roll;
+		roll = (scrawl.isa(roll,'bool')) ? roll : false;
+		local = (scrawl.isa(local,'bool')) ? local : false;
+		var	myLink,
+			linkVal,
+			linkList,
+			linkDurations,
+			before,
+			bVal,
+			after,
+			aVal,
+			here,
+			angle;
 		this.getPerimeterLength();
-		val = scrawl.isa(val,'num') ? val : 1;
-		var myLink, linkVal;
-		for(var i=0, z=this.linkList.length; i<z; i++){
-			myLink = scrawl.link[this.linkList[i]];
-			if(this.linkDurations[i] >= val){
+		linkList = this.get('linkList')
+		linkDurations = this.get('linkDurations');
+		for(var i=0, z=linkList.length; i<z; i++){
+			myLink = scrawl.link[linkList[i]];
+			if(linkDurations[i] >= val){
 				if(i === 0){
-					linkVal = val/this.linkDurations[i];
+					linkVal = val/linkDurations[i];
 					}
 				else{
-					linkVal = ((val-this.linkDurations[i-1])/(this.linkDurations[i]-this.linkDurations[i-1]));
+					linkVal = ((val-linkDurations[i-1])/(linkDurations[i]-linkDurations[i-1]));
 					}
 				linkVal = (linkVal < 0) ? 0 : ((linkVal > 1) ? 1 : linkVal);
+				bVal = (linkVal-0.0000001 < 0) ? 0 : linkVal-0.0000001;
+				aVal = (linkVal+0.0000001 > 1) ? 1 : linkVal+0.0000001;
 				if(steady){
 					if(roll){
-						var before = myLink.getSteadyPositionOnLink((linkVal-0.0000001 < 0) ? 0 : linkVal-0.0000001);
-						var after = myLink.getSteadyPositionOnLink((linkVal+0.0000001 > 1) ? 1 : linkVal+0.0000001);
-						var here = myLink.getSteadyPositionOnLink(linkVal);
-						var angle = Math.atan2(after.y-before.y, after.x-before.x)/scrawl.radian;
+						before = (local) ? myLink.getLocalSteadyPositionOnLink(bVal) : myLink.getSteadyPositionOnLink(bVal);
+						after = (local) ? myLink.getLocalSteadyPositionOnLink(aVal) : myLink.getSteadyPositionOnLink(aVal);
+						here = (local) ? myLink.getLocalSteadyPositionOnLink(linkVal) : myLink.getSteadyPositionOnLink(linkVal);
+						angle = Math.atan2(after.y-before.y, after.x-before.x)/scrawl.radian;
 						return {x:here.x, y:here.y, r:angle};
 						}
 					else{
-						return myLink.getSteadyPositionOnLink(linkVal);
+						return (local) ? myLink.getLocalSteadyPositionOnLink(linkVal) : myLink.getSteadyPositionOnLink(linkVal);
 						}
 					}
 				else{
 					if(roll){
-						var before = myLink.getPositionOnLink((linkVal-0.0000001 < 0) ? 0 : linkVal-0.0000001);
-						var after = myLink.getPositionOnLink((linkVal+0.0000001 > 1) ? 1 : linkVal+0.0000001);
-						var here = myLink.getPositionOnLink(linkVal);
-						var angle = Math.atan2(after.y-before.y, after.x-before.x)/scrawl.radian;
+						before = (local) ? myLink.getLocalPositionOnLink(bVal) : myLink.getPositionOnLink(bVal);
+						after = (local) ? myLink.getLocalPositionOnLink(aVal) : myLink.getPositionOnLink(aVal);
+						here = (local) ? myLink.getLocalPositionOnLink(linkVal) : myLink.getPositionOnLink(linkVal);
+						angle = Math.atan2(after.y-before.y, after.x-before.x)/scrawl.radian;
 						return {x:here.x, y:here.y, r:angle};
 						}
 					else{
-						return myLink.getPositionOnLink(linkVal);
+						return (local) ? myLink.getLocalPositionOnLink(linkVal) : myLink.getPositionOnLink(linkVal);
 						}
 					}
 				}
 			}
 		return false;
 		};
-	Shape.prototype.clone = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		var myItems = JSON.parse(JSON.stringify(this));
-		myItems.name = items.name || this.name;
-		myItems.data = items.data || this.data;
-		myItems.startX = items.startX || this.startX;
-		myItems.startY = items.startY || this.startY;
-		myItems.handleX = items.handleX || this.handleX;
-		myItems.handleY = items.handleY || this.handleY;
-		var a = scrawl.makePath(myItems);
-		if(!scrawl.xt(items.createNewContext) || items.createNewContext){
-			var c = JSON.parse(JSON.stringify(scrawl.ctx[this.context]));
-			delete c.name;
-			a.set(c);
-			}
-		delete items.name;
-		delete items.data;
-		delete items.startX,
-		delete items.startY,
-		delete items.handleX,
-		delete items.handleY,
-		a.set(items);
-		return a;
-		};
 
+/**
+# Point
+	
+## Instantiation
+
+* Objects created via Shape factories
+* scrawl.makeCartesianPoints() - deprecated
+* scrawl.makePolarPoints() - deprecated
+
+## Purpose
+
+* Defines a movable point within a Shape sprite object
+* Acts as a coordinate vector for Link drawing
+
+Shape creation factories will all create Point objects automatically as part of the generation process. Point objects will be named regularly, depending on the factory:
+
+* scrawl.makeLine(): SPRITENAME_p1 (start point), SPRITENAME_p2 (end point)
+* scrawl.makeQuadratic(): SPRITENAME_p1 (start point), SPRITENAME_p2 (control point), SPRITENAME_p3 (end point)
+* scrawl.makeBezier(): SPRITENAME_p1 (start point), SPRITENAME_p2 (first control point), SPRITENAME_p3 (second control point), SPRITENAME_p4 (end point)
+* scrawl.makeRegularShape(): each angle point is numbered consecutively, starting at SPRITENAME_p1
+* scrawl.makePath(): points are numbered consecutively, beginning from SPRITENAME_p1 at the start of the path; the end point of a line, quadratic curve or bezier curve will also act as the start point for the next line or curve
+@class Point
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Point(items){
-		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.sprite = items.sprite || false;
-		this.distance = items.distance || false;
-		this.angle = items.angle || false;
-		this.startLink = items.startLink || false;
-		this.currentX = items.currentX || 0;
-		this.currentY = items.currentY || 0;
-		this.visibility = (scrawl.isa(items.visibility,'bool')) ? items.visibility : true;
-		this.fixed = (scrawl.isa(items.fixed,'bool')) ? items.fixed : false;
+		Scrawl.call(this, items);
+		var local = (scrawl.xt(items.local)) ? items.local : {};
+		this.sprite = items.sprite || '';
+		this.local = items.local || new Vector({
+			x: items.startX || items.currentX || local.x || 0,
+			y: items.startY || items.currentY || local.y || 0,
+			});
+		this.startLink = items.startLink || '';
+		this.fixed = items.fixed || false;
+		if(scrawl.xto([items.angle,items.distance])){
+			this.setPolar(items);
+			}
 		scrawl.point[this.name] = this;
-		scrawl.pointnames.pushUnique(this.name);
+		scrawl.pushUnique(scrawl.pointnames, this.name);
 		if(this.sprite && scrawl.sprite[this.sprite].type === 'Shape'){
-			scrawl.sprite[this.sprite].pointList.pushUnique(this.name);
+			scrawl.pushUnique(scrawl.sprite[this.sprite].pointList, this.name);
 			}
 		return this;
 		}
 	Point.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Point'
+@final
+**/		
 	Point.prototype.type = 'Point';
 	Point.prototype.classname = 'pointnames';
-	Point.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//Point
-			sprite: this.sprite,
-			distance: (this.distance) ? this.distance : u,
-			angle: (this.angle) ? this.angle : u,
-			startLink: (this.startLink) ? this.startLink : u,
-			currentX: (this.currentX !== 0) ? this.currentX : u,
-			currentY: (this.currentY !== 0) ? this.currentY : u,
-			visibility: (!this.visibility) ? this.visibility : u,
-			fixed: (this.fixed) ? this.fixed : u,
-			};
+	scrawl.d.Point = {
+/**
+SPRITENAME String of point object's parent sprite
+@property sprite
+@type String
+@default ''
+**/
+		sprite: '',
+/**
+Point's coordinate Vector - generally the Vector marks the Point's position (in pixels) from the Parent sprite's start coordinates, though this can be changed by setting the __fixed__ attribute to true.
+
+The following argument attributes can be used to initialize, set and get this attribute's component values:
+
+* __startX__ or __currentX__ to set the x coordinate value
+* __startY__ or __currentY__ to set the y coordinate value
+@property local
+@type Vector
+@default zero value Vector
+**/
+		local: new Vector(),
+/**
+LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
+@property startLink
+@type String
+@default ''
+@private
+**/
+		startLink: '',
+/**
+Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (true), or to a Sprite start Vector (SPRITENAME). Default action is to treat the Point as local to its parent Sprite's start coordinate
+@property fixed
+@type Boolean
+@default false
+**/
+		fixed: false,
 		};
-	Point.prototype.setToDefaults = function(){
-		this.set({
-			comment: '',
-			title: '',
-			sprite: false,
-			distance: false,
-			angle: false,
-			startLink: false,
-			currentX: 0,
-			currentY: 0,
-			visibility: false,
-			fixed: false,
-			});
-		return this;
-		};
-	Point.prototype.getData = function(override){
-		if(!scrawl.isa(this.distance,'num') && !scrawl.isa(this.angle,'num')){
-			this.setPolar();
-			}
-		this.recalculate(override);
-		return {
-			name: this.name,
-			currentX: this.currentX,
-			currentY: this.currentY,
-			startLink: this.startLink,
-			};
-		};
+	scrawl.mergeInto(scrawl.d.Point, scrawl.d.Scrawl);
+
+/**
+Overrides Scrawl.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Point.prototype.set = function(items){
-		var mySprite = this.sprite;
 		Scrawl.prototype.set.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.xto([items.currentX,items.currentY])){
-			this.setPolar();
+		var local = (scrawl.xt(items.local)) ? items.local : {};
+		if(scrawl.xto([items.distance, items.angle])){
+			this.setPolar(items);
 			}
-		if(scrawl.isa(items.sprite,'str')){
-			try{scrawl.sprite[this.sprite].pointList.removeItem(this.name);}catch(e){}
-			try{scrawl.sprite[items.sprite].pointList.pushUnique(this.name);}catch(e){}
-			this.sprite = items.sprite;
+		else if(scrawl.xto([items.startX, items.startY, items.currentX, items.currentY, items.local])){
+			this.local.x = (scrawl.xt(items.startX)) ? items.startX : ((scrawl.xt(items.currentX)) ? items.currentX : ((scrawl.xt(local.x)) ? local.x : this.local.x));
+			this.local.y = (scrawl.xt(items.startY)) ? items.startY : ((scrawl.xt(items.currentY)) ? items.currentY : ((scrawl.xt(local.y)) ? local.y : this.local.y));
 			}
 		return this;
 		};
+ 
+/**
+Add values to the local attribute. Permitted attributes of the argument object include:
+
+* __startX__, __currentX__ - added to _local.x
+* __startY__, __currentY__ - added to _local.y
+* __distance__ - recalculates the _local_ vector to set its values to equal vector's current magnitude + distance (in pixels)
+* __angle__ - recalculates the _local_ vector to rotate it by the angle value (in degrees)
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Point.prototype.setDelta = function(items){
+		var m,
+			d, 
+			a,
+			local = (scrawl.xt(items.local)) ? items.local : {};
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(items.distance){this.distance += items.distance;}
-		if(items.angle){this.angle += items.angle;}
-		var override = (items.override) ? items.override : {x:0,y:0};
-		this.recalculate(override);
-		return this;
-		};
-	Point.prototype.recalculate = function(override){
-		var override = (override) ? override : {x:0,y:0};
-		if(scrawl.isa(this.fixed,'str') && (scrawl.spritenames.contains(this.fixed) || scrawl.pointnames.contains(this.fixed))){
-			var myPivot = scrawl.sprite[this.fixed] || scrawl.point[this.fixed];
-			if(myPivot.type === 'Point'){
-				this.currentX = myPivot.currentX + override.x;
-				this.currentY = myPivot.currentY + override.y;
-				}
-			else{
-				this.currentX = myPivot.startX;
-				this.currentY = myPivot.startY;
-				}
+		if(scrawl.xto([items.startX,items.startY,items.currentX,items.currentY, items.local])){
+			this.local.x += (scrawl.xt(items.startX)) ? items.startX : ((scrawl.xt(items.currentX)) ? items.currentX : ((scrawl.xt(local.x)) ? local.x : 0));
+			this.local.y += (scrawl.xt(items.startY)) ? items.startY : ((scrawl.xt(items.currentY)) ? items.currentY : ((scrawl.xt(local.y)) ? local.y : 0));
 			}
-		else if(!this.fixed){
-			var obj, myAngle, myRadius, here; 
-			obj = scrawl.sprite[this.sprite];
-			here = obj.prepareStamp(override)
-			if(obj.type === 'Shape'){
-				if(obj.addPathRoll){
-					myAngle = (this.angle + obj.currentRoll + obj.pathRoll) * scrawl.radian;
-					}
-				else{
-					myAngle = (this.angle + obj.currentRoll) * scrawl.radian;
-					}
-				myRadius = this.distance * obj.scale;
-				}
-			else{
-				myAngle = this.angle * scrawl.radian;
-				myRadius = this.distance;
-				}
-			this.currentX = here.x + (myRadius * Math.cos(myAngle));
-			this.currentY = here.y + (myRadius * Math.sin(myAngle));
+		if(scrawl.xt(items.distance)){
+			m = this.local.getMagnitude()
+			this.local.scalarMultiply((items.distance + m)/m);
 			}
-		return this;
-		};
-	Point.prototype.setPolar = function(){
-		var obj = scrawl.sprite[this.sprite];
-		var dx = this.currentX - obj.startX;
-		var dy = this.currentY - obj.startY;
-		this.angle = Math.atan2(dy, dx)/scrawl.radian;
-		this.distance = Math.sqrt((dx*dx)+(dy*dy));
+		if(scrawl.xt(items.angle)){
+			d = this.local.getMagnitude();
+			a = Math.atan2(this.local.y, this.local.x);
+			a += (items.angle * scrawl.radian);
+			this.local.x = d * Math.cos(a);
+			this.local.y = d * Math.sin(a);
+			}
 		return this;
 		};
 
-	function Link(items){
-		Scrawl.call(this, items);
+/**
+Sets the local attribute using angle and/or distance parameters:
+
+* __distance__ - calculates the _local_ vector to set its values to equal vector's current magnitude + distance (in pixels)
+* __angle__ - calculates the _local_ vector to rotate it by the angle value (in degrees)
+@method setPolar
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Point.prototype.setPolar = function(items){
+		var m,
+			d,
+			a;
+		Scrawl.prototype.set.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.species = items.species || false;
-		this.startPoint = items.startPoint || false;
-		this.sprite = (scrawl.xt(scrawl.point[this.startPoint])) ? scrawl.point[this.startPoint].sprite : false;
-		this.endPoint = items.endPoint || false;
-		this.controlPoint1 = items.controlPoint1 || false;
-		this.controlPoint2 = items.controlPoint2 || false;
-		this.action = items.action || 'add';
+		if(scrawl.xta([items.distance,items.angle])){
+			a = items.angle * scrawl.radian;
+			this.local.x = items.distance * Math.cos(a);
+			this.local.y = items.distance * Math.sin(a);
+			}
+		else{
+			if(scrawl.xt(items.distance)){
+				m = this.local.getMagnitude();
+				m = (scrawl.xt(m) && m > 0.0000001) ? m : 1;
+				this.local.scalarMultiply(items.distance/m);
+				}
+			if(scrawl.xt(items.angle)){
+				d = this.local.getMagnitude();
+				a = items.angle * scrawl.radian;
+				this.local.x = d * Math.cos(a);
+				this.local.y = d * Math.sin(a);
+				}
+			}
+		return this;
+		};
+
+/**
+Retrieve Point object's coordinates, together with additional data
+
+* Coordinate reference frame determined by the value of Point.local
+* Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object's position and settings
+
+Return object has the following attributes:
+
+* __name__ - Point.name
+* __current__ - coordinate Vector
+* __startLink__ - Point.startLink
+
+@method getData
+@return Result object
+@private
+**/
+	Point.prototype.getData = function(){
+		var c,
+			s = scrawl.sprite[this.sprite],
+			myPivot,
+			d,
+			fixed = this.fixed,
+			scale = s.scale;
+		if(scrawl.xt(this.local) && this.local.type === 'Vector'){
+			c = this.local.getVector();
+			if(scrawl.isa(fixed,'str') && (scrawl.contains(scrawl.spritenames, fixed) || scrawl.contains(scrawl.pointnames, fixed))){
+				myPivot = scrawl.sprite[fixed] || scrawl.point[fixed];
+				if(myPivot.type === 'Point'){
+					c = myPivot.local.getVector().scalarMultiply(scale || 1);
+					}
+				else{
+					c = (myPivot.type === 'Particle') ? myPivot.get('position') : myPivot.start.getVector();
+					}
+				}
+			else if(!fixed){
+				c.scalarMultiply(scale || 1);
+				}
+			else{
+				d = (c.getMagnitude() !== 0) ? s.start.getVector() : new Vector();
+				c.vectorSubtract(d);
+				c.scalarMultiply(scale || 1);
+				c.rotate(-s.roll);
+				}
+			return {
+				name: this.name,
+				current: c,
+				startLink: this.startLink,
+				};
+			}
+		return false;
+		};
+
+/**
+Retrieve Point object's coordinates
+
+* Coordinate reference frame determined by the value of Point.local
+* Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object's position and settings
+@method getCurrentCoordinates
+@return Coordinate Vector
+**/
+	Point.prototype.getCurrentCoordinates = function(){
+		return this.getData().current;
+		};
+
+/**
+Set Point.fixed attribute
+@method setToFixed
+@param {Mixed} items - either a coordinate Vector; or an Object with x and y attributes; or a Number representing the horizontal coordinate, in pixels, from &lt;canvas&gt; element's left edge; or a pivot SPRITENAME, POINTNAME or PARTICLENAME String
+@param {Number} [y] - vertical coordinate, in pixels, from &lt;canvas&gt; element's top edge
+@return This
+@chainable
+**/
+	Point.prototype.setToFixed = function(items, y){
+		var myX,
+			myY;
+		if(scrawl.isa(items,'str')){
+			this.fixed = items;
+			}
+		else{
+			myX = (scrawl.isa(items,'obj') && scrawl.xt(items.x)) ? items.x : ((scrawl.isa(items,'num')) ? items : 0);
+			myY = (scrawl.isa(items,'obj') && scrawl.xt(items.y)) ? items.y : ((scrawl.isa(y,'num')) ? y : 0);
+			this.local.set({
+				x: myX,
+				y: myY,
+				});
+			this.fixed = true;
+			}
+		return this;
+		};
+
+/**
+# Link
+	
+## Instantiation
+
+* Objects created via Shape factories
+
+## Purpose
+
+* Defines the type of line to be drawn between two Point objects
+* Can be of the form (species): line, bezier, quadratic
+* Posesses actions: 'add', 'move' (to not draw a line), 'close' (end Point is Shape object's startPoint), 'end' (for non-closed Shape objects)
+* Makes use of additional control points to determine curves
+
+@class Link
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+@private
+**/		
+	function Link(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		Scrawl.call(this, items);
+		Scrawl.prototype.set.call(this, items);
+		this.startPoint = items.startPoint || scrawl.d.Link.startPoint;
+		this.sprite = (scrawl.xt(scrawl.point[this.startPoint])) ? scrawl.point[this.startPoint].sprite : scrawl.d.Link.sprite;
+		this.endPoint = items.endPoint || scrawl.d.Link.endPoint;
+		this.species = items.species || scrawl.d.Link.species;
+		this.action = items.action || scrawl.d.Link.action;
 		scrawl.link[this.name] = this;
-		scrawl.linknames.pushUnique(this.name);
-		this.length = (scrawl.isa(items.length,'bool') && items.length) ? this.getLength() : false;
-		this.precision = (scrawl.isa(items.precision,'num')) ? items.precision : 100; 
-		this.positions = (scrawl.isa(items.positions,'bool') && items.positions) ? this.setPositions(this.precision) : false;
+		scrawl.pushUnique(scrawl.linknames, this.name);
+		this.setPositions();
 		if(this.startPoint && this.sprite && this.action === 'add'){
-			scrawl.sprite[this.sprite].linkList.pushUnique(this.name);
+			scrawl.pushUnique(scrawl.sprite[this.sprite].linkList, this.name);
 			}
 		return this;
 		}
 	Link.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Link'
+@final
+**/		
 	Link.prototype.type = 'Link';
 	Link.prototype.classname = 'linknames';
-	Link.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//Link
-			species: (this.species) ? this.species : u,
-			startPoint: (this.startPoint) ? this.startPoint : u,
-			sprite: (this.sprite) ? this.sprite : u,
-			endPoint: (this.endPoint) ? this.endPoint : u,
-			controlPoint1: (this.controlPoint1) ? this.controlPoint1 : u,
-			controlPoint2: (this.controlPoint2) ? this.controlPoint2 : u,
-			action: (this.action !== 'add') ? this.action : u,
-			precision: (this.precision !== 100) ? this.precision : u,
-			positions: (this.positions) ? true : u,
-			};
+	scrawl.d.Link = {
+/**
+Type of link - permitted values include: 'line', 'quadratic', 'bezier'
+@property species
+@type String
+@default ''
+**/
+		species: '',
+/**
+POINTNAME of start Point object - used by line, quadratic and bezier links
+@property startPoint
+@type String
+@default ''
+**/
+		startPoint: '',
+/**
+SPRITENAME of this Link's parent sprite object
+@property sprite
+@type String
+@default ''
+**/
+		sprite: '',
+/**
+POINTNAME of end Point object - used by line, quadratic and bezier links
+@property endPoint
+@type String
+@default ''
+**/
+		endPoint: '',
+/**
+POINTNAME of first control Point object - used by quadratic and bezier links
+@property controlPoint1
+@type String
+@default ''
+**/
+		controlPoint1: '',
+/**
+POINTNAME of second control Point object - used by bezier links
+@property controlPoint2
+@type String
+@default ''
+**/
+		controlPoint2: '',
+/**
+Link object's action - permitted values include: 'add', 'move', 'close', 'end'
+@property startLink
+@type String
+@default 'add'
+**/
+		action: 'add',
+/**
+Link length - this value will be affected by the value of the parent Sprite object's __precision__ attribute
+@property length
+@type Number
+@default 0
+@private
+**/
+		length: 0,
+/**
+Positions Array along the length of the Link's path - these values will be affected by the value of the parent Sprite object's __precision__ attribute
+@property positions
+@type Array
+@default []
+@private
+**/
+		positions: [],
 		};
-	Link.prototype.setToDefaults = function(){
-		this.set({
-			comment: '',
-			title: '',
-			species: false,
-			startPoint: false,
-			sprite: false,
-			endPoint: false,
-			controlPoint1: false,
-			controlPoint2: false,
-			action: false,
-			precision: 100,
-			positions: false,
-			});
-		return this;
-		};
+	scrawl.mergeInto(scrawl.d.Link, scrawl.d.Scrawl);
+
+/**
+Overrides Scrawl.set()
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Link.prototype.set = function(items){
-		var mySprite = this.sprite;
 		Scrawl.prototype.set.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(scrawl.isa(items.sprite,'str') && items.sprite !== mySprite && mySprite){
-			scrawl.sprite[mySprite].linkList.removeItem(this.name);
+		if(scrawl.isa(items.sprite,'str') && items.sprite !== this.sprite && this.sprite){
+			scrawl.removeItem(scrawl.sprite[this.sprite].linkList, this.name);
 			}
-		if(scrawl.isa(items.action,'str') && this.sprite && scrawl.spritenames.contains(this.sprite)){
+		if(scrawl.isa(items.action,'str') && this.sprite && scrawl.contains(scrawl.spritenames, this.sprite)){
 			if(items.action === 'add'){
-				scrawl.sprite[this.sprite].linkList.pushUnique(this.name);
+				scrawl.pushUnique(scrawl.sprite[this.sprite].linkList, this.name);
 				}
 			else{
-				scrawl.sprite[this.sprite].linkList.removeItem(this.name);
+				scrawl.removeItem(scrawl.sprite[this.sprite].linkList, this.name);
 				}
 			}
 		return this;
 		};
+
+/**
+Position calculation helper function
+@method pointOnLine
+@param {Point} origin Start Point for calculation
+@param {Point} destination End Point for calculation
+@param {Number} val Distance between start and end points, where 0 = start and 1 = end
+@return Coordinate Vector
+@private
+**/
 	Link.prototype.pointOnLine = function(origin, destination, val){
-		return {
-			x: origin.x + ((destination.x - origin.x) * val),
-			y: origin.y + ((destination.y - origin.y) * val),
-			};
-		};
-	Link.prototype.getPointCoordinates = function(){
-		if(!scrawl.point[this.startPoint].currentX){
-			scrawl.sprite[this.sprite].forceStamp('empty');
-			}
-		var s = {
-			x: scrawl.point[this.startPoint].currentX,
-			y: scrawl.point[this.startPoint].currentY,
-			};
-		var e = {
-			x: scrawl.point[this.endPoint].currentX,
-			y: scrawl.point[this.endPoint].currentY,
-			};
-		var c1 = (['quadratic', 'bezier'].contains(this.species)) ? {
-			x: scrawl.point[this.controlPoint1].currentX,
-			y: scrawl.point[this.controlPoint1].currentY,
-			} : false;
-		var c2 = (this.species === 'bezier') ? {
-			x: scrawl.point[this.controlPoint2].currentX,
-			y: scrawl.point[this.controlPoint2].currentY,
-			} : false;
-		return {
-			start: s,
-			end: e,
-			control1: c1,
-			control2: c2,
-			};
-		};
-	Link.prototype.getPositionOnLink = function(val){
-		val = (scrawl.isa(val,'num')) ? val : 1;
-		var pts = this.getPointCoordinates();
-		switch(this.species){
-			case 'line':
-				return this.pointOnLine(pts.start, pts.end, val);
-				break;
-			case 'quadratic':
-				var mid1 = this.pointOnLine(pts.start, pts.control1, val);
-				var mid2 = this.pointOnLine(pts.control1, pts.end, val);
-				return this.pointOnLine(mid1, mid2, val);
-				break;
-			case 'bezier':
-				var fst1 = this.pointOnLine(pts.start, pts.control1, val);
-				var fst2 = this.pointOnLine(pts.control1, pts.control2, val);
-				var fst3 = this.pointOnLine(pts.control2, pts.end, val);
-				var sec1 = this.pointOnLine(fst1, fst2, val);
-				var sec2 = this.pointOnLine(fst2, fst3, val);
-				return this.pointOnLine(sec1, sec2, val);
-				break;
+		if(origin && destination && scrawl.isa(val,'num')){
+			var a = destination.getVectorSubtract(origin),
+				b = a.getScalarMultiply(val),
+				c = b.getVectorAdd(origin);
+			return c;
 			}
 		return false;
 		};
-	Link.prototype.getSteadyPositionOnLink = function(val){
-		val = (scrawl.isa(val,'num')) ? val : 1;
-		if(this.positions.length === 0){
-			this.setPositions();
+
+/**
+Position calculation helper function
+
+Result Object contains the following attributes:
+
+* __start__ - Link.start Point object's local Vector
+* __end__ - Link.end Point object's local Vector
+* __control1__ - Link.controlPoint1 Point object's local Vector
+* __control2__ - Link.controlPoint2 Point object's local Vector
+@method getPointCoordinates
+@return Result Object
+@private
+**/
+	Link.prototype.getPointCoordinates = function(){
+		var result = {
+			start: (this.startPoint) ? scrawl.point[this.startPoint].getCurrentCoordinates() : new Vector(),
+			end: (this.endPoint) ? scrawl.point[this.endPoint].getCurrentCoordinates() : new Vector(),
+			};
+		if(scrawl.contains(['quadratic', 'bezier'], this.species)){
+			result.control1 = (this.controlPoint1) ? scrawl.point[this.controlPoint1].getCurrentCoordinates() : new Vector();
+			if(this.species === 'bezier'){
+				result.control2 = (this.controlPoint2) ? scrawl.point[this.controlPoint2].getCurrentCoordinates() : new Vector();
+				}
 			}
-		var distance = this.length * val;
-		distance = (distance > this.positions[this.precision].cumulativeLength) ? this.positions[this.precision].cumulativeLength : ((distance < 0) ? 0 : distance);
-		var startX, startY, dx, dy, dPos, result;
-		for(var i=1; i<=this.precision; i++){
-			if(distance <= this.positions[i].cumulativeLength){
-				startX = this.positions[i-1].x;
-				startY = this.positions[i-1].y;
-				dx = this.positions[i].x - startX;
-				dy = this.positions[i].y - startY;
-				dPos = (distance - this.positions[i-1].cumulativeLength)/this.positions[i].length;
-				result = {
-					x: startX + (dx * dPos),
-					y: startY + (dy * dPos),
-					};
-				return result;
+		return result;
+		};
+
+/**
+Position calculation helper function
+@method getLocalPositionOnLink
+@param {Number} [val] - distance along link, where 0 = start and 1 = end
+@return coordinate Vector
+@private
+**/
+	Link.prototype.getLocalPositionOnLink = function(val){
+		val = (scrawl.isa(val,'num')) ? val : 1;
+		var pts = this.getPointCoordinates(),
+			mid1,
+			mid2, 
+			fst1, 
+			fst2, 
+			fst3, 
+			sec1, 
+			sec2,
+			result;
+		switch(this.species){
+			case 'line':
+				result = this.pointOnLine(pts.start, pts.end, val);
+				break;
+			case 'quadratic':
+				mid1 = this.pointOnLine(pts.start, pts.control1, val);
+				mid2 = this.pointOnLine(pts.control1, pts.end, val);
+				result = this.pointOnLine(mid1, mid2, val);
+				break;
+			case 'bezier':
+				fst1 = this.pointOnLine(pts.start, pts.control1, val);
+				fst2 = this.pointOnLine(pts.control1, pts.control2, val);
+				fst3 = this.pointOnLine(pts.control2, pts.end, val);
+				sec1 = this.pointOnLine(fst1, fst2, val);
+				sec2 = this.pointOnLine(fst2, fst3, val);
+				result = this.pointOnLine(sec1, sec2, val);
+				break;
+			default: 
+				result = pts.end || pts.start || new Vector();
+			}
+		return result;
+		};
+
+/**
+Position calculation helper function
+@method getPositionOnLink
+@param {Number} [val] - distance along link, where 0 = start and 1 = end
+@return coordinate Vector
+@private
+**/
+	Link.prototype.getPositionOnLink = function(val){
+		var mySprite = scrawl.sprite[this.sprite],
+			scale = mySprite.scale,
+			roll = mySprite.roll,
+			result;
+		if(scrawl.isa(val,'num')){
+			result = this.getLocalPositionOnLink(val);
+			return result.scalarMultiply(scale).rotate(roll).vectorAdd(mySprite.start);
+			}
+		return false;
+		};
+
+/**
+Position calculation helper function
+@method getLocalSteadyPositionOnLink
+@param {Number} [val] - distance along link, where 0 = start and 1 = end
+@return coordinate Vector
+@private
+**/
+	Link.prototype.getLocalSteadyPositionOnLink = function(val){
+		val = (scrawl.isa(val,'num')) ? val : 1;
+		var	s,
+			d, 
+			dPos,
+			precision = scrawl.sprite[this.sprite].get('precision'),
+			positions = this.positions,
+			length = this.length,
+			distance = length * val;
+		distance = (distance > positions[precision].cumulativeLength) ? positions[precision].cumulativeLength : ((distance < 0) ? 0 : distance);
+		for(var i=1; i<=precision; i++){
+			if(distance <= positions[i].cumulativeLength){
+				s = positions[i-1].p;
+				d = positions[i].p.getVectorSubtract(s);
+				dPos = (distance - positions[i-1].cumulativeLength)/positions[i].length;
+				return d.scalarMultiply(dPos).vectorAdd(s);
 				}
 			}
 		return false;
 		};
+
+/**
+Position calculation helper function
+@method getSteadyPositionOnLink
+@param {Number} [val] - distance along link, where 0 = start and 1 = end
+@return coordinate Vector
+@private
+**/
+	Link.prototype.getSteadyPositionOnLink = function(val){
+		var mySprite = scrawl.sprite[this.sprite],
+			d = this.getLocalSteadyPositionOnLink(val);
+			d.scalarMultiply(mySprite.scale).rotate(mySprite.roll).vectorAdd(mySprite.start);
+		return d;
+		};
+
+/**
+Returns length of Link, in pixels
+@method getLength
+@return Length, in pixels
+**/
 	Link.prototype.getLength = function(){
-		var pts = this.getPointCoordinates();
-		this.setPositions(this.precision);
+		this.setPositions();
 		return this.length;
 		};
+
+/**
+(re)Calculate the Link object's __positions__ array
+@method setPositions
+@param {Number} [val] - precision level for the calculation. Default: parent Shape object's precision value
+@return This
+@chainable
+**/
 	Link.prototype.setPositions = function(val){
-		var pts = this.getPointCoordinates();
-		this.precision = (scrawl.isa(val,'num') && val>0) ? val : (this.precision || 100); 
+		var pts = this.getPointCoordinates(),
+			precision = (scrawl.isa(val,'num') && val>0) ? val : (scrawl.sprite[this.sprite].get('precision')),
+			step = 1/precision, 
+			pos, 
+			here, 
+			vHere, 
+			dist, 
+			d,
+			cumLen = 0,
+			cur = pts.start.getVector(),
+			sprite = scrawl.sprite[this.sprite],
+			temp = sprite.roll;
 		this.positions = [];
-		var step = 1/this.precision, pos, here, dist, dx, dy;
-		var cumLen = 0, curX = pts.start.x, curY = pts.start.y;
 		this.positions.push({
-			x: curX,
-			y: curY,
+			p: cur.getVector(),
 			length: 0,
 			cumulativeLength: cumLen,
 			});
-		for(var i=0; i<this.precision; i++){
-			pos = step*(i+1);
+		sprite.set({roll: 0,});
+		for(var i=0; i<precision; i++){
+			pos = step * (i + 1);
 			here = this.getPositionOnLink(pos);
-			dx = here.x - curX;
-			dy = here.y - curY;
-			curX = here.x;
-			curY = here.y;
-			dist = Math.sqrt((dx*dx)+(dy*dy));
+			here.vectorSubtract(sprite.start);
+			vHere = here.getVector();
+			dist = here.vectorSubtract(cur).getMagnitude();
+			cur = vHere;
 			cumLen += dist;
 			this.positions.push({
-				x: curX,
-				y: curY,
+				p: cur.getVector(),
 				length: dist,
 				cumulativeLength: cumLen,
 				});
 			}
-		this.length = this.positions[this.precision].cumulativeLength;
+		this.length = this.positions[precision].cumulativeLength;
+		sprite.roll = temp;
 		return this;
 		};
-	Link.prototype.sketch = function(ctx, override){
-		var myEnd, myCon1, myCon2;
-		var myResult;
+
+/**
+Shape object drawing helper function
+
+_Note: this function is recursive_
+
+@method sketch
+@param {Object} ctx Sprite Cell's &lt;canvas&gt; element's context engine Object
+@return True (eventually)
+@private
+**/
+	Link.prototype.sketch = function(ctx){
+		var myEnd, 
+			myCon1, 
+			myCon2,
+			myResult;
 		switch(this.action){
 			case 'close' :
 				ctx.closePath();
 				break;
 			case 'move' :
 				try{
-					myEnd = scrawl.point[this.endPoint].getData(override);
+					myEnd = scrawl.point[this.endPoint].getData();
 					ctx.moveTo(
-						myEnd.currentX, 
-						myEnd.currentY
+						myEnd.current.x, 
+						myEnd.current.y
 						);
 					}
 				catch(e){
@@ -6997,33 +14762,33 @@ m: '',
 				try{
 					switch(this.species){
 						case 'line' :
-							myEnd = scrawl.point[this.endPoint].getData(override);
+							myEnd = scrawl.point[this.endPoint].getData();
 							ctx.lineTo(
-								myEnd.currentX, 
-								myEnd.currentY
+								myEnd.current.x, 
+								myEnd.current.y
 								);
 							break;
 						case 'quadratic' :
-							myCon1 = scrawl.point[this.controlPoint1].getData(override);
-							myEnd = scrawl.point[this.endPoint].getData(override);
+							myCon1 = scrawl.point[this.get('controlPoint1')].getData();
+							myEnd = scrawl.point[this.endPoint].getData();
 							ctx.quadraticCurveTo(
-								myCon1.currentX, 
-								myCon1.currentY, 
-								myEnd.currentX, 
-								myEnd.currentY
+								myCon1.current.x, 
+								myCon1.current.y,
+								myEnd.current.x, 
+								myEnd.current.y
 								);
 							break;
 						case 'bezier' :
-							myCon1 = scrawl.point[this.controlPoint1].getData(override);
-							myCon2 = scrawl.point[this.controlPoint2].getData(override);
-							myEnd = scrawl.point[this.endPoint].getData(override);
+							myCon1 = scrawl.point[this.get('controlPoint1')].getData();
+							myCon2 = scrawl.point[this.get('controlPoint2')].getData();
+							myEnd = scrawl.point[this.endPoint].getData();
 							ctx.bezierCurveTo(
-								myCon1.currentX, 
-								myCon1.currentY, 
-								myCon2.currentX, 
-								myCon2.currentY, 
-								myEnd.currentX, 
-								myEnd.currentY
+								myCon1.current.x, 
+								myCon1.current.y,
+								myCon2.current.x, 
+								myCon2.current.y,
+								myEnd.current.x, 
+								myEnd.current.y
 								);
 							break;
 						default : 
@@ -7039,7 +14804,7 @@ m: '',
 				break;
 			}
 		try{
-			myResult = scrawl.link[scrawl.point[this.endPoint].startLink].sketch(ctx, override);
+			myResult = scrawl.link[scrawl.point[this.endPoint].startLink].sketch(ctx);
 			}
 		catch(e){
 			return true;
@@ -7047,141 +14812,253 @@ m: '',
 		return true;
 		};
 		
+/**
+# Design
+	
+## Instantiation
+
+* This object should never be instantiated by users
+
+## Purpose
+
+* Defines gradients and radial gradients used with sprite objects' strokeStyle and fillStyle attributes
+
+@class Design
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Design(items){
 		Scrawl.call(this, items);
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.color = items.color || [{color: 'black', stop: 0},{color: 'white', stop: 0.999999}];
-		this.setToSprite = (scrawl.isa(items.setToSprite,'bool')) ? items.setToSprite : false; 
-		this.roll = items.roll || 0;
-		this.cell = items.cell || scrawl.pad[scrawl.currentPad].current;
-		this.startX = items.startX || 0;
-		this.startY = items.startY || 0;
-		this.endX = items.endX || 0;
-		this.endY = items.endY || 0;
-		this.handleX = items.handleX || 0;
-		this.handleY = items.handleY || 0;
-		this.startHandleX = items.startHandleX || 0;
-		this.startHandleY = items.startHandleY || 0;
-		this.endHandleX = items.endHandleX || 0;
-		this.endHandleY = items.endHandleY || 0;
-		this.startRangeX = items.startRangeX || 0;
-		this.startRangeY = items.startRangeY || 0;
-		this.endRangeX = (scrawl.isa(items.endRangeX,'num')) ? items.endRangeX : 1;
-		this.endRangeY = (scrawl.isa(items.endRangeY,'num')) ? items.endRangeY : 0;
-		this.autoUpdate = (scrawl.isa(items.autoUpdate,'bool')) ? items.autoUpdate : false;
 		return this;
 		}
 	Design.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Design'
+@final
+**/		
 	Design.prototype.type = 'Design';
 	Design.prototype.classname = 'designnames';
-	Design.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//Design/Gradient/RadialGradient
-			color: (this.color) ? this.color : u,
-			setToSprite: (this.setToSprite) ? this.setToSprite : u,
-			roll: (this.roll !== 0) ? this.roll : u,
-			cell: (this.cell) ? this.cell : u,
-			startX: (this.startX !== 0) ? this.startX : u,
-			startY: (this.startY !== 0) ? this.startY : u,
-			endX: (this.endX !== 0) ? this.endX : u,
-			endY: (this.endY !== 0) ? this.endY : u,
-			handleX: (this.handleX !== 0) ? this.handleX : u,
-			handleY: (this.handleY !== 0) ? this.handleY : u,
-			startHandleX: (this.startHandleX !== 0) ? this.startHandleX : u,
-			startHandleY: (this.startHandleY !== 0) ? this.startHandleY : u,
-			endHandleX: (this.endHandleX !== 0) ? this.endHandleX : u,
-			endHandleY: (this.endHandleY !== 0) ? this.endHandleY : u,
-			startRangeX: (this.startRangeX !== 0) ? this.startRangeX : u,
-			startRangeY: (this.startRangeY !== 0) ? this.startRangeY : u,
-			endRangeX: (this.endRangeX !== 1) ? this.endRangeX : u,
-			endRangeY: (this.endRangeY !== 1) ? this.endRangeY : u,
-			autoUpdate: (this.autoUpdate) ? this.autoUpdate : u,
-			startRadius: (scrawl.xt(this.startRadius) && this.startRadius !== 0) ? this.startRadius : u,
-			endRadius: (scrawl.xt(this.endRadius) && this.endRadius !== 0) ? this.endRadius : u,
-			startRangeRadius: (scrawl.xt(this.startRangeRadius) && this.startRangeRadius !== 0.5) ? this.startRangeRadius : u,
-			endRangeRadius: (scrawl.xt(this.endRangeRadius) && this.endRangeRadius !== 0) ? this.endRangeRadius : u,
-			};
+	scrawl.d.Design = {
+/**
+Array of JavaScript Objects representing color stop data
+
+Objects take the form {color:String, stop:Number} where:
+
+* __color__ attribute can be any legitimate CSS color string
+* __stop can be any number between O and 0.999999 (not 1)
+@property color
+@type Array of JavaScript objects
+@default [{color: 'black', stop: 0},{color: 'white', stop: 0.999999}]
+**/
+		color: [{color: 'black', stop: 0},{color: 'white', stop: 0.999999}],
+/**
+Drawing flag - when set to true, will use sprite-based 'range' coordinates to calculate the start and end points of the gradient; when false, will use Cell-based coordinates
+@property setToSprite
+@type Boolean
+@default false
+**/
+		setToSprite: false,
+/**
+Defines the speed at which the gradient will animate; value should be between 0 and 1
+@property roll
+@type Number
+@default 0
+**/
+		roll: 0,
+/**
+CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set
+@property cell
+@type Number
+@default 0
+**/
+		cell: '',
+/**
+Horizontal start coordinate, in pixels, from the top-left corner of the gradient's &lt;canvas&gt; element
+@property startX
+@type Number
+@default 0
+**/
+		startX: 0,
+/**
+Vertical start coordinate, in pixels, from the top-left corner of the gradient's &lt;canvas&gt; element
+@property startY
+@type Number
+@default 0
+**/
+		startY: 0,
+/**
+Horizontal end coordinate, in pixels, from the top-left corner of the gradient's &lt;canvas&gt; element
+@property endX
+@type Number
+@default 0
+**/
+		endX: 0,
+/**
+Vertical end coordinate, in pixels, from the top-left corner of the gradient's &lt;canvas&gt; element
+@property endY
+@type Number
+@default 0
+**/
+		endY: 0,
+/**
+Horizontal start coordinate, measured as a percentage from the center of a sprite, with 0 representing the center and 1 the left edge
+@property startRangeX
+@type Number
+@default 1
+**/
+		startRangeX: 1,
+/**
+Vertical start coordinate, measured as a percentage from the center of a sprite, with 0 representing the center and 1 the top edge
+@property startRangeY
+@type Number
+@default 1
+**/
+		startRangeY: 1,
+/**
+Horizontal end coordinate, measured as a percentage from the center of a sprite, with 0 representing the center and 1 the right edge
+@property endRangeX
+@type Number
+@default 1
+**/
+		endRangeX: 1,
+/**
+Vertical end coordinate, measured as a percentage from the center of a sprite, with 0 representing the center and 1 the bottom edge
+@property endRangeY
+@type Number
+@default 1
+**/
+		endRangeY: 1,
+/**
+Drawing flag - when set to true, the gradient will recalculate its color stop values, taking into account the roll attribute's value, and reset itself on the &lt;canvas&gt; element's context engine
+@property autoUpdate
+@type Boolean
+@default false
+**/
+		autoUpdate: false,
 		};
-	Design.prototype.setToDefaults = function(){
-		var u;
-		this.set({
-			comment: '',
-			title: '',
-			setToSprite: false,
-			roll: 0,
-			startX: 0,
-			startY: 0,
-			endX: 0,
-			endY: 0,
-			handleX: 0,
-			handleY: 0,
-			startHandleX: 0,
-			startHandleY: 0,
-			endHandleX: 0,
-			endHandleY: 0,
-			startRangeX: 0,
-			startRangeY: 0,
-			endRangeX: 1,
-			endRangeY: 1,
-			autoUpdate: false,
-			startRadius: (scrawl.xt(this.startRadius)) ? 0 : u,
-			endRadius: (scrawl.xt(this.endRadius)) ? 0 : u,
-			startRangeRadius: (scrawl.xt(this.startRangeRadius)) ? 0.5 : u,
-			endRangeRadius: (scrawl.xt(this.endRangeRadius)) ? 0 : u,
-			});
-		return this;
-		};
+	scrawl.mergeInto(scrawl.d.Design, scrawl.d.Scrawl);
+ 
+/**
+Add values to Number attributes
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Design.prototype.setDelta = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		if(items.roll){this.roll += items.roll;}
-		if(items.startX){this.startX += items.startX;}
-		if(items.startY){this.startY += items.startY;}
-		if(items.startRadius){this.startRadius += items.startRadius;}
-		if(items.endX){this.endX += items.endX;}
-		if(items.endY){this.endY += items.endY;}
-		if(items.endRadius){this.endRadius += items.endRadius;}
-		if(items.startRangeRadius){this.startRangeRadius += items.startRangeRadius;}
-		if(items.endRangeRadius){this.endRangeRadius += items.endRangeRadius;}
-		if(items.handleX){this.handleX += items.handleX;}
-		if(items.handleY){this.handleY += items.handleY;}
-		if(items.startHandleX){this.startHandleX += items.startHandleX;}
-		if(items.startHandleY){this.startHandleY += items.startHandleY;}
-		if(items.endHandleX){this.endHandleX += items.endHandleX;}
-		if(items.endHandleY){this.endHandleY += items.endHandleY;}
-		if(items.startRangeX){this.startRangeX += items.startRangeX;}
-		if(items.startRangeY){this.startRangeY += items.startRangeY;}
-		if(items.endRangeX){this.endRangeX += items.endRangeX;}
-		if(items.endRangeY){this.endRangeY += items.endRangeY;}
-		this.update();
+		var f = {};
+		if(items.roll){f.roll = this.get('roll') + items.roll;}
+		if(items.startX){f.startX = this.get('startX') + items.startX;}
+		if(items.startY){f.startY = this.get('startY') + items.startY;}
+		if(items.startRadius){f.startRadius = this.get('startRadius') + items.startRadius;}
+		if(items.endX){f.endX = this.get('endX') + items.endX;}
+		if(items.endY){f.endY = this.get('endY') + items.endY;}
+		if(items.endRadius){f.endRadius = this.get('endRadius') + items.endRadius;}
+		if(items.startRangeRadius){f.startRangeRadius = this.get('startRangeRadius') + items.startRangeRadius;}
+		if(items.endRangeRadius){f.endRangeRadius = this.get('endRangeRadius') + items.endRangeRadius;}
+		if(items.startRangeX){f.startRangeX = this.get('startRangeX') + items.startRangeX;}
+		if(items.startRangeY){f.startRangeY = this.get('startRangeY') + items.startRangeY;}
+		if(items.endRangeX){f.endRangeX = this.get('endRangeX') + items.endRangeX;}
+		if(items.endRangeY){f.endRangeY = this.get('endRangeY') + items.endRangeY;}
+		this.set(f);
 		return this;
 		};
-	Design.prototype.set = function(items){
-		Scrawl.prototype.set.call(this, items);
-		this.update();
-		return this;
-		};
-	Design.prototype.update = function(){
-		this.makeGradient();
+ 
+/**
+Adds roll attribute to each color stop value, sorts the colors into ascending order and recreates the gradient
+@method update
+@param {String} [sprite] SPRITENAME String
+@param {String} [cell] CELLNAME String
+@return This
+@chainable
+**/
+	Design.prototype.update = function(sprite, cell){
+		this.makeGradient(sprite, cell);
 		this.sortStops();
 		this.applyStops();
 		return this;
 		};
-	Design.prototype.makeGradient = function(){
-		var ctx = scrawl.context[this.cell];
-		var g;
+ 
+/**
+Returns &lt;canvas&gt; element's contenxt engine's gradient object, or 'rgba(0,0,0,0)' on failure
+@method getData
+@return JavaScript Gradient object, or String
+@private
+**/
+	Design.prototype.getData = function(){
+		return (scrawl.xt(scrawl.dsn[this.name])) ? scrawl.dsn[this.name] : 'rgba(0,0,0,0)';
+		};
+ 
+/**
+Builds &lt;canvas&gt; element's contenxt engine's gradient object
+@method makeGradient
+@param {String} [sprite] SPRITENAME String
+@param {String} [cell] CELLNAME String
+@return This
+@chainable
+@private
+**/
+	Design.prototype.makeGradient = function(sprite, cell){
+		cell = (scrawl.xt(cell)) ? scrawl.cell[cell] : scrawl.cell[this.get('cell')];
+		sprite = scrawl.sprite[sprite];
+		var ctx = scrawl.context[cell.name],
+			g, 
+			north, 
+			south, 
+			east, 
+			west,
+			temp = sprite.getOffsetStartVector();
 		switch (this.type) {
 			case 'Gradient' :
-				g = ctx.createLinearGradient((this.startX+this.startHandleX+this.handleX), (this.startY+this.startHandleY+this.handleY), (this.endX+this.endHandleX+this.handleX), (this.endY+this.endHandleY+this.handleY));
+				if(this.get('setToSprite')){
+					switch(sprite.type){
+						case 'Wheel' :
+							west = temp.x - (sprite.radius * sprite.scale);
+							north = temp.y - (sprite.radius * sprite.scale);
+							east = west + (sprite.radius * 2 * sprite.scale);
+							south = north + (sprite.radius * 2 * sprite.scale);
+							break;
+						case 'Shape' :
+							west = temp.x - ((sprite.width/2) * sprite.scale);
+							north = temp.y - ((sprite.height/2) * sprite.scale);
+							east = west + (sprite.width * sprite.scale);
+							south = north + (sprite.height * sprite.scale);
+							break;
+						default :
+							west = temp.x;
+							north = temp.y;
+							east = west + (sprite.width * sprite.scale);
+							south = north + (sprite.height * sprite.scale);
+						}
+					west *= this.get('startRangeX');
+					north *= this.get('startRangeY');
+					east *= this.get('endRangeX');
+					south *= this.get('endRangeY');
+					}
+				else{
+					west = -sprite.start.x + this.get('startX');
+					north = -sprite.start.y + this.get('startY');
+					east = -sprite.start.x + (this.get('endX') || cell.actualWidth);
+					south = -sprite.start.y + (this.get('endY') || cell.actualHeight);
+					}
+				g = ctx.createLinearGradient(west, north, east, south);
 				break;
 			case 'RadialGradient' :
-				g = ctx.createRadialGradient((this.startX+this.startHandleX+this.handleX), (this.startY+this.startHandleY+this.handleY), this.startRadius, (this.endX+this.endHandleX+this.handleX), (this.endY+this.endHandleY+this.handleY), this.endRadius);
+				if(this.setToSprite){
+					g = ctx.createRadialGradient(this.get('startX'), this.get('startY'), (this.get('startRadius') * this.get('startRangeRadius')), this.get('endX'), this.get('endY'), (this.get('endRadius') * this.get('endRangeRadius')));
+					}
+				else{
+					west = this.get('startX')-sprite.start.x;
+					east = this.get('startY')-sprite.start.y;
+					north = this.get('endX')-sprite.start.x;
+					south = this.get('endY')-sprite.start.y;
+					g = ctx.createRadialGradient(west, east, this.get('startRadius'), north, south, this.get('endRadius'));
+					}
 				break;
 			default :
 				g = false;
@@ -7189,112 +15066,308 @@ m: '',
 		scrawl.dsn[this.name] = g;
 		return this;
 		};
+ 
+/**
+Gradient builder helper function - sorts color attribute Objects by their stop attribute values, after adding the roll value to them
+@method sortStops
+@return Nothing
+@private
+**/
 	Design.prototype.sortStops = function(){
-		for(var i=0, z=this.color.length; i<z; i++){
-			this.color[i].stop += this.roll;
-			if(!this.color[i].stop.isBetween(0,1,true)){
-				this.color[i].stop = (this.color[i].stop > 0.5) ? this.color[i].stop-1 : this.color[i].stop+1;
+		var color = this.get('color'),
+			roll = this.get('roll');
+		for(var i=0, z=color.length; i<z; i++){
+			color[i].stop += roll;
+			if(!scrawl.isBetween(color[i].stop, 0, 1, true)){
+				color[i].stop = (color[i].stop > 0.5) ? color[i].stop-1 : color[i].stop+1;
 				}
-			if(this.color[i].stop <= 0){this.color[i].stop = 0.000001;}
-			else if(this.color[i].stop >= 1){this.color[i].stop = 0.999999;}
+			if(color[i].stop <= 0){color[i].stop = 0.000001;}
+			else if(color[i].stop >= 1){color[i].stop = 0.999999;}
 			}
-		this.color.sort(function(a,b){
+		color.sort(function(a,b){
 			return a.stop - b.stop;
 			});
+		this.set({color: color,});
 		};
+ 
+/**
+Gradient builder helper function - applies color attribute objects to the gradient
+@method applyStops
+@return This
+@private
+@chainable
+**/
 	Design.prototype.applyStops = function(){
+		var color = this.get('color');
 		if(scrawl.dsn[this.name]){
-			for(var i=0, z=this.color.length; i<z; i++){
-				scrawl.dsn[this.name].addColorStop(this.color[i].stop, this.color[i].color);
+			for(var i=0, z=color.length; i<z; i++){
+				scrawl.dsn[this.name].addColorStop(color[i].stop, color[i].color);
 				}
 			}
 		return this;
 		};
+ 
+/**
+Remove this gradient from the scrawl library
+@method remove
+@return Always true
+**/
 	Design.prototype.remove = function(){
 		delete scrawl.dsn[this.name];
 		delete scrawl.design[this.name];
-		scrawl.designnames.removeItem(this.name);
+		scrawl.removeItem(scrawl.designnames, this.name);
 		return true;
 		};
 		
+/**
+# Gradient
+	
+## Instantiation
+
+* scrawl.newGradient()
+
+## Purpose
+
+* Defines a linear gradient
+* Used with sprite.strokeStyle and sprite.fillStyle attributes
+
+@class Gradient
+@constructor
+@extends Design
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Gradient(items){
-		Design.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		Design.call(this, items);
+		Scrawl.prototype.set.call(this, items);
 		scrawl.design[this.name] = this;
-		scrawl.designnames.pushUnique(this.name);
-		this.update();
+		scrawl.pushUnique(scrawl.designnames, this.name);
 		return this;
 		}
 	Gradient.prototype = Object.create(Design.prototype);
+/**
+@property type
+@type String
+@default 'Gradient'
+@final
+**/		
 	Gradient.prototype.type = 'Gradient';
 	Gradient.prototype.classname = 'designnames';
+	scrawl.d.Gradient = {
+		};
+	scrawl.mergeInto(scrawl.d.Gradient, scrawl.d.Design);
+ 
+/**
+Swap start and end attributes
+@method swap
+@return This
+@chainable
+**/
 	Gradient.prototype.swap = function(){
-		var tempX = this.startX; this.startX = this.endX; this.endX = tempX;
-		var tempY = this.startY; this.startY = this.endY; this.endY = tempY;
+		var sx = this.get('startX'),
+			sy = this.get('startY'),
+			ex = this.get('endX'),
+			ey = this.get('endY');
+		this.set({
+			startX: ex,
+			startY: ey,
+			endX: sx,
+			endY: sy,
+			});
 		this.update();
 		return this;
 		};
 
+/**
+# RadialGradient
+	
+## Instantiation
+
+* scrawl.newRadialGradient()
+
+## Purpose
+
+* Defines a radial gradient
+* Used with sprite.strokeStyle and sprite.fillStyle attributes
+
+@class RadialGradient
+@constructor
+@extends Design
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function RadialGradient(items){
-		Design.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.startRadius = items.startRadius || 0;
-		this.endRadius = items.endRadius || 0;
-		this.startRangeRadius = (scrawl.isa(items.startRangeRadius,'num')) ? items.startRangeRadius : 0.5;
-		this.endRangeRadius = items.endRangeRadius || 0;
+		Design.call(this, items);
+		Scrawl.prototype.set.call(this, items);
 		scrawl.design[this.name] = this;
-		scrawl.designnames.pushUnique(this.name);
-		this.update();
+		scrawl.pushUnique(scrawl.designnames, this.name);
 		return this;
 		}
 	RadialGradient.prototype = Object.create(Design.prototype);
+/**
+@property type
+@type String
+@default 'RadialGradient'
+@final
+**/		
 	RadialGradient.prototype.type = 'RadialGradient';
 	RadialGradient.prototype.classname = 'designnames';
+	scrawl.d.RadialGradient = {
+/**
+Start circle radius, in pixels
+@property startRadius
+@type Number
+@default 0
+**/
+		startRadius: 0,
+/**
+End circle radius, in pixels
+@property endRadius
+@type Number
+@default 0
+**/
+		endRadius: 0,
+/**
+Start circle radius, as a percentage of the sprites width where 0 = 0px and 1 = width in pixels
+@property startRangeRadius
+@type Number
+@default 0.5
+**/
+		startRangeRadius: 0.5,
+/**
+End circle radius, as a percentage of the sprites width where 0 = 0px and 1 = width in pixels
+@property endRangeRadius
+@type Number
+@default 0
+**/
+		endRangeRadius: 0,
+		};
+	scrawl.mergeInto(scrawl.d.RadialGradient, scrawl.d.Design);
+ 
+/**
+Swap start and end attributes
+@method swap
+@return This
+@chainable
+**/
 	RadialGradient.prototype.swap = function(){
-		var tempX = this.startX; this.startX = this.endX; this.endX = tempX;
-		var tempY = this.startY; this.startY = this.endY; this.endY = tempY;
-		var tempR = this.startRadius; this.startRadius = this.endRadius; this.endRadius = tempY;
+		var sx = this.get('startX'),
+			sy = this.get('startY'),
+			sr = this.get('startRadius'),
+			ex = this.get('endY'),
+			ey = this.get('endY'),
+			er = this.get('endRadius');
+		this.set({
+			startX: ex,
+			startY: ey,
+			startRadius: er,
+			endX: sx,
+			endY: sy,
+			endRadius: sr,
+			});
 		this.update();
 		return this;
 		};
 
+/**
+# Pattern
+	
+## Instantiation
+
+* scrawl.newPattern()
+
+## Purpose
+
+* Defines a pattern
+* Used with sprite.strokeStyle and sprite.fillStyle attributes
+
+@class Pattern
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Pattern(items){
-		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
+		Scrawl.call(this, items);
+		Scrawl.prototype.set.call(this, items);
 		this.repeat = items.repeat || 'repeat';
 		this.cell = items.cell || scrawl.pad[scrawl.currentPad].current;
-		//source = url string; imageData = imageData object; image = ScrawlImage.name; canvas = Cell.name
 		this.setImage((items.source || items.imageData || scrawl.image[items.image] || scrawl.cell[items.canvas] || false), items.callback);
 		return this;
 		}
 	Pattern.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Pattern'
+@final
+**/		
 	Pattern.prototype.type = 'Pattern';
 	Pattern.prototype.classname = 'designnames';
-	Pattern.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//Pattern
-			repeat: (this.repeat !== 'repeat') ? this.repeat : u,
-			image: (this.image) ? this.image : u,
-			source: (this.source) ? this.source : u,
-			canvas: (this.canvas) ? this.canvas : u,
-			cell: this.cell,
-			};
+	scrawl.d.Pattern = {
+/**
+Drawing parameter
+@property repeat
+@type String
+@default 'repeat'
+**/		
+		repeat: 'repeat',
+/**
+CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set
+@property cell
+@type String
+@default ''
+**/		
+		cell: '',
+/**
+SCRAWLIMAGENAME String - used when pattern is based on an image already imported into the scrawl library
+@property image
+@type String
+@default ''
+**/		
+		image: '',
+/**
+Full path to image file on server - used when pattern is based on a dynamically loaded image
+@property source
+@type String
+@default ''
+**/		
+		source: '',
+/**
+CELLNAME String - used when pattern is based on a &lt;canvas&gt; element's image
+@property canvas
+@type String
+@default ''
+**/		
+		canvas: '',
 		};
-	Pattern.prototype.setToDefaults = function(){
-		this.set({
-			comment: '',
-			title: '',
-			repeat: 'repeat',
-			});
+	scrawl.mergeInto(scrawl.d.Pattern, scrawl.d.Scrawl);
+
+/**
+Overrides Scrawl.set()
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Pattern.prototype.set = function(items){
+		Scrawl.prototype.set.call(this, items);
+		this.setImage();
 		return this;
 		};
+
+/**
+Discover this Pattern's image source, loading it if necessary
+@method setImage
+@param {Mixed} source
+@param {Function} [callback] Function to be run once Image is successfully loaded
+@return This
+@chainable
+@private
+**/
 	Pattern.prototype.setImage = function(source, callback){
 		if(scrawl.isa(source, 'str')){
 			var myImage = new Image();
@@ -7308,15 +15381,15 @@ m: '',
 						});
 					scrawl.design[that.name] = that;
 					scrawl.design[that.name].image = iObj.name;
-					scrawl.design[that.name].source = source;
-					scrawl.designnames.pushUnique(that.name);
+					scrawl.design[that.name].source = myImage.src;
+					scrawl.pushUnique(scrawl.designnames, that.name);
 					scrawl.design[that.name].makeDesign();
 					if(scrawl.isa(callback, 'fn')){
 						callback();
 						}
 					}
 				catch(e){
-					console.log('Pattern '+[that.name]+' - setImage() failed - '+e.name+' error: '+e.message);
+					console.log('Pattern '+[that.name]+' - setImage() #1 failed - '+e.name+' error: '+e.message);
 					return that;
 					}
 				};
@@ -7324,38 +15397,60 @@ m: '',
 			}
 		else if(scrawl.isa(source, 'obj')){
 			if(source.type === 'ScrawlImage'){
-				this.image = source.name;
-				this.source = source.source;
-				scrawl.design[this.name] = this;
-				scrawl.designnames.pushUnique(this.name);
-				this.makeDesign();
-				if(scrawl.isa(callback, 'fn')){
-					callback();
+				try{
+					this.image = source.name;
+					this.source = source.source;
+					scrawl.design[this.name] = this;
+					scrawl.pushUnique(scrawl.designnames, this.name);
+					this.makeDesign();
+					if(scrawl.isa(callback, 'fn')){
+						callback();
+						}
+					}
+				catch(e){
+					console.log('Pattern '+[this.name]+' - setImage() #2 failed - '+e.name+' error: '+e.message);
+					return that;
 					}
 				}
 			else if(source.type === 'Cell'){
-				this.canvas = source.name;
-				scrawl.design[this.name] = this;
-				scrawl.designnames.pushUnique(this.name);
-				this.makeDesign();
-				if(scrawl.isa(callback, 'fn')){
-					callback();
+				try{
+					this.canvas = source.name;
+					scrawl.design[this.name] = this;
+					scrawl.pushUnique(scrawl.designnames, this.name);
+					this.makeDesign();
+					if(scrawl.isa(callback, 'fn')){
+						callback();
+						}
+					}
+				catch(e){
+					console.log('Pattern '+[this.name]+' - setImage() #3 failed - '+e.name+' error: '+e.message);
+					return that;
 					}
 				}
 			}
 		else{
-			console.log('Pattern '+[this.name]+' - setImage() failed - source not a string or an object');
+			console.log('Pattern '+[this.name]+' - setImage() #4 failed - source not a string or an object', source);
 			}
 		return this;
 		};
-	Pattern.prototype.set = function(items){
-		Scrawl.prototype.set.call(this, items);
-		this.setImage();
-		return this;
-		};
-	Pattern.prototype.get = function(){
+ 
+/**
+Returns &lt;canvas&gt; element's contenxt engine's pattern object, or 'rgba(0,0,0,0)' on failure
+@method getData
+@return JavaScript pattern object, or String
+@private
+**/
+	Pattern.prototype.getData = function(){
 		return (scrawl.xt(scrawl.dsn[this.name])) ? scrawl.dsn[this.name] : 'rgba(0,0,0,0)';
 		};
+ 
+/**
+Builds &lt;canvas&gt; element's contenxt engine's pattern object
+@method makeDesign
+@return This
+@chainable
+@private
+**/
 	Pattern.prototype.makeDesign = function(){
 		var ctx = scrawl.context[this.cell];
 		try{
@@ -7373,45 +15468,52 @@ m: '',
 			return this;
 			}
 		};
-	Pattern.prototype.clone = function(items){
-		var c = scrawl.newPattern(items);
-		return c;
-		};
+
+/**
+Remove this pattern from the scrawl library
+@method remove
+@return Always true
+**/
 	Pattern.prototype.remove = function(){
 		delete scrawl.dsn[this.name];
 		delete scrawl.design[this.name];
-		scrawl.designnames.removeItem(this.name);
+		scrawl.removeItem(scrawl.designnames, this.name);
 		return true;
 		};
+
+/**
+Alias for Pattern.makeDesign()
+@method update
+@return This
+@chainable
+**/
 	Pattern.prototype.update = function(){
 		this.makeDesign();
 		return this;
 		};
 
+/**
+# Color
+	
+## Instantiation
+
+* scrawl.newColor()
+
+## Purpose
+
+* Defines a color object
+* Used with sprite.strokeStyle, sprite.fillStyle and sprite.shadowColor attributes
+
+@class Color
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
 	function Color(items){
-		Scrawl.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.r = items.r || 0;
-		this.g = items.g || 0;
-		this.b = items.b || 0;
-		this.a = items.a || 1;
-		this.rShift = items.rShift || 0;
-		this.gShift = items.gShift || 0;
-		this.bShift = items.bShift || 0;
-		this.aShift = items.aShift || 0;
-		this.rMax = items.rMax || 255;
-		this.gMax = items.gMax || 255;
-		this.bMax = items.bMax || 255;
-		this.aMax = items.aMax || 1;
-		this.rMin = items.rMin || 0;
-		this.gMin = items.gMin || 0;
-		this.bMin = items.bMin || 0;
-		this.aMin = items.aMin || 0;
-		this.rBounce = (scrawl.isa(items.rBounce,'bool')) ? items.rBounce : false;
-		this.gBounce = (scrawl.isa(items.gBounce,'bool')) ? items.gBounce : false;
-		this.bBounce = (scrawl.isa(items.bBounce,'bool')) ? items.bBounce : false;
-		this.aBounce = (scrawl.isa(items.aBounce,'bool')) ? items.aBounce : false;
-		this.autoUpdate = (scrawl.isa(items.autoUpdate,'bool')) ? items.autoUpdate : false;
+		Scrawl.call(this, items);
+		this.set(items);
 		if(scrawl.xt(items.color)){
 			this.convert(items.color)
 			};
@@ -7420,93 +15522,298 @@ m: '',
 			};
 		this.checkValues();
 		scrawl.design[this.name] = this;
-		scrawl.designnames.pushUnique(this.name);
+		scrawl.pushUnique(scrawl.designnames, this.name);
 		return this;
 		}
 	Color.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Color'
+@final
+**/		
 	Color.prototype.type = 'Color';
 	Color.prototype.classname = 'designnames';
-	Color.prototype.prepareForExport = function(){
-		var u;
-		return {
-			//all
-			name: this.name,
-			comment: (this.comment !== '') ? this.comment : u,
-			title: (this.title !== '') ? this.title : u,
-			timestamp: this.timestamp,
-			type: this.type,
-			//Pattern
-			r: (this.r !== 0) ? this.r : u,
-			g: (this.g !== 0) ? this.g : u,
-			b: (this.b !== 0) ? this.b : u,
-			a: (this.a !== 1) ? this.a : u,
-			rShift: (this.rShift !== 0) ? this.rShift : u,
-			gShift: (this.gShift !== 0) ? this.gShift : u,
-			bShift: (this.bShift !== 0) ? this.bShift : u,
-			aShift: (this.aShift !== 0) ? this.aShift : u,
-			rMax: (this.rMax !== 255) ? this.rMax : u,
-			gMax: (this.gMax !== 255) ? this.gMax : u,
-			bMax: (this.bMax !== 255) ? this.bMax : u,
-			aMax: (this.aMax !== 1) ? this.aMax : u,
-			rMin: (this.rMin !== 0) ? this.rMin : u,
-			gMin: (this.gMin !== 0) ? this.gMin : u,
-			bMin: (this.bMin !== 0) ? this.bMin : u,
-			aMin: (this.aMin !== 0) ? this.aMin : u,
-			rBounce: (this.rBounce) ? this.rBounce : u,
-			gBounce: (this.gBounce) ? this.gBounce : u,
-			bBounce: (this.bBounce) ? this.bBounce : u,
-			aBounce: (this.aBounce) ? this.aBounce : u,
-			autoUpdate: (this.autoUpdate) ? this.autoUpdate : u,
-			};
+	scrawl.d.Color = {
+/**
+Red channel value: 0 - 255
+@property r
+@type Number
+@default 0
+**/		
+		r: 0,
+/**
+Green channel value: 0 - 255
+@property g
+@type Number
+@default 0
+**/		
+		g: 0,
+/**
+Blue channel value: 0 - 255
+@property b
+@type Number
+@default 0
+**/		
+		b: 0,
+/**
+Alpha channel value: 0 - 1
+@property a
+@type Number
+@default 1
+**/		
+		a: 1,
+/**
+Red channel delta value
+@property rShift
+@type Number
+@default 0
+**/		
+		rShift: 0,
+/**
+Green channel delta value
+@property gShift
+@type Number
+@default 0
+**/		
+		gShift: 0,
+/**
+Blue channel delta value
+@property bShift
+@type Number
+@default 0
+**/		
+		bShift: 0,
+/**
+Alpha channel delta value
+@property aShift
+@type Number
+@default 0
+**/		
+		aShift: 0,
+/**
+Red channel maximum permitted value: 0 - 255
+@property rMax
+@type Number
+@default 255
+**/		
+		rMax: 255,
+/**
+Green channel maximum permitted value: 0 - 255
+@property gMax
+@type Number
+@default 255
+**/		
+		gMax: 255,
+/**
+Blue channel maximum permitted value: 0 - 255
+@property bMax
+@type Number
+@default 255
+**/		
+		bMax: 255,
+/**
+Alpha channel maximum permitted value: 0 - 1
+@property aMax
+@type Number
+@default 1
+**/		
+		aMax: 1,
+/**
+Red channel minimum permitted value: 0 - 255
+@property rMin
+@type Number
+@default 0
+**/		
+		rMin: 0,
+/**
+Green channel minimum permitted value: 0 - 255
+@property gMin
+@type Number
+@default 0
+**/		
+		gMin: 0,
+/**
+Blue channel minimum permitted value: 0 - 255
+@property bMin
+@type Number
+@default 0
+**/		
+		bMin: 0,
+/**
+Alpha channel minimum permitted value: 0 - 1
+@property aMin
+@type Number
+@default 0
+**/		
+		aMin: 0,
+/**
+Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel's maximum or minimum value is breached
+@property rBounce
+@type Boolean
+@default false
+**/		
+		rBounce: false,
+/**
+Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel's maximum or minimum value is breached
+@property gBounce
+@type Boolean
+@default false
+**/		
+		gBounce: false,
+/**
+Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel's maximum or minimum value is breached
+@property bBounce
+@type Boolean
+@default false
+**/		
+		bBounce: false,
+/**
+Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel's maximum or minimum value is breached
+@property aBounce
+@type Boolean
+@default false
+**/		
+		aBounce: false,
+/**
+Requires Color object to recalculate its attribute values before each display cycle commences
+@property autoUpdate
+@type Boolean
+@default false
+**/		
+		autoUpdate: false,
+/**
+Generation flag - if true, Color object will set itself to a random color within minimum and maximum attributes
+
+This attribute is not retained by the color object, and can only be used in the __scrawl.newColor()__ and __Color.set()__ functions
+@property random
+@type Boolean
+@default false
+**/		
 		};
-	Color.prototype.setToDefaults = function(){
-		this.set({
-			comment: '',
-			title: '',
-			r: 0,
-			g: 0,
-			b: 0,
-			a: 1,
-			rShift: 0,
-			gShift: 0,
-			bShift: 0,
-			aShift: 0,
-			rMax: 255,
-			gMax: 255,
-			bMax: 255,
-			aMax: 1,
-			rMin: 0,
-			gMin: 0,
-			bMin: 0,
-			aMin: 0,
-			rBounce: false,
-			gBounce: false,
-			bBounce: false,
-			aBounce: false,
-			autoUpdate: false,
+	scrawl.mergeInto(scrawl.d.Color, scrawl.d.Scrawl);
+ 
+/**
+Overrides Scrawl.get()
+
+* If called with no argument, will return the current color String
+* if called with the String argument 'random', will generate a random color (within permitted limits) and return that
+@method get
+@param {String} item Attribute key String
+@return Attribute value, or CSS color string
+**/
+	Color.prototype.get = function(item){
+		if(!scrawl.xt(item)){
+			return 'rgba('+(this.r || 0)+', '+(this.g || 0)+', '+(this.b || 0)+', '+(this.a || 1)+')';
+			}
+		else if(item === 'random'){
+			this.generateRandomColor();
+			return this.get();
+			}
+		else{
+			return Scrawl.prototype.get.call(this, item);
+			}
+		};
+ 
+/**
+Overrides Scrawl.clone()
+@method clone
+@param {Object} items Object consisting of key:value attributes
+@return Cloned Color object
+**/
+	Color.prototype.clone = function(items){
+		var a = this.parse(),
+			b,
+			c;
+		b = scrawl.mergeOver(a, ((scrawl.isa(items,'obj')) ? items : {}));
+		c = scrawl.newColor(b);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xt(items.random) && items.random){
+			delete c.r;
+			delete c.g;
+			delete c.b;
+			delete c.a;
+			c.generateRandomColor(items)
+			}
+		return c;
+		};
+ 
+/**
+Returns current color
+@method getData
+@return CSS color String
+@private
+**/
+	Color.prototype.getData = function(){
+		if(this.get('autoUpdate')){
+			this.update();
+			}
+		this.checkValues();
+		return this.get();
+		};
+ 
+/**
+Generates a random color
+
+Argument can include preset color channel values (0-255, 0-1 for alpha): {r:Number, g:Number, b:Number, a:Number}
+@method generateRandomColor
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+@private
+**/
+	Color.prototype.generateRandomColor = function(items){
+		var rMax = this.get('rMax'),
+			gMax = this.get('gMax'),
+			bMax = this.get('bMax'),
+			aMax = this.get('aMax'),
+			rMin = this.get('rMin'),
+			gMin = this.get('gMin'),
+			bMin = this.get('bMin'),
+			aMin = this.get('aMin');
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		Scrawl.prototype.set.call(this, {
+			r: items.r || Math.round((Math.random()*(rMax-rMin))+rMin),
+			g: items.g || Math.round((Math.random()*(gMax-gMin))+gMin),
+			b: items.b || Math.round((Math.random()*(bMax-bMin))+bMin),
+			a: items.a || (Math.random()*(aMax-aMin))+aMin,
+			});
+		this.checkValues();
+		return this;
+		};
+ 
+/**
+Checks that color channel values are of the permitted form (integer vs float) and within permitted ranges
+@method checkValues
+@return This
+@chainable
+@private
+**/
+	Color.prototype.checkValues = function(){
+		var r = this.r || 0,
+			g = this.g || 0,
+			b = this.b || 0,
+			a = this.a || 1;
+		r = (r > 255) ? 255 : ((r < 0) ? 0 : r);
+		g = (g > 255) ? 255 : ((g < 0) ? 0 : g);
+		b = (b > 255) ? 255 : ((b < 0) ? 0 : b);
+		a = (a > 1) ? 1 : ((a < 0) ? 0 : a);
+		Scrawl.prototype.set.call(this, {
+			r: r,
+			g: g,
+			b: b,
+			a: a,
 			});
 		return this;
 		};
-	Color.prototype.get = function(){
-		this.checkValues();
-		return 'rgba('+this.r+','+this.g+','+this.b+','+this.a+')';
-		};
-	Color.prototype.generateRandomColor = function(items){
-		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.r = items.r || parseInt(((Math.random()*(this.rMax-this.rMin))+this.rMin).toFixed());
-		this.g = items.g || parseInt(((Math.random()*(this.gMax-this.gMin))+this.gMin).toFixed());
-		this.b = items.b || parseInt(((Math.random()*(this.bMax-this.bMin))+this.bMin).toFixed());
-		this.a = items.a || parseFloat(((Math.random()*(this.aMax-this.aMin))+this.aMin).toFixed(6));
-		this.checkValues();
-		return this;
-		};
-	Color.prototype.checkValues = function(){
-		this.r = (this.r > 255) ? 255 : ((this.r < 0) ? 0 : this.r);
-		this.g = (this.g > 255) ? 255 : ((this.g < 0) ? 0 : this.g);
-		this.b = (this.b > 255) ? 255 : ((this.b < 0) ? 0 : this.b);
-		this.a = (this.a > 1) ? 1 : ((this.a < 0) ? 0 : this.a);
-		return this;
-		};
+
+/**
+Overrides Scrawl.set()
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Color.prototype.set = function(items){
 		Scrawl.prototype.set.call(this, items);
 		items = (scrawl.isa(items,'obj')) ? items : {};
@@ -7516,106 +15823,987 @@ m: '',
 		this.checkValues();
 		return this;
 		};
+
+/**
+Update the current color, taking into account shift and bounce attribute values
+@method update
+@return This
+@chainable
+**/
 	Color.prototype.update = function(){
-		var l = ['r','g','b','a'];
+		var l = ['r','g','b','a'],
+			col,
+			res = [],
+			sft = [],
+			shift,
+			min,
+			max,
+			bounce,
+			r,
+			g,
+			b,
+			a;
 		for(var i=0, z=l.length; i<z; i++){
-			if(!(this[l[i]]+this[l[i]+'Shift']).isBetween(this[l[i]+'Max'],this[l[i]+'Min'],true)){
-				if(this[l[i]+'Bounce']){
-					this[l[i]+'Shift'] = -this[l[i]+'Shift'];
+			col = this.get(l[i]);
+			shift = this.get(l[i]+'Shift');
+			min = this.get(l[i]+'Min');
+			max = this.get(l[i]+'Max');
+			bounce = this.get(l[i]+'Bounce');
+			if(!scrawl.isBetween((col + shift), max, min, true)){
+				if(bounce){
+					shift = -shift;
 					}
 				else{
-					this[l[i]] = (this[l[i]] > (this[l[i]+'Max']+this[l[i]+'Min'])/2) ? this[l[i]+'Max'] : this[l[i]+'Min'];
-					this[l[i]+'Shift'] = 0;
+					col = (col > (max + min)/2) ? max : min;
+					shift = 0;
 					}
 				}
-			this[l[i]] += this[l[i]+'Shift'];
+			res[i] = col + shift;
+			sft[i] = shift;
 			}
+		Scrawl.prototype.set.call(this, {
+			r: res[0],
+			g: res[1],
+			b: res[2],
+			a: res[3],
+			rShift: sft[0],
+			gShift: sft[1],
+			bShift: sft[2],
+			aShift: sft[3],
+			});
 		return this;
 		};
+ 
+/**
+Add values to Number attributes - limited to altering __r__, __g__, __b__ and __a__ attributes
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 	Color.prototype.setDelta = function(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		this.r += items.r || 0;
-		this.g += items.g || 0;
-		this.b += items.b || 0;
-		this.a += items.a || 0;
+		Scrawl.prototype.set.call(this, {
+			r: (this.r || 0) + (items.r || 0),
+			g: (this.g || 0) + (items.g || 0),
+			b: (this.b || 0) + (items.b || 0),
+			a: (this.a || 1) + (items.a || 0),
+			});
 		this.checkValues();
 		return this;
 		};
+
+/**
+Convert a CSS color string value into native attribute values. 
+
+Converts: '#nnn', '#nnnnnn', 'rgb(n, n, n)', 'rgba(n, n, n, a), color names.
+
+Color names are limited to those supported by SVGTiny: 'green', 'silver', 'lime', 'gray', 'grey', 'olive', 'white', 'yellow', 'maroon', 'navy', 'red', 'blue', 'purple', 'teal', 'fuchsia', 'aqua'. Default: 'black'.
+@method convert
+@param {String} items CSS color String 
+@return This
+@chainable
+**/
 	Color.prototype.convert = function(items){
 		items = (scrawl.isa(items,'str')) ? items : '';
 		if(items.length > 0){
 			items.toLowerCase();
-			var temp;
+			var temp,
+				r = 0,
+				g = 0,
+				b = 0,
+				a = 1;
 			if(items[0] === '#'){
 				if(items.length < 5){
-					this.r = this.toDecimal(items[1]+items[1]);
-					this.g = this.toDecimal(items[2]+items[2]);
-					this.b = this.toDecimal(items[3]+items[3]);
+					r = this.toDecimal(items[1]+items[1]);
+					g = this.toDecimal(items[2]+items[2]);
+					b = this.toDecimal(items[3]+items[3]);
 					}
 				else if(items.length < 8){
-					this.r = this.toDecimal(items[1]+items[2]);
-					this.g = this.toDecimal(items[3]+items[4]);
-					this.b = this.toDecimal(items[5]+items[6]);
+					r = this.toDecimal(items[1]+items[2]);
+					g = this.toDecimal(items[3]+items[4]);
+					b = this.toDecimal(items[5]+items[6]);
 					}
 				}
 			else if(/rgb\(/.test(items)){
 				temp = items.match(/([0-9.]+\b)/g);
 				if(/%/.test(items)){
-					this.r = parseInt((temp[0]/100)*255,10);
-					this.g = parseInt((temp[1]/100)*255,10);
-					this.b = parseInt((temp[2]/100)*255,10);
+					r = Math.round((temp[0]/100)*255);
+					g = Math.round((temp[1]/100)*255);
+					b = Math.round((temp[2]/100)*255);
 					}
 				else{
-					this.r = parseInt(temp[0],10);
-					this.g = parseInt(temp[1],10);
-					this.b = parseInt(temp[2],10);
+					r = Math.round(temp[0]);
+					g = Math.round(temp[1]);
+					b = Math.round(temp[2]);
 					}
 				}
 			else if(/rgba\(/.test(items)){
 				temp = items.match(/([0-9.]+\b)/g);
-				this.r = temp[0];
-				this.g = temp[1];
-				this.b = temp[2];
-				this.a = temp[3];
+				r = temp[0];
+				g = temp[1];
+				b = temp[2];
+				a = temp[3];
 				}
 			else{
 				switch(items){
-					case 'green' : 		this.r = 0;		this.g = 128;	this.b = 0;		break;
-					case 'silver' : 	this.r = 192;	this.g = 192;	this.b = 192;	break;
-					case 'lime' : 		this.r = 0;		this.g = 255;	this.b = 0;		break;
-					case 'gray' : 		this.r = 128;	this.g = 128;	this.b = 128;	break;
-					case 'grey' : 		this.r = 128;	this.g = 128;	this.b = 128;	break;
-					case 'olive' : 		this.r = 128;	this.g = 128;	this.b = 0;		break;
-					case 'white' : 		this.r = 255;	this.g = 255;	this.b = 255;	break;
-					case 'yellow' : 	this.r = 255;	this.g = 255;	this.b = 0;		break;
-					case 'maroon' : 	this.r = 128;	this.g = 0;		this.b = 0;		break;
-					case 'navy' : 		this.r = 0;		this.g = 0;		this.b = 128;	break;
-					case 'red' : 		this.r = 255;	this.g = 0;		this.b = 0;		break;
-					case 'blue' : 		this.r = 0;		this.g = 0;		this.b = 255;	break;
-					case 'purple' : 	this.r = 128;	this.g = 0;		this.b = 128;	break;
-					case 'teal' : 		this.r = 0;		this.g = 128;	this.b = 128;	break;
-					case 'fuchsia' : 	this.r = 255;	this.g = 0;		this.b = 255;	break;
-					case 'aqua' : 		this.r = 0;		this.g = 255;	this.b = 255;	break;
-					default : 			this.r = 0;		this.g = 0;		this.b = 0;		break;
+					case 'green' : 		r = 0;		g = 128;	b = 0;		break;
+					case 'silver' : 	r = 192;	g = 192;	b = 192;	break;
+					case 'lime' : 		r = 0;		g = 255;	b = 0;		break;
+					case 'gray' : 		r = 128;	g = 128;	b = 128;	break;
+					case 'grey' : 		r = 128;	g = 128;	b = 128;	break;
+					case 'olive' : 		r = 128;	g = 128;	b = 0;		break;
+					case 'white' : 		r = 255;	g = 255;	b = 255;	break;
+					case 'yellow' : 	r = 255;	g = 255;	b = 0;		break;
+					case 'maroon' : 	r = 128;	g = 0;		b = 0;		break;
+					case 'navy' : 		r = 0;		g = 0;		b = 128;	break;
+					case 'red' : 		r = 255;	g = 0;		b = 0;		break;
+					case 'blue' : 		r = 0;		g = 0;		b = 255;	break;
+					case 'purple' : 	r = 128;	g = 0;		b = 128;	break;
+					case 'teal' : 		r = 0;		g = 128;	b = 128;	break;
+					case 'fuchsia' : 	r = 255;	g = 0;		b = 255;	break;
+					case 'aqua' : 		r = 0;		g = 255;	b = 255;	break;
+					default : 			r = 0;		g = 0;		b = 0;		break;
 					}
 				}
 			}
+		Scrawl.prototype.set.call(this, {
+			r: r,
+			g: g,
+			b: b,
+			a: a,
+			});
 		this.checkValues();
 		return this;
 		};
+
+/**
+Convert a decimal Number to its hexidecimal String value
+@method toDecimal
+@param {Number} items decimal value
+@return Hexidecimal String
+**/
 	Color.prototype.toDecimal = function(item){
 		return parseInt(item,16);
 		};
+
+/**
+Convert a hexidecimal String to its decimal Number value
+@method toHex
+@param {String} Hexidecimal String value
+@return Decimal Number
+**/
 	Color.prototype.toHex = function(item){
 		return item.toString(16);
 		};
+
+/**
+Delete this Color object from the scrawl library
+@method remove
+@return Always true
+**/
 	Color.prototype.remove = function(){
 		delete scrawl.dsn[this.name];
 		delete scrawl.design[this.name];
-		scrawl.designnames.removeItem(this.name);
+		scrawl.removeItem(scrawl.designnames, this.name);
+		return true;
+		};
+
+/**
+# Particle
+	
+## Instantiation
+
+* scrawl.newParticle()
+
+## Purpose
+
+* Defines Particle object, for physics simulations
+* Particles are stored in __scrawl.sprite__; they inherit from Scrawl, not Sprite, objects
+@class Particle
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
+	function Particle(items){
+		Scrawl.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.position = new Vector();
+		this.velocity = new Vector();
+		this.set(items);
+		this.priorPosition = this.position.getVector();
+		this.engine = items.engine || 'euler';
+		this.userVar = items.userVar || {};
+		this.mobile = (scrawl.isa(items.mobile,'bool')) ? items.mobile : true;
+		this.forces = items.forces || [];
+		this.springs = items.springs || [];
+		this.mass = items.mass || scrawl.d.Particle.mass;
+		this.elasticity = items.elasticity || scrawl.d.Particle.elasticity;
+		this.radius = items.radius || scrawl.d.Particle.radius;
+		if(items.radius || items.area){
+			this.area = items.area || 2 * Math.PI * this.get('radius') * this.get('radius') || scrawl.d.Particle.area;
+			}
+		this.load = new Vector();
+		scrawl.sprite[this.name] = this;
+		scrawl.pushUnique(scrawl.spritenames, this.name);
+		this.group = Sprite.prototype.getGroup.call(this, items);
+		scrawl.group[this.group].addSpritesToGroup(this.name);
+		return this;
+		}
+	Particle.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Particle'
+@final
+**/		
+	Particle.prototype.type = 'Particle';
+	Particle.prototype.classname = 'spritenames';
+/**
+All Property have an order attribute of value 0
+@property order
+@type Number
+@default 0
+@final
+**/		
+	Particle.prototype.order = 0;	//included to allow normal sprites to sort themselves properly
+	scrawl.d.Particle = {
+/**
+Current group
+@property group
+@type String
+@default ''
+**/		
+		group: '',
+		order: 0,
+/**
+Mobility flag; when false, particle is fixed to the Cell at its position attribute coordinate vector
+@property mobile
+@type Boolean
+@default true
+**/		
+		mobile: true,
+/**
+Particle mass value, in kilograms
+@property mass
+@type Number
+@default 1
+**/		
+		mass: 1,
+/**
+Particle radius, in meters
+@property radius
+@type Number
+@default 0.1
+**/		
+		radius: 0.1,
+/**
+Projected surface area - assumed to be of a sphere - in square meters
+@property area
+@type Number
+@default 0.03
+**/		
+		area: 0.03,
+/**
+Air drag coefficient - assumed to be operating on a smooth sphere
+@property drag
+@type Number
+@default 0.42
+**/		
+		drag: 0.42,
+/**
+Elasticity coefficient, where 0.0 = 100% elastic and 1.0 is 100% inelastic
+@property elasticity
+@type Number
+@default 1
+**/		
+		elasticity: 1,
+/**
+Object in which user key:value pairs can be stored - clonable
+@property userVar
+@type Object
+@default {}
+**/		
+		userVar: {},
+/**
+Position vector - assume 1 pixel = 1 meter
+
+Vector attributes can be set using the following alias attributes:
+
+* position.x - __startX__ or __start.x__
+* position.y - __startY__ or __start.y__
+@property position
+@type Vector
+@default Zero values vector
+**/		
+		position: {x:0,y:0,z:0},
+/**
+Velocity vector - assume 1 pixel = 1 meter per second
+
+Vector attributes can be set using the following alias attributes:
+
+* velocity.x - __deltaX__ or __delta.x__
+* velocity.y - __deltaY__ or __delta.y__
+@property velocity
+@type Vector
+@default Zero values vector
+**/		
+		velocity: {x:0,y:0,z:0},
+/**
+Particle calculator engine - a String value. 
+
+Current engines include: 'rungeKutter' (most accurate), 'improvedEuler', 'euler' (default)
+@property engine
+@type String
+@default 'euler'
+**/		
+		engine: 'euler',
+/**
+An Array containing FORCENAME Strings and/or force Functions
+@property forces
+@type Array
+@default []
+**/		
+		forces: [],
+/**
+An Array containing SPRINGNAME Strings
+@property springs
+@type Array
+@default []
+**/		
+		springs: [],
+/**
+Load Vector - recreated at the start of every calculation cycle iteration
+@property load
+@type Vector
+@default Zero vector
+@private
+**/		
+		load: new Vector(),
+		};
+	scrawl.mergeInto(scrawl.d.Particle, scrawl.d.Scrawl);
+
+/**
+Overrides Scrawl.set()
+
+Allows users to set the Particle's position and velocity attributes using startX, startY, start, deltaX, deltaY, delta values
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	Particle.prototype.set = function(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var temp;
+		Scrawl.prototype.set.call(this, items);
+		if(!this.position.type || this.position.type !== 'Vector'){
+			this.position = new Vector(items.position || this.position);
+			}
+		if(scrawl.xto([items.start, items.startX, items.startY])){
+			temp = (scrawl.isa(items.start,'obj')) ? items.start : {};
+			this.position.x = (scrawl.xt(items.startX)) ? items.startX : ((scrawl.xt(temp.x)) ? temp.x : this.position.x);
+			this.position.y = (scrawl.xt(items.startY)) ? items.startY : ((scrawl.xt(temp.y)) ? temp.y : this.position.y);
+			}
+		if(!this.velocity.type || this.velocity.type !== 'Vector'){
+			this.velocity = new Vector(items.velocity || this.velocity);
+			}
+		if(scrawl.xto([items.delta, items.deltaX, items.deltaY])){
+			temp = (scrawl.isa(items.delta,'obj')) ? items.delta : {};
+			this.velocity.x = (scrawl.xt(items.deltaX)) ? items.deltaX : ((scrawl.xt(temp.x)) ? temp.x : this.velocity.x);
+			this.velocity.y = (scrawl.xt(items.deltaY)) ? items.deltaY : ((scrawl.xt(temp.y)) ? temp.y : this.velocity.y);
+			}
+		return this;
+		};
+
+/**
+Overrides Scrawl.clone()
+@method clone
+@param {Object} items Object consisting of key:value attributes
+@return Cloned Particle object
+@chainable
+**/
+	Particle.prototype.clone = function(items){
+		var a = Scrawl.prototype.clone.call(this, items);
+		a.position = new Vector(a.position);
+		a.velocity = new Vector(a.velocity);
+		a.forces = [];
+		for(var i=0, z=this.forces.length; i<z; i++){
+			a.forces.push(this.forces[i]);
+			}
+		return a;
+		};
+
+/**
+Add a force to the forces array
+@method addForce
+@param {Object} item Anonymous Function, or FORCENAME String
+@return This
+@chainable
+**/
+	Particle.prototype.addForce = function(item){
+		if(scrawl.xt(item)){
+			this.forces.push(item);
+			}
+		return this;
+		};
+	Particle.prototype.revert = function(){
+		this.position = this.priorPosition.getVector();
+		return this;
+		};
+
+/**
+Undertake a calculation cycle iteration
+@method stamp
+@return This
+@chainable
+**/
+	Particle.prototype.stamp = function(){
+		if(this.mobile){
+			this.calculateLoads();
+			switch(this.engine){
+				case 'improvedEuler' :
+					this.updateImprovedEuler();
+					break;
+				case 'rungeKutter' :
+					this.updateRungeKutter();
+					break;
+				default :
+					this.updateEuler();
+				}
+			}
+		return this;
+		};
+
+/**
+Alias for Particle.stamp()
+@method forceStamp
+@return This
+@chainable
+**/
+	Particle.prototype.forceStamp = function(){
+		return this.stamp();
+		};
+
+/**
+Alias for Particle.stamp()
+@method update
+@return This
+@chainable
+**/
+	Particle.prototype.update = function(){
+		return this.stamp();
+		return this;
+		};
+
+/**
+Calculate the loads (via forces) acting on the particle for this calculation cycle iteration
+@method calculateLoads
+@return This
+@chainable
+@private
+**/
+	Particle.prototype.calculateLoads = function(){
+		this.load = new Vector();
+		for(var i=0, z=this.forces.length; i<z; i++){
+			if(scrawl.isa(this.forces[i], 'str') && scrawl.contains(scrawl.forcenames, this.forces[i])){
+				scrawl.force[this.forces[i]].run(this);
+				}
+			else{
+				this.forces[i](this);
+				}
+			}
+		for(var i=0, z=this.springs.length; i<z; i++){
+			if(scrawl.spring[this.springs[i]].start === this.name){
+				this.load.vectorAdd(scrawl.spring[this.springs[i]].force);
+				}
+			else if(scrawl.spring[this.springs[i]].end === this.name){
+				this.load.vectorSubtract(scrawl.spring[this.springs[i]].force);
+				}
+			}
+		return this;
+		};
+
+/**
+Calculation cycle engine
+@method updateEuler
+@return This
+@chainable
+@private
+**/
+	Particle.prototype.updateEuler = function(){
+		this.velocity.vectorAdd(this.load.getScalarDivide(this.mass).scalarMultiply(scrawl.physics.deltaTime));
+		this.priorPosition = this.position.getVector();
+		this.position.vectorAdd(this.velocity.getScalarMultiply(scrawl.physics.deltaTime));
+		return this;
+		};
+
+/**
+Calculation cycle engine
+@method updateImprovedEuler
+@return This
+@chainable
+@private
+**/
+	Particle.prototype.updateImprovedEuler = function(){
+		var k1 = this.load.getScalarDivide(this.mass).scalarMultiply(scrawl.physics.deltaTime);
+		var k2 = this.load.getVectorAdd(k1).scalarDivide(this.mass).scalarMultiply(scrawl.physics.deltaTime);
+		var kSum = k1.getVectorAdd(k2).scalarDivide(2);
+		this.velocity.vectorAdd(kSum);
+		this.priorPosition = this.position.getVector();
+		this.position.vectorAdd(this.velocity.getScalarMultiply(scrawl.physics.deltaTime));
+		return this;
+		};
+
+/**
+Calculation cycle engine
+@method updateRungeKutter
+@return This
+@chainable
+@private
+**/
+	Particle.prototype.updateRungeKutter = function(){
+		var k1 = this.load.getScalarDivide(this.mass).scalarMultiply(scrawl.physics.deltaTime).scalarDivide(2);
+		var k2 = this.load.getVectorAdd(k1).scalarDivide(this.mass).scalarMultiply(scrawl.physics.deltaTime).scalarDivide(2);
+		var k3 = this.load.getVectorAdd(k2).scalarDivide(this.mass).scalarMultiply(scrawl.physics.deltaTime);
+		var k4 = this.load.getVectorAdd(k3).scalarDivide(this.mass).scalarMultiply(scrawl.physics.deltaTime);
+		k2.scalarMultiply(2);
+		k3.scalarMultiply(2);
+		var kSum = k1.getVectorAdd(k2).vectorAdd(k3).vectorAdd(k4).scalarDivide(6);
+		this.velocity.vectorAdd(kSum);
+		this.priorPosition = this.position.getVector();
+		this.position.vectorAdd(this.velocity.getScalarMultiply(scrawl.physics.deltaTime));
+		return this;
+		};
+
+/**
+Calculation cycle engine - linear particle collisions
+@method linearCollide
+@return This
+@chainable
+@private
+**/
+	Particle.prototype.linearCollide = function(b){
+		var relPosition = this.position.getVectorSubtract(b.position);
+		var normal = relPosition.getNormal();
+		var relVelocity = this.velocity.getVectorSubtract(b.velocity);
+		var impactScalar = relVelocity.getDotProduct(normal);
+		impactScalar = -impactScalar * (1 + ((this.elasticity + b.elasticity)/2));
+		impactScalar /= ((1/this.mass)+(1/b.mass));
+		var impact = normal.getScalarMultiply(impactScalar);
+		this.velocity.vectorAdd(impact.scalarDivide(this.mass));
+		b.velocity.vectorAdd(impact.scalarDivide(b.mass).reverse());
+		return this;
+		};
+
+/**
+Create a new Spring object and add it to this, and another, Particle objects' springs array
+
+Argument can be either a PARTICLENAME String, or an Object which includes an __end__ attribute set to a PARTICLENAME String
+@method addSpring
+@param {Object} items Object consisting of key:value attributes; alternatively, use a PARTICLENAME String
+@return This
+@chainable
+**/
+	Particle.prototype.addSpring = function(items){
+		var mySpring = false, end = false;
+		if(scrawl.isa(items,'str') && scrawl.contains(scrawl.spritenames, items)){
+			end = items;
+			var myItems = {};
+			myItems.start = this.name;
+			myItems.end = items;
+			mySpring = scrawl.newSpring(myItems);
+			}
+		else{
+			items = (scrawl.isa(items,'obj')) ? items : {};
+			end = items.end || false;
+			if(end && scrawl.contains(scrawl.spritenames, end)){
+				items.start = this.name;
+				mySpring = scrawl.newSpring(items);
+				}
+			}
+		if(mySpring){
+			scrawl.pushUnique(this.springs, mySpring.name);
+			scrawl.pushUnique(scrawl.sprite[end].springs, mySpring.name);
+			}
+		return this;
+		};
+
+/**
+Delete all springs associated with this Particle
+@method removeSprings
+@return This
+@chainable
+**/
+	Particle.prototype.removeSprings = function(){
+		var temp = [];
+		for(var i=0, z=this.springs.length; i<z; i++){
+			temp.push(this.springs[i]);
+			}
+		for(var i=0, z=temp.length; i<z; i++){
+			scrawl.spring[temp].kill();
+			}
+		return this;
+		};
+
+/**
+Delete a named Spring object from this Particle
+@method removeSpringsTo
+@return This
+@chainable
+**/
+	Particle.prototype.removeSpringsTo = function(item){
+		if(scrawl.xt(item) && scrawl.contains(scrawl.spritenames, item)){
+			var temp = [], s;
+			for(var i=0, z=this.springs.length; i<z; i++){
+				s = scrawl.spring[this.springs[i]];
+				if(s.start === this.name || s.end === this.name){
+					temp.push(this.springs[i]);
+					}
+				}
+			for(var i=0, z=temp.length; i<z; i++){
+				scrawl.spring[temp].kill();
+				}
+			}
+		return this;
+		};
+	//the following dummy functions allow Particle objects to play nicely as part of a wider sprite Group object
+	Particle.prototype.pickupSprite = function(item){return this;};
+	Particle.prototype.dropSprite = function(item){return this;};
+	Particle.prototype.updateStart = function(){return this;};
+		
+/**
+# Spring
+	
+## Instantiation
+
+* scrawl.newSpring()
+* Particle.addSpring()
+
+## Purpose
+
+* Defines a Spring object connecting two Particle objects
+@class Spring
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
+	function Spring(items){
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		if(scrawl.xta([items.start, items.end])){
+			var b1 = scrawl.sprite[items.start];
+			var b2 = scrawl.sprite[items.end];
+			Scrawl.call(this, items);
+			this.start = items.start;
+			this.end = items.end;
+			this.springConstant = items.springConstant || 1000;
+			this.damperConstant = items.damperConstant || 100;
+			if(scrawl.xt(items.restLength)){
+				this.restLength = items.restLength;
+				}
+			else{
+				var r = b2.position.getVector();
+				r.vectorSubtract(b1.position);
+				this.restLength = r.getMagnitude();
+				}
+			this.currentLength = items.currentLength || this.restLength;
+			this.force = new Vector();
+			scrawl.spring[this.name] = this;
+			scrawl.pushUnique(scrawl.springnames, this.name);
+			return this;
+			}
+		return false;
+		}
+	Spring.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Spring'
+@final
+**/		
+	Spring.prototype.type = 'Spring';
+	Spring.prototype.classname = 'springnames';
+	scrawl.d.Spring = {
+/**
+First Particle PARTICLENAME
+@property start
+@type String
+@default ''
+**/		
+		start: '',
+/**
+Second Particle PARTICLENAME
+@property end
+@type String
+@default ''
+**/		
+		end: '',
+/**
+Spring constant
+@property springConstant
+@type Number
+@default 1000
+**/		
+		springConstant: 1000,
+/**
+Spring damper constant
+@property damperConstant
+@type Number
+@default 100
+**/		
+		damperConstant: 100,
+/**
+Rest length, in pixels, between the Spring object's two Particle objects
+@property restLength
+@type Number
+@default 1
+**/		
+		restLength: 1,
+/**
+Current length, in pixels, between the Spring object's two Particle objects
+
+Recalculated as part of each  calculation cycle iteration
+@property currentLength
+@type Number
+@default 1
+@private
+**/		
+		currentLength: 1,
+/**
+Vector representing the Spring object's current force on its Particles
+
+Recalculated as part of each  calculation cycle iteration
+@property force
+@type Vector
+@default Zero value vector
+@private
+**/		
+		force: {x:0,y:0,z:0},
+		};
+	scrawl.mergeInto(scrawl.d.Spring, scrawl.d.Scrawl);
+
+/**
+Calculate the force exerted by the spring for this calculation cycle iteration
+@method update
+@return This
+@chainable
+@private
+**/
+	Spring.prototype.update = function(){
+		var vr = scrawl.sprite[this.end].velocity.getVectorSubtract(scrawl.sprite[this.start].velocity);
+		var r = scrawl.sprite[this.end].position.getVectorSubtract(scrawl.sprite[this.start].position);
+		var r_norm = r.getNormal();
+		this.force = r_norm.getScalarMultiply(this.springConstant * (r.getMagnitude() - this.restLength)).vectorAdd(vr.vectorMultiply(r_norm).scalarMultiply(this.damperConstant).vectorMultiply(r_norm));
+		return this;
+		};
+
+/**
+Remove this Spring from its Particle objects, and from the scrawl library
+@method kill
+@return Always true
+**/
+	Spring.prototype.kill = function(){
+		scrawl.removeItem(scrawl.sprite[this.start].springs, this.name);
+		scrawl.removeItem(scrawl.sprite[this.end].springs, this.name);
+		delete scrawl.spring[this.name];
+		scrawl.removeItem(scrawl.springnames, this.name);
+		return true;
+		};
+
+/**
+# Force
+	
+## Instantiation
+
+* scrawl.newForce()
+
+## Purpose
+
+* Defines a Force function that can calculate forces on Particle objects
+
+Two forces are pre-defined by scrawl:
+
+* __scrawl.force.gravity__ - calculates the gravitational force acting on a Particle, as determined by the _scrawl.physics.gravity_ value and the Particle's _mass_
+* __scrawl.force.drag__ - calculates the air drag force acting on a Particle, as determined by the scrawl.physics.airDensity value, and the Particle's _area_ and _drag_ attribute values
+@class Force
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
+	function Force(items){
+		Scrawl.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		this.fn = items.fn || function(){}; 
+		scrawl.force[this.name] = this;
+		scrawl.pushUnique(scrawl.forcenames, this.name);
+		return this;
+		}
+	Force.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Force'
+@final
+**/		
+	Force.prototype.type = 'Force';
+	Force.prototype.classname = 'forcenames';
+	scrawl.d.Force = {
+/**
+Anonymous function for calculating a force on a Particle
+
+Functions need to be in the form:
+
+	function(ball){
+		//get or build a Vector object to hold the result
+		var result = scrawl.newVector();
+
+		//calculate the force - Particle attributes are available via the _ball_ argument
+		
+		//add the force to the Particle's load Vector
+		ball.load.vectorAdd(result);
+		}
+
+@property fn
+@type Function
+@default function(){}
+**/		
+		fn: function(){},
+		};
+	scrawl.mergeInto(scrawl.d.Force, scrawl.d.Scrawl);
+
+/**
+Calculate the force for this calculation cycle iteration
+@method run
+@return force Vector, as defined in the force function
+**/
+	Force.prototype.run = function(item){
+		return this.fn(item);
+		};
+
+/**
+Remove this Force from the scrawl library
+@method kill
+@return Always true
+**/
+	Force.prototype.kill = function(){
+		delete scrawl.force[this.name];
+		scrawl.removeItem(scrawl.forcenames, this.name);
 		return true;
 		};
 	
+	//add in some forces
+	scrawl.newForce({
+		name: 'gravity',
+		fn: function(ball){
+			ball.load.vectorAdd({y: ball.mass * scrawl.physics.gravity});
+			},
+		});
+	scrawl.newForce({
+		name: 'drag',
+		fn: function(ball){
+			var d = ball.velocity.getConjugate();
+			d.normalize();
+			var s = ball.velocity.getMagnitude();
+			var df = 0.5 * scrawl.physics.airDensity * s * s * ball.get('area') * ball.get('drag');
+			d.scalarMultiply(df);
+			ball.load.vectorAdd(d);
+			},
+		});
+	
+
+/**
+# Animation
+	
+## Instantiation
+
+* scrawl.newAnimation()
+
+## Purpose
+
+* Defines an animation function to be run by the scrawl.animationLoop() function
+
+@class Animation
+@constructor
+@extends Scrawl
+@param {Object} [items] Key:value Object argument for setting attributes
+@return This
+**/		
+	function Animation(items){
+		Scrawl.call(this, items);
+		items = (scrawl.isa(items,'obj')) ? items : {};
+		var delay = (scrawl.isa(items.delay, 'bool')) ? items.delay : false;
+		this.fn = items.fn || function(){}; 
+		scrawl.animation[this.name] = this;
+		scrawl.pushUnique(scrawl.animationnames, this.name);
+/**
+Pseudo-attribute used to prevent immediate running of animation when first created
+
+_This attribute is not retained by the Animation object_
+@property delay
+@type Boolean
+@default false
+**/		
+		if(!delay){
+			this.run();
+			}
+		return this;
+		}
+	Animation.prototype = Object.create(Scrawl.prototype);
+/**
+@property type
+@type String
+@default 'Animation'
+@final
+**/		
+	Animation.prototype.type = 'Animation';
+	Animation.prototype.classname = 'animationnames';
+	scrawl.d.Animation = {
+/**
+Anonymous function for an animation routine
+@property fn
+@type Function
+@default function(){}
+**/		
+		fn: function(){},
+		};
+	scrawl.mergeInto(scrawl.d.Animation, scrawl.d.Scrawl);
+
+/**
+Run an animation
+@method run
+@return Always true
+**/
+	Animation.prototype.run = function(){
+		scrawl.pushUnique(scrawl.animate, this.name);
+		return true;
+		};
+
+/**
+Stop an animation
+@method halt
+@return Always true
+**/
+	Animation.prototype.halt = function(){
+		scrawl.removeItem(scrawl.animate, this.name);
+		return true;
+		};
+		
+
+/**
+Remove this Animation from the scrawl library
+@method kill
+@return Always true
+**/
+	Animation.prototype.kill = function(){
+		delete scrawl.animation[this.name];
+		scrawl.removeItem(scrawl.animationnames, this.name);
+		scrawl.removeItem(scrawl.animate, this.name);
+		return true;
+		};
+		
+	//start initialization
 	scrawl.initialize();
 	return scrawl;
 	}());

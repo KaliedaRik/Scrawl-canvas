@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.04 - 29 November 2013
+*	version 2.00 - 2 March 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,29 +84,19 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 1.04 released 29 November 2013
+VERSION 2.00 released 2 March 2014
 
     - the zip file includes:
 	
-		- scrawl.js (279kb)
-			- will gzip to ~45kb
-		- scrawl-min.js (172kb)
-			- will gzip to ~37kb
-		
-		- documentation.txt
+		- scrawl.js (513kb)
+			- includes complete documentation for all objects, attributes and functions
+		- scrawl-min.js (181kb)
+			- use the minified file for live websites
+			- will gzip to ~40kb
 		- changelog.txt
 		- README.txt (this file)
 
-Documentation can be found in a text file (imaginatively) called 'documentation.txt'. 
-There's also a fair amount of documentation in the tutorial page on the website:
-http://scrawl.rikweb.org.uk/tutorial.html
-
-Proper inline documentation (for developers) coming soon ...
-
-I'm currently keeping track of daily changes, bug fixes and additions to the libraries in a text 
-file called 'changelog.txt'
-
-All versions of scrawl.js can be found on their SourceForge page: 
+The latest versions of scrawl.js can be found on their SourceForge page: 
 https://sourceforge.net/projects/scrawljs/
 
 scrawl.js is also available for forking from GitHub: 
@@ -117,26 +107,18 @@ Please post all questions, suggestions and critiques of Scrawl.js to those pages
 https://sourceforge.net/p/scrawljs/discussion/
 https://github.com/KaliedaRik/Scrawl.js/pulls
 
+If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
-Version 1.04 uploaded 29 November 2013
-	- added lockX and lockY attributes to sprite objects to constrain movement to the 
-	vertical and horizontal planes
-Version 1.03 uploaded 28 November 2013
-	- added ability for multiple cells to be zoomed simultaneously
-	- added more group collision detection functionality
-	- added ability for Patterns to use canvas elements as their image sources
-	- some minor bug fixes
-Version 1.02 uploaded 24 November 2013
-	- added ability to delete gradient, pattern and color objects
-	- added Cell.zoom method, together with associated Cell object attributes
-	- some minor bug fixes
-Version 1.01 uploaded 6 November 2013
-	- added ability for Picture sprites to upload their images asynchronously
-VERSION 1.00 uploaded 30 October 2013
+VERSION 2.00 uploaded 2 March 2013
 
-Previous versions are NOT compatible with version 1.00+
+Previous versions are NOT compatible with version 2.00+
+	Version 1.04 uploaded 29 November 2013
+	Version 1.03 uploaded 28 November 2013
+	Version 1.02 uploaded 24 November 2013
+	Version 1.01 uploaded 6 November 2013
+	VERSION 1.00 uploaded 30 October 2013
 	version 0.300 uploaded 20 August 2013
 	version 0.200(beta) uploaded 21 May 2013
 	version 0.02(beta) uploaded 27 April 2013

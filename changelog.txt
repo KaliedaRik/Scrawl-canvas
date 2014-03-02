@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 1.04 - 29 November 2013
+*	version 2.00 - 2 March 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -10,14 +10,1124 @@
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
-- locking X/Y sprite coordinates - eg for easing animation stuff
+- need to look at quaternion stuff again
+	- current implementation does not perform robustly enough
+	- currently has some annoying quirks
+	- chrome seems to hate yaw/pitch/roll rotations of 180deg
 - user accessibility issues
-- controlling videos in Picture sprites?
-- saving canvas as images (most probably via server)
-
+- animation - sprite tweening
+- physics engine - rigid body interactions
+- better, more responsive stacks
+- more work on stack element/canvas sprite interactivity
+- accurate mouse cursor position detection on 3d rotated canvas elements
+- filters
+- isometric game demos
+- sprite positioning on canvas using cell dimension percentage values?
+	- to match stack element positioning functionality
+	- (not a priority)
+- scrawl and svg interoperability
+- using scrawl with popular javascript frameworks and web building software
+	- jQuery
+	- WordPress
+	- Angular, Ember, Backbone
+	- node version??
+	
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140302
+	- scrawl-min.js testing
+		- all demos and index page pass testing in firefox
+	- index page - final testing
+		- testing against scrawl-min.js
+		- testing for all modes (canvas and/or css3 3d supported)
+		- testing for dynamic browser resize
+		- testing in all browsers
+			- in all browsers, occasionally, after resizing the browser the indicator event listeners fail to fire
+			- apart from that ...
+				- firefox - all good
+				- safari(windows) - all good, apart from text size at smallest browser widths
+				- opera - all good
+				- IE11 - all good
+				- chrome 
+					- still the occasional problem of canvas6 displaying behind canvas3, if browser rescaled while canvas6 turns away
+					- text size at smallest browser widths too large
+			- I can live with these bugs ... for now.
+	- redated all web pages
+		- official release date for v2.00 is now 2 March 2014
+			
+------------------------------------------------------------------------------------
+140301
+	- index page recoding
+		- initial code completed
+		- testing in all browsers
+			- firefox
+				- works entirely as intended
+			- safari (windows)
+				- slow, but mostly works as intended
+					- no marching ants, and the wheel doesn't appear to be turning
+			- opera
+				- canvas6 does not seem to respect backfaceVisibility after it has been rotated 
+					- bug only shows up after the first cycle completes
+					- not a backfaceVisibility issue
+						- applied backfaceVisibility to all canvas6 canvases - still happens
+					- setting canvas6 zIndex to -1 does allow other canvases to display above it
+					- possible quick fix - add background color to all other canvases, to cover canvas6?
+					- resizing gets rid of the problem
+						- even without the help of backfaceVisibility and zIndex stuff
+						- could thus reset height before/after turn?
+					- FIXED
+						- setting every canvas backgroundColor
+							- including scrawl code tweaks so backgroundColor, globalAlpha, globalCompositionOperation can be passed via Pad.set()
+						- canvas6 zIndex set to -1
+						- special test at end of stack rotation to clear/show canvas6 stack canvases
+				- everything else seems fine
+			- chrome
+				- oh, lordy ...
+				- carousel is over-turning?
+					- currentCanvas works as expected - turns 90deg and disappears
+					- nextCanvas
+						- seems to be starting at 90deg
+						- appears immediately
+						- turns 180deg in full view and then corrects itself at end of turn
+					- canvas6 
+						- showing its backend when turning away (end)
+						- clearly demonstrates that animation only starts after 90deg of the turn towards (start)
+					- FIXED 
+						- opera fixes, plus setting nextPane yaw values to 179.9999 - chrome apparently hates yaw: 180.
+				- apart from turning issues, and canvas6 backface, everything works fine
+					- not respecting winding for collision detection on shapes/outlines - expected behaviour
+			- internet explorer 11
+				- everything works as per spec
+				- even continues to display canvases when resizing browser
+	- testing scrawl.js for all demos, and website, in all browsers
+		- firefox 
+			- not as quick as some other browsers
+			- a few quirks re CSS3d elements - coded out in demos and index page
+			- all tests passed
+		- safari (windows)
+			- text not sufficiently scaled at smallest browser sizes
+			- demo034, etc - known issue re globalCompositeOperation
+			- demo050, etc - known issues re lineDash, lineDashOffset, winding
+			- demo068, etc - known issues re support of files API
+			- demo085 - known issue re video
+			- demo094 - known issue re slow SVG on canvas
+			- all other tests passed
+		- opera
+			- demo050, etc - known issue re winding and collision detection
+			- demo065 - known issue re not detecting collisions on line sprites
+			- demo094 - known issue re slow SVG on canvas
+			- demo205, etc - known issue re flickering canvas elements
+			- all other tests passed
+		- IE11
+			- star on supporters page is strangely slow
+			- demo085 - known issue re video
+			- demo094 - known issue re slow SVG on canvas
+			- all other tests passed
+		- chrome
+			- sprite to mouse stuff can be a bit sluggish
+			- animated (eg rotating) text can be a bit shaky compared to other browsers
+			- demo050, etc - known issue re winding and collision detection
+			- demo065 - known issue re not detecting collisions on line sprites
+			- demo085 - known issue re video
+			- demo094 - known issue re very slow SVG on canvas
+			- demo204, etc - chrome objects to setting element pitch/yaw to 180 - use 179.9999 instead
+			- demo205, etc - known issue re flickering canvas elements
+			- all other tests passed
+	- generated docs
+	- generated scrawl-min.js
+	- TODO:
+		- test scrawl-min.js for all demos, and website, in all browsers
+					
+140228
+	- index page recoding - running cat demo
+		- trying to fix perspective issues
+	
+140223-27
+	- index page recoding
+		- fixed dynamic stack/canvas resizing issues
+		- fixed mouse detection on resized pads
+			- where Pad.display and Pad.base canvases have different sizes
+		- fixed poor coding in Picture.checkHit function
+		- fixed scrawl.addstackToPage function
+		- recoding canvas panes from demos
+			- canvas0 - hello world (067)
+			- canvas1 - cloning (050)
+			- canvas2 - collision detection (075)
+			- canvas3 - kaliedoscope clock (090)
+			- canvas4 - magnifier over image (037)
+			- canvas5 - 3d images carousel (062)
+		- recoded page to be more dynamic and responsive
+			- all the visible elements are now part of a stack
+			- canvas animations only run when canvas elements are visible
+				- makes everything a lot quicker!
+		- changed the canvas carousel from flat to flipped card format
+		- graceful failure in browsers that don't support canvas element and/or css3 transforms
+	- TODO:
+		- need to recode 'comment' attribute so comments get placed inside the canvas element tags in the DOM - DONE
+			- apparently, it's the friendliest way to do user accessibility
+		- canvas6 - running cat demo (206)
+		- add hammer.js (for touch) and mousetrap.js (for keyboard)
+			- and add associated event handlers
+				- nothing snazzy this time around, just need something so phone/keyboard users can enjoy the goodness
+		- test everything in all browsers
+		- regenerate documentation and -min file
+		- test everything in all browsers against scrawl-min
+		- proofread everything (again)
+		- recode everything in the blog
+		- finalize pages with v2.00 release data
+		- release day
+			- upload new website
+			- update all codepen examples to use v2.00
+			- release v2.00 on StackOverflow, GitHub
+		- promote v2.00 on Twitter and the like
+			- pre-publicity for forthcoming funding drive
+				- need to talk to people about feasability of business model
+					- eg pulling together the business case
+			- do some videos for YouTube/Twitter
+				- to get in some practice on making better videos, talking to camera, adding audio to videos, etc
+
+140122
+	- safari issues
+		- demo034
+			- difficult to fix - safari does GCO source-in different to other browsers
+			- just put a note into the code to acknowledge this fact
+		- demo090
+			- safari (probably correctly) caught the fact that picture was copying areas outside its source cell
+	- started recoding the index page
+	
+140221
+	- coded up a 'supporters' page for the website
+	- added the ability for elements to be placed relative to their containing stacks via percentages and string literals
+		- very lightly tested in all browsers - seems to work ok
+		- might be worth doing something similar with sprites/cells?
+			- not yet - something for future consideration
+	- added 'border', 'margin' and 'padding' to the list of CSS style attributes which can be amended via Scrawl
+		- because positioning is intimately tied to the CSS/DOM box model
+		- fairly certain I don't want to make all style attributes amendable via Scrawl
+			- JavaScript does it fine without Scrawl's help
+			- jQuery and similar libraries do a superb job of manipulating the DOM - no need to replicate their work
+	- finally fixed the 3d running cat (demo206) so it displays in Safari
+	- demo testing
+		- firefox
+			- all demos work fine
+			- general
+				- firefox is default development browser, so no surprises
+				- compared to other browsers, demo094 is very fast
+				- reminder: firefox does not calculate element offsets if they are part of a CSS table
+				- animations can be a little flickery/distorted at times
+		- safari
+			- demo034 - drawing black line beyond edges of Picture sprite
+			- demo050 - safari doesn't yet support:
+				- dashed lines
+				- even-odd fills
+			- demo068 - importing image files via drag-drop
+				- could be a handle thing??
+			- demo085 - no video
+			- demo090 - nothing shows up - picture sprite is 'out of bounds' (line 12380)
+			- general 
+				- complex animations run at about half the speed of firefox
+				- bunny tests significantly slower
+		- opera
+			- demo063 - collision zone not recognising even-odd fill
+				- not much I can do about this
+				- opera (and chrome) set the fill winding rule during the ctx.fill() call
+				- firefox and IE have dedicated settings (mozFillRule, msFillRule) which can accept 'nonzero' and 'evenodd' strings
+				- which means opera/chrome only set the fill rule when they actually fill something
+				- but scrawl collision detection relies on the path being defined, but not filled - instead it chucks in an .isPointInPath test
+				- thus, evenodd shows up when the sprite is stamped on the canvas, but not during collision detection
+			- demo205, 208 - flickering canvases
+			- general
+				- very fast! Space invaders is almost unplayable
+		- IE11
+			- demo085 - no video
+			- general
+				- best overall performance (except for video)
+		- chrome
+			- demo063 - collision zone not recognising even-odd fill
+				- see opera
+			- demo205, 208 - flickering canvases
+			- demo085 - video
+			- general
+				- fast and smooth
+	- TODO
+		- index page
+		
+140220
+	- animation
+		- all animated demos now updated
+	- tutorial
+		- tutorials corrected for new animation functionality
+			- all walk-throughs amended
+			- animation cycle section rewritten
+	- reinstated Scrawl3d title and comment functionality for constructor and set()
+	
+140219
+	- animation
+		- updated all animated demos up to demo087
+		- will need to amend all three walkthroughs in the tutorial
+		
+140218
+	- internalizing JavaScript object prototype changes
+		- because changing JavaScript object prototypes is mad and dangerous
+			- Array.prototype.contains -> scrawl.contains
+			- Array.prototype.pushUnique -> scrawl.pushUnique
+			- Array.prototype.deleteItem -> scrawl.deleteItem
+			- Number.prototype.isBetween -> scrawl.isBetween
+		- all changes documented
+		- all uses of these utility functions updated
+			- for scrawl.js
+			- for all demos
+	- animation
+		- finally bit the bullet and internalized the animation loop function
+			- scrawl.animationLoop()
+				- the animation loop itself
+				- still relies on the window.requestAnimFrame shim
+				- automatically started when scrawl initializes
+			- scrawl.doAnimation
+				- animation loop flag
+				- set to false to stop the animation loop
+					- particularly useful if all canvases on a page are static
+				- set to true, then call scrawl.animationLoop(), to restart animations
+			- scrawl.animate
+				- an array of ANIMATIONNAME strings, representing Animation objects that need to be called each cycle
+			- scrawl.animation, scrawl.animationnames
+				- object and array to support the new Animation object
+			- Animation()
+				- the animation object itself
+				- based on the Force object
+				- prototypes from Scrawl
+				- .name attribute - to give each object a known name
+				- .fn attribute - the anonymous animation function
+				- .delay flag - to prevent the animation being added to scrawl.animate array on creation
+			- Animation.run()
+				- adds ANIMATIONNAME to scrawl.animate array
+			- Animation.halt()
+				- removes ANIMATIONNAME from scrawl.animate array
+			- Animation.kill()
+				- deletes animation object
+		- system builds on kludge developed for the blog
+			- which means blog code examples will be brought into line with non-blog code
+			- also, possible to have multiple animation routines on the same canvas, individually controlled
+		- amended demo004 to test new functionality - works!!
+	- TODO
+		- amend all animated demos to use new animation functionality - DONE
+		- update tutorial page to reflect all new functionalities - DONE
+		- recode index page
+		- tweening for sprite animations
+			- because it's what people will expect
+				- cuz everyone else seems to do it (including CSS, damn them)
+			- probably do this after release of V2.00
+				- cuz potential investors might prefer a 'work in progress' rather than a 'finished product'?
+			
+140217
+	- stack scaling - now seems to work
+		- demo702 adapted to scale dynamically with browser window height
+		- demo208 - new spinning cube demo
+			- scaling stack and stack contents
+			- pivot stack/element/pad to other stack/element/pad
+			- not yet perfect - need to look at element handle attribute, as causing unexpected results on browser resize
+	- testing
+		- firefox
+			- demo207 - element height needs looking at
+			- all other demos works fine
+			
+140216
+	- demo701 - space invaders - fixed
+	- demo702 - frogger - fixed
+	- working on stack scaling ...
+	
+140215
+	- tutorial page rewrite:
+		- physics engine - done
+		- the tutorial page now reflects the reality of the source file!
+		- does it need a quick section on event handlers?
+			- all the other libraries make a big fuss about their event handlers
+			- makes sense to point out that Scrawl can be used very easily by other event handler libraries ...
+	- TODO
+		- have I lost stack scaling functionality?
+			- probably, yes
+			- need to add it back in to the code base
+			- makes sense to add a couple of paras, or a section, to the tutorial explaining stack scaling functionality
+		- index page
+			- looking at a complete rewrite
+				- make sure it includes the new stack snazziness eg 3d rotations when browser moves between landscape and portrait modes
+				- use the cube demo rather than the running cat demo to show off stack functionality
+					- because the cube now works (just) in all browsers, while the cat demo fails in Safari
+		- other pages
+			- need to get the documentation looking more like the other pages
+			- need to use the logo consistently
+			- will need to add in a sponsors page ...
+		- blog
+			- recode all existing posts to make use of v2.00?
+			- alternatively, delete most of the posts and start fresh?
+		- if all goes well, should be ready to release Scrawl v2.00 on or before 23 Feb
+			- which is around the first anniversary of its life
+	
+140214
+	- Operation DocumentIt!
+		- all documentation completed
+		- documentation web pages generated and checked
+	- minified version generated
+		- all working demos checked against scrawl-min.js (firefox) - no problems encountered
+	- tutorial page rewrite:
+		- Scrawl Stacks
+		- Vectors and quaternions
+		- Animation efficiency
+	- TODO:
+		- tutorial page on the physics engine
+	
+140213
+	- tested all demos in firefox
+		- fixed a number of minor bugs introduced by previous efficiency drives
+	- quickly checked problematic demos in other browsers
+		- still need to do a full demo check on all browsers before release of v2
+	- proofreading text already written on tutorial page
+	- Operation DocumentIt!
+		- completed: Vector (new functions), Quaternion
+
+140212
+	- rewrite of Scrawl3d: completed (for now)
+		- tested demos in Firefox, Opera, Chrome, IE11, Safari (windows) - issues:
+			- 205 - some flickering on the cube in Opera, chrome
+			- 206 - cat (still) doesn't appear in Safari
+				- definitely a z order thingy
+				- setting translateZ: 200 on the cat canvas brings cat into view
+				- suspicions that Safari is working correctly, treating all canvases as part of the same stack perspective
+			- all other demos work as expected
+	- NEED TO DO:
+		- inline documentation for Quaternion and Scrawl3d objects
+		- write up tutorial pages:
+			- group collisions
+			- vectors
+			- quaternions
+			- save/load
+				- need to check out code for this - should it include stacks/elements?
+			- physics engine
+			- animation efficiency
+			- stacks
+		- generate documentation and test new scrawl-min.js version in all browsers
+		- proofread everything!
+		- redo index page
+			- make full use of new functionality
+				- eg for canvas carousel
+			- can use spinning cube demo!
+		- prepare for soft launch
+		- start thinking about prepromotion before KickStarter work
+			
+140201-11
+	- rewrite of Scrawl3d
+		- bringing CSS3 3d styling into line with Scrawl norms
+			- added Quaternion object
+				- all rotations use quaternion calculations
+			- start attribute (a Vector) represents stack element rotation/reflection point
+				- measured in pixels from stack top left hand corner
+				- includes Vector.z
+			- delta attribute (a Vector) for moving start attribute
+			- handle attribute (a Vector) used for calculating element top and left style attributes
+				- uses all Scrawl handle formats
+				- represents the element transform-origin style
+			- rotation attribute (a Quaternion) for holding rotation data
+				- set using pitch, yaw, roll pseudo-attributes
+				- represents the element rotateX, rotateY, rotateZ arguments for the transform style attribute
+			- deltaRotation attribute (a Quaternion) for element rotation animations
+				- set using deltaPitch, deltaYaw, deltaRoll pseudo-attributes
+			- translate attribute (a Vector) for holding 3d offsets from the element rotation/reflection point
+				- set using translateX, translateY, translateZ pseudo-attributes
+				- represents the element translateX, translateY, translateZ arguments for the transform style attribute
+			- position, backgroundVisibility attributes stored on the element, not in the scrawl element objects
+				- get and set functions take this into account
+		- positioning elements can be done:
+			- directly by setting the start attribute
+			- by setting the 'pivot' attribute to a sprite or point object's name
+			- by setting the 'path' attribute to a Shape sprite's name (not yet tested)
+		- new functions for rendering stacks: scrawl.renderElements(); Scrawl3d.renderElement()
+			- analagous, but not as detailed, as scrawl.render() for canvases
+		- demo201 - creating stacks dynamically - works
+		- demo202 - picking up stacks and elements from the DOM
+			- also tests the pivot='mouse' functionality testing
+			- works
+		- demo203 - adding elements to a stack
+			- includes basic rotation animation testing
+			- works
+		- demo204 - flipcards - testing for backfaceVisibility - works
+		- demo205 - spinning cube
+			- KNOWN BUG: setting deltaYaw and/or deltaPitch and/or deltaRoll on an element and animating it leads to element drift
+			- deliberately avoiding the perspective inheritance stuff that IE very clearly hates!
+				- managed to get the cube spinning without the help of a nested div element!!
+			- works
+		- demo206 - running cat
+			- testing for different handle values
+			- works
+			
+140131
+	- load and save objects
+		- initial work completed
+		- uses .toString(), scrawl.load(), scrawl.save()
+		- much better than the old system
+		- new demos 501-504
+	- captured images of canvases for all demos
+		- for the tutorial pages
+	- tutorial page revision continues ...
+		- Animating sprites
+		- Sprite pivots
+		- Sprite to mouse
+		- Drag and drop
+		- Path animation
+		- Cell animation
+		- Groups
+		- Sprite collision zones
+		- At-coordinate collisions
+		- Field collisions
+		- Group collisions
+		- Saving and loading Scrawl objects
+		- demo list
+		- new pages set up for:
+			- Scrawl physics engine
+			- Animation efficiency
+	- TODO
+		- Scrawl stacks, scrawl3d 
+			- the whole mess needs reviewing and rationalising
+		- last few pages of tutorial
+		- index page needs a complete recode
+		- PROOFREAD EVERYTHING
+	
+140130
+	- saving scrawl objects
+	- loading scrawl objects
+	
+140129 
+	- Tutotial page revision 
+		- removing all code blocks from the pages as I revise them
+			- code now shown on each demo page
+			- can get rid of the demos.js file
+		- removing the bulk of the attributes and functions lists from pages
+			- linking instead to relevant pages in the new documentation
+		- pages rewritten:
+			- HTML5 page
+			- Using Scrawl
+			- Pads and Cells
+			- Scrawl sprites
+			- Sprite positioning (new)
+			- Block
+			- Wheel
+			- Phrase
+			- Picture
+			- Outline
+			- Shape
+			- Colors
+			- Gradients
+			- Patterns
+			- Display cycle
+			- Clear
+			- Stamp
+			- Compile
+			- Show
+			- Render
+			- Animation cycle
+		- pages skipped for now:
+			- Scrawl stacks
+		- pages removed:
+			- Creating complex Shape sprites
+		
+140128
+	- Operation DocumentIt!
+		- COMPLETED for all objects, functions and attributes
+			- only Scrawl3d functions to do
+				- but that object's about to suffer a major overhaul ...
+		- current source file is 15,000 lines long
+			- about 50% code, 50% documentation
+		- still need to proofread everything before going live with the new documentation
+		- whole job took a week!
+			- but will never have to do the entire thing again (he says) ...
+	- renumbering the demos - rationalizations:
+		- 001-099 - canvas demos
+		- 101-199 - (additional canvas demos)
+		- 201-299 - stack demos
+		- 301-399 - physics engine demos
+		- 401-499 - filters demos
+		- 501-599 - (load/save demos, when written)
+		- 601-699 - (not yet assigned)
+		- 701-799 - game demos
+		- 801-899 - isometric tiling game demos
+		- 901-999 - (not yet assigned)
+	- started rewriting the tutorial page ...
+	
+140127
+	- Operation DocumentIt! 
+		- done: 
+			- everything down to the end of Shape
+			- all constructors (bar physics)
+			- all object attributes (bar physics)
+		- to do:
+			Point functions
+			Link functions
+			Design functions
+			Gradient functions
+			RadialGradient functions
+			Pattern functions
+			Color functions
+			Particle object
+			Spring object
+			Force object
+		
+140126
+	- rationalised the generation of sprite.collisionVectors
+		- Shape and Wheel now follow the patterns for sprite, with only minor amendments
+		- reintroduced the idea of having collision point vector values
+		- collision vector generation now happens at the time they are first needed (in sprite.getCollisionVectors)
+			- got rid of Shape.getCollisionVectors
+		- demos 072, 073, 074 all seem to be working fine
+	- fixed bug in Picture.checkHit()
+		- was only checking against the top left corner of the sprite sheet area, not the current animation frame area
+	- added Cell.updateStart(), .revertStart()
+		- to take into account the need to update the source Vector as well as the start Vector and pathPlace value
+	- improved performance of Cell.spliceCell() function
+	- fixed demo052 (parallax cells) to work with new Cell features
+	- demo082 (text widths) - problem with event listeners not firing
+	- continuing with Operation DocumentIt! Completed: 
+		- Sprite parameters
+		- Sprite functions
+		- Phrase parameters
+		- Text parameters
+		
+140125
+	- continuing with Operation DocumentIt!
+		- done:
+			- all constructors (except for physics objects
+			- all attributes and functions down to the Sprite attributes
+		- still to do: everything below Sprite attributes, except for constructors
+			- (mainly the easier bits)
+			
+140124
+	- Major Change
+		- revised Cell object to bring it into line with current thinking
+			- new attributes Cell.source, .sourceDelta
+				- vectors, just like start and delta, to mark the starting point for cell copy operations
+				- replace .sourceX, .sourceY
+			- old attributes .targetX, .targetY now save their values in Cell.start vector
+			- .delta now has meaning - added a Cell.updateStart() overwrite to take into account Cell's special needs
+			- .pivot now has meaning for Cell objects
+				- tested in demo037 (magnifier) using 'mouse' as the pivot - works!
+			- handles now work - they act on the start/target point where cell gets copied to a destination canvas
+			- added some sprite functionality to Cell.copyCellToSelf()
+				- cell copying now works like sprite stamping - shift the matrix to the drawing point and then draw using handle offset
+				- also allows me to (easily) introduce the idea of .flipUpend, .flipReverse and (a welcome return for) .roll
+					- tested in demo051 - works!
+			- not yet tested to see if .lockTo still works - will wait until redo isomorphic game series
+			- not yet tested if .lockX, .lockY work - should be no reason why not ...
+			- not yet tested for paths ...
+	- continuing with Operation DocumentIt!
+			
+140123
+	- persevering with Operation DocumentIt!
+		- revised existing markup for consistent formatting
+		- worked out how to add attributes to object 'classes'
+			- still don't like the YUI phraseology - JavaScript does NOT have classes
+		- more markup added to source file
+		
+140122
+	- demo work
+		- minor adjustments to demo404 to make it faster
+		- started thinking about ripped net demo (406)
+	- Operation DocumentIt!
+		- completed:
+			-SubScrawl
+			
+140121
+	- demos 001-103 checked and corrected for event handler code
+	- demos 401-405 cleaned
+	- chrome browser
+		- turns out to be a browser cache issue - disabled caching and running incognito solves most problems
+		- demos 050, 063 - even-odd winding not working with collision detection in Shape/Outline sprites
+		- demos 073, 090, 404 - flickering sprites - group/sprite sorting issue?
+		- still refusing to load: 060, 074, 075
+		- demo085 - video is playing, but not displaying
+		- 094 (spinning svg tigers) slow - 12fps (vs 60fps on firefox)
+		- 098 bunny speed test - 12,100 bunnies @ 10fps
+		- general ... runs well - speedy, even - once caching issues are overcome
+	- Operation DocumentIt!
+		- started the job of adding inline documentation to the source code
+			- using YUIDoc syntax
+		- completed:
+			- scrawl library
+			- Scrawl
+			- Vector
+			
+140120
+	- new function - Sprite.bounceOnFieldCollision()
+		- calculates bounce resulting from sprite collisions with cell fieldss
+		- works for non-horizontal/vertical lines, and for curves
+	- 079 and 060 updated with new functionality
+	- 058 (animated cat) not recoded 
+		- shows the functionality, which is enough
+	- previous kludges removed from Particle object functions
+		- physics engine is back to its more 'pure' state
+	- testing in web browsers:
+		- firefox 
+			- all demos work as expected
+			- 098 bunny speed test - 14,600 bunnies @ 10fps
+		- chrome
+			- 027 drag-drop issue - see IE11
+			- 063 winding issues - not doing even-odd
+			- 082 input ranges are not draggable
+			- 085 no video
+			- 094 (spinning svg tigers) verrrry slow (12fps vs 60fps on firefox)
+			- 098 bunny speed test - 11,600 bunnies @ 10fps
+			- 404 (rope) - flickering sprites
+			- refusing to load: 004, 060, 062, 065, 074, 075
+			- refusing to work
+				- 045 (snake)
+				- 048 (circle on mouse)
+				- 049 (drag&drop images)
+				- 081 (advent calendar)
+				- 099 (blob speed test) - animation working; mouse not being picked up
+				- 102 (bridge text) - click-drag not working
+			- (removing performance.now() - for safari - didn't solve these problems)
+			- (reinstalling latest version of Google Chrome - didn't solve these problems)
+				- must be bad coding in some part of the scrawl library
+					- demo004 specifically chokes on the Sprite path stuff ... though demos 006, 009 and even 012 work ...
+			- general ... disappointing - why so many demo failures??
+		- safari (windows)
+			- choked on window.performance.now()
+				- changed tests in all demos to remove performance.now()
+			- Outline/Shape winding - even-odd not working (known browser issue)
+			- line dashes - not working (known browser issue)
+			- 027 drag-drop issue - see IE11
+			- 029 3d cat - no cat displayed (old issue)
+			- 068 (drag-drop files) - file reader interface doesn't seem to be implemented?
+			- 085 (video) - doesn't load video - 'type error' in Picture.fill()
+			- 090 (clock) - 'negative index error' in Picture.fill() ??? demo doesn't use Picture objects ...
+			- 094 (spinning svg tigers) verrrry slow (8fps vs 60fps on firefox)
+			- 098 bunny speed test - 3,500 bunnies @ 10fps
+			- general ... browser is a lot slower than the others
+		- opera
+			- 027 drag-drop issue - see IE11
+			- 063 winding issues - not doing even-odd (known issue with browser)
+			- 073/4 (between-group collision detection) - flickering sprites - an ordering issue??
+			- 094 (spinning svg tigers) verrrry slow (14fps vs 60fps on firefox)
+			- 098 bunny speed test - 11,700 bunnies @ 10fps
+			- 404 (rope) - flickering sprites
+			- general ... better than chrome, but sharing some common issues
+		- IE11
+			- 027 - issue with drag-drop - occasionally sprites 'cling' to mouse after drop
+				- probably an issue with demo coding - not including the bubble prevention stuff
+				- 066 (drag sprites between canvases), with properly coded event handlers, doesn't have this problem
+			- 085 no video
+			- 087 (spinning cube) - IE still haven't got the perspective thingy right
+			- 094 (spinning svg tigers) verrrry slow (16fps vs 60fps on firefox)
+			- 096/97 (slow bunny tests) - too many bunnies makes IE browser controls choke
+			- 098 bunny speed test - 11,400 bunnies @ 10fps
+			- general ... everything (including physics demos) runs faster
+				- top speed 66fps vs firefox 60fps
+	- TODO
+		- fix all demos using event listeners to cancel default event listener behaviour - DONE
+		- sort Chrome issues - DONE
+			- complete review of Scrawl.js code alongside faulty demo code - NOT NEEDED
+		- clean up physics demo code - DONE
+		- redo tutorial page
+		- comment scrawl.js source code so that documentation can be automatically generated via node.js (fingers crossed)
+		- recode index page - can it be made even more exciting
+			- one specific issue to look at is resizing/zoom - current index page does not play well with user zoom requests
+				- see if zoom can be tied into normal zoom keypresses?
+		- fix games demos
+		- look again at isometric map demos
+		- V2.0 launch preparation
+			- will need to recode all blog demos before launching 
+			- also, all jsFiddle code will need updating for v2.00
+				- and look to add more jsFiddles - people can find Scrawl.js via that route
+		
+140119
+	- cleaning up demo code
+		- djankey canvas performance test - 2 of the 3 demos removed
+			- cuz the bunny demos already cover this ground
+			- only keeping fastest performing test
+		- all demos 001-102 recoded
+			- 060, 079 need further work
+				- taken physics code out of 079
+					- new solution is servicable, but ugly
+					- need to read up some more on collision detection involving slopes and curves
+						- must be a better way
+			- 046 recoded to test Cell.zoom() - works fine
+	- bugfixes 
+		- Phrase.backgroundColor was not displaying for default fonts
+		- scrawl.makeRectangle() was inverting instructions - top->bottom, right->left, etc
+		- Color.get('random') was returning undefined
+		- Cell.zoom() - now works as intended
+		
+140118
+	- cleaning up demo code
+		- demo 093 removed - duplicate of 037
+		- filter experiments (096, 098, 099) moved to demo201-203
+		- isometric experiments (102-108) moved to demo301-307
+		- physics engine experiments (demos121-128) moved to demo401-405 (121, 123, 125 dumped)
+		- demos081-083 (frogger, space invaders) moved to demo701-703
+		- other demos renumbered
+		- all (renumbered) demos to 095 completed
+	- TODO:
+		- demo096-104 (bunny and bead demos, + a couple of others)
+		- demo201-203 (filters)
+		- demo401-405 (physics)
+		- demo701-703 (games)
+			- leave isometric stuff (301+) for now
+		- test everything in all browsers, on varous machines
+			- and fix the broken stuff
+		- implement a (non-physics) solution for demos 060 and 079
+			- really don't like the idea of dirtying the physics engine with non-physics collision detection stuff
+		- desperate to do a net curtain physics demo
+		- need to reimplement the load/save stuff (dumped during the Major Overhauls)
+		- rewrite tutorial
+		- redo the documentation
+			- give serious thought to adding documentation to scrawl.js source file
+				- looks more professional; makes it easier for other developers; will be easier to maintain!
+			- will probably require changes/new pages on the website ...
+		- redo the index page
+		- recode all the blog demos in line with changes
+		- get ready to release v2
+		- start thinking about crowdsourcing stuff
+			- aims
+			- videos
+			- presentations
+			- promotion
+			- with aim to do it in February!!
+		
+140117
+	- attribute name changes
+		- SubScrawl.pathPosition -> .pathPlace
+		- SubScrawl.movePathPosition -> .deltaPathPlace
+			- removes the verb from the attribute name
+			- all affected demos (to 084) corrected for change
+	- Wheel.collisionPoints can now be a number
+		- because sometimes 8 collision points around the perimeter just ain't enough!
+	- experimenting with using particles for cell collision detection
+		- new Particle.engine option - 'none'
+			- adds .velocity attribute to .position attribute
+			- option 'euler' is now the default action for the Particle.stamp() function
+			- demos 060 and 079 make use of this new functionality
+		- could make a case for a more detailed Sprite.checkField() function?
+			- Sprite.checkFieldPerpendicular() ??
+				- would do further tests to determine where the perpendicular line between sprite and cell wall actually is
+					- could address the unexpected bouncing in demos 060, 079 ... but only when sprite start is centred
+				- not convinced - something for later, maybe
+	- cleaning up demo code
+		- regularised test code for all previously cleaned demos
+		- removed almost all <style> code from demo pages
+			- put most of it into css/demo.css file
+		- demos 061-084 cleaned
+			- except for 081, 082, 083 - need substantial review and recode (alongside 058)
+			- 034, 066, 068 made blank
+			
+140116
+	- creating stacks and canvases dynamically - changes
+		- for both, .parentElement attribute can now be the DOM object id string
+			- additional to passing the DOM object itself in the .parentElement attribute 
+	- contemplating another (future) major recode - DOM object handling needs a comprehensive review
+	- cleaning up demo code
+		- correcting demos to take into account all changes to library code
+		- cleaning demo code in line with good coding practice
+			- eg declaring all variables up front, commenting all demos, etc
+		- major change re Tutorials page
+			- demo code now displayed on demo page
+			- no need to include all code in Tutorials page
+				- will save a huge amount of future maintenance work!
+		- completed: demo001 - demo060
+			- demo034 (clock in stack) to be abandoned - cuz demo090 covers clock code
+			- demo 058 needs to be completely recoded
+				- needs to act as a comprehensive test for sprite sheet animation
+				- also, ugly
+	
+140115
+	- Major overhauls - aftershock
+		- renamed SubScrawl.moveStart to SubScrawl.delta
+		- removed Subscrawl.moveHandle - see no point to it now
+		- refactored SubScrawl constructor, .set, .setDelta, .clone
+		- Sprite.moveStart(s) function renamed to .updateStart; .unmoveStart(s) to revertStart
+			- to make things more obvious - 'move' did not actually move anything
+		- cleaned up codebase
+	- next project: cleaning up demo code
+	
+140106-14
+	- Major Overhauls - COMPLETED
+		- massive changes throughout the code
+		- however ...
+			- changes have paid off
+			- code is a LOT more efficient
+			- all demos run at top speed
+			- many things have simplified as a result of the changes
+	- tested all demos in Firefox
+		- bugs hunted down and fixed
+		- demo code changed wherever that was causing problems
+			- means the v2 code is NOT backwards compatible with v1 code
+				- but changes are worth it
+	- TODO:
+		- need to substantially fix tutorial and documentation
+		
+140103-05
+	- Major Overhaul #2 merged into Major Overhaul #3
+		- conversion of all start,handle,moveStart,moveHandle attributes to Vector objects
+		- move away from get lookups for many attributes
+			- wasn't really saving much time
+		- move to using setTransform for stamping each sprite
+			- allows for much simpler calculations re positioning sprites
+			
+140102
+	- Major Overhaul #2
+		- function recoding completed for:
+			- Sprite object
+			- Picture object
+			- Phrase object
+			- Text object
+			- Block object
+			- Wheel object
+			- Outline object
+			- Shape object
+			
+140101
+	- Major Overhaul #2
+		- function recoding completed for:
+			- Pad object
+			- Cell object
+			- Context object
+			- ScrawlImage objects
+			- AnimSheet objects - constructor not substantially changed as all attributes explicitly set
+			- Group objects 
+				- constructor not substantially changed as all attributes explicitly set
+				- collision routines rewritten to make them a bit more efficient
+		- much of the Sprite object also tweaked for the changes
+		
+131231
+	- Major Overhaul #1 completed
+		- demos085, 081-083, 103-108, 095 have outstanding issues, mostly in the demo code
+	- preparation for Major Overhaul #2 started
+		- going through all functions
+			- putting all variables at top of each function
+			- plan to strictly enforce get()
+				- will lengthen code, but make the MO#2 changes a lot simpler to achieve
+		- recoded Scrawl.get(), .set()
+		- added .prototype.d objects to all Scrawl objects
+		- added scrawl.keys object, and code at end of library to generate key arrays on startup
+			- used by .set() to determine if attribute is permitted in object
+		- new Scrawl.addAttributes() function
+			- for (eventual) use by all constructors
+			- will remove the explicit setting of every attribute
+				- only those attributes which are not default values need to be set
+					- this is (hopefully) the big memory saver, as atm Scrawl objects tend to be huge
+		- function recoding completed for:
+			- scrawl library
+			- Scrawl object 
+			- SubScrawl object
+		- so far demo061 (sprites on rotating oval path) and demo050 (cloning sprites) continue to work ...
+		
+131228-30
+	- Major Overhaul #1
+		- further advances in using vectors wherever possible
+			- new functions in SubScrawl to return data in Vector format
+		- sorted out/simplified collisions
+			- using Vector calculations wherever possible
+			- finally cracked Picture collision and Picture getcolor stuff
+		- simplified Sprite 'current' parameters
+		- debugged Sprite stamping
+		- massive overhaul of Group object
+			- removed all references to 'override'
+				- Groups no longer influence their sprites' positioning
+			- changed Group.cells array to Group.cell string
+				- Groups now only answer to once default cell
+				- can still belong to more than one cell, by adding group name to Cell.groups array
+			- got rid of Group.groups array
+				- Groups are no longer nestable
+			- added new functions to allow users to influence sprites via their groups
+		- checked all demos in Firefox and Opera
+			- changes have speeded up the demos - between 1.5-2 times quicker up to the screen refresh limit?
+			- additional bugs caught by Opera fixed
+		- over the past week:
+			- library reduced by 1400 lines
+			- 57kb of code removed from library
+		- ISSUES REMAINING before embarking on Major Overhaul #2:
+			- Cloning - fill/stroke issues for Phrase sprites (as shown in Demo050)
+			- Space Invaders and Frogger games (demos081-83) need to be fixed
+			- Pattern global and local positioning
+				- currently it is all local to the sprite
+			- still some bugfixes needed to make later demos work properly
+			
+131222-27
+	- Major Overhaul #1
+		- moving from Cell-centered drawing to Sprite-centered drawing
+			- in the hope of speeding things up a bit
+			- also may help to simplify the code
+		- removed all the load/save native stuff - can recode it later (after Major Overhaul #2)
+		- simplified gradients
+			- Sprite-centered drawing ruined the old gradient system
+		- simplified Cell.setEngine()
+			- got rid of the horrific strokeStyle and fillStyle code
+		- simplified all sprite drawing routines
+		- complete recode of scrawl.makeRegularShape()
+		- sorted out various bugs in the Shape/Outline factory methods
+		- massive overhaul of Points
+			- now use Vectors and vector calculations
+			- associated changes to Link object and functions
+		- removed Cell native Canvas wrapper functions
+			- no need to spin cells when all sprites can spin
+		- fixed demos broken by changes
+			- will require moving eventual code to Version 2.0, with warnings
+		- STILL TO DO
+			- group positioning - DONE
+				- revisiting the whole override thingy - DONE
+			- patterns - to match changes in gradients
+			- shape hit zones - long overdue - DONE
+			- more work on contexts - demo050 still has issues of not updating fill/strokeStyles eg for Phrases
+			- Major Overhaul #2
+				- planning to slimline all objects by only retaining attributes that do not match defaults
+					- this should (hopefully) be the big speed enhancement
+					- current Scrawl objects are too big, take up too much memory and slow stuff down
+					
+131221
+	- bugfix
+		- Shape markers - was not recalculating the Shape path before adding marks
+	- experiments in physics
+		- removed Particle (nee Ball) pivot and handle stuff
+			- Particles are strictly linear, and strictly positioned - no handle offsets.
+			- a Particle cannot use another particle for positioning itself
+		
+131220
+	- experiments in physics
+		- fixed the Spring calculations
+			- finally got the swinging rope demo working like I wanted it to
+		- renamed Ball objects to Particle
+		- added new object - Body
+			- will be used for rigid body physics
+				- not yet sure how to implement it ...
+	- bugfix
+		- Outline sprites were miscalculating initial 'm' data positioning
+				
+131219
+	- experiments in physics
+		- thinking about rigid body stuff
+		- added code to include Ball object pivots and handleXY offsets
+		
+131218
+	- new scrawl object
+		- Spring()
+			- for connecting two balls together
+			- prototypes from Scrawl
+			- stored in scrawl.spring
+				- unlike Ball sprites, springs are NOT sprites
+	- also added in scrawl.force
+		- for storing force functions 'globally' rather than individually as part of the Ball sprite
+	- experiments in physics
+		- demo127 - rope swinging under gravity
+		
+131217
+	- experiments in physics
+		- demo125 - collisions
+			- between ball sprites
+			- also, use a Ball sprite to help calculate cell field collisions
+		- demo126 - more collisions
+		
+131216
+	- experiments in physics
+		- demo123 - normal collision detection against a cell field
+		- demo124 - adding a force limited to a sprite
+		
+131215
+	- new Scrawl object
+		- Ball()
+			- prototypes from SubScrawl, but is stored in scrawl.sprite
+			- is a form of sprite which is never displayed
+				- normal sprites can use Balls as pivots
+	- experiments in physics
+		- demo121 - ball falling from top of screen under influence of gravity
+		- demo122 - ball under influence of gravity, air friction and wind
+		
+131214
+	- new Scrawl objects
+		- Vector(), Matrix(), Quaternion()
+			- as written up in the book
+			- for calculations using vectors, 3x3 matrices and quaternions
+			
+131213
+	- cross-origin images
+		- need to investigate where to add the img.crossOrigin = ''; code into scrawl to allow basic CORS compliance
+			- definitely in ScrawlImage constructor and loader
+			- possibly somewhere in Picture and Pattern objects
+			
+131212
+	- learning physics stuff
+	
+131211
+	- learning physics stuff
+	
+131210
+	- returned to the bunny problem
+		- Scrawl slows down significantly when too many sprites are added to the mix
+			- as in anything over 200 sprites
+		- coded up a series of demos - 119, 120 - which build on the bunny demo112, to test for solutions
+		- also coded up demos 116-118 based on the djankey Canvas performance test
+			- eg http://jsdo.it/djankey/test-fabricjs
+		- solutions:
+			- 1. offer sprites a way to skip the roll code using new Sprite.allowRoll attribute
+				- true by default; setting to false skims a few milliseconds per cycle at best
+			- 2. let sprites skip the flip code using new Sprite.allowFlip attribute
+				- as for .allowRoll; even less time saved
+			- 3. allow sprites to bypass the Cell.setEngine routine by setting Sprite.fastStamp to true
+				- offers significant time savings - doubles the framerate on the tests
+				- risky to use as completely ignores the context engine; sprites have to use engine's existing settings
+			- best solution remains to cut down on number of sprites (demo118, demo120)
+				- achieved respectable speeds when using just one sprite and stamping it where required on each display cycle
+					- still not as good as the opposition, but getting there
+		- significant recoding of Cell.setEngine(), Context.getChanges()
+			- bugs in the code were causing the loop to run for .name and .timestamp - wasting time
+			- was also picking up false positives for .lineDash attribute, which is an array
+			- new code saves between 3-8 milliseconds per stamping, where context engine did not need to be updated
+		- minor recoding of Sprite.flipCanvas(), .rotateCell(), .unrotateCell()
+			- to implement .allowRoll and .allowFlip
+		- also updated Sprite constructor and Sprite.prepareForExport(), .setToDefaults() to capture new attribute data
+		- checked all demos in JavaScript to make sure changes broke nothing else - all good
+	- NEED to:
+		- Fix Phrase.clone() bug
+		- update documentation
+		- update tutorial with new page on best practice for speeding up Scrawl.js
+			- also text on new zoom and pattern features
+			- additional text on SVG filters
+		- complete demos for Isometric game display
+			- which then needs to be turned into yet another tutorial page
+		- release next version of Scrawl
+		- continue developing physics engine
+		
+131209
+	- investigating the possibility of adding a physics engine to Scrawl
+		- was hoping to find physics engine off-the-shelf which Scrawl could hook into
+			- most seem to already have 'rendering' engines built into them
+			- all seem to have their own collision detection systems
+				- probably incompatible with Scrawl
+		- decided to add my own physics engine to the code base
+			- using O'Reilley's 'Physics for Game Developers' book to guide me
+			- added new Vector object class to the code base, together with various methods
+				- book says vectors are essential for physics
+				- may have uses beyond the scope of the physics engine
+				
+131208
+	- developed demo115 - easing experiments using Shape guides
+		- proof of concept; no changes to Scrawl library
+		
+131206
+	- developed demo114 - wrapping text dynamically to a fixed width
+		- BUG uncovered 
+			- Phrase.clone() not setting font to desired parameters
+		- developed a text parser for the demo; no plans to include it in Scrawl.js
+		
+131202-05
+	- developing demo113 - Poetry Advent Calendar
+
+131201
+	- added new Group attributes
+		- Group.spriteSort, .groupSort
+			- boolean, when set to false will skip the sprite/group sorting steps
+			- default: true
+			
+131130
+	- looking at rendering lots of objects
+	- demo112 - the bunny test
+	
 131129
 	- new Sprite attributes: Sprite.lockX, .lockY
 		- for sprites using pivots or paths to calculate their starting coordinates
@@ -41,7 +1151,7 @@ CHANGE LOG
 			- for consistency with other designs
 		- demo110 - using static pattern generated from canvas
 		- demo109 - using animated pattern generated from canvas
-			- big issues with animation - wont work unless sprites used in source cell also stamped on other cells
+			- big issues with animation - won't work unless sprites used in source cell also stamped on other cells
 				- absolutely no idea why this is happening
 		- tested all demos in FF - all working after minor bugfix
 			- ScrawlImage had a type==='Image', not 'ScrawlImage' - fixed
@@ -50,9 +1160,10 @@ CHANGE LOG
 		- updated website
 		- uploaded to SourceForge/GitHub
 	- IE11 decided to install itself on computer
-		- most demos run fine onm IE11
+		- most demos run fine on IE11
 			- except spinning cube, filters
 	
+------------------------------------------------------------------------------------
 131127
 	- demo107 (adding roads and rivers) completed
 		- finally coded up Outline.clip()
