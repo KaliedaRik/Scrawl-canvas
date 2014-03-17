@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 2.00 - 2 March 2014
+*	version 2.01 - 17 March 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,15 +84,15 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 2.00 released 2 March 2014
+VERSION 2.01 released 17 March 2014
 
     - the zip file includes:
 	
-		- scrawl.js (513kb)
+		- scrawl.js (546kb)
 			- includes complete documentation for all objects, attributes and functions
-		- scrawl-min.js (181kb)
+		- scrawl-min.js (189kb)
 			- use the minified file for live websites
-			- will gzip to ~40kb
+			- will gzip to ~45kb
 		- changelog.txt
 		- README.txt (this file)
 
@@ -111,7 +111,10 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
-VERSION 2.00 uploaded 2 March 2013
+Version 2.01 uploaded 17 March 2014
+	- added filters
+	- fixed some minor bugs
+VERSION 2.00 uploaded 2 March 2014
 
 Previous versions are NOT compatible with version 2.00+
 	Version 1.04 uploaded 29 November 2013

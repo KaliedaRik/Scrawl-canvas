@@ -1,7 +1,7 @@
 /**
 # SCRAWL.JS Library
 
-## Version 2.00 - 20 February 2014
+## Version 2.01 - 17 March 2014
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -61,6 +61,9 @@ __window.scrawl__ - the Scrawl.js library object
 @module scrawl
 **/
 
+//COMMENT OUT for production
+"use strict";
+
 // requestAnimFrame from Paul Irish - http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 window.requestAnimFrame = (function(callback){
 	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback){window.setTimeout(callback, 1000/60);};
@@ -82,6 +85,7 @@ _Note: use lowecase s - 'scrawl' (and no underscore)_
 
 @class _scrawl
 **/
+
 window.scrawl = (function(){
 	var scrawl = {
 	
@@ -104,7 +108,7 @@ Scrawl.js version number
 		version: '2.00',
 		
 /**
-Contains key:value pairs for storing user-specified variables
+Contains key:value pairs for storing miscellaneous objects, for instance handles to DOM image elements imported into scrawl via scrawl.getImagesByClass()
 @property object
 @type {Object}
 **/
@@ -457,6 +461,22 @@ An Object containing OBJECTTYPE:Object pairs which in turn contain default value
 		d: {},
 		
 /**
+Backoffice canvas element - never displayed
+@property cv
+@type {DOM Object}
+@private
+**/
+		cv: document.createElement('canvas'),
+		
+/**
+Backoffice canvas element context
+@property cvx
+@type {2dCanvas object}
+@private
+**/
+		cvx: null,
+		
+/**
 An Object containing parameter:value pairs representing the physical parameters within which a physics model operates
 @property physics
 @type {Object}
@@ -795,7 +815,7 @@ A __factory__ function to generate a new Force object
 @return new Force object
 **/
 		newForce: function(items){return new Force(items);},
-			
+		
 /**
 A __utility__ function for variable type checking
 @method isa
@@ -2689,6 +2709,7 @@ The following objects can be cloned:
 * Phrase
 * Point
 * RadialGradient
+* ScrawlImage
 * Shape
 * Spring
 * Vector
@@ -2719,6 +2740,7 @@ The following objects can be cloned:
 			case 'Particle' : return new Particle(b); break;
 			case 'Vector' : return new Vector(b); break;
 			case 'Spring' : return new Spring(b); break;
+			case 'ScrawlImage' : return new ScrawlImage(b); break;
 			}
 		return false;
 		};
@@ -5316,7 +5338,7 @@ Calculate start Vector in reference to a sprite or Point object's position
 			}
 		else if(scrawl.contains(scrawl.spritenames, this.pivot)){
 			myP = scrawl.sprite[this.pivot];
-			myPVector = (myP.type === 'Particle') ? myP.get('position') : myP.getStartValues();
+			myPVector = (myP.type === 'Particle') ? myP.get('position') : myP.get('start');
 			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 			}
@@ -8185,33 +8207,27 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 **/		
 	function ScrawlImage(items){
 		items = (scrawl.isa(items,'obj')) ? items : {};
-		Scrawl.call(this, items);
-		this.width = items.width || scrawl.d.ScrawlImage.width;
-		this.height = items.height || scrawl.d.ScrawlImage.height;
-		if(scrawl.xt(items.imageData)){						//flag used by scrawl.addScrawlImage() when calling Image constructor
-			var c = document.createElement('img');
-			c.id = this.name;
-			c.width = this.width;
-			c.height = this.height;
-			c.src = items.imageData;
-			items['element'] = c;
+		var iData = (scrawl.xt(items.imageData)) ? items.imageData : {},
+			eData = (scrawl.xt(items.element)) ? items.element : {},
+			data,
+			makeCopy = (scrawl.xt(items.makeCopy)) ? items.makeCopy : false;
+		if(scrawl.xto([items.element, items.imageData])){
+			items.name = items.name || eData.getAttribute('id') || eData.getAttribute('name') || eData.getAttribute('src');
+			Scrawl.call(this, items);
+			this.width = items.width || iData.width || parseFloat(eData.offsetWidth) || eData.width || eData.style.width || 0;
+			this.height = items.height || iData.height || parseFloat(eData.offsetHeight) || eData.height || eData.style.height || 0;
+			data = (scrawl.xt(items.element)) ? this.getImageDataUrl(eData) : iData;
+			if(scrawl.xt(items.element) && makeCopy){
+				scrawl.img[this.name] = this.makeImage(data);
+				}
+			scrawl.image[this.name] = this;
+			scrawl.pushUnique(scrawl.imagenames, this.name);
+			scrawl.object[this.name] = eData;
+			scrawl.pushUnique(scrawl.objectnames, this.name);
+			this.source = items.source || this.name || '';
+			return this;
 			}
-		this.source = items.source || false;
-		if(scrawl.xt(items.element)){						//flag used by scrawl.getImagesByClass() when calling Image constructor
-			var myName = items.element.getAttribute('id') || items.element.getAttribute('name') || items.element.getAttribute('src');
-			this.name = scrawl.makeName({name: myName, type: this.type, target: 'imagenames'});
-			this.width = parseFloat(items.element.offsetWidth) || items.element.width || items.element.style.width || 0;
-			this.height = parseFloat(items.element.offsetHeight) || items.element.height || items.element.style.height || 0;
-			this.source = items.element.src;
-			}
-		this.copyX = items.copyX || 0,
-		this.copyY = items.copyY || 0,
-		this.copyWidth = items.copyWidth ||  this.width,
-		this.copyHeight = items.copyHeight ||  this.height,
-		scrawl.img[this.name] = items.element;
-		scrawl.image[this.name] = this;
-		scrawl.pushUnique(scrawl.imagenames, this.name);
-		return this;
+		return false;
 		}
 	ScrawlImage.prototype = Object.create(Scrawl.prototype);
 /**
@@ -8238,58 +8254,804 @@ DOM image actual height, in pixels
 **/
 		height: 0,
 /**
-Path to image location on server
-@property source
+Handle to the DOM &lt;img&gt; element from which this object derives its image data
+@property source 
 @type String
-@default 0
+@default ''
+@private
 **/
 		source: '',
-/**
-Copy image - horizontal start coordinate from top left corner of image, in pixels
-@property copyX
-@type Number
-@default 0
-**/
-		copyX: 0,
-/**
-Copy image - vertical start coordinate from top left corner of image, in pixels
-@property copyY
-@type Number
-@default 0
-**/
-		copyY: 0,
-/**
-Copy image - width, in pixels
-@property copyWidth
-@type Number
-@default 0
-**/
-		copyWidth:  0,
-/**
-Copy image - height, in pixels
-@property copyHeight
-@type Number
-@default 0
-**/
-		copyHeight:  0,
 		};
 	scrawl.mergeInto(scrawl.d.ScrawlImage, scrawl.d.Scrawl);
 
 /**
-Get image data - uses JavScript canvas API function ctx.toDataURL()
+Makes a virtual image from an imageDataUrl
+
+@method makeImage
+@param {Object} data The imageDataUrl data
+@return new DOM &lt;img&gt; object
+@private
+**/
+	ScrawlImage.prototype.makeImage = function(data){
+		var image = document.createElement('img');
+		image.width = this.width;
+		image.height = this.height;
+		image.src = data;
+		return image;
+		};
+
+/**
+Get image data URL - uses JavScript canvas API function ctx.toDataURL()
 
 _Note: does not save the data in the scrawl library_
-@method getImageData
+@method getImageDataUrl
+@param {Object} image DOM &lt;img&gt; element
 @return data.URL data
 @private
 **/
-	ScrawlImage.prototype.getImageData = function(){
-		var	c = document.createElement('canvas'),
-			cx = c.getContext('2d');
-		c.width = this.width;
-		c.height = this.height;
-		cx.drawImage(scrawl.img[this.name], 0, 0);
-		return c.toDataURL();
+	ScrawlImage.prototype.getImageDataUrl = function(image, putdata){
+		putdata = (scrawl.xt(putdata)) ? putdata : false;
+		scrawl.cv.width = this.width;
+		scrawl.cv.height = this.height;
+		(putdata) ? scrawl.cvx.putImageData(image, 0, 0) : scrawl.cvx.drawImage(image, 0, 0);
+		return scrawl.cv.toDataURL();
+		};
+
+/**
+Get image data - uses JavScript canvas API function ctx.getImageData()
+
+_Note: does not save the data in the scrawl library_
+@method getImageData
+@param {Boolean} [source] When true, retrieves image data from the source image; default is false
+@return getImageData data object
+@private
+**/
+	ScrawlImage.prototype.getImageData = function(source){
+		source = (scrawl.xt(source)) ? source : false;
+		var image;
+		if(scrawl.isa(source,'bool')){
+			image = (source) ? scrawl.object[this.source] : scrawl.img[this.name];
+			scrawl.cv.width = this.width;
+			scrawl.cv.height = this.height;
+			scrawl.cvx.drawImage(image, 0, 0);
+			return scrawl.cvx.getImageData(0, 0, this.width, this.height);
+			}
+		return source;
+		};
+
+/**
+Clone a SpriteImage object
+
+Also clones the virtual &lt;img&gt; element associated with the SpriteImage
+@method clone
+@param {Object} [items] Key:value Object argument for setting attributes
+@return new ScrawlImage object on success; false otherwise
+**/
+	ScrawlImage.prototype.clone = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		items.element = (scrawl.xt(scrawl.img[this.name])) ? scrawl.img[this.name] : scrawl.object[this.source];
+		items.makeCopy = true;
+		return Scrawl.prototype.clone.call(this, items);
+		};
+
+/**
+Grayscale filter
+
+Attributes in the argument object:
+
+* __value__ - Number or String. Percentage value of grayscaling effect: as a Number, between 0 (no effect) and 1 (full grayscale effect); as a String, between '0%' and '100%' (default: 1)
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method grayscale
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.grayscale = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var value = (scrawl.xt(items.value)) ? items.value : 1,
+			useSourceData = (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			imgData = items.use || this.getImageData(useSourceData),
+			data = imgData.data,
+			gray,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		value = (scrawl.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (scrawl.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+		for(var i=0, z=data.length; i<z; i += 4){
+			gray = Math.floor((0.2126 * data[i]) + (0.7152 * data[i+1]) + (0.0722 * data[i+2]));
+			data[i] = data[i] + ((gray - data[i]) * value);
+			data[i+1] = data[i+1] + ((gray - data[i+1]) * value);
+			data[i+2] = data[i+2] + ((gray - data[i+2]) * value);
+			}
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Sharpen filter
+
+Attributes in the argument object:
+
+* __value__ - Number or String. Percentage value of sharpen effect: as a Number, between 0 (no effect) and 1 (full sharpen effect); as a String, between '0%' and '100%' (default: 1)
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method sharpen
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.sharpen = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var value = (scrawl.xt(items.value)) ? items.value : 1,
+			useSourceData = (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			imgData = items.use || this.getImageData(useSourceData),
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			mask,
+			merge,
+			result;
+		value = (scrawl.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		mask = this.matrix({
+			useSourceData: useSourceData,
+			data: [0, -1, 0, -1, 5, -1, 0, -1, 0],
+			save: false,
+			});
+		merge = this.mergeImages({
+			image1: imgData,
+			image2: mask,
+			value: value,
+			});
+		if(save){
+			result = this.getImageDataUrl(merge, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return merge;
+		};
+
+/**
+Filter helper function - merge one image data object into another
+
+Attributes in the argument object:
+
+* __value__ - Number. Percentage value of merge, between 0 (image1 returned) and 1 (image2 returned)
+* __image1__ - First image data object - fully displayed when _value_ is 0
+* __image2__ - Second image data object - fully displayed when _value_ is 1
+@method mergeImages
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+@private
+**/
+	ScrawlImage.prototype.mergeImages = function(items){
+		if(scrawl.isa(items,'obj') && scrawl.xta([items.image1, items.image2, items.value])){
+			var img1 = items.image1,
+				dat1 = img1.data,
+				img2 = items.image2,
+				dat2 = img2.data,
+				val = items.value;
+			if(val === 0){
+				return img1;
+				}
+			else if(val === 1){
+				return img2;
+				}
+			else{
+				for(var i=0, z=dat1.length; i<z; i += 4){
+					dat1[i] = (dat1[i] * (1 - val)) + ((dat2[i]) * val);
+					dat1[i+1] = (dat1[i+1] * (1 - val)) + ((dat2[i+1]) * val);
+					dat1[i+2] = (dat1[i+2] * (1 - val)) + ((dat2[i+2]) * val);
+					}
+				return img1;
+				}
+			}
+		return false;
+		};
+
+/**
+Invert filter
+
+Attributes in the argument object:
+
+* __value__ - Number or String. Percentage value of invert effect: as a Number, between 0 (no effect) and 1 (full invert effect); as a String, between '0%' and '100%' (default: 1)
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method invert
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.invert = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var value = (scrawl.xt(items.value)) ? items.value : 1,
+			useSourceData = (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			imgData = items.use || this.getImageData(useSourceData),
+			data = imgData.data,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		value = (scrawl.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (scrawl.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+		for(var i=0, z=data.length; i<z; i += 4){
+			data[i] = (data[i] * (1 - value)) + ((255 - data[i]) * value);
+			data[i+1] = (data[i+1] * (1 - value)) + ((255 - data[i+1]) * value);
+			data[i+2] = (data[i+2] * (1 - value)) + ((255 - data[i+2]) * value);
+			}
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Brightness filter
+
+Attributes in the argument object:
+
+* __value__ - Number or String. Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1.
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method brightness
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.brightness = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var value = (scrawl.xt(items.value)) ? items.value : 1,
+			useSourceData = items.use || (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			imgData = this.getImageData(useSourceData),
+			data = imgData.data,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		value = (scrawl.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (value < 0) ? 0 : value;
+		for(var i=0, z=data.length; i<z; i += 4){
+			data[i] = data[i] * value;
+			data[i+1] = data[i+1] * value;
+			data[i+2] = data[i+2] * value;
+			}
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Saturation filter
+
+Attributes in the argument object:
+
+* __value__ - Number or String. Percentage value of saturation effect: as a Number, between 0 (gray) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1.
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method saturation
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.saturation = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var value = (scrawl.xt(items.value)) ? items.value : 1,
+			useSourceData = items.use || (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			imgData = this.getImageData(useSourceData),
+			data = imgData.data,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		value = (scrawl.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (value < 0) ? 0 : value;
+		for(var i=0, z=data.length; i<z; i += 4){
+			data[i] = 127 + (data[i] - 127) * value;
+			data[i+1] = 127 + (data[i+1] - 127) * value;
+			data[i+2] = 127 + (data[i+2] - 127) * value;
+			}
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Threshold filter
+
+Attributes in the argument object:
+
+* __value__ - Number or String. Percentage value of threshold border: as a Number, between 0 (black) and 1 (white); as a String, between '0%' and '100%' (default: 0.5)
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method threshold
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.threshold = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var value = (scrawl.xt(items.value)) ? items.value : 0.5,
+			imgData,
+			data,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		value = (scrawl.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (scrawl.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+		value *= 255;
+		result = this.grayscale({
+			useSourceData: items.useSourceData,
+			use: items.use,
+			save: false,
+			});
+		imgData = this.getImageData(result),
+		data = imgData.data;
+		for(var i=0, z=data.length; i<z; i += 4){
+			data[i] = (data[i] > value) ? 255 : 0;
+			data[i+1] = (data[i+1] > value) ? 255 : 0;
+			data[i+2] = (data[i+2] > value) ? 255 : 0;
+			}
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Channels filter
+
+Alter the relative channel levels for an image
+
+Attributes in the argument object:
+
+* __red__ - Number or String. Percentage value of red channel effect on the pixel: as a Number, between 0 (set red channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
+* __green__ - Number or String. Percentage value of green channel effect on the pixel: as a Number, between 0 (set green channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
+* __blue__ - Number or String. Percentage value of blue channel effect on the pixel: as a Number, between 0 (set blue channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
+* __alpha__ - Number or String. Percentage value of alpha channel effect on the pixel: as a Number, between 0 (set alpha channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method channels
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.channels = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var red = (scrawl.xt(items.red)) ? items.red : 1,
+			green = (scrawl.xt(items.green)) ? items.green : 1,
+			blue = (scrawl.xt(items.blue)) ? items.blue : 1,
+			alpha = (scrawl.xt(items.alpha)) ? items.alpha : 1,
+			useSourceData = items.use || (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			imgData = this.getImageData(useSourceData),
+			data = imgData.data,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		red = (scrawl.isa(red, 'str')) ? parseFloat(red)/100 : red;
+		green = (scrawl.isa(green, 'str')) ? parseFloat(green)/100 : green;
+		blue = (scrawl.isa(blue, 'str')) ? parseFloat(blue)/100 : blue;
+		alpha = (scrawl.isa(alpha, 'str')) ? parseFloat(alpha)/100 : alpha;
+		for(var i=0, z=data.length; i<z; i += 4){
+			data[i] = data[i] * red;
+			data[i+1] = data[i+1] * green;
+			data[i+2] = data[i+2] * blue;
+			data[i+3] = data[i+3] * alpha;
+			}
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+ChannelStep filter
+
+Limit the number of values used in each channel
+
+Attributes in the argument object:
+
+* __red__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
+* __green__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
+* __blue__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
+* __alpha__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method channelStep
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.channelStep = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var red = (scrawl.xt(items.red)) ? items.red : 1,
+			green = (scrawl.xt(items.green)) ? items.green : 1,
+			blue = (scrawl.xt(items.blue)) ? items.blue : 1,
+			alpha = (scrawl.xt(items.alpha)) ? items.alpha : 1,
+			useSourceData = items.use || (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			imgData = this.getImageData(useSourceData),
+			data = imgData.data,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		for(var i=0, z=data.length; i<z; i += 4){
+			data[i] = Math.floor(data[i] / red) * red;
+			data[i+1] = Math.floor(data[i+1] / green) * green;
+			data[i+2] = Math.floor(data[i+2] / blue) * blue;
+			data[i+3] = Math.floor(data[i+3] / alpha) * alpha;
+			}
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Sepia filter
+
+Attributes in the argument object:
+
+* __value__ - Number or String. Percentage value of sepia effect: as a Number, between 0 (no effect) and 1 (full sepia tint); as a String, between '0%' and '100%' (default: 1).
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method sepia
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.sepia = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		items.rr = 0.393;
+		items.rg = 0.349;
+		items.rb = 0.272;
+		items.gr = 0.769;
+		items.gg = 0.686;
+		items.gb = 0.534;
+		items.br = 0.189;
+		items.bg = 0.168;
+		items.bb = 0.131;
+		return this.tint(items);
+		};
+
+/**
+Tint filter
+
+Attributes in the argument object:
+
+* __value__ - Number or String. Percentage value of tint effect: as a Number, between 0 (no effect) and 1 (full tint); as a String, between '0%' and '100%' (default: 1).
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+
+The argument object can take up to nine additional attributes, used to set the tinting effect. Default values for these attributes will generate a sepia tint. All values are Numbers between 0 and 1:
+
+* __redInRed__ or __rr__ - default 0.393
+* __redInGreen__ or __rg__ - default 0.349
+* __redInBlue__ or __rb__ - default 0.272
+* __greenInRed__ or __gr__ - default 0.769
+* __greenInGreen__ or __gg__ - default 0.686
+* __greenInBlue__ or __gb__ - default 0.534
+* __blueInRed__ or __br__ - default 0.189
+* __blueInGreen__ or __bg__ - default 0.168
+* __blueInBlue__ or __bb__ - default 0.131
+@method tint
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.tint = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var value = (scrawl.xt(items.value)) ? items.value : 1,
+			useSourceData = items.use || (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			rr = items.rr || items.redInRed || 0.393,
+			rg = items.rg || items.redInGreen || 0.349,
+			rb = items.rb || items.redInBlue || 0.272,
+			gr = items.gr || items.greenInRed || 0.769,
+			gg = items.gg || items.greenInGreen || 0.686,
+			gb = items.gb || items.greenInBlue || 0.534,
+			br = items.br || items.blueInRed || 0.189,
+			bg = items.bg || items.blueInGreen || 0.168,
+			bb = items.bb || items.blueInBlue || 0.131,
+			imgData = this.getImageData(useSourceData),
+			data = imgData.data,
+			red,
+			grn,
+			blu,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		value = (scrawl.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (scrawl.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+		for(var i=0, z=data.length; i<z; i += 4){
+			red = (data[i] * rr) + (data[i+1] * gr) + (data[i+2] * br)
+			grn = (data[i] * rg) + (data[i+1] * gg) + (data[i+2] * bg)
+			blu = (data[i] * rb) + (data[i+1] * gb) + (data[i+2] * bb)
+			data[i] = ((data[i] * (1 - value)) + (red * value));
+			data[i+1] = ((data[i+1] * (1 - value)) + (grn * value));
+			data[i+2] = ((data[i+2] * (1 - value)) + (blu * value));
+			}
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Blur filter
+
+Attributes in the argument object:
+
+* __radius__ - Number. Blur brush x and y radius (default: 0)
+* __radiusX__ - Number. Blur brush x radius (default: 2)
+* __radiusY__ - Number. Blur brush y radius (default: 2)
+* __roll__ - Number. Blur brush roll value (default: 0)
+* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method blur
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.blur = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var radius = (scrawl.xt(items.radius)) ? Math.abs(items.radius) : 0,
+			radiusX = (scrawl.xt(items.radiusX)) ? Math.abs(items.radiusX) : 2,
+			radiusY = (scrawl.xt(items.radiusY)) ? Math.abs(items.radiusY) : 2,
+			roll = (scrawl.xt(items.roll)) ? items.roll : 0,
+			rx = radius || radiusX || 2,
+			ry = radius || radiusY || 2,
+			useSourceData = items.use || (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			addAlpha = (scrawl.xt(items.includeAlpha)) ? items.includeAlpha : false,
+			brush = this.getBrush(rx, ry, roll),
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			imgData = this.doMatrix(brush, useSourceData, addAlpha),
+			result;
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Blur helper function
+
+@method getBrush
+@param x {Number} brush x radius
+@param y {Number} brush y radius
+@param r {Number} brush roll (in degrees)
+@return Array of objects used for the blur brush
+@private
+**/
+	ScrawlImage.prototype.getBrush = function(x, y, r){
+		var dim = (x > y) ? x+2 : y+2,
+			hDim = Math.floor(dim/2),
+			cos = Math.cos(r * scrawl.radian),
+			sin = Math.sin(r * scrawl.radian),
+			brush = [];
+		scrawl.cv.width = dim;
+		scrawl.cv.height = dim;
+		scrawl.cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
+		scrawl.cvx.beginPath();
+		scrawl.cvx.moveTo(0,-y);
+		scrawl.cvx.bezierCurveTo(x*0.55, -y, x, -y*0.55, x, 0);
+		scrawl.cvx.bezierCurveTo(x, y*0.55, x*0.55, y, 0, y);
+		scrawl.cvx.bezierCurveTo(-x*0.55, y, -x, y*0.55, -x, 0);
+		scrawl.cvx.bezierCurveTo(-x, -y*0.55, -x*0.55, -y, 0, -y);
+		scrawl.cvx.closePath();
+		for(var i=0; i<dim; i++){ //rows (y)
+			for(var j=0; j<dim; j++){ //cols (x)
+				if(scrawl.cvx.isPointInPath(j, i)){
+					brush.push({ox: j - hDim, oy: i - hDim, wt: 1});
+					}
+				}
+			}
+		scrawl.cvx.setTransform(1, 0, 0, 1, 0, 0);
+		return brush;
+		};
+
+/**
+Pixelate filter
+
+Attributes in the argument object:
+
+* __width__ - Number. Block width (default: 5)
+* __height__ - Number. Block height (default: 5)
+* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method pixelate
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	ScrawlImage.prototype.pixelate = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var width = (scrawl.xt(items.width)) ? Math.ceil(items.width) : 5,
+			height = (scrawl.xt(items.height)) ? Math.ceil(items.height) : 5,
+			useSourceData = items.use || (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			addAlpha = (scrawl.xt(items.includeAlpha)) ? items.includeAlpha : false,
+			imgData = this.getImageData(useSourceData),
+			red,
+			grn,
+			blu,
+			alp,
+			block,
+			count,
+			tW,
+			tH,
+			vol,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			result;
+		scrawl.cv.width = imgData.width;
+		scrawl.cv.height = imgData.height;
+		scrawl.cvx.putImageData(imgData, 0, 0);
+		for(var i = 0; i < imgData.height; i += height){ //rows (y)
+			for(var j = 0; j < imgData.width; j += width){ //cols (x)
+				red = grn = blu = alp = count = 0;
+				tW = (j + width > imgData.width) ? imgData.width - j : width;
+				tH = (i + height > imgData.height) ? imgData.height - i : height;
+				vol = tW * tH * 4;
+				block = scrawl.cvx.getImageData(j, i, tW, tH);
+				for(var k = 0; k < vol; k += 4){
+					if(block.data[k+3] > 0){
+						red += block.data[k];
+						grn += block.data[k+1];
+						blu += block.data[k+2];
+						alp += block.data[k+3];
+						count++;
+						}
+					}
+				red = Math.floor(red/count);
+				grn = Math.floor(grn/count);
+				blu = Math.floor(blu/count);
+				alp = Math.floor(alp/count);
+				scrawl.cvx.fillStyle = (addAlpha) ? 'rgba('+red+','+grn+','+blu+','+alp+')' : 'rgb('+red+','+grn+','+blu+')';
+				scrawl.cvx.fillRect(j, i, tW, tH);
+				}
+			}
+		block = scrawl.cvx.getImageData(0, 0, imgData.width, imgData.height);
+		if(save){
+			result = this.getImageDataUrl(block, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return block;
+		};
+
+/**
+Matrix filter
+
+Transforms an image using a weighted matrix
+
+Matrix is composed of an array of weightings to be applied to the colors of surrounding pixels. The function expects the weightings data to equate to a square matrix with an odd number of colums/rows - thusthe data array should consist of 9, 25, 49, etc elements. if the data array is missing the requisite number of elements, the function will add zeros to it to pad it out.
+
+Attributes in the argument object:
+
+* __data__ - Array of Numbers. (default: [1])
+* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
+* __wrap__ - Boolean. When true, offset pixels that fall outside the boundaries of the image will be wrapped to the opposite end of the image row or column; when false, the offset pixels are ignored and their weightings excluded from the calculation (default: false)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method matrix
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended data image object
+**/
+	ScrawlImage.prototype.matrix = function(items){
+		items = (scrawl.isa(items, 'obj')) ? items : {};
+		var useSourceData = (scrawl.xt(items.useSourceData)) ? items.useSourceData : false,
+			addAlpha = (scrawl.xt(items.includeAlpha)) ? items.includeAlpha : false,
+			wrap = (scrawl.isa(items.wrap, 'bool')) ? items.wrap : false,
+			myArray = (scrawl.isa(items.data,'arr')) ? items.data : [1],
+			matrix = [],
+			reqLen,
+			matrixMid,
+			matrixDim,
+			matrixCenter,
+			counter = 0,
+			save = (scrawl.xt(items.save)) ? items.save : true,
+			imgData,
+			result;
+		reqLen = Math.ceil(Math.sqrt(myArray.length));
+		reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
+		for(var i = 0; i < reqLen; i++){
+			myArray[i] = (scrawl.xt(myArray[i])) ? parseFloat(myArray[i]) : 0;
+			myArray[i] = (isNaN(myArray[i])) ? 0 : myArray[i];
+			}
+		matrixMid = Math.floor(myArray.length/2);
+		matrixDim = Math.sqrt(myArray.length);
+		matrixCenter = Math.floor(matrixDim/2);
+		for(var i = 0; i < matrixDim; i++){ //col (y)
+			for(var j = 0; j < matrixDim; j++){ //row (x)
+				if(myArray[counter] !== 0){
+					matrix.push({
+						ox: j - matrixCenter,
+						oy: i - matrixCenter,
+						wt: myArray[counter],
+						});
+					}
+				counter++;
+				}
+			}
+		imgData = this.doMatrix(matrix, useSourceData, addAlpha, wrap);
+		if(save){
+			result = this.getImageDataUrl(imgData, true);
+			scrawl.img[this.name] = this.makeImage(result);
+			}
+		return imgData;
+		};
+
+/**
+Helper function
+
+The matrix array consists of objects with the following attributes:
+
+* __ox__ horizontal offset from the current pixel
+* __oy__ vertical offset from the current pixel
+* __wt__ weighting to be used when adding the color values of the offset pixel to the resulting color for current pixel
+
+Function used by matrix() and blur() filter functions
+
+@method doMatrix
+@param {Array} matrix Array of matrix objects
+@param {Boolean} urlData image URL data
+@param {Boolean} addAlpha When true, alpha values are included in the calculation
+@param {Boolean} wrap When true, offset pixels that fall outside the boundaries of the image will be wrapped to the opposite end of the image row or column; when false, the offset pixels are ignored and their weightings excluded from the calculation
+@return True on success; false otherwise
+@private
+**/
+	ScrawlImage.prototype.doMatrix = function(matrix, urlData, addAlpha, wrap){
+		wrap = (scrawl.isa(wrap,'bool')) ? wrap : false;
+		var imgData = this.getImageData(urlData),
+			data = imgData.data,
+			copyData = this.getImageData(urlData),
+			copy = copyData.data,
+			weight = 0,
+			red,
+			grn,
+			blu,
+			alp,
+			here,
+			there,
+			addPix;
+		if(matrix.length > 0){
+			for(var i = 0; i < imgData.height; i++){ //rows (y)
+				for(var j = 0; j < imgData.width; j++){ //cols (x)
+					red = blu = grn = alp = weight = 0;
+					here = 4 * ((i * imgData.width) + j);
+					for(var k = 0, z = matrix.length; k < z; k++){
+						addPix = true;
+						if(!scrawl.isBetween(j + matrix[k].ox, 0, imgData.width - 1, true) || !scrawl.isBetween(i + matrix[k].oy, 0, imgData.height - 1, true)){
+							if(wrap){
+								if(!scrawl.isBetween(j + matrix[k].ox, 0, imgData.width - 1, true)){
+									matrix[k].ox += (matrix[k].ox > 0) ? -imgData.width : imgData.width;
+									}
+								if(!scrawl.isBetween(i + matrix[k].oy, 0, imgData.height - 1, true)){
+									matrix[k].oy += (matrix[k].oy > 0) ? -imgData.height : imgData.height;
+									}
+								}
+							else{
+								addPix = false;
+								}
+							}
+						if(addPix){
+							there = here + (4 * ((matrix[k].oy * imgData.width) + matrix[k].ox));
+							red += data[there] * matrix[k].wt;
+							grn += data[there + 1] * matrix[k].wt;
+							blu += data[there + 2] * matrix[k].wt;
+							weight += matrix[k].wt;
+							if(addAlpha){
+								alp += data[there + 3] * matrix[k].wt;
+								}
+							}
+						}
+					copy[here] = (weight !== 0) ? red/weight : red;
+					copy[here + 1] = (weight !== 0) ? grn/weight : grn;
+					copy[here + 2] = (weight !== 0) ? blu/weight : blu;
+					if(addAlpha){
+						copy[here + 3] = (weight !== 0) ? alp/weight : alp;
+						}
+					}
+				}
+			return copyData;
+			}
+		return false;
 		};
 
 /**
@@ -9320,9 +10082,10 @@ Turn the object into a JSON String
 @return JSON string of non-default value attributes, including non-default context values
 **/
 	Sprite.prototype.toString = function(noexternalobjects){
+		noexternalobjects = (scrawl.xt(noexternalobjects)) ? noexternalobjects : false;
 		var keys = Object.keys(scrawl.d[this.type]),
 			result = {},
-			ctx,
+			ctx = scrawl.ctx[this.context],
 			ctxArray,
 			designs = [],
 			resarray = [];
@@ -9330,14 +10093,13 @@ Turn the object into a JSON String
 		result.classname = this.classname;
 		result.name = this.name;
 		if(!noexternalobjects){
-			ctx = scrawl.ctx[this.context];
-			if(scrawl.contains(scrawl.designnames, ctx.fillStyle)){
+			if(ctx && ctx.fillStyle && scrawl.contains(scrawl.designnames, ctx.fillStyle)){
 				scrawl.pushUnique(designs, ctx.fillStyle);
 				}
-			if(scrawl.contains(scrawl.designnames, ctx.strokeStyle)){
+			if(ctx && ctx.strokeStyle && scrawl.contains(scrawl.designnames, ctx.strokeStyle)){
 				scrawl.pushUnique(designs, ctx.strokeStyle);
 				}
-			if(scrawl.contains(scrawl.designnames, ctx.shadowColor)){
+			if(ctx && ctx.shadowColor && scrawl.contains(scrawl.designnames, ctx.shadowColor)){
 				scrawl.pushUnique(designs, ctx.shadowColor);
 				}
 			for(var i=0, z=designs.length; i<z; i++){
@@ -9350,7 +10112,7 @@ Turn the object into a JSON String
 					result[keys[i]] = this[keys[i]];
 					}
 				}
-			else if(keys[i] === 'context'){
+			else if(keys[i] === 'context' && scrawl.xt(scrawl.ctx[this.context])){
 				ctx = JSON.parse(scrawl.ctx[this.context].toString());
 				ctxArray = Object.keys(ctx);
 				for(var j = 0, w = ctxArray.length; j < w; j++){
@@ -12126,10 +12888,10 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 			if(this.source){
 				if(this.imageType === 'img'){
 					s = scrawl.image[this.source];
-					w = s.get('copyWidth');
-					h = s.get('copyHeight');
-					x = s.get('copyX');
-					y = s.get('copyY');
+					w = s.get('width');
+					h = s.get('height');
+					x = 0;
+					y = 0;
 					}
 				else if(this.imageType === 'canvas'){
 					s = scrawl.cell[this.source];
@@ -12405,10 +13167,10 @@ Clone helper function
 		if(this.imageType === 'img'){
 			var img = scrawl.image[this.source];
 			this.set({
-				copyWidth: img.get('copyWidth'),
-				copyHeight: img.get('copyHeight'),
-				copyX: img.get('copyX'),
-				copyY: img.get('copyY'),
+				copyWidth: img.get('width'),
+				copyHeight: img.get('height'),
+				copyX: 0,
+				copyY: 0,
 				});
 			}
 		return this;
@@ -12635,35 +13397,21 @@ Load the Picture sprite's image data (via JavaScript getImageData() function) in
 **/
 	Picture.prototype.getImageData = function(label){
 		label = (scrawl.xt(label)) ? label : 'data';
-		var	myCanvas,
-			myImage,
-			w,
-			h;
-		if(this.imageType === 'animation' && scrawl.image[this.source]){
+		var	img = this.getImage(),
+			myImage;
+		if(this.imageType === 'animation'){
 			myImage = scrawl.image[this.source];
-			myCanvas = scrawl.addNewCell({
-				name: this.name,
-				width: myImage.get('width'),
-				height: myImage.get('height'),
-				});
-			scrawl.context[myCanvas.name].drawImage(scrawl.img[this.source], 0, 0);
+			scrawl.cv.width = myImage.get('width');
+			scrawl.cv.height = myImage.get('height');
+			scrawl.cvx.drawImage(img, 0, 0);
 			}
 		else{
-			w = this.copyWidth;
-			h = this.copyHeight;
-			myCanvas = scrawl.addNewCell({
-				name: this.name,
-				width: w,
-				height: h,
-				});
-			try{scrawl.context[myCanvas.name].drawImage(this.getImage(), this.copyX, this.copyY, w, h, 0, 0, w, h);}catch(e){console.log(this.name+' failed getImageData');}
+			scrawl.cv.width = this.copyWidth;
+			scrawl.cv.height = this.copyHeight;
+			scrawl.cvx.drawImage(img, this.copyX, this.copyY, this.copyWidth, this.copyHeight, 0, 0, this.copyWidth, this.copyHeight);
 			}
-		this.set({
-			imageData: myCanvas.getImageData({
-				name: label,
-				}),
-			});
-		scrawl.deleteCells([myCanvas.name]);
+		this.imageData = this.name+'_'+label;
+		scrawl.imageData[this.imageData] = scrawl.cvx.getImageData(0, 0, scrawl.cv.width, scrawl.cv.height);
 		return this;
 		};
 
@@ -12721,7 +13469,27 @@ Display helper function - retrieve copy attributes for ScrawlImage, taking into 
 @private
 **/
 	Picture.prototype.getImage = function(){
-		if(this.imageType === 'animation'){
+		var myData,
+			myReturn;
+		switch(this.imageType){
+			case 'canvas' :
+				myReturn = scrawl.canvas[this.source];
+				break;
+			case 'animation' :
+				myData = scrawl.anim[this.animSheet].getData();
+				this.set({
+					copyX: myData.copyX,
+					copyY: myData.copyY,
+					copyWidth: myData.copyWidth,
+					copyHeight: myData.copyHeight,
+					});
+				myReturn = (scrawl.xt(scrawl.img[this.source])) ? scrawl.img[this.source] : scrawl.object[this.source];
+				break;
+			default :
+				myReturn = (scrawl.xt(scrawl.img[this.source])) ? scrawl.img[this.source] : scrawl.object[this.source];
+			}
+		return myReturn;
+/*		if(this.imageType === 'animation'){
 			//animSheet always set if imageType === 'animation'
 			var myData = scrawl.anim[this.animSheet].getData();
 			this.set({
@@ -12735,7 +13503,7 @@ Display helper function - retrieve copy attributes for ScrawlImage, taking into 
 		else{
 			return scrawl[this.imageType][this.source];
 			}
-		};
+*/		};
 
 /**
 Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
@@ -13607,6 +14375,7 @@ Stamp mark sprites onto Shape path
 			tPathPosition,
 			tGroup,
 			tPivot,
+			tHandle,
 			links,
 			link,
 			point;
@@ -13614,6 +14383,7 @@ Stamp mark sprites onto Shape path
 			links = this.get('linkList');
 			tPivot = sprite.pivot;
 			tGroup = sprite.group;
+			tHandle = sprite.handle;
 			for(var i=0, z=links.length; i<z; i++){
 				link = scrawl.link[links[i]];
 				point = scrawl.point[link.get('endPoint')];
@@ -13621,27 +14391,32 @@ Stamp mark sprites onto Shape path
 					sprite.set({
 						pivot: point.name,
 						group: cell,
+						handle: this.handle,
 						}).forceStamp();
 					}
 				}
 			sprite.set({
 				pivot: tPivot,
 				group: tGroup,
+				handle: tHandle,
 				});
 			}
 		else{
 			tPath = sprite.path;
 			tPathPosition = sprite.pathPlace;
 			tGroup = sprite.group;
+			tHandle = sprite.handle;
 			sprite.set({
 				path: this.name,
 				pathPlace: pos,
 				group: cell,
+				handle: this.handle,
 				}).forceStamp();
 			sprite.set({
 				path: tPath,
 				pathPlace: tPathPosition,
 				group: tGroup,
+				handle: tHandle,
 				});
 			}
 		return this;
@@ -15452,21 +16227,22 @@ Builds &lt;canvas&gt; element's contenxt engine's pattern object
 @private
 **/
 	Pattern.prototype.makeDesign = function(){
-		var ctx = scrawl.context[this.cell];
-		try{
+		var ctx = scrawl.context[this.cell],
+			img = (scrawl.xt(scrawl.img[this.image])) ? scrawl.img[this.image] : scrawl.object[this.image];
+//		try{
 			if(this.image){
-				if(scrawl.img[this.image]){
-					scrawl.dsn[this.name] = ctx.createPattern(scrawl.img[this.image], this.repeat);
+				if(img){
+					scrawl.dsn[this.name] = ctx.createPattern(img, this.repeat);
 					}
 				}
 			else if(this.canvas){
 				scrawl.dsn[this.name] = ctx.createPattern(scrawl.canvas[this.canvas], this.repeat);
 				}
 			return this;
-			}
-		catch(e){
-			return this;
-			}
+//			}
+//		catch(e){
+//			return this;
+//			}
 		};
 
 /**
@@ -16802,8 +17578,9 @@ Remove this Animation from the scrawl library
 		scrawl.removeItem(scrawl.animate, this.name);
 		return true;
 		};
-		
+
 	//start initialization
 	scrawl.initialize();
+	scrawl.cvx = scrawl.cv.getContext('2d')
 	return scrawl;
 	}());

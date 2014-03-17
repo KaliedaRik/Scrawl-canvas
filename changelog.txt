@@ -35,6 +35,125 @@ Topics that I want|need to look at (in no particular order) ...
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140317
+	- coded new demo209 - Position DOM elements using pivot
+		- because no demo was testing element positioning via sprite pivots
+		- found some minor bugs in various Scrawl3d functions that were incorrectly positioning the elements
+		- fixed a positioning bug for Shape marks - wasn't taking handle offsets into account in calculations
+	- revisited the ScrawlImage constructor
+		- not happy that every image loaded into library was also being copied
+		- updated various sprite functions so that they could get the copied image, if present, or the original image as fallback
+	- moving to version 2.01
+		- added text to the tutorial to cover ScrawlImage filters
+		- generated minified version, and new documentation
+		- updated website pages with latest info
+		- uploaded to Sourceforge and GitHub
+		
+140314-16
+	- Coding up a potential Facebook app
+		- App is a combination of demos 046 (cell zoom), 082 (wrapping text dynamically) and 068 (loading local image files)
+			- users can load local files into the canvas, zoom and rotate them, and add text
+			- results are (currently) saved to the doc where they can be right-clicked for local saving and reposting to Facebook
+			- final aim is that when users click on the save button, the new picture will be posted to their timeline on Facebook
+		- created separate subdomain for this work - http://isay.rikweb.org.uk
+		- initial page design and functionality largely completed
+		- can't take this project further at the moment
+			- Facebook demands that all apps using its canvas iFrame be served from both a normal and a secure domain
+			
+140313
+	- Picture/ScrawlImage filters
+		- investigating various ways to make things a bit speedier
+			- IE11 doesn't support Uint8ClampedArray - still returning CanvasPixelArray
+			- cleaning up code to remove Math.floor checks 
+				- ImageData.data (of all flavours) seems to convert to int, and check bounds 0-255, automatically
+			- thinking about web workers
+			
+140312
+	- Picture/ScrawlImage filters
+		- added filter function
+			- sharpen() - demo413
+		- new helper function - mergeImages()
+			- used by sharpen filter
+			- should be useful for combining the effects of multiple filters into simgle image
+
+140311
+	- Picture/ScrawlImage filters
+		- completed filter function
+			-pixelate() - demo409
+		- added filter function
+			- matrix() - demo410
+			- channels() - demo411
+			- channelStep() - demo412
+		- rewrote blur filter to make use of the new doMatrix() helper function
+		- rewrote sepia filter to use the tint filter
+		- amended all filters:
+			- added in argument attribute .save
+				- so filters no longer automatically save/display the results of their actions
+			- added in argument attribute .use
+				- an image data object
+				- so filters can act on any image, not just their SpriteImage image
+			- all filters now return the amended image data object, not 'this'
+			- changes should allow filters to use other filters to achieve effects
+		- all filter documentation completed and up-to-date
+		
+140310
+	- Picture/ScrawlImage filters
+		- completed filter function
+			- tint() - demo407
+		- added filter functions
+			- blur() - demo408
+		- working on filter function
+			- pixelate() - demo409
+
+140309
+	- Picture/ScrawlImage filters
+		- added scrawl.cv to hold a workhorse canvas that never gets displayed
+			- created on Scrawl.js initiation
+			- canvas's context engine stored in scrawl.cvx
+		- rewrote ScrawlImage constructor
+			- now stores a URLencoded copy of the source image in scrawl.img
+			- source <img> element reference stored in scrawl.object
+		- new/rewritten ScrawlImage functions: .makeImage(); .getImageDataUrl(); .getImageData(); .clone()
+			- all documented
+		- removed ScrawlImage attributes: .copyX; .copyY; .copyWidth; .copyHeight
+			- meaningless
+			- rewrote Picture functions that were using them, when they should have been using 0, 0, ScrawlImage.width, ScrawlImage.height
+		- added some filter functions
+			- grayscale() - demo401
+			- invert() - demo402
+			- brightness() - demo403
+			- saturation() - demo404
+			- threshold() - demo405
+			- sepia() - demo406
+			- tint() - no demo coded yet for this one
+				- all demos tested in FF and IE11 - all work
+					- Firefox seems very slow to update images
+					- IE11 is quite nifty - images change as range input thingy is dragged
+				- all functions documented
+		 TODO:
+			- have no idea what contrast is, or how to code up a filter for it.
+			- tint filter is pretty complex; also need to code up a simpleTint filter?
+			- need to work out how best to do matrix-based filters such as blur
+				- once I get blur working, I can add more complex filters
+			- possibilities of advanced filters involving two image inputs?
+			- need to work out a way to access ScrawlImage filters via Picture sprites
+			- thinking about a Sprite.convertToPictureSprite() function
+			
+140308
+	- decided a good approach to filters may be to apply them in the ScrawlImage object
+		- means rewriting the object
+	- playing with filters
+		- got a grayscale(100%) filter working
+		
+140307
+	- thinking about filters ...
+	
+140306
+	- minor fixes to index.html, tutorial.html, supporters.html after validating code against w3c validator
+	
+140305
+	- recoded demo034 for better asynchronous loading of image file
+	
 140302
 	- scrawl-min.js testing
 		- all demos and index page pass testing in firefox
@@ -55,6 +174,10 @@ CHANGE LOG
 			- I can live with these bugs ... for now.
 	- redated all web pages
 		- official release date for v2.00 is now 2 March 2014
+	- uploaded v2.00 to sourceforge, github
+	- uploaded new website to scrawl.rikweb.org.uk
+	- updated blog
+		- removed most posts rather than recoding
 			
 ------------------------------------------------------------------------------------
 140301
