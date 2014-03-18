@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 2.01 - 17 March 2014
+*	version 2.02 - 18 March 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,7 +84,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 2.01 released 17 March 2014
+VERSION 2.02 released 18 March 2014
 
     - the zip file includes:
 	
@@ -111,6 +111,8 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 2.02 uploaded 18 March 2014
+	- added CORS functionality to Picture and ScrawlImage objects
 Version 2.01 uploaded 17 March 2014
 	- added filters
 	- fixed some minor bugs

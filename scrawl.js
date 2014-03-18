@@ -1,7 +1,7 @@
 /**
 # SCRAWL.JS Library
 
-## Version 2.01 - 17 March 2014
+## Version 2.02 - 18 March 2014
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -62,7 +62,7 @@ __window.scrawl__ - the Scrawl.js library object
 **/
 
 //COMMENT OUT for production
-"use strict";
+//"use strict";
 
 // requestAnimFrame from Paul Irish - http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 window.requestAnimFrame = (function(callback){
@@ -8216,15 +8216,28 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 			Scrawl.call(this, items);
 			this.width = items.width || iData.width || parseFloat(eData.offsetWidth) || eData.width || eData.style.width || 0;
 			this.height = items.height || iData.height || parseFloat(eData.offsetHeight) || eData.height || eData.style.height || 0;
-			data = (scrawl.xt(items.element)) ? this.getImageDataUrl(eData) : iData;
 			if(scrawl.xt(items.element) && makeCopy){
+				data = (scrawl.xt(items.element)) ? this.getImageDataUrl(eData) : iData;
 				scrawl.img[this.name] = this.makeImage(data);
+				}
+			else{
+				scrawl.object[this.name] = eData;
+				scrawl.pushUnique(scrawl.objectnames, this.name);
 				}
 			scrawl.image[this.name] = this;
 			scrawl.pushUnique(scrawl.imagenames, this.name);
-			scrawl.object[this.name] = eData;
-			scrawl.pushUnique(scrawl.objectnames, this.name);
 			this.source = items.source || this.name || '';
+/**
+ScrawlImage constructor and clone() function callback - an anonymous function that runs at the end of image construction
+
+_Not retained_
+@property callback
+@type Function
+@default undefined
+**/
+			if(scrawl.isa(items.fn, 'fn')){
+				items.fn.call(this);
+				}
 			return this;
 			}
 		return false;
@@ -8276,6 +8289,7 @@ Makes a virtual image from an imageDataUrl
 		var image = document.createElement('img');
 		image.width = this.width;
 		image.height = this.height;
+		image.crossorigin = 'anonymous';
 		image.src = data;
 		return image;
 		};
@@ -13012,7 +13026,7 @@ Image display - height, in pixels, from copy start point
 /**
 Asynchronous loading of image file from the server - path/to/image file
 
-_Not retained by object_
+Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
 @property url
 @type String
 @default ''
@@ -13020,7 +13034,7 @@ _Not retained by object_
 /**
 Asynchronous loading of image file from the server - function to run once image has successfully loaded
 
-_Not retained by object_
+Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
 @property callback
 @type Function
 @default undefined
@@ -13104,12 +13118,13 @@ _Note: this function is asynchronous_
 		if(scrawl.isa(items, 'obj') && scrawl.xt(items.url)){
 			var myImage = new Image();
 			myImage.id = items.name || 'image'+Math.floor(Math.random()*100000000);
+			myImage.crossOrigin = 'anonymous';
 			myImage.onload = function(){
 				try{
 					var iObj = scrawl.newImage({
-						name: myImage.id,
-						element: myImage,
-						}),
+							name: myImage.id,
+							element: myImage,
+							}),
 						url = items.url;
 					delete items.url;
 					items.source = myImage.id;
@@ -13124,14 +13139,6 @@ _Note: this function is asynchronous_
 					return false;
 					}
 				};
-/**
-Path to image, for use when dynamically importing images for use by the sprite
-
-Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
-@property url
-@type String
-@default ''
-**/
 			myImage.src = items.url;
 			}
 		else{
@@ -13489,21 +13496,7 @@ Display helper function - retrieve copy attributes for ScrawlImage, taking into 
 				myReturn = (scrawl.xt(scrawl.img[this.source])) ? scrawl.img[this.source] : scrawl.object[this.source];
 			}
 		return myReturn;
-/*		if(this.imageType === 'animation'){
-			//animSheet always set if imageType === 'animation'
-			var myData = scrawl.anim[this.animSheet].getData();
-			this.set({
-				copyX: myData.copyX,
-				copyY: myData.copyY,
-				copyWidth: myData.copyWidth,
-				copyHeight: myData.copyHeight,
-				});
-			return scrawl.img[this.source];
-			}
-		else{
-			return scrawl[this.imageType][this.source];
-			}
-*/		};
+		};
 
 /**
 Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function

@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 2.00 - 2 March 2014
+*	version 2.02 - 18 March 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -20,7 +20,6 @@ Topics that I want|need to look at (in no particular order) ...
 - better, more responsive stacks
 - more work on stack element/canvas sprite interactivity
 - accurate mouse cursor position detection on 3d rotated canvas elements
-- filters
 - isometric game demos
 - sprite positioning on canvas using cell dimension percentage values?
 	- to match stack element positioning functionality
@@ -35,6 +34,15 @@ Topics that I want|need to look at (in no particular order) ...
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140318
+	- added CORS functionality to image handling (Picture, ScrawlImage)
+		- rewrote functions and constructors to take advantage of CORS, when it is available on the browser
+			- will not work unless users have configured their servers to send CORS headers
+				- and/or included the crossorigin attribute in their DOM <img> element
+		- rewrote demo401 as an example of using a crossorigin image
+			- currently works in latest versions of: Firefox; IE11; Chrome
+			- doesn't work in latest versions of: Opera; Safari(windows)
+			
 140317
 	- coded new demo209 - Position DOM elements using pivot
 		- because no demo was testing element positioning via sprite pivots
