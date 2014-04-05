@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 2.02 - 18 March 2014
+*	version 3.0.0 - 5 April 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -12,28 +12,232 @@ Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
 - need to look at quaternion stuff again
 	- current implementation does not perform robustly enough
-	- currently has some annoying quirks
+	- has some annoying quirks
 	- chrome seems to hate yaw/pitch/roll rotations of 180deg
 - user accessibility issues
-- animation - sprite tweening
 - physics engine - rigid body interactions
 - better, more responsive stacks
-- more work on stack element/canvas sprite interactivity
-- accurate mouse cursor position detection on 3d rotated canvas elements
+	- accurate mouse cursor position detection on 3d rotated canvas elements
+	- scrawl and svg interoperability
 - isometric game demos
-- sprite positioning on canvas using cell dimension percentage values?
-	- to match stack element positioning functionality
-	- (not a priority)
-- scrawl and svg interoperability
 - using scrawl with popular javascript frameworks and web building software
 	- jQuery
 	- WordPress
 	- Angular, Ember, Backbone
+	- Require?
 	- node version??
 	
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140402-05
+	- testing new code in all browsers
+		- fixing bugs as we go along
+	- updating all documentation
+		- to take into account the new modularity
+	- updating the tutorial
+	- upload VERSION 3.0.0 to sourceforge, github
+	- update website
+	
+140401
+	- modularization exercise completed
+		- all modules recoded and tested via demos
+			- minified versions of modules produced and tested
+				- core minifies to 57kb - very competitive compared to other libraries
+				- modularization by other libraries is sparse - gives Scrawl an edge.
+		- all demos recoded
+		- index and supporters page recoded
+		- testing:
+			- firefox - all demo tests passed; index/supporters page working
+			- opera - all demo tests passed; index/supporters page working
+			- IE11 - all demo tests passed; index/supporters page working
+			- chrome - all demo tests passed; index/supporters page working
+				- except for video test, grayscale test (for cors support)
+			- safari - all demo tests passed; index/supporters page working
+				- except for video test, grayscale test (for cors support), file loading test
+				- index page magnifier canvas was failing for out of bounds drawImage copying
+					- temporarily solved by surrounding Picture drawImage statements in try-catch
+	- TODO
+		- redo all the documentation markup and regenerate docs
+		- update website pages with v3 release info
+		- prepare v3 for release
+				
+140326-31
+	- very unhappy with the current modularization paradigm
+		- decided to redo the whole thing
+			- using proper modular pattern
+			- a single core file - puts nothing on the screen
+			- all other modules amend or add to the core
+				- key design feature: modules must be able to load asynchronously - no dependencies beyond core!
+			- took the opportunity to rename stuff:
+				- breaks the API; means next version will be 3.00
+					- Scrawl -> Base
+					- SubScrawl -> Position
+					- Scrawl3d -> PageElements
+					- Shape -> Path
+					- Outline -> Shape
+			- rationalized existing codebase wherever possible
+				- eg sprite/cell position calculations now part of Position, not repeated in different objects
+				- using core hook functions wherever possible to minimize code repetition across modules
+			- new modules:
+				- scrawlCore
+					- utility functions
+					- new module loader function
+						- init function NOT run automatically anymore
+						- run scrawl.init() as part of the scrawl.loadModules() callback function
+					- Pad and Cell functionality
+						- including mouse position detection
+					- Group and Sprite core functionality
+					- Gradient and RadialGradient
+				- scrawlBlock (alias: block)
+				- scrawlWheel (alias: wheel)
+				- scrawlPhrase (alias: phrase)
+				- scrawlPath (alias: path)
+					- (was Shape)
+					- including sprite-to-path functionality
+				- scrawlShape (alias: shape)
+					- (was Outline)
+				- scrawlPathFactories (alias: factories)
+					- eg scrawl.makeEllipse, .makeRegularShape, etc
+				- scrawlImages (alias: images)
+					- ScrawlImage objects
+					- Picture sprites
+					- AnimSheet objects
+					- Pattern designs
+				- scrawlFilters (alias: filters)
+					- separated out - functions now part of the scrawl library, not Picture sprites
+						- retained linking functions in Picture
+				- scrawlAnimation (alias: animation)
+					- animation functionality
+				- scrawlCollisions (alias: collisions)
+					- separated out (does not include sprite-to-mouse stuff, which remains in core)
+				- scrawlColor (alias: color)
+				- scrawlPhysics (alias: physics)
+				- scrawlStacks (alias: stacks)
+				- scrawlSaveLoad (alias: saveload)
+		- recoding demos:
+			- demo001-100 (basic) - working in firefox
+			- demo301-305 (physics) - working
+			- demo401-413 (filters) - working
+			- demo501-504 (load-save) - working
+				
+140325
+	- FIXED:
+		- Pattern cloning bug, where pattern was attempting to clone from a pre-loaded image (demo040)
+		- Wheel collision bug - was no longer recognising collision test radius
+	- experiments in modularization
+		- recoded demos to take into account new choices of core functionality and asynchronous loading stuff
+			- demo041-101 
+			- demo201-209 
+			- demo301-305 
+				- all fine in firefox
+		
+140324
+	- experiments in modularization
+		- tried to separate out stack/element stuff - wasn't working
+			- because it meant adapting core functions rather than adding to them
+		- decided to go with three core files, any one of which (and only one of which) will be loaded first
+			- after which, the other modules can be added to the core, in any order
+			- core modules are:
+				- scrawl-core-static.js
+					- simplest: Pad, Cell, Group, Shape, gradients, pivots, paths
+				- scrawl-core-basic.js
+					- all static stuff, plus: animation, mouse detection, collisions
+				- scrawl-core-enhanced.js
+					- all basic stuff, plus: stacks, elements
+		- investigated options for asynchronously loading scrawl modules
+			- finally went with LazyLoader.js
+				- very simple
+				- can delay loading modules until after core completes loading
+		- recoded demo001-040 to take into account new choices of core functionality and asynchronous loading stuff
+			- all fine except for demo040
+			
+140323
+	-experiments in modularization
+		- experimenting on scrawl-core.js
+			- aim is to separate 'module' code out to their own separate files
+		- worked out a way to take code blocks out of the main function
+			- new functions: .scrawl.getProto(), scrawl.getConstructor()
+				- used with module code to reintegrate it back into the Scrawl object and retain functionality
+		- decisions:
+			- modularise as much as possible away from core
+			- things that core ought to retain:
+				- Vectors - everything uses them
+				- pads, cells, etc 
+					- cuz handling canvases IS the core function
+					- may be scope to modularize some of the cell add-ons eg zoom, splice
+				- animation - cuz it's small and very useful
+				- collision detection - spread through too many other (modularized) areas
+				- Sprite and Group
+				- Shape sprites - cuz the path stuff is too deeply integrated
+					- also keep in Link and Point objects
+					- doesn't stop me modularizing the convenience functions
+				- Gradients and RadialGradients
+					- but not Patterns - they're too dependent on the image stuff
+				- 3d manipulation stuff?
+					- could be modularized, but Pads build off Scrawl3d 
+						- needs some thinking about how best to do it
+		- modularized code:
+			- scrawl-core.js (always required)
+			- scrawl-Block.js
+			- scrawl-Wheel.js
+			- scrawl-Phrase.js
+			- scrawl-Color.js
+			- scrawl-Tween.js
+			- scrawl-Outline.js
+			- scrawl-physics.js
+			- scrawl-shapeFactories.js
+			- scrawl-imagePack.js
+			- scrawl-loadSave.js
+		- testing:
+			- producing 'c' versions of all demos using scrawl-core.js and whatever additional scripts are needed to make them work
+			- completed ...
+				- demo001c - demo025c
+				- demo097c - demo101c
+				- demo301c - demo305c
+				- demo501c - demo504c
+			
+140322
+	- continuing with tween functionality
+		- rewrote Tween object and functions
+		- demo100 - tweening color and gradient objects
+			- fixed bug in Color.checkValues()
+			- fixed bug in Scrawl.get()
+				- will need to check all demos andf fix where necessary
+		- added some easing models
+			- each attribute being tweened can be assigned to its own easing model
+				
+140321
+	- tweens
+		- road testing ideas for implementing tweens
+			- demo097, 098 - basic functionality
+			- demo099 - clone and kill tweens
+			
+140320
+	- potential Facebook app thingy now a reality
+		- https://apps.facebook.com/662194193842457/
+		- tweaking site in response to user feedback
+		- testing site for changes
+			- all works in Firefox; not tested in other browsers
+				- will be problems cuz it uses the File api
+				- fairly certain it won't run well (or at all) on mobile devices
+					- something to look at in the near future ...
+		- user feedback seems generally positive
+	- fixed some minor bugs in scrawl.js arising from the Facebook app experiments
+	- started working on tweens
+		- new object: Tween
+			- based squarely on the Animation Object
+				- same functionality: run, halt, kill
+				- Tween objects saved in same space as animation objects
+		- TODO:
+			- develop a couple of demos to test tweens for: sprites; cells; elements
+			
+140319
+	- setup website to be used as a source for the potential Facebook app thingy
+		- investigating image upload to facebook timelines
+		- styling website to make it more user-friendly
+		- opened app for beta testers to play with
+		
 140318
 	- added CORS functionality to image handling (Picture, ScrawlImage)
 		- rewrote functions and constructors to take advantage of CORS, when it is available on the browser
@@ -42,6 +246,8 @@ CHANGE LOG
 		- rewrote demo401 as an example of using a crossorigin image
 			- currently works in latest versions of: Firefox; IE11; Chrome
 			- doesn't work in latest versions of: Opera; Safari(windows)
+	- uploaded Version 2.02 to sourceforge, github
+	- updated website
 			
 140317
 	- coded new demo209 - Position DOM elements using pivot

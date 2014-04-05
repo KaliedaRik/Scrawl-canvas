@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 2.02 - 18 March 2014
+*	version 3.0.0 - 5 April 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -18,9 +18,12 @@ A. PURPOSE AND FEATURES
 Scrawl.js is  JavaScript library which adds an API for handling and manipulating 
 HTML5 <canvas> elements in the DOM.
 
-It uses the ’2d’ context with each canvas element.
+the library is modular - only load the JavaScript that is needed, nothing more. Scrawl core
+is 60kb, much less when gzipped. Modules can be loaded asynchronously, saving load time.
 
-On starting, Scrawl.js investigates the HTML DOM and automatically creates controller 
+Scrawl uses the ’2d’ context with each canvas element.
+
+On initialization, Scrawl investigates the HTML DOM and automatically creates controller 
 and wrapper objects for each <canvas> element it finds.
 
 It can also generate visible canvas elements programatically, and add them to the DOM.
@@ -40,12 +43,9 @@ JPG, PNG and SVG images (and videos – experimental) can be imported and used b
 Picture sprites.
 
 Animations can be achieved by manipulating a sprite/gradient’s attributes within 
-a user-coded animation loop.
+a user-coded animation loop. Scrawl also supports animation tweens, and easing.
 
-Scrawl.js supports all canvas 2d matrix transforms (translate, rotate, etc), though 
-moving and rotating sprites is handled directly by the sprite object itself.
-
-All sprites – and even gradients – can be given drag-and-drop and attach-to-mouse 
+All sprites, gradients and cells – can be given drag-and-drop and attach-to-mouse 
 functionality.
 
 Scrawl sprites can be gathered into groups for easier manipulation.
@@ -53,7 +53,7 @@ Scrawl sprites can be gathered into groups for easier manipulation.
 Sprites can also be linked together directly (using their pivot attribute) so that 
 positioning/moving one sprite will position/move all other sprites associated with it.
 
-Sprites can also be animated along paths.
+All sprites - including text - can be animated along paths.
 
 Scrawl.js has good support for collision detection between, and within, sprites 
 gathered into groups. Collision fields can be generated for canvas elements to 
@@ -84,15 +84,45 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 2.02 released 18 March 2014
+VERSION 3.0.0 released 5 April 2014
 
     - the zip file includes:
-	
-		- scrawl.js (546kb)
-			- includes complete documentation for all objects, attributes and functions
-		- scrawl-min.js (189kb)
-			- use the minified file for live websites
-			- will gzip to ~45kb
+		
+		Production:
+		- scrawlCore-min.js (60kb)
+		- scrawlAnimation-min.js (14kb)
+		- scrawlBlock-min.js (3kb)
+		- scrawlCollisions-min.js (11kb)
+		- scrawlColor-min.js (5kb)
+		- scrawlFilters-min.js (9kb)
+		- scrawlImages-min.js (17kb)
+		- scrawlPath-min.js (22kb)
+		- scrawlPathFactories-min.js (7kb)
+		- scrawlPhrase-min.js (12kb)
+		- scrawlPhysics-min.js (9kb)
+		- scrawlSaveLoad-min.js (8kb)
+		- scrawlShape-min.js (8kb)
+		- scrawlStacks-min.js (22kb)
+		- scrawlWheel-min.js (5kb)
+
+		Development:
+		- scrawlCore.js (188kb)
+		- scrawlAnimation.js (40kb)
+		- scrawlBlock.js (9kb)
+		- scrawlCollisions.js (24kb)
+		- scrawlColor.js (13kb)
+		- scrawlFilters.js (32kb)
+		- scrawlImages.js (56kb)
+		- scrawlPath.js (60kb)
+		- scrawlPathFactories.js (17kb)
+		- scrawlPhrase.js (33kb)
+		- scrawlPhysics.js (22kb)
+		- scrawlSaveLoad.js (16kb)
+		- scrawlShape.js (20kb)
+		- scrawlStacks.js (50kb)
+		- scrawlWheel.js (14kb)
+
+		Documentation:
 		- changelog.txt
 		- README.txt (this file)
 
@@ -111,6 +141,11 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+VERSION 3.0.0 uploaded 5 April 2014
+	- modularized the entire library
+	- added functionality to allow for asynchronous loading of modules
+	- added tween animations
+
 Version 2.02 uploaded 18 March 2014
 	- added CORS functionality to Picture and ScrawlImage objects
 Version 2.01 uploaded 17 March 2014
