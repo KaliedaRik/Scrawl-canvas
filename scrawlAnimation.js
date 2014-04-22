@@ -60,7 +60,6 @@ Starts the animation loop
 		my.doAnimation = true;
 		my.animationLoop();
 		};
-	//Position
 	my.d.Position.delta = {x:0,y:0,z:0};
 	my.d.Position.deltaPathPlace = 0;
 	my.d.Position.pathSpeedConstant = true;
@@ -86,6 +85,7 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
+		this.work.delta = my.newVector({name: this.type+'.'+this.name+'.work.delta'});
 		this.pathSpeedConstant = (my.isa(items.pathSpeedConstant,'bool')) ? items.pathSpeedConstant : my.d[this.type].pathSpeedConstant;
 		this.deltaPathPlace = items.deltaPathPlace || my.d[this.type].deltaPathPlace;
 		};
@@ -102,7 +102,7 @@ Position.get hook function - modified by animation module
 				}
 			}
 		if('delta' === item){
-			return this.delta.getVector();
+			console.log(this.name, 'get delta vector'); return this.delta.getVector();
 			}
 		return false;
 		};
@@ -211,8 +211,8 @@ Swaps the values of an attribute between two objects
 **/
 	my.Position.prototype.exchange = function(obj, item){
 		if(my.isa(obj,'obj')){
-			var temp = this.get(item); 
-			this[item] = obj.get(item); 
+			var temp = this[item] || this.get(item); 
+			this[item] = obj[item] || obj.get(item); 
 			obj[item] = temp;
 			}
 		return this;
@@ -240,7 +240,6 @@ Changes the sign (+/-) of specified attribute values
 			}
 		return this;
 		};
-	//Cell
 	my.d.Cell.sourceDelta = {x:0, y:0, z:0};
 	my.d.Cell.sourceMinWidth = 0;
 	my.d.Cell.sourceMaxWidth = 0;
@@ -260,6 +259,7 @@ Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to 
 			x: (my.xt(items.sourceDeltaX)) ? items.sourceDeltaX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.sourceDeltaY)) ? items.sourceDeltaY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
+		this.work.sourceDelta = my.newVector();
 		};
 /**
 Cell.get hook function - modified by animation module
@@ -273,10 +273,7 @@ Cell.get hook function - modified by animation module
 				case 'sourceDeltaY' : return this.sourceDelta.y; break;
 				}
 			}
-		if('sourceDelta' === item){
-			return this.sourceDelta.getVector();
-			}
-		return false;
+		return my.Base.prototype.get.call(this, item);
 		};
 /**
 Cell.set hook function - modified by animation module
@@ -567,8 +564,6 @@ Each sprite will change the sign (+/-) of specified attribute values
 			}
 		return this;
 		};
-		
-	//Design
 	my.d.Design.roll = 0;
 	my.d.Design.autoUpdate = false;
 	my.mergeInto(my.d.Gradient, my.d.Design);
@@ -630,8 +625,6 @@ A __factory__ function to generate new Tween objects
 	my.newTween = function(items){
 		return new my.Tween(items);
 		};
-	
-	//Animation object structures
 	my.pushUnique(my.sectionlist, 'animation');
 	my.pushUnique(my.nameslist, 'animate');
 	my.pushUnique(my.nameslist, 'animationnames');

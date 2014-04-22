@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.0.0 - 5 April 2014
+*	version 3.1.0 - 22 April 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -30,6 +30,121 @@ Topics that I want|need to look at (in no particular order) ...
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140216-22
+	- Operation SaveMemory
+		- quaternion functionality completely rewritten
+			- fixes many bugs in the original code
+			- DOM element transforms in the stack now work completely as expected
+		- new work vectors and quaternions
+			- scrawl.workphys (v1-v5)
+				- for dedicated physics calculations
+			- scrawl.workquat object (q1-q5)
+				- included in core module (not stacks) in case people want to use quaternions for other stuff
+	- new functions: scrawl.update3d(), PageElement.update3d()
+		- separated out 3d updates from .updateStart() functionality
+			- means including an extra call in 3d demos, but well worth it
+			- all stack demos rewritten
+	- dumped Sprite.bounceOnFieldCollision()
+		- wasn't working well at all under the new paradigm
+		- converted demos060, 079 to use physics module and physics collisions
+			- not a perfect solution, but at least they work now
+	- tested all demos, and web pages, in Firefox - all pass
+	- UPDATE to Version 3.1.0
+				
+140412-15
+	- Operation SaveMemory
+		- vector generation is out of hand
+			- checking memory usage and garbage collection shows some serious sawtooth patterns
+			- DECISION: prevent excessive vector generation by getting rid of most of the Vector.getXYZ() functions
+		- fixed Vector.set()
+			- was setting attributes to 0 if they were not included in the argument object
+		- introduced work vectors into the scrawl library
+			- scrawl.v 
+				- the universal vector, for use in any calculation needing a temporary vector
+			- Base.work
+				- an object containing copies of an object's essential vectors eg start, handle, delta
+				- can be reset to their originals' values using Base.resetWork() function
+			- scrawl.worklink
+				- library object holding dedicated work vectors for path-based calculations
+			- scrawl.workcols
+				- library object holding dedicated work vectors for collision-based calculations
+		- going through entire codebase to replace Vector.getXYZ() calls 
+			- instead, using new work vectors, setting them to the required values and then conducting operations on them
+			- key issue: what gets returned from various functions was often a reference to a vector
+				- which could subsequently change in an unrelated operation
+		- got most demos working again
+			- outstanding issues:
+				- demo072-075 - group collisions
+				- demo060 and 079 - bounceOffField collisions - needs major reconsideration!
+				- demo078, 083, 090 - not working
+				- still to do:
+					- physics module
+					- stacks module
+					- check all sprites modules for missed Vector.get and outstanding collisions stuff
+					- demo085 video has gone missing (again)
+		- outcome so far - quite good; much less sawtoothing, lower overall memory usage
+		
+140411
+	- investigations into speeding up filters
+		- looked at typed arrays
+			- did some experiments
+			- could see a hint of some speedups, particularly when filtering larger images
+			- but no speedup detected for many filters
+			- a lot of work for not much gain
+		- simplified a lot of the filters eg through pre-lookups of values
+		
+140410
+	- simplified ScrawlImage.makeImage()
+		- no longer converts imported images to base64URLs
+		- attendant changes to functions that make use of makeImage()
+	- new function: Sprite.convertToPicture()
+		- does the same as Group.convertToSprite(), but for individual sprites
+		- tested all demos in Firefox - all display fine
+	- simplified convertToPicture and convertTo Sprite using helper functions
+		- scrawl.prepareConvert(), scrawl.doConvert()
+	- presentation stuff - recoded all demos to display code correctly
+	
+140407-09
+	- rewriting filters system
+		- so that it can be used by picture sprites
+		- refactored filters module code
+		- NEW library object - f
+			- DocumentFragment
+			- something to hang generated image elements from
+			- also someplace to put the default canvas
+		- reworked ScrawlImage to make use of f
+			- took out all the ScrawlImage filter stub functions
+				- replaced by a single ScrawlImage.finter() function
+				- rewrote demo401-413
+		- new filter - glassTile
+		- added new Picture.functions attribute
+			- an object that takes filter names as attributes, and objects as their arguments
+			- significant rewrite of Picture.getImage() function
+				- this is where dynamic filtered images are produced for display
+				- also added a checksum facility so dynamic images are only recompiled when something changes
+			- allows a picture sprite to update its display 'on-the-hoof'
+			- new demos 101, 102 to test added functionality
+	- new Group.convertToSprite() function
+		- converts a group of sprites to a single Picture sprite
+		- tested with new demo103 - works
+	- CONCERNS: 
+		- on occasion, pictures are not displaying immediately, but show up on page reload
+			- possible caching issue?
+			- possibly browsers are handling some aspects of image element generation asynchronously??
+		- updating filter attributes needs to be done directly 
+			- not efficient; not the same way other attributes get updated
+			- not tweenable??
+		- matrix-based filters still very slow compared to others - especially blur
+	- testing
+		- Firefox and Safari are considerably slower than other browsers when it comes to filters
+		- Opera continues to hate cross-origin images
+	- TODO:  investigate memory leaks, particularly in IE11
+		
+140406
+	- fixed codepen demos
+	- fixed jsFiddle demos
+	- fixed blog code
+	
 140402-05
 	- testing new code in all browsers
 		- fixing bugs as we go along

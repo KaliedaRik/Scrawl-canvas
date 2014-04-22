@@ -215,10 +215,10 @@ Allows users to:
 		this.lineHeight = items.lineHeight || this.lineHeight;
 		if(items.font){
 			this.checkFont(items.font);
-			delete this.offset;
+			this.offset.flag = false;
 			}
 		if(items.text || items.size || items.scale){
-			delete this.offset;
+			this.offset.flag = false;
 			}
 		this.constructFont();
 		this.size = this.get('size');
@@ -236,11 +236,11 @@ Augments Sprite.detDelta()
 	my.Phrase.prototype.setDelta = function(items){
 		my.Sprite.prototype.setDelta.call(this, items);
 		if(items.text){
-			delete this.offset;
+			this.offset.flag = false;
 			}
 		if(items.size || items.scale){
 			this.constructFont();
-			delete this.offset;
+			this.offset.flag = false;
 			}
 		this.getMetrics();
 		return this;

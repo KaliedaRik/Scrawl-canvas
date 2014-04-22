@@ -344,6 +344,49 @@ A __display__ function to move DOM elements within a Stack
 		};
 			
 /**
+A __display__ function to update DOM elements' 3d position/rotation
+
+Argument can contain the following (optional) attributes:
+
+* __quaternion__ - quaternion representing the rotation to be applied to the element
+* __distance__ - distance of element from the rotation origin
+* __action__ - elements to be rotated/positioned
+
+Where the _action_ attribute can contain either an array of Scrawl objects to be operated upon, or one of the following Strings: '__all__' (default), '__stacks__', '__pads__', or '__elements__'
+
+@method update3d
+@param {Object} [items] Argument object containing key:value pairs
+@return Always true
+**/
+	my.update3d = function(items){
+		items = my.safeObject(items);
+		var action = items.action || 'all';
+		if(action === 'stacks' || action === 'all'){
+			for(var i=0, z=my.stacknames.length; i<z; i++){
+				my.stack[my.stacknames[i]].update3d(items);
+				}
+			}
+		if(action === 'pads' || action === 'all'){
+			for(var i=0, z=my.padnames.length; i<z; i++){
+				my.pad[my.padnames[i]].update3d(items);
+				}
+			}
+		if(action === 'elements' || action === 'all'){
+			for(var i=0, z=my.elementnames.length; i<z; i++){
+				my.element[my.elementnames[i]].update3d(items);
+				}
+			}
+		if(my.isa(action, 'arr')){
+			for(var i = 0, iz = action; i < iz; i++){
+				if(my.contains(['Pad', 'Stack', 'Element'], action[i].type)){
+					action[i].update3d(items);
+					}
+				}
+			}
+		return true;
+		};
+			
+/**
 The coordinate Vector representing the object's rotation/flip point
 
 PageElement, and all Objects that prototype chain to PageElement, supports the following 'virtual' attributes for this attribute:
@@ -386,6 +429,11 @@ PageElement, and all Objects that prototype chain to PageElement, supports the f
 @type Vector
 **/		
 	my.d.PageElement.translate = {x:0,y:0,z:0};
+/**
+@property PageElement.deltaTranslate
+@type Vector
+**/		
+	my.d.PageElement.deltaTranslate = {x:0,y:0,z:0};
 /**
 An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
 
@@ -510,16 +558,19 @@ PageElement constructor hook function - modified by stacks module
 			x: (my.xt(items.startX)) ? items.startX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.startY)) ? items.startY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
+		this.work.start = my.newVector({name: this.type+'.'+this.name+'.work.start'});
 		temp = my.safeObject(items.delta);
 		this.delta = my.newVector({
 			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
+		this.work.delta = my.newVector({name: this.type+'.'+this.name+'.work.delta'});
 		temp = my.safeObject(items.handle);
 		this.handle = my.newVector({
 			x: (my.xt(items.handleX)) ? items.handleX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.handleY)) ? items.handleY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
+		this.work.handle = my.newVector({name: this.type+'.'+this.name+'.work.handle'});
 		if(my.xto([items.handleX, items.handleY, items.handle])){
 			this.setTransformOrigin();
 			}
@@ -529,6 +580,14 @@ PageElement constructor hook function - modified by stacks module
 			y: (my.xt(items.translateY)) ? items.translateY : ((my.xt(temp.y)) ? temp.y : 0),
 			z: (my.xt(items.translateZ)) ? items.translateZ : ((my.xt(temp.y)) ? temp.y : 0),
 			});
+		this.work.translate = my.newVector({name: this.type+'.'+this.name+'.work.translate'});
+		temp = my.safeObject(items.deltaTranslate);
+		this.deltaTranslate = my.newVector({
+			x: (my.xt(items.translateX)) ? items.deltaTranslateX : ((my.xt(temp.x)) ? temp.x : 0),
+			y: (my.xt(items.translateY)) ? items.deltaTranslateY : ((my.xt(temp.y)) ? temp.y : 0),
+			z: (my.xt(items.translateZ)) ? items.deltaTranslateZ : ((my.xt(temp.y)) ? temp.y : 0),
+			});
+		this.work.deltaTranslate = my.newVector({name: this.type+'.'+this.name+'.work.deltaTranslate'});
 		this.pivot = items.pivot || my.d[this.type].pivot;
 		this.path = items.path || my.d[this.type].path;
 		this.pathRoll = items.pathRoll || my.d[this.type].pathRoll;
@@ -539,16 +598,18 @@ PageElement constructor hook function - modified by stacks module
 		this.lockX = items.lockX || my.d[this.type].lockX;
 		this.lockY = items.lockY || my.d[this.type].lockY;
 		this.visibility = (my.isa(items.visibility, 'bool')) ? items.visibility : my.d[this.type].visibility;
-		this.rotation = my.Quaternion.prototype.makeQuaternion({
+		this.rotation = my.newQuaternion({name: this.type+'.'+this.name+'.rotation'}).setFromEuler({
 			pitch: items.pitch || 0,
 			yaw: items.yaw || 0,
 			roll: items.roll || 0,
 			});
-		this.deltaRotation = my.Quaternion.prototype.makeQuaternion({
+		this.work.rotation = my.newQuaternion({name: this.type+'.'+this.name+'.work.rotation'});
+		this.deltaRotation = my.newQuaternion({name: this.type+'.'+this.name+'.deltaRotation'}).setFromEuler({
 			pitch: items.deltaPitch || 0,
 			yaw: items.deltaYaw || 0,
 			roll: items.deltaRoll || 0,
 			});
+		this.work.deltaRotation = my.newQuaternion({name: this.type+'.'+this.name+'.work.deltaRotation'});
 		this.rotationTolerance = items.rotationTolerance || my.d[this.type].rotationTolerance;
 		};
 /**
@@ -593,13 +654,9 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 				case 'translateZ' : return this.translate.z; break;
 				}
 			}
-		if(my.contains(['start','handle','delta','translate'], item)){
-			switch(item){
-				case 'start' : return this.start.getVector(); break;
-				case 'handle' : return this.handle.getVector(); break;
-				case 'delta' : return this.delta.getVector(); break;
-				case 'translate' : return this.translate.getVector(); break;
-				}
+		
+		if(my.xt(el.style[item])){
+			return el.style[item];
 			}
 		if(item === 'position'){
 			return el.style.position;
@@ -649,6 +706,14 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			this.translate.y = (my.xt(items.translateY)) ? items.translateY : this.translate.y;
 			this.translate.z = (my.xt(items.translateZ)) ? items.translateZ : this.translate.z;
 			}
+		if(!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector'){
+			this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
+			}
+		if(my.xto([items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ])){
+			this.deltaTranslate.x = (my.xt(items.deltaTranslateX)) ? items.deltaTranslateX : this.deltaTranslate.x;
+			this.deltaTranslate.y = (my.xt(items.deltaTranslateY)) ? items.deltaTranslateY : this.deltaTranslate.y;
+			this.deltaTranslate.z = (my.xt(items.deltaTranslateZ)) ? items.deltaTranslateZ : this.deltaTranslate.z;
+			}
 		if(!this.handle.type || this.handle.type !== 'Vector'){
 			this.handle = my.newVector(items.handle || this.handle);
 			}
@@ -657,14 +722,14 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			this.handle.y = (my.xt(items.handleY)) ? items.handleY : this.handle.y;
 			}
 		if(my.xto([items.pitch, items.yaw, items.roll])){
-			this.rotation = my.Quaternion.prototype.makeQuaternion({
+			this.rotation.setFromEuler({
 				pitch: items.pitch || 0,
 				yaw: items.yaw || 0,
 				roll: items.roll || 0,
 				});
 			}
 		if(my.xto([items.deltaPitch, items.deltaYaw, items.deltaRoll])){
-			this.deltaRotation = my.Quaternion.prototype.makeQuaternion({
+			this.deltaRotation.setFromEuler({
 				pitch: items.deltaPitch || 0,
 				yaw: items.deltaYaw || 0,
 				roll: items.deltaRoll || 0,
@@ -697,39 +762,33 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 **/
 	my.PageElement.prototype.setStyles = function(items){
 		items = (my.xt(items)) ? items : {};
-		var el = this.getElement();
-		if(my.xt(items.position)){
-			el.style.position = items.position;
-			}
-		if(my.xt(items.overflow)){
-			el.style.overflow = items.overflow;
-			}
-		if(my.xt(items.backfaceVisibility)){
-			el.style.WebkitBackfaceVisibility = items.backfaceVisibility;
-			el.style.mozBackfaceVisibility = items.backfaceVisibility;
-			el.style.backfaceVisibility = items.backfaceVisibility;
-			}
-		if(my.xt(items.margin)){
-			el.style.margin = items.margin;
-			}
-		if(my.xt(items.border)){
-			el.style.border = items.border;
-			}
-		if(my.xt(items.padding)){
-			el.style.padding = items.padding;
-			}
-		if(my.xt(items.visibility)){
-			if(my.isa(items.visibility, 'str')){
-				this.visibility = (!my.contains(['hidden', 'none'], items.visibility)) ? true : false;
+		var el = this.getElement(),
+			k = Object.keys(items);
+		for(var i=0, iz=k.length; i<iz; i++){
+			if(my.contains(['width', 'height', 'translate', 'translateX', 'translateY', 'translateZ'], k[i])){}
+			else if(k[i] === 'backfaceVisibility'){
+				el.style.WebkitBackfaceVisibility = items.backfaceVisibility;
+				el.style.mozBackfaceVisibility = items.backfaceVisibility;
+				el.style.backfaceVisibility = items.backfaceVisibility;
 				}
-			else{
-				this.visibility = (items.visibility) ? true : false;
+			else if(k[i] === 'visibility'){
+				if(my.isa(items.visibility, 'str')){
+					this.visibility = (!my.contains(['hidden', 'none'], items.visibility)) ? true : false;
+					}
+				else{
+					this.visibility = (items.visibility) ? true : false;
+					}
+				if(this.stack){
+					el.style.opacity = (this.visibility) ? 1 : 0;
+					}
+				else{
+					el.style.display = (this.visibility) ? 'block' : 'none';
+					}
 				}
-			if(this.stack){
-				el.style.opacity = (this.visibility) ? 1 : 0;
-				}
-			else{
-				el.style.display = (this.visibility) ? 'block' : 'none';
+			else {
+				if(my.xt(el.style[k[i]])){
+					el.style[k[i]] = items[k[i]];
+					}
 				}
 			}
 		return this;
@@ -751,8 +810,14 @@ Adds the value of each attribute supplied in the argument to existing values; on
 			this.translate.y += (my.xt(items.translateY)) ? items.translateY : ((my.xt(temp.y)) ? temp.y : 0);
 			this.translate.z += (my.xt(items.translateZ)) ? items.translateZ : ((my.xt(temp.z)) ? temp.z : 0);
 			}
+		if(my.xto([items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY])){
+			temp = (my.isa(items.deltaTranslate,'obj')) ? items.deltaTranslate : {};
+			this.deltaTranslate.x += (my.xt(items.deltaTranslateX)) ? items.deltaTranslateX : ((my.xt(temp.x)) ? temp.x : 0);
+			this.deltaTranslate.y += (my.xt(items.deltaTranslateY)) ? items.deltaTranslateY : ((my.xt(temp.y)) ? temp.y : 0);
+			this.deltaTranslate.z += (my.xt(items.deltaTranslateZ)) ? items.deltaTranslateZ : ((my.xt(temp.z)) ? temp.z : 0);
+			}
 		if(my.xto([items.pitch, items.yaw, items.roll])){
-			temp = my.Quaternion.prototype.makeQuaternion({
+			temp = my.workquat.q1.setFromEuler({
 				pitch: items.pitch || 0,
 				yaw: items.yaw || 0,
 				roll: items.roll || 0,
@@ -760,7 +825,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 			this.rotation.quaternionMultiply(temp);
 			}
 		if(my.xto([items.deltaPitch, items.deltaYaw, items.deltaRoll])){
-			temp = my.Quaternion.prototype.makeQuaternion({
+			temp = my.workquat.q1.setFromEuler({
 				pitch: items.deltaPitch || 0,
 				yaw: items.deltaYaw || 0,
 				roll: items.deltaRoll || 0,
@@ -807,13 +872,10 @@ Permitted argument values include
 				if(this.pathPlace > 1){this.pathPlace -= 1;}
 				if(this.pathPlace < 0){this.pathPlace += 1;}
 				break;
-			case 'rotation' :
-				this.rotation = this.deltaRotation.getQuaternionMultiply(this.rotation);
 			default :
 				this.pathPlace += this.deltaPathPlace;
 				if(this.pathPlace > 1){this.pathPlace -= 1;}
 				if(this.pathPlace < 0){this.pathPlace += 1;}
-				this.rotation = this.deltaRotation.getQuaternionMultiply(this.rotation);
 				if(my.isa(this.start.x,'num') && my.isa(this.start.y,'num')){this.start.vectorAdd(this.delta);}
 			}
 		this.setDisplayOffsets();
@@ -840,8 +902,6 @@ Permitted argument values include
 			case 'y' :
 				this.start.y -= this.delta.y || 0;
 				break;
-			case 'rotation' :
-				this.rotation = this.deltaRotation.getConjugate().quaternionMultiply(this.rotation);
 			case 'path' :
 				this.pathPlace -= this.deltaPathPlace;
 				if(this.pathPlace > 1){this.pathPlace -= 1;}
@@ -851,10 +911,41 @@ Permitted argument values include
 				this.pathPlace += this.deltaPathPlace;
 				if(this.pathPlace > 1){this.pathPlace -= 1;}
 				if(this.pathPlace < 0){this.pathPlace += 1;}
-				this.rotation = this.deltaRotation.getConjugate().quaternionMultiply(this.rotation);
 				this.start.vectorSubtract(this.delta);
 			}
 		this.setDisplayOffsets();
+		return this;
+		};
+/**
+Rotate and translate a DOM element around a quaternion rotation
+
+* Element's initial rotation values should be stored in the deltaRotation attribute quaternion
+* Element's initial translation values should be stored in the deltaTranslate attribute vector
+
+Argument can contain the following (optional) attributes:
+
+* __quaternion__ - quaternion representing the rotation to be applied to the element
+* __distance__ - distance of element from the rotation origin
+
+@method PageElement.update3d
+@param {Object} [items] - Distance between the effective rotation point and the DOM element's start attribute - default: deltaTranslate vector's magnitude
+@return This
+@chainable
+**/
+	my.PageElement.prototype.update3d = function(items){
+		items = my.safeObject(items);
+		if(my.isa(items.quaternion, 'quaternion')){
+			this.rotation.set(this.deltaRotation);				//deltaRotation represents the initial, world rotation of the element
+			this.rotation.quaternionRotate(items.quaternion);	//quaternion is the local amount we want to rotate the element by
+			this.translate.zero();
+			this.translate.vectorAdd(this.deltaTranslate);
+			this.translate.rotate3d(items.quaternion, items.distance);
+			}
+		else{
+			//opposite to above; rotation is the world rotation, deltaRotation the local rotation to be applied
+			this.rotation.quaternionRotate(this.deltaRotation);
+			this.translate.vectorAdd(this.deltaTranslate);
+			}
 		return this;
 		};
 /**
@@ -903,7 +994,7 @@ Calculates the pixels value of the object's start attribute
 @private
 **/
 	my.PageElement.prototype.getStartValues = function(){
-		var result = this.start.getVector(),
+		var result = my.v.set(this.start),
 			height = (this.stack) ? my.stack[this.stack].get('height') : this.height || this.get('height'),
 			width = (this.stack) ? my.stack[this.stack].get('width') : this.width || this.get('width');
 		return my.Position.prototype.calculatePOV(result, width, height, false);
@@ -1155,6 +1246,7 @@ A __factory__ function to generate new Element objects
 				y: (my.xt(items.perspectiveY)) ? items.perspectiveY : ((my.xt(temp.y)) ? temp.y : 'center'),
 				z: (my.xt(items.perspectiveZ)) ? items.perspectiveZ : ((my.xt(temp.z)) ? temp.z : 0),
 				});
+			this.work.perspective = my.newVector({name: this.type+'.'+this.name+'.work.perspective'});
 			this.width = items.width || this.get('width');
 			this.height = items.height || this.get('height');
 			this.setDimensions()
@@ -1302,7 +1394,7 @@ Parse the perspective Vector attribute
 @private
 **/
 	my.Stack.prototype.parsePerspective = function(){
-		var result = this.perspective.getVector(),
+		var result = this.work.perspective,
 			height = this.height || this.get('height'),
 			width = this.width || this.get('width');
 		return my.Position.prototype.calculatePOV(result, width, height, false);
@@ -1313,6 +1405,7 @@ Calculates the pixels value of the object's perspective attribute
 @return Set the Stack element's perspective point
 **/
 	my.Stack.prototype.setPerspective = function(){
+		this.resetWork();
 		var sx = (my.isa(this.perspective.x,'str')) ? this.scale : 1,
 			sy = (my.isa(this.perspective.y,'str')) ? this.scale : 1,
 			myH = this.parsePerspective(),

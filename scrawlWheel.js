@@ -192,7 +192,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 **/
 	my.Wheel.prototype.checkHit = function(items){
 		items = my.safeObject(items);
-		var	tests = (my.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}],
+		var	tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
 			result = false,
 			myX,
 			myY,
@@ -203,9 +203,9 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 			ctx;
 		if(this.checkHitUsingRadius){
 			testRadius = (this.checkHitRadius) ? this.checkHitRadius : this.radius * this.scale;
-			for(var i=0, z=tests.length; i<z; i++){
-				myX = tests[i].x - this.start.x;
-				myY = tests[i].y - this.start.y;
+			for(var i = 0, z = tests.length; i < z; i += 2){
+				myX = tests[i] - this.start.x;
+				myY = tests[i+1] - this.start.y;
 				distance = Math.sqrt((myX * myX) + (myY * myY));
 				result = (distance <= testRadius) ? true : false;
 				if(result){break;}
@@ -216,12 +216,12 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 			cell = my.cell[pad.current].name;
 			ctx = my.context[pad.current];
 			this.buildPath(ctx, cell);
-			for(var i=0, z=tests.length; i<z; i++){
-				result = ctx.isPointInPath(tests[i].x, tests[i].y);
+			for(var i = 0, z = tests.length; i < z; i += 2){
+				result = ctx.isPointInPath(tests[i], tests[i+1]);
 				if(result){break;}
 				}
 			}
-		return (result) ? tests[i] : false;
+		return (result) ? {x: tests[i], y: tests[i+1]} : false;
 		};
 /**
 Position.getOffsetStartVector() helper function
@@ -417,9 +417,11 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @private
 **/
 	my.Wheel.prototype.buildCollisionVectors = function(items){
-		if(my.xt(my.d.Wheel.fieldChannel)){
+		if(my.xt(my.workcols)){
 			var	p,
-				v = my.newVector({x: this.radius, y: 0}),
+				c = [],
+				v = my.workcols.v1.set({x: this.radius, y: 0}),
+				w,
 				r,
 				res;
 			if(my.xt(items)){
@@ -428,34 +430,35 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 			else{
 				p = this.collisionPoints;
 				}
-			this.collisionVectors = [];
-			for(var i=0, z=p.length; i<z; i++){
+			for(var i = 0, iz = p.length; i < iz; i++){
 				if(my.isa(p[i], 'num') && p[i] > 1){
+					w = my.workcols.v2.set(v)
 					r = 360/Math.floor(p[i]);
 					for(var j=0; j<p[i]; j++){
-						this.collisionVectors.push(v.getVector().rotate(r*j));
+						w.rotate(r); c.push(w.x); c.push(w.y);
 						}
 					}
 				else if(my.isa(p[i], 'str')){
+					w = my.workcols.v2.set(v)
 					switch(p[i]) {
-						case 'start' : 	res = my.newVector(); break;
-						case 'N' : 		res = v.getVector().rotate(-90); break;
-						case 'NE' : 	res = v.getVector().rotate(-45); break;
-						case 'E' : 		res = v.getVector(); break;
-						case 'SE' : 	res = v.getVector().rotate(45); break;
-						case 'S' : 		res = v.getVector().rotate(90); break;
-						case 'SW' : 	res = v.getVector().rotate(135); break;
-						case 'W' : 		res = v.getVector().rotate(180); break;
-						case 'NW' : 	res = v.getVector().rotate(-135); break;
-						case 'center' :	res = my.newVector(); break;
+						case 'start' : 						c.push(0); 		c.push(0);		break;
+						case 'N' : 		w.rotate(-90); 		c.push(w.x);	c.push(w.y);	break;
+						case 'NE' : 	w.rotate(-45); 		c.push(w.x);	c.push(w.y);	break;
+						case 'E' : 							c.push(w.x);	c.push(w.y);	break;
+						case 'SE' : 	w.rotate(45); 		c.push(w.x);	c.push(w.y);	break;
+						case 'S' : 		w.rotate(90); 		c.push(w.x);	c.push(w.y);	break;
+						case 'SW' : 	w.rotate(135); 		c.push(w.x);	c.push(w.y);	break;
+						case 'W' : 		w.rotate(180);	 	c.push(w.x);	c.push(w.y);	break;
+						case 'NW' : 	w.rotate(-135); 	c.push(w.x);	c.push(w.y);	break;
+						case 'center' :						c.push(0);		c.push(0);		break;
 						}
-					this.collisionVectors.push(res);
 					}
-				else if(my.isa(p[i], 'obj') && p[i].type === 'Vector'){
-					this.collisionVectors.push(p[i]);
+				else if(my.isa(p[i], 'vector')){
+					c.push(p[i].x);	c.push(p[i].y);
 					}
 				}
 			}
+		this.collisionVectors = c;
 		return this;
 		};
 

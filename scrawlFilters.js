@@ -22,8 +22,27 @@ scrawlFilters module adaptions to the Scrawl library object
 @class window.scrawl_Filters
 **/
 
-	my.filternames = ['grayscale', 'sharpen', 'mergeImages', 'invert', 'brightness', 'saturation', 'threshold', 'channels', 'channelStep', 'sepia', 'tint', 'blur', 'getBrush', 'pixelate', 'matrix', 'doMatrix'];
-	my.filter = {
+	my.prepareFilterSection();
+	
+	my.filterSetup = function(items, image){
+		items = my.safeObject(items);
+		var myUse = (my.xt(items.useSourceData)) ? items.useSourceData : false,
+			result = {};
+		result.items = items;
+		result.image = image || false;
+		result.useSourceData = myUse;
+		result.imgData = items.use || image.getImageData(myUse);
+		result.save = (my.xt(items.save)) ? items.save : true;
+		return result;
+		};
+	my.filterSave = function(args){
+		var result;
+		if(args.save && args.image){
+			result = args.image.getImageDataUrl(args.imgData, true);
+			my.img[args.image.name] = args.image.makeImage(result, args.image.name+'_current', args.image.width, args.image.height);
+			}
+		};
+
 /**
 Grayscale filter (added to the core by the scrawlFilters module)
 
@@ -37,29 +56,26 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		grayscale: function(items, image){
-			items = my.safeObject(items);
-			var value = (my.xt(items.value)) ? items.value : 1,
-				useSourceData = (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				imgData = items.use || image.getImageData(useSourceData),
-				data = imgData.data,
-				gray,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
-			for(var i=0, z=data.length; i<z; i += 4){
-				gray = Math.floor((0.2126 * data[i]) + (0.7152 * data[i+1]) + (0.0722 * data[i+2]));
-				data[i] = data[i] + ((gray - data[i]) * value);
-				data[i+1] = data[i+1] + ((gray - data[i+1]) * value);
-				data[i+2] = data[i+2] + ((gray - data[i+2]) * value);
+	my.filter.grayscale = function(items, image){
+		var args = my.filterSetup(items, image),
+			value = (my.xt(args.items.value)) ? args.items.value : 1,
+			data = args.imgData.data,
+			gray,
+			here;
+		value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+		for(var i=0, z=data.length; i<z; i += 4){
+			here = i;
+			gray = Math.floor((0.2126 * data[here]) + (0.7152 * data[++here]) + (0.0722 * data[++here]));
+			for(var j = 0; j < 3; j++){
+				here = i + j; 
+				data[here] = data[here] + ((gray - data[here]) * value);
 				}
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+			}
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'grayscale');
 /**
 Sharpen filter (added to the core by the scrawlFilters module)
 
@@ -73,32 +89,25 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		sharpen: function(items, image){
-			items = my.safeObject(items);
-			var value = (my.xt(items.value)) ? items.value : 1,
-				useSourceData = (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				imgData = items.use || image.getImageData(useSourceData),
-				save = (my.xt(items.save)) ? items.save : true,
-				mask,
-				merge,
-				result;
-			value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
-			mask = my.filter.matrix({
-				useSourceData: useSourceData,
-				data: [0, -1, 0, -1, 5, -1, 0, -1, 0],
-				save: false,
-				}, image);
-			merge = my.filter.mergeImages({
-				image1: imgData,
-				image2: mask,
-				value: value,
-				});
-			if(save){
-				result = image.getImageDataUrl(merge, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return merge;
-			},
+	my.filter.sharpen = function(items, image){
+		var args = my.filterSetup(items, image),
+			value = (my.xt(args.items.value)) ? args.items.value : 1,
+			mask;
+		value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		mask = my.filter.matrix({
+			use: args.imgData,
+			data: [0, -1, 0, -1, 5, -1, 0, -1, 0],
+			save: false,
+			}, args.image);
+		args.imgData = my.filter.mergeImages({
+			image1: args.imgData,
+			image2: mask,
+			value: value,
+			});
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'sharpen');
 /**
 Filter helper function - merge one image data object into another
 
@@ -111,30 +120,34 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		mergeImages: function(items){
-			if(my.isa(items,'obj') && my.xta([items.image1, items.image2, items.value])){
-				var img1 = items.image1,
-					dat1 = img1.data,
-					img2 = items.image2,
-					dat2 = img2.data,
-					val = items.value;
-				if(val === 0){
-					return img1;
-					}
-				else if(val === 1){
-					return img2;
-					}
-				else{
-					for(var i=0, z=dat1.length; i<z; i += 4){
-						dat1[i] = (dat1[i] * (1 - val)) + ((dat2[i]) * val);
-						dat1[i+1] = (dat1[i+1] * (1 - val)) + ((dat2[i+1]) * val);
-						dat1[i+2] = (dat1[i+2] * (1 - val)) + ((dat2[i+2]) * val);
-						}
-					return img1;
-					}
+	my.filter.mergeImages = function(items){
+		if(my.isa(items,'obj') && my.xta([items.image1, items.image2, items.value])){
+			var img1 = items.image1,
+				dat1 = img1.data,
+				img2 = items.image2,
+				dat2 = img2.data,
+				val = items.value,
+				iVal = 1 - val,
+				here;
+			if(val === 0){
+				return img1;
 				}
-			return false;
-			},
+			else if(val === 1){
+				return img2;
+				}
+			else{
+				for(var i = 0, z = dat1.length; i < z; i += 4){
+					for(var j = 0; j < 3; j++){
+						here = i + j; 
+						dat1[here] = (dat1[here] * iVal) + (dat2[here] * val);
+						}
+					}
+				return img1;
+				}
+			}
+		return false;
+		};
+	my.pushUnique(my.filternames, 'mergeImages');
 /**
 Invert filter (added to the core by the scrawlFilters module)
 
@@ -148,27 +161,24 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		invert: function(items, image){
-			items = my.safeObject(items);
-			var value = (my.xt(items.value)) ? items.value : 1,
-				useSourceData = (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				imgData = items.use || image.getImageData(useSourceData),
-				data = imgData.data,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
-			for(var i=0, z=data.length; i<z; i += 4){
-				data[i] = (data[i] * (1 - value)) + ((255 - data[i]) * value);
-				data[i+1] = (data[i+1] * (1 - value)) + ((255 - data[i+1]) * value);
-				data[i+2] = (data[i+2] * (1 - value)) + ((255 - data[i+2]) * value);
+	my.filter.invert = function(items, image){
+		var args = my.filterSetup(items, image),
+			value = (my.xt(args.items.value)) ? args.items.value : 1,
+			data = args.imgData.data,
+			iVal, here;
+		value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (my.isBetween(value, 0, 1, true)) ? value : (value > 0.5) ? 1 : 0;
+		iVal = 1 - value;
+		for(var i = 0, iz = data.length; i < iz; i += 4){
+			for(var j = 0; j < 3; j++){
+				here = i + j;
+				data[here] = (data[here] * iVal) + ((255 - data[here]) * value);
 				}
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+			}
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'invert');
 /**
 Brightness filter (added to the core by the scrawlFilters module)
 
@@ -182,27 +192,23 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		brightness: function(items, image){
-			items = my.safeObject(items);
-			var value = (my.xt(items.value)) ? items.value : 1,
-				useSourceData = items.use || (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				imgData = image.getImageData(useSourceData),
-				data = imgData.data,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
-			value = (value < 0) ? 0 : value;
-			for(var i=0, z=data.length; i<z; i += 4){
-				data[i] = data[i] * value;
-				data[i+1] = data[i+1] * value;
-				data[i+2] = data[i+2] * value;
+	my.filter.brightness = function(items, image){
+		var args = my.filterSetup(items, image),
+			value = (my.xt(args.items.value)) ? args.items.value : 1,
+			data = args.imgData.data,
+			here;
+		value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (value < 0) ? 0 : value;
+		for(var i = 0, iz = data.length; i < iz; i += 4){
+			for(var j = 0; j < 3; j++){
+				here = i + j;
+				data[here] = data[here] * value;
 				}
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+			}
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'brightness');
 /**
 Saturation filter (added to the core by the scrawlFilters module)
 
@@ -216,27 +222,23 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		saturation: function(items, image){
-			items = my.safeObject(items);
-			var value = (my.xt(items.value)) ? items.value : 1,
-				useSourceData = items.use || (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				imgData = image.getImageData(useSourceData),
-				data = imgData.data,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
-			value = (value < 0) ? 0 : value;
-			for(var i=0, z=data.length; i<z; i += 4){
-				data[i] = 127 + (data[i] - 127) * value;
-				data[i+1] = 127 + (data[i+1] - 127) * value;
-				data[i+2] = 127 + (data[i+2] - 127) * value;
+	my.filter.saturation = function(items, image){
+		var args = my.filterSetup(items, image),
+			value = (my.xt(args.items.value)) ? args.items.value : 1,
+			data = args.imgData.data,
+			here;
+		value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (value < 0) ? 0 : value;
+		for(var i = 0, iz = data.length; i < iz; i += 4){
+			for(var j = 0; j < 3; j++){
+				here = i + j;
+				data[here] = 127 + ((data[here] - 127) * value);
 				}
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+			}
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'saturation');
 /**
 Threshold filter (added to the core by the scrawlFilters module)
 
@@ -250,34 +252,30 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		threshold: function(items, image){
-			items = my.safeObject(items);
-			var value = (my.xt(items.value)) ? items.value : 0.5,
-				imgData,
-				data,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
-			value *= 255;
-			result = my.filter.grayscale({
-				useSourceData: items.useSourceData,
-				use: items.use,
-				save: false,
-				}, image);
-			imgData = image.getImageData(result),
-			data = imgData.data;
-			for(var i=0, z=data.length; i<z; i += 4){
-				data[i] = (data[i] > value) ? 255 : 0;
-				data[i+1] = (data[i+1] > value) ? 255 : 0;
-				data[i+2] = (data[i+2] > value) ? 255 : 0;
+	my.filter.threshold = function(items, image){
+		var args = my.filterSetup(items, image),
+			value = (my.xt(items.value)) ? items.value : 0.5,
+			data,
+			here;
+		value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+		value *= 255;
+		args.imgData = my.filter.grayscale({
+			useSourceData: args.useSourceData,
+			use: args.imgData,
+			save: false,
+			}, args.image);
+		data = args.imgData.data;
+		for(var i = 0, iz = data.length; i < iz; i += 4){
+			for(var j = 0; j < 3; j++){
+				here = i + j;
+				data[here] = (data[here] > value) ? 255 : 0;
 				}
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+			}
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'threshold');
 /**
 Channels filter (added to the core by the scrawlFilters module)
 
@@ -296,33 +294,28 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		channels: function(items, image){
-			items = my.safeObject(items);
-			var red = (my.xt(items.red)) ? items.red : 1,
-				green = (my.xt(items.green)) ? items.green : 1,
-				blue = (my.xt(items.blue)) ? items.blue : 1,
-				alpha = (my.xt(items.alpha)) ? items.alpha : 1,
-				useSourceData = items.use || (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				imgData = image.getImageData(useSourceData),
-				data = imgData.data,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			red = (my.isa(red, 'str')) ? parseFloat(red)/100 : red;
-			green = (my.isa(green, 'str')) ? parseFloat(green)/100 : green;
-			blue = (my.isa(blue, 'str')) ? parseFloat(blue)/100 : blue;
-			alpha = (my.isa(alpha, 'str')) ? parseFloat(alpha)/100 : alpha;
-			for(var i=0, z=data.length; i<z; i += 4){
-				data[i] = data[i] * red;
-				data[i+1] = data[i+1] * green;
-				data[i+2] = data[i+2] * blue;
-				data[i+3] = data[i+3] * alpha;
-				}
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+	my.filter.channels = function(items, image){
+		var args = my.filterSetup(items, image),
+			red = (my.xt(args.items.red)) ? args.items.red : 1,
+			green = (my.xt(args.items.green)) ? args.items.green : 1,
+			blue = (my.xt(args.items.blue)) ? args.items.blue : 1,
+			alpha = (my.xt(args.items.alpha)) ? args.items.alpha : 1,
+			data = args.imgData.data,
+			here;
+		red = (my.isa(red, 'str')) ? parseFloat(red)/100 : red;
+		green = (my.isa(green, 'str')) ? parseFloat(green)/100 : green;
+		blue = (my.isa(blue, 'str')) ? parseFloat(blue)/100 : blue;
+		alpha = (my.isa(alpha, 'str')) ? parseFloat(alpha)/100 : alpha;
+		for(var i=0, z=data.length; i<z; i += 4){
+			here = i; data[here] = data[here] * red;
+			here++; data[here] = data[here] * green;
+			here++; data[here] = data[here] * blue;
+			here++; data[here] = data[here] * alpha;
+			}
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'channels');
 /**
 ChannelStep filter (added to the core by the scrawlFilters module)
 
@@ -341,29 +334,24 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		channelStep: function(items, image){
-			items = my.safeObject(items);
-			var red = (my.xt(items.red)) ? items.red : 1,
-				green = (my.xt(items.green)) ? items.green : 1,
-				blue = (my.xt(items.blue)) ? items.blue : 1,
-				alpha = (my.xt(items.alpha)) ? items.alpha : 1,
-				useSourceData = items.use || (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				imgData = image.getImageData(useSourceData),
-				data = imgData.data,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			for(var i=0, z=data.length; i<z; i += 4){
-				data[i] = Math.floor(data[i] / red) * red;
-				data[i+1] = Math.floor(data[i+1] / green) * green;
-				data[i+2] = Math.floor(data[i+2] / blue) * blue;
-				data[i+3] = Math.floor(data[i+3] / alpha) * alpha;
-				}
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+	my.filter.channelStep = function(items, image){
+		var args = my.filterSetup(items, image),
+			red = (my.xt(args.items.red)) ? args.items.red : 1,
+			green = (my.xt(args.items.green)) ? args.items.green : 1,
+			blue = (my.xt(args.items.blue)) ? args.items.blue : 1,
+			alpha = (my.xt(args.items.alpha)) ? args.items.alpha : 1,
+			data = args.imgData.data,
+			here;
+		for(var i=0, z=data.length; i<z; i += 4){
+			here = i; data[here] = Math.floor(data[here] / red) * red;
+			here++; data[here] = Math.floor(data[here] / green) * green;
+			here++; data[here] = Math.floor(data[here] / blue) * blue;
+			here++; data[here] = Math.floor(data[here] / alpha) * alpha;
+			}
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'channelStep');
 /**
 Sepia filter (added to the core by the scrawlFilters module)
 
@@ -377,19 +365,10 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		sepia: function(items, image){
-			items = my.safeObject(items);
-			items.rr = 0.393;
-			items.rg = 0.349;
-			items.rb = 0.272;
-			items.gr = 0.769;
-			items.gg = 0.686;
-			items.gb = 0.534;
-			items.br = 0.189;
-			items.bg = 0.168;
-			items.bb = 0.131;
-			return my.filter.tint(items, image);
-			},
+	my.filter.sepia = function(items, image){
+		return my.filter.tint(items, image);
+		};
+	my.pushUnique(my.filternames, 'sepia');
 /**
 Tint filter (added to the core by the scrawlFilters module)
 
@@ -415,51 +394,51 @@ The argument object can take up to nine additional attributes, used to set the t
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		tint: function(items, image){
-			items = my.safeObject(items);
-			var value = (my.xt(items.value)) ? items.value : 1,
-				useSourceData = items.use || (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				rr = items.rr || items.redInRed || 0.393,
-				rg = items.rg || items.redInGreen || 0.349,
-				rb = items.rb || items.redInBlue || 0.272,
-				gr = items.gr || items.greenInRed || 0.769,
-				gg = items.gg || items.greenInGreen || 0.686,
-				gb = items.gb || items.greenInBlue || 0.534,
-				br = items.br || items.blueInRed || 0.189,
-				bg = items.bg || items.blueInGreen || 0.168,
-				bb = items.bb || items.blueInBlue || 0.131,
-				imgData = image.getImageData(useSourceData),
-				data = imgData.data,
-				red,
-				grn,
-				blu,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
-			for(var i=0, z=data.length; i<z; i += 4){
-				red = (data[i] * rr) + (data[i+1] * gr) + (data[i+2] * br)
-				grn = (data[i] * rg) + (data[i+1] * gg) + (data[i+2] * bg)
-				blu = (data[i] * rb) + (data[i+1] * gb) + (data[i+2] * bb)
-				data[i] = ((data[i] * (1 - value)) + (red * value));
-				data[i+1] = ((data[i+1] * (1 - value)) + (grn * value));
-				data[i+2] = ((data[i+2] * (1 - value)) + (blu * value));
-				}
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+	my.filter.tint = function(items, image){
+		var args = my.filterSetup(items, image),
+			value = (my.xt(args.items.value)) ? args.items.value : 1,
+			iVal,
+			rr = args.items.rr || args.items.redInRed || 0.393,
+			rg = args.items.rg || args.items.redInGreen || 0.349,
+			rb = args.items.rb || args.items.redInBlue || 0.272,
+			gr = args.items.gr || args.items.greenInRed || 0.769,
+			gg = args.items.gg || args.items.greenInGreen || 0.686,
+			gb = args.items.gb || args.items.greenInBlue || 0.534,
+			br = args.items.br || args.items.blueInRed || 0.189,
+			bg = args.items.bg || args.items.blueInGreen || 0.168,
+			bb = args.items.bb || args.items.blueInBlue || 0.131,
+			data = args.imgData.data,
+			r, red,
+			g, grn,
+			b, blu;
+		value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
+		value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+		iVal = 1 - value;
+		for(var i = 0, iz = data.length; i < iz; i += 4){
+			r = data[i];
+			g = data[i+1];
+			b = data[i+2];
+			red = (r * rr) + (g * gr) + (b * br)
+			grn = (r * rg) + (g * gg) + (b * bg)
+			blu = (r * rb) + (g * gb) + (b * bb)
+			data[i] = (r * iVal) + (red * value);
+			data[i+1] = (g * iVal) + (grn * value);
+			data[i+2] = (b * iVal) + (blu * value);
+			}
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'tint');
 /**
 Blur filter (added to the core by the scrawlFilters module)
 
 Attributes in the argument object:
 
-* __radius__ - Number. Blur brush x and y radius (default: 0)
+* __brush__ - Array. A pre-compiled filter.getBrush() array to be used with the blur filter; alternatively, define the brush dynamically using the radius/radiusX/radiusY/roll attributes below
 * __radiusX__ - Number. Blur brush x radius (default: 2)
 * __radiusY__ - Number. Blur brush y radius (default: 2)
 * __roll__ - Number. Blur brush roll value (default: 0)
+* __radius__ - Number. Blur brush x and y radius (default: 0)
 * __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
 * __use__ - Object. Image data object on which to apply the filter (default: undefined)
 * __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
@@ -468,26 +447,24 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		blur: function(items, image){
-			items = my.safeObject(items);
-			var radius = (my.xt(items.radius)) ? Math.abs(items.radius) : 0,
-				radiusX = (my.xt(items.radiusX)) ? Math.abs(items.radiusX) : 2,
-				radiusY = (my.xt(items.radiusY)) ? Math.abs(items.radiusY) : 2,
-				roll = (my.xt(items.roll)) ? items.roll : 0,
+	my.filter.blur = function(items, image){
+		var args = my.filterSetup(items, image);
+		args.items.includeAlpha = (my.isa(args.items.includeAlpha, 'bool')) ? args.items.includeAlpha : false;
+		args.items.wrap = false;
+		if(!my.xt(args.items.brush)){
+			var radius = (my.xt(args.items.radius)) ? Math.abs(args.items.radius) : 0,
+				radiusX = (my.xt(args.items.radiusX)) ? Math.abs(args.items.radiusX) : 2,
+				radiusY = (my.xt(args.items.radiusY)) ? Math.abs(args.items.radiusY) : 2,
+				roll = (my.xt(args.items.roll)) ? args.items.roll : 0,
 				rx = radius || radiusX || 2,
-				ry = radius || radiusY || 2,
-				useSourceData = items.use || (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				addAlpha = (my.xt(items.includeAlpha)) ? items.includeAlpha : false,
-				brush = my.filter.getBrush(rx, ry, roll),
-				save = (my.xt(items.save)) ? items.save : true,
-				imgData = my.filter.doMatrix(brush, useSourceData, addAlpha, false, image),
-				result;
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+				ry = radius || radiusY || 2;
+			args.items.brush = my.filter.getBrush(rx, ry, roll);
+			}
+		args.imgData = my.filter.doMatrix(args.items.brush, args);
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'blur');
 /**
 Blur helper function
 
@@ -497,32 +474,37 @@ Blur helper function
 @param r {Number} brush roll (in degrees)
 @return Array of objects used for the blur brush
 **/
-		getBrush: function(x, y, r){
-			var dim = (x > y) ? x+2 : y+2,
-				hDim = Math.floor(dim/2),
-				cos = Math.cos(r * my.radian),
-				sin = Math.sin(r * my.radian),
-				brush = [];
-			my.cv.width = dim;
-			my.cv.height = dim;
-			my.cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
-			my.cvx.beginPath();
-			my.cvx.moveTo(0,-y);
-			my.cvx.bezierCurveTo(x*0.55, -y, x, -y*0.55, x, 0);
-			my.cvx.bezierCurveTo(x, y*0.55, x*0.55, y, 0, y);
-			my.cvx.bezierCurveTo(-x*0.55, y, -x, y*0.55, -x, 0);
-			my.cvx.bezierCurveTo(-x, -y*0.55, -x*0.55, -y, 0, -y);
-			my.cvx.closePath();
-			for(var i=0; i<dim; i++){ //rows (y)
-				for(var j=0; j<dim; j++){ //cols (x)
-					if(my.cvx.isPointInPath(j, i)){
-						brush.push({ox: j - hDim, oy: i - hDim, wt: 1});
-						}
+	my.filter.getBrush = function(x, y, r){
+		var dim = (x > y) ? x+2 : y+2,
+			hDim = Math.floor(dim/2),
+			cos = Math.cos(r * my.radian),
+			sin = Math.sin(r * my.radian),
+			brush = [];
+		my.cv.width = dim;
+		my.cv.height = dim;
+		my.cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
+		my.cvx.beginPath();
+		my.cvx.moveTo(-x, 0);
+		my.cvx.lineTo(-1, -1);
+		my.cvx.lineTo(0, -y);
+		my.cvx.lineTo(1, -1);
+		my.cvx.lineTo(x, 0);
+		my.cvx.lineTo(1, 1);
+		my.cvx.lineTo(0, y);
+		my.cvx.lineTo(-1, 1);
+		my.cvx.lineTo(-x, 0);
+		my.cvx.closePath();
+		for(var i=0; i<dim; i++){ //rows (y)
+			for(var j=0; j<dim; j++){ //cols (x)
+				if(my.cvx.isPointInPath(j, i)){
+					brush.push({ox: j - hDim, oy: i - hDim, wt: 1});
 					}
 				}
-			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-			return brush;
-			},
+			}
+		my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+		return brush;
+		};
+	my.pushUnique(my.filternames, 'getBrush');
 /**
 Pixelate filter (added to the core by the scrawlFilters module)
 
@@ -538,58 +520,96 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended image data object
 **/
-		pixelate: function(items, image){
-			items = my.safeObject(items);
-			var width = (my.xt(items.width)) ? Math.ceil(items.width) : 5,
-				height = (my.xt(items.height)) ? Math.ceil(items.height) : 5,
-				useSourceData = items.use || (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				addAlpha = (my.xt(items.includeAlpha)) ? items.includeAlpha : false,
-				imgData = image.getImageData(useSourceData),
-				red,
-				grn,
-				blu,
-				alp,
-				block,
-				count,
-				tW,
-				tH,
-				vol,
-				save = (my.xt(items.save)) ? items.save : true,
-				result;
-			my.cv.width = imgData.width;
-			my.cv.height = imgData.height;
-			my.cvx.putImageData(imgData, 0, 0);
-			for(var i = 0; i < imgData.height; i += height){ //rows (y)
-				for(var j = 0; j < imgData.width; j += width){ //cols (x)
-					red = grn = blu = alp = count = 0;
-					tW = (j + width > imgData.width) ? imgData.width - j : width;
-					tH = (i + height > imgData.height) ? imgData.height - i : height;
-					vol = tW * tH * 4;
-					block = my.cvx.getImageData(j, i, tW, tH);
-					for(var k = 0; k < vol; k += 4){
-						if(block.data[k+3] > 0){
-							red += block.data[k];
-							grn += block.data[k+1];
-							blu += block.data[k+2];
-							alp += block.data[k+3];
-							count++;
-							}
+	my.filter.pixelate = function(items, image){
+		var args = my.filterSetup(items, image),
+			width = (my.xt(args.items.width)) ? Math.ceil(args.items.width) : 5,
+			height = (my.xt(args.items.height)) ? Math.ceil(args.items.height) : 5,
+			addAlpha = (my.xt(args.items.includeAlpha)) ? args.items.includeAlpha : false,
+			iWidth = args.imgData.width,
+			iHeight = args.imgData.height,
+			red,
+			grn,
+			blu,
+			alp,
+			block,
+			count,
+			tW,
+			tH,
+			vol,
+			here;
+		my.cv.width = iWidth;
+		my.cv.height = iHeight;
+		my.cvx.putImageData(args.imgData, 0, 0);
+		for(var i = 0; i < iHeight; i += height){ //rows (y)
+			for(var j = 0; j < iWidth; j += width){ //cols (x)
+				red = grn = blu = alp = count = 0;
+				tW = (j + width > iWidth) ? iWidth - j : width;
+				tH = (i + height > iHeight) ? iHeight - i : height;
+				vol = tW * tH * 4;
+				block = my.cvx.getImageData(j, i, tW, tH);
+				for(var k = 0; k < vol; k += 4){
+					if(block.data[k+3] > 0){
+						here = k;
+						red += block.data[here];
+						grn += block.data[++here];
+						blu += block.data[++here];
+						alp += block.data[++here];
+						count++;
 						}
-					red = Math.floor(red/count);
-					grn = Math.floor(grn/count);
-					blu = Math.floor(blu/count);
-					alp = Math.floor(alp/count);
-					my.cvx.fillStyle = (addAlpha) ? 'rgba('+red+','+grn+','+blu+','+alp+')' : 'rgb('+red+','+grn+','+blu+')';
-					my.cvx.fillRect(j, i, tW, tH);
 					}
+				red = Math.floor(red/count);
+				grn = Math.floor(grn/count);
+				blu = Math.floor(blu/count);
+				alp = Math.floor(alp/count);
+				my.cvx.fillStyle = (addAlpha) ? 'rgba('+red+','+grn+','+blu+','+alp+')' : 'rgb('+red+','+grn+','+blu+')';
+				my.cvx.fillRect(j, i, tW, tH);
 				}
-			block = my.cvx.getImageData(0, 0, imgData.width, imgData.height);
-			if(save){
-				result = image.getImageDataUrl(block, true);
-				my.img[image.name] = image.makeImage(result);
+			}
+		args.imgData = my.cvx.getImageData(0, 0, args.imgData.width, args.imgData.height);
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'pixelate');
+/**
+Glass Tile filter (added to the core by the scrawlFilters module)
+
+Attributes in the argument object:
+
+* __width__ - Number. Block width (default: 5)
+* __height__ - Number. Block height (default: 5)
+* __outerWidth__ - Number. Block width (default: 8)
+* __outerHeight__ - Number. Block height (default: 8)
+* __use__ - Object. Image data object on which to apply the filter (default: undefined)
+* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+@method glassTile
+@param {Object} [items] Key:value Object argument for setting attributes
+@return amended image data object
+**/
+	my.filter.glassTile = function(items, image){
+		var args = my.filterSetup(items, image),
+			width = (my.xt(args.items.width)) ? Math.ceil(args.items.width) : 5,
+			height = (my.xt(args.items.height)) ? Math.ceil(args.items.height) : 5,
+			outerWidth = (my.xt(args.items.outerWidth)) ? Math.ceil(args.items.outerWidth) : 8,
+			outerHeight = (my.xt(args.items.outerHeight)) ? Math.ceil(args.items.outerHeight) : 8,
+			tW,
+			tH,
+			block;
+		my.cv.width = args.imgData.width;
+		my.cv.height = args.imgData.height;
+		my.cvx.putImageData(args.imgData, 0, 0);
+		for(var i = 0; i < args.imgData.height; i += height){ //rows (y)
+			for(var j = 0; j < args.imgData.width; j += width){ //cols (x)
+				tW = (j + outerWidth > args.imgData.width) ? args.imgData.width - j : outerWidth;
+				tH = (i + outerHeight > args.imgData.height) ? args.imgData.height - i : outerHeight;
+				my.cvx.drawImage(my.cv, j, i, tW, tH, j, i, width, height);
 				}
-			return block;
-			},
+			}
+		args.imgData = my.cvx.getImageData(0, 0, args.imgData.width, args.imgData.height);
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'glassTile');
 /**
 Matrix filter (added to the core by the scrawlFilters module)
 
@@ -607,49 +627,44 @@ Attributes in the argument object:
 @param {Object} [items] Key:value Object argument for setting attributes
 @return amended data image object
 **/
-		matrix: function(items, image){
-			items = my.safeObject(items);
-			var useSourceData = (my.xt(items.useSourceData)) ? items.useSourceData : false,
-				addAlpha = (my.xt(items.includeAlpha)) ? items.includeAlpha : false,
-				wrap = (my.isa(items.wrap, 'bool')) ? items.wrap : false,
-				myArray = (my.isa(items.data,'arr')) ? items.data : [1],
-				matrix = [],
-				reqLen,
-				matrixMid,
-				matrixDim,
-				matrixCenter,
-				counter = 0,
-				save = (my.xt(items.save)) ? items.save : true,
-				imgData,
-				result;
-			reqLen = Math.ceil(Math.sqrt(myArray.length));
-			reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
-			for(var i = 0; i < reqLen; i++){
-				myArray[i] = (my.xt(myArray[i])) ? parseFloat(myArray[i]) : 0;
-				myArray[i] = (isNaN(myArray[i])) ? 0 : myArray[i];
-				}
-			matrixMid = Math.floor(myArray.length/2);
-			matrixDim = Math.sqrt(myArray.length);
-			matrixCenter = Math.floor(matrixDim/2);
-			for(var i = 0; i < matrixDim; i++){ //col (y)
-				for(var j = 0; j < matrixDim; j++){ //row (x)
-					if(myArray[counter] !== 0){
-						matrix.push({
-							ox: j - matrixCenter,
-							oy: i - matrixCenter,
-							wt: myArray[counter],
-							});
-						}
-					counter++;
+	my.filter.matrix = function(items, image){
+		var args = my.filterSetup(items, image),
+			myArray = (my.isa(args.items.data,'arr')) ? args.items.data : [1],
+			matrix = [],
+			reqLen,
+			matrixMid,
+			matrixDim,
+			matrixCenter,
+			counter = 0,
+			imgData;
+		args.items.includeAlpha = (my.isa(args.items.includeAlpha, 'bool')) ? args.items.includeAlpha : false;
+		args.items.wrap = (my.isa(args.items.wrap, 'bool')) ? args.items.wrap : false;
+		reqLen = Math.ceil(Math.sqrt(myArray.length));
+		reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
+		for(var i = 0; i < reqLen; i++){
+			myArray[i] = (my.xt(myArray[i])) ? parseFloat(myArray[i]) : 0;
+			myArray[i] = (isNaN(myArray[i])) ? 0 : myArray[i];
+			}
+		matrixMid = Math.floor(myArray.length/2);
+		matrixDim = Math.sqrt(myArray.length);
+		matrixCenter = Math.floor(matrixDim/2);
+		for(var i = 0; i < matrixDim; i++){ //col (y)
+			for(var j = 0; j < matrixDim; j++){ //row (x)
+				if(myArray[counter] !== 0){
+					matrix.push({
+						ox: j - matrixCenter,
+						oy: i - matrixCenter,
+						wt: myArray[counter],
+						});
 					}
+				counter++;
 				}
-			imgData = my.filter.doMatrix(matrix, useSourceData, addAlpha, wrap, image);
-			if(save){
-				result = image.getImageDataUrl(imgData, true);
-				my.img[image.name] = image.makeImage(result);
-				}
-			return imgData;
-			},
+			}
+		args.imgData = my.filter.doMatrix(matrix, args);
+		my.filterSave(args);
+		return args.imgData;
+		};
+	my.pushUnique(my.filternames, 'matrix');
 /**
 Helper function
 
@@ -663,69 +678,63 @@ Function used by matrix() and blur() filter functions
 
 @method doMatrix
 @param {Array} matrix Array of matrix objects
-@param {Boolean} urlData image URL data
-@param {Boolean} addAlpha When true, alpha values are included in the calculation
-@param {Boolean} wrap When true, offset pixels that fall outside the boundaries of the image will be wrapped to the opposite end of the image row or column; when false, the offset pixels are ignored and their weightings excluded from the calculation
-@return True on success; false otherwise
+@param {Object} args Arguments object supplied by filter
+@return Updated ImageData data on success; false otherwise
 **/
-		doMatrix: function(matrix, urlData, addAlpha, wrap, image){
-			wrap = (my.isa(wrap,'bool')) ? wrap : false;
-			var imgData = image.getImageData(urlData),
-				data = imgData.data,
-				copyData = image.getImageData(urlData),
-				copy = copyData.data,
-				weight = 0,
-				red,
-				grn,
-				blu,
-				alp,
-				here,
-				there,
-				addPix;
-			if(matrix.length > 0){
-				for(var i = 0; i < imgData.height; i++){ //rows (y)
-					for(var j = 0; j < imgData.width; j++){ //cols (x)
-						red = blu = grn = alp = weight = 0;
-						here = 4 * ((i * imgData.width) + j);
-						for(var k = 0, z = matrix.length; k < z; k++){
-							addPix = true;
-							if(!my.isBetween(j + matrix[k].ox, 0, imgData.width - 1, true) || !my.isBetween(i + matrix[k].oy, 0, imgData.height - 1, true)){
-								if(wrap){
-									if(!my.isBetween(j + matrix[k].ox, 0, imgData.width - 1, true)){
-										matrix[k].ox += (matrix[k].ox > 0) ? -imgData.width : imgData.width;
-										}
-									if(!my.isBetween(i + matrix[k].oy, 0, imgData.height - 1, true)){
-										matrix[k].oy += (matrix[k].oy > 0) ? -imgData.height : imgData.height;
-										}
-									}
-								else{
-									addPix = false;
-									}
+	my.filter.doMatrix = function(matrix, args){
+		var width = args.imgData.width,
+			height = args.imgData.height,
+			source = args.imgData.data,
+			result = my.cvx.createImageData(args.imgData),
+			destination = result.data,
+			addAlpha = args.items.includeAlpha,
+			wrap = args.items.wrap,
+			w, r, g, b, a, x, y, wt,
+			here, there, addPix, boundX, boundY,
+			length = matrix.length;
+		if(length > 0){
+			for(var i = 0; i < height; i++){ //rows (y)
+				for(var j = 0; j < width; j++){ //cols (x)
+					r = b = g = a = w = 0;
+					here = 4 * ((i * width) + j);
+					for(var k = 0, z = length; k < z; k++){
+						addPix = true;
+						x = matrix[k].ox;
+						y = matrix[k].oy;
+						wt = matrix[k].wt;
+						boundX = my.isBetween(j + x, 0, width - 1, true);
+						boundY = my.isBetween(i + y, 0, height - 1, true);
+						if(!boundX || !boundY){
+							if(wrap){
+								if(!boundX){x += (x > 0) ? -width : width;}
+								if(!boundY){y += (y > 0) ? -height : height;}
 								}
-							if(addPix){
-								there = here + (4 * ((matrix[k].oy * imgData.width) + matrix[k].ox));
-								red += data[there] * matrix[k].wt;
-								grn += data[there + 1] * matrix[k].wt;
-								blu += data[there + 2] * matrix[k].wt;
-								weight += matrix[k].wt;
-								if(addAlpha){
-									alp += data[there + 3] * matrix[k].wt;
-									}
+							else{
+								addPix = false;
 								}
 							}
-						copy[here] = (weight !== 0) ? red/weight : red;
-						copy[here + 1] = (weight !== 0) ? grn/weight : grn;
-						copy[here + 2] = (weight !== 0) ? blu/weight : blu;
-						if(addAlpha){
-							copy[here + 3] = (weight !== 0) ? alp/weight : alp;
+						if(addPix){
+							there = here + (4 * ((y * width) + x));
+							r += source[there] * wt;
+							g += source[++there] * wt;
+							b += source[++there] * wt;
+							w += wt;
+							if(addAlpha){
+								a += source[++there] * wt;
+								}
 							}
 						}
+					destination[here] = (w !== 0) ? r/w : r;
+					destination[++here] = (w !== 0) ? g/w : g;
+					destination[++here] = (w !== 0) ? b/w : b;
+					destination[++here] = (addAlpha) ? ((w !== 0) ? a/w : a) : source[here];
 					}
-				return copyData;
 				}
-			return false;
-			},
+			return result;
+			}
+		return false;
 		};
+	my.pushUnique(my.filternames, 'doMatrix');
 
 	return my;
 	}(scrawl));

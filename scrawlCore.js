@@ -2,7 +2,7 @@
 /**
 # scrawlCore
 
-## Version 3.0.0 - 5 April 2014
+## Version 3.1.0 - 22 April 2014
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -79,10 +79,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 3.00
+@default 3.1.0
 @final
 **/
-	my.version = '3.00';
+	my.version = '3.1.0';
 /**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -113,12 +113,35 @@ An Object containing OBJECTTYPE:Object pairs which in turn contain default attri
 **/
 	my.d = {};
 /**
+Work vector, for calculations
+@property v
+@type {Vector}
+@private
+**/
+	my.v;
+/**
+Work quaternions, for calculations
+@property workquat
+@type {Object}
+@private
+**/
+	my.workquat;
+/**
+DOM document fragment
+@property f
+@type {Object}
+@private
+**/
+	my.f = document.createDocumentFragment();
+/**
 Utility canvas - never displayed
 @property cv
 @type {CasnvasObject}
 @private
 **/
 	my.cv = document.createElement('canvas');
+	my.cv.id = 'defaultHiddenCanvasElement';
+	my.f.appendChild(my.cv);
 /**
 Utility canvas 2d context engine
 @property cvx
@@ -286,7 +309,7 @@ Any supplied callback function will only be run once all modules have been loade
 			callback = (my.isa(items.callback, 'fn')) ? items.callback : function(){},
 			mini = (my.xt(items.minified)) ? items.minified : true,
 			//FOR DEVELOPMENT TESTING ONLY
-			//mini = false,
+//			mini = false,
 			tail = (mini) ? '-min.js' : '.js',
 			loaded = [].concat(modules),
 			getModule = function(module){
@@ -533,6 +556,15 @@ Valid identifier Strings include:
 				case 'obj' :
 					return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 					break;
+				case 'canvas' :
+					return (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
+					break;
+				case 'img' :
+					return (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
+					break;
+				case 'video' :
+					return (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
+					break;
 				case 'date' :
 					return (Object.prototype.toString.call(item) === '[object Date]') ? true : false;
 					break;
@@ -740,6 +772,20 @@ The argument object should include the following attributes:
 		myPad.set(items);
 		my.setDisplayOffsets();
 		return myPad;
+		};
+/**
+A __private__ function - def9ines the filter sections in the library
+@method prepareFilterSection
+@return The Scrawl library object (scrawl)
+@chainable
+@private
+**/
+	my.prepareFilterSection = function(){
+		if(!my.xt(my.filter)){
+			my.filter = {};
+			my.filternames = [];
+			}
+		return my;
 		};
 /**
 A __general__ function which passes on requests to pads to update their drawOrder property - see Pad.setDrawOrder() for more details
@@ -1046,7 +1092,7 @@ Argument object can be in the following form, where all values (which default to
 		});
 **/
 	my.makeQuaternion = function(items){
-		return my.Quaternion.prototype.makeQuaternion(items);
+		return my.Quaternion.prototype.makeFromEuler(items);
 		}
 /**
 A __factory__ function to generate new Pad objects
@@ -1125,6 +1171,7 @@ A __factory__ function to generate new RadialGradient objects
 		this.x = items.x || 0;
 		this.y = items.y || 0;
 		this.z = items.z || 0;
+		this.name = items.name || 'generic';
 		return this;
 		}
 	my.Vector.prototype = Object.create(Object.prototype);
@@ -1157,6 +1204,13 @@ Z coordinate (px)
 @default 0
 **/		
 		z: 0,
+/**
+Vector name - not guaranteed to be unique
+@property name
+@type String
+@default 'generic'
+**/		
+		name: 'generic',
 		};
 /**
 Set the Vector's coordinates to values that will result in the given magnitude
@@ -1194,6 +1248,18 @@ Normalize the Vector to a unit vector
 		return this;
 		};
 /**
+Set all attributes to zero
+@method zero
+@return This
+@chainable
+**/
+	my.Vector.prototype.zero = function(){
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
+		return this;
+		};
+/**
 Set attributes to new values
 @method set
 @param {Object} items Object containing attribute key:value pairs
@@ -1202,76 +1268,9 @@ Set attributes to new values
 **/
 	my.Vector.prototype.set = function(items){
 		items = my.safeObject(items);
-		this.x = items.x || 0;
-		this.y = items.y || 0;
-		this.z = items.z || 0;
-		return this;
-		};
-/**
-Return a normalized (unit) copy of the Vector
-@method getNormal
-@return Amended copy of Vector; or this if magnitude === 0
-@chainable
-**/
-	my.Vector.prototype.getNormal = function(){
-		var m = this.getMagnitude();
-		if(m > 0){
-			return my.newVector({
-				x: this.x/m,
-				y: this.y/m,
-				z: this.z/m,
-				});
-			}
-		console.log('Vector.getNormal() error: magnitude is <= 0');
-		return this;
-		};
-/**
-Rotate the Vector by a given angle
-@method rotate
-@param {Number} angle Rotation angle (in degrees)
-@return This
-@chainable
-**/
-	my.Vector.prototype.rotate = function(angle){
-		if(my.xt(angle)){
-			var a = Math.atan2(this.y, this.x);
-			a += (angle * my.radian);
-			var m = this.getMagnitude();
-			this.x = m * Math.cos(a);
-			this.y = m * Math.sin(a);
-			}
-		return this;
-		};
-/**
-Rotate a copy of the vector by a given angle
-@method getRotate
-@param {Number} angle Rotation angle (in degrees)
-@return Amended copy of Vector on success; this on failure
-@chainable
-**/
-	my.Vector.prototype.getRotate = function(angle){
-		if(my.xt(angle)){
-			var a = Math.atan2(this.y, this.x);
-			a += (angle * my.radian);
-			var m = this.getMagnitude();
-			return my.newVector({
-				x: m * Math.cos(a),
-				y: m * Math.sin(a),
-				});
-			}
-		console.log('Vector.getRotate() error: no argument supplied');
-		return false;
-		};
-/**
-Rotate the Vector by 180 degrees
-@method reverse
-@return This
-@chainable
-**/
-	my.Vector.prototype.reverse = function(){
-		this.x = -this.x;
-		this.y = -this.y;
-		this.z = -this.z;
+		this.x = (my.xt(items.x)) ? items.x : this.x;
+		this.y = (my.xt(items.y)) ? items.y : this.y;
+		this.z = (my.xt(items.z)) ? items.z : this.z;
 		return this;
 		};
 /**
@@ -1303,6 +1302,14 @@ Comparea vector-like object to this one for equality
 		return false;
 		};
 /**
+extracts x and y data
+@method getData
+@return Object (not vector) with x and y attributes
+**/
+	my.Vector.prototype.getData = function(){
+		return {x: this.x, y: this.y, z: this.z};
+		};
+/**
 Comparea vector-like object to this one for equality
 @method hasCoordinates
 @param {Mixed} item Object to be tested against this
@@ -1310,19 +1317,6 @@ Comparea vector-like object to this one for equality
 **/
 	my.Vector.prototype.hasCoordinates = function(item){
 		return (my.xta([item, item.x, item.y])) ? true : false;
-		};
-/**
-Rotate a copy of the Vector by 180 degrees
-@method getReverse
-@return Amended copy of Vector
-@chainable
-**/
-	my.Vector.prototype.getReverse = function(){
-		return my.newVector({
-			x: -this.x,
-			y: -this.y,
-			z: -this.z,
-			});
 		};
 /**
 Add a Vector to this Vector
@@ -1437,140 +1431,12 @@ Return a clone of this Vector
 @return Clone of this Vector
 **/
 	my.Vector.prototype.getVector = function(){
+console.log('Vector.getVector');
 		return my.newVector({
 			x: this.x, 
 			y: this.y, 
 			z: this.z
 			});
-		};
-/**
-Alias of Vector.getReverse()
-@method getConjugate
-@return Amended copy of source Vector
-@chainable
-@deprecated
-**/
-	my.Vector.prototype.getConjugate = function(){
-		return this.getReverse();
-		};
-/**
-Add a Vector to a copy of this, or another, vector
-@method getVectorAdd
-@param {Object} u Vector to be added to source Vector; can also be an Object with x, y and z attributes (all optional)
-@param {Vector} [v] Source Vector (by default: this)
-@return Amended copy of source Vector; this on failure
-@chainable
-**/
-	my.Vector.prototype.getVectorAdd = function(u, v){
-		if(my.isa(u, 'obj')){
-			v = (my.isa(v, 'vector')) ? v : this;
-			return my.newVector({
-				x: v.x + (u.x || 0),
-				y: v.y + (u.y || 0),
-				z: v.z + (u.z || 0),
-				});
-			}
-		console.log('Vector.getVectorAdd() error: argument is not an object');
-		return this;
-		};
-/**
-Subtract a Vector from a copy of this, or another, Vector
-@method getVectorSubtract
-@param {Object} u Vector to be subtracted from source Vector; can also be an Object with x, y and z attributes (all optional)
-@param {Vector} [v] Source Vector (by default: this)
-@return Amended copy of source Vector; this on failure
-@chainable
-**/
-	my.Vector.prototype.getVectorSubtract = function(u, v){
-		if(my.isa(u, 'obj')){
-			v = (my.isa(v, 'vector')) ? v : this;
-			return my.newVector({
-				x: v.x - (u.x || 0),
-				y: v.y - (u.y || 0),
-				z: v.z - (u.z || 0),
-				});
-			}
-		console.log('Vector.getVectorSubtract() error: argument is not an object');
-		return this;
-		};
-/**
-Multiply a Vector with a copy of this, or another, Vector
-@method getVectorMultiply
-@param {Object} u Vector to be multiplied with source Vector; can also be an Object with x, y and z attributes (all optional)
-@param {Vector} [v] Source Vector (by default: this)
-@return Amended copy of source Vector on success; this on failure
-@chainable
-**/
-	my.Vector.prototype.getVectorMultiply = function(u, v){
-		if(my.isa(u, 'obj')){
-			v = (my.isa(v, 'vector')) ? v : this;
-			return my.newVector({
-				x: v.x * (u.x || 1),
-				y: v.y * (u.y || 1),
-				z: v.z * (u.z || 1),
-				});
-			}
-		console.log('Vector.getVectorMultiply() error: argument is not an object');
-		return this;
-		};
-/**
-Divide a Vector into a copy of this, or another, Vector
-
-Arithmetic is v/u, not u/v
-
-@method getVectorDivide
-@param {Object} u Vector to be divided into source Vector; can also be an Object with x, y and z attributes (all optional)
-@param {Vector} [v] Source vector (by default: this)
-@return Amended copy of source Vector on success; this on failure
-@chainable
-**/
-	my.Vector.prototype.getVectorDivide = function(u, v){
-		if(my.isa(u, 'obj')){
-			v = (my.isa(v, 'vector')) ? v : this;
-			return my.newVector({
-				x: ((u.x || 0) !== 0) ? v.x / (u.x || 1) : v.x,
-				y: ((u.y || 0) !== 0) ? v.y / (u.y || 1) : v.y,
-				z: ((u.z || 0) !== 0) ? v.z / (u.z || 1) : v.z,
-				});
-			}
-		console.log('Vector.getVectorDivide() error: argument is not an object');
-		return this;
-		};
-/**
-Multiply a copy of this Vector by a scalar value
-@method getScalarMultiply
-@param {Number} item Scalar value
-@return Amended copy of this on success; this on failure
-@chainable
-**/
-	my.Vector.prototype.getScalarMultiply = function(item){
-		if(my.isa(item, 'num')){
-			return my.newVector({
-				x: this.x * item,
-				y: this.y * item,
-				z: this.z * item,
-				});
-			}
-		console.log('Vector.getScalarMultiply() error: argument is not a number');
-		return this;
-		};
-/**
-Divide a scalar value into a copy of this Vector
-@method getScalarDivide
-@param {Number} item Scalar value
-@return Amended copy of this on success; this on failure
-@chainable
-**/
-	my.Vector.prototype.getScalarDivide = function(item){
-		if(my.isa(item, 'num')){
-			return my.newVector({
-				x: this.x / item,
-				y: this.y / item,
-				z: this.z / item,
-				});
-			}
-		console.log('Vector.getScalarDivide() error: argument is not a number, or is zero');
-		return this;
 		};
 /**
 Obtain the cross product of one Vector and a copy of this, or another, Vector
@@ -1584,6 +1450,7 @@ Arithmetic is v(crossProduct)u, not u(crossProduct)v
 @chainable
 **/
 	my.Vector.prototype.getCrossProduct = function(u, v){
+console.log('Vector.getCrossProduct');
 		if(my.isa(u, 'vector')){
 			v = (my.isa(v, 'vector')) ? v : this;
 			var v1x = v.x || 0;
@@ -1645,6 +1512,37 @@ Obtain the triple scalar product of two Vectors and this, or a third, Vector
 		return false;
 		};
 /**
+Rotate the Vector by a given angle
+@method rotate
+@param {Number} angle Rotation angle (in degrees)
+@return This
+@chainable
+**/
+	my.Vector.prototype.rotate = function(angle){
+		if(my.isa(angle, 'num')){
+			var a = Math.atan2(this.y, this.x);
+			a += (angle * my.radian);
+			var m = this.getMagnitude();
+			this.x = m * Math.cos(a);
+			this.y = m * Math.sin(a);
+			return this;
+			}
+		console.log('Vector.rotate() error: argument is not a Number');
+		return this;
+		};
+/**
+Rotate the Vector by 180 degrees
+@method reverse
+@return This
+@chainable
+**/
+	my.Vector.prototype.reverse = function(){
+		this.x = -this.x;
+		this.y = -this.y;
+		this.z = -this.z;
+		return this;
+		};
+/**
 Rotate a Vector object by a Quaternion rotation
 @method quaternionMultiply
 @param {Quaternion} item Quaternion object
@@ -1652,38 +1550,18 @@ Rotate a Vector object by a Quaternion rotation
 @return Amended version of Vector; this on failure
 @chainable
 **/
-	my.Vector.prototype.quaternionMultiply = function(item, mag){
+	my.Vector.prototype.rotate3d = function(item, mag){
 		if(my.isa(item, 'quaternion')){
-			mag = (my.xt(mag)) ? mag : this.getMagnitude();
-			var conjugate = item.getConjugate();
-			var result = item.getVectorMultiply(this);
-			result.quaternionMultiply(conjugate);
-			this.x = result.v.x;
-			this.y = result.v.y;
-			this.z = result.v.z;
-			this.setMagnitudeTo(mag);
+			mag = (scrawl.isa(mag, 'num')) ? mag : this.getMagnitude();
+			var q1 = my.workquat.q1.set(item),
+				q2 = my.workquat.q2.set(this),
+				q3 = my.workquat.q3.set(item).conjugate();
+			q1.quaternionMultiply(q2);
+			q1.quaternionMultiply(q3);
+			this.set(q1.v).setMagnitudeTo(mag);
 			return this;
 			}
-		console.log('Vector.quaternionMultiply() error: argument is not a Quaternion');
-		return this;
-		};
-/**
-Rotate a Vector object by a Quaternion rotation
-@method getQuaternionMultiply
-@param {Quaternion} item Quaternion object
-@param {Number} [mag] Magnitude value to which Vector needs to be set after rotation
-@return Amended version of Vector; this on failure
-**/
-	my.Vector.prototype.getQuaternionMultiply = function(item, mag){
-		if(my.isa(item, 'quaternion')){
-			mag = (my.xt(mag)) ? mag : this.getMagnitude();
-			var conjugate = item.getConjugate();
-			var result = item.getVectorMultiply(this);
-			result.quaternionMultiply(conjugate);
-			result.v.setMagnitudeTo(mag);
-			return result.v;
-			}
-		console.log('Vector.getQuaternionMultiply() error: argument is not a Quaternion');
+		console.log('Vector.rotate3d() error: argument is not a Quaternion');
 		return this;
 		};
 
@@ -1703,12 +1581,13 @@ Rotate a Vector object by a Quaternion rotation
 **/		
 	my.Quaternion = function(items){
 		items = my.safeObject(items);
-		var vector = (my.xt(items.v)) ? items.v : {};
+		var vector = my.safeObject(items.v);
+		this.name = items.name || 'generic';
 		this.n = items.n || 1;
 		this.v = my.newVector({
-			x: vector.x || 0,
-			y: vector.y || 0,
-			z: vector.z || 0,
+			x: vector.x || items.x || 0,
+			y: vector.y || items.y || 0,
+			z: vector.z || items.z || 0,
 			})
 		return this;
 		}
@@ -1721,6 +1600,13 @@ Rotate a Vector object by a Quaternion rotation
 **/
 	my.Quaternion.prototype.type = 'Quaternion';
 	my.d.Quaternion = {
+/**
+Quaternion name
+@property name
+@type String
+@default 'generic'
+**/		
+		name: 'generic',
 /**
 3d rotation value
 @property n
@@ -1735,6 +1621,19 @@ Rotate a Vector object by a Quaternion rotation
 @default {x:0, y:0, z:0}
 **/		
 		v: {x:0, y:0, z:0},
+		};
+/**
+set to zero quaternion (n = 1)
+@method zero
+@return This
+@chainable
+**/
+	my.Quaternion.prototype.zero = function(){
+		this.n = 1;
+		this.v.x = 0;
+		this.v.y = 0;
+		this.v.z = 0;
+		return this;
 		};
 /**
 Calculate magnitude of a quaternion
@@ -1761,26 +1660,6 @@ Normalize the quaternion
 		return this;
 		};
 /**
-Normalize the quaternion
-@method getNormal
-@return Copy of the normalized quaternion; this on failure
-**/
-	my.Quaternion.prototype.getNormal = function(){
-		var mag = this.getMagnitude();
-		if(mag !== 0){
-			return my.newQuaternion({
-				n: this.n/mag,
-				v: my.newVector({
-					x: this.v.x/mag,
-					y: this.v.y/mag,
-					z: this.v.z/mag,
-					}),
-				});
-			}
-		console.log('Quaternion.getNormal() error: magnitude is zero');
-		return this;
-		};
-/**
 Check to see if quaternion is a unit quaternion, within permitted tolerance
 @method checkNormal
 @param {Number} [tolerance] Tolerance value; default: 0
@@ -1788,7 +1667,7 @@ Check to see if quaternion is a unit quaternion, within permitted tolerance
 **/
 	my.Quaternion.prototype.checkNormal = function(tolerance){
 		tolerance = (my.xt(tolerance)) ? tolerance : 0;
-		var check = this.n + this.v.x + this.v.y + this.v.z;
+		var check = this.getMagnitude();
 		if(check >= 1-tolerance && check <= 1+tolerance){
 			return true;
 			}
@@ -1800,7 +1679,7 @@ Retrieve quaternion's vector (rotation axis) component
 @return Vector component
 **/
 	my.Quaternion.prototype.getVector = function(){
-		return this.v.getVector();
+		return this.v;
 		};
 /**
 Retrieve quaternion's scalar (rotation around axis) component
@@ -1882,98 +1761,91 @@ Divide quaternion by a scalar value
 		return this;
 		};
 /**
-Get the conjugate (reversed) value for this quaternion
-@method getConjugate
+Conjugate (reverse) value for this quaternion
+@method conjugate
 @return Conjugated quaternion
 **/
-	my.Quaternion.prototype.getConjugate = function(){
-		return my.newQuaternion({
-			n: this.n,
-			v: my.newVector({
-				x: -this.x,
-				y: -this.y,
-				z: -this.z,
-				}),
-			});
+	my.Quaternion.prototype.conjugate = function(){
+		this.v.x = -this.v.x;
+		this.v.y = -this.v.y;
+		this.v.z = -this.v.z;
+		return this;
 		};
 /**
-Add a quaternion to this quaternion
-@method getQuaternionAdd
-@param {Quaternion} item Quaternion to be added to this quaternion
-@return New quaternion on success; this, otherwise
+Set the values for this quaternion
+
+Argument object can contain the following attributes:
+
+* for the scalar (n) value, __scalar__ or __n__ (Number)
+* for the vector (v) value, __vector__ or __v__ (Vector object, or object containing xyz attribnutes)
+* for the x value (v.x), __x__ (Number)
+* for the y value (v.y), __y__ (Number)
+* for the z value (v.z), __z__ (Number)
+
+If the argument object includes values for __pitch__, __yaw__ or __roll__, the set will be performed via the setFromEuler() function
+
+Argument can also be either an existing Quaternion object, or an existing Vector object - for vectors, the scalar value will be set to 0
+@method set
+@param items Object containing key:value attributes
+@return Amended quaternion
 **/
-	my.Quaternion.prototype.getQuaternionAdd = function(item){
+	my.Quaternion.prototype.set = function(items){
+		items = my.safeObject(items);
+		var x, y, z, n, v;
+		if(my.isa(items, 'quaternion')){
+			return this.setFromQuaternion(items);
+			}
+		if(my.isa(items, 'vector')){
+			return this.setFromVector(items);
+			}
+		if(my.xto([items.pitch, items.yaw, items.roll])){
+			return this.setFromEuler(items);
+			}
+		v = (my.xt(items.vector) || my.xt(items.v)) ? (items.vector || items.v) : false;
+		n = (my.xt(items.scalar) || my.xt(items.n)) ? (items.scalar || items.n || 0) : false;
+		x = (v) ? (v.x || 0) : items.x;
+		y = (v) ? (v.y || 0) : items.y;
+		z = (v) ? (v.z || 0) : items.z;
+		this.n = (my.isa(n, 'num')) ? n : this.n;
+		this.v.x = (my.isa(x, 'num')) ? x : this.v.x;
+		this.v.y = (my.isa(y, 'num')) ? y : this.v.y;
+		this.v.z = (my.isa(z, 'num')) ? z : this.v.z;
+		return this;
+		};
+/**
+Set the values for this quaternion based on the values of the argument quaternion
+@method setFromQuaternion
+@param {Quaternion} item Reference quaternion
+@return This
+@chainable
+**/
+	my.Quaternion.prototype.setFromQuaternion = function(item){
 		if(my.isa(item, 'quaternion')){
-			return my.newQuaternion({
-				n: this.n + item.n,
-				v: my.newVector({
-					x: this.v.x + item.v.x,
-					y: this.v.y + item.v.y,
-					z: this.v.z + item.v.z,
-					}),
-				});
+			this.n = item.n;
+			this.v.x = item.v.x;
+			this.v.y = item.v.y;
+			this.v.z = item.v.z;
+			return this;
 			}
-		console.log('Quaternion.getQuaternionAdd() error: argument is not a Quaternion object');
+		console.log('Quaternion.setFromQuaternion() error: argument is not a Quaternion object');
 		return this;
 		};
 /**
-Subtract a quaternion from this quaternion
-@method getQuaternionSubtract
-@param {Quaternion} item Quaternion to be subtracted from this quaternion
-@return New quaternion on success; this, otherwise
+Set the values for this quaternion based on the values of the reference vector
+@method setFromVector
+@param {Vector} item Reference vector
+@return This
+@chainable
 **/
-	my.Quaternion.prototype.getQuaternionSubtract = function(item){
-		if(my.isa(item, 'quaternion')){
-			return my.newQuaternion({
-				n: this.n - item.n,
-				v: my.newVector({
-					x: this.v.x - item.v.x,
-					y: this.v.y - item.v.y,
-					z: this.v.z - item.v.z,
-					}),
-				});
+	my.Quaternion.prototype.setFromVector = function(item){
+		if(my.isa(item, 'vector')){
+			this.n = 0;
+			this.v.x = item.x;
+			this.v.y = item.y;
+			this.v.z = item.z;
+			return this;
 			}
-		console.log('Quaternion.getQuaternionSubtract() error: argument is not a Quaternion object');
-		return this;
-		};
-/**
-Multiply quaternion by a scalar value
-@method getScalarMultiply
-@param {Number} item Value to multiply quaternion by
-@return New quaternion on success; this, otherwise
-**/
-	my.Quaternion.prototype.getScalarMultiply = function(item){
-		if(my.isa(item,'num')){
-			return my.newQuaternion({
-				n: this.n * item,
-				v: my.newVector({
-					x: this.v.x * item,
-					y: this.v.y * item,
-					z: this.v.z * item,
-					}),
-				});
-			}
-		console.log('Quaternion.getScalarMultiply() error: argument is not a number');
-		return this;
-		};
-/**
-Divide quaternion by a scalar value
-@method getScalarDivide
-@param {Number} item Value to divide quaternion by
-@return New quaternion on success; this, otherwise
-**/
-	my.Quaternion.prototype.getScalarDivide = function(item){
-		if(my.isa(item,'num') && item !== 0){
-			return my.newQuaternion({
-				n: this.n / item,
-				v: my.newVector({
-					x: this.v.x / item,
-					y: this.v.y / item,
-					z: this.v.z / item,
-					}),
-				});
-			}
-		console.log('Quaternion.getScalarDivide() error: argument is not a number, or is zero');
+		console.log('Quaternion.setFromVector() error: argument is not a Vector object');
 		return this;
 		};
 /**
@@ -2002,68 +1874,6 @@ _Quaternion multiplication is not comutative - arithmetic is this*item, not item
 			return this;
 			}
 		console.log('Quaternion.quaternionMultiply() error: argument is not a Quaternion object');
-		return this;
-		};
-/**
-Multiply this quaternion by a second quaternion
-
-_Quaternion multiplication is not comutative - arithmetic is this*item, not item*this_
-@method getQuaternionMultiply
-@param {Quaternion} item Quaternion to multiply this quaternion by
-@return New Quaternion on success; this on failure
-@chainable
-**/
-	my.Quaternion.prototype.getQuaternionMultiply = function(item){
-		if(my.isa(item, 'quaternion')){
-			var n1 = this.n,
-				x1 = this.v.x,
-				y1 = this.v.y,
-				z1 = this.v.z,
-				n2 = item.n,
-				x2 = item.v.x,
-				y2 = item.v.y,
-				z2 = item.v.z,
-				q = my.newQuaternion({
-					n: (n1*n2) - (x1*x2) - (y1*y2) - (z1*z2),
-					v: my.newVector({
-						x: (n1*x2) + (x1*n2) + (y1*z2) - (z1*y2),
-						y: (n1*y2) + (y1*n2) + (z1*x2) - (x1*z2),
-						z: (n1*z2) + (z1*n2) + (x1*y2) - (y1*x2),
-						}),
-					});
-			return q;
-			}
-		console.log('Quaternion.getQuaternionMultiply() error: argument is not a Quaternion object');
-		return this;
-		};
-/**
-Multiply this quaternion by a Vector
-
-_Quaternion multiplication is not comutative - arithmetic is this*item, not item*this_
-@method getVectorMultiply
-@param {Vector} item Vector to multiply this quaternion by
-@return New quaternion on success; this, otherwise
-**/
-	my.Quaternion.prototype.getVectorMultiply = function(item){
-		if(my.isa(item, 'vector')){
-			var n1 = this.n,
-				x1 = this.v.x,
-				y1 = this.v.y,
-				z1 = this.v.z,
-				x2 = item.x,
-				y2 = item.y,
-				z2 = item.z,
-				q = my.newQuaternion({
-					n: -((x1*x2) + (y1*y2) + (z1*z2)),
-					v: my.newVector({
-						x: (n1*x2) + (y1*z2) - (z1*y2),
-						y: (n1*y2) + (z1*x2) - (x1*z2),
-						z: (n1*z2) + (x1*y2) - (y1*x2),
-						}),
-					});
-			return q;
-			}
-		console.log('Quaternion.getVectorMultiply() error: argument is not a Vector object');
 		return this;
 		};
 /**
@@ -2107,24 +1917,27 @@ Retrieve rotational component of this quaternion
 /**
 Retrieve axis component of this quaternion
 @method getAxis
-@return Normalized Vector
+@return Normalized Vector (scrawl.v Vector)
 **/
 	my.Quaternion.prototype.getAxis = function(){
-		var vector = this.getVector(),
+		var vector = my.v.set(this.v),
 			magnitude = this.getMagnitude();
 		return (magnitude !==0) ? vector.scalarDivide(magnitude) : vector;
 		};
 /**
 Rotate this quaternion by another quaternion
+
+_Quaternion multiplication is not comutative - arithmetic is item (representing the local rotation to be applied) * this, not this * item (for which, use quaternionMultiply)_
 @method quaternionRotate
 @param {Quaternion} item Quaternion to rotate this quaternion by
-@return Rotated quaternion; this, on failure
+@return This
+@chainable
 **/
 	my.Quaternion.prototype.quaternionRotate = function(item){
 		if(my.isa(item, 'quaternion')){
-			var conjugate = this.getConjugate(),
-				result = this.getQuaternionMultiply(item);
-			return result.quaternionMultiply(conjugate);
+			var q4 = my.workquat.q4.set(item),
+				q5 = my.workquat.q5.set(this);
+			return this.set(q4.quaternionMultiply(q5));
 			}
 		console.log('Quaternion.quaternionRotate() error: argument is not a Quaternion object');
 		return this;
@@ -2133,17 +1946,14 @@ Rotate this quaternion by another quaternion
 Rotate a Vector by this quaternion
 @method vectorRotate
 @param {Vector} item Vector to be rotated by this quaternion
-@return Rotated Vector; this, on failure
+@return Vector (amended argument); false on failure
 **/
 	my.Quaternion.prototype.vectorRotate = function(item){
 		if(my.isa(item, 'vector')){
-			var conjugate = this.getConjugate(),
-				temp = this.getVectorMultiply(item),
-				result = temp.quaternionMultiply(conjugate);
-			return result.getVector();
+			return item.rotate3d(this);
 			}
 		console.log('Quaternion.vectorRotate() error: argument is not a Vector object');
-		return this;
+		return false;
 		};
 /**
 Build a quaternion from Euler angle values
@@ -2152,43 +1962,67 @@ Argument object can be in the form, where all values (which default to 0) are in
 * {pitch:Number, yaw:Number, roll:Number}
 * {x:Number, y:Number, z:Number}
 * or a mixture of the two
-@method makeQuaternion
+@method makeFromEuler
 @param {Object} [items] Key:value Object argument for setting attributes
 @return New quaternion
 @example
-	var myQuart = scrawl.quaternion.makeQuaternion({
+	var myQuart = scrawl.quaternion.makeFromEuler({
 		roll: 30,
 		pitch: 90,
 		yaw: 125,
 		});
 **/
-	my.Quaternion.prototype.makeQuaternion = function(items){
+	my.Quaternion.prototype.makeFromEuler = function(items){
+console.log('makeFromEuler');
 		items = my.safeObject(items); 
 		var pitch = (items.pitch || items.x || 0) * my.radian,
 			yaw = (items.yaw || items.y || 0) * my.radian,
 			roll = (items.roll || items.z || 0) * my.radian,
-			qPitch = my.newQuaternion({
-				n: Math.cos(pitch/2),
-				v: my.newVector({
-					x: Math.sin(pitch/2),
-					}),
-				}),
-			qYaw = my.newQuaternion({
-				n: Math.cos(yaw/2),
-				v: my.newVector({
-					y: Math.sin(yaw/2),
-					}),
-				}),
-			qRoll = my.newQuaternion({
-				n: Math.cos(roll/2),
-				v: my.newVector({
-					z: Math.sin(roll/2),
-					}),
-				}),
-			qResult1 = qYaw.getQuaternionMultiply(qPitch),
-			qResult2 = qResult1.getQuaternionMultiply(qRoll);
-		qResult2.normalize();
-		return qResult2;
+			c1 = Math.cos(yaw/2),
+			c2 = Math.cos(roll/2),
+			c3 = Math.cos(pitch/2),
+			s1 = Math.sin(yaw/2),
+			s2 = Math.sin(roll/2),
+			s3 = Math.sin(pitch/2),
+			w = (c1 * c2 * c3) - (s1 * s2 * s3),
+			x = (s1 * s2 * c3) + (c1 * c2 * s3),
+			y = (s1 * c2 * c3) + (c1 * s2 * s3),
+			z = (c1 * s2 * c3) - (s1 * c2 * s3);
+		return my.newQuaternion({n: w, x: x, y: y, z: z});
+		};
+/**
+Update quaternion with Euler angle values
+
+Argument object can be in the form, where all values (which default to 0) are in degrees:
+* {pitch:Number, yaw:Number, roll:Number}
+* {x:Number, y:Number, z:Number}
+* or a mixture of the two
+@method setFromEuler
+@param {Object} [items] Key:value Object argument for setting attributes
+@return New quaternion
+@example
+	var myQuart = scrawl.quaternion.setFromEuler({
+		roll: 30,
+		pitch: 90,
+		yaw: 125,
+		});
+**/
+	my.Quaternion.prototype.setFromEuler = function(items){
+		items = my.safeObject(items); 
+		var pitch = (items.pitch || items.x || 0) * my.radian,
+			yaw = (items.yaw || items.y || 0) * my.radian,
+			roll = (items.roll || items.z || 0) * my.radian,
+			c1 = Math.cos(yaw/2),
+			c2 = Math.cos(roll/2),
+			c3 = Math.cos(pitch/2),
+			s1 = Math.sin(yaw/2),
+			s2 = Math.sin(roll/2),
+			s3 = Math.sin(pitch/2),
+			w = (c1 * c2 * c3) - (s1 * s2 * s3),
+			x = (s1 * s2 * c3) + (c1 * c2 * s3),
+			y = (s1 * c2 * c3) + (c1 * s2 * s3),
+			z = (c1 * s2 * c3) - (s1 * c2 * s3);
+		return this.set({n: w, x: x, y: y, z: z});
 		};
 /**
 Retrieve rotations (Euler angles) from a quaternion
@@ -2196,30 +2030,33 @@ Retrieve rotations (Euler angles) from a quaternion
 @return Object in the form {pitch:Number, yaw:Number, roll:Number}
 **/
 	my.Quaternion.prototype.getEulerAngles = function(){
-		var q00 = this.n * this.n;
-		var q11 = this.v.x * this.v.x;
-		var q22 = this.v.y * this.v.y;
-		var q33 = this.v.z * this.v.z;
-		var r11 = q00 + q11 - q22 - q33;
-		var r21 = 2 * ((this.v.x * this.v.y) + (this.n * this.v.z));
-		var r31 = 2 * ((this.v.x * this.v.z) - (this.n * this.v.y));
-		var r32 = 2 * ((this.v.y * this.v.z) + (this.n * this.v.x));
-		var r33 = q00 - q11 - q22 + q33;
-		var temp = Math.abs(r31);
-		var deg = 1/my.radian;
-		var result = {};
-		if(temp > 0.999999){
-			var r12 = 2 * ((this.v.x * this.v.y) - (this.n * this.v.z));
-			var r13 = 2 * ((this.v.x * this.v.z) + (this.n * this.v.y));
-			result.pitch = 0.0;
-			result.yaw = (-(Math.pi/2)*(r31/temp))*deg;
-			result.roll = (Math.atan2(-r12,(-r31*r13)))*deg;
+		var sqw = this.n * this.n,
+			sqx = this.v.x * this.v.x,
+			sqy = this.v.y * this.v.y,
+			sqz = this.v.z * this.v.z,
+			unit = sqw + sqx + sqy + sqz,
+			test = (this.v.x * this.v.y) + (this.v.z * this.n),
+			result = {pitch: 0, yaw: 0, roll: 0},
+			t0, t1;
+		if(test > 0.499999 * unit){
+			result.yaw = (2 * Math.atan2(this.v.x, this.n))/my.radian;
+			result.roll = (Math.PI/2)/my.radian;
+			result.pitch = 0;
+			return result;
 			}
-		else{
-			result.pitch = (Math.atan2(r32, r33))*deg;
-			result.yaw = (Math.asin(-r31))*deg;
-			result.roll = (Math.atan2(r21, r11))*deg;
+		if(test < -0.499999 * unit){
+			result.yaw = (-2 * Math.atan2(this.v.x, this.n))/my.radian;
+			result.roll = (-Math.PI/2)/my.radian;
+			result.pitch = 0;
+			return result;
 			}
+		t0 = (2 * this.v.y * this.n) - (2 * this.v.x * this.v.z);
+		t1 = sqx - sqy - sqz + sqw;
+		result.yaw = (Math.atan2(t0, t1))/my.radian;
+		result.roll = (Math.asin((2 * test)/unit))/my.radian;
+		t0 = (2 * this.v.x * this.n) - (2 * this.v.y * this.v.z);
+		t1 = sqy - sqx - sqz + sqw;
+		result.pitch = (Math.atan2(t0, t1))/my.radian;
 		return result;
 		};
 
@@ -2249,6 +2086,13 @@ Unique identifier for each object; default: computer-generated String based on O
 @type String
 **/		
 		this.name = my.makeName({name: items.name || '', type: this.type, target: this.classname});
+/**
+Vector work space - not included in defaults
+@property work
+@type Object
+@private
+**/		
+		this.work = {};
 		return this;
 		}
 	my.Base.prototype = Object.create(Object.prototype);
@@ -2360,6 +2204,19 @@ Turn the object into a JSON String
 **/
 	my.Base.prototype.parse = function(){
 		return JSON.parse(JSON.stringify(this));
+		};
+/**
+Restore workspece vector values to their current specified values
+@method resetWork
+@return always true
+@private
+**/
+	my.Base.prototype.resetWork = function(){
+		var keys = Object.keys(this.work);
+		for(var i = 0, iz = keys.length; i < iz; i++){
+			this.work[keys[i]].set(this[keys[i]]);
+			}
+		return true;
 		};
 
 /**
@@ -2528,15 +2385,25 @@ Position constructor hook function - core functionality
 		this.start = my.newVector({
 			x: (my.xt(items.startX)) ? items.startX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.startY)) ? items.startY : ((my.xt(temp.y)) ? temp.y : 0),
+			name: this.type+'.'+this.name+'.start',
 			});
+		this.work.start = my.newVector({name: this.type+'.'+this.name+'.work.start'}); 
 		temp = my.safeObject(items.handle);
 		this.handle = my.newVector({
 			x: (my.xt(items.handleX)) ? items.handleX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.handleY)) ? items.handleY : ((my.xt(temp.y)) ? temp.y : 0),
+			name: this.type+'.'+this.name+'.handle',
 			});
+		this.work.handle = my.newVector({name: this.type+'.'+this.name+'.work.handle'});
 		this.pivot = items.pivot || my.d[this.type].pivot;
 		this.scale = (my.isa(items.scale, 'num')) ? items.scale : my.d[this.type].scale;
 		this.roll = (my.isa(items.roll, 'num')) ? items.roll : my.d[this.type].roll;
+		this.flipReverse = (my.isa(items.flipReverse, 'bool')) ? items.flipReverse : my.d[this.type].flipReverse;
+		this.flipUpend = (my.isa(items.flipUpend, 'bool')) ? items.flipUpend : my.d[this.type].flipUpend;
+		this.lockX = (my.isa(items.lockX, 'bool')) ? items.lockX : my.d[this.type].lockX;
+		this.lockY = (my.isa(items.lockY, 'bool')) ? items.lockY : my.d[this.type].lockY;
+		this.offset = my.newVector({name: this.type+'.'+this.name+'.offset'});
+		this.offset.flag = false;
 		};
 /**
 Position constructor hook function - modified by animation module
@@ -2552,6 +2419,8 @@ Position constructor hook function - modified by path module
 	my.Position.prototype.pathPositionInit = function(items){};
 /**
 Augments Base.get(), to allow users to get values for start, startX, startY, handle, handleX, handleY
+
+For 'start' and 'handle', returns a copy of the Vector
 @method get
 @param {String} get Attribute key
 @return Attribute value
@@ -2564,12 +2433,6 @@ Augments Base.get(), to allow users to get values for start, startX, startY, han
 				case 'startY' : return this.start.y; break;
 				case 'handleX' : return this.handle.x; break;
 				case 'handleY' : return this.handle.y; break;
-				}
-			}
-		if(my.contains(['start', 'handle'], item)){
-			switch(item){
-				case 'start' : return this.start.getVector(); break;
-				case 'handle' : return this.handle.getVector(); break;
 				}
 			}
 		return (this.animationPositionGet(item) || my.Base.prototype.get.call(this, item));
@@ -2661,11 +2524,13 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 		a.start = my.newVector({
 			x: (my.xt(items.startX)) ? items.startX : ((my.xt(temp.x)) ? temp.x : a.start.x),
 			y: (my.xt(items.startY)) ? items.startY : ((my.xt(temp.y)) ? temp.y : a.start.y),
+			name: a.type+'.'+a.name+'.start',
 			});
 		temp = my.safeObject(items.handle);
 		a.handle = my.newVector({
 			x: (my.xt(items.handleX)) ? items.handleX : ((my.xt(temp.x)) ? temp.x : a.handle.x),
 			y: (my.xt(items.handleY)) ? items.handleY : ((my.xt(temp.y)) ? temp.y : a.handle.y),
+			name: a.type+'.'+a.name+'.handle',
 			});
 		a = this.animationPositionClone(a, items);
 		return a;
@@ -2687,9 +2552,10 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 @private
 **/
 	my.Position.prototype.getPivotOffsetVector = function(){
-		var result = this.handle.getVector(),
+		var result = this.work.handle,
 			height = this.targetHeight || this.height || this.get('height'),
 			width = this.targetWidth || this.width || this.get('width');
+//console.log(this.name, 'core getPivotOffsetVector', result);
 		return my.Position.prototype.calculatePOV(result, width, height, false);
 		};
 /**
@@ -2703,7 +2569,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 @private
 **/
 	my.Position.prototype.getCenteredPivotOffsetVector = function(){
-		var result = this.handle.getVector(),
+		var result = this.work.handle,
 			height = this.targetHeight || this.height || this.get('height'),
 			width = this.targetWidth || this.width || this.get('width');
 		return my.Position.prototype.calculatePOV(result, width, height, true);
@@ -2748,6 +2614,7 @@ Calculates the pixel values of the object's handle attribute
 @return Final offset values (as a Vector) to determine where sprite, cell or element drawing should start
 **/
 	my.Position.prototype.getOffsetStartVector = function(){
+		this.resetWork();
 		var sx = (my.isa(this.handle.x, 'str')) ? this.scale : 1,
 			sy = (my.isa(this.handle.y, 'str')) ? this.scale : 1,
 			myH = this.getPivotOffsetVector();
@@ -2779,7 +2646,7 @@ Takes into account lock flag settings
 			}
 		if(my.contains(my.spritenames, this.pivot)){
 			myP = my.sprite[this.pivot];
-			myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.start.getVector();
+			myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.start;
 			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 			return this;
@@ -2788,12 +2655,7 @@ Takes into account lock flag settings
 			var myCell = my.cell[cell],
 				myPad = my.pad[myCell.pad],
 				here = myPad.getMouse();
-			if(myPad.width !== myCell.actualWidth){
-				here.x /= (myPad.width/myCell.actualWidth);
-				}
-			if(myPad.height !== myCell.actualHeight){
-				here.y /= (myPad.height/myCell.actualHeight);
-				}
+			here = this.correctCoordinates(here, cell);
 			if(!my.xta([this.mouseX, this.mouseY])){
 				this.mouseX = this.start.x;
 				this.mouseY = this.start.y;
@@ -2806,6 +2668,30 @@ Takes into account lock flag settings
 				}
 			}
 		return this
+		};
+/**
+Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions
+
+Takes into account lock flag settings
+@method correctCoordinates
+@param {Object} coords An object containing x and y attributes
+@param {String} [cell] CELLNAME String
+@return Amended coordinate object
+**/
+	my.Position.prototype.correctCoordinates = function(coords, cell){
+		coords = my.safeObject(coords);
+		if(scrawl.xta([coords.x, coords.y])){
+			cell = (my.contains(my.cellnames, cell)) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
+			var pad = my.pad[cell.pad];
+			if(pad.width !== cell.actualWidth){
+				coords.x /= (pad.width/cell.actualWidth);
+				}
+			if(pad.height !== cell.actualHeight){
+				coords.y /= (pad.height/cell.actualHeight);
+				}
+			return coords;
+			}
+		return false
 		};
 
 /**
@@ -2830,6 +2716,7 @@ The core implementation of this object is a stub that supplies Pad objects with 
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		this.scale = (my.isa(items.scale, 'num')) ? items.scale : my.d[this.type].scale;
+		this.mouse = my.newVector({name: this.type+'.'+this.name+'.mouse'});
 		this.stacksPageElementConstructor(items);
 		return this;
 		}
@@ -2878,6 +2765,13 @@ The object's scale value - larger values increase the object's size
 @default 1
 **/
 		scale: 1,
+/**
+mouse vector
+@property mouse
+@type Vector
+@default {x:0, y:0, z:0}
+**/
+		mouse: {x:0, y:0, z:0},
 /**
 Current horizontal position of the mouse cursor in relation to the DOM element's top left corner
 @property mouseX
@@ -3034,24 +2928,17 @@ The returned object is a Vector containing the mouse cursor's current x and y co
 @return Vector containing localized mouse coordinates, with additional attributes
 **/
 	my.PageElement.prototype.getMouse = function(){
-		var result = my.newVector(),
-			maxX,
-			maxY,
-			mop = false;
-		if(!window.onmousemove){
-			window.onmousemove = my.handleMouseMove;
-			}
+		var maxX,
+			maxY;
+		this.mouse.active = false;
 		maxX = this.displayOffsetX + (this.width * this.scale);
 		maxY = this.displayOffsetY + (this.height * this.scale);
 		if(my.mouseX >= this.displayOffsetX && my.mouseX <= maxX && my.mouseY >= this.displayOffsetY && my.mouseY <= maxY){
-			mop = true;
+			this.mouse.active = true;
 			}
-		result.x = (mop) ? (my.mouseX - this.displayOffsetX) * (1/this.scale) : 0;
-		result.y = (mop) ? (my.mouseY - this.displayOffsetY) * (1/this.scale) : 0;
-		result.active = mop;
-		result.source = this.name;
-		result.type = this.type.toLowerCase();
-		return result;
+		this.mouse.x = (my.mouseX - this.displayOffsetX) * (1/this.scale);
+		this.mouse.y = (my.mouseY - this.displayOffsetY) * (1/this.scale);
+		return this.mouse;
 		};
 
 /**
@@ -3255,7 +3142,7 @@ Set the drawOrder attribute
 	scrawl.pad.mycanvas.addNewCell({
 		name: 'background',
 		});
-	scrawl.pad.mycanvas.setDrawOrder(['background', action']);
+	scrawl.pad.mycanvas.setDrawOrder(['background', 'action']);
 **/
 	my.Pad.prototype.setDrawOrder = function(order){
 		this.drawOrder = (my.xt(order)) ? [].concat(order) : [];
@@ -3806,7 +3693,9 @@ Cell constructor hook function - core module
 		this.source = my.newVector({
 			x: (my.xt(items.sourceX)) ? items.sourceX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.sourceY)) ? items.sourceY : ((my.xt(temp.y)) ? temp.y : 0),
+			name: this.type+'.'+this.name+'.source'
 			});
+		this.work.source = my.newVector({name: this.type+'.'+this.name+'.work.source'});
 		this.actualWidth = items.actualWidth || items.width || my.canvas[this.name].width;
 		this.actualHeight = items.actualHeight || items.height || my.canvas[this.name].height;
 		this.sourceWidth = this.actualWidth;
@@ -3918,6 +3807,9 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 			this.setDimensions(items);
 			}
 		this.animationCellSet(items);
+		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale])){
+			this.offset.flag = false;
+			}
 		return this;
 		};
 /**
@@ -3959,6 +3851,9 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 			}
 		if(my.xt(items.globalAlpha)){
 			this.globalAlpha += items.globalAlpha;
+			}
+		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale])){
+			this.offset.flag = false;
 			}
 		return this;
 		};
@@ -4155,8 +4050,10 @@ Cell copy helper function
 @private
 **/
 	my.Cell.prototype.prepareToCopyCell = function(engine){
-		if(!this.offset){
-			this.offset = this.getOffsetStartVector();
+		this.resetWork();
+		if(!this.offset.flag){
+			this.offset.set(this.getOffsetStartVector());
+			this.offset.flag = true;
 			}
 		(this.pivot) ? this.setStampUsingPivot(my.pad[this.pad].base) : this.pathPrepareToCopyCell();
 		this.rotateDestination(engine);
@@ -4930,10 +4827,10 @@ This has the effect of turning a set of disparate sprites into a single, coordin
 		if(item){
 			p = my.sprite[item] || (my.xt(my.point) ? my.point[item] : false);
 			if(p){
-				pStart = (p.type === 'Point') ? p.get('current') : p.start.getVector();
+				pStart = (p.type === 'Point') ? p.get('current') : p.start;
 				for(var i=0, z=this.sprites.length; i<z; i++){
 					sprite = my.sprite[this.sprites[i]];
-					sv = sprite.start.getVector();
+					sv = my.v.set(sprite.start);
 					sv.vectorSubtract(pStart);
 					sprite.set({
 						pivot: item,
@@ -4953,26 +4850,17 @@ Check all sprites in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getSpriteAt = function(items){
 		items = my.safeObject(items);
-		var coordinate = my.newVector(items),
+		var coordinate = my.v.set({x: (items.x || 0), y: (items.y || 0)}),
 			sprite,
-			pad,
 			cell,
 			result;
-		if(my.xta([items.source, items.type])){
-			pad = my[items.type][items.source];
-			cell = my.cell[this.cell];
-			if(pad.width !== cell.actualWidth){
-				coordinate.x /= (pad.width/cell.actualWidth);
-				}
-			if(pad.height !== cell.actualHeight){
-				coordinate.y /= (pad.height/cell.actualHeight);
-				}
-			}
+		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
 		this.sortSprites();
 		for(var i=this.sprites.length-1; i>=0; i--){
 			sprite = my.sprite[this.sprites[i]];
 			if(this.regionRadius){
-				result = sprite.start.getVectorSubtract(coordinate);
+				sprite.resetWork();
+				result = sprite.work.start.vectorSubtract(coordinate);
 				if(result.getMagnitude() > this.regionRadius){
 					continue;
 					}
@@ -4991,27 +4879,18 @@ Check all sprites in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getAllSpritesAt = function(items){
 		items = my.safeObject(items);
-		var coordinate = my.newVector(items),
+		var coordinate = my.v.set({x: (items.x || 0), y: (items.y || 0)}),
 			sprite,
-			pad,
 			cell,
 			result,
 			resArray = [];
-		if(my.xta([items.source,items.type])){
-			pad = my[items.type][items.source];
-			cell = my.cell[this.cell];
-			if(pad.width !== cell.actualWidth){
-				coordinate.x /= (pad.width/cell.actualWidth);
-				}
-			if(pad.height !== cell.actualHeight){
-				coordinate.y /= (pad.height/cell.actualHeight);
-				}
-			}
+		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
 		this.sortSprites();
 		for(var i=this.sprites.length-1; i>=0; i--){
 			sprite = my.sprite[this.sprites[i]];
 			if(this.regionRadius){
-				result = sprite.start.getVectorSubtract(coordinate);
+				sprite.resetWork();
+				result = sprite.work.start.vectorSubtract(coordinate);
 				if(result.getMagnitude() > this.regionRadius){
 					continue;
 					}
@@ -5227,7 +5106,7 @@ Allows users to:
 			}
 		this.collisionsSpriteSet(items);
 		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale])){
-			delete this.offset;
+			this.offset.flag = false;
 			}
 		return this;
 		};
@@ -5254,8 +5133,10 @@ Allows users to amend a sprite's Context object's values via the sprite, in addi
 			ctx.setDelta(items);
 			}
 		this.roll += items.roll || 0;
+		this.width += items.width || 0;
+		this.height += items.height || 0;
 		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale])){
-			delete this.offset;
+			this.offset.flag = false;
 			}
 		return this;
 		};
@@ -5334,8 +5215,9 @@ Stamp helper function - get handle offset values
 @private
 **/
 	my.Sprite.prototype.prepareStamp = function(){
-		if(!this.offset){
-			this.offset = this.getOffsetStartVector();
+		if(!this.offset.flag){
+			this.offset.set(this.getOffsetStartVector());
+			this.offset.flag = true;
 			}
 		return this.offset;
 		};
@@ -5545,24 +5427,6 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 		return this;
 		};
 /**
-Translate a Cell coordinate into a coordinate centered on this sprite's start coordinate
-@method getLocalCoordinate
-@param {Vector} items Cell coordinate
-@return Localised Vector coordinate
-**/
-	my.Sprite.prototype.getLocalCoordinate = function(items){
-		items = my.safeObject(items);
-		var original = my.newVector({x: items.x || 0, y: items.y || 0}),
-			offset = this.getPivotOffsetVector();
-		original.vectorSubtract(this.start);
-		original.scalarDivide(this.scale);
-		original.rotate(-this.roll);
-		original.x = (this.flipReverse) ? -original.x : original.x;
-		original.y = (this.flipUpend) ? -original.y : original.y;
-		original.vectorAdd(offset);
-		return original;
-		};
-/**
 Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)
 @method clearShadow
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -5603,28 +5467,16 @@ Set sprite's pivot to 'mouse'; set handles to supplied Vector value; set order t
 **/
 	my.Sprite.prototype.pickupSprite = function(items){
 		items = my.safeObject(items);
-		var coordinate = my.newVector(items),
-			pad,
-			cell;
-		if(my.xta([items.source, items.type])){
-			pad = my[items.type][items.source];
+		var coordinate = my.v.set({x: (items.x || 0), y: (items.y || 0)}),
 			cell = my.cell[my.group[this.group].cell];
-			if(pad.width !== cell.actualWidth){
-				coordinate.x /= (pad.width/cell.actualWidth);
-				}
-			if(pad.height !== cell.actualHeight){
-				coordinate.y /= (pad.height/cell.actualHeight);
-				}
-			}
-		if(my.xta([items.x, items.y])){
-			this.mouseX = coordinate.x || 0;
-			this.mouseY = coordinate.y || 0;
-			this.realPivot = this.pivot;
-			this.set({
-				pivot: 'mouse',
-				order: this.order + 9999,
-				});
-			}
+		coordinate = this.correctCoordinates(coordinate, cell);
+		this.mouseX = coordinate.x || 0;
+		this.mouseY = coordinate.y || 0;
+		this.realPivot = this.pivot;
+		this.set({
+			pivot: 'mouse',
+			order: this.order + 9999,
+			});
 		return this;
 		};
 /**
@@ -5663,20 +5515,20 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 		items = my.safeObject(items);
 		var	pad = my.pad[my.currentPad],
 			ctx = my.context[pad.current],
-			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [{x: (items.x || false), y: (items.y || false)}],
+			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
 			here,
 			result;
 		this.rotateCell(ctx);
 		here = this.prepareStamp();
 		ctx.beginPath();
 		ctx.rect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
-		for(var i=0, z=tests.length; i<z; i++){
-			result = ctx.isPointInPath(tests[i].x, tests[i].y);
+		for(var i = 0, iz = tests.length; i < iz; i += 2){
+			result = ctx.isPointInPath(tests[i], tests[i+1]);
 			if(result){
 				break;
 				}
 			}
-		return (result) ? tests[i] : false;
+		return (result) ? {x: tests[i], y: tests[i+1]} : false;
 		};
 
 /**
@@ -6097,6 +5949,16 @@ Swap start and end attributes
 		this.update();
 		return this;
 		};
+		
+	my.v = my.newVector({name: 'scrawl.v'});
+	my.workquat = {
+		q1: my.newQuaternion({name: 'scrawl.workquat.q1'}),
+		q2: my.newQuaternion({name: 'scrawl.workquat.q2'}),
+		q3: my.newQuaternion({name: 'scrawl.workquat.q3'}),
+		q4: my.newQuaternion({name: 'scrawl.workquat.q4'}),
+		q5: my.newQuaternion({name: 'scrawl.workquat.q5'}),
+		};
+	window.addEventListener('mousemove', my.handleMouseMove, false);
 		
 	return my;
 	}());

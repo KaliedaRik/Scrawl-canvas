@@ -10,8 +10,8 @@ The Collisions module adds support for detecting collisions between sprites
 
 @module scrawlCollisions
 **/
-
 var scrawl = (function(my){
+
 /**
 # window.scrawl
 
@@ -30,8 +30,20 @@ scrawlCollisions module adaptions to the Scrawl library object
 **/
 
 /**
+Collision vectors, for use in collision detection calculations
+@property scrawl.workcols
+@type Object 
+@value Object containing three vectors - v1, v2, v3
+@private
+**/
+	my.workcols = {
+		v1: my.newVector({name: 'scrawl.workcols.v1'}),
+		v2: my.newVector({name: 'scrawl.workcols.v2'}),
+		v3: my.newVector({name: 'scrawl.workcols.v3'}),
+		};
+/**
 A __general__ function which asks Cell objects to generate field collision tables
-@method buildFields
+@method scrawl.buildFields
 @param {Array} [items] Array of CELLNAME Strings - can also be a String
 @return Always true
 **/
@@ -161,14 +173,14 @@ Test will return:
 			myTest = items.test || 0,
 			x, 
 			y, 
-			coords = (items.coordinates) ? items.coordinates : [{x: items.x || 0, y: items.y || 0}], 
+			coords = (items.coordinates) ? items.coordinates : [items.x || 0, items.y || 0], 
 			pos,
 			d,
 			fieldLabel = this.get('fieldLabel');
 		d = my.imageData[fieldLabel];
-		for(var i=0, z=coords.length; i<z; i++){
-			x = Math.round(coords[i].x);
-			y = Math.round(coords[i].y);
+		for(var i = 0, iz = coords.length; i < iz; i += 2){
+			x = Math.round(coords[i]);
+			y = Math.round(coords[i+1]);
 			if(!my.isBetween(x, 0, d.width, true) || !my.isBetween(y, 0, d.height, true)){
 				return false;
 				break;
@@ -178,27 +190,27 @@ Test will return:
 				switch(myChannel){
 					case 'red' : 
 						if(d.data[pos] <= myTest){
-							return coords[i];
+							return {x: x, y: y};
 							}
 						break;
 					case 'green' : 
 						if(d.data[pos+1] <= myTest){
-							return coords[i];
+							return {x: x, y: y};
 							}
 						break;
 					case 'blue' : 
 						if(d.data[pos+2] <= myTest){
-							return coords[i];
+							return {x: x, y: y};
 							}
 						break;
 					case 'alpha' : 
 						if(d.data[pos+3] <= myTest){
-							return coords[i];
+							return {x: x, y: y};
 							}
 						break;
 					case 'anycolor' :
 						if(d.data[pos] <= myTest || d.data[pos+1] <= myTest || d.data[pos+2] <= myTest){
-							return coords[i];
+							return {x: x, y: y};
 							}
 						break;
 					}
@@ -253,12 +265,12 @@ Check all sprites in the Group against each other to see if they are in collisio
 			}
 		for(var i=0, z=this.sprites.length; i<z; i++){
 			if(cViz[this.sprites[i]]){
-				ts1 = my.sprite[this.sprites[i]].start;
 				for(var j=i+1, w=this.sprites.length; j<w; j++){
 					if(cViz[this.sprites[j]]){
-						ts2 = my.sprite[this.sprites[j]].start;
 						if(this.regionRadius){
-							tresult = ts1.getVectorSubtract(ts2).getMagnitude();
+							ts1 = my.workcols.v1.set(my.sprite[this.sprites[i]].start);
+							ts2 = my.workcols.v2.set(my.sprite[this.sprites[j]].start);
+							tresult = ts1.vectorSubtract(ts2).getMagnitude();
 							if(tresult > this.regionRadius){
 								continue;
 								}
@@ -321,12 +333,12 @@ Check all sprites in this Group against all sprites in the argument Group, to se
 				}
 			for(var i=0, z=this.sprites.length; i<z; i++){
 				if(cViz[this.sprites[i]]){
-					ts1 = my.sprite[this.sprites[i]].start;
 					for(var j=0, w=g.sprites.length; j<w; j++){
 						if(cViz[g.sprites[j]]){
-							ts2 = my.sprite[g.sprites[j]].start;
 							if(this.regionRadius){
-								tresult = ts1.getVectorSubtract(ts2).getMagnitude();
+								ts1 = my.workcols.v1.set(my.sprite[this.sprites[i]].start);
+								ts2 = my.workcols.v2.set(my.sprite[g.sprites[j]].start);
+								tresult = ts1.vectorSubtract(ts2).getMagnitude();
 								if(tresult > this.regionRadius){
 									continue;
 									}
@@ -504,70 +516,6 @@ Check this sprite's collision Vectors against a Cell object's collision field im
 			});
 		};
 /**
-Calculate an appropriate 'bounce' - altering the sprite's delta attribute values - following an adverse sprite.checkField() function result
-
-This method attempts to produce a realistic bounce away from both straight and curved surfaces
-@method Sprite.bounceOnFieldCollision
-@param {String} collision Collision point Vector
-@param {String} [cell] CELLNAME String of the Cell to be checked against
-@return This
-@chainable
-**/
-	my.Sprite.prototype.bounceOnFieldCollision = function(collision, cell){
-		var	myCell = (cell) ? my.cell[cell] : my.cell[my.group[this.group].cell],
-			start = this.start.getVector(),
-			collisionStartVector = collision.getVectorSubtract(start),//.scalarMultiply(1.1),
-			testVector,
-			topVector = collisionStartVector.getVector(),
-			bottomVector = collisionStartVector.getVector(),
-			topFlag = false,
-			bottomFlag = false,
-			fieldAngle,
-			turn,
-			directionAngle,
-			fieldTest = this.get('fieldTest'),
-			fieldChannel = this.get('fieldChannel'),
-			counter = 0,
-			cfa = function(){
-				var r = myCell.checkFieldAt({
-					coordinates: [testVector.vectorAdd(start)],
-					test: fieldTest,
-					channel: fieldChannel,
-					});
-				return r;
-				};
-		do{
-			testVector = topVector.rotate(-10).getVector();
-			topFlag = cfa();
-			counter++;
-			}while(counter < 36 && topFlag !== true);
-		counter = 0;
-		do{
-			testVector = topVector.rotate(1).getVector();
-			topFlag = cfa();
-			counter++;
-			}while(counter <= 10 && topFlag === true);
-		counter = 0;
-		do{
-			testVector = bottomVector.rotate(10).getVector();
-			bottomFlag = cfa();
-			counter++;
-			}while(counter < 36 && bottomFlag !== true);
-		counter = 0;
-		do{
-			testVector = bottomVector.rotate(-1).getVector();
-			bottomFlag = cfa();
-			counter++;
-			}while(counter <= 10 && bottomFlag === true);
-		topVector.vectorAdd(start);
-		bottomVector.vectorAdd(start);
-		fieldAngle = (Math.atan2((topVector.y - bottomVector.y), (topVector.x - bottomVector.x))/my.radian);
-		directionAngle = Math.atan2(this.delta.y,this.delta.x)/my.radian;
-		turn = (fieldAngle - directionAngle) * 2;
-		this.delta.rotate(turn);
-		return this;
-		};
-/**
 Calculate the current positions of this sprite's collision Vectors, taking into account the sprite's current position, roll and scale
 @method Sprite.getCollisionPoints
 @return Array of coordinate Vectors
@@ -583,10 +531,10 @@ Calculate the current positions of this sprite's collision Vectors, taking into 
 			}
 		c = this.collisionVectors || false;
 		if(c){
-			for(var i=0, z=c.length; i<z; i++){
-				v = c[i].getVector();
-				v.x = (this.flipReverse) ? -v.x : v.x;
-				v.y = (this.flipUpend) ? -v.y : v.y;
+			for(var i = 0, iz = c.length; i < iz; i += 2){
+				v = my.v;
+				v.x = (this.flipReverse) ? -c[i] : c[i];
+				v.y = (this.flipUpend) ? -c[i+1] : c[i+1];
 				if(this.roll){
 					v.rotate(this.roll);
 					}
@@ -594,7 +542,8 @@ Calculate the current positions of this sprite's collision Vectors, taking into 
 					v.scalarMultiply(this.scale);
 					}
 				v.vectorAdd(this.start);
-				p.push(v);
+				p.push(v.x);
+				p.push(v.y);
 				}
 			return p;
 			}
@@ -611,36 +560,31 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @private
 **/
 	my.Sprite.prototype.buildCollisionVectors = function(items){
-		var	p, 
-			o = this.getPivotOffsetVector(),
+		var	p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints, 
+			o = this.getOffsetStartVector().reverse(),
 			w = this.width,
-			h = this.height;
-		if(my.xt(items)){
-			p = this.parseCollisionPoints(items);
-			}
-		else{
-			p = this.collisionPoints;
-			}
-		this.collisionVectors = [];
-		for(var i=0, z=p.length; i<z; i++){
+			h = this.height,
+			c = [];
+		for(var i = 0, iz = p.length; i < iz; i++){
 			if(my.isa(p[i], 'str')){
 				switch(p[i]) {
-					case 'start' : 	this.collisionVectors.push(my.newVector()); break;
-					case 'N' : 		this.collisionVectors.push(my.newVector({	x: (w/2)-o.x,	y: -o.y,		})); break;
-					case 'NE' : 	this.collisionVectors.push(my.newVector({	x: w-o.x,		y: -o.y,		})); break;
-					case 'E' : 		this.collisionVectors.push(my.newVector({	x: w-o.x,		y: (h/2)-o.y,	})); break;
-					case 'SE' : 	this.collisionVectors.push(my.newVector({	x: w-o.x,		y: h-o.y,		})); break;
-					case 'S' : 		this.collisionVectors.push(my.newVector({	x: (w/2)-o.x,	y: h-o.y,		})); break;
-					case 'SW' : 	this.collisionVectors.push(my.newVector({	x: -o.x,		y: h-o.y,		})); break;
-					case 'W' : 		this.collisionVectors.push(my.newVector({	x: -o.x,		y: (h/2)-o.y,	})); break;
-					case 'NW' : 	this.collisionVectors.push(my.newVector({	x: -o.x,		y: -o.y,		})); break;
-					case 'center' :	this.collisionVectors.push(my.newVector({	x: (w/2)-o.x,	y: (h/2)-o.y,	})); break;
+					case 'start' : 	c.push(0); 				c.push(0); 				break;
+					case 'N' : 		c.push((w/2) - o.x); 	c.push(-o.y); 			break;
+					case 'NE' : 	c.push(w - o.x);		c.push(-o.y); 			break;
+					case 'E' : 		c.push(w - o.x);		c.push((h/2) - o.y); 	break;
+					case 'SE' : 	c.push(w - o.x);		c.push(h - o.y); 		break;
+					case 'S' : 		c.push((w/2) - o.x);	c.push(h - o.y); 		break;
+					case 'SW' : 	c.push(-o.x);			c.push(h - o.y); 		break;
+					case 'W' : 		c.push(-o.x);			c.push((h/2) - o.y); 	break;
+					case 'NW' : 	c.push(-o.x);			c.push(-o.y); 			break;
+					case 'center' :	c.push((w/2) - o.x);	c.push((h/2) - o.y); 	break;
 					}
 				}
 			else if(my.isa(p[i], 'vector')){
-				this.collisionVectors.push(p[i]);
+				c.push(p[i].x);		c.push(p[i].y);
 				}
 			}
+		this.collisionVectors = c;
 		return this;
 		};
 /**

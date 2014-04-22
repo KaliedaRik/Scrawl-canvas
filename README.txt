@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.0.0 - 5 April 2014
+*	version 3.1.0 - 22 April 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -18,7 +18,7 @@ A. PURPOSE AND FEATURES
 Scrawl.js is  JavaScript library which adds an API for handling and manipulating 
 HTML5 <canvas> elements in the DOM.
 
-the library is modular - only load the JavaScript that is needed, nothing more. Scrawl core
+The library is modular - only load the JavaScript that is needed, nothing more. Scrawl core
 is 60kb, much less when gzipped. Modules can be loaded asynchronously, saving load time.
 
 Scrawl uses the ’2d’ context with each canvas element.
@@ -84,42 +84,42 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 3.0.0 released 5 April 2014
+VERSION 3.1.0 released 22 April 2014
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (60kb)
+		- scrawlCore-min.js (59kb)
 		- scrawlAnimation-min.js (14kb)
 		- scrawlBlock-min.js (3kb)
-		- scrawlCollisions-min.js (11kb)
+		- scrawlCollisions-min.js (10kb)
 		- scrawlColor-min.js (5kb)
 		- scrawlFilters-min.js (9kb)
-		- scrawlImages-min.js (17kb)
-		- scrawlPath-min.js (22kb)
-		- scrawlPathFactories-min.js (7kb)
+		- scrawlImages-min.js (19kb)
+		- scrawlPath-min.js (23kb)
+		- scrawlPathFactories-min.js (8kb)
 		- scrawlPhrase-min.js (12kb)
-		- scrawlPhysics-min.js (9kb)
+		- scrawlPhysics-min.js (10kb)
 		- scrawlSaveLoad-min.js (8kb)
 		- scrawlShape-min.js (8kb)
-		- scrawlStacks-min.js (22kb)
+		- scrawlStacks-min.js (24kb)
 		- scrawlWheel-min.js (5kb)
 
 		Development:
-		- scrawlCore.js (188kb)
-		- scrawlAnimation.js (40kb)
-		- scrawlBlock.js (9kb)
-		- scrawlCollisions.js (24kb)
+		- scrawlCore.js (185kb)
+		- scrawlAnimation.js (38kb)
+		- scrawlBlock.js (8kb)
+		- scrawlCollisions.js (22kb)
 		- scrawlColor.js (13kb)
 		- scrawlFilters.js (32kb)
-		- scrawlImages.js (56kb)
+		- scrawlImages.js (49kb)
 		- scrawlPath.js (60kb)
 		- scrawlPathFactories.js (17kb)
 		- scrawlPhrase.js (33kb)
-		- scrawlPhysics.js (22kb)
+		- scrawlPhysics.js (23kb)
 		- scrawlSaveLoad.js (16kb)
-		- scrawlShape.js (20kb)
-		- scrawlStacks.js (50kb)
+		- scrawlShape.js (21kb)
+		- scrawlStacks.js (53kb)
 		- scrawlWheel.js (14kb)
 
 		Documentation:
@@ -141,6 +141,10 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 3.1.0 uploaded 22 April 2014
+	- extended filters to include sprites
+	- improved stack handling
+	- improved memory management
 VERSION 3.0.0 uploaded 5 April 2014
 	- modularized the entire library
 	- added functionality to allow for asynchronous loading of modules

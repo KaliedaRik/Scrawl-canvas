@@ -120,7 +120,7 @@ Augments Sprite.set()
 		items = (my.isa(items,'obj')) ? items : {};
 		if(my.xt(items.data)){
 			this.dataSet = this.buildDataSet(this.data);
-			delete this.offset;
+			this.offset.flag = false;
 			}
 		return this;
 		};
@@ -592,16 +592,59 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 		var	pad = my.pad[my.currentPad], 
 			cell = my.cell[pad.current].name,
 			ctx = my.context[pad.current],
-			tests = (my.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}],
+			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
 			result = false;
 		this.doOutline(ctx, cell);
-		for(var i=0, z=tests.length; i<z; i++){
-			result = ctx.isPointInPath(tests[i].x, tests[i].y);
+		for(var i = 0, z = tests.length; i < z; i += 2){
+			result = ctx.isPointInPath(tests[i], tests[i+1]);
 			if(result){
 				break;
 				}
 			}
-		return (result) ? tests[i] : false;
+		return (result) ? {x: tests[i], y: tests[i+1]} : false;
+		};
+/**
+Collision detection helper function
+
+Parses the collisionPoints array to generate coordinate Vectors representing the sprite's collision points
+@method buildCollisionVectors
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
+	my.Shape.prototype.buildCollisionVectors = function(items){
+		if(this.isLine){
+			my.Sprite.prototype.buildCollisionVectors.call(this, items);
+			}
+		else{
+			var	p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints, 
+				o = this.getOffsetStartVector().reverse(),
+				w = this.width/2,
+				h = this.height/2,
+				c = [];
+			for(var i = 0, iz = p.length; i < iz; i++){
+				if(my.isa(p[i], 'str')){
+					switch(p[i]) {
+						case 'start' : 	c.push(0); 			c.push(0); 			break;
+						case 'N' : 		c.push(-o.x); 		c.push(-h - o.y); 	break;
+						case 'NE' : 	c.push(w - o.x);	c.push(-h - o.y); 	break;
+						case 'E' : 		c.push(w - o.x);	c.push(-o.y); 		break;
+						case 'SE' : 	c.push(w - o.x);	c.push(h - o.y); 	break;
+						case 'S' : 		c.push(-o.x);		c.push(h - o.y); 	break;
+						case 'SW' : 	c.push(-w - o.x);	c.push(h - o.y); 	break;
+						case 'W' : 		c.push(-w - o.x);	c.push(-o.y); 		break;
+						case 'NW' : 	c.push(-w - o.x);	c.push(-h - o.y); 	break;
+						case 'center' :	c.push(-o.x);		c.push(-o.y); 		break;
+						}
+					}
+				else if(my.isa(p[i], 'vector')){
+					c.push(p[i].x);		c.push(p[i].y);
+					}
+				}
+			this.collisionVectors = c;
+			}
+		return this;
 		};
 
 	return my;

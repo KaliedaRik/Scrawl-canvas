@@ -84,19 +84,6 @@ A __factory__ function to generate new Block sprites
 	my.Block.prototype.classname = 'spritenames';
 	my.d.Block = {};
 	my.mergeInto(my.d.Block, my.d.Sprite);
-/*	my.Block.prototype.set = function(items){
-		my.Sprite.prototype.set.call(this, items);
-		this.width = items.width || this.width;
-		this.height = items.height || this.height;
-		return this;
-		};
-	my.Block.prototype.setDelta = function(items){
-		my.Sprite.prototype.setDelta.call(this, items);
-		if(my.xt(items.width)){this.width += items.width;}
-		if(my.xt(items.height)){this.height += items.height;}
-		return this;
-		};
-*/
 /**
 Stamp helper function - perform a 'clip' method draw
 @method clip

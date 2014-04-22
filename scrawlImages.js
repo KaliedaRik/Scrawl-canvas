@@ -35,21 +35,42 @@ scrawlImages module adaptions to the Scrawl library object
 A __general__ function to generate ScrawlImage wrapper objects for &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; elements identified by class string
 @method getImagesByClass
 @param {String} classtag Class string value of DOM objects to be imported into the scrawl library
+@param {Boolean} [kill] when set to true, the &lt;img&gt; elements will be removed from the DOM when imported into the library
 @return Array of String names; false on failure
 **/
-	my.getImagesByClass = function(classtag){
+	my.getImagesByClass = function(classtag, kill){
 		if(classtag){
 			var names = [],
-				s = document.getElementsByClassName(classtag);
+				s = document.getElementsByClassName(classtag),
+				myImg;
 			if(s.length > 0){
-				for(var i=0, z=s.length; i<z; i++){
-					var myImg = my.newImage({
-						element: s[i],							//unrecorded flag for triggering Image stuff
+				for(var i = s.length; i > 0; i--){
+					myImg = my.newImage({
+						element: s[i - 1],
+						removeImageFromDOM: kill || true,
 						});
 					names.push(myImg.name);
 					}
 				return names;
 				}
+			}
+		console.log('my.getImagesByClass() failed to find any <img> elements of class="'+classtag+'" on the page');
+		return false;
+		};
+/**
+A __general__ function to generate a ScrawlImage wrapper object for an &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; element identified by an id string
+@method getImageById
+@param {String} idtag Id string value of DOM object to be imported into the scrawl library
+@param {Boolean} [kill] when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library
+@return String name; false on failure
+**/
+	my.getImageById = function(idtag, kill){
+		if(idtag){
+			var myImg = my.newImage({
+				element: document.getElementById(idtag),							//unrecorded flag for triggering Image stuff
+				removeImageFromDOM: kill || true,
+				});
+			return myImg.name;
 			}
 		console.log('my.getImagesByClass() failed to find any <img> elements of class="'+classtag+'" on the page');
 		return false;
@@ -97,6 +118,113 @@ A __factory__ function to generate new AnimSheet objects
 	my.pushUnique(my.nameslist, 'animnames');
 	my.pushUnique(my.sectionlist, 'anim');
 
+/**
+A __factory__ function to convert a sprite into a Picture sprite
+
+Argument attributes can include any sprite positioning and styling values, alongside the following flag:
+
+* __convert__ - when set to true, existing sprite will be deleted; default: false
+
+If no name attribute is supplied in the argument object, the new Picture sprite will be given the name: SPRITENAME+'_picture'
+@method Sprite.convertToPicture
+@param {Object} items Key:value Object argument for setting attributes
+@return Picture sprite object
+**/
+	my.Sprite.prototype.convertToPicture = function(items){
+		items = my.safeObject(items);
+		var image,
+			cell,
+			ctx;
+		cell = my.cell[my.group[this.group].cell];
+		ctx = my.context[my.group[this.group].cell];
+		image = my.prepareConvert(cell, ctx, this);
+		items.name = items.name || this.name+'_picture';
+		items.group = items.group || this.group;
+		if(items.convert){
+			my.deleteSprite([this.name]);
+			}
+		return my.doConvert(image, items);
+		};
+/**
+A __factory__ function to convert a group of sprites into a single Picture sprite
+
+Argument attributes can include any sprite positioning and styling values, alongside the following flag:
+
+* __convert__ - when set to true, existing sprites in the group will be deleted; default: false
+
+If no name attribute is supplied in the argument object, the new Picture sprite will be given the name: GROUPNAME+'_sprite'
+@method Group.convertToSprite
+@param {Object} items Key:value Object argument for setting attributes
+@return Picture sprite object; false if no sprites contained in group
+**/
+	my.Group.prototype.convertToSprite = function(items){
+		items = my.safeObject(items);
+		var image,
+			cell,
+			ctx;
+		if(this.sprites.length > 0){
+			cell = my.cell[this.cell];
+			ctx = my.context[this.cell];
+			image = my.prepareConvert(cell, ctx, this);
+			items.name = items.name || this.name+'_sprite';
+			items.group = items.group || this.name;
+			if(items.convert){
+				my.deleteSprite(this.sprites);
+				}
+			return my.doConvert(image, items);
+			}
+		return false
+		};
+/**
+Helper function for convert functions
+@method prepareConvert
+@return ImageData object
+@private
+**/
+	my.prepareConvert = function(cell, ctx, obj){
+		var left = cell.actualWidth,
+			right = 0,
+			top = cell.actualHeight,
+			bottom = 0,
+			image,
+			data,
+			pos;
+		cell.clear();
+		obj.stamp();
+		image = ctx.getImageData(0, 0, cell.actualWidth, cell.actualHeight);
+		data = image.data;
+		for(var i = 0, iz = cell.actualHeight; i < iz; i++){
+			for(var j = 0, jz = cell.actualWidth; j < jz; j++){
+				pos = (((i * cell.actualWidth) + j) * 4) + 3;
+				if(data[pos] > 0){
+					top = (top > i) ? i : top;
+					bottom = (bottom < i) ? i : bottom;
+					left = (left > j) ? j : left;
+					right = (right < j) ? j : right;
+					}
+				}
+			}
+		image = ctx.getImageData(left, top, (right - left + 1), (bottom - top + 1));
+		cell.clear();
+		return image;
+		};
+/**
+Helper function for convert functions
+@method doConvert
+@return Picture sprite object
+@private
+**/
+	my.doConvert = function(image, items){
+		my.cv.width = image.width;
+		my.cv.height = image.height;
+		my.cvx.putImageData(image, 0, 0);
+		items.element = my.cv.toDataURL();
+		items.width = image.width;
+		items.height = image.height;
+		image = new my.ScrawlImage(items);
+		items.source = image.name;
+		return my.newPicture(items);
+		};
 /**
 # Pattern
 	
@@ -351,10 +479,10 @@ Alias for Pattern.makeDesign()
 			this.source = items.source || false;
 			this.imageType = this.sourceImage(items.source) || false;
 			if(this.source){
-				if(this.imageType === 'img'){
+				if(this.imageType === 'img' || this.imageType === 'video'){
 					s = my.image[this.source];
-					w = s.get('width');
-					h = s.get('height');
+					w = s.width;
+					h = s.height;
 					x = 0;
 					y = 0;
 					}
@@ -379,6 +507,10 @@ Alias for Pattern.makeDesign()
 				this.copyWidth = items.copyWidth || w;
 				this.copyHeight = items.copyHeight || h;
 				}
+			this.filters = my.safeObject(items.filters);
+			this.filterKeys = Object.keys(this.filters);
+			this.checkSum = 0;
+			this.calculateFilters = false;
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].sprites, this.name);
 			return this;
@@ -472,6 +604,36 @@ Image display - height, in pixels, from copy start point
 **/
 		copyHeight: 0,
 /**
+Object consisting of filter name keys and filter argument objects
+@property filters
+@type Object
+@default Object
+**/
+		filters: {},
+/**
+Array of this.filters{} attribute keys
+@property filterKeys
+@type Array
+@default Array
+@private
+**/
+		filterKeys: [],
+/**
+Checksum - used to determine whether filters need to be calculated
+@property checkSum
+@type Number
+@default 0
+**/
+		checkSum: 0,
+/**
+Dirty filter flag - if true, recalculate filtered image
+@property calculateFilters
+@type Boolean
+@default false
+@private
+**/
+		calculateFilters: false,
+/**
 Asynchronous loading of image file from the server - path/to/image file
 
 Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
@@ -515,13 +677,6 @@ Augments Sprite.set()
 		if(my.xt(this.animSheet)){
 			my.anim[this.animSheet].set(items);
 			}
-		items = my.safeObject(items);
-		this.width = items.width || this.width;
-		this.height = items.height || this.height;
-		this.copyX = items.copyX || this.copyX;
-		this.copyY = items.copyY || this.copyY;
-		this.copyWidth = items.copyWidth || this.copyWidth;
-		this.copyHeight = items.copyHeight || this.copyHeight;
 		return this;
 		};
 /**
@@ -534,8 +689,6 @@ Augments Sprite.setDelta()
 	my.Picture.prototype.setDelta = function(items){
 		my.Sprite.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
-		if(my.xt(items.width)){this.width += items.width;}
-		if(my.xt(items.height)){this.height += items.height;}
 		if(my.xt(items.copyX)){this.copyX += items.copyX;}
 		if(my.xt(items.copyY)){this.copyY += items.copyY;}
 		if(my.xt(items.copyWidth)){this.copyWidth += items.copyWidth;}
@@ -624,8 +777,12 @@ Constructor and clone helper function
 @private
 **/
 	my.Picture.prototype.sourceImage = function(){
+		var home;
 		if(this.get('animSheet') && my.contains(my.imagenames, this.source)){return 'animation';}
-		if(my.contains(my.imagenames, this.source)){return 'img';}
+		if(my.contains(my.imagenames, this.source)){
+			home = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
+			return (my.isa(home, 'video')) ? 'video' : 'img';
+			}
 		if(my.contains(my.cellnames, this.source)){return 'canvas';}
 		return false;
 		};
@@ -712,14 +869,13 @@ Stamp helper function - perform a 'fill' method draw
 @private
 **/
 	my.Picture.prototype.fill = function(ctx, cell){
-		var here;
-		if(this.imageType){
+		var here,
+			data = this.getImage();
+		if(data.image){
 			here = this.prepareStamp();
 			this.rotateCell(ctx);
 			my.cell[cell].setEngine(this);
-			try{
-				ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, (this.width * this.scale), (this.height * this.scale));
-				}catch(e){console.log('Picture '+this.name+' experienced a "fill" drawImage glitch');}
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, (this.width * this.scale), (this.height * this.scale));
 			}
 		return this;
 		};
@@ -735,8 +891,9 @@ Stamp helper function - perform a 'drawFill' method draw
 	my.Picture.prototype.drawFill = function(ctx, cell){
 		var here,
 			width,
-			height;
-		if(this.imageType){
+			height,
+			data = this.getImage();
+		if(data.image){
 			here = this.prepareStamp();
 			width = this.width * this.scale;
 			height = this.height * this.scale;
@@ -744,9 +901,7 @@ Stamp helper function - perform a 'drawFill' method draw
 			my.cell[cell].setEngine(this);
 			ctx.strokeRect(here.x, here.y, width, height);
 			this.clearShadow(ctx, cell);
-			try{
-				ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, width, height);
-				}catch(e){console.log('Picture '+this.name+' experienced a "drawFill" drawImage glitch');}
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, width, height);
 			}
 		return this;
 		};
@@ -762,16 +917,15 @@ Stamp helper function - perform a 'fillDraw' method draw
 	my.Picture.prototype.fillDraw = function(ctx, cell){
 		var here,
 			width,
-			height;
-		if(this.imageType){
+			height,
+			data = this.getImage();
+		if(data.image){
 			here = this.prepareStamp();
 			width = this.width * this.scale;
 			height = this.height * this.scale;
 			this.rotateCell(ctx);
 			my.cell[cell].setEngine(this);
-			try{
-				ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, width, height);
-				}catch(e){console.log('Picture '+this.name+' experienced a "fillDraw" drawImage glitch');}
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, width, height);
 			this.clearShadow(ctx, cell);
 			ctx.strokeRect(here.x, here.y, width, height);
 			}
@@ -789,16 +943,15 @@ Stamp helper function - perform a 'sinkInto' method draw
 	my.Picture.prototype.sinkInto = function(ctx, cell){
 		var here,
 			width,
-			height;
-		if(this.imageType){
+			height,
+			data = this.getImage();
+		if(data.image){
 			here = this.prepareStamp();
 			width = this.width * this.scale;
 			height = this.height * this.scale;
 			this.rotateCell(ctx);
 			my.cell[cell].setEngine(this);
-			try{
-				ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, width, height);
-				}catch(e){console.log('Picture '+this.name+' experienced a "sinkInto" drawImage glitch');}
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, width, height);
 			ctx.strokeRect(here.x, here.y, width, height);
 			}
 		return this;
@@ -815,17 +968,16 @@ Stamp helper function - perform a 'floatOver' method draw
 	my.Picture.prototype.floatOver = function(ctx, cell){
 		var here,
 			width,
-			height;
-		if(this.imageType){
+			height,
+			data = this.getImage();
+		if(data.image){
 			here = this.prepareStamp();
 			width = this.width * this.scale;
 			height = this.height * this.scale;
 			this.rotateCell(ctx);
 			my.cell[cell].setEngine(this);
 			ctx.strokeRect(here.x, here.y, width, height);
-			try{
-				ctx.drawImage(this.getImage(), this.copyX, this.copyY, this.copyWidth, this.copyHeight, here.x, here.y, width, height);
-				}catch(e){console.log('Picture '+this.name+' experienced a "floatOver" drawImage glitch');}
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, width, height);
 			}
 		return this;
 		};
@@ -838,23 +990,23 @@ Load the Picture sprite's image data (via JavaScript getImageData() function) in
 **/
 	my.Picture.prototype.getImageData = function(label){
 		label = (my.xt(label)) ? label : 'data';
-		var	img = this.getImage(),
+		var	data = this.getImage(),
 			myImage;
-		if(this.imageType === 'animation'){
-			myImage = my.image[this.source];
-			my.cv.width = myImage.get('width');
-			my.cv.height = myImage.get('height');
-			my.cvx.drawImage(img, 0, 0);
+		if(data.image){
+			if(this.imageType === 'animation'){
+				myImage = my.image[this.source];
+				my.cv.width = myImage.get('width');
+				my.cv.height = myImage.get('height');
+				my.cvx.drawImage(data.image, 0, 0);
+				}
+			else{
+				my.cv.width = this.copyWidth;
+				my.cv.height = this.copyHeight;
+				my.cvx.drawImage(data.image, this.copyX, this.copyY, this.copyWidth, this.copyHeight, 0, 0, this.copyWidth, this.copyHeight);
+				}
+			this.imageData = this.name+'_'+label;
+			my.imageData[this.imageData] = my.cvx.getImageData(0, 0, my.cv.width, my.cv.height);
 			}
-		else{
-			my.cv.width = this.copyWidth;
-			my.cv.height = this.copyHeight;
-			try{
-				my.cvx.drawImage(img, this.copyX, this.copyY, this.copyWidth, this.copyHeight, 0, 0, this.copyWidth, this.copyHeight);
-				}catch(e){console.log('Picture '+this.name+' experienced a "getImageData" drawImage glitch');}
-			}
-		this.imageData = this.name+'_'+label;
-		my.imageData[this.imageData] = my.cvx.getImageData(0, 0, my.cv.width, my.cv.height);
 		return this;
 		};
 /**
@@ -866,7 +1018,8 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 @return Color value at coordinate; false if no color found
 **/
 	my.Picture.prototype.getImageDataValue = function(items){
-		var	coords = this.getLocalCoordinate(items),
+		items = my.safeObject(items);
+		var	coords = my.v.set({x: (items.x || 0), y: (items.y || 0)}),
 			d = my.imageData[this.get('imageData')],
 			myX,
 			myY,
@@ -876,6 +1029,11 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 			result,
 			myEl,
 			imageDataChannel = this.get('imageDataChannel');
+		this.resetWork();
+		coords.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
+		coords.x = (this.flipReverse) ? -coords.x : coords.x;
+		coords.y = (this.flipUpend) ? -coords.y : coords.y;
+		coords.vectorAdd(this.getPivotOffsetVector(this.handle));
 		if(this.imageType === 'animation' && my.image[this.source]){
 			myData = my.anim[this.get('animSheet')].getData();
 			copyScaleX = this.width/myData.copyWidth;
@@ -905,31 +1063,99 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 		};
 /**
 Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for sprite sheet images
+
+Also generates new filtered images, when necessary
 @method getImage
 @return Image Object
 @private
 **/
 	my.Picture.prototype.getImage = function(){
 		var myData,
-			myReturn;
+			myReturn = {},
+			myImage,
+			iObject,
+			home;
+		myReturn.copyX = this.copyX;
+		myReturn.copyY = this.copyY;
+		myReturn.copyWidth = this.copyWidth; 
+		myReturn.copyHeight = this.copyHeight; 
 		switch(this.imageType){
 			case 'canvas' :
-				myReturn = my.canvas[this.source];
+				myReturn.image = (my.isa(my.canvas[this.source], 'canvas')) ? my.canvas[this.source] : false;
 				break;
 			case 'animation' :
-				myData = my.anim[this.animSheet].getData();
-				this.set({
-					copyX: myData.copyX,
-					copyY: myData.copyY,
-					copyWidth: myData.copyWidth,
-					copyHeight: myData.copyHeight,
-					});
-				myReturn = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
+				myReturn = my.anim[this.animSheet].getData();
+				this.copyX = myReturn.copyX;
+				this.copyY = myReturn.copyY;
+				this.copyWidth = myReturn.copyWidth;
+				this.copyHeight = myReturn.copyHeight;
+				home = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
+				myReturn.image = (my.isa(home, 'img')) ? home : false;
 				break;
 			default :
-				myReturn = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
+				home = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
+				myReturn.image = (my.isa(home, 'img') || my.isa(home, 'video')) ? home : false;
+			}
+		this.filterKeys = Object.keys(this.filters);
+		if(this.filterKeys.length > 0){
+			this.calculateCheckSum();
+			if(this.calculateFilters){
+				iObject = my.image[this.source];
+				my.cv.width = iObject.width;
+				my.cv.height = iObject.height;
+				my.cvx.drawImage(myReturn.image, 0, 0);
+				myImage = my.cvx.getImageData(this.copyX, this.copyY, this.copyWidth, this.copyHeight);
+				for(var i = 0, iz = this.filterKeys.length; i < iz; i++){
+					if(my.xt(my.filter[this.filterKeys[i]])){
+						this.filters[this.filterKeys[i]].use = myImage;
+						this.filters[this.filterKeys[i]].save = false;
+						myImage = my.filter[this.filterKeys[i]](this.filters[this.filterKeys[i]], my.image[this.source]);
+						}
+					}
+				myImage = iObject.getImageDataUrl(myImage, true);
+				iObject.makeImage(myImage, this.name+'_brush', this.copyWidth, this.copyHeight);
+				}
+			myReturn.copyX = 0;
+			myReturn.copyY = 0;
+			myImage = my.f.querySelector('#'+this.name+'_brush');
+			myReturn.image = (my.isa(myImage, 'img')) ? myImage : false;
+			if(myReturn.image){
+				this.calculateFilters = false;
+				}
 			}
 		return myReturn;
+		};
+/**
+Display helper function - check to see if filtered image needs to be recalculated
+@method calculateCheckSum
+@return Boolean False if filters need recalculating; true otherwise.
+@private
+**/
+	my.Picture.prototype.calculateCheckSum = function(){
+		var check = ((this.copyX * this.copyX) || 1) * ((this.copyY * this.copyY) || 1) * ((this.copyWidth * this.copyWidth) || 1) * ((this.copyHeight * this.copyHeight) || 1),
+			filtercheck = Object.keys(this.filters);
+		//check if copy parameters have changed
+		if(this.checkSum !== check){
+			this.calculateFilters = true;
+			this.checkSum = check;
+			}
+		//check if a filter has been added/removed from the filters object
+		if(this.filterKeys.length !== filtercheck.length){
+			this.calculateFilters = true;
+			}
+		//at this point, know enough to return if something has changed
+		if(this.calculateFilters){
+			return false;
+			}
+		//final, deep check to see if filter order has changed, or if a filter has been replaced by another one
+		for(var i = 0, iz = filtercheck.length; i < iz; i++){
+			if(this.filterKeys[i] !== filtercheck[i]){
+				this.calculateFilters = true;
+				return false;
+				}
+			}
+		//nothing changed
+		return true;
 		};
 /**
 Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
@@ -978,13 +1204,12 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 
 * Wraps DOM image elements imported into the scrawl library - &lt;img&gt;, &lt;video&gt;, &lt;svg&gt;
 * Used by __Picture__ sprites and __Pattern__ designs
-* Users should not interact directly with this object
 
 ## Access
 
 * scrawl.image.SCRAWLIMAGENAME - for the ScrawlImage object
-* scrawl.img.SCRAWLIMAGENAME - for a link to a copy of the original &lt;img&gt; element
 * scrawl.object.SCRAWLIMAGENAME - for a link to the original &lt;img&gt;, &lt;svg&gt; or &lt;video&gt; element
+* scrawl.img.SCRAWLIMAGENAME - for a link to a working copy of the original &lt;img&gt; element (as generated by filters)
 
 @class ScrawlImage
 @constructor
@@ -992,35 +1217,42 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 @param {Object} [items] Key:value Object argument for setting attributes
 **/		
 	my.ScrawlImage = function(items){
+		//assume items.element is either an <img> element, or an imageDataURL object (with width, height, data attributes)
 		items = my.safeObject(items);
-		var iData = (my.xt(items.imageData)) ? items.imageData : {},
-			eData = (my.xt(items.element)) ? items.element : {},
-			data,
-			makeCopy = (my.xt(items.makeCopy)) ? items.makeCopy : false;
-		if(my.xto([items.element, items.imageData])){
-			items.name = items.name || eData.getAttribute('id') || eData.getAttribute('name') || eData.getAttribute('src');
+		var url,
+			el,
+			kill = (my.isa(items.removeImageFromDOM, 'bool')) ? items.removeImageFromDOM : true;
+		if(my.xt(items.element)){
+			items.name = items.name || items.element.getAttribute('id') || items.element.getAttribute('name') || '';
 			my.Base.call(this, items);
-			this.width = items.width || iData.width || parseFloat(eData.offsetWidth) || eData.width || eData.style.width || 0;
-			this.height = items.height || iData.height || parseFloat(eData.offsetHeight) || eData.height || eData.style.height || 0;
-			if(my.xt(items.element) && makeCopy){
-				data = (my.xt(items.element)) ? this.getImageDataUrl(eData) : iData;
-				my.img[this.name] = this.makeImage(data);
+			this.width = parseFloat(items.element.offsetWidth) || items.element.width || ((my.xt(items.element.style)) ? items.element.style.width : items.width || 0);
+			this.height = parseFloat(items.element.offsetHeight) || items.element.height || ((my.xt(items.element.style)) ? items.element.style.height : items.height || 0);
+			if(my.isa(items.element, 'img')){
+				if(kill){
+					el = items.element;
+					}
+				else{
+					el = items.element.cloneNode();
+					items.name = el.id;
+					my.Base.call(this, items);
+					el.id = this.name;
+					}
+				my.f.appendChild(el);
+				this.elementType = 'img';
+				}
+			else if(my.isa(items.element, 'video')){
+				el = items.element;
+				this.elementType = 'video';
 				}
 			else{
-				my.object[this.name] = eData;
-				my.pushUnique(my.objectnames, this.name);
+				url = items.element;
+				el = this.makeImage(url, this.name, this.width, this.height);
+				this.elementType = 'img';
 				}
+			my.object[this.name] = el;
+			my.pushUnique(my.objectnames, this.name);
 			my.image[this.name] = this;
 			my.pushUnique(my.imagenames, this.name);
-			this.source = items.source || this.name || '';
-/**
-ScrawlImage constructor and clone() function callback - an anonymous function that runs at the end of image construction
-
-_Not retained_
-@property callback
-@type Function
-@default undefined
-**/
 			if(my.isa(items.fn, 'fn')){
 				items.fn.call(this);
 				}
@@ -1053,13 +1285,29 @@ DOM image actual height, in pixels
 **/
 		height: 0,
 /**
-Handle to the DOM &lt;img&gt; element from which this object derives its image data
-@property source 
+Image element type: 'img' or 'video'
+@property elementType 
 @type String
 @default ''
 @private
 **/
-		source: '',
+		elementType: '',
+/**
+Constructor/clone flag - if set to true (default), will remove the &lt;img&gt; element from the web page DOM
+
+_This attribute is not retained by the object_
+@property removeImageFromDOM 
+@type Boolean
+@default true
+**/
+/**
+Constructor argument attribute - either the DOM image/video element; or an image URL object
+
+_This attribute is not retained by the object_
+@property element 
+@type Object
+@default undefined
+**/
 		};
 	my.mergeInto(my.d.ScrawlImage, my.d.Base);
 /**
@@ -1070,12 +1318,18 @@ Makes a virtual image from an imageDataUrl
 @return new DOM &lt;img&gt; object
 @private
 **/
-	my.ScrawlImage.prototype.makeImage = function(data){
-		var image = document.createElement('img');
-		image.width = this.width;
-		image.height = this.height;
+	my.ScrawlImage.prototype.makeImage = function(data, id, width, height){
+		var image = document.createElement('img'),
+			old = my.f.querySelector('#'+id);
+		image.width = width || data.width;
+		image.height = height || data.height;
 		image.crossorigin = 'anonymous';
 		image.src = data;
+		if(old){
+			my.f.removeChild(old);
+			}
+		my.f.appendChild(image);
+		image.id = id;
 		return image;
 		};
 /**
@@ -1089,8 +1343,8 @@ _Note: does not save the data in the scrawl library_
 **/
 	my.ScrawlImage.prototype.getImageDataUrl = function(image, putdata){
 		putdata = (my.xt(putdata)) ? putdata : false;
-		my.cv.width = this.width;
-		my.cv.height = this.height;
+		my.cv.width = (putdata) ? image.width : this.width;
+		my.cv.height = (putdata) ? image.height : this.height;
 		(putdata) ? my.cvx.putImageData(image, 0, 0) : my.cvx.drawImage(image, 0, 0);
 		return my.cv.toDataURL();
 		};
@@ -1107,7 +1361,7 @@ _Note: does not save the data in the scrawl library_
 		source = (my.xt(source)) ? source : false;
 		var image;
 		if(my.isa(source,'bool')){
-			image = (source) ? my.object[this.source] : my.img[this.name];
+			image = (source) ? my.object[this.name] : my.img[this.name] ||  my.object[this.name];
 			my.cv.width = this.width;
 			my.cv.height = this.height;
 			my.cvx.drawImage(image, 0, 0);
@@ -1125,249 +1379,21 @@ Also clones the virtual &lt;img&gt; element associated with the SpriteImage
 **/
 	my.ScrawlImage.prototype.clone = function(items){
 		items = my.safeObject(items);
-		items.element = (my.xt(my.img[this.name])) ? my.img[this.name] : my.object[this.source];
-		items.makeCopy = true;
-		return my.Base.prototype.clone.call(this, items);
+		items.element = (my.xt(my.img[this.name])) ? my.img[this.name] : my.object[this.name];
+		var result = my.Base.prototype.clone.call(this, items);
+		return result;
 		};
+		
 /**
-Grayscale filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of grayscaling effect: as a Number, between 0 (no effect) and 1 (full grayscale effect); as a String, between '0%' and '100%' (default: 1)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method grayscale
-@param {Object} [items] Key:value Object argument for setting attributes
+Use a filter on the image
+@method filter
+@param {String} filtername Filter name string
+@param {Object} [items] Key:value Object argument for filter function
 @return amended image data object
 **/
-	my.ScrawlImage.prototype.grayscale = function(items){
-		return (my.xt(my.filter)) ? my.filter.grayscale(items, this) : false;
-		};
-/**
-Sharpen filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of sharpen effect: as a Number, between 0 (no effect) and 1 (full sharpen effect); as a String, between '0%' and '100%' (default: 1)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method sharpen
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.sharpen = function(items){
-		return (my.xt(my.filter)) ? my.filter.sharpen(items, this) : false;
-		};
-/**
-Invert filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of invert effect: as a Number, between 0 (no effect) and 1 (full invert effect); as a String, between '0%' and '100%' (default: 1)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method invert
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.invert = function(items){
-		return (my.xt(my.filter)) ? my.filter.invert(items, this) : false;
-		};
-/**
-Brightness filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method brightness
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.brightness = function(items){
-		return (my.xt(my.filter)) ? my.filter.brightness(items, this) : false;
-		};
-/**
-Saturation filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of saturation effect: as a Number, between 0 (gray) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method saturation
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.saturation = function(items){
-		return (my.xt(my.filter)) ? my.filter.saturation(items, this) : false;
-		};
-/**
-Threshold filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of threshold border: as a Number, between 0 (black) and 1 (white); as a String, between '0%' and '100%' (default: 0.5)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method threshold
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.threshold = function(items){
-		return (my.xt(my.filter)) ? my.filter.threshold(items, this) : false;
-		};
-/**
-Channels filter (added to the core by the scrawlFilters module)
-
-Alter the relative channel levels for an image
-
-Attributes in the argument object:
-
-* __red__ - Number or String. Percentage value of red channel effect on the pixel: as a Number, between 0 (set red channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
-* __green__ - Number or String. Percentage value of green channel effect on the pixel: as a Number, between 0 (set green channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
-* __blue__ - Number or String. Percentage value of blue channel effect on the pixel: as a Number, between 0 (set blue channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
-* __alpha__ - Number or String. Percentage value of alpha channel effect on the pixel: as a Number, between 0 (set alpha channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method channels
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.channels = function(items){
-		return (my.xt(my.filter)) ? my.filter.channels(items, this) : false;
-		};
-/**
-ChannelStep filter (added to the core by the scrawlFilters module)
-
-Limit the number of values used in each channel
-
-Attributes in the argument object:
-
-* __red__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __green__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __blue__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __alpha__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method channelStep
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.channelStep = function(items){
-		return (my.xt(my.filter)) ? my.filter.channelStep(items, this) : false;
-		};
-/**
-Sepia filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of sepia effect: as a Number, between 0 (no effect) and 1 (full sepia tint); as a String, between '0%' and '100%' (default: 1).
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method sepia
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.sepia = function(items){
-		return (my.xt(my.filter)) ? my.filter.sepia(items, this) : false;
-		};
-/**
-Tint filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of tint effect: as a Number, between 0 (no effect) and 1 (full tint); as a String, between '0%' and '100%' (default: 1).
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-
-The argument object can take up to nine additional attributes, used to set the tinting effect. Default values for these attributes will generate a sepia tint. All values are Numbers between 0 and 1:
-
-* __redInRed__ or __rr__ - default 0.393
-* __redInGreen__ or __rg__ - default 0.349
-* __redInBlue__ or __rb__ - default 0.272
-* __greenInRed__ or __gr__ - default 0.769
-* __greenInGreen__ or __gg__ - default 0.686
-* __greenInBlue__ or __gb__ - default 0.534
-* __blueInRed__ or __br__ - default 0.189
-* __blueInGreen__ or __bg__ - default 0.168
-* __blueInBlue__ or __bb__ - default 0.131
-@method tint
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.tint = function(items){
-		return (my.xt(my.filter)) ? my.filter.tint(items, this) : false;
-		};
-/**
-Blur filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __radius__ - Number. Blur brush x and y radius (default: 0)
-* __radiusX__ - Number. Blur brush x radius (default: 2)
-* __radiusY__ - Number. Blur brush y radius (default: 2)
-* __roll__ - Number. Blur brush roll value (default: 0)
-* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method blur
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.blur = function(items){
-		return (my.xt(my.filter)) ? my.filter.blur(items, this) : false;
-		};
-/**
-Pixelate filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __width__ - Number. Block width (default: 5)
-* __height__ - Number. Block height (default: 5)
-* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method pixelate
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.ScrawlImage.prototype.pixelate = function(items){
-		return (my.xt(my.filter)) ? my.filter.pixelate(items, this) : false;
-		};
-/**
-Matrix filter (added to the core by the scrawlFilters module)
-
-Transforms an image using a weighted matrix
-
-Matrix is composed of an array of weightings to be applied to the colors of surrounding pixels. The function expects the weightings data to equate to a square matrix with an odd number of colums/rows - thusthe data array should consist of 9, 25, 49, etc elements. if the data array is missing the requisite number of elements, the function will add zeros to it to pad it out.
-
-Attributes in the argument object:
-
-* __data__ - Array of Numbers. (default: [1])
-* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
-* __wrap__ - Boolean. When true, offset pixels that fall outside the boundaries of the image will be wrapped to the opposite end of the image row or column; when false, the offset pixels are ignored and their weightings excluded from the calculation (default: false)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method matrix
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended data image object
-**/
-	my.ScrawlImage.prototype.matrix = function(items){
-		return (my.xt(my.filter)) ? my.filter.matrix(items, this) : false;
+	my.prepareFilterSection();
+	my.ScrawlImage.prototype.filter = function(filtername, items){
+		return (my.xta([my.filter, my.filter[filtername]])) ? my.filter[filtername](items, this) : false;
 		};
 
 /**

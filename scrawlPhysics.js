@@ -57,6 +57,13 @@ Change in time since last update, measured in seconds
 **/		
 		deltaTime: 0,
 		};
+	my.workphys = {
+		v1: my.newVector(),
+		v2: my.newVector(),
+		v3: my.newVector(),
+		v4: my.newVector(),
+		v5: my.newVector(),
+		};
 /**
 A __general__ function to undertake a round of calculations for Spring objects
 @method updateSprings
@@ -98,8 +105,9 @@ Initiates two forces:
 		my.newForce({
 			name: 'drag',
 			fn: function(ball){
-				var d = ball.velocity.getConjugate();
-				d.normalize();
+				var d, s, df;
+				ball.resetWork();
+				d = ball.work.velocity.reverse().normalize();
 				var s = ball.velocity.getMagnitude();
 				var df = 0.5 * my.physics.airDensity * s * s * ball.get('area') * ball.get('drag');
 				d.scalarMultiply(df);
@@ -159,9 +167,11 @@ A __factory__ function to generate new Force objects
 		my.Base.call(this, items);
 		items = my.safeObject(items);
 		this.place = my.newVector();
+		this.work.place = my.newVector();
 		this.velocity = my.newVector();
+		this.work.velocity = my.newVector();
 		this.set(items);
-		this.priorPlace = this.place.getVector();
+		this.priorPlace = my.newVector(this.place);
 		this.engine = items.engine || 'euler';
 		this.userVar = items.userVar || {};
 		this.mobile = (my.isa(items.mobile,'bool')) ? items.mobile : true;
@@ -367,7 +377,7 @@ Add a force to the forces array
 		return this;
 		};
 	my.Particle.prototype.revert = function(){
-		this.place = this.priorPlace.getVector();
+		this.place.set(this.priorPlace);
 		return this;
 		};
 /**
@@ -418,7 +428,7 @@ Calculate the loads (via forces) acting on the particle for this calculation cyc
 @private
 **/
 	my.Particle.prototype.calculateLoads = function(){
-		this.load = my.newVector();
+		this.load.zero();
 		for(var i=0, z=this.forces.length; i<z; i++){
 			if(my.isa(this.forces[i], 'str') && my.contains(my.forcenames, this.forces[i])){
 				my.force[this.forces[i]].run(this);
@@ -445,9 +455,12 @@ Calculation cycle engine
 @private
 **/
 	my.Particle.prototype.updateEuler = function(){
-		this.velocity.vectorAdd(this.load.getScalarDivide(this.mass).scalarMultiply(my.physics.deltaTime));
-		this.priorPlace = this.place.getVector();
-		this.place.vectorAdd(this.velocity.getScalarMultiply(my.physics.deltaTime));
+		this.resetWork();
+		var v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
+		this.work.velocity.vectorAdd(v1);
+		this.velocity.set(this.work.velocity);
+		this.priorPlace.set(this.place);
+		this.place.vectorAdd(this.work.velocity.scalarMultiply(my.physics.deltaTime));
 		return this;
 		};
 /**
@@ -458,12 +471,14 @@ Calculation cycle engine
 @private
 **/
 	my.Particle.prototype.updateImprovedEuler = function(){
-		var k1 = this.load.getScalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-		var k2 = this.load.getVectorAdd(k1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-		var kSum = k1.getVectorAdd(k2).scalarDivide(2);
-		this.velocity.vectorAdd(kSum);
-		this.priorPlace = this.place.getVector();
-		this.place.vectorAdd(this.velocity.getScalarMultiply(my.physics.deltaTime));
+		this.resetWork();
+		var v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime),
+			v2 = my.workphys.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime),
+			v3 = v1.vectorAdd(v2).scalarDivide(2);
+		this.work.velocity.vectorAdd(v3);
+		this.velocity.set(this.work.velocity);
+		this.priorPlace.set(this.place);
+		this.place.vectorAdd(this.work.velocity.scalarMultiply(my.physics.deltaTime));
 		return this;
 		};
 /**
@@ -474,16 +489,19 @@ Calculation cycle engine
 @private
 **/
 	my.Particle.prototype.updateRungeKutter = function(){
-		var k1 = this.load.getScalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2);
-		var k2 = this.load.getVectorAdd(k1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2);
-		var k3 = this.load.getVectorAdd(k2).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-		var k4 = this.load.getVectorAdd(k3).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-		k2.scalarMultiply(2);
-		k3.scalarMultiply(2);
-		var kSum = k1.getVectorAdd(k2).vectorAdd(k3).vectorAdd(k4).scalarDivide(6);
-		this.velocity.vectorAdd(kSum);
-		this.priorPlace = this.place.getVector();
-		this.place.vectorAdd(this.velocity.getScalarMultiply(my.physics.deltaTime));
+		this.resetWork();
+		var v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2),
+			v2 = my.workphys.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2),
+			v3 = my.workphys.v3.set(this.load).vectorAdd(v2).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime),
+			v4 = my.workphys.v4.set(this.load).vectorAdd(v3).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime),
+			v5 = my.workphys.v5;
+		v2.scalarMultiply(2);
+		v3.scalarMultiply(2);
+		v5.set(v1).vectorAdd(v2).vectorAdd(v3).vectorAdd(v4).scalarDivide(6);
+		this.work.velocity.vectorAdd(v5);
+		this.velocity.set(this.work.velocity);
+		this.priorPlace.set(this.place);
+		this.place.vectorAdd(this.work.velocity.scalarMultiply(my.physics.deltaTime));
 		return this;
 		};
 /**
@@ -494,13 +512,14 @@ Calculation cycle engine - linear particle collisions
 @private
 **/
 	my.Particle.prototype.linearCollide = function(b){
-		var relPosition = this.place.getVectorSubtract(b.place);
-		var normal = relPosition.getNormal();
-		var relVelocity = this.velocity.getVectorSubtract(b.velocity);
-		var impactScalar = relVelocity.getDotProduct(normal);
+		this.resetWork();
+		var normal = my.workphys.v1.set(this.place).vectorSubtract(b.place).normalize(),
+			relVelocity = my.workphys.v2.set(this.velocity).vectorSubtract(b.velocity),
+			impactScalar = relVelocity.getDotProduct(normal),
+			impact = my.workphys.v3;
 		impactScalar = -impactScalar * (1 + ((this.elasticity + b.elasticity)/2));
 		impactScalar /= ((1/this.mass)+(1/b.mass));
-		var impact = normal.getScalarMultiply(impactScalar);
+		impact.set(normal).scalarMultiply(impactScalar);
 		this.velocity.vectorAdd(impact.scalarDivide(this.mass));
 		b.velocity.vectorAdd(impact.scalarDivide(b.mass).reverse());
 		return this;
@@ -618,12 +637,13 @@ Delete a named Spring object from this Particle
 				this.restLength = items.restLength;
 				}
 			else{
-				var r = b2.place.getVector();
+				var r = my.workphys.v1.set(b2.place);
 				r.vectorSubtract(b1.place);
 				this.restLength = r.getMagnitude();
 				}
 			this.currentLength = items.currentLength || this.restLength;
 			this.force = my.newVector();
+			this.work.force = my.newVector();
 			my.spring[this.name] = this;
 			my.pushUnique(my.springnames, this.name);
 			return this;
@@ -705,10 +725,11 @@ Calculate the force exerted by the spring for this calculation cycle iteration
 @private
 **/
 	my.Spring.prototype.update = function(){
-		var vr = my.sprite[this.end].velocity.getVectorSubtract(my.sprite[this.start].velocity);
-		var r = my.sprite[this.end].place.getVectorSubtract(my.sprite[this.start].place);
-		var r_norm = r.getNormal();
-		this.force = r_norm.getScalarMultiply(this.springConstant * (r.getMagnitude() - this.restLength)).vectorAdd(vr.vectorMultiply(r_norm).scalarMultiply(this.damperConstant).vectorMultiply(r_norm));
+		var vr = my.workphys.v1.set(my.sprite[this.end].velocity).vectorSubtract(my.sprite[this.start].velocity),
+			r = my.workphys.v2.set(my.sprite[this.end].place).vectorSubtract(my.sprite[this.start].place),
+			r_norm = my.workphys.v3.set(r).normalize(),
+			r_norm2 = my.workphys.v4.set(r_norm);
+		this.force.set(r_norm.scalarMultiply(this.springConstant * (r.getMagnitude() - this.restLength)).vectorAdd(vr.vectorMultiply(r_norm2).scalarMultiply(this.damperConstant).vectorMultiply(r_norm2)));
 		return this;
 		};
 /**
@@ -771,7 +792,8 @@ Functions need to be in the form:
 
 	function(ball){
 		//get or build a Vector object to hold the result
-		var result = scrawl.newVector();
+		var result = scrawl.newVector();	//creating the vector
+		var result = scrawl.workphys.v1;	//using an existing work vector: scrawl.workphys.v1 to v5
 
 		//calculate the force - Particle attributes are available via the _ball_ argument
 		

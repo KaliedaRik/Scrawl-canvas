@@ -1008,19 +1008,21 @@ Calculate coordinates of point at given distance along the Shape sprite's path
 	my.Path.prototype.getPerimeterPosition = function(val, steady, roll, local){
 		val = (my.isa(val,'num')) ? val : 1;
 		steady = (my.isa(steady,'bool')) ? steady : true;
-		roll = (my.isa(roll,'num') && roll) ? true : roll;
 		roll = (my.isa(roll,'bool')) ? roll : false;
 		local = (my.isa(local,'bool')) ? local : false;
 		var	myLink,
 			linkVal,
 			linkList,
 			linkDurations,
-			before,
+			beforex,
+			beforey,
 			bVal,
-			after,
+			afterx,
+			aftery,
 			aVal,
 			here,
-			angle;
+			angle,
+			temp;
 		this.getPerimeterLength();
 		linkList = this.get('linkList')
 		linkDurations = this.get('linkDurations');
@@ -1038,10 +1040,14 @@ Calculate coordinates of point at given distance along the Shape sprite's path
 				aVal = (linkVal+0.0000001 > 1) ? 1 : linkVal+0.0000001;
 				if(steady){
 					if(roll){
-						before = (local) ? myLink.getLocalSteadyPositionOnLink(bVal) : myLink.getSteadyPositionOnLink(bVal);
-						after = (local) ? myLink.getLocalSteadyPositionOnLink(aVal) : myLink.getSteadyPositionOnLink(aVal);
+						temp = (local) ? myLink.getLocalSteadyPositionOnLink(bVal) : myLink.getSteadyPositionOnLink(bVal);
+						beforex = temp.x;
+						beforey = temp.y;
+						temp = (local) ? myLink.getLocalSteadyPositionOnLink(aVal) : myLink.getSteadyPositionOnLink(aVal);
+						afterx = temp.x;
+						aftery = temp.y;
+						angle = Math.atan2(aftery - beforey, afterx - beforex)/my.radian;
 						here = (local) ? myLink.getLocalSteadyPositionOnLink(linkVal) : myLink.getSteadyPositionOnLink(linkVal);
-						angle = Math.atan2(after.y-before.y, after.x-before.x)/my.radian;
 						return {x:here.x, y:here.y, r:angle};
 						}
 					else{
@@ -1050,10 +1056,14 @@ Calculate coordinates of point at given distance along the Shape sprite's path
 					}
 				else{
 					if(roll){
-						before = (local) ? myLink.getLocalPositionOnLink(bVal) : myLink.getPositionOnLink(bVal);
-						after = (local) ? myLink.getLocalPositionOnLink(aVal) : myLink.getPositionOnLink(aVal);
+						temp = (local) ? myLink.getLocalPositionOnLink(bVal) : myLink.getPositionOnLink(bVal);
+						beforex = temp.x;
+						beforey = temp.y;
+						temp = (local) ? myLink.getLocalPositionOnLink(aVal) : myLink.getPositionOnLink(aVal);
+						afterx = temp.x;
+						aftery = temp.y;
+						angle = Math.atan2(aftery - beforey, afterx - beforex)/my.radian;
 						here = (local) ? myLink.getLocalPositionOnLink(linkVal) : myLink.getPositionOnLink(linkVal);
-						angle = Math.atan2(after.y-before.y, after.x-before.x)/my.radian;
 						return {x:here.x, y:here.y, r:angle};
 						}
 					else{
@@ -1083,18 +1093,18 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 		var pad = my.pad[items.pad] || my.pad[my.currentPad],
 			cell = my.cell[pad.current].name,
 			ctx = my.context[pad.current],
-			tests = (my.xt(items.tests)) ? items.tests : [{x: (items.x || false), y: (items.y || false)}],
+			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
 			result = false,
 			winding,
 			closed = this.get('closed');
 		this.prepareShape(ctx, cell);
-		for(var i=0, z=tests.length; i<z; i++){
-			result = ctx.isPointInPath(tests[i].x, tests[i].y);
+		for(var i = 0, iz = tests.length; i < iz; i += 2){
+			result = ctx.isPointInPath(tests[i], tests[i+1]);
 			if(result){
 				break;
 				}
 			}
-		return (result) ? tests[i] : false;
+		return (result) ? {x: tests[i], y: tests[i+1]} : false;
 		};
 /**
 Collision detection helper function
@@ -1111,8 +1121,8 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 			var	p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,
 				myAdvance,
 				point,
+				c = [],
 				currentPos = 0;
-			this.collisionVectors = [];
 			for(var i=0, z=p.length; i<z; i++){
 				if(my.isa(p[i], 'num') && p[i] >= 0){
 					if(p[i] > 1){
@@ -1120,26 +1130,28 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 						myAdvance = 1/p[i];
 						for(var j=0; j<p[i]; j++){
 							point = this.getPerimeterPosition(currentPos, true, false, true);
-							this.collisionVectors.push(point);
+							c.push(point.x); c.push(point.y);
 							currentPos += myAdvance;
 							}
 						}
 					else{
 						//a point at a specific position on the path
 						point = this.getPerimeterPosition(p[i], true, false, true);
-						this.collisionVectors.push(point);
+						c.push(point.x); c.push(point.y);
 						}
 					}
 				else if(my.isa(p[i], 'str')){
 					switch(p[i]) {
-						case 'start' : 	this.collisionVectors.push(my.newVector()); break;
+						case 'start' : 	
+							c.push(0); c.push(0); break;
 						}
 					}
 				else if(my.isa(p[i], 'vector')){
-					this.collisionVectors.push(p[i]);
+					c.push(p[i].x);		c.push(p[i].y);
 					}
 				}
 			}
+		this.collisionVectors = c;
 		return this;
 		};
 
@@ -1183,6 +1195,8 @@ Path creation factories will all create Point objects automatically as part of t
 			x: items.startX || items.currentX || local.x || 0,
 			y: items.startY || items.currentY || local.y || 0,
 			});
+		this.work.local = my.newVector({name: this.type+'.'+this.name+'.work.local'});
+		this.work.local.name = this.type+'.'+this.name+'.work.local';
 		this.startLink = items.startLink || '';
 		this.fixed = items.fixed || false;
 		if(my.xto([items.angle,items.distance])){
@@ -1223,7 +1237,7 @@ The following argument attributes can be used to initialize, set and get this at
 @type Vector
 @default zero value Vector
 **/
-		local: my.newVector(),
+		local: {x:0, y:0, z:0},
 /**
 LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
 @property startLink
@@ -1352,26 +1366,31 @@ Return object has the following attributes:
 		var c,
 			s = my.sprite[this.sprite],
 			myPivot,
-			d,
 			fixed = this.fixed,
 			scale = s.scale;
+		this.resetWork();
 		if(my.xt(this.local) && this.local.type === 'Vector'){
-			c = this.local.getVector();
+			c = this.work.local;
 			if(my.isa(fixed,'str') && (my.contains(my.spritenames, fixed) || my.contains(my.pointnames, fixed))){
 				myPivot = my.sprite[fixed] || my.point[fixed];
 				if(myPivot.type === 'Point'){
-					c = myPivot.local.getVector().scalarMultiply(scale || 1);
+					c.set(myPivot.local);
+					c.scalarMultiply(scale || 1);
 					}
 				else{
-					c = (myPivot.type === 'Particle') ? myPivot.get('place') : myPivot.start.getVector();
+					if(myPivot.type === 'Particle'){
+						c.set(myPivot.get('place'));
+						}
+					else{
+						c.set(myPivot.start);
+						}
 					}
 				}
 			else if(!fixed){
 				c.scalarMultiply(scale || 1);
 				}
 			else{
-				d = (c.getMagnitude() !== 0) ? s.start.getVector() : my.newVector();
-				c.vectorSubtract(d);
+				c.vectorSubtract(s.start || {});
 				c.scalarMultiply(scale || 1);
 				c.rotate(-s.roll);
 				}
@@ -1455,7 +1474,7 @@ Set Point.fixed attribute
 		this.action = items.action || my.d.Link.action;
 		my.link[this.name] = this;
 		my.pushUnique(my.linknames, this.name);
-		this.setPositions();
+		this.positions = [];
 		if(this.startPoint && this.sprite && this.action === 'add'){
 			my.pushUnique(my.sprite[this.sprite].linkList, this.name);
 			}
@@ -1470,6 +1489,17 @@ Set Point.fixed attribute
 **/		
 	my.Link.prototype.type = 'Link';
 	my.Link.prototype.classname = 'linknames';
+	if(!my.xt(my.worklink)){
+		my.worklink = {
+			start: my.newVector({name: 'scrawl.worklink.start'}),
+			end: my.newVector({name: 'scrawl.worklink.end'}),
+			control1: my.newVector({name: 'scrawl.worklink.control1'}),
+			control2: my.newVector({name: 'scrawl.worklink.control2'}),
+			v1: my.newVector({name: 'scrawl.worklink.v1'}),
+			v2: my.newVector({name: 'scrawl.worklink.v2'}),
+			v3: my.newVector({name: 'scrawl.worklink.v3'}),
+			};
+		}
 	my.d.Link = {
 /**
 Type of link - permitted values include: 'line', 'quadratic', 'bezier'
@@ -1571,11 +1601,9 @@ Position calculation helper function
 @private
 **/
 	my.Link.prototype.pointOnLine = function(origin, destination, val){
+//console.log(this.name, 'pointOnLine');
 		if(origin && destination && my.isa(val,'num')){
-			var a = destination.getVectorSubtract(origin),
-				b = a.getScalarMultiply(val),
-				c = b.getVectorAdd(origin);
-			return c;
+			return destination.vectorSubtract(origin).scalarMultiply(val).vectorAdd(origin);
 			}
 		return false;
 		};
@@ -1593,17 +1621,11 @@ Result Object contains the following attributes:
 @private
 **/
 	my.Link.prototype.getPointCoordinates = function(){
-		var result = {
-			start: (this.startPoint) ? my.point[this.startPoint].getCurrentCoordinates() : my.newVector(),
-			end: (this.endPoint) ? my.point[this.endPoint].getCurrentCoordinates() : my.newVector(),
-			};
-		if(my.contains(['quadratic', 'bezier'], this.species)){
-			result.control1 = (this.controlPoint1) ? my.point[this.controlPoint1].getCurrentCoordinates() : my.newVector();
-			if(this.species === 'bezier'){
-				result.control2 = (this.controlPoint2) ? my.point[this.controlPoint2].getCurrentCoordinates() : my.newVector();
-				}
-			}
-		return result;
+		my.worklink.start.set((this.startPoint) ? my.point[this.startPoint].getCurrentCoordinates() : {x:0, y:0, z:0});
+		my.worklink.end.set((this.endPoint) ? my.point[this.endPoint].getCurrentCoordinates() : {x:0, y:0, z:0});
+		my.worklink.control1.set((this.controlPoint1) ? my.point[this.controlPoint1].getCurrentCoordinates() : {x:0, y:0, z:0});
+		my.worklink.control2.set((this.controlPoint2) ? my.point[this.controlPoint2].getCurrentCoordinates() : {x:0, y:0, z:0});
+		return my.worklink;
 		};
 /**
 Position calculation helper function
@@ -1614,8 +1636,7 @@ Position calculation helper function
 **/
 	my.Link.prototype.getLocalPositionOnLink = function(val){
 		val = (my.isa(val, 'num')) ? val : 1;
-		var pts = this.getPointCoordinates(),
-			mid1,
+		var mid1,
 			mid2, 
 			fst1, 
 			fst2, 
@@ -1623,27 +1644,28 @@ Position calculation helper function
 			sec1, 
 			sec2,
 			result;
+		this.getPointCoordinates();
 		switch(this.species){
 			case 'line':
-				result = this.pointOnLine(pts.start, pts.end, val);
+				my.worklink.v1.set(this.pointOnLine(my.worklink.start, my.worklink.end, val));
 				break;
 			case 'quadratic':
-				mid1 = this.pointOnLine(pts.start, pts.control1, val);
-				mid2 = this.pointOnLine(pts.control1, pts.end, val);
-				result = this.pointOnLine(mid1, mid2, val);
+				mid2 = this.pointOnLine(my.worklink.control1, my.worklink.end, val);
+				mid1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
+				my.worklink.v1.set(this.pointOnLine(mid1, mid2, val));
 				break;
 			case 'bezier':
-				fst1 = this.pointOnLine(pts.start, pts.control1, val);
-				fst2 = this.pointOnLine(pts.control1, pts.control2, val);
-				fst3 = this.pointOnLine(pts.control2, pts.end, val);
-				sec1 = this.pointOnLine(fst1, fst2, val);
+				fst3 = this.pointOnLine(my.worklink.control2, my.worklink.end, val); 
+				fst2 = this.pointOnLine(my.worklink.control1, my.worklink.control2, val);
+				fst1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
 				sec2 = this.pointOnLine(fst2, fst3, val);
-				result = this.pointOnLine(sec1, sec2, val);
+				sec1 = this.pointOnLine(fst1, fst2, val);
+				my.worklink.v1.set(this.pointOnLine(sec1, sec2, val));
 				break;
 			default: 
-				result = pts.end || pts.start || my.newVector();
+				my.worklink.v1.set({x:0, y:0, z:0});
 			}
-		return result;
+		return my.worklink.v1;
 		};
 /**
 Position calculation helper function
@@ -1659,7 +1681,7 @@ Position calculation helper function
 			result;
 		if(my.isa(val, 'num')){
 			result = this.getLocalPositionOnLink(val);
-			return result.scalarMultiply(scale).rotate(roll).vectorAdd(mySprite.start);
+			return result.rotate(roll).vectorAdd(mySprite.start);
 			}
 		return false;
 		};
@@ -1682,8 +1704,9 @@ Position calculation helper function
 		distance = (distance > positions[precision].cumulativeLength) ? positions[precision].cumulativeLength : ((distance < 0) ? 0 : distance);
 		for(var i=1; i<=precision; i++){
 			if(distance <= positions[i].cumulativeLength){
-				s = positions[i-1].p;
-				d = positions[i].p.getVectorSubtract(s);
+				s = my.worklink.v1.set(positions[i-1].p);
+				d = my.worklink.v2.set(positions[i].p);
+				d.vectorSubtract(s);
 				dPos = (distance - positions[i-1].cumulativeLength)/positions[i].length;
 				return d.scalarMultiply(dPos).vectorAdd(s);
 				}
@@ -1700,7 +1723,7 @@ Position calculation helper function
 	my.Link.prototype.getSteadyPositionOnLink = function(val){
 		var mySprite = my.sprite[this.sprite],
 			d = this.getLocalSteadyPositionOnLink(val);
-			d.scalarMultiply(mySprite.scale).rotate(mySprite.roll).vectorAdd(mySprite.start);
+			d.rotate(mySprite.roll).vectorAdd(mySprite.start);
 		return d;
 		};
 /**
@@ -1720,41 +1743,46 @@ Returns length of Link, in pixels
 @chainable
 **/
 	my.Link.prototype.setPositions = function(val){
-		var pts = this.getPointCoordinates(),
-			precision = (my.isa(val, 'num') && val > 0) ? val : (my.sprite[this.sprite].get('precision')),
-			step = 1/precision, 
-			pos, 
-			here, 
-			vHere, 
-			dist, 
-			d,
-			cumLen = 0,
-			cur = pts.start.getVector(),
-			sprite = my.sprite[this.sprite],
-			temp = sprite.roll;
-		this.positions = [];
-		this.positions.push({
-			p: cur.getVector(),
-			length: 0,
-			cumulativeLength: cumLen,
-			});
-		sprite.set({roll: 0,});
-		for(var i=0; i<precision; i++){
-			pos = step * (i + 1);
-			here = this.getPositionOnLink(pos);
-			here.vectorSubtract(sprite.start);
-			vHere = here.getVector();
-			dist = here.vectorSubtract(cur).getMagnitude();
-			cur = vHere;
-			cumLen += dist;
-			this.positions.push({
-				p: cur.getVector(),
-				length: dist,
-				cumulativeLength: cumLen,
-				});
+		if(this.action === 'add'){
+			var pts = this.getPointCoordinates(),
+				precision = (my.isa(val, 'num') && val > 0) ? val : (my.sprite[this.sprite].get('precision')),
+				step = 1/precision, 
+				pos, 
+				here, 
+				vHere = my.worklink.v3, 
+				dist, 
+				d,
+				cumLen = 0,
+				cur = my.worklink.v2.set(pts.start),		//my.worklink.v2
+				sprite = my.sprite[this.sprite],
+				temp = sprite.roll;
+			if(this.positions.length !== precision + 1){
+				this.positions.length = 0;
+				for(var i = 0; i <= precision; i++){
+					this.positions[i] = {
+						p: my.newVector(),
+						length: 0,
+						cumulativeLength: 0,
+						};
+					}
+				}
+			this.positions[0].p.set(cur);
+			sprite.set({roll: 0,});
+			for(var i = 1; i <= precision; i++){
+				pos = step * ((i-1) + 1);
+				here = this.getPositionOnLink(pos);				//my.worklink.v1
+				here.vectorSubtract(sprite.start);
+				vHere.set(here);								//my.worklink.v3
+				dist = here.vectorSubtract(cur).getMagnitude();
+				cur.set(vHere);									//my.worklink.v2
+				cumLen += dist;
+				this.positions[i].p.set(cur);
+				this.positions[i].length = dist;
+				this.positions[i].cumulativeLength = cumLen;
+				}
+			this.length = this.positions[precision].cumulativeLength;
+			sprite.roll = temp;
 			}
-		this.length = this.positions[precision].cumulativeLength;
-		sprite.roll = temp;
 		return this;
 		};
 /**
@@ -1778,10 +1806,10 @@ _Note: this function is recursive_
 				break;
 			case 'move' :
 				try{
-					myEnd = my.point[this.endPoint].getData();
+					myEnd = my.point[this.endPoint].getCurrentCoordinates();
 					ctx.moveTo(
-						myEnd.current.x, 
-						myEnd.current.y
+						myEnd.x, 
+						myEnd.y
 						);
 					}
 				catch(e){
@@ -1792,33 +1820,33 @@ _Note: this function is recursive_
 				try{
 					switch(this.species){
 						case 'line' :
-							myEnd = my.point[this.endPoint].getData();
+							myEnd = my.point[this.endPoint].getCurrentCoordinates();
 							ctx.lineTo(
-								myEnd.current.x, 
-								myEnd.current.y
+								myEnd.x, 
+								myEnd.y
 								);
 							break;
 						case 'quadratic' :
-							myCon1 = my.point[this.get('controlPoint1')].getData();
-							myEnd = my.point[this.endPoint].getData();
+							myCon1 = my.point[this.get('controlPoint1')].getCurrentCoordinates();
+							myEnd = my.point[this.endPoint].getCurrentCoordinates();
 							ctx.quadraticCurveTo(
-								myCon1.current.x, 
-								myCon1.current.y,
-								myEnd.current.x, 
-								myEnd.current.y
+								myCon1.x, 
+								myCon1.y,
+								myEnd.x, 
+								myEnd.y
 								);
 							break;
 						case 'bezier' :
-							myCon1 = my.point[this.get('controlPoint1')].getData();
-							myCon2 = my.point[this.get('controlPoint2')].getData();
-							myEnd = my.point[this.endPoint].getData();
+							myCon1 = my.point[this.get('controlPoint1')].getCurrentCoordinates();
+							myCon2 = my.point[this.get('controlPoint2')].getCurrentCoordinates();
+							myEnd = my.point[this.endPoint].getCurrentCoordinates();
 							ctx.bezierCurveTo(
-								myCon1.current.x, 
-								myCon1.current.y,
-								myCon2.current.x, 
-								myCon2.current.y,
-								myEnd.current.x, 
-								myEnd.current.y
+								myCon1.x, 
+								myCon1.y,
+								myCon2.x, 
+								myCon2.y,
+								myEnd.x, 
+								myEnd.y
 								);
 							break;
 						default : 

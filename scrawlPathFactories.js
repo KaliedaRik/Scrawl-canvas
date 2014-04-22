@@ -409,24 +409,18 @@ _(Either the 'angle' attribute or the 'sides' attribute (but not both) must be i
 			var	turn = (my.isa(items.sides,'num') && items.sides > 1) ? 360/items.sides : ((my.isa(items.angle,'num') && items.angle > 0) ? items.angle : 4),
 				currentAngle = 0,
 				count = 0,
-				point = my.newVector({x: items.radius}),
-				tPoint, 
-				oPoint, 
-				cPoint, 
+				point = my.worklink.v1.set({x: items.radius, y:0, z:0}),
+				oPoint = my.worklink.v2.set(point), 
 				test,
-				data = 'm';
-			cPoint = point.getRotate(currentAngle)
-			data += ''+cPoint.x.toFixed(4)+','+cPoint.y.toFixed(4)+' ';
-			oPoint = cPoint.getVector();
+				data = 'm'+point.x.toFixed(4)+','+point.y.toFixed(4)+' ';
 			do{
 				count++;
 				currentAngle += turn;
 				currentAngle = currentAngle % 360;
-				tPoint = point.getRotate(currentAngle);
-				cPoint = tPoint.getVectorSubtract(oPoint);
-				data += ''+cPoint.x.toFixed(4)+','+cPoint.y.toFixed(4)+' ';
-				oPoint = tPoint.getVector();
 				test = currentAngle.toFixed(0);
+				point.rotate(turn);
+				data += ''+(point.x - oPoint.x).toFixed(4)+','+(point.y - oPoint.y).toFixed(4)+' ';
+				oPoint.set(point);
 				}while(test !== '0' && count < 1000);
 			data += 'z';
 			items.data = data;
@@ -436,6 +430,18 @@ _(Either the 'angle' attribute or the 'sides' attribute (but not both) must be i
 		return false;
 		};
 
+	if(!my.xt(my.worklink)){
+		my.worklink = {
+			start: my.newVector({name: 'scrawl.worklink.start'}),
+			end: my.newVector({name: 'scrawl.worklink.end'}),
+			control1: my.newVector({name: 'scrawl.worklink.control1'}),
+			control2: my.newVector({name: 'scrawl.worklink.control2'}),
+			v1: my.newVector({name: 'scrawl.worklink.v1'}),
+			v2: my.newVector({name: 'scrawl.worklink.v2'}),
+			v3: my.newVector({name: 'scrawl.worklink.v3'}),
+			};
+		}
+		
 	return my;
 	}(scrawl));
 
