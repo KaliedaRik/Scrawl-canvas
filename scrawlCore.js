@@ -2,7 +2,7 @@
 /**
 # scrawlCore
 
-## Version 3.1.0 - 22 April 2014
+## Version 3.1.1 - 30 April 2014
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -79,10 +79,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 3.1.0
+@default 3.1.1
 @final
 **/
-	my.version = '3.1.0';
+	my.version = '3.1.1';
 /**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -309,7 +309,7 @@ Any supplied callback function will only be run once all modules have been loade
 			callback = (my.isa(items.callback, 'fn')) ? items.callback : function(){},
 			mini = (my.xt(items.minified)) ? items.minified : true,
 			//FOR DEVELOPMENT TESTING ONLY
-//			mini = false,
+			//mini = false,
 			tail = (mini) ? '-min.js' : '.js',
 			loaded = [].concat(modules),
 			getModule = function(module){
@@ -3805,6 +3805,7 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 			this.actualWidth = items.actualWidth || items.width || this.actualWidth;
 			this.actualHeight = items.actualHeight || items.height || this.actualHeight;
 			this.setDimensions(items);
+			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
 			}
 		this.animationCellSet(items);
 		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale])){
@@ -4865,7 +4866,7 @@ Check all sprites in the Group to see if they are colliding with the supplied co
 					continue;
 					}
 				}
-			if(sprite.checkHit(coordinate)){
+			if(sprite.checkHit({x: coordinate.x, y: coordinate.y})){
 				return sprite;
 				}
 			}

@@ -331,8 +331,10 @@ Check all sprites in this Group against all sprites in the argument Group, to se
 					cPoints[temp.name] = temp.getCollisionPoints();
 					}
 				}
+//console.log(cPoints);
 			for(var i=0, z=this.sprites.length; i<z; i++){
 				if(cViz[this.sprites[i]]){
+//console.log(this.name, this.sprites[i]);
 					for(var j=0, w=g.sprites.length; j<w; j++){
 						if(cViz[g.sprites[j]]){
 							if(this.regionRadius){
@@ -343,6 +345,7 @@ Check all sprites in this Group against all sprites in the argument Group, to se
 									continue;
 									}
 								}
+//console.log(g.name, g.sprites[j], cPoints[this.sprites[i]]);
 							if(my.sprite[g.sprites[j]].checkHit({tests: cPoints[this.sprites[i]]})){
 								hits.push([this.sprites[i],g.sprites[j]]);
 								continue;

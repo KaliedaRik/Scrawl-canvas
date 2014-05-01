@@ -1090,6 +1090,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Path.prototype.checkHit = function(items){
 		items = my.safeObject(items);
+//console.log(this.name, items);
 		var pad = my.pad[items.pad] || my.pad[my.currentPad],
 			cell = my.cell[pad.current].name,
 			ctx = my.context[pad.current],

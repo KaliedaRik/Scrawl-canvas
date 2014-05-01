@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.0 - 22 April 2014
+*	version 3.1.1 - 30 April 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,7 +84,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 3.1.0 released 22 April 2014
+VERSION 3.1.1 released 30 April 2014
 
     - the zip file includes:
 		
@@ -120,7 +120,7 @@ VERSION 3.1.0 released 22 April 2014
 		- scrawlSaveLoad.js (16kb)
 		- scrawlShape.js (21kb)
 		- scrawlStacks.js (53kb)
-		- scrawlWheel.js (14kb)
+		- scrawlWheel.js (15kb)
 
 		Documentation:
 		- changelog.txt
@@ -141,6 +141,9 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 3.1.1 uploaded 30 April 2014
+	- added callback functionality to animation tweens
+	- minor bug fix: wheel checkHit()
 Version 3.1.0 uploaded 22 April 2014
 	- extended filters to include sprites
 	- improved stack handling

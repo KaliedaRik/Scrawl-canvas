@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.0 - 22 April 2014
+*	version 3.1.1 - 30 April 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -10,10 +10,6 @@
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
-- need to look at quaternion stuff again
-	- current implementation does not perform robustly enough
-	- has some annoying quirks
-	- chrome seems to hate yaw/pitch/roll rotations of 180deg
 - user accessibility issues
 - physics engine - rigid body interactions
 - better, more responsive stacks
@@ -27,9 +23,73 @@ Topics that I want|need to look at (in no particular order) ...
 	- Require?
 	- node version??
 	
+Currently known bugs
+------------------------------------------------------------------------------------
+- Image loading
+	- Internet Explorer (11) prefers pre-loaded images
+	- Firefox has cache issues with Pictures created from other sprites
+		- particularly when an image filter is applied to the Picture sprite
+	
+- Video
+	- Internet Explorer(11), Chrome and Safari(Windows) have issues playing non-visible videos in the canvas
+	
+- Composite operations
+	- Safari(windows) is non-compliant for some global composite operations
+	
+- Collision detection
+	- Chrome and Safari do not accept even-odd winding (Shape and Path sprites) for collision detection
+		- though both display even-odd winding correctly
+	
+- Sprite ordering
+	- Sprites with the same order value, in the same group, may occasionally flicker when overlapping (Chrome, Opera)
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140501
+	- testing in browsers
+		- Safari(Windows)
+			- all demos and website pages work to spec
+				- except those expected to fail
+	- update website
+	- upload v3.1.1 to sourceforge, github
+	- update broken codepen demos
+	- update broken jsFiddle demos
+	
+140430
+	- rewrote Index page and Demo401 to compensate for Windows image loading issues
+	- testing in browsers
+		- IE11
+			- all Demos work fine
+				- except for demo085 (video)
+			- index page now works to spec
+				- residual problems re cloning images in canvas 1 - FIXED
+		- Firefox
+			- all demos and website pages work to spec
+		- Chrome
+			- all demos and website pages work to spec
+				- except for demo085 (video)
+		- Opera
+			- all demos and website pages work to spec (including demo085)
+			
+140429
+	- testing in browsers:
+		- chrome - all works, except
+			- video not playing
+		- IE11 - big problems with index page
+			- issue with Picture sprites
+			- problems with preloading and callbacks
+
+140427-28
+	- added callback functionality to scrawl tweens
+		- new demo107 to test functionality
+	- bugfix: Wheel.checkHit()
+		- function wasn't taking rotation and scale into account for radius-based collision detection
+		- new demo106 to test collision detection
+	- updated documentation
+	- minified modules generated
+	- testing in browsers:
+		- Firefox - all work
+		
 140216-22
 	- Operation SaveMemory
 		- quaternion functionality completely rewritten

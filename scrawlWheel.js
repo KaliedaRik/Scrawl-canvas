@@ -41,6 +41,9 @@ A __factory__ function to generate new Wheel sprites
 		return new my.Wheel(items);
 		};
 
+	my.workwheel = {
+		v1: my.newVector(),
+		};
 /**
 # Wheel
 	
@@ -194,9 +197,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 		items = my.safeObject(items);
 		var	tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
 			result = false,
-			myX,
-			myY,
-			distance,
+			coords,
 			testRadius,
 			pad,
 			cell,
@@ -204,10 +205,13 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 		if(this.checkHitUsingRadius){
 			testRadius = (this.checkHitRadius) ? this.checkHitRadius : this.radius * this.scale;
 			for(var i = 0, z = tests.length; i < z; i += 2){
-				myX = tests[i] - this.start.x;
-				myY = tests[i+1] - this.start.y;
-				distance = Math.sqrt((myX * myX) + (myY * myY));
-				result = (distance <= testRadius) ? true : false;
+				this.resetWork();
+				coords = my.workwheel.v1.set({x: tests[i], y: tests[i+1]});
+				coords.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
+				coords.x = (this.flipReverse) ? -coords.x : coords.x;
+				coords.y = (this.flipUpend) ? -coords.y : coords.y;
+				coords.vectorAdd(this.getPivotOffsetVector(this.handle));
+				result = (coords.getMagnitude() <= testRadius) ? true : false;
 				if(result){break;}
 				}
 			}

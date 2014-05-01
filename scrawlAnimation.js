@@ -824,6 +824,7 @@ Tweens come with a number of flags and attributes to indicate how many times the
 		this.onComplete = items.onComplete || {};
 		this.nextTween = items.nextTween || '';
 		this.killOnComplete = items.killOnComplete || false;
+		this.callback = (my.isa(items.callback, 'fn')) ? items.callback : false;
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
 		return this;
@@ -940,6 +941,13 @@ Flag - when true, tween will automatically reverse its direction when it complet
 @default false
 **/		
 		autoReverse: false,
+/**
+Callback function to run when tween completes - will not run if nextTween is set
+@property callback
+@type Function
+@default false
+**/		
+		callback: false,
 /**
 Flag - when true, tween will automatically reverse its direction when it completes, and immediately run again
 @property autoReverseAndRun
@@ -1182,6 +1190,9 @@ Finish running a tween
 			if(my.xt(my.animation[this.nextTween])){
 				my.animation[this.nextTween].run();
 				}
+			}
+		else if(this.callback){
+			this.callback();
 			}
 		if(this.killOnComplete){
 			this.kill();

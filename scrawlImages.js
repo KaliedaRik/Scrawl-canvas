@@ -1,4 +1,5 @@
 'use strict';
+
 /**
 # scrawlImages
 
@@ -102,6 +103,9 @@ A __factory__ function to generate new ScrawlImage objects
 **/
 	my.newImage = function(items){
 		return new my.ScrawlImage(items);
+		};
+	my.workimg = {
+		v1: my.newVector(),
 		};
 /**
 A __factory__ function to generate new AnimSheet objects
@@ -513,6 +517,9 @@ Alias for Pattern.makeDesign()
 			this.calculateFilters = false;
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].sprites, this.name);
+			if(my.isa(items.callback,'fn')){
+				items.callback.call(this);
+				}
 			return this;
 			}
 		};
@@ -708,10 +715,11 @@ _Note: this function is asynchronous_
 @private
 **/
 	my.Picture.prototype.importImage = function(items){
-		if(my.isa(items, 'obj') && my.xt(items.url)){
+		items = my.safeObject(items);
+		if(my.xt(items.url)){
 			var myImage = new Image();
 			myImage.id = items.name || 'image'+Math.floor(Math.random()*100000000);
-			myImage.crossOrigin = 'anonymous';
+			myImage.crossOrigin = 'Anonymous';
 			myImage.onload = function(){
 				var iObj = my.newImage({
 					name: myImage.id,
@@ -719,11 +727,8 @@ _Note: this function is asynchronous_
 					});
 				delete items.url;
 				items.source = myImage.id;
-				var s = my.newPicture(items);
-				if(my.isa(items.callback,'fn')){
-					items.callback.call(s);
-					}
-				return s;
+				console.log('Picture.importImage() - <'+myImage.id+'> loaded');
+				return my.newPicture(items);
 				};
 			myImage.onerror = function(){
 				console.log('Picture.importImage() failed - <'+myImage.id+'> failed to load');
@@ -1019,7 +1024,7 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 **/
 	my.Picture.prototype.getImageDataValue = function(items){
 		items = my.safeObject(items);
-		var	coords = my.v.set({x: (items.x || 0), y: (items.y || 0)}),
+		var	coords = my.workimg.v1.set({x: (items.x || 0), y: (items.y || 0)}),
 			d = my.imageData[this.get('imageData')],
 			myX,
 			myY,
@@ -1173,24 +1178,30 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Picture.prototype.checkHit = function(items){
 		items = my.safeObject(items);
-		var	hit = my.Sprite.prototype.checkHit.call(this, items),
+		var mytests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
 			c,
-			test;
-		if(this.checkHitUsingImageData){
-			if(hit){
-				hit.x = parseInt(hit.x);
-				hit.y = parseInt(hit.y);
-				c = this.getImageDataValue(hit);
-				if(this.get('imageDataChannel') === 'color'){
-					return (c === 'rgba(0,0,0,0)') ? false : hit;
-					}
-				else{
-					test = (my.isa(items.test,'num')) ? items.test : 0;
-					return (c > test) ? hit : false;
+			hit,
+			test = (my.isa(items.test,'num')) ? items.test : 0;
+		for(var i = 0, iz = mytests.length; i < iz; i += 2){
+			hit = my.Sprite.prototype.checkHit.call(this, {tests: [mytests[i], mytests[i+1]]})
+			if(this.checkHitUsingImageData){
+				if(hit){
+					hit.x = parseInt(hit.x);
+					hit.y = parseInt(hit.y);
+					c = this.getImageDataValue(hit);
+					if(this.get('imageDataChannel') === 'color'){
+						hit = (c === 'rgba(0,0,0,0)') ? false : hit;
+						}
+					else{
+						hit = (c > test) ? hit : false;
+						}
 					}
 				}
+			if(hit){
+				break;
+				}
 			}
-		return hit;
+		return (hit) ? hit : false;
 		};
 
 /**
@@ -1225,8 +1236,8 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 		if(my.xt(items.element)){
 			items.name = items.name || items.element.getAttribute('id') || items.element.getAttribute('name') || '';
 			my.Base.call(this, items);
-			this.width = parseFloat(items.element.offsetWidth) || items.element.width || ((my.xt(items.element.style)) ? items.element.style.width : items.width || 0);
-			this.height = parseFloat(items.element.offsetHeight) || items.element.height || ((my.xt(items.element.style)) ? items.element.style.height : items.height || 0);
+			this.width = items.width || parseFloat(items.element.offsetWidth) || items.element.width || (my.xta([items.element.style, items.element.style.width]) ? parseFloat(items.element.style.width) : 0);
+			this.height = items.height || parseFloat(items.element.offsetHeight) || items.element.height || (my.xta([items.element.style, items.element.style.height]) ? parseFloat(items.element.style.height) : 0);
 			if(my.isa(items.element, 'img')){
 				if(kill){
 					el = items.element;
@@ -1323,7 +1334,6 @@ Makes a virtual image from an imageDataUrl
 			old = my.f.querySelector('#'+id);
 		image.width = width || data.width;
 		image.height = height || data.height;
-		image.crossorigin = 'anonymous';
 		image.src = data;
 		if(old){
 			my.f.removeChild(old);
@@ -1342,11 +1352,13 @@ _Note: does not save the data in the scrawl library_
 @private
 **/
 	my.ScrawlImage.prototype.getImageDataUrl = function(image, putdata){
+		var result;
 		putdata = (my.xt(putdata)) ? putdata : false;
 		my.cv.width = (putdata) ? image.width : this.width;
 		my.cv.height = (putdata) ? image.height : this.height;
 		(putdata) ? my.cvx.putImageData(image, 0, 0) : my.cvx.drawImage(image, 0, 0);
-		return my.cv.toDataURL();
+		result = my.cv.toDataURL('image/png');
+		return result;
 		};
 /**
 Get image data - uses JavScript canvas API function ctx.getImageData()
@@ -1359,13 +1371,14 @@ _Note: does not save the data in the scrawl library_
 **/
 	my.ScrawlImage.prototype.getImageData = function(source){
 		source = (my.xt(source)) ? source : false;
-		var image;
+		var image, result;
 		if(my.isa(source,'bool')){
 			image = (source) ? my.object[this.name] : my.img[this.name] ||  my.object[this.name];
 			my.cv.width = this.width;
 			my.cv.height = this.height;
 			my.cvx.drawImage(image, 0, 0);
-			return my.cvx.getImageData(0, 0, this.width, this.height);
+			result = my.cvx.getImageData(0, 0, this.width, this.height);
+			return result;
 			}
 		return source;
 		};

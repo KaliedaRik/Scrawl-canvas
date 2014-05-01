@@ -1,4 +1,5 @@
 'use strict';
+
 /**
 # scrawlFilters
 
@@ -31,7 +32,9 @@ scrawlFilters module adaptions to the Scrawl library object
 		result.items = items;
 		result.image = image || false;
 		result.useSourceData = myUse;
+//console.log('filterSetup #1', myUse, items.use);
 		result.imgData = items.use || image.getImageData(myUse);
+//console.log('filterSetup #2', result.imgData.data[0], result.imgData.data[100], result.imgData.data[200], result.imgData.data[300], result.imgData.data[400], result.imgData.data[500]);
 		result.save = (my.xt(items.save)) ? items.save : true;
 		return result;
 		};
@@ -57,6 +60,7 @@ Attributes in the argument object:
 @return amended image data object
 **/
 	my.filter.grayscale = function(items, image){
+//console.log('grayscale #1', items);
 		var args = my.filterSetup(items, image),
 			value = (my.xt(args.items.value)) ? args.items.value : 1,
 			data = args.imgData.data,
@@ -64,6 +68,7 @@ Attributes in the argument object:
 			here;
 		value = (my.isa(value, 'str')) ? parseFloat(value)/100 : value;
 		value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+//console.log('grayscale #2', args, value, data.length);
 		for(var i=0, z=data.length; i<z; i += 4){
 			here = i;
 			gray = Math.floor((0.2126 * data[here]) + (0.7152 * data[++here]) + (0.0722 * data[++here]));
