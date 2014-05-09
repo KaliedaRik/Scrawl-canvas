@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.1 - 30 April 2014
+*	version 3.1.2 - 9 May 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -13,7 +13,6 @@ Topics that I want|need to look at (in no particular order) ...
 - user accessibility issues
 - physics engine - rigid body interactions
 - better, more responsive stacks
-	- accurate mouse cursor position detection on 3d rotated canvas elements
 	- scrawl and svg interoperability
 - isometric game demos
 - using scrawl with popular javascript frameworks and web building software
@@ -38,13 +37,78 @@ Currently known bugs
 	
 - Collision detection
 	- Chrome and Safari do not accept even-odd winding (Shape and Path sprites) for collision detection
-		- though both display even-odd winding correctly
+		- though both display even-odd winding fills correctly
 	
 - Sprite ordering
 	- Sprites with the same order value, in the same group, may occasionally flicker when overlapping (Chrome, Opera)
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140509
+	- bugfix - sorted the cube canvas flicker issue (205, 208) in Chrome/Opera/Safari
+	
+140508
+	- mouse listeners
+		- tested new code on index page
+			- bugs fixed
+	- testing
+		- Firefox - all tests passed, except: 
+			- 101 (pixellate brush not smooth when moving) 
+			- 103, 104 (sprites converted to Picture then filtered)
+		- Chrome - all tests passed, except 085 (video), 205/208 (cube sides flicker), 211
+			- Shape/Path hit detection - even-odd winding not recognised
+		- IE11 - all tests passed, except 085 (video), 211
+		- Opera - all tests passed, except 205/208 (cube sides flicker), 211
+			- Shape/Path hit detection - even-odd winding not recognised
+		- SafariWindows 
+			- Shape/Path even-odd winding not recognised
+			- sprite lineDash attribute not recognised
+			- significantly slower than other browsers
+			- demo034 gComposition fails
+			- demo066 listeners fail
+			- demo068 fileLoad not recognised
+			- demo101 pixellate brush not smooth when moving
+			- demo211
+			- demo401 CORS remote image loading
+			- (all these issues are browser-specific - no need to be fixed)
+		
+140507
+	- mouse position on rotated canvas
+		- found a way to get mouse position
+			- uses MouseEvent.layerX, .layerY
+				- which only gets reported for mousemove events
+				- and only seems to work well in Firefox
+		- localised the mousemove event listener
+			- does mean more listeners - one per actively tracked element
+			- solves the problem of getting .layer data on non-static DOM elements
+			- gets rid of the confusion of .mouse related attributes both in library and in Scrawl objects
+			- rewrote PageElement.getMouse()
+			- new PageElement functions: initMouse(); handleMouseMove(); handleMouseOut(); addMouseMove(); removeMouseMove()
+			- PageElement constructor, and .set(), now accept 'mouse' attribute in argument 
+				- true to add mousemove events to element; false to remove listeners
+				- Pad and Stack automatically add listeners when created; Element does not
+		- demo211 - test mouse tracking on rotating canvas element
+	
+140506
+	- hit testing for elements
+		- investigating ways to determine mouse position (for drag-drop) on 3d rotated canvas
+		
+140505
+	- hit testing
+		- looking to implement hit testing on elements
+		- first step - decouple sprite hit testing from individual sprite canvases to the universal canvas
+			- because elements don't have default canvases
+			- thinking of using sprite.checkHit.call() for element hit testing
+				- though there will be issues with this approach for elements with non-zero pitch and yaw values
+				- but this can also tie into the issue of getting accurate mouse position on such displaced elements
+		- amended Sprite.checkHit(), Path.checkHit(), Shape.checkHit(), Wheel.checkHit()
+			- (Picture, Phrase and Block all make use of Sprite.checkHit())
+			- also decoupled hit checking from the need to set cell context engines to match sprite context parameters
+			- Shape.doOutline() divided into two functions - .doOutline() and .completeOutline()
+				- Shape.checkHit() doesn't care about building the outline if it doesn't already exist, or calling the canvas context engine
+					- except for winding attribute, which is crucial for hit checking
+			- immediate speed improvements (demo072 - 075)
+					
 140501
 	- testing in browsers
 		- Safari(Windows)

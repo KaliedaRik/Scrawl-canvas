@@ -2,7 +2,7 @@
 /**
 # scrawlCore
 
-## Version 3.1.1 - 30 April 2014
+## Version 3.1.2 - 9 May 2014
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -79,10 +79,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 3.1.1
+@default 3.1.2
 @final
 **/
-	my.version = '3.1.1';
+	my.version = '3.1.2';
 /**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -149,20 +149,6 @@ Utility canvas 2d context engine
 @private
 **/
 	my.cvx = my.cv.getContext('2d');
-/**
-Holds the current cursor x position on the web page
-@property mouseX
-@type {Number}
-@private
-**/
-	my.mouseX = 0;
-/**
-Holds the current cursor y position on the web page
-@property mouseY
-@type {Number}
-@private
-**/
-	my.mouseY = 0;
 /**
 Key:value pairs of module alias:filename Strings, used by scrawl.loadModules()
 @property loadAlias
@@ -336,25 +322,6 @@ Any supplied callback function will only be run once all modules have been loade
 			getModule(modules[i]);
 			};
 		return my;
-		};
-/**
-Updates scrawl.mouseX, scrawl.mouseY with current mouse position in the current document
-@method handleMouseMove
-@param {Object} e window.event
-@return Always true
-@private
-**/
-	my.handleMouseMove = function(e){
-		if (!e) var e = window.event;
-		if (e.pageX || e.pageY){
-			my.mouseX = e.pageX;
-			my.mouseY = e.pageY;
-			}
-		else if (e.clientX || e.clientY){
-			my.mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			my.mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-			}
-		return true;
 		};
 /**
 A __utility__ function that adds the attributes of the additive object to those of the reference object, where those attributes don't already exist in the reference object
@@ -2555,7 +2522,6 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 		var result = this.work.handle,
 			height = this.targetHeight || this.height || this.get('height'),
 			width = this.targetWidth || this.width || this.get('width');
-//console.log(this.name, 'core getPivotOffsetVector', result);
 		return my.Position.prototype.calculatePOV(result, width, height, false);
 		};
 /**
@@ -2654,18 +2620,15 @@ Takes into account lock flag settings
 		if(this.pivot === 'mouse'){
 			var myCell = my.cell[cell],
 				myPad = my.pad[myCell.pad],
-				here = myPad.getMouse();
-			here = this.correctCoordinates(here, cell);
-			if(!my.xta([this.mouseX, this.mouseY])){
-				this.mouseX = this.start.x;
-				this.mouseY = this.start.y;
+				here = this.correctCoordinates(myPad.mouse, cell);
+			if(!my.xta([this.oldX, this.oldY])){
+				this.oldX = this.start.x;
+				this.oldY = this.start.y;
 				}
-			if(here.active){
-				this.start.x = (!this.lockX) ? this.start.x + here.x - this.mouseX : this.start.x;
-				this.start.y = (!this.lockY) ? this.start.y + here.y - this.mouseY : this.start.y;
-				this.mouseX = here.x;
-				this.mouseY = here.y;
-				}
+			this.start.x = (!this.lockX) ? this.start.x + here.x - this.oldX : this.start.x;
+			this.start.y = (!this.lockY) ? this.start.y + here.y - this.oldY : this.start.y;
+			this.oldX = here.x;
+			this.oldY = here.y;
 			}
 		return this
 		};
@@ -2680,16 +2643,17 @@ Takes into account lock flag settings
 **/
 	my.Position.prototype.correctCoordinates = function(coords, cell){
 		coords = my.safeObject(coords);
+		var v = my.v.set(coords);
 		if(scrawl.xta([coords.x, coords.y])){
 			cell = (my.contains(my.cellnames, cell)) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
 			var pad = my.pad[cell.pad];
 			if(pad.width !== cell.actualWidth){
-				coords.x /= (pad.width/cell.actualWidth);
+				v.x /= (pad.width/cell.actualWidth);
 				}
 			if(pad.height !== cell.actualHeight){
-				coords.y /= (pad.height/cell.actualHeight);
+				v.y /= (pad.height/cell.actualHeight);
 				}
-			return coords;
+			return v;
 			}
 		return false
 		};
@@ -2716,7 +2680,6 @@ The core implementation of this object is a stub that supplies Pad objects with 
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		this.scale = (my.isa(items.scale, 'num')) ? items.scale : my.d[this.type].scale;
-		this.mouse = my.newVector({name: this.type+'.'+this.name+'.mouse'});
 		this.stacksPageElementConstructor(items);
 		return this;
 		}
@@ -2766,33 +2729,26 @@ The object's scale value - larger values increase the object's size
 **/
 		scale: 1,
 /**
-mouse vector
+Mouse vector - holds the mouse pointer coordinates relative to the top left corner of the element
+
+When instantiating DOM element wrappers (Pad, Stack, Element), setting this attribute to true will make Scrawl add a mousemove event listener to the element. By default, Pads and Stacks will add the event listener to the &lt;canvas&gt; or &lt;div&gt; element (mouse == true); Elements will not (mouse == false).
+
+The event listener can be added to, or removed from, an element at any time using the set() function with an argument attribute of _mouse: true_ or _mouse: false_.
+
+The functions _addMouseMove()_ and _removeMouseMove()_ can also be called directly.
+
 @property mouse
 @type Vector
-@default {x:0, y:0, z:0}
-**/
-		mouse: {x:0, y:0, z:0},
-/**
-Current horizontal position of the mouse cursor in relation to the DOM element's top left corner
-@property mouseX
-@type Number
-@default 0
-**/
-		mouseX: 0,
-/**
-Current vertical position of the mouse cursor in relation to the DOM element's top left corner
-@property mouseY
-@type Number
-@default 0
-**/
-		mouseY: 0,
-/**
-Flag indicating whether the mouse cursor is hovering over the DOM element
-@property mouseOverPad
-@type Boolean
 @default false
 **/
-		mouseOverPad: 0,
+		mouse: false,
+/**
+Element CSS position styling attribute
+@property position
+@type String
+@default 'static'
+**/
+		position: 'static',
 		};
 	my.mergeInto(my.d.PageElement, my.d.Base);
 /**
@@ -2820,6 +2776,9 @@ Augments Base.get() to retrieve DOM element width and height values
 				case 'height' : 
 					return this.height || parseFloat(el.height) || my.d[this.type].height; 
 					break;
+				case 'position' : 
+					return this.position || el.style.position; 
+					break;
 				}
 			}
 		return my.Base.prototype.get.call(this, item);
@@ -2841,6 +2800,19 @@ Augments Base.set() to allow the setting of DOM element dimension values
 		if(my.xto([items.width, items.height, items.scale])){
 			this.setDimensions();
 			this.setDisplayOffsets();
+			}
+		if(my.xt(items.position)){
+			this.position = items.position;
+			}
+		if(my.xt(items.mouse)){
+			this.initMouse({mouse: items.mouse});
+			}
+		if(my.xt(items.pivot)){
+			this.pivot = items.pivot;
+			if(!this.pivot){
+				delete this.oldX;
+				delete this.oldY;
+				}
 			}
 		if(my.xto([items.title, items.comment])){
 			this.setAccessibility(items);
@@ -2923,22 +2895,136 @@ The returned object is a Vector containing the mouse cursor's current x and y co
 
 * __active__ - set to true if mouse is hovering over the element; false otherwise
 * __type__ - element's type ('stack', 'element', 'pad')
-* __source__ - Scrawl wrapper object's name attribute
+* __element__ - Scrawl wrapper object's name attribute
+* __type__ - Scrawl wrapper object's type ('Pad', 'Stack', 'Element')
+* __layer__ - true if coordinates have been calculated using e.layerX, e.layerY; false otherwise
 @method getMouse
 @return Vector containing localized mouse coordinates, with additional attributes
 **/
 	my.PageElement.prototype.getMouse = function(){
-		var maxX,
-			maxY;
-		this.mouse.active = false;
-		maxX = this.displayOffsetX + (this.width * this.scale);
-		maxY = this.displayOffsetY + (this.height * this.scale);
-		if(my.mouseX >= this.displayOffsetX && my.mouseX <= maxX && my.mouseY >= this.displayOffsetY && my.mouseY <= maxY){
-			this.mouse.active = true;
-			}
-		this.mouse.x = (my.mouseX - this.displayOffsetX) * (1/this.scale);
-		this.mouse.y = (my.mouseY - this.displayOffsetY) * (1/this.scale);
 		return this.mouse;
+		};
+/**
+mousemove event listener function
+@method handleMouseMove
+@param {Object} e window.event
+@return This
+@private
+**/
+	my.PageElement.prototype.handleMouseMove = function(e){
+		e = (my.xt(e)) ? e : window.event;
+		var wrap = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false,
+			mouseX = 0,
+			mouseY = 0,
+			maxX,
+			maxY;
+		if(wrap){
+			wrap.mouse.active = false;
+			wrap.mouse.element = wrap.name;
+			wrap.mouse.type = wrap.type;
+			if(wrap.mouse.layer || my.xta([e, e.layerX]) && my.contains(['relative', 'absolute', 'fixed', 'sticky'], wrap.position)){
+				mouseX = e.layerX;
+				mouseY = e.layerY;
+				if(mouseX >= 0 && mouseX <= wrap.width && mouseY >= 0 && mouseY <= wrap.height){
+					wrap.mouse.active = true;
+					}
+				wrap.mouse.x = e.layerX * (1/wrap.scale);
+				wrap.mouse.y = e.layerY * (1/wrap.scale);
+				wrap.mouse.layer = true;
+				}
+			else{
+				if (e.pageX || e.pageY){
+					mouseX = e.pageX;
+					mouseY = e.pageY;
+					}
+				else if (e.clientX || e.clientY){
+					mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+					mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+					}
+				maxX = wrap.displayOffsetX + (wrap.width * wrap.scale);
+				maxY = wrap.displayOffsetY + (wrap.height * wrap.scale);
+				if(mouseX >= wrap.displayOffsetX && mouseX <= maxX && mouseY >= wrap.displayOffsetY && mouseY <= maxY){
+					wrap.mouse.active = true;
+					}
+				wrap.mouse.x = (mouseX - wrap.displayOffsetX) * (1/wrap.scale);
+				wrap.mouse.y = (mouseY - wrap.displayOffsetY) * (1/wrap.scale);
+				wrap.mouse.layer = false;
+				}
+			}
+		return wrap;
+		};
+/**
+mouseout event listener function
+@method handleMouseOut
+@param {Object} e window.event
+@return This
+@private
+**/
+	my.PageElement.prototype.handleMouseOut = function(e){
+		e = (my.xt(e)) ? e : window.event;
+		var wrap = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
+		if(wrap){
+			wrap.mouse.active = false;
+			}
+		return wrap;
+		};
+
+/**
+Constructor helper function
+@method initMouse
+@param constructor argument object
+@return This
+@chainable
+@private
+**/
+	my.PageElement.prototype.initMouse = function(items){
+		this.mouse = my.newVector({name: this.type+'.'+this.name+'.mouse'});
+		if(!this.position){
+			this.position = this.get('position');
+			}
+		if(items.mouse){
+			this.mouse.set(items.mouse);
+			this.addMouseMove();
+			}
+		else{
+			this.removeMouseMove();
+			}
+		return this;
+		};
+/**
+Adds a mousemove event listener to the element
+@method addMouseMove
+@return This
+@chainable
+@private
+**/
+	my.PageElement.prototype.addMouseMove = function(){
+		var el = this.getElement(),
+			test,
+			nowt;
+		el.removeEventListener('mousemove', this.handleMouseMove, false);
+		el.addEventListener('mousemove', this.handleMouseMove, false);
+		el.removeEventListener('mouseout', this.handleMouseOut, false);
+		el.removeEventListener('mouseleave', this.handleMouseOut, false);
+		el.setAttribute('onmouseout', 'return;');
+		test = typeof el.onmouseout == 'function';
+		el.setAttribute('onmouseout', nowt);
+		(test) ? el.addEventListener('mouseout', this.handleMouseOut, false) : el.addEventListener('mouseleave', this.handleMouseOut, false);
+		return this;
+		};
+/**
+Remove the mousemove event listener from the element
+@method removeMouseMove
+@return This
+@chainable
+@private
+**/
+	my.PageElement.prototype.removeMouseMove = function(){
+		var el = this.getElement();
+		el.removeEventListener('mousemove', this.handleMouseMove, false);
+		el.removeEventListener('mouseout', this.handleMouseOut, false);
+		el.removeEventListener('mouseleave', this.handleMouseOut, false);
+		return this;
 		};
 
 /**
@@ -3022,6 +3108,8 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				if(my.xto([items.title, items.comment])){
 					this.setAccessibility(items);
 					}
+				items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
+				this.initMouse(items);
 				return this;
 				}
 			}
@@ -5471,8 +5559,8 @@ Set sprite's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		var coordinate = my.v.set({x: (items.x || 0), y: (items.y || 0)}),
 			cell = my.cell[my.group[this.group].cell];
 		coordinate = this.correctCoordinates(coordinate, cell);
-		this.mouseX = coordinate.x || 0;
-		this.mouseY = coordinate.y || 0;
+		this.oldX = coordinate.x || 0;
+		this.oldY = coordinate.y || 0;
 		this.realPivot = this.pivot;
 		this.set({
 			pivot: 'mouse',
@@ -5494,8 +5582,8 @@ Revert pickupSprite() actions, ensuring sprite is left where the user drops it
 			order: (order >= 9999) ? order - 9999 : 0,
 			});
 		delete this.realPivot;
-		delete this.mouseX;
-		delete this.mouseY;
+		delete this.oldX;
+		delete this.oldY;
 		return this;
 		};
 /**
@@ -5514,8 +5602,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Sprite.prototype.checkHit = function(items){
 		items = my.safeObject(items);
-		var	pad = my.pad[my.currentPad],
-			ctx = my.context[pad.current],
+		var	ctx = my.cvx,
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
 			here,
 			result;
@@ -5959,7 +6046,6 @@ Swap start and end attributes
 		q4: my.newQuaternion({name: 'scrawl.workquat.q4'}),
 		q5: my.newQuaternion({name: 'scrawl.workquat.q5'}),
 		};
-	window.addEventListener('mousemove', my.handleMouseMove, false);
 		
 	return my;
 	}());

@@ -1090,15 +1090,20 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Path.prototype.checkHit = function(items){
 		items = my.safeObject(items);
-//console.log(this.name, items);
-		var pad = my.pad[items.pad] || my.pad[my.currentPad],
-			cell = my.cell[pad.current].name,
-			ctx = my.context[pad.current],
+		var ctx = my.cvx,
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
 			result = false,
-			winding,
-			closed = this.get('closed');
-		this.prepareShape(ctx, cell);
+			here,
+			winding = my.ctx[this.context].winding;
+		ctx.mozFillRule = winding;
+		ctx.msFillRule = winding;
+		if(this.firstPoint){
+			here = this.prepareStamp();
+			this.rotateCell(ctx);
+			ctx.translate(here.x,here.y);
+			ctx.beginPath();
+			my.link[my.point[this.firstPoint].startLink].sketch(ctx);
+			}
 		for(var i = 0, iz = tests.length; i < iz; i += 2){
 			result = ctx.isPointInPath(tests[i], tests[i+1]);
 			if(result){

@@ -747,6 +747,19 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 		if(my.xto([items.handleX, items.handleY, items.handle])){
 			this.setTransformOrigin();
 			}
+		if(my.xt(items.position)){
+			this.position = items.position;
+			}
+		if(my.xt(items.mouse)){
+			this.initMouse({mouse: items.mouse});
+			}
+		if(my.xt(items.pivot)){
+			this.pivot = items.pivot;
+			if(!this.pivot){
+				delete this.oldX;
+				delete this.oldY;
+				}
+			}
 		if(my.xto([items.title, items.comment])){
 			this.setAccessibility(items);
 			}
@@ -767,7 +780,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 		for(var i=0, iz=k.length; i<iz; i++){
 			if(my.contains(['width', 'height', 'translate', 'translateX', 'translateY', 'translateZ'], k[i])){}
 			else if(k[i] === 'backfaceVisibility'){
-				el.style.WebkitBackfaceVisibility = items.backfaceVisibility;
+				el.style.webkitBackfaceVisibility = items.backfaceVisibility;
 				el.style.mozBackfaceVisibility = items.backfaceVisibility;
 				el.style.backfaceVisibility = items.backfaceVisibility;
 				}
@@ -1041,17 +1054,16 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 		m.push(this.rotation.getAngle(false));
 
 		for(var i = 0, z = m.length; i < z; i++){
-			if(my.isBetween(m[i], 0.000000001,-0.000000001)){
+			if(my.isBetween(m[i], 0.000001,-0.000001)){
 				m[i] = 0;
 				}
 			}
 		temp += 'translate3d('+m[0]+'px,'+m[1]+'px,'+m[2]+'px) rotate3d('+m[3]+','+m[4]+','+m[5]+','+m[6]+'rad)';
 			
-		el.style.mozTransform = temp;
 		el.style.webkitTransform = temp;
-		el.style.msTransform = temp;
-		el.style.oTransform = temp;
 		el.style.transform = temp;
+		
+		el.style.zIndex = m[2];
 
 		temp = this.getStartValues(); 
 		
@@ -1127,14 +1139,14 @@ Calculate start Vector in reference to a sprite or Point object's position
 				here = my.stack[this.stack].getMouse();
 				temp = this.getStartValues(); 
 				if(!my.xta([this.mouseX,this.mouseY])){
-					this.mouseX = temp.x;
-					this.mouseY = temp.y;
+					this.oldX = temp.x;
+					this.oldY = temp.y;
 					}
 				if(here.active){
-					this.start.x = (!this.lockX) ? temp.x + here.x - this.mouseX : this.start.x;
-					this.start.y = (!this.lockY) ? temp.y + here.y - this.mouseY : this.start.y;
-					this.mouseX = here.x;
-					this.mouseY = here.y;
+					this.start.x = (!this.lockX) ? temp.x + here.x - this.oldX : this.start.x;
+					this.start.y = (!this.lockY) ? temp.y + here.y - this.oldY : this.start.y;
+					this.oldX = here.x;
+					this.oldY = here.y;
 					}
 				}
 			}
@@ -1255,6 +1267,8 @@ A __factory__ function to generate new Element objects
 			if(my.xto([items.title, items.comment])){
 				this.setAccessibility(items);
 				}
+			items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
+			this.initMouse(items);
 			return this;
 			}
 		console.log('Failed to generate a Stack wrapper - no DOM element supplied'); 
@@ -1500,6 +1514,8 @@ Scale the stack, and all objects contained in stack
 			if(my.xto([items.title, items.comment])){
 				this.setAccessibility(items);
 				}
+			items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : false;
+			this.initMouse(items);
 			return this;
 			}
 		console.log('Failed to generate an Element wrapper - no DOM element supplied'); 

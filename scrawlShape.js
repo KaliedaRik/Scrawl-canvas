@@ -259,7 +259,6 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
 @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
 @return This
-@chainable
 @private
 **/
 	my.Shape.prototype.doOutline = function(ctx, cell){
@@ -267,6 +266,16 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 		if(!this.dataSet && this.data){
 			this.buildDataSet(this.data);
 			}
+		return this.completeOutline(ctx);
+		};
+/**
+Helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
+@method completeOutline
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@return This
+@private
+**/
+	my.Shape.prototype.completeOutline = function(ctx){
 		if(this.dataSet){
 			var here = this.prepareStamp(),
 				currentX = 0,
@@ -589,12 +598,13 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Shape.prototype.checkHit = function(items){
 		items = (my.isa(items,'obj')) ? items : {};
-		var	pad = my.pad[my.currentPad], 
-			cell = my.cell[pad.current].name,
-			ctx = my.context[pad.current],
+		var ctx = my.cvx,
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
-			result = false;
-		this.doOutline(ctx, cell);
+			result = false,
+			winding = my.ctx[this.context].winding;
+		ctx.mozFillRule = winding;
+		ctx.msFillRule = winding;
+		this.completeOutline(ctx);
 		for(var i = 0, z = tests.length; i < z; i += 2){
 			result = ctx.isPointInPath(tests[i], tests[i+1]);
 			if(result){

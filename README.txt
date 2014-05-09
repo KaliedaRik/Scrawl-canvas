@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.1 - 30 April 2014
+*	version 3.1.2 - 9 May 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,12 +84,12 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 3.1.1 released 30 April 2014
+VERSION 3.1.2 released 9 May 2014
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (59kb)
+		- scrawlCore-min.js (61kb)
 		- scrawlAnimation-min.js (14kb)
 		- scrawlBlock-min.js (3kb)
 		- scrawlCollisions-min.js (10kb)
@@ -101,26 +101,26 @@ VERSION 3.1.1 released 30 April 2014
 		- scrawlPhrase-min.js (12kb)
 		- scrawlPhysics-min.js (10kb)
 		- scrawlSaveLoad-min.js (8kb)
-		- scrawlShape-min.js (8kb)
+		- scrawlShape-min.js (9kb)
 		- scrawlStacks-min.js (24kb)
 		- scrawlWheel-min.js (5kb)
 
 		Development:
-		- scrawlCore.js (185kb)
+		- scrawlCore.js (188kb)
 		- scrawlAnimation.js (38kb)
 		- scrawlBlock.js (8kb)
 		- scrawlCollisions.js (22kb)
 		- scrawlColor.js (13kb)
 		- scrawlFilters.js (32kb)
-		- scrawlImages.js (49kb)
+		- scrawlImages.js (50kb)
 		- scrawlPath.js (60kb)
 		- scrawlPathFactories.js (17kb)
 		- scrawlPhrase.js (33kb)
 		- scrawlPhysics.js (23kb)
 		- scrawlSaveLoad.js (16kb)
-		- scrawlShape.js (21kb)
+		- scrawlShape.js (22kb)
 		- scrawlStacks.js (53kb)
-		- scrawlWheel.js (15kb)
+		- scrawlWheel.js (14kb)
 
 		Documentation:
 		- changelog.txt
@@ -141,6 +141,8 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 3.1.2 uploaded 9 May 2014
+	- improvements to check hitting and mouse position functions
 Version 3.1.1 uploaded 30 April 2014
 	- added callback functionality to animation tweens
 	- minor bug fix: wheel checkHit()
