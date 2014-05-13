@@ -265,6 +265,7 @@ Helper function - creates Text objects for each line of text in a multiline Phra
 @private
 **/
 	my.Phrase.prototype.multiline = function(items){
+		items = JSON.parse(JSON.stringify(items));
 		var	text = ''+(items.text || this.get('text')),
 			textArray = text.split('\n');
 		if(my.xt(this.texts)){

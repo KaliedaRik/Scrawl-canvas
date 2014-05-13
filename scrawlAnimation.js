@@ -1147,7 +1147,9 @@ Run a tween animation
 				}
 			if(this.currentTargets.length > 0){
 				for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
+//					var com = JSON.stringify(this.onCommence);
 					if(my.xt(this.currentTargets[t])){
+//						this.currentTargets[t].set(JSON.parse(com));
 						this.currentTargets[t].set(this.onCommence);
 						this.initVals.push({});
 						for(var k = 0, kz = keys.length; k < kz; k++){
@@ -1182,7 +1184,9 @@ Finish running a tween
 **/
 	my.Tween.prototype.runComplete = function(){
 		for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
+//			var com = JSON.stringify(this.onComplete);
 			if(my.xt(this.currentTargets[t])){
+//				this.currentTargets[t].set(JSON.parse(com));
 				this.currentTargets[t].set(this.onComplete);
 				}
 			}

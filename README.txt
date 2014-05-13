@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.2 - 9 May 2014
+*	version 3.1.3 - 13 May 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,7 +84,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 3.1.2 released 9 May 2014
+VERSION 3.1.3 released 13 May 2014
 
     - the zip file includes:
 		
@@ -141,6 +141,8 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 3.1.3 uploaded 9 May 2014
+	- minor bug fix - using Phrase sprites in tween animations
 Version 3.1.2 uploaded 9 May 2014
 	- improvements to check hitting and mouse position functions
 Version 3.1.1 uploaded 30 April 2014

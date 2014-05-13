@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.2 - 9 May 2014
+*	version 3.1.3 - 13 May 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -44,8 +44,18 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140513
+	- move to version 3.1.3
+		- tested in all browsers
+
+140510-12
+	- developing infographics animated by tweens
+	- bugfix - using Phrase sprites in tween animations
+	
 140509
 	- bugfix - sorted the cube canvas flicker issue (205, 208) in Chrome/Opera/Safari
+	- move to version 3.1.2
+		- tested in all browsers
 	
 140508
 	- mouse listeners

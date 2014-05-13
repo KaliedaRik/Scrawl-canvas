@@ -2,7 +2,7 @@
 /**
 # scrawlCore
 
-## Version 3.1.2 - 9 May 2014
+## Version 3.1.3 - 13 May 2014
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -82,7 +82,7 @@ Scrawl.js version number
 @default 3.1.2
 @final
 **/
-	my.version = '3.1.2';
+	my.version = '3.1.3';
 /**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
