@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.3r2 - 5 July 2014
+*	version 3.1.4 - 7 July 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -44,6 +44,10 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140707
+	- included a bower.js file in the distribution
+	- updated to version 3.1.4
+	
 140704
 	- added the MIT licence text to all scrawl.js JavaScript files
 		- http://opensource.org/licenses/MIT
