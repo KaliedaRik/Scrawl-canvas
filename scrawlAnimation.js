@@ -659,6 +659,13 @@ Animation flag: set to false to stop animation loop
 **/
 	my.doAnimation = false;
 /**
+Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
+@property orderAnimations
+@type {Boolean}
+@default true
+**/		
+	my.orderAnimations = true,
+/**
 The Scrawl animation loop
 
 Animation loop is invoked automatically as part of the initialization process
@@ -673,6 +680,9 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 @return Recursively calls itself - never returns
 **/
 	my.animationLoop = function(){
+		if(my.orderAnimations){
+			my.sortAnimations();
+			}
 		for(var i=0, z=my.animate.length; i<z; i++){
 			if(my.animate[i]){
 				my.animation[my.animate[i]].fn();
@@ -683,6 +693,17 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 				my.animationLoop();
 				});
 			}
+		};
+/**
+Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order
+@method sortAnimations
+@return Nothing
+@private
+**/
+	my.sortAnimations = function(){
+		my.animate.sort(function(a,b){
+			return my.animation[a].order - my.animation[b].order;
+			});
 		};
 		
 /**
@@ -710,6 +731,7 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 		items = my.safeObject(items);
 		var delay = (my.isa(items.delay, 'bool')) ? items.delay : false;
 		this.fn = items.fn || function(){}; 
+		this.order = items.order || 0;
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
 /**
@@ -742,6 +764,13 @@ Anonymous function for an animation routine
 @default function(){}
 **/		
 		fn: function(){},
+/**
+Lower order animations are run during each frame before higher order ones
+@property order
+@type Number
+@default 0
+**/		
+		order: 0,
 		};
 	my.mergeInto(my.d.Animation, my.d.Base);
 /**
@@ -849,6 +878,7 @@ Tweens come with a number of flags and attributes to indicate how many times the
 		this.nextTween = items.nextTween || '';
 		this.killOnComplete = items.killOnComplete || false;
 		this.callback = (my.isa(items.callback, 'fn')) ? items.callback : false;
+		this.order = items.order || 0;
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
 		return this;
@@ -1008,6 +1038,13 @@ TWEENNAME Sring of the tween to be run when this tween completes
 @default ''
 **/		
 		nextTween: '',
+/**
+Lower order animations are run during each frame before higher order ones
+@property order
+@type Number
+@default 0
+**/		
+		order: 0,
 		};
 	my.mergeInto(my.d.Tween, my.d.Base);
 /**
@@ -1171,9 +1208,7 @@ Run a tween animation
 				}
 			if(this.currentTargets.length > 0){
 				for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
-//					var com = JSON.stringify(this.onCommence);
 					if(my.xt(this.currentTargets[t])){
-//						this.currentTargets[t].set(JSON.parse(com));
 						this.currentTargets[t].set(this.onCommence);
 						this.initVals.push({});
 						for(var k = 0, kz = keys.length; k < kz; k++){
@@ -1208,9 +1243,7 @@ Finish running a tween
 **/
 	my.Tween.prototype.runComplete = function(){
 		for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
-//			var com = JSON.stringify(this.onComplete);
 			if(my.xt(this.currentTargets[t])){
-//				this.currentTargets[t].set(JSON.parse(com));
 				this.currentTargets[t].set(this.onComplete);
 				}
 			}

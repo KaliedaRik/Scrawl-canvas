@@ -26,7 +26,7 @@
 /**
 # scrawlCore
 
-## Version 3.1.3 - 13 May 2014
+## Version 3.1.5 - 30 July 2014
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -103,10 +103,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 3.1.2
+@default 3.1.4
 @final
 **/
-	my.version = '3.1.3';
+	my.version = '3.1.5';
 /**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -319,7 +319,7 @@ Any supplied callback function will only be run once all modules have been loade
 			callback = (my.isa(items.callback, 'fn')) ? items.callback : function(){},
 			mini = (my.xt(items.minified)) ? items.minified : true,
 			//FOR DEVELOPMENT TESTING ONLY
-			mini = false,
+			//mini = false,
 			tail = (mini) ? '-min.js' : '.js',
 			loaded = [].concat(modules),
 			getModule = function(module){
@@ -2546,7 +2546,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 		var result = this.work.handle,
 			height = this.targetHeight || this.height || this.get('height'),
 			width = this.targetWidth || this.width || this.get('width');
-		return my.Position.prototype.calculatePOV(result, width, height, false);
+		return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 		};
 /**
 Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object's handle attribute, where the object's frame of reference is its center
@@ -2562,7 +2562,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 		var result = this.work.handle,
 			height = this.targetHeight || this.height || this.get('height'),
 			width = this.targetWidth || this.width || this.get('width');
-		return my.Position.prototype.calculatePOV(result, width, height, true);
+		return my.Position.prototype.calculatePOV.call(this, result, width, height, true);
 		};
 /**
 Position.getOffsetStartVector() helper function. Calculates the pixel values for the object's handle attribute
@@ -2576,6 +2576,9 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 @private
 **/
 	my.Position.prototype.calculatePOV = function(result, width, height, centered){
+		width = (my.isa(width, 'num')) ? width : 0; 
+		height = (my.isa(height, 'num')) ? height : 0; 
+		centered = (my.isa(centered, 'bool')) ? centered : false; 
 		if((my.isa(result.x, 'str')) && !my.contains(['left', 'center', 'right'], result.x)){
 			result.x = (centered) ? ((parseFloat(result.x)/100) * width) - (width/2) : (parseFloat(result.x)/100) * width;
 			}
@@ -2949,7 +2952,7 @@ mousemove event listener function
 			if(wrap.mouse.layer || my.xta([e, e.layerX]) && my.contains(['relative', 'absolute', 'fixed', 'sticky'], wrap.position)){
 				mouseX = e.layerX;
 				mouseY = e.layerY;
-				if(mouseX >= 0 && mouseX <= wrap.width && mouseY >= 0 && mouseY <= wrap.height){
+				if(mouseX >= 0 && mouseX <= (wrap.width * wrap.scale) && mouseY >= 0 && mouseY <= (wrap.height * wrap.scale)){
 					wrap.mouse.active = true;
 					}
 				wrap.mouse.x = e.layerX * (1/wrap.scale);

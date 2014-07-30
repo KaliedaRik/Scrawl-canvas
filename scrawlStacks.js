@@ -579,18 +579,21 @@ PageElement constructor hook function - modified by stacks module
 	my.PageElement.prototype.stacksPageElementConstructor = function(items){
 		var temp = my.safeObject(items.start);
 		this.start = my.newVector({
+			name: this.type+'.'+this.name+'.start',
 			x: (my.xt(items.startX)) ? items.startX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.startY)) ? items.startY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
 		this.work.start = my.newVector({name: this.type+'.'+this.name+'.work.start'});
 		temp = my.safeObject(items.delta);
 		this.delta = my.newVector({
+			name: this.type+'.'+this.name+'.delta',
 			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
 		this.work.delta = my.newVector({name: this.type+'.'+this.name+'.work.delta'});
 		temp = my.safeObject(items.handle);
 		this.handle = my.newVector({
+			name: this.type+'.'+this.name+'.handle',
 			x: (my.xt(items.handleX)) ? items.handleX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.handleY)) ? items.handleY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
@@ -600,6 +603,7 @@ PageElement constructor hook function - modified by stacks module
 			}
 		temp = my.safeObject(items.translate);
 		this.translate = my.newVector({
+			name: this.type+'.'+this.name+'.translate',
 			x: (my.xt(items.translateX)) ? items.translateX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.translateY)) ? items.translateY : ((my.xt(temp.y)) ? temp.y : 0),
 			z: (my.xt(items.translateZ)) ? items.translateZ : ((my.xt(temp.y)) ? temp.y : 0),
@@ -607,6 +611,7 @@ PageElement constructor hook function - modified by stacks module
 		this.work.translate = my.newVector({name: this.type+'.'+this.name+'.work.translate'});
 		temp = my.safeObject(items.deltaTranslate);
 		this.deltaTranslate = my.newVector({
+			name: this.type+'.'+this.name+'.deltaTranslate',
 			x: (my.xt(items.translateX)) ? items.deltaTranslateX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.translateY)) ? items.deltaTranslateY : ((my.xt(temp.y)) ? temp.y : 0),
 			z: (my.xt(items.translateZ)) ? items.deltaTranslateZ : ((my.xt(temp.y)) ? temp.y : 0),
@@ -1027,14 +1032,26 @@ Calculates the pixels value of the object's start attribute
 * doesn't take into account the object's scaling or orientation
 
 @method PageElement.getStartValues
+@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
 @return A Vector of calculated values to help determine where sprite drawing should start
 @private
 **/
-	my.PageElement.prototype.getStartValues = function(){
-		var result = my.v.set(this.start),
-			height = (this.stack) ? my.stack[this.stack].get('height') : this.height || this.get('height'),
+	my.PageElement.prototype.getStartValues = function(hasElementPivot){
+		hasElementPivot = (my.xt(hasElementPivot)) ? hasElementPivot : false;
+		var result,
+			height,
+			width;
+		if(hasElementPivot){
+			result = my.v.set(my.element[this.pivot].start),
+			height = my.element[this.pivot].get(height);
+			width = my.element[this.pivot].get(width);
+			}
+		else{
+			result = my.v.set(this.start),
+			height = (this.stack) ? my.stack[this.stack].get('height') : this.height || this.get('height');
 			width = (this.stack) ? my.stack[this.stack].get('width') : this.width || this.get('width');
-		return my.Position.prototype.calculatePOV(result, width, height, false);
+			}
+		return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 		};
 /**
 Calculates the pixels value of the object's handle attribute
@@ -1262,7 +1279,6 @@ A __factory__ function to generate new Element objects
 **/		
 	my.Stack = function(items){
 		items = my.safeObject(items);
-		my.PageElement.call(this, items);
 		if(my.xt(items.stackElement)){
 			var tempname = '',
 				temp;
@@ -1285,6 +1301,7 @@ A __factory__ function to generate new Element objects
 			this.work.perspective = my.newVector({name: this.type+'.'+this.name+'.work.perspective'});
 			this.width = items.width || this.get('width');
 			this.height = items.height || this.get('height');
+			this.scaleText = (my.isa(items.scaleText, 'bool')) ? items.scaleText : false;
 			this.setDimensions()
 			this.setPerspective();
 			this.setStyles(items);
@@ -1320,6 +1337,14 @@ the Stack constructor, and set() function, supports the following 'virtual' attr
 @type Object
 **/		
 		perspective: {x:'center',y:'center',z:0},
+/**
+A flag to indicate whether element text should be scaled at the same time as the stack. Default; false (do not scale text)
+
+@property scaleText
+@type Boolean
+@default false
+**/		
+		scaleText: false,
 		};
 	my.mergeInto(my.d.Stack, my.d.PageElement);
 /**
@@ -1348,6 +1373,9 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 			this.perspective.y = (my.xt(items.perspectiveY)) ? items.perspectiveY : this.perspective.y;
 			this.perspective.z = (my.xt(items.perspectiveZ)) ? items.perspectiveZ : this.perspective.z;
 			this.setPerspective();
+			}
+		if(my.xt(items.scale)){
+			this.scaleStack(items.scale);
 			}
 		return this;
 		};
@@ -1435,7 +1463,7 @@ Parse the perspective Vector attribute
 		var result = this.work.perspective,
 			height = this.height || this.get('height'),
 			width = this.width || this.get('width');
-		return my.Position.prototype.calculatePOV(result, width, height, false);
+		return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 		};
 /**
 Calculates the pixels value of the object's perspective attribute
@@ -1460,12 +1488,19 @@ Calculates the pixels value of the object's perspective attribute
 		};
 /**
 Scale the stack, and all objects contained in stack
+
+An item value of 1 will scale the stack to its preset size. Values less than 1 will shrink the stack; values greater than 1 will enlarge it.
+
+By default, this function does not scale text contained in any stack element. If the scaleFont boolean is is passed as true, then the function will set the stack's font-size style attribute to (item * 100)%. Element font sizes will not scale unless they have been initially set to relative unit values.
+
 @method scaleStack
-@param {Number} item Scale value
+@param {Number} item - Scale value
+@param {Boolean} scaleFont - if set to true, will also scale element font sizes; default: false
 @return This
 @chainable
 **/
-	my.Stack.prototype.scaleStack = function(item){
+	my.Stack.prototype.scaleStack = function(item, scaleFont){
+		scaleFont = (my.xt(scaleFont)) ? scaleFont : this.scaleText;
 		if(my.isa(item,'num') && this.type === 'Stack'){
 			for(var i=0, z=my.stacknames.length; i<z; i++){
 				if(my.stack[my.stacknames[i]].stack === this.name){
@@ -1485,6 +1520,9 @@ Scale the stack, and all objects contained in stack
 			this.scaleDimensions(item);
 			if(this.type === 'Stack'){
 				this.setPerspective();
+				if(scaleFont){
+					my.stk[this.name].style.fontSize = (item * 100)+'%';
+					}
 				}
 			}
 		return this;
@@ -1512,12 +1550,12 @@ Scale the stack, and all objects contained in stack
 
 @class Element
 @constructor
-@extends Scrawl3d
+@extends PageElement
 @param {Object} [items] Key:value Object argument for setting attributes
 **/		
 	my.Element = function(items){
 		items = (my.isa(items,'obj')) ? items : {};
-		my.PageElement.call(this, items);
+//		my.PageElement.call(this, items);
 		if(my.xt(items.domElement)){
 			var tempname = '';
 			if(my.xto([items.domElement.id,items.domElement.name])){
@@ -1529,6 +1567,7 @@ Scale the stack, and all objects contained in stack
 			my.pushUnique(my.elementnames, this.name);
 			my.elm[this.name].id = this.name;
 			my.elm[this.name].style.position = 'absolute';
+			my.elm[this.name].style.visibility = 'visible';
 			this.stack = items.stack || '';
 			this.width = items.width || this.get('width');
 			this.height = items.height || this.get('height');

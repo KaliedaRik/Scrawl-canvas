@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.4 - 7 July 2014
+*	version 3.1.5 - 30 July 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,7 +84,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 3.1.4 released 7 July 2014
+VERSION 3.1.5 released 30 July 2014
 
     - the zip file includes:
 		
@@ -141,6 +141,9 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 3.1.5 uploaded 30 July 2014
+	- bugfixes for element positioning within a scrawl stack
+	- added ability to order animations
 Version 3.1.4 uploaded 7 July 2014
 	- included MIT licence text in all source files
 	- added a bower.json file to the distribution

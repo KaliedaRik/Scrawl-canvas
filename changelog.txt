@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.4 - 7 July 2014
+*	version 3.1.5 - 30 July 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -44,6 +44,13 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+140425-30
+	- developed new demo - 213 - featuring animated elements
+		- fixed element positioning bugs
+		- added .order attribute to animation and tween objects
+			- so the order in which animations are executed each screen refresh can be controlled
+	- updated to version 3.1.5
+
 140707
 	- included a bower.js file in the distribution
 	- updated to version 3.1.4
