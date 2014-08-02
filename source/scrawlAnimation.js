@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 window.requestAnimFrame = (function(callback){
 	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback){window.setTimeout(callback, 1000/60);};
 	})();
@@ -43,6 +42,7 @@ The Animation module adds support for animation and tweening to the core
 **/
 
 var scrawl = (function(my){
+	'use strict';
 
 /**
 # window.scrawl
@@ -121,8 +121,8 @@ Position.get hook function - modified by animation module
 	my.Position.prototype.animationPositionGet = function(item){
 		if(my.contains(['deltaX','deltaY'], item)){
 			switch(item){
-				case 'deltaX' : return this.delta.x; break;
-				case 'deltaY' : return this.delta.y; break;
+				case 'deltaX' : return this.delta.x;
+				case 'deltaY' : return this.delta.y;
 				}
 			}
 		if('delta' === item){
@@ -293,8 +293,8 @@ Cell.get hook function - modified by animation module
 	my.Cell.prototype.animationCellGet = function(item){
 		if(my.contains(['sourceDeltaX', 'sourceDeltaY'], item)){
 			switch(item){
-				case 'sourceDeltaX' : return this.sourceDelta.x; break;
-				case 'sourceDeltaY' : return this.sourceDelta.y; break;
+				case 'sourceDeltaX' : return this.sourceDelta.x;
+				case 'sourceDeltaY' : return this.sourceDelta.y;
 				}
 			}
 		return my.Base.prototype.get.call(this, item);
@@ -639,7 +639,7 @@ A __factory__ function to generate new Animation objects
 **/
 	my.newAnimation = function(items){
 		return new my.Animation(items);
-		}
+		};
 /**
 A __factory__ function to generate new Tween objects
 @method newTween
@@ -664,7 +664,7 @@ Animation ordering flag - when set to false, the ordering of animations is skipp
 @type {Boolean}
 @default true
 **/		
-	my.orderAnimations = true,
+	my.orderAnimations = true;
 /**
 The Scrawl animation loop
 
@@ -683,7 +683,7 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 		if(my.orderAnimations){
 			my.sortAnimations();
 			}
-		for(var i=0, z=my.animate.length; i<z; i++){
+		for(var i=0, iz=my.animate.length; i<iz; i++){
 			if(my.animate[i]){
 				my.animation[my.animate[i]].fn();
 				}
@@ -746,7 +746,7 @@ _This attribute is not retained by the Animation object_
 			this.run();
 			}
 		return this;
-		}
+		};
 	my.Animation.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -882,7 +882,7 @@ Tweens come with a number of flags and attributes to indicate how many times the
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
 		return this;
-		}
+		};
 	my.Tween.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -1116,9 +1116,9 @@ Tween engines
 	my.Tween.prototype.engine = function(start, change, position, engine, reverse){
 		var temp;
 		switch(engine){
-			case 'easeOut' : 										//OPPOSITE of Flash easeOut - slow at start, not end
+			case 'easeOut' :										//OPPOSITE of Flash easeOut - slow at start, not end
 				return start + ((position * position) * change);
-			case 'easeIn' : 										//OPPOSITE of Flash easeIn - slow at end, not start
+			case 'easeIn' :											//OPPOSITE of Flash easeIn - slow at end, not start
 				temp = 1 - position;
 				return (start + change) + ((temp * temp) * -change);
 			case 'easeOut3' :
@@ -1178,13 +1178,13 @@ Run a tween animation
 			start,
 			change;
 		if(!this.active){
-			activeTweens = [],
-			keys = Object.keys(this.end),
+			activeTweens = [];
+			keys = Object.keys(this.end);
 			this.currentCount = this.currentCount || this.count;
 			this.currentTargets = [];
 			this.initVals = [];
-			for(var i = 0, z = my.animationnames.length; i < z; i++){
-				tw = my.animation[my.animationnames[i]];
+			for(var l = 0, lz = my.animationnames.length; l < lz; l++){
+				tw = my.animation[my.animationnames[l]];
 				if(tw.type === 'Tween' && tw.active && tw.name !== this.name){
 					activeTweens.push(tw);
 					}
@@ -1211,17 +1211,17 @@ Run a tween animation
 					if(my.xt(this.currentTargets[t])){
 						this.currentTargets[t].set(this.onCommence);
 						this.initVals.push({});
-						for(var k = 0, kz = keys.length; k < kz; k++){
-							if(my.xt(this.start[keys[k]])){
-								this.initVals[t][keys[k]] = {
-									start: (this.reverse) ? this.end[keys[k]] : this.start[keys[k]],
-									change: (this.reverse) ? -(this.end[keys[k]] - this.start[keys[k]]) : this.end[keys[k]] - this.start[keys[k]],
+						for(var m = 0, mz = keys.length; m < mz; m++){
+							if(my.xt(this.start[keys[m]])){
+								this.initVals[t][keys[m]] = {
+									start: (this.reverse) ? this.end[keys[m]] : this.start[keys[m]],
+									change: (this.reverse) ? -(this.end[keys[m]] - this.start[keys[m]]) : this.end[keys[m]] - this.start[keys[m]],
 									};
 								}
 							else{
-								this.initVals[t][keys[k]] = {
-									start: this.currentTargets[t].get([keys[k]]),
-									change: (this.reverse) ? -this.end[keys[k]] : this.end[keys[k]],
+								this.initVals[t][keys[m]] = {
+									start: this.currentTargets[t].get([keys[m]]),
+									change: (this.reverse) ? -this.end[keys[m]] : this.end[keys[m]],
 									};
 								}
 							}

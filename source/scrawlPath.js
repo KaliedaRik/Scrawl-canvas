@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 /**
 # scrawlPath
 
@@ -38,6 +37,7 @@ The Path module adds Path sprites - path-based objects - to the core module
 **/
 
 var scrawl = (function(my){
+	'use strict';
 
 /**
 # window.scrawl
@@ -70,13 +70,13 @@ scrawl.deleteSprite hook function - modified by path module
 		if(mySprite.type === 'Path'){
 			myPointList = mySprite.getFullPointList();
 			myLinkList = mySprite.getFullLinkList();
-			for(var j=0, w=myPointList.length; j<w; j++){
+			for(var j=0, jz=myPointList.length; j<jz; j++){
 				my.removeItem(my.pointnames, myPointList[j]);
 				delete my.point[myPointList[j]];
 				}
-			for(var j=0, w=myLinkList.length; j<w; j++){
-				my.removeItem(my.linknames, myLinkList[j]);
-				delete my.link[myLinkList[j]];
+			for(var i=0, iz=myLinkList.length; i<iz; i++){
+				my.removeItem(my.linknames, myLinkList[i]);
+				delete my.link[myLinkList[i]];
 				}
 			}
 		};
@@ -229,7 +229,9 @@ A __factory__ function to generate new Path sprites
 			lc = 0, 
 			pc = 0, 
 			cx = 0, 
-			cy = 0;
+			cy = 0,
+			k = 0,
+			v = 0;
 		var	myPivot = (my.xt(items.pivot)) ? my.point[myPivot] || my.sprite[myPivot] : false;
 		items.start = (my.xt(items.start)) ? items.start : {};
 		items.scaleX = items.scaleX || 1; 
@@ -288,36 +290,36 @@ A __factory__ function to generate new Path sprites
 			if(myShape){
 				set = items.data.match(/([A-Za-z][0-9. ,\-]*)/g);
 				generatePoint(tn, pc, sn, cx, cy, lc, sx, sy); pc++;
-				for(var i=0,z=set.length; i<z; i++){
+				for(var i=0, iz=set.length; i<iz; i++){
 					command = set[i][0];
 					data = getPathSetData(set[i]);
 					switch(command){
 						case 'M' :
-							cx = data[0], cy = data[1];
+							cx = data[0]; cy = data[1];
 							checkMinMax(cx,cy);
 							generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 							generateLink(tn, lc, sn, false, 'move', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
-							for(var k=2,v=data.length;k<v;k+=2){
+							for(k=2, v=data.length; k<v; k+=2){
 								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
-								cx = data[k], cy = data[k+1];
+								cx = data[k]; cy = data[k+1];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 'm' :
 							if(i===0){
-								cx = data[0], cy = data[1];
+								cx = data[0]; cy = data[1];
 								}
 							else{
-								cx += data[0], cy += data[1];
+								cx += data[0]; cy += data[1];
 								}
 							checkMinMax(cx,cy);
 							generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 							generateLink(tn, lc, sn, false, 'move', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
-							for(var k=2,v=data.length;k<v;k+=2){
+							for(k=2, v=data.length; k<v; k+=2){
 								generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
-								cx += data[k], cy += data[k+1];
+								cx += data[k]; cy += data[k+1];
 								checkMinMax(cx,cy);
 								}
 							break;
@@ -327,23 +329,23 @@ A __factory__ function to generate new Path sprites
 							generateLink(tn, lc, sn, false, 'close', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 							break;
 						case 'L' :
-							for(var k=0,v=data.length;k<v;k+=2){
+							for(k=0, v=data.length; k<v; k+=2){
 								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
-								cx = data[k], cy = data[k+1];
+								cx = data[k]; cy = data[k+1];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 'l' :
-							for(var k=0,v=data.length;k<v;k+=2){
+							for(k=0, v=data.length; k<v; k+=2){
 								generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
-								cx += data[k], cy += data[k+1];
+								cx += data[k]; cy += data[k+1];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 'H' :
-							for(var k=0,v=data.length;k<v;k++){
+							for(k=0, v=data.length; k<v; k++){
 								generatePoint(tn, pc, sn, data[k], cy, lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 								cx = data[k];
@@ -351,7 +353,7 @@ A __factory__ function to generate new Path sprites
 								}
 							break;
 						case 'h' :
-							for(var k=0,v=data.length;k<v;k++){
+							for(k=0, v=data.length; k<v; k++){
 								generatePoint(tn, pc, sn, cx+data[k], cy, lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 								cx += data[k];
@@ -359,7 +361,7 @@ A __factory__ function to generate new Path sprites
 								}
 							break;
 						case 'V' :
-							for(var k=0,v=data.length;k<v;k++){
+							for(k=0, v=data.length; k<v; k++){
 								generatePoint(tn, pc, sn, cx, data[k], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 								cy = data[k];
@@ -367,7 +369,7 @@ A __factory__ function to generate new Path sprites
 								}
 							break;
 						case 'v' :
-							for(var k=0,v=data.length;k<v;k++){
+							for(k=0, v=data.length; k<v; k++){
 								generatePoint(tn, pc, sn, cx, cy+data[k], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'line', 'add', lib[tn+'_p'+(pc-2)], lib[tn+'_p'+(pc-1)]); lc++;
 								cy += data[k];
@@ -375,33 +377,33 @@ A __factory__ function to generate new Path sprites
 								}
 							break;
 						case 'C' :
-							for(var k=0,v=data.length;k<v;k+=6){
+							for(k=0, v=data.length; k<v; k+=6){
 								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 								generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
 								generatePoint(tn, pc, sn, data[k+4], data[k+5], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
-								cx = data[k+4], cy = data[k+5];
+								cx = data[k+4]; cy = data[k+5];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 'c' :
-							for(var k=0,v=data.length;k<v;k+=6){
+							for(k=0, v=data.length; k<v; k+=6){
 								generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
 								generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], lc+1, sx, sy); pc++;
 								generatePoint(tn, pc, sn, cx+data[k+4], cy+data[k+5], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
-								cx += data[k+4], cy += data[k+5];
+								cx += data[k+4]; cy += data[k+5];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 'S' :
-							for(var k=0,v=data.length;k<v;k+=4){
+							for(k=0, v=data.length; k<v; k+=4){
 								if(i>0 && my.contains(['C','c','S','s'], set[i-1][0])){
 									lib[tn+'_p'+(pc-2)].clone({
 										name: tn+'_p'+pc,
 										currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
 										currentY: cy+(cy-lib[tn+'_p'+(pc-2)].currentY),
-										}), pc++;
+										}); pc++;
 									}
 								else{
 									generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
@@ -409,18 +411,18 @@ A __factory__ function to generate new Path sprites
 								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 								generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
-								cx = data[k+2], cy = data[k+3];
+								cx = data[k+2]; cy = data[k+3];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 's' :
-							for(var k=0,v=data.length;k<v;k+=4){
+							for(k=0, v=data.length; k<v; k+=4){
 								if(i>0 && my.contains(['C','c','S','s'], set[i-1][0])){
 									lib[tn+'_p'+(pc-2)].clone({
 										name: tn+'_p'+pc,
 										currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
 										currentY: cy+(cy-lib[tn+'_p'+(pc-2)].currentY),
-										}), pc++;
+										}); pc++;
 									}
 								else{
 									generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
@@ -428,61 +430,61 @@ A __factory__ function to generate new Path sprites
 								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 								generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'bezier', 'add', lib[tn+'_p'+(pc-4)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-2)]); lc++;
-								cx += data[k+2], cy += data[k+3];
+								cx += data[k+2]; cy += data[k+3];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 'Q' :
-							for(var k=0,v=data.length;k<v;k+=4){
+							for(k=0, v=data.length; k<v; k+=4){
 								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 								generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
-								cx = data[k+2], cy = data[k+3];
+								cx = data[k+2]; cy = data[k+3];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 'q' :
-							for(var k=0,v=data.length;k<v;k+=4){
+							for(k=0, v=data.length; k<v; k+=4){
 								generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
 								generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
-								cx += data[k+2], cy += data[k+3];
+								cx += data[k+2]; cy += data[k+3];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 'T' :
-							for(var k=0,v=data.length;k<v;k+=2){
+							for(k=0, v=data.length; k<v; k+=2){
 								if(i>0 && my.contains(['Q','q','T','t'], set[i-1][0])){
 									lib[tn+'_p'+(pc-2)].clone({
 										name: tn+'_p'+pc,
 										currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
 										currentY: cy+(cy-lib[tn+'_p'+(pc-2)].currentY),
-										}), pc++;
+										}); pc++;
 									}
 								else{
 									generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 									}
 								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
-								cx = data[k], cy = data[k+1];
+								cx = data[k]; cy = data[k+1];
 								checkMinMax(cx,cy);
 								}
 							break;
 						case 't' :
-							for(var k=0,v=data.length;k<v;k+=2){
+							for(k=0, v=data.length; k<v; k+=2){
 								if(i>0 && my.contains(['Q','q','T','t'], set[i-1][0])){
 									lib[tn+'_p'+(pc-2)].clone({
 										name: tn+'_p'+pc,
 										currentX: cx+(cx-lib[tn+'_p'+(pc-2)].currentX),
 										currentY: cy+(cy-lib[tn+'_p'+(pc-2)].currentY),
-										}), pc++;
+										}); pc++;
 									}
 								else{
 									generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
 									}
 								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
 								generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn+'_p'+(pc-3)], lib[tn+'_p'+(pc-1)], lib[tn+'_p'+(pc-2)]); lc++;
-								cx += data[k], cy += data[k+1];
+								cx += data[k]; cy += data[k+1];
 								checkMinMax(cx,cy);
 								}
 							break;
@@ -542,7 +544,7 @@ Additional factory functions to instantiate Path objects are available in the __
 		this.registerInLibrary();
 		my.pushUnique(my.group[this.group].sprites, this.name);
 		return this;
-		}
+		};
 	my.Path.prototype = Object.create(my.Sprite.prototype);
 /**
 @property type
@@ -678,7 +680,7 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 			my.link[my.point[this.firstPoint].startLink].sketch(ctx);
 			}
 		return this;
-		}
+		};
 /**
 Augments Position.getPivotOffsetVector()
 @method getPivotOffsetVector
@@ -952,7 +954,7 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 	my.Path.prototype.getFullPointList = function(){
 		var myPointList = [],
 			search = new RegExp(this.name + '_.*');
-		for(var i=0, z=my.pointnames.length; i<z; i++){
+		for(var i=0, iz=my.pointnames.length; i<iz; i++){
 			if(search.test(my.pointnames[i])){
 				myPointList.push(my.pointnames[i]);
 				}
@@ -966,7 +968,7 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 	my.Path.prototype.getFullLinkList = function(){
 		var myLinkList = [],
 			search = new RegExp(this.name + '_.*');
-		for(var i=0, z=my.linknames.length; i<z; i++){
+		for(var i=0, iz=my.linknames.length; i<iz; i++){
 			if(search.test(my.linknames[i])){
 				myLinkList.push(my.linknames[i]);
 				}
@@ -1001,18 +1003,18 @@ Helper function - calculate the positions and lengths of the Path's constituent 
 			len, 
 			myLink,
 			tPos;
-		for(var i=0, z=linkList.length; i<z; i++){
+		for(var i=0, iz=linkList.length; i<iz; i++){
 			my.link[linkList[i]].setPositions();
 			}
-		for(var i=0, z=linkList.length; i<z; i++){
-			myLink = my.link[linkList[i]];
+		for(var j=0, jz=linkList.length; j<jz; j++){
+			myLink = my.link[linkList[j]];
 			tPos = myLink.get('positions');
 			len = tPos[tPos.length - 1].cumulativeLength;
 			cumLen += len;
 			linkDurations.push(cumLen);
 			}
-		for(var i=0, z=linkList.length; i<z; i++){
-			linkDurations[i] /= cumLen;
+		for(var k=0, kz=linkList.length; k<kz; k++){
+			linkDurations[k] /= cumLen;
 			}
 		my.Base.prototype.set.call(this, {
 			perimeterLength: cumLen,
@@ -1048,9 +1050,9 @@ Calculate coordinates of point at given distance along the Shape sprite's path
 			angle,
 			temp;
 		this.getPerimeterLength();
-		linkList = this.get('linkList')
+		linkList = this.get('linkList');
 		linkDurations = this.get('linkDurations');
-		for(var i=0, z=linkList.length; i<z; i++){
+		for(var i=0, iz=linkList.length; i<iz; i++){
 			myLink = my.link[linkList[i]];
 			if(linkDurations[i] >= val){
 				if(i === 0){
@@ -1153,7 +1155,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				point,
 				c = [],
 				currentPos = 0;
-			for(var i=0, z=p.length; i<z; i++){
+			for(var i=0, iz=p.length; i<iz; i++){
 				if(my.isa(p[i], 'num') && p[i] >= 0){
 					if(p[i] > 1){
 						//regular points along the path
@@ -1172,7 +1174,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 					}
 				else if(my.isa(p[i], 'str')){
 					switch(p[i]) {
-						case 'start' : 	
+						case 'start' :
 							c.push(0); c.push(0); break;
 						}
 					}
@@ -1180,8 +1182,8 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 					c.push(p[i].x);		c.push(p[i].y);
 					}
 				}
+			this.collisionVectors = c;
 			}
-		this.collisionVectors = c;
 		return this;
 		};
 
@@ -1238,7 +1240,7 @@ Path creation factories will all create Point objects automatically as part of t
 			my.pushUnique(my.sprite[this.sprite].pointList, this.name);
 			}
 		return this;
-		}
+		};
 	my.Point.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -1328,7 +1330,7 @@ Add values to the local attribute. Permitted attributes of the argument object i
 			this.local.y += (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : 0));
 			}
 		if(my.xt(items.distance)){
-			m = this.local.getMagnitude()
+			m = this.local.getMagnitude();
 			this.local.scalarMultiply((items.distance + m)/m);
 			}
 		if(my.xt(items.angle)){
@@ -1509,7 +1511,7 @@ Set Point.fixed attribute
 			my.pushUnique(my.sprite[this.sprite].linkList, this.name);
 			}
 		return this;
-		}
+		};
 	my.Link.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -1798,17 +1800,17 @@ Returns length of Link, in pixels
 				}
 			this.positions[0].p.set(cur);
 			sprite.set({roll: 0,});
-			for(var i = 1; i <= precision; i++){
-				pos = step * ((i-1) + 1);
+			for(var j = 1; j <= precision; j++){
+				pos = step * ((j-1) + 1);
 				here = this.getPositionOnLink(pos);				//my.worklink.v1
 				here.vectorSubtract(sprite.start);
 				vHere.set(here);								//my.worklink.v3
 				dist = here.vectorSubtract(cur).getMagnitude();
 				cur.set(vHere);									//my.worklink.v2
 				cumLen += dist;
-				this.positions[i].p.set(cur);
-				this.positions[i].length = dist;
-				this.positions[i].cumulativeLength = cumLen;
+				this.positions[j].p.set(cur);
+				this.positions[j].length = dist;
+				this.positions[j].cumulativeLength = cumLen;
 				}
 			this.length = this.positions[precision].cumulativeLength;
 			sprite.roll = temp;
@@ -1889,7 +1891,6 @@ _Note: this function is recursive_
 				break;
 			default :
 				return true;
-				break;
 			}
 		try{
 			myResult = my.link[my.point[this.endPoint].startLink].sketch(ctx);

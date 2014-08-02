@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 
 /**
 # scrawlFilters
@@ -35,6 +34,7 @@ The Filters module adds a set of filter algorithms to the Scrawl library
 **/
 
 var scrawl = (function(my){
+	'use strict';
 /**
 # window.scrawl
 
@@ -447,9 +447,9 @@ The argument object can take up to nine additional attributes, used to set the t
 			r = data[i];
 			g = data[i+1];
 			b = data[i+2];
-			red = (r * rr) + (g * gr) + (b * br)
-			grn = (r * rg) + (g * gg) + (b * bg)
-			blu = (r * rb) + (g * gb) + (b * bb)
+			red = (r * rr) + (g * gr) + (b * br);
+			grn = (r * rg) + (g * gg) + (b * bg);
+			blu = (r * rb) + (g * gb) + (b * bb);
 			data[i] = (r * iVal) + (red * value);
 			data[i+1] = (g * iVal) + (grn * value);
 			data[i+2] = (b * iVal) + (blu * value);
@@ -670,9 +670,9 @@ Attributes in the argument object:
 		args.items.wrap = (my.isa(args.items.wrap, 'bool')) ? args.items.wrap : false;
 		reqLen = Math.ceil(Math.sqrt(myArray.length));
 		reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
-		for(var i = 0; i < reqLen; i++){
-			myArray[i] = (my.xt(myArray[i])) ? parseFloat(myArray[i]) : 0;
-			myArray[i] = (isNaN(myArray[i])) ? 0 : myArray[i];
+		for(var k = 0; k < reqLen; k++){
+			myArray[k] = (my.xt(myArray[k])) ? parseFloat(myArray[k]) : 0;
+			myArray[k] = (isNaN(myArray[k])) ? 0 : myArray[k];
 			}
 		matrixMid = Math.floor(myArray.length/2);
 		matrixDim = Math.sqrt(myArray.length);
@@ -724,9 +724,9 @@ Function used by matrix() and blur() filter functions
 		if(length > 0){
 			for(var i = 0; i < height; i++){ //rows (y)
 				for(var j = 0; j < width; j++){ //cols (x)
-					r = b = g = a = w = 0;
+					r = 0; b = 0; g = 0; a = 0; w = 0;
 					here = 4 * ((i * width) + j);
-					for(var k = 0, z = length; k < z; k++){
+					for(var k = 0; k < length; k++){
 						addPix = true;
 						x = matrix[k].ox;
 						y = matrix[k].oy;

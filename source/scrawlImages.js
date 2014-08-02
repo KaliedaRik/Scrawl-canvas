@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 
 /**
 # scrawlImages
@@ -41,6 +40,7 @@ The Images module adds support for displaying images on canvas elements
 **/
 
 var scrawl = (function(my){
+	'use strict';
 
 /**
 # window.scrawl
@@ -201,7 +201,7 @@ If no name attribute is supplied in the argument object, the new Picture sprite 
 				}
 			return my.doConvert(image, items);
 			}
-		return false
+		return false;
 		};
 /**
 Helper function for convert functions
@@ -757,7 +757,7 @@ _Note: this function is asynchronous_
 			myImage.onerror = function(){
 				console.log('Picture.importImage() failed - <'+myImage.id+'> failed to load');
 				return false;
-				}
+				};
 			myImage.src = items.url;
 			}
 		else{
@@ -1207,11 +1207,11 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			hit,
 			test = (my.isa(items.test,'num')) ? items.test : 0;
 		for(var i = 0, iz = mytests.length; i < iz; i += 2){
-			hit = my.Sprite.prototype.checkHit.call(this, {tests: [mytests[i], mytests[i+1]]})
+			hit = my.Sprite.prototype.checkHit.call(this, {tests: [mytests[i], mytests[i+1]]});
 			if(this.checkHitUsingImageData){
 				if(hit){
-					hit.x = parseInt(hit.x);
-					hit.y = parseInt(hit.y);
+					hit.x = parseInt(hit.x, 10);
+					hit.y = parseInt(hit.y, 10);
 					c = this.getImageDataValue(hit);
 					if(this.get('imageDataChannel') === 'color'){
 						hit = (c === 'rgba(0,0,0,0)') ? false : hit;
@@ -1294,7 +1294,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			return this;
 			}
 		return false;
-		}
+		};
 	my.ScrawlImage.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -1380,7 +1380,12 @@ _Note: does not save the data in the scrawl library_
 		putdata = (my.xt(putdata)) ? putdata : false;
 		my.cv.width = (putdata) ? image.width : this.width;
 		my.cv.height = (putdata) ? image.height : this.height;
-		(putdata) ? my.cvx.putImageData(image, 0, 0) : my.cvx.drawImage(image, 0, 0);
+		if(putdata){
+			my.cvx.putImageData(image, 0, 0);
+			}
+		else{
+			my.cvx.drawImage(image, 0, 0);
+			}
 		result = my.cv.toDataURL('image/png');
 		return result;
 		};
@@ -1471,7 +1476,7 @@ AnimSheet attributes can also be set and retrieved directly using Picture.get() 
 		my.anim[this.name] = this;
 		my.pushUnique(my.animnames, this.name);
 		return this;
-		}
+		};
 	my.AnimSheet.prototype = Object.create(my.Base.prototype);
 /**
 @property type

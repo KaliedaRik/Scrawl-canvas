@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 /**
 # scrawlPhrase
 
@@ -38,6 +37,7 @@ The Phrase module adds Phrase sprites - single and multi-line text objects - to 
 **/
 
 var scrawl = (function(my){
+	'use strict';
 
 /**
 # window.scrawl
@@ -108,7 +108,7 @@ A __factory__ function to generate new Phrase sprites
 		this.multiline(items);
 		this.getMetrics();
 		return this;
-		}
+		};
 	my.Phrase.prototype = Object.create(my.Sprite.prototype);
 /**
 @property type
@@ -293,15 +293,15 @@ Helper function - creates Text objects for each line of text in a multiline Phra
 		var	text = ''+(items.text || this.get('text')),
 			textArray = text.split('\n');
 		if(my.xt(this.texts)){
-			for(var i=0,z=this.texts.length; i<z; i++){
+			for(var i = 0, iz = this.texts.length; i < iz; i++){
 				delete my.text[this.texts[i]];
 				my.removeItem(my.textnames, this.texts[i]);
 				}
 			}
 		this.texts = [];
 		items.phrase = this.name;
-		for(var i=0, z=textArray.length; i<z; i++){
-			items.text = textArray[i];
+		for(var j = 0, jz = textArray.length; j < jz; j++){
+			items.text = textArray[j];
 			if(items.text.length > 0){
 				new my.Text(items);
 				}
@@ -765,7 +765,7 @@ Returns an object with coordinates __x__ and __y__
 		my.pushUnique(my.sprite[this.phrase].texts, this.name);
 		this.getMetrics();
 		return this;
-		}
+		};
 	my.Text.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -914,14 +914,10 @@ Permitted methods include:
 					case 'fillDraw' : this.fillDraw(engine, cell, x, y, p); break;
 					case 'sinkInto' : this.sinkInto(engine, cell, x, y); break;
 					case 'floatOver' : this.floatOver(engine, cell, x, y); break;
-					case 'clear' : 
-					case 'clearWithBackground' : 
-					case 'clip' : 
-					case 'none' : 
 					default :
 						//do nothing
 					}
-				pos += (this.glyphWidths[j]/width) * ratio
+				pos += (this.glyphWidths[j]/width) * ratio;
 				if(!my.isBetween(pos, 0, 1, true)){
 					pos += (pos > 0.5) ? -1 : 1;
 					}
@@ -1106,7 +1102,7 @@ Calculate metrics for each phrase, word or glyph in the glyphs array
 			myText = this.text;
 			if(this.textAlongPath === 'word'){
 				tempText = this.text.split(' ');
-				for(var i=0, z=tempText.length; i<z; i++){
+				for(var i = 0, iz = tempText.length; i < iz; i++){
 					this.glyphs.push(tempText[i]);
 					this.glyphWidths.push(myContext.measureText(tempText[i]).width);
 					if(my.xt(tempText[i+1])){
@@ -1118,15 +1114,15 @@ Calculate metrics for each phrase, word or glyph in the glyphs array
 			else{
 				myTextWidth = myContext.measureText(myText).width;
 				if(this.fixedWidth){
-					for(var i=0, z=myText.length; i<z; i++){
-						this.glyphs.push(myText[i]);
-						this.glyphWidths.push(myTextWidth/z);
+					for(var j = 0, jz = myText.length; j < jz; j++){
+						this.glyphs.push(myText[j]);
+						this.glyphWidths.push(myTextWidth/jz);
 						}
 					}
 				else{
-					for(var i=1, z=myText.length; i<=z; i++){
-						this.glyphs.push(myText[i-1]);
-						tempText = myText.substr(0, i-1)+myText.substr(i);
+					for(var k = 1, kz = myText.length; k <= kz; k++){
+						this.glyphs.push(myText[k-1]);
+						tempText = myText.substr(0, k-1)+myText.substr(k);
 						this.glyphWidths.push((myTextWidth - myContext.measureText(tempText).width));
 						}
 					}

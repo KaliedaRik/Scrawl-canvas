@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 /**
 # scrawlCollisions
 
@@ -35,6 +34,7 @@ The Collisions module adds support for detecting collisions between sprites
 @module scrawlCollisions
 **/
 var scrawl = (function(my){
+	'use strict';
 
 /**
 # window.scrawl
@@ -76,7 +76,7 @@ A __general__ function which asks Cell objects to generate field collision table
 		if(items === 'all'){
 			myCells = my.cellnames;
 			}
-		for(var i=0, z=myCells.length; i<z; i++){
+		for(var i = 0, iz = myCells.length; i < iz; i++){
 			my.cell[myCells[i]].buildField();
 			}
 		return true;
@@ -89,7 +89,7 @@ Orders all Cell objects associated with this Pad to (re)create their field colli
 @chainable
 **/
 	my.Pad.prototype.buildFields = function(){
-		for(var i=0, z=this.cells.length; i<z; i++){
+		for(var i = 0, iz = this.cells.length; i < iz; i++){
 			my.cell[this.cells[i]].buildField();
 			}
 		return this;
@@ -117,7 +117,7 @@ Cell constructor hook function - modified by collisions module
 		if(items.fence){
 			my.group[this.name+'_fence'].sprites = [].concat(items.fence);
 			}
-		}
+		};
 
 	my.d.Cell.fieldLabel = '';
 /**
@@ -137,7 +137,7 @@ Builds a collision map image from sprites, for use in sprite field collision det
 		my.context[this.context].fillRect(0, 0, this.actualWidth, this.actualHeight);
 		my.context[this.context].fillStyle = myfill;
 		fieldSprites = my.group[this.name+'_field'].sprites;
-		for(var i=0, z=fieldSprites.length; i<z; i++){
+		for(var i = 0, iz = fieldSprites.length; i < iz; i++){
 			tempsprite = my.sprite[fieldSprites[i]];
 			tempfill = my.ctx[tempsprite.context].fillStyle;
 			tempstroke = my.ctx[tempsprite.context].strokeStyle;
@@ -148,8 +148,8 @@ Builds a collision map image from sprites, for use in sprite field collision det
 			my.ctx[tempsprite.context].strokeStyle = tempstroke;
 			}
 		fenceSprites = my.group[this.name+'_fence'].sprites;
-		for(var i=0, z=fenceSprites.length; i<z; i++){
-			tempsprite = my.sprite[fenceSprites[i]];
+		for(var j = 0, jz = fenceSprites.length; j < jz; j++){
+			tempsprite = my.sprite[fenceSprites[j]];
 			tempfill = my.ctx[tempsprite.context].fillStyle;
 			tempstroke = my.ctx[tempsprite.context].strokeStyle;
 			my.ctx[tempsprite.context].fillStyle = 'rgba(0,0,0,1)';
@@ -207,7 +207,6 @@ Test will return:
 			y = Math.round(coords[i+1]);
 			if(!my.isBetween(x, 0, d.width, true) || !my.isBetween(y, 0, d.height, true)){
 				return false;
-				break;
 				}
 			else{
 				pos = ((y * d.width) + x) * 4;
@@ -254,7 +253,7 @@ Check all sprites in the Group to see if they are colliding with the supplied sp
 		if(my.contains(my.spritenames, sprite.name)){
 			var	hits = [],
 				myTests = sprite.getCollisionPoints();
-			for(var i=0, z=this.sprites.length; i<z; i++){
+			for(var i = 0, iz = this.sprites.length; i < iz; i++){
 				if(my.sprite[this.sprites[i]].name !== sprite.name){
 					if(my.sprite[this.sprites[i]].get('visibility')){
 						if(my.sprite[this.sprites[i]].checkHit({tests: myTests})){
@@ -280,31 +279,31 @@ Check all sprites in the Group against each other to see if they are in collisio
 			ts1,
 			ts2,
 			tresult;
-		for(var i=0, z=this.sprites.length; i<z; i++){
+		for(var i = 0, iz = this.sprites.length; i < iz; i++){
 			temp = my.sprite[this.sprites[i]];
 			cViz[temp.name] = temp.visibility;
 			if(cViz[temp.name]){
 				cPoints[temp.name] = temp.getCollisionPoints();
 				}
 			}
-		for(var i=0, z=this.sprites.length; i<z; i++){
-			if(cViz[this.sprites[i]]){
-				for(var j=i+1, w=this.sprites.length; j<w; j++){
+		for(var k = 0, kz = this.sprites.length; k < kz; k++){
+			if(cViz[this.sprites[k]]){
+				for(var j = k+1, jz = this.sprites.length; j < jz; j++){
 					if(cViz[this.sprites[j]]){
 						if(this.regionRadius){
-							ts1 = my.workcols.v1.set(my.sprite[this.sprites[i]].start);
+							ts1 = my.workcols.v1.set(my.sprite[this.sprites[k]].start);
 							ts2 = my.workcols.v2.set(my.sprite[this.sprites[j]].start);
 							tresult = ts1.vectorSubtract(ts2).getMagnitude();
 							if(tresult > this.regionRadius){
 								continue;
 								}
 							}
-						if(my.sprite[this.sprites[j]].checkHit({tests: cPoints[this.sprites[i]]})){
-							hits.push([this.sprites[i],this.sprites[j]]);
+						if(my.sprite[this.sprites[j]].checkHit({tests: cPoints[this.sprites[k]]})){
+							hits.push([this.sprites[k],this.sprites[j]]);
 							continue;
 							}
-						if(my.sprite[this.sprites[i]].checkHit({tests: cPoints[this.sprites[j]]})){
-							hits.push([this.sprites[i],this.sprites[j]]);
+						if(my.sprite[this.sprites[k]].checkHit({tests: cPoints[this.sprites[j]]})){
+							hits.push([this.sprites[k],this.sprites[j]]);
 							continue;
 							}
 						}
@@ -341,41 +340,38 @@ Check all sprites in this Group against all sprites in the argument Group, to se
 					return false;
 					}
 				}
-			for(var i=0, z=this.sprites.length; i<z; i++){
-				temp = my.sprite[this.sprites[i]];
+			for(var l = 0, lz = this.sprites.length; l < lz; l++){
+				temp = my.sprite[this.sprites[l]];
 				cViz[temp.name] = temp.visibility;
 				if(cViz[temp.name]){
 					cPoints[temp.name] = temp.getCollisionPoints();
 					}
 				}
-			for(var i=0, z=g.sprites.length; i<z; i++){
+			for(var i = 0, iz = g.sprites.length; i < iz; i++){
 				temp = my.sprite[g.sprites[i]];
 				cViz[temp.name] = temp.visibility;
 				if(cViz[temp.name]){
 					cPoints[temp.name] = temp.getCollisionPoints();
 					}
 				}
-//console.log(cPoints);
-			for(var i=0, z=this.sprites.length; i<z; i++){
-				if(cViz[this.sprites[i]]){
-//console.log(this.name, this.sprites[i]);
-					for(var j=0, w=g.sprites.length; j<w; j++){
+			for(var k = 0, kz = this.sprites.length; k < kz; k++){
+				if(cViz[this.sprites[k]]){
+					for(var j = 0, jz = g.sprites.length; j < jz; j++){
 						if(cViz[g.sprites[j]]){
 							if(this.regionRadius){
-								ts1 = my.workcols.v1.set(my.sprite[this.sprites[i]].start);
+								ts1 = my.workcols.v1.set(my.sprite[this.sprites[k]].start);
 								ts2 = my.workcols.v2.set(my.sprite[g.sprites[j]].start);
 								tresult = ts1.vectorSubtract(ts2).getMagnitude();
 								if(tresult > this.regionRadius){
 									continue;
 									}
 								}
-//console.log(g.name, g.sprites[j], cPoints[this.sprites[i]]);
-							if(my.sprite[g.sprites[j]].checkHit({tests: cPoints[this.sprites[i]]})){
-								hits.push([this.sprites[i],g.sprites[j]]);
+							if(my.sprite[g.sprites[j]].checkHit({tests: cPoints[this.sprites[k]]})){
+								hits.push([this.sprites[k],g.sprites[j]]);
 								continue;
 								}
-							if(my.sprite[this.sprites[i]].checkHit({tests: cPoints[g.sprites[j]]})){
-								hits.push([this.sprites[i],g.sprites[j]]);
+							if(my.sprite[this.sprites[k]].checkHit({tests: cPoints[g.sprites[j]]})){
+								hits.push([this.sprites[k],g.sprites[j]]);
 								continue;
 								}
 							}
@@ -400,7 +396,7 @@ An Array of Arrays is returned, with each constituent array consisting of the th
 		cell = (my.xt(cell)) ? cell : this.cell;
 		var	hits = [],
 			result;
-		for(var j=0, w=this.sprites.length; j<w; j++){
+		for(var j = 0, jz = this.sprites.length; j < jz; j++){
 			result = my.sprite[this.sprites[j]].checkField(cell);
 			if(!my.isa(result,'bool')){
 				hits.push([this.sprites[j], result]);
@@ -473,7 +469,7 @@ Add this sprite to a (range of) Cell object field groups
 **/
 	my.Sprite.prototype.addSpriteToCellFields = function(cells){
 		cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
-		for(var i=0, z=cells.length; i<z; i++){
+		for(var i = 0, iz = cells.length; i < iz; i++){
 			if(my.contains(my.cellnames, cells[i])){
 				my.group[cells[i]+'_field'].addSpritesToGroup(this.name);
 				}
@@ -489,7 +485,7 @@ Add this sprite to a (range of) Cell object fence groups
 **/
 	my.Sprite.prototype.addSpriteToCellFences = function(cells){
 		cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
-		for(var i=0, z=cells.length; i<z; i++){
+		for(var i = 0, iz = cells.length; i < iz; i++){
 			if(my.contains(my.cellnames, cells[i])){
 				my.group[cells[i]+'_fence'].addSpritesToGroup(this.name);
 				}
@@ -505,7 +501,7 @@ Remove this sprite from a (range of) Cell object field groups
 **/
 	my.Sprite.prototype.removeSpriteFromCellFields = function(cells){
 		cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
-		for(var i=0, z=cells.length; i<z; i++){
+		for(var i = 0, iz = cells.length; i < iz; i++){
 			if(my.contains(my.cellnames, cells[i])){
 				my.group[cells[i]+'_field'].removeSpritesFromGroup(this.name);
 				}
@@ -521,7 +517,7 @@ Remove this sprite from a (range of) Cell object fence groups
 **/
 	my.Sprite.prototype.removeSpriteFromCellFences = function(cells){
 		cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
-		for(var i=0, z=cells.length; i<z; i++){
+		for(var i = 0, iz = cells.length; i < iz; i++){
 			if(my.contains(my.cellnames, cells[i])){
 				my.group[cells[i]+'_fence'].removeSpritesFromGroup(this.name);
 				}
@@ -595,16 +591,16 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 		for(var i = 0, iz = p.length; i < iz; i++){
 			if(my.isa(p[i], 'str')){
 				switch(p[i]) {
-					case 'start' : 	c.push(0); 				c.push(0); 				break;
-					case 'N' : 		c.push((w/2) - o.x); 	c.push(-o.y); 			break;
-					case 'NE' : 	c.push(w - o.x);		c.push(-o.y); 			break;
-					case 'E' : 		c.push(w - o.x);		c.push((h/2) - o.y); 	break;
-					case 'SE' : 	c.push(w - o.x);		c.push(h - o.y); 		break;
-					case 'S' : 		c.push((w/2) - o.x);	c.push(h - o.y); 		break;
-					case 'SW' : 	c.push(-o.x);			c.push(h - o.y); 		break;
-					case 'W' : 		c.push(-o.x);			c.push((h/2) - o.y); 	break;
-					case 'NW' : 	c.push(-o.x);			c.push(-o.y); 			break;
-					case 'center' :	c.push((w/2) - o.x);	c.push((h/2) - o.y); 	break;
+					case 'start'	:	c.push(0);				c.push(0);				break;
+					case 'N'		:	c.push((w/2) - o.x);	c.push(-o.y);			break;
+					case 'NE'		:	c.push(w - o.x);		c.push(-o.y);			break;
+					case 'E'		:	c.push(w - o.x);		c.push((h/2) - o.y);	break;
+					case 'SE'		:	c.push(w - o.x);		c.push(h - o.y);		break;
+					case 'S'		:	c.push((w/2) - o.x);	c.push(h - o.y);		break;
+					case 'SW'		:	c.push(-o.x);			c.push(h - o.y);		break;
+					case 'W'		:	c.push(-o.x);			c.push((h/2) - o.y);	break;
+					case 'NW'		:	c.push(-o.x);			c.push(-o.y);			break;
+					case 'center'	:	c.push((w/2) - o.x);	c.push((h/2) - o.y);	break;
 					}
 				}
 			else if(my.isa(p[i], 'vector')){
@@ -627,7 +623,7 @@ Parses user input for the collisionPoint attribute
 	my.Sprite.prototype.parseCollisionPoints = function(items){
 		var myItems = (my.xt(items)) ? [].concat(items) : [],
 			p = [];
-		for(var i=0, z=myItems.length; i<z; i++){
+		for(var i = 0, iz = myItems.length; i < iz; i++){
 			if(my.isa(myItems[i], 'str')){
 				switch(myItems[i].toLowerCase()) {
 					case 'all' :

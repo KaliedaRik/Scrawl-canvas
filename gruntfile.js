@@ -31,7 +31,7 @@ module.exports = function(grunt){
 					}
 				},
 			jshint: {
-				all: ['source/scrawlPath.js']
+				all: ['source/scrawlPhysics.js']
 				}
 		});
 

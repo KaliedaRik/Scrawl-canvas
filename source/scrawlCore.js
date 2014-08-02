@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 /**
 # scrawlCore
 
@@ -65,6 +64,7 @@ The core module is the only essential module in Scrawl. It must always be direct
 **/
 
 var scrawl = (function(){
+	'use strict';
 	var my = {};
 	
 /**
@@ -142,14 +142,14 @@ Work vector, for calculations
 @type {Vector}
 @private
 **/
-	my.v;
+	my.v = null;
 /**
 Work quaternions, for calculations
 @property workquat
 @type {Object}
 @private
 **/
-	my.workquat;
+	my.workquat = null;
 /**
 DOM document fragment
 @property f
@@ -243,8 +243,8 @@ A __general__ function that resets the Scrawl library to empty arrays and object
 		for(var i = 0, iz = my.nameslist.length; i < iz; i++){
 			my[my.nameslist[i]] = [];
 			}
-		for(var i = 0, iz = my.sectionlist.length; i < iz; i++){
-			my[my.sectionlist[i]] = {};
+		for(var j = 0, jz = my.sectionlist.length; j < jz; j++){
+			my[my.sectionlist[j]] = {};
 			}
 		return my;
 		};
@@ -319,7 +319,7 @@ Any supplied callback function will only be run once all modules have been loade
 			callback = (my.isa(items.callback, 'fn')) ? items.callback : function(){},
 			mini = (my.xt(items.minified)) ? items.minified : true,
 			//FOR DEVELOPMENT TESTING ONLY
-			//mini = false,
+			mini = false,
 			tail = (mini) ? '-min.js' : '.js',
 			loaded = [].concat(modules),
 			getModule = function(module){
@@ -344,7 +344,7 @@ Any supplied callback function will only be run once all modules have been loade
 		console.log('Modules to be loaded: ',modules);
 		for(var i = 0, iz = modules.length; i < iz; i++){
 			getModule(modules[i]);
-			};
+			}
 		return my;
 		};
 /**
@@ -523,44 +523,19 @@ Valid identifier Strings include:
 		if(my.xta([item, identifier])){
 			var myId = identifier.toLowerCase();
 			switch(myId){
-				case 'num' :
-					return (typeof item === 'number') ? true : false;
-					break;
-				case 'str' :
-					return (typeof item === 'string') ? true : false;
-					break;
-				case 'bool' :
-					return (typeof item === 'boolean') ? true : false;
-					break;
-				case 'fn' :
-					return (typeof item === 'function') ? true : false;
-					break;
-				case 'vector' :
-					return (my.isa(item, 'obj') && my.xt(item.type) && item.type === 'Vector') ? true : false;
-					break;
-				case 'quaternion' :
-					return (my.isa(item, 'obj') && my.xt(item.type) && item.type === 'Quaternion') ? true : false;
-					break;
-				case 'arr' :
-					return (Object.prototype.toString.call(item) === '[object Array]') ? true : false;
-					break;
-				case 'obj' :
-					return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
-					break;
-				case 'canvas' :
-					return (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
-					break;
-				case 'img' :
-					return (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
-					break;
-				case 'video' :
-					return (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
-					break;
-				case 'date' :
-					return (Object.prototype.toString.call(item) === '[object Date]') ? true : false;
-					break;
-				default :
-					return false;
+				case 'num' : return (typeof item === 'number') ? true : false;
+				case 'str' : return (typeof item === 'string') ? true : false;
+				case 'bool' : return (typeof item === 'boolean') ? true : false;
+				case 'fn' : return (typeof item === 'function') ? true : false;
+				case 'vector' : return (my.isa(item, 'obj') && my.xt(item.type) && item.type === 'Vector') ? true : false;
+				case 'quaternion' : return (my.isa(item, 'obj') && my.xt(item.type) && item.type === 'Quaternion') ? true : false;
+				case 'arr' : return (Object.prototype.toString.call(item) === '[object Array]') ? true : false;
+				case 'obj' : return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
+				case 'canvas' : return (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
+				case 'img' : return (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
+				case 'video' : return (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
+				case 'date' : return (Object.prototype.toString.call(item) === '[object Date]') ? true : false;
+				default : return false;
 				}
 			}
 		return false;
@@ -574,7 +549,7 @@ Check to see if variable is an Object
 **/
 	my.safeObject = function(items){
 		return (my.isa(items, 'obj')) ? items : {};
-		}
+		};
 /**
 A __utility__ function for variable type checking
 @method xt
@@ -604,7 +579,7 @@ A __utility__ function for variable type checking
 	my.xta = function(item){
 		var a = [].concat(item);
 		if(a.length > 0){
-			for(var i=0, z=a.length; i<z; i++){
+			for(var i=0, iz=a.length; i<iz; i++){
 				if(typeof a[i] === 'undefined'){
 					return false;
 					}
@@ -628,7 +603,7 @@ A __utility__ function for variable type checking
 	my.xto = function(item){
 		var a = [].concat(item);
 		if(a.length > 0){
-			for(var i=0, z=a.length; i<z; i++){
+			for(var i=0, iz=a.length; i<iz; i++){
 				if(typeof a[i] !== 'undefined'){
 					return true;
 					}
@@ -675,7 +650,7 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 **/
 	my.setDisplayOffsets = function(item){
 		item = (my.xt(item)) ? item : 'all';
-		for(var i=0, z=my.padnames.length; i<z; i++){
+		for(var i=0, iz=my.padnames.length; i<iz; i++){
 			my.pad[my.padnames[i]].setDisplayOffsets();
 			}
 		return my;
@@ -693,14 +668,14 @@ A __private__ function that searches the DOM for canvas elements and generates P
 			myPad, 
 			canvases = [];
 		if(s.length > 0){
-			for(var i=0, z=s.length; i<z; i++){
+			for(var i=0, iz=s.length; i<iz; i++){
 				canvases.push(s[i]);
 				}
-			for(var i=0, z=s.length; i<z; i++){
+			for(var j=0, jz=s.length; j<jz; j++){
 				myPad = my.newPad({
-					canvasElement: canvases[i],
+					canvasElement: canvases[j],
 					});
-				if(i === 0){
+				if(j === 0){
 					my.currentPad = myPad.name;
 					}
 				}
@@ -754,7 +729,7 @@ The argument object should include the following attributes:
 		myCanvas = document.createElement('canvas');
 		myCanvas.id = myName;
 		myParent.appendChild(myCanvas);
-		DOMCanvas = document.getElementById(myName)
+		DOMCanvas = document.getElementById(myName);
 		DOMCanvas.width = items.width;
 		DOMCanvas.height = items.height;
 		myPad = my.newPad({
@@ -788,7 +763,7 @@ A __general__ function which passes on requests to pads to update their drawOrde
 **/
 	my.setDrawOrder = function(order, pads){
 		var p = (my.xt(pads)) ? [].concat(pads) : [my.currentPad];
-		for(var i=0, z=p.length; i<z; i++){
+		for(var i=0, iz=p.length; i<iz; i++){
 			my.pad[p[i]].setDrawOrder(order);
 			}
 		return my;
@@ -804,7 +779,7 @@ A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&
 	my.clear = function(command, pads){
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
 		if(p.length > 0){
-			for(var i=0, z=p.length; i<z; i++){
+			for(var i=0, iz=p.length; i<iz; i++){
 				my.pad[p[i]].clear(command);
 				}
 			}
@@ -821,7 +796,7 @@ A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&
 	my.stampBackground = function(command, pads){
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
 		if(p.length > 0){
-			for(var i=0, z=p.length; i<z; i++){
+			for(var i=0, iz=p.length; i<iz; i++){
 				my.pad[p[i]].stampBackground(command);
 				}
 			}
@@ -838,7 +813,7 @@ A __display__ function to ask Pads to get their Cells to compile their scenes - 
 	my.compile = function(command, pads){
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
 		if(p.length > 0){
-			for(var i=0, z=p.length; i<z; i++){
+			for(var i=0, iz=p.length; i<iz; i++){
 				my.pad[p[i]].compile(command);
 				}
 			}
@@ -855,7 +830,7 @@ A __display__ function to ask Pads to show the results of their latest display c
 	my.show = function(command, pads){
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
 		if(p.length > 0){
-			for(var i=0, z=p.length; i<z; i++){
+			for(var i=0, iz=p.length; i<iz; i++){
 				my.pad[p[i]].show(command);
 				}
 			}
@@ -872,7 +847,7 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 	my.render = function(command, pads){
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
 		if(p.length > 0){
-			for(var i=0, z=p.length; i<z; i++){
+			for(var i=0, iz=p.length; i<iz; i++){
 				my.pad[p[i]].render(command);
 				}
 			}
@@ -898,9 +873,9 @@ A __general__ function which deletes Cell objects and their associated paraphina
 **/
 	my.deleteCells = function(cells){
 		if(my.xt(cells)){
-			var c = [].concat(cells)
-			for(var i=0, z=c.length; i<z; i++){
-				for(var j=0, w=my.padnames.length; j<w; j++){
+			var c = [].concat(cells);
+			for(var i=0, iz=c.length; i<iz; i++){
+				for(var j=0, jz=my.padnames.length; j<jz; j++){
 					my.pad[my.padnames[j]].deleteCell(c[i]);
 					}
 				delete my.group[c[i]];
@@ -974,7 +949,7 @@ A __general__ function which adds supplied spritenames to Group.sprites attribut
 		if(my.xta([groups,sprites])){
 			var	myGroups = [].concat(groups),
 				mySprites = [].concat(sprites);
-			for(var i=0, z=myGroups.length; i<z; i++){
+			for(var i=0, iz=myGroups.length; i<iz; i++){
 				if(my.contains(my.groupnames, myGroups[i])){
 					my.group[myGroups[i]].addSpritesToGroup(mySprites);
 					}
@@ -994,7 +969,7 @@ A __general__ function which removes supplied spritenames from Group.sprites att
 		if(my.xta([groups,sprites])){
 			var	myGroups = [].concat(groups),
 				mySprites = [].concat(sprites);
-			for(var i=0, z=myGroups.length; i<z; i++){
+			for(var i=0, iz=myGroups.length; i<iz; i++){
 				if(my.contains(my.groupnames, myGroups[i])){
 					my.group[myGroups[i]].removeSpritesFromGroup(mySprites);
 					}
@@ -1021,7 +996,7 @@ A __general__ function to delete sprite objects
 			myCtx,
 			search,
 			mySprite;
-		for(var i=0, z=myItems.length; i<z; i++){
+		for(var i=0, iz=myItems.length; i<iz; i++){
 			if(my.contains(my.spritenames, myItems[i])){
 				mySprite = my.sprite[myItems[i]];
 				my.pathDeleteSprite(mySprite);
@@ -1030,7 +1005,7 @@ A __general__ function to delete sprite objects
 				delete my.ctx[myCtx];
 				my.removeItem(my.spritenames, myItems[i]);
 				delete my.sprite[myItems[i]];
-				for(var j =0, v=my.groupnames.length; j<v; j++){
+				for(var j =0, jz=my.groupnames.length; j<jz; j++){
 					my.removeItem(my.group[my.groupnames[j]].sprites, myItems[i]);
 					}
 				}
@@ -1056,7 +1031,7 @@ A __factory__ function to generate new Vector objects
 **/
 	my.newVector = function(items){
 		return new my.Vector(items);
-		}
+		};
 /**
 A __factory__ function to generate new Quaternion objects - see also scrawl.makeQuaternion()
 @method newQuaternion
@@ -1065,7 +1040,7 @@ A __factory__ function to generate new Quaternion objects - see also scrawl.make
 **/
 	my.newQuaternion = function(items){
 		return new my.Quaternion(items);
-		}
+		};
 /**
 A __factory__ function to build a Quaternion object from Euler angle values
 
@@ -1084,7 +1059,7 @@ Argument object can be in the following form, where all values (which default to
 **/
 	my.makeQuaternion = function(items){
 		return my.Quaternion.prototype.makeFromEuler(items);
-		}
+		};
 /**
 A __factory__ function to generate new Pad objects
 @method newPad
@@ -1094,7 +1069,7 @@ A __factory__ function to generate new Pad objects
 **/
 	my.newPad = function(items){
 		return new my.Pad(items);
-		}
+		};
 /**
 A __factory__ function to generate new Cell objects
 @method newCell
@@ -1104,7 +1079,7 @@ A __factory__ function to generate new Cell objects
 **/
 	my.newCell = function(items){
 		return new my.Cell(items);
-		}
+		};
 /**
 A __factory__ function to generate new Context objects
 @method newContext
@@ -1132,7 +1107,7 @@ A __factory__ function to generate new Gradient objects
 **/
 	my.newGradient = function(items){
 		return new my.Gradient(items);
-		}
+		};
 /**
 A __factory__ function to generate new RadialGradient objects
 @method newRadialGradient
@@ -1141,7 +1116,7 @@ A __factory__ function to generate new RadialGradient objects
 **/
 	my.newRadialGradient = function(items){
 		return new my.RadialGradient(items);
-		}
+		};
 		
 /**
 # Vector
@@ -1164,7 +1139,7 @@ A __factory__ function to generate new RadialGradient objects
 		this.z = items.z || 0;
 		this.name = items.name || 'generic';
 		return this;
-		}
+		};
 	my.Vector.prototype = Object.create(Object.prototype);
 /**
 @property type
@@ -1579,9 +1554,9 @@ Rotate a Vector object by a Quaternion rotation
 			x: vector.x || items.x || 0,
 			y: vector.y || items.y || 0,
 			z: vector.z || items.z || 0,
-			})
+			});
 		return this;
-		}
+		};
 	my.Quaternion.prototype = Object.create(Object.prototype);
 /**
 @property type
@@ -2085,7 +2060,7 @@ Vector work space - not included in defaults
 **/		
 		this.work = {};
 		return this;
-		}
+		};
 	my.Base.prototype = Object.create(Object.prototype);
 /**
 @property type
@@ -2236,7 +2211,7 @@ Certain Scrawl modules will add functionality to this object, for instance scraw
 		this.animationPositionInit(items);
 		this.pathPositionInit(items);
 		return this;
-		}
+		};
 	my.Position.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -2420,10 +2395,10 @@ For 'start' and 'handle', returns a copy of the Vector
 		var u;
 		if(my.contains(['startX', 'startY', 'handleX', 'handleY'], item)){
 			switch(item){
-				case 'startX' : return this.start.x; break;
-				case 'startY' : return this.start.y; break;
-				case 'handleX' : return this.handle.x; break;
-				case 'handleY' : return this.handle.y; break;
+				case 'startX' : return this.start.x;
+				case 'startY' : return this.start.y;
+				case 'handleX' : return this.handle.x;
+				case 'handleY' : return this.handle.y;
 				}
 			}
 		return (this.animationPositionGet(item) || my.Base.prototype.get.call(this, item));
@@ -2657,7 +2632,7 @@ Takes into account lock flag settings
 			this.oldX = here.x;
 			this.oldY = here.y;
 			}
-		return this
+		return this;
 		};
 /**
 Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions
@@ -2682,7 +2657,7 @@ Takes into account lock flag settings
 				}
 			return v;
 			}
-		return false
+		return false;
 		};
 
 /**
@@ -2709,7 +2684,7 @@ The core implementation of this object is a stub that supplies Pad objects with 
 		this.scale = (my.isa(items.scale, 'num')) ? items.scale : my.d[this.type].scale;
 		this.stacksPageElementConstructor(items);
 		return this;
-		}
+		};
 	my.PageElement.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -2799,13 +2774,10 @@ Augments Base.get() to retrieve DOM element width and height values
 			switch(item){
 				case 'width' : 
 					return this.width || parseFloat(el.width) || my.d[this.type].width; 
-					break;
 				case 'height' : 
 					return this.height || parseFloat(el.height) || my.d[this.type].height; 
-					break;
 				case 'position' : 
 					return this.position || el.style.position; 
-					break;
 				}
 			}
 		return my.Base.prototype.get.call(this, item);
@@ -2880,7 +2852,11 @@ Calculate the DOM element's current display offset values
 			do{
 				dox += myDisplay.offsetLeft;
 				doy += myDisplay.offsetTop;
-				} while (myDisplay = myDisplay.offsetParent);
+				//original
+				//} while (myDisplay = myDisplay.offsetParent);
+				//linted
+				myDisplay = myDisplay.offsetParent;
+				} while (myDisplay.offsetParent);
 			}
 		this.displayOffsetX = dox;
 		this.displayOffsetY = doy;
@@ -2895,7 +2871,7 @@ Scale DOM element dimensions (width, height)
 **/
 	my.PageElement.prototype.scaleDimensions = function(item){
 		if(my.isa(item, 'num')){
-			this.scale = item,
+			this.scale = item;
 			this.setDimensions();
 			}
 		return this;
@@ -3027,16 +3003,23 @@ Adds a mousemove event listener to the element
 **/
 	my.PageElement.prototype.addMouseMove = function(){
 		var el = this.getElement(),
-			test,
-			nowt;
+			test;
+//			test,
+//			nowt;
 		el.removeEventListener('mousemove', this.handleMouseMove, false);
 		el.addEventListener('mousemove', this.handleMouseMove, false);
 		el.removeEventListener('mouseout', this.handleMouseOut, false);
 		el.removeEventListener('mouseleave', this.handleMouseOut, false);
 		el.setAttribute('onmouseout', 'return;');
 		test = typeof el.onmouseout == 'function';
-		el.setAttribute('onmouseout', nowt);
-		(test) ? el.addEventListener('mouseout', this.handleMouseOut, false) : el.addEventListener('mouseleave', this.handleMouseOut, false);
+//		el.setAttribute('onmouseout', nowt);
+		el.setAttribute('onmouseout', null);
+		if(test) {
+			el.addEventListener('mouseout', this.handleMouseOut, false);
+			}
+		else{
+			el.addEventListener('mouseleave', this.handleMouseOut, false);
+			}
 		return this;
 		};
 /**
@@ -3091,7 +3074,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			baseCanvas,
 			myCellBase;
 		if(my.xt(items.canvasElement)){
-			my.canvas['PadConstructorTemporaryCanvas'] = items.canvasElement;
+			my.canvas.PadConstructorTemporaryCanvas = items.canvasElement;
 			this.display = 'PadConstructorTemporaryCanvas';
 			if(my.xto([items.canvasElement.id,items.canvasElement.name])){
 				tempname = items.canvasElement.id || items.canvasElement.name || tempname;
@@ -3106,7 +3089,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				this.drawOrder = [];
 				this.width = items.width || this.get('width');
 				this.height = items.height || this.get('height');
-				this.setDimensions()
+				this.setDimensions();
 				my.pad[this.name] = this;
 				my.pushUnique(my.padnames, this.name);
 				if(items.length > 1){
@@ -3142,7 +3125,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			}
 		console.log('Failed to generate a Pad controller - no canvas element supplied'); 
 		return false;
-		}
+		};
 	my.Pad.prototype = Object.create(my.PageElement.prototype);
 /**
 @property type
@@ -3292,7 +3275,7 @@ The argument can also be an Array of CELLNAME strings
 			temp = command;
 			}
 		else{
-			for(var i=0, z=this.cells.length; i<z; i++){
+			for(var i=0, iz=this.cells.length; i<iz; i++){
 				temp.push(this.cells[i]);
 				}
 			switch(command){
@@ -3338,7 +3321,7 @@ The argument can also be an Array of CELLNAME strings
 **/
 	my.Pad.prototype.clear = function(command){
 		var temp = this.getCellsForDisplayAction(command);
-		for(var i=0, z=temp.length; i<z; i++){
+		for(var i=0, iz=temp.length; i<iz; i++){
 			my.cell[temp[i]].clear();
 			}
 		return this;
@@ -3368,7 +3351,7 @@ The argument can also be an Array of CELLNAME strings
 **/
 	my.Pad.prototype.compile = function(command){
 		var temp = this.getCellsForDisplayAction(command);
-		for(var i=0, z=temp.length; i<z; i++){
+		for(var i=0, iz=temp.length; i<iz; i++){
 			my.cell[temp[i]].compile();
 			}
 		return this;
@@ -3398,7 +3381,7 @@ The argument can also be an Array of CELLNAME strings
 **/
 	my.Pad.prototype.stampBackground = function(command){
 		var temp = this.getCellsForDisplayAction(command);
-		for(var i=0, z=temp.length; i<z; i++){
+		for(var i=0, iz=temp.length; i<iz; i++){
 			my.cell[temp[i]].stampBackground();
 			}
 		return this;
@@ -3434,7 +3417,7 @@ The base canvas is then copied onto the display canvas, as the last copy operati
 				break;
 			}
 		if(this.drawOrder.length > 0){
-			for(var i=0, z=this.drawOrder.length; i<z; i++){
+			for(var i=0, iz=this.drawOrder.length; i<iz; i++){
 				my.cell[this.base].copyCellToSelf(my.cell[this.drawOrder[i]]);
 				}
 			}
@@ -3488,8 +3471,8 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 			myCanvas.setAttribute('id', data.name);
 			myCanvas.setAttribute('height', data.height);
 			myCanvas.setAttribute('width', data.width);
-			data['pad'] = this.name;
-			data['canvas'] = myCanvas;
+			data.pad = this.name;
+			data.canvas = myCanvas;
 			myCell = my.newCell(data);
 			my.pushUnique(this.cells, myCell.name);
 			return myCell;
@@ -3505,7 +3488,7 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 **/
 	my.Pad.prototype.addCells = function(items){
 		items = [].concat(items);
-		for(var i=0, z=items.length; i<z; i++){
+		for(var i=0, iz=items.length; i<iz; i++){
 			if(my.contains(my.cellnames, items[i])){
 				this.cells.push(items[i]);
 				this.drawOrder.push(items[i]);
@@ -3642,7 +3625,7 @@ Cell supports the following 'virtual' attributes for this attribute:
 			}
 		console.log('Cell constructor encountered an error: no canvas element supplied to it');
 		return false;
-		}
+		};
 	my.Cell.prototype = Object.create(my.Position.prototype);
 /**
 @property type
@@ -3863,22 +3846,22 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 	my.Cell.prototype.get = function(item){
 		if(my.contains(['targetX', 'targetY', 'sourceX', 'sourceY'], item)){
 			switch(item){
-				case 'targetX' : return this.start.x; break;
-				case 'targetY' : return this.start.y; break;
-				case 'sourceX' : return this.source.x; break;
-				case 'sourceY' : return this.source.y; break;
+				case 'targetX' : return this.start.x;
+				case 'targetY' : return this.start.y;
+				case 'sourceX' : return this.source.x;
+				case 'sourceY' : return this.source.y;
 				}
 			}
 		if(my.contains(['target', 'source'], item)){
 			switch(item){
-				case 'target' : return this.start.getVector(); break;
-				case 'source' : return this.source.getVector(); break;
+				case 'target' : return this.start.getVector();
+				case 'source' : return this.source.getVector();
 				}
 			}
 		if(my.contains(['width', 'height'], item)){
 			switch(item){
-				case 'width' : return (this.usePadDimensions) ? this.getPadWidth() : this.actualWidth; break;
-				case 'height' : return (this.usePadDimensions) ? this.getPadHeight() : this.actualHeight; break;
+				case 'width' : return (this.usePadDimensions) ? this.getPadWidth() : this.actualWidth;
+				case 'height' : return (this.usePadDimensions) ? this.getPadHeight() : this.actualHeight;
 				}
 			}
 		return (this.animationCellGet(item) || my.Position.prototype.get.call(this, item));
@@ -4115,7 +4098,7 @@ Prepare to draw sprites onto the Cell's &lt;canvas&gt; element, in line with the
 		this.groups.sort(function(a,b){
 			return my.group[a].order - my.group[b].order;
 			});
-		for(var i=0, z=this.groups.length; i<z; i++){
+		for(var i=0, iz=this.groups.length; i<iz; i++){
 			if(my.group[this.groups[i]].get('visibility')){
 				my.group[this.groups[i]].stamp(false, this.name);
 				}
@@ -4171,7 +4154,12 @@ Cell copy helper function
 			this.offset.set(this.getOffsetStartVector());
 			this.offset.flag = true;
 			}
-		(this.pivot) ? this.setStampUsingPivot(my.pad[this.pad].base) : this.pathPrepareToCopyCell();
+		if(this.pivot){
+			this.setStampUsingPivot(my.pad[this.pad].base);
+			}
+		else{
+			this.pathPrepareToCopyCell();
+			}
 		this.rotateDestination(engine);
 		return this;
 		};
@@ -4395,7 +4383,7 @@ Default values are:
 		my.ctx[this.name] = this;
 		my.pushUnique(my.ctxnames, this.name);
 		return this;
-		}
+		};
 	my.Context.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -4643,7 +4631,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @private
 **/
 	my.Context.prototype.getContextFromEngine = function(ctx){
-		for(var i=0, z=my.contextKeys.length; i<z; i++){
+		for(var i=0, iz=my.contextKeys.length; i<iz; i++){
 			this[my.contextKeys[i]] = ctx[my.contextKeys[i]];
 			}
 		this.winding = ctx.mozFillRule || ctx.msFillRule || 'nonzero';
@@ -4666,7 +4654,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 			count = 0,
 			temp,
 			tempCol;
-		for(var i=0, z=my.contextKeys.length; i<z; i++){
+		for(var i=0, iz=my.contextKeys.length; i<iz; i++){
 			temp = this.get(my.contextKeys[i]);
 			//handle scalable items
 			if(my.contains(['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'], my.contextKeys[i])){
@@ -4703,7 +4691,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 					count++;
 					}
 				else{
-					for(var j=0, w=temp.length; j<w; j++){
+					for(var j=0, jz=temp.length; j<jz; j++){
 						if(temp[j] !== ctx.lineDash[j]){
 							r.lineDash = temp;
 							count++;
@@ -4761,7 +4749,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 		my.pushUnique(my.groupnames, this.name);
 		my.pushUnique(my.cell[this.cell].groups, this.name);
 		return this;
-		}
+		};
 	my.Group.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -4857,7 +4845,7 @@ Tell the Group to ask its constituent sprites to draw themselves on a &lt;canvas
 	my.Group.prototype.stamp = function(method, cell){
 		if(this.visibility){
 			this.sortSprites();
-			for(var i=0, z=this.sprites.length; i<z; i++){
+			for(var i=0, iz=this.sprites.length; i<iz; i++){
 				my.sprite[this.sprites[i]].stamp(method, cell);
 				}
 			}
@@ -4872,7 +4860,7 @@ Add sprites to the Group
 **/
 	my.Group.prototype.addSpritesToGroup = function(item){
 		item = (my.xt(item)) ? [].concat(item) : [];
-		for(var i=0, z=item.length; i<z; i++){
+		for(var i=0, iz=item.length; i<iz; i++){
 			my.pushUnique(this.sprites, item[i]);
 			}
 		return this;
@@ -4886,7 +4874,7 @@ Remove sprites from the Group
 **/
 	my.Group.prototype.removeSpritesFromGroup = function(item){
 		item = (my.xt(item)) ? [].concat(item) : [];
-		for(var i=0, z=item.length; i<z; i++){
+		for(var i=0, iz=item.length; i<iz; i++){
 			my.removeItem(this.sprites, item[i]);
 			}
 		return this;
@@ -4902,7 +4890,7 @@ The following sprite attributes can be amended by this function: startX, startY,
 **/
 	my.Group.prototype.updateSpritesBy = function(items){
 		items = my.safeObject(items);
-		for(var i=0, z=this.sprites.length; i<z; i++){
+		for(var i=0, iz=this.sprites.length; i<iz; i++){
 			my.sprite[this.sprites[i]].setDelta({
 				startX: items.x || items.startX || 0,
 				startY: items.y || items.startY || 0,
@@ -4920,7 +4908,7 @@ Ask all sprites in the Group to perform a set() operation
 @chainable
 **/
 	my.Group.prototype.setSpritesTo = function(items){
-		for(var i=0, z=this.sprites.length; i<z; i++){
+		for(var i=0, iz=this.sprites.length; i<iz; i++){
 			my.sprite[this.sprites[i]].set(items);
 			}
 		return this;
@@ -4944,7 +4932,7 @@ This has the effect of turning a set of disparate sprites into a single, coordin
 			p = my.sprite[item] || (my.xt(my.point) ? my.point[item] : false);
 			if(p){
 				pStart = (p.type === 'Point') ? p.get('current') : p.start;
-				for(var i=0, z=this.sprites.length; i<z; i++){
+				for(var i=0, iz=this.sprites.length; i<iz; i++){
 					sprite = my.sprite[this.sprites[i]];
 					sv = my.v.set(sprite.start);
 					sv.vectorSubtract(pStart);
@@ -5062,7 +5050,7 @@ __Scrawl core does not include any sprite type constructors.__ Each sprite type 
 		this.method = items.method || my.d[this.type].method;
 		this.collisionsSpriteConstructor(items);
 		return this;
-		}
+		};
 	my.Sprite.prototype = Object.create(my.Position.prototype);
 /**
 @property type
@@ -5665,7 +5653,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 	my.Design = function(items){
 		my.Base.call(this, items);
 		return this;
-		}
+		};
 	my.Design.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -5889,10 +5877,10 @@ Design.update() helper function - applies color attribute objects to the gradien
 @private
 @chainable
 **/
- 	my.Design.prototype.applyStops = function(){
+	my.Design.prototype.applyStops = function(){
 		var color = this.get('color');
 		if(my.dsn[this.name]){
-			for(var i=0, z=color.length; i<z; i++){
+			for(var i=0, iz=color.length; i<iz; i++){
 				my.dsn[this.name].addColorStop(color[i].stop, color[i].color);
 				}
 			}
@@ -5938,7 +5926,7 @@ Remove this gradient from the scrawl library
 		my.design[this.name] = this;
 		my.pushUnique(my.designnames, this.name);
 		return this;
-		}
+		};
 	my.Gradient.prototype = Object.create(my.Design.prototype);
 /**
 @property type
@@ -5999,7 +5987,7 @@ Swap start and end attributes
 		my.design[this.name] = this;
 		my.pushUnique(my.designnames, this.name);
 		return this;
-		}
+		};
 	my.RadialGradient.prototype = Object.create(my.Design.prototype);
 /**
 @property type
