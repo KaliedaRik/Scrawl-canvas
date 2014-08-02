@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+	<body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 098</h1>
+		<h2>Sprite tween animation #3</h2>
+		<h3>Modules: block, animation</h3>
+		<p>Click on a block to clone the tween to it</p>
+		<p><i>Tweening: startY; clone on demand, killOnComplete</i></p>
+		<canvas id="mycanvas" width="600" height="400"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//variables
+				var myBlocks,
+					myTween,
+					myPad = scrawl.pad[scrawl.currentPad],
+					myCanvas = scrawl.canvas[scrawl.currentPad],
+					startNewTween,
+					mySprite,
+					myClone,
+					here;
+				
+				//group
+				myBlocks = scrawl.newGroup({
+					name: 'blocks',
+					});
+					
+				//sprites
+				scrawl.newBlock({
+					startX: 50,
+					startY: 70,
+					fillStyle: 'red',
+					strokeStyle: 'blue',
+					lineWidth: 5,
+					method: 'fillDraw',
+					width: 80,
+					height: 80,
+					handleX: 'center',
+					handleY: 'center',
+					group: 'blocks'
+					}).clone({
+					startX: 150,
+					}).clone({
+					startX: 250,
+					}).clone({
+					startX: 350,
+					}).clone({
+					startX: 450,
+					}).clone({
+					startX: 550,
+					});
+					
+				//tweens
+				myTween = scrawl.newTween({
+					start: {
+						startY: 70,
+						roll: 0,
+						},
+					end: {
+						startY: 330,
+						roll: 180,
+						},
+					duration: 3000,
+					count: 2,
+					autoReverseAndRun: true,
+					onComplete: {
+						startY: 70,
+						roll: 0,
+						},
+					killOnComplete: true,
+					});
+
+				//event listener
+				startNewTween = function(e){
+					mySprite = myBlocks.getSpriteAt(here);
+					if(mySprite){
+						myClone = myTween.clone({
+							targets: mySprite,
+							});
+						if(!myClone.run()){
+							myClone.kill();
+							}
+						}
+					}
+				myCanvas.addEventListener('click', startNewTween, false);
+				
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						here = myPad.getMouse();
+						scrawl.render();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['block', 'animation'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//variables
+	var myBlocks,
+		myTween,
+		myPad = scrawl.pad[scrawl.currentPad],
+		myCanvas = scrawl.canvas[scrawl.currentPad],
+		startNewTween,
+		mySprite,
+		myClone,
+		here;
+	
+	//group
+	myBlocks = scrawl.newGroup({
+		name: 'blocks',
+		});
+		
+	//sprites
+	scrawl.newBlock({
+		startX: 50,
+		startY: 70,
+		fillStyle: 'red',
+		strokeStyle: 'blue',
+		lineWidth: 5,
+		method: 'fillDraw',
+		width: 80,
+		height: 80,
+		handleX: 'center',
+		handleY: 'center',
+		group: 'blocks'
+		}).clone({
+		startX: 150,
+		}).clone({
+		startX: 250,
+		}).clone({
+		startX: 350,
+		}).clone({
+		startX: 450,
+		}).clone({
+		startX: 550,
+		});
+		
+	//tweens
+	myTween = scrawl.newTween({
+		start: {
+			startY: 70,
+			roll: 0,
+			},
+		end: {
+			startY: 330,
+			roll: 180,
+			},
+		duration: 3000,
+		count: 2,
+		autoReverseAndRun: true,
+		onComplete: {
+			startY: 70,
+			roll: 0,
+			},
+		killOnComplete: true,
+		});
+
+	//event listener
+	startNewTween = function(e){
+		mySprite = myBlocks.getSpriteAt(here);
+		if(mySprite){
+			myClone = myTween.clone({
+				targets: mySprite,
+				});
+			if(!myClone.run()){
+				myClone.kill();
+				}
+			}
+		}
+	myCanvas.addEventListener('click', startNewTween, false);
+	
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			here = myPad.getMouse();
+			scrawl.render();
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['block', 'animation'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+	</body>
+</html>

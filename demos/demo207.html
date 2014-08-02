@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+	<body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 207</h1>
+		<h2>Easing DOM elements - scrawl Paths</h2>
+		<h3>Modules: wheel, path, factories, animation, stacks</h3>
+		<p>Drag the circles to set the easing curve.</p>
+		<div id="stackHolder"></div>
+		<button id="button0" type="button" class="mybuttons">Click me</button>
+		<button id="button1" type="button" class="mybuttons">Click me</button>
+		<button id="button2" type="button" class="mybuttons">Click me</button>
+		<button id="button3" type="button" class="mybuttons">Click me</button>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var stack,
+					canvas,
+					pad,
+					buttons = [],
+					guide,
+					myGroup,
+					doButtons,
+					here, 
+					mySprite = false,
+					getWheel,
+					mySprite,
+					dropWheel,
+					moveButton,
+					myButton;
+				
+				//add stack to web page
+				scrawl.addStackToPage({
+					stackName: 		'stack',
+					parentElement: 	document.getElementById('stackHolder'),
+					width: 			602,
+					height: 		402,
+					});
+				//add canvas to stack
+				scrawl.addCanvasToPage({
+					stackName: 	'stack',
+					canvasName:	'canvas',
+					width: 		600,
+					height: 	400,
+					}).makeCurrent();
+				stack = scrawl.stack.stack;
+				canvas = scrawl.canvas.canvas;
+				pad = scrawl.pad.canvas;
+				
+				//easing path sprite
+				guide = scrawl.makeBezier({
+					name: 			'guide',
+					lineWidth: 		2,
+					strokeStyle:	'#880000',
+					precision: 		100,
+					});
+				//dragging sprites to change the curve of the easing path sprite
+				myGroup = scrawl.newGroup({
+					name: 'myGroup',
+					});
+				for(var i = 0; i < 4; i++){
+					scrawl.newWheel({
+						name: 		'wheel_'+i,
+						radius: 	10,
+						lineWidth: 	2,
+						method: 	'fillDraw',
+						order: 		1,
+						group: 		'myGroup',
+						startX: 	(i * 155) + 30,
+						startY: 	200,
+						fillStyle:	'yellow',
+						});
+					}
+				//fix easing path Point objects to dragging sprites
+				scrawl.point.guide_p1.setToFixed('wheel_0');
+				scrawl.point.guide_p2.setToFixed('wheel_1');
+				scrawl.point.guide_p3.setToFixed('wheel_2');
+				scrawl.point.guide_p4.setToFixed('wheel_3');
+				
+				//get DOM buttons and add them to the stack
+				stack.addElementsByClassName('mybuttons');
+				buttons.push(scrawl.element.button0);
+				buttons.push(scrawl.element.button1);
+				buttons.push(scrawl.element.button2);
+				buttons.push(scrawl.element.button3);
+				
+				//position and size buttons
+				for(var i = 0; i < 4; i++){
+					buttons[i].set({
+						startX:				30,
+						startY: 			(i * 100) + 50,
+						lockY:				true,
+						width:				80,
+						height:				26,
+						path:				'guide',
+						pathPlace:			0,
+						deltaPathPlace:		0,
+						addPathRoll:		(i < 2) ? false : true,
+						pathSpeedConstant:	(i === 0 || i === 2) ? false : true,
+						});
+					}
+				scrawl.renderElements();
+				
+				//button animation function
+				doButtons = function(){
+					for(var i = 0; i < 4; i++){
+						buttons[i].updateStart();
+						if(buttons[i].deltaPathPlace){
+							//check to see if animation needs to be stopped
+							if(!scrawl.isBetween((buttons[i].pathPlace + buttons[i].deltaPathPlace), 0, 1)){
+								buttons[i].set({
+									pathPlace: 		(buttons[i].pathPlace < 0.5) ? 0 : 1,
+									deltaPathPlace:	0,
+									});
+								}
+							}
+						buttons[i].renderElement();
+						}
+					}
+				
+				//dragging sprite event listeners
+				getWheel = function(e){
+					mySprite = myGroup.getSpriteAt(here);
+					if(mySprite){
+						mySprite.pickupSprite(here);
+						}
+					if(e){
+						e.stopPropagation();
+						e.preventDefault();
+						}
+					};
+				dropWheel = function(e){
+					if(mySprite){
+						mySprite.dropSprite();
+						mySprite = false;
+						guide.buildPositions();
+						}
+					if(e){
+						e.stopPropagation();
+						e.preventDefault();
+						}
+					};
+				canvas.addEventListener('mousedown', getWheel, false);
+				canvas.addEventListener('mouseup', dropWheel, false);
+				
+				//button event listeners
+				moveButton = function(e){
+					e.preventDefault();
+					e.returnValue=false;
+					myButton = scrawl.element[e.target.id];
+					myButton.set({
+						deltaPathPlace: (myButton.pathPlace < 0.5) ? 0.0065 : -0.0065,
+						});
+					}
+				for(var i = 0; i < 4; i++){
+					scrawl.elm[buttons[i].name].addEventListener('click', moveButton, false);
+					}
+
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						here = pad.getMouse();
+						if(!here.active){
+							if(mySprite){
+								dropWheel();
+								}
+							}
+						doButtons();
+						pad.render();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['wheel', 'path', 'factories', 'animation', 'stacks'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-markup">&lt;body>
+	&lt;div id="stackHolder">&lt;/div>
+	&lt;button id="button0" type="button" class="mybuttons">Click me&lt;/button>
+	&lt;button id="button1" type="button" class="mybuttons">Click me&lt;/button>
+	&lt;button id="button2" type="button" class="mybuttons">Click me&lt;/button>
+	&lt;button id="button3" type="button" class="mybuttons">Click me&lt;/button>
+	&lt;script src="js/scrawlCore.js">&lt;/script>
+	&lt;script>
+		var mycode = function(){
+			//define variables
+			var stack,
+				canvas,
+				pad,
+				buttons = [],
+				guide,
+				myGroup,
+				doButtons,
+				here, 
+				mySprite = false,
+				getWheel,
+				mySprite,
+				dropWheel,
+				moveButton,
+				myButton;
+			
+			//add stack to web page
+			scrawl.addStackToPage({
+				stackName: 		'stack',
+				parentElement: 	document.getElementById('stackHolder'),
+				width: 			602,
+				height: 		402,
+				});
+			//add canvas to stack
+			scrawl.addCanvasToPage({
+				stackName: 	'stack',
+				canvasName:	'canvas',
+				width: 		600,
+				height: 	400,
+				}).makeCurrent();
+			stack = scrawl.stack.stack;
+			canvas = scrawl.canvas.canvas;
+			pad = scrawl.pad.canvas;
+			
+			//easing path sprite
+			guide = scrawl.makeBezier({
+				name: 			'guide',
+				lineWidth: 		2,
+				strokeStyle:	'#880000',
+				precision: 		100,
+				});
+			//dragging sprites to change the curve of the easing path sprite
+			myGroup = scrawl.newGroup({
+				name: 'myGroup',
+				});
+			for(var i = 0; i &lt; 4; i++){
+				scrawl.newWheel({
+					name: 		'wheel_'+i,
+					radius: 	10,
+					lineWidth: 	2,
+					method: 	'fillDraw',
+					order: 		1,
+					group: 		'myGroup',
+					startX: 	(i * 155) + 30,
+					startY: 	200,
+					fillStyle:	'yellow',
+					});
+				}
+			//fix easing path Point objects to dragging sprites
+			scrawl.point.guide_p1.setToFixed('wheel_0');
+			scrawl.point.guide_p2.setToFixed('wheel_1');
+			scrawl.point.guide_p3.setToFixed('wheel_2');
+			scrawl.point.guide_p4.setToFixed('wheel_3');
+			
+			//get DOM buttons and add them to the stack
+			stack.addElementsByClassName('mybuttons');
+			buttons.push(scrawl.element.button0);
+			buttons.push(scrawl.element.button1);
+			buttons.push(scrawl.element.button2);
+			buttons.push(scrawl.element.button3);
+			
+			//position and size buttons
+			for(var i = 0; i &lt; 4; i++){
+				buttons[i].set({
+					startX:				30,
+					startY: 			(i * 100) + 50,
+					lockY:				true,
+					width:				80,
+					height:				26,
+					path:				'guide',
+					pathPlace:			0,
+					deltaPathPlace:		0,
+					addPathRoll:		(i &lt; 2) ? false : true,
+					pathSpeedConstant:	(i === 0 || i === 2) ? false : true,
+					});
+				}
+			scrawl.renderElements();
+			
+			//button animation function
+			doButtons = function(){
+				for(var i = 0; i &lt; 4; i++){
+					buttons[i].updateStart();
+					if(buttons[i].deltaPathPlace){
+						//check to see if animation needs to be stopped
+						if(!scrawl.isBetween((buttons[i].pathPlace + buttons[i].deltaPathPlace), 0, 1)){
+							buttons[i].set({
+								pathPlace: 		(buttons[i].pathPlace &lt; 0.5) ? 0 : 1,
+								deltaPathPlace:	0,
+								});
+							}
+						}
+					buttons[i].renderElement();
+					}
+				}
+			
+			//dragging sprite event listeners
+			getWheel = function(e){
+				mySprite = myGroup.getSpriteAt(here);
+				if(mySprite){
+					mySprite.pickupSprite(here);
+					}
+				if(e){
+					e.stopPropagation();
+					e.preventDefault();
+					}
+				};
+			dropWheel = function(e){
+				if(mySprite){
+					mySprite.dropSprite();
+					mySprite = false;
+					guide.buildPositions();
+					}
+				if(e){
+					e.stopPropagation();
+					e.preventDefault();
+					}
+				};
+			canvas.addEventListener('mousedown', getWheel, false);
+			canvas.addEventListener('mouseup', dropWheel, false);
+			
+			//button event listeners
+			moveButton = function(e){
+				e.preventDefault();
+				e.returnValue=false;
+				myButton = scrawl.element[e.target.id];
+				myButton.set({
+					deltaPathPlace: (myButton.pathPlace &lt; 0.5) ? 0.0065 : -0.0065,
+					});
+				}
+			for(var i = 0; i &lt; 4; i++){
+				scrawl.elm[buttons[i].name].addEventListener('click', moveButton, false);
+				}
+
+			//animation object
+			scrawl.newAnimation({
+				fn: function(){
+					here = pad.getMouse();
+					if(!here.active){
+						if(mySprite){
+							dropWheel();
+							}
+						}
+					doButtons();
+					pad.render();
+					},
+				});
+			};
+			
+		scrawl.loadModules({
+			path: 'js/',
+			modules: ['wheel', 'path', 'factories', 'animation', 'stacks'],
+			callback: function(){
+				window.onload = function(){
+					scrawl.init();
+					mycode();
+					};
+				},
+			});
+	&lt;/script>
+&lt;/body></code></pre>
+		<script src="js/prism.js"></script>
+	</body>
+</html>

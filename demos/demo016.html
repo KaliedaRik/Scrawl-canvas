@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+ <html>
+   <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 016</h1>
+		<h2>Ellipse Shape sprite</h2>
+		<h3>Modules: shape, factories, animation</h3>
+		<canvas id="mycanvas" width="400" height="400"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+				
+				//define sprite
+				scrawl.makeEllipse({
+					name:			'ellie',
+					startX:			200,
+					startY:			200,
+					radiusX:		150,
+					radiusY:		50,
+					lineWidth:		5,
+					fillStyle:		'blue',
+					strokeStyle:	'red',
+					method:			'fillDraw',
+					shape:			true,
+					});
+					
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						scrawl.sprite.ellie.setDelta({
+							roll: 1,
+							});
+						scrawl.cell.mycanvas_base.set({
+							backgroundColor: (scrawl.sprite.ellie.checkHit(scrawl.pad.mycanvas.getMouse())) ? 'lightblue' : 'lightgreen',
+							});
+						scrawl.render();
+
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['shape', 'factories', 'animation'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define sprite
+	scrawl.makeEllipse({
+		name:			'ellie',
+		startX:			200,
+		startY:			200,
+		radiusX:		150,
+		radiusY:		50,
+		lineWidth:		5,
+		fillStyle:		'blue',
+		strokeStyle:	'red',
+		method:			'fillDraw',
+		shape:			true,
+		});
+		
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			scrawl.sprite.ellie.setDelta({
+				roll: 1,
+				});
+			scrawl.cell.mycanvas_base.set({
+				backgroundColor: (scrawl.sprite.ellie.checkHit(scrawl.pad.mycanvas.getMouse())) ? 'lightblue' : 'lightgreen',
+				});
+			scrawl.render();
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['shape', 'factories', 'animation'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 021</h1>
+		<h2>Scrawl Path/Shape sprites - quadratic curve</h2>
+		<h3>Modules: path, factories</h3>
+		<canvas id="mycanvas" width="400" height="200"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//makeQuadratic factory
+				scrawl.makeQuadratic({
+					startX:		50,
+					startY:		150,
+					endX:		350,
+					endY:		150,
+					controlX:	200,
+					controlY:	0,
+					});
+					
+				//display canvas
+				scrawl.render();
+				
+				testNow = Date.now();
+				testTime =  testNow - testTicker;
+				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['path', 'factories'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+		
+	//makeQuadratic factory
+	scrawl.makeQuadratic({
+		startX:		50,
+		startY:		150,
+		endX:		350,
+		endY:		150,
+		controlX:	200,
+		controlY:	0,
+		});
+		
+	//display canvas
+	scrawl.render();
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['path', 'factories'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

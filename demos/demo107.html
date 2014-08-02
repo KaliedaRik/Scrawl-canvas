@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+		<style>
+			.zero {
+				margin: 0;
+				padding: 0;
+				border: 0;
+				}
+			.center {
+				width: 100%;
+				text-align: center;
+				}
+		</style>
+	</head>
+	<body class="zero">
+		<div id="mystack" class="scrawlstack zero">
+			<canvas id="mycanvas" class="zero"></canvas>
+			<div id="page1" class="zero">
+				<h1><a href="index.html">Scrawl.js</a> - demonstration 107</h1>
+				<h2>Page loading effects</h2>
+				<h3>Modules: path, factories, animation, stacks, block, wheel</h3>
+				<div class="center">
+					<p>Select effect:</p>
+					<p>
+						<select id="effect">
+							<option value="fog" selected>Fog</option>
+							<option value="clearFromCenter">Rolling rectangle</option>
+							<option value="starburst">Spinning star</option>
+							<option value="roller">Chop from top</option>
+							<option value="clearCircles">Clear with circles</option>
+						</select>
+					</p>
+					<p><button id="startButton" type="button">Display effect</button></p>
+				</div>
+<pre style="height: 500px;"><code class="language-markup/javascript">&lt;!DOCTYPE html>
+&lt;html>
+	&lt;head>
+		&lt;title>Scrawl.js&lt;/title>
+		&lt;link href="css/prism.css" rel="stylesheet" />
+		&lt;link href="css/demo.css" rel="stylesheet" />
+		&lt;style>
+			.zero {
+				margin: 0;
+				padding: 0;
+				border: 0;
+				}
+			.center {
+				width: 100%;
+				text-align: center;
+				}
+		&lt;/style>
+	&lt;/head>
+	&lt;body class="zero">
+		&lt;div id="mystack" class="scrawlstack zero">
+			&lt;canvas id="mycanvas" class="zero">&lt;/canvas>
+			&lt;div id="page1" class="zero">
+				&lt;h1>&lt;a href="index.html">Scrawl.js&lt;/a> - demonstration 107&lt;/h1>
+				&lt;h2>Page loading effects&lt;/h2>
+				&lt;h3>Modules: path, factories, animation, stacks, block, wheel&lt;/h3>
+				&lt;div class="center">
+					&lt;p>Select effect:&lt;/p>
+					&lt;p>
+						&lt;select id="effect">
+							&lt;option value="fog" selected>Fog&lt;/option>
+							&lt;option value="clearFromCenter">Rolling rectangle&lt;/option>
+							&lt;option value="starburst">Spinning star&lt;/option>
+							&lt;option value="roller">Chop from top&lt;/option>
+							&lt;option value="clearCircles">Clear with circles&lt;/option>
+						&lt;/select>
+					&lt;/p>
+					&lt;p>&lt;button id="startButton" type="button">Display effect&lt;/button>&lt;/p>
+				&lt;/div>
+			&lt;/div>
+			&lt;div id="page2" class="zero">
+				&lt;div class="center">
+					&lt;button id="returnButton" type="button">Return to main page&lt;/button>
+				&lt;/div>
+				&lt;iframe id="myframe" src="about:blank">&lt;/iframe>
+			&lt;/div>
+		&lt;/div>
+		&lt;script src="js/scrawlCore.js">&lt;/script>
+		&lt;script>
+			var mycode = function(){
+				//define variables
+				var pad = scrawl.pad.mycanvas,
+					cell = scrawl.cell[pad.base],
+					stack = scrawl.stack.mystack,
+					page1 = scrawl.element.page1,
+					page2 = scrawl.element.page2,
+					browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+					browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+					startButton = document.getElementById('startButton'),
+					returnButton = document.getElementById('returnButton'),
+					effectSelector = document.getElementById('effect'),
+					getEffect, currentEffect,
+					frame = document.getElementById('myframe'),
+					frameSources = [
+						'http://en.wikipedia.org/wiki/Cat',
+						'http://en.wikipedia.org/wiki/Dog',
+						'http://en.wikipedia.org/wiki/Goat',
+						'http://en.wikipedia.org/wiki/Rabbit',
+						'http://en.wikipedia.org/wiki/Parrot',
+						'http://en.wikipedia.org/wiki/Sea_slug',
+						'http://en.wikipedia.org/wiki/Orchid',
+						'http://en.wikipedia.org/wiki/Rose',
+						'http://en.wikipedia.org/wiki/HTML5',
+						'http://en.wikipedia.org/wiki/Css',
+						'http://en.wikipedia.org/wiki/Javascript'
+						],
+					currentFrame,
+					newFrame,
+					doButtons,
+					resize,
+					checkE,
+					myBlock, myStar, myCircles, myCirclesGroup,
+					fogIn, fogOut, doFog, buildFog,
+					clearFromCenterIn, clearFromCenterOut, doClearFromCenter, buildClearFromCenter,
+					starburstIn, starburstOut, doStarburst, buildStarburst,
+					rollerIn, rollerOut, doRoller, buildRoller,
+					clearCirclesIn, clearCirclesOut, doClearCircles, buildClearCircles,
+					showPad, hidePad, switchPages, clearSprites;
+				
+				//initial setup of DOM elements in stack
+				stack.set({	startX: 15,		startY: 15});
+				pad.set({	translateZ: 0});
+				page1.set({	translateZ: 1,	visibility: true});
+				page2.set({	translateZ: -1,	visibility: false});
+
+				//functions for manipulating the display of various page sections (page1, page2, pad)
+				showPad = function(){
+					pad.set({	translateZ: 2});
+					};
+				hidePad = function(){
+					pad.set({	translateZ: 0});
+					};
+				switchPages = function(){
+					if(page1.visibility){
+						page1.set({	translateZ: -1,	visibility: false});
+						page2.set({	translateZ: 1,	visibility: true});
+						}
+					else{
+						page1.set({translateZ: 1,	visibility: true});
+						page2.set({translateZ: -1,	visibility: false});
+						}
+					};
+				//determine which wikipedia page to display in the iframe
+				newFrame = function(){
+					currentFrame = Math.floor(Math.random() * frameSources.length);
+					};
+				
+				//define sprites to be used in animations
+				clearSprites = function(){
+					scrawl.group[pad.base].setSpritesTo({
+						visibility: false,
+						});
+					myCirclesGroup.setSpritesTo({
+						visibility: false,
+						});
+					};
+				myBlock = scrawl.newBlock({
+					name: 'myblock',
+					fillStyle: 'white',
+					visibility: false,
+					});
+				myStar = scrawl.makeRegularShape({
+					name: 'mystar',
+					fillStyle: 'gold',
+					method: 'fill',
+					radius: 1000,
+					angle: 144,
+					visibility: false,
+					});
+				myCircles = [];
+				myCirclesGroup = scrawl.newGroup({
+					name: 'circles',
+					});
+				for(var i = 0; i &lt; 20; i++){
+					myCircles.push(scrawl.newWheel({
+						radius: 200,
+						group: 'circles',
+						fillStyle: 'lightblue',
+						visibility: false,
+						}));
+					}
+				
+				//event listeners
+				checkE = function(e){				//common function to halt propogation of event
+					if(e){
+						e.preventDefault();
+						e.returnValue=false;
+						}
+					};
+				resize = function(e){				//listen and respond to browser resizing
+					browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+					browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+					browserWidth -= 45;
+					stack.set({	width: browserWidth,	height: browserHeight});
+					pad.set({	width: browserWidth,	height: browserHeight});
+					cell.set({	width: browserWidth,	height: browserHeight});
+					page1.set({	width: browserWidth});
+					page2.set({	width: browserWidth});
+					frame.width = browserWidth - 10;
+					frame.height = browserHeight - 50;
+					checkE(e);
+					};
+				window.addEventListener('resize', resize, false);
+				
+				//event listener
+				getEffect = function(e){
+					currentEffect = e.currentTarget.value;
+					checkE(e);
+					};
+				effectSelector.options.selectedIndex = 0;
+				currentEffect = 'fog';
+				effectSelector.addEventListener('change', getEffect, false);
+
+				doButtons = function(e){
+					clearSprites();
+					switch(currentEffect){
+						case 'clearFromCenter' :
+							doClearFromCenter();
+							break;
+						case 'fog' :
+							doFog();
+							break;
+						case 'starburst' :
+							doStarburst();
+							break;
+						case 'roller' :
+							doRoller();
+							break;
+						case 'clearCircles' :
+							doClearCircles();
+							break;
+						}
+					checkE(e);
+					};
+				startButton.addEventListener('click', doButtons, false);
+				returnButton.addEventListener('click', doButtons, false);
+				
+				//roller animation: animate block by its height
+				rollerIn = scrawl.newTween({
+					name: 'rollerIn',
+					start: {height: 0},
+					engines: {height: 'easeOut3'},
+					duration: 1000,
+					killOnComplete: true,
+					});
+				rollerOut = scrawl.newTween({
+					name: 'rollerOut',
+					end: {height: 0},
+					engines: {height: 'easeIn3'},
+					duration: 1000,
+					killOnComplete: true,
+					});
+				buildRoller = function(){
+					switchPages();
+					rollerOut.clone({
+						targets: myBlock,
+						start: {
+							height: browserHeight,
+							},
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doRoller = function(){
+					var tween = rollerIn.clone({
+						targets: myBlock,
+						onCommence: {
+							visibility: true,
+							width: browserWidth,
+							height: 0,
+							startX: 0,
+							startY: 0,
+							handleX: 'left',
+							handleY: 'top',
+							scale: 1,
+							globalAlpha: 1,
+							roll: 0,
+							},
+						end: {
+							height: browserHeight
+							},
+						onComplete: {
+							height: browserHeight,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildRoller();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildRoller();
+								}
+							},
+						});
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+				
+				//starburst animation: animate star by its scale and roll
+				starburstIn = scrawl.newTween({
+					name: 'starburstIn',
+					start: {	scale: 0.01,	roll: 0},
+					end: {		scale: 2, 		roll: 180},
+					engines: {	scale: 'easeOut'},
+					duration: 3000,
+					killOnComplete: true,
+					});
+				starburstOut = scrawl.newTween({
+					name: 'starburstOut',
+					start: {	scale: 2, 		roll: 180},
+					end: {		scale: 0.01,	roll: 360},
+					engines: {	scale: 'easeIn'},
+					duration: 3000,
+					killOnComplete: true,
+					});
+				buildStarburst = function(){
+					switchPages();
+					starburstOut.clone({
+						targets: myStar,
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doStarburst = function(){
+					var tween = starburstIn.clone({
+						targets: myStar,
+						onCommence: {
+							visibility: true,
+							startX: browserWidth/2,
+							startY: browserHeight/2,
+							handleX: 'center',
+							handleY: 'center',
+							scale: 0.01,
+							globalAlpha: 1,
+							roll: 0,
+							},
+						onComplete: {
+							scale: 2,
+							roll: 180,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildStarburst();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildStarburst();
+								}
+							},
+						});
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+				
+				//fog animation: white out browser - animate block by its globalAlpha
+				fogIn = scrawl.newTween({
+					name: 'fogIn',
+					start: {globalAlpha: 0},
+					end: {globalAlpha: 1},
+					duration: 1000,
+					killOnComplete: true,
+					});
+				fogOut = scrawl.newTween({
+					name: 'fogOut',
+					start: {globalAlpha: 1},
+					end: {globalAlpha: 0},
+					duration: 1000,
+					killOnComplete: true,
+					});
+				buildFog = function(){
+					switchPages();
+					fogOut.clone({
+						targets: myBlock,
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doFog = function(){
+					var tween = fogIn.clone({
+						targets: myBlock,
+						onCommence: {
+							visibility: true,
+							width: browserWidth,
+							height: browserHeight,
+							startX: 0,
+							startY: 0,
+							handleX: 'left',
+							handleY: 'top',
+							scale: 1,
+							globalAlpha: 0,
+							roll: 0,
+							},
+						onComplete: {
+							globalAlpha: 1,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildFog();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildFog();
+								}
+							},
+						});
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+				
+				//clear from center: animate block by its scale and roll
+				clearFromCenterIn = scrawl.newTween({ 
+					name: 'clearFromCenterIn',
+					start: {	scale: 0, 	roll: 0},
+					end: {		scale: 1,	roll: 360},
+					duration: 1500,
+					killOnComplete: true,
+					});
+				clearFromCenterOut = scrawl.newTween({
+					name: 'clearFromCenterOut',
+					start: {	scale: 1, 	roll: 0},
+					end: {		scale: 0, 	roll: 360},
+					duration: 1500,
+					killOnComplete: true,
+					});
+				buildClearFromCenter = function(){
+					switchPages();
+					clearFromCenterOut.clone({
+						targets: myBlock,
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doClearFromCenter = function(){
+					var tween = clearFromCenterIn.clone({
+						targets: myBlock,
+						onCommence: {
+							visibility: true,
+							scale: 0,
+							globalAlpha: 1,
+							roll: 0,
+							startX: browserWidth/2,
+							startY: browserHeight/2,
+							width: browserWidth * 1.2,
+							height: browserHeight * 1.2,
+							handleX: 'center',
+							handleY: 'center',
+							},
+						onComplete: {
+							scale: 1,
+							roll: 360,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildClearFromCenter();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildClearFromCenter();
+								}
+							},
+						});
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+				
+				//clear with circles: animate circles by their scale
+				clearCirclesIn = scrawl.newTween({ 
+					name: 'clearCirclesIn',
+					start: {scale: 0},
+					end: {scale: 2},
+					engines: {scale: 'easeOut4'},
+					duration: 2000,
+					killOnComplete: true,
+					});
+				clearCirclesOut = scrawl.newTween({
+					name: 'clearCirclesOut',
+					start: {scale: 2},
+					end: {scale: 0},
+					engines: {scale: 'easeIn4'},
+					duration: 2000,
+					killOnComplete: true,
+					});
+				buildClearCircles = function(){
+					switchPages();
+					clearCirclesOut.clone({
+						targets: myCircles,
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doClearCircles = function(){
+					var tween = clearCirclesIn.clone({
+						targets: myCircles,
+						onCommence: {
+							visibility: true,
+							scale: 0,
+							},
+						onComplete: {
+							scale: 2,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildClearCircles();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildClearCircles();
+								}
+							},
+						});
+					for(var i = 0, iz = myCircles.length; i &lt; iz; i++){
+						myCircles[i].set({
+							startX: Math.floor(Math.random() * browserWidth),
+							startY: Math.floor(Math.random() * browserHeight),
+							});
+						}
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+					
+				//canvas animation - runs all the time
+				scrawl.newAnimation({
+					fn: function(){
+						scrawl.render();
+						},
+					});
+				
+				//complete initial setup of DOM elements in stack
+				resize();
+				scrawl.renderElements();
+				};
+				
+			//load scrawl modules used in this demo
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['path', 'factories', 'animation', 'stacks', 'block', 'wheel'],			
+				callback: function(){
+					window.addEventListener('load', function(){
+						scrawl.init();
+						mycode();
+						}, false);
+					},
+				});
+		&lt;/script>
+	&lt;/body>
+&lt;/html></code></pre>
+			</div>
+			<div id="page2" class="zero">
+				<div class="center">
+					<button id="returnButton" type="button">Return to main page</button>
+				</div>
+				<iframe id="myframe" src="about:blank"></iframe>
+			</div>
+		</div>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				//define variables
+				var pad = scrawl.pad.mycanvas,
+					cell = scrawl.cell[pad.base],
+					stack = scrawl.stack.mystack,
+					page1 = scrawl.element.page1,
+					page2 = scrawl.element.page2,
+					browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+					browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+					startButton = document.getElementById('startButton'),
+					returnButton = document.getElementById('returnButton'),
+					effectSelector = document.getElementById('effect'),
+					getEffect, currentEffect,
+					frame = document.getElementById('myframe'),
+					frameSources = [
+						'http://en.wikipedia.org/wiki/Cat',
+						'http://en.wikipedia.org/wiki/Dog',
+						'http://en.wikipedia.org/wiki/Goat',
+						'http://en.wikipedia.org/wiki/Rabbit',
+						'http://en.wikipedia.org/wiki/Parrot',
+						'http://en.wikipedia.org/wiki/Sea_slug',
+						'http://en.wikipedia.org/wiki/Orchid',
+						'http://en.wikipedia.org/wiki/Rose',
+						'http://en.wikipedia.org/wiki/HTML5',
+						'http://en.wikipedia.org/wiki/Css',
+						'http://en.wikipedia.org/wiki/Javascript'
+						],
+					currentFrame,
+					newFrame,
+					doButtons,
+					resize,
+					checkE,
+					myBlock, myStar, myCircles, myCirclesGroup,
+					fogIn, fogOut, doFog, buildFog,
+					clearFromCenterIn, clearFromCenterOut, doClearFromCenter, buildClearFromCenter,
+					starburstIn, starburstOut, doStarburst, buildStarburst,
+					rollerIn, rollerOut, doRoller, buildRoller,
+					clearCirclesIn, clearCirclesOut, doClearCircles, buildClearCircles,
+					showPad, hidePad, switchPages, clearSprites;
+				
+				//initial setup of DOM elements in stack
+				stack.set({	startX: 15,		startY: 15});
+				pad.set({	translateZ: 0});
+				page1.set({	translateZ: 1,	visibility: true});
+				page2.set({	translateZ: -1,	visibility: false});
+
+				//functions for manipulating the display of various page sections (page1, page2, pad)
+				showPad = function(){
+					pad.set({	translateZ: 2});
+					};
+				hidePad = function(){
+					pad.set({	translateZ: 0});
+					};
+				switchPages = function(){
+					if(page1.visibility){
+						page1.set({	translateZ: -1,	visibility: false});
+						page2.set({	translateZ: 1,	visibility: true});
+						}
+					else{
+						page1.set({translateZ: 1,	visibility: true});
+						page2.set({translateZ: -1,	visibility: false});
+						}
+					};
+				//determine which wikipedia page to display in the iframe
+				newFrame = function(){
+					currentFrame = Math.floor(Math.random() * frameSources.length);
+					};
+				
+				//define sprites to be used in animations
+				clearSprites = function(){
+					scrawl.group[pad.base].setSpritesTo({
+						visibility: false,
+						});
+					myCirclesGroup.setSpritesTo({
+						visibility: false,
+						});
+					};
+				myBlock = scrawl.newBlock({
+					name: 'myblock',
+					fillStyle: 'white',
+					visibility: false,
+					});
+				myStar = scrawl.makeRegularShape({
+					name: 'mystar',
+					fillStyle: 'gold',
+					method: 'fill',
+					radius: 1000,
+					angle: 144,
+					visibility: false,
+					});
+				myCircles = [];
+				myCirclesGroup = scrawl.newGroup({
+					name: 'circles',
+					});
+				for(var i = 0; i < 20; i++){
+					myCircles.push(scrawl.newWheel({
+						radius: 200,
+						group: 'circles',
+						fillStyle: 'lightblue',
+						visibility: false,
+						}));
+					}
+				
+				//event listeners
+				checkE = function(e){				//common function to halt propogation of event
+					if(e){
+						e.preventDefault();
+						e.returnValue=false;
+						}
+					};
+				resize = function(e){				//listen and respond to browser resizing
+					browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+					browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+					browserWidth -= 45;
+					stack.set({	width: browserWidth,	height: browserHeight});
+					pad.set({	width: browserWidth,	height: browserHeight});
+					cell.set({	width: browserWidth,	height: browserHeight});
+					page1.set({	width: browserWidth});
+					page2.set({	width: browserWidth});
+					frame.width = browserWidth - 10;
+					frame.height = browserHeight - 50;
+					checkE(e);
+					};
+				window.addEventListener('resize', resize, false);
+				
+				//event listener
+				getEffect = function(e){
+					currentEffect = e.currentTarget.value;
+					checkE(e);
+					};
+				effectSelector.options.selectedIndex = 0;
+				currentEffect = 'fog';
+				effectSelector.addEventListener('change', getEffect, false);
+
+				doButtons = function(e){
+					clearSprites();
+					switch(currentEffect){
+						case 'clearFromCenter' :
+							doClearFromCenter();
+							break;
+						case 'fog' :
+							doFog();
+							break;
+						case 'starburst' :
+							doStarburst();
+							break;
+						case 'roller' :
+							doRoller();
+							break;
+						case 'clearCircles' :
+							doClearCircles();
+							break;
+						}
+					checkE(e);
+					};
+				startButton.addEventListener('click', doButtons, false);
+				returnButton.addEventListener('click', doButtons, false);
+				
+				//roller animation: animate block by its height
+				rollerIn = scrawl.newTween({
+					name: 'rollerIn',
+					start: {height: 0},
+					engines: {height: 'easeOut3'},
+					duration: 1000,
+					killOnComplete: true,
+					});
+				rollerOut = scrawl.newTween({
+					name: 'rollerOut',
+					end: {height: 0},
+					engines: {height: 'easeIn3'},
+					duration: 1000,
+					killOnComplete: true,
+					});
+				buildRoller = function(){
+					switchPages();
+					rollerOut.clone({
+						targets: myBlock,
+						start: {
+							height: browserHeight,
+							},
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doRoller = function(){
+					var tween = rollerIn.clone({
+						targets: myBlock,
+						onCommence: {
+							visibility: true,
+							width: browserWidth,
+							height: 0,
+							startX: 0,
+							startY: 0,
+							handleX: 'left',
+							handleY: 'top',
+							scale: 1,
+							globalAlpha: 1,
+							roll: 0,
+							},
+						end: {
+							height: browserHeight
+							},
+						onComplete: {
+							height: browserHeight,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildRoller();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildRoller();
+								}
+							},
+						});
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+				
+				//starburst animation: animate star by its scale and roll
+				starburstIn = scrawl.newTween({
+					name: 'starburstIn',
+					start: {	scale: 0.01,	roll: 0},
+					end: {		scale: 2, 		roll: 180},
+					engines: {	scale: 'easeOut'},
+					duration: 3000,
+					killOnComplete: true,
+					});
+				starburstOut = scrawl.newTween({
+					name: 'starburstOut',
+					start: {	scale: 2, 		roll: 180},
+					end: {		scale: 0.01,	roll: 360},
+					engines: {	scale: 'easeIn'},
+					duration: 3000,
+					killOnComplete: true,
+					});
+				buildStarburst = function(){
+					switchPages();
+					starburstOut.clone({
+						targets: myStar,
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doStarburst = function(){
+					var tween = starburstIn.clone({
+						targets: myStar,
+						onCommence: {
+							visibility: true,
+							startX: browserWidth/2,
+							startY: browserHeight/2,
+							handleX: 'center',
+							handleY: 'center',
+							scale: 0.01,
+							globalAlpha: 1,
+							roll: 0,
+							},
+						onComplete: {
+							scale: 2,
+							roll: 180,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildStarburst();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildStarburst();
+								}
+							},
+						});
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+				
+				//fog animation: white out browser - animate block by its globalAlpha
+				fogIn = scrawl.newTween({
+					name: 'fogIn',
+					start: {globalAlpha: 0},
+					end: {globalAlpha: 1},
+					duration: 1000,
+					killOnComplete: true,
+					});
+				fogOut = scrawl.newTween({
+					name: 'fogOut',
+					start: {globalAlpha: 1},
+					end: {globalAlpha: 0},
+					duration: 1000,
+					killOnComplete: true,
+					});
+				buildFog = function(){
+					switchPages();
+					fogOut.clone({
+						targets: myBlock,
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doFog = function(){
+					var tween = fogIn.clone({
+						targets: myBlock,
+						onCommence: {
+							visibility: true,
+							width: browserWidth,
+							height: browserHeight,
+							startX: 0,
+							startY: 0,
+							handleX: 'left',
+							handleY: 'top',
+							scale: 1,
+							globalAlpha: 0,
+							roll: 0,
+							},
+						onComplete: {
+							globalAlpha: 1,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildFog();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildFog();
+								}
+							},
+						});
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+				
+				//clear from center: animate block by its scale and roll
+				clearFromCenterIn = scrawl.newTween({ 
+					name: 'clearFromCenterIn',
+					start: {	scale: 0, 	roll: 0},
+					end: {		scale: 1,	roll: 360},
+					duration: 1500,
+					killOnComplete: true,
+					});
+				clearFromCenterOut = scrawl.newTween({
+					name: 'clearFromCenterOut',
+					start: {	scale: 1, 	roll: 0},
+					end: {		scale: 0, 	roll: 360},
+					duration: 1500,
+					killOnComplete: true,
+					});
+				buildClearFromCenter = function(){
+					switchPages();
+					clearFromCenterOut.clone({
+						targets: myBlock,
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doClearFromCenter = function(){
+					var tween = clearFromCenterIn.clone({
+						targets: myBlock,
+						onCommence: {
+							visibility: true,
+							scale: 0,
+							globalAlpha: 1,
+							roll: 0,
+							startX: browserWidth/2,
+							startY: browserHeight/2,
+							width: browserWidth * 1.2,
+							height: browserHeight * 1.2,
+							handleX: 'center',
+							handleY: 'center',
+							},
+						onComplete: {
+							scale: 1,
+							roll: 360,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildClearFromCenter();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildClearFromCenter();
+								}
+							},
+						});
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+				
+				//clear with circles: animate circles by their scale
+				clearCirclesIn = scrawl.newTween({ 
+					name: 'clearCirclesIn',
+					start: {scale: 0},
+					end: {scale: 2},
+					engines: {scale: 'easeOut4'},
+					duration: 2000,
+					killOnComplete: true,
+					});
+				clearCirclesOut = scrawl.newTween({
+					name: 'clearCirclesOut',
+					start: {scale: 2},
+					end: {scale: 0},
+					engines: {scale: 'easeIn4'},
+					duration: 2000,
+					killOnComplete: true,
+					});
+				buildClearCircles = function(){
+					switchPages();
+					clearCirclesOut.clone({
+						targets: myCircles,
+						onComplete: {
+							visibility: false,
+							},
+						callback: function(){
+							hidePad();
+							scrawl.renderElements();
+							},
+						}).run();
+					};
+				doClearCircles = function(){
+					var tween = clearCirclesIn.clone({
+						targets: myCircles,
+						onCommence: {
+							visibility: true,
+							scale: 0,
+							},
+						onComplete: {
+							scale: 2,
+							},
+						callback: function(){
+							if(page1.visibility){
+								newFrame();
+								frame.onload = function(){
+									buildClearCircles();
+									};
+								frame.src = frameSources[currentFrame];
+								}
+							else{
+								buildClearCircles();
+								}
+							},
+						});
+					for(var i = 0, iz = myCircles.length; i < iz; i++){
+						myCircles[i].set({
+							startX: Math.floor(Math.random() * browserWidth),
+							startY: Math.floor(Math.random() * browserHeight),
+							});
+						}
+					showPad();
+					scrawl.renderElements();
+					tween.run();
+					};
+					
+				//canvas animation - runs all the time
+				scrawl.newAnimation({
+					fn: function(){
+						scrawl.render();
+						},
+					});
+				
+				//complete initial setup of DOM elements in stack
+				resize();
+				scrawl.renderElements();
+				};
+				
+			//load scrawl modules used in this demo
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['path', 'factories', 'animation', 'stacks', 'block', 'wheel'],			
+				callback: function(){
+					window.addEventListener('load', function(){
+						scrawl.init();
+						mycode();
+						}, false);
+					},
+				});
+		</script>
+		<script src="js/prism.js"></script>
+	</body>
+</html>

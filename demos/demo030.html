@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+ <html>
+   <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 030</h1>
+		<h2>Rounded corner rectangle Shape sprites</h2>
+		<h3>Modules: path, factories</h3>
+		<canvas id="mycanvas" width="400" height="400"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//makeRectangle factory
+				scrawl.makeRectangle({
+					startX:			200,
+					startY:			80,
+					width:			200,
+					height:			100,
+					radius:			20,
+					lineWidth:		5,
+					fillStyle:		'blue',
+					strokeStyle:	'red',
+					method:			'fillDraw',
+					});
+				scrawl.makeRectangle({
+					startX:			200,
+					startY:			200,
+					width:			350,
+					height:			60,
+					radiusTop:		20,
+					lineWidth:		5,
+					fillStyle:		'blue',
+					strokeStyle:	'red',
+					method:			'fillDraw',
+					});
+				scrawl.makeRectangle({
+					startX:			200,
+					startY:			320,
+					width:			100,
+					height:			100,
+					radius:			100,
+					lineWidth:		5,
+					lineJoin:		'round',
+					fillStyle:		'blue',
+					strokeStyle:	'red',
+					method:			'fillDraw',
+					});
+
+				//display canvas
+				scrawl.render();
+				
+				testNow = Date.now();
+				testTime =  testNow - testTicker;
+				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['path', 'factories'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//makeRectangle factory
+	scrawl.makeRectangle({
+		startX:			200,
+		startY:			80,
+		width:			200,
+		height:			100,
+		radius:			20,
+		lineWidth:		5,
+		fillStyle:		'blue',
+		strokeStyle:	'red',
+		method:			'fillDraw',
+		});
+	scrawl.makeRectangle({
+		startX:			200,
+		startY:			200,
+		width:			350,
+		height:			60,
+		radiusTop:		20,
+		lineWidth:		5,
+		fillStyle:		'blue',
+		strokeStyle:	'red',
+		method:			'fillDraw',
+		});
+	scrawl.makeRectangle({
+		startX:			200,
+		startY:			320,
+		width:			100,
+		height:			100,
+		radius:			100,
+		lineWidth:		5,
+		lineJoin:		'round',
+		fillStyle:		'blue',
+		strokeStyle:	'red',
+		method:			'fillDraw',
+		});
+		
+	//display canvas
+	scrawl.render();
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['path', 'factories'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

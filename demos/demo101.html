@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+	<body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 101</h1>
+		<h2>Pixellate brush</h2>
+		<h3>Modules: images, animation, filters</h3>
+		<p>Move mouse pointer over canvas.</p>
+		<img src="img/flower01.jpg" id="flower" />
+		<canvas id="mycanvas" width="600" height="300"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var myPad = scrawl.pad.mycanvas,
+					brush,
+					blur,
+					here;
+
+				//import image into scrawl library
+				scrawl.getImageById('flower');
+				
+				//define sprites
+				scrawl.newPicture({
+					name: 'background',
+					width: 600,
+					height: 300,
+					copyX: 50,
+					copyY: 50,
+					copyWidth: 600,
+					copyHeight: 300,
+					source: 'flower',
+					});
+//				blur = scrawl.filter.getBrush(6, 6, 0);
+				brush = scrawl.newPicture({
+					name:		'highlight',
+					source:		'flower',
+					method:		'fillDraw',	
+					handleX: 	'center',
+					handleY: 	'center',
+					pivot:		'mouse',
+					width:		100,
+					height:		100,
+					copyWidth:	100,
+					copyHeight:	100,
+					filters:	{
+						pixelate: {
+							width: 20,
+							height: 20,
+							},
+//						grayscale: {},
+//						sepia: {},
+//						tint: {
+//							br: 0.5,
+//							},
+//						threshold: {},
+//						saturation: {
+//							value: 2,
+//							},
+//						brightness: {
+//							value: 2,
+//							},
+//						invert: {},
+//						channels: {
+//							blue: 0,
+//							green: 0,
+//							},
+//						channelStep: {
+//							red: 64,
+//							blue: 64,
+//							green: 64,
+//							},
+//						glassTile: {
+//							width: 20,
+//							height: 20,
+//							outerWidth: 30,
+//							outerHeight: 30,
+//							},
+//						matrix: {
+//							data: [-1, 0, 1, -2, 0, 2, -1, 0, 1],
+//							wrap: true,
+//							},
+//						blur: {
+//							brush: blur,
+//							},
+//						sharpen: {},
+						},
+					});
+					
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						here = myPad.getMouse();
+						if(here.active){
+							brush.set({
+								visibility: true,
+								copyX: here.x,
+								copyY: here.y,
+								});
+							}
+						else{
+							brush.set({
+								visibility: false,
+								});
+							}
+						scrawl.render();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['images', 'animation', 'filters'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define variables
+	var myPad = scrawl.pad.mycanvas,
+		brush,
+		blur,
+		here;
+
+	//import image into scrawl library
+	scrawl.getImageById('flower');
+	
+	//define sprites
+	scrawl.newPicture({
+		name: 'background',
+		width: 600,
+		height: 300,
+		copyX: 50,
+		copyY: 50,
+		copyWidth: 600,
+		copyHeight: 300,
+		source: 'flower',
+		});
+//	blur = scrawl.filter.getBrush(6, 6, 0);
+	brush = scrawl.newPicture({
+		name:		'highlight',
+		source:		'flower',
+		method:		'fillDraw',	
+		handleX: 	'center',
+		handleY: 	'center',
+		pivot:		'mouse',
+		width:		100,
+		height:		100,
+		copyWidth:	100,
+		copyHeight:	100,
+		filters:	{
+			pixelate: {
+				width: 20,
+				height: 20,
+				},
+//			grayscale: {},
+//			sepia: {},
+//			tint: {
+//				br: 0.5,
+//				},
+//			threshold: {},
+//			saturation: {
+//				value: 2,
+//				},
+//			brightness: {
+//				value: 2,
+//				},
+//			invert: {},
+//			channels: {
+//				blue: 0,
+//				green: 0,
+//				},
+//			channelStep: {
+//				red: 64,
+//				blue: 64,
+//				green: 64,
+//				},
+//			glassTile: {
+//				width: 20,
+//				height: 20,
+//				outerWidth: 30,
+//				outerHeight: 30,
+//				},
+//			matrix: {
+//				data: [-1, 0, 1, -2, 0, 2, -1, 0, 1],
+//				wrap: true,
+//				},
+//			blur: {
+//				brush: blur,
+//				},
+//			sharpen: {},
+			},
+		});
+		
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			here = myPad.getMouse();
+			if(here.active){
+				brush.set({
+					visibility: true,
+					copyX: here.x,
+					copyY: here.y,
+					});
+				}
+			else{
+				brush.set({
+					visibility: false,
+					});
+				}
+			scrawl.render();
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['images', 'animation', 'filters'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

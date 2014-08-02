@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 046</h1>
+		<h2>Cell zoom</h2>
+		<h3>Modules: factories, path, phrase, animation, collisions, block, color</h3>
+		<p>Keys: use arrows to move across cell; +/- to zoom in/out. Mouse scroll button also zooms in/out.</p>
+		<p id="message"></p>
+		<p>(<a href="http://craig.is/killing/mice">Mousetrap.js</a> - a simple library for handling keyboard shortcuts in JavaScript. Created by <a href="http://craig.is/">Craig Campbell</a>.)</p>
+        <script src="js/mousetrap.js"></script>
+		<canvas id="mycanvas" width="400" height="400"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage'),
+					msg = document.getElementById('message');
+
+				//define variables
+				var pad = scrawl.pad.mycanvas,
+					canvas = scrawl.canvas.mycanvas,
+					zoomCell,
+					moveCell,
+					zoom,
+					zoomStep = 20, 
+					moveStep = 10,
+					bigCell,
+					myGroup,
+					myColor,
+					moveSprites,
+					mySprite;
+					
+				//add cell to canvas
+				bigCell = pad.addNewCell({
+					name: 				'bigcell',
+					width: 				1600,
+					height: 			1200,
+					sourceX: 			600,
+					sourceY: 			400,
+					sourceWidth: 		400,
+					sourceHeight: 		400,
+					sourceMaxWidth: 	1200,
+					sourceMaxHeight:	1200,
+					sourceMinWidth: 	100,
+					sourceMinHeight: 	100,
+					targetX: 			0,
+					targetY: 			0,
+					targetWidth: 		400,
+					targetHeight: 		400,
+					backgroundColor: 	'#f4f4f4',
+					});
+				pad.setDrawOrder(['bigcell']);
+				myGroup = scrawl.group.bigcell;
+				
+				//define designs (colors)
+				myColor = scrawl.newColor({
+					a: 		1,
+					aMin: 	1,
+					rMax: 	200,
+					gMax: 	200,
+					bMax: 	200,
+					});
+					
+				//define sprites
+				scrawl.newBlock({
+					startX: 	10,
+					startY: 	10,
+					width: 		1580,
+					height: 	1180,
+					group: 		'bigcell',
+					method: 	'draw',
+					lineWidth: 	5,
+					});
+					
+				scrawl.newPhrase({
+					text: 		'This cell is zoomable\n'+
+								'Use the + and - keys to zoom in or out\n'+
+								'(or use the mouse wheel for zooming)\n'+
+								'Use the arrow keys to move around the cell',
+					fillStyle: 	'grey',
+					startX: 	800,
+					startY: 	600,
+					handleX: 	'center',
+					handleY: 	'center',
+					textAlign:	'center',
+					group: 		'bigcell',
+					});
+					
+				for(var i = 0; i < 10; i++){
+					scrawl.makeRegularShape({
+						outline: 		true,
+						startX: 		800,
+						startY: 		600,
+						deltaX: 		(Math.random() * 10) - 5,
+						deltaY: 		(Math.random() * 8) - 5,
+						radius: 		(Math.random() * 150) + 30,
+						angle: 			(Math.floor(Math.random() * 20) + 15) * 4,
+						strokeStyle:	myColor.get('random'),
+						group: 			'bigcell',
+						});
+					}
+
+				//helper function - zoom cell within canvas
+				zoomCell = function(item){
+					bigCell.zoom(item);
+					}
+					
+				//helper function -  move cell within canvas
+				moveCell = function(item){
+					var myX,
+						myY,
+						sw = bigCell.sourceWidth,
+						sh = bigCell.sourceHeight,
+						sx = bigCell.source.x,
+						sy = bigCell.source.y,
+						aw = bigCell.actualWidth,
+						ah = bigCell.actualHeight;
+					myX = (scrawl.isBetween((sx + item.x), 0, (aw - sw), true)) ? sx + item.x : sx;
+					myY = (scrawl.isBetween((sy + item.y), 0, (ah - sh), true)) ? sy + item.y : sy;
+					bigCell.source.x = myX;
+					bigCell.source.y = myY;
+					};
+				
+				//event listener - mouse wheel
+				zoom = function(e){
+					//zoomDelta will set to +1 or -1, depending on the direction the mouse wheel is spun
+					var zoomDelta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+					zoomCell(zoomDelta * zoomStep);
+					e.preventDefault();
+					e.returnValue=false;
+					}
+				canvas.addEventListener('mousewheel', zoom, false);
+				canvas.addEventListener('DOMMouseScroll', zoom, false);
+
+				//event listeners - keyboard
+				Mousetrap.bind('-', function(e){
+					zoomCell(zoomStep);
+					});
+				Mousetrap.bind('+', function(e){
+					zoomCell(-zoomStep);
+					});
+				Mousetrap.bind('up', function(e){
+					moveCell({x: 0, y: -moveStep});
+					return false;
+					});
+				Mousetrap.bind('down', function(e){
+					moveCell({x: 0, y: moveStep});
+					return false;
+					});
+				Mousetrap.bind('left', function(e){
+					moveCell({x: -moveStep, y: 0});
+					return false;
+					});
+				Mousetrap.bind('right', function(e){
+					moveCell({x: moveStep, y: 0});
+					return false;
+					});
+
+				//animation function
+				moveSprites = function(){
+					for(var i=0, z = myGroup.sprites.length; i < z; i++){
+						mySprite = scrawl.sprite[myGroup.sprites[i]];
+						if(!scrawl.isBetween((mySprite.start.x + mySprite.delta.x), 0, 1600)){
+							mySprite.delta.x = -mySprite.delta.x;
+							}
+						if(!scrawl.isBetween((mySprite.start.y + mySprite.delta.y), 0, 1200)){
+							mySprite.delta.y = -mySprite.delta.y;
+							}
+						mySprite.updateStart();
+						}
+					}
+					
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						moveSprites();
+						pad.render();
+						
+						message.innerHTML = 'Current zoom: '+((400/bigCell.sourceWidth)*100).toFixed(2)+'%';
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['factories', 'path', 'phrase', 'animation', 'collisions', 'block', 'color'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-markup">&lt;body>
+	&lt;p>(&lt;a href="http://craig.is/killing/mice">Mousetrap.js&lt;/a> - a simple library for handling keyboard shortcuts in JavaScript. Created by &lt;a href="http://craig.is/">Craig Campbell&lt;/a>.)&lt;/p>
+	&lt;script src="js/mousetrap.js">&lt;/script>
+	&lt;canvas id="mycanvas" width="400" height="400">&lt;/canvas>
+	&lt;script src="js/scrawlCore.js">&lt;/script>
+	&lt;script>
+		var mycode = function(){
+			//define variables
+			var pad = scrawl.pad.mycanvas,
+				canvas = scrawl.canvas.mycanvas,
+				zoomCell,
+				moveCell,
+				zoom,
+				zoomStep = 20, 
+				moveStep = 10,
+				bigCell,
+				myGroup,
+				myColor,
+				moveSprites,
+				mySprite;
+				
+			//add cell to canvas
+			bigCell = pad.addNewCell({
+				name: 				'bigcell',
+				width: 				1600,
+				height: 			1200,
+				sourceX: 			600,
+				sourceY: 			400,
+				sourceWidth: 		400,
+				sourceHeight: 		400,
+				sourceMaxWidth: 	1200,
+				sourceMaxHeight:	1200,
+				sourceMinWidth: 	100,
+				sourceMinHeight: 	100,
+				targetX: 			0,
+				targetY: 			0,
+				targetWidth: 		400,
+				targetHeight: 		400,
+				backgroundColor: 	'#f4f4f4',
+				});
+			pad.setDrawOrder(['bigcell']);
+			myGroup = scrawl.group.bigcell;
+			
+			//define designs (colors)
+			myColor = scrawl.newColor({
+				a: 		1,
+				aMin: 	1,
+				rMax: 	200,
+				gMax: 	200,
+				bMax: 	200,
+				});
+				
+			//define sprites
+			scrawl.newBlock({
+				startX: 	10,
+				startY: 	10,
+				width: 		1580,
+				height: 	1180,
+				group: 		'bigcell',
+				method: 	'draw',
+				lineWidth: 	5,
+				});
+				
+			scrawl.newPhrase({
+				text: 		'This cell is zoomable\n'+
+							'Use the + and - keys to zoom in or out\n'+
+							'(or use the mouse wheel for zooming)\n'+
+							'Use the arrow keys to move around the cell',
+				fillStyle: 	'grey',
+				startX: 	800,
+				startY: 	600,
+				handleX: 	'center',
+				handleY: 	'center',
+				textAlign:	'center',
+				group: 		'bigcell',
+				});
+				
+			for(var i = 0; i &lt; 10; i++){
+				scrawl.makeRegularShape({
+					outline: 		true,
+					startX: 		800,
+					startY: 		600,
+					deltaX: 		(Math.random() * 10) - 5,
+					deltaY: 		(Math.random() * 8) - 5,
+					radius: 		(Math.random() * 150) + 30,
+					angle: 			(Math.floor(Math.random() * 20) + 15) * 4,
+					strokeStyle:	myColor.get('random'),
+					group: 			'bigcell',
+					});
+				}
+
+			//helper function - zoom cell within canvas
+			zoomCell = function(item){
+				bigCell.zoom(item);
+				}
+				
+			//helper function -  move cell within canvas
+			moveCell = function(item){
+				var myX,
+					myY,
+					sw = bigCell.sourceWidth,
+					sh = bigCell.sourceHeight,
+					sx = bigCell.source.x,
+					sy = bigCell.source.y,
+					aw = bigCell.actualWidth,
+					ah = bigCell.actualHeight;
+				myX = (scrawl.isBetween((sx + item.x), 0, (aw - sw), true)) ? sx + item.x : sx;
+				myY = (scrawl.isBetween((sy + item.y), 0, (ah - sh), true)) ? sy + item.y : sy;
+				bigCell.source.x = myX;
+				bigCell.source.y = myY;
+				};
+			
+			//event listener - mouse wheel
+			zoom = function(e){
+				//zoomDelta will set to +1 or -1, depending on the direction the mouse wheel is spun
+				var zoomDelta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+				zoomCell(zoomDelta * zoomStep);
+				e.preventDefault();
+				e.returnValue=false;
+				}
+			canvas.addEventListener('mousewheel', zoom, false);
+			canvas.addEventListener('DOMMouseScroll', zoom, false);
+
+			//event listeners - keyboard
+			Mousetrap.bind('-', function(e){
+				zoomCell(zoomStep);
+				});
+			Mousetrap.bind('+', function(e){
+				zoomCell(-zoomStep);
+				});
+			Mousetrap.bind('up', function(e){
+				moveCell({x: 0, y: -moveStep});
+				return false;
+				});
+			Mousetrap.bind('down', function(e){
+				moveCell({x: 0, y: moveStep});
+				return false;
+				});
+			Mousetrap.bind('left', function(e){
+				moveCell({x: -moveStep, y: 0});
+				return false;
+				});
+			Mousetrap.bind('right', function(e){
+				moveCell({x: moveStep, y: 0});
+				return false;
+				});
+
+			//animation function
+			moveSprites = function(){
+				for(var i=0, z = myGroup.sprites.length; i &lt; z; i++){
+					mySprite = scrawl.sprite[myGroup.sprites[i]];
+					if(!scrawl.isBetween((mySprite.start.x + mySprite.delta.x), 0, 1600)){
+						mySprite.delta.x = -mySprite.delta.x;
+						}
+					if(!scrawl.isBetween((mySprite.start.y + mySprite.delta.y), 0, 1200)){
+						mySprite.delta.y = -mySprite.delta.y;
+						}
+					mySprite.updateStart();
+					}
+				}
+				
+			//animation object
+			scrawl.newAnimation({
+				fn: function(){
+					moveSprites();
+					pad.render();
+					},
+				});
+			};
+			
+		scrawl.loadModules({
+			path: 'js/',
+			modules: ['factories', 'path', 'phrase', 'animation', 'collisions', 'block', 'color'],
+			callback: function(){
+				window.onload = function(){
+					scrawl.init();
+					mycode();
+					};
+				},
+			});
+	&lt;/script>
+&lt;/body></code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+	<body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 078</h1>
+		<h2>Global composite operations</h2>
+		<h3>Modules: block, wheel, phrase, images</h3>
+		<ol>
+			<li>Red circle is painted first onto a clean canvas - it is the 'destination'.</li>
+			<li>Blue brick is then painted on the canvas. Its .globalCompositeOperation attribute is changed for each test. It is the 'source'.</li>
+			<li>Different browsers render some of the tests in different ways (especially the CSS/SVG blending modes - from 'normal' to 'luminosity').</li>
+		</ol>
+		
+		<canvas width="600px" height="900px" id="mycanvas"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var operations = ['source-over', 'source-atop', 'source-in', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'darker', 'copy', 'xor', 'normal', 'multiply', 'screen', 'overlay', 'color-dodge', 'color-burn', 'hue', 'saturation', 'color', 'luminosity'],
+					tester,
+					square,
+					circle,
+					label,
+					counter = 0,
+					camera;
+					
+				//define cells
+				tester = scrawl.pad.mycanvas.addNewCell({
+					name:	'tester',
+					width:	150,
+					height:	150,
+					});
+					
+				//define sprites
+				circle = scrawl.newWheel({
+					name: 		'here',
+					startX: 	75,
+					startY: 	75,
+					radius: 	50,
+					fillStyle:	'red',
+					group:		'tester',
+					});
+				square = scrawl.newBlock({
+					pivot: 		'here',
+					handleX: 	'center',
+					handleY: 	'center',
+					width: 		120,
+					height: 	50,
+					fillStyle: 	'blue',
+					group: 		'tester',
+					});
+				label = scrawl.newPhrase({
+					pivot: 		'here',
+					handleX: 	'center',
+					handleY: 	75,
+					font: 		'14pt sans-serif',
+					group: 		'tester',
+					})
+				camera = scrawl.newPicture({
+					width: 		150,
+					height: 	150,
+					source: 	'tester',
+					});
+					
+				//compile scene
+				for(var y = 0; y < 6; y++){
+					for(var x = 0; x < 4; x++){
+						if(operations[counter]){
+							tester.clear();
+							circle.stamp();
+							square.set({
+								globalCompositeOperation: operations[counter],
+								}).stamp();
+							label.set({
+								text: operations[counter],
+								}).stamp();
+							camera.set({
+								startX: x * 150,
+								startY: y * 150,
+								}).stamp();
+							}
+						counter++;
+						}
+					}
+					
+				//display canvas
+				scrawl.pad.mycanvas.show();
+				
+				testNow = Date.now();
+				testTime =  testNow - testTicker;
+				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['block', 'wheel', 'phrase', 'images'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define variables
+	var operations = ['source-over', 'source-atop', 'source-in', 'source-out', 
+		'destination-over', 'destination-atop', 'destination-in', 'destination-out', 
+		'lighter', 'darker', 'copy', 'xor', 'normal', 'multiply', 'screen', 'overlay', 
+		'color-dodge', 'color-burn', 'hue', 'saturation', 'color', 'luminosity'],
+		tester,
+		square,
+		circle,
+		label,
+		counter = 0,
+		camera;
+		
+	//define cells
+	tester = scrawl.pad.mycanvas.addNewCell({
+		name:	'tester',
+		width:	150,
+		height:	150,
+		});
+		
+	//define sprites
+	circle = scrawl.newWheel({
+		name: 'here',
+		startX: 	75,
+		startY: 	75,
+		radius: 	50,
+		fillStyle:	'red',
+		group:		'tester',
+		});
+	square = scrawl.newBlock({
+		pivot: 		'here',
+		handleX: 	'center',
+		handleY: 	'center',
+		width: 		120,
+		height: 	50,
+		fillStyle: 	'blue',
+		group: 		'tester',
+		});
+	label = scrawl.newPhrase({
+		pivot: 		'here',
+		handleX: 	'center',
+		handleY: 	75,
+		font: 		'14pt sans-serif',
+		group: 		'tester',
+		})
+	camera = scrawl.newPicture({
+		width: 		150,
+		height: 	150,
+		source: 	'tester',
+		});
+		
+	//compile scene
+	for(var y = 0; y < 6; y++){
+		for(var x = 0; x < 4; x++){
+			if(operations[counter]){
+				tester.clear();
+				circle.stamp();
+				square.set({
+					globalCompositeOperation: operations[counter],
+					}).stamp();
+				label.set({
+					text: operations[counter],
+					}).stamp();
+				camera.set({
+					startX: x * 150,
+					startY: y * 150,
+					}).stamp();
+				}
+			counter++;
+			}
+		}
+		
+	//display canvas
+	scrawl.pad.mycanvas.show();
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['block', 'wheel', 'phrase', 'images'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 045</h1>
+		<h2>Scrawl animation - attaching sprites to sprite pivots</h2>
+		<h3>Modules: animation, wheel</h3>
+		<p>Move the mouse over canvas to activate the snake.</p>
+		<canvas id="mycanvas" width="750" height="375"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var here, 
+					choke = 80, 
+					chokeTime = Date.now(), 
+					radius = 10,
+					snake,
+					vector = scrawl.newVector(), 
+					updateSnake;
+					
+				//define sprites
+				for(var i = 0; i < 29; i++){
+					scrawl.newWheel({
+						name:		'seg_'+i,
+						startX:		350,
+						startY:		187,
+						pivot:		'seg_'+(i + 1),
+						radius:		radius,
+						fillStyle:	'rgba(0,'+(255 - (i * 8))+',0,1)',
+						method:		'fillDraw',
+						order:		i,
+						});
+					}
+					
+				snake = scrawl.newWheel({
+					name:		'seg_29',
+					startX:		350,
+					startY:		187,
+					radius:		radius,
+					fillStyle:	'Black',
+					method:		'fillDraw',
+					visibility:	false,
+					order:		29,
+					});
+					
+				//display initial canvas scene
+				scrawl.clear();
+				scrawl.compile();
+				snake.forceStamp();
+				scrawl.show();
+
+				//animation function
+				updateSnake = function(){
+					if(chokeTime + choke < Date.now()){
+						chokeTime = Date.now();
+						scrawl.clear();
+						scrawl.compile();
+						vector.set(here);
+						vector.vectorSubtract(snake.start);
+						if(vector.getMagnitude() > radius){
+							vector.setMagnitudeTo(radius * 2);
+							snake.setDelta({
+								start: vector,
+								});
+							}
+						snake.forceStamp();
+						scrawl.show();
+						}
+					};
+
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						here = scrawl.pad.mycanvas.getMouse();
+						if(here.active){
+							updateSnake();
+							}
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['animation', 'wheel'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define variables
+	var here, 
+		choke = 80, 
+		chokeTime = Date.now(), 
+		radius = 10,
+		snake,
+		vector = scrawl.newVector(), 
+		updateSnake;
+		
+	//define sprites
+	for(var i = 0; i < 29; i++){
+		scrawl.newWheel({
+			name:		'seg_'+i,
+			startX:		350,
+			startY:		187,
+			pivot:		'seg_'+(i + 1),
+			radius:		radius,
+			fillStyle:	'rgba(0,'+(255 - (i * 8))+',0,1)',
+			method:		'fillDraw',
+			order:		i,
+			});
+		}
+		
+	snake = scrawl.newWheel({
+		name:		'seg_29',
+		startX:		350,
+		startY:		187,
+		radius:		radius,
+		fillStyle:	'Black',
+		method:		'fillDraw',
+		visibility:	false,
+		order:		29,
+		});
+		
+	//display initial canvas scene
+	scrawl.clear();
+	scrawl.compile();
+	snake.forceStamp();
+	scrawl.show();
+
+	//animation function
+	updateSnake = function(){
+		if(chokeTime + choke < Date.now()){
+			chokeTime = Date.now();
+			scrawl.clear();
+			scrawl.compile();
+			vector.set(here);
+			vector.vectorSubtract(snake.start);
+			if(vector.getMagnitude() > radius){
+				vector.setMagnitudeTo(radius * 2);
+				snake.setDelta({
+					start: vector,
+					});
+				}
+			snake.forceStamp();
+			scrawl.show();
+			}
+		};
+
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			here = scrawl.pad.mycanvas.getMouse();
+			if(here.active){
+				updateSnake();
+				}
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['animation', 'wheel'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

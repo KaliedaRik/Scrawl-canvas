@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 001</h1>
+		<h2>Adding a Scrawl.js canvas to a page programmatically - #1</h2>
+		<h3>Modules: phrase</h3>
+		<p>Canvas will appear at bottom of this page ...</p>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//add a canvas to the end of document.body, and make it current
+				scrawl.addCanvasToPage({
+					width: 400,
+					height: 200,
+					}).makeCurrent();
+					
+				//define a phrase sprite to hold some text
+				scrawl.newPhrase({
+					text: 'Hello, Scrawl World!',
+					startX: 50,
+					startY: 50,
+					});
+					
+				//update the canvas display
+				scrawl.render();
+
+				testNow = Date.now();
+				testTime =  testNow - testTicker;
+				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',				//path to where Scrawl modules are stored, relative to this web page
+				modules: 'phrase',			//array (or string) of Scrawl modules to be loaded 
+				callback: function(){		//function to perform once all the Scrawl modules have loaded
+					window.onload = function(){
+						scrawl.init();		//start Scrawl
+						mycode();			//run the mycode function defined above
+						};
+					},
+				});
+		</script>
+<pre><code class="language-markup">&lt;!DOCTYPE html>
+&lt;html>
+    &lt;head>
+        &lt;title>Scrawl.js&lt;/title>
+	&lt;/head>
+    &lt;body>
+		&lt;p>Canvas will appear at bottom of this page ...&lt;/p>
+		&lt;script src="js/scrawlCore.js">&lt;/script>
+		&lt;script>
+			var mycode = function(){
+				//add a canvas to the end of document.body, and make it current
+				scrawl.addCanvasToPage({
+					width:	400,
+					height:	200,
+					}).makeCurrent();
+					
+				//define a phrase sprite to hold some text
+				scrawl.newPhrase({
+					text:	'Hello, Scrawl World!',
+					startX:	50,
+					startY:	50,
+					});
+					
+				//update the canvas display
+				scrawl.render();
+				};
+				
+			scrawl.loadModules({
+				path:		'js/',				//path to where Scrawl modules are stored, relative to this web page
+				modules:	'phrase',			//array (or string) of Scrawl modules to be loaded 
+				callback:	function(){			//function to perform once all the Scrawl modules have loaded
+					window.onload = function(){
+						scrawl.init();			//start Scrawl
+						mycode();				//run the mycode function defined above
+						};
+					},
+				});
+		&lt;/script>
+    &lt;/body>
+&lt;/html></code></pre>
+	<script src="js/prism.js" data-default-language="markup"></script>
+    </body>
+</html>

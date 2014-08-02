@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 053</h1>
+		<h2>Scrawl animation - manipulating sprite 'roll' and 'scale' attributes</h2>
+		<h3>Modules: path, animation, factories</h3>
+		<canvas id="mycanvas" width="750" height="375"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var minScale = 0.4, 
+					maxScale = 1.2,
+					myRotate = 1, 
+					myScale = 0.01,
+					star,
+					box;
+					
+				//define sprites
+				star = scrawl.makeRegularShape({
+					name:			'star',
+					startX:			200,
+					startY:			185,
+					winding:		'evenodd',
+					fillStyle:		'Pink',
+					strokeStyle:	'Red',
+					lineWidth:		2,
+					scaleOutline:	false,
+					method:			'fillDraw',
+					radius:			100,
+					angle:			144,
+					});
+				box = star.clone({
+					name:			'box',
+					startX:			500,
+					startY:			185,
+					data:			'm-100,-100h200v200h-200v-200m50,50h100v100h-100v-100m-50-50z'
+					});
+					
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						if(!scrawl.isBetween((star.scale + myScale), maxScale, minScale, true)){
+							myScale = -myScale;
+							}
+						star.setDelta({
+							scale:	myScale,
+							roll:	myRotate,
+							});
+						box.setDelta({
+							scale:	myScale,
+							roll:	-myRotate,
+							});
+						scrawl.render();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['path', 'animation', 'factories'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define variables
+	var minScale = 0.4, 
+		maxScale = 1.2,
+		myRotate = 1, 
+		myScale = 0.01,
+		star,
+		box;
+		
+	//define sprites
+	star = scrawl.makeRegularShape({
+		name:			'star',
+		startX:			200,
+		startY:			185,
+		winding:		'evenodd',
+		fillStyle:		'Pink',
+		strokeStyle:	'Red',
+		lineWidth:		2,
+		scaleOutline:	false,
+		method:			'fillDraw',
+		radius:			100,
+		angle:			144,
+		});
+	box = star.clone({
+		name:			'box',
+		startX:			500,
+		startY:			185,
+		data:			'm-100,-100h200v200h-200v-200m50,50h100v100h-100v-100m-50-50z'
+		});
+		
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			if(!scrawl.isBetween((star.scale + myScale), maxScale, minScale, true)){
+				myScale = -myScale;
+				}
+			star.setDelta({
+				scale:	myScale,
+				roll:	myRotate,
+				});
+			box.setDelta({
+				scale:	myScale,
+				roll:	-myRotate,
+				});
+			scrawl.render();
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['path', 'animation', 'factories'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

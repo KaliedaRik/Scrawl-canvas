@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+		<style>
+			#mystack {
+				border: solid 1px red;
+				}
+			#cow {
+				position: static;
+				visibility: visible;
+				}
+		</style>
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 202</h1>
+		<h2>Attaching an SVG &lt;img&gt; element to the mouse cursor in a Scrawl stack</h2>
+		<h3>Modules: animation, stacks</h3>
+		<p>Move mouse pointer over the canvas to see the cow.</p>
+		
+		<div id="mystack" class="scrawlstack">
+			<img id="cow" src="img/cow01.svg" />
+		</div>
+		
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var mystack = scrawl.stack.mystack,
+					cw = 280, 
+					ch = 315,
+					mypad = scrawl.pad.mycanvas,
+					mycow = scrawl.element.cow,
+					here, 
+					myScale;
+
+				//style the stack
+				mystack.set({
+					width: 600,
+					height: 400,
+					overflow: 'hidden',
+					});
+					
+				//style the stack elements
+				mycow.set({
+					handleX: 'center',
+					handleY: 'center',
+					pivot: 'mouse',
+					pointerEvents:	'none',
+					});
+
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						here = mystack.getMouse();
+						myScale = (1 - ((Math.abs(here.y - (mystack.height/2))/mystack.height)+(Math.abs(here.x - (mystack.width/2))/mystack.width))) + 0.1;
+						mycow.set({
+							width:	(here.active) ? parseInt(cw * myScale) : 0,
+							height:	(here.active) ? parseInt(ch * myScale) : 0,
+							});
+						mystack.renderElements();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['animation', 'stacks'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-markup">&lt;body>
+	&lt;div id="mystack" class="scrawlstack">
+		&lt;img id="cow" src="img/cow01.svg" />
+	&lt;/div>
+	&lt;script src="js/scrawlCore.js">&lt;/script>
+	&lt;script>
+		var mycode = function(){
+			//define variables
+			var mystack = scrawl.stack.mystack,
+				cw = 280, 
+				ch = 315,
+				mypad = scrawl.pad.mycanvas,
+				mycow = scrawl.element.cow,
+				here, 
+				myScale;
+
+			//style the stack
+			mystack.set({
+				width: 600,
+				height: 400,
+				overflow: 'hidden',
+				});
+				
+			//style the stack elements
+			mycow.set({
+				handleX: 'center',
+				handleY: 'center',
+				pivot: 'mouse',
+				pointerEvents:	'none',
+				});
+
+			//animation object
+			scrawl.newAnimation({
+				fn: function(){
+					here = mystack.getMouse();
+					myScale = (1 - ((Math.abs(here.y - (mystack.height/2))/mystack.height)+(Math.abs(here.x - (mystack.width/2))/mystack.width))) + 0.1;
+					mycow.set({
+						width:	(here.active) ? parseInt(cw * myScale) : 0,
+						height:	(here.active) ? parseInt(ch * myScale) : 0,
+						});
+					mystack.renderElements();
+					},
+				});
+			};
+			
+		scrawl.loadModules({
+			path: 'js/',
+			modules: ['animation', 'stacks'],
+			callback: function(){
+				window.onload = function(){
+					scrawl.init();
+					mycode();
+					};
+				},
+			});
+	&lt;/script>
+&lt;/body></code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

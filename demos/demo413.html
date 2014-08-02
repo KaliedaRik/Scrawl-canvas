@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+	<body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 413</h1>
+		<h2>Scrawl image filters - sharpen()</h2>
+		<h3>Modules: images, filters, animation</h3>
+		<canvas width="400" height="400" id="mycanvas"></canvas>
+		<p>Sharpen value: 0 ('0%') <input id="myvalue" type="range" value="1" min="0" max="1" step="0.05" /> 1 ('100%')</p>
+		<img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo413" />
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var myInput,
+					updateInput;
+					
+				//import image
+				scrawl.getImagesByClass('demo413');
+					
+				//clone image and add filter to it
+				scrawl.image.parrot.clone({
+					name: 'sharpenparrot',
+					}).filter('sharpen', {
+						value: 1,
+						useSourceData: true,
+						});
+
+				//define sprites
+				scrawl.newPicture({
+					name: 'parrot',
+					startX: 10,
+					startY: 10,
+					scale: 0.5,
+					source: 'parrot',
+					}).clone({
+					startX: 120,
+					startY: 210,
+					source: 'sharpenparrot',
+					});
+					
+				//preparing the DOM input elements
+				myInput = document.getElementById('myvalue');
+				myInput.value = 1;
+
+				//event listener
+				updateInput = function(e){
+					scrawl.image.sharpenparrot.filter('sharpen', {
+						value: parseFloat(myInput.value),
+						useSourceData: true,
+						});
+					e.preventDefault();
+					e.returnValue = false;
+					};
+				myInput.addEventListener('change', updateInput, false);
+				
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						scrawl.render();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Current sharpen value: '+myInput.value+'. Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['images', 'filters', 'animation'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define variables
+	var myInput,
+		updateInput;
+		
+	//import image
+	scrawl.getImagesByClass('demo413');
+		
+	//clone image and add filter to it
+	scrawl.image.parrot.clone({
+		name: 'sharpenparrot',
+		}).filter('sharpen', {
+			value: 1,
+			useSourceData: true,
+			});
+
+	//define sprites
+	scrawl.newPicture({
+		name: 'parrot',
+		startX: 10,
+		startY: 10,
+		scale: 0.5,
+		source: 'parrot',
+		}).clone({
+		startX: 120,
+		startY: 210,
+		source: 'sharpenparrot',
+		});
+		
+	//preparing the DOM input elements
+	myInput = document.getElementById('myvalue');
+	myInput.value = 1;
+
+	//event listener
+	updateInput = function(e){
+		scrawl.image.sharpenparrot.filter('sharpen', {
+			value: parseFloat(myInput.value),
+			useSourceData: true,
+			});
+		e.preventDefault();
+		e.returnValue = false;
+		};
+	myInput.addEventListener('change', updateInput, false);
+	
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			scrawl.render();
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['images', 'filters', 'animation'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+		<style>
+		</style>
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 211</h1>
+		<h2>Test mouse tracking on rotating canvas element</h2>
+		<h3>Modules: animation, stacks, wheel</h3>
+		<p>Move mouse pointer over the canvas.</p>
+		<ul>
+			<li>Wheel follows mouse correctly in Firefox, both on front and back sides of the canvas</li>
+			<li>Wheel remains stationary if mouse does not move in all browsers (desired outcome: wheel moves across canvas as canvas rotates)</li>
+			<li>Wheel movement erratic in IE11, Chrome, Opera, SafariWindows (follows the unrotated canvas coordinates), and backface movements are opposite to expected directions</li>
+			<li>mousemove listener not fired on canvas when mouse pointer is over BLAH div, and div is 'in front of' canvas (IE11, Chrome, Opera, SafariWindows) - can be mitigated by setting Blah div's <i>pointerEvents</i> style attribute to 'none', though that in turn disables the Blah link's interactivity ...</li>
+		</ul>
+		
+		<div id="mystack" class="scrawlstack">
+			<div id="testpanel"><a href="">BLAH blah blah</a> blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah </div>
+			<canvas id="mycanvas" width="600" height="400"></canvas>
+		</div>
+		
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var mystack = scrawl.stack.mystack,
+					mypad = scrawl.pad.mycanvas,
+					mydiv = scrawl.element.testpanel,
+					mycanvas = scrawl.pad.mycanvas,
+					eldiv = scrawl.elm.testpanel,
+					elstk = scrawl.stk.mystack,
+					here;
+
+				//style the stack
+				mystack.set({
+					width: 600,
+					height: 400,
+					perspectiveZ:	1000,
+					border: '1px solid red',
+					});
+					
+				//style the stack elements
+				mycanvas.set({
+					startX: 300,
+					startY: 200,
+					handleX: 'center',
+					handleY: 'center',
+					});
+				mydiv.set({
+					startX: 150,
+					startY: 100,
+					width: 300,
+					height: 200,
+					border: '1px solid black',
+					overflow: 'hidden',
+					handleX: 'center',
+					handleY: 'center',
+					//pointerEvents: 'none',
+					});
+				
+				//build sprite
+				scrawl.newWheel({
+					name: 'mywheel',
+					radius: 70,
+					fillStyle: 'blue',
+					strokeStyle: 'red',
+					lineWidth: 10,
+					method: 'fillDraw',
+					pivot: 'mouse',
+					});
+
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+					
+						scrawl.sprite.mywheel.set({
+							visibility: (mycanvas.getMouse().active) ? true : false,
+							});
+						scrawl.render();
+						mycanvas.setDelta({
+							yaw: 0.5,
+							});
+						mydiv.setDelta({
+							pitch: 0.5,
+							});
+						scrawl.renderElements();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['animation', 'stacks', 'wheel'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-markup">&lt;body>
+	&lt;div id="mystack" class="scrawlstack">
+		&lt;div id="testpanel">&lt;a href="">BLAH blah blah&lt;/a> blah blah blah blah blah etc &lt;/div>
+		&lt;canvas id="mycanvas" width="600" height="400">&lt;/canvas>
+	&lt;/div>
+	&lt;script src="js/scrawlCore.js">&lt;/script>
+	&lt;script>
+		var mycode = function(){
+			//define variables
+			var mystack = scrawl.stack.mystack,
+				mypad = scrawl.pad.mycanvas,
+				mydiv = scrawl.element.testpanel,
+				mycanvas = scrawl.pad.mycanvas,
+				eldiv = scrawl.elm.testpanel,
+				elstk = scrawl.stk.mystack,
+				here;
+
+			//style the stack
+			mystack.set({
+				width: 600,
+				height: 400,
+				perspectiveZ:	1000,
+				border: '1px solid red',
+				});
+				
+			//style the stack elements
+			mycanvas.set({
+				startX: 300,
+				startY: 200,
+				handleX: 'center',
+				handleY: 'center',
+				});
+			mydiv.set({
+				startX: 150,
+				startY: 100,
+				width: 300,
+				height: 200,
+				border: '1px solid black',
+				overflow: 'hidden',
+				handleX: 'center',
+				handleY: 'center',
+				//pointerEvents: 'none',
+				});
+				
+			//build sprite
+			scrawl.newWheel({
+				name: 'mywheel',
+				radius: 70,
+				fillStyle: 'blue',
+				strokeStyle: 'red',
+				lineWidth: 10,
+				method: 'fillDraw',
+				pivot: 'mouse',
+				});
+
+			//animation object
+			scrawl.newAnimation({
+				fn: function(){
+					scrawl.sprite.mywheel.set({
+						visibility: (mycanvas.getMouse().active) ? true : false,
+						});
+					scrawl.render();
+					mycanvas.setDelta({
+						yaw: 0.5,
+						});
+					mydiv.setDelta({
+						pitch: 0.5,
+						});
+					scrawl.renderElements();
+					},
+				});
+			};
+			
+		scrawl.loadModules({
+			path: 'js/',
+			modules: ['animation', 'stacks', 'wheel'],
+			callback: function(){
+				window.onload = function(){
+					scrawl.init();
+					mycode();
+					};
+				},
+			});
+	&lt;/script>
+&lt;/body></code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

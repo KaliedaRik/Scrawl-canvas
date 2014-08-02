@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+	<body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 000</h1>
+		<h2>blank</h2>
+		<h3>Modules: </h3>
+		<p>text</p>
+		<canvas id="mycanvas" width="300" height="150"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				
+				//code here
+				
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+					
+						//code here
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+					
+				testNow = Date.now();
+				testTime =  testNow - testTicker;
+				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: [],			
+				callback: function(){
+					window.addEventListener('load', function(){
+						scrawl.init();
+						mycode();
+						}, false);
+					},
+				});
+		</script>
+<pre><code class="language-markup/javascript">
+</code></pre>
+		<script src="js/prism.js"></script>
+	</body>
+</html>

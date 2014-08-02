@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+	<body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 304</h1>
+		<h2>Physics engine - springs: rope demo</h2>
+		<h3>Modules: animation, path, wheel, physics</h3>
+		<p id="msg1"></p>
+		<p id="msg2"></p>
+		<p id="msg3"></p>
+		<canvas id="mycanvas" width="600" height="600"></canvas>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var msg1 = document.getElementById('msg1'),
+					msg2 = document.getElementById('msg2'),
+					msg3 = document.getElementById('msg3');
+
+				//define variables
+				var pad = scrawl.pad.mycanvas,
+					ticker = Date.now(), 
+					dTime = 0, 
+					sTime = 0,
+					timeSpeed = 25,
+					rope,
+					calculatePositions;
+					
+				//define sprites
+				rope = scrawl.makePath({
+					name: 		'rope',
+					lineWidth: 	10,
+					lineJoin: 	'round',
+					lineCap: 	'round',
+					data: 		'm0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0',
+					markStart: 	'pin',
+					mark: 		'joint',
+					precision:	1,
+					});
+					
+				scrawl.newWheel({
+					name: 		'joint',
+					radius: 	3,
+					fillStyle: 	'gold',
+					visibility:	'false',
+					});
+
+				scrawl.newWheel({
+					name: 		'pin',
+					method: 	'fillDraw',
+					radius: 	10,
+					fillStyle:	'red',
+					lineWidth: 	2,
+					visibility:	'false',
+					});
+
+				//define physics objects
+				for(var i = 0; i < 20; i++){							//define particles for animating rope
+					scrawl.newParticle({
+						name: 	'b_'+i,
+						startX:	300+(i * 15),
+						startY:	100,
+						mass: 	50,
+						radius:	0.1,
+						}).addForce('gravity');
+					scrawl.point['rope_p'+(i + 1)].fixed = 'b_'+i;		//assign rope points to particle objects
+					}
+				scrawl.sprite.b_0.set({									//fix top of rope to display
+					mobile: false,
+					});
+					
+				for(var i = 0; i < 19; i++){							//add in springs between particles
+					scrawl.sprite['b_'+i].addSpring({
+						end:			'b_'+(i + 1),
+						springConstant:	8000,
+						});
+					}
+				
+				//physics update function
+				calculatePositions = function(){
+					//update time
+					var now = Date.now();
+					sTime =  now - ticker;
+					ticker = now;
+					dTime = (sTime > timeSpeed) ? timeSpeed : sTime;
+					scrawl.physics.deltaTime = dTime/1000;
+					//calculate springs
+					scrawl.updateSprings();
+					//calculate particle positions and display results
+					pad.render();
+					};
+					
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						calculatePositions();
+
+						msg1.innerHTML = 'Milliseconds per physics refresh: '+parseInt(dTime);
+						msg2.innerHTML = 'Milliseconds per screen refresh: '+parseInt(sTime);
+						msg3.innerHTML = 'Frames per second: '+parseInt(1000/sTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['animation', 'path', 'wheel', 'physics'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define variables
+	var pad = scrawl.pad.mycanvas,
+		ticker = Date.now(), 
+		dTime = 0, 
+		sTime = 0,
+		timeSpeed = 25,
+		rope,
+		calculatePositions;
+		
+	//define sprites
+	rope = scrawl.makePath({
+		name: 		'rope',
+		lineWidth: 	10,
+		lineJoin: 	'round',
+		lineCap: 	'round',
+		data: 		'm0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0',
+		markStart: 	'pin',
+		mark: 		'joint',
+		precision:	1,
+		});
+		
+	scrawl.newWheel({
+		name: 		'joint',
+		radius: 	3,
+		fillStyle: 	'gold',
+		visibility:	'false',
+		});
+
+	scrawl.newWheel({
+		name: 		'pin',
+		method: 	'fillDraw',
+		radius: 	10,
+		fillStyle:	'red',
+		lineWidth: 	2,
+		visibility:	'false',
+		});
+
+	//define physics objects
+	for(var i = 0; i < 20; i++){							//define particles for animating rope
+		scrawl.newParticle({
+			name: 	'b_'+i,
+			startX:	300+(i * 15),
+			startY:	100,
+			mass: 	50,
+			radius:	0.1,
+			}).addForce('gravity');
+		scrawl.point['rope_p'+(i + 1)].fixed = 'b_'+i;		//assign rope points to particle objects
+		}
+	scrawl.sprite.b_0.set({									//fix top of rope to display
+		mobile: false,
+		});
+		
+	for(var i = 0; i < 19; i++){							//add in springs between particles
+		scrawl.sprite['b_'+i].addSpring({
+			end:			'b_'+(i + 1),
+			springConstant:	8000,
+			});
+		}
+	
+	//physics update function
+	calculatePositions = function(){
+		//update time
+		var now = Date.now();
+		sTime =  now - ticker;
+		ticker = now;
+		dTime = (sTime > timeSpeed) ? timeSpeed : sTime;
+		scrawl.physics.deltaTime = dTime/1000;
+		//calculate springs
+		scrawl.updateSprings();
+		//calculate particle positions and display results
+		pad.render();
+		};
+		
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			calculatePositions();
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['animation', 'path', 'wheel', 'physics'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

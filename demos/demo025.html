@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 025</h1>
+		<h2>Scrawl Path/Shape sprites - pentagons</h2>
+		<h3>Modules: path, factories</h3>
+		<canvas id="mycanvas" width="400" height="200"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//makeRegularShape factory - using sides
+				scrawl.makeRegularShape({
+					startX:	100,
+					startY:	100,
+					radius:	90,
+					sides:	5,
+					});
+					
+				//makeRegularShape factory - using angles
+				scrawl.makeRegularShape({
+					startX:	300,
+					startY:	100,
+					radius:	90,
+					angle:	72,
+					});
+					
+				//display canvas
+				scrawl.render();
+				
+				testNow = Date.now();
+				testTime =  testNow - testTicker;
+				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['path', 'factories'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+		
+	//makeRegularShape factory - using sides
+	scrawl.makeRegularShape({
+		startX:	100,
+		startY:	100,
+		radius:	90,
+		sides:	5,
+		});
+		
+	//makeRegularShape factory - using angles
+	scrawl.makeRegularShape({
+		startX:	300,
+		startY:	100,
+		radius:	90,
+		angle:	72,
+		});
+		
+	//display canvas
+	scrawl.render();
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['path', 'factories'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

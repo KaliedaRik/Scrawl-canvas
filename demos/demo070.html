@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scrawl.js</title>
+		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
+	</head>
+	<body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 070</h1>
+		<h2>Multiple line Phrase sprites</h2>
+		<h3>Modules: phrase, animation</h3>
+		<p>The text is draggable</p>
+		<canvas id="mycanvas" width="800" height="500"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//define variables
+				var myPad = scrawl.pad.mycanvas,
+					mySprite, 
+					here,
+					dragGroup,
+					getPhrase,
+					dropPhrase;
+				
+				//define groups
+				dragGroup = scrawl.newGroup({
+					name: 'drag',
+					});
+					
+				//define sprites
+				scrawl.newPhrase({
+					name:		'lefty',
+					group:		'drag',
+					text:		'Hello! Lefty reporting for duty!\nI am a very long line of text\nthat has been broken up into\nseparate lines. I am\nleft justified and my lineHeight\nattribute has been set to\na value of 1.2.',
+					textAlign:	'left',
+					lineHeight:	1.2,
+					handleX:	'center',
+					handleY:	'top',
+					startX:		140,
+					startY:		20,
+					font:		'13pt Arial, san-serif',
+					}).clone({
+					name:		'centra',
+					text:		'Hi! My name is Centra and I\'ve\nbeen given the job of looking\nafter the middle column of text.\nMy details are\ntextAlign: \'center\',\nlineHeight: 1.4.\nHave a nice day!',
+					textAlign:	'center',
+					lineHeight:	1.4,
+					startX:		395,
+					startY:		18,
+					fillStyle:	'blue',
+					}).clone({
+					name:		'righty',
+					text:		'As a right justified column with a\nlineHeight value of 1.8, I don\'t\nfeel the need to say much.\nOh, yeah: the name\'s Righty.\nGood to meet you!',
+					textAlign:	'right',
+					lineHeight:	1.8,
+					startX:		650,
+					startY:		14,
+					fillStyle:	'green',
+					});
+					
+				//event listeners
+				getPhrase = function(e){
+					mySprite = dragGroup.getSpriteAt(here);
+					if(mySprite){
+						mySprite.pickupSprite(here);
+						}
+					if(e){
+						e.stopPropagation();
+						e.preventDefault();
+						}
+					};
+				dropPhrase = function(e){
+					if(mySprite){
+						mySprite.dropSprite();
+						mySprite = false;
+						}
+					if(e){
+						e.stopPropagation();
+						e.preventDefault();
+						}
+					};
+				scrawl.canvas.mycanvas.addEventListener('mousedown', getPhrase, false);
+				scrawl.canvas.mycanvas.addEventListener('mouseup', dropPhrase, false);
+				
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						here = myPad.getMouse();
+						if(!here.active && mySprite){
+							dropPhrase();
+							}
+						scrawl.render();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['phrase', 'animation'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define variables
+	var myPad = scrawl.pad.mycanvas,
+		mySprite, 
+		here,
+		dragGroup,
+		getPhrase,
+		dropPhrase;
+	
+	//define groups
+	dragGroup = scrawl.newGroup({
+		name: 'drag',
+		});
+		
+	//define sprites
+	scrawl.newPhrase({
+		name:		'lefty',
+		group:		'drag',
+		text:		'Hello! Lefty reporting for duty!\nI am a very long line of text\nthat has been broken up into\nseparate lines. I am\nleft justified and my lineHeight\nattribute has been set to\na value of 1.2.',
+		textAlign:	'left',
+		lineHeight:	1.2,
+		handleX:	'center',
+		handleY:	'top',
+		startX:		140,
+		startY:		20,
+		font:		'13pt Arial, san-serif',
+		}).clone({
+		name:		'centra',
+		text:		'Hi! My name is Centra and I\'ve\nbeen given the job of looking\nafter the middle column of text.\nMy details are\ntextAlign: \'center\',\nlineHeight: 1.4.\nHave a nice day!',
+		textAlign:	'center',
+		lineHeight:	1.4,
+		startX:		395,
+		startY:		18,
+		fillStyle:	'blue',
+		}).clone({
+		name:		'righty',
+		text:		'As a right justified column with a\nlineHeight value of 1.8, I don\'t\nfeel the need to say much.\nOh, yeah: the name\'s Righty.\nGood to meet you!',
+		textAlign:	'right',
+		lineHeight:	1.8,
+		startX:		650,
+		startY:		14,
+		fillStyle:	'green',
+		});
+		
+	//event listeners
+	getPhrase = function(e){
+		mySprite = dragGroup.getSpriteAt(here);
+		if(mySprite){
+			mySprite.pickupSprite(here);
+			}
+		if(e){
+			e.stopPropagation();
+			e.preventDefault();
+			}
+		};
+	dropPhrase = function(e){
+		if(mySprite){
+			mySprite.dropSprite();
+			mySprite = false;
+			}
+		if(e){
+			e.stopPropagation();
+			e.preventDefault();
+			}
+		};
+	scrawl.canvas.mycanvas.addEventListener('mousedown', getPhrase, false);
+	scrawl.canvas.mycanvas.addEventListener('mouseup', dropPhrase, false);
+	
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			here = myPad.getMouse();
+			if(!here.active && mySprite){
+				dropPhrase();
+				}
+			scrawl.render();
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['phrase', 'animation'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 040</h1>
+		<h2>Creating patterns to use with sprites</h2>
+		<h3>Modules: block, images, animation</h3>
+		<img src="img/leaves.png" id="leaves" class="demo040" />
+		<img src="img/water.png" id="water" class="demo040" />
+		<canvas id="mycanvas" width="750" height="375"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+					
+				//import images for patterns
+				scrawl.getImagesByClass('demo040');
+
+				//define patterns
+				scrawl.newPattern({			//uses preloaded images
+					name:	'leaves',
+					image:	'leaves',
+					}).clone({
+					name:	'water',
+					image:	'water',
+					});
+				scrawl.newPattern({			//loads images dynamically before using them
+					name:	'marble',
+					source:	'img/marble.png',
+					}).clone({
+					name:	'parque',
+					source:	'img/parque.png',
+					});
+					
+				//define sprites
+				scrawl.newBlock({
+					name:			'b1',
+					startX:			35,
+					startY:			10,
+					width:			300,
+					height:			150,
+					fillStyle:		'leaves',
+					strokeStyle:	'marble',
+					lineWidth:		12,
+					lineJoin:		'round',
+					shadowOffsetX:	8,
+					shadowOffsetY:	8,
+					shadowBlur:		5,
+					shadowColor:	'Black',
+					method:			'sinkInto',
+					}).clone({
+					name:			'b2',
+					fillStyle:		'marble',
+					strokeStyle:	'water',
+					startX:			375, 
+					}).clone({
+					name:			'b3',
+					fillStyle:		'water',
+					strokeStyle:	'parque',
+					startY:			200, 
+					}).clone({
+					name:			'b4',
+					fillStyle:		'parque',
+					strokeStyle:	'leaves',
+					startX:			35, 
+					});
+				
+				//animation object
+				// - necessary because dynamic loading of images takes time
+				scrawl.newAnimation({
+					fn: function(){
+						scrawl.render();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['block', 'images', 'animation'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-markup">&lt;body>
+	&lt;img src="img/leaves.png" id="leaves" class="demo040" />
+	&lt;img src="img/water.png" id="water" class="demo040" />
+	&lt;canvas id="mycanvas" width="750" height="375">&lt;/canvas>
+	&lt;script src="js/scrawlCore.js">&lt;/script>
+	&lt;script>
+		var mycode = function(){
+			//import images for patterns
+			scrawl.getImagesByClass('demo040');
+
+			//define patterns
+			scrawl.newPattern({			//uses preloaded images
+				name:	'leaves',
+				image:	'leaves',
+				}).clone({
+				name:	'water',
+				image:	'water',
+				});
+			scrawl.newPattern({			//loads images dynamically before using them
+				name:	'marble',
+				source:	'img/marble.png',
+				}).clone({
+				name:	'parque',
+				source:	'img/parque.png',
+				});
+				
+			//define sprites
+			scrawl.newBlock({
+				name:			'b1',
+				startX:			35,
+				startY:			10,
+				width:			300,
+				height:			150,
+				fillStyle:		'leaves',
+				strokeStyle:	'marble',
+				lineWidth:		12,
+				lineJoin:		'round',
+				shadowOffsetX:	8,
+				shadowOffsetY:	8,
+				shadowBlur:		5,
+				shadowColor:	'Black',
+				method:			'sinkInto',
+				}).clone({
+				name:			'b2',
+				fillStyle:		'marble',
+				strokeStyle:	'water',
+				startX:			375, 
+				}).clone({
+				name:			'b3',
+				fillStyle:		'water',
+				strokeStyle:	'parque',
+				startY:			200, 
+				}).clone({
+				name:			'b4',
+				fillStyle:		'parque',
+				strokeStyle:	'leaves',
+				startX:			35, 
+				});
+			
+			//animation object
+			// - necessary because dynamic loading of images takes time
+			scrawl.newAnimation({
+				fn: function(){
+					scrawl.render();
+					},
+				});
+			};
+			
+		scrawl.loadModules({
+			path: 'js/',
+			modules: ['block', 'images', 'animation'],
+			callback: function(){
+				window.onload = function(){
+					scrawl.init();
+					mycode();
+					};
+				},
+			});
+	&lt;/script>
+&lt;/body>
+			</code>
+		</pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>

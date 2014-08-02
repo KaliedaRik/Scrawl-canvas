@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrawl.js</title>
+ 		<link href="css/prism.css" rel="stylesheet" />
+ 		<link href="css/demo.css" rel="stylesheet" />
+    </head>
+    <body>
+		<h1><a href="index.html">Scrawl.js</a> - demonstration 057</h1>
+		<h2>Scrawl animation - building Shape sprites dynamically</h2>
+		<h3>Modules: animation, shape, color</h3>
+		<p id="message">Click-and-drag to draw lines</p>
+		<canvas id="mycanvas" width="750" height="375"></canvas>
+		<p id="testmessage"></p>
+		<script src="js/scrawlCore.js"></script>
+		<script>
+			var mycode = function(){
+				var testTicker = Date.now(),
+					testTime = testTicker,
+					testNow,
+					testMessage = document.getElementById('testmessage');
+				var myMessage = document.getElementById('message');
+					
+				//define variables
+				var mouseDown = false, 
+					currentSprite = false,
+					myPad = scrawl.pad.mycanvas, 
+					myCanvas = scrawl.canvas.mycanvas,
+					here,
+					sX, 
+					sY,
+					myColor,
+					lines,
+					startDrawing,
+					keepDrawing,
+					endDrawing,
+					spinLines;
+				
+				//setup canvas
+				scrawl.cell[myPad.base].set({backgroundColor: '#eee',});
+				
+				//define designs (color)
+				myColor = scrawl.newColor({
+					rMin:	50,
+					rMax:	220,
+					gMin:	50,
+					gMax:	220,
+					bMin:	50,
+					bMax:	220,
+					a:		1,
+					});
+				
+				//define groups
+				lines = scrawl.newGroup({
+					name: 'lines',
+					});
+					
+				//event listeners
+				startDrawing = function(e){
+					mouseDown = true;
+					currentSprite = scrawl.newShape({
+						start:			here.getData(),
+						method:			'draw',
+						lineWidth:		10,
+						lineJoin:		'round',
+						lineCap:		'round',
+						strokeStyle:	myColor.clone({random: true, a: 1}).name,
+						data:			'l0,0 ',
+						group:			'lines',
+						});
+					sX = here.x;
+					sY = here.y;
+					if(e){
+						e.stopPropagation();
+						e.preventDefault();
+						}
+					};
+				scrawl.canvas.mycanvas.addEventListener('mousedown', startDrawing, false);
+					
+				endDrawing = function(e){
+					if(currentSprite){
+						currentSprite = false;
+						}
+					mouseDown = false;
+					if(e){
+						e.stopPropagation();
+						e.preventDefault();
+						}
+					};
+				scrawl.canvas.mycanvas.addEventListener('mouseup', endDrawing, false);
+				
+				//animation functions
+				keepDrawing = function(){
+					if(currentSprite){
+						if(here.x !== sX || here.y !== sY){
+							currentSprite.set({
+								data: currentSprite.data+' '+(here.x - sX)+','+(here.y - sY),
+								});
+							sX = here.x;
+							sY = here.y;
+							}
+						}
+					};
+				spinLines = function(){
+					for(var i = 0, z = lines.sprites.length; i < z; i++){
+						scrawl.sprite[lines.sprites[i]].setDelta({
+							roll: 1,
+							});
+						}
+					};
+				
+				//animation object
+				scrawl.newAnimation({
+					fn: function(){
+						here = myPad.getMouse();
+						if(here.active){
+							(mouseDown) ? keepDrawing() : spinLines();
+							myMessage.innerHTML = (mouseDown) ? 'Drawing...' : 'Click-and-drag to draw lines';
+							}
+						else{
+							if(currentSprite){
+								endDrawing();
+								}
+							myMessage.innerHTML = 'Click-and-drag to draw lines';
+							spinLines();
+							}
+						scrawl.render();
+						
+						testNow = Date.now();
+						testTime =  testNow - testTicker;
+						testTicker = testNow;
+						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						},
+					});
+				};
+				
+			scrawl.loadModules({
+				path: 'js/',
+				modules: ['animation', 'shape', 'color'],
+				callback: function(){
+					window.onload = function(){
+						scrawl.init();
+						mycode();
+						};
+					},
+				});
+		</script>
+<pre><code class="language-javascript">var mycode = function(){
+	//define variables
+	var mouseDown = false, 
+		currentSprite = false,
+		myPad = scrawl.pad.mycanvas, 
+		myCanvas = scrawl.canvas.mycanvas,
+		here,
+		sX, 
+		sY,
+		myColor,
+		lines,
+		startDrawing,
+		keepDrawing,
+		endDrawing,
+		spinLines;
+	
+	//setup canvas
+	scrawl.cell[myPad.base].set({backgroundColor: '#eee',});
+	
+	//define designs (color)
+	myColor = scrawl.newColor({
+		rMin:	50,
+		rMax:	220,
+		gMin:	50,
+		gMax:	220,
+		bMin:	50,
+		bMax:	220,
+		a:		1,
+		});
+	
+	//define groups
+	lines = scrawl.newGroup({
+		name: 'lines',
+		});
+		
+	//event listeners
+	startDrawing = function(e){
+		mouseDown = true;
+		currentSprite = scrawl.newShape({
+			start:			here.getData(),
+			method:			'draw',
+			lineWidth:		10,
+			lineJoin:		'round',
+			lineCap:		'round',
+			strokeStyle:	myColor.clone({random: true, a: 1}).name,
+			data:			'l0,0 ',
+			group:			'lines',
+			});
+		sX = here.x;
+		sY = here.y;
+		if(e){
+			e.stopPropagation();
+			e.preventDefault();
+			}
+		};
+	scrawl.canvas.mycanvas.addEventListener('mousedown', startDrawing, false);
+		
+	endDrawing = function(e){
+		if(currentSprite){
+			currentSprite = false;
+			}
+		mouseDown = false;
+		if(e){
+			e.stopPropagation();
+			e.preventDefault();
+			}
+		};
+	scrawl.canvas.mycanvas.addEventListener('mouseup', endDrawing, false);
+	
+	//animation functions
+	keepDrawing = function(){
+		if(currentSprite){
+			if(here.x !== sX || here.y !== sY){
+				currentSprite.set({
+					data: currentSprite.data+' '+(here.x - sX)+','+(here.y - sY),
+					});
+				sX = here.x;
+				sY = here.y;
+				}
+			}
+		};
+	spinLines = function(){
+		for(var i = 0, z = lines.sprites.length; i < z; i++){
+			scrawl.sprite[lines.sprites[i]].setDelta({
+				roll: 1,
+				});
+			}
+		};
+	
+	//animation object
+	scrawl.newAnimation({
+		fn: function(){
+			here = myPad.getMouse();
+			if(here.active){
+				(mouseDown) ? keepDrawing() : spinLines();
+				}
+			else{
+				if(currentSprite){
+					endDrawing();
+					}
+				spinLines();
+				}
+			scrawl.render();
+			},
+		});
+	};
+	
+scrawl.loadModules({
+	path: 'js/',
+	modules: ['animation', 'shape', 'color'],
+	callback: function(){
+		window.onload = function(){
+			scrawl.init();
+			mycode();
+			};
+		},
+	});</code></pre>
+		<script src="js/prism.js"></script>
+    </body>
+</html>
