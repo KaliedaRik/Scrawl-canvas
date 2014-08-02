@@ -11,9 +11,9 @@ module.exports = function(grunt){
 				mytarget: {
 					files: [{
 						expand: true,
-						cwd: 'src',
+						cwd: 'source',
 						src: '*.js',
-						dest: 'build',
+						dest: 'min',
 						ext: '-min.js'
 						}]
 					}
@@ -25,13 +25,13 @@ module.exports = function(grunt){
 					version: '<%= pkg.version %>',
 					url: '<%= pkg.homepage %>',
 					options: {
-						paths: 'src/',
+						paths: 'source/',
 						outdir: 'docs/'
 						}
 					}
 				},
 			jshint: {
-				all: ['src/scrawlPath.js']
+				all: ['source/scrawlPath.js']
 				}
 		});
 

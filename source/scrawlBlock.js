@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
+'use strict';
 /**
 # scrawlBlock
 
@@ -36,7 +37,6 @@ The Block module adds Block sprites - squares and rectangles - to the core modul
 **/
 
 var scrawl = (function(my){
-	'use strict';
 /**
 # window.scrawl
 

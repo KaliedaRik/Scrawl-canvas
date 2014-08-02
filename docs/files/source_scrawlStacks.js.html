@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>source\scrawlStacks.js - scrawl</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="scrawl"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 3.1.5</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Animation.html">Animation</a></li>
+            
+                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
+            
+                <li><a href="../classes/Base.html">Base</a></li>
+            
+                <li><a href="../classes/Block.html">Block</a></li>
+            
+                <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/Context.html">Context</a></li>
+            
+                <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Element.html">Element</a></li>
+            
+                <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Gradient.html">Gradient</a></li>
+            
+                <li><a href="../classes/Group.html">Group</a></li>
+            
+                <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/Pad.html">Pad</a></li>
+            
+                <li><a href="../classes/PageElement.html">PageElement</a></li>
+            
+                <li><a href="../classes/Particle.html">Particle</a></li>
+            
+                <li><a href="../classes/Path.html">Path</a></li>
+            
+                <li><a href="../classes/Pattern.html">Pattern</a></li>
+            
+                <li><a href="../classes/Phrase.html">Phrase</a></li>
+            
+                <li><a href="../classes/Picture.html">Picture</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Position.html">Position</a></li>
+            
+                <li><a href="../classes/Quaternion.html">Quaternion</a></li>
+            
+                <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
+            
+                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+            
+                <li><a href="../classes/Shape.html">Shape</a></li>
+            
+                <li><a href="../classes/Spring.html">Spring</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/Stack.html">Stack</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Tween.html">Tween</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Wheel.html">Wheel</a></li>
+            
+                <li><a href="../classes/window.scrawl.html">window.scrawl</a></li>
+            
+                <li><a href="../classes/window.scrawl_Animation.html">window.scrawl_Animation</a></li>
+            
+                <li><a href="../classes/window.scrawl_Block.html">window.scrawl_Block</a></li>
+            
+                <li><a href="../classes/window.scrawl_Collisions.html">window.scrawl_Collisions</a></li>
+            
+                <li><a href="../classes/window.scrawl_Color.html">window.scrawl_Color</a></li>
+            
+                <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
+            
+                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
+            
+                <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
+            
+                <li><a href="../classes/window.scrawl_Phrase.html">window.scrawl_Phrase</a></li>
+            
+                <li><a href="../classes/window.scrawl_Physics.html">window.scrawl_Physics</a></li>
+            
+                <li><a href="../classes/window.scrawl_SaveLoad.html">window.scrawl_SaveLoad</a></li>
+            
+                <li><a href="../classes/window.scrawl_Shape.html">window.scrawl_Shape</a></li>
+            
+                <li><a href="../classes/window.scrawl_Stacks.html">window.scrawl_Stacks</a></li>
+            
+                <li><a href="../classes/window.scrawl_Wheel.html">window.scrawl_Wheel</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/scrawlAnimation.html">scrawlAnimation</a></li>
+            
+                <li><a href="../modules/scrawlBlock.html">scrawlBlock</a></li>
+            
+                <li><a href="../modules/scrawlCollisions.html">scrawlCollisions</a></li>
+            
+                <li><a href="../modules/scrawlColor.html">scrawlColor</a></li>
+            
+                <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
+            
+                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
+            
+                <li><a href="../modules/scrawlPathFactories.html">scrawlPathFactories</a></li>
+            
+                <li><a href="../modules/scrawlPhrase.html">scrawlPhrase</a></li>
+            
+                <li><a href="../modules/scrawlPhysics.html">scrawlPhysics</a></li>
+            
+                <li><a href="../modules/scrawlSaveLoad.html">scrawlSaveLoad</a></li>
+            
+                <li><a href="../modules/scrawlShape.html">scrawlShape</a></li>
+            
+                <li><a href="../modules/scrawlStacks.html">scrawlStacks</a></li>
+            
+                <li><a href="../modules/scrawlWheel.html">scrawlWheel</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: source\scrawlStacks.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+//---------------------------------------------------------------------------------
+// The MIT License (MIT)
+//
+// Copyright (c) 2014 Richard James Roots
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the &quot;Software&quot;), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//---------------------------------------------------------------------------------
+
+&#x27;use strict&#x27;;
+/**
+# scrawlStacks
+
+## Purpose and features
+
+The Stacks module adds support for CSS3 3d transformations to visible &amp;lt;canvas&amp;gt;, and other, elements
+
+* Significantly amends the PageElement object and functions
+* Adds core functions for detecting and including Scrawl stacks and associated elements in the library
+* Defines the Stack object, which contains all DOM elements to be manipulated by this stack
+* Defines the Element object, which wrap DOM elements (excluding &amp;lt;canvas&amp;gt; elements) included in a stack
+
+@module scrawlStacks
+**/
+
+var scrawl = (function(my){
+
+/**
+# window.scrawl
+
+scrawlStacks module adaptions to the Scrawl library object
+
+## New library sections
+
+* scrawl.stack - for Stack objects
+* scrawl.stk - for handles to DOM stack containers
+* scrawl.element - for Element objects
+* scrawl.elm - for handles to DOM elements within a stack
+
+## New default attributes
+
+* PageElement.start - default: {x:0,y:0,z:0};
+* PageElement.delta - default: {x:0,y:0,z:0};
+* PageElement.translate - default: {x:0,y:0,z:0};
+* PageElement.handle - default: {x:&#x27;center&#x27;,y:&#x27;center&#x27;,z:0};
+* PageElement.pivot - default: &#x27;&#x27;;
+* PageElement.stack - default: &#x27;&#x27;;
+* PageElement.path - default: &#x27;&#x27;;
+* PageElement.pathPlace - default: 0;
+* PageElement.deltaPathPlace - default: 0;
+* PageElement.pathSpeedConstant - default: true;
+* PageElement.pathRoll - default: 0;
+* PageElement.addPathRoll - default: false;
+* PageElement.lockX - default: false;
+* PageElement.lockY - default: false;
+* PageElement.rotation - default: {n:1,v:{x:0,y:0,z:0}};
+* PageElement.deltaRotation - default: {n:1,v:{x:0,y:0,z:0}};
+* PageElement.rotationTolerance - default: 0.001;
+* PageElement.visibility - default: true;
+
+@class window.scrawl_Stacks
+**/
+
+/**
+scrawl.init hook function - modified by stacks module
+@method pageInit
+@private
+**/
+	my.pageInit = function(){
+		my.getStacks();
+		my.getCanvases();
+		my.getElements();
+		};
+/**
+A __private__ function that searches the DOM for elements with class=&quot;scrawlstack&quot;; generates Stack objects
+@method getStacks
+@return True on success; false otherwise
+@private
+**/
+	my.getStacks = function(){
+		var	s = document.getElementsByClassName(&quot;scrawlstack&quot;),
+			stacks = [],
+			myStack;
+		if(s.length &gt; 0){
+			for(var i=0, z=s.length; i&lt;z; i++){
+				stacks.push(s[i]);
+				}
+			for(var i=0, z=s.length; i&lt;z; i++){
+				myStack = my.newStack({
+					stackElement: stacks[i],
+					});
+				for(var j=0, w=my.stk[myStack.name].children.length; j&lt;w; j++){
+					my.stk[myStack.name].children[j].style.position = &#x27;absolute&#x27;;
+					if(my.stk[myStack.name].children[j].tagName !== &#x27;CANVAS&#x27;){
+						my.newElement({
+							domElement: my.stk[myStack.name].children[j],
+							stack: myStack.name,
+							});
+						}
+					}
+				if(my.contains(my.elementnames, myStack.name)){
+					myStack.stack = my.element[myStack.name].stack;
+					delete my.element[myStack.name];
+					delete my.elm[myStack.name];
+					my.removeItem(my.elementnames, myStack.name);
+					}
+				}
+			return true;
+			}
+		console.log(&#x27;my.getStacks() failed to find any elements with class=&quot;scrawlstack&quot; on the page&#x27;);
+		return false;
+		};
+/**
+A __private__ function that searches the DOM for canvas elements and generates Pad/Cell/Context objects for each of them
+
+(This function replaces the one defined in the core module)
+@method getCanvases
+@return True on success; false otherwise
+@private
+**/
+	my.getCanvases = function(){
+		var	s = document.getElementsByTagName(&quot;canvas&quot;),
+			myPad, 
+			myStack, 
+			myElement, 
+			myNewStack,
+			canvases = [];
+		if(s.length &gt; 0){
+			for(var i=0, z=s.length; i&lt;z; i++){
+				canvases.push(s[i]);
+				}
+			for(var i=0, z=s.length; i&lt;z; i++){
+				if(canvases[i].className.indexOf(&#x27;stack:&#x27;) !== -1){
+					myStack = canvases[i].className.match(/stack:(\w+)/);
+					if(my.contains(my.stacknames, myStack[1])){
+						my.stk[myStack[1]].appendChild(canvases[i]);
+						}
+					else{
+						myElement = document.createElement(&#x27;div&#x27;);
+						myElement.id = myStack[1];
+						canvases[i].parentElement.appendChild(myElement);
+						myElement.appendChild(canvases[i]);
+						myNewStack = my.newStack({
+							stackElement: document.getElementById(myStack[1]),
+							});
+						}
+					}
+				myPad = my.newPad({
+					canvasElement: canvases[i],
+					});
+				if(my.contains(my.stacknames, canvases[i].parentElement.id)){
+					myPad.stack = canvases[i].parentElement.id;
+					canvases[i].style.position = &#x27;absolute&#x27;;
+					}
+				if(i === 0){
+					my.currentPad = myPad.name;
+					}
+				}
+			return true;
+			}
+		console.log(&#x27;my.getCanvases() failed to find any &lt;canvas&gt; elements on the page&#x27;);
+		return false;
+		};
+/**
+A __private__ function that searches the DOM for elements with class=&quot;scrawl stack:STACKNAME&quot;; generates Element objects
+@method getElements
+@return True on success; false otherwise
+@private
+**/
+	my.getElements = function(){
+		var	s = document.getElementsByClassName(&quot;scrawl&quot;),
+			el = [],
+			myName, 
+			myStack;
+		if(s.length &gt; 0){
+			for(var i=0, z=s.length; i&lt;z; i++){
+				el.push(s[i]);
+				}
+			for(var i=0, z=s.length; i&lt;z; i++){
+				myName = el.id || el.name || false;
+				if(!my.contains(my.elementnames, myName)){
+					if(el[i].className.indexOf(&#x27;stack:&#x27;) !== -1){
+						myStack = el[i].className.match(/stack:(\w+)/);
+						if(my.contains(my.stacknames, myStack[1])){
+							my.stk[myStack[1]].appendChild(el[i]);
+							my.newElement({
+								domElement: el[i],
+								stack: myStack[1],
+								});
+							}
+						}
+					}
+				}
+			return true;
+			}
+		console.log(&#x27;my.getElements() failed to find any elements with class=&quot;scrawl&quot; on the page&#x27;);
+		return false;
+		};
+/**
+A __general__ function to add a visible &amp;lt;canvas&amp;gt; element to the web page, and create a Pad controller and Cell wrappers for it
+
+The argument object should include the following attributes:
+
+* __stackName__ (String) - STACKNAME of existing or new stack (optional)
+* __parentElement__ - (String) CSS #id of parent element, or the DOM element itself; default: document.body
+* any other legitimate Pad and/or Cell object attribute
+
+(This function replaces the one defined in the core module)
+@method addCanvasToPage
+@param {Object} items Object containing new Cell&#x27;s parameters
+@return The new Pad object
+@example
+    &lt;body&gt;
+		&lt;div id=&quot;canvasholder&quot;&gt;&lt;/div&gt;
+		&lt;script src=&quot;js/scrawlCore-min.js&quot;&gt;&lt;/script&gt;
+		&lt;script&gt;
+			scrawl.addCanvasToPage({
+				canvasName:	&#x27;mycanvas&#x27;,
+				parentElement: &#x27;canvasholder&#x27;,
+				width: 400,
+				height: 200,
+				}).makeCurrent();
+		&lt;/script&gt;
+    &lt;/body&gt;
+
+&lt;a href=&quot;../../demo002.html&quot;&gt;Live demo&lt;/a&gt;
+**/
+	my.addCanvasToPage = function(items){
+		items = (my.isa(items,&#x27;obj&#x27;)) ? items : {};
+		var	myStk = false,
+			myParent, 
+			myName, 
+			myCanvas, 
+			DOMCanvas, 
+			myPad,
+			stackParent;
+		if(my.xt(items.stackName)){
+			myStk = document.getElementById(items.stackName) || false;
+			if(!myStk){
+				if(!my.xt(items.parentElement)){
+					stackParent = document.body;
+					}
+				else{
+					stackParent = (my.isa(items.parentElement,&#x27;str&#x27;)) ? document.getElementById(items.parentElement) : items.parentElement;
+					}
+				myStk = my.addStackToPage({
+					stackName: items.stackName, 
+					width: items.width, 
+					height: items.height, 
+					parentElement: stackParent,
+					});
+				}
+			items.stack = myStk.name;
+			}
+		myParent = my.stk[(myStk.name || myStk.id)] || document.getElementById(items.parentElement) || document.body;
+		myName = my.makeName({
+			name: items.canvasName || items.name || false,
+			type: &#x27;Pad&#x27;,
+			target: &#x27;padnames&#x27;,
+			});
+		myCanvas = document.createElement(&#x27;canvas&#x27;);
+		myCanvas.id = myName;
+		myParent.appendChild(myCanvas);
+		DOMCanvas = document.getElementById(myName)
+		DOMCanvas.width = items.width;
+		DOMCanvas.height = items.height;
+		myPad = my.newPad({
+			canvasElement: DOMCanvas,
+			});
+		if(my.xt(items.position) || myStk){
+			items.position = items.position || &#x27;absolute&#x27;;
+			}
+		items.stack = (items.stackName) ? items.stackName : &#x27;&#x27;;
+		myPad.set(items);
+		my.setDisplayOffsets();
+		return myPad;
+		};
+/**
+A __general__ function to generates a new Stack object, together with a new DOM &amp;lt;div&amp;gt; element to act as the stack
+
+The argument object should include the following attributes:
+
+* __stackName__ (String) - STACKNAME of existing or new stack (optional)
+* __parentElement__ - (String) CSS #id of parent element, or the DOM element itself; default: document.body
+* any other legitimate Stack object attribute
+@method addStackToPage
+@param {Object} items Object containing new Stack&#x27;s parameters
+@return New stack object
+**/
+	my.addStackToPage = function(items){
+		if(my.isa(items.stackName,&#x27;str&#x27;) &amp;&amp; my.xt(items.parentElement)){
+			var myElement,
+				myStack;
+			items.parentElement = (my.isa(items.parentElement,&#x27;str&#x27;)) ? document.getElementById(items.parentElement) : items.parentElement;
+			myElement = document.createElement(&#x27;div&#x27;);
+			myElement.id = items.stackName;
+			items.parentElement.appendChild(myElement);
+			items[&#x27;stackElement&#x27;] = document.getElementById(items.stackName);
+			myStack = my.newStack(items);
+			myStack.stack = (my.contains(my.stacknames, items.parentElement.id)) ? items.parentElement.id : &#x27;&#x27;;
+			return myStack;
+			}
+		return false;
+		};
+/**
+A __general__ function to reset display offsets for all pads, stacks and elements
+
+The argument is an optional String - permitted values include &#x27;stack&#x27;, &#x27;pad&#x27;, &#x27;element&#x27;; default: &#x27;all&#x27;
+
+(This function replaces the one defined in the core module)
+@method setDisplayOffsets
+@param {String} [item] Command string detailing which element types are to be set
+@return The Scrawl library object (scrawl)
+@chainable
+@example
+	scrawl.setDisplayOffsets();
+**/
+	my.setDisplayOffsets = function(item){
+		item = (my.xt(item)) ? item : &#x27;all&#x27;;
+		if(item === &#x27;stack&#x27; || item === &#x27;all&#x27;){
+			for(var i=0, z=my.stacknames.length; i&lt;z; i++){
+				my.stack[my.stacknames[i]].setDisplayOffsets();
+				}
+			}
+		if(item === &#x27;pad&#x27; || item === &#x27;all&#x27;){
+			for(var i=0, z=my.padnames.length; i&lt;z; i++){
+				my.pad[my.padnames[i]].setDisplayOffsets();
+				}
+			}
+		if(item === &#x27;element&#x27; || item === &#x27;all&#x27;){
+			for(var i=0, z=my.elementnames.length; i&lt;z; i++){
+				my.element[my.elementnames[i]].setDisplayOffsets();
+				}
+			}
+		return true;
+		};
+/**
+A __display__ function to move DOM elements within a Stack
+@method renderElements
+@return Always true
+**/
+	my.renderElements = function(){
+		for(var i=0, z=my.stacknames.length; i&lt;z; i++){
+			my.stack[my.stacknames[i]].renderElement();
+			}
+		for(var i=0, z=my.padnames.length; i&lt;z; i++){
+			my.pad[my.padnames[i]].renderElement();
+			}
+		for(var i=0, z=my.elementnames.length; i&lt;z; i++){
+			my.element[my.elementnames[i]].renderElement();
+			}
+		return true;
+		};
+			
+/**
+A __display__ function to update DOM elements&#x27; 3d position/rotation
+
+Argument can contain the following (optional) attributes:
+
+* __quaternion__ - quaternion representing the rotation to be applied to the element
+* __distance__ - distance of element from the rotation origin
+* __action__ - elements to be rotated/positioned
+
+Where the _action_ attribute can contain either an array of Scrawl objects to be operated upon, or one of the following Strings: &#x27;__all__&#x27; (default), &#x27;__stacks__&#x27;, &#x27;__pads__&#x27;, or &#x27;__elements__&#x27;
+
+@method update3d
+@param {Object} [items] Argument object containing key:value pairs
+@return Always true
+**/
+	my.update3d = function(items){
+		items = my.safeObject(items);
+		var action = items.action || &#x27;all&#x27;;
+		if(action === &#x27;stacks&#x27; || action === &#x27;all&#x27;){
+			for(var i=0, z=my.stacknames.length; i&lt;z; i++){
+				my.stack[my.stacknames[i]].update3d(items);
+				}
+			}
+		if(action === &#x27;pads&#x27; || action === &#x27;all&#x27;){
+			for(var i=0, z=my.padnames.length; i&lt;z; i++){
+				my.pad[my.padnames[i]].update3d(items);
+				}
+			}
+		if(action === &#x27;elements&#x27; || action === &#x27;all&#x27;){
+			for(var i=0, z=my.elementnames.length; i&lt;z; i++){
+				my.element[my.elementnames[i]].update3d(items);
+				}
+			}
+		if(my.isa(action, &#x27;arr&#x27;)){
+			for(var i = 0, iz = action; i &lt; iz; i++){
+				if(my.contains([&#x27;Pad&#x27;, &#x27;Stack&#x27;, &#x27;Element&#x27;], action[i].type)){
+					action[i].update3d(items);
+					}
+				}
+			}
+		return true;
+		};
+			
+/**
+The coordinate Vector representing the object&#x27;s rotation/flip point
+
+PageElement, and all Objects that prototype chain to PageElement, supports the following &#x27;virtual&#x27; attributes for this attribute:
+
+* __startX__ - (Mixed) the x coordinate of the object&#x27;s rotation/flip point, in pixels, from the left side of the object&#x27;s stack
+* __startY__ - (Mixed) the y coordinate of the object&#x27;s rotation/flip point, in pixels, from the top side of the object&#x27;s stack
+
+This attribute&#x27;s attributes accepts absolute number values (in pixels), or string percentages where the percentage is relative to the container stack&#x27;s width or height, or string literals which again refer to the containing stack&#x27;s dimensions:
+
+* _startX_ - &#x27;left&#x27;, &#x27;right&#x27; or &#x27;center&#x27;
+* _startY_ - &#x27;top&#x27;, &#x27;bottom&#x27; or &#x27;center&#x27;
+
+Where values are Numbers, handle can be treated like any other Vector
+@property PageElement.start
+@type Vector
+**/		
+	my.d.PageElement.start = {x:0,y:0,z:0};
+/**
+A change Vector which can be applied to the object&#x27;s rotation/flip point
+
+PageElement, and all Objects that prototype chain to PageElement, supports the following &#x27;virtual&#x27; attributes for this attribute:
+
+* __deltaX__ - (Number) a horizontal change value, in pixels
+* __deltaY__ - (Number) a vertical change value, in pixels
+
+@property PageElement.delta
+@type Vector
+**/		
+	my.d.PageElement.delta = {x:0,y:0,z:0};
+/**
+A change Vector for translating elements away from their start coordinate
+
+PageElement, and all Objects that prototype chain to PageElement, supports the following &#x27;virtual&#x27; attributes for this attribute:
+
+* __translateX__ - (Number) movement along the x axis, in pixels
+* __translateY__ - (Number) movement along the y axis, in pixels
+* __translateZ__ - (Number) movement along the z axis, in pixels
+
+@property PageElement.translate
+@type Vector
+**/		
+	my.d.PageElement.translate = {x:0,y:0,z:0};
+/**
+@property PageElement.deltaTranslate
+@type Vector
+**/		
+	my.d.PageElement.deltaTranslate = {x:0,y:0,z:0};
+/**
+An Object (in fact, a Vector) containing offset instructions from the object&#x27;s rotation/flip point, where drawing commences. 
+
+PageElement, and all Objects that prototype chain to PageElement, supports the following &#x27;virtual&#x27; attributes for this attribute:
+
+* __handleX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object&#x27;s width, or the String literal &#x27;left&#x27;, &#x27;right&#x27; or &#x27;center&#x27;
+* __handleY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object&#x27;s height, or the String literal &#x27;top&#x27;, &#x27;bottom&#x27; or &#x27;center&#x27;
+
+Where values are Numbers, handle can be treated like any other Vector
+
+@property PageElement.handle
+@type Object
+**/		
+	my.d.PageElement.handle = {x:&#x27;center&#x27;,y:&#x27;center&#x27;,z:0};
+/**
+The SPRITENAME or POINTNAME of a sprite or Point object to be used for setting this object&#x27;s start point
+@property PageElement.pivot
+@type String
+@default &#x27;&#x27;
+**/		
+	my.d.PageElement.pivot = &#x27;&#x27;;
+/**
+The element&#x27;s parent stack&#x27;s STACKNAME
+@property PageElement.stack
+@type String
+@default &#x27;&#x27;
+**/		
+	my.d.PageElement.stack = &#x27;&#x27;;
+/**
+The SPRITENAME of a Shape sprite whose path is used to calculate this object&#x27;s start point
+@property PageElement.path
+@type String
+@default &#x27;&#x27;
+**/		
+	my.d.PageElement.path = &#x27;&#x27;;
+/**
+A value between 0 and 1 to represent the distance along a Shape object&#x27;s path, where 0 is the path start and 1 is the path end
+@property PageElement.pathPlace
+@type Number
+@default 0
+**/
+	my.d.PageElement.pathPlace = 0;
+/**
+A change value which can be applied to the object&#x27;s pathPlace attribute
+@property PageElement.deltaPathPlace
+@type Number
+@default 0
+**/
+	my.d.PageElement.deltaPathPlace = 0;
+/**
+A flag to determine whether the object will calculate its position along a Shape path in a regular (true), or simple (false), manner
+@property PageElement.pathSpeedConstant
+@type Boolean
+@default true
+**/		
+	my.d.PageElement.pathSpeedConstant = true;
+/**
+The rotation value (in degrees) of an object&#x27;s current position along a Shape path
+@property PageElement.pathRoll
+@type Number
+@default 0
+**/		
+	my.d.PageElement.pathRoll = 0;
+/**
+A flag to determine whether the object will calculate the rotation value of its current position along a Shape path
+@property PageElement.addPathRoll
+@type Boolean
+@default false
+**/		
+	my.d.PageElement.addPathRoll = false;
+/**
+When true, element ignores horizontal placement data via pivot and path attributes
+@property PageElement.lockX
+@type Boolean
+@default false
+**/		
+	my.d.PageElement.lockX = false;
+/**
+When true, element ignores vertical placement data via pivot and path attributes
+@property PageElement.lockY
+@type Boolean
+@default false
+**/		
+	my.d.PageElement.lockY = false;
+/**
+Element rotation around its transform (start) coordinate
+@property PageElement.rotation
+@type Quaternion
+@default Unit quaternion with no rotation
+**/		
+	my.d.PageElement.rotation = {n:1,v:{x:0,y:0,z:0}};
+/**
+Element&#x27;s delta (change in) rotation around its transform (start) coordinate
+@property PageElement.deltaRotation
+@type Quaternion
+@default Unit quaternion with no rotation
+**/		
+	my.d.PageElement.deltaRotation = {n:1,v:{x:0,y:0,z:0}};
+/**
+Element&#x27;s rotation tolerance - all Quaternions need to be unit quaternions; this value represents the acceptable tolerance away from the norm
+@property PageElement.rotationTolerance
+@type Number
+@default 0.001
+**/		
+	my.d.PageElement.rotationTolerance = 0.001;
+/**
+A flag to determine whether an element displays itself
+@property PageElement.visibility
+@type Boolean
+@default true
+**/		
+	my.d.PageElement.visibility = true;
+	my.mergeInto(my.d.Pad, my.d.PageElement);
+/**
+PageElement constructor hook function - modified by stacks module
+@method stacksPageElementConstructor
+@private
+**/
+	my.PageElement.prototype.stacksPageElementConstructor = function(items){
+		var temp = my.safeObject(items.start);
+		this.start = my.newVector({
+			name: this.type+&#x27;.&#x27;+this.name+&#x27;.start&#x27;,
+			x: (my.xt(items.startX)) ? items.startX : ((my.xt(temp.x)) ? temp.x : 0),
+			y: (my.xt(items.startY)) ? items.startY : ((my.xt(temp.y)) ? temp.y : 0),
+			});
+		this.work.start = my.newVector({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.start&#x27;});
+		temp = my.safeObject(items.delta);
+		this.delta = my.newVector({
+			name: this.type+&#x27;.&#x27;+this.name+&#x27;.delta&#x27;,
+			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : 0),
+			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : 0),
+			});
+		this.work.delta = my.newVector({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.delta&#x27;});
+		temp = my.safeObject(items.handle);
+		this.handle = my.newVector({
+			name: this.type+&#x27;.&#x27;+this.name+&#x27;.handle&#x27;,
+			x: (my.xt(items.handleX)) ? items.handleX : ((my.xt(temp.x)) ? temp.x : 0),
+			y: (my.xt(items.handleY)) ? items.handleY : ((my.xt(temp.y)) ? temp.y : 0),
+			});
+		this.work.handle = my.newVector({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.handle&#x27;});
+		if(my.xto([items.handleX, items.handleY, items.handle])){
+			this.setTransformOrigin();
+			}
+		temp = my.safeObject(items.translate);
+		this.translate = my.newVector({
+			name: this.type+&#x27;.&#x27;+this.name+&#x27;.translate&#x27;,
+			x: (my.xt(items.translateX)) ? items.translateX : ((my.xt(temp.x)) ? temp.x : 0),
+			y: (my.xt(items.translateY)) ? items.translateY : ((my.xt(temp.y)) ? temp.y : 0),
+			z: (my.xt(items.translateZ)) ? items.translateZ : ((my.xt(temp.y)) ? temp.y : 0),
+			});
+		this.work.translate = my.newVector({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.translate&#x27;});
+		temp = my.safeObject(items.deltaTranslate);
+		this.deltaTranslate = my.newVector({
+			name: this.type+&#x27;.&#x27;+this.name+&#x27;.deltaTranslate&#x27;,
+			x: (my.xt(items.translateX)) ? items.deltaTranslateX : ((my.xt(temp.x)) ? temp.x : 0),
+			y: (my.xt(items.translateY)) ? items.deltaTranslateY : ((my.xt(temp.y)) ? temp.y : 0),
+			z: (my.xt(items.translateZ)) ? items.deltaTranslateZ : ((my.xt(temp.y)) ? temp.y : 0),
+			});
+		this.work.deltaTranslate = my.newVector({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.deltaTranslate&#x27;});
+		this.pivot = items.pivot || my.d[this.type].pivot;
+		this.path = items.path || my.d[this.type].path;
+		this.pathRoll = items.pathRoll || my.d[this.type].pathRoll;
+		this.addPathRoll = items.addPathRoll || my.d[this.type].addPathRoll;
+		this.pathSpeedConstant = (my.isa(items.pathSpeedConstant,&#x27;bool&#x27;)) ? items.pathSpeedConstant : my.d[this.type].pathSpeedConstant;
+		this.pathPlace = items.pathPlace || my.d[this.type].pathPlace;
+		this.deltaPathPlace = items.deltaPathPlace || my.d[this.type].deltaPathPlace;
+		this.lockX = items.lockX || my.d[this.type].lockX;
+		this.lockY = items.lockY || my.d[this.type].lockY;
+		this.visibility = (my.isa(items.visibility, &#x27;bool&#x27;)) ? items.visibility : my.d[this.type].visibility;
+		this.rotation = my.newQuaternion({name: this.type+&#x27;.&#x27;+this.name+&#x27;.rotation&#x27;}).setFromEuler({
+			pitch: items.pitch || 0,
+			yaw: items.yaw || 0,
+			roll: items.roll || 0,
+			});
+		this.work.rotation = my.newQuaternion({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.rotation&#x27;});
+		this.deltaRotation = my.newQuaternion({name: this.type+&#x27;.&#x27;+this.name+&#x27;.deltaRotation&#x27;}).setFromEuler({
+			pitch: items.deltaPitch || 0,
+			yaw: items.deltaYaw || 0,
+			roll: items.deltaRoll || 0,
+			});
+		this.work.deltaRotation = my.newQuaternion({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.deltaRotation&#x27;});
+		this.rotationTolerance = items.rotationTolerance || my.d[this.type].rotationTolerance;
+		};
+/**
+Augments Base.get() to retrieve DOM element width and height values, and stack-related attributes
+
+(The stack module replaces the core function rather than augmenting it via a hook function)
+
+@method PageElement.get
+@param {String} get Attribute key
+@return Attribute value
+**/
+	my.PageElement.prototype.get = function(item){
+		var el = this.getElement();
+		if(my.contains([&#x27;width&#x27;,&#x27;height&#x27;], item)){
+			switch(this.type){
+				case &#x27;Pad&#x27; :
+					if(&#x27;width&#x27; === item){
+						return this.width || parseFloat(el.width) || my.d[this.type].width; 
+						}
+					if(&#x27;height&#x27; === item){
+						return this.height || parseFloat(el.height) || my.d[this.type].height; 
+						}
+				default :
+					if(&#x27;width&#x27; === item){
+						return this.width || parseFloat(el.style.width) || parseFloat(el.clientWidth) || my.d[this.type].width; 
+						}
+					if(&#x27;height&#x27; === item){
+						return this.height || parseFloat(el.style.height) || parseFloat(el.clientHeight) || my.d[this.type].height; 
+						}
+				}
+			}
+		if(my.contains([&#x27;startX&#x27;,&#x27;startY&#x27;,&#x27;handleX&#x27;,&#x27;handleY&#x27;,&#x27;deltaX&#x27;,&#x27;deltaY&#x27;,&#x27;translateX&#x27;,&#x27;translateY&#x27;,&#x27;translateZ&#x27;], item)){
+			switch(item){
+				case &#x27;startX&#x27; : return this.start.x; break;
+				case &#x27;startY&#x27; : return this.start.y; break;
+				case &#x27;handleX&#x27; : return this.handle.x; break;
+				case &#x27;handleY&#x27; : return this.handle.y; break;
+				case &#x27;deltaX&#x27; : return this.delta.x; break;
+				case &#x27;deltaY&#x27; : return this.delta.y; break;
+				case &#x27;translateX&#x27; : return this.translate.x; break;
+				case &#x27;translateY&#x27; : return this.translate.y; break;
+				case &#x27;translateZ&#x27; : return this.translate.z; break;
+				}
+			}
+		
+		if(my.xt(el.style[item])){
+			return el.style[item];
+			}
+		if(item === &#x27;position&#x27;){
+			return el.style.position;
+			}
+		if(item === &#x27;overflow&#x27;){
+			return el.style.overflow;
+			}
+		if(item === &#x27;backfaceVisibility&#x27;){
+			return el.style.backfaceVisibility;
+			}
+		return my.Base.prototype.get.call(this, item);
+		};
+/**
+Augments Base.set() to allow the setting of DOM element dimension values, and stack-related attributes
+
+(The stack module replaces the core function rather than augmenting it via a hook function)
+
+@method PageElement.set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.PageElement.prototype.set = function(items){
+		var el = this.getElement(),
+			temp;
+		items = my.safeObject(items);
+		my.Base.prototype.set.call(this, items);
+		if(!this.start.type || this.start.type !== &#x27;Vector&#x27;){
+			this.start = my.newVector(items.start || this.start);
+			}
+		if(my.xto([items.startX, items.startY])){
+			this.start.x = (my.xt(items.startX)) ? items.startX : this.start.x;
+			this.start.y = (my.xt(items.startY)) ? items.startY : this.start.y;
+			}
+		if(!this.delta.type || this.delta.type !== &#x27;Vector&#x27;){
+			this.delta = my.newVector(items.delta || this.delta);
+			}
+		if(my.xto([items.deltaX, items.deltaY])){
+			this.delta.x = (my.xt(items.deltaX)) ? items.deltaX : this.delta.x;
+			this.delta.y = (my.xt(items.deltaY)) ? items.deltaY : this.delta.y;
+			}
+		if(!this.translate.type || this.translate.type !== &#x27;Vector&#x27;){
+			this.translate = my.newVector(items.translate || this.translate);
+			}
+		if(my.xto([items.translateX, items.translateY, items.translateZ])){
+			this.translate.x = (my.xt(items.translateX)) ? items.translateX : this.translate.x;
+			this.translate.y = (my.xt(items.translateY)) ? items.translateY : this.translate.y;
+			this.translate.z = (my.xt(items.translateZ)) ? items.translateZ : this.translate.z;
+			}
+		if(!this.deltaTranslate.type || this.deltaTranslate.type !== &#x27;Vector&#x27;){
+			this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
+			}
+		if(my.xto([items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ])){
+			this.deltaTranslate.x = (my.xt(items.deltaTranslateX)) ? items.deltaTranslateX : this.deltaTranslate.x;
+			this.deltaTranslate.y = (my.xt(items.deltaTranslateY)) ? items.deltaTranslateY : this.deltaTranslate.y;
+			this.deltaTranslate.z = (my.xt(items.deltaTranslateZ)) ? items.deltaTranslateZ : this.deltaTranslate.z;
+			}
+		if(!this.handle.type || this.handle.type !== &#x27;Vector&#x27;){
+			this.handle = my.newVector(items.handle || this.handle);
+			}
+		if(my.xto([items.handleX, items.handleY])){
+			this.handle.x = (my.xt(items.handleX)) ? items.handleX : this.handle.x;
+			this.handle.y = (my.xt(items.handleY)) ? items.handleY : this.handle.y;
+			}
+		if(my.xto([items.pitch, items.yaw, items.roll])){
+			this.rotation.setFromEuler({
+				pitch: items.pitch || 0,
+				yaw: items.yaw || 0,
+				roll: items.roll || 0,
+				});
+			}
+		if(my.xto([items.deltaPitch, items.deltaYaw, items.deltaRoll])){
+			this.deltaRotation.setFromEuler({
+				pitch: items.deltaPitch || 0,
+				yaw: items.deltaYaw || 0,
+				roll: items.deltaRoll || 0,
+				});
+			}
+		if(my.xto([items.width, items.height, items.scale])){
+			this.setDimensions();
+			}
+		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale])){
+			delete this.offset;
+			}
+		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start])){
+			this.setDisplayOffsets();
+			}
+		if(my.xto([items.handleX, items.handleY, items.handle])){
+			this.setTransformOrigin();
+			}
+		if(my.xt(items.position)){
+			this.position = items.position;
+			}
+		if(my.xt(items.mouse)){
+			this.initMouse({mouse: items.mouse});
+			}
+		if(my.xt(items.pivot)){
+			this.pivot = items.pivot;
+			if(!this.pivot){
+				delete this.oldX;
+				delete this.oldY;
+				}
+			}
+		if(my.xto([items.title, items.comment])){
+			this.setAccessibility(items);
+			}
+		this.setStyles(items);
+		return this;
+		};
+/**
+Handles the setting of position, transformOrigin, backfaceVisibility, margin, border, padding
+@method PageElement.setStyles
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.PageElement.prototype.setStyles = function(items){
+		items = (my.xt(items)) ? items : {};
+		var el = this.getElement(),
+			k = Object.keys(items);
+		for(var i=0, iz=k.length; i&lt;iz; i++){
+			if(my.contains([&#x27;width&#x27;, &#x27;height&#x27;, &#x27;translate&#x27;, &#x27;translateX&#x27;, &#x27;translateY&#x27;, &#x27;translateZ&#x27;], k[i])){}
+			else if(k[i] === &#x27;backfaceVisibility&#x27;){
+				el.style.webkitBackfaceVisibility = items.backfaceVisibility;
+				el.style.mozBackfaceVisibility = items.backfaceVisibility;
+				el.style.backfaceVisibility = items.backfaceVisibility;
+				}
+			else if(k[i] === &#x27;visibility&#x27;){
+				if(my.isa(items.visibility, &#x27;str&#x27;)){
+					this.visibility = (!my.contains([&#x27;hidden&#x27;, &#x27;none&#x27;], items.visibility)) ? true : false;
+					}
+				else{
+					this.visibility = (items.visibility) ? true : false;
+					}
+				if(this.stack){
+					el.style.opacity = (this.visibility) ? 1 : 0;
+					}
+				else{
+					el.style.display = (this.visibility) ? &#x27;block&#x27; : &#x27;none&#x27;;
+					}
+				}
+			else {
+				if(my.xt(el.style[k[i]])){
+					el.style[k[i]] = items[k[i]];
+					}
+				}
+			}
+		return this;
+		};
+/**
+Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+@method PageElement.setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.PageElement.prototype.setDelta = function(items){
+		var temp;
+		my.Position.prototype.setDelta.call(this, items);
+		items = my.safeObject(items);
+		if(my.xto([items.translate, items.translateX, items.translateY])){
+			temp = (my.isa(items.translate,&#x27;obj&#x27;)) ? items.translate : {};
+			this.translate.x += (my.xt(items.translateX)) ? items.translateX : ((my.xt(temp.x)) ? temp.x : 0);
+			this.translate.y += (my.xt(items.translateY)) ? items.translateY : ((my.xt(temp.y)) ? temp.y : 0);
+			this.translate.z += (my.xt(items.translateZ)) ? items.translateZ : ((my.xt(temp.z)) ? temp.z : 0);
+			}
+		if(my.xto([items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY])){
+			temp = (my.isa(items.deltaTranslate,&#x27;obj&#x27;)) ? items.deltaTranslate : {};
+			this.deltaTranslate.x += (my.xt(items.deltaTranslateX)) ? items.deltaTranslateX : ((my.xt(temp.x)) ? temp.x : 0);
+			this.deltaTranslate.y += (my.xt(items.deltaTranslateY)) ? items.deltaTranslateY : ((my.xt(temp.y)) ? temp.y : 0);
+			this.deltaTranslate.z += (my.xt(items.deltaTranslateZ)) ? items.deltaTranslateZ : ((my.xt(temp.z)) ? temp.z : 0);
+			}
+		if(my.xto([items.pitch, items.yaw, items.roll])){
+			temp = my.workquat.q1.setFromEuler({
+				pitch: items.pitch || 0,
+				yaw: items.yaw || 0,
+				roll: items.roll || 0,
+				});
+			this.rotation.quaternionMultiply(temp);
+			}
+		if(my.xto([items.deltaPitch, items.deltaYaw, items.deltaRoll])){
+			temp = my.workquat.q1.setFromEuler({
+				pitch: items.deltaPitch || 0,
+				yaw: items.deltaYaw || 0,
+				roll: items.deltaRoll || 0,
+				});
+			this.deltaRotation.quaternionMultiply(temp);
+			}
+		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale])){
+			delete this.offset;
+			}
+		if(my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start])){
+			this.setDisplayOffsets();
+			}
+		if(my.xto([items.handleX, items.handleY, items.handle])){
+			this.setTransformOrigin();
+			}
+		if(my.xto([items.width, items.height, items.scale])){
+			this.setDimensions();
+			}
+		return this;
+		};
+/**
+Adds delta values to the start vector; adds deltaPathPlace to pathPlace
+
+Permitted argument values include 
+* &#x27;x&#x27; - delta.x added to start.x
+* &#x27;y&#x27; - delta.y added to start.y
+* &#x27;path&#x27; - deltaPathPlace added to pathPlace 
+* undefined: all values are amended
+@method PageElement.updateStart
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;x&#x27;, &#x27;y&#x27;, &#x27;path&#x27;; default action: all values are amended
+@return This
+@chainable
+**/
+	my.PageElement.prototype.updateStart = function(item){
+		switch(item){
+			case &#x27;x&#x27; :
+				if(my.isa(this.start.x,&#x27;num&#x27;)){this.start.x += this.delta.x || 0};
+				break;
+			case &#x27;y&#x27; :
+				if(my.isa(this.start.y,&#x27;num&#x27;)){this.start.y += this.delta.y || 0;}
+				break;
+			case &#x27;path&#x27; :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
+				break;
+			default :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
+				if(my.isa(this.start.x,&#x27;num&#x27;) &amp;&amp; my.isa(this.start.y,&#x27;num&#x27;)){this.start.vectorAdd(this.delta);}
+			}
+		this.setDisplayOffsets();
+		return this;
+		};
+/**
+Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
+
+Permitted argument values include 
+* &#x27;x&#x27; - delta.x subtracted from start.x
+* &#x27;y&#x27; - delta.y subtracted from start.y
+* &#x27;path&#x27; - deltaPathPlace subtracted from pathPlace 
+* undefined: all values are amended
+@method PageElement.revertStart
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;x&#x27;, &#x27;y&#x27;, &#x27;path&#x27;; default action: all values are amended
+@return This
+@chainable
+**/
+	my.PageElement.prototype.revertStart = function(item){
+		switch(item){
+			case &#x27;x&#x27; :
+				this.start.x -= this.delta.x || 0;
+				break;
+			case &#x27;y&#x27; :
+				this.start.y -= this.delta.y || 0;
+				break;
+			case &#x27;path&#x27; :
+				this.pathPlace -= this.deltaPathPlace;
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
+				break;
+			default :
+				this.pathPlace += this.deltaPathPlace;
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
+				this.start.vectorSubtract(this.delta);
+			}
+		this.setDisplayOffsets();
+		return this;
+		};
+/**
+Rotate and translate a DOM element around a quaternion rotation
+
+* Element&#x27;s initial rotation values should be stored in the deltaRotation attribute quaternion
+* Element&#x27;s initial translation values should be stored in the deltaTranslate attribute vector
+
+Argument can contain the following (optional) attributes:
+
+* __quaternion__ - quaternion representing the rotation to be applied to the element
+* __distance__ - distance of element from the rotation origin
+
+@method PageElement.update3d
+@param {Object} [items] - Distance between the effective rotation point and the DOM element&#x27;s start attribute - default: deltaTranslate vector&#x27;s magnitude
+@return This
+@chainable
+**/
+	my.PageElement.prototype.update3d = function(items){
+		items = my.safeObject(items);
+		if(my.isa(items.quaternion, &#x27;quaternion&#x27;)){
+			this.rotation.set(this.deltaRotation);				//deltaRotation represents the initial, world rotation of the element
+			this.rotation.quaternionRotate(items.quaternion);	//quaternion is the local amount we want to rotate the element by
+			this.translate.zero();
+			this.translate.vectorAdd(this.deltaTranslate);
+			this.translate.rotate3d(items.quaternion, items.distance);
+			}
+		else{
+			//opposite to above; rotation is the world rotation, deltaRotation the local rotation to be applied
+			this.rotation.quaternionRotate(this.deltaRotation);
+			this.translate.vectorAdd(this.deltaTranslate);
+			}
+		return this;
+		};
+/**
+Changes the sign (+/-) of specified attribute values
+@method PageElement.reverse
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;deltaX&#x27;, &#x27;deltaY&#x27;, &#x27;delta&#x27;, &#x27;deltaPathPlace&#x27;; default action: all values are amended
+@return This
+@chainable
+**/
+	my.PageElement.prototype.reverse = function(item){
+		switch(item){
+			case &#x27;deltaX&#x27; : 
+				this.delta.x = -this.delta.x; break;
+			case &#x27;deltaY&#x27; : 
+				this.delta.y = -this.delta.y; break;
+			case &#x27;delta&#x27; : 
+				this.delta.reverse(); break;
+			case &#x27;deltaPathPlace&#x27; : 
+				this.deltaPathPlace = -this.deltaPathPlace; break;
+			default : 
+				this.deltaPathPlace = -this.deltaPathPlace;
+				this.delta.reverse();
+			}
+		return this;
+		};
+/**
+Calculates the pixels value of the object&#x27;s handle attribute
+
+* doesn&#x27;t take into account the object&#x27;s scaling or orientation
+* (badly named function - getPivotOffsetVector has nothing to do with pivots)
+
+@method PageElement.getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where sprite drawing should start
+@private
+**/
+	my.PageElement.prototype.getPivotOffsetVector = function(){
+		return my.Position.prototype.getPivotOffsetVector.call(this);
+		};
+/**
+Calculates the pixels value of the object&#x27;s start attribute
+
+* doesn&#x27;t take into account the object&#x27;s scaling or orientation
+
+@method PageElement.getStartValues
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;deltaX&#x27;, &#x27;deltaY&#x27;, &#x27;delta&#x27;, &#x27;deltaPathPlace&#x27;; default action: all values are amended
+@return A Vector of calculated values to help determine where sprite drawing should start
+@private
+**/
+	my.PageElement.prototype.getStartValues = function(hasElementPivot){
+		hasElementPivot = (my.xt(hasElementPivot)) ? hasElementPivot : false;
+		var result,
+			height,
+			width;
+		if(hasElementPivot){
+			result = my.v.set(my.element[this.pivot].start),
+			height = my.element[this.pivot].get(height);
+			width = my.element[this.pivot].get(width);
+			}
+		else{
+			result = my.v.set(this.start),
+			height = (this.stack) ? my.stack[this.stack].get(&#x27;height&#x27;) : this.height || this.get(&#x27;height&#x27;);
+			width = (this.stack) ? my.stack[this.stack].get(&#x27;width&#x27;) : this.width || this.get(&#x27;width&#x27;);
+			}
+		return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
+		};
+/**
+Calculates the pixels value of the object&#x27;s handle attribute
+@method PageElement.getOffsetStartVector
+@return Final offset values (as a Vector) to determine where sprite drawing should start
+**/
+	my.PageElement.prototype.getOffsetStartVector = function(){
+		return my.Position.prototype.getOffsetStartVector.call(this);
+		};
+/**
+Reposition an element within its stack by changing &#x27;left&#x27; and &#x27;top&#x27; style attributes; rotate it using matrix3d transform
+@method PageElement.renderElement
+@return This left
+@chainable
+**/
+	my.PageElement.prototype.renderElement = function(){
+		var el = this.getElement(),
+			temp = &#x27;&#x27;,
+			m = [];
+		if(!my.xt(this.offset)){
+			this.offset = this.getOffsetStartVector();
+			}
+		if(this.path){
+			this.setStampUsingPath();
+			}
+		else if(this.pivot){
+			this.setStampUsingPivot();
+			}
+		this.updateStart();
+		
+		if(this.rotation.getMagnitude() !== 1){
+			this.rotation.normalize();
+			}
+		
+		m.push(Math.round(this.translate.x * this.scale));
+		m.push(Math.round(this.translate.y * this.scale));
+		m.push(Math.round(this.translate.z * this.scale));
+		m.push(this.rotation.v.x);
+		m.push(this.rotation.v.y);
+		m.push(this.rotation.v.z);
+		m.push(this.rotation.getAngle(false));
+
+		for(var i = 0, z = m.length; i &lt; z; i++){
+			if(my.isBetween(m[i], 0.000001,-0.000001)){
+				m[i] = 0;
+				}
+			}
+		temp += &#x27;translate3d(&#x27;+m[0]+&#x27;px,&#x27;+m[1]+&#x27;px,&#x27;+m[2]+&#x27;px) rotate3d(&#x27;+m[3]+&#x27;,&#x27;+m[4]+&#x27;,&#x27;+m[5]+&#x27;,&#x27;+m[6]+&#x27;rad)&#x27;;
+			
+		el.style.webkitTransform = temp;
+		el.style.transform = temp;
+		
+		el.style.zIndex = m[2];
+
+		temp = this.getStartValues(); 
+		
+		el.style.left = ((temp.x * this.scale) + this.offset.x)+&#x27;px&#x27;;
+		el.style.top = ((temp.y * this.scale) + this.offset.y)+&#x27;px&#x27;;
+		return this;
+		};
+/**
+Calculate start Vector in reference to a Shape sprite object&#x27;s path
+@method PageElement.setStampUsingPath
+@return This
+@chainable
+@private
+**/
+	my.PageElement.prototype.setStampUsingPath = function(){
+		var here,
+			angles;
+		if(my.contains(my.spritenames, this.path) &amp;&amp; my.sprite[this.path].type === &#x27;Path&#x27;){
+			here = my.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+			this.start.x = (!this.lockX) ? here.x : this.start.x;
+			this.start.y = (!this.lockY) ? here.y : this.start.y;
+			this.pathRoll = here.r || 0;
+			if(this.addPathRoll &amp;&amp; this.pathRoll){
+				angles = this.rotation.getEulerAngles();
+				this.setDelta({
+					roll: this.pathRoll - angles.roll,
+					});
+				}
+			}
+		return this;
+		};
+/**
+Calculate start Vector in reference to a sprite or Point object&#x27;s position
+@method PageElement.setStampUsingPivot
+@return This
+@chainable
+@private
+**/
+	my.PageElement.prototype.setStampUsingPivot = function(){
+		var	here,
+			myCell,
+			myP,
+			myPVector,
+			pSprite,
+			temp;
+		if(my.contains(my.pointnames, this.pivot)){
+			myP = my.point[this.pivot];
+			pSprite = my.sprite[myP.sprite];
+			myPVector = myP.getCurrentCoordinates().rotate(pSprite.roll).vectorAdd(pSprite.getStartValues());
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(my.contains(my.spritenames, this.pivot)){
+			myP = my.sprite[this.pivot];
+			myPVector = (myP.type === &#x27;Particle&#x27;) ? myP.get(&#x27;place&#x27;) : myP.get(&#x27;start&#x27;);
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(my.contains(my.padnames, this.pivot)){
+			myP = my.pad[this.pivot];
+			myPVector = myP.getStartValues();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(my.contains(my.elementnames, this.pivot)){
+			myP = my.element[this.pivot];
+			myPVector = myP.getStartValues();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			}
+		else if(this.pivot === &#x27;mouse&#x27;){
+			if(this.stack){
+				here = my.stack[this.stack].getMouse();
+				temp = this.getStartValues(); 
+				if(!my.xta([this.mouseX,this.mouseY])){
+					this.oldX = temp.x;
+					this.oldY = temp.y;
+					}
+				if(here.active){
+					this.start.x = (!this.lockX) ? temp.x + here.x - this.oldX : this.start.x;
+					this.start.y = (!this.lockY) ? temp.y + here.y - this.oldY : this.start.y;
+					this.oldX = here.x;
+					this.oldY = here.y;
+					}
+				}
+			}
+		return this;
+		};
+/**
+Set the transform origin style attribute
+@method PageElement.setTransformOrigin
+@return This
+@chainable
+**/
+	my.PageElement.prototype.setTransformOrigin = function(){
+		var el = this.getElement(),
+			x = (my.isa(this.handle.x,&#x27;str&#x27;)) ? this.handle.x : (this.handle.x * this.scale)+&#x27;px&#x27;,
+			y = (my.isa(this.handle.y,&#x27;str&#x27;)) ? this.handle.y : (this.handle.y * this.scale)+&#x27;px&#x27;,
+			t = x+&#x27; &#x27;+y;
+		el.style.mozTransformOrigin = t;
+		el.style.webkitTransformOrigin = t;
+		el.style.msTransformOrigin = t;
+		el.style.oTransformOrigin = t;
+		el.style.transformOrigin = t;
+		return this;
+		};
+/**
+Calculate the element&#x27;s display offset values
+@method PageElement.setDisplayOffsets
+@return This
+@chainable
+**/
+	my.PageElement.prototype.setDisplayOffsets = function(){
+		var dox = 0,
+			doy = 0,
+			myDisplay = this.getElement();
+		if(myDisplay.offsetParent){
+			do{
+				dox += myDisplay.offsetLeft;
+				doy += myDisplay.offsetTop;
+				} while (myDisplay = myDisplay.offsetParent);
+			}
+		this.offset = this.getOffsetStartVector();
+		this.displayOffsetX = dox;
+		this.displayOffsetY = doy;
+		return this;
+		};
+/**
+A __factory__ function to generate new Stack objects
+@method newStack
+@param {Object} items Key:value Object argument for setting attributes
+@return Stack object
+@private
+**/
+	my.newStack = function(items){
+		return new my.Stack(items);
+		};
+/**
+A __factory__ function to generate new Element objects
+@method newElement
+@param {Object} items Key:value Object argument for setting attributes
+@return Element object
+@private
+**/
+	my.newElement = function(items){
+		return new my.Element(items);
+		};
+
+	my.pushUnique(my.sectionlist, &#x27;stack&#x27;);
+	my.pushUnique(my.sectionlist, &#x27;stk&#x27;);
+	my.pushUnique(my.nameslist, &#x27;stacknames&#x27;);
+/**
+# Stack
+	
+## Instantiation
+
+* scrawl.addStackToPage()
+
+## Purpose
+
+* add/manipulate perspective data to a DOM element
+
+## Access
+
+* scrawl.stack.STACKNAME - for the Stack object
+* scrawl.stk.STACKNAME - for a handle to the DOM stack element
+
+@class Stack
+@constructor
+@extends PageElement
+@param {Object} [items] Key:value Object argument for setting attributes
+**/		
+	my.Stack = function(items){
+		items = my.safeObject(items);
+		if(my.xt(items.stackElement)){
+			var tempname = &#x27;&#x27;,
+				temp;
+			if(my.xto([items.stackElement.id, items.stackElement.name])){
+				tempname = items.stackElement.id || items.stackElement.name;
+				}
+			my.PageElement.call(this, {name: tempname,});
+			my.stack[this.name] = this;
+			my.stk[this.name] = items.stackElement;
+			my.pushUnique(my.stacknames, this.name);
+			my.stk[this.name].id = this.name;
+			my.stk[this.name].style.position = &#x27;relative&#x27;;
+			this.setDisplayOffsets();
+			temp = (my.isa(items.perspective,&#x27;obj&#x27;)) ? items.perspective : {};
+			this.perspective = my.newVector({
+				x: (my.xt(items.perspectiveX)) ? items.perspectiveX : ((my.xt(temp.x)) ? temp.x : &#x27;center&#x27;),
+				y: (my.xt(items.perspectiveY)) ? items.perspectiveY : ((my.xt(temp.y)) ? temp.y : &#x27;center&#x27;),
+				z: (my.xt(items.perspectiveZ)) ? items.perspectiveZ : ((my.xt(temp.z)) ? temp.z : 0),
+				});
+			this.work.perspective = my.newVector({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.perspective&#x27;});
+			this.width = items.width || this.get(&#x27;width&#x27;);
+			this.height = items.height || this.get(&#x27;height&#x27;);
+			this.scaleText = (my.isa(items.scaleText, &#x27;bool&#x27;)) ? items.scaleText : false;
+			this.setDimensions()
+			this.setPerspective();
+			this.setStyles(items);
+			if(my.xto([items.title, items.comment])){
+				this.setAccessibility(items);
+				}
+			items.mouse = (my.isa(items.mouse, &#x27;bool&#x27;) || my.isa(items.mouse, &#x27;vector&#x27;)) ? items.mouse : true;
+			this.initMouse(items);
+			return this;
+			}
+		console.log(&#x27;Failed to generate a Stack wrapper - no DOM element supplied&#x27;); 
+		return false;
+		}
+	my.Stack.prototype = Object.create(my.PageElement.prototype);
+/**
+@property type
+@type String
+@default &#x27;Stack&#x27;
+@final
+**/
+	my.Stack.prototype.type = &#x27;Stack&#x27;;
+	my.Stack.prototype.classname = &#x27;stacknames&#x27;;
+	my.d.Stack = {
+/**
+An Object (in fact, a Vector) containing perspective details for the stack element. 
+
+the Stack constructor, and set() function, supports the following &#x27;virtual&#x27; attributes for this attribute:
+
+* __perspectiveX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object&#x27;s width, or the String literal &#x27;left&#x27;, &#x27;right&#x27; or &#x27;center&#x27;
+* __perspectiveY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object&#x27;s height, or the String literal &#x27;top&#x27;, &#x27;bottom&#x27; or &#x27;center&#x27;
+* __perspectiveZ__ - (Number) perspective depth, in pixels
+@property perspective
+@type Object
+**/		
+		perspective: {x:&#x27;center&#x27;,y:&#x27;center&#x27;,z:0},
+/**
+A flag to indicate whether element text should be scaled at the same time as the stack. Default; false (do not scale text)
+
+@property scaleText
+@type Boolean
+@default false
+**/		
+		scaleText: false,
+		};
+	my.mergeInto(my.d.Stack, my.d.PageElement);
+/**
+Return the DOM element wrapped by this object
+@method getElement
+@return Element
+**/
+	my.Stack.prototype.getElement = function(){
+		return my.stk[this.name];
+		};
+/**
+Augments PageElement.set(), to allow users to set the stack perspective using perspectiveX, perspectiveY, perspectiveZ
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Stack.prototype.set = function(items){
+		items = (my.xt(items)) ? items : {};
+		my.PageElement.prototype.set.call(this, items);
+		if(my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])){
+			if(!my.isa(this.perspective, &#x27;Vector&#x27;)){
+				this.perspective = my.newVector(items.perspective || this.perspective);
+				}
+			this.perspective.x = (my.xt(items.perspectiveX)) ? items.perspectiveX : this.perspective.x;
+			this.perspective.y = (my.xt(items.perspectiveY)) ? items.perspectiveY : this.perspective.y;
+			this.perspective.z = (my.xt(items.perspectiveZ)) ? items.perspectiveZ : this.perspective.z;
+			this.setPerspective();
+			}
+		if(my.xt(items.scale)){
+			this.scaleStack(items.scale);
+			}
+		return this;
+		};
+/**
+Import elements into the stack DOM object, and create element object wrappers for them
+@method addElementById
+@param {String} DOM element id String
+@return Element wrapper object on success; false otherwise
+**/
+	my.Stack.prototype.addElementById = function(item){
+		if(my.isa(item, &#x27;str&#x27;)){
+			var myElement = my.newElement({
+				domElement: document.getElementById(item),
+				stack: this.name,
+				});
+			my.stk[this.name].appendChild(my.elm[myElement.name]);
+			my.elm[myElement.name] = document.getElementById(myElement.name);
+			return myElement;
+			}
+		return false;
+		};
+/**
+Import elements into the stack DOM object, and create element object wrappers for them
+@method addElementsByClassName
+@param {String} DOM element class String
+@return Array of element wrapper objects on success; false otherwise
+**/
+	my.Stack.prototype.addElementsByClassName = function(item){
+		if(my.isa(item, &#x27;str&#x27;)){
+			var myElements = [];
+			var myArray = document.getElementsByClassName(item);
+			var myElement, myElm, thisElement;
+			for(var i=0, z=myArray.length; i&lt;z; i++){
+				thisElement = myArray[i]
+				if(thisElement.nodeName !== &#x27;CANVAS&#x27;){
+					myElement = my.newElement({
+						domElement: thisElement,
+						stack: this.name,
+						});
+					myElements.push(myElement);
+					}
+				}
+			for(var i=0, z=myElements.length; i&lt;z; i++){
+				my.stk[this.name].appendChild(my.elm[myElements[i].name]);
+				my.elm[myElements[i].name] = document.getElementById(myElements[i].name);
+				}
+			return myElements;
+			}
+		return false;
+		};
+/**
+Move DOM elements within a Stack
+@method renderElements
+@return Always true
+**/
+	my.Stack.prototype.renderElements = function(){
+		var temp;
+		for(var i=0, z=my.stacknames.length; i&lt;z; i++){
+			temp = my.stack[my.stacknames[i]];
+			if(temp.stack === this.name){
+				temp.renderElement();
+				}
+			}
+		for(var i=0, z=my.padnames.length; i&lt;z; i++){
+			temp = my.pad[my.padnames[i]];
+			if(temp.stack === this.name){
+				temp.renderElement();
+				}
+			}
+		for(var i=0, z=my.elementnames.length; i&lt;z; i++){
+			temp = my.element[my.elementnames[i]];
+			if(temp.stack === this.name){
+				temp.renderElement();
+				}
+			}
+		return true;
+		};
+/**
+Parse the perspective Vector attribute
+@method parsePerspective
+@return Object containing offset values (in pixels)
+@private
+**/
+	my.Stack.prototype.parsePerspective = function(){
+		var result = this.work.perspective,
+			height = this.height || this.get(&#x27;height&#x27;),
+			width = this.width || this.get(&#x27;width&#x27;);
+		return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
+		};
+/**
+Calculates the pixels value of the object&#x27;s perspective attribute
+@method setPerspective
+@return Set the Stack element&#x27;s perspective point
+**/
+	my.Stack.prototype.setPerspective = function(){
+		this.resetWork();
+		var sx = (my.isa(this.perspective.x,&#x27;str&#x27;)) ? this.scale : 1,
+			sy = (my.isa(this.perspective.y,&#x27;str&#x27;)) ? this.scale : 1,
+			myH = this.parsePerspective(),
+			el = this.getElement();
+		myH.x *= sx;
+		myH.y *= sy;
+		myH.z *= sx;
+		el.style.mozPerspectiveOrigin = myH.x+&#x27;px &#x27;+myH.y+&#x27;px&#x27;;
+		el.style.webkitPerspectiveOrigin = myH.x+&#x27;px &#x27;+myH.y+&#x27;px&#x27;;
+		el.style.perspectiveOrigin = myH.x+&#x27;px &#x27;+myH.y+&#x27;px&#x27;;
+		el.style.mozPerspective = myH.z+&#x27;px&#x27;;
+		el.style.webkitPerspective = myH.z+&#x27;px&#x27;;
+		el.style.perspective = myH.z+&#x27;px&#x27;;
+		};
+/**
+Scale the stack, and all objects contained in stack
+
+An item value of 1 will scale the stack to its preset size. Values less than 1 will shrink the stack; values greater than 1 will enlarge it.
+
+By default, this function does not scale text contained in any stack element. If the scaleFont boolean is is passed as true, then the function will set the stack&#x27;s font-size style attribute to (item * 100)%. Element font sizes will not scale unless they have been initially set to relative unit values.
+
+@method scaleStack
+@param {Number} item - Scale value
+@param {Boolean} scaleFont - if set to true, will also scale element font sizes; default: false
+@return This
+@chainable
+**/
+	my.Stack.prototype.scaleStack = function(item, scaleFont){
+		scaleFont = (my.xt(scaleFont)) ? scaleFont : this.scaleText;
+		if(my.isa(item,&#x27;num&#x27;) &amp;&amp; this.type === &#x27;Stack&#x27;){
+			for(var i=0, z=my.stacknames.length; i&lt;z; i++){
+				if(my.stack[my.stacknames[i]].stack === this.name){
+					my.stack[my.stacknames[i]].scaleStack(item);
+					}
+				}
+			for(var i=0, z=my.elementnames.length; i&lt;z; i++){
+				if(my.element[my.elementnames[i]].stack === this.name){
+					my.element[my.elementnames[i]].scaleDimensions(item);
+					}
+				}
+			for(var i=0, z=my.padnames.length; i&lt;z; i++){
+				if(my.pad[my.padnames[i]].stack === this.name){
+					my.pad[my.padnames[i]].scaleDimensions(item);
+					}
+				}
+			this.scaleDimensions(item);
+			if(this.type === &#x27;Stack&#x27;){
+				this.setPerspective();
+				if(scaleFont){
+					my.stk[this.name].style.fontSize = (item * 100)+&#x27;%&#x27;;
+					}
+				}
+			}
+		return this;
+		};
+
+	my.pushUnique(my.sectionlist, &#x27;element&#x27;);
+	my.pushUnique(my.sectionlist, &#x27;elm&#x27;);
+	my.pushUnique(my.nameslist, &#x27;elementnames&#x27;);
+/**
+# Element
+	
+## Instantiation
+
+* Stack.addElementById()
+* Stack.addElementsByClassNames()
+
+## Purpose
+
+* provide a wrapper object for a DOM element
+
+## Access
+
+* scrawl.element.ELEMENTNAME - for the Element object
+* scrawl.elm.ELEMENTNAME - for a handle to the DOM element
+
+@class Element
+@constructor
+@extends PageElement
+@param {Object} [items] Key:value Object argument for setting attributes
+**/		
+	my.Element = function(items){
+		items = (my.isa(items,&#x27;obj&#x27;)) ? items : {};
+//		my.PageElement.call(this, items);
+		if(my.xt(items.domElement)){
+			var tempname = &#x27;&#x27;;
+			if(my.xto([items.domElement.id,items.domElement.name])){
+				tempname = items.domElement.id || items.domElement.name;
+				}
+			my.PageElement.call(this, {name: tempname,});
+			my.element[this.name] = this;
+			my.elm[this.name] = items.domElement;
+			my.pushUnique(my.elementnames, this.name);
+			my.elm[this.name].id = this.name;
+			my.elm[this.name].style.position = &#x27;absolute&#x27;;
+			my.elm[this.name].style.visibility = &#x27;visible&#x27;;
+			this.stack = items.stack || &#x27;&#x27;;
+			this.width = items.width || this.get(&#x27;width&#x27;);
+			this.height = items.height || this.get(&#x27;height&#x27;);
+			this.setDimensions()
+			this.setDisplayOffsets();
+			this.setStyles(items);
+			if(my.xto([items.title, items.comment])){
+				this.setAccessibility(items);
+				}
+			items.mouse = (my.isa(items.mouse, &#x27;bool&#x27;) || my.isa(items.mouse, &#x27;vector&#x27;)) ? items.mouse : false;
+			this.initMouse(items);
+			return this;
+			}
+		console.log(&#x27;Failed to generate an Element wrapper - no DOM element supplied&#x27;); 
+		return false;
+		}
+	my.Element.prototype = Object.create(my.PageElement.prototype);
+/**
+@property type
+@type String
+@default &#x27;Element&#x27;
+@final
+**/
+	my.Element.prototype.type = &#x27;Element&#x27;;
+	my.Element.prototype.classname = &#x27;elementnames&#x27;;
+	my.d.Element = {
+		};
+	my.mergeInto(my.d.Element, my.d.PageElement);
+/**
+Return the DOM element wrapped by this object
+@method getElement
+@return Element
+**/
+	my.Element.prototype.getElement = function(){
+		return my.elm[this.name];
+		};
+		
+	return my;
+	}(scrawl));
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

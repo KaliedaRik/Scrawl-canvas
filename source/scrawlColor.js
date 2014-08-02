@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
+'use strict';
 /**
 # scrawlColor
 
@@ -33,7 +34,6 @@ The Color module adds a controllable color object that can be used with sprite f
 **/
 
 var scrawl = (function(my){
-	'use strict';
 
 /**
 # window.scrawl
@@ -79,16 +79,16 @@ A __factory__ function to generate new Color objects
 		my.Base.call(this, items);
 		this.set(items);
 		if(my.xt(items.color)){
-			this.convert(items.color);
-			}
+			this.convert(items.color)
+			};
 		if(items.random){
-			this.generateRandomColor(items);
-			}
+			this.generateRandomColor(items)
+			};
 		this.checkValues();
 		my.design[this.name] = this;
 		my.pushUnique(my.designnames, this.name);
 		return this;
-		};
+		}
 	my.Color.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -295,7 +295,7 @@ Augments Base.clone()
 			delete c.g;
 			delete c.b;
 			delete c.a;
-			c.generateRandomColor(items);
+			c.generateRandomColor(items)
 			}
 		return c;
 		};
@@ -400,7 +400,7 @@ Update the current color, taking into account shift and bounce attribute values
 			g,
 			b,
 			a;
-		for(var i=0, iz=l.length; i<iz; i++){
+		for(var i=0, z=l.length; i<z; i++){
 			col = this.get(l[i]);
 			shift = this.get(l[i]+'Shift');
 			min = this.get(l[i]+'Min');
@@ -502,33 +502,33 @@ Color names are limited to those supported by SVGTiny: 'green', 'silver', 'lime'
 				}
 			else{
 				switch(items){
-					case 'green' :		r = 0;		g = 128;	b = 0;		break;
-					case 'silver' :		r = 192;	g = 192;	b = 192;	break;
-					case 'lime' :		r = 0;		g = 255;	b = 0;		break;
-					case 'gray' :		r = 128;	g = 128;	b = 128;	break;
-					case 'grey' :		r = 128;	g = 128;	b = 128;	break;
-					case 'olive' :		r = 128;	g = 128;	b = 0;		break;
-					case 'white' :		r = 255;	g = 255;	b = 255;	break;
-					case 'yellow' :		r = 255;	g = 255;	b = 0;		break;
-					case 'maroon' :		r = 128;	g = 0;		b = 0;		break;
-					case 'navy' :		r = 0;		g = 0;		b = 128;	break;
-					case 'red' :		r = 255;	g = 0;		b = 0;		break;
-					case 'blue' :		r = 0;		g = 0;		b = 255;	break;
-					case 'purple' :		r = 128;	g = 0;		b = 128;	break;
-					case 'teal' :		r = 0;		g = 128;	b = 128;	break;
-					case 'fuchsia' :	r = 255;	g = 0;		b = 255;	break;
-					case 'aqua' :		r = 0;		g = 255;	b = 255;	break;
-					default :			r = 0;		g = 0;		b = 0;		break;
+					case 'green' : 		r = 0;		g = 128;	b = 0;		break;
+					case 'silver' : 	r = 192;	g = 192;	b = 192;	break;
+					case 'lime' : 		r = 0;		g = 255;	b = 0;		break;
+					case 'gray' : 		r = 128;	g = 128;	b = 128;	break;
+					case 'grey' : 		r = 128;	g = 128;	b = 128;	break;
+					case 'olive' : 		r = 128;	g = 128;	b = 0;		break;
+					case 'white' : 		r = 255;	g = 255;	b = 255;	break;
+					case 'yellow' : 	r = 255;	g = 255;	b = 0;		break;
+					case 'maroon' : 	r = 128;	g = 0;		b = 0;		break;
+					case 'navy' : 		r = 0;		g = 0;		b = 128;	break;
+					case 'red' : 		r = 255;	g = 0;		b = 0;		break;
+					case 'blue' : 		r = 0;		g = 0;		b = 255;	break;
+					case 'purple' : 	r = 128;	g = 0;		b = 128;	break;
+					case 'teal' : 		r = 0;		g = 128;	b = 128;	break;
+					case 'fuchsia' : 	r = 255;	g = 0;		b = 255;	break;
+					case 'aqua' : 		r = 0;		g = 255;	b = 255;	break;
+					default : 			r = 0;		g = 0;		b = 0;		break;
 					}
 				}
-			my.Base.prototype.set.call(this, {
-				r: r,
-				g: g,
-				b: b,
-				a: a,
-				});
-			this.checkValues();
 			}
+		my.Base.prototype.set.call(this, {
+			r: r,
+			g: g,
+			b: b,
+			a: a,
+			});
+		this.checkValues();
 		return this;
 		};
 /**

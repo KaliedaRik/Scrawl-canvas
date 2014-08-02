@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>source\scrawlCollisions.js - scrawl</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="scrawl"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 3.1.5</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Animation.html">Animation</a></li>
+            
+                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
+            
+                <li><a href="../classes/Base.html">Base</a></li>
+            
+                <li><a href="../classes/Block.html">Block</a></li>
+            
+                <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/Context.html">Context</a></li>
+            
+                <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Element.html">Element</a></li>
+            
+                <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Gradient.html">Gradient</a></li>
+            
+                <li><a href="../classes/Group.html">Group</a></li>
+            
+                <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/Pad.html">Pad</a></li>
+            
+                <li><a href="../classes/PageElement.html">PageElement</a></li>
+            
+                <li><a href="../classes/Particle.html">Particle</a></li>
+            
+                <li><a href="../classes/Path.html">Path</a></li>
+            
+                <li><a href="../classes/Pattern.html">Pattern</a></li>
+            
+                <li><a href="../classes/Phrase.html">Phrase</a></li>
+            
+                <li><a href="../classes/Picture.html">Picture</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Position.html">Position</a></li>
+            
+                <li><a href="../classes/Quaternion.html">Quaternion</a></li>
+            
+                <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
+            
+                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+            
+                <li><a href="../classes/Shape.html">Shape</a></li>
+            
+                <li><a href="../classes/Spring.html">Spring</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/Stack.html">Stack</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Tween.html">Tween</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Wheel.html">Wheel</a></li>
+            
+                <li><a href="../classes/window.scrawl.html">window.scrawl</a></li>
+            
+                <li><a href="../classes/window.scrawl_Animation.html">window.scrawl_Animation</a></li>
+            
+                <li><a href="../classes/window.scrawl_Block.html">window.scrawl_Block</a></li>
+            
+                <li><a href="../classes/window.scrawl_Collisions.html">window.scrawl_Collisions</a></li>
+            
+                <li><a href="../classes/window.scrawl_Color.html">window.scrawl_Color</a></li>
+            
+                <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
+            
+                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
+            
+                <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
+            
+                <li><a href="../classes/window.scrawl_Phrase.html">window.scrawl_Phrase</a></li>
+            
+                <li><a href="../classes/window.scrawl_Physics.html">window.scrawl_Physics</a></li>
+            
+                <li><a href="../classes/window.scrawl_SaveLoad.html">window.scrawl_SaveLoad</a></li>
+            
+                <li><a href="../classes/window.scrawl_Shape.html">window.scrawl_Shape</a></li>
+            
+                <li><a href="../classes/window.scrawl_Stacks.html">window.scrawl_Stacks</a></li>
+            
+                <li><a href="../classes/window.scrawl_Wheel.html">window.scrawl_Wheel</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/scrawlAnimation.html">scrawlAnimation</a></li>
+            
+                <li><a href="../modules/scrawlBlock.html">scrawlBlock</a></li>
+            
+                <li><a href="../modules/scrawlCollisions.html">scrawlCollisions</a></li>
+            
+                <li><a href="../modules/scrawlColor.html">scrawlColor</a></li>
+            
+                <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
+            
+                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
+            
+                <li><a href="../modules/scrawlPathFactories.html">scrawlPathFactories</a></li>
+            
+                <li><a href="../modules/scrawlPhrase.html">scrawlPhrase</a></li>
+            
+                <li><a href="../modules/scrawlPhysics.html">scrawlPhysics</a></li>
+            
+                <li><a href="../modules/scrawlSaveLoad.html">scrawlSaveLoad</a></li>
+            
+                <li><a href="../modules/scrawlShape.html">scrawlShape</a></li>
+            
+                <li><a href="../modules/scrawlStacks.html">scrawlStacks</a></li>
+            
+                <li><a href="../modules/scrawlWheel.html">scrawlWheel</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: source\scrawlCollisions.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+//---------------------------------------------------------------------------------
+// The MIT License (MIT)
+//
+// Copyright (c) 2014 Richard James Roots
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the &quot;Software&quot;), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//---------------------------------------------------------------------------------
+
+/**
+# scrawlCollisions
+
+## Purpose and features
+
+The Collisions module adds support for detecting collisions between sprites
+
+* Adds functionality to various core objects and functions so they can take detect collisions
+
+@module scrawlCollisions
+**/
+var scrawl = (function(my){
+	&#x27;use strict&#x27;;
+
+/**
+# window.scrawl
+
+scrawlCollisions module adaptions to the Scrawl library object
+
+## New default attributes
+
+* Position.delta - default: {x:0,y:0,z:0};
+* Cell.fieldLabel - default: &#x27;&#x27;;
+* Sprite.fieldChannel - default: &#x27;anycolor&#x27;;
+* Sprite.fieldTest - default: 0;
+* Sprite.collisionVectors - default: [];
+* Sprite.collisionPoints - default: [];
+
+@class window.scrawl_Collisions
+**/
+
+/**
+Collision vectors, for use in collision detection calculations
+@property scrawl.workcols
+@type Object 
+@value Object containing three vectors - v1, v2, v3
+@private
+**/
+	my.workcols = {
+		v1: my.newVector({name: &#x27;scrawl.workcols.v1&#x27;}),
+		v2: my.newVector({name: &#x27;scrawl.workcols.v2&#x27;}),
+		v3: my.newVector({name: &#x27;scrawl.workcols.v3&#x27;}),
+		};
+/**
+A __general__ function which asks Cell objects to generate field collision tables
+@method scrawl.buildFields
+@param {Array} [items] Array of CELLNAME Strings - can also be a String
+@return Always true
+**/
+	my.buildFields = function(items){
+		var myCells = (my.xt(items)) ? [].concat(items) : [my.pad[my.currentPad].current];
+		if(items === &#x27;all&#x27;){
+			myCells = my.cellnames;
+			}
+		for(var i=0, iz=myCells.length; i&lt;iz; i++){
+			my.cell[myCells[i]].buildField();
+			}
+		return true;
+		};
+		
+/**
+Orders all Cell objects associated with this Pad to (re)create their field collision image maps
+@method Pad.buildFields
+@return This
+@chainable
+**/
+	my.Pad.prototype.buildFields = function(){
+		for(var i=0, iz=this.cells.length; i&lt;iz; i++){
+			my.cell[this.cells[i]].buildField();
+			}
+		return this;
+		};
+
+/**
+Cell constructor hook function - modified by collisions module
+@method Cell.collisionsCellInit
+@private
+**/
+	my.Cell.prototype.collisionsCellInit = function(items){
+		my.newGroup({
+			name: this.name+&#x27;_field&#x27;,
+			cell: this.name,
+			visibility: false,
+			});
+		if(items.field){
+			my.group[this.name+&#x27;_field&#x27;].sprites = [].concat(items.field);
+			}
+		my.newGroup({
+			name: this.name+&#x27;_fence&#x27;,
+			cell: this.name,
+			visibility: false,
+			});
+		if(items.fence){
+			my.group[this.name+&#x27;_fence&#x27;].sprites = [].concat(items.fence);
+			}
+		};
+
+	my.d.Cell.fieldLabel = &#x27;&#x27;;
+/**
+Builds a collision map image from sprites, for use in sprite field collision detection functions
+@method Cell.buildField
+@return This
+@chainable
+**/
+	my.Cell.prototype.buildField = function(){
+		var	fieldSprites = [],
+			fenceSprites = [],
+			tempsprite = &#x27;&#x27;,
+			tempfill,
+			tempstroke,
+			myfill = my.ctx[this.context].get(&#x27;fillStyle&#x27;);
+		my.context[this.context].fillStyle = &#x27;rgba(0,0,0,1)&#x27;;
+		my.context[this.context].fillRect(0, 0, this.actualWidth, this.actualHeight);
+		my.context[this.context].fillStyle = myfill;
+		fieldSprites = my.group[this.name+&#x27;_field&#x27;].sprites;
+		for(var i=0, iz=fieldSprites.length; i&lt;iz; i++){
+			tempsprite = my.sprite[fieldSprites[i]];
+			tempfill = my.ctx[tempsprite.context].fillStyle;
+			tempstroke = my.ctx[tempsprite.context].strokeStyle;
+			my.ctx[tempsprite.context].fillStyle = &#x27;rgba(255,255,255,1)&#x27;;
+			my.ctx[tempsprite.context].strokeStyle = &#x27;rgba(255,255,255,1)&#x27;;
+			tempsprite.forceStamp(&#x27;fillDraw&#x27;,this.name);
+			my.ctx[tempsprite.context].fillStyle = tempfill;
+			my.ctx[tempsprite.context].strokeStyle = tempstroke;
+			}
+		fenceSprites = my.group[this.name+&#x27;_fence&#x27;].sprites;
+		for(var j=0, jz=fenceSprites.length; j&lt;jz; j++){
+			tempsprite = my.sprite[fenceSprites[j]];
+			tempfill = my.ctx[tempsprite.context].fillStyle;
+			tempstroke = my.ctx[tempsprite.context].strokeStyle;
+			my.ctx[tempsprite.context].fillStyle = &#x27;rgba(0,0,0,1)&#x27;;
+			my.ctx[tempsprite.context].strokeStyle = &#x27;rgba(0,0,0,1)&#x27;;
+			tempsprite.forceStamp(&#x27;fillDraw&#x27;,this.name);
+			my.ctx[tempsprite.context].fillStyle = tempfill;
+			my.ctx[tempsprite.context].strokeStyle = tempstroke;
+			}
+		this.set({
+			fieldLabel: this.getImageData({
+				name: &#x27;field&#x27;,
+				}),
+			});
+		return this;
+		};
+/**
+Cell field collision detection function
+
+Argument should be in the form of:
+
+* {channel:String, test:Number, coordinates:Array of Vectors, x:Number, y:Number}
+
+Where:
+
+* __channel__ (optional) can be &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;alpha&#x27;, or &#x27;anycolor&#x27; (default)
+* __test__ (optional) can be a value between 0 and 254 (default: 0)
+* __coordinates__ (optional) is an array of Vector coordinates, in pixels, relative to the Cell&#x27;s &amp;lt;canvas&amp;gt; element&#x27;s top left corner
+* __x__ (optional) is the horizontal coordinate, in pixels, relative to the Cell&#x27;s top left corner
+* __y__ (optional) is the vertical coordinate, in pixels, relative to the Cell&#x27;s top left corner
+
+Either include a single coordinate (x, y), or an array of coordinate Vectors
+
+Test will return: 
+* false if it encounters a coordinate outside the bou8ds of its image map
+* true if all coordinates exceed the test level (thus a sprite testing in the red channel will report true if it is entirely within a red part of the collision map
+* the first coordinate that falls below, or equals, the test level
+@method Cell.checkFieldAt
+@param {Object} items Argument containing details of how and where to check the cell&#x27;s collision map image
+@return Vector of first the first coordinates to &#x27;pass&#x27; the test
+@private
+**/
+	my.Cell.prototype.checkFieldAt = function(items){
+		items = my.safeObject(items);
+		var	myChannel = items.channel || &#x27;anycolor&#x27;,
+			myTest = items.test || 0,
+			x, 
+			y, 
+			coords = (items.coordinates) ? items.coordinates : [items.x || 0, items.y || 0], 
+			pos,
+			d,
+			fieldLabel = this.get(&#x27;fieldLabel&#x27;);
+		d = my.imageData[fieldLabel];
+		for(var i = 0, iz = coords.length; i &lt; iz; i += 2){
+			x = Math.round(coords[i]);
+			y = Math.round(coords[i+1]);
+			if(!my.isBetween(x, 0, d.width, true) || !my.isBetween(y, 0, d.height, true)){
+				return false;
+				}
+			else{
+				pos = ((y * d.width) + x) * 4;
+				switch(myChannel){
+					case &#x27;red&#x27; : 
+						if(d.data[pos] &lt;= myTest){
+							return {x: x, y: y};
+							}
+						break;
+					case &#x27;green&#x27; : 
+						if(d.data[pos+1] &lt;= myTest){
+							return {x: x, y: y};
+							}
+						break;
+					case &#x27;blue&#x27; : 
+						if(d.data[pos+2] &lt;= myTest){
+							return {x: x, y: y};
+							}
+						break;
+					case &#x27;alpha&#x27; : 
+						if(d.data[pos+3] &lt;= myTest){
+							return {x: x, y: y};
+							}
+						break;
+					case &#x27;anycolor&#x27; :
+						if(d.data[pos] &lt;= myTest || d.data[pos+1] &lt;= myTest || d.data[pos+2] &lt;= myTest){
+							return {x: x, y: y};
+							}
+						break;
+					}
+				}
+			}
+		return true;
+		};
+		
+/**
+Check all sprites in the Group to see if they are colliding with the supplied sprite object. An Array of all sprite objects colliding with the reference sprite will be returned
+@method Group.getSpritesCollidingWith
+@param {String} sprite SPRITENAME String of the reference sprite; alternatively the sprite Object itself can be passed as the argument
+@return Array of visible sprite Objects currently colliding with the reference sprite
+**/
+	my.Group.prototype.getSpritesCollidingWith = function(sprite){
+		sprite = (my.isa(sprite, &#x27;str&#x27;)) ? my.sprite[sprite] : sprite; 
+		if(my.contains(my.spritenames, sprite.name)){
+			var	hits = [],
+				myTests = sprite.getCollisionPoints();
+			for(var i=0, iz=this.sprites.length; i&lt;iz; i++){
+				if(my.sprite[this.sprites[i]].name !== sprite.name){
+					if(my.sprite[this.sprites[i]].get(&#x27;visibility&#x27;)){
+						if(my.sprite[this.sprites[i]].checkHit({tests: myTests})){
+							hits.push(this.sprites[i]);
+							}
+						}
+					}
+				}
+			return (hits.length &gt; 0) ? hits : false;
+			}
+		return false;
+		};
+/**
+Check all sprites in the Group against each other to see if they are in collision
+@method Group.getInGroupSpriteHits
+@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of sprites currently in collision
+**/
+	my.Group.prototype.getInGroupSpriteHits = function(){
+		var	hits = [],
+			cPoints = {},
+			cViz = {},
+			temp,
+			ts1,
+			ts2,
+			tresult;
+		for(var i=0, iz=this.sprites.length; i&lt;iz; i++){
+			temp = my.sprite[this.sprites[i]];
+			cViz[temp.name] = temp.visibility;
+			if(cViz[temp.name]){
+				cPoints[temp.name] = temp.getCollisionPoints();
+				}
+			}
+		for(var k=0, kz=this.sprites.length; k&lt;kz; i++){
+			if(cViz[this.sprites[i]]){
+				for(var j=k+1, jz=this.sprites.length; j&lt;jz; j++){
+					if(cViz[this.sprites[j]]){
+						if(this.regionRadius){
+							ts1 = my.workcols.v1.set(my.sprite[this.sprites[k]].start);
+							ts2 = my.workcols.v2.set(my.sprite[this.sprites[j]].start);
+							tresult = ts1.vectorSubtract(ts2).getMagnitude();
+							if(tresult &gt; this.regionRadius){
+								continue;
+								}
+							}
+						if(my.sprite[this.sprites[j]].checkHit({tests: cPoints[this.sprites[k]]})){
+							hits.push([this.sprites[k],this.sprites[j]]);
+							continue;
+							}
+						if(my.sprite[this.sprites[k]].checkHit({tests: cPoints[this.sprites[j]]})){
+							hits.push([this.sprites[k],this.sprites[j]]);
+							continue;
+							}
+						}
+					}
+				}
+			}
+		return hits;
+		};
+/**
+Check all sprites in this Group against all sprites in the argument Group, to see if they are in collision
+@method Group.getBetweenGroupSpriteHits
+@param {String} g GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument
+@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of sprites currently in collision
+**/
+	my.Group.prototype.getBetweenGroupSpriteHits = function(g){
+		var	hits = [],
+			cPoints = {},
+			cViz = {},
+			temp,
+			ts1,
+			ts2,
+			tresult;
+		if(my.xt(g)){
+			if(my.isa(g,&#x27;str&#x27;)){
+				if(my.contains(my.groupnames, g)){
+					g = my.group[g];
+					}
+				else{
+					return false;
+					}
+				}
+			else{
+				if(!my.xt(g.type) || g.type !== &#x27;Group&#x27;){
+					return false;
+					}
+				}
+			for(var l=0, lz=this.sprites.length; l&lt;lz; l++){
+				temp = my.sprite[this.sprites[l]];
+				cViz[temp.name] = temp.visibility;
+				if(cViz[temp.name]){
+					cPoints[temp.name] = temp.getCollisionPoints();
+					}
+				}
+			for(var i=0, iz=g.sprites.length; i&lt;iz; i++){
+				temp = my.sprite[g.sprites[i]];
+				cViz[temp.name] = temp.visibility;
+				if(cViz[temp.name]){
+					cPoints[temp.name] = temp.getCollisionPoints();
+					}
+				}
+			for(var k=0, kz=this.sprites.length; k&lt;kz; k++){
+				if(cViz[this.sprites[k]]){
+					for(var j=0, jz=g.sprites.length; j&lt;jz; j++){
+						if(cViz[g.sprites[j]]){
+							if(this.regionRadius){
+								ts1 = my.workcols.v1.set(my.sprite[this.sprites[k]].start);
+								ts2 = my.workcols.v2.set(my.sprite[g.sprites[j]].start);
+								tresult = ts1.vectorSubtract(ts2).getMagnitude();
+								if(tresult &gt; this.regionRadius){
+									continue;
+									}
+								}
+							if(my.sprite[g.sprites[j]].checkHit({tests: cPoints[this.sprites[k]]})){
+								hits.push([this.sprites[k],g.sprites[j]]);
+								continue;
+								}
+							if(my.sprite[this.sprites[k]].checkHit({tests: cPoints[g.sprites[j]]})){
+								hits.push([this.sprites[k],g.sprites[j]]);
+								continue;
+								}
+							}
+						}
+					}
+				}
+			return hits;
+			}
+		return false;
+		};
+/**
+Check all sprites in this Group against a &amp;lt;canvas&amp;gt; element&#x27;s collision field image
+
+If no argument is supplied, the Group&#x27;s default Cell&#x27;s &amp;lt;canvas&amp;gt; element will be used for the check
+
+An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the sprite that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring
+@method Group.getFieldSpriteHits
+@param {String} [cell] CELLNAME of Cell whose &amp;lt;canvas&amp;gt; element is to be used for the check
+@return Array of [SPRITENAME, Vector] Arrays
+**/
+	my.Group.prototype.getFieldSpriteHits = function(cell){
+		cell = (my.xt(cell)) ? cell : this.cell;
+		var	hits = [],
+			result;
+		for(var j=0, w=this.sprites.length; j&lt;w; j++){
+			result = my.sprite[this.sprites[j]].checkField(cell);
+			if(!my.isa(result,&#x27;bool&#x27;)){
+				hits.push([this.sprites[j], result]);
+				}
+			}
+		return hits;
+		};
+
+	my.d.Sprite.fieldChannel = &#x27;anycolor&#x27;;
+	my.d.Sprite.fieldTest = 0;
+	my.d.Sprite.collisionVectors = [];
+	my.d.Sprite.collisionPoints = [];
+	if(my.xt(my.d.Block)){my.mergeInto(my.d.Block, my.d.Sprite);}
+	if(my.xt(my.d.Shape)){my.mergeInto(my.d.Shape, my.d.Sprite);}
+	if(my.xt(my.d.Wheel)){my.mergeInto(my.d.Wheel, my.d.Sprite);}
+	if(my.xt(my.d.Picture)){my.mergeInto(my.d.Picture, my.d.Sprite);}
+	if(my.xt(my.d.Phrase)){my.mergeInto(my.d.Phrase, my.d.Sprite);}
+	if(my.xt(my.d.Path)){my.mergeInto(my.d.Path, my.d.Sprite);}
+/**
+Sprite constructor hook function - modified by collisions module
+@method Sprite.collisionsSpriteConstructor
+@private
+**/
+	my.Sprite.prototype.collisionsSpriteConstructor = function(items){
+		if(my.xt(items.field)){
+			this.addSpriteToCellFields();
+			}
+		if(my.xt(items.fence)){
+			this.addSpriteToCellFences();
+			}
+		};
+/**
+Sprite.registerInLibrary hook function - modified by collisions module
+@method Sprite.collisionsSpriteRegisterInLibrary
+@private
+**/
+	my.Sprite.prototype.collisionsSpriteRegisterInLibrary = function(){
+		if(my.xt(this.collisionPoints)){
+			this.collisionPoints = (my.isa(this.collisionPoints, &#x27;arr&#x27;)) ? this.collisionPoints : [this.collisionPoints];
+			this.collisionPoints = this.parseCollisionPoints(this.collisionPoints);
+			}
+		return this;
+		};
+/**
+Sprite.set hook function - modified by collisions module
+@method Sprite.collisionsSpriteSet
+@private
+**/
+	my.Sprite.prototype.collisionsSpriteSet = function(items){
+		if(my.xto([items.collisionPoints, items.field, items.fence])){
+			if(my.xt(items.collisionPoints)){
+				this.collisionPoints = (my.isa(items.collisionPoints, &#x27;arr&#x27;)) ? items.collisionPoints : [items.collisionPoints];
+				this.collisionPoints = this.parseCollisionPoints(this.collisionPoints);
+				delete this.collisionVectors;
+				}
+			if(my.xt(items.field)){
+				this.addSpriteToCellFields();
+				}
+			if(my.xt(items.fence)){
+				this.addSpriteToCellFences();
+				}
+			}
+		};
+/**
+Add this sprite to a (range of) Cell object field groups
+@method Sprite.addSpriteToCellFields
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
+	my.Sprite.prototype.addSpriteToCellFields = function(cells){
+		cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
+		for(var i=0, iz=cells.length; i&lt;iz; i++){
+			if(my.contains(my.cellnames, cells[i])){
+				my.group[cells[i]+&#x27;_field&#x27;].addSpritesToGroup(this.name);
+				}
+			}
+		return this;
+		};
+/**
+Add this sprite to a (range of) Cell object fence groups
+@method Sprite.addSpriteToCellFences
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
+	my.Sprite.prototype.addSpriteToCellFences = function(cells){
+		cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
+		for(var i=0, iz=cells.length; i&lt;iz; i++){
+			if(my.contains(my.cellnames, cells[i])){
+				my.group[cells[i]+&#x27;_fence&#x27;].addSpritesToGroup(this.name);
+				}
+			}
+		return this;
+		};
+/**
+Remove this sprite from a (range of) Cell object field groups
+@method Sprite.removeSpriteFromCellFields
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
+	my.Sprite.prototype.removeSpriteFromCellFields = function(cells){
+		cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
+		for(var i=0, iz=cells.length; i&lt;iz; i++){
+			if(my.contains(my.cellnames, cells[i])){
+				my.group[cells[i]+&#x27;_field&#x27;].removeSpritesFromGroup(this.name);
+				}
+			}
+		return this;
+		};
+/**
+Remove this sprite from a (range of) Cell object fence groups
+@method Sprite.removeSpriteFromCellFences
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
+	my.Sprite.prototype.removeSpriteFromCellFences = function(cells){
+		cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
+		for(var i=0, iz=cells.length; i&lt;iz; i++){
+			if(my.contains(my.cellnames, cells[i])){
+				my.group[cells[i]+&#x27;_fence&#x27;].removeSpritesFromGroup(this.name);
+				}
+			}
+		return this;
+		};
+/**
+Check this sprite&#x27;s collision Vectors against a Cell object&#x27;s collision field image to see if any of them are colliding with the Cell&#x27;s field sprites
+@method Sprite.checkField
+@param {String} [cell] CELLNAME String of the Cell to be checked against
+@return First Vector coordinate to &#x27;pass&#x27; the Cell.checkFieldAt() function&#x27;s test; true if none pass; false if the test parameters are out of bounds
+**/
+	my.Sprite.prototype.checkField = function(cell){
+		var	myCell = (cell) ? my.cell[cell] : my.cell[my.group[this.group].cell];
+		return myCell.checkFieldAt({
+			coordinates: this.getCollisionPoints(),
+			test: this.get(&#x27;fieldTest&#x27;),
+			channel: this.get(&#x27;fieldChannel&#x27;),
+			});
+		};
+/**
+Calculate the current positions of this sprite&#x27;s collision Vectors, taking into account the sprite&#x27;s current position, roll and scale
+@method Sprite.getCollisionPoints
+@return Array of coordinate Vectors
+**/
+	my.Sprite.prototype.getCollisionPoints = function(){
+		var	p = [],
+			v,
+			c;
+		if(!my.xt(this.collisionVectors)){
+			if(my.xt(this.collisionPoints)){
+				this.buildCollisionVectors();
+				}
+			}
+		c = this.collisionVectors || false;
+		if(c){
+			for(var i = 0, iz = c.length; i &lt; iz; i += 2){
+				v = my.v;
+				v.x = (this.flipReverse) ? -c[i] : c[i];
+				v.y = (this.flipUpend) ? -c[i+1] : c[i+1];
+				if(this.roll){
+					v.rotate(this.roll);
+					}
+				if(this.scale !== 1){
+					v.scalarMultiply(this.scale);
+					}
+				v.vectorAdd(this.start);
+				p.push(v.x);
+				p.push(v.y);
+				}
+			return p;
+			}
+		return [];
+		};
+/**
+Collision detection helper function
+
+Parses the collisionPoints array to generate coordinate Vectors representing the sprite&#x27;s collision points
+@method Sprite.buildCollisionVectors
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
+	my.Sprite.prototype.buildCollisionVectors = function(items){
+		var	p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints, 
+			o = this.getOffsetStartVector().reverse(),
+			w = this.width,
+			h = this.height,
+			c = [];
+		for(var i = 0, iz = p.length; i &lt; iz; i++){
+			if(my.isa(p[i], &#x27;str&#x27;)){
+				switch(p[i]) {
+					case &#x27;start&#x27;	:	c.push(0);				c.push(0);				break;
+					case &#x27;N&#x27;		:	c.push((w/2) - o.x);	c.push(-o.y);			break;
+					case &#x27;NE&#x27;		:	c.push(w - o.x);		c.push(-o.y);			break;
+					case &#x27;E&#x27;		:	c.push(w - o.x);		c.push((h/2) - o.y);	break;
+					case &#x27;SE&#x27;		:	c.push(w - o.x);		c.push(h - o.y);		break;
+					case &#x27;S&#x27;		:	c.push((w/2) - o.x);	c.push(h - o.y);		break;
+					case &#x27;SW&#x27;		:	c.push(-o.x);			c.push(h - o.y);		break;
+					case &#x27;W&#x27;		:	c.push(-o.x);			c.push((h/2) - o.y);	break;
+					case &#x27;NW&#x27;		:	c.push(-o.x);			c.push(-o.y);			break;
+					case &#x27;center&#x27;	:	c.push((w/2) - o.x);	c.push((h/2) - o.y);	break;
+					}
+				}
+			else if(my.isa(p[i], &#x27;vector&#x27;)){
+				c.push(p[i].x);		c.push(p[i].y);
+				}
+			}
+		this.collisionVectors = c;
+		return this;
+		};
+/**
+Collision detection helper function
+
+Parses user input for the collisionPoint attribute
+@method Sprite.parseCollisionPoints
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
+	my.Sprite.prototype.parseCollisionPoints = function(items){
+		var myItems = (my.xt(items)) ? [].concat(items) : [],
+			p = [];
+		for(var i=0, iz=myItems.length; i&lt;iz; i++){
+			if(my.isa(myItems[i], &#x27;str&#x27;)){
+				switch(myItems[i].toLowerCase()) {
+					case &#x27;all&#x27; :
+						my.pushUnique(p, &#x27;N&#x27;); my.pushUnique(p, &#x27;NE&#x27;); my.pushUnique(p, &#x27;E&#x27;); my.pushUnique(p, &#x27;SE&#x27;); my.pushUnique(p, &#x27;S&#x27;);
+						my.pushUnique(p, &#x27;SW&#x27;); my.pushUnique(p, &#x27;W&#x27;); my.pushUnique(p, &#x27;NW&#x27;); my.pushUnique(p, &#x27;start&#x27;); my.pushUnique(p, &#x27;center&#x27;);
+						break;
+					case &#x27;corners&#x27; :
+						my.pushUnique(p, &#x27;NE&#x27;); my.pushUnique(p, &#x27;SE&#x27;); my.pushUnique(p, &#x27;SW&#x27;); my.pushUnique(p, &#x27;NW&#x27;);
+						break;
+					case &#x27;edges&#x27; :
+						my.pushUnique(p, &#x27;N&#x27;); my.pushUnique(p, &#x27;E&#x27;); my.pushUnique(p, &#x27;S&#x27;); my.pushUnique(p, &#x27;W&#x27;);
+						break;
+					case &#x27;perimeter&#x27; :
+						my.pushUnique(p, &#x27;N&#x27;); my.pushUnique(p, &#x27;NE&#x27;); my.pushUnique(p, &#x27;E&#x27;); my.pushUnique(p, &#x27;SE&#x27;);
+						my.pushUnique(p, &#x27;S&#x27;); my.pushUnique(p, &#x27;SW&#x27;); my.pushUnique(p, &#x27;W&#x27;); my.pushUnique(p, &#x27;NW&#x27;);
+						break;
+					case &#x27;north&#x27; : 
+					case &#x27;n&#x27; :
+						my.pushUnique(p, &#x27;N&#x27;); break;
+					case &#x27;northeast&#x27; : 
+					case &#x27;ne&#x27; :
+						my.pushUnique(p, &#x27;NE&#x27;); break;
+					case &#x27;east&#x27; : 
+					case &#x27;e&#x27; :
+						my.pushUnique(p, &#x27;E&#x27;); break;
+					case &#x27;southeast&#x27; : 
+					case &#x27;se&#x27; :
+						my.pushUnique(p, &#x27;SE&#x27;); break;
+					case &#x27;south&#x27; : 
+					case &#x27;s&#x27; :
+						my.pushUnique(p, &#x27;S&#x27;); break;
+					case &#x27;southwest&#x27; : 
+					case &#x27;sw&#x27; :
+						my.pushUnique(p, &#x27;SW&#x27;); break;
+					case &#x27;west&#x27; : 
+					case &#x27;w&#x27; :
+						my.pushUnique(p, &#x27;W&#x27;); break;
+					case &#x27;northwest&#x27; : 
+					case &#x27;nw&#x27; :
+						my.pushUnique(p, &#x27;NW&#x27;); break;
+					case &#x27;start&#x27; : 
+						my.pushUnique(p, &#x27;start&#x27;); break;
+					case &#x27;center&#x27; : 
+						my.pushUnique(p, &#x27;center&#x27;); break;
+					}
+				}
+			else if(my.isa(myItems[i], &#x27;num&#x27;)){
+				p.push(myItems[i]);
+				}
+			else if(my.isa(myItems[i], &#x27;vector&#x27;)){
+				p.push(myItems[i]);
+				}
+			}
+		this.collisionPoints = p;
+		return p;
+		};
+
+	return my;
+	}(scrawl));
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

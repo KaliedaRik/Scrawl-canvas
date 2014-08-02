@@ -1,0 +1,8556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Wheel - scrawl</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="scrawl"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 3.1.5</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Animation.html">Animation</a></li>
+            
+                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
+            
+                <li><a href="../classes/Base.html">Base</a></li>
+            
+                <li><a href="../classes/Block.html">Block</a></li>
+            
+                <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/Context.html">Context</a></li>
+            
+                <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Element.html">Element</a></li>
+            
+                <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Gradient.html">Gradient</a></li>
+            
+                <li><a href="../classes/Group.html">Group</a></li>
+            
+                <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/Pad.html">Pad</a></li>
+            
+                <li><a href="../classes/PageElement.html">PageElement</a></li>
+            
+                <li><a href="../classes/Particle.html">Particle</a></li>
+            
+                <li><a href="../classes/Path.html">Path</a></li>
+            
+                <li><a href="../classes/Pattern.html">Pattern</a></li>
+            
+                <li><a href="../classes/Phrase.html">Phrase</a></li>
+            
+                <li><a href="../classes/Picture.html">Picture</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Position.html">Position</a></li>
+            
+                <li><a href="../classes/Quaternion.html">Quaternion</a></li>
+            
+                <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
+            
+                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+            
+                <li><a href="../classes/Shape.html">Shape</a></li>
+            
+                <li><a href="../classes/Spring.html">Spring</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/Stack.html">Stack</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Tween.html">Tween</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Wheel.html">Wheel</a></li>
+            
+                <li><a href="../classes/window.scrawl.html">window.scrawl</a></li>
+            
+                <li><a href="../classes/window.scrawl_Animation.html">window.scrawl_Animation</a></li>
+            
+                <li><a href="../classes/window.scrawl_Block.html">window.scrawl_Block</a></li>
+            
+                <li><a href="../classes/window.scrawl_Collisions.html">window.scrawl_Collisions</a></li>
+            
+                <li><a href="../classes/window.scrawl_Color.html">window.scrawl_Color</a></li>
+            
+                <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
+            
+                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
+            
+                <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
+            
+                <li><a href="../classes/window.scrawl_Phrase.html">window.scrawl_Phrase</a></li>
+            
+                <li><a href="../classes/window.scrawl_Physics.html">window.scrawl_Physics</a></li>
+            
+                <li><a href="../classes/window.scrawl_SaveLoad.html">window.scrawl_SaveLoad</a></li>
+            
+                <li><a href="../classes/window.scrawl_Shape.html">window.scrawl_Shape</a></li>
+            
+                <li><a href="../classes/window.scrawl_Stacks.html">window.scrawl_Stacks</a></li>
+            
+                <li><a href="../classes/window.scrawl_Wheel.html">window.scrawl_Wheel</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/scrawlAnimation.html">scrawlAnimation</a></li>
+            
+                <li><a href="../modules/scrawlBlock.html">scrawlBlock</a></li>
+            
+                <li><a href="../modules/scrawlCollisions.html">scrawlCollisions</a></li>
+            
+                <li><a href="../modules/scrawlColor.html">scrawlColor</a></li>
+            
+                <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
+            
+                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
+            
+                <li><a href="../modules/scrawlPathFactories.html">scrawlPathFactories</a></li>
+            
+                <li><a href="../modules/scrawlPhrase.html">scrawlPhrase</a></li>
+            
+                <li><a href="../modules/scrawlPhysics.html">scrawlPhysics</a></li>
+            
+                <li><a href="../modules/scrawlSaveLoad.html">scrawlSaveLoad</a></li>
+            
+                <li><a href="../modules/scrawlShape.html">scrawlShape</a></li>
+            
+                <li><a href="../modules/scrawlStacks.html">scrawlStacks</a></li>
+            
+                <li><a href="../modules/scrawlWheel.html">scrawlWheel</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1>Wheel Class</h1>
+<div class="box meta">
+    
+
+    
+        <div class="extends">
+            Extends <a href="../classes/Sprite.html" class="crosslink">Sprite</a>
+        </div>
+    
+
+    
+        <div class="foundat">
+            Defined in: <a href="../files/source_scrawlWheel.js.html#l72"><code>source\scrawlWheel.js:72</code></a>
+        </div>
+    
+
+    
+        
+            Module: <a href="../modules/scrawlWheel.html">scrawlWheel</a>
+        
+    
+
+    
+</div>
+
+
+
+<div class="box intro">
+    <h1 id="wheel">Wheel</h1>
+<h2 id="instantiation">Instantiation</h2>
+<ul>
+<li>scrawl.newWheel()</li>
+</ul>
+<h2 id="purpose">Purpose</h2>
+<ul>
+<li>Defines &#39;arc&#39; objects for displaying on a Cell&#39;s canvas</li>
+<li>Performs &#39;arc&#39; based drawing operations on canvases</li>
+</ul>
+<h2 id="access">Access</h2>
+<ul>
+<li>scrawl.sprite.WHEELNAME - for the Wheel sprite object</li>
+</ul>
+
+</div>
+
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_Wheel" class="method item">
+    <h3 class="name"><code>Wheel</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l72"><code>source\scrawlWheel.js:72</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key:value Object argument for setting attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+    </div>
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+        
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods extends">
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_animationPositionClone">animationPositionClone</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_animationPositionGet">animationPositionGet</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_animationPositionInit">animationPositionInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_animationPositionSet">animationPositionSet</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_buildCollisionVectors">buildCollisionVectors</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_buildPath">buildPath</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_calculatePOV">calculatePOV</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_callMethod">callMethod</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_checkHit">checkHit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_clear">clear</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_clearShadow">clearShadow</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_clearWithBackground">clearWithBackground</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_clip">clip</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited inherited">
+                                <a href="#method_clone">clone</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_collisionsSpriteConstructor">collisionsSpriteConstructor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_collisionsSpriteRegisterInLibrary">collisionsSpriteRegisterInLibrary</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_collisionsSpriteSet">collisionsSpriteSet</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_corePositionInit">corePositionInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_correctCoordinates">correctCoordinates</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_draw">draw</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_drawFill">drawFill</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_dropSprite">dropSprite</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_fill">fill</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_fillDraw">fillDraw</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_floatOver">floatOver</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_forceStamp">forceStamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited inherited">
+                                <a href="#method_get">get</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_getCenteredPivotOffsetVector">getCenteredPivotOffsetVector</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_getChanges">getChanges</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_getContextFromEngine">getContextFromEngine</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_getGroup">getGroup</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_getOffsetStartVector">getOffsetStartVector</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_getPivotOffsetVector">getPivotOffsetVector</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_none">none</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_pathPositionInit">pathPositionInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_pathPositionSetDelta">pathPositionSetDelta</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_pathStamp">pathStamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_pickupSprite">pickupSprite</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_prepareStamp">prepareStamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_registerInLibrary">registerInLibrary</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_resetWork">resetWork</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_restoreShadow">restoreShadow</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_rotateCell">rotateCell</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_set">set</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setDelta">setDelta</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_setStampUsingPivot">setStampUsingPivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_sinkInto">sinkInto</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_stamp">stamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_toString">toString</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties extends">
+                        
+                            <li class="index-item property">
+                                <a href="#property_checkHitRadius">checkHitRadius</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_checkHitUsingRadius">checkHitUsingRadius</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_clockwise">clockwise</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_closed">closed</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_comment">comment</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private inherited">
+                                <a href="#property_context">context</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_data">data</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_deltaPathPlace">deltaPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_endAngle">endAngle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_fastStamp">fastStamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_fillStyle">fillStyle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_flipReverse">flipReverse</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_flipUpend">flipUpend</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_font">font</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_globalAlpha">globalAlpha</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_globalCompositeOperation">globalCompositeOperation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_group">group</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_handle">handle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_includeCenter">includeCenter</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_lineCap">lineCap</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_lineDash">lineDash</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_lineDashOffset">lineDashOffset</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_lineJoin">lineJoin</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_lineWidth">lineWidth</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_lockX">lockX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_lockY">lockY</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_method">method</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_miterLimit">miterLimit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_name">name</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_order">order</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_path">path</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_pathPlace">pathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_pathSpeedConstant">pathSpeedConstant</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_pivot">pivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_radius">radius</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_roll">roll</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_scale">scale</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_scaleOutline">scaleOutline</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_shadowBlur">shadowBlur</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_shadowColor">shadowColor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_shadowOffsetX">shadowOffsetX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_shadowOffsetY">shadowOffsetY</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_start">start</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_startAngle">startAngle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_strokeStyle">strokeStyle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_textAlign">textAlign</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_textBaseline">textBaseline</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_timestamp">timestamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_title">title</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_type">type</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_visibility">visibility</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited inherited">
+                                <a href="#property_width">width</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_winding">winding</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private inherited">
+                                <a href="#property_work">work</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+
+            
+        </div>
+
+        
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_animationPositionClone" class="method item private inherited">
+    <h3 class="name"><code>animationPositionClone</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_animationPositionClone">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2504"><code>source\scrawlCore.js:2504</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position.setDelta hook function - modified by animation module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_animationPositionGet" class="method item private inherited">
+    <h3 class="name"><code>animationPositionGet</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_animationPositionGet">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2406"><code>source\scrawlCore.js:2406</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position.get hook function - modified by animation module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_animationPositionInit" class="method item private inherited">
+    <h3 class="name"><code>animationPositionInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_animationPositionInit">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2374"><code>source\scrawlCore.js:2374</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position constructor hook function - modified by animation module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_animationPositionSet" class="method item private inherited">
+    <h3 class="name"><code>animationPositionSet</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_animationPositionSet">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2439"><code>source\scrawlCore.js:2439</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position.set hook function - modified by animation module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_buildCollisionVectors" class="method item private">
+    <h3 class="name"><code>buildCollisionVectors</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l435"><code>source\scrawlWheel.js:435</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Collision detection helper function</p>
+<p>Parses the collisionPoints array to generate coordinate Vectors representing the sprite&#39;s collision points</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Array</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of collision point data</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_buildPath" class="method item private">
+    <h3 class="name"><code>buildPath</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l260"><code>source\scrawlWheel.js:260</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - define the sprite&#39;s path on the &lt;canvas&gt; element&#39;s context engine</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_calculatePOV" class="method item private inherited">
+    <h3 class="name"><code>calculatePOV</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>result</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>width</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>height</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>centered</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_calculatePOV">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2542"><code>source\scrawlCore.js:2542</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position.getOffsetStartVector() helper function. Calculates the pixel values for the object&#39;s handle attribute</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">result</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>object&#39;s handle vector</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">width</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>object&#39;s width (pixels)</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">height</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>object&#39;s height (pixels)</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">centered</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>true if object&#39;s frame of reference is its center point; false otherwise</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>A Vector of calculated offset values</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_callMethod" class="method item private inherited">
+    <h3 class="name"><code>callMethod</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>engine</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[method]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_callMethod">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5370"><code>source\scrawlCore.js:5370</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - direct sprite to the required drawing method function</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">engine</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[method]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Permitted method attribute String; by default, will use sprite&#39;s own method setting</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_checkHit" class="method item">
+    <h3 class="name"><code>checkHit</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_checkHit">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l204"><code>source\scrawlWheel.js:204</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check a set of coordinates to see if any of them fall within this sprite&#39;s path - uses JavaScript&#39;s <em>isPointInPath</em> function</p>
+<p>Argument object contains the following attributes:</p>
+<ul>
+<li><strong>tests</strong> - an array of Vector coordinates to be checked; alternatively can be a single Vector</li>
+<li><strong>x</strong> - X coordinate</li>
+<li><strong>y</strong> - Y coordinate</li>
+<li><strong>pad</strong> - PADNAME String</li>
+</ul>
+<p>Either the &#39;tests&#39; attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values</p>
+<p>If the <strong>checkHitUsingRadius</strong> attribute is true, collisions will be detected using a simple distance comparison; otherwise the JavaScript isPointInPath() function will be invoked</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Argument object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>The first coordinate to fall within the sprite&#39;s path; false if none fall within the path</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_clear" class="method item private">
+    <h3 class="name"><code>clear</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_clear">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l295"><code>source\scrawlWheel.js:295</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;clear&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_clearShadow" class="method item private inherited">
+    <h3 class="name"><code>clearShadow</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_clearShadow">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5533"><code>source\scrawlCore.js:5533</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_clearWithBackground" class="method item private">
+    <h3 class="name"><code>clearWithBackground</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_clearWithBackground">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l312"><code>source\scrawlWheel.js:312</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;clearWithBackground&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_clip" class="method item private">
+    <h3 class="name"><code>clip</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_clip">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l281"><code>source\scrawlWheel.js:281</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;clip&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_clone" class="method item inherited">
+    <h3 class="name"><code>clone</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Base.html#method_clone">
+                Base
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5247"><code>source\scrawlCore.js:5247</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments Position.clone()</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes, used to update the clone&#39;s attributes with new values</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Cloned object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_collisionsSpriteConstructor" class="method item private inherited">
+    <h3 class="name"><code>collisionsSpriteConstructor</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_collisionsSpriteConstructor">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5145"><code>source\scrawlCore.js:5145</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite constructor hook function - modified by collisions module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_collisionsSpriteRegisterInLibrary" class="method item private inherited">
+    <h3 class="name"><code>collisionsSpriteRegisterInLibrary</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_collisionsSpriteRegisterInLibrary">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5165"><code>source\scrawlCore.js:5165</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite.registerInLibrary hook function - modified by collisions module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_collisionsSpriteSet" class="method item private inherited">
+    <h3 class="name"><code>collisionsSpriteSet</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_collisionsSpriteSet">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5217"><code>source\scrawlCore.js:5217</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite.set hook function - modified by collisions module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_corePositionInit" class="method item private inherited">
+    <h3 class="name"><code>corePositionInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_corePositionInit">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2344"><code>source\scrawlCore.js:2344</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position constructor hook function - core functionality</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_correctCoordinates" class="method item inherited">
+    <h3 class="name"><code>correctCoordinates</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>coords</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_correctCoordinates">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2637"><code>source\scrawlCore.js:2637</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions</p>
+<p>Takes into account lock flag settings</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">coords</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>An object containing x and y attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Amended coordinate object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_draw" class="method item private">
+    <h3 class="name"><code>draw</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_draw">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l339"><code>source\scrawlWheel.js:339</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;draw&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_drawFill" class="method item private">
+    <h3 class="name"><code>drawFill</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_drawFill">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l369"><code>source\scrawlWheel.js:369</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;drawFill&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_dropSprite" class="method item inherited">
+    <h3 class="name"><code>dropSprite</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_dropSprite">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5586"><code>source\scrawlCore.js:5586</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Revert pickupSprite() actions, ensuring sprite is left where the user drops it</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Alternative pivot String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_fill" class="method item private">
+    <h3 class="name"><code>fill</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_fill">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l354"><code>source\scrawlWheel.js:354</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;fill&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_fillDraw" class="method item private">
+    <h3 class="name"><code>fillDraw</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_fillDraw">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l386"><code>source\scrawlWheel.js:386</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;fillDraw&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_floatOver" class="method item private">
+    <h3 class="name"><code>floatOver</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_floatOver">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l419"><code>source\scrawlWheel.js:419</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;floatOver&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_forceStamp" class="method item inherited">
+    <h3 class="name"><code>forceStamp</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[method]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_forceStamp">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5286"><code>source\scrawlCore.js:5286</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Stamp function - instruct sprite to draw itself on a Cell&#39;s &lt;canvas&gt; element, regardless of the setting of its visibility attribute</p></p>
+<p><p>Permitted methods include:</p></p>
+<ul>
+<li>&#39;draw&#39; - stroke the sprite&#39;s path with the sprite&#39;s strokeStyle color, pattern or gradient</li>
+<li>&#39;fill&#39; - fill the sprite&#39;s path with the sprite&#39;s fillStyle color, pattern or gradient</li>
+<li>&#39;drawFill&#39; - stroke, and then fill, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
+<li>&#39;fillDraw&#39; - fill, and then stroke, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
+<li>&#39;floatOver&#39; - stroke, and then fill, the sprite&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;sinkInto&#39; - fill, and then stroke, the sprite&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;clear&#39; - fill the sprite&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
+<li>&#39;clearWithBackground&#39; - fill the sprite&#39;s path with the Cell&#39;s current backgroundColor</li>
+<li>&#39;clip&#39; - clip the drawing zone to the sprite&#39;s path (not tested)</li>
+<li>&#39;none&#39; - perform all necessary updates, but do not draw the sprite onto the canvas</li>
+</ul>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[method]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Permitted method attribute String; by default, will use sprite&#39;s own method setting</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_get" class="method item inherited">
+    <h3 class="name"><code>get</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>item</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Base.html#method_get">
+                Base
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5171"><code>source\scrawlCore.js:5171</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments Position.get()</p>
+<p>Allows users to retrieve a sprite&#39;s Context object&#39;s values via the sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">item</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>attribute key string</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Attribute value</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getCenteredPivotOffsetVector" class="method item private inherited">
+    <h3 class="name"><code>getCenteredPivotOffsetVector</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_getCenteredPivotOffsetVector">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2526"><code>source\scrawlCore.js:2526</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object&#39;s handle attribute, where the object&#39;s frame of reference is its center</p></p>
+<ul>
+<li>doesn&#39;t take into account the object&#39;s scaling or orientation</li>
+<li>(badly named function - getPivotOffsetVector has nothing to do with pivots)</li>
+</ul>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>A Vector of calculated offset values to help determine where sprite/cell/element drawing should start</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getChanges" class="method item private inherited">
+    <h3 class="name"><code>getChanges</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#method_getChanges">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4642"><code>source\scrawlCore.js:4642</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Interrogates a &lt;canvas&gt; element&#39;s context engine and populates its own attributes with returned values</p>
+<p>(Only for use by Context objects)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>&lt;canvas&gt; element context engine Object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getContextFromEngine" class="method item private inherited">
+    <h3 class="name"><code>getContextFromEngine</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#method_getContextFromEngine">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4623"><code>source\scrawlCore.js:4623</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Interrogates a &lt;canvas&gt; element&#39;s context engine and populates its own attributes with returned values</p>
+<p>(Only for use by Context objects)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>&lt;canvas&gt; element context engine Object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getGroup" class="method item private inherited">
+    <h3 class="name"><code>getGroup</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_getGroup">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5270"><code>source\scrawlCore.js:5270</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Constructor helper function - discover this sprite&#39;s default group affiliation</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Constructor argument</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>GROUPNAME String</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getOffsetStartVector" class="method item inherited">
+    <h3 class="name"><code>getOffsetStartVector</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_getOffsetStartVector">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2579"><code>source\scrawlCore.js:2579</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Calculates the pixel values of the object&#39;s handle attribute</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Final offset values (as a Vector) to determine where sprite, cell or element drawing should start</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getPivotOffsetVector" class="method item private">
+    <h3 class="name"><code>getPivotOffsetVector</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Position.html#method_getPivotOffsetVector">
+                Position
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l251"><code>source\scrawlWheel.js:251</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position.getOffsetStartVector() helper function</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>A Vector of calculated offset values to help determine where sprite drawing should start</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_none" class="method item private inherited">
+    <h3 class="name"><code>none</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_none">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5520"><code>source\scrawlCore.js:5520</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;none&#39; method draw. This involves setting the &lt;canvas&gt; element&#39;s context engine&#39;s values with this sprite&#39;s context values, but not defining or drawing the sprite on the canvas.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_pathPositionInit" class="method item private inherited">
+    <h3 class="name"><code>pathPositionInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_pathPositionInit">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2380"><code>source\scrawlCore.js:2380</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position constructor hook function - modified by path module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_pathPositionSetDelta" class="method item private inherited">
+    <h3 class="name"><code>pathPositionSetDelta</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_pathPositionSetDelta">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2471"><code>source\scrawlCore.js:2471</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Position.setDelta hook function - modified by path module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_pathStamp" class="method item private inherited">
+    <h3 class="name"><code>pathStamp</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_pathStamp">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5364"><code>source\scrawlCore.js:5364</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite.stamp hook function - modified by path module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_pickupSprite" class="method item inherited">
+    <h3 class="name"><code>pickupSprite</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_pickupSprite">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5565"><code>source\scrawlCore.js:5565</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Set sprite&#39;s pivot to &#39;mouse&#39;; set handles to supplied Vector value; set order to +9999</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Coordinate vector; alternatively an object with {x, y} attributes can be used</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_prepareStamp" class="method item private inherited">
+    <h3 class="name"><code>prepareStamp</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_prepareStamp">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5314"><code>source\scrawlCore.js:5314</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - get handle offset values</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_registerInLibrary" class="method item private inherited">
+    <h3 class="name"><code>registerInLibrary</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_registerInLibrary">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5151"><code>source\scrawlCore.js:5151</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Constructor helper function - register sprite object in the scrawl library</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_resetWork" class="method item private inherited">
+    <h3 class="name"><code>resetWork</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_resetWork">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2174"><code>source\scrawlCore.js:2174</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Restore workspece vector values to their current specified values</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_restoreShadow" class="method item private inherited">
+    <h3 class="name"><code>restoreShadow</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_restoreShadow">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5549"><code>source\scrawlCore.js:5549</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - clear shadow parameters during a multi draw operation (Phrase text-along-path drawFill and fillDraw methods)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_rotateCell" class="method item private inherited">
+    <h3 class="name"><code>rotateCell</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_rotateCell">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5395"><code>source\scrawlCore.js:5395</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - rotate and position canvas ready for drawing sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_set" class="method item">
+    <h3 class="name"><code>set</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Base.html#method_set">
+                Base
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l169"><code>source\scrawlWheel.js:169</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments Sprite.set()</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDelta" class="method item">
+    <h3 class="name"><code>setDelta</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Context.html#method_setDelta">
+                Context
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l183"><code>source\scrawlWheel.js:183</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments Sprite.setDelta()</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setStampUsingPivot" class="method item private inherited">
+    <h3 class="name"><code>setStampUsingPivot</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setStampUsingPivot">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2593"><code>source\scrawlCore.js:2593</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - set this sprite, cell or element start values to its pivot sprite/point start value, or to the current mouse coordinates</p>
+<p>Takes into account lock flag settings</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_sinkInto" class="method item private">
+    <h3 class="name"><code>sinkInto</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Sprite.html#method_sinkInto">
+                Sprite
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l403"><code>source\scrawlWheel.js:403</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;sinkInto&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_stamp" class="method item inherited">
+    <h3 class="name"><code>stamp</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[method]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#method_stamp">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5328"><code>source\scrawlCore.js:5328</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Stamp function - instruct sprite to draw itself on a Cell&#39;s &lt;canvas&gt; element, if its visibility attribute is true</p></p>
+<p><p>Permitted methods include:</p></p>
+<ul>
+<li>&#39;draw&#39; - stroke the sprite&#39;s path with the sprite&#39;s strokeStyle color, pattern or gradient</li>
+<li>&#39;fill&#39; - fill the sprite&#39;s path with the sprite&#39;s fillStyle color, pattern or gradient</li>
+<li>&#39;drawFill&#39; - stroke, and then fill, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
+<li>&#39;fillDraw&#39; - fill, and then stroke, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
+<li>&#39;floatOver&#39; - stroke, and then fill, the sprite&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;sinkInto&#39; - fill, and then stroke, the sprite&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;clear&#39; - fill the sprite&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
+<li>&#39;clearWithBackground&#39; - fill the sprite&#39;s path with the Cell&#39;s current backgroundColor</li>
+<li>&#39;clip&#39; - clip the drawing zone to the sprite&#39;s path (not tested)</li>
+<li>&#39;none&#39; - perform all necessary updates, but do not draw the sprite onto the canvas</li>
+</ul>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[method]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Permitted method attribute String; by default, will use sprite&#39;s own method setting</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_toString" class="method item inherited">
+    <h3 class="name"><code>toString</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_toString">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2166"><code>source\scrawlCore.js:2166</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Turn the object into a JSON String</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>JSON string of non-default value attributes</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_checkHitRadius" class="property item">
+    <h3 class="name"><code>checkHitRadius</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l160"><code>source\scrawlWheel.js:160</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Collision calculation value - collision radius, from start vector</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_checkHitUsingRadius" class="property item">
+    <h3 class="name"><code>checkHitUsingRadius</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l153"><code>source\scrawlWheel.js:153</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Collision calculation flag - true to use a simple radius check; false to use the JavaScript isPointInPath() function</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_clockwise" class="property item">
+    <h3 class="name"><code>clockwise</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l132"><code>source\scrawlWheel.js:132</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Drawing flag - true to draw the arc in a clockwise direction; false for anti-clockwise</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_closed" class="property item">
+    <h3 class="name"><code>closed</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l139"><code>source\scrawlWheel.js:139</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Drawing flag - true to close the path; false to keep the path open</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_comment" class="property item inherited">
+    <h3 class="name"><code>comment</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#property_comment">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2074"><code>source\scrawlCore.js:2074</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Comment, for accessibility</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_context" class="property item private inherited">
+    <h3 class="name"><code>context</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_context">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5126"><code>source\scrawlCore.js:5126</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>CTXNAME of this Sprite&#39;s Context object</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_data" class="property item inherited">
+    <h3 class="name"><code>data</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_data">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5098"><code>source\scrawlCore.js:5098</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Current SVGTiny data string for the sprite (only supported by Path and Shape sprites)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_deltaPathPlace" class="property item inherited">
+    <h3 class="name"><code>deltaPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_deltaPathPlace">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2328"><code>source\scrawlCore.js:2328</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>(Added by the path module)
+A change value which can be applied to the object&#39;s pathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_endAngle" class="property item">
+    <h3 class="name"><code>endAngle</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l125"><code>source\scrawlWheel.js:125</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Angle of the path&#39;s end point, from due east, in degrees</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 360</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_fastStamp" class="property item inherited">
+    <h3 class="name"><code>fastStamp</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_fastStamp">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5119"><code>source\scrawlCore.js:5119</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Display cycle flag; if set to true, sprite will not change the &lt;canvas&gt; element&#39;s context engine&#39;s settings before drawing itself on the cell</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_fillStyle" class="property item inherited">
+    <h3 class="name"><code>fillStyle</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_fillStyle">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4397"><code>source\scrawlCore.js:4397</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Color, gradient or pattern used to fill a sprite. Can be:</p></p>
+<ul>
+<li>Cascading Style Sheet format color String - &#39;#fff&#39;, &#39;#ffffff&#39;, &#39;rgb(255,255,255)&#39;, &#39;rgba(255,255,255,1)&#39;, &#39;white&#39;</li>
+<li>COLORNAME String</li>
+<li>GRADIENTNAME String</li>
+<li>RADIALGRADIENTNAME String</li>
+<li>PATTERNNAME String</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;#000000&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_flipReverse" class="property item inherited">
+    <h3 class="name"><code>flipReverse</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_flipReverse">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2265"><code>source\scrawlCore.js:2265</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Reflection flag; set to true to flip sprite, cell or element along the Y axis</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_flipUpend" class="property item inherited">
+    <h3 class="name"><code>flipUpend</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_flipUpend">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2272"><code>source\scrawlCore.js:2272</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Reflection flag; set to true to flip sprite, cell or element along the X axis</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_font" class="property item inherited">
+    <h3 class="name"><code>font</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_font">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4546"><code>source\scrawlCore.js:4546</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Cascading Style Sheet font String, for Phrase sprites</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;10pt sans-serif&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_globalAlpha" class="property item inherited">
+    <h3 class="name"><code>globalAlpha</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_globalAlpha">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4433"><code>source\scrawlCore.js:4433</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_globalCompositeOperation" class="property item inherited">
+    <h3 class="name"><code>globalCompositeOperation</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_globalCompositeOperation">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4440"><code>source\scrawlCore.js:4440</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Compositing method for applying the sprite to an existing Cell (&lt;canvas&gt;) display. Permitted values include</p>
+<ul>
+<li>&#39;source-over&#39;</li>
+<li>&#39;source-atop&#39;</li>
+<li>&#39;source-in&#39;</li>
+<li>&#39;source-out&#39;</li>
+<li>&#39;destination-over&#39;</li>
+<li>&#39;destination-atop&#39;</li>
+<li>&#39;destination-in&#39;</li>
+<li>&#39;destination-out&#39;</li>
+<li>&#39;lighter&#39;</li>
+<li>&#39;darker&#39;</li>
+<li>&#39;copy&#39;</li>
+<li>&#39;xor&#39;</li>
+</ul>
+<p><em>Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers</em></p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;source-over&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_group" class="property item inherited">
+    <h3 class="name"><code>group</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_group">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5134"><code>source\scrawlCore.js:5134</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>GROUPNAME String for this sprite&#39;s default group</p>
+<p><em>Note: a sprite can belong to more than one group by being added to other Group objects via the <strong>scrawl.addSpritesToGroups()</strong> and <strong>Group.addSpriteToGroup()</strong> functions</em></p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_handle" class="property item inherited">
+    <h3 class="name"><code>handle</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_handle">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2237"><code>source\scrawlCore.js:2237</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>An Object (in fact, a Vector) containing offset instructions from the object&#39;s rotation/flip point, where drawing commences. </p>
+<p>SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following &#39;virtual&#39; attributes for this attribute:</p>
+<ul>
+<li><strong>handleX</strong> - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object&#39;s width, or the String literal &#39;left&#39;, &#39;right&#39; or &#39;center&#39;</li>
+<li><strong>handleY</strong> - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object&#39;s height, or the String literal &#39;top&#39;, &#39;bottom&#39; or &#39;center&#39;</li>
+</ul>
+<p>Where values are Numbers, handle can be treated like any other Vector</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_includeCenter" class="property item">
+    <h3 class="name"><code>includeCenter</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l146"><code>source\scrawlWheel.js:146</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Drawing flag - true to include the center in the path (for wedge shapes); false for circles</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineCap" class="property item inherited">
+    <h3 class="name"><code>lineCap</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_lineCap">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4470"><code>source\scrawlCore.js:4470</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Line cap styling. Permitted values include:</p></p>
+<ul>
+<li>&#39;butt&#39;</li>
+<li>&#39;round&#39;</li>
+<li>&#39;square&#39;</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;butt&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineDash" class="property item inherited">
+    <h3 class="name"><code>lineDash</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_lineDash">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4494"><code>source\scrawlCore.js:4494</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Line dash format - an array of Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> []</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineDashOffset" class="property item inherited">
+    <h3 class="name"><code>lineDashOffset</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_lineDashOffset">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4501"><code>source\scrawlCore.js:4501</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Line dash offset - distance along the sprite&#39;s outline at which to start the line dash. Changing this value can be used to create a &#39;marching ants effect</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineJoin" class="property item inherited">
+    <h3 class="name"><code>lineJoin</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_lineJoin">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4482"><code>source\scrawlCore.js:4482</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Line join styling. Permitted values include:</p></p>
+<ul>
+<li>&#39;miter&#39;</li>
+<li>&#39;round&#39;</li>
+<li>&#39;bevel&#39;</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;miter&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineWidth" class="property item inherited">
+    <h3 class="name"><code>lineWidth</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_lineWidth">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4463"><code>source\scrawlCore.js:4463</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Line width, in pixels</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lockX" class="property item inherited">
+    <h3 class="name"><code>lockX</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_lockX">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2279"><code>source\scrawlCore.js:2279</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lockY" class="property item inherited">
+    <h3 class="name"><code>lockY</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_lockY">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2286"><code>source\scrawlCore.js:2286</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_method" class="property item inherited">
+    <h3 class="name"><code>method</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_method">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5078"><code>source\scrawlCore.js:5078</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite drawing method. A sprite can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:</p>
+<ul>
+<li>&#39;draw&#39; - stroke the sprite&#39;s path with the sprite&#39;s strokeStyle color, pattern or gradient</li>
+<li>&#39;fill&#39; - fill the sprite&#39;s path with the sprite&#39;s fillStyle color, pattern or gradient</li>
+<li>&#39;drawFill&#39; - stroke, and then fill, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
+<li>&#39;fillDraw&#39; - fill, and then stroke, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
+<li>&#39;floatOver&#39; - stroke, and then fill, the sprite&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;sinkInto&#39; - fill, and then stroke, the sprite&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;clear&#39; - fill the sprite&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
+<li>&#39;clearWithBackground&#39; - fill the sprite&#39;s path with the Cell&#39;s current backgroundColor</li>
+<li>&#39;clip&#39; - clip the drawing zone to the sprite&#39;s path (not tested)</li>
+<li>&#39;none&#39; - perform all necessary updates, but do not draw the sprite onto the canvas</li>
+</ul>
+<p><em>Note: not all sprites support all of these operations</em></p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;fill&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_miterLimit" class="property item inherited">
+    <h3 class="name"><code>miterLimit</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_miterLimit">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4508"><code>source\scrawlCore.js:4508</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>miterLimit - affecting the &#39;pointiness&#39; of the line join where two lines join at an acute angle</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 10</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_name" class="property item inherited">
+    <h3 class="name"><code>name</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#property_name">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2049"><code>source\scrawlCore.js:2049</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Unique identifier for each object; default: computer-generated String based on Object&#39;s type</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_order" class="property item inherited">
+    <h3 class="name"><code>order</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_order">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5064"><code>source\scrawlCore.js:5064</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite order value - lower order sprites are drawn on &lt;canvas&gt; elements before higher order sprites</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_path" class="property item inherited">
+    <h3 class="name"><code>path</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_path">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2314"><code>source\scrawlCore.js:2314</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>(Added by the path module)
+The SPRITENAME of a Shape sprite whose path is used to calculate this object&#39;s start point</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_pathPlace" class="property item inherited">
+    <h3 class="name"><code>pathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_pathPlace">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2321"><code>source\scrawlCore.js:2321</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>(Added by the path module)
+A value between 0 and 1 to represent the distance along a Shape object&#39;s path, where 0 is the path start and 1 is the path end</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_pathSpeedConstant" class="property item inherited">
+    <h3 class="name"><code>pathSpeedConstant</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_pathSpeedConstant">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2335"><code>source\scrawlCore.js:2335</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>(Added by the path module)
+A flag to determine whether the object will calculate its position along a Shape path in a regular (true), or simple (false), manner</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_pivot" class="property item inherited">
+    <h3 class="name"><code>pivot</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_pivot">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2251"><code>source\scrawlCore.js:2251</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The SPRITENAME or POINTNAME of a sprite or Point object to be used for setting this object&#39;s start point</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_radius" class="property item inherited">
+    <h3 class="name"><code>radius</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_radius">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5105"><code>source\scrawlCore.js:5105</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite radius, in pixels - not supported by all sprite objects</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_roll" class="property item inherited">
+    <h3 class="name"><code>roll</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_roll">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2293"><code>source\scrawlCore.js:2293</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Current rotation of the sprite, cell or element (in degrees)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_scale" class="property item inherited">
+    <h3 class="name"><code>scale</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_scale">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2258"><code>source\scrawlCore.js:2258</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The object&#39;s scale value - larger values increase the object&#39;s size</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_scaleOutline" class="property item inherited">
+    <h3 class="name"><code>scaleOutline</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_scaleOutline">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5112"><code>source\scrawlCore.js:5112</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Scaling flag; set to true to ensure lineWidth scales in line with the scale attribute value</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_shadowBlur" class="property item inherited">
+    <h3 class="name"><code>shadowBlur</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_shadowBlur">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4529"><code>source\scrawlCore.js:4529</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Blur border for a sprite&#39;s shadow, in pixels</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_shadowColor" class="property item inherited">
+    <h3 class="name"><code>shadowColor</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_shadowColor">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4536"><code>source\scrawlCore.js:4536</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Color, gradient or pattern used for sprite shadow effect. Can be:</p></p>
+<ul>
+<li>Cascading Style Sheet format color String - &#39;#fff&#39;, &#39;#ffffff&#39;, &#39;rgb(255,255,255)&#39;, &#39;rgba(255,255,255,1)&#39;, &#39;white&#39;</li>
+<li>COLORNAME String</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;rgba(0,0,0,0)&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_shadowOffsetX" class="property item inherited">
+    <h3 class="name"><code>shadowOffsetX</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_shadowOffsetX">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4515"><code>source\scrawlCore.js:4515</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Horizontal offset of a sprite&#39;s shadow, in pixels</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_shadowOffsetY" class="property item inherited">
+    <h3 class="name"><code>shadowOffsetY</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_shadowOffsetY">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4522"><code>source\scrawlCore.js:4522</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Vertical offset of a sprite&#39;s shadow, in pixels</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_start" class="property item inherited">
+    <h3 class="name"><code>start</code></h3>
+    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_start">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2225"><code>source\scrawlCore.js:2225</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>The coordinate Vector representing the object&#39;s rotation/flip point</p></p>
+<p><p>SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following &#39;virtual&#39; attributes for this attribute:</p></p>
+<ul>
+<li><strong>startX</strong> - (Number) the x coordinate of the object&#39;s rotation/flip point, in pixels, from the left side of the object&#39;s cell</li>
+<li><strong>startY</strong> - (Number) the y coordinate of the object&#39;s rotation/flip point, in pixels, from the top side of the object&#39;s cell</li>
+</ul>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_startAngle" class="property item">
+    <h3 class="name"><code>startAngle</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l118"><code>source\scrawlWheel.js:118</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Angle of the path&#39;s start point, from due east, in degrees</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_strokeStyle" class="property item inherited">
+    <h3 class="name"><code>strokeStyle</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_strokeStyle">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4420"><code>source\scrawlCore.js:4420</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Color, gradient or pattern used to outline a sprite. Can be:</p></p>
+<ul>
+<li>Cascading Style Sheet format color String - &#39;#fff&#39;, &#39;#ffffff&#39;, &#39;rgb(255,255,255)&#39;, &#39;rgba(255,255,255,1)&#39;, &#39;white&#39;</li>
+<li>COLORNAME String</li>
+<li>GRADIENTNAME String</li>
+<li>RADIALGRADIENTNAME String</li>
+<li>PATTERNNAME String</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;#000000&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_textAlign" class="property item inherited">
+    <h3 class="name"><code>textAlign</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_textAlign">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4553"><code>source\scrawlCore.js:4553</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Text alignment for multi-line Phrase sprites. Permitted values include:</p></p>
+<ul>
+<li>&#39;start&#39;</li>
+<li>&#39;left&#39;</li>
+<li>&#39;center&#39;</li>
+<li>&#39;right&#39;</li>
+<li>&#39;end&#39;</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;start&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_textBaseline" class="property item inherited">
+    <h3 class="name"><code>textBaseline</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_textBaseline">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4567"><code>source\scrawlCore.js:4567</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Text baseline value for single-line Phrase sprites set to follow a Path sprite path. Permitted values include:</p></p>
+<ul>
+<li>&#39;alphabetic&#39;</li>
+<li>&#39;top&#39;</li>
+<li>&#39;hanging&#39;</li>
+<li>&#39;middle&#39;</li>
+<li>&#39;ideographic&#39;</li>
+<li>&#39;bottom&#39;</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;alphabetic&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_timestamp" class="property item inherited">
+    <h3 class="name"><code>timestamp</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#property_timestamp">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2088"><code>source\scrawlCore.js:2088</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Creation timestamp</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_title" class="property item inherited">
+    <h3 class="name"><code>title</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#property_title">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2081"><code>source\scrawlCore.js:2081</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Title, for accessibility</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_type" class="property item">
+    <h3 class="name"><code>type</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+        <span class="flag final">final</span>
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Base.html#property_type">
+                Base
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlWheel.js.html#l109"><code>source\scrawlWheel.js:109</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;Wheel&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_visibility" class="property item inherited">
+    <h3 class="name"><code>visibility</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Sprite.html#property_visibility">Sprite</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5071"><code>source\scrawlCore.js:5071</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Visibility flag - sprites will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_width" class="property item inherited">
+    <h3 class="name"><code>width</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Position.html#property_width">
+                Position
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2300"><code>source\scrawlCore.js:2300</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sprite, cell or element width (in pixels)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_winding" class="property item inherited">
+    <h3 class="name"><code>winding</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Context.html#property_winding">Context</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l4410"><code>source\scrawlCore.js:4410</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>Shape and Path sprite fill method. Can be:</p></p>
+<ul>
+<li>&#39;nonzero&#39; - all areas enclosed by the sprite&#39;s path are flooded</li>
+<li>&#39;evenodd&#39; - only &#39;odd&#39; areas of the sprite&#39;s path are flooded</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;nonzero&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_work" class="property item private inherited">
+    <h3 class="name"><code>work</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#property_work">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2055"><code>source\scrawlCore.js:2055</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Vector work space - not included in defaults</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+
+        
+    </div>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

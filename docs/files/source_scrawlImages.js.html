@@ -1,10 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>source\scrawlImages.js - scrawl</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="scrawl"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 3.1.5</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Animation.html">Animation</a></li>
+            
+                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
+            
+                <li><a href="../classes/Base.html">Base</a></li>
+            
+                <li><a href="../classes/Block.html">Block</a></li>
+            
+                <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/Context.html">Context</a></li>
+            
+                <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Element.html">Element</a></li>
+            
+                <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Gradient.html">Gradient</a></li>
+            
+                <li><a href="../classes/Group.html">Group</a></li>
+            
+                <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/Pad.html">Pad</a></li>
+            
+                <li><a href="../classes/PageElement.html">PageElement</a></li>
+            
+                <li><a href="../classes/Particle.html">Particle</a></li>
+            
+                <li><a href="../classes/Path.html">Path</a></li>
+            
+                <li><a href="../classes/Pattern.html">Pattern</a></li>
+            
+                <li><a href="../classes/Phrase.html">Phrase</a></li>
+            
+                <li><a href="../classes/Picture.html">Picture</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Position.html">Position</a></li>
+            
+                <li><a href="../classes/Quaternion.html">Quaternion</a></li>
+            
+                <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
+            
+                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+            
+                <li><a href="../classes/Shape.html">Shape</a></li>
+            
+                <li><a href="../classes/Spring.html">Spring</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/Stack.html">Stack</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Tween.html">Tween</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Wheel.html">Wheel</a></li>
+            
+                <li><a href="../classes/window.scrawl.html">window.scrawl</a></li>
+            
+                <li><a href="../classes/window.scrawl_Animation.html">window.scrawl_Animation</a></li>
+            
+                <li><a href="../classes/window.scrawl_Block.html">window.scrawl_Block</a></li>
+            
+                <li><a href="../classes/window.scrawl_Collisions.html">window.scrawl_Collisions</a></li>
+            
+                <li><a href="../classes/window.scrawl_Color.html">window.scrawl_Color</a></li>
+            
+                <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
+            
+                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
+            
+                <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
+            
+                <li><a href="../classes/window.scrawl_Phrase.html">window.scrawl_Phrase</a></li>
+            
+                <li><a href="../classes/window.scrawl_Physics.html">window.scrawl_Physics</a></li>
+            
+                <li><a href="../classes/window.scrawl_SaveLoad.html">window.scrawl_SaveLoad</a></li>
+            
+                <li><a href="../classes/window.scrawl_Shape.html">window.scrawl_Shape</a></li>
+            
+                <li><a href="../classes/window.scrawl_Stacks.html">window.scrawl_Stacks</a></li>
+            
+                <li><a href="../classes/window.scrawl_Wheel.html">window.scrawl_Wheel</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/scrawlAnimation.html">scrawlAnimation</a></li>
+            
+                <li><a href="../modules/scrawlBlock.html">scrawlBlock</a></li>
+            
+                <li><a href="../modules/scrawlCollisions.html">scrawlCollisions</a></li>
+            
+                <li><a href="../modules/scrawlColor.html">scrawlColor</a></li>
+            
+                <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
+            
+                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
+            
+                <li><a href="../modules/scrawlPathFactories.html">scrawlPathFactories</a></li>
+            
+                <li><a href="../modules/scrawlPhrase.html">scrawlPhrase</a></li>
+            
+                <li><a href="../modules/scrawlPhysics.html">scrawlPhysics</a></li>
+            
+                <li><a href="../modules/scrawlSaveLoad.html">scrawlSaveLoad</a></li>
+            
+                <li><a href="../modules/scrawlShape.html">scrawlShape</a></li>
+            
+                <li><a href="../modules/scrawlStacks.html">scrawlStacks</a></li>
+            
+                <li><a href="../modules/scrawlWheel.html">scrawlWheel</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: source\scrawlImages.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
 // Copyright (c) 2014 Richard James Roots
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
+// of this software and associated documentation files (the &quot;Software&quot;), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
@@ -13,7 +225,7 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 // 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -22,7 +234,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 
 /**
 # scrawlImages
@@ -31,9 +242,9 @@
 
 The Images module adds support for displaying images on canvas elements
 
-* Defines the SpriteImage object, which wraps &lt;img&gt; and &lt;svg&gt; elements
+* Defines the SpriteImage object, which wraps &amp;lt;img&amp;gt; and &amp;lt;svg&amp;gt; elements
 * Adds functionality to load images into the Scrawl library dynamically (after the web page hads loaded)
-* Defines the Picture sprite, which can be used to display file images (including animated sprite sheets), other &lt;canvas&gt; elements, and &lt;video&gt; elements (experimental)
+* Defines the Picture sprite, which can be used to display file images (including animated sprite sheets), other &amp;lt;canvas&amp;gt; elements, and &amp;lt;video&amp;gt; elements (experimental)
 * Defines the AnimSheet object, which in turn define and control action sequences from sprite sheet images
 * Defines the Pattern design, which uses images for sprite fillStyle and strokeStyle attributes
 
@@ -41,6 +252,7 @@ The Images module adds support for displaying images on canvas elements
 **/
 
 var scrawl = (function(my){
+	&#x27;use strict&#x27;;
 
 /**
 # window.scrawl
@@ -50,17 +262,17 @@ scrawlImages module adaptions to the Scrawl library object
 ## New library sections
 
 * scrawl.image - for ScrawlImage objects
-* scrawl.img - linking to copies of DOM &lt;img&gt; elements - links to the original elements are stored in scrawl.object
+* scrawl.img - linking to copies of DOM &amp;lt;img&amp;gt; elements - links to the original elements are stored in scrawl.object
 * scrawl.anim - for AnimSheet objects
 
 @class window.scrawl_Images
 **/
 
 /**
-A __general__ function to generate ScrawlImage wrapper objects for &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; elements identified by class string
+A __general__ function to generate ScrawlImage wrapper objects for &amp;lt;img&amp;gt;, &amp;lt;video&amp;gt; or &amp;lt;svg&amp;gt; elements identified by class string
 @method getImagesByClass
 @param {String} classtag Class string value of DOM objects to be imported into the scrawl library
-@param {Boolean} [kill] when set to true, the &lt;img&gt; elements will be removed from the DOM when imported into the library
+@param {Boolean} [kill] when set to true, the &amp;lt;img&amp;gt; elements will be removed from the DOM when imported into the library
 @return Array of String names; false on failure
 **/
 	my.getImagesByClass = function(classtag, kill){
@@ -68,8 +280,8 @@ A __general__ function to generate ScrawlImage wrapper objects for &lt;img&gt;, 
 			var names = [],
 				s = document.getElementsByClassName(classtag),
 				myImg;
-			if(s.length > 0){
-				for(var i = s.length; i > 0; i--){
+			if(s.length &gt; 0){
+				for(var i = s.length; i &gt; 0; i--){
 					myImg = my.newImage({
 						element: s[i - 1],
 						removeImageFromDOM: kill || true,
@@ -79,14 +291,14 @@ A __general__ function to generate ScrawlImage wrapper objects for &lt;img&gt;, 
 				return names;
 				}
 			}
-		console.log('my.getImagesByClass() failed to find any <img> elements of class="'+classtag+'" on the page');
+		console.log(&#x27;my.getImagesByClass() failed to find any &lt;img&gt; elements of class=&quot;&#x27;+classtag+&#x27;&quot; on the page&#x27;);
 		return false;
 		};
 /**
-A __general__ function to generate a ScrawlImage wrapper object for an &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; element identified by an id string
+A __general__ function to generate a ScrawlImage wrapper object for an &amp;lt;img&amp;gt;, &amp;lt;video&amp;gt; or &amp;lt;svg&amp;gt; element identified by an id string
 @method getImageById
 @param {String} idtag Id string value of DOM object to be imported into the scrawl library
-@param {Boolean} [kill] when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library
+@param {Boolean} [kill] when set to true, the &amp;lt;img&amp;gt; element will be removed from the DOM when imported into the library
 @return String name; false on failure
 **/
 	my.getImageById = function(idtag, kill){
@@ -97,7 +309,7 @@ A __general__ function to generate a ScrawlImage wrapper object for an &lt;img&g
 				});
 			return myImg.name;
 			}
-		console.log('my.getImagesByClass() failed to find any <img> elements of class="'+classtag+'" on the page');
+		console.log(&#x27;my.getImagesByClass() failed to find any &lt;img&gt; elements of class=&quot;&#x27;+classtag+&#x27;&quot; on the page&#x27;);
 		return false;
 		};
 /**
@@ -140,11 +352,11 @@ A __factory__ function to generate new AnimSheet objects
 	my.newAnimSheet = function(items){
 		return new my.AnimSheet(items);
 		};
-	my.pushUnique(my.sectionlist, 'image');
-	my.pushUnique(my.sectionlist, 'img');
-	my.pushUnique(my.nameslist, 'imagenames');
-	my.pushUnique(my.nameslist, 'animnames');
-	my.pushUnique(my.sectionlist, 'anim');
+	my.pushUnique(my.sectionlist, &#x27;image&#x27;);
+	my.pushUnique(my.sectionlist, &#x27;img&#x27;);
+	my.pushUnique(my.nameslist, &#x27;imagenames&#x27;);
+	my.pushUnique(my.nameslist, &#x27;animnames&#x27;);
+	my.pushUnique(my.sectionlist, &#x27;anim&#x27;);
 
 /**
 A __factory__ function to convert a sprite into a Picture sprite
@@ -153,7 +365,7 @@ Argument attributes can include any sprite positioning and styling values, along
 
 * __convert__ - when set to true, existing sprite will be deleted; default: false
 
-If no name attribute is supplied in the argument object, the new Picture sprite will be given the name: SPRITENAME+'_picture'
+If no name attribute is supplied in the argument object, the new Picture sprite will be given the name: SPRITENAME+&#x27;_picture&#x27;
 @method Sprite.convertToPicture
 @param {Object} items Key:value Object argument for setting attributes
 @return Picture sprite object
@@ -166,7 +378,7 @@ If no name attribute is supplied in the argument object, the new Picture sprite 
 		cell = my.cell[my.group[this.group].cell];
 		ctx = my.context[my.group[this.group].cell];
 		image = my.prepareConvert(cell, ctx, this);
-		items.name = items.name || this.name+'_picture';
+		items.name = items.name || this.name+&#x27;_picture&#x27;;
 		items.group = items.group || this.group;
 		if(items.convert){
 			my.deleteSprite([this.name]);
@@ -180,7 +392,7 @@ Argument attributes can include any sprite positioning and styling values, along
 
 * __convert__ - when set to true, existing sprites in the group will be deleted; default: false
 
-If no name attribute is supplied in the argument object, the new Picture sprite will be given the name: GROUPNAME+'_sprite'
+If no name attribute is supplied in the argument object, the new Picture sprite will be given the name: GROUPNAME+&#x27;_sprite&#x27;
 @method Group.convertToSprite
 @param {Object} items Key:value Object argument for setting attributes
 @return Picture sprite object; false if no sprites contained in group
@@ -190,18 +402,18 @@ If no name attribute is supplied in the argument object, the new Picture sprite 
 		var image,
 			cell,
 			ctx;
-		if(this.sprites.length > 0){
+		if(this.sprites.length &gt; 0){
 			cell = my.cell[this.cell];
 			ctx = my.context[this.cell];
 			image = my.prepareConvert(cell, ctx, this);
-			items.name = items.name || this.name+'_sprite';
+			items.name = items.name || this.name+&#x27;_sprite&#x27;;
 			items.group = items.group || this.name;
 			if(items.convert){
 				my.deleteSprite(this.sprites);
 				}
 			return my.doConvert(image, items);
 			}
-		return false
+		return false;
 		};
 /**
 Helper function for convert functions
@@ -221,14 +433,14 @@ Helper function for convert functions
 		obj.stamp();
 		image = ctx.getImageData(0, 0, cell.actualWidth, cell.actualHeight);
 		data = image.data;
-		for(var i = 0, iz = cell.actualHeight; i < iz; i++){
-			for(var j = 0, jz = cell.actualWidth; j < jz; j++){
+		for(var i = 0, iz = cell.actualHeight; i &lt; iz; i++){
+			for(var j = 0, jz = cell.actualWidth; j &lt; jz; j++){
 				pos = (((i * cell.actualWidth) + j) * 4) + 3;
-				if(data[pos] > 0){
-					top = (top > i) ? i : top;
-					bottom = (bottom < i) ? i : bottom;
-					left = (left > j) ? j : left;
-					right = (right < j) ? j : right;
+				if(data[pos] &gt; 0){
+					top = (top &gt; i) ? i : top;
+					bottom = (bottom &lt; i) ? i : bottom;
+					left = (left &gt; j) ? j : left;
+					right = (right &lt; j) ? j : right;
 					}
 				}
 			}
@@ -278,7 +490,7 @@ Helper function for convert functions
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		my.Base.prototype.set.call(this, items);
-		this.repeat = items.repeat || 'repeat';
+		this.repeat = items.repeat || &#x27;repeat&#x27;;
 		this.cell = items.cell || my.pad[my.currentPad].current;
 		this.setImage((items.source || items.imageData || my.image[items.image] || my.cell[items.canvas] || false), items.callback);
 		return this;
@@ -287,47 +499,47 @@ Helper function for convert functions
 /**
 @property type
 @type String
-@default 'Pattern'
+@default &#x27;Pattern&#x27;
 @final
 **/		
-	my.Pattern.prototype.type = 'Pattern';
-	my.Pattern.prototype.classname = 'designnames';
+	my.Pattern.prototype.type = &#x27;Pattern&#x27;;
+	my.Pattern.prototype.classname = &#x27;designnames&#x27;;
 	my.d.Pattern = {
 /**
 Drawing parameter
 @property repeat
 @type String
-@default 'repeat'
+@default &#x27;repeat&#x27;
 **/		
-		repeat: 'repeat',
+		repeat: &#x27;repeat&#x27;,
 /**
-CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set
+CELLNAME String of &amp;lt;canvas&amp;gt; element context engine on which the gradient has been set
 @property cell
 @type String
-@default ''
+@default &#x27;&#x27;
 **/		
-		cell: '',
+		cell: &#x27;&#x27;,
 /**
 SCRAWLIMAGENAME String - used when pattern is based on an image already imported into the scrawl library
 @property image
 @type String
-@default ''
+@default &#x27;&#x27;
 **/		
-		image: '',
+		image: &#x27;&#x27;,
 /**
 Full path to image file on server - used when pattern is based on a dynamically loaded image
 @property source
 @type String
-@default ''
+@default &#x27;&#x27;
 **/		
-		source: '',
+		source: &#x27;&#x27;,
 /**
-CELLNAME String - used when pattern is based on a &lt;canvas&gt; element's image
+CELLNAME String - used when pattern is based on a &amp;lt;canvas&amp;gt; element&#x27;s image
 @property canvas
 @type String
-@default ''
+@default &#x27;&#x27;
 **/		
-		canvas: '',
+		canvas: &#x27;&#x27;,
 		};
 	my.mergeInto(my.d.Pattern, my.d.Base);
 /**
@@ -343,7 +555,7 @@ Augments Base.set()
 		return this;
 		};
 /**
-Discover this Pattern's image source, loading it if necessary
+Discover this Pattern&#x27;s image source, loading it if necessary
 @method setImage
 @param {Mixed} source
 @param {Function} [callback] Function to be run once Image is successfully loaded
@@ -352,7 +564,7 @@ Discover this Pattern's image source, loading it if necessary
 @private
 **/
 	my.Pattern.prototype.setImage = function(source, callback){
-		if(my.isa(source, 'str')){
+		if(my.isa(source, &#x27;str&#x27;)){
 			var myImage = new Image();
 			var that = this;
 			myImage.id = this.name;
@@ -367,65 +579,65 @@ Discover this Pattern's image source, loading it if necessary
 					my.design[that.name].source = myImage.src;
 					my.pushUnique(my.designnames, that.name);
 					my.design[that.name].makeDesign();
-					if(my.isa(callback, 'fn')){
+					if(my.isa(callback, &#x27;fn&#x27;)){
 						callback();
 						}
 					}
 				catch(e){
-					console.log('Pattern '+[that.name]+' - setImage() #1 failed - '+e.name+' error: '+e.message);
+					console.log(&#x27;Pattern &#x27;+[that.name]+&#x27; - setImage() #1 failed - &#x27;+e.name+&#x27; error: &#x27;+e.message);
 					return that;
 					}
 				};
 			myImage.src = source;
 			}
-		else if(my.isa(source, 'obj')){
-			if(source.type === 'ScrawlImage'){
+		else if(my.isa(source, &#x27;obj&#x27;)){
+			if(source.type === &#x27;ScrawlImage&#x27;){
 				try{
 					this.image = source.name;
 					my.design[this.name] = this;
 					my.pushUnique(my.designnames, this.name);
 					this.makeDesign();
-					if(my.isa(callback, 'fn')){
+					if(my.isa(callback, &#x27;fn&#x27;)){
 						callback();
 						}
 					}
 				catch(e){
-					console.log('Pattern '+[this.name]+' - setImage() #2 failed - '+e.name+' error: '+e.message);
+					console.log(&#x27;Pattern &#x27;+[this.name]+&#x27; - setImage() #2 failed - &#x27;+e.name+&#x27; error: &#x27;+e.message);
 					return that;
 					}
 				}
-			else if(source.type === 'Cell'){
+			else if(source.type === &#x27;Cell&#x27;){
 				try{
 					this.canvas = source.name;
 					my.design[this.name] = this;
 					my.pushUnique(my.designnames, this.name);
 					this.makeDesign();
-					if(my.isa(callback, 'fn')){
+					if(my.isa(callback, &#x27;fn&#x27;)){
 						callback();
 						}
 					}
 				catch(e){
-					console.log('Pattern '+[this.name]+' - setImage() #3 failed - '+e.name+' error: '+e.message);
+					console.log(&#x27;Pattern &#x27;+[this.name]+&#x27; - setImage() #3 failed - &#x27;+e.name+&#x27; error: &#x27;+e.message);
 					return that;
 					}
 				}
 			}
 		else{
-			console.log('Pattern '+[this.name]+' - setImage() #4 failed - source not a string or an object', source);
+			console.log(&#x27;Pattern &#x27;+[this.name]+&#x27; - setImage() #4 failed - source not a string or an object&#x27;, source);
 			}
 		return this;
 		};
 /**
-Returns &lt;canvas&gt; element's contenxt engine's pattern object, or 'rgba(0,0,0,0)' on failure
+Returns &amp;lt;canvas&amp;gt; element&#x27;s contenxt engine&#x27;s pattern object, or &#x27;rgba(0,0,0,0)&#x27; on failure
 @method getData
 @return JavaScript pattern object, or String
 @private
 **/
 	my.Pattern.prototype.getData = function(){
-		return (my.xt(my.dsn[this.name])) ? my.dsn[this.name] : 'rgba(0,0,0,0)';
+		return (my.xt(my.dsn[this.name])) ? my.dsn[this.name] : &#x27;rgba(0,0,0,0)&#x27;;
 		};
 /**
-Builds &lt;canvas&gt; element's contenxt engine's pattern object
+Builds &amp;lt;canvas&amp;gt; element&#x27;s contenxt engine&#x27;s pattern object
 @method makeDesign
 @return This
 @chainable
@@ -475,11 +687,11 @@ Alias for Pattern.makeDesign()
 
 ## Purpose
 
-* Defines rectangular image-based objects for displaying on a Cell's canvas
+* Defines rectangular image-based objects for displaying on a Cell&#x27;s canvas
 * Used to display both static and sprite sheet image animations
-* Links to details of an image's data; can use image data (rgba data) during collision detection
+* Links to details of an image&#x27;s data; can use image data (rgba data) during collision detection
 * Can handle video input (experimental)
-* Performs 'rect' and 'drawImage' drawing operations on canvases
+* Performs &#x27;rect&#x27; and &#x27;drawImage&#x27; drawing operations on canvases
 
 ## Access
 
@@ -492,7 +704,7 @@ Alias for Pattern.makeDesign()
 @param {Object} [items] Key:value Object argument for setting attributes
 **/		
 	my.Picture = function(items){
-		if(my.isa(items, 'obj') && my.xt(items.url)){
+		if(my.isa(items, &#x27;obj&#x27;) &amp;&amp; my.xt(items.url)){
 			return this.importImage(items);
 			}
 		else{
@@ -507,22 +719,22 @@ Alias for Pattern.makeDesign()
 			this.source = items.source || false;
 			this.imageType = this.sourceImage(items.source) || false;
 			if(this.source){
-				if(this.imageType === 'img' || this.imageType === 'video'){
+				if(this.imageType === &#x27;img&#x27; || this.imageType === &#x27;video&#x27;){
 					s = my.image[this.source];
 					w = s.width;
 					h = s.height;
 					x = 0;
 					y = 0;
 					}
-				else if(this.imageType === 'canvas'){
+				else if(this.imageType === &#x27;canvas&#x27;){
 					s = my.cell[this.source];
 					w = s.sourceWidth;
 					h = s.sourceHeight;
 					x = s.source.x;
 					y = s.source.y;
 					}
-				else if(this.imageType === 'animation'){
-					s = my.anim[this.get('animSheet')].getData();
+				else if(this.imageType === &#x27;animation&#x27;){
+					s = my.anim[this.get(&#x27;animSheet&#x27;)].getData();
 					w = s.copyWidth;
 					h = s.copyHeight;
 					x = s.copyX;
@@ -541,7 +753,7 @@ Alias for Pattern.makeDesign()
 			this.calculateFilters = false;
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].sprites, this.name);
-			if(my.isa(items.callback,'fn')){
+			if(my.isa(items.callback,&#x27;fn&#x27;)){
 				items.callback.call(this);
 				}
 			return this;
@@ -551,54 +763,54 @@ Alias for Pattern.makeDesign()
 /**
 @property type
 @type String
-@default 'Picture'
+@default &#x27;Picture&#x27;
 @final
 **/		
-	my.Picture.prototype.type = 'Picture';
-	my.Picture.prototype.classname = 'spritenames';
+	my.Picture.prototype.type = &#x27;Picture&#x27;;
+	my.Picture.prototype.classname = &#x27;spritenames&#x27;;
 	my.d.Picture = {
 /**
 SCRAWLIMAGE String - source image for this sprite
 @property source
 @type String
-@default ''
+@default &#x27;&#x27;
 **/
-		source: '',
+		source: &#x27;&#x27;,
 /**
 IMAGEDATANAME String - name of the Image Data object
 
 Calculated automatically by Scrawl following a .getImageData() call
 @property imageData
 @type String
-@default ''
+@default &#x27;&#x27;
 **/
-		imageData: '',
+		imageData: &#x27;&#x27;,
 /**
 Collision attribute - name of channel to be checked against during collision detection
 
-Permitted values: 'red', 'blue', 'green', 'alpha'
+Permitted values: &#x27;red&#x27;, &#x27;blue&#x27;, &#x27;green&#x27;, &#x27;alpha&#x27;
 @property imageDataChannel
 @type String
-@default 'alpha'
+@default &#x27;alpha&#x27;
 **/
-		imageDataChannel: 'alpha',
+		imageDataChannel: &#x27;alpha&#x27;,
 /**
 ANIMSHEET String - Sprite sheet image linked to this sprite
 @property animSheet
 @type String
 @default ;;
 **/
-		animSheet: '',
+		animSheet: &#x27;&#x27;,
 /**
-Identifier String - permitted values include: 'animation', 'canvas', 'img'
+Identifier String - permitted values include: &#x27;animation&#x27;, &#x27;canvas&#x27;, &#x27;img&#x27;
 
 Detected automatically by scrawl during sprite construction
 @property imageType
 @type String
-@default ''
+@default &#x27;&#x27;
 @private
 **/
-		imageType: '',
+		imageType: &#x27;&#x27;,
 /**
 Collision flag - when true, Picture sprite will use imageData to determine whether a collision has occured; when false, a simpler box collision system is used
 @property checkHitUsingImageData
@@ -607,14 +819,14 @@ Collision flag - when true, Picture sprite will use imageData to determine wheth
 **/
 		checkHitUsingImageData: false,
 /**
-Image display - horizontal offset, in pixels, from the image's top left corner
+Image display - horizontal offset, in pixels, from the image&#x27;s top left corner
 @property copyX
 @type Number
 @default 0
 **/
 		copyX: 0,
 /**
-Image display - vertical offset, in pixels, from the image's top left corner
+Image display - vertical offset, in pixels, from the image&#x27;s top left corner
 @property copyY
 @type Number
 @default 0
@@ -670,7 +882,7 @@ Asynchronous loading of image file from the server - path/to/image file
 Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
 @property url
 @type String
-@default ''
+@default &#x27;&#x27;
 **/
 /**
 Asynchronous loading of image file from the server - function to run once image has successfully loaded
@@ -742,8 +954,8 @@ _Note: this function is asynchronous_
 		items = my.safeObject(items);
 		if(my.xt(items.url)){
 			var myImage = new Image();
-			myImage.id = items.name || 'image'+Math.floor(Math.random()*100000000);
-			myImage.crossOrigin = 'Anonymous';
+			myImage.id = items.name || &#x27;image&#x27;+Math.floor(Math.random()*100000000);
+			myImage.crossOrigin = &#x27;Anonymous&#x27;;
 			myImage.onload = function(){
 				var iObj = my.newImage({
 					name: myImage.id,
@@ -751,24 +963,24 @@ _Note: this function is asynchronous_
 					});
 				delete items.url;
 				items.source = myImage.id;
-				console.log('Picture.importImage() - <'+myImage.id+'> loaded');
+				console.log(&#x27;Picture.importImage() - &lt;&#x27;+myImage.id+&#x27;&gt; loaded&#x27;);
 				return my.newPicture(items);
 				};
 			myImage.onerror = function(){
-				console.log('Picture.importImage() failed - <'+myImage.id+'> failed to load');
+				console.log(&#x27;Picture.importImage() failed - &lt;&#x27;+myImage.id+&#x27;&gt; failed to load&#x27;);
 				return false;
-				}
+				};
 			myImage.src = items.url;
 			}
 		else{
-			console.log('Picture.importImage() failed - no url supplied');
+			console.log(&#x27;Picture.importImage() failed - no url supplied&#x27;);
 			return false;
 			}
 		};
 /**
 Augments Sprite.clone()
 @method clone
-@param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
+@param {Object} items Object consisting of key:value attributes, used to update the clone&#x27;s attributes with new values
 @return Cloned object
 @chainable
 **/
@@ -788,11 +1000,11 @@ Clone helper function
 @private
 **/
 	my.Picture.prototype.fitToImageSize = function(){
-		if(this.imageType === 'img'){
+		if(this.imageType === &#x27;img&#x27;){
 			var img = my.image[this.source];
 			this.set({
-				copyWidth: img.get('width'),
-				copyHeight: img.get('height'),
+				copyWidth: img.get(&#x27;width&#x27;),
+				copyHeight: img.get(&#x27;height&#x27;),
 				copyX: 0,
 				copyY: 0,
 				});
@@ -807,19 +1019,19 @@ Constructor and clone helper function
 **/
 	my.Picture.prototype.sourceImage = function(){
 		var home;
-		if(this.get('animSheet') && my.contains(my.imagenames, this.source)){return 'animation';}
+		if(this.get(&#x27;animSheet&#x27;) &amp;&amp; my.contains(my.imagenames, this.source)){return &#x27;animation&#x27;;}
 		if(my.contains(my.imagenames, this.source)){
 			home = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
-			return (my.isa(home, 'video')) ? 'video' : 'img';
+			return (my.isa(home, &#x27;video&#x27;)) ? &#x27;video&#x27; : &#x27;img&#x27;;
 			}
-		if(my.contains(my.cellnames, this.source)){return 'canvas';}
+		if(my.contains(my.cellnames, this.source)){return &#x27;canvas&#x27;;}
 		return false;
 		};
 /**
-Stamp helper function - perform a 'clip' method draw
+Stamp helper function - perform a &#x27;clip&#x27; method draw
 @method clip
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -834,10 +1046,10 @@ Stamp helper function - perform a 'clip' method draw
 		return this;
 		};
 /**
-Stamp helper function - perform a 'clear' method draw
+Stamp helper function - perform a &#x27;clear&#x27; method draw
 @method clear
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -849,10 +1061,10 @@ Stamp helper function - perform a 'clear' method draw
 		return this;
 		};
 /**
-Stamp helper function - perform a 'clearWithBackground' method draw
+Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 @method clearWithBackground
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -873,10 +1085,10 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 		return this;
 		};
 /**
-Stamp helper function - perform a 'draw' method draw
+Stamp helper function - perform a &#x27;draw&#x27; method draw
 @method draw
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -889,10 +1101,10 @@ Stamp helper function - perform a 'draw' method draw
 		return this;
 		};
 /**
-Stamp helper function - perform a 'fill' method draw
+Stamp helper function - perform a &#x27;fill&#x27; method draw
 @method fill
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -909,10 +1121,10 @@ Stamp helper function - perform a 'fill' method draw
 		return this;
 		};
 /**
-Stamp helper function - perform a 'drawFill' method draw
+Stamp helper function - perform a &#x27;drawFill&#x27; method draw
 @method drawFill
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -935,10 +1147,10 @@ Stamp helper function - perform a 'drawFill' method draw
 		return this;
 		};
 /**
-Stamp helper function - perform a 'fillDraw' method draw
+Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
 @method fillDraw
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -961,10 +1173,10 @@ Stamp helper function - perform a 'fillDraw' method draw
 		return this;
 		};
 /**
-Stamp helper function - perform a 'sinkInto' method draw
+Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
 @method sinkInto
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -986,10 +1198,10 @@ Stamp helper function - perform a 'sinkInto' method draw
 		return this;
 		};
 /**
-Stamp helper function - perform a 'floatOver' method draw
+Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 @method floatOver
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
 @return This
 @chainable
 @private
@@ -1011,21 +1223,21 @@ Stamp helper function - perform a 'floatOver' method draw
 		return this;
 		};
 /**
-Load the Picture sprite's image data (via JavaScript getImageData() function) into the scrawl library
+Load the Picture sprite&#x27;s image data (via JavaScript getImageData() function) into the scrawl library
 @method getImageData
 @param {String} [label] IMAGEDATANAME - default: PICTURENAME_data
 @return This
 @chainable
 **/
 	my.Picture.prototype.getImageData = function(label){
-		label = (my.xt(label)) ? label : 'data';
+		label = (my.xt(label)) ? label : &#x27;data&#x27;;
 		var	data = this.getImage(),
 			myImage;
 		if(data.image){
-			if(this.imageType === 'animation'){
+			if(this.imageType === &#x27;animation&#x27;){
 				myImage = my.image[this.source];
-				my.cv.width = myImage.get('width');
-				my.cv.height = myImage.get('height');
+				my.cv.width = myImage.get(&#x27;width&#x27;);
+				my.cv.height = myImage.get(&#x27;height&#x27;);
 				my.cvx.drawImage(data.image, 0, 0);
 				}
 			else{
@@ -1033,15 +1245,15 @@ Load the Picture sprite's image data (via JavaScript getImageData() function) in
 				my.cv.height = this.copyHeight;
 				my.cvx.drawImage(data.image, this.copyX, this.copyY, this.copyWidth, this.copyHeight, 0, 0, this.copyWidth, this.copyHeight);
 				}
-			this.imageData = this.name+'_'+label;
+			this.imageData = this.name+&#x27;_&#x27;+label;
 			my.imageData[this.imageData] = my.cvx.getImageData(0, 0, my.cv.width, my.cv.height);
 			}
 		return this;
 		};
 /**
-Get the pixel color or channel data from Picture object's image at given coordinate
+Get the pixel color or channel data from Picture object&#x27;s image at given coordinate
 
-Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha', 'color' (default)
+Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - &#x27;red&#x27;, &#x27;blue&#x27;, &#x27;green&#x27;, &#x27;alpha&#x27;, &#x27;color&#x27; (default)
 @method getImageDataValue
 @param {Object} items Coordinate Vector or Object
 @return Color value at coordinate; false if no color found
@@ -1049,7 +1261,7 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 	my.Picture.prototype.getImageDataValue = function(items){
 		items = my.safeObject(items);
 		var	coords = my.workimg.v1.set({x: (items.x || 0), y: (items.y || 0)}),
-			d = my.imageData[this.get('imageData')],
+			d = my.imageData[this.get(&#x27;imageData&#x27;)],
 			myX,
 			myY,
 			myData,
@@ -1057,14 +1269,14 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 			copyScaleY,
 			result,
 			myEl,
-			imageDataChannel = this.get('imageDataChannel');
+			imageDataChannel = this.get(&#x27;imageDataChannel&#x27;);
 		this.resetWork();
 		coords.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
 		coords.x = (this.flipReverse) ? -coords.x : coords.x;
 		coords.y = (this.flipUpend) ? -coords.y : coords.y;
 		coords.vectorAdd(this.getPivotOffsetVector(this.handle));
-		if(this.imageType === 'animation' && my.image[this.source]){
-			myData = my.anim[this.get('animSheet')].getData();
+		if(this.imageType === &#x27;animation&#x27; &amp;&amp; my.image[this.source]){
+			myData = my.anim[this.get(&#x27;animSheet&#x27;)].getData();
 			copyScaleX = this.width/myData.copyWidth;
 			copyScaleY = this.height/myData.copyHeight;
 			myX = Math.round((coords.x/copyScaleX) + myData.copyX);
@@ -1078,13 +1290,13 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 			}
 		result = false;
 		myEl = ((myY * d.width) + myX) * 4;
-		if(my.isBetween(myX, 0, d.width-1, true) && my.isBetween(myY, 0, d.height-1, true)){
+		if(my.isBetween(myX, 0, d.width-1, true) &amp;&amp; my.isBetween(myY, 0, d.height-1, true)){
 			switch(items.channel || imageDataChannel){
-				case 'red' : result = (my.xt(d.data[myEl])) ? d.data[myEl] : false; break;
-				case 'blue' : result = (my.xt(d.data[myEl+1])) ? d.data[myEl+1] : false; break;
-				case 'green' : result = (my.xt(d.data[myEl+2])) ? d.data[myEl+2] : false; break;
-				case 'alpha' : result = (my.xt(d.data[myEl+3])) ? d.data[myEl+3] : false; break;
-				case 'color' : result = (my.xta([d.data[myEl],d.data[myEl+1],d.data[myEl+2],d.data[myEl+3]])) ? 'rgba('+d.data[myEl]+','+d.data[myEl+1]+','+d.data[myEl+2]+','+d.data[myEl+3]+')' : false; break;
+				case &#x27;red&#x27; : result = (my.xt(d.data[myEl])) ? d.data[myEl] : false; break;
+				case &#x27;blue&#x27; : result = (my.xt(d.data[myEl+1])) ? d.data[myEl+1] : false; break;
+				case &#x27;green&#x27; : result = (my.xt(d.data[myEl+2])) ? d.data[myEl+2] : false; break;
+				case &#x27;alpha&#x27; : result = (my.xt(d.data[myEl+3])) ? d.data[myEl+3] : false; break;
+				case &#x27;color&#x27; : result = (my.xta([d.data[myEl],d.data[myEl+1],d.data[myEl+2],d.data[myEl+3]])) ? &#x27;rgba(&#x27;+d.data[myEl]+&#x27;,&#x27;+d.data[myEl+1]+&#x27;,&#x27;+d.data[myEl+2]+&#x27;,&#x27;+d.data[myEl+3]+&#x27;)&#x27; : false; break;
 				default : result = false;
 				}
 			}
@@ -1109,24 +1321,24 @@ Also generates new filtered images, when necessary
 		myReturn.copyWidth = this.copyWidth; 
 		myReturn.copyHeight = this.copyHeight; 
 		switch(this.imageType){
-			case 'canvas' :
-				myReturn.image = (my.isa(my.canvas[this.source], 'canvas')) ? my.canvas[this.source] : false;
+			case &#x27;canvas&#x27; :
+				myReturn.image = (my.isa(my.canvas[this.source], &#x27;canvas&#x27;)) ? my.canvas[this.source] : false;
 				break;
-			case 'animation' :
+			case &#x27;animation&#x27; :
 				myReturn = my.anim[this.animSheet].getData();
 				this.copyX = myReturn.copyX;
 				this.copyY = myReturn.copyY;
 				this.copyWidth = myReturn.copyWidth;
 				this.copyHeight = myReturn.copyHeight;
 				home = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
-				myReturn.image = (my.isa(home, 'img')) ? home : false;
+				myReturn.image = (my.isa(home, &#x27;img&#x27;)) ? home : false;
 				break;
 			default :
 				home = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
-				myReturn.image = (my.isa(home, 'img') || my.isa(home, 'video')) ? home : false;
+				myReturn.image = (my.isa(home, &#x27;img&#x27;) || my.isa(home, &#x27;video&#x27;)) ? home : false;
 			}
 		this.filterKeys = Object.keys(this.filters);
-		if(this.filterKeys.length > 0){
+		if(this.filterKeys.length &gt; 0){
 			this.calculateCheckSum();
 			if(this.calculateFilters){
 				iObject = my.image[this.source];
@@ -1134,7 +1346,7 @@ Also generates new filtered images, when necessary
 				my.cv.height = iObject.height;
 				my.cvx.drawImage(myReturn.image, 0, 0);
 				myImage = my.cvx.getImageData(this.copyX, this.copyY, this.copyWidth, this.copyHeight);
-				for(var i = 0, iz = this.filterKeys.length; i < iz; i++){
+				for(var i = 0, iz = this.filterKeys.length; i &lt; iz; i++){
 					if(my.xt(my.filter[this.filterKeys[i]])){
 						this.filters[this.filterKeys[i]].use = myImage;
 						this.filters[this.filterKeys[i]].save = false;
@@ -1142,12 +1354,12 @@ Also generates new filtered images, when necessary
 						}
 					}
 				myImage = iObject.getImageDataUrl(myImage, true);
-				iObject.makeImage(myImage, this.name+'_brush', this.copyWidth, this.copyHeight);
+				iObject.makeImage(myImage, this.name+&#x27;_brush&#x27;, this.copyWidth, this.copyHeight);
 				}
 			myReturn.copyX = 0;
 			myReturn.copyY = 0;
-			myImage = my.f.querySelector('#'+this.name+'_brush');
-			myReturn.image = (my.isa(myImage, 'img')) ? myImage : false;
+			myImage = my.f.querySelector(&#x27;#&#x27;+this.name+&#x27;_brush&#x27;);
+			myReturn.image = (my.isa(myImage, &#x27;img&#x27;)) ? myImage : false;
 			if(myReturn.image){
 				this.calculateFilters = false;
 				}
@@ -1177,7 +1389,7 @@ Display helper function - check to see if filtered image needs to be recalculate
 			return false;
 			}
 		//final, deep check to see if filter order has changed, or if a filter has been replaced by another one
-		for(var i = 0, iz = filtercheck.length; i < iz; i++){
+		for(var i = 0, iz = filtercheck.length; i &lt; iz; i++){
 			if(this.filterKeys[i] !== filtercheck[i]){
 				this.calculateFilters = true;
 				return false;
@@ -1187,7 +1399,7 @@ Display helper function - check to see if filtered image needs to be recalculate
 		return true;
 		};
 /**
-Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+Check Cell coordinates to see if any of them fall within this sprite&#x27;s path - uses JavaScript&#x27;s _isPointInPath_ function
 
 Argument object contains the following attributes:
 
@@ -1195,29 +1407,29 @@ Argument object contains the following attributes:
 * __x__ - X coordinate
 * __y__ - Y coordinate
 
-Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
 @method checkHit
 @param {Object} items Argument object
-@return The first coordinate to fall within the sprite's path; false if none fall within the path
+@return The first coordinate to fall within the sprite&#x27;s path; false if none fall within the path
 **/
 	my.Picture.prototype.checkHit = function(items){
 		items = my.safeObject(items);
 		var mytests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
 			c,
 			hit,
-			test = (my.isa(items.test,'num')) ? items.test : 0;
-		for(var i = 0, iz = mytests.length; i < iz; i += 2){
-			hit = my.Sprite.prototype.checkHit.call(this, {tests: [mytests[i], mytests[i+1]]})
+			test = (my.isa(items.test,&#x27;num&#x27;)) ? items.test : 0;
+		for(var i = 0, iz = mytests.length; i &lt; iz; i += 2){
+			hit = my.Sprite.prototype.checkHit.call(this, {tests: [mytests[i], mytests[i+1]]});
 			if(this.checkHitUsingImageData){
 				if(hit){
-					hit.x = parseInt(hit.x);
-					hit.y = parseInt(hit.y);
+					hit.x = parseInt(hit.x, 10);
+					hit.y = parseInt(hit.y, 10);
 					c = this.getImageDataValue(hit);
-					if(this.get('imageDataChannel') === 'color'){
-						hit = (c === 'rgba(0,0,0,0)') ? false : hit;
+					if(this.get(&#x27;imageDataChannel&#x27;) === &#x27;color&#x27;){
+						hit = (c === &#x27;rgba(0,0,0,0)&#x27;) ? false : hit;
 						}
 					else{
-						hit = (c > test) ? hit : false;
+						hit = (c &gt; test) ? hit : false;
 						}
 					}
 				}
@@ -1237,14 +1449,14 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 
 ## Purpose
 
-* Wraps DOM image elements imported into the scrawl library - &lt;img&gt;, &lt;video&gt;, &lt;svg&gt;
+* Wraps DOM image elements imported into the scrawl library - &amp;lt;img&amp;gt;, &amp;lt;video&amp;gt;, &amp;lt;svg&amp;gt;
 * Used by __Picture__ sprites and __Pattern__ designs
 
 ## Access
 
 * scrawl.image.SCRAWLIMAGENAME - for the ScrawlImage object
-* scrawl.object.SCRAWLIMAGENAME - for a link to the original &lt;img&gt;, &lt;svg&gt; or &lt;video&gt; element
-* scrawl.img.SCRAWLIMAGENAME - for a link to a working copy of the original &lt;img&gt; element (as generated by filters)
+* scrawl.object.SCRAWLIMAGENAME - for a link to the original &amp;lt;img&amp;gt;, &amp;lt;svg&amp;gt; or &amp;lt;video&amp;gt; element
+* scrawl.img.SCRAWLIMAGENAME - for a link to a working copy of the original &amp;lt;img&amp;gt; element (as generated by filters)
 
 @class ScrawlImage
 @constructor
@@ -1252,17 +1464,17 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 @param {Object} [items] Key:value Object argument for setting attributes
 **/		
 	my.ScrawlImage = function(items){
-		//assume items.element is either an <img> element, or an imageDataURL object (with width, height, data attributes)
+		//assume items.element is either an &lt;img&gt; element, or an imageDataURL object (with width, height, data attributes)
 		items = my.safeObject(items);
 		var url,
 			el,
-			kill = (my.isa(items.removeImageFromDOM, 'bool')) ? items.removeImageFromDOM : true;
+			kill = (my.isa(items.removeImageFromDOM, &#x27;bool&#x27;)) ? items.removeImageFromDOM : true;
 		if(my.xt(items.element)){
-			items.name = items.name || items.element.getAttribute('id') || items.element.getAttribute('name') || '';
+			items.name = items.name || items.element.getAttribute(&#x27;id&#x27;) || items.element.getAttribute(&#x27;name&#x27;) || &#x27;&#x27;;
 			my.Base.call(this, items);
 			this.width = items.width || parseFloat(items.element.offsetWidth) || items.element.width || (my.xta([items.element.style, items.element.style.width]) ? parseFloat(items.element.style.width) : 0);
 			this.height = items.height || parseFloat(items.element.offsetHeight) || items.element.height || (my.xta([items.element.style, items.element.style.height]) ? parseFloat(items.element.style.height) : 0);
-			if(my.isa(items.element, 'img')){
+			if(my.isa(items.element, &#x27;img&#x27;)){
 				if(kill){
 					el = items.element;
 					}
@@ -1273,37 +1485,37 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 					el.id = this.name;
 					}
 				my.f.appendChild(el);
-				this.elementType = 'img';
+				this.elementType = &#x27;img&#x27;;
 				}
-			else if(my.isa(items.element, 'video')){
+			else if(my.isa(items.element, &#x27;video&#x27;)){
 				el = items.element;
-				this.elementType = 'video';
+				this.elementType = &#x27;video&#x27;;
 				}
 			else{
 				url = items.element;
 				el = this.makeImage(url, this.name, this.width, this.height);
-				this.elementType = 'img';
+				this.elementType = &#x27;img&#x27;;
 				}
 			my.object[this.name] = el;
 			my.pushUnique(my.objectnames, this.name);
 			my.image[this.name] = this;
 			my.pushUnique(my.imagenames, this.name);
-			if(my.isa(items.fn, 'fn')){
+			if(my.isa(items.fn, &#x27;fn&#x27;)){
 				items.fn.call(this);
 				}
 			return this;
 			}
 		return false;
-		}
+		};
 	my.ScrawlImage.prototype = Object.create(my.Base.prototype);
 /**
 @property type
 @type String
-@default 'ScrawlImage'
+@default &#x27;ScrawlImage&#x27;
 @final
 **/
-	my.ScrawlImage.prototype.type = 'ScrawlImage';
-	my.ScrawlImage.prototype.classname = 'imagenames';
+	my.ScrawlImage.prototype.type = &#x27;ScrawlImage&#x27;;
+	my.ScrawlImage.prototype.classname = &#x27;imagenames&#x27;;
 	my.d.ScrawlImage = {
 /**
 DOM image actual width, in pixels
@@ -1320,15 +1532,15 @@ DOM image actual height, in pixels
 **/
 		height: 0,
 /**
-Image element type: 'img' or 'video'
+Image element type: &#x27;img&#x27; or &#x27;video&#x27;
 @property elementType 
 @type String
-@default ''
+@default &#x27;&#x27;
 @private
 **/
-		elementType: '',
+		elementType: &#x27;&#x27;,
 /**
-Constructor/clone flag - if set to true (default), will remove the &lt;img&gt; element from the web page DOM
+Constructor/clone flag - if set to true (default), will remove the &amp;lt;img&amp;gt; element from the web page DOM
 
 _This attribute is not retained by the object_
 @property removeImageFromDOM 
@@ -1350,12 +1562,12 @@ Makes a virtual image from an imageDataUrl
 
 @method makeImage
 @param {Object} data The imageDataUrl data
-@return new DOM &lt;img&gt; object
+@return new DOM &amp;lt;img&amp;gt; object
 @private
 **/
 	my.ScrawlImage.prototype.makeImage = function(data, id, width, height){
-		var image = document.createElement('img'),
-			old = my.f.querySelector('#'+id);
+		var image = document.createElement(&#x27;img&#x27;),
+			old = my.f.querySelector(&#x27;#&#x27;+id);
 		image.width = width || data.width;
 		image.height = height || data.height;
 		image.src = data;
@@ -1371,7 +1583,7 @@ Get image data URL - uses JavScript canvas API function ctx.toDataURL()
 
 _Note: does not save the data in the scrawl library_
 @method getImageDataUrl
-@param {Object} image DOM &lt;img&gt; element
+@param {Object} image DOM &amp;lt;img&amp;gt; element
 @return data.URL data
 @private
 **/
@@ -1380,8 +1592,13 @@ _Note: does not save the data in the scrawl library_
 		putdata = (my.xt(putdata)) ? putdata : false;
 		my.cv.width = (putdata) ? image.width : this.width;
 		my.cv.height = (putdata) ? image.height : this.height;
-		(putdata) ? my.cvx.putImageData(image, 0, 0) : my.cvx.drawImage(image, 0, 0);
-		result = my.cv.toDataURL('image/png');
+		if(putdata){
+			my.cvx.putImageData(image, 0, 0);
+			}
+		else{
+			my.cvx.drawImage(image, 0, 0);
+			}
+		result = my.cv.toDataURL(&#x27;image/png&#x27;);
 		return result;
 		};
 /**
@@ -1396,7 +1613,7 @@ _Note: does not save the data in the scrawl library_
 	my.ScrawlImage.prototype.getImageData = function(source){
 		source = (my.xt(source)) ? source : false;
 		var image, result;
-		if(my.isa(source,'bool')){
+		if(my.isa(source,&#x27;bool&#x27;)){
 			image = (source) ? my.object[this.name] : my.img[this.name] ||  my.object[this.name];
 			my.cv.width = this.width;
 			my.cv.height = this.height;
@@ -1409,7 +1626,7 @@ _Note: does not save the data in the scrawl library_
 /**
 Clone a SpriteImage object
 
-Also clones the virtual &lt;img&gt; element associated with the SpriteImage
+Also clones the virtual &amp;lt;img&amp;gt; element associated with the SpriteImage
 @method clone
 @param {Object} [items] Key:value Object argument for setting attributes
 @return new ScrawlImage object on success; false otherwise
@@ -1464,23 +1681,23 @@ AnimSheet attributes can also be set and retrieved directly using Picture.get() 
 		my.Base.call(this, items);
 		this.frames = (my.xt(items.frames)) ? [].concat(items.frames) : [];
 		this.currentFrame = items.currentFrame || 0;
-		this.speed = (my.isa(items.speed,'num')) ? items.speed : 1;
-		this.loop = (my.isa(items.loop,'str')) ? items.loop : 'end';
-		this.running = (my.isa(items.running,'str')) ? items.running : 'complete';
+		this.speed = (my.isa(items.speed,&#x27;num&#x27;)) ? items.speed : 1;
+		this.loop = (my.isa(items.loop,&#x27;str&#x27;)) ? items.loop : &#x27;end&#x27;;
+		this.running = (my.isa(items.running,&#x27;str&#x27;)) ? items.running : &#x27;complete&#x27;;
 		this.lastCalled = (my.xt(items.lastCalled)) ? items.lastCalled : Date.now();
 		my.anim[this.name] = this;
 		my.pushUnique(my.animnames, this.name);
 		return this;
-		}
+		};
 	my.AnimSheet.prototype = Object.create(my.Base.prototype);
 /**
 @property type
 @type String
-@default 'AnimSheet'
+@default &#x27;AnimSheet&#x27;
 @final
 **/		
-	my.AnimSheet.prototype.type = 'AnimSheet';
-	my.AnimSheet.prototype.classname = 'animnames';
+	my.AnimSheet.prototype.type = &#x27;AnimSheet&#x27;;
+	my.AnimSheet.prototype.classname = &#x27;animnames&#x27;;
 	my.d.AnimSheet = {
 /**
 An Array of animation frame data Objects, to be used for producing an animation sequence. Each Object in the Array has the following form:
@@ -1516,26 +1733,26 @@ The speed at which the animation is to play. Values less than 1 will slow the an
 /**
 Playback String; permitted values include:
 
-* 'pause' - pause the animation on the current frame
-* 'end' - play the animation once (default)
-* 'loop' - play the animation continuously 
-* 'reverse' - reverse the direction in which the animation runs
+* &#x27;pause&#x27; - pause the animation on the current frame
+* &#x27;end&#x27; - play the animation once (default)
+* &#x27;loop&#x27; - play the animation continuously 
+* &#x27;reverse&#x27; - reverse the direction in which the animation runs
 @property loop
 @type String
-@default 'end'
+@default &#x27;end&#x27;
 **/
-		loop: 'end',
+		loop: &#x27;end&#x27;,
 /**
 Animation running String: permitted values include:
 
-* 'forward' - play the animation from the first frame towards the last frame
-* 'backward' - play the animation from the last frame towards the first frame
-* 'complete' - animation has reached the last (or first) frame and has completed
+* &#x27;forward&#x27; - play the animation from the first frame towards the last frame
+* &#x27;backward&#x27; - play the animation from the last frame towards the first frame
+* &#x27;complete&#x27; - animation has reached the last (or first) frame and has completed
 @property running
 @type String
-@default 'complete'
+@default &#x27;complete&#x27;
 **/
-		running: 'complete',
+		running: &#x27;complete&#x27;,
 /**
 Datestamp when AnimSheet.getData() function was last called
 @property lastCalled
@@ -1559,24 +1776,24 @@ Set attribute values - will also set the __currentFrame__ attribute to the appro
 **/
 	my.AnimSheet.prototype.set = function(items){
 		items = my.safeObject(items);
-		var paused = (this.loop === 'pause') ? true : false;
+		var paused = (this.loop === &#x27;pause&#x27;) ? true : false;
 		my.Base.prototype.set.call(this, items);
 		if(my.xt(items.running)){
 			switch(items.running){
-				case 'forward' :
-					this.running = 'forward';
+				case &#x27;forward&#x27; :
+					this.running = &#x27;forward&#x27;;
 					if(!paused){
 						this.currentFrame = 0;
 						}
 					break;
-				case 'backward' :
-					this.running = 'backward';
+				case &#x27;backward&#x27; :
+					this.running = &#x27;backward&#x27;;
 					if(!paused){
 						this.currentFrame = this.frames.length - 1;
 						}
 					break;
 				default :
-					this.running = 'complete';
+					this.running = &#x27;complete&#x27;;
 					this.currentFrame = 0;
 					break;
 				}
@@ -1592,48 +1809,48 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 @private
 **/
 	my.AnimSheet.prototype.getData = function(){
-		if(this.speed > 0){
+		if(this.speed &gt; 0){
 			var interval = this.frames[this.currentFrame].d/this.speed;
-			var changeFrame = (this.lastCalled + interval < Date.now()) ? true : false;
+			var changeFrame = (this.lastCalled + interval &lt; Date.now()) ? true : false;
 			switch(this.running){
-				case 'complete' :
+				case &#x27;complete&#x27; :
 					this.lastCalled = Date.now();
 					break;
-				case 'forward' :
+				case &#x27;forward&#x27; :
 					if(changeFrame){
 						switch(this.loop){
-							case 'pause' :
+							case &#x27;pause&#x27; :
 								break;
-							case 'end' :
-								this.running = (this.currentFrame + 1 >= this.frames.length) ? 'complete' : this.running;
-								this.currentFrame = (this.currentFrame + 1 >= this.frames.length) ? this.currentFrame : this.currentFrame + 1;
+							case &#x27;end&#x27; :
+								this.running = (this.currentFrame + 1 &gt;= this.frames.length) ? &#x27;complete&#x27; : this.running;
+								this.currentFrame = (this.currentFrame + 1 &gt;= this.frames.length) ? this.currentFrame : this.currentFrame + 1;
 								break;
-							case 'loop' :
-								this.currentFrame = (this.currentFrame + 1 >= this.frames.length) ? 0 : this.currentFrame + 1;
+							case &#x27;loop&#x27; :
+								this.currentFrame = (this.currentFrame + 1 &gt;= this.frames.length) ? 0 : this.currentFrame + 1;
 								break;
-							case 'reverse' :
-								this.running = (this.currentFrame + 1 >= this.frames.length) ? 'backward' : 'forward';
-								this.currentFrame = (this.currentFrame + 1 >= this.frames.length) ? this.currentFrame : this.currentFrame + 1;
+							case &#x27;reverse&#x27; :
+								this.running = (this.currentFrame + 1 &gt;= this.frames.length) ? &#x27;backward&#x27; : &#x27;forward&#x27;;
+								this.currentFrame = (this.currentFrame + 1 &gt;= this.frames.length) ? this.currentFrame : this.currentFrame + 1;
 								break;
 							}
 						this.lastCalled = Date.now();
 						}
 					break;
-				case 'backward' :
+				case &#x27;backward&#x27; :
 					if(changeFrame){
 						switch(this.loop){
-							case 'pause' :
+							case &#x27;pause&#x27; :
 								break;
-							case 'end' :
-								this.running = (this.currentFrame - 1 <= 0) ? 'complete' : this.running;
-								this.currentFrame = (this.currentFrame - 1 <= 0) ? this.currentFrame : this.currentFrame - 1;
+							case &#x27;end&#x27; :
+								this.running = (this.currentFrame - 1 &lt;= 0) ? &#x27;complete&#x27; : this.running;
+								this.currentFrame = (this.currentFrame - 1 &lt;= 0) ? this.currentFrame : this.currentFrame - 1;
 								break;
-							case 'loop' :
-								this.currentFrame = (this.currentFrame - 1 <= 0) ? this.frames.length - 1 : this.currentFrame - 1;
+							case &#x27;loop&#x27; :
+								this.currentFrame = (this.currentFrame - 1 &lt;= 0) ? this.frames.length - 1 : this.currentFrame - 1;
 								break;
-							case 'reverse' :
-								this.running = (this.currentFrame - 1 <= 0) ? 'forward' : 'backward';
-								this.currentFrame = (this.currentFrame - 1 <= 0) ? this.currentFrame : this.currentFrame - 1;
+							case &#x27;reverse&#x27; :
+								this.running = (this.currentFrame - 1 &lt;= 0) ? &#x27;forward&#x27; : &#x27;backward&#x27;;
+								this.currentFrame = (this.currentFrame - 1 &lt;= 0) ? this.currentFrame : this.currentFrame - 1;
 								break;
 							}
 						this.lastCalled = Date.now();
@@ -1651,3 +1868,23 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 
 	return my;
 	}(scrawl));
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

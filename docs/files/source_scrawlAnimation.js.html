@@ -1,10 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>source\scrawlAnimation.js - scrawl</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="scrawl"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 3.1.5</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Animation.html">Animation</a></li>
+            
+                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
+            
+                <li><a href="../classes/Base.html">Base</a></li>
+            
+                <li><a href="../classes/Block.html">Block</a></li>
+            
+                <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/Context.html">Context</a></li>
+            
+                <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Element.html">Element</a></li>
+            
+                <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Gradient.html">Gradient</a></li>
+            
+                <li><a href="../classes/Group.html">Group</a></li>
+            
+                <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/Pad.html">Pad</a></li>
+            
+                <li><a href="../classes/PageElement.html">PageElement</a></li>
+            
+                <li><a href="../classes/Particle.html">Particle</a></li>
+            
+                <li><a href="../classes/Path.html">Path</a></li>
+            
+                <li><a href="../classes/Pattern.html">Pattern</a></li>
+            
+                <li><a href="../classes/Phrase.html">Phrase</a></li>
+            
+                <li><a href="../classes/Picture.html">Picture</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Position.html">Position</a></li>
+            
+                <li><a href="../classes/Quaternion.html">Quaternion</a></li>
+            
+                <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
+            
+                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+            
+                <li><a href="../classes/Shape.html">Shape</a></li>
+            
+                <li><a href="../classes/Spring.html">Spring</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/Stack.html">Stack</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Tween.html">Tween</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Wheel.html">Wheel</a></li>
+            
+                <li><a href="../classes/window.scrawl.html">window.scrawl</a></li>
+            
+                <li><a href="../classes/window.scrawl_Animation.html">window.scrawl_Animation</a></li>
+            
+                <li><a href="../classes/window.scrawl_Block.html">window.scrawl_Block</a></li>
+            
+                <li><a href="../classes/window.scrawl_Collisions.html">window.scrawl_Collisions</a></li>
+            
+                <li><a href="../classes/window.scrawl_Color.html">window.scrawl_Color</a></li>
+            
+                <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
+            
+                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
+            
+                <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
+            
+                <li><a href="../classes/window.scrawl_Phrase.html">window.scrawl_Phrase</a></li>
+            
+                <li><a href="../classes/window.scrawl_Physics.html">window.scrawl_Physics</a></li>
+            
+                <li><a href="../classes/window.scrawl_SaveLoad.html">window.scrawl_SaveLoad</a></li>
+            
+                <li><a href="../classes/window.scrawl_Shape.html">window.scrawl_Shape</a></li>
+            
+                <li><a href="../classes/window.scrawl_Stacks.html">window.scrawl_Stacks</a></li>
+            
+                <li><a href="../classes/window.scrawl_Wheel.html">window.scrawl_Wheel</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/scrawlAnimation.html">scrawlAnimation</a></li>
+            
+                <li><a href="../modules/scrawlBlock.html">scrawlBlock</a></li>
+            
+                <li><a href="../modules/scrawlCollisions.html">scrawlCollisions</a></li>
+            
+                <li><a href="../modules/scrawlColor.html">scrawlColor</a></li>
+            
+                <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
+            
+                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
+            
+                <li><a href="../modules/scrawlPathFactories.html">scrawlPathFactories</a></li>
+            
+                <li><a href="../modules/scrawlPhrase.html">scrawlPhrase</a></li>
+            
+                <li><a href="../modules/scrawlPhysics.html">scrawlPhysics</a></li>
+            
+                <li><a href="../modules/scrawlSaveLoad.html">scrawlSaveLoad</a></li>
+            
+                <li><a href="../modules/scrawlShape.html">scrawlShape</a></li>
+            
+                <li><a href="../modules/scrawlStacks.html">scrawlStacks</a></li>
+            
+                <li><a href="../modules/scrawlWheel.html">scrawlWheel</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: source\scrawlAnimation.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
 // Copyright (c) 2014 Richard James Roots
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
+// of this software and associated documentation files (the &quot;Software&quot;), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
@@ -13,7 +225,7 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 // 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -22,7 +234,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 window.requestAnimFrame = (function(callback){
 	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback){window.setTimeout(callback, 1000/60);};
 	})();
@@ -43,6 +254,7 @@ The Animation module adds support for animation and tweening to the core
 **/
 
 var scrawl = (function(my){
+	&#x27;use strict&#x27;;
 
 /**
 # window.scrawl
@@ -61,7 +273,7 @@ scrawlAnimation module adaptions to the Scrawl library object
 * Position.delta - default: {x:0,y:0,z:0};
 * Position.deltaPathPlace - default: 0;
 * Position.pathSpeedConstant - default: true;
-* Position.path - default: '';
+* Position.path - default: &#x27;&#x27;;
 
 * Cell.sourceDelta - default: {x:0, y:0, z:0};
 * Cell.sourceMinWidth - default: 0;
@@ -98,7 +310,7 @@ Starts the animation loop
 /**
 Position constructor hook function
 
-Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a 'velocity'
+Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a &#x27;velocity&#x27;
 
 @method animationPositionInit
 @private
@@ -109,8 +321,8 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : 0),
 			});
-		this.work.delta = my.newVector({name: this.type+'.'+this.name+'.work.delta'});
-		this.pathSpeedConstant = (my.isa(items.pathSpeedConstant,'bool')) ? items.pathSpeedConstant : my.d[this.type].pathSpeedConstant;
+		this.work.delta = my.newVector({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.delta&#x27;});
+		this.pathSpeedConstant = (my.isa(items.pathSpeedConstant,&#x27;bool&#x27;)) ? items.pathSpeedConstant : my.d[this.type].pathSpeedConstant;
 		this.deltaPathPlace = items.deltaPathPlace || my.d[this.type].deltaPathPlace;
 		};
 /**
@@ -119,14 +331,14 @@ Position.get hook function - modified by animation module
 @private
 **/
 	my.Position.prototype.animationPositionGet = function(item){
-		if(my.contains(['deltaX','deltaY'], item)){
+		if(my.contains([&#x27;deltaX&#x27;,&#x27;deltaY&#x27;], item)){
 			switch(item){
-				case 'deltaX' : return this.delta.x; break;
-				case 'deltaY' : return this.delta.y; break;
+				case &#x27;deltaX&#x27; : return this.delta.x;
+				case &#x27;deltaY&#x27; : return this.delta.y;
 				}
 			}
-		if('delta' === item){
-			console.log(this.name, 'get delta vector'); return this.delta.getVector();
+		if(&#x27;delta&#x27; === item){
+			console.log(this.name, &#x27;get delta vector&#x27;); return this.delta.getVector();
 			}
 		return false;
 		};
@@ -136,7 +348,7 @@ Position.set hook function - modified by animation module
 @private
 **/
 	my.Position.prototype.animationPositionSet = function(items){
-		if(!my.isa(this.delta, 'vector')){
+		if(!my.isa(this.delta, &#x27;vector&#x27;)){
 			this.delta = my.newVector(items.delta || this.delta);
 			}
 		if(my.xto([items.deltaX, items.deltaY])){
@@ -161,32 +373,32 @@ Position.setDelta hook function - modified by animation module
 Adds delta values to the start vector; adds deltaPathPlace to pathPlace
 
 Permitted argument values include 
-* 'x' - delta.x added to start.x
-* 'y' - delta.y added to start.y
-* 'path' - deltaPathPlace added to pathPlace 
+* &#x27;x&#x27; - delta.x added to start.x
+* &#x27;y&#x27; - delta.y added to start.y
+* &#x27;path&#x27; - deltaPathPlace added to pathPlace 
 * undefined: all values are amended
 @method Position.updateStart
-@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;x&#x27;, &#x27;y&#x27;, &#x27;path&#x27;; default action: all values are amended
 @return This
 @chainable
 **/
 	my.Position.prototype.updateStart = function(item){
 		switch(item){
-			case 'x' :
+			case &#x27;x&#x27; :
 				this.start.x += this.delta.x || 0;
 				break;
-			case 'y' :
+			case &#x27;y&#x27; :
 				this.start.y += this.delta.y || 0;
 				break;
-			case 'path' :
+			case &#x27;path&#x27; :
 				this.pathPlace += this.deltaPathPlace;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
 				break;
 			default :
 				this.pathPlace += this.deltaPathPlace;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
 				this.start.vectorAdd(this.delta);
 			}
 		return this;
@@ -195,32 +407,32 @@ Permitted argument values include
 Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
 
 Permitted argument values include 
-* 'x' - delta.x subtracted from start.x
-* 'y' - delta.y subtracted from start.y
-* 'path' - deltaPathPlace subtracted from pathPlace 
+* &#x27;x&#x27; - delta.x subtracted from start.x
+* &#x27;y&#x27; - delta.y subtracted from start.y
+* &#x27;path&#x27; - deltaPathPlace subtracted from pathPlace 
 * undefined: all values are amended
 @method Position.revertStart
-@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;x&#x27;, &#x27;y&#x27;, &#x27;path&#x27;; default action: all values are amended
 @return This
 @chainable
 **/
 	my.Position.prototype.revertStart = function(item){
 		switch(item){
-			case 'x' :
+			case &#x27;x&#x27; :
 				this.start.x -= this.delta.x || 0;
 				break;
-			case 'y' :
+			case &#x27;y&#x27; :
 				this.start.y -= this.delta.y || 0;
 				break;
-			case 'path' :
+			case &#x27;path&#x27; :
 				this.pathPlace -= this.deltaPathPlace;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
 				break;
 			default :
 				this.pathPlace += this.deltaPathPlace;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
 				this.start.vectorSubtract(this.delta);
 			}
 		return this;
@@ -234,7 +446,7 @@ Swaps the values of an attribute between two objects
 @chainable
 **/
 	my.Position.prototype.exchange = function(obj, item){
-		if(my.isa(obj,'obj')){
+		if(my.isa(obj,&#x27;obj&#x27;)){
 			var temp = this[item] || this.get(item); 
 			this[item] = obj[item] || obj.get(item); 
 			obj[item] = temp;
@@ -244,19 +456,19 @@ Swaps the values of an attribute between two objects
 /**
 Changes the sign (+/-) of specified attribute values
 @method Position.reverse
-@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;deltaX&#x27;, &#x27;deltaY&#x27;, &#x27;delta&#x27;, &#x27;deltaPathPlace&#x27;; default action: all values are amended
 @return This
 @chainable
 **/
 	my.Position.prototype.reverse = function(item){
 		switch(item){
-			case 'deltaX' : 
+			case &#x27;deltaX&#x27; : 
 				this.delta.x = -this.delta.x; break;
-			case 'deltaY' : 
+			case &#x27;deltaY&#x27; : 
 				this.delta.y = -this.delta.y; break;
-			case 'delta' : 
+			case &#x27;delta&#x27; : 
 				this.delta.reverse(); break;
-			case 'deltaPathPlace' : 
+			case &#x27;deltaPathPlace&#x27; : 
 				this.deltaPathPlace = -this.deltaPathPlace; break;
 			default : 
 				this.deltaPathPlace = -this.deltaPathPlace;
@@ -272,7 +484,7 @@ Changes the sign (+/-) of specified attribute values
 /**
 Cell constructor hook function
 
-Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to give it a 'velocity'
+Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to give it a &#x27;velocity&#x27;
 
 @method animationCellInit
 @private
@@ -291,10 +503,10 @@ Cell.get hook function - modified by animation module
 @private
 **/
 	my.Cell.prototype.animationCellGet = function(item){
-		if(my.contains(['sourceDeltaX', 'sourceDeltaY'], item)){
+		if(my.contains([&#x27;sourceDeltaX&#x27;, &#x27;sourceDeltaY&#x27;], item)){
 			switch(item){
-				case 'sourceDeltaX' : return this.sourceDelta.x; break;
-				case 'sourceDeltaY' : return this.sourceDelta.y; break;
+				case &#x27;sourceDeltaX&#x27; : return this.sourceDelta.x;
+				case &#x27;sourceDeltaY&#x27; : return this.sourceDelta.y;
 				}
 			}
 		return my.Base.prototype.get.call(this, item);
@@ -316,44 +528,44 @@ Cell.set hook function - modified by animation module
 Adds delta values to the start vector; adds sourceDelta values to the source vector; adds deltaPathPlace to pathPlace
 
 Permitted argument values include 
-* 'x' - delta.x added to start.x; deltaSource.x added to source.x
-* 'y' - delta.y added to start.y; deltaSource.y added to source.y
-* 'start', 'target' - delta added to start
-* 'source' - deltaSource added to source
-* 'path' - deltaPathPlace added to pathPlace 
+* &#x27;x&#x27; - delta.x added to start.x; deltaSource.x added to source.x
+* &#x27;y&#x27; - delta.y added to start.y; deltaSource.y added to source.y
+* &#x27;start&#x27;, &#x27;target&#x27; - delta added to start
+* &#x27;source&#x27; - deltaSource added to source
+* &#x27;path&#x27; - deltaPathPlace added to pathPlace 
 * undefined: all values are amended
 @method Cell.updateStart
-@param {String} [item] String used to limit this function's actions
+@param {String} [item] String used to limit this function&#x27;s actions
 @return This
 @chainable
 **/
 	my.Cell.prototype.updateStart = function(item){
 		switch(item){
-			case 'x' :
+			case &#x27;x&#x27; :
 				this.start.x += this.delta.x || 0;
 				this.source.x += this.deltaSource.x || 0;
 				break;
-			case 'y' :
+			case &#x27;y&#x27; :
 				this.start.y += this.delta.y || 0;
 				this.source.y += this.deltaSource.y || 0;
 				break;
-			case 'start' :
-			case 'target' :
+			case &#x27;start&#x27; :
+			case &#x27;target&#x27; :
 				this.start.vectorAdd(this.delta);
 				break;
-			case 'source' :
+			case &#x27;source&#x27; :
 				this.source.vectorAdd(this.sourceDelta);
 				break;
-			case 'path' :
+			case &#x27;path&#x27; :
 				this.pathPlace += this.deltaPathPlace || 0;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
 				break;
 			default :
 				if(my.xt(this.pathPlace)){
 					this.pathPlace += this.deltaPathPlace || 0;
-					if(this.pathPlace > 1){this.pathPlace -= 1;}
-					if(this.pathPlace < 0){this.pathPlace += 1;}
+					if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+					if(this.pathPlace &lt; 0){this.pathPlace += 1;}
 					}
 				this.start.vectorAdd(this.delta);
 				this.source.vectorAdd(this.sourceDelta);
@@ -364,44 +576,44 @@ Permitted argument values include
 Subtracts delta values from the start vector; subtracts sourceDelta values from the source vector; subtracts deltaPathPlace to pathPlace
 
 Permitted argument values include 
-* 'x' - delta.x subtracted from start.x; deltaSource.x subtracted from source.x
-* 'y' - delta.y subtracted from start.y; deltaSource.y subtracted from source.y
-* 'start', 'target' - delta subtracted from start
-* 'source' - deltaSource subtracted from source
-* 'path' - deltaPathPlace subtracted from pathPlace 
+* &#x27;x&#x27; - delta.x subtracted from start.x; deltaSource.x subtracted from source.x
+* &#x27;y&#x27; - delta.y subtracted from start.y; deltaSource.y subtracted from source.y
+* &#x27;start&#x27;, &#x27;target&#x27; - delta subtracted from start
+* &#x27;source&#x27; - deltaSource subtracted from source
+* &#x27;path&#x27; - deltaPathPlace subtracted from pathPlace 
 * undefined: all values are amended
 @method Cell.revertStart
-@param {String} [item] String used to limit this function's actions
+@param {String} [item] String used to limit this function&#x27;s actions
 @return This
 @chainable
 **/
 	my.Cell.prototype.revertStart = function(item){
 		switch(item){
-			case 'x' :
+			case &#x27;x&#x27; :
 				this.start.x -= this.delta.x || 0;
 				this.source.x -= this.deltaSource.x || 0;
 				break;
-			case 'y' :
+			case &#x27;y&#x27; :
 				this.start.y -= this.delta.y || 0;
 				this.source.y -= this.deltaSource.y || 0;
 				break;
-			case 'start' :
-			case 'target' :
+			case &#x27;start&#x27; :
+			case &#x27;target&#x27; :
 				this.start.vectorSubtract(this.delta);
 				break;
-			case 'source' :
+			case &#x27;source&#x27; :
 				this.source.vectorSubtract(this.sourceDelta);
 				break;
-			case 'path' :
+			case &#x27;path&#x27; :
 				this.pathPlace -= this.deltaPathPlace || 0;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+				if(this.pathPlace &lt; 0){this.pathPlace += 1;}
 				break;
 			default :
 				if(my.xt(this.pathPlace)){
 					this.pathPlace -= this.deltaPathPlace || 0;
-					if(this.pathPlace > 1){this.pathPlace -= 1;}
-					if(this.pathPlace < 0){this.pathPlace += 1;}
+					if(this.pathPlace &gt; 1){this.pathPlace -= 1;}
+					if(this.pathPlace &lt; 0){this.pathPlace += 1;}
 					}
 				this.start.vectorSubtract(this.delta);
 				this.source.vectorSubtract(this.sourceDelta);
@@ -411,33 +623,33 @@ Permitted argument values include
 /**
 Zooms one cell in relation to another cell
 @method Cell.zoom
-@param {Number} item Number of pixels to amend the zoomed cell's start and dimensions by
+@param {Number} item Number of pixels to amend the zoomed cell&#x27;s start and dimensions by
 @return This
 @chainable
 **/
 	my.Cell.prototype.zoom = function(item){
-		if(my.isa(item, 'num')){
+		if(my.isa(item, &#x27;num&#x27;)){
 			var	sWidth = this.sourceWidth,
 				sHeight = this.sourceHeight,
 				aWidth = this.actualWidth,
 				aHeight = this.actualHeight,
-				minWidth = this.get('sourceMinWidth') || this.sourceWidth,
-				minHeight = this.get('sourceMinHeight') || this.sourceHeight,
-				maxWidth = this.get('sourceMaxWidth') || this.sourceWidth,
-				maxHeight = this.get('sourceMaxHeight') || this.sourceHeight,
+				minWidth = this.get(&#x27;sourceMinWidth&#x27;) || this.sourceWidth,
+				minHeight = this.get(&#x27;sourceMinHeight&#x27;) || this.sourceHeight,
+				maxWidth = this.get(&#x27;sourceMaxWidth&#x27;) || this.sourceWidth,
+				maxHeight = this.get(&#x27;sourceMaxHeight&#x27;) || this.sourceHeight,
 				sx = this.source.x,
 				sy = this.source.y,
 				myW = sWidth + item,
 				myH = sHeight + item,
 				myX,
 				myY;
-			if(my.isBetween(myW, minWidth, maxWidth, true) && my.isBetween(myH, minHeight, maxHeight, true)){
+			if(my.isBetween(myW, minWidth, maxWidth, true) &amp;&amp; my.isBetween(myH, minHeight, maxHeight, true)){
 				sWidth = myW;
 				myX = sx - (item/2);
-				if(myX < 0){
+				if(myX &lt; 0){
 					sx = 0;
 					}
-				else if(myX > (aWidth - sWidth)){
+				else if(myX &gt; (aWidth - sWidth)){
 					sx = aWidth - sWidth;
 					}
 				else{
@@ -445,10 +657,10 @@ Zooms one cell in relation to another cell
 					}
 				sHeight = myH;
 				myY = sy - (item/2);
-				if(myY < 0){
+				if(myY &lt; 0){
 					sy = 0;
 					}
-				else if(myY > (aHeight - sHeight)){
+				else if(myY &gt; (aHeight - sHeight)){
 					sy = aHeight - sHeight;
 					}
 				else{
@@ -463,18 +675,18 @@ Zooms one cell in relation to another cell
 		return this;
 		};
 /**
-Perform a splice-shift-join operation on the &lt;canvas&gt; element's current scene
+Perform a splice-shift-join operation on the &amp;lt;canvas&amp;gt; element&#x27;s current scene
 
 Argument is an Object in the form:
 
 * {edge:String, strip:Number}
 
-Permitted values for the argument Object's attributes are:
+Permitted values for the argument Object&#x27;s attributes are:
 
-* __edge__ - one from 'horizontal', 'vertical', 'top', 'bottom', 'left', 'right'
-* __strip__ - a width/height Number (in pixels) of the strip that is to be moved from the named edge of the &lt;canvas&gt; to the opposite edge
+* __edge__ - one from &#x27;horizontal&#x27;, &#x27;vertical&#x27;, &#x27;top&#x27;, &#x27;bottom&#x27;, &#x27;left&#x27;, &#x27;right&#x27;
+* __strip__ - a width/height Number (in pixels) of the strip that is to be moved from the named edge of the &amp;lt;canvas&amp;gt; to the opposite edge
 
-_Note that this function is only effective in achieving a parallax effect if the user never clears or updates the cell's &lt;canvas&gt; element, and takes steps to shift the cell's source vector appropriately each time the splice operation is performed_
+_Note that this function is only effective in achieving a parallax effect if the user never clears or updates the cell&#x27;s &amp;lt;canvas&amp;gt; element, and takes steps to shift the cell&#x27;s source vector appropriately each time the splice operation is performed_
 
 @method Cell.spliceCell
 @param {Object} items Object containing data for the splice operation
@@ -483,7 +695,7 @@ _Note that this function is only effective in achieving a parallax effect if the
 **/
 	my.Cell.prototype.spliceCell = function(items){
 		items = my.safeObject(items);
-		if(my.contains(['horizontal','vertical','top','bottom','left','right'], items.edge)){
+		if(my.contains([&#x27;horizontal&#x27;,&#x27;vertical&#x27;,&#x27;top&#x27;,&#x27;bottom&#x27;,&#x27;left&#x27;,&#x27;right&#x27;], items.edge)){
 			var	myStrip, 
 				myRemains, 
 				myEdge, 
@@ -493,47 +705,47 @@ _Note that this function is only effective in achieving a parallax effect if the
 				e,
 				canvas = my.canvas[this.name],
 				ctx = my.context[this.name];
-			c = document.createElement('canvas');
+			c = document.createElement(&#x27;canvas&#x27;);
 			c.width = width;
 			c.height = height;
-			e = c.getContext('2d');
+			e = c.getContext(&#x27;2d&#x27;);
 			ctx.setTransform(1,0,0,1,0,0);
 			switch(items.edge){
-				case 'horizontal' :
+				case &#x27;horizontal&#x27; :
 					myStrip = myRemains = width/2;
-					myEdge = 'left';
+					myEdge = &#x27;left&#x27;;
 					break;
-				case 'vertical' :
+				case &#x27;vertical&#x27; :
 					myStrip = myRemains = height/2;
-					myEdge = 'top';
+					myEdge = &#x27;top&#x27;;
 					break;
-				case 'top' :
-				case 'bottom' :
+				case &#x27;top&#x27; :
+				case &#x27;bottom&#x27; :
 					myStrip = items.strip || 20;
 					myRemains = height - myStrip;
 					myEdge = items.edge;
 					break;
-				case 'left' :
-				case 'right' :
+				case &#x27;left&#x27; :
+				case &#x27;right&#x27; :
 					myStrip = items.strip || 20;
 					myRemains = width - myStrip;
 					myEdge = items.edge;
 					break;
 				}
 			switch(myEdge){
-				case 'top' :
+				case &#x27;top&#x27; :
 					e.drawImage(canvas, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
 					e.drawImage(canvas, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
 					break;
-				case 'bottom' :
+				case &#x27;bottom&#x27; :
 					e.drawImage(canvas, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
 					e.drawImage(canvas, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
 					break;
-				case 'left' :
+				case &#x27;left&#x27; :
 					e.drawImage(canvas, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
 					e.drawImage(canvas, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
 					break;
-				case 'right' :
+				case &#x27;right&#x27; :
 					e.drawImage(canvas, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
 					e.drawImage(canvas, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
 					break;
@@ -548,12 +760,12 @@ Ask all sprites in the Group to perform an updateStart() operation
 
 Each sprite will add their delta values to their start Vector, and/or add deltaPathPlace from pathPlace
 @method Group.updateStart
-@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;x&#x27;, &#x27;y&#x27;, &#x27;path&#x27;; default action: all values are amended
 @return This
 @chainable
 **/
 	my.Group.prototype.updateStart = function(item){
-		for(var i=0, z=this.sprites.length; i<z; i++){
+		for(var i=0, z=this.sprites.length; i&lt;z; i++){
 			my.sprite[this.sprites[i]].updateStart(item);
 			}
 		return this;
@@ -563,12 +775,12 @@ Ask all sprites in the Group to perform a revertStart() operation
 
 Each sprite will subtract their delta values to their start Vector, and/or subtract deltaPathPlace from pathPlace
 @method Group.revertStart
-@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;x&#x27;, &#x27;y&#x27;, &#x27;path&#x27;; default action: all values are amended
 @return This
 @chainable
 **/
 	my.Group.prototype.revertStart = function(item){
-		for(var i=0, z=this.sprites.length; i<z; i++){
+		for(var i=0, z=this.sprites.length; i&lt;z; i++){
 			my.sprite[this.sprites[i]].revertStart(item);
 			}
 		return this;
@@ -578,12 +790,12 @@ Ask all sprites in the group to perform a reverse() operation
 
 Each sprite will change the sign (+/-) of specified attribute values
 @method Group.reverse
-@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
+@param {String} [item] String used to limit this function&#x27;s actions - permitted values include &#x27;deltaX&#x27;, &#x27;deltaY&#x27;, &#x27;delta&#x27;, &#x27;deltaPathPlace&#x27;; default action: all values are amended
 @return This
 @chainable
 **/
 	my.Group.prototype.reverse = function(item){
-		for(var i=0, z=this.sprites.length; i<z; i++){
+		for(var i=0, z=this.sprites.length; i&lt;z; i++){
 			my.sprite[this.sprites[i]].reverse(item);
 			}
 		return this;
@@ -616,15 +828,15 @@ Gradient builder helper function - sorts color attribute Objects by their stop a
 @private
 **/
 	my.Design.prototype.sortStops = function(){
-		var color = this.get('color'),
-			roll = this.get('roll');
-		for(var i=0, z=color.length; i<z; i++){
+		var color = this.get(&#x27;color&#x27;),
+			roll = this.get(&#x27;roll&#x27;);
+		for(var i=0, z=color.length; i&lt;z; i++){
 			color[i].stop += roll;
 			if(!my.isBetween(color[i].stop, 0, 1, true)){
-				color[i].stop = (color[i].stop > 0.5) ? color[i].stop-1 : color[i].stop+1;
+				color[i].stop = (color[i].stop &gt; 0.5) ? color[i].stop-1 : color[i].stop+1;
 				}
-			if(color[i].stop <= 0){color[i].stop = 0.000001;}
-			else if(color[i].stop >= 1){color[i].stop = 0.999999;}
+			if(color[i].stop &lt;= 0){color[i].stop = 0.000001;}
+			else if(color[i].stop &gt;= 1){color[i].stop = 0.999999;}
 			}
 		color.sort(function(a,b){
 			return a.stop - b.stop;
@@ -639,7 +851,7 @@ A __factory__ function to generate new Animation objects
 **/
 	my.newAnimation = function(items){
 		return new my.Animation(items);
-		}
+		};
 /**
 A __factory__ function to generate new Tween objects
 @method newTween
@@ -649,9 +861,9 @@ A __factory__ function to generate new Tween objects
 	my.newTween = function(items){
 		return new my.Tween(items);
 		};
-	my.pushUnique(my.sectionlist, 'animation');
-	my.pushUnique(my.nameslist, 'animate');
-	my.pushUnique(my.nameslist, 'animationnames');
+	my.pushUnique(my.sectionlist, &#x27;animation&#x27;);
+	my.pushUnique(my.nameslist, &#x27;animate&#x27;);
+	my.pushUnique(my.nameslist, &#x27;animationnames&#x27;);
 /**
 Animation flag: set to false to stop animation loop
 @property doAnimation
@@ -664,7 +876,7 @@ Animation ordering flag - when set to false, the ordering of animations is skipp
 @type {Boolean}
 @default true
 **/		
-	my.orderAnimations = true,
+	my.orderAnimations = true;
 /**
 The Scrawl animation loop
 
@@ -683,7 +895,7 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 		if(my.orderAnimations){
 			my.sortAnimations();
 			}
-		for(var i=0, z=my.animate.length; i<z; i++){
+		for(var i=0, iz=my.animate.length; i&lt;iz; i++){
 			if(my.animate[i]){
 				my.animation[my.animate[i]].fn();
 				}
@@ -729,7 +941,7 @@ Animation sorting routine - animation objects are sorted according to their anim
 	my.Animation = function(items){
 		my.Base.call(this, items);
 		items = my.safeObject(items);
-		var delay = (my.isa(items.delay, 'bool')) ? items.delay : false;
+		var delay = (my.isa(items.delay, &#x27;bool&#x27;)) ? items.delay : false;
 		this.fn = items.fn || function(){}; 
 		this.order = items.order || 0;
 		my.animation[this.name] = this;
@@ -746,16 +958,16 @@ _This attribute is not retained by the Animation object_
 			this.run();
 			}
 		return this;
-		}
+		};
 	my.Animation.prototype = Object.create(my.Base.prototype);
 /**
 @property type
 @type String
-@default 'Animation'
+@default &#x27;Animation&#x27;
 @final
 **/		
-	my.Animation.prototype.type = 'Animation';
-	my.Animation.prototype.classname = 'animationnames';
+	my.Animation.prototype.type = &#x27;Animation&#x27;;
+	my.Animation.prototype.classname = &#x27;animationnames&#x27;;
 	my.d.Animation = {
 /**
 Anonymous function for an animation routine
@@ -820,7 +1032,7 @@ Tweens are animations defined by duration (how long they should run for) and dis
 * Any attribute that holds a Number type value can be tweened
 * The starting point for each attribute tween is set in the __start__ attribute object
 * The ending point for each attribute tween is set in the __end__ attribute object
-* If an ending point is defined for an attribute, but no starting point, then the tween will use the object's attribute's current value for the starting point.
+* If an ending point is defined for an attribute, but no starting point, then the tween will use the object&#x27;s attribute&#x27;s current value for the starting point.
 * Individual _easing engines_ can be defined for each attribute in the __engines__ attribute object.
 
 The objects on which the tween will operate are passed to the tween as an array of objects, in the __targets__ attribute
@@ -838,8 +1050,8 @@ Tweens come with a number of flags and attributes to indicate how many times the
 
 * Set the __count__ attribute to a positive integer to run the tween that many times. Setting the attribute to _true_ will run the tween forever
 * Tween direction can be reversed by setting the __reverse__ flag to _true_
-* Setting the __autoReverse__ flag to true will automatically reverse the tween's direction at the end of each run
-* Setting the __autoReverseAndRun__ reverses the tween's direction and immediately running it again.
+* Setting the __autoReverse__ flag to true will automatically reverse the tween&#x27;s direction at the end of each run
+* Setting the __autoReverseAndRun__ reverses the tween&#x27;s direction and immediately running it again.
 
 ## Access
 
@@ -859,12 +1071,12 @@ Tweens come with a number of flags and attributes to indicate how many times the
 	my.Tween = function(items){
 		my.Base.call(this, items);
 		items = my.safeObject(items);
-		this.targets = (my.isa(items.targets, 'arr')) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
+		this.targets = (my.isa(items.targets, &#x27;arr&#x27;)) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
 		this.currentTargets = [];
 		this.initVals = [];
-		this.start = (my.isa(items.start, 'obj')) ? items.start : {};
-		this.engines = (my.isa(items.engines, 'obj')) ? items.engines : {};
-		this.end = (my.isa(items.end, 'obj')) ? items.end : {};
+		this.start = (my.isa(items.start, &#x27;obj&#x27;)) ? items.start : {};
+		this.engines = (my.isa(items.engines, &#x27;obj&#x27;)) ? items.engines : {};
+		this.end = (my.isa(items.end, &#x27;obj&#x27;)) ? items.end : {};
 		this.startTime = Date.now();
 		this.duration = items.duration || 0;
 		this.active = false;
@@ -875,23 +1087,23 @@ Tweens come with a number of flags and attributes to indicate how many times the
 		this.currentCount = 0;
 		this.onCommence = items.onCommence || {};
 		this.onComplete = items.onComplete || {};
-		this.nextTween = items.nextTween || '';
+		this.nextTween = items.nextTween || &#x27;&#x27;;
 		this.killOnComplete = items.killOnComplete || false;
-		this.callback = (my.isa(items.callback, 'fn')) ? items.callback : false;
+		this.callback = (my.isa(items.callback, &#x27;fn&#x27;)) ? items.callback : false;
 		this.order = items.order || 0;
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
 		return this;
-		}
+		};
 	my.Tween.prototype = Object.create(my.Base.prototype);
 /**
 @property type
 @type String
-@default 'Tween'
+@default &#x27;Tween&#x27;
 @final
 **/		
-	my.Tween.prototype.type = 'Tween';
-	my.Tween.prototype.classname = 'animationnames';
+	my.Tween.prototype.type = &#x27;Tween&#x27;;
+	my.Tween.prototype.classname = &#x27;animationnames&#x27;;
 	my.d.Tween = {
 /**
 Array of sprites, cells, etc to be animated using this tween; expects to be passed handles to the sprite objects, not SPRITENAME strings
@@ -918,7 +1130,7 @@ Object containing the start positions (for absolute transitions) or delta values
 /**
 Object containing attribute: value pairs determining which easing engine will be applied to each tweened attribute
 
-Currently, Scrawl offers the following easing engines. _Out_ signifies that the end of the tween is faster than the start; _In_ signifies the the end of the tween is slower. (This is the opposite of 'Flash' usage, but in line with wider programming conventions):
+Currently, Scrawl offers the following easing engines. _Out_ signifies that the end of the tween is faster than the start; _In_ signifies the the end of the tween is slower. (This is the opposite of &#x27;Flash&#x27; usage, but in line with wider programming conventions):
 
 * __in__, __easeIn__, __easeIn3__, __easeIn4__, __easeIn5__
 * __out__, __easeOut__, __easeOut3__, __easeOut4__, __easeOut5__
@@ -1035,9 +1247,9 @@ Flag - when true, tween will automatically delete itself when it completes
 TWEENNAME Sring of the tween to be run when this tween completes
 @property nextTween
 @type String
-@default ''
+@default &#x27;&#x27;
 **/		
-		nextTween: '',
+		nextTween: &#x27;&#x27;,
 /**
 Lower order animations are run during each frame before higher order ones
 @property order
@@ -1060,12 +1272,12 @@ Tween animation function
 			argSet,
 			keys = Object.keys(this.end);
 		if(this.active){
-			if(progress < 1){
-				for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
+			if(progress &lt; 1){
+				for(var t = 0, tz = this.currentTargets.length; t &lt; tz; t++){
 					sprite = this.currentTargets[t];
 					if(my.xt(sprite)){
 						argSet = {};
-						for(var k = 0, kz = keys.length; k < kz; k++){
+						for(var k = 0, kz = keys.length; k &lt; kz; k++){
 							argSet[keys[k]] = this.engine(this.initVals[t][keys[k]].start,
 								this.initVals[t][keys[k]].change,
 								progress,
@@ -1082,9 +1294,9 @@ Tween animation function
 					this.reverse = (this.reverse) ? false : true;
 					}
 				if(this.autoReverseAndRun){
-					if(my.isa(this.currentCount, 'num')){
+					if(my.isa(this.currentCount, &#x27;num&#x27;)){
 						this.currentCount--;
-						if(this.currentCount > 0){
+						if(this.currentCount &gt; 0){
 							this.run();
 							}
 						else{
@@ -1116,50 +1328,50 @@ Tween engines
 	my.Tween.prototype.engine = function(start, change, position, engine, reverse){
 		var temp;
 		switch(engine){
-			case 'easeOut' : 										//OPPOSITE of Flash easeOut - slow at start, not end
+			case &#x27;easeOut&#x27; :										//OPPOSITE of Flash easeOut - slow at start, not end
 				return start + ((position * position) * change);
-			case 'easeIn' : 										//OPPOSITE of Flash easeIn - slow at end, not start
+			case &#x27;easeIn&#x27; :											//OPPOSITE of Flash easeIn - slow at end, not start
 				temp = 1 - position;
 				return (start + change) + ((temp * temp) * -change);
-			case 'easeOut3' :
+			case &#x27;easeOut3&#x27; :
 				return start + ((position * position * position) * change);
-			case 'easeIn3' :
+			case &#x27;easeIn3&#x27; :
 				temp = 1 - position;
 				return (start + change) + ((temp * temp * temp) * -change);
-			case 'easeOut4' :
+			case &#x27;easeOut4&#x27; :
 				return start + ((position * position * position * position) * change);
-			case 'easeIn4' :
+			case &#x27;easeIn4&#x27; :
 				temp = 1 - position;
 				return (start + change) + ((temp * temp * temp * temp) * -change);
-			case 'easeOut5' :
+			case &#x27;easeOut5&#x27; :
 				return start + ((position * position * position * position * position) * change);
-			case 'easeIn5' :
+			case &#x27;easeIn5&#x27; :
 				temp = 1 - position;
 				return (start + change) + ((temp * temp * temp * temp * temp) * -change);
-			case 'easeOutIn' :
+			case &#x27;easeOutIn&#x27; :
 				temp = 1 - position;
-				return (position < 0.5) ? 
+				return (position &lt; 0.5) ? 
 					start + ((position * position) * change * 2) :
 					(start + change) + ((temp * temp) * -change * 2);
-			case 'easeOutIn3' :
+			case &#x27;easeOutIn3&#x27; :
 				temp = 1 - position;
-				return (position < 0.5) ? 
+				return (position &lt; 0.5) ? 
 					start + ((position * position * position) * change * 4) :
 					(start + change) + ((temp * temp * temp) * -change * 4);
-			case 'easeOutIn4' :
+			case &#x27;easeOutIn4&#x27; :
 				temp = 1 - position;
-				return (position < 0.5) ? 
+				return (position &lt; 0.5) ? 
 					start + ((position * position * position * position) * change * 8) :
 					(start + change) + ((temp * temp * temp * temp) * -change * 8);
-			case 'easeOutIn5' :
+			case &#x27;easeOutIn5&#x27; :
 				temp = 1 - position;
-				return (position < 0.5) ? 
+				return (position &lt; 0.5) ? 
 					start + ((position * position * position * position * position) * change * 16) :
 					(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
-			case 'out' :
+			case &#x27;out&#x27; :
 				temp = 1 - position;
 				return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
-			case 'in' :
+			case &#x27;in&#x27; :
 				return start + (Math.sin((position * 90) * my.radian) * change);
 			default :
 				return start + (position * change);
@@ -1178,21 +1390,21 @@ Run a tween animation
 			start,
 			change;
 		if(!this.active){
-			activeTweens = [],
-			keys = Object.keys(this.end),
+			activeTweens = [];
+			keys = Object.keys(this.end);
 			this.currentCount = this.currentCount || this.count;
 			this.currentTargets = [];
 			this.initVals = [];
-			for(var i = 0, z = my.animationnames.length; i < z; i++){
-				tw = my.animation[my.animationnames[i]];
-				if(tw.type === 'Tween' && tw.active && tw.name !== this.name){
+			for(var l = 0, lz = my.animationnames.length; l &lt; lz; l++){
+				tw = my.animation[my.animationnames[l]];
+				if(tw.type === &#x27;Tween&#x27; &amp;&amp; tw.active &amp;&amp; tw.name !== this.name){
 					activeTweens.push(tw);
 					}
 				}
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
+			for(var i = 0, iz = this.targets.length; i &lt; iz; i++){
 				test = true;
-				for(var j = 0, jz = activeTweens.length; j < jz; j++){
-					for(var k = 0, kz = activeTweens[j].currentTargets.length; k < kz; k++){
+				for(var j = 0, jz = activeTweens.length; j &lt; jz; j++){
+					for(var k = 0, kz = activeTweens[j].currentTargets.length; k &lt; kz; k++){
 						if(this.targets[i].name === activeTweens[j].currentTargets[k].name){
 							test = false;
 							break;
@@ -1206,22 +1418,22 @@ Run a tween animation
 					this.currentTargets.push(this.targets[i]);
 					}
 				}
-			if(this.currentTargets.length > 0){
-				for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
+			if(this.currentTargets.length &gt; 0){
+				for(var t = 0, tz = this.currentTargets.length; t &lt; tz; t++){
 					if(my.xt(this.currentTargets[t])){
 						this.currentTargets[t].set(this.onCommence);
 						this.initVals.push({});
-						for(var k = 0, kz = keys.length; k < kz; k++){
-							if(my.xt(this.start[keys[k]])){
-								this.initVals[t][keys[k]] = {
-									start: (this.reverse) ? this.end[keys[k]] : this.start[keys[k]],
-									change: (this.reverse) ? -(this.end[keys[k]] - this.start[keys[k]]) : this.end[keys[k]] - this.start[keys[k]],
+						for(var m = 0, mz = keys.length; m &lt; mz; m++){
+							if(my.xt(this.start[keys[m]])){
+								this.initVals[t][keys[m]] = {
+									start: (this.reverse) ? this.end[keys[m]] : this.start[keys[m]],
+									change: (this.reverse) ? -(this.end[keys[m]] - this.start[keys[m]]) : this.end[keys[m]] - this.start[keys[m]],
 									};
 								}
 							else{
-								this.initVals[t][keys[k]] = {
-									start: this.currentTargets[t].get([keys[k]]),
-									change: (this.reverse) ? -this.end[keys[k]] : this.end[keys[k]],
+								this.initVals[t][keys[m]] = {
+									start: this.currentTargets[t].get([keys[m]]),
+									change: (this.reverse) ? -this.end[keys[m]] : this.end[keys[m]],
 									};
 								}
 							}
@@ -1242,7 +1454,7 @@ Finish running a tween
 @private
 **/
 	my.Tween.prototype.runComplete = function(){
-		for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
+		for(var t = 0, tz = this.currentTargets.length; t &lt; tz; t++){
 			if(my.xt(this.currentTargets[t])){
 				this.currentTargets[t].set(this.onComplete);
 				}
@@ -1277,7 +1489,7 @@ Remove this tween from the scrawl library
 **/
 	my.Tween.prototype.kill = function(){
 		if(this.active){
-			for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
+			for(var t = 0, tz = this.currentTargets.length; t &lt; tz; t++){
 				if(my.xt(this.currentTargets[t])){
 					this.currentTargets[t].set(this.onComplete);
 					}
@@ -1291,3 +1503,23 @@ Remove this tween from the scrawl library
 		
 	return my;
 	}(scrawl));
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
