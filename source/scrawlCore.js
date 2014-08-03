@@ -302,8 +302,6 @@ Any supplied callback function will only be run once all modules have been loade
 		</body>
 	</html>
 
-<a href="../../demo1000.html">Live demo</a>
-
 @method loadModules
 @param {String} [path] File path String to the directory where the Scrawl module scripts have been stored, relative to the web page's main file; default ('') will assume modules are in the same directory as the web page file
 @param {Array} modules Array of module Strings (either filenames or module aliases), representing Scrawl modules to be loaded into the core
@@ -727,8 +725,6 @@ The argument object should include the following attributes:
 				}).makeCurrent();
 		</script>
     </body>
-
-<a href="../../demo002.html">Live demo</a>
 **/
 	my.addCanvasToPage = function(items) {
 		items = my.safeObject(items);
