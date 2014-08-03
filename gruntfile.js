@@ -20,6 +20,7 @@ module.exports = function(grunt){
 				}]
 			}
 		},
+		
 		//yuidoc generates documentation from comments in the .js source files
 		yuidoc: {
 			all: {
@@ -33,6 +34,7 @@ module.exports = function(grunt){
 				}
 			}
 		},
+
 		//jshint - using default settings to test all .js files in the source directory
 		jshint: {
 			all: ['source/*.js']
@@ -58,7 +60,8 @@ module.exports = function(grunt){
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-jsbeautifier');	
+	grunt.loadNpmTasks('grunt-jsbeautifier');
+
 	// Default task(s).
 	grunt.registerTask('default', ['uglify']);
 	grunt.registerTask('docs', ['yuidoc']);
