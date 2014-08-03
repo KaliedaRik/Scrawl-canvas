@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>source\scrawlCore.js - scrawl</title>
+    <title>source\scrawlCore.js - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -15,7 +15,7 @@
     <div id="hd" class="yui3-g header">
         <div class="yui3-u-3-4">
             
-                <h1><img src="../assets/css/logo.png" title="scrawl"></h1>
+                <h1><img src="../assets/css/logo.png" title="scrawl-canvas"></h1>
             
         </div>
         <div class="yui3-u-1-4 version">
@@ -514,8 +514,6 @@ Any supplied callback function will only be run once all modules have been loade
 		&lt;/body&gt;
 	&lt;/html&gt;
 
-&lt;a href=&quot;../../demo1000.html&quot;&gt;Live demo&lt;/a&gt;
-
 @method loadModules
 @param {String} [path] File path String to the directory where the Scrawl module scripts have been stored, relative to the web page&#x27;s main file; default (&#x27;&#x27;) will assume modules are in the same directory as the web page file
 @param {Array} modules Array of module Strings (either filenames or module aliases), representing Scrawl modules to be loaded into the core
@@ -939,8 +937,6 @@ The argument object should include the following attributes:
 				}).makeCurrent();
 		&lt;/script&gt;
     &lt;/body&gt;
-
-&lt;a href=&quot;../../demo002.html&quot;&gt;Live demo&lt;/a&gt;
 **/
 	my.addCanvasToPage = function(items) {
 		items = my.safeObject(items);
