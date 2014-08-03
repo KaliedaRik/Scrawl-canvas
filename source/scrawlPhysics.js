@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 /**
 # scrawlPhysics
 
@@ -37,6 +36,8 @@ Adds an (experimental) physics engine to the core
 **/
 
 var scrawl = (function(my){
+	'use strict';
+
 /**
 # window.scrawl
 
@@ -98,12 +99,12 @@ A __general__ function to undertake a round of calculations for Spring objects
 		if(my.springnames.length > 0){
 			var s = [];
 			items = (my.isa(items,'arr')) ? items : my.springnames;
-			for(var i=0, z=items.length; i<z; i++){
+			for(var i = 0, iz = items.length; i < iz; i++){
 				s.push((my.isa(items[i],'obj')) ? items[i] : ((my.isa(items[i],'str')) ? my.spring[items[i]] : false));
 				}
-			for(var i=0, z=s.length; i<z; i++){
-				if(s[i]){
-					s[i].update();
+			for(var j = 0, jz = s.length; j < jz; j++){
+				if(s[j]){
+					s[j].update();
 					}
 				}
 			return true;
@@ -132,8 +133,8 @@ Initiates two forces:
 				var d, s, df;
 				ball.resetWork();
 				d = ball.work.velocity.reverse().normalize();
-				var s = ball.velocity.getMagnitude();
-				var df = 0.5 * my.physics.airDensity * s * s * ball.get('area') * ball.get('drag');
+				s = ball.velocity.getMagnitude();
+				df = 0.5 * my.physics.airDensity * s * s * ball.get('area') * ball.get('drag');
 				d.scalarMultiply(df);
 				ball.load.vectorAdd(d);
 				},
@@ -213,7 +214,7 @@ A __factory__ function to generate new Force objects
 		this.group = my.Sprite.prototype.getGroup.call(this, items);
 		my.group[this.group].addSpritesToGroup(this.name);
 		return this;
-		}
+		};
 	my.Particle.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -452,8 +453,9 @@ Calculate the loads (via forces) acting on the particle for this calculation cyc
 @private
 **/
 	my.Particle.prototype.calculateLoads = function(){
+		var i = 0, iz = 0;
 		this.load.zero();
-		for(var i=0, z=this.forces.length; i<z; i++){
+		for(i = 0, iz = this.forces.length; i < iz; i++){
 			if(my.isa(this.forces[i], 'str') && my.contains(my.forcenames, this.forces[i])){
 				my.force[this.forces[i]].run(this);
 				}
@@ -461,7 +463,7 @@ Calculate the loads (via forces) acting on the particle for this calculation cyc
 				this.forces[i](this);
 				}
 			}
-		for(var i=0, z=this.springs.length; i<z; i++){
+		for(i = 0, iz = this.springs.length; i < iz; i++){
 			if(my.spring[this.springs[i]].start === this.name){
 				this.load.vectorAdd(my.spring[this.springs[i]].force);
 				}
@@ -587,12 +589,13 @@ Delete all springs associated with this Particle
 @chainable
 **/
 	my.Particle.prototype.removeSprings = function(){
-		var temp = [];
-		for(var i=0, z=this.springs.length; i<z; i++){
-			temp.push(this.springs[i]);
-			}
-		for(var i=0, z=temp.length; i<z; i++){
-			my.spring[temp].kill();
+//		var temp = [];
+//		for(i = 0, iz = this.springs.length; i < iz; i++){
+//			temp.push(this.springs[i]);
+//			}
+		var temp = this.springs.slice(0);
+		for(var i = 0, iz = temp.length; i < iz; i++){
+			my.spring[temp[i]].kill();
 			}
 		return this;
 		};
@@ -606,15 +609,15 @@ Delete a named Spring object from this Particle
 	my.Particle.prototype.removeSpringsTo = function(item){
 		if(my.xt(item) && my.contains(my.spritenames, item)){
 			var temp = [], 
-				s;
-			for(var i=0, z=this.springs.length; i<z; i++){
+				s, i, iz;
+			for(i = 0, iz = this.springs.length; i < iz; i++){
 				s = my.spring[this.springs[i]];
 				if(s.start === this.name || s.end === this.name){
 					temp.push(this.springs[i]);
 					}
 				}
-			for(var i=0, z=temp.length; i<z; i++){
-				my.spring[temp].kill();
+			for(i = 0, iz = temp.length; i < iz; i++){
+				my.spring[temp[i]].kill();
 				}
 			}
 		return this;
@@ -673,7 +676,7 @@ Delete a named Spring object from this Particle
 			return this;
 			}
 		return false;
-		}
+		};
 	my.Spring.prototype = Object.create(my.Base.prototype);
 /**
 @property type
@@ -798,7 +801,7 @@ Two forces are pre-defined by scrawl:
 		my.force[this.name] = this;
 		my.pushUnique(my.forcenames, this.name);
 		return this;
-		}
+		};
 	my.Force.prototype = Object.create(my.Base.prototype);
 /**
 @property type

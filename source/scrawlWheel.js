@@ -22,8 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
-
 /**
 # scrawlWheel
 
@@ -38,6 +36,7 @@ The Wheel module adds Wheel sprites - circles, segments and filled arcs - to the
 **/
 
 var scrawl = (function(my){
+	'use strict';
 
 /**
 # window.scrawl
@@ -104,7 +103,7 @@ A __factory__ function to generate new Wheel sprites
 		this.registerInLibrary();
 		my.pushUnique(my.group[this.group].sprites, this.name);
 		return this;
-		}
+		};
 	my.Wheel.prototype = Object.create(my.Sprite.prototype);
 /**
 @property type
@@ -224,10 +223,11 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 			result = false,
 			coords,
 			testRadius,
-			ctx;
+			ctx,
+			i, iz;
 		if(this.checkHitUsingRadius){
 			testRadius = (this.checkHitRadius) ? this.checkHitRadius : this.radius * this.scale;
-			for(var i = 0, z = tests.length; i < z; i += 2){
+			for(i = 0, iz = tests.length; i < iz; i += 2){
 				this.resetWork();
 				coords = my.workwheel.v1.set({x: tests[i], y: tests[i+1]});
 				coords.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
@@ -241,7 +241,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 		else{
 			ctx = my.cvx;
 			this.buildPath(ctx);
-			for(var i = 0, z = tests.length; i < z; i += 2){
+			for(i = 0, iz = tests.length; i < iz; i += 2){
 				result = ctx.isPointInPath(tests[i], tests[i+1]);
 				if(result){break;}
 				}
@@ -443,39 +443,32 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @private
 **/
 	my.Wheel.prototype.buildCollisionVectors = function(items){
+		var	p, c = [],
+			v, w, r,
+			res;
 		if(my.xt(my.workcols)){
-			var	p,
-				c = [],
-				v = my.workcols.v1.set({x: this.radius, y: 0}),
-				w,
-				r,
-				res;
-			if(my.xt(items)){
-				p = this.parseCollisionPoints(items);
-				}
-			else{
-				p = this.collisionPoints;
-				}
+			v = my.workcols.v1.set({x: this.radius, y: 0});
+			p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
 			for(var i = 0, iz = p.length; i < iz; i++){
 				if(my.isa(p[i], 'num') && p[i] > 1){
-					w = my.workcols.v2.set(v)
+					w = my.workcols.v2.set(v);
 					r = 360/Math.floor(p[i]);
-					for(var j=0; j<p[i]; j++){
+					for(var j = 0; j < p[i]; j++){
 						w.rotate(r); c.push(w.x); c.push(w.y);
 						}
 					}
 				else if(my.isa(p[i], 'str')){
-					w = my.workcols.v2.set(v)
+					w = my.workcols.v2.set(v);
 					switch(p[i]) {
-						case 'start' : 						c.push(0); 		c.push(0);		break;
-						case 'N' : 		w.rotate(-90); 		c.push(w.x);	c.push(w.y);	break;
-						case 'NE' : 	w.rotate(-45); 		c.push(w.x);	c.push(w.y);	break;
-						case 'E' : 							c.push(w.x);	c.push(w.y);	break;
-						case 'SE' : 	w.rotate(45); 		c.push(w.x);	c.push(w.y);	break;
-						case 'S' : 		w.rotate(90); 		c.push(w.x);	c.push(w.y);	break;
-						case 'SW' : 	w.rotate(135); 		c.push(w.x);	c.push(w.y);	break;
-						case 'W' : 		w.rotate(180);	 	c.push(w.x);	c.push(w.y);	break;
-						case 'NW' : 	w.rotate(-135); 	c.push(w.x);	c.push(w.y);	break;
+						case 'start' :						c.push(0);		c.push(0);		break;
+						case 'N' :		w.rotate(-90);		c.push(w.x);	c.push(w.y);	break;
+						case 'NE' :		w.rotate(-45);		c.push(w.x);	c.push(w.y);	break;
+						case 'E' :							c.push(w.x);	c.push(w.y);	break;
+						case 'SE' :		w.rotate(45);		c.push(w.x);	c.push(w.y);	break;
+						case 'S' :		w.rotate(90);		c.push(w.x);	c.push(w.y);	break;
+						case 'SW' :		w.rotate(135);		c.push(w.x);	c.push(w.y);	break;
+						case 'W' :		w.rotate(180);		c.push(w.x);	c.push(w.y);	break;
+						case 'NW' :		w.rotate(-135);		c.push(w.x);	c.push(w.y);	break;
 						case 'center' :						c.push(0);		c.push(0);		break;
 						}
 					}

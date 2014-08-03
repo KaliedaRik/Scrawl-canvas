@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 /**
 # scrawlSaveLoad
 
@@ -36,6 +35,7 @@ _This module is experimental and thus likely to change significantly as Scrawl e
 **/
 
 var scrawl = (function(my){
+	'use strict';
 
 /**
 # window.scrawl
@@ -119,43 +119,44 @@ _Note: this function does not check for duplicate objects_
 @return Array of saved data
 **/
 	my.save = function(item){
-		var results = [];
+		var results = [],
+			i, iz;
 		switch(item){
 			case 'pads' :
-				for(var i=0, z=my.padnames.length; i<z; i++){
+				for(i = 0, iz = my.padnames.length; i < iz; i++){
 					results = results.concat(my.pad[my.padnames[i]].toString());
 					}
 				break;
 			case 'cells' :
-				for(var i=0, z=my.cellnames.length; i<z; i++){
+				for(i = 0, iz = my.cellnames.length; i < iz; i++){
 					results = results.concat(my.cell[my.cellnames[i]].toString());
 					}
 				break;
 			case 'groups' :
-				for(var i=0, z=my.groupnames.length; i<z; i++){
+				for(i = 0, iz = my.groupnames.length; i < iz; i++){
 					results = results.concat(my.group[my.groupnames[i]].toString());
 					}
 				break;
 			case 'sprites' :
-				for(var i=0, z=my.spritenames.length; i<z; i++){
+				for(i = 0, iz = my.spritenames.length; i < iz; i++){
 					results = results.concat(my.sprite[my.spritenames[i]].toString());
 					}
 				break;
 			case 'designs' :
-				for(var i=0, z=my.designnames.length; i<z; i++){
+				for(i = 0, iz = my.designnames.length; i < iz; i++){
 					results = results.concat(my.design[my.designnames[i]].toString());
 					}
 				break;
 			case 'animsheets' :
 				if(my.xt(my.animnames)){
-					for(var i=0, z=my.animnames.length; i<z; i++){
+					for(i = 0, iz = my.animnames.length; i < iz; i++){
 						results = results.concat(my.anim[my.animnames[i]].toString());
 						}
 					}
 				break;
 			case 'springs' :
 				if(my.xt(my.springnames)){
-					for(var i=0, z=my.springnames.length; i<z; i++){
+					for(i = 0, iz = my.springnames.length; i < iz; i++){
 						results = results.concat(my.spring[my.springnames[i]].toString());
 						}
 					}
@@ -257,12 +258,13 @@ Turn the object into a JSON String
 			groups = [],
 			sprites = [],
 			ctx,
-			designs = [];
+			designs = [],
+			i, iz, j, jz;
 		result.type = this.type;
 		result.classname = this.classname;
 		result.name = this.name;
 		result.parentElement = my.canvas[this.name].parentElement.id;
-		for(var i = 0, z = keys.length; i < z; i++){
+		for(i = 0, iz = keys.length; i < iz; i++){
 			if(my.contains(['start', 'delta', 'handle'], keys[i])){
 				if(!this[keys[i]].isLike(my.d[this.type][keys[i]])){
 					result[keys[i]] = this[keys[i]];
@@ -276,19 +278,19 @@ Turn the object into a JSON String
 		delete result.displayOffsetY;
 		resarray.push(JSON.stringify(result));
 		if(!noexternalobjects){
-			for(var i=0, z=this.cells.length; i<z; i++){
-				for(var j=0, w=my.cell[this.cells[i]].groups.length; j<w; j++){
+			for(i = 0, iz=this.cells.length; i < iz; i++){
+				for(j = 0, jz = my.cell[this.cells[i]].groups.length; j < jz; j++){
 					my.pushUnique(groups, my.cell[this.cells[i]].groups[j]);
 					}
 				resarray.push(my.cell[this.cells[i]].toString(true));
 				}
-			for(var i=0, z=groups.length; i<z; i++){
-				for(var j=0, w=my.group[groups[i]].sprites.length; j<w; j++){
+			for(i = 0, iz=groups.length; i < iz; i++){
+				for(j = 0, jz = my.group[groups[i]].sprites.length; j < jz; j++){
 					my.pushUnique(sprites, my.group[groups[i]].sprites[j]);
 					}
 				resarray.push(my.group[groups[i]].toString(true));
 				}
-			for(var i=0, z=sprites.length; i<z; i++){
+			for(i = 0, iz=sprites.length; i < iz; i++){
 				ctx = my.ctx[my.sprite[sprites[i]].context];
 				if(my.contains(my.designnames, ctx.fillStyle)){
 					my.pushUnique(designs, ctx.fillStyle);
@@ -300,10 +302,10 @@ Turn the object into a JSON String
 					my.pushUnique(designs, ctx.shadowColor);
 					}
 				}
-			for(var i=0, z=designs.length; i<z; i++){
+			for(i = 0, iz=designs.length; i < iz; i++){
 				resarray.push(my.design[designs[i]].toString());
 				}
-			for(var i=0, z=sprites.length; i<z; i++){
+			for(i = 0, iz=sprites.length; i < iz; i++){
 				resarray.push(my.sprite[sprites[i]].toString(true));
 				}
 			}
@@ -322,11 +324,12 @@ Turn the object into a JSON String
 			resarray = [],
 			sprites = [],
 			ctx,
-			designs = [];
+			designs = [],
+			i, iz, j, jz;
 		result.type = this.type;
 		result.classname = this.classname;
 		result.name = this.name;
-		for(var i = 0, z = keys.length; i < z; i++){
+		for(i = 0, iz = keys.length; i < iz; i++){
 			if(my.contains(['start', 'delta', 'handle', 'source', 'sourceDelta'], keys[i])){
 				if(!this[keys[i]].isLike(my.d[this.type][keys[i]])){
 					result[keys[i]] = this[keys[i]];
@@ -338,13 +341,13 @@ Turn the object into a JSON String
 			}
 		resarray.push(JSON.stringify(result));
 		if(!noexternalobjects){
-			for(var i=0, z=this.groups.length; i<z; i++){
-				for(var j=0, w=my.group[this.groups[i]].sprites.length; j<w; j++){
+			for(i = 0, iz = this.groups.length; i < iz; i++){
+				for(j = 0, jz = my.group[this.groups[i]].sprites.length; j < jz; j++){
 					my.pushUnique(sprites, my.group[this.groups[i]].sprites[j]);
 					}
 				resarray.push(my.group[this.groups[i]].toString(true));
 				}
-			for(var i=0, z=sprites.length; i<z; i++){
+			for(i = 0, iz = sprites.length; i < iz; i++){
 				ctx = my.ctx[my.sprite[sprites[i]].context];
 				if(my.contains(my.designnames, ctx.fillStyle)){
 					my.pushUnique(designs, ctx.fillStyle);
@@ -356,10 +359,10 @@ Turn the object into a JSON String
 					my.pushUnique(designs, ctx.shadowColor);
 					}
 				}
-			for(var i=0, z=designs.length; i<z; i++){
+			for(i = 0, iz = designs.length; i < iz; i++){
 				resarray.push(my.design[designs[i]].toString());
 				}
-			for(var i=0, z=sprites.length; i<z; i++){
+			for(i = 0, iz = sprites.length; i < iz; i++){
 				resarray.push(my.sprite[sprites[i]].toString(true));
 				}
 			}
@@ -397,11 +400,12 @@ Automatically removes the sprites attribute from the result; when loading, exist
 			result = {},
 			resarray = [],
 			ctx,
-			designs = [];
+			designs = [],
+			i, iz;
 		result.type = this.type;
 		result.classname = this.classname;
 		result.name = this.name;
-		for(var i = 0, z = keys.length; i < z; i++){
+		for(i = 0, iz = keys.length; i < iz; i++){
 			if(my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]){
 				result[keys[i]] = this[keys[i]];
 				}
@@ -409,7 +413,7 @@ Automatically removes the sprites attribute from the result; when loading, exist
 		delete result.sprites;
 		resarray.push(JSON.stringify(result));
 		if(!nosprites){
-			for(var i=0, z=this.sprites.length; i<z; i++){
+			for(i = 0, iz = this.sprites.length; i < iz; i++){
 				ctx = my.ctx[my.sprite[this.sprites[i]].context];
 				if(my.contains(my.designnames, ctx.fillStyle)){
 					my.pushUnique(designs, ctx.fillStyle);
@@ -421,10 +425,10 @@ Automatically removes the sprites attribute from the result; when loading, exist
 					my.pushUnique(designs, ctx.shadowColor);
 					}
 				}
-			for(var i=0, z=designs.length; i<z; i++){
+			for(i = 0, iz = designs.length; i < iz; i++){
 				resarray.push(my.design[designs[i]].toString());
 				}
-			for(var i=0, z=this.sprites.length; i<z; i++){
+			for(i = 0, iz = this.sprites.length; i < iz; i++){
 				resarray.push(my.sprite[this.sprites[i]].toString(true));
 				}
 			}
@@ -478,11 +482,11 @@ Turn the object into a JSON String
 			if(ctx && ctx.shadowColor && my.contains(my.designnames, ctx.shadowColor)){
 				my.pushUnique(designs, ctx.shadowColor);
 				}
-			for(var i=0, z=designs.length; i<z; i++){
-				resarray.push(my.design[designs[i]].toString());
+			for(var k = 0, kz = designs.length; k < kz; k++){
+				resarray.push(my.design[designs[k]].toString());
 				}
 			}
-		for(var i = 0, z = keys.length; i < z; i++){
+		for(var i = 0, iz = keys.length; i < iz; i++){
 			if(my.contains(['start', 'delta', 'handle'], keys[i])){
 				if(!this[keys[i]].isLike(my.d[this.type][keys[i]])){
 					result[keys[i]] = this[keys[i]];
@@ -491,7 +495,7 @@ Turn the object into a JSON String
 			else if(keys[i] === 'context' && my.xt(my.ctx[this.context])){
 				ctx = JSON.parse(my.ctx[this.context].toString());
 				ctxArray = Object.keys(ctx);
-				for(var j = 0, w = ctxArray.length; j < w; j++){
+				for(var j = 0, jz = ctxArray.length; j < jz; j++){
 					result[ctxArray[j]] = ctx[ctxArray[j]];
 					}
 				}
@@ -506,7 +510,7 @@ Turn the object into a JSON String
 			result.url = my.image[this.source].source;
 			}
 		resarray.push(JSON.stringify(result).replace('\\n', '\\\\n'));		//replace required for multiline Phrase sprites
-		return resarray
+		return resarray;
 		};
 		
 	return my;
