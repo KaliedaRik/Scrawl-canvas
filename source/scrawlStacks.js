@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-'use strict';
 /**
 # scrawlStacks
 
@@ -39,6 +38,7 @@ The Stacks module adds support for CSS3 3d transformations to visible &lt;canvas
 **/
 
 var scrawl = (function(my){
+	'use strict';
 
 /**
 # window.scrawl
@@ -95,16 +95,17 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 	my.getStacks = function(){
 		var	s = document.getElementsByClassName("scrawlstack"),
 			stacks = [],
-			myStack;
+			myStack,
+			i, iz, j, jz;
 		if(s.length > 0){
-			for(var i=0, z=s.length; i<z; i++){
+			for(i = 0, iz = s.length; i < iz; i++){
 				stacks.push(s[i]);
 				}
-			for(var i=0, z=s.length; i<z; i++){
+			for(i = 0, iz = s.length; i < iz; i++){
 				myStack = my.newStack({
 					stackElement: stacks[i],
 					});
-				for(var j=0, w=my.stk[myStack.name].children.length; j<w; j++){
+				for(j = 0, jz = my.stk[myStack.name].children.length; j < jz; j++){
 					my.stk[myStack.name].children[j].style.position = 'absolute';
 					if(my.stk[myStack.name].children[j].tagName !== 'CANVAS'){
 						my.newElement({
@@ -139,12 +140,13 @@ A __private__ function that searches the DOM for canvas elements and generates P
 			myStack, 
 			myElement, 
 			myNewStack,
-			canvases = [];
+			canvases = [],
+			i, iz;
 		if(s.length > 0){
-			for(var i=0, z=s.length; i<z; i++){
+			for(i = 0, iz = s.length; i < iz; i++){
 				canvases.push(s[i]);
 				}
-			for(var i=0, z=s.length; i<z; i++){
+			for(i = 0, iz = s.length; i < iz; i++){
 				if(canvases[i].className.indexOf('stack:') !== -1){
 					myStack = canvases[i].className.match(/stack:(\w+)/);
 					if(my.contains(my.stacknames, myStack[1])){
@@ -186,12 +188,13 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 		var	s = document.getElementsByClassName("scrawl"),
 			el = [],
 			myName, 
-			myStack;
+			myStack,
+			i, iz;
 		if(s.length > 0){
-			for(var i=0, z=s.length; i<z; i++){
+			for(i = 0, iz = s.length; i < iz; i++){
 				el.push(s[i]);
 				}
-			for(var i=0, z=s.length; i<z; i++){
+			for(i = 0, iz = s.length; i < iz; i++){
 				myName = el.id || el.name || false;
 				if(!my.contains(my.elementnames, myName)){
 					if(el[i].className.indexOf('stack:') !== -1){
@@ -276,7 +279,7 @@ The argument object should include the following attributes:
 		myCanvas = document.createElement('canvas');
 		myCanvas.id = myName;
 		myParent.appendChild(myCanvas);
-		DOMCanvas = document.getElementById(myName)
+		DOMCanvas = document.getElementById(myName);
 		DOMCanvas.width = items.width;
 		DOMCanvas.height = items.height;
 		myPad = my.newPad({
@@ -310,7 +313,7 @@ The argument object should include the following attributes:
 			myElement = document.createElement('div');
 			myElement.id = items.stackName;
 			items.parentElement.appendChild(myElement);
-			items['stackElement'] = document.getElementById(items.stackName);
+			items.stackElement = document.getElementById(items.stackName);
 			myStack = my.newStack(items);
 			myStack.stack = (my.contains(my.stacknames, items.parentElement.id)) ? items.parentElement.id : '';
 			return myStack;
@@ -331,19 +334,20 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 	scrawl.setDisplayOffsets();
 **/
 	my.setDisplayOffsets = function(item){
+		var i, iz;
 		item = (my.xt(item)) ? item : 'all';
 		if(item === 'stack' || item === 'all'){
-			for(var i=0, z=my.stacknames.length; i<z; i++){
+			for(i = 0, iz = my.stacknames.length; i < iz; i++){
 				my.stack[my.stacknames[i]].setDisplayOffsets();
 				}
 			}
 		if(item === 'pad' || item === 'all'){
-			for(var i=0, z=my.padnames.length; i<z; i++){
+			for(i = 0, iz = my.padnames.length; i < iz; i++){
 				my.pad[my.padnames[i]].setDisplayOffsets();
 				}
 			}
 		if(item === 'element' || item === 'all'){
-			for(var i=0, z=my.elementnames.length; i<z; i++){
+			for(i = 0, iz = my.elementnames.length; i < iz; i++){
 				my.element[my.elementnames[i]].setDisplayOffsets();
 				}
 			}
@@ -355,13 +359,14 @@ A __display__ function to move DOM elements within a Stack
 @return Always true
 **/
 	my.renderElements = function(){
-		for(var i=0, z=my.stacknames.length; i<z; i++){
+		var i, iz;
+		for(i = 0, iz = my.stacknames.length; i < iz; i++){
 			my.stack[my.stacknames[i]].renderElement();
 			}
-		for(var i=0, z=my.padnames.length; i<z; i++){
+		for(i = 0, iz = my.padnames.length; i < iz; i++){
 			my.pad[my.padnames[i]].renderElement();
 			}
-		for(var i=0, z=my.elementnames.length; i<z; i++){
+		for(i = 0, iz = my.elementnames.length; i < iz; i++){
 			my.element[my.elementnames[i]].renderElement();
 			}
 		return true;
@@ -384,24 +389,25 @@ Where the _action_ attribute can contain either an array of Scrawl objects to be
 **/
 	my.update3d = function(items){
 		items = my.safeObject(items);
-		var action = items.action || 'all';
+		var action = items.action || 'all',
+		i, iz;
 		if(action === 'stacks' || action === 'all'){
-			for(var i=0, z=my.stacknames.length; i<z; i++){
+			for(i = 0, iz = my.stacknames.length; i < iz; i++){
 				my.stack[my.stacknames[i]].update3d(items);
 				}
 			}
 		if(action === 'pads' || action === 'all'){
-			for(var i=0, z=my.padnames.length; i<z; i++){
+			for(i = 0, iz = my.padnames.length; i < iz; i++){
 				my.pad[my.padnames[i]].update3d(items);
 				}
 			}
 		if(action === 'elements' || action === 'all'){
-			for(var i=0, z=my.elementnames.length; i<z; i++){
+			for(i = 0, iz = my.elementnames.length; i < iz; i++){
 				my.element[my.elementnames[i]].update3d(items);
 				}
 			}
 		if(my.isa(action, 'arr')){
-			for(var i = 0, iz = action; i < iz; i++){
+			for(i = 0, iz = action; i < iz; i++){
 				if(my.contains(['Pad', 'Stack', 'Element'], action[i].type)){
 					action[i].update3d(items);
 					}
@@ -661,6 +667,7 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 					if('height' === item){
 						return this.height || parseFloat(el.height) || my.d[this.type].height; 
 						}
+					break;
 				default :
 					if('width' === item){
 						return this.width || parseFloat(el.style.width) || parseFloat(el.clientWidth) || my.d[this.type].width; 
@@ -672,15 +679,15 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 			}
 		if(my.contains(['startX','startY','handleX','handleY','deltaX','deltaY','translateX','translateY','translateZ'], item)){
 			switch(item){
-				case 'startX' : return this.start.x; break;
-				case 'startY' : return this.start.y; break;
-				case 'handleX' : return this.handle.x; break;
-				case 'handleY' : return this.handle.y; break;
-				case 'deltaX' : return this.delta.x; break;
-				case 'deltaY' : return this.delta.y; break;
-				case 'translateX' : return this.translate.x; break;
-				case 'translateY' : return this.translate.y; break;
-				case 'translateZ' : return this.translate.z; break;
+				case 'startX' : return this.start.x;
+				case 'startY' : return this.start.y;
+				case 'handleX' : return this.handle.x;
+				case 'handleY' : return this.handle.y;
+				case 'deltaX' : return this.delta.x;
+				case 'deltaY' : return this.delta.y;
+				case 'translateX' : return this.translate.x;
+				case 'translateY' : return this.translate.y;
+				case 'translateZ' : return this.translate.z;
 				}
 			}
 		
@@ -904,7 +911,7 @@ Permitted argument values include
 	my.PageElement.prototype.updateStart = function(item){
 		switch(item){
 			case 'x' :
-				if(my.isa(this.start.x,'num')){this.start.x += this.delta.x || 0};
+				if(my.isa(this.start.x,'num')){this.start.x += this.delta.x || 0;}
 				break;
 			case 'y' :
 				if(my.isa(this.start.y,'num')){this.start.y += this.delta.y || 0;}
@@ -1042,12 +1049,12 @@ Calculates the pixels value of the object's start attribute
 			height,
 			width;
 		if(hasElementPivot){
-			result = my.v.set(my.element[this.pivot].start),
+			result = my.v.set(my.element[this.pivot].start);
 			height = my.element[this.pivot].get(height);
 			width = my.element[this.pivot].get(width);
 			}
 		else{
-			result = my.v.set(this.start),
+			result = my.v.set(this.start);
 			height = (this.stack) ? my.stack[this.stack].get('height') : this.height || this.get('height');
 			width = (this.stack) ? my.stack[this.stack].get('width') : this.width || this.get('width');
 			}
@@ -1225,7 +1232,8 @@ Calculate the element's display offset values
 			do{
 				dox += myDisplay.offsetLeft;
 				doy += myDisplay.offsetTop;
-				} while (myDisplay = myDisplay.offsetParent);
+				myDisplay = myDisplay.offsetParent;
+				} while (myDisplay.offsetParent);
 			}
 		this.offset = this.getOffsetStartVector();
 		this.displayOffsetX = dox;
@@ -1302,7 +1310,7 @@ A __factory__ function to generate new Element objects
 			this.width = items.width || this.get('width');
 			this.height = items.height || this.get('height');
 			this.scaleText = (my.isa(items.scaleText, 'bool')) ? items.scaleText : false;
-			this.setDimensions()
+			this.setDimensions();
 			this.setPerspective();
 			this.setStyles(items);
 			if(my.xto([items.title, items.comment])){
@@ -1314,7 +1322,7 @@ A __factory__ function to generate new Element objects
 			}
 		console.log('Failed to generate a Stack wrapper - no DOM element supplied'); 
 		return false;
-		}
+		};
 	my.Stack.prototype = Object.create(my.PageElement.prototype);
 /**
 @property type
@@ -1404,12 +1412,16 @@ Import elements into the stack DOM object, and create element object wrappers fo
 @return Array of element wrapper objects on success; false otherwise
 **/
 	my.Stack.prototype.addElementsByClassName = function(item){
+		var myElements = [],
+			myArray,
+			myElement, 
+			myElm, 
+			thisElement,
+			i, iz;
 		if(my.isa(item, 'str')){
-			var myElements = [];
-			var myArray = document.getElementsByClassName(item);
-			var myElement, myElm, thisElement;
-			for(var i=0, z=myArray.length; i<z; i++){
-				thisElement = myArray[i]
+			myArray = document.getElementsByClassName(item);
+			for(i = 0, iz = myArray.length; i < iz; i++){
+				thisElement = myArray[i];
 				if(thisElement.nodeName !== 'CANVAS'){
 					myElement = my.newElement({
 						domElement: thisElement,
@@ -1418,7 +1430,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 					myElements.push(myElement);
 					}
 				}
-			for(var i=0, z=myElements.length; i<z; i++){
+			for(i = 0, iz = myElements.length; i < iz; i++){
 				my.stk[this.name].appendChild(my.elm[myElements[i].name]);
 				my.elm[myElements[i].name] = document.getElementById(myElements[i].name);
 				}
@@ -1432,20 +1444,21 @@ Move DOM elements within a Stack
 @return Always true
 **/
 	my.Stack.prototype.renderElements = function(){
-		var temp;
-		for(var i=0, z=my.stacknames.length; i<z; i++){
+		var temp,
+			i, iz;
+		for(i = 0, iz = my.stacknames.length; i < iz; i++){
 			temp = my.stack[my.stacknames[i]];
 			if(temp.stack === this.name){
 				temp.renderElement();
 				}
 			}
-		for(var i=0, z=my.padnames.length; i<z; i++){
+		for(i = 0, iz = my.padnames.length; i < iz; i++){
 			temp = my.pad[my.padnames[i]];
 			if(temp.stack === this.name){
 				temp.renderElement();
 				}
 			}
-		for(var i=0, z=my.elementnames.length; i<z; i++){
+		for(i = 0, iz = my.elementnames.length; i < iz; i++){
 			temp = my.element[my.elementnames[i]];
 			if(temp.stack === this.name){
 				temp.renderElement();
@@ -1500,19 +1513,20 @@ By default, this function does not scale text contained in any stack element. If
 @chainable
 **/
 	my.Stack.prototype.scaleStack = function(item, scaleFont){
+		var i, iz;
 		scaleFont = (my.xt(scaleFont)) ? scaleFont : this.scaleText;
 		if(my.isa(item,'num') && this.type === 'Stack'){
-			for(var i=0, z=my.stacknames.length; i<z; i++){
+			for(i = 0, iz = my.stacknames.length; i < iz; i++){
 				if(my.stack[my.stacknames[i]].stack === this.name){
 					my.stack[my.stacknames[i]].scaleStack(item);
 					}
 				}
-			for(var i=0, z=my.elementnames.length; i<z; i++){
+			for(i = 0, iz = my.elementnames.length; i < iz; i++){
 				if(my.element[my.elementnames[i]].stack === this.name){
 					my.element[my.elementnames[i]].scaleDimensions(item);
 					}
 				}
-			for(var i=0, z=my.padnames.length; i<z; i++){
+			for(i = 0, iz = my.padnames.length; i < iz; i++){
 				if(my.pad[my.padnames[i]].stack === this.name){
 					my.pad[my.padnames[i]].scaleDimensions(item);
 					}
@@ -1555,7 +1569,6 @@ By default, this function does not scale text contained in any stack element. If
 **/		
 	my.Element = function(items){
 		items = (my.isa(items,'obj')) ? items : {};
-//		my.PageElement.call(this, items);
 		if(my.xt(items.domElement)){
 			var tempname = '';
 			if(my.xto([items.domElement.id,items.domElement.name])){
@@ -1571,7 +1584,7 @@ By default, this function does not scale text contained in any stack element. If
 			this.stack = items.stack || '';
 			this.width = items.width || this.get('width');
 			this.height = items.height || this.get('height');
-			this.setDimensions()
+			this.setDimensions();
 			this.setDisplayOffsets();
 			this.setStyles(items);
 			if(my.xto([items.title, items.comment])){
@@ -1583,7 +1596,7 @@ By default, this function does not scale text contained in any stack element. If
 			}
 		console.log('Failed to generate an Element wrapper - no DOM element supplied'); 
 		return false;
-		}
+		};
 	my.Element.prototype = Object.create(my.PageElement.prototype);
 /**
 @property type

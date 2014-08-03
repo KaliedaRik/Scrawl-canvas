@@ -31,7 +31,7 @@ module.exports = function(grunt){
 					}
 				},
 			jshint: {
-				all: ['source/scrawlShape.js']
+				all: ['source/*.js']
 				}
 		});
 
