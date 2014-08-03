@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>source\scrawlWheel.js - scrawl</title>
+    <title>source\scrawlWheel.js - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -15,7 +15,7 @@
     <div id="hd" class="yui3-g header">
         <div class="yui3-u-3-4">
             
-                <h1><img src="../assets/css/logo.png" title="scrawl"></h1>
+                <h1><img src="../assets/css/logo.png" title="scrawl-canvas"></h1>
             
         </div>
         <div class="yui3-u-1-4 version">
@@ -233,9 +233,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
-
-&#x27;use strict&#x27;;
-
 /**
 # scrawlWheel
 
@@ -248,10 +245,10 @@ The Wheel module adds Wheel sprites - circles, segments and filled arcs - to the
 
 @module scrawlWheel
 **/
+var scrawl = (function(my) {
+	&#x27;use strict&#x27;;
 
-var scrawl = (function(my){
-
-/**
+	/**
 # window.scrawl
 
 scrawlWheel module adaptions to the Scrawl library object
@@ -259,7 +256,7 @@ scrawlWheel module adaptions to the Scrawl library object
 @class window.scrawl_Wheel
 **/
 
-/**
+	/**
 A __factory__ function to generate new Wheel sprites
 @method newWheel
 @param {Object} items Key:value Object argument for setting attributes
@@ -274,14 +271,14 @@ A __factory__ function to generate new Wheel sprites
 		method: &#x27;drawFill&#x27;,
 		});
 **/
-	my.newWheel = function(items){
+	my.newWheel = function(items) {
 		return new my.Wheel(items);
-		};
+	};
 
 	my.workwheel = {
 		v1: my.newVector(),
-		};
-/**
+	};
+	/**
 # Wheel
 	
 ## Instantiation
@@ -301,119 +298,123 @@ A __factory__ function to generate new Wheel sprites
 @constructor
 @extends Sprite
 @param {Object} [items] Key:value Object argument for setting attributes
-**/		
-	my.Wheel = function Wheel(items){
+**/
+	my.Wheel = function Wheel(items) {
 		items = my.safeObject(items);
 		my.Sprite.call(this, items);
 		my.Position.prototype.set.call(this, items);
 		this.radius = items.radius || my.d.Wheel.radius;
 		this.width = this.radius * 2;
 		this.height = this.width;
-		this.checkHitUsingRadius = (my.isa(items.checkHitUsingRadius,&#x27;bool&#x27;)) ? items.checkHitUsingRadius : my.d.Wheel.checkHitUsingRadius;
-		this.closed = (my.isa(items.closed,&#x27;bool&#x27;)) ? items.closed : my.d.Wheel.closed;
-		this.includeCenter = (my.isa(items.includeCenter,&#x27;bool&#x27;)) ? items.includeCenter : my.d.Wheel.includeCenter;
-		this.clockwise = (my.isa(items.clockwise,&#x27;bool&#x27;)) ? items.clockwise : my.d.Wheel.clockwise;
+		this.checkHitUsingRadius = (my.isa(items.checkHitUsingRadius, &#x27;bool&#x27;)) ? items.checkHitUsingRadius : my.d.Wheel.checkHitUsingRadius;
+		this.closed = (my.isa(items.closed, &#x27;bool&#x27;)) ? items.closed : my.d.Wheel.closed;
+		this.includeCenter = (my.isa(items.includeCenter, &#x27;bool&#x27;)) ? items.includeCenter : my.d.Wheel.includeCenter;
+		this.clockwise = (my.isa(items.clockwise, &#x27;bool&#x27;)) ? items.clockwise : my.d.Wheel.clockwise;
 		this.registerInLibrary();
 		my.pushUnique(my.group[this.group].sprites, this.name);
 		return this;
-		}
+	};
 	my.Wheel.prototype = Object.create(my.Sprite.prototype);
-/**
+	/**
 @property type
 @type String
 @default &#x27;Wheel&#x27;
 @final
-**/		
+**/
 	my.Wheel.prototype.type = &#x27;Wheel&#x27;;
 	my.Wheel.prototype.classname = &#x27;spritenames&#x27;;
 	my.d.Wheel = {
-/**
+		/**
 Angle of the path&#x27;s start point, from due east, in degrees
 @property startAngle
 @type Number
 @default 0
 **/
 		startAngle: 0,
-/**
+		/**
 Angle of the path&#x27;s end point, from due east, in degrees
 @property endAngle
 @type Number
 @default 360
 **/
 		endAngle: 360,
-/**
+		/**
 Drawing flag - true to draw the arc in a clockwise direction; false for anti-clockwise
 @property clockwise
 @type Boolean
 @default false
 **/
 		clockwise: false,
-/**
+		/**
 Drawing flag - true to close the path; false to keep the path open
 @property closed
 @type Boolean
 @default true
 **/
 		closed: true,
-/**
+		/**
 Drawing flag - true to include the center in the path (for wedge shapes); false for circles
 @property includeCenter
 @type Boolean
 @default false
 **/
 		includeCenter: false,
-/**
+		/**
 Collision calculation flag - true to use a simple radius check; false to use the JavaScript isPointInPath() function
 @property checkHitUsingRadius
 @type Boolean
 @default true
 **/
 		checkHitUsingRadius: true,
-/**
+		/**
 Collision calculation value - collision radius, from start vector
 @property checkHitRadius
 @type Number
 @default 0
 **/
 		checkHitRadius: 0,
-		};
+	};
 	my.mergeInto(my.d.Wheel, my.d.Sprite);
-/**
+	/**
 Augments Sprite.set()
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
-	my.Wheel.prototype.set = function(items){
+	my.Wheel.prototype.set = function(items) {
 		my.Sprite.prototype.set.call(this, items);
 		this.radius = items.radius || this.radius;
 		this.width = this.radius * 2;
 		this.height = this.width;
 		return this;
-		};
-/**
+	};
+	/**
 Augments Sprite.setDelta()
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
-	my.Wheel.prototype.setDelta = function(items){
+	my.Wheel.prototype.setDelta = function(items) {
 		my.Sprite.prototype.setDelta.call(this, items);
-		items = (my.isa(items,&#x27;obj&#x27;)) ? items : {};
+		items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
 		var f = {};
-		if(my.xt(items.radius)){
+		if (my.xt(items.radius)) {
 			this.radius += items.radius;
 			this.width = this.radius * 2;
 			this.height = this.width;
-			}
-		if(my.xt(items.startAngle)){f.startAngle = this.get(&#x27;startAngle&#x27;) + items.startAngle;}
-		if(my.xt(items.endAngle)){f.endAngle = this.get(&#x27;endAngle&#x27;) + items.endAngle;}
+		}
+		if (my.xt(items.startAngle)) {
+			f.startAngle = this.get(&#x27;startAngle&#x27;) + items.startAngle;
+		}
+		if (my.xt(items.endAngle)) {
+			f.endAngle = this.get(&#x27;endAngle&#x27;) + items.endAngle;
+		}
 		this.set(f);
 		return this;
-		};
-/**
+	};
+	/**
 Check a set of coordinates to see if any of them fall within this sprite&#x27;s path - uses JavaScript&#x27;s _isPointInPath_ function
 
 Argument object contains the following attributes:
@@ -430,46 +431,57 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 @param {Object} items Argument object
 @return The first coordinate to fall within the sprite&#x27;s path; false if none fall within the path
 **/
-	my.Wheel.prototype.checkHit = function(items){
+	my.Wheel.prototype.checkHit = function(items) {
 		items = my.safeObject(items);
-		var	tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
+		var tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
 			result = false,
 			coords,
 			testRadius,
-			ctx;
-		if(this.checkHitUsingRadius){
+			ctx,
+			i, iz;
+		if (this.checkHitUsingRadius) {
 			testRadius = (this.checkHitRadius) ? this.checkHitRadius : this.radius * this.scale;
-			for(var i = 0, z = tests.length; i &lt; z; i += 2){
+			for (i = 0, iz = tests.length; i &lt; iz; i += 2) {
 				this.resetWork();
-				coords = my.workwheel.v1.set({x: tests[i], y: tests[i+1]});
+				coords = my.workwheel.v1.set({
+					x: tests[i],
+					y: tests[i + 1]
+				});
 				coords.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
 				coords.x = (this.flipReverse) ? -coords.x : coords.x;
 				coords.y = (this.flipUpend) ? -coords.y : coords.y;
 				coords.vectorAdd(this.getPivotOffsetVector(this.handle));
 				result = (coords.getMagnitude() &lt;= testRadius) ? true : false;
-				if(result){break;}
+				if (result) {
+					break;
 				}
 			}
-		else{
+		}
+		else {
 			ctx = my.cvx;
 			this.buildPath(ctx);
-			for(var i = 0, z = tests.length; i &lt; z; i += 2){
-				result = ctx.isPointInPath(tests[i], tests[i+1]);
-				if(result){break;}
+			for (i = 0, iz = tests.length; i &lt; iz; i += 2) {
+				result = ctx.isPointInPath(tests[i], tests[i + 1]);
+				if (result) {
+					break;
 				}
 			}
-		return (result) ? {x: tests[i], y: tests[i+1]} : false;
-		};
-/**
+		}
+		return (result) ? {
+			x: tests[i],
+			y: tests[i + 1]
+		} : false;
+	};
+	/**
 Position.getOffsetStartVector() helper function
 @method getPivotOffsetVector
 @return A Vector of calculated offset values to help determine where sprite drawing should start
 @private
 **/
-	my.Wheel.prototype.getPivotOffsetVector = function(){
+	my.Wheel.prototype.getPivotOffsetVector = function() {
 		return this.getCenteredPivotOffsetVector();
-		};
-/**
+	};
+	/**
 Stamp helper function - define the sprite&#x27;s path on the &amp;lt;canvas&amp;gt; element&#x27;s context engine
 @method buildPath
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -478,19 +490,22 @@ Stamp helper function - define the sprite&#x27;s path on the &amp;lt;canvas&amp;
 @chainable
 @private
 **/
-//	my.Wheel.prototype.buildPath = function(ctx, cell){
-	my.Wheel.prototype.buildPath = function(ctx){
+	my.Wheel.prototype.buildPath = function(ctx) {
 		var here = this.prepareStamp(),
 			startAngle = this.get(&#x27;startAngle&#x27;),
 			endAngle = this.get(&#x27;endAngle&#x27;);
 		this.rotateCell(ctx);
 		ctx.beginPath();
 		ctx.arc(here.x, here.y, (this.radius * this.scale), (startAngle * my.radian), (endAngle * my.radian), this.clockwise);
-		if(this.includeCenter){ctx.lineTo(here.x, here.y);}
-		if(this.closed){ctx.closePath();}
+		if (this.includeCenter) {
+			ctx.lineTo(here.x, here.y);
+		}
+		if (this.closed) {
+			ctx.closePath();
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;clip&#x27; method draw
 @method clip
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -499,12 +514,12 @@ Stamp helper function - perform a &#x27;clip&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.clip = function(ctx, cell){
+	my.Wheel.prototype.clip = function(ctx, cell) {
 		this.buildPath(ctx);
 		ctx.clip();
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;clear&#x27; method draw
 @method clear
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -513,15 +528,15 @@ Stamp helper function - perform a &#x27;clear&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.clear = function(ctx, cell){
+	my.Wheel.prototype.clear = function(ctx, cell) {
 		ctx.globalCompositeOperation = &#x27;destination-out&#x27;;
 		this.buildPath(ctx);
 		ctx.stroke();
 		ctx.fill();
 		ctx.globalCompositeOperation = my.ctx[cell].get(&#x27;globalCompositeOperation&#x27;);
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -530,7 +545,7 @@ Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.clearWithBackground = function(ctx, cell){
+	my.Wheel.prototype.clearWithBackground = function(ctx, cell) {
 		var myCell = my.cell[cell],
 			bc = myCell.get(&#x27;backgroundColor&#x27;),
 			myCellCtx = my.ctx[cell],
@@ -547,8 +562,8 @@ Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 		ctx.strokeStyle = strokeStyle;
 		ctx.globalAlpha = globalAlpha;
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;draw&#x27; method draw
 @method draw
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -557,13 +572,13 @@ Stamp helper function - perform a &#x27;draw&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.draw = function(ctx, cell){
+	my.Wheel.prototype.draw = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
 		this.buildPath(ctx);
 		ctx.stroke();
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;fill&#x27; method draw
 @method fill
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -572,13 +587,13 @@ Stamp helper function - perform a &#x27;fill&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.fill = function(ctx, cell){
+	my.Wheel.prototype.fill = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
 		this.buildPath(ctx);
 		ctx.fill();
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;drawFill&#x27; method draw
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -587,15 +602,15 @@ Stamp helper function - perform a &#x27;drawFill&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.drawFill = function(ctx, cell){
+	my.Wheel.prototype.drawFill = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
 		this.buildPath(ctx);
 		ctx.stroke();
 		this.clearShadow(ctx, cell);
 		ctx.fill();
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -604,15 +619,15 @@ Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.fillDraw = function(ctx, cell){
+	my.Wheel.prototype.fillDraw = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
 		this.buildPath(ctx);
 		ctx.fill();
 		this.clearShadow(ctx, cell);
 		ctx.stroke();
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -621,14 +636,14 @@ Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.sinkInto = function(ctx, cell){
+	my.Wheel.prototype.sinkInto = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
 		this.buildPath(ctx);
 		ctx.fill();
 		ctx.stroke();
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -637,14 +652,14 @@ Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 @chainable
 @private
 **/
-	my.Wheel.prototype.floatOver = function(ctx, cell){
+	my.Wheel.prototype.floatOver = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
 		this.buildPath(ctx);
 		ctx.stroke();
 		ctx.fill();
 		return this;
-		};
-/**
+	};
+	/**
 Collision detection helper function
 
 Parses the collisionPoints array to generate coordinate Vectors representing the sprite&#x27;s collision points
@@ -654,54 +669,90 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @chainable
 @private
 **/
-	my.Wheel.prototype.buildCollisionVectors = function(items){
-		if(my.xt(my.workcols)){
-			var	p,
-				c = [],
-				v = my.workcols.v1.set({x: this.radius, y: 0}),
-				w,
-				r,
-				res;
-			if(my.xt(items)){
-				p = this.parseCollisionPoints(items);
+	my.Wheel.prototype.buildCollisionVectors = function(items) {
+		var p, c = [],
+			v, w, r,
+			res;
+		if (my.xt(my.workcols)) {
+			v = my.workcols.v1.set({
+				x: this.radius,
+				y: 0
+			});
+			p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
+			for (var i = 0, iz = p.length; i &lt; iz; i++) {
+				if (my.isa(p[i], &#x27;num&#x27;) &amp;&amp; p[i] &gt; 1) {
+					w = my.workcols.v2.set(v);
+					r = 360 / Math.floor(p[i]);
+					for (var j = 0; j &lt; p[i]; j++) {
+						w.rotate(r);
+						c.push(w.x);
+						c.push(w.y);
+					}
 				}
-			else{
-				p = this.collisionPoints;
+				else if (my.isa(p[i], &#x27;str&#x27;)) {
+					w = my.workcols.v2.set(v);
+					switch (p[i]) {
+						case &#x27;start&#x27;:
+							c.push(0);
+							c.push(0);
+							break;
+						case &#x27;N&#x27;:
+							w.rotate(-90);
+							c.push(w.x);
+							c.push(w.y);
+							break;
+						case &#x27;NE&#x27;:
+							w.rotate(-45);
+							c.push(w.x);
+							c.push(w.y);
+							break;
+						case &#x27;E&#x27;:
+							c.push(w.x);
+							c.push(w.y);
+							break;
+						case &#x27;SE&#x27;:
+							w.rotate(45);
+							c.push(w.x);
+							c.push(w.y);
+							break;
+						case &#x27;S&#x27;:
+							w.rotate(90);
+							c.push(w.x);
+							c.push(w.y);
+							break;
+						case &#x27;SW&#x27;:
+							w.rotate(135);
+							c.push(w.x);
+							c.push(w.y);
+							break;
+						case &#x27;W&#x27;:
+							w.rotate(180);
+							c.push(w.x);
+							c.push(w.y);
+							break;
+						case &#x27;NW&#x27;:
+							w.rotate(-135);
+							c.push(w.x);
+							c.push(w.y);
+							break;
+						case &#x27;center&#x27;:
+							c.push(0);
+							c.push(0);
+							break;
+					}
 				}
-			for(var i = 0, iz = p.length; i &lt; iz; i++){
-				if(my.isa(p[i], &#x27;num&#x27;) &amp;&amp; p[i] &gt; 1){
-					w = my.workcols.v2.set(v)
-					r = 360/Math.floor(p[i]);
-					for(var j=0; j&lt;p[i]; j++){
-						w.rotate(r); c.push(w.x); c.push(w.y);
-						}
-					}
-				else if(my.isa(p[i], &#x27;str&#x27;)){
-					w = my.workcols.v2.set(v)
-					switch(p[i]) {
-						case &#x27;start&#x27; : 						c.push(0); 		c.push(0);		break;
-						case &#x27;N&#x27; : 		w.rotate(-90); 		c.push(w.x);	c.push(w.y);	break;
-						case &#x27;NE&#x27; : 	w.rotate(-45); 		c.push(w.x);	c.push(w.y);	break;
-						case &#x27;E&#x27; : 							c.push(w.x);	c.push(w.y);	break;
-						case &#x27;SE&#x27; : 	w.rotate(45); 		c.push(w.x);	c.push(w.y);	break;
-						case &#x27;S&#x27; : 		w.rotate(90); 		c.push(w.x);	c.push(w.y);	break;
-						case &#x27;SW&#x27; : 	w.rotate(135); 		c.push(w.x);	c.push(w.y);	break;
-						case &#x27;W&#x27; : 		w.rotate(180);	 	c.push(w.x);	c.push(w.y);	break;
-						case &#x27;NW&#x27; : 	w.rotate(-135); 	c.push(w.x);	c.push(w.y);	break;
-						case &#x27;center&#x27; :						c.push(0);		c.push(0);		break;
-						}
-					}
-				else if(my.isa(p[i], &#x27;vector&#x27;)){
-					c.push(p[i].x);	c.push(p[i].y);
-					}
+				else if (my.isa(p[i], &#x27;vector&#x27;)) {
+					c.push(p[i].x);
+					c.push(p[i].y);
 				}
 			}
+		}
 		this.collisionVectors = c;
 		return this;
-		};
+	};
 
 	return my;
-	}(scrawl));
+}(scrawl));
 
     </pre>
 </div>
