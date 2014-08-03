@@ -234,7 +234,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-&#x27;use strict&#x27;;
 /**
 # scrawlPathFactories
 
@@ -245,8 +244,10 @@ The Factories module adds a set of factory functions to the Scrawl library, whic
 @module scrawlPathFactories
 **/
 
-var scrawl = (function(my){
-/**
+var scrawl = (function(my) {
+	&#x27;use strict&#x27;;
+
+	/**
 # window.scrawl
 
 scrawlPathFactories module adaptions to the Scrawl library object
@@ -254,7 +255,7 @@ scrawlPathFactories module adaptions to the Scrawl library object
 @class window.scrawl_Factories
 **/
 
-/**
+	/**
 A __factory__ function to generate elliptical Shape or Path sprite objects
 
 The argument can include:
@@ -266,66 +267,70 @@ The argument can include:
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
-	my.makeEllipse = function(items){
+	my.makeEllipse = function(items) {
 		items = my.safeObject(items);
-		items.startX = items.startX || 0; 
+		items.startX = items.startX || 0;
 		items.startY = items.startY || 0;
 		items.radiusX = items.radiusX || 0;
 		items.radiusY = items.radiusY || 0;
 		items.closed = true;
-		var	myData = &#x27;m&#x27;,
+		var myData = &#x27;m&#x27;,
 			cx = items.startX,
 			cy = items.startY,
 			dx = items.startX,
-			dy = items.startY-items.radiusY,
+			dy = items.startY - items.radiusY,
 			myShape;
-		myData += (cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX+(items.radiusX*0.55);
-		dy = items.startY-items.radiusY;
-		myData += &#x27;c&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX+items.radiusX;
-		dy = items.startY-(items.radiusY*0.55);
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX+items.radiusX;
+		myData += (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX + (items.radiusX * 0.55);
+		dy = items.startY - items.radiusY;
+		myData += &#x27;c&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX + items.radiusX;
+		dy = items.startY - (items.radiusY * 0.55);
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX + items.radiusX;
 		dy = items.startY;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX+items.radiusX;
-		dy = items.startY+(items.radiusY*0.55);
-		myData += &#x27;c&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX+(items.radiusX*0.55);
-		dy = items.startY+items.radiusY;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX + items.radiusX;
+		dy = items.startY + (items.radiusY * 0.55);
+		myData += &#x27;c&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX + (items.radiusX * 0.55);
+		dy = items.startY + items.radiusY;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
 		dx = items.startX;
-		dy = items.startY+items.radiusY;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX-(items.radiusX*0.55);
-		dy = items.startY+items.radiusY;
-		myData += &#x27;c&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX-items.radiusX;
-		dy = items.startY+(items.radiusY*0.55);
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX-items.radiusX;
+		dy = items.startY + items.radiusY;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX - (items.radiusX * 0.55);
+		dy = items.startY + items.radiusY;
+		myData += &#x27;c&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX - items.radiusX;
+		dy = items.startY + (items.radiusY * 0.55);
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX - items.radiusX;
 		dy = items.startY;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX-items.radiusX;
-		dy = items.startY-(items.radiusY*0.55);
-		myData += &#x27;c&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX-(items.radiusX*0.55);
-		dy = items.startY-items.radiusY;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX - items.radiusX;
+		dy = items.startY - (items.radiusY * 0.55);
+		myData += &#x27;c&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX - (items.radiusX * 0.55);
+		dy = items.startY - items.radiusY;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
 		dx = items.startX;
-		dy = items.startY-items.radiusY;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
+		dy = items.startY - items.radiusY;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
 		myData += &#x27;z&#x27;;
 		items.isLine = false;
 		items.data = myData;
 		return (items.shape) ? my.newShape(items) : my.makePath(items);
-		};
-/**
+	};
+	/**
 A __factory__ function to generate rectangular Shape or Path sprite objects, with optional rounded corners
 
 The argument can include:
@@ -338,15 +343,15 @@ The argument can include:
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
-	my.makeRectangle = function(items){
-		items = my.safeObject(items)
-		items.startX = items.startX || 0; 
+	my.makeRectangle = function(items) {
+		items = my.safeObject(items);
+		items.startX = items.startX || 0;
 		items.startY = items.startY || 0;
-		items.width = items.width || 0; 
+		items.width = items.width || 0;
 		items.height = items.height || 0;
-		items.radius = items.radius || 0; 
+		items.radius = items.radius || 0;
 		items.closed = true;
-		var	_brx = items.radiusTopLeftX || items.radiusTopLeft || items.radiusTopX || items.radiusLeftX || items.radiusTop || items.radiusLeft || items.radiusX || items.radius || 0,
+		var _brx = items.radiusTopLeftX || items.radiusTopLeft || items.radiusTopX || items.radiusLeftX || items.radiusTop || items.radiusLeft || items.radiusX || items.radius || 0,
 			_bry = items.radiusTopLeftY || items.radiusTopLeft || items.radiusTopY || items.radiusLeftY || items.radiusTop || items.radiusLeft || items.radiusY || items.radius || 0,
 			_blx = items.radiusTopRightX || items.radiusTopRight || items.radiusTopX || items.radiusRightX || items.radiusTop || items.radiusRight || items.radiusX || items.radius || 0,
 			_bly = items.radiusTopRightY || items.radiusTopRight || items.radiusTopY || items.radiusRightY || items.radiusTop || items.radiusRight || items.radiusY || items.radius || 0,
@@ -354,77 +359,85 @@ The argument can include:
 			_tly = items.radiusBottomRightY || items.radiusBottomRight || items.radiusBottomY || items.radiusRightY || items.radiusBottom || items.radiusRight || items.radiusY || items.radius || 0,
 			_trx = items.radiusBottomLeftX || items.radiusBottomLeft || items.radiusBottomX || items.radiusLeftX || items.radiusBottom || items.radiusLeft || items.radiusX || items.radius || 0,
 			_try = items.radiusBottomLeftY || items.radiusBottomLeft || items.radiusBottomY || items.radiusLeftY || items.radiusBottom || items.radiusLeft || items.radiusY || items.radius || 0,
-			halfWidth = (items.width/2),
-			halfHeight = (items.height/2),
+			halfWidth = (items.width / 2),
+			halfHeight = (items.height / 2),
 			myData = &#x27;m&#x27;,
 			cx = items.startX,
 			cy = items.startY,
-			dx = items.startX-halfWidth+_tlx,
-			dy = items.startY-halfHeight,
+			dx = items.startX - halfWidth + _tlx,
+			dy = items.startY - halfHeight,
 			myShape;
-		myData += (cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX+halfWidth-_trx;
-		dy = items.startY-halfHeight;
-		myData += &#x27;l&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX+halfWidth-_trx+(_trx*0.55);
-		dy = items.startY-halfHeight;
-		myData += &#x27;c&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX+halfWidth;
-		dy = items.startY-halfHeight+_try-(_try*0.55);
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX+halfWidth;
-		dy = items.startY-halfHeight+_try;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX+halfWidth;
-		dy = items.startY+halfHeight-_bry;
-		myData += &#x27;l&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX+halfWidth;
-		dy = items.startY+halfHeight-_bry+(_bry*0.55);
-		myData += &#x27;c&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX+halfWidth-_brx+(_brx*0.55);
-		dy = items.startY+halfHeight;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX+halfWidth-_brx;
-		dy = items.startY+halfHeight;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX-halfWidth+_blx;
-		dy = items.startY+halfHeight;
-		myData += &#x27;l&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX-halfWidth+_blx-(_blx*0.55);
-		dy = items.startY+halfHeight;
-		myData += &#x27;c&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX-halfWidth;
-		dy = items.startY+halfHeight-_bly+(_bly*0.55);
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX-halfWidth;
-		dy = items.startY+halfHeight-_bly;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX-halfWidth;
-		dy = items.startY-halfHeight+_tly;
-		myData += &#x27;l&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		cx = dx, cy = dy;
-		dx = items.startX-halfWidth;
-		dy = items.startY-halfHeight+_tly-(_tly*0.55);
-		myData += &#x27;c&#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX-halfWidth+_tlx-(_tlx*0.55);
-		dy = items.startY-halfHeight;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
-		dx = items.startX-halfWidth+_tlx;
-		dy = items.startY-halfHeight;
-		myData += &#x27; &#x27;+(cx-dx)+&#x27;,&#x27;+(cy-dy);
+		myData += (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX + halfWidth - _trx;
+		dy = items.startY - halfHeight;
+		myData += &#x27;l&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX + halfWidth - _trx + (_trx * 0.55);
+		dy = items.startY - halfHeight;
+		myData += &#x27;c&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX + halfWidth;
+		dy = items.startY - halfHeight + _try - (_try * 0.55);
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX + halfWidth;
+		dy = items.startY - halfHeight + _try;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX + halfWidth;
+		dy = items.startY + halfHeight - _bry;
+		myData += &#x27;l&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX + halfWidth;
+		dy = items.startY + halfHeight - _bry + (_bry * 0.55);
+		myData += &#x27;c&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX + halfWidth - _brx + (_brx * 0.55);
+		dy = items.startY + halfHeight;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX + halfWidth - _brx;
+		dy = items.startY + halfHeight;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX - halfWidth + _blx;
+		dy = items.startY + halfHeight;
+		myData += &#x27;l&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX - halfWidth + _blx - (_blx * 0.55);
+		dy = items.startY + halfHeight;
+		myData += &#x27;c&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX - halfWidth;
+		dy = items.startY + halfHeight - _bly + (_bly * 0.55);
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX - halfWidth;
+		dy = items.startY + halfHeight - _bly;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX - halfWidth;
+		dy = items.startY - halfHeight + _tly;
+		myData += &#x27;l&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		cx = dx;
+		cy = dy;
+		dx = items.startX - halfWidth;
+		dy = items.startY - halfHeight + _tly - (_tly * 0.55);
+		myData += &#x27;c&#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX - halfWidth + _tlx - (_tlx * 0.55);
+		dy = items.startY - halfHeight;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
+		dx = items.startX - halfWidth + _tlx;
+		dy = items.startY - halfHeight;
+		myData += &#x27; &#x27; + (cx - dx) + &#x27;,&#x27; + (cy - dy);
 		myData += &#x27;z&#x27;;
 		items.isLine = false;
 		items.data = myData;
 		return (items.shape) ? my.newShape(items) : my.makePath(items);
-		};
-/**
+	};
+	/**
 A __factory__ function to generate bezier curve Shape or Path sprite objects
 
 The argument can include:
@@ -442,9 +455,9 @@ The argument can include:
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
-	my.makeBezier = function(items){
-		items = my.safeObject(items)
-		items.startX = items.startX || 0; 
+	my.makeBezier = function(items) {
+		items = my.safeObject(items);
+		items.startX = items.startX || 0;
 		items.startY = items.startY || 0;
 		items.startControlX = items.startControlX || 0;
 		items.startControlY = items.startControlY || 0;
@@ -455,51 +468,51 @@ The argument can include:
 		items.closed = false;
 		items.handleX = items.handleX || &#x27;left&#x27;;
 		items.handleY = items.handleY || &#x27;top&#x27;;
-		var	myFixed = items.fixed || &#x27;none&#x27;,
-			myShape, 
-			data, 
+		var myFixed = items.fixed || &#x27;none&#x27;,
+			myShape,
+			data,
 			tempName;
 		items.fixed = false;
-		data = &#x27;m0,0c&#x27;+
-			(items.startControlX-items.startX)+&#x27;,&#x27;+(items.startControlY-items.startY)+&#x27; &#x27;+
-			(items.endControlX-items.startX)+&#x27;,&#x27;+(items.endControlY-items.startY)+&#x27; &#x27;+
-			(items.endX-items.startX)+&#x27;,&#x27;+(items.endY-items.startY);
+		data = &#x27;m0,0c&#x27; +
+			(items.startControlX - items.startX) + &#x27;,&#x27; + (items.startControlY - items.startY) + &#x27; &#x27; +
+			(items.endControlX - items.startX) + &#x27;,&#x27; + (items.endControlY - items.startY) + &#x27; &#x27; +
+			(items.endX - items.startX) + &#x27;,&#x27; + (items.endY - items.startY);
 		items.data = data;
 		items.isLine = true;
-		if(items.shape){
+		if (items.shape) {
 			myShape = my.newShape(items);
-			}
-		else{
+		}
+		else {
 			myShape = my.makePath(items);
-			tempName = myShape.name.replace(&#x27;~&#x27;,&#x27;_&#x27;,&#x27;g&#x27;);
-			switch(myFixed){
-				case &#x27;all&#x27; :
-					my.point[tempName+&#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
-					my.point[tempName+&#x27;_p2&#x27;].setToFixed(items.startControlX, items.startControlY);
-					my.point[tempName+&#x27;_p3&#x27;].setToFixed(items.endControlX, items.endControlY);
-					my.point[tempName+&#x27;_p4&#x27;].setToFixed(items.endX, items.endY);
+			tempName = myShape.name.replace(&#x27;~&#x27;, &#x27;_&#x27;, &#x27;g&#x27;);
+			switch (myFixed) {
+				case &#x27;all&#x27;:
+					my.point[tempName + &#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
+					my.point[tempName + &#x27;_p2&#x27;].setToFixed(items.startControlX, items.startControlY);
+					my.point[tempName + &#x27;_p3&#x27;].setToFixed(items.endControlX, items.endControlY);
+					my.point[tempName + &#x27;_p4&#x27;].setToFixed(items.endX, items.endY);
 					break;
-				case &#x27;both&#x27; :
-					my.point[tempName+&#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
-					my.point[tempName+&#x27;_p4&#x27;].setToFixed(items.endX, items.endY);
+				case &#x27;both&#x27;:
+					my.point[tempName + &#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
+					my.point[tempName + &#x27;_p4&#x27;].setToFixed(items.endX, items.endY);
 					break;
-				case &#x27;start&#x27; :
-					my.point[tempName+&#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
+				case &#x27;start&#x27;:
+					my.point[tempName + &#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
 					break;
-				case &#x27;startControl&#x27; :
-					my.point[tempName+&#x27;_p2&#x27;].setToFixed(items.startControlX, items.startControlY);
+				case &#x27;startControl&#x27;:
+					my.point[tempName + &#x27;_p2&#x27;].setToFixed(items.startControlX, items.startControlY);
 					break;
-				case &#x27;endControl&#x27; :
-					my.point[tempName+&#x27;_p3&#x27;].setToFixed(items.endControlX, items.endControlY);
+				case &#x27;endControl&#x27;:
+					my.point[tempName + &#x27;_p3&#x27;].setToFixed(items.endControlX, items.endControlY);
 					break;
-				case &#x27;end&#x27; :
-					my.point[tempName+&#x27;_p4&#x27;].setToFixed(items.endX, items.endY);
+				case &#x27;end&#x27;:
+					my.point[tempName + &#x27;_p4&#x27;].setToFixed(items.endX, items.endY);
 					break;
-				}
 			}
+		}
 		return myShape;
-		};
-/**
+	};
+	/**
 A __factory__ function to generate quadratic curve Shape or Path sprite objects
 
 The argument can include:
@@ -515,9 +528,9 @@ The argument can include:
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
-	my.makeQuadratic = function(items){
-		items = my.safeObject(items)
-		items.startX = items.startX || 0; 
+	my.makeQuadratic = function(items) {
+		items = my.safeObject(items);
+		items.startX = items.startX || 0;
 		items.startY = items.startY || 0;
 		items.controlX = items.controlX || 0;
 		items.controlY = items.controlY || 0;
@@ -527,45 +540,45 @@ The argument can include:
 		items.handleX = items.handleX || &#x27;left&#x27;;
 		items.handleY = items.handleY || &#x27;top&#x27;;
 		var myFixed = items.fixed || &#x27;none&#x27;,
-			data, 
-			myShape, 
+			data,
+			myShape,
 			tempName;
-		data = 	&#x27;m0,0q&#x27;+
-			(items.controlX-items.startX)+&#x27;,&#x27;+(items.controlY-items.startY)+&#x27; &#x27;+
-			(items.endX-items.startX)+&#x27;,&#x27;+(items.endY-items.startY);
+		data = &#x27;m0,0q&#x27; +
+			(items.controlX - items.startX) + &#x27;,&#x27; + (items.controlY - items.startY) + &#x27; &#x27; +
+			(items.endX - items.startX) + &#x27;,&#x27; + (items.endY - items.startY);
 		items.fixed = false;
 		items.data = data;
 		items.isLine = true;
-		if(items.shape){
+		if (items.shape) {
 			myShape = my.newShape(items);
-			}
-		else{
+		}
+		else {
 			myShape = my.makePath(items);
-			tempName = myShape.name.replace(&#x27;~&#x27;,&#x27;_&#x27;,&#x27;g&#x27;);
-			switch(myFixed){
-				case &#x27;all&#x27; :
-					my.point[tempName+&#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
-					my.point[tempName+&#x27;_p2&#x27;].setToFixed(items.controlX, items.controlY);
-					my.point[tempName+&#x27;_p3&#x27;].setToFixed(items.endX, items.endY);
+			tempName = myShape.name.replace(&#x27;~&#x27;, &#x27;_&#x27;, &#x27;g&#x27;);
+			switch (myFixed) {
+				case &#x27;all&#x27;:
+					my.point[tempName + &#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
+					my.point[tempName + &#x27;_p2&#x27;].setToFixed(items.controlX, items.controlY);
+					my.point[tempName + &#x27;_p3&#x27;].setToFixed(items.endX, items.endY);
 					break;
-				case &#x27;both&#x27; :
-					my.point[tempName+&#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
-					my.point[tempName+&#x27;_p3&#x27;].setToFixed(items.endX, items.endY);
+				case &#x27;both&#x27;:
+					my.point[tempName + &#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
+					my.point[tempName + &#x27;_p3&#x27;].setToFixed(items.endX, items.endY);
 					break;
-				case &#x27;start&#x27; :
-					my.point[tempName+&#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
+				case &#x27;start&#x27;:
+					my.point[tempName + &#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
 					break;
-				case &#x27;control&#x27; :
-					my.point[tempName+&#x27;_p2&#x27;].setToFixed(items.controlX, items.controlY);
+				case &#x27;control&#x27;:
+					my.point[tempName + &#x27;_p2&#x27;].setToFixed(items.controlX, items.controlY);
 					break;
-				case &#x27;end&#x27; :
-					my.point[tempName+&#x27;_p3&#x27;].setToFixed(items.endX, items.endY);
+				case &#x27;end&#x27;:
+					my.point[tempName + &#x27;_p3&#x27;].setToFixed(items.endX, items.endY);
 					break;
-				}
 			}
+		}
 		return myShape;
-		};
-/**
+	};
+	/**
 A __factory__ function to generate straight line Shape or Path sprite objects
 
 The argument can include:
@@ -579,9 +592,9 @@ The argument can include:
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
-	my.makeLine = function(items){
-		items = my.safeObject(items)
-		items.startX = items.startX || 0; 
+	my.makeLine = function(items) {
+		items = my.safeObject(items);
+		items.startX = items.startX || 0;
 		items.startY = items.startY || 0;
 		items.endX = items.endX || 0;
 		items.endY = items.endY || 0;
@@ -589,35 +602,35 @@ The argument can include:
 		items.handleX = items.handleX || &#x27;left&#x27;;
 		items.handleY = items.handleY || &#x27;top&#x27;;
 		var myFixed = items.fixed || &#x27;none&#x27;,
-			data, 
-			myShape, 
+			data,
+			myShape,
 			tempName;
-		data = 	&#x27;m0,0 &#x27;+(items.endX-items.startX)+&#x27;,&#x27;+(items.endY-items.startY);
+		data = &#x27;m0,0 &#x27; + (items.endX - items.startX) + &#x27;,&#x27; + (items.endY - items.startY);
 		items.fixed = false;
 		items.data = data;
 		items.isLine = true;
-		if(items.shape){
+		if (items.shape) {
 			myShape = my.newShape(items);
-			}
-		else{
+		}
+		else {
 			myShape = my.makePath(items);
-			tempName = myShape.name.replace(&#x27;~&#x27;,&#x27;_&#x27;,&#x27;g&#x27;);
-			switch(myFixed){
-				case &#x27;both&#x27; :
-					my.point[tempName+&#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
-					my.point[tempName+&#x27;_p2&#x27;].setToFixed(items.endX, items.endY);
+			tempName = myShape.name.replace(&#x27;~&#x27;, &#x27;_&#x27;, &#x27;g&#x27;);
+			switch (myFixed) {
+				case &#x27;both&#x27;:
+					my.point[tempName + &#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
+					my.point[tempName + &#x27;_p2&#x27;].setToFixed(items.endX, items.endY);
 					break;
-				case &#x27;start&#x27; :
-					my.point[tempName+&#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
+				case &#x27;start&#x27;:
+					my.point[tempName + &#x27;_p1&#x27;].setToFixed(items.startX, items.startY);
 					break;
-				case &#x27;end&#x27; :
-					my.point[tempName+&#x27;_p2&#x27;].setToFixed(items.endX, items.endY);
+				case &#x27;end&#x27;:
+					my.point[tempName + &#x27;_p2&#x27;].setToFixed(items.endX, items.endY);
 					break;
-				}
 			}
+		}
 		return myShape;
-		};
-/**
+	};
+	/**
 A __factory__ function to generate straight-edged regular sprites such as triangles, stars, hexagons, etc
 
 The argument can include:
@@ -634,53 +647,70 @@ _(Either the &#x27;angle&#x27; attribute or the &#x27;sides&#x27; attribute (but
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
-	my.makeRegularShape = function(items){
-		items = my.safeObject(items)
-		if(my.xto([items.sides, items.angle])){
+	my.makeRegularShape = function(items) {
+		items = my.safeObject(items);
+		if (my.xto([items.sides, items.angle])) {
 			items.startX = items.startX || 0;
 			items.startY = items.startY || 0;
 			items.radius = items.radius || 20;
 			items.closed = true;
 			// - known bug: items.sides has difficulty exiting the loop, hence the count&lt;1000 limit
-			var	turn = (my.isa(items.sides,&#x27;num&#x27;) &amp;&amp; items.sides &gt; 1) ? 360/items.sides : ((my.isa(items.angle,&#x27;num&#x27;) &amp;&amp; items.angle &gt; 0) ? items.angle : 4),
+			var turn = (my.isa(items.sides, &#x27;num&#x27;) &amp;&amp; items.sides &gt; 1) ? 360 / items.sides : ((my.isa(items.angle, &#x27;num&#x27;) &amp;&amp; items.angle &gt; 0) ? items.angle : 4),
 				currentAngle = 0,
 				count = 0,
-				point = my.worklink.v1.set({x: items.radius, y:0, z:0}),
-				oPoint = my.worklink.v2.set(point), 
+				point = my.worklink.v1.set({
+					x: items.radius,
+					y: 0,
+					z: 0
+				}),
+				oPoint = my.worklink.v2.set(point),
 				test,
-				data = &#x27;m&#x27;+point.x.toFixed(4)+&#x27;,&#x27;+point.y.toFixed(4)+&#x27; &#x27;;
-			do{
+				data = &#x27;m&#x27; + point.x.toFixed(4) + &#x27;,&#x27; + point.y.toFixed(4) + &#x27; &#x27;;
+			do {
 				count++;
 				currentAngle += turn;
 				currentAngle = currentAngle % 360;
 				test = currentAngle.toFixed(0);
 				point.rotate(turn);
-				data += &#x27;&#x27;+(point.x - oPoint.x).toFixed(4)+&#x27;,&#x27;+(point.y - oPoint.y).toFixed(4)+&#x27; &#x27;;
+				data += &#x27;&#x27; + (point.x - oPoint.x).toFixed(4) + &#x27;,&#x27; + (point.y - oPoint.y).toFixed(4) + &#x27; &#x27;;
 				oPoint.set(point);
-				}while(test !== &#x27;0&#x27; &amp;&amp; count &lt; 1000);
+			} while (test !== &#x27;0&#x27; &amp;&amp; count &lt; 1000);
 			data += &#x27;z&#x27;;
 			items.data = data;
 			items.isLine = false;
 			return (items.shape) ? my.newShape(items) : my.makePath(items);
-			}
-		return false;
-		};
-
-	if(!my.xt(my.worklink)){
-		my.worklink = {
-			start: my.newVector({name: &#x27;scrawl.worklink.start&#x27;}),
-			end: my.newVector({name: &#x27;scrawl.worklink.end&#x27;}),
-			control1: my.newVector({name: &#x27;scrawl.worklink.control1&#x27;}),
-			control2: my.newVector({name: &#x27;scrawl.worklink.control2&#x27;}),
-			v1: my.newVector({name: &#x27;scrawl.worklink.v1&#x27;}),
-			v2: my.newVector({name: &#x27;scrawl.worklink.v2&#x27;}),
-			v3: my.newVector({name: &#x27;scrawl.worklink.v3&#x27;}),
-			};
 		}
-		
-	return my;
-	}(scrawl));
+		return false;
+	};
 
+	if (!my.xt(my.worklink)) {
+		my.worklink = {
+			start: my.newVector({
+				name: &#x27;scrawl.worklink.start&#x27;
+			}),
+			end: my.newVector({
+				name: &#x27;scrawl.worklink.end&#x27;
+			}),
+			control1: my.newVector({
+				name: &#x27;scrawl.worklink.control1&#x27;
+			}),
+			control2: my.newVector({
+				name: &#x27;scrawl.worklink.control2&#x27;
+			}),
+			v1: my.newVector({
+				name: &#x27;scrawl.worklink.v1&#x27;
+			}),
+			v2: my.newVector({
+				name: &#x27;scrawl.worklink.v2&#x27;
+			}),
+			v3: my.newVector({
+				name: &#x27;scrawl.worklink.v3&#x27;
+			}),
+		};
+	}
+
+	return my;
+}(scrawl));
 
     </pre>
 </div>

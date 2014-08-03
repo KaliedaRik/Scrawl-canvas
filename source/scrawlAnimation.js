@@ -22,9 +22,11 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-window.requestAnimFrame = (function(callback){
-	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback){window.setTimeout(callback, 1000/60);};
-	})();
+window.requestAnimFrame = (function(callback) {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
 
 /**
 # scrawlAnimation
@@ -41,10 +43,10 @@ The Animation module adds support for animation and tweening to the core
 @module scrawlAnimation
 **/
 
-var scrawl = (function(my){
+var scrawl = (function(my) {
 	'use strict';
 
-/**
+	/**
 # window.scrawl
 
 scrawlAnimation module adaptions to the Scrawl library object
@@ -75,27 +77,43 @@ scrawlAnimation module adaptions to the Scrawl library object
 @class window.scrawl_Animation
 **/
 
-/**
+	/**
 Starts the animation loop
 @method animationInit
 @private
 **/
-	my.animationInit = function(){
+	my.animationInit = function() {
 		my.doAnimation = true;
 		my.animationLoop();
-		};
-	my.d.Position.delta = {x:0,y:0,z:0};
+	};
+	my.d.Position.delta = {
+		x: 0,
+		y: 0,
+		z: 0
+	};
 	my.d.Position.deltaPathPlace = 0;
 	my.d.Position.pathSpeedConstant = true;
 	my.mergeInto(my.d.Cell, my.d.Position);
 	my.mergeInto(my.d.Sprite, my.d.Position);
-	if(my.xt(my.d.Block)){my.mergeInto(my.d.Block, my.d.Sprite);}
-	if(my.xt(my.d.Shape)){my.mergeInto(my.d.Shape, my.d.Sprite);}
-	if(my.xt(my.d.Wheel)){my.mergeInto(my.d.Wheel, my.d.Sprite);}
-	if(my.xt(my.d.Picture)){my.mergeInto(my.d.Picture, my.d.Sprite);}
-	if(my.xt(my.d.Phrase)){my.mergeInto(my.d.Phrase, my.d.Sprite);}
-	if(my.xt(my.d.Path)){my.mergeInto(my.d.Path, my.d.Sprite);}
-/**
+	if (my.xt(my.d.Block)) {
+		my.mergeInto(my.d.Block, my.d.Sprite);
+	}
+	if (my.xt(my.d.Shape)) {
+		my.mergeInto(my.d.Shape, my.d.Sprite);
+	}
+	if (my.xt(my.d.Wheel)) {
+		my.mergeInto(my.d.Wheel, my.d.Sprite);
+	}
+	if (my.xt(my.d.Picture)) {
+		my.mergeInto(my.d.Picture, my.d.Sprite);
+	}
+	if (my.xt(my.d.Phrase)) {
+		my.mergeInto(my.d.Phrase, my.d.Sprite);
+	}
+	if (my.xt(my.d.Path)) {
+		my.mergeInto(my.d.Path, my.d.Sprite);
+	}
+	/**
 Position constructor hook function
 
 Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a 'velocity'
@@ -103,61 +121,66 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 @method animationPositionInit
 @private
 **/
-	my.Position.prototype.animationPositionInit = function(items){
+	my.Position.prototype.animationPositionInit = function(items) {
 		var temp = my.safeObject(items.delta);
 		this.delta = my.newVector({
 			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : 0),
-			});
-		this.work.delta = my.newVector({name: this.type+'.'+this.name+'.work.delta'});
-		this.pathSpeedConstant = (my.isa(items.pathSpeedConstant,'bool')) ? items.pathSpeedConstant : my.d[this.type].pathSpeedConstant;
+		});
+		this.work.delta = my.newVector({
+			name: this.type + '.' + this.name + '.work.delta'
+		});
+		this.pathSpeedConstant = (my.isa(items.pathSpeedConstant, 'bool')) ? items.pathSpeedConstant : my.d[this.type].pathSpeedConstant;
 		this.deltaPathPlace = items.deltaPathPlace || my.d[this.type].deltaPathPlace;
-		};
-/**
+	};
+	/**
 Position.get hook function - modified by animation module
 @method animationPositionGet
 @private
 **/
-	my.Position.prototype.animationPositionGet = function(item){
-		if(my.contains(['deltaX','deltaY'], item)){
-			switch(item){
-				case 'deltaX' : return this.delta.x;
-				case 'deltaY' : return this.delta.y;
-				}
+	my.Position.prototype.animationPositionGet = function(item) {
+		if (my.contains(['deltaX', 'deltaY'], item)) {
+			switch (item) {
+				case 'deltaX':
+					return this.delta.x;
+				case 'deltaY':
+					return this.delta.y;
 			}
-		if('delta' === item){
-			console.log(this.name, 'get delta vector'); return this.delta.getVector();
-			}
+		}
+		if ('delta' === item) {
+			console.log(this.name, 'get delta vector');
+			return this.delta.getVector();
+		}
 		return false;
-		};
-/**
+	};
+	/**
 Position.set hook function - modified by animation module
 @method animationPositionSet
 @private
 **/
-	my.Position.prototype.animationPositionSet = function(items){
-		if(!my.isa(this.delta, 'vector')){
+	my.Position.prototype.animationPositionSet = function(items) {
+		if (!my.isa(this.delta, 'vector')) {
 			this.delta = my.newVector(items.delta || this.delta);
-			}
-		if(my.xto([items.deltaX, items.deltaY])){
+		}
+		if (my.xto([items.deltaX, items.deltaY])) {
 			this.delta.x = (my.xt(items.deltaX)) ? items.deltaX : this.delta.x;
 			this.delta.y = (my.xt(items.deltaY)) ? items.deltaY : this.delta.y;
-			}
-		};
-/**
+		}
+	};
+	/**
 Position.setDelta hook function - modified by animation module
 @method animationPositionClone
 @private
 **/
-	my.Position.prototype.animationPositionClone = function(a, items){
+	my.Position.prototype.animationPositionClone = function(a, items) {
 		var temp = my.safeObject(items.delta);
 		a.delta = my.newVector({
 			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : a.delta.x),
 			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : a.delta.y),
-			});
+		});
 		return a;
-		};
-/**
+	};
+	/**
 Adds delta values to the start vector; adds deltaPathPlace to pathPlace
 
 Permitted argument values include 
@@ -170,28 +193,36 @@ Permitted argument values include
 @return This
 @chainable
 **/
-	my.Position.prototype.updateStart = function(item){
-		switch(item){
-			case 'x' :
+	my.Position.prototype.updateStart = function(item) {
+		switch (item) {
+			case 'x':
 				this.start.x += this.delta.x || 0;
 				break;
-			case 'y' :
+			case 'y':
 				this.start.y += this.delta.y || 0;
 				break;
-			case 'path' :
+			case 'path':
 				this.pathPlace += this.deltaPathPlace;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if (this.pathPlace > 1) {
+					this.pathPlace -= 1;
+				}
+				if (this.pathPlace < 0) {
+					this.pathPlace += 1;
+				}
 				break;
-			default :
+			default:
 				this.pathPlace += this.deltaPathPlace;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if (this.pathPlace > 1) {
+					this.pathPlace -= 1;
+				}
+				if (this.pathPlace < 0) {
+					this.pathPlace += 1;
+				}
 				this.start.vectorAdd(this.delta);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
 
 Permitted argument values include 
@@ -204,28 +235,36 @@ Permitted argument values include
 @return This
 @chainable
 **/
-	my.Position.prototype.revertStart = function(item){
-		switch(item){
-			case 'x' :
+	my.Position.prototype.revertStart = function(item) {
+		switch (item) {
+			case 'x':
 				this.start.x -= this.delta.x || 0;
 				break;
-			case 'y' :
+			case 'y':
 				this.start.y -= this.delta.y || 0;
 				break;
-			case 'path' :
+			case 'path':
 				this.pathPlace -= this.deltaPathPlace;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if (this.pathPlace > 1) {
+					this.pathPlace -= 1;
+				}
+				if (this.pathPlace < 0) {
+					this.pathPlace += 1;
+				}
 				break;
-			default :
+			default:
 				this.pathPlace += this.deltaPathPlace;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if (this.pathPlace > 1) {
+					this.pathPlace -= 1;
+				}
+				if (this.pathPlace < 0) {
+					this.pathPlace += 1;
+				}
 				this.start.vectorSubtract(this.delta);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Swaps the values of an attribute between two objects
 @method Position.exchange
 @param {Object} obj Object with which this object will swap attribute values
@@ -233,43 +272,51 @@ Swaps the values of an attribute between two objects
 @return This
 @chainable
 **/
-	my.Position.prototype.exchange = function(obj, item){
-		if(my.isa(obj,'obj')){
-			var temp = this[item] || this.get(item); 
-			this[item] = obj[item] || obj.get(item); 
+	my.Position.prototype.exchange = function(obj, item) {
+		if (my.isa(obj, 'obj')) {
+			var temp = this[item] || this.get(item);
+			this[item] = obj[item] || obj.get(item);
 			obj[item] = temp;
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Changes the sign (+/-) of specified attribute values
 @method Position.reverse
 @param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
 @return This
 @chainable
 **/
-	my.Position.prototype.reverse = function(item){
-		switch(item){
-			case 'deltaX' : 
-				this.delta.x = -this.delta.x; break;
-			case 'deltaY' : 
-				this.delta.y = -this.delta.y; break;
-			case 'delta' : 
-				this.delta.reverse(); break;
-			case 'deltaPathPlace' : 
-				this.deltaPathPlace = -this.deltaPathPlace; break;
-			default : 
+	my.Position.prototype.reverse = function(item) {
+		switch (item) {
+			case 'deltaX':
+				this.delta.x = -this.delta.x;
+				break;
+			case 'deltaY':
+				this.delta.y = -this.delta.y;
+				break;
+			case 'delta':
+				this.delta.reverse();
+				break;
+			case 'deltaPathPlace':
+				this.deltaPathPlace = -this.deltaPathPlace;
+				break;
+			default:
 				this.deltaPathPlace = -this.deltaPathPlace;
 				this.delta.reverse();
-			}
+		}
 		return this;
-		};
-	my.d.Cell.sourceDelta = {x:0, y:0, z:0};
+	};
+	my.d.Cell.sourceDelta = {
+		x: 0,
+		y: 0,
+		z: 0
+	};
 	my.d.Cell.sourceMinWidth = 0;
 	my.d.Cell.sourceMaxWidth = 0;
 	my.d.Cell.sourceMinHeight = 0;
 	my.d.Cell.sourceMaxHeight = 0;
-/**
+	/**
 Cell constructor hook function
 
 Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to give it a 'velocity'
@@ -277,42 +324,44 @@ Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to 
 @method animationCellInit
 @private
 **/
-	my.Cell.prototype.animationCellInit = function(items){
+	my.Cell.prototype.animationCellInit = function(items) {
 		var temp = my.safeObject(items.sourceDelta);
 		this.sourceDelta = my.newVector({
 			x: (my.xt(items.sourceDeltaX)) ? items.sourceDeltaX : ((my.xt(temp.x)) ? temp.x : 0),
 			y: (my.xt(items.sourceDeltaY)) ? items.sourceDeltaY : ((my.xt(temp.y)) ? temp.y : 0),
-			});
+		});
 		this.work.sourceDelta = my.newVector();
-		};
-/**
+	};
+	/**
 Cell.get hook function - modified by animation module
 @method animationCellGet
 @private
 **/
-	my.Cell.prototype.animationCellGet = function(item){
-		if(my.contains(['sourceDeltaX', 'sourceDeltaY'], item)){
-			switch(item){
-				case 'sourceDeltaX' : return this.sourceDelta.x;
-				case 'sourceDeltaY' : return this.sourceDelta.y;
-				}
+	my.Cell.prototype.animationCellGet = function(item) {
+		if (my.contains(['sourceDeltaX', 'sourceDeltaY'], item)) {
+			switch (item) {
+				case 'sourceDeltaX':
+					return this.sourceDelta.x;
+				case 'sourceDeltaY':
+					return this.sourceDelta.y;
 			}
+		}
 		return my.Base.prototype.get.call(this, item);
-		};
-/**
+	};
+	/**
 Cell.set hook function - modified by animation module
 @method animationCellSet
 @private
 **/
-	my.Cell.prototype.animationCellSet = function(items){
+	my.Cell.prototype.animationCellSet = function(items) {
 		var temp;
-		if(my.xto([items.sourceDelta, items.sourceDeltaX, items.sourceDeltaY])){
+		if (my.xto([items.sourceDelta, items.sourceDeltaX, items.sourceDeltaY])) {
 			temp = my.safeObject(items.sourceDelta);
 			this.sourceDelta.x = items.sourceDeltaX || temp.x || this.sourceDelta.x;
 			this.sourceDelta.y = items.sourceDeltaY || temp.y || this.sourceDelta.y;
-			}
-		};
-/**
+		}
+	};
+	/**
 Adds delta values to the start vector; adds sourceDelta values to the source vector; adds deltaPathPlace to pathPlace
 
 Permitted argument values include 
@@ -327,40 +376,48 @@ Permitted argument values include
 @return This
 @chainable
 **/
-	my.Cell.prototype.updateStart = function(item){
-		switch(item){
-			case 'x' :
+	my.Cell.prototype.updateStart = function(item) {
+		switch (item) {
+			case 'x':
 				this.start.x += this.delta.x || 0;
 				this.source.x += this.deltaSource.x || 0;
 				break;
-			case 'y' :
+			case 'y':
 				this.start.y += this.delta.y || 0;
 				this.source.y += this.deltaSource.y || 0;
 				break;
-			case 'start' :
-			case 'target' :
+			case 'start':
+			case 'target':
 				this.start.vectorAdd(this.delta);
 				break;
-			case 'source' :
+			case 'source':
 				this.source.vectorAdd(this.sourceDelta);
 				break;
-			case 'path' :
+			case 'path':
 				this.pathPlace += this.deltaPathPlace || 0;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if (this.pathPlace > 1) {
+					this.pathPlace -= 1;
+				}
+				if (this.pathPlace < 0) {
+					this.pathPlace += 1;
+				}
 				break;
-			default :
-				if(my.xt(this.pathPlace)){
+			default:
+				if (my.xt(this.pathPlace)) {
 					this.pathPlace += this.deltaPathPlace || 0;
-					if(this.pathPlace > 1){this.pathPlace -= 1;}
-					if(this.pathPlace < 0){this.pathPlace += 1;}
+					if (this.pathPlace > 1) {
+						this.pathPlace -= 1;
 					}
+					if (this.pathPlace < 0) {
+						this.pathPlace += 1;
+					}
+				}
 				this.start.vectorAdd(this.delta);
 				this.source.vectorAdd(this.sourceDelta);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Subtracts delta values from the start vector; subtracts sourceDelta values from the source vector; subtracts deltaPathPlace to pathPlace
 
 Permitted argument values include 
@@ -375,49 +432,57 @@ Permitted argument values include
 @return This
 @chainable
 **/
-	my.Cell.prototype.revertStart = function(item){
-		switch(item){
-			case 'x' :
+	my.Cell.prototype.revertStart = function(item) {
+		switch (item) {
+			case 'x':
 				this.start.x -= this.delta.x || 0;
 				this.source.x -= this.deltaSource.x || 0;
 				break;
-			case 'y' :
+			case 'y':
 				this.start.y -= this.delta.y || 0;
 				this.source.y -= this.deltaSource.y || 0;
 				break;
-			case 'start' :
-			case 'target' :
+			case 'start':
+			case 'target':
 				this.start.vectorSubtract(this.delta);
 				break;
-			case 'source' :
+			case 'source':
 				this.source.vectorSubtract(this.sourceDelta);
 				break;
-			case 'path' :
+			case 'path':
 				this.pathPlace -= this.deltaPathPlace || 0;
-				if(this.pathPlace > 1){this.pathPlace -= 1;}
-				if(this.pathPlace < 0){this.pathPlace += 1;}
+				if (this.pathPlace > 1) {
+					this.pathPlace -= 1;
+				}
+				if (this.pathPlace < 0) {
+					this.pathPlace += 1;
+				}
 				break;
-			default :
-				if(my.xt(this.pathPlace)){
+			default:
+				if (my.xt(this.pathPlace)) {
 					this.pathPlace -= this.deltaPathPlace || 0;
-					if(this.pathPlace > 1){this.pathPlace -= 1;}
-					if(this.pathPlace < 0){this.pathPlace += 1;}
+					if (this.pathPlace > 1) {
+						this.pathPlace -= 1;
 					}
+					if (this.pathPlace < 0) {
+						this.pathPlace += 1;
+					}
+				}
 				this.start.vectorSubtract(this.delta);
 				this.source.vectorSubtract(this.sourceDelta);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Zooms one cell in relation to another cell
 @method Cell.zoom
 @param {Number} item Number of pixels to amend the zoomed cell's start and dimensions by
 @return This
 @chainable
 **/
-	my.Cell.prototype.zoom = function(item){
-		if(my.isa(item, 'num')){
-			var	sWidth = this.sourceWidth,
+	my.Cell.prototype.zoom = function(item) {
+		if (my.isa(item, 'num')) {
+			var sWidth = this.sourceWidth,
 				sHeight = this.sourceHeight,
 				aWidth = this.actualWidth,
 				aHeight = this.actualHeight,
@@ -431,38 +496,38 @@ Zooms one cell in relation to another cell
 				myH = sHeight + item,
 				myX,
 				myY;
-			if(my.isBetween(myW, minWidth, maxWidth, true) && my.isBetween(myH, minHeight, maxHeight, true)){
+			if (my.isBetween(myW, minWidth, maxWidth, true) && my.isBetween(myH, minHeight, maxHeight, true)) {
 				sWidth = myW;
-				myX = sx - (item/2);
-				if(myX < 0){
+				myX = sx - (item / 2);
+				if (myX < 0) {
 					sx = 0;
-					}
-				else if(myX > (aWidth - sWidth)){
+				}
+				else if (myX > (aWidth - sWidth)) {
 					sx = aWidth - sWidth;
-					}
-				else{
+				}
+				else {
 					sx = myX;
-					}
+				}
 				sHeight = myH;
-				myY = sy - (item/2);
-				if(myY < 0){
+				myY = sy - (item / 2);
+				if (myY < 0) {
 					sy = 0;
-					}
-				else if(myY > (aHeight - sHeight)){
+				}
+				else if (myY > (aHeight - sHeight)) {
 					sy = aHeight - sHeight;
-					}
-				else{
+				}
+				else {
 					sy = myY;
-					}
+				}
 				this.source.x = sx;
 				this.source.y = sy;
 				this.sourceWidth = sWidth;
 				this.sourceHeight = sHeight;
-				}
 			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Perform a splice-shift-join operation on the &lt;canvas&gt; element's current scene
 
 Argument is an Object in the form:
@@ -481,12 +546,12 @@ _Note that this function is only effective in achieving a parallax effect if the
 @return This
 @chainable
 **/
-	my.Cell.prototype.spliceCell = function(items){
+	my.Cell.prototype.spliceCell = function(items) {
 		items = my.safeObject(items);
-		if(my.contains(['horizontal','vertical','top','bottom','left','right'], items.edge)){
-			var	myStrip, 
-				myRemains, 
-				myEdge, 
+		if (my.contains(['horizontal', 'vertical', 'top', 'bottom', 'left', 'right'], items.edge)) {
+			var myStrip,
+				myRemains,
+				myEdge,
 				height = this.actualHeight,
 				width = this.actualWidth,
 				c,
@@ -497,53 +562,53 @@ _Note that this function is only effective in achieving a parallax effect if the
 			c.width = width;
 			c.height = height;
 			e = c.getContext('2d');
-			ctx.setTransform(1,0,0,1,0,0);
-			switch(items.edge){
-				case 'horizontal' :
-					myStrip = myRemains = width/2;
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			switch (items.edge) {
+				case 'horizontal':
+					myStrip = myRemains = width / 2;
 					myEdge = 'left';
 					break;
-				case 'vertical' :
-					myStrip = myRemains = height/2;
+				case 'vertical':
+					myStrip = myRemains = height / 2;
 					myEdge = 'top';
 					break;
-				case 'top' :
-				case 'bottom' :
+				case 'top':
+				case 'bottom':
 					myStrip = items.strip || 20;
 					myRemains = height - myStrip;
 					myEdge = items.edge;
 					break;
-				case 'left' :
-				case 'right' :
+				case 'left':
+				case 'right':
 					myStrip = items.strip || 20;
 					myRemains = width - myStrip;
 					myEdge = items.edge;
 					break;
-				}
-			switch(myEdge){
-				case 'top' :
+			}
+			switch (myEdge) {
+				case 'top':
 					e.drawImage(canvas, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
 					e.drawImage(canvas, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
 					break;
-				case 'bottom' :
+				case 'bottom':
 					e.drawImage(canvas, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
 					e.drawImage(canvas, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
 					break;
-				case 'left' :
+				case 'left':
 					e.drawImage(canvas, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
 					e.drawImage(canvas, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
 					break;
-				case 'right' :
+				case 'right':
 					e.drawImage(canvas, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
 					e.drawImage(canvas, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
 					break;
-				}
+			}
 			ctx.clearRect(0, 0, width, height);
 			ctx.drawImage(c, 0, 0, width, height);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Ask all sprites in the Group to perform an updateStart() operation
 
 Each sprite will add their delta values to their start Vector, and/or add deltaPathPlace from pathPlace
@@ -552,13 +617,13 @@ Each sprite will add their delta values to their start Vector, and/or add deltaP
 @return This
 @chainable
 **/
-	my.Group.prototype.updateStart = function(item){
-		for(var i=0, z=this.sprites.length; i<z; i++){
+	my.Group.prototype.updateStart = function(item) {
+		for (var i = 0, z = this.sprites.length; i < z; i++) {
 			my.sprite[this.sprites[i]].updateStart(item);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Ask all sprites in the Group to perform a revertStart() operation
 
 Each sprite will subtract their delta values to their start Vector, and/or subtract deltaPathPlace from pathPlace
@@ -567,13 +632,13 @@ Each sprite will subtract their delta values to their start Vector, and/or subtr
 @return This
 @chainable
 **/
-	my.Group.prototype.revertStart = function(item){
-		for(var i=0, z=this.sprites.length; i<z; i++){
+	my.Group.prototype.revertStart = function(item) {
+		for (var i = 0, z = this.sprites.length; i < z; i++) {
 			my.sprite[this.sprites[i]].revertStart(item);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Ask all sprites in the group to perform a reverse() operation
 
 Each sprite will change the sign (+/-) of specified attribute values
@@ -582,18 +647,20 @@ Each sprite will change the sign (+/-) of specified attribute values
 @return This
 @chainable
 **/
-	my.Group.prototype.reverse = function(item){
-		for(var i=0, z=this.sprites.length; i<z; i++){
+	my.Group.prototype.reverse = function(item) {
+		for (var i = 0, z = this.sprites.length; i < z; i++) {
 			my.sprite[this.sprites[i]].reverse(item);
-			}
+		}
 		return this;
-		};
+	};
 	my.d.Design.roll = 0;
 	my.d.Design.autoUpdate = false;
 	my.mergeInto(my.d.Gradient, my.d.Design);
 	my.mergeInto(my.d.RadialGradient, my.d.Design);
-	if(my.xt(my.d.Pattern)){my.mergeInto(my.d.Pattern, my.d.Design);}
-/**
+	if (my.xt(my.d.Pattern)) {
+		my.mergeInto(my.d.Pattern, my.d.Design);
+	}
+	/**
 Creates the gradient
 
 _This function replaces the one in the core module_
@@ -603,69 +670,75 @@ _This function replaces the one in the core module_
 @return This
 @chainable
 **/
-	my.Design.prototype.update = function(sprite, cell){
+	my.Design.prototype.update = function(sprite, cell) {
 		this.makeGradient(sprite, cell);
 		this.sortStops();
 		this.applyStops();
 		return this;
-		};
-/**
+	};
+	/**
 Gradient builder helper function - sorts color attribute Objects by their stop attribute values, after adding the roll value to them
 @method Design.sortStops
 @return Nothing
 @private
 **/
-	my.Design.prototype.sortStops = function(){
+	my.Design.prototype.sortStops = function() {
 		var color = this.get('color'),
 			roll = this.get('roll');
-		for(var i=0, z=color.length; i<z; i++){
+		for (var i = 0, z = color.length; i < z; i++) {
 			color[i].stop += roll;
-			if(!my.isBetween(color[i].stop, 0, 1, true)){
-				color[i].stop = (color[i].stop > 0.5) ? color[i].stop-1 : color[i].stop+1;
-				}
-			if(color[i].stop <= 0){color[i].stop = 0.000001;}
-			else if(color[i].stop >= 1){color[i].stop = 0.999999;}
+			if (!my.isBetween(color[i].stop, 0, 1, true)) {
+				color[i].stop = (color[i].stop > 0.5) ? color[i].stop - 1 : color[i].stop + 1;
 			}
-		color.sort(function(a,b){
+			if (color[i].stop <= 0) {
+				color[i].stop = 0.000001;
+			}
+			else if (color[i].stop >= 1) {
+				color[i].stop = 0.999999;
+			}
+		}
+		color.sort(function(a, b) {
 			return a.stop - b.stop;
-			});
-		this.set({color: color,});
-		};
-/**
+		});
+		this.set({
+			color: color,
+		});
+	};
+	/**
 A __factory__ function to generate new Animation objects
 @method newAnimation
 @param {Object} items Key:value Object argument for setting attributes
 @return Animation object
 **/
-	my.newAnimation = function(items){
+	my.newAnimation = function(items) {
 		return new my.Animation(items);
-		};
-/**
+	};
+	/**
 A __factory__ function to generate new Tween objects
 @method newTween
 @param {Object} items Key:value Object argument for setting attributes
 @return Tween object
 **/
-	my.newTween = function(items){
+	my.newTween = function(items) {
 		return new my.Tween(items);
-		};
+	};
 	my.pushUnique(my.sectionlist, 'animation');
 	my.pushUnique(my.nameslist, 'animate');
 	my.pushUnique(my.nameslist, 'animationnames');
-/**
+	/**
 Animation flag: set to false to stop animation loop
 @property doAnimation
 @type {Boolean}
 **/
 	my.doAnimation = false;
-/**
+	/**
 Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
 @property orderAnimations
 @type {Boolean}
 @default true
-**/		
+**/
 	my.orderAnimations = true;
-/**
+	/**
 The Scrawl animation loop
 
 Animation loop is invoked automatically as part of the initialization process
@@ -679,36 +752,36 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 @method animationLoop
 @return Recursively calls itself - never returns
 **/
-	my.animationLoop = function(){
-		if(my.orderAnimations){
+	my.animationLoop = function() {
+		if (my.orderAnimations) {
 			my.sortAnimations();
-			}
-		for(var i=0, iz=my.animate.length; i<iz; i++){
-			if(my.animate[i]){
+		}
+		for (var i = 0, iz = my.animate.length; i < iz; i++) {
+			if (my.animate[i]) {
 				my.animation[my.animate[i]].fn();
-				}
 			}
-		if(my.doAnimation){
-			window.requestAnimFrame(function(){
+		}
+		if (my.doAnimation) {
+			window.requestAnimFrame(function() {
 				my.animationLoop();
-				});
-			}
-		};
-/**
+			});
+		}
+	};
+	/**
 Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order
 @method sortAnimations
 @return Nothing
 @private
 **/
-	my.sortAnimations = function(){
-		my.animate.sort(function(a,b){
+	my.sortAnimations = function() {
+		my.animate.sort(function(a, b) {
 			return my.animation[a].order - my.animation[b].order;
-			});
-		};
-		
-/**
+		});
+	};
+
+	/**
 # Animation
-	
+
 ## Instantiation
 
 * scrawl.newAnimation()
@@ -725,87 +798,87 @@ Animation sorting routine - animation objects are sorted according to their anim
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
-**/		
-	my.Animation = function(items){
+**/
+	my.Animation = function(items) {
 		my.Base.call(this, items);
 		items = my.safeObject(items);
 		var delay = (my.isa(items.delay, 'bool')) ? items.delay : false;
-		this.fn = items.fn || function(){}; 
+		this.fn = items.fn || function() {};
 		this.order = items.order || 0;
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
-/**
+		/**
 Pseudo-attribute used to prevent immediate running of animation when first created
 
 _This attribute is not retained by the Animation object_
 @property delay
 @type Boolean
 @default false
-**/		
-		if(!delay){
+**/
+		if (!delay) {
 			this.run();
-			}
+		}
 		return this;
-		};
+	};
 	my.Animation.prototype = Object.create(my.Base.prototype);
-/**
+	/**
 @property type
 @type String
 @default 'Animation'
 @final
-**/		
+**/
 	my.Animation.prototype.type = 'Animation';
 	my.Animation.prototype.classname = 'animationnames';
 	my.d.Animation = {
-/**
+		/**
 Anonymous function for an animation routine
 @property fn
 @type Function
 @default function(){}
-**/		
-		fn: function(){},
-/**
+**/
+		fn: function() {},
+		/**
 Lower order animations are run during each frame before higher order ones
 @property order
 @type Number
 @default 0
-**/		
+**/
 		order: 0,
-		};
+	};
 	my.mergeInto(my.d.Animation, my.d.Base);
-/**
+	/**
 Run an animation
 @method run
 @return Always true
 **/
-	my.Animation.prototype.run = function(){
+	my.Animation.prototype.run = function() {
 		my.pushUnique(my.animate, this.name);
 		return true;
-		};
-/**
+	};
+	/**
 Stop an animation
 @method halt
 @return Always true
 **/
-	my.Animation.prototype.halt = function(){
+	my.Animation.prototype.halt = function() {
 		my.removeItem(my.animate, this.name);
 		return true;
-		};
-/**
+	};
+	/**
 Remove this Animation from the scrawl library
 @method kill
 @return Always true
 **/
-	my.Animation.prototype.kill = function(){
+	my.Animation.prototype.kill = function() {
 		delete my.animation[this.name];
 		my.removeItem(my.animationnames, this.name);
 		my.removeItem(my.animate, this.name);
 		return true;
-		};
+	};
 
-/**
+	/**
 # Tween
-	
+
 ## Instantiation
 
 * scrawl.newTween()
@@ -855,8 +928,8 @@ Tweens come with a number of flags and attributes to indicate how many times the
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
-**/		
-	my.Tween = function(items){
+**/
+	my.Tween = function(items) {
 		my.Base.call(this, items);
 		items = my.safeObject(items);
 		this.targets = (my.isa(items.targets, 'arr')) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
@@ -882,40 +955,40 @@ Tweens come with a number of flags and attributes to indicate how many times the
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
 		return this;
-		};
+	};
 	my.Tween.prototype = Object.create(my.Base.prototype);
-/**
+	/**
 @property type
 @type String
 @default 'Tween'
 @final
-**/		
+**/
 	my.Tween.prototype.type = 'Tween';
 	my.Tween.prototype.classname = 'animationnames';
 	my.d.Tween = {
-/**
+		/**
 Array of sprites, cells, etc to be animated using this tween; expects to be passed handles to the sprite objects, not SPRITENAME strings
 @property targets
 @type Array
 @default []
-**/		
+**/
 		targets: [],
-/**
+		/**
 Array of sprites, cells, etc currently being animated using this tween
 @property currentTargets
 @type Array
 @default []
 @private
-**/		
+**/
 		currentTargets: [],
-/**
+		/**
 Object containing the start positions (for absolute transitions) or delta values (for relative transitions) for given settable (ie: Number) attributes
 @property start
 @type Object
 @default {}
-**/		
+**/
 		start: {},
-/**
+		/**
 Object containing attribute: value pairs determining which easing engine will be applied to each tweened attribute
 
 Currently, Scrawl offers the following easing engines. _Out_ signifies that the end of the tween is faster than the start; _In_ signifies the the end of the tween is slower. (This is the opposite of 'Flash' usage, but in line with wider programming conventions):
@@ -927,182 +1000,182 @@ Currently, Scrawl offers the following easing engines. _Out_ signifies that the 
 @property engines
 @type Object
 @default {}
-**/		
+**/
 		engines: {},
-/**
+		/**
 Object containing the end positions for given settable (ie: Number) attributes
 @property end
 @type Object
 @default {}
-**/		
+**/
 		end: {},
-/**
+		/**
 Object containing set instructions to be performed at the end of the tween
 @property onComplete
 @type Object
 @default {}
-**/		
+**/
 		onComplete: {},
-/**
+		/**
 Object containing runtime initial values for each object being tweened
 @property initVals
 @type Object
 @default {}
 @private
-**/		
+**/
 		initVals: [],
-/**
+		/**
 Object containing set instructions to be performed at the start of the tween
 @property onCommence
 @type Object
 @default {}
-**/		
+**/
 		onCommence: {},
-/**
+		/**
 Datetime when the tween starts running
 @property startTime
 @type Number - Date.now()
 @default 0
 @private
-**/		
+**/
 		startTime: 0,
-/**
+		/**
 Duration of the tween, measured in milliseconds
 @property duration
 @type Number
 @default 0
-**/		
+**/
 		duration: 0,
-/**
+		/**
 Flag - when true, tween is running
 @property active
 @type Boolean
 @default false
 @private
-**/		
+**/
 		active: false,
-/**
+		/**
 Flag - when true, tween runs in reverse, from end values to start values (for absolute transitions) or applying negative start values (for relative transitions)
 @property reverse
 @type Boolean
 @default false
-**/		
+**/
 		reverse: false,
-/**
+		/**
 Flag - when true, tween will automatically reverse its direction when it completes
 @property autoReverse
 @type Boolean
 @default false
-**/		
+**/
 		autoReverse: false,
-/**
+		/**
 Callback function to run when tween completes - will not run if nextTween is set
 @property callback
 @type Function
 @default false
-**/		
+**/
 		callback: false,
-/**
+		/**
 Flag - when true, tween will automatically reverse its direction when it completes, and immediately run again
 @property autoReverseAndRun
 @type Boolean
 @default false
-**/		
+**/
 		autoReverseAndRun: false,
-/**
+		/**
 Counter for the number of cycles the tween will run; set to true for countinuous repetition
 @property count
 @type Mixed - Number or Boolean
 @default 0
-**/		
+**/
 		count: 0,
-/**
+		/**
 Internal attribute
 @property currentCount
 @type Mixed - Number or Boolean
 @default 0
 @private
-**/		
+**/
 		currentCount: 0,
-/**
+		/**
 Flag - when true, tween will automatically delete itself when it completes
 @property killOnComplete
 @type Boolean
 @default false
-**/		
+**/
 		killOnComplete: false,
-/**
+		/**
 TWEENNAME Sring of the tween to be run when this tween completes
 @property nextTween
 @type String
 @default ''
-**/		
+**/
 		nextTween: '',
-/**
+		/**
 Lower order animations are run during each frame before higher order ones
 @property order
 @type Number
 @default 0
-**/		
+**/
 		order: 0,
-		};
+	};
 	my.mergeInto(my.d.Tween, my.d.Base);
-/**
+	/**
 Tween animation function
 @method fn
 @return Always true
 @private
 **/
-	my.Tween.prototype.fn = function(){
-		var	currentTime = Date.now(),
-			progress = (currentTime - this.startTime)/this.duration,
+	my.Tween.prototype.fn = function() {
+		var currentTime = Date.now(),
+			progress = (currentTime - this.startTime) / this.duration,
 			sprite,
 			argSet,
 			keys = Object.keys(this.end);
-		if(this.active){
-			if(progress < 1){
-				for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
+		if (this.active) {
+			if (progress < 1) {
+				for (var t = 0, tz = this.currentTargets.length; t < tz; t++) {
 					sprite = this.currentTargets[t];
-					if(my.xt(sprite)){
+					if (my.xt(sprite)) {
 						argSet = {};
-						for(var k = 0, kz = keys.length; k < kz; k++){
+						for (var k = 0, kz = keys.length; k < kz; k++) {
 							argSet[keys[k]] = this.engine(this.initVals[t][keys[k]].start,
 								this.initVals[t][keys[k]].change,
 								progress,
 								this.engines[keys[k]],
 								this.reverse);
-							}
+						}
 						sprite.set(argSet);
-						}
-					}
-				}
-			else{
-				this.halt();
-				if(this.autoReverse || this.autoReverseAndRun){
-					this.reverse = (this.reverse) ? false : true;
-					}
-				if(this.autoReverseAndRun){
-					if(my.isa(this.currentCount, 'num')){
-						this.currentCount--;
-						if(this.currentCount > 0){
-							this.run();
-							}
-						else{
-							this.runComplete();
-							}
-						}
-					else{
-						this.run();
-						}
-					}
-				else{
-					this.runComplete();
 					}
 				}
 			}
+			else {
+				this.halt();
+				if (this.autoReverse || this.autoReverseAndRun) {
+					this.reverse = (this.reverse) ? false : true;
+				}
+				if (this.autoReverseAndRun) {
+					if (my.isa(this.currentCount, 'num')) {
+						this.currentCount--;
+						if (this.currentCount > 0) {
+							this.run();
+						}
+						else {
+							this.runComplete();
+						}
+					}
+					else {
+						this.run();
+					}
+				}
+				else {
+					this.runComplete();
+				}
+			}
+		}
 		return true;
-		};
-/**
+	};
+	/**
 Tween engines
 @method engine
 @return calculated current value for an attribute, which will vary depending on which engine has been selected 
@@ -1113,181 +1186,181 @@ Tween engines
 @param {Boolean} reverse Reverse flag - true if tween is reversed
 @private
 **/
-	my.Tween.prototype.engine = function(start, change, position, engine, reverse){
+	my.Tween.prototype.engine = function(start, change, position, engine, reverse) {
 		var temp;
-		switch(engine){
-			case 'easeOut' :										//OPPOSITE of Flash easeOut - slow at start, not end
+		switch (engine) {
+			case 'easeOut': //OPPOSITE of Flash easeOut - slow at start, not end
 				return start + ((position * position) * change);
-			case 'easeIn' :											//OPPOSITE of Flash easeIn - slow at end, not start
+			case 'easeIn': //OPPOSITE of Flash easeIn - slow at end, not start
 				temp = 1 - position;
 				return (start + change) + ((temp * temp) * -change);
-			case 'easeOut3' :
+			case 'easeOut3':
 				return start + ((position * position * position) * change);
-			case 'easeIn3' :
+			case 'easeIn3':
 				temp = 1 - position;
 				return (start + change) + ((temp * temp * temp) * -change);
-			case 'easeOut4' :
+			case 'easeOut4':
 				return start + ((position * position * position * position) * change);
-			case 'easeIn4' :
+			case 'easeIn4':
 				temp = 1 - position;
 				return (start + change) + ((temp * temp * temp * temp) * -change);
-			case 'easeOut5' :
+			case 'easeOut5':
 				return start + ((position * position * position * position * position) * change);
-			case 'easeIn5' :
+			case 'easeIn5':
 				temp = 1 - position;
 				return (start + change) + ((temp * temp * temp * temp * temp) * -change);
-			case 'easeOutIn' :
+			case 'easeOutIn':
 				temp = 1 - position;
-				return (position < 0.5) ? 
+				return (position < 0.5) ?
 					start + ((position * position) * change * 2) :
 					(start + change) + ((temp * temp) * -change * 2);
-			case 'easeOutIn3' :
+			case 'easeOutIn3':
 				temp = 1 - position;
-				return (position < 0.5) ? 
+				return (position < 0.5) ?
 					start + ((position * position * position) * change * 4) :
 					(start + change) + ((temp * temp * temp) * -change * 4);
-			case 'easeOutIn4' :
+			case 'easeOutIn4':
 				temp = 1 - position;
-				return (position < 0.5) ? 
+				return (position < 0.5) ?
 					start + ((position * position * position * position) * change * 8) :
 					(start + change) + ((temp * temp * temp * temp) * -change * 8);
-			case 'easeOutIn5' :
+			case 'easeOutIn5':
 				temp = 1 - position;
-				return (position < 0.5) ? 
+				return (position < 0.5) ?
 					start + ((position * position * position * position * position) * change * 16) :
 					(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
-			case 'out' :
+			case 'out':
 				temp = 1 - position;
 				return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
-			case 'in' :
+			case 'in':
 				return start + (Math.sin((position * 90) * my.radian) * change);
-			default :
+			default:
 				return start + (position * change);
-			}
-		};
-/**
+		}
+	};
+	/**
 Run a tween animation
 @method run
 @return Always true
 **/
-	my.Tween.prototype.run = function(){
+	my.Tween.prototype.run = function() {
 		var test,
 			activeTweens,
 			tw,
 			keys,
 			start,
 			change;
-		if(!this.active){
+		if (!this.active) {
 			activeTweens = [];
 			keys = Object.keys(this.end);
 			this.currentCount = this.currentCount || this.count;
 			this.currentTargets = [];
 			this.initVals = [];
-			for(var l = 0, lz = my.animationnames.length; l < lz; l++){
+			for (var l = 0, lz = my.animationnames.length; l < lz; l++) {
 				tw = my.animation[my.animationnames[l]];
-				if(tw.type === 'Tween' && tw.active && tw.name !== this.name){
+				if (tw.type === 'Tween' && tw.active && tw.name !== this.name) {
 					activeTweens.push(tw);
-					}
 				}
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
+			}
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
 				test = true;
-				for(var j = 0, jz = activeTweens.length; j < jz; j++){
-					for(var k = 0, kz = activeTweens[j].currentTargets.length; k < kz; k++){
-						if(this.targets[i].name === activeTweens[j].currentTargets[k].name){
+				for (var j = 0, jz = activeTweens.length; j < jz; j++) {
+					for (var k = 0, kz = activeTweens[j].currentTargets.length; k < kz; k++) {
+						if (this.targets[i].name === activeTweens[j].currentTargets[k].name) {
 							test = false;
 							break;
-							}
-						}
-					if(!test){
-						break;
 						}
 					}
-				if(test){
-					this.currentTargets.push(this.targets[i]);
+					if (!test) {
+						break;
 					}
 				}
-			if(this.currentTargets.length > 0){
-				for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
-					if(my.xt(this.currentTargets[t])){
+				if (test) {
+					this.currentTargets.push(this.targets[i]);
+				}
+			}
+			if (this.currentTargets.length > 0) {
+				for (var t = 0, tz = this.currentTargets.length; t < tz; t++) {
+					if (my.xt(this.currentTargets[t])) {
 						this.currentTargets[t].set(this.onCommence);
 						this.initVals.push({});
-						for(var m = 0, mz = keys.length; m < mz; m++){
-							if(my.xt(this.start[keys[m]])){
+						for (var m = 0, mz = keys.length; m < mz; m++) {
+							if (my.xt(this.start[keys[m]])) {
 								this.initVals[t][keys[m]] = {
 									start: (this.reverse) ? this.end[keys[m]] : this.start[keys[m]],
 									change: (this.reverse) ? -(this.end[keys[m]] - this.start[keys[m]]) : this.end[keys[m]] - this.start[keys[m]],
-									};
-								}
-							else{
+								};
+							}
+							else {
 								this.initVals[t][keys[m]] = {
 									start: this.currentTargets[t].get([keys[m]]),
 									change: (this.reverse) ? -this.end[keys[m]] : this.end[keys[m]],
-									};
-								}
+								};
 							}
 						}
 					}
+				}
 				this.startTime = Date.now();
 				my.pushUnique(my.animate, this.name);
 				this.active = true;
 				return true;
-				}
 			}
+		}
 		return false;
-		};
-/**
+	};
+	/**
 Finish running a tween
 @method runComplete
 @return Always true
 @private
 **/
-	my.Tween.prototype.runComplete = function(){
-		for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
-			if(my.xt(this.currentTargets[t])){
+	my.Tween.prototype.runComplete = function() {
+		for (var t = 0, tz = this.currentTargets.length; t < tz; t++) {
+			if (my.xt(this.currentTargets[t])) {
 				this.currentTargets[t].set(this.onComplete);
-				}
 			}
-		if(this.nextTween){
-			if(my.xt(my.animation[this.nextTween])){
+		}
+		if (this.nextTween) {
+			if (my.xt(my.animation[this.nextTween])) {
 				my.animation[this.nextTween].run();
-				}
 			}
-		else if(this.callback){
+		}
+		else if (this.callback) {
 			this.callback();
-			}
-		if(this.killOnComplete){
+		}
+		if (this.killOnComplete) {
 			this.kill();
-			}
+		}
 		return true;
-		};
-/**
+	};
+	/**
 Stop a tween animation
 @method halt
 @return Always true
 **/
-	my.Tween.prototype.halt = function(){
+	my.Tween.prototype.halt = function() {
 		this.active = false;
 		my.removeItem(my.animate, this.name);
 		return true;
-		};
-/**
+	};
+	/**
 Remove this tween from the scrawl library
 @method kill
 @return Always true
 **/
-	my.Tween.prototype.kill = function(){
-		if(this.active){
-			for(var t = 0, tz = this.currentTargets.length; t < tz; t++){
-				if(my.xt(this.currentTargets[t])){
+	my.Tween.prototype.kill = function() {
+		if (this.active) {
+			for (var t = 0, tz = this.currentTargets.length; t < tz; t++) {
+				if (my.xt(this.currentTargets[t])) {
 					this.currentTargets[t].set(this.onComplete);
-					}
 				}
 			}
+		}
 		my.removeItem(my.animate, this.name);
 		my.removeItem(my.animationnames, this.name);
 		delete my.animation[this.name];
 		return true;
-		};
-		
+	};
+
 	return my;
-	}(scrawl));
+}(scrawl));

@@ -32,10 +32,10 @@ The Color module adds a controllable color object that can be used with sprite f
 @module scrawlColor
 **/
 
-var scrawl = (function(my){
+var scrawl = (function(my) {
 	'use strict';
 
-/**
+	/**
 # window.scrawl
 
 scrawlColor module adaptions to the Scrawl library object
@@ -43,19 +43,19 @@ scrawlColor module adaptions to the Scrawl library object
 @class window.scrawl_Color
 **/
 
-/**
+	/**
 A __factory__ function to generate new Color objects
 @method newColor
 @param {Object} items Key:value Object argument for setting attributes
 @return Color object
 **/
-	my.newColor = function(items){
+	my.newColor = function(items) {
 		return new my.Color(items);
-		};
+	};
 
-/**
+	/**
 # Color
-	
+
 ## Instantiation
 
 * scrawl.newColor()
@@ -73,190 +73,190 @@ A __factory__ function to generate new Color objects
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
-**/		
-	my.Color = function(items){
+**/
+	my.Color = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		this.set(items);
-		if(my.xt(items.color)){
+		if (my.xt(items.color)) {
 			this.convert(items.color);
-			}
-		if(items.random){
+		}
+		if (items.random) {
 			this.generateRandomColor(items);
-			}
+		}
 		this.checkValues();
 		my.design[this.name] = this;
 		my.pushUnique(my.designnames, this.name);
 		return this;
-		};
+	};
 	my.Color.prototype = Object.create(my.Base.prototype);
-/**
+	/**
 @property type
 @type String
 @default 'Color'
 @final
-**/		
+**/
 	my.Color.prototype.type = 'Color';
 	my.Color.prototype.classname = 'designnames';
 	my.d.Color = {
-/**
+		/**
 Red channel value: 0 - 255
 @property r
 @type Number
 @default 0
-**/		
+**/
 		r: 0,
-/**
+		/**
 Green channel value: 0 - 255
 @property g
 @type Number
 @default 0
-**/		
+**/
 		g: 0,
-/**
+		/**
 Blue channel value: 0 - 255
 @property b
 @type Number
 @default 0
-**/		
+**/
 		b: 0,
-/**
+		/**
 Alpha channel value: 0 - 1
 @property a
 @type Number
 @default 1
-**/		
+**/
 		a: 1,
-/**
+		/**
 Red channel delta value
 @property rShift
 @type Number
 @default 0
-**/		
+**/
 		rShift: 0,
-/**
+		/**
 Green channel delta value
 @property gShift
 @type Number
 @default 0
-**/		
+**/
 		gShift: 0,
-/**
+		/**
 Blue channel delta value
 @property bShift
 @type Number
 @default 0
-**/		
+**/
 		bShift: 0,
-/**
+		/**
 Alpha channel delta value
 @property aShift
 @type Number
 @default 0
-**/		
+**/
 		aShift: 0,
-/**
+		/**
 Red channel maximum permitted value: 0 - 255
 @property rMax
 @type Number
 @default 255
-**/		
+**/
 		rMax: 255,
-/**
+		/**
 Green channel maximum permitted value: 0 - 255
 @property gMax
 @type Number
 @default 255
-**/		
+**/
 		gMax: 255,
-/**
+		/**
 Blue channel maximum permitted value: 0 - 255
 @property bMax
 @type Number
 @default 255
-**/		
+**/
 		bMax: 255,
-/**
+		/**
 Alpha channel maximum permitted value: 0 - 1
 @property aMax
 @type Number
 @default 1
-**/		
+**/
 		aMax: 1,
-/**
+		/**
 Red channel minimum permitted value: 0 - 255
 @property rMin
 @type Number
 @default 0
-**/		
+**/
 		rMin: 0,
-/**
+		/**
 Green channel minimum permitted value: 0 - 255
 @property gMin
 @type Number
 @default 0
-**/		
+**/
 		gMin: 0,
-/**
+		/**
 Blue channel minimum permitted value: 0 - 255
 @property bMin
 @type Number
 @default 0
-**/		
+**/
 		bMin: 0,
-/**
+		/**
 Alpha channel minimum permitted value: 0 - 1
 @property aMin
 @type Number
 @default 0
-**/		
+**/
 		aMin: 0,
-/**
+		/**
 Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel's maximum or minimum value is breached
 @property rBounce
 @type Boolean
 @default false
-**/		
+**/
 		rBounce: false,
-/**
+		/**
 Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel's maximum or minimum value is breached
 @property gBounce
 @type Boolean
 @default false
-**/		
+**/
 		gBounce: false,
-/**
+		/**
 Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel's maximum or minimum value is breached
 @property bBounce
 @type Boolean
 @default false
-**/		
+**/
 		bBounce: false,
-/**
+		/**
 Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel's maximum or minimum value is breached
 @property aBounce
 @type Boolean
 @default false
-**/		
+**/
 		aBounce: false,
-/**
+		/**
 Requires Color object to recalculate its attribute values before each display cycle commences
 @property autoUpdate
 @type Boolean
 @default false
-**/		
+**/
 		autoUpdate: false,
-/**
+		/**
 Generation flag - if true, Color object will set itself to a random color within minimum and maximum attributes
 
 This attribute is not retained by the color object, and can only be used in the __scrawl.newColor()__ and __Color.set()__ functions
 @property random
 @type Boolean
 @default false
-**/		
-		};
+**/
+	};
 	my.mergeInto(my.d.Color, my.d.Base);
-/**
+	/**
 Augments Base.get()
 
 * If called with no argument, will return the current color String
@@ -265,54 +265,54 @@ Augments Base.get()
 @param {String} item Attribute key String
 @return Attribute value, or CSS color string
 **/
-	my.Color.prototype.get = function(item){
-		if(!my.xt(item)){
-			return 'rgba('+(this.r || 0)+', '+(this.g || 0)+', '+(this.b || 0)+', '+(this.a || 1)+')';
-			}
-		else if(item === 'random'){
+	my.Color.prototype.get = function(item) {
+		if (!my.xt(item)) {
+			return 'rgba(' + (this.r || 0) + ', ' + (this.g || 0) + ', ' + (this.b || 0) + ', ' + (this.a || 1) + ')';
+		}
+		else if (item === 'random') {
 			this.generateRandomColor();
 			return this.get();
-			}
-		else{
+		}
+		else {
 			return my.Base.prototype.get.call(this, item);
-			}
-		};
-/**
+		}
+	};
+	/**
 Augments Base.clone()
 @method clone
 @param {Object} items Object consisting of key:value attributes
 @return Cloned Color object
 **/
-	my.Color.prototype.clone = function(items){
+	my.Color.prototype.clone = function(items) {
 		var a = this.parse(),
 			b,
 			c;
-		b = my.mergeOver(a, ((my.isa(items,'obj')) ? items : {}));
+		b = my.mergeOver(a, ((my.isa(items, 'obj')) ? items : {}));
 		c = my.newColor(b);
 		items = my.safeObject(items);
-		if(my.xt(items.random) && items.random){
+		if (my.xt(items.random) && items.random) {
 			delete c.r;
 			delete c.g;
 			delete c.b;
 			delete c.a;
 			c.generateRandomColor(items);
-			}
+		}
 		return c;
-		};
-/**
+	};
+	/**
 Returns current color, or next color value in sequence if .autoUpdate is true
 @method getData
 @return CSS color String
 @private
 **/
-	my.Color.prototype.getData = function(){
-		if(this.get('autoUpdate')){
+	my.Color.prototype.getData = function() {
+		if (this.get('autoUpdate')) {
 			this.update();
-			}
+		}
 		this.checkValues();
 		return this.get();
-		};
-/**
+	};
+	/**
 Generates a random color
 
 Argument can include preset color channel values (0-255, 0-1 for alpha): {r:Number, g:Number, b:Number, a:Number}
@@ -322,7 +322,7 @@ Argument can include preset color channel values (0-255, 0-1 for alpha): {r:Numb
 @chainable
 @private
 **/
-	my.Color.prototype.generateRandomColor = function(items){
+	my.Color.prototype.generateRandomColor = function(items) {
 		var rMax = this.get('rMax'),
 			gMax = this.get('gMax'),
 			bMax = this.get('bMax'),
@@ -333,22 +333,22 @@ Argument can include preset color channel values (0-255, 0-1 for alpha): {r:Numb
 			aMin = this.get('aMin');
 		items = my.safeObject(items);
 		my.Base.prototype.set.call(this, {
-			r: items.r || Math.round((Math.random()*(rMax-rMin))+rMin),
-			g: items.g || Math.round((Math.random()*(gMax-gMin))+gMin),
-			b: items.b || Math.round((Math.random()*(bMax-bMin))+bMin),
-			a: items.a || (Math.random()*(aMax-aMin))+aMin,
-			});
+			r: items.r || Math.round((Math.random() * (rMax - rMin)) + rMin),
+			g: items.g || Math.round((Math.random() * (gMax - gMin)) + gMin),
+			b: items.b || Math.round((Math.random() * (bMax - bMin)) + bMin),
+			a: items.a || (Math.random() * (aMax - aMin)) + aMin,
+		});
 		this.checkValues();
 		return this;
-		};
-/**
+	};
+	/**
 Checks that color channel values are of the permitted form (integer vs float) and within permitted ranges
 @method checkValues
 @return This
 @chainable
 @private
 **/
-	my.Color.prototype.checkValues = function(){
+	my.Color.prototype.checkValues = function() {
 		var r = Math.floor(this.r) || 0,
 			g = Math.floor(this.g) || 0,
 			b = Math.floor(this.b) || 0,
@@ -362,33 +362,33 @@ Checks that color channel values are of the permitted form (integer vs float) an
 			g: g,
 			b: b,
 			a: a,
-			});
+		});
 		return this;
-		};
-/**
+	};
+	/**
 Augments Base.set()
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
-	my.Color.prototype.set = function(items){
+	my.Color.prototype.set = function(items) {
 		my.Base.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		if(items.random){
+		if (items.random) {
 			this.generateRandomColor(items);
-			}
+		}
 		this.checkValues();
 		return this;
-		};
-/**
+	};
+	/**
 Update the current color, taking into account shift and bounce attribute values
 @method update
 @return This
 @chainable
 **/
-	my.Color.prototype.update = function(){
-		var l = ['r','g','b','a'],
+	my.Color.prototype.update = function() {
+		var l = ['r', 'g', 'b', 'a'],
 			col,
 			res = [],
 			sft = [],
@@ -400,24 +400,24 @@ Update the current color, taking into account shift and bounce attribute values
 			g,
 			b,
 			a;
-		for(var i=0, iz=l.length; i<iz; i++){
+		for (var i = 0, iz = l.length; i < iz; i++) {
 			col = this.get(l[i]);
-			shift = this.get(l[i]+'Shift');
-			min = this.get(l[i]+'Min');
-			max = this.get(l[i]+'Max');
-			bounce = this.get(l[i]+'Bounce');
-			if(!my.isBetween((col + shift), max, min, true)){
-				if(bounce){
+			shift = this.get(l[i] + 'Shift');
+			min = this.get(l[i] + 'Min');
+			max = this.get(l[i] + 'Max');
+			bounce = this.get(l[i] + 'Bounce');
+			if (!my.isBetween((col + shift), max, min, true)) {
+				if (bounce) {
 					shift = -shift;
-					}
-				else{
-					col = (col > (max + min)/2) ? max : min;
-					shift = 0;
-					}
 				}
+				else {
+					col = (col > (max + min) / 2) ? max : min;
+					shift = 0;
+				}
+			}
 			res[i] = col + shift;
 			sft[i] = shift;
-			}
+		}
 		my.Base.prototype.set.call(this, {
 			r: res[0],
 			g: res[1],
@@ -427,28 +427,28 @@ Update the current color, taking into account shift and bounce attribute values
 			gShift: sft[1],
 			bShift: sft[2],
 			aShift: sft[3],
-			});
+		});
 		return this;
-		};
-/**
+	};
+	/**
 Add values to Number attributes - limited to altering __r__, __g__, __b__ and __a__ attributes
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
-	my.Color.prototype.setDelta = function(items){
-		items = (my.isa(items,'obj')) ? items : {};
+	my.Color.prototype.setDelta = function(items) {
+		items = (my.isa(items, 'obj')) ? items : {};
 		my.Base.prototype.set.call(this, {
 			r: (this.r || 0) + (items.r || 0),
 			g: (this.g || 0) + (items.g || 0),
 			b: (this.b || 0) + (items.b || 0),
 			a: (this.a || 1) + (items.a || 0),
-			});
+		});
 		this.checkValues();
 		return this;
-		};
-/**
+	};
+	/**
 Convert a CSS color string value into native attribute values. 
 
 Converts: '#nnn', '#nnnnnn', 'rgb(n, n, n)', 'rgba(n, n, n, a), color names.
@@ -459,107 +459,175 @@ Color names are limited to those supported by SVGTiny: 'green', 'silver', 'lime'
 @return This
 @chainable
 **/
-	my.Color.prototype.convert = function(items){
-		items = (my.isa(items,'str')) ? items : '';
-		if(items.length > 0){
+	my.Color.prototype.convert = function(items) {
+		items = (my.isa(items, 'str')) ? items : '';
+		if (items.length > 0) {
 			items.toLowerCase();
 			var temp,
 				r = 0,
 				g = 0,
 				b = 0,
 				a = 1;
-			if(items[0] === '#'){
-				if(items.length < 5){
-					r = this.toDecimal(items[1]+items[1]);
-					g = this.toDecimal(items[2]+items[2]);
-					b = this.toDecimal(items[3]+items[3]);
-					}
-				else if(items.length < 8){
-					r = this.toDecimal(items[1]+items[2]);
-					g = this.toDecimal(items[3]+items[4]);
-					b = this.toDecimal(items[5]+items[6]);
-					}
+			if (items[0] === '#') {
+				if (items.length < 5) {
+					r = this.toDecimal(items[1] + items[1]);
+					g = this.toDecimal(items[2] + items[2]);
+					b = this.toDecimal(items[3] + items[3]);
 				}
-			else if(/rgb\(/.test(items)){
+				else if (items.length < 8) {
+					r = this.toDecimal(items[1] + items[2]);
+					g = this.toDecimal(items[3] + items[4]);
+					b = this.toDecimal(items[5] + items[6]);
+				}
+			}
+			else if (/rgb\(/.test(items)) {
 				temp = items.match(/([0-9.]+\b)/g);
-				if(/%/.test(items)){
-					r = Math.round((temp[0]/100)*255);
-					g = Math.round((temp[1]/100)*255);
-					b = Math.round((temp[2]/100)*255);
-					}
-				else{
+				if (/%/.test(items)) {
+					r = Math.round((temp[0] / 100) * 255);
+					g = Math.round((temp[1] / 100) * 255);
+					b = Math.round((temp[2] / 100) * 255);
+				}
+				else {
 					r = Math.round(temp[0]);
 					g = Math.round(temp[1]);
 					b = Math.round(temp[2]);
-					}
 				}
-			else if(/rgba\(/.test(items)){
+			}
+			else if (/rgba\(/.test(items)) {
 				temp = items.match(/([0-9.]+\b)/g);
 				r = temp[0];
 				g = temp[1];
 				b = temp[2];
 				a = temp[3];
+			}
+			else {
+				switch (items) {
+					case 'green':
+						r = 0;
+						g = 128;
+						b = 0;
+						break;
+					case 'silver':
+						r = 192;
+						g = 192;
+						b = 192;
+						break;
+					case 'lime':
+						r = 0;
+						g = 255;
+						b = 0;
+						break;
+					case 'gray':
+						r = 128;
+						g = 128;
+						b = 128;
+						break;
+					case 'grey':
+						r = 128;
+						g = 128;
+						b = 128;
+						break;
+					case 'olive':
+						r = 128;
+						g = 128;
+						b = 0;
+						break;
+					case 'white':
+						r = 255;
+						g = 255;
+						b = 255;
+						break;
+					case 'yellow':
+						r = 255;
+						g = 255;
+						b = 0;
+						break;
+					case 'maroon':
+						r = 128;
+						g = 0;
+						b = 0;
+						break;
+					case 'navy':
+						r = 0;
+						g = 0;
+						b = 128;
+						break;
+					case 'red':
+						r = 255;
+						g = 0;
+						b = 0;
+						break;
+					case 'blue':
+						r = 0;
+						g = 0;
+						b = 255;
+						break;
+					case 'purple':
+						r = 128;
+						g = 0;
+						b = 128;
+						break;
+					case 'teal':
+						r = 0;
+						g = 128;
+						b = 128;
+						break;
+					case 'fuchsia':
+						r = 255;
+						g = 0;
+						b = 255;
+						break;
+					case 'aqua':
+						r = 0;
+						g = 255;
+						b = 255;
+						break;
+					default:
+						r = 0;
+						g = 0;
+						b = 0;
+						break;
 				}
-			else{
-				switch(items){
-					case 'green' :		r = 0;		g = 128;	b = 0;		break;
-					case 'silver' :		r = 192;	g = 192;	b = 192;	break;
-					case 'lime' :		r = 0;		g = 255;	b = 0;		break;
-					case 'gray' :		r = 128;	g = 128;	b = 128;	break;
-					case 'grey' :		r = 128;	g = 128;	b = 128;	break;
-					case 'olive' :		r = 128;	g = 128;	b = 0;		break;
-					case 'white' :		r = 255;	g = 255;	b = 255;	break;
-					case 'yellow' :		r = 255;	g = 255;	b = 0;		break;
-					case 'maroon' :		r = 128;	g = 0;		b = 0;		break;
-					case 'navy' :		r = 0;		g = 0;		b = 128;	break;
-					case 'red' :		r = 255;	g = 0;		b = 0;		break;
-					case 'blue' :		r = 0;		g = 0;		b = 255;	break;
-					case 'purple' :		r = 128;	g = 0;		b = 128;	break;
-					case 'teal' :		r = 0;		g = 128;	b = 128;	break;
-					case 'fuchsia' :	r = 255;	g = 0;		b = 255;	break;
-					case 'aqua' :		r = 0;		g = 255;	b = 255;	break;
-					default :			r = 0;		g = 0;		b = 0;		break;
-					}
-				}
+			}
 			my.Base.prototype.set.call(this, {
 				r: r,
 				g: g,
 				b: b,
 				a: a,
-				});
+			});
 			this.checkValues();
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Convert a decimal Number to its hexidecimal String value
 @method toDecimal
 @param {Number} items decimal value
 @return Hexidecimal String
 **/
-	my.Color.prototype.toDecimal = function(item){
-		return parseInt(item,16);
-		};
-/**
+	my.Color.prototype.toDecimal = function(item) {
+		return parseInt(item, 16);
+	};
+	/**
 Convert a hexidecimal String to its decimal Number value
 @method toHex
 @param {String} Hexidecimal String value
 @return Decimal Number
 **/
-	my.Color.prototype.toHex = function(item){
+	my.Color.prototype.toHex = function(item) {
 		return item.toString(16);
-		};
-/**
+	};
+	/**
 Delete this Color object from the scrawl library
 @method remove
 @return Always true
 **/
-	my.Color.prototype.remove = function(){
+	my.Color.prototype.remove = function() {
 		delete my.dsn[this.name];
 		delete my.design[this.name];
 		my.removeItem(my.designnames, this.name);
 		return true;
-		};
+	};
 
 	return my;
-	}(scrawl));
+}(scrawl));

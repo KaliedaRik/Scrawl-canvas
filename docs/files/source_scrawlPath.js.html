@@ -248,10 +248,10 @@ The Path module adds Path sprites - path-based objects - to the core module
 @module scrawlPath
 **/
 
-var scrawl = (function(my){
+var scrawl = (function(my) {
 	&#x27;use strict&#x27;;
 
-/**
+	/**
 # window.scrawl
 
 scrawlPath module adaptions to the Scrawl library object
@@ -271,28 +271,28 @@ scrawlPath module adaptions to the Scrawl library object
 @class window.scrawl_Path
 **/
 
-/**
+	/**
 scrawl.deleteSprite hook function - modified by path module
 @method pathDeleteSprite
 @private
 **/
-	my.pathDeleteSprite = function(mySprite){
+	my.pathDeleteSprite = function(mySprite) {
 		var myPointList,
 			myLinkList;
-		if(mySprite.type === &#x27;Path&#x27;){
+		if (mySprite.type === &#x27;Path&#x27;) {
 			myPointList = mySprite.getFullPointList();
 			myLinkList = mySprite.getFullLinkList();
-			for(var j=0, jz=myPointList.length; j&lt;jz; j++){
+			for (var j = 0, jz = myPointList.length; j &lt; jz; j++) {
 				my.removeItem(my.pointnames, myPointList[j]);
 				delete my.point[myPointList[j]];
-				}
-			for(var i=0, iz=myLinkList.length; i&lt;iz; i++){
+			}
+			for (var i = 0, iz = myLinkList.length; i &lt; iz; i++) {
 				my.removeItem(my.linknames, myLinkList[i]);
 				delete my.link[myLinkList[i]];
-				}
 			}
-		};
-/**
+		}
+	};
+	/**
 Clone a Scrawl.js object, optionally altering attribute values in the cloned object
 
 (This function replaces the core function)
@@ -312,92 +312,102 @@ Clone a Scrawl.js object, optionally altering attribute values in the cloned obj
 	newBox.get(&#x27;width&#x27;);		//returns 50
 	newBox.get(&#x27;height&#x27;);		//returns 100
 **/
-	my.Base.prototype.clone = function(items){
+	my.Base.prototype.clone = function(items) {
 		var b = my.mergeOver(this.parse(), my.safeObject(items));
-		delete b.context;	//required for successful cloning of sprites
+		delete b.context; //required for successful cloning of sprites
 		return (this.type === &#x27;Path&#x27;) ? my.makePath(b) : new my[this.type](b);
-		};
+	};
 	my.d.Position.pathPlace = 0;
 	my.d.Position.pathRoll = 0;
 	my.d.Position.addPathRoll = false;
 	my.d.Position.path = &#x27;&#x27;;
 	my.mergeInto(my.d.Cell, my.d.Position);
 	my.mergeInto(my.d.Sprite, my.d.Position);
-	if(my.xt(my.d.Block)){my.mergeInto(my.d.Block, my.d.Sprite);}
-	if(my.xt(my.d.Shape)){my.mergeInto(my.d.Shape, my.d.Sprite);}
-	if(my.xt(my.d.Wheel)){my.mergeInto(my.d.Wheel, my.d.Sprite);}
-	if(my.xt(my.d.Picture)){my.mergeInto(my.d.Picture, my.d.Sprite);}
-	if(my.xt(my.d.Phrase)){my.mergeInto(my.d.Phrase, my.d.Sprite);}
-/**
+	if (my.xt(my.d.Block)) {
+		my.mergeInto(my.d.Block, my.d.Sprite);
+	}
+	if (my.xt(my.d.Shape)) {
+		my.mergeInto(my.d.Shape, my.d.Sprite);
+	}
+	if (my.xt(my.d.Wheel)) {
+		my.mergeInto(my.d.Wheel, my.d.Sprite);
+	}
+	if (my.xt(my.d.Picture)) {
+		my.mergeInto(my.d.Picture, my.d.Sprite);
+	}
+	if (my.xt(my.d.Phrase)) {
+		my.mergeInto(my.d.Phrase, my.d.Sprite);
+	}
+	/**
 Position constructor hook function - modified by path module
 @method pathPositionInit
 @private
 **/
-	my.Position.prototype.pathPositionInit = function(items){
+	my.Position.prototype.pathPositionInit = function(items) {
 		this.path = items.path || my.d[this.type].path;
 		this.pathRoll = items.pathRoll || my.d[this.type].pathRoll;
 		this.addPathRoll = items.addPathRoll || my.d[this.type].addPathRoll;
 		this.pathPlace = items.pathPlace || my.d[this.type].pathPlace;
-		};
-/**
+	};
+	/**
 Position.setDelta hook function - modified by path module
 @method pathPositionSetDelta
 @private
 **/
-	my.Position.prototype.pathPositionSetDelta = function(items){
-		if(items.pathPlace){
+	my.Position.prototype.pathPositionSetDelta = function(items) {
+		if (items.pathPlace) {
 			this.pathPlace += items.pathPlace;
-			}
-		};
-/**
+		}
+	};
+	/**
 Cell.prepareToCopyCell hook function - modified by path module
 @method pathPrepareToCopyCell
 @private
 **/
-	my.Cell.prototype.pathPrepareToCopyCell = function(){
-		var	here;
-		if(my.contains(my.spritenames, this.path) &amp;&amp; my.sprite[this.path].type === &#x27;Path&#x27;){
+	my.Cell.prototype.pathPrepareToCopyCell = function() {
+		var here;
+		if (my.contains(my.spritenames, this.path) &amp;&amp; my.sprite[this.path].type === &#x27;Path&#x27;) {
 			here = my.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 			this.start.x = (!this.lockX) ? here.x : this.start.x;
 			this.start.y = (!this.lockY) ? here.y : this.start.y;
 			this.pathRoll = here.r || 0;
-			}
-		};
-/**
+		}
+	};
+	/**
 Sprite.stamp hook function - modified by path module
 @method pathStamp
 @private
 **/
-	my.Sprite.prototype.pathStamp = function(method, cell){
+	my.Sprite.prototype.pathStamp = function(method, cell) {
 		var here;
-		if(my.contains(my.spritenames, this.path) &amp;&amp; my.sprite[this.path].type === &#x27;Path&#x27;){
+		if (my.contains(my.spritenames, this.path) &amp;&amp; my.sprite[this.path].type === &#x27;Path&#x27;) {
 			here = my.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 			this.start.x = (!this.lockX) ? here.x : this.start.x;
 			this.start.y = (!this.lockY) ? here.y : this.start.y;
 			this.pathRoll = here.r || 0;
-			}
-		};
-/**
+		}
+	};
+	/**
 A __factory__ function to generate new Point objects
 @method newPoint
 @param {Object} items Key:value Object argument for setting attributes
 @return Point object
 @private
 **/
-	my.newPoint = function(items){
+	my.newPoint = function(items) {
 		return new my.Point(items);
-		};
-/**
+	};
+	/**
 A __factory__ function to generate new Link objects
 @method newLink
 @param {Object} items Key:value Object argument for setting attributes
 @return Link object
 @private
 **/
-	my.newLink = function(items){
+	my.newLink = function(items) {
 		return new my.Link(items);
-		};
-/**
+	};
+	/**
 A __factory__ function to generate new Path objects
 
 _Note: this function does NOT produce Path sprites_ - use scrawl.makePath()
@@ -406,10 +416,10 @@ _Note: this function does NOT produce Path sprites_ - use scrawl.makePath()
 @return Path object
 @private
 **/
-	my.newPath = function(items){
+	my.newPath = function(items) {
 		return new my.Path(items);
-		};
-/**
+	};
+	/**
 A __factory__ function to generate new Path sprites
 @method makePath
 @param {Object} items Key:value Object argument for setting attributes
@@ -422,307 +432,377 @@ A __factory__ function to generate new Path sprites
 		data: &#x27;M0,0 50,0 60,20, 10,20 0,0z&#x27;,
 		});
 **/
-	my.makePath = function(items){
-		items = (my.isa(items,&#x27;obj&#x27;)) ? items : {};
-		var minX = 999999, 
-			minY = 999999, 
-			maxX = -999999, 
+	my.makePath = function(items) {
+		items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
+		var minX = 999999,
+			minY = 999999,
+			maxX = -999999,
 			maxY = -999999,
-			myShape, 
-			sn, 
-			tn, 
-			lib, 
-			sx, 
-			sy, 
-			set, 
-			data, 
-			command, 
+			myShape,
+			sn,
+			tn,
+			lib,
+			sx,
+			sy,
+			set,
+			data,
+			command,
 			temppoint,
-			lc = 0, 
-			pc = 0, 
-			cx = 0, 
+			lc = 0,
+			pc = 0,
+			cx = 0,
 			cy = 0,
 			k = 0,
 			v = 0;
-		var	myPivot = (my.xt(items.pivot)) ? my.point[myPivot] || my.sprite[myPivot] : false;
+		var myPivot = (my.xt(items.pivot)) ? my.point[myPivot] || my.sprite[myPivot] : false;
 		items.start = (my.xt(items.start)) ? items.start : {};
-		items.scaleX = items.scaleX || 1; 
+		items.scaleX = items.scaleX || 1;
 		items.scaleY = items.scaleY || 1;
-		items.startX = (myPivot) ? ((myPivot.type === &#x27;Point&#x27;) ? myPivot.local.x : myPivot.start.x) : (items.startX || items.start.x || 0); 
-		items.startY = (myPivot) ? ((myPivot.type === &#x27;Point&#x27;) ? myPivot.local.y : myPivot.start.y) : (items.startY || items.start.y || 0); 
-		items.isLine = (my.isa(items.isLine,&#x27;bool&#x27;)) ? items.isLine : true;
-		var checkMinMax = function(cx,cy){
+		items.startX = (myPivot) ? ((myPivot.type === &#x27;Point&#x27;) ? myPivot.local.x : myPivot.start.x) : (items.startX || items.start.x || 0);
+		items.startY = (myPivot) ? ((myPivot.type === &#x27;Point&#x27;) ? myPivot.local.y : myPivot.start.y) : (items.startY || items.start.y || 0);
+		items.isLine = (my.isa(items.isLine, &#x27;bool&#x27;)) ? items.isLine : true;
+		var checkMinMax = function(cx, cy) {
 			minX = (minX &gt; cx) ? cx : minX;
 			minY = (minY &gt; cy) ? cy : minY;
 			maxX = (maxX &lt; cx) ? cx : maxX;
 			maxY = (maxY &lt; cy) ? cy : maxY;
-			};
-		var getPathSetData = function(sim){
+		};
+		var getPathSetData = function(sim) {
 			var psd = sim.match(/(-?[0-9.]+\b)/g);
-			if(psd){
-				for(var j=0, w=psd.length; j&lt;w; j++){
+			if (psd) {
+				for (var j = 0, w = psd.length; j &lt; w; j++) {
 					psd[j] = parseFloat(psd[j]);
-					}
-				return psd;
 				}
+				return psd;
+			}
 			return false;
-			};
-		var generatePoint = function(_tempname,_pcount,_shapename,_x,_y,_lcount,_sx,_sy){
+		};
+		var generatePoint = function(_tempname, _pcount, _shapename, _x, _y, _lcount, _sx, _sy) {
 			my.newPoint({
-				name: _tempname+&#x27;_p&#x27;+_pcount,
+				name: _tempname + &#x27;_p&#x27; + _pcount,
 				sprite: _shapename,
-				currentX: _x*_sx,
-				currentY: _y*_sy,
-				startLink: _tempname+&#x27;_l&#x27;+_lcount,
-				});
-			};
-		var generateLink = function(_tempname,_lcount,_shapename,_spec,_act,_spt,_ept,_cp1,_cp2){
+				currentX: _x * _sx,
+				currentY: _y * _sy,
+				startLink: _tempname + &#x27;_l&#x27; + _lcount,
+			});
+		};
+		var generateLink = function(_tempname, _lcount, _shapename, _spec, _act, _spt, _ept, _cp1, _cp2) {
 			_ept = (my.xt(_ept)) ? _ept : {};
 			_cp1 = (my.xt(_cp1)) ? _cp1 : {};
 			_cp2 = (my.xt(_cp2)) ? _cp2 : {};
 			my.newLink({
-				name: _tempname+&#x27;_l&#x27;+_lcount,
+				name: _tempname + &#x27;_l&#x27; + _lcount,
 				sprite: _shapename,
-				species: _spec, 
+				species: _spec,
 				startPoint: _spt.name,
 				endPoint: _ept.name || false,
 				controlPoint1: _cp1.name || false,
 				controlPoint2: _cp2.name || false,
 				precision: items.precision || false,
 				action: _act,
-				});
-			};
-		if(my.xt(items.data)){
+			});
+		};
+		if (my.xt(items.data)) {
 			myShape = my.newPath(items);
 			sn = myShape.name;
-			tn = sn.replace(&#x27;~&#x27;,&#x27;_&#x27;,&#x27;g&#x27;);
+			tn = sn.replace(&#x27;~&#x27;, &#x27;_&#x27;, &#x27;g&#x27;);
 			lib = my.point;
 			sx = items.scaleX;
 			sy = items.scaleY;
-			if(myShape){
+			if (myShape) {
 				set = items.data.match(/([A-Za-z][0-9. ,\-]*)/g);
-				generatePoint(tn, pc, sn, cx, cy, lc, sx, sy); pc++;
-				for(var i=0, iz=set.length; i&lt;iz; i++){
-					command = set[i][0];
-					data = getPathSetData(set[i]);
-					switch(command){
-						case &#x27;M&#x27; :
-							cx = data[0]; cy = data[1];
-							checkMinMax(cx,cy);
-							generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
-							generateLink(tn, lc, sn, false, &#x27;move&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
-							for(k=2, v=data.length; k&lt;v; k+=2){
-								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
-								cx = data[k]; cy = data[k+1];
-								checkMinMax(cx,cy);
-								}
-							break;
-						case &#x27;m&#x27; :
-							if(i===0){
-								cx = data[0]; cy = data[1];
-								}
-							else{
-								cx += data[0]; cy += data[1];
-								}
-							checkMinMax(cx,cy);
-							generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
-							generateLink(tn, lc, sn, false, &#x27;move&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
-							for(k=2, v=data.length; k&lt;v; k+=2){
-								generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
-								cx += data[k]; cy += data[k+1];
-								checkMinMax(cx,cy);
-								}
-							break;
-						case &#x27;Z&#x27; :
-						case &#x27;z&#x27; :
-							generatePoint(tn, pc, sn, myShape.start.x, myShape.start.y, lc+1, sx, sy); pc++;
-							generateLink(tn, lc, sn, false, &#x27;close&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
-							break;
-						case &#x27;L&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=2){
-								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
-								cx = data[k]; cy = data[k+1];
-								checkMinMax(cx,cy);
-								}
-							break;
-						case &#x27;l&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=2){
-								generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
-								cx += data[k]; cy += data[k+1];
-								checkMinMax(cx,cy);
-								}
-							break;
-						case &#x27;H&#x27; :
-							for(k=0, v=data.length; k&lt;v; k++){
-								generatePoint(tn, pc, sn, data[k], cy, lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
+				generatePoint(tn, pc, sn, cx, cy, lc, sx, sy);
+				pc++;
+				for (var i = 0, iz = set.length; i &lt; iz; i++) {
+					command = set [i][0];
+					data = getPathSetData(set [i]);
+					switch (command) {
+						case &#x27;M&#x27;:
+							cx = data[0];
+							cy = data[1];
+							checkMinMax(cx, cy);
+							generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+							pc++;
+							generateLink(tn, lc, sn, false, &#x27;move&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+							lc++;
+							for (k = 2, v = data.length; k &lt; v; k += 2) {
+								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
 								cx = data[k];
-								checkMinMax(cx,cy);
-								}
+								cy = data[k + 1];
+								checkMinMax(cx, cy);
+							}
 							break;
-						case &#x27;h&#x27; :
-							for(k=0, v=data.length; k&lt;v; k++){
-								generatePoint(tn, pc, sn, cx+data[k], cy, lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
+						case &#x27;m&#x27;:
+							if (i === 0) {
+								cx = data[0];
+								cy = data[1];
+							}
+							else {
+								cx += data[0];
+								cy += data[1];
+							}
+							checkMinMax(cx, cy);
+							generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+							pc++;
+							generateLink(tn, lc, sn, false, &#x27;move&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+							lc++;
+							for (k = 2, v = data.length; k &lt; v; k += 2) {
+								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
 								cx += data[k];
-								checkMinMax(cx,cy);
-								}
+								cy += data[k + 1];
+								checkMinMax(cx, cy);
+							}
 							break;
-						case &#x27;V&#x27; :
-							for(k=0, v=data.length; k&lt;v; k++){
-								generatePoint(tn, pc, sn, cx, data[k], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
+						case &#x27;Z&#x27;:
+						case &#x27;z&#x27;:
+							generatePoint(tn, pc, sn, myShape.start.x, myShape.start.y, lc + 1, sx, sy);
+							pc++;
+							generateLink(tn, lc, sn, false, &#x27;close&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+							lc++;
+							break;
+						case &#x27;L&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 2) {
+								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
+								cx = data[k];
+								cy = data[k + 1];
+								checkMinMax(cx, cy);
+							}
+							break;
+						case &#x27;l&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 2) {
+								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
+								cx += data[k];
+								cy += data[k + 1];
+								checkMinMax(cx, cy);
+							}
+							break;
+						case &#x27;H&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k++) {
+								generatePoint(tn, pc, sn, data[k], cy, lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
+								cx = data[k];
+								checkMinMax(cx, cy);
+							}
+							break;
+						case &#x27;h&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k++) {
+								generatePoint(tn, pc, sn, cx + data[k], cy, lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
+								cx += data[k];
+								checkMinMax(cx, cy);
+							}
+							break;
+						case &#x27;V&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k++) {
+								generatePoint(tn, pc, sn, cx, data[k], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
 								cy = data[k];
-								checkMinMax(cx,cy);
-								}
+								checkMinMax(cx, cy);
+							}
 							break;
-						case &#x27;v&#x27; :
-							for(k=0, v=data.length; k&lt;v; k++){
-								generatePoint(tn, pc, sn, cx, cy+data[k], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-2)], lib[tn+&#x27;_p&#x27;+(pc-1)]); lc++;
+						case &#x27;v&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k++) {
+								generatePoint(tn, pc, sn, cx, cy + data[k], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
 								cy += data[k];
-								checkMinMax(cx,cy);
-								}
+								checkMinMax(cx, cy);
+							}
 							break;
-						case &#x27;C&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=6){
-								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
-								generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
-								generatePoint(tn, pc, sn, data[k+4], data[k+5], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-4)], lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc-3)], lib[tn+&#x27;_p&#x27;+(pc-2)]); lc++;
-								cx = data[k+4]; cy = data[k+5];
-								checkMinMax(cx,cy);
-								}
+						case &#x27;C&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 6) {
+								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
+								pc++;
+								generatePoint(tn, pc, sn, data[k + 4], data[k + 5], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+								lc++;
+								cx = data[k + 4];
+								cy = data[k + 5];
+								checkMinMax(cx, cy);
+							}
 							break;
-						case &#x27;c&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=6){
-								generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
-								generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], lc+1, sx, sy); pc++;
-								generatePoint(tn, pc, sn, cx+data[k+4], cy+data[k+5], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-4)], lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc-3)], lib[tn+&#x27;_p&#x27;+(pc-2)]); lc++;
-								cx += data[k+4]; cy += data[k+5];
-								checkMinMax(cx,cy);
-								}
+						case &#x27;c&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 6) {
+								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generatePoint(tn, pc, sn, cx + data[k + 2], cy + data[k + 3], lc + 1, sx, sy);
+								pc++;
+								generatePoint(tn, pc, sn, cx + data[k + 4], cy + data[k + 5], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+								lc++;
+								cx += data[k + 4];
+								cy += data[k + 5];
+								checkMinMax(cx, cy);
+							}
 							break;
-						case &#x27;S&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=4){
-								if(i&gt;0 &amp;&amp; my.contains([&#x27;C&#x27;,&#x27;c&#x27;,&#x27;S&#x27;,&#x27;s&#x27;], set[i-1][0])){
-									lib[tn+&#x27;_p&#x27;+(pc-2)].clone({
-										name: tn+&#x27;_p&#x27;+pc,
-										currentX: cx+(cx-lib[tn+&#x27;_p&#x27;+(pc-2)].currentX),
-										currentY: cy+(cy-lib[tn+&#x27;_p&#x27;+(pc-2)].currentY),
-										}); pc++;
-									}
-								else{
-									generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
-									}
-								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
-								generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-4)], lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc-3)], lib[tn+&#x27;_p&#x27;+(pc-2)]); lc++;
-								cx = data[k+2]; cy = data[k+3];
-								checkMinMax(cx,cy);
+						case &#x27;S&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 4) {
+								if (i &gt; 0 &amp;&amp; my.contains([&#x27;C&#x27;, &#x27;c&#x27;, &#x27;S&#x27;, &#x27;s&#x27;], set [i - 1][0])) {
+									lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
+										name: tn + &#x27;_p&#x27; + pc,
+										currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentX),
+										currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentY),
+									});
+									pc++;
 								}
-							break;
-						case &#x27;s&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=4){
-								if(i&gt;0 &amp;&amp; my.contains([&#x27;C&#x27;,&#x27;c&#x27;,&#x27;S&#x27;,&#x27;s&#x27;], set[i-1][0])){
-									lib[tn+&#x27;_p&#x27;+(pc-2)].clone({
-										name: tn+&#x27;_p&#x27;+pc,
-										currentX: cx+(cx-lib[tn+&#x27;_p&#x27;+(pc-2)].currentX),
-										currentY: cy+(cy-lib[tn+&#x27;_p&#x27;+(pc-2)].currentY),
-										}); pc++;
-									}
-								else{
-									generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
-									}
-								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
-								generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-4)], lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc-3)], lib[tn+&#x27;_p&#x27;+(pc-2)]); lc++;
-								cx += data[k+2]; cy += data[k+3];
-								checkMinMax(cx,cy);
+								else {
+									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+									pc++;
 								}
+								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+								lc++;
+								cx = data[k + 2];
+								cy = data[k + 3];
+								checkMinMax(cx, cy);
+							}
 							break;
-						case &#x27;Q&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=4){
-								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
-								generatePoint(tn, pc, sn, data[k+2], data[k+3], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-3)], lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc-2)]); lc++;
-								cx = data[k+2]; cy = data[k+3];
-								checkMinMax(cx,cy);
+						case &#x27;s&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 4) {
+								if (i &gt; 0 &amp;&amp; my.contains([&#x27;C&#x27;, &#x27;c&#x27;, &#x27;S&#x27;, &#x27;s&#x27;], set [i - 1][0])) {
+									lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
+										name: tn + &#x27;_p&#x27; + pc,
+										currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentX),
+										currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentY),
+									});
+									pc++;
 								}
-							break;
-						case &#x27;q&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=4){
-								generatePoint(tn, pc, sn, cx+data[k], cy+data[k+1], lc+1, sx, sy); pc++;
-								generatePoint(tn, pc, sn, cx+data[k+2], cy+data[k+3], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-3)], lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc-2)]); lc++;
-								cx += data[k+2]; cy += data[k+3];
-								checkMinMax(cx,cy);
+								else {
+									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+									pc++;
 								}
+								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+								lc++;
+								cx += data[k + 2];
+								cy += data[k + 3];
+								checkMinMax(cx, cy);
+							}
 							break;
-						case &#x27;T&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=2){
-								if(i&gt;0 &amp;&amp; my.contains([&#x27;Q&#x27;,&#x27;q&#x27;,&#x27;T&#x27;,&#x27;t&#x27;], set[i-1][0])){
-									lib[tn+&#x27;_p&#x27;+(pc-2)].clone({
-										name: tn+&#x27;_p&#x27;+pc,
-										currentX: cx+(cx-lib[tn+&#x27;_p&#x27;+(pc-2)].currentX),
-										currentY: cy+(cy-lib[tn+&#x27;_p&#x27;+(pc-2)].currentY),
-										}); pc++;
-									}
-								else{
-									generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
-									}
-								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-3)], lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc-2)]); lc++;
-								cx = data[k]; cy = data[k+1];
-								checkMinMax(cx,cy);
+						case &#x27;Q&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 4) {
+								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+								lc++;
+								cx = data[k + 2];
+								cy = data[k + 3];
+								checkMinMax(cx, cy);
+							}
+							break;
+						case &#x27;q&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 4) {
+								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generatePoint(tn, pc, sn, cx + data[k + 2], cy + data[k + 3], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+								lc++;
+								cx += data[k + 2];
+								cy += data[k + 3];
+								checkMinMax(cx, cy);
+							}
+							break;
+						case &#x27;T&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 2) {
+								if (i &gt; 0 &amp;&amp; my.contains([&#x27;Q&#x27;, &#x27;q&#x27;, &#x27;T&#x27;, &#x27;t&#x27;], set [i - 1][0])) {
+									lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
+										name: tn + &#x27;_p&#x27; + pc,
+										currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentX),
+										currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentY),
+									});
+									pc++;
 								}
-							break;
-						case &#x27;t&#x27; :
-							for(k=0, v=data.length; k&lt;v; k+=2){
-								if(i&gt;0 &amp;&amp; my.contains([&#x27;Q&#x27;,&#x27;q&#x27;,&#x27;T&#x27;,&#x27;t&#x27;], set[i-1][0])){
-									lib[tn+&#x27;_p&#x27;+(pc-2)].clone({
-										name: tn+&#x27;_p&#x27;+pc,
-										currentX: cx+(cx-lib[tn+&#x27;_p&#x27;+(pc-2)].currentX),
-										currentY: cy+(cy-lib[tn+&#x27;_p&#x27;+(pc-2)].currentY),
-										}); pc++;
-									}
-								else{
-									generatePoint(tn, pc, sn, cx, cy, lc+1, sx, sy); pc++;
-									}
-								generatePoint(tn, pc, sn, data[k], data[k+1], lc+1, sx, sy); pc++;
-								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn+&#x27;_p&#x27;+(pc-3)], lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc-2)]); lc++;
-								cx += data[k]; cy += data[k+1];
-								checkMinMax(cx,cy);
+								else {
+									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+									pc++;
 								}
+								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+								lc++;
+								cx = data[k];
+								cy = data[k + 1];
+								checkMinMax(cx, cy);
+							}
 							break;
-						default :
-						}
+						case &#x27;t&#x27;:
+							for (k = 0, v = data.length; k &lt; v; k += 2) {
+								if (i &gt; 0 &amp;&amp; my.contains([&#x27;Q&#x27;, &#x27;q&#x27;, &#x27;T&#x27;, &#x27;t&#x27;], set [i - 1][0])) {
+									lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
+										name: tn + &#x27;_p&#x27; + pc,
+										currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentX),
+										currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentY),
+									});
+									pc++;
+								}
+								else {
+									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+									pc++;
+								}
+								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+								lc++;
+								cx += data[k];
+								cy += data[k + 1];
+								checkMinMax(cx, cy);
+							}
+							break;
+						default:
 					}
-				generateLink(tn, lc, sn, false, &#x27;end&#x27;, lib[tn+&#x27;_p&#x27;+(pc-1)], lib[tn+&#x27;_p&#x27;+(pc)]);
+				}
+				generateLink(tn, lc, sn, false, &#x27;end&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc)]);
 				myShape.set({
 					firstPoint: tn + &#x27;_p0&#x27;,
 					width: (maxX - minX) * items.scaleX,
 					height: (maxY - minY) * items.scaleY,
-					});
+				});
 				myShape.buildPositions();
 				return myShape;
-				}
 			}
+		}
 		return false;
-		};
+	};
 	my.pushUnique(my.sectionlist, &#x27;point&#x27;);
 	my.pushUnique(my.nameslist, &#x27;pointnames&#x27;);
 	my.pushUnique(my.sectionlist, &#x27;link&#x27;);
 	my.pushUnique(my.nameslist, &#x27;linknames&#x27;);
-		
-/**
+
+	/**
 # Path
-	
+
 ## Instantiation
 
 * scrawl.makePath() - Irregular, path-based shapes
@@ -744,30 +824,30 @@ Additional factory functions to instantiate Path objects are available in the __
 @constructor
 @extends Sprite
 @param {Object} [items] Key:value Object argument for setting attributes
-**/		
-	my.Path = function(items){
+**/
+	my.Path = function(items) {
 		items = my.safeObject(items);
 		my.Sprite.call(this, items);
 		my.Position.prototype.set.call(this, items);
-		this.isLine = (my.isa(items.isLine,&#x27;bool&#x27;)) ? items.isLine : true;
+		this.isLine = (my.isa(items.isLine, &#x27;bool&#x27;)) ? items.isLine : true;
 		this.linkList = [];
 		this.linkDurations = [];
 		this.pointList = [];
 		this.registerInLibrary();
 		my.pushUnique(my.group[this.group].sprites, this.name);
 		return this;
-		};
+	};
 	my.Path.prototype = Object.create(my.Sprite.prototype);
-/**
+	/**
 @property type
 @type String
 @default &#x27;Path&#x27;
 @final
-**/		
+**/
 	my.Path.prototype.type = &#x27;Path&#x27;;
 	my.Path.prototype.classname = &#x27;spritenames&#x27;;
 	my.d.Path = {
-/**
+		/**
 POINTNAME of the Point object that commences the drawing operation
 
 Set automatically by Path creation factory functions
@@ -777,7 +857,7 @@ Set automatically by Path creation factory functions
 @private
 **/
 		firstPoint: &#x27;&#x27;,
-/**
+		/**
 Drawing flag - when set to true, will treat the first drawing (not positioning) data point as the start point
 
 Generally this is set automatically as part of an outline factory function
@@ -786,7 +866,7 @@ Generally this is set automatically as part of an outline factory function
 @default true
 **/
 		isLine: true,
-/**
+		/**
 Drawing flag - when true, path will be closed
 
 _Note: this attribute must be set to true for those drawing methods that use a fill flood as part of their operation
@@ -795,7 +875,7 @@ _Note: this attribute must be set to true for those drawing methods that use a f
 @default true
 **/
 		closed: true,
-/**
+		/**
 Array of LINKNAME Strings for Link objects associated with this Path sprite
 @property linkList
 @type Array
@@ -803,7 +883,7 @@ Array of LINKNAME Strings for Link objects associated with this Path sprite
 @private
 **/
 		linkList: [],
-/**
+		/**
 Array of length (Number) values for each Link object associated with this Path sprite
 @property linkDurations
 @type Array
@@ -811,7 +891,7 @@ Array of length (Number) values for each Link object associated with this Path s
 @private
 **/
 		linkDurations: [],
-/**
+		/**
 Array of POINTNAME Strings for Point objects associated with this Path sprite
 @property pointList
 @type Array
@@ -819,7 +899,7 @@ Array of POINTNAME Strings for Point objects associated with this Path sprite
 @private
 **/
 		pointList: [],
-/**
+		/**
 Path length - calculated automatically by scrawl
 
 _Note: this value will be affected by the value of the precision attribute - hiher precisions lead to more accurate perimeterLength values, particularly along curves_
@@ -828,51 +908,51 @@ _Note: this value will be affected by the value of the precision attribute - hih
 @default 0
 **/
 		perimeterLength: 0,
-/**
+		/**
 Path marker sprites - SPRITENAME String of sprite used at start of the Path
 @property markStart
 @type String
 @default &#x27;&#x27;
 **/
 		markStart: &#x27;&#x27;,
-/**
+		/**
 Path marker sprites - SPRITENAME String of sprite used at the line/curve joints along the Path
 @property markMid
 @type String
 @default &#x27;&#x27;
 **/
 		markMid: &#x27;&#x27;,
-/**
+		/**
 Path marker sprites - SPRITENAME String of sprite used at end of the Path
 @property markEnd
 @type String
 @default &#x27;&#x27;
 **/
 		markEnd: &#x27;&#x27;,
-/**
+		/**
 Path marker sprites - SPRITENAME String of sprite used as the fallback when markStart, markMid or markEnd attributes are not set
 @property mark
 @type String
 @default &#x27;&#x27;
 **/
 		mark: &#x27;&#x27;,
-/**
+		/**
 Path sprite default method attribute is &#x27;draw&#x27;, not &#x27;fill&#x27;
 @property method
 @type String
 @default &#x27;draw&#x27;
 **/
 		method: &#x27;draw&#x27;,
-/**
+		/**
 Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure sprites will follow the path more accurately
 @property precision
 @type Number
 @default 10
 **/
 		precision: 10,
-		};
+	};
 	my.mergeInto(my.d.Path, my.d.Sprite);
-/**
+	/**
 Helper function - define the sprite&#x27;s path on the &amp;lt;canvas&amp;gt; element&#x27;s context engine
 @method prepareShape
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -881,28 +961,28 @@ Helper function - define the sprite&#x27;s path on the &amp;lt;canvas&amp;gt; el
 @chainable
 @private
 **/
-	my.Path.prototype.prepareShape = function(ctx, cell){
+	my.Path.prototype.prepareShape = function(ctx, cell) {
 		var here;
 		my.cell[cell].setEngine(this);
-		if(this.firstPoint){
+		if (this.firstPoint) {
 			here = this.prepareStamp();
 			this.rotateCell(ctx);
-			ctx.translate(here.x,here.y);
+			ctx.translate(here.x, here.y);
 			ctx.beginPath();
 			my.link[my.point[this.firstPoint].startLink].sketch(ctx);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Augments Position.getPivotOffsetVector()
 @method getPivotOffsetVector
 @return A Vector of calculated offset values to help determine where sprite drawing should start
 @private
 **/
-	my.Path.prototype.getPivotOffsetVector = function(){
+	my.Path.prototype.getPivotOffsetVector = function() {
 		return (this.isLine) ? my.Sprite.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
-		};
-/**
+	};
+	/**
 Display helper function
 
 Stamp mark sprites onto Path
@@ -916,8 +996,8 @@ Stamp mark sprites onto Path
 @chainable
 @private
 **/
-	my.Path.prototype.stampMark = function(sprite, pos, ctx, cell){
-		var	tPath,
+	my.Path.prototype.stampMark = function(sprite, pos, ctx, cell) {
+		var tPath,
 			tPathPlace,
 			tGroup,
 			tHandle;
@@ -930,16 +1010,16 @@ Stamp mark sprites onto Path
 			pathPlace: pos,
 			group: cell,
 			handle: this.handle,
-			}).forceStamp();
+		}).forceStamp();
 		sprite.set({
 			path: tPath,
 			pathPlace: tPathPlace,
 			group: tGroup,
 			handle: tHandle,
-			});
+		});
 		return this;
-		};
-/**
+	};
+	/**
 Display helper function
 
 Prepare mark sprites for stamping onto Path
@@ -951,7 +1031,7 @@ Prepare mark sprites for stamping onto Path
 @chainable
 @private
 **/
-	my.Path.prototype.addMarks = function(ctx, cell){
+	my.Path.prototype.addMarks = function(ctx, cell) {
 		var mark = this.get(&#x27;mark&#x27;),
 			markStart = this.get(&#x27;markStart&#x27;),
 			markMid = this.get(&#x27;markMid&#x27;),
@@ -959,28 +1039,28 @@ Prepare mark sprites for stamping onto Path
 			myMark = false,
 			sprite,
 			linkDurations;
-		if(mark || markStart || markMid || markEnd){
+		if (mark || markStart || markMid || markEnd) {
 			this.buildPositions();
 			linkDurations = this.get(&#x27;linkDurations&#x27;);
 			myMark = markStart || mark || false;
-			if(myMark &amp;&amp; my.contains(my.spritenames, myMark)){
+			if (myMark &amp;&amp; my.contains(my.spritenames, myMark)) {
 				this.stampMark(my.sprite[myMark], 0, ctx, cell);
-				}
+			}
 			myMark = markMid || mark || false;
-			if(myMark &amp;&amp; my.contains(my.spritenames, myMark)){
+			if (myMark &amp;&amp; my.contains(my.spritenames, myMark)) {
 				sprite = my.sprite[myMark];
-				for(var j=0, w=linkDurations.length-1; j&lt;w; j++){
+				for (var j = 0, w = linkDurations.length - 1; j &lt; w; j++) {
 					this.stampMark(sprite, linkDurations[j], ctx, cell);
-					}
-				}
-			myMark = markEnd || mark || false;
-			if(myMark &amp;&amp; my.contains(my.spritenames, myMark)){
-				this.stampMark(my.sprite[myMark], 1, ctx, cell);
 				}
 			}
+			myMark = markEnd || mark || false;
+			if (myMark &amp;&amp; my.contains(my.spritenames, myMark)) {
+				this.stampMark(my.sprite[myMark], 1, ctx, cell);
+			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;clip&#x27; method draw
 @method clip
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -989,14 +1069,14 @@ Stamp helper function - perform a &#x27;clip&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.clip = function(ctx, cell){
-		if(this.closed){
+	my.Path.prototype.clip = function(ctx, cell) {
+		if (this.closed) {
 			this.prepareShape(ctx, cell);
 			ctx.clip();
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;clear&#x27; method draw
 @method clear
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1005,15 +1085,15 @@ Stamp helper function - perform a &#x27;clear&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.clear = function(ctx, cell){
+	my.Path.prototype.clear = function(ctx, cell) {
 		this.prepareShape(ctx, cell);
 		ctx.globalCompositeOperation = &#x27;destination-out&#x27;;
 		ctx.stroke();
 		ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
 		ctx.globalCompositeOperation = my.ctx[cell].get(&#x27;globalCompositeOperation&#x27;);
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1022,7 +1102,7 @@ Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.clearWithBackground = function(ctx, cell){
+	my.Path.prototype.clearWithBackground = function(ctx, cell) {
 		var c = my.cell[cell],
 			bc = c.get(&#x27;backgroundColor&#x27;),
 			cx = my.ctx[cell],
@@ -1039,8 +1119,8 @@ Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 		ctx.strokeStyle = strokeStyle;
 		ctx.globalAlpha = globalAlpha;
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;fill&#x27; method draw
 @method fill
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1049,15 +1129,15 @@ Stamp helper function - perform a &#x27;fill&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.fill = function(ctx, cell){
-		if(this.get(&#x27;closed&#x27;)){
+	my.Path.prototype.fill = function(ctx, cell) {
+		if (this.get(&#x27;closed&#x27;)) {
 			this.prepareShape(ctx, cell);
 			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
 			this.addMarks(ctx, cell);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;draw&#x27; method draw
 @method draw
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1066,13 +1146,13 @@ Stamp helper function - perform a &#x27;draw&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.draw = function(ctx, cell){
+	my.Path.prototype.draw = function(ctx, cell) {
 		this.prepareShape(ctx, cell);
 		ctx.stroke();
 		this.addMarks(ctx, cell);
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;drawFill&#x27; method draw
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1081,17 +1161,17 @@ Stamp helper function - perform a &#x27;drawFill&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.drawFill = function(ctx, cell){
+	my.Path.prototype.drawFill = function(ctx, cell) {
 		this.prepareShape(ctx, cell);
 		ctx.stroke();
-		if(this.get(&#x27;closed&#x27;)){
+		if (this.get(&#x27;closed&#x27;)) {
 			this.clearShadow(ctx, cell);
 			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-			}
+		}
 		this.addMarks(ctx, cell);
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1100,17 +1180,17 @@ Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.fillDraw = function(ctx, cell){
+	my.Path.prototype.fillDraw = function(ctx, cell) {
 		this.prepareShape(ctx, cell);
-		if(this.get(&#x27;closed&#x27;)){
+		if (this.get(&#x27;closed&#x27;)) {
 			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
 			this.clearShadow(ctx, cell);
-			}
+		}
 		ctx.stroke();
 		this.addMarks(ctx, cell);
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1119,16 +1199,16 @@ Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.sinkInto = function(ctx, cell){
+	my.Path.prototype.sinkInto = function(ctx, cell) {
 		this.prepareShape(ctx, cell);
-		if(this.get(&#x27;closed&#x27;)){
+		if (this.get(&#x27;closed&#x27;)) {
 			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-			}
+		}
 		ctx.stroke();
 		this.addMarks(ctx, cell);
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1137,16 +1217,16 @@ Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 @chainable
 @private
 **/
-	my.Path.prototype.floatOver = function(ctx, cell){
+	my.Path.prototype.floatOver = function(ctx, cell) {
 		this.prepareShape(ctx, cell);
 		ctx.stroke();
-		if(this.get(&#x27;closed&#x27;)){
+		if (this.get(&#x27;closed&#x27;)) {
 			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-			}
+		}
 		this.addMarks(ctx, cell);
 		return this;
-		};
-/**
+	};
+	/**
 Stamp helper function - perform a &#x27;none&#x27; method draw. This involves setting the &amp;lt;canvas&amp;gt; element&#x27;s context engine&#x27;s values with this sprite&#x27;s context values and defining the sprites path, on the canvas, but not drawing (fill stroke) the sprite.
 @method none
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
@@ -1155,39 +1235,39 @@ Stamp helper function - perform a &#x27;none&#x27; method draw. This involves se
 @chainable
 @private
 **/
-	my.Path.prototype.none = function(ctx, cell){
+	my.Path.prototype.none = function(ctx, cell) {
 		this.prepareShape(ctx, cell);
 		return this;
-		};
-/**
+	};
+	/**
 @method getFullPointList
 @return Array containing POINTNAME Strings of all Point objects associated with this Path object
 **/
-	my.Path.prototype.getFullPointList = function(){
+	my.Path.prototype.getFullPointList = function() {
 		var myPointList = [],
 			search = new RegExp(this.name + &#x27;_.*&#x27;);
-		for(var i=0, iz=my.pointnames.length; i&lt;iz; i++){
-			if(search.test(my.pointnames[i])){
+		for (var i = 0, iz = my.pointnames.length; i &lt; iz; i++) {
+			if (search.test(my.pointnames[i])) {
 				myPointList.push(my.pointnames[i]);
-				}
 			}
+		}
 		return myPointList;
-		};
-/**
+	};
+	/**
 @method getFullLinkList
 @return Array containing LINKNAME Strings of all Link objects associated with this Path object
 **/
-	my.Path.prototype.getFullLinkList = function(){
+	my.Path.prototype.getFullLinkList = function() {
 		var myLinkList = [],
 			search = new RegExp(this.name + &#x27;_.*&#x27;);
-		for(var i=0, iz=my.linknames.length; i&lt;iz; i++){
-			if(search.test(my.linknames[i])){
+		for (var i = 0, iz = my.linknames.length; i &lt; iz; i++) {
+			if (search.test(my.linknames[i])) {
 				myLinkList.push(my.linknames[i]);
-				}
 			}
+		}
 		return myLinkList;
-		};
-/**
+	};
+	/**
 Calculate and return Path object&#x27;s path length
 
 Accuracy of returned value depends on the setting of the __precision__ attribute; lower precision is less accurate for curves
@@ -1195,46 +1275,46 @@ Accuracy of returned value depends on the setting of the __precision__ attribute
 @param {Boolean} [force] If set to true, forces a complete recalculation
 @return Path length, in pixels
 **/
-	my.Path.prototype.getPerimeterLength = function(force){
-		if(force || !this.get(&#x27;perimeterLength&#x27;) || this.get(&#x27;linkDurations&#x27;).length === 0){
+	my.Path.prototype.getPerimeterLength = function(force) {
+		if (force || !this.get(&#x27;perimeterLength&#x27;) || this.get(&#x27;linkDurations&#x27;).length === 0) {
 			this.buildPositions();
-			}
+		}
 		return this.get(&#x27;perimeterLength&#x27;);
-		};
-/**
+	};
+	/**
 Helper function - calculate the positions and lengths of the Path&#x27;s constituent Point and Link objects
 @method buildPositions
 @return This
 @chainable
 @private
 **/
-	my.Path.prototype.buildPositions = function(){
+	my.Path.prototype.buildPositions = function() {
 		var linkList = this.get(&#x27;linkList&#x27;),
 			linkDurations = [],
-			cumLen = 0, 
-			len, 
+			cumLen = 0,
+			len,
 			myLink,
 			tPos;
-		for(var i=0, iz=linkList.length; i&lt;iz; i++){
+		for (var i = 0, iz = linkList.length; i &lt; iz; i++) {
 			my.link[linkList[i]].setPositions();
-			}
-		for(var j=0, jz=linkList.length; j&lt;jz; j++){
+		}
+		for (var j = 0, jz = linkList.length; j &lt; jz; j++) {
 			myLink = my.link[linkList[j]];
 			tPos = myLink.get(&#x27;positions&#x27;);
 			len = tPos[tPos.length - 1].cumulativeLength;
 			cumLen += len;
 			linkDurations.push(cumLen);
-			}
-		for(var k=0, kz=linkList.length; k&lt;kz; k++){
+		}
+		for (var k = 0, kz = linkList.length; k &lt; kz; k++) {
 			linkDurations[k] /= cumLen;
-			}
+		}
 		my.Base.prototype.set.call(this, {
 			perimeterLength: cumLen,
 			linkDurations: linkDurations,
-			});
+		});
 		return this;
-		};
-/**
+	};
+	/**
 Calculate coordinates of point at given distance along the Shape sprite&#x27;s path
 @method getPerimeterPosition
 @param {Number} [val] Distance along path, between 0 (start) and 1 (end); default: 1
@@ -1243,12 +1323,12 @@ Calculate coordinates of point at given distance along the Shape sprite&#x27;s p
 @param {Boolean} [local] Local flag - if true, return coordinate Vector relative to Sprite start parameter; otherwise return Cell coordinate Vector. Default: false
 @return Vector coordinates
 **/
-	my.Path.prototype.getPerimeterPosition = function(val, steady, roll, local){
-		val = (my.isa(val,&#x27;num&#x27;)) ? val : 1;
-		steady = (my.isa(steady,&#x27;bool&#x27;)) ? steady : true;
-		roll = (my.isa(roll,&#x27;bool&#x27;)) ? roll : false;
-		local = (my.isa(local,&#x27;bool&#x27;)) ? local : false;
-		var	myLink,
+	my.Path.prototype.getPerimeterPosition = function(val, steady, roll, local) {
+		val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
+		steady = (my.isa(steady, &#x27;bool&#x27;)) ? steady : true;
+		roll = (my.isa(roll, &#x27;bool&#x27;)) ? roll : false;
+		local = (my.isa(local, &#x27;bool&#x27;)) ? local : false;
+		var myLink,
 			linkVal,
 			linkList,
 			linkDurations,
@@ -1264,55 +1344,63 @@ Calculate coordinates of point at given distance along the Shape sprite&#x27;s p
 		this.getPerimeterLength();
 		linkList = this.get(&#x27;linkList&#x27;);
 		linkDurations = this.get(&#x27;linkDurations&#x27;);
-		for(var i=0, iz=linkList.length; i&lt;iz; i++){
+		for (var i = 0, iz = linkList.length; i &lt; iz; i++) {
 			myLink = my.link[linkList[i]];
-			if(linkDurations[i] &gt;= val){
-				if(i === 0){
-					linkVal = val/linkDurations[i];
-					}
-				else{
-					linkVal = ((val-linkDurations[i-1])/(linkDurations[i]-linkDurations[i-1]));
-					}
+			if (linkDurations[i] &gt;= val) {
+				if (i === 0) {
+					linkVal = val / linkDurations[i];
+				}
+				else {
+					linkVal = ((val - linkDurations[i - 1]) / (linkDurations[i] - linkDurations[i - 1]));
+				}
 				linkVal = (linkVal &lt; 0) ? 0 : ((linkVal &gt; 1) ? 1 : linkVal);
-				bVal = (linkVal-0.0000001 &lt; 0) ? 0 : linkVal-0.0000001;
-				aVal = (linkVal+0.0000001 &gt; 1) ? 1 : linkVal+0.0000001;
-				if(steady){
-					if(roll){
+				bVal = (linkVal - 0.0000001 &lt; 0) ? 0 : linkVal - 0.0000001;
+				aVal = (linkVal + 0.0000001 &gt; 1) ? 1 : linkVal + 0.0000001;
+				if (steady) {
+					if (roll) {
 						temp = (local) ? myLink.getLocalSteadyPositionOnLink(bVal) : myLink.getSteadyPositionOnLink(bVal);
 						beforex = temp.x;
 						beforey = temp.y;
 						temp = (local) ? myLink.getLocalSteadyPositionOnLink(aVal) : myLink.getSteadyPositionOnLink(aVal);
 						afterx = temp.x;
 						aftery = temp.y;
-						angle = Math.atan2(aftery - beforey, afterx - beforex)/my.radian;
+						angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
 						here = (local) ? myLink.getLocalSteadyPositionOnLink(linkVal) : myLink.getSteadyPositionOnLink(linkVal);
-						return {x:here.x, y:here.y, r:angle};
-						}
-					else{
-						return (local) ? myLink.getLocalSteadyPositionOnLink(linkVal) : myLink.getSteadyPositionOnLink(linkVal);
-						}
+						return {
+							x: here.x,
+							y: here.y,
+							r: angle
+						};
 					}
-				else{
-					if(roll){
+					else {
+						return (local) ? myLink.getLocalSteadyPositionOnLink(linkVal) : myLink.getSteadyPositionOnLink(linkVal);
+					}
+				}
+				else {
+					if (roll) {
 						temp = (local) ? myLink.getLocalPositionOnLink(bVal) : myLink.getPositionOnLink(bVal);
 						beforex = temp.x;
 						beforey = temp.y;
 						temp = (local) ? myLink.getLocalPositionOnLink(aVal) : myLink.getPositionOnLink(aVal);
 						afterx = temp.x;
 						aftery = temp.y;
-						angle = Math.atan2(aftery - beforey, afterx - beforex)/my.radian;
+						angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
 						here = (local) ? myLink.getLocalPositionOnLink(linkVal) : myLink.getPositionOnLink(linkVal);
-						return {x:here.x, y:here.y, r:angle};
-						}
-					else{
+						return {
+							x: here.x,
+							y: here.y,
+							r: angle
+						};
+					}
+					else {
 						return (local) ? myLink.getLocalPositionOnLink(linkVal) : myLink.getPositionOnLink(linkVal);
-						}
 					}
 				}
 			}
+		}
 		return false;
-		};
-/**
+	};
+	/**
 Check a set of coordinates to see if any of them fall within this sprite&#x27;s path - uses JavaScript&#x27;s _isPointInPath_ function
 
 Argument object contains the following attributes:
@@ -1326,7 +1414,7 @@ Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of v
 @param {Object} items Argument object
 @return The first coordinate to fall within the sprite&#x27;s path; false if none fall within the path
 **/
-	my.Path.prototype.checkHit = function(items){
+	my.Path.prototype.checkHit = function(items) {
 		items = my.safeObject(items);
 		var ctx = my.cvx,
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
@@ -1335,22 +1423,25 @@ Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of v
 			winding = my.ctx[this.context].winding;
 		ctx.mozFillRule = winding;
 		ctx.msFillRule = winding;
-		if(this.firstPoint){
+		if (this.firstPoint) {
 			here = this.prepareStamp();
 			this.rotateCell(ctx);
-			ctx.translate(here.x,here.y);
+			ctx.translate(here.x, here.y);
 			ctx.beginPath();
 			my.link[my.point[this.firstPoint].startLink].sketch(ctx);
-			}
-		for(var i = 0, iz = tests.length; i &lt; iz; i += 2){
-			result = ctx.isPointInPath(tests[i], tests[i+1]);
-			if(result){
+		}
+		for (var i = 0, iz = tests.length; i &lt; iz; i += 2) {
+			result = ctx.isPointInPath(tests[i], tests[i + 1]);
+			if (result) {
 				break;
-				}
 			}
-		return (result) ? {x: tests[i], y: tests[i+1]} : false;
-		};
-/**
+		}
+		return (result) ? {
+			x: tests[i],
+			y: tests[i + 1]
+		} : false;
+	};
+	/**
 Collision detection helper function
 
 Parses the collisionPoints array to generate coordinate Vectors representing the sprite&#x27;s collision points
@@ -1360,48 +1451,53 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @chainable
 @private
 **/
-	my.Path.prototype.buildCollisionVectors = function(items){
-		if(my.xt(my.d.Path.fieldChannel)){
-			var	p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,
+	my.Path.prototype.buildCollisionVectors = function(items) {
+		if (my.xt(my.d.Path.fieldChannel)) {
+			var p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,
 				myAdvance,
 				point,
 				c = [],
 				currentPos = 0;
-			for(var i=0, iz=p.length; i&lt;iz; i++){
-				if(my.isa(p[i], &#x27;num&#x27;) &amp;&amp; p[i] &gt;= 0){
-					if(p[i] &gt; 1){
+			for (var i = 0, iz = p.length; i &lt; iz; i++) {
+				if (my.isa(p[i], &#x27;num&#x27;) &amp;&amp; p[i] &gt;= 0) {
+					if (p[i] &gt; 1) {
 						//regular points along the path
-						myAdvance = 1/p[i];
-						for(var j=0; j&lt;p[i]; j++){
+						myAdvance = 1 / p[i];
+						for (var j = 0; j &lt; p[i]; j++) {
 							point = this.getPerimeterPosition(currentPos, true, false, true);
-							c.push(point.x); c.push(point.y);
+							c.push(point.x);
+							c.push(point.y);
 							currentPos += myAdvance;
-							}
 						}
-					else{
+					}
+					else {
 						//a point at a specific position on the path
 						point = this.getPerimeterPosition(p[i], true, false, true);
-						c.push(point.x); c.push(point.y);
-						}
-					}
-				else if(my.isa(p[i], &#x27;str&#x27;)){
-					switch(p[i]) {
-						case &#x27;start&#x27; :
-							c.push(0); c.push(0); break;
-						}
-					}
-				else if(my.isa(p[i], &#x27;vector&#x27;)){
-					c.push(p[i].x);		c.push(p[i].y);
+						c.push(point.x);
+						c.push(point.y);
 					}
 				}
-			this.collisionVectors = c;
+				else if (my.isa(p[i], &#x27;str&#x27;)) {
+					switch (p[i]) {
+						case &#x27;start&#x27;:
+							c.push(0);
+							c.push(0);
+							break;
+					}
+				}
+				else if (my.isa(p[i], &#x27;vector&#x27;)) {
+					c.push(p[i].x);
+					c.push(p[i].y);
+				}
 			}
+			this.collisionVectors = c;
+		}
 		return this;
-		};
+	};
 
-/**
+	/**
 # Point
-	
+
 ## Instantiation
 
 * Objects created via Path factories
@@ -1429,8 +1525,8 @@ Path creation factories will all create Point objects automatically as part of t
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
-**/		
-	my.Point = function(items){
+**/
+	my.Point = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		var local = (my.xt(items.local)) ? items.local : {};
@@ -1438,39 +1534,41 @@ Path creation factories will all create Point objects automatically as part of t
 		this.local = items.local || my.newVector({
 			x: items.startX || items.currentX || local.x || 0,
 			y: items.startY || items.currentY || local.y || 0,
-			});
-		this.work.local = my.newVector({name: this.type+&#x27;.&#x27;+this.name+&#x27;.work.local&#x27;});
-		this.work.local.name = this.type+&#x27;.&#x27;+this.name+&#x27;.work.local&#x27;;
+		});
+		this.work.local = my.newVector({
+			name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.local&#x27;
+		});
+		this.work.local.name = this.type + &#x27;.&#x27; + this.name + &#x27;.work.local&#x27;;
 		this.startLink = items.startLink || &#x27;&#x27;;
 		this.fixed = items.fixed || false;
-		if(my.xto([items.angle,items.distance])){
+		if (my.xto([items.angle, items.distance])) {
 			this.setPolar(items);
-			}
+		}
 		my.point[this.name] = this;
 		my.pushUnique(my.pointnames, this.name);
-		if(this.sprite &amp;&amp; my.sprite[this.sprite].type === &#x27;Path&#x27;){
+		if (this.sprite &amp;&amp; my.sprite[this.sprite].type === &#x27;Path&#x27;) {
 			my.pushUnique(my.sprite[this.sprite].pointList, this.name);
-			}
+		}
 		return this;
-		};
+	};
 	my.Point.prototype = Object.create(my.Base.prototype);
-/**
+	/**
 @property type
 @type String
 @default &#x27;Point&#x27;
 @final
-**/		
+**/
 	my.Point.prototype.type = &#x27;Point&#x27;;
 	my.Point.prototype.classname = &#x27;pointnames&#x27;;
 	my.d.Point = {
-/**
+		/**
 SPRITENAME String of point object&#x27;s parent sprite
 @property sprite
 @type String
 @default &#x27;&#x27;
 **/
 		sprite: &#x27;&#x27;,
-/**
+		/**
 Point&#x27;s coordinate Vector - generally the Vector marks the Point&#x27;s position (in pixels) from the Parent sprite&#x27;s start coordinates, though this can be changed by setting the __fixed__ attribute to true.
 
 The following argument attributes can be used to initialize, set and get this attribute&#x27;s component values:
@@ -1481,8 +1579,12 @@ The following argument attributes can be used to initialize, set and get this at
 @type Vector
 @default zero value Vector
 **/
-		local: {x:0, y:0, z:0},
-/**
+		local: {
+			x: 0,
+			y: 0,
+			z: 0
+		},
+		/**
 LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
 @property startLink
 @type String
@@ -1490,36 +1592,36 @@ LINKNAME of Link object for which this Point acts as the start coordinate; gener
 @private
 **/
 		startLink: &#x27;&#x27;,
-/**
+		/**
 Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (true), or to a Sprite start Vector (SPRITENAME). Default action is to treat the Point as local to its parent Sprite&#x27;s start coordinate
 @property fixed
 @type Boolean
 @default false
 **/
 		fixed: false,
-		};
+	};
 	my.mergeInto(my.d.Point, my.d.Base);
-/**
+	/**
 Augments Base.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
-	my.Point.prototype.set = function(items){
+	my.Point.prototype.set = function(items) {
 		my.Base.prototype.set.call(this, items);
 		items = my.safeObject(items);
 		var local = (my.xt(items.local)) ? items.local : {};
-		if(my.xto([items.distance, items.angle])){
+		if (my.xto([items.distance, items.angle])) {
 			this.setPolar(items);
-			}
-		else if(my.xto([items.startX, items.startY, items.currentX, items.currentY, items.local])){
+		}
+		else if (my.xto([items.startX, items.startY, items.currentX, items.currentY, items.local])) {
 			this.local.x = (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : this.local.x));
 			this.local.y = (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : this.local.y));
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Add values to the local attribute. Permitted attributes of the argument object include:
 
 * __startX__, __currentX__ - added to _local.x
@@ -1531,30 +1633,30 @@ Add values to the local attribute. Permitted attributes of the argument object i
 @return This
 @chainable
 **/
-	my.Point.prototype.setDelta = function(items){
+	my.Point.prototype.setDelta = function(items) {
 		var m,
-			d, 
+			d,
 			a,
 			local = (my.xt(items.local)) ? items.local : {};
 		items = my.safeObject(items);
-		if(my.xto([items.startX,items.startY,items.currentX,items.currentY, items.local])){
+		if (my.xto([items.startX, items.startY, items.currentX, items.currentY, items.local])) {
 			this.local.x += (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : 0));
 			this.local.y += (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : 0));
-			}
-		if(my.xt(items.distance)){
+		}
+		if (my.xt(items.distance)) {
 			m = this.local.getMagnitude();
-			this.local.scalarMultiply((items.distance + m)/m);
-			}
-		if(my.xt(items.angle)){
+			this.local.scalarMultiply((items.distance + m) / m);
+		}
+		if (my.xt(items.angle)) {
 			d = this.local.getMagnitude();
 			a = Math.atan2(this.local.y, this.local.x);
 			a += (items.angle * my.radian);
 			this.local.x = d * Math.cos(a);
 			this.local.y = d * Math.sin(a);
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Sets the local attribute using angle and/or distance parameters:
 
 * __distance__ - calculates the _local_ vector to set its values to equal vector&#x27;s current magnitude + distance (in pixels)
@@ -1564,33 +1666,33 @@ Sets the local attribute using angle and/or distance parameters:
 @return This
 @chainable
 **/
-	my.Point.prototype.setPolar = function(items){
+	my.Point.prototype.setPolar = function(items) {
 		var m,
 			d,
 			a;
 		my.Base.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		if(my.xta([items.distance,items.angle])){
+		if (my.xta([items.distance, items.angle])) {
 			a = items.angle * my.radian;
 			this.local.x = items.distance * Math.cos(a);
 			this.local.y = items.distance * Math.sin(a);
-			}
-		else{
-			if(my.xt(items.distance)){
+		}
+		else {
+			if (my.xt(items.distance)) {
 				m = this.local.getMagnitude();
 				m = (my.xt(m) &amp;&amp; m &gt; 0.0000001) ? m : 1;
-				this.local.scalarMultiply(items.distance/m);
-				}
-			if(my.xt(items.angle)){
+				this.local.scalarMultiply(items.distance / m);
+			}
+			if (my.xt(items.angle)) {
 				d = this.local.getMagnitude();
 				a = items.angle * my.radian;
 				this.local.x = d * Math.cos(a);
 				this.local.y = d * Math.sin(a);
-				}
 			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Retrieve Point object&#x27;s coordinates, together with additional data
 
 * Coordinate reference frame determined by the value of Point.local
@@ -1606,47 +1708,47 @@ Return object has the following attributes:
 @return Result object
 @private
 **/
-	my.Point.prototype.getData = function(){
+	my.Point.prototype.getData = function() {
 		var c,
 			s = my.sprite[this.sprite],
 			myPivot,
 			fixed = this.fixed,
 			scale = s.scale;
 		this.resetWork();
-		if(my.xt(this.local) &amp;&amp; this.local.type === &#x27;Vector&#x27;){
+		if (my.xt(this.local) &amp;&amp; this.local.type === &#x27;Vector&#x27;) {
 			c = this.work.local;
-			if(my.isa(fixed,&#x27;str&#x27;) &amp;&amp; (my.contains(my.spritenames, fixed) || my.contains(my.pointnames, fixed))){
+			if (my.isa(fixed, &#x27;str&#x27;) &amp;&amp; (my.contains(my.spritenames, fixed) || my.contains(my.pointnames, fixed))) {
 				myPivot = my.sprite[fixed] || my.point[fixed];
-				if(myPivot.type === &#x27;Point&#x27;){
+				if (myPivot.type === &#x27;Point&#x27;) {
 					c.set(myPivot.local);
 					c.scalarMultiply(scale || 1);
-					}
-				else{
-					if(myPivot.type === &#x27;Particle&#x27;){
+				}
+				else {
+					if (myPivot.type === &#x27;Particle&#x27;) {
 						c.set(myPivot.get(&#x27;place&#x27;));
-						}
-					else{
+					}
+					else {
 						c.set(myPivot.start);
-						}
 					}
 				}
-			else if(!fixed){
+			}
+			else if (!fixed) {
 				c.scalarMultiply(scale || 1);
-				}
-			else{
+			}
+			else {
 				c.vectorSubtract(s.start || {});
 				c.scalarMultiply(scale || 1);
 				c.rotate(-s.roll);
-				}
+			}
 			return {
 				name: this.name,
 				current: c,
 				startLink: this.startLink,
-				};
-			}
+			};
+		}
 		return false;
-		};
-/**
+	};
+	/**
 Retrieve Point object&#x27;s coordinates
 
 * Coordinate reference frame determined by the value of Point.local
@@ -1654,10 +1756,10 @@ Retrieve Point object&#x27;s coordinates
 @method getCurrentCoordinates
 @return Coordinate Vector
 **/
-	my.Point.prototype.getCurrentCoordinates = function(){
+	my.Point.prototype.getCurrentCoordinates = function() {
 		return this.getData().current;
-		};
-/**
+	};
+	/**
 Set Point.fixed attribute
 @method setToFixed
 @param {Mixed} items - either a coordinate Vector; or an Object with x and y attributes; or a Number representing the horizontal coordinate, in pixels, from &amp;lt;canvas&amp;gt; element&#x27;s left edge; or a pivot SPRITENAME, POINTNAME or PARTICLENAME String
@@ -1665,27 +1767,27 @@ Set Point.fixed attribute
 @return This
 @chainable
 **/
-	my.Point.prototype.setToFixed = function(items, y){
+	my.Point.prototype.setToFixed = function(items, y) {
 		var myX,
 			myY;
-		if(my.isa(items,&#x27;str&#x27;)){
+		if (my.isa(items, &#x27;str&#x27;)) {
 			this.fixed = items;
-			}
-		else{
-			myX = (my.isa(items,&#x27;obj&#x27;) &amp;&amp; my.xt(items.x)) ? items.x : ((my.isa(items,&#x27;num&#x27;)) ? items : 0);
-			myY = (my.isa(items,&#x27;obj&#x27;) &amp;&amp; my.xt(items.y)) ? items.y : ((my.isa(y,&#x27;num&#x27;)) ? y : 0);
+		}
+		else {
+			myX = (my.isa(items, &#x27;obj&#x27;) &amp;&amp; my.xt(items.x)) ? items.x : ((my.isa(items, &#x27;num&#x27;)) ? items : 0);
+			myY = (my.isa(items, &#x27;obj&#x27;) &amp;&amp; my.xt(items.y)) ? items.y : ((my.isa(y, &#x27;num&#x27;)) ? y : 0);
 			this.local.set({
 				x: myX,
 				y: myY,
-				});
+			});
 			this.fixed = true;
-			}
+		}
 		return this;
-		};
+	};
 
-/**
+	/**
 # Link
-	
+
 ## Instantiation
 
 * Objects created via Path factories
@@ -1706,8 +1808,8 @@ Set Point.fixed attribute
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 @private
-**/		
-	my.Link = function(items){
+**/
+	my.Link = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		my.Base.prototype.set.call(this, items);
@@ -1719,82 +1821,96 @@ Set Point.fixed attribute
 		my.link[this.name] = this;
 		my.pushUnique(my.linknames, this.name);
 		this.positions = [];
-		if(this.startPoint &amp;&amp; this.sprite &amp;&amp; this.action === &#x27;add&#x27;){
+		if (this.startPoint &amp;&amp; this.sprite &amp;&amp; this.action === &#x27;add&#x27;) {
 			my.pushUnique(my.sprite[this.sprite].linkList, this.name);
-			}
+		}
 		return this;
-		};
+	};
 	my.Link.prototype = Object.create(my.Base.prototype);
-/**
+	/**
 @property type
 @type String
 @default &#x27;Link&#x27;
 @final
-**/		
+**/
 	my.Link.prototype.type = &#x27;Link&#x27;;
 	my.Link.prototype.classname = &#x27;linknames&#x27;;
-	if(!my.xt(my.worklink)){
+	if (!my.xt(my.worklink)) {
 		my.worklink = {
-			start: my.newVector({name: &#x27;scrawl.worklink.start&#x27;}),
-			end: my.newVector({name: &#x27;scrawl.worklink.end&#x27;}),
-			control1: my.newVector({name: &#x27;scrawl.worklink.control1&#x27;}),
-			control2: my.newVector({name: &#x27;scrawl.worklink.control2&#x27;}),
-			v1: my.newVector({name: &#x27;scrawl.worklink.v1&#x27;}),
-			v2: my.newVector({name: &#x27;scrawl.worklink.v2&#x27;}),
-			v3: my.newVector({name: &#x27;scrawl.worklink.v3&#x27;}),
-			};
-		}
+			start: my.newVector({
+				name: &#x27;scrawl.worklink.start&#x27;
+			}),
+			end: my.newVector({
+				name: &#x27;scrawl.worklink.end&#x27;
+			}),
+			control1: my.newVector({
+				name: &#x27;scrawl.worklink.control1&#x27;
+			}),
+			control2: my.newVector({
+				name: &#x27;scrawl.worklink.control2&#x27;
+			}),
+			v1: my.newVector({
+				name: &#x27;scrawl.worklink.v1&#x27;
+			}),
+			v2: my.newVector({
+				name: &#x27;scrawl.worklink.v2&#x27;
+			}),
+			v3: my.newVector({
+				name: &#x27;scrawl.worklink.v3&#x27;
+			}),
+		};
+	}
 	my.d.Link = {
-/**
+		/**
 Type of link - permitted values include: &#x27;line&#x27;, &#x27;quadratic&#x27;, &#x27;bezier&#x27;
 @property species
 @type String
 @default &#x27;&#x27;
 **/
 		species: &#x27;&#x27;,
-/**
+		/**
 POINTNAME of start Point object - used by line, quadratic and bezier links
 @property startPoint
 @type String
 @default &#x27;&#x27;
 **/
 		startPoint: &#x27;&#x27;,
-/**
+		/**
 SPRITENAME of this Link&#x27;s parent sprite object
 @property sprite
 @type String
 @default &#x27;&#x27;
 **/
 		sprite: &#x27;&#x27;,
-/**
+		/**
 POINTNAME of end Point object - used by line, quadratic and bezier links
 @property endPoint
 @type String
 @default &#x27;&#x27;
 **/
 		endPoint: &#x27;&#x27;,
-/**
+		/**
 POINTNAME of first control Point object - used by quadratic and bezier links
 @property controlPoint1
 @type String
 @default &#x27;&#x27;
 **/
 		controlPoint1: &#x27;&#x27;,
-/**
+		/**
 POINTNAME of second control Point object - used by bezier links
 @property controlPoint2
 @type String
 @default &#x27;&#x27;
 **/
 		controlPoint2: &#x27;&#x27;,
-/**
+		/**
 Link object&#x27;s action - permitted values include: &#x27;add&#x27;, &#x27;move&#x27;, &#x27;close&#x27;, &#x27;end&#x27;
 @property startLink
 @type String
 @default &#x27;add&#x27;
 **/
 		action: &#x27;add&#x27;,
-/**
+		/**
 Link length - this value will be affected by the value of the parent Sprite object&#x27;s __precision__ attribute
 @property length
 @type Number
@@ -1802,7 +1918,7 @@ Link length - this value will be affected by the value of the parent Sprite obje
 @private
 **/
 		length: 0,
-/**
+		/**
 Positions Array along the length of the Link&#x27;s path - these values will be affected by the value of the parent Sprite object&#x27;s __precision__ attribute
 @property positions
 @type Array
@@ -1810,32 +1926,32 @@ Positions Array along the length of the Link&#x27;s path - these values will be 
 @private
 **/
 		positions: [],
-		};
+	};
 	my.mergeInto(my.d.Link, my.d.Base);
-/**
+	/**
 Augments Base.set()
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
-	my.Link.prototype.set = function(items){
+	my.Link.prototype.set = function(items) {
 		my.Base.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		if(my.isa(items.sprite,&#x27;str&#x27;) &amp;&amp; items.sprite !== this.sprite &amp;&amp; this.sprite){
+		if (my.isa(items.sprite, &#x27;str&#x27;) &amp;&amp; items.sprite !== this.sprite &amp;&amp; this.sprite) {
 			my.removeItem(my.sprite[this.sprite].linkList, this.name);
-			}
-		if(my.isa(items.action,&#x27;str&#x27;) &amp;&amp; this.sprite &amp;&amp; my.contains(my.spritenames, this.sprite)){
-			if(items.action === &#x27;add&#x27;){
+		}
+		if (my.isa(items.action, &#x27;str&#x27;) &amp;&amp; this.sprite &amp;&amp; my.contains(my.spritenames, this.sprite)) {
+			if (items.action === &#x27;add&#x27;) {
 				my.pushUnique(my.sprite[this.sprite].linkList, this.name);
-				}
-			else{
-				my.removeItem(my.sprite[this.sprite].linkList, this.name);
-				}
 			}
+			else {
+				my.removeItem(my.sprite[this.sprite].linkList, this.name);
+			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Position calculation helper function
 @method pointOnLine
 @param {Point} origin Start Point for calculation
@@ -1844,14 +1960,14 @@ Position calculation helper function
 @return Coordinate Vector
 @private
 **/
-	my.Link.prototype.pointOnLine = function(origin, destination, val){
-//console.log(this.name, &#x27;pointOnLine&#x27;);
-		if(origin &amp;&amp; destination &amp;&amp; my.isa(val,&#x27;num&#x27;)){
+	my.Link.prototype.pointOnLine = function(origin, destination, val) {
+		//console.log(this.name, &#x27;pointOnLine&#x27;);
+		if (origin &amp;&amp; destination &amp;&amp; my.isa(val, &#x27;num&#x27;)) {
 			return destination.vectorSubtract(origin).scalarMultiply(val).vectorAdd(origin);
-			}
+		}
 		return false;
-		};
-/**
+	};
+	/**
 Position calculation helper function
 
 Result Object contains the following attributes:
@@ -1864,32 +1980,48 @@ Result Object contains the following attributes:
 @return Result Object
 @private
 **/
-	my.Link.prototype.getPointCoordinates = function(){
-		my.worklink.start.set((this.startPoint) ? my.point[this.startPoint].getCurrentCoordinates() : {x:0, y:0, z:0});
-		my.worklink.end.set((this.endPoint) ? my.point[this.endPoint].getCurrentCoordinates() : {x:0, y:0, z:0});
-		my.worklink.control1.set((this.controlPoint1) ? my.point[this.controlPoint1].getCurrentCoordinates() : {x:0, y:0, z:0});
-		my.worklink.control2.set((this.controlPoint2) ? my.point[this.controlPoint2].getCurrentCoordinates() : {x:0, y:0, z:0});
+	my.Link.prototype.getPointCoordinates = function() {
+		my.worklink.start.set((this.startPoint) ? my.point[this.startPoint].getCurrentCoordinates() : {
+			x: 0,
+			y: 0,
+			z: 0
+		});
+		my.worklink.end.set((this.endPoint) ? my.point[this.endPoint].getCurrentCoordinates() : {
+			x: 0,
+			y: 0,
+			z: 0
+		});
+		my.worklink.control1.set((this.controlPoint1) ? my.point[this.controlPoint1].getCurrentCoordinates() : {
+			x: 0,
+			y: 0,
+			z: 0
+		});
+		my.worklink.control2.set((this.controlPoint2) ? my.point[this.controlPoint2].getCurrentCoordinates() : {
+			x: 0,
+			y: 0,
+			z: 0
+		});
 		return my.worklink;
-		};
-/**
+	};
+	/**
 Position calculation helper function
 @method getLocalPositionOnLink
 @param {Number} [val] - distance along link, where 0 = start and 1 = end
 @return coordinate Vector
 @private
 **/
-	my.Link.prototype.getLocalPositionOnLink = function(val){
+	my.Link.prototype.getLocalPositionOnLink = function(val) {
 		val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
 		var mid1,
-			mid2, 
-			fst1, 
-			fst2, 
-			fst3, 
-			sec1, 
+			mid2,
+			fst1,
+			fst2,
+			fst3,
+			sec1,
 			sec2,
 			result;
 		this.getPointCoordinates();
-		switch(this.species){
+		switch (this.species) {
 			case &#x27;line&#x27;:
 				my.worklink.v1.set(this.pointOnLine(my.worklink.start, my.worklink.end, val));
 				break;
@@ -1899,137 +2031,143 @@ Position calculation helper function
 				my.worklink.v1.set(this.pointOnLine(mid1, mid2, val));
 				break;
 			case &#x27;bezier&#x27;:
-				fst3 = this.pointOnLine(my.worklink.control2, my.worklink.end, val); 
+				fst3 = this.pointOnLine(my.worklink.control2, my.worklink.end, val);
 				fst2 = this.pointOnLine(my.worklink.control1, my.worklink.control2, val);
 				fst1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
 				sec2 = this.pointOnLine(fst2, fst3, val);
 				sec1 = this.pointOnLine(fst1, fst2, val);
 				my.worklink.v1.set(this.pointOnLine(sec1, sec2, val));
 				break;
-			default: 
-				my.worklink.v1.set({x:0, y:0, z:0});
-			}
+			default:
+				my.worklink.v1.set({
+					x: 0,
+					y: 0,
+					z: 0
+				});
+		}
 		return my.worklink.v1;
-		};
-/**
+	};
+	/**
 Position calculation helper function
 @method getPositionOnLink
 @param {Number} [val] - distance along link, where 0 = start and 1 = end
 @return coordinate Vector
 @private
 **/
-	my.Link.prototype.getPositionOnLink = function(val){
+	my.Link.prototype.getPositionOnLink = function(val) {
 		var mySprite = my.sprite[this.sprite],
 			scale = mySprite.scale,
 			roll = mySprite.roll,
 			result;
-		if(my.isa(val, &#x27;num&#x27;)){
+		if (my.isa(val, &#x27;num&#x27;)) {
 			result = this.getLocalPositionOnLink(val);
 			return result.rotate(roll).vectorAdd(mySprite.start);
-			}
+		}
 		return false;
-		};
-/**
+	};
+	/**
 Position calculation helper function
 @method getLocalSteadyPositionOnLink
 @param {Number} [val] - distance along link, where 0 = start and 1 = end
 @return coordinate Vector
 @private
 **/
-	my.Link.prototype.getLocalSteadyPositionOnLink = function(val){
+	my.Link.prototype.getLocalSteadyPositionOnLink = function(val) {
 		val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
-		var	s,
-			d, 
+		var s,
+			d,
 			dPos,
 			precision = my.sprite[this.sprite].get(&#x27;precision&#x27;),
 			positions = this.positions,
 			length = this.length,
 			distance = length * val;
 		distance = (distance &gt; positions[precision].cumulativeLength) ? positions[precision].cumulativeLength : ((distance &lt; 0) ? 0 : distance);
-		for(var i=1; i&lt;=precision; i++){
-			if(distance &lt;= positions[i].cumulativeLength){
-				s = my.worklink.v1.set(positions[i-1].p);
+		for (var i = 1; i &lt;= precision; i++) {
+			if (distance &lt;= positions[i].cumulativeLength) {
+				s = my.worklink.v1.set(positions[i - 1].p);
 				d = my.worklink.v2.set(positions[i].p);
 				d.vectorSubtract(s);
-				dPos = (distance - positions[i-1].cumulativeLength)/positions[i].length;
+				dPos = (distance - positions[i - 1].cumulativeLength) / positions[i].length;
 				return d.scalarMultiply(dPos).vectorAdd(s);
-				}
 			}
+		}
 		return false;
-		};
-/**
+	};
+	/**
 Position calculation helper function
 @method getSteadyPositionOnLink
 @param {Number} [val] - distance along link, where 0 = start and 1 = end
 @return coordinate Vector
 @private
 **/
-	my.Link.prototype.getSteadyPositionOnLink = function(val){
+	my.Link.prototype.getSteadyPositionOnLink = function(val) {
 		var mySprite = my.sprite[this.sprite],
 			d = this.getLocalSteadyPositionOnLink(val);
-			d.rotate(mySprite.roll).vectorAdd(mySprite.start);
+		d.rotate(mySprite.roll).vectorAdd(mySprite.start);
 		return d;
-		};
-/**
+	};
+	/**
 Returns length of Link, in pixels
 @method getLength
 @return Length, in pixels
 **/
-	my.Link.prototype.getLength = function(){
+	my.Link.prototype.getLength = function() {
 		this.setPositions();
 		return this.length;
-		};
-/**
+	};
+	/**
 (re)Calculate the Link object&#x27;s __positions__ array
 @method setPositions
 @param {Number} [val] - precision level for the calculation. Default: parent Shape object&#x27;s precision value
 @return This
 @chainable
 **/
-	my.Link.prototype.setPositions = function(val){
-		if(this.action === &#x27;add&#x27;){
+	my.Link.prototype.setPositions = function(val) {
+		if (this.action === &#x27;add&#x27;) {
 			var pts = this.getPointCoordinates(),
 				precision = (my.isa(val, &#x27;num&#x27;) &amp;&amp; val &gt; 0) ? val : (my.sprite[this.sprite].get(&#x27;precision&#x27;)),
-				step = 1/precision, 
-				pos, 
-				here, 
-				vHere = my.worklink.v3, 
-				dist, 
+				step = 1 / precision,
+				pos,
+				here,
+				vHere = my.worklink.v3,
+				dist,
 				d,
 				cumLen = 0,
-				cur = my.worklink.v2.set(pts.start),		//my.worklink.v2
+				cur = my.worklink.v2.set(pts.start), //my.worklink.v2
 				sprite = my.sprite[this.sprite],
 				temp = sprite.roll;
-			if(this.positions.length !== precision + 1){
+			if (this.positions.length !== precision + 1) {
 				this.positions.length = 0;
-				for(var i = 0; i &lt;= precision; i++){
+				for (var i = 0; i &lt;= precision; i++) {
 					this.positions[i] = {
 						p: my.newVector(),
 						length: 0,
 						cumulativeLength: 0,
-						};
-					}
+					};
 				}
+			}
 			this.positions[0].p.set(cur);
-			sprite.set({roll: 0,});
-			for(var j = 1; j &lt;= precision; j++){
-				pos = step * ((j-1) + 1);
-				here = this.getPositionOnLink(pos);				//my.worklink.v1
+			sprite.set({
+				roll: 0,
+			});
+			for (var j = 1; j &lt;= precision; j++) {
+				pos = step * ((j - 1) + 1);
+				here = this.getPositionOnLink(pos); //my.worklink.v1
 				here.vectorSubtract(sprite.start);
-				vHere.set(here);								//my.worklink.v3
+				vHere.set(here); //my.worklink.v3
 				dist = here.vectorSubtract(cur).getMagnitude();
-				cur.set(vHere);									//my.worklink.v2
+				cur.set(vHere); //my.worklink.v2
 				cumLen += dist;
 				this.positions[j].p.set(cur);
 				this.positions[j].length = dist;
 				this.positions[j].cumulativeLength = cumLen;
-				}
+			}
 			this.length = this.positions[precision].cumulativeLength;
 			sprite.roll = temp;
-			}
+		}
 		return this;
-		};
-/**
+	};
+	/**
 Path object drawing helper function
 
 _Note: this function is recursive_
@@ -2039,83 +2177,82 @@ _Note: this function is recursive_
 @return True (eventually)
 @private
 **/
-	my.Link.prototype.sketch = function(ctx){
-		var myEnd, 
-			myCon1, 
+	my.Link.prototype.sketch = function(ctx) {
+		var myEnd,
+			myCon1,
 			myCon2,
 			myResult;
-		switch(this.action){
-			case &#x27;close&#x27; :
+		switch (this.action) {
+			case &#x27;close&#x27;:
 				ctx.closePath();
 				break;
-			case &#x27;move&#x27; :
-				try{
+			case &#x27;move&#x27;:
+				try {
 					myEnd = my.point[this.endPoint].getCurrentCoordinates();
 					ctx.moveTo(
-						myEnd.x, 
+						myEnd.x,
 						myEnd.y
-						);
-					}
-				catch(e){
+					);
+				}
+				catch (e) {
 					return true;
-					}
+				}
 				break;
-			case &#x27;add&#x27; :
-				try{
-					switch(this.species){
-						case &#x27;line&#x27; :
+			case &#x27;add&#x27;:
+				try {
+					switch (this.species) {
+						case &#x27;line&#x27;:
 							myEnd = my.point[this.endPoint].getCurrentCoordinates();
 							ctx.lineTo(
-								myEnd.x, 
+								myEnd.x,
 								myEnd.y
-								);
+							);
 							break;
-						case &#x27;quadratic&#x27; :
+						case &#x27;quadratic&#x27;:
 							myCon1 = my.point[this.get(&#x27;controlPoint1&#x27;)].getCurrentCoordinates();
 							myEnd = my.point[this.endPoint].getCurrentCoordinates();
 							ctx.quadraticCurveTo(
-								myCon1.x, 
+								myCon1.x,
 								myCon1.y,
-								myEnd.x, 
+								myEnd.x,
 								myEnd.y
-								);
+							);
 							break;
-						case &#x27;bezier&#x27; :
+						case &#x27;bezier&#x27;:
 							myCon1 = my.point[this.get(&#x27;controlPoint1&#x27;)].getCurrentCoordinates();
 							myCon2 = my.point[this.get(&#x27;controlPoint2&#x27;)].getCurrentCoordinates();
 							myEnd = my.point[this.endPoint].getCurrentCoordinates();
 							ctx.bezierCurveTo(
-								myCon1.x, 
+								myCon1.x,
 								myCon1.y,
-								myCon2.x, 
+								myCon2.x,
 								myCon2.y,
-								myEnd.x, 
+								myEnd.x,
 								myEnd.y
-								);
+							);
 							break;
-						default : 
+						default:
 							return true;
-						}
 					}
-				catch(e){
+				}
+				catch (e) {
 					return true;
-					}
+				}
 				break;
-			default :
+			default:
 				return true;
-			}
-		try{
+		}
+		try {
 			myResult = my.link[my.point[this.endPoint].startLink].sketch(ctx);
-			}
-		catch(e){
+		}
+		catch (e) {
 			return true;
-			}
+		}
 		return true;
-		};
+	};
 
 	return my;
-	}(scrawl));
-
+}(scrawl));
 
     </pre>
 </div>
