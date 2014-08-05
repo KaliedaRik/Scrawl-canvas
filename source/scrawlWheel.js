@@ -68,7 +68,7 @@ A __factory__ function to generate new Wheel sprites
 	};
 	/**
 # Wheel
-	
+
 ## Instantiation
 
 * scrawl.newWheel()
