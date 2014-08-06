@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
     </head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 010</h1>
@@ -11,9 +11,10 @@
 		<h3>Modules: wheel</h3>
 		<canvas id="mycanvas" width="400" height="200"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -52,55 +53,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: 'wheel',
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define sprites
-	scrawl.newWheel({
-		name: 'mywheel',
-		startX:			100,
-		startY:			100,
-		radius:			80,
-		fillStyle:		'Gold',
-		strokeStyle:	'rgb(0,190,0)',
-		lineWidth:		10,
-		lineCap:		'round',
-		lineJoin:		'round',
-		shadowOffsetX:	3,
-		shadowOffsetY:	3,
-		shadowBlur:		2,
-		shadowColor:	'Black',
-		method:			'sinkInto',
-		}).clone({
-		startX:			300,
-		startAngle:		30,
-		endAngle:		325,
-		includeCenter:	true,
-		scale:			0.7,
-		});
-		
-	//display canvas
-	scrawl.render();
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: 'wheel',
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

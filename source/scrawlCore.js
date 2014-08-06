@@ -315,9 +315,7 @@ Any supplied callback function will only be run once all modules have been loade
 		var path = items.path || '',
 			modules = (my.isa(items.modules, 'arr')) ? items.modules : [items.modules],
 			callback = (my.isa(items.callback, 'fn')) ? items.callback : function() {},
-			//FOR DEVELOPMENT TESTING, use mini = false version
-			//mini = (my.xt(items.minified)) ? items.minified : true,
-			mini = (my.xt(items.minified)) ? items.minified : false,
+			mini = (my.xt(items.minified)) ? items.minified : true,
 			tail = (mini) ? '-min.js' : '.js',
 			loaded = [].concat(modules),
 			getModule = function(module) {
