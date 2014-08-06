@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
     </head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 002</h1>
@@ -11,9 +11,10 @@
 		<h3>Modules: phrase</h3>
 		<div id="benny"></div>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -66,75 +67,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: 'phrase',
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-markup">&lt;body>
-	&lt;div id="benny">&lt;/div>
-	&lt;script src="js/scrawlCore.js">&lt;/script>
-	&lt;script>
-		var mycode = function(){
-			//define variables used in program
-			var myWidth = window.innerWidth - 50,
-				myHeight = window.innerHeight - 150;
-				
-			//manipulate variables
-			myWidth = (myWidth > 100) ? myWidth : 100;
-			myHeight = (myHeight > 100) ? myHeight : 100;
-			
-			//add a canvas to the 'benny' div element, and make it current
-			scrawl.addCanvasToPage({
-				canvasName:		'mycanvas',
-				parentElement:	'benny',
-				width:			myWidth,
-				height:			myHeight,
-				}).makeCurrent();
-				
-			//define a phrase sprite to hold some text
-			scrawl.newPhrase({
-				text:		'Hello, Scrawl World!',
-				startX:		myWidth/2,
-				startY:		myHeight/2,
-				handleX:	'center',
-				handleY:	'bottom',
-				font:		parseInt(myHeight/10)+'pt serif',
-				method:		'fillDraw',
-				fillStyle:	'red',
-				// ... and clone it to define a second phrase sprite
-				}).clone({
-				handleY:	'top',
-				text:		'canvas id: '+scrawl.canvas.mycanvas.id+
-							'\nwidth: '+scrawl.canvas.mycanvas.getAttribute('width')+
-							'px\nheight: '+scrawl.canvas.mycanvas.getAttribute('height')+'px',
-				font:		'16pt sans-serif',
-				textAlign:	'center',
-				method:		'fill',
-				fillStyle:	'black',
-				});
-
-			//update the canvas display
-			scrawl.render();
-			};
-			
-		scrawl.loadModules({
-			path: 'js/',
-			modules: 'phrase',
-			callback: function(){
-				window.onload = function(){
-					scrawl.init();
-					mycode();
-					};
-				},
-			});
-	&lt;/script>
-&lt;/body></code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

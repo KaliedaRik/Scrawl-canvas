@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
     </head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 003</h1>
@@ -13,9 +13,10 @@
 			<p>It looks like your browser doesn't support the &lt;canvas&gt; element.</p>
 		</canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -51,60 +52,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: 'phrase',
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-markup">&lt;body>
-	&lt;canvas id="mycanvas" width="400" height="200">
-		&lt;p>It looks like your browser doesn't support the &lt;canvas&gt; element.&lt;/p>
-	&lt;/canvas>
-	&lt;script src="js/scrawlCore.js">&lt;/script>
-	&lt;script>
-		var mycode = function(){
-			//define some phrase sprites to hold the text
-			scrawl.newPhrase({
-				text: 'Hello, Scrawl World!',
-				handleX: 'center',
-				handleY: 'center',
-				startX: 200,
-				startY: 70,
-				font: '30pt serif',
-				method: 'fillDraw',
-				fillStyle: 'red',
-				}).clone({
-				text: 'canvas id: '+scrawl.canvas.mycanvas.id+
-						'\nwidth: '+scrawl.canvas.mycanvas.getAttribute('width')+
-						'px\nheight: '+scrawl.canvas.mycanvas.getAttribute('height')+'px',
-				textAlign: 'center',
-				method: 'fill',
-				fillStyle: 'darkblue',
-				font: '12pt monospace',
-				startY: 130,
-				});
-				
-			//update the canvas display
-			scrawl.render();
-			};
-			
-		scrawl.loadModules({
-			path: 'js/',
-			modules: 'phrase',
-			callback: function(){
-				window.onload = function(){
-					scrawl.init();
-					mycode();
-					};
-				},
-			});
-	&lt;/script>
-&lt;/body></code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

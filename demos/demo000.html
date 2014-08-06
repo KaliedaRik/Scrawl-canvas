@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -12,9 +12,10 @@
 		<p>text</p>
 		<canvas id="mycanvas" width="300" height="150"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -43,8 +44,9 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
-				modules: [],			
+				path: '../source/js/',
+				minified: false,
+				modules: [],
 				callback: function(){
 					window.addEventListener('load', function(){
 						scrawl.init();
@@ -53,8 +55,5 @@
 					},
 				});
 		</script>
-<pre><code class="language-markup/javascript">
-</code></pre>
-		<script src="js/prism.js"></script>
 	</body>
 </html>
