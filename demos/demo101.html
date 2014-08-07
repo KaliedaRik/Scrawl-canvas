@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 101</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -13,9 +13,10 @@
 		<img src="img/flower01.jpg" id="flower" />
 		<canvas id="mycanvas" width="600" height="300"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,

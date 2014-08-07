@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+        <title>Demo 036</title>
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
     </head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 036</h1>
@@ -12,9 +12,10 @@
 		<p>Move mouse over canvas to activate the arrow</p>
 		<canvas id="mycanvas" width="400" height="400"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -89,90 +90,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['animation', 'path', 'phrase'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var myPad = scrawl.pad.mycanvas,
-		here, 
-		mouseArrow = false;
-	
-	//define sprites
-	scrawl.makePath({
-		name:			'arrow',
-		startX:			200,
-		startY:			200,
-		lineWidth:		6,
-		strokeStyle:	'red',
-		method:			'draw',
-		lineJoin:		'round',
-		lineCap:		'round',
-		line:			true,
-		shadowOffsetX:	2,
-		shadowOffsetY:	2,
-		shadowBlur:		2,
-		shadowColor:	'black',
-		data:			'm0,0 -50-40 m0,80 50-40 0,0',
-		//				  _p1 _p2     _p3  _p4   _p5 
-		});
-	scrawl.point.arrow_p5.setToFixed({
-		x:	200,
-		y:	200,
-		});
-		
-	for(var i=1; i<6; i++){
-		scrawl.newPhrase({
-			name:		'aPoint'+i,
-			text:		' p'+i+' ',
-			pivot:		'arrow_p'+i,
-			font:		'12pt bold Arial, sans-serif',
-			handleX:	'center',
-			});
-		}
-	scrawl.sprite.aPoint1.set({handleX: 'right'});
-	scrawl.sprite.aPoint4.set({handleX: 'left'});
-	
-	//display initial canvas
-	scrawl.render();
-	
-	//animation object
-	scrawl.newAnimation({
-		fn: function(){
-			here = myPad.getMouse();
-			if(here.active){
-				scrawl.sprite.arrow.set({
-					pivot:	'mouse',
-					roll:	Math.atan2(here.y-200,here.x-200)/scrawl.radian,
-					});
-				scrawl.render();
-				}
-			else{
-				scrawl.sprite.arrow.set({
-					pivot:	false,
-					});
-				}
-			},
-		});
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['animation', 'path', 'phrase'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

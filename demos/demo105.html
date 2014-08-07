@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+		<title>Demo 105</title>
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
     </head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 105</h1>
@@ -11,9 +11,10 @@
 		<h3>Modules: block, wheel, path, shape, images, animation</h3>
 		<canvas id="mycanvas" width="400" height="200"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,

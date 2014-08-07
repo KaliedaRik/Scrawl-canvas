@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
    <head>
-        <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+        <title>Demo 049</title>
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
     </head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 049</h1>
@@ -22,9 +22,10 @@
 		<img src="img/icons/buttonWood.png" id="buttonWood" class="demo049" />
 		<canvas id="mycanvas" width="750" height="375"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -103,94 +104,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['images', 'animation'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var myPad = scrawl.pad.mycanvas, 
-		here, 
-		mySprite = false,
-		spriteList = ['Air', 'Bone', 'Clay', 'Fire', 'Metal', 'Radiance', 'Rock', 'Smoke', 'Water', 'Wood'],
-		myGroup,
-		getIcon,
-		dropIcon;
-	
-	//import inmages into scrawl library
-	scrawl.getImagesByClass('demo049');
-
-	//define group
-	myGroup = scrawl.newGroup({
-		name: 'myGroup',
-		});
-		
-	//define sprites; get their image data
-	for(var i = 0, z = spriteList.length; i < z; i++){
-		scrawl.newPicture({	
-			name:	spriteList[i],
-			source:	'button'+spriteList[i],
-			startX:	(i * 58) + 85,
-			startY:	187.5,
-			order:	i,
-			method:	'fill',	
-			group:	'myGroup',
-			checkHitUsingImageData: true,
-			}).getImageData();
-		}
-
-	//event listeners
-	getIcon = function(e){
-		mySprite = myGroup.getSpriteAt(here);
-		if(mySprite){
-			mySprite.pickupSprite(here);
-			}
-		if(e){
-			e.stopPropagation();
-			e.preventDefault();
-			}
-		};
-	dropIcon = function(e){
-		if(mySprite){
-			mySprite.dropSprite();
-			mySprite = false;
-			}
-		if(e){
-			e.stopPropagation();
-			e.preventDefault();
-			}
-		};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getIcon, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropIcon, false);
-
-	//animation object
-	scrawl.newAnimation({
-		fn: function(){
-			here = myPad.getMouse();
-			if(!here.active && mySprite){
-				dropIcon();
-				}
-			scrawl.render();
-			},
-		});
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['images', 'animation'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

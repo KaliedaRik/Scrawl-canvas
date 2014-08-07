@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
+		<title>Demo 032a</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -12,9 +13,10 @@
 		<img src="img/bunny.png" id="bunny" class="demo032" />
 		<canvas id="mycanvas" width="600" height="600" style="float: left;"></canvas>
 		<p id="results" style="float: left; padding-left: 15px;"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -164,10 +166,11 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['images', 'animation'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};

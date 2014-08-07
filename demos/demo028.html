@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -11,9 +11,10 @@
 		<h3>Modules: block, wheel, animation, images</h3>
 		<div id="canvasHolder"></div>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -100,102 +101,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['block', 'wheel', 'animation', 'images'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var pad,
-		patternGroup,
-		dotty,
-		frame;
-	
-	//add canvass to web page
-	scrawl.addCanvasToPage({
-		canvasName: 	'canvas',
-		parentElement:	'canvasHolder',
-		width: 			400,
-		height: 		400,
-		}).makeCurrent();
-	pad = scrawl.pad.canvas;
-	
-	//create a new cell for the pattern
-	pad.addNewCell({
-		name: 				'patternCell',
-		width: 				50,
-		height: 			50,
-		backgroundColor:	'blue',
-		});
-	patternGroup = scrawl.group.patternCell;
-
-	//add sprites to the pattern cell ...
-	scrawl.newWheel({
-		radius: 	10,
-		fillStyle: 	'red',
-		method: 	'fill',
-		group: 		'patternCell',
-		}).clone({
-		startX: 50,
-		}).clone({
-		startY: 50,
-		}).clone({
-		startX: 0,
-		}).clone({
-		startX: 25,
-		startY: 25,
-		});
-	//... and compile it
-	scrawl.cell.patternCell.compile();
-		
-	//build the pattern
-	dotty = scrawl.newPattern({
-		name: 	'dotty',
-		canvas:	'patternCell',
-		});
-		
-	//add a block sprite, for showing off the pattern
-	frame = scrawl.newBlock({
-		startX: 		200,
-		startY: 		200,
-		handleX: 		'center',
-		handleY: 		'center',
-		width: 			200,
-		height: 		200,
-		lineWidth: 		40,
-		lineJoin: 		'round',
-		lineCaps: 		'round',
-		method: 		'draw',
-		strokeStyle:	'dotty',
-		});
-
-	//animation object
-	scrawl.newAnimation({
-		fn: function(){
-			frame.setDelta({
-				roll: 0.5,
-				});
-			pad.render();
-			},
-		});
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['block', 'wheel', 'animation', 'images'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

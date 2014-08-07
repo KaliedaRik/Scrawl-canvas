@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 066</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -15,9 +15,10 @@
 		<div id="canvas2Host"></div>
 		<p>Release the mouse button to position the tile.</p>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -150,161 +151,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['animation', 'block'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">&lt;body>
-	&lt;h1>&lt;a href="index.html">Scrawl.js&lt;/a> - demonstration 066&lt;/h1>
-	&lt;h2>Dragging sprites between canvases&lt;/h2>
-	&lt;h3>Modules: animation, block&lt;/h3>
-	&lt;p>Click down (keep left mouse button pressed down) on a red tile to drag it around the canvas ...&lt;/p>
-	&lt;div id="canvas1Host">&lt;/div>
-	&lt;p>... the tiles can also be dragged between canvases:&lt;/p>
-	&lt;div id="canvas2Host">&lt;/div>
-	&lt;p>Release the mouse button to position the tile.&lt;/p>
-	&lt;script src="js/scrawlCore.js">&lt;/script>
-	&lt;script>
-		var mycode = function(){
-			//define variables
-			var pad1,
-				pad2,
-				pad1Here, 
-				pad2Here,
-				currentSprite,
-				group1,
-				group2,
-				pickupSprite,
-				dropSprite,
-				dragenter,
-				dragover;
-			
-			//add canvases to page
-			pad1 = scrawl.addCanvasToPage({
-				canvasName: 	'canvas1',
-				parentElement:	'canvas1Host',
-				width: 			400,
-				height:			200,
-				});
-			pad2 = scrawl.addCanvasToPage({
-				canvasName: 	'canvas2',
-				parentElement: 	'canvas2Host',
-				width: 			400,
-				height:			200,
-				});
-			scrawl.canvas.canvas1.style.border = '1px solid green';
-			scrawl.canvas.canvas2.style.border = '1px solid green';
-			
-			//define groups
-			group1 = scrawl.group[pad1.base];
-			group2 = scrawl.group[pad2.base];
-			
-			//make first pad the current pad
-			pad1.makeCurrent();
-			
-			//define sprites
-			scrawl.newBlock({
-				name: 		'box1',
-				startX: 	10,
-				startY: 	10,
-				width: 		80,
-				height: 	40,
-				method: 	'fillDraw',
-				fillStyle: 	'red',
-				}).clone({
-				name: 		'box2',
-				startX:		110,
-				}).clone({
-				name: 		'box3',
-				startX: 	210,
-				}).clone({
-				name: 		'box4',
-				startX: 	310,
-				});
-
-			//event listeners
-			pickupSprite = function(e){
-				currentSprite = group1.getSpriteAt(pad1Here) || group2.getSpriteAt(pad2Here);
-				if(currentSprite){
-					currentSprite.pickupSprite((pad1Here.active) ? pad1Here : pad2Here);
-					}
-				e.stopPropagation();
-				e.preventDefault();
-				};
-			dropSprite = function(e){
-				if(currentSprite){
-					currentSprite.dropSprite();
-					currentSprite = false;
-					}
-				e.stopPropagation();
-				e.preventDefault();
-				};
-			dragenter = function(e){
-				e.stopPropagation();
-				e.preventDefault();
-				};
-			dragover = function(e){
-				e.stopPropagation();
-				e.preventDefault();
-				};
-			scrawl.canvas.canvas1.addEventListener('mousedown', pickupSprite, false);
-			scrawl.canvas.canvas1.addEventListener('dragenter', dragenter, false);
-			scrawl.canvas.canvas1.addEventListener('dragover', dragover, false);
-			scrawl.canvas.canvas2.addEventListener('mousedown', pickupSprite, false);
-			scrawl.canvas.canvas2.addEventListener('dragenter', dragenter, false);
-			scrawl.canvas.canvas2.addEventListener('dragover', dragover, false);
-			document.body.addEventListener('mouseup', dropSprite, false);
-			document.body.addEventListener('mouseleave', dropSprite, false);
-
-			//animation object
-			scrawl.newAnimation({
-				fn: function(){
-					pad1Here = pad1.getMouse();
-					pad2Here = pad2.getMouse();
-					scrawl.cell[pad1.base].set({
-						backgroundColor: (pad1Here.active) ? 'lightblue' : 'white',
-						});
-					scrawl.cell[pad2.base].set({
-						backgroundColor: (pad2Here.active) ? 'lightblue' : 'white',
-						});
-					if(currentSprite){
-						if(scrawl.contains(group1.sprites, currentSprite.name)){
-							if(pad2Here.active){
-								group1.removeSpritesFromGroup(currentSprite.name);
-								group2.addSpritesToGroup(currentSprite.name);
-								}
-							}
-						else if(scrawl.contains(group2.sprites, currentSprite.name)){
-							if(pad1Here.active){
-								group2.removeSpritesFromGroup(currentSprite.name);
-								group1.addSpritesToGroup(currentSprite.name);
-								}
-							}
-						}
-					pad1.render();
-					pad2.render();
-					},
-				});
-			};
-			
-		scrawl.loadModules({
-			path: 'js/',
-			modules: ['animation', 'block'],
-			callback: function(){
-				window.onload = function(){
-					scrawl.init();
-					mycode();
-					};
-				},
-			});
-	&lt;/script>
-&lt;/body></code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

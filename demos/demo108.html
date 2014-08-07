@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 108</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -11,9 +11,10 @@
 		<h3>Modules: block, wheel, animation</h3>
 		<p>Check page tag icon above - there should be a spinning bar and balls on the left hand side of the tab (Firefox, Opera, Chrome).</p>
 		<canvas id="mycanvas" width="64" height="64"></canvas>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				//define variables
 				var canvas = scrawl.canvas.mycanvas,
 					head = document.getElementsByTagName('head')[0],

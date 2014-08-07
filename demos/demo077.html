@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 077</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 		<style>
 			form {
@@ -27,9 +27,10 @@
 		</form>
 		<canvas id="mycanvas" width="400" height="400"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -142,125 +143,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['wheel', 'phrase'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var myGroups = ['corners', 'edges', 'center', 'start'],
-		myOptions = document.getElementById('collision'),
-		changeDisplay;
-
-	//define groups
-	scrawl.newGroup({name: 'corners', 	order: 4});
-	scrawl.newGroup({name: 'edges', 	order: 3});
-	scrawl.newGroup({name: 'center', 	order: 1});
-	scrawl.newGroup({name: 'start', 	order: 2});
-
-	//define sprites
-	scrawl.newWheel({
-		startX:			200,
-		startY:			200,
-		radius:			150,
-		lineWidth:		4,
-		strokeStyle:	'gold',
-		method:			'draw',
-		});
-
-	scrawl.newWheel({
-		name:		'north',
-		startX:		200,
-		startY:		50,
-		radius:		5,
-		fillStyle:	'red',
-		method:		'fillDraw',
-		group:		'edges',
-		}).clone({name: 'east',			startX: 350, 					startY: 200,
-		}).clone({name: 'south', 		startX: 200, 					startY: 350,
-		}).clone({name: 'west', 		startX: 50, 					startY: 200,
-		}).clone({name: 'northwest', 	startX: 200 - (150 * 0.707), 	startY: 200 - (150 * 0.707), 	fillStyle: 'blue', 		group: 'corners',
-		}).clone({name: 'northeast', 	startX: 200 + (150 * 0.707), 	startY: 200 - (150 * 0.707),
-		}).clone({name: 'southeast', 	startX: 200 + (150 * 0.707), 	startY: 200 + (150 * 0.707),
-		}).clone({name: 'southwest',	startX: 200 - (150 * 0.707), 	startY: 200 + (150 * 0.707),
-		}).clone({name: 'center',	 	startX: 200, 					startY: 200, 					fillStyle: 'orange', 	group: 'center',
-		}).clone({name: 'start', 		startX: 200, 					startY: 200, 					fillStyle: 'purple', 	group: 'start', 	radius: 7,
-		});
-		
-	scrawl.newPhrase({
-		pivot:		'north',
-		text:		'north/N',
-		handleX:	'center',
-		handleY:	24,
-		font:		'11pt Arial, sans-serif',
-		group:		'edges',
-		}).clone({pivot: 'east', 		text: 'east/E',
-		}).clone({pivot: 'south', 		text: 'south/S',
-		}).clone({pivot: 'west', 		text: 'west/W',
-		}).clone({pivot: 'northwest', 	text: 'northwest/NW', 	group: 'corners',
-		}).clone({pivot: 'northeast', 	text: 'northeast/NE',
-		}).clone({pivot: 'southeast', 	text: 'southeast/SE',
-		}).clone({pivot: 'southwest', 	text: 'southwest/SW',
-		}).clone({pivot: 'center', 		text: 'center', 		group: 'center',
-		}).clone({pivot: 'start', 		text: 'start', 			group: 'start', 	handleY: -8,
-		});
-		
-	//event listener
-	changeDisplay = function(e){
-		e.stopPropagation();
-		e.preventDefault();
-		testTicker = Date.now();
-		for(var i = 0, z = myGroups.length; i < z; i++){
-			scrawl.group[myGroups[i]].visibility = false;
-			}
-		switch(e.currentTarget.value){
-			case 'all' :
-				for(var i = 0, z = myGroups.length; i < z; i++){
-					scrawl.group[myGroups[i]].visibility = true;
-					}
-				break;
-			case 'perimeter' :
-				scrawl.group.corners.visibility = true;
-				scrawl.group.edges.visibility = true;
-				break;
-			case 'corners' :
-				scrawl.group.corners.visibility = true;
-				break;
-			case 'edges' :
-				scrawl.group.edges.visibility = true;
-				break;
-			case 'center' :
-				scrawl.group.center.visibility = true;
-				break;
-			case 'start' :
-				scrawl.group.start.visibility = true;
-				break;
-			}
-		scrawl.render();
-		};
-	myOptions.options.selectedIndex = 0;
-	myOptions.addEventListener('change', changeDisplay, false);
-	
-	//display initial canvas
-	scrawl.render();
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['wheel', 'phrase'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

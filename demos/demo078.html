@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 078</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -17,9 +17,10 @@
 		
 		<canvas width="600px" height="900px" id="mycanvas"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -102,102 +103,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['block', 'wheel', 'phrase', 'images'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var operations = ['source-over', 'source-atop', 'source-in', 'source-out', 
-		'destination-over', 'destination-atop', 'destination-in', 'destination-out', 
-		'lighter', 'darker', 'copy', 'xor', 'normal', 'multiply', 'screen', 'overlay', 
-		'color-dodge', 'color-burn', 'hue', 'saturation', 'color', 'luminosity'],
-		tester,
-		square,
-		circle,
-		label,
-		counter = 0,
-		camera;
-		
-	//define cells
-	tester = scrawl.pad.mycanvas.addNewCell({
-		name:	'tester',
-		width:	150,
-		height:	150,
-		});
-		
-	//define sprites
-	circle = scrawl.newWheel({
-		name: 'here',
-		startX: 	75,
-		startY: 	75,
-		radius: 	50,
-		fillStyle:	'red',
-		group:		'tester',
-		});
-	square = scrawl.newBlock({
-		pivot: 		'here',
-		handleX: 	'center',
-		handleY: 	'center',
-		width: 		120,
-		height: 	50,
-		fillStyle: 	'blue',
-		group: 		'tester',
-		});
-	label = scrawl.newPhrase({
-		pivot: 		'here',
-		handleX: 	'center',
-		handleY: 	75,
-		font: 		'14pt sans-serif',
-		group: 		'tester',
-		})
-	camera = scrawl.newPicture({
-		width: 		150,
-		height: 	150,
-		source: 	'tester',
-		});
-		
-	//compile scene
-	for(var y = 0; y < 6; y++){
-		for(var x = 0; x < 4; x++){
-			if(operations[counter]){
-				tester.clear();
-				circle.stamp();
-				square.set({
-					globalCompositeOperation: operations[counter],
-					}).stamp();
-				label.set({
-					text: operations[counter],
-					}).stamp();
-				camera.set({
-					startX: x * 150,
-					startY: y * 150,
-					}).stamp();
-				}
-			counter++;
-			}
-		}
-		
-	//display canvas
-	scrawl.pad.mycanvas.show();
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['block', 'wheel', 'phrase', 'images'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

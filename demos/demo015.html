@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
@@ -12,9 +12,10 @@
 		<h3>Modules: phrase</h3>
 		<canvas id="mycanvas" width="400" height="200"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -41,56 +42,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: 'phrase',
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-markup">&lt;!DOCTYPE html>
-&lt;html>
-    &lt;head>
-        &lt;title>Scrawl.js&lt;/title>
-		&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    &lt;/head>
-    &lt;body>
-		&lt;canvas id="mycanvas" width="400" height="200">&lt;/canvas>
-		&lt;script src="js/scrawlCore.js">&lt;/script>
-		&lt;script>
-			var mycode = function(){
-				//define sprite ...
-				scrawl.newPhrase({
-					startX:		200,
-					startY:		100,
-					handleX:	'center',
-					handleY:	'center',
-					size:		80,
-					metrics:	'px',
-					family:		'"KaiTi", "楷体", STKaiti, "华文楷体", "Microsoft YaHei New", "Microsoft Yahei", "微软雅黑", STXihei, "华文细黑", SimSun, 宋体, Georgia, "Times New Roman", serif',
-					text:		'你好',
-					});
-					
-				//... and display it
-				scrawl.render();
-				};
-				
-			scrawl.loadModules({
-				path: 'js/',
-				modules: 'phrase',
-				callback: function(){
-					window.onload = function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		&lt;/script>
-    &lt;/body>
-&lt;/html></code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 033</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -14,9 +14,10 @@
 		<img src="img/bunny.png" id="bunny" class="demo033" />
 		<canvas id="mycanvas" width="600" height="600"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -107,104 +108,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['images', 'animation'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var canvas = scrawl.canvas.mycanvas,
-		pad = scrawl.pad.mycanvas,
-		totalBunnies = 0,
-		minX = 5, 
-		minY = 5, 
-		maxX = 595, 
-		maxY = 595,
-		bunnyPos = [],
-		bunny,
-		addBunnies,
-		moveBunnies;
-	
-	//load image into scrawl library
-	scrawl.getImagesByClass('demo033');
-	
-	//define a single bunny sprite - start and delta values will be stored in the bunnyPos array
-	bunny = scrawl.newPicture({
-		name: 				'bunny',
-		source: 			'bunny',
-		handleX: 			'center',
-		handleY: 			'center',
-		collisionPoints: 	'center',
-		fastStamp: 			true,			//essential if speed gains are to be realised
-		});
-	
-	//event listener
-	addBunnies = function(e){
-		if(e){
-			e.stopPropagation();
-			e.preventDefault();
-			}
-		for(var i = 0; i < 100; i++){
-			bunnyPos.push({
-				x:	10,
-				y:	10,
-				dx:	(Math.random() * 8) + 1,
-				dy:	(Math.random() * 8) + 1,
-				});
-			}
-		totalBunnies += 100;
-		};
-	canvas.addEventListener('mouseup', addBunnies, false);
-	
-	//animation (display loop) function
-	moveBunnies = function(){
-		var temp;
-		pad.clear();
-		for(var i = 0, z = bunnyPos.length; i < z; i++){
-			temp = bunnyPos[i].x + bunnyPos[i].dx;
-			if(temp < minX || temp > maxX){
-				bunnyPos[i].dx = -bunnyPos[i].dx;
-				}
-			temp = bunnyPos[i].y + bunnyPos[i].dy;
-			if(temp < minY || temp > maxY){
-				bunnyPos[i].dy = -bunnyPos[i].dy;
-				}
-			bunnyPos[i].x += bunnyPos[i].dx;
-			bunnyPos[i].y += bunnyPos[i].dy;
-			bunny.start.x = bunnyPos[i].x;
-			bunny.start.y = bunnyPos[i].y;
-			bunny.stamp();
-			}
-		pad.show();
-		};
-		
-	//initialize scene
-	addBunnies();
-	
-	//animation object
-	scrawl.newAnimation({
-		fn: function(){
-			moveBunnies();
-			},
-		});
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['images', 'animation'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
 	</body>
 </html>

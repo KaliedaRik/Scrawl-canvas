@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
     </head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 017</h1>
@@ -12,9 +12,10 @@
 		<img id="peacock" src="img/carousel/peacock.png" class="demo017" />
 		<canvas id="mycanvas" width="400" height="200"></canvas>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
+		<script src="../source/scrawlCore.js"></script>
 		<script>
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -43,52 +44,16 @@
 				};
 
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: 'images',
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-markup">&lt;body>
-	&lt;img id="peacock" src="img/carousel/peacock.png" class="demo017" />
-	&lt;canvas id="mycanvas" width="400" height="200">&lt;/canvas>
-	&lt;script src="js/scrawlCore.js">&lt;/script>
-	&lt;script>
-		var mycode = function(){
-			//import images into scrawl library
-			scrawl.getImagesByClass('demo017');
-
-			//define the sprite
-			scrawl.newPicture({
-				source:		'peacock',
-				width:		400,
-				height:		200,
-				copyX:		90,
-				copyY:		130,
-				copyWidth:	400,
-				copyHeight:	200,
-				});
-				
-			//display the canvas
-			scrawl.render();
-			};
-
-		scrawl.loadModules({
-			path: 'js/',
-			modules: 'images',
-			callback: function(){
-				window.onload = function(){
-					scrawl.init();
-					mycode();
-					};
-				},
-			});
-	&lt;/script>
-&lt;/body></code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>
