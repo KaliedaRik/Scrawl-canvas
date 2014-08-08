@@ -4,22 +4,38 @@
 		<title>Demo 000</title>
 		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
+		<!-- 
+		add the following line if using addcodedisplayblock.js
+		<link href="css/demo.css" rel="stylesheet" />
+		-->
+
+		<!-- additional styling here -->
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
 	<body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 000</h1>
 		<h2>blank</h2>
 		<h3>Modules: </h3>
 		<p>text</p>
+
+		<!-- additional or alternate setup here -->
 		<canvas id="mycanvas" width="300" height="150"></canvas>
+
+		<!-- 
+		include if using static or real-time timing with the demo
 		<p id="testmessage"></p>
+		-->
 		<script src="../source/scrawlCore.js"></script>
-		<script>
+		<script id="myscript">
 			var mycode = function(){
 				'use strict'
+				/* variables required by the static/real-time timing display
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
 					testMessage = document.getElementById('testmessage');
+				*/
 					
 				//define variables
 				
@@ -31,16 +47,20 @@
 					
 						//code here
 						
+						/* real-time timing display - remove if using static timing display
 						testNow = Date.now();
 						testTime =  testNow - testTicker;
 						testTicker = testNow;
 						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
+						*/
 						},
 					});
 					
+				/* static timing display - remove if using real-time timing display
 				testNow = Date.now();
 				testTime =  testNow - testTicker;
 				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
+				*/
 				};
 				
 			scrawl.loadModules({
@@ -55,5 +75,11 @@
 					},
 				});
 		</script>
+
+		<!-- 
+		include addcodedisplayblock.js to display the code at the bottom of the page
+		all code within the element with an id="myscript" should be displayed
+		<script src="js/addcodedisplayblock.js"></script>
+		-->
 	</body>
 </html>

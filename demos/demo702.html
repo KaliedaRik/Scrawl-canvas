@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
+		<title>Demo 702</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 		<style>
 			canvas {
@@ -23,9 +24,10 @@
 			<canvas id="mycanvas" width="600" height="600"></canvas>
 		</div>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
-		<script>
+		<script src="../source/scrawlCore.js"></script>
+		<script id="myscript">
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -709,10 +711,11 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['animation', 'block', 'stacks', 'phrase', 'images', 'collisions'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};

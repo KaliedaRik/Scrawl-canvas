@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<title>Scrawl.js</title>
+		<title>Demo 701</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
     </head>
     <body>
@@ -12,9 +13,10 @@
 		<canvas id="mycanvas" width="800" height="640"></canvas>
 		<p>Press the left and right arrow keys to move the gun, and the space bar to fire it. Refresh page to restart game. Good luck!</p>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
-		<script>
+		<script src="../source/scrawlCore.js"></script>
+		<script id="myscript">
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -764,10 +766,11 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['animation', 'collisions', 'images', 'wheel', 'block', 'phrase'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};

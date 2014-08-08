@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 409</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -15,9 +15,10 @@
 		<p>Height (px): 1 <input id="height" type="range" value="20" min="1" max="100" step="1" /> 100</p>
 		<img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo409" />
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
-		<script>
+		<script src="../source/scrawlCore.js"></script>
+		<script id="myscript">
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -104,102 +105,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['images', 'filters', 'animation'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var width,
-		height,
-		widthVal = 20,
-		heightVal = 20,
-		getWidth,
-		getHeight;
-		
-	//import image
-	scrawl.getImagesByClass('demo409');
-		
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'pixelateparrot',
-		}).filter('pixelate', {
-			width: 20,
-			height: 20,
-			useSourceData: true,
-			});
-
-	//define sprites
-	scrawl.newPicture({
-		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-		}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'pixelateparrot',
-		});
-		
-	//preparing the DOM input elements
-	width = document.getElementById('width');
-	width.value = 20;
-	height = document.getElementById('height');
-	height.value = 20;
-
-	//image update function
-	updateInput = function(){
-		scrawl.image.pixelateparrot.filter('pixelate', {
-			width: widthVal,
-			height: heightVal,
-			useSourceData: true,
-			});
-		};
-	
-	//event listeners
-	getWidth = function(e){
-		widthVal = parseFloat(width.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-		};
-	width.addEventListener('change', getWidth, false);
-	getHeight = function(e){
-		heightVal = parseFloat(height.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-		};
-	height.addEventListener('change', getHeight, false);
-	
-	//to make sure everything is in place ...
-	updateInput();
-	
-	//animation object
-	scrawl.newAnimation({
-		fn: function(){
-			scrawl.render();
-			},
-		});
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['images', 'filters', 'animation'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

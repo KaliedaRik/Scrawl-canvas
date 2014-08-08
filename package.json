@@ -6,12 +6,17 @@
 		"url": "http://github.com/KaliedaRik/Scrawl-canvas.git"
 	},
 	"description": "Scrawl.js is a JavaScript library designed to make using the HTML5 canvas element a bit easier, and a bit more fun",
-	"license" : "MIT",
+	"license": "MIT",
+	"dependencies": {},
 	"devDependencies": {
 		"grunt": "~0.4.2",
+		"matchdep": "~0.1.1",
 		"grunt-contrib-jshint": "~0.6.3",
 		"grunt-contrib-uglify": "~0.2.2",
 		"grunt-jsbeautifier": "~0.2.6",
-		"grunt-contrib-yuidoc": "~0.5.0"
+		"grunt-contrib-yuidoc": "~0.5.0",
+		"grunt-regarde": "~0.1.1",
+		"grunt-contrib-connect": "~0.1.2",
+		"grunt-contrib-livereload": "~0.1.1"
 	}
 }

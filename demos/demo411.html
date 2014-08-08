@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 411</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -15,9 +15,10 @@
 		<p>Blue: 0 <input id="blue" type="range" value="1" min="0" max="3" step="0.05" /> 3</p>
 		<img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo411" />
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
-		<script>
+		<script src="../source/scrawlCore.js"></script>
+		<script id="myscript">
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -118,116 +119,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['images', 'filters', 'animation'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var red,
-		green,
-		blue,
-		redVal = 1,
-		greenVal = 1,
-		blueVal = 1,
-		getRed,
-		getGreen,
-		getBlue;
-		
-	//import image
-	scrawl.getImagesByClass('demo411');
-		
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'channelsparrot',
-		}).filter('channels', {
-			red: 1,
-			green: 1,
-			blue: 1,
-			useSourceData: true,
-			});
-
-	//define sprites
-	scrawl.newPicture({
-		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-		}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'channelsparrot',
-		});
-		
-	//preparing the DOM input elements
-	red = document.getElementById('red');
-	red.value = 1;
-	green = document.getElementById('green');
-	green.value = 1;
-	blue = document.getElementById('blue');
-	blue.value = 1;
-
-	//image update function
-	updateInput = function(){
-		scrawl.image.channelsparrot.filter('channels', {
-			red: redVal,
-			green: greenVal,
-			blue: blueVal,
-			useSourceData: true,
-			});
-		};
-	
-	//event listeners
-	getRed = function(e){
-		redVal = parseFloat(red.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-		};
-	red.addEventListener('change', getRed, false);
-	getGreen = function(e){
-		greenVal = parseFloat(green.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-		};
-	green.addEventListener('change', getGreen, false);
-	getBlue = function(e){
-		blueVal = parseFloat(blue.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-		};
-	blue.addEventListener('change', getBlue, false);
-	
-	//to make sure everything is in place ...
-	updateInput();
-	
-	//animation object
-	scrawl.newAnimation({
-		fn: function(){
-			scrawl.render();
-			},
-		});
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['images', 'filters', 'animation'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

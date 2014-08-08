@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Scrawl.js</title>
- 		<link href="css/prism.css" rel="stylesheet" />
- 		<link href="css/demo.css" rel="stylesheet" />
+		<title>Demo 203</title>
+		<link href="css/normalize.css" rel="stylesheet" />
+		<link href="css/demo.css" rel="stylesheet" />
 		<style>
 			#mystack {
 				margin: 20px;
@@ -74,9 +74,10 @@
 		</div>
 		<img id="cow" src="img/cow01.svg" class="inwego" />
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
-		<script>
+		<script src="../source/scrawlCore.js"></script>
+		<script id="myscript">
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -169,195 +170,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['phrase', 'stacks', 'animation'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-markup">&lt;!DOCTYPE html>
-&lt;html>
-    &lt;head>
-        &lt;title>Scrawl.js&lt;/title>
- 		&lt;link href="css/prism.css" rel="stylesheet" />
- 		&lt;link href="css/demo.css" rel="stylesheet" />
-		&lt;style>
-			#mystack {
-				margin: 20px;
-				border: solid 1px red;
-				}
-			#harry {
-				text-align: left;
-				margin: 0;
-				padding: 5px;
-				font-size: 20pt;
-				color: green;
-				border: solid 1px green;
-				}
-			#horace {
-				text-align: left;
-				margin: 0;
-				padding: 5px;
-				font: 16pt sans-serif;
-				color: blue;
-				border: solid 1px blue;
-				}
-			#davey {
-				margin: 0;
-				padding: 5px;
-				color: orange;
-				border: solid 1px orange;
-				}
-			#container {
-				margin: 0;
-				padding: 0;
-				border: solid 1px violet;
-				}
-			#peter {
-				margin: 0;
-				padding: 5px;
-				border: solid 1px silver;
-				font: 12pt sans-serif;
-				}
-			#cow {
-				position: static;
-				visibility: visible;
-				}
-			.gray {
-				background-color: silver;
-				}
-		&lt;/style>
-    &lt;/head>
-    &lt;body>
-		&lt;h1>&lt;a href="index.html">Scrawl.js&lt;/a> - demonstration 203&lt;/h1>
-		&lt;h2>Adding HTML elements to a Scrawl stack&lt;/h2>
-		&lt;h3>Modules: phrase, stacks, animation&lt;/h3>
-		&lt;h3 id="harry" class="gray inwego">Adding elements to the stack&lt;/h3>
-		&lt;ul id="horace">
-			&lt;li>Click to move stuff&lt;/li>
-			&lt;li>into the Scrawl stack&lt;/li>
-		&lt;/ul>
-		&lt;div id="davey" class="inwego">
-			&lt;p id="peter">This &lt;p&gt;tag is in fact in a &lt;div&gt; class, alongside 
-			this &lt;a href="http://scrawl.rikweb.org.uk/">link back to the main Scrawl.js page&lt;/a>.&lt;/p>
-		&lt;/div>
-		&lt;div id="container">
-			&lt;canvas id="mycanvas" class="stuff nonsense stack:mystack">&lt;/canvas>
-			&lt;p>In the initial HTML markup for this page, this &lt;p&gt; element followed the 
-			&lt;canvas&gt; element within the 'container' &lt;div&gt;. But picking up canvases 
-			and putting them into stacks causes them to be placed at the end of their parent 
-			element's child chain, which is why this text now appears above the stack &lt;div&gt; 
-			and its canvas element.&lt;/p>
-		&lt;/div>
-		&lt;img id="cow" src="img/cow01.svg" class="inwego" />
-		&lt;p id="testmessage">&lt;/p>
-		&lt;script src="js/scrawlCore.js">&lt;/script>
-		&lt;script>
-			var mycode = function(){
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//define variables
-				var myStack = scrawl.stack.mystack,		//stack automatically created by canvas element
-					clicked = false,
-					harry, 
-					horace, 
-					cow, 
-					davey;
-				
-				//add stuff to the canvas, and display it
-				scrawl.newPhrase({
-					startX:	20,
-					startY:	50,
-					size:	20,
-					text:	'Hi! I\'m the canvas.',
-					});
-				scrawl.render();
-
-				//event listener
-				function moveIn(e){
-					if(!clicked){
-						//ensure listener only runs once
-						clicked = true;
-						
-						//setup stack for 3d animations
-						myStack.set({
-							width:			800,
-							height:			400,
-							perspectiveZ:	1000,
-							});
-							
-						//add DOM elements to the scrawl library
-						myStack.addElementById('horace');
-						myStack.addElementsByClassName('inwego');
-						
-						//assign elements to previously defined variables
-						harry = scrawl.element.harry;
-						horace = scrawl.element.horace;
-						cow = scrawl.element.cow;
-						davey = scrawl.element.davey;
-						
-						//modify DOM elements - position and dimensions within stack; rotations
-						harry.set({
-							startX:		300,
-							startY:		5,
-							width:		500,
-							});
-						horace.set({
-							startX:		300,
-							startY:		60,
-							width:		500,
-							deltaPitch: 1,
-							});
-						davey.set({
-							width:		300,
-							startX:		50,
-							startY:		230,
-							deltaYaw: 	1,
-							});
-						cow.set({
-							width:		200,
-							height:		200,
-							startX:		500, 
-							startY:		150,
-							deltaRoll: 	1,
-							});
-						}
-					};
-				document.addEventListener('mouseup', moveIn, false);
-				
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						scrawl.renderElements();
-						
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: 'js/',
-				modules: ['phrase', 'stacks', 'animation'],
-				callback: function(){
-					window.onload = function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		&lt;/script>
-    &lt;/body>
-&lt;/html></code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

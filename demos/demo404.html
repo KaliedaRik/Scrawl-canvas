@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 404</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -13,9 +13,10 @@
 		<p>Saturation value: 0 ('0%') <input id="myvalue" type="range" value="1" min="0" max="2" step="0.05" /> 2 ('200%')</p>
 		<img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo404" />
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
-		<script>
+		<script src="../source/scrawlCore.js"></script>
+		<script id="myscript">
 			var mycode = function(){
+				'use strict'
 				var testTicker = Date.now(),
 					testTime = testTicker,
 					testNow,
@@ -79,79 +80,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['images', 'filters', 'animation'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var myInput,
-		updateInput;
-		
-	//import image
-	scrawl.getImagesByClass('demo404');
-		
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'saturationparrot',
-		}).filter('saturation', {
-			value: 1.5,
-			useSourceData: true,
-			});
-
-	//define sprites
-	scrawl.newPicture({
-		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-		}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'saturationparrot',
-		});
-		
-	//preparing the DOM input elements
-	myInput = document.getElementById('myvalue');
-	myInput.value = 1.5;
-
-	//event listener
-	updateInput = function(e){
-		scrawl.image.saturationparrot.filter('saturation', {
-			value: parseFloat(myInput.value),
-			useSourceData: true,
-			});
-		e.preventDefault();
-		e.returnValue = false;
-		};
-	myInput.addEventListener('input', updateInput, false);	//for firefox real-time updating
-	myInput.addEventListener('change', updateInput, false);
-	
-	//animation object
-	scrawl.newAnimation({
-		fn: function(){
-			scrawl.render();
-			},
-		});
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['images', 'filters', 'animation'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

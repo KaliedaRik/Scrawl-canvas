@@ -51,7 +51,7 @@
 			</div>
 		</div>
 		<script src="../source/scrawlCore.js"></script>
-		<script>
+		<script id="myscript">
 			var mycode = function(){
 				'use strict'
 				//define variables
@@ -553,7 +553,8 @@
 				
 			//load scrawl modules used in this demo
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['path', 'factories', 'animation', 'stacks', 'block', 'wheel'],			
 				callback: function(){
 					window.addEventListener('load', function(){

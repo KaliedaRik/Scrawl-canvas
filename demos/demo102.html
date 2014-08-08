@@ -13,7 +13,7 @@
 		<canvas id="mycanvas" width="400" height="200"></canvas>
 		<p id="testmessage"></p>
 		<script src="../source/scrawlCore.js"></script>
-		<script>
+		<script id="myscript">
 			var mycode = function(){
 				'use strict'
 				var testTicker = Date.now(),
@@ -73,80 +73,16 @@
 				};
 
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['images', 'animation', 'filters'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-markup">&lt;body>
-	&lt;img id="runningcat" src="img/runningcat.png" />
-	&lt;canvas id="mycanvas" width="400" height="200">&lt;/canvas>
-	&lt;script src="js/scrawlCore.js">&lt;/script>
-	&lt;script>
-		var mycode = function(){
-			//load spritesheet into scrawl library
-			scrawl.getImageById('runningcat');
-		
-			//define AnimSheet object
-			scrawl.newAnimSheet({
-				name:		'animatedCat',
-				running:	'forward',
-				loop:		'loop',
-				speed:		1.2,
-				frames:		[
-					{x: 0,		y: 0,		w: 512,		h: 256,		d: 100,},
-					{x: 512,	y: 0,		w: 512,		h: 256,		d: 100,},
-					{x: 0,		y: 256,		w: 512,		h: 256,		d: 100,},
-					{x: 512,	y: 256,		w: 512,		h: 256,		d: 100,},
-					{x: 0,		y: 512,		w: 512,		h: 256,		d: 100,},
-					{x: 512,	y: 512,		w: 512,		h: 256,		d: 100,},
-					{x: 0,		y: 768,		w: 512,		h: 256,		d: 100,},
-					{x: 512,	y: 768,		w: 512,		h: 256,		d: 100,},
-					],
-				});
-				
-			//define Picture sprite which will display animation
-			scrawl.newPicture({
-				width:		400,
-				height:		200,
-				method:		'fill',
-				source:		'runningcat',
-				animSheet:	'animatedCat',
-				filters:	{
-					glassTile: {
-						width: 20,
-						height: 20,
-						outerWidth: 30,
-						outerHeight: 30,
-						},
-					},
-				});
-			
-			//animation object
-			scrawl.newAnimation({
-				fn: function(){
-					scrawl.render();
-					},
-				});
-			};
-
-		scrawl.loadModules({
-			path: 'js/',
-			modules: ['images', 'animation', 'filters'],
-			callback: function(){
-				window.onload = function(){
-					scrawl.init();
-					mycode();
-					};
-				},
-			});
-	&lt;/script>
-&lt;/body></code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

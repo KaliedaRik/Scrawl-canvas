@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 301</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -12,9 +12,10 @@
 		<p id="message"></p>
 		<canvas id="mycanvas" width="600" height="600"></canvas>
 		<p id="msg"></p>
-		<script src="js/scrawlCore.js"></script>
-		<script>
+		<script src="../source/scrawlCore.js"></script>
+		<script id="myscript">
 			var mycode = function(){
+				'use strict'
 				var message = document.getElementById('message'),
 					msg = document.getElementById('msg'),
 					ticker = Date.now(), 
@@ -93,92 +94,16 @@
 				};
 				
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['physics', 'wheel', 'animation'],
 				callback: function(){
-					window.onload = function(){
+					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
 						};
 					},
 				});
 		</script>
-<pre><code class="language-javascript">var mycode = function(){
-	//define variables
-	var pad = scrawl.pad.mycanvas,
-		tkr = Date.now(), 
-		dTime = 0,
-		pBall,
-		dBall,
-		checkPositions;
-	
-	//add attributes to the physics object
-	scrawl.physics.windSpeed = 15;			//meters per second, blowing horizontally left-to-right
-	
-	//define physics objects
-	pBall = scrawl.newParticle({
-		name: 		'myball',
-		startX: 	300,
-		startY: 	20,
-		});
-		
-	//add forces to the particle object
-	pBall.addForce('gravity').addForce('drag');
-	pBall.addForce(function(ball){
-		var c = 0.5 * scrawl.physics.airDensity * scrawl.physics.windSpeed * scrawl.physics.windSpeed,
-			wind = scrawl.v.set({
-				x: c * ball.get('area') * ball.get('drag'),
-				y: 0,
-				z: 0,
-				});
-		ball.load.vectorAdd(wind);
-		});
-		
-	//define sprites
-	dBall = scrawl.newWheel({
-		pivot: 	'myball',
-		radius:	10,
-		});
-		
-	//iteration function
-	var checkPositions = function(){
-		dTime = Date.now() - tkr;
-		dTime = (dTime > 10) ? 10 : dTime;
-		tkr = Date.now();
-		
-		//place check
-		if(pBall.place.y > 620){
-			pBall.set({
-				startX: 300,
-				startY: 20,
-				deltaX:	0,			//reset velocity to zero
-				deltaY:	0,
-				});
-			}
-			
-		//updating stuff
-		scrawl.physics.deltaTime = dTime/1000;
-		};
-		
-	//animation object
-	scrawl.newAnimation({
-		fn: function(){
-			checkPositions();
-			pad.render();
-			},
-		});
-	};
-	
-scrawl.loadModules({
-	path: 'js/',
-	modules: ['physics', 'wheel', 'animation'],
-	callback: function(){
-		window.onload = function(){
-			scrawl.init();
-			mycode();
-			};
-		},
-	});</code></pre>
-		<script src="js/prism.js"></script>
     </body>
 </html>

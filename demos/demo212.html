@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scrawl.js</title>
-		<link href="css/prism.css" rel="stylesheet" />
+		<title>Demo 212</title>
+		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -17,8 +17,8 @@
 			<p id="mycopytext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integeras nec odio.</p>
 		</div>
 		<p id="testmessage"></p>
-		<script src="js/scrawlCore.js"></script>
-		<script>
+		<script src="../source/scrawlCore.js"></script>
+		<script id="myscript">
 			var mycode = function(){
 				'use strict'
 				var testTicker = Date.now(),
@@ -197,7 +197,8 @@
 				
 			//module loading and initialization function
 			scrawl.loadModules({
-				path: 'js/',
+				path: '../source/js/',
+				minified: false,
 				modules: ['stacks', 'animation'],			
 				callback: function(){
 					window.addEventListener('load', function(){
@@ -207,8 +208,5 @@
 				},
 			});
 		</script>
-<pre><code class="language-markup/javascript">
-</code></pre>
-		<script src="js/prism.js"></script>
 	</body>
 </html>
