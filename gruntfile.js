@@ -1,5 +1,7 @@
 module.exports = function(grunt){
 
+	var path = require('path');
+	
 	// Load Grunt tasks declared in the package.json file
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -61,9 +63,9 @@ module.exports = function(grunt){
 		express: {
 		    all: {
 		        options: {
-		            bases: 'demos',
+		            bases : [path.resolve('.')], 
 		            port: 8080,
-		            hostname: "0.0.0.0",
+		            hostname: '*',
 		            livereload: true
 		        }
 		    }
@@ -82,7 +84,7 @@ module.exports = function(grunt){
 		// Demo testing - grunt-open
 		open: {
 		    all: {
-		        path: 'http://localhost:8080/index.html'
+		        path: 'http://localhost:8080/demos/index.html'
 		    }
 		}
 	});

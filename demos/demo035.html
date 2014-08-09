@@ -16,6 +16,7 @@
 				width: 60%;
 				}
 		</style>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 035</h1>
@@ -495,14 +496,14 @@
 				};
 				
 			scrawl.loadModules({
-				path: '../source/js/',
+				path: '../source/',
 				minified: false,
 				modules: ['factories', 'block', 'wheel', 'path', 'shape', 'images', 'phrase', 'color', 'animation'],
 				callback: function(){
 					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
-						};
+						}, false);
 					},
 				});
 		</script>

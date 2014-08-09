@@ -4,6 +4,7 @@
 		<title>Demo 018</title>
 		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
 		<img id="peacock" src="img/carousel/peacock.png" class="demo018" />
@@ -84,14 +85,14 @@
 				};
 				
 			scrawl.loadModules({
-				path: '../source/js/',
+				path: '../source/',
 				minified: false,
 				modules: ['images', 'animation'],
 				callback: function(){
 					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
-						};
+						}, false);
 					},
 				});
 		</script>

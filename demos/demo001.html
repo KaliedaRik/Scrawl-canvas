@@ -4,6 +4,7 @@
 		<title>Demo 001</title>
 		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
     <body>
 		<h1><a href="index.html">Scrawl.js</a> - demonstration 001</h1>
@@ -43,13 +44,13 @@
 				
 			scrawl.loadModules({
 				minified: false,
-				path: '../source/js/',		//path to where Scrawl modules are stored, relative to this web page
+				path: '../source/',		//path to where Scrawl modules are stored, relative to this web page
 				modules: 'phrase',			//array (or string) of Scrawl modules to be loaded 
 				callback: function(){		//function to perform once all the Scrawl modules have loaded
 					window.addEventListener('load', function(){
 						scrawl.init();		//start Scrawl
 						mycode();			//run the mycode function defined above
-						};
+						}, false);
 					},
 				});
 		</script>

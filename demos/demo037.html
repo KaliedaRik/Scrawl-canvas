@@ -4,6 +4,7 @@
         <title>Demo 037</title>
 		<link href="css/normalize.css" rel="stylesheet" />
 		<link href="css/demo.css" rel="stylesheet" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
 		<!--#1: Load a web page, including the Scrawl javascript modules-->
@@ -142,14 +143,14 @@
 				};
 				
 			scrawl.loadModules({
-				path: '../source/js/',
+				path: '../source/',
 				minified: false,
 				modules: ['animation', 'images', 'wheel'],
 				callback: function(){
 					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
-						};
+						}, false);
 					},
 				});
 		</script>

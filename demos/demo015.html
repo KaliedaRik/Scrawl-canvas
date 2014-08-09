@@ -42,14 +42,14 @@
 				};
 				
 			scrawl.loadModules({
-				path: '../source/js/',
+				path: '../source/',
 				minified: false,
 				modules: 'phrase',
 				callback: function(){
 					window.addEventListener('load', function(){
 						scrawl.init();
 						mycode();
-						};
+						}, false);
 					},
 				});
 		</script>
