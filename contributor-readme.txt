@@ -14,15 +14,15 @@ cd into the scrawl directory
 
     $ cd Scrawl-canvas
 
+Run npm
+
+    $ npm install
+
 Wherever possible, use the 'git flow' methodology. Start git flow ...
 
     $ git flow init
 
 and accept all the default parameters. When completed, you will be in the 'develop' branch.
-
-Run npm
-
-    $ npm install
 
 ### Manual changes to the downloaded repository
 
@@ -36,13 +36,17 @@ into the ...
 
     node_modules/grunt-contrib-yuidoc/node_modules/yuidocjs/themes/default/assets/css/ 
 
-directory.
+directory. Documents should only be regenerated when a new release candidate is being finalised.
 
-## Working on the repository
+## Coding
 
 All development work should take place on the 'develop' branch - specifically in a new 'git flow feature' branch (unless the changes are trivial).
 
-## Writing code
+Changes to the source files need to be checked against relevant demos to make sure new, or amended, code doesn't break the library.
+
+When developing a new feature, write a new demo to test the feature. Demos can be pretty broad-brush - they're not designed for unit testing. Remember to describe what the demo is testing (and why), and the expected outcome of the demo. Testing animation features is largely visual, and subjective; static features with know end results can be tested more objectively.
+
+A default demo template can be found at demos/demo000.html - if in doubt about which number to give the demo, ask. Remember to add a link to the demo from the demo/index.html page.
 
 All code needs to pass the linting test, and be beautified. Run these grunt tasks before finishing your git flow feature:
 
@@ -52,6 +56,18 @@ All code needs to pass the linting test, and be beautified. Run these grunt task
 These two tasks comprise the default task, and can be run together by typing
 
     $ grunt
+
+## Testing
+
+(being developed)
+
+(starting the testing rig)
+
+(lint/beautifier automated when using the testing rig)
+
+(demos are expected to pass tests in modern versions of Chrome/Opera, Firefox, IE (11 definitely, 10 if possible), and Safari. Testing on key mobile browsers/environment is welcome, but not mandatory)
+
+(Test failures are allowed for known issues with specific browsers)
 
 ## New releases
 
@@ -102,4 +118,5 @@ Note that these four grunt tasks can be run using a single command:
 
 7. and push everything to GitHub
 
+    $ git push
     $ git push --tags
