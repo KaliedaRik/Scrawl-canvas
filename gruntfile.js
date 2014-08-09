@@ -5,7 +5,6 @@ module.exports = function(grunt){
 
 	// Project configurations.
 	grunt.initConfig({
-		//pkg: grunt.file.readJSON('package.json'),
 
 		//uglify is used to minify .js files from source/ to min/ directories
 		uglify: {
@@ -58,46 +57,35 @@ module.exports = function(grunt){
 			}
 		},
 
-		//For testing the demos - starts the web server
-		connect: {
-			all: {
-				options:{
-					port: 9000,
-					hostname: "0.0.0.0",
-					middleware: function(connect, options) {
-						return [
-							require('grunt-contrib-livereload/lib/utils').livereloadSnippet,
-							connect.static(options.base)
-						];
-					}
-				}
-			}
+		// Demo testing - Grunt express
+		express: {
+		    all: {
+		        options: {
+		            bases: 'demos',
+		            port: 8080,
+		            hostname: "0.0.0.0",
+		            livereload: true
+		        }
+		    }
 		},
 
-		//For testing the demos - loads the index page
+		// Demo testing - grunt-watch
+		watch: {
+		    all: {
+	            files: ['demos/*.html', 'source/*.js'],
+	            options: {
+	                livereload: true
+		        }
+		    }
+		},
+
+		// Demo testing - grunt-open
 		open: {
-			all: {
-				//the index page which will be opened
-				path: 'http://localhost:<%= connect.all.options.port%>'
-			}
-		},
-
-		//For testing the demos - keeps an eye on files and reloads when they are updated
-		regarde: {
-			all: {
-				//change this line to cover which files will be watched and live-reloaded
-				files:['docs/*.html', 'source/*.js'],
-				tasks: ['lint', 'beautify', 'livereload']
-			}
+		    all: {
+		        path: 'http://localhost:8080/index.html'
+		    }
 		}
-
 	});
-
-	// Load the plugin that provides the "uglify" task.
-	//grunt.loadNpmTasks('grunt-contrib-uglify');
-	//grunt.loadNpmTasks('grunt-contrib-yuidoc');
-	//grunt.loadNpmTasks('grunt-contrib-jshint');
-	//grunt.loadNpmTasks('grunt-jsbeautifier');
 
 	// Default task(s).
 	grunt.registerTask('default', ['jsbeautifier', 'jshint']);
@@ -106,6 +94,6 @@ module.exports = function(grunt){
 	grunt.registerTask('docs', ['yuidoc']);
 	grunt.registerTask('lint', ['jshint']);
 	grunt.registerTask('beautify', ['jsbeautifier']);
-	grunt.registerTask('server', ['livereload-start', 'connect', 'open', 'regarde']);
+	grunt.registerTask('server', ['express', 'open', 'watch']);
 };
 	
