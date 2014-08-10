@@ -41,12 +41,12 @@ module.exports = function(grunt){
 
 		//jshint - using default settings to test all .js files in the source directory
 		jshint: {
-			all: ['source/*.js']
+			all: ['source/*.js', "demos/js/*.js"]
 		},
 
 		//jsbeautifier - enforces a set of standard coding conventions on the source .js files
 		jsbeautifier: {
-			files: ["source/*.js"],
+			files: ["source/*.js", "demos/js/*.js"],
 			options: {
 				js: {
 					braceStyle: "end-expand",
