@@ -1,511 +1,558 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Demo 035</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-		<style>
-			table {
-				width: 100%;
-				}
-			th, td {
-				border: 1px solid gray;
-				width: 33%;
-				}
-			table input {
-				width: 60%;
-				}
-		</style>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    </head>
-    <body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 035</h1>
-		<h2>Sprite offsets (handles)</h2>
-		<h3>Modules: factories, block, wheel, path, shape, images, phrase, color, animation</h3>
-		<img src="img/carousel/angelfish.png" id="angelfish" class="demo035" />
-		<canvas id="mycanvas" width="800" height="600"></canvas>
-		<p id="status"></p>
-		<table>
-			<tr>
-				<td><b>Percentage value handles (string - 'n%')</b></td>
-				<td>X: -50% <input id="xPercent" type="range" value="0" min="-50" max="150" step="10" /> 150%</td>
-				<td>Y: -50% <input id="yPercent" type="range" value="0" min="-50" max="150" step="10" /> 150%</td>
-			</tr>
-			<tr>
-				<td><b>Absolute value handles (number - n)</b></td>
-				<td>X: -50 <input id="xAbsolute" type="range" value="0" min="-50" max="50" step="10" /> 50</td>
-				<td>Y: -50 <input id="yAbsolute" type="range" value="0" min="-50" max="50" step="10" /> 50</td>
-			</tr>
-			<tr>
-				<td><b>String value handles</b></td>
-				<td>X: <select id="xString"><option value="left">left</option><option value="center">center</option><option value="right">right</option></select></td>
-				<td>Y: <select id="yString"><option value="top">top</option><option value="center">center</option><option value="bottom">bottom</option></select></td>
-			</tr>
-			<tr>
-				<td><b>Flip values</b></td>
-				<td>Reverse: <select id="reverse"><option value="false">false</option><option value="true">true</option></select></td>
-				<td>Upend: <select id="upend"><option value="false">false</option><option value="true">true</option></select></td>
-			</tr>
-			<tr>
-				<td><b>Scale (number - n)</b></td>
-				<td>0.5 <input id="scale" type="range" value="1" min="0.5" max="1.5" step="0.1" /> 1.5</td>
-				<td></td>
-			</tr>
-		</table>
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage'),
-					status = document.getElementById('status');
-				
-				//define variables
-				var mySprites,
-					pin,
-					myCol,
-					currentScale = 1, 
-					currentXHandle = 0, 
-					currentYHandle = 0, 
-					currentFlipUpend = false, 
-					currentFlipReverse = false,
-					scaleInput = document.getElementById('scale'),			//capture DOM select and input elements
-					xPercentInput = document.getElementById('xPercent'),
-					yPercentInput = document.getElementById('yPercent'),
-					xAbsoluteInput = document.getElementById('xAbsolute'),
-					yAbsoluteInput = document.getElementById('yAbsolute'),
-					xStringInput = document.getElementById('xString'),
-					yStringInput = document.getElementById('yString'),
-					reverseInput = document.getElementById('reverse'),
-					upendInput = document.getElementById('upend'),
-					updateScale,											//for event listeners
-					updateXPercent,
-					updateYPercent,
-					updateXAbsolute,
-					updateYAbsolute,
-					updateXString,
-					updateYString,
-					updateReverse,
-					updateUpend;
-					
-				//import image into scrawl library
-				scrawl.getImagesByClass('demo035');
-				
-				//setup DOM controls
-				scaleInput.value = 1;
-				xPercentInput.value = 0;
-				yPercentInput.value = 0;
-				xAbsoluteInput.value = 0;
-				yAbsoluteInput.value = 0;
-				xStringInput.options.selectedIndex = 1;
-				yStringInput.options.selectedIndex = 1;
-				reverseInput.options.selectedIndex = 0;
-				upendInput.options.selectedIndex = 0;
-				
-				//define groups
-				scrawl.newGroup({
-					name: 'mylabels',
-					order: 0,
-					});
-				mySprites = scrawl.newGroup({
-					name: 'mysprites',
-					order: 1,
-					});
-				scrawl.newGroup({
-					name: 'mypins',
-					order: 2,
-					});
-					
-				//define designs (colors, gradients)
-				scrawl.newColor({
-					name:		'myRed',
-					color:		'#f00',
-					});
-					
-				myCol = scrawl.newColor({
-					name:		'myBlue',
-					random:		true,
-					aShift:		0.002,
-					aBounce:	true,
-					autoUpdate:	true,
-					});
-					
-				scrawl.newGradient({
-					name:			'gradient',
-					roll:			0.002,
-					setToSprite:	true,
-					color:			[
-						{color: '#333333',	stop: 0},
-						{color: 'orange',	stop: 0.2},
-						{color: 'gold',		stop: 0.4},
-						{color: 'green',	stop: 0.6},
-						{color: '#cccccc',	stop: 0.8},
-						{color: '#333333',	stop: 1},
-						],
-					});
-					
-				//define sprites
-				pin = scrawl.newWheel({			//template sprite
-					radius:			3,
-					method:			'fillDraw',
-					fillStyle:		'#880000',
-					group:			'mypins',
-					visibility:		false,
-					});
-					
-				scrawl.newPhrase({					//background texts
-					startX:			400,
-					startY:			100,
-					globalAlpha:	0.3,
-					font:			'40pt Arial, sans-serif',
-					handleX:		'center',
-					handleY:		'center',
-					text:			'Path sprites',
-					group:			'mylabels',
-					}).clone({
-					startY:			300,
-					text:			'Shape sprites',
-					}).clone({
-					startY:			500,
-					text:			'Other sprites',
-					});
-					
-				scrawl.makeRegularShape({
-					name:			'myregularshape',
-					startX:			100,
-					startY:			100,
-					angle:			144,
-					radius:			50,
-					winding:		'evenodd',
-					fillStyle:		'myRed',
-					method:			'fillDraw',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'myregularshape',
-					visibility:		'true',
-					});
-					
-				scrawl.makeLine({
-					name:			'mylineshape',
-					startX:			300,
-					startY:			100,
-					endX:			390,
-					endY:			100,
-					lineWidth:		4,
-					lineCap:		'round',
-					strokeStyle:	'blue',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'mylineshape',
-					visibility:		'true',
-					});
 
-				scrawl.makeQuadratic({
-					name:			'myquadshape',
-					startX:			500,
-					startY:			100,
-					controlX:		545,
-					controlY:		10,
-					endX:			590,
-					endY:			100,
-					lineWidth:		4,
-					lineCap:		'round',
-					strokeStyle:	'blue',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'myquadshape',
-					visibility:		'true',
-					});
+<head>
+  <title>Demo 035</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+  <style>
+  table {
+    width: 100%;
+  }
+  th,
+  td {
+    border: 1px solid gray;
+    width: 33%;
+  }
+  table input {
+    width: 60%;
+  }
+  </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
 
-				scrawl.makeRectangle({
-					name:			'myrectshape',
-					startX:			700,
-					startY:			100,
-					width:			90,
-					height:			40,
-					radius:			8,
-					lineWidth:		2,
-					lineJoin:		'round',
-					fillStyle:		'lightblue',
-					method:			'fillDraw',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'myrectshape',
-					visibility:		'true',
-					});
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 035</h1>
+  <h2>Sprite offsets (handles)</h2>
+  <h3>Modules: factories, block, wheel, path, shape, images, phrase, color, animation</h3>
+  <img src="img/carousel/angelfish.png" id="angelfish" class="demo035" />
+  <canvas id="mycanvas" width="800" height="600"></canvas>
+  <p id="status"></p>
+  <table>
+    <tr>
+      <td><b>Percentage value handles (string - 'n%')</b>
+      </td>
+      <td>X: -50%
+        <input id="xPercent" type="range" value="0" min="-50" max="150" step="10" />150%</td>
+      <td>Y: -50%
+        <input id="yPercent" type="range" value="0" min="-50" max="150" step="10" />150%</td>
+    </tr>
+    <tr>
+      <td><b>Absolute value handles (number - n)</b>
+      </td>
+      <td>X: -50
+        <input id="xAbsolute" type="range" value="0" min="-50" max="50" step="10" />50</td>
+      <td>Y: -50
+        <input id="yAbsolute" type="range" value="0" min="-50" max="50" step="10" />50</td>
+    </tr>
+    <tr>
+      <td><b>String value handles</b>
+      </td>
+      <td>X:
+        <select id="xString">
+          <option value="left">left</option>
+          <option value="center">center</option>
+          <option value="right">right</option>
+        </select>
+      </td>
+      <td>Y:
+        <select id="yString">
+          <option value="top">top</option>
+          <option value="center">center</option>
+          <option value="bottom">bottom</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td><b>Flip values</b>
+      </td>
+      <td>Reverse:
+        <select id="reverse">
+          <option value="false">false</option>
+          <option value="true">true</option>
+        </select>
+      </td>
+      <td>Upend:
+        <select id="upend">
+          <option value="false">false</option>
+          <option value="true">true</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td><b>Scale (number - n)</b>
+      </td>
+      <td>0.5
+        <input id="scale" type="range" value="1" min="0.5" max="1.5" step="0.1" />1.5</td>
+      <td></td>
+    </tr>
+  </table>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage'),
+      status = document.getElementById('status');
 
-				scrawl.makeRegularShape({
-					name:			'myregularoutline',
-					shape:			true,
-					startX:			100,
-					startY:			300,
-					angle:			144,
-					radius:			50,
-					winding:		'evenodd',
-					fillStyle:		'myRed',
-					method:			'fillDraw',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'myregularoutline',
-					visibility:		'true',
-					});
+    //define variables
+    var mySprites,
+      pin,
+      myCol,
+      currentScale = 1,
+      currentXHandle = 0,
+      currentYHandle = 0,
+      currentFlipUpend = false,
+      currentFlipReverse = false,
+      scaleInput = document.getElementById('scale'), //capture DOM select and input elements
+      xPercentInput = document.getElementById('xPercent'),
+      yPercentInput = document.getElementById('yPercent'),
+      xAbsoluteInput = document.getElementById('xAbsolute'),
+      yAbsoluteInput = document.getElementById('yAbsolute'),
+      xStringInput = document.getElementById('xString'),
+      yStringInput = document.getElementById('yString'),
+      reverseInput = document.getElementById('reverse'),
+      upendInput = document.getElementById('upend'),
+      updateScale, //for event listeners
+      updateXPercent,
+      updateYPercent,
+      updateXAbsolute,
+      updateYAbsolute,
+      updateXString,
+      updateYString,
+      updateReverse,
+      updateUpend;
 
-				scrawl.makeLine({
-					name:			'mylineoutline',
-					shape:			true,
-					startX:			300,
-					startY:			300,
-					endX:			390,
-					endY:			300,
-					lineWidth:		4,
-					lineCap:		'round',
-					strokeStyle:	'blue',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'mylineoutline',
-					visibility:		'true',
-					});
+    //import image into scrawl library
+    scrawl.getImagesByClass('demo035');
 
-				scrawl.makeQuadratic({
-					name:			'myquadoutline',
-					shape:			true,
-					startX:			500,
-					startY:			300,
-					controlX:		545,
-					controlY:		210,
-					endX:			590,
-					endY:			300,
-					lineWidth:		4,
-					lineCap:		'round',
-					strokeStyle:	'blue',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'myquadoutline',
-					visibility:		'true',
-					});
+    //setup DOM controls
+    scaleInput.value = 1;
+    xPercentInput.value = 0;
+    yPercentInput.value = 0;
+    xAbsoluteInput.value = 0;
+    yAbsoluteInput.value = 0;
+    xStringInput.options.selectedIndex = 1;
+    yStringInput.options.selectedIndex = 1;
+    reverseInput.options.selectedIndex = 0;
+    upendInput.options.selectedIndex = 0;
 
-				scrawl.makeRectangle({
-					name:			'myrectoutline',
-					shape:			true,
-					startX:			700,
-					startY:			300,
-					width:			90,
-					height:			40,
-					radius:			8,
-					lineWidth:		2,
-					lineJoin:		'round',
-					fillStyle:		'lightblue',
-					method:			'fillDraw',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'myrectoutline',
-					visibility:		'true',
-					});
+    //define groups
+    scrawl.newGroup({
+      name: 'mylabels',
+      order: 0,
+    });
+    mySprites = scrawl.newGroup({
+      name: 'mysprites',
+      order: 1,
+    });
+    scrawl.newGroup({
+      name: 'mypins',
+      order: 2,
+    });
 
-				scrawl.newPicture({
-					name:			'mypicture',
-					source:			'angelfish',
-					strokeStyle:	'Gold',
-					lineWidth:		3,
-					method:			'fillDraw',
-					width:			100,
-					height:			67,
-					shadowBlur:		4,
-					shadowColor:	'Black',
-					startX:			100,
-					startY:			500,
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'mypicture',
-					visibility:		'true',
-					});
+    //define designs (colors, gradients)
+    scrawl.newColor({
+      name: 'myRed',
+      color: '#f00',
+    });
 
-				scrawl.newBlock({
-					name:			'myblock',
-					strokeStyle:	'Orange',
-					fillStyle:		'myBlue',
-					lineWidth:		6,
-					method:			'fillDraw',
-					width:			100,
-					height:			100,
-					startX:			300,
-					startY:			500,
-					lineDash:		[20,5],
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'myblock',
-					visibility:		'true',
-					});
+    myCol = scrawl.newColor({
+      name: 'myBlue',
+      random: true,
+      aShift: 0.002,
+      aBounce: true,
+      autoUpdate: true,
+    });
 
-				scrawl.newWheel({
-					name:			'mywheel',
-					strokeStyle:	'#800',
-					fillStyle:		'gradient',
-					lineWidth:		6,
-					method:			'fillDraw',
-					radius:			40,
-					startX:			500,
-					startY:			500,
-					lineDash:		[20,5,5,5],
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'mywheel',
-					visibility:		'true',
-					});
+    scrawl.newGradient({
+      name: 'gradient',
+      roll: 0.002,
+      setToSprite: true,
+      color: [{
+        color: '#333333',
+        stop: 0
+      }, {
+        color: 'orange',
+        stop: 0.2
+      }, {
+        color: 'gold',
+        stop: 0.4
+      }, {
+        color: 'green',
+        stop: 0.6
+      }, {
+        color: '#cccccc',
+        stop: 0.8
+      }, {
+        color: '#333333',
+        stop: 1
+      }, ],
+    });
 
-				scrawl.newPhrase({
-					name:			'myphrase',
-					text:			'Hello Scrawl,\nHello World',
-					startX:			700,
-					startY:			500,
-					font:			'16pt Arial, Helvetica',
-					group:			'mysprites',
-					});
-				pin.clone({
-					pivot:			'myphrase',
-					visibility:		'true',
-					});
+    //define sprites
+    pin = scrawl.newWheel({ //template sprite
+      radius: 3,
+      method: 'fillDraw',
+      fillStyle: '#880000',
+      group: 'mypins',
+      visibility: false,
+    });
 
-				//event listeners
-				updateScale = function(e){
-					currentScale = scaleInput.value;
-					mySprites.setSpritesTo({
-						scale: parseFloat(currentScale),
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				scaleInput.addEventListener('input', updateScale, false);		//for firefox real-time updating
-				scaleInput.addEventListener('change', updateScale, false);
+    scrawl.newPhrase({ //background texts
+      startX: 400,
+      startY: 100,
+      globalAlpha: 0.3,
+      font: '40pt Arial, sans-serif',
+      handleX: 'center',
+      handleY: 'center',
+      text: 'Path sprites',
+      group: 'mylabels',
+    }).clone({
+      startY: 300,
+      text: 'Shape sprites',
+    }).clone({
+      startY: 500,
+      text: 'Other sprites',
+    });
 
-				updateXPercent = function(e){
-					currentXHandle = xPercentInput.value+'%';
-					mySprites.setSpritesTo({
-						handleX: currentXHandle,
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				xPercentInput.addEventListener('input', updateXPercent, false);
-				xPercentInput.addEventListener('change', updateXPercent, false);
+    scrawl.makeRegularShape({
+      name: 'myregularshape',
+      startX: 100,
+      startY: 100,
+      angle: 144,
+      radius: 50,
+      winding: 'evenodd',
+      fillStyle: 'myRed',
+      method: 'fillDraw',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'myregularshape',
+      visibility: 'true',
+    });
 
-				updateYPercent = function(e){
-					currentYHandle = yPercentInput.value+'%';
-					mySprites.setSpritesTo({
-						handleY: currentYHandle,
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				yPercentInput.addEventListener('input', updateYPercent, false);
-				yPercentInput.addEventListener('change', updateYPercent, false);
+    scrawl.makeLine({
+      name: 'mylineshape',
+      startX: 300,
+      startY: 100,
+      endX: 390,
+      endY: 100,
+      lineWidth: 4,
+      lineCap: 'round',
+      strokeStyle: 'blue',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'mylineshape',
+      visibility: 'true',
+    });
 
-				updateXAbsolute = function(e){
-					currentXHandle = xAbsoluteInput.value;
-					mySprites.setSpritesTo({
-						handleX: parseFloat(currentXHandle),
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				xAbsoluteInput.addEventListener('input', updateXAbsolute, false);
-				xAbsoluteInput.addEventListener('change', updateXAbsolute, false);
+    scrawl.makeQuadratic({
+      name: 'myquadshape',
+      startX: 500,
+      startY: 100,
+      controlX: 545,
+      controlY: 10,
+      endX: 590,
+      endY: 100,
+      lineWidth: 4,
+      lineCap: 'round',
+      strokeStyle: 'blue',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'myquadshape',
+      visibility: 'true',
+    });
 
-				updateYAbsolute = function(e){
-					currentYHandle = yAbsoluteInput.value;
-					mySprites.setSpritesTo({
-						handleY: parseFloat(currentYHandle),
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				yAbsoluteInput.addEventListener('input', updateYAbsolute, false);
-				yAbsoluteInput.addEventListener('change', updateYAbsolute, false);
-				
-				updateXString = function(e){
-					currentXHandle = xStringInput.value;
-					mySprites.setSpritesTo({
-						handleX: currentXHandle,
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				xStringInput.addEventListener('input', updateXString, false);
-				xStringInput.addEventListener('change', updateXString, false);
+    scrawl.makeRectangle({
+      name: 'myrectshape',
+      startX: 700,
+      startY: 100,
+      width: 90,
+      height: 40,
+      radius: 8,
+      lineWidth: 2,
+      lineJoin: 'round',
+      fillStyle: 'lightblue',
+      method: 'fillDraw',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'myrectshape',
+      visibility: 'true',
+    });
 
-				updateYString = function(e){
-					currentYHandle = yStringInput.value;
-					mySprites.setSpritesTo({
-						handleY: currentYHandle,
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				yStringInput.addEventListener('input', updateYString, false);
-				yStringInput.addEventListener('change', updateYString, false);
+    scrawl.makeRegularShape({
+      name: 'myregularoutline',
+      shape: true,
+      startX: 100,
+      startY: 300,
+      angle: 144,
+      radius: 50,
+      winding: 'evenodd',
+      fillStyle: 'myRed',
+      method: 'fillDraw',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'myregularoutline',
+      visibility: 'true',
+    });
 
-				updateReverse = function(e){
-					currentFlipReverse = reverseInput.value;
-					mySprites.setSpritesTo({
-						flipReverse: (currentFlipReverse === 'true') ? true : false,
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				reverseInput.addEventListener('change', updateReverse, false);
+    scrawl.makeLine({
+      name: 'mylineoutline',
+      shape: true,
+      startX: 300,
+      startY: 300,
+      endX: 390,
+      endY: 300,
+      lineWidth: 4,
+      lineCap: 'round',
+      strokeStyle: 'blue',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'mylineoutline',
+      visibility: 'true',
+    });
 
-				updateUpend = function(e){
-					currentFlipUpend = upendInput.value;
-					mySprites.setSpritesTo({
-						flipUpend: (currentFlipUpend === 'true') ? true : false,
-						});
-					e.preventDefault();
-					e.returnValue=false;
-					};
-				upendInput.addEventListener('change', updateUpend, false);
+    scrawl.makeQuadratic({
+      name: 'myquadoutline',
+      shape: true,
+      startX: 500,
+      startY: 300,
+      controlX: 545,
+      controlY: 210,
+      endX: 590,
+      endY: 300,
+      lineWidth: 4,
+      lineCap: 'round',
+      strokeStyle: 'blue',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'myquadoutline',
+      visibility: 'true',
+    });
 
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						mySprites.updateSpritesBy({
-							roll: 1,
-							});
-						scrawl.render();
-						
-						status.innerHTML = '<b>Current settings - scale:</b> '+currentScale+'; <b>handleX:</b> '+currentXHandle+'; <b>handleY:</b> '+currentYHandle+'; <b>flipReverse:</b> '+currentFlipReverse+'; <b>flipUpend:</b> '+currentFlipUpend;
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/',
-				minified: false,
-				modules: ['factories', 'block', 'wheel', 'path', 'shape', 'images', 'phrase', 'color', 'animation'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						}, false);
-					},
-				});
-		</script>
-    </body>
+    scrawl.makeRectangle({
+      name: 'myrectoutline',
+      shape: true,
+      startX: 700,
+      startY: 300,
+      width: 90,
+      height: 40,
+      radius: 8,
+      lineWidth: 2,
+      lineJoin: 'round',
+      fillStyle: 'lightblue',
+      method: 'fillDraw',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'myrectoutline',
+      visibility: 'true',
+    });
+
+    scrawl.newPicture({
+      name: 'mypicture',
+      source: 'angelfish',
+      strokeStyle: 'Gold',
+      lineWidth: 3,
+      method: 'fillDraw',
+      width: 100,
+      height: 67,
+      shadowBlur: 4,
+      shadowColor: 'Black',
+      startX: 100,
+      startY: 500,
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'mypicture',
+      visibility: 'true',
+    });
+
+    scrawl.newBlock({
+      name: 'myblock',
+      strokeStyle: 'Orange',
+      fillStyle: 'myBlue',
+      lineWidth: 6,
+      method: 'fillDraw',
+      width: 100,
+      height: 100,
+      startX: 300,
+      startY: 500,
+      lineDash: [20, 5],
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'myblock',
+      visibility: 'true',
+    });
+
+    scrawl.newWheel({
+      name: 'mywheel',
+      strokeStyle: '#800',
+      fillStyle: 'gradient',
+      lineWidth: 6,
+      method: 'fillDraw',
+      radius: 40,
+      startX: 500,
+      startY: 500,
+      lineDash: [20, 5, 5, 5],
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'mywheel',
+      visibility: 'true',
+    });
+
+    scrawl.newPhrase({
+      name: 'myphrase',
+      text: 'Hello Scrawl,\nHello World',
+      startX: 700,
+      startY: 500,
+      font: '16pt Arial, Helvetica',
+      group: 'mysprites',
+    });
+    pin.clone({
+      pivot: 'myphrase',
+      visibility: 'true',
+    });
+
+    //event listeners
+    updateScale = function(e) {
+      currentScale = scaleInput.value;
+      mySprites.setSpritesTo({
+        scale: parseFloat(currentScale),
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    scaleInput.addEventListener('input', updateScale, false); //for firefox real-time updating
+    scaleInput.addEventListener('change', updateScale, false);
+
+    updateXPercent = function(e) {
+      currentXHandle = xPercentInput.value + '%';
+      mySprites.setSpritesTo({
+        handleX: currentXHandle,
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    xPercentInput.addEventListener('input', updateXPercent, false);
+    xPercentInput.addEventListener('change', updateXPercent, false);
+
+    updateYPercent = function(e) {
+      currentYHandle = yPercentInput.value + '%';
+      mySprites.setSpritesTo({
+        handleY: currentYHandle,
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    yPercentInput.addEventListener('input', updateYPercent, false);
+    yPercentInput.addEventListener('change', updateYPercent, false);
+
+    updateXAbsolute = function(e) {
+      currentXHandle = xAbsoluteInput.value;
+      mySprites.setSpritesTo({
+        handleX: parseFloat(currentXHandle),
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    xAbsoluteInput.addEventListener('input', updateXAbsolute, false);
+    xAbsoluteInput.addEventListener('change', updateXAbsolute, false);
+
+    updateYAbsolute = function(e) {
+      currentYHandle = yAbsoluteInput.value;
+      mySprites.setSpritesTo({
+        handleY: parseFloat(currentYHandle),
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    yAbsoluteInput.addEventListener('input', updateYAbsolute, false);
+    yAbsoluteInput.addEventListener('change', updateYAbsolute, false);
+
+    updateXString = function(e) {
+      currentXHandle = xStringInput.value;
+      mySprites.setSpritesTo({
+        handleX: currentXHandle,
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    xStringInput.addEventListener('input', updateXString, false);
+    xStringInput.addEventListener('change', updateXString, false);
+
+    updateYString = function(e) {
+      currentYHandle = yStringInput.value;
+      mySprites.setSpritesTo({
+        handleY: currentYHandle,
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    yStringInput.addEventListener('input', updateYString, false);
+    yStringInput.addEventListener('change', updateYString, false);
+
+    updateReverse = function(e) {
+      currentFlipReverse = reverseInput.value;
+      mySprites.setSpritesTo({
+        flipReverse: (currentFlipReverse === 'true') ? true : false,
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    reverseInput.addEventListener('change', updateReverse, false);
+
+    updateUpend = function(e) {
+      currentFlipUpend = upendInput.value;
+      mySprites.setSpritesTo({
+        flipUpend: (currentFlipUpend === 'true') ? true : false,
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    upendInput.addEventListener('change', updateUpend, false);
+
+    //animation object
+    scrawl.newAnimation({
+      fn: function() {
+        mySprites.updateSpritesBy({
+          roll: 1,
+        });
+        scrawl.render();
+
+        status.innerHTML = '<b>Current settings - scale:</b> ' + currentScale + '; <b>handleX:</b> ' + currentXHandle + '; <b>handleY:</b> ' + currentYHandle + '; <b>flipReverse:</b> ' + currentFlipReverse + '; <b>flipUpend:</b> ' + currentFlipUpend;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
+      },
+    });
+  };
+
+  scrawl.loadModules({
+    path: '../source/',
+    minified: false,
+    modules: ['factories', 'block', 'wheel', 'path', 'shape', 'images', 'phrase', 'color', 'animation'],
+    callback: function() {
+      window.addEventListener('load', function() {
+        scrawl.init();
+        mycode();
+      }, false);
+    },
+  });
+  </script>
+</body>
+
 </html>

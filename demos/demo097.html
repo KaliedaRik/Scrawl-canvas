@@ -1,161 +1,165 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Demo 097</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-	</head>
-	<body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 097</h1>
-		<h2>Sprite tween animation #2</h2>
-		<h3>Modules: block, animation</h3>
-		<p><i>Tweening: startX, roll, width, handleX; tween chaining</i></p>
-		<canvas id="mycanvas" width="600" height="400"></canvas>
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//sprites
-				scrawl.newBlock({
-					name: 'block1',
-					startX: 50,
-					startY: 70,
-					fillStyle: 'red',
-					strokeStyle: 'blue',
-					lineWidth: 5,
-					method: 'fillDraw',
-					width: 80,
-					height: 80,
-					handleX: 'center',
-					handleY: 'center',
-					}).clone({
-					name: 'block2',
-					startY: 200,
-					}).clone({
-					name: 'block3',
-					startY: 330,
-					handleX: 40,
-					});
-					
-				//tweens
-				scrawl.newTween({
-					name: 'tween1',
-					targets: scrawl.sprite.block1,
-					start: {
-						startX: 50,
-						width: 80,
-						roll: 0,
-						},
-					end: {
-						startX: 550,
-						width: 20,
-						roll: 360,
-						},
-					duration: 3000,
-					count: true,
-					autoReverseAndRun: true,
-					}).run();
-				scrawl.animation.tween1.clone({
-					name: 'tween2',
-					targets: scrawl.sprite.block3,
-					duration: 4000,
-					start: {
-						startX: 50,
-						handleX: 40,
-						roll: 0,
-						},
-					end: {
-						startX: 550,
-						handleX: 140,
-						roll: 360,
-						},
-					}).run();
-				scrawl.newTween({
-					name: 'tween3',
-					targets: scrawl.sprite.block2,
-					duration: 2000,
-					start: {
-						startX: 50,
-						width: 80,
-						},
-					end: {
-						startX: 300,
-						width: 20,
-						roll: 90,
-						},
-					nextTween: 'tween4',
-					}).clone({
-					name: 'tween4',
-					targets: scrawl.sprite.block2,
-					start: {
-						startX: 300,
-						width: 20,
-						},
-					end: {
-						startX: 550,
-						width: 80,
-						roll: 90,
-						},
-					nextTween: 'tween5',
-					}).clone({
-					name: 'tween5',
-					targets: scrawl.sprite.block2,
-					start: {
-						startX: 550,
-						width: 80,
-						},
-					end: {
-						startX: 300,
-						width: 120,
-						roll: 90,
-						},
-					nextTween: 'tween6',
-					}).clone({
-					name: 'tween6',
-					targets: scrawl.sprite.block2,
-					start: {
-						startX: 300,
-						width: 120,
-						},
-					end: {
-						startX: 50,
-						width: 80,
-						roll: 90,
-						},
-					nextTween: 'tween3',
-					});
-				scrawl.animation.tween3.run();
-				
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						scrawl.render();
-						
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/js/',
-				minified: false,
-				modules: ['block', 'animation'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		</script>
-	</body>
+
+<head>
+  <title>Demo 097</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 097</h1>
+  <h2>Sprite tween animation #2</h2>
+  <h3>Modules: block, animation</h3>
+  <p><i>Tweening: startX, roll, width, handleX; tween chaining</i>
+  </p>
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //sprites
+    scrawl.newBlock({
+      name: 'block1',
+      startX: 50,
+      startY: 70,
+      fillStyle: 'red',
+      strokeStyle: 'blue',
+      lineWidth: 5,
+      method: 'fillDraw',
+      width: 80,
+      height: 80,
+      handleX: 'center',
+      handleY: 'center',
+    }).clone({
+      name: 'block2',
+      startY: 200,
+    }).clone({
+      name: 'block3',
+      startY: 330,
+      handleX: 40,
+    });
+
+    //tweens
+    scrawl.newTween({
+      name: 'tween1',
+      targets: scrawl.sprite.block1,
+      start: {
+        startX: 50,
+        width: 80,
+        roll: 0,
+      },
+      end: {
+        startX: 550,
+        width: 20,
+        roll: 360,
+      },
+      duration: 3000,
+      count: true,
+      autoReverseAndRun: true,
+    }).run();
+    scrawl.animation.tween1.clone({
+      name: 'tween2',
+      targets: scrawl.sprite.block3,
+      duration: 4000,
+      start: {
+        startX: 50,
+        handleX: 40,
+        roll: 0,
+      },
+      end: {
+        startX: 550,
+        handleX: 140,
+        roll: 360,
+      },
+    }).run();
+    scrawl.newTween({
+      name: 'tween3',
+      targets: scrawl.sprite.block2,
+      duration: 2000,
+      start: {
+        startX: 50,
+        width: 80,
+      },
+      end: {
+        startX: 300,
+        width: 20,
+        roll: 90,
+      },
+      nextTween: 'tween4',
+    }).clone({
+      name: 'tween4',
+      targets: scrawl.sprite.block2,
+      start: {
+        startX: 300,
+        width: 20,
+      },
+      end: {
+        startX: 550,
+        width: 80,
+        roll: 90,
+      },
+      nextTween: 'tween5',
+    }).clone({
+      name: 'tween5',
+      targets: scrawl.sprite.block2,
+      start: {
+        startX: 550,
+        width: 80,
+      },
+      end: {
+        startX: 300,
+        width: 120,
+        roll: 90,
+      },
+      nextTween: 'tween6',
+    }).clone({
+      name: 'tween6',
+      targets: scrawl.sprite.block2,
+      start: {
+        startX: 300,
+        width: 120,
+      },
+      end: {
+        startX: 50,
+        width: 80,
+        roll: 90,
+      },
+      nextTween: 'tween3',
+    });
+    scrawl.animation.tween3.run();
+
+    //animation object
+    scrawl.newAnimation({
+      fn: function() {
+        scrawl.render();
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
+      },
+    });
+  };
+
+  scrawl.loadModules({
+      path: '../source/js/',
+      minified: false,
+      modules: ['block', 'animation'],
+      callback: function() {
+        window.addEventListener('load', function() {
+            scrawl.init();
+            mycode();
+          };
+        },
+      });
+  </script>
+</body>
+
 </html>

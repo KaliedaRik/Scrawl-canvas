@@ -1,95 +1,99 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Demo 403</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-	</head>
-	<body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 403</h1>
-		<h2>Scrawl image filters - brightness()</h2>
-		<h3>Modules: images, filters, animation</h3>
-		<canvas width="400" height="400" id="mycanvas"></canvas>
-		<p>Brightness value: 0 ('0%') <input id="myvalue" type="range" value="1" min="0" max="2" step="0.05" /> 2 ('200%')</p>
-		<img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo403" />
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//define variables
-				var myInput,
-					updateInput;
-					
-				//import image
-				scrawl.getImagesByClass('demo403');
-					
-				//clone image and add filter to it
-				scrawl.image.parrot.clone({
-					name: 'brightnessparrot',
-					}).filter('brightness', {
-						value: 1.5,
-						useSourceData: true,
-						});
 
-				//define sprites
-				scrawl.newPicture({
-					name: 'parrot',
-					startX: 10,
-					startY: 10,
-					scale: 0.5,
-					source: 'parrot',
-					}).clone({
-					startX: 120,
-					startY: 210,
-					source: 'brightnessparrot',
-					});
-					
-				//preparing the DOM input elements
-				myInput = document.getElementById('myvalue');
-				myInput.value = 1.5;
+<head>
+  <title>Demo 403</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+</head>
 
-				//event listener
-				updateInput = function(e){
-					scrawl.image.brightnessparrot.filter('brightness', {
-						value: parseFloat(myInput.value),
-						useSourceData: true,
-						});
-					e.preventDefault();
-					e.returnValue = false;
-					};
-				myInput.addEventListener('input', updateInput, false);	//for firefox real-time updating
-				myInput.addEventListener('change', updateInput, false);
-				
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						scrawl.render();
-						
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Current brightness value: '+myInput.value+'. Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/js/',
-				minified: false,
-				modules: ['images', 'filters', 'animation'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		</script>
-    </body>
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 403</h1>
+  <h2>Scrawl image filters - brightness()</h2>
+  <h3>Modules: images, filters, animation</h3>
+  <canvas width="400" height="400" id="mycanvas"></canvas>
+  <p>Brightness value: 0 ('0%')
+    <input id="myvalue" type="range" value="1" min="0" max="2" step="0.05" />2 ('200%')</p>
+  <img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo403" />
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //define variables
+    var myInput,
+      updateInput;
+
+    //import image
+    scrawl.getImagesByClass('demo403');
+
+    //clone image and add filter to it
+    scrawl.image.parrot.clone({
+      name: 'brightnessparrot',
+    }).filter('brightness', {
+      value: 1.5,
+      useSourceData: true,
+    });
+
+    //define sprites
+    scrawl.newPicture({
+      name: 'parrot',
+      startX: 10,
+      startY: 10,
+      scale: 0.5,
+      source: 'parrot',
+    }).clone({
+      startX: 120,
+      startY: 210,
+      source: 'brightnessparrot',
+    });
+
+    //preparing the DOM input elements
+    myInput = document.getElementById('myvalue');
+    myInput.value = 1.5;
+
+    //event listener
+    updateInput = function(e) {
+      scrawl.image.brightnessparrot.filter('brightness', {
+        value: parseFloat(myInput.value),
+        useSourceData: true,
+      });
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    myInput.addEventListener('input', updateInput, false); //for firefox real-time updating
+    myInput.addEventListener('change', updateInput, false);
+
+    //animation object
+    scrawl.newAnimation({
+      fn: function() {
+        scrawl.render();
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Current brightness value: ' + myInput.value + '. Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
+      },
+    });
+  };
+
+  scrawl.loadModules({
+      path: '../source/js/',
+      minified: false,
+      modules: ['images', 'filters', 'animation'],
+      callback: function() {
+        window.addEventListener('load', function() {
+            scrawl.init();
+            mycode();
+          };
+        },
+      });
+  </script>
+</body>
+
 </html>

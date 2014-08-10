@@ -1,187 +1,189 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Demo 031a</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	</head>
-	<body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 031</h1>
-		<h2>Bunny rendering test (#1 - naive coding; slow result)</h2>
-		<h3>Modules: images, collisions, animation, block</h3>
-		<p id="message">Loading the bunny ...</p>
-		<img src="img/bunny.png" id="bunny" class="demo031" />
-		<canvas id="mycanvas" width="600" height="600" style="float: left;"></canvas>
-		<p id="results" style="float: left; padding-left: 15px;"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage'),
-					msg = document.getElementById('message');
-				var myresults = [],
-					counter = 0,
-					level,
-					doTest,
-					run = [],
-					length,
-					fps,
-					f, 
-					p, 
-					result,
-					running = true,
-					average = 0;
-					
-				//define variables
-				var canvas = scrawl.canvas.mycanvas,
-					pad = scrawl.pad.mycanvas,
-					minX = 5, 
-					minY = 5, 
-					maxX = 595, 
-					maxY = 595,
-					totalBunnies = 0,
-					group,
-					bunny,
-					moveSprites,
-					checkBounds,
-					mySprite, 
-					coord, 
-					hits,
-					moveBunnies,
-					addBunnies;
-					
-				//load images into scrawl library
-				scrawl.getImagesByClass('demo031');
 
-				//define groups
-				group = scrawl.newGroup({
-					name: 'mygroup',
-					});
+<head>
+  <title>Demo 031a</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
 
-				//define sprites
-				scrawl.newBlock({						//cell collision zone
-					startX: 5,
-					startY: 5,
-					width: 590,
-					height: 590,
-					field: true,
-					visibility: false,
-					});
-				scrawl.buildFields();
-				
-				bunny = scrawl.newPicture({				//bunny sprite template
-					name: 				'bunny',
-					source: 			'bunny',
-					handleX: 			'center',
-					handleY: 			'center',
-					visibility: 		false,
-					collisionPoints:	'center',
-					});
-				
-				//animation functions
-				moveSprites = function(){
-					group.updateStart();
-					}
-					
-				checkBounds = function(){
-					hits = group.getFieldSpriteHits();
-					for(var i = 0, z = hits.length; i < z; i++){
-						mySprite = scrawl.sprite[hits[i][0]];
-						coord = hits[i][1];
-						mySprite.revertStart();
-						if(!scrawl.isBetween(coord.x, minX, maxX, true)){
-							mySprite.reverse('deltaX');
-							}
-						if(!scrawl.isBetween(coord.y, minY, maxY, true)){
-							mySprite.reverse('deltaY');
-							}
-						mySprite.updateStart();
-						}
-					};
-					
-				moveBunnies = function(){
-					moveSprites();
-					checkBounds();
-					};
-					
-				doTest = function(){
-					if(running){
-						run.push(fps);
-						if (run.length > 20){
-							length = run.length
-							for(var i = 0; i < length; i++){ 
-								average += run[i];
-								}
-							result = Math.floor(average/length);
-							myresults[totalBunnies] = result;
-							run.length = 0;
-							average = 0;
-							if(result < 20){
-								running = false;
-								f = document.getElementById('results');
-								p = '';
-								for(var i=0, z=myresults.length; i<z; i++){
-									if(myresults[i]){
-										p += i+' bunnies: '+myresults[i]+'fps<br />';
-										}
-									}
-								f.innerHTML = p;
-								}
-							else{
-								addBunnies();
-								}
-							}
-						}
-					};
-									
-				addBunnies = function(){
-					for(var i = 0; i < 10; i++){
-						bunny.clone({
-							startX: 	Math.floor((Math.random() * 580) + 10),
-							startY: 	Math.floor((Math.random() * 580) + 10),
-							deltaX: 	Math.floor((Math.random() * 4) + 1),
-							deltaY: 	Math.floor((Math.random() * 4) + 1),
-							visibility:	true,
-							group: 		'mygroup',
-							});
-						}
-					totalBunnies += 10;
-					};
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 031</h1>
+  <h2>Bunny rendering test (#1 - naive coding; slow result)</h2>
+  <h3>Modules: images, collisions, animation, block</h3>
+  <p id="message">Loading the bunny ...</p>
+  <img src="img/bunny.png" id="bunny" class="demo031" />
+  <canvas id="mycanvas" width="600" height="600" style="float: left;"></canvas>
+  <p id="results" style="float: left; padding-left: 15px;"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage'),
+      msg = document.getElementById('message');
+    var myresults = [],
+      counter = 0,
+      level,
+      doTest,
+      run = [],
+      length,
+      fps,
+      f,
+      p,
+      result,
+      running = true,
+      average = 0;
 
-				//initialize scene
-				addBunnies();
-				
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						moveBunnies();
-						pad.render();
-						
-						msg.innerHTML = 'Bunnies: '+totalBunnies;
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						fps = Math.floor(1000/testTime);
-						doTest();
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/',
-				minified: false,
-				modules: ['images', 'collisions', 'animation', 'block'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						}, false);
-					},
-				});
-		</script>
-    </body>
+    //define variables
+    var canvas = scrawl.canvas.mycanvas,
+      pad = scrawl.pad.mycanvas,
+      minX = 5,
+      minY = 5,
+      maxX = 595,
+      maxY = 595,
+      totalBunnies = 0,
+      group,
+      bunny,
+      moveSprites,
+      checkBounds,
+      mySprite,
+      coord,
+      hits,
+      moveBunnies,
+      addBunnies;
+
+    //load images into scrawl library
+    scrawl.getImagesByClass('demo031');
+
+    //define groups
+    group = scrawl.newGroup({
+      name: 'mygroup',
+    });
+
+    //define sprites
+    scrawl.newBlock({ //cell collision zone
+      startX: 5,
+      startY: 5,
+      width: 590,
+      height: 590,
+      field: true,
+      visibility: false,
+    });
+    scrawl.buildFields();
+
+    bunny = scrawl.newPicture({ //bunny sprite template
+      name: 'bunny',
+      source: 'bunny',
+      handleX: 'center',
+      handleY: 'center',
+      visibility: false,
+      collisionPoints: 'center',
+    });
+
+    //animation functions
+    moveSprites = function() {
+      group.updateStart();
+    }
+
+    checkBounds = function() {
+      hits = group.getFieldSpriteHits();
+      for (var i = 0, z = hits.length; i < z; i++) {
+        mySprite = scrawl.sprite[hits[i][0]];
+        coord = hits[i][1];
+        mySprite.revertStart();
+        if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
+          mySprite.reverse('deltaX');
+        }
+        if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
+          mySprite.reverse('deltaY');
+        }
+        mySprite.updateStart();
+      }
+    };
+
+    moveBunnies = function() {
+      moveSprites();
+      checkBounds();
+    };
+
+    doTest = function() {
+      if (running) {
+        run.push(fps);
+        if (run.length > 20) {
+          length = run.length
+          for (var i = 0; i < length; i++) {
+            average += run[i];
+          }
+          result = Math.floor(average / length);
+          myresults[totalBunnies] = result;
+          run.length = 0;
+          average = 0;
+          if (result < 20) {
+            running = false;
+            f = document.getElementById('results');
+            p = '';
+            for (var i = 0, z = myresults.length; i < z; i++) {
+              if (myresults[i]) {
+                p += i + ' bunnies: ' + myresults[i] + 'fps<br />';
+              }
+            }
+            f.innerHTML = p;
+          } else {
+            addBunnies();
+          }
+        }
+      }
+    };
+
+    addBunnies = function() {
+      for (var i = 0; i < 10; i++) {
+        bunny.clone({
+          startX: Math.floor((Math.random() * 580) + 10),
+          startY: Math.floor((Math.random() * 580) + 10),
+          deltaX: Math.floor((Math.random() * 4) + 1),
+          deltaY: Math.floor((Math.random() * 4) + 1),
+          visibility: true,
+          group: 'mygroup',
+        });
+      }
+      totalBunnies += 10;
+    };
+
+    //initialize scene
+    addBunnies();
+
+    //animation object
+    scrawl.newAnimation({
+      fn: function() {
+        moveBunnies();
+        pad.render();
+
+        msg.innerHTML = 'Bunnies: ' + totalBunnies;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        fps = Math.floor(1000 / testTime);
+        doTest();
+      },
+    });
+  };
+
+  scrawl.loadModules({
+    path: '../source/',
+    minified: false,
+    modules: ['images', 'collisions', 'animation', 'block'],
+    callback: function() {
+      window.addEventListener('load', function() {
+        scrawl.init();
+        mycode();
+      }, false);
+    },
+  });
+  </script>
+</body>
+
 </html>

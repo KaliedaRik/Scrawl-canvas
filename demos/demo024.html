@@ -1,53 +1,56 @@
 <!DOCTYPE html>
 <html>
-    <head>
-		<title>Demo 024</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    </head>
-    <body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 024</h1>
-		<h2>Scrawl Path/Shape sprites - pentangle (or star)</h2>
-		<h3>Modules: path, factories</h3>
-		<canvas id="mycanvas" width="400" height="200"></canvas>
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//makeRegularShape factory
-				scrawl.makeRegularShape({
-					startX:	200,
-					startY:	100,
-					radius:	90,
-					angle:	144,
-					});
-					
-				//display canvas
-				scrawl.render();
-				
-				testNow = Date.now();
-				testTime =  testNow - testTicker;
-				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
-				};
-				
-			scrawl.loadModules({
-				path: '../source/',
-				minified: false,
-				modules: ['path', 'factories'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						}, false);
-					},
-				});
-		</script>
-    </body>
+
+<head>
+  <title>Demo 024</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 024</h1>
+  <h2>Scrawl Path/Shape sprites - pentangle (or star)</h2>
+  <h3>Modules: path, factories</h3>
+  <canvas id="mycanvas" width="400" height="200"></canvas>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //makeRegularShape factory
+    scrawl.makeRegularShape({
+      startX: 200,
+      startY: 100,
+      radius: 90,
+      angle: 144,
+    });
+
+    //display canvas
+    scrawl.render();
+
+    testNow = Date.now();
+    testTime = testNow - testTicker;
+    testMessage.innerHTML = 'Render time: ' + parseInt(testTime) + 'ms';
+  };
+
+  scrawl.loadModules({
+    path: '../source/',
+    minified: false,
+    modules: ['path', 'factories'],
+    callback: function() {
+      window.addEventListener('load', function() {
+        scrawl.init();
+        mycode();
+      }, false);
+    },
+  });
+  </script>
+</body>
+
 </html>

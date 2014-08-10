@@ -1,87 +1,93 @@
 <!DOCTYPE html>
 <html>
-    <head>
-		<title>Demo 063</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-    </head>
-    <body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 063</h1>
-		<h2>Scrawl collisions - Shape sprite collision zones</h2>
-		<h3>Modules: factories, path, wheel</h3>
-		<canvas id="mycanvas" width="800" height="400"></canvas>
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//define variables
-				var myGroup,
-					brush;
-				
-				//define groups
-				myGroup = scrawl.newGroup({
-					name:			'mystars',
-					regionRadius:	190,
-					});
-					
-				//define, and stamp, sprites
-				scrawl.makeRegularShape({
-					name: 'star1',
-					startX:		200,
-					startY:		200,
-					angle:		144,
-					radius:		190,
-					lineWidth:	3,
-					method:		'draw',
-					group:		'mystars',
-					}).stamp().clone({
-					name:		'star2',
-					startX:		600,
-					winding:	'evenodd',
-					}).stamp();
-				
-				//define brush sprite ...
-				brush = scrawl.newWheel({
-					radius:	3,
-					method:	'fill',
-					});
-					
-				//... and stamp it
-				for(var dx = 0; dx <= 800; dx += 10){
-					for(var dy = 0; dy <= 400; dy += 10){
-						brush.set({
-							startX: dx,
-							startY: dy,
-							fillStyle: (myGroup.getSpriteAt({x: dx, y: dy})) ? 'rgba(255,0,0,0.5)' : 'rgba(0,0,255,0.5)',
-							}).stamp();
-						}
-					}
-					
-				//display canvas
-				scrawl.show();
 
-				testNow = Date.now();
-				testTime =  testNow - testTicker;
-				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
-				};
-				
-			scrawl.loadModules({
-				path: '../source/js/',
-				minified: false,
-				modules: ['factories', 'path', 'wheel'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		</script>
-    </body>
+<head>
+  <title>Demo 063</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 063</h1>
+  <h2>Scrawl collisions - Shape sprite collision zones</h2>
+  <h3>Modules: factories, path, wheel</h3>
+  <canvas id="mycanvas" width="800" height="400"></canvas>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //define variables
+    var myGroup,
+      brush;
+
+    //define groups
+    myGroup = scrawl.newGroup({
+      name: 'mystars',
+      regionRadius: 190,
+    });
+
+    //define, and stamp, sprites
+    scrawl.makeRegularShape({
+      name: 'star1',
+      startX: 200,
+      startY: 200,
+      angle: 144,
+      radius: 190,
+      lineWidth: 3,
+      method: 'draw',
+      group: 'mystars',
+    }).stamp().clone({
+      name: 'star2',
+      startX: 600,
+      winding: 'evenodd',
+    }).stamp();
+
+    //define brush sprite ...
+    brush = scrawl.newWheel({
+      radius: 3,
+      method: 'fill',
+    });
+
+    //... and stamp it
+    for (var dx = 0; dx <= 800; dx += 10) {
+      for (var dy = 0; dy <= 400; dy += 10) {
+        brush.set({
+          startX: dx,
+          startY: dy,
+          fillStyle: (myGroup.getSpriteAt({
+            x: dx,
+            y: dy
+          })) ? 'rgba(255,0,0,0.5)' : 'rgba(0,0,255,0.5)',
+        }).stamp();
+      }
+    }
+
+    //display canvas
+    scrawl.show();
+
+    testNow = Date.now();
+    testTime = testNow - testTicker;
+    testMessage.innerHTML = 'Render time: ' + parseInt(testTime) + 'ms';
+  };
+
+  scrawl.loadModules({
+      path: '../source/js/',
+      minified: false,
+      modules: ['factories', 'path', 'wheel'],
+      callback: function() {
+        window.addEventListener('load', function() {
+            scrawl.init();
+            mycode();
+          };
+        },
+      });
+  </script>
+</body>
+
 </html>
