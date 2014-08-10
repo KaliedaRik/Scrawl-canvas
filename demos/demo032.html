@@ -1,148 +1,151 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Demo 032</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	</head>
-	<body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 032</h1>
-		<h2>Bunny rendering test (#2 - setting acceleration flags; manual collision detection ... better results)</h2>
-		<h3>Modules: images, animation</h3>
-		<p>Click on the canvas to add bunnies.</p>
-		<p id="message">Loading the bunny ...</p>
-		<img src="img/bunny.png" id="bunny" class="demo032" />
-		<canvas id="mycanvas" width="600" height="600"></canvas>
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage'),
-					msg = document.getElementById('message');
-					
-				//define variables
-				var canvas = scrawl.canvas.mycanvas,
-					pad = scrawl.pad.mycanvas,
-					minX = 5, 
-					minY = 5, 
-					maxX = 595, 
-					maxY = 595,
-					totalBunnies = 0,
-					group,
-					bunny,
-					moveSprites,
-					checkBounds,
-					mySprite, 
-					hitFlag,
-					moveBunnies,
-					addBunnies;
-				
-				//load images into scrawl library
-				scrawl.getImagesByClass('demo032');
 
-				//define groups
-				group = scrawl.newGroup({
-					name: 		'mygroup',
-					spriteSort:	false,
-					//spriteSort=false - turns off pre-sorting of sprites before each display cycle (small speed gain)
-					});
+<head>
+  <title>Demo 032</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
 
-				//define sprites
-				bunny = scrawl.newPicture({				//bunny sprite template
-					name: 				'bunny',
-					source: 			'bunny',
-					handleX: 			'center',
-					handleY: 			'center',
-					visibility: 		false,
-					fastStamp: 			true,
-					//fastStamp=true - switches off context engine updating before each sprite is stamped (large speed gain)
-					});
-				
-				//animation functions
-				moveSprites = function(){
-					group.updateStart();
-					}
-					
-				// - use manual checking instead of cell collision field checking (small speed gain)
-				checkBounds = function(){
-					for(var i = 0, z = group.sprites.length; i < z; i++){
-						hitFlag = false;
-						mySprite = scrawl.sprite[group.sprites[i]];
-						if(!scrawl.isBetween(mySprite.start.x, minX, maxX, true)){
-							mySprite.delta.x = -mySprite.delta.x;
-							hitFlag = true;
-							}
-						if(!scrawl.isBetween(mySprite.start.y, minY, maxY, true)){
-							mySprite.delta.y = -mySprite.delta.y;
-							hitFlag = true;
-							}
-						if(hitFlag){
-							mySprite.updateStart();
-							}
-						}
-					};
-					
-				moveBunnies = function(){
-					moveSprites();
-					checkBounds();
-					};
-					
-				//event handlers
-				addBunnies = function(e){
-					if(e){
-						e.stopPropagation();
-						e.preventDefault();
-						}
-					for(var i = 0; i < 10; i++){
-						bunny.clone({
-							startX: 			Math.floor((Math.random() * 580) + 10),
-							startY: 			Math.floor((Math.random() * 580) + 10),
-							deltaX: 			Math.floor((Math.random() * 4) + 1),
-							deltaY: 			Math.floor((Math.random() * 4) + 1),
-							visibility:			true,
-							group: 				'mygroup',
-							createNewContext:	false,
-							//createNewContext=false - forces bunny clones to use the original bunny's context object (good speed gain)
-							});
-						}
-					totalBunnies += 10;
-					};
-				canvas.addEventListener('mouseup', addBunnies, false);
-					
-				//initialize scene
-				addBunnies();
-				
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						moveBunnies();
-						pad.render();
-						
-						msg.innerHTML = 'Bunnies: '+totalBunnies;
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/',
-				minified: false,
-				modules: ['images', 'animation'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						}, false);
-					},
-				});
-		</script>
-    </body>
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 032</h1>
+  <h2>Bunny rendering test (#2 - setting acceleration flags; manual collision detection ... better results)</h2>
+  <h3>Modules: images, animation</h3>
+  <p>Click on the canvas to add bunnies.</p>
+  <p id="message">Loading the bunny ...</p>
+  <img src="img/bunny.png" id="bunny" class="demo032" />
+  <canvas id="mycanvas" width="600" height="600"></canvas>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage'),
+      msg = document.getElementById('message');
+
+    //define variables
+    var canvas = scrawl.canvas.mycanvas,
+      pad = scrawl.pad.mycanvas,
+      minX = 5,
+      minY = 5,
+      maxX = 595,
+      maxY = 595,
+      totalBunnies = 0,
+      group,
+      bunny,
+      moveSprites,
+      checkBounds,
+      mySprite,
+      hitFlag,
+      moveBunnies,
+      addBunnies;
+
+    //load images into scrawl library
+    scrawl.getImagesByClass('demo032');
+
+    //define groups
+    group = scrawl.newGroup({
+      name: 'mygroup',
+      spriteSort: false,
+      //spriteSort=false - turns off pre-sorting of sprites before each display cycle (small speed gain)
+    });
+
+    //define sprites
+    bunny = scrawl.newPicture({ //bunny sprite template
+      name: 'bunny',
+      source: 'bunny',
+      handleX: 'center',
+      handleY: 'center',
+      visibility: false,
+      fastStamp: true,
+      //fastStamp=true - switches off context engine updating before each sprite is stamped (large speed gain)
+    });
+
+    //animation functions
+    moveSprites = function() {
+      group.updateStart();
+    }
+
+    // - use manual checking instead of cell collision field checking (small speed gain)
+    checkBounds = function() {
+      for (var i = 0, z = group.sprites.length; i < z; i++) {
+        hitFlag = false;
+        mySprite = scrawl.sprite[group.sprites[i]];
+        if (!scrawl.isBetween(mySprite.start.x, minX, maxX, true)) {
+          mySprite.delta.x = -mySprite.delta.x;
+          hitFlag = true;
+        }
+        if (!scrawl.isBetween(mySprite.start.y, minY, maxY, true)) {
+          mySprite.delta.y = -mySprite.delta.y;
+          hitFlag = true;
+        }
+        if (hitFlag) {
+          mySprite.updateStart();
+        }
+      }
+    };
+
+    moveBunnies = function() {
+      moveSprites();
+      checkBounds();
+    };
+
+    //event handlers
+    addBunnies = function(e) {
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      for (var i = 0; i < 10; i++) {
+        bunny.clone({
+          startX: Math.floor((Math.random() * 580) + 10),
+          startY: Math.floor((Math.random() * 580) + 10),
+          deltaX: Math.floor((Math.random() * 4) + 1),
+          deltaY: Math.floor((Math.random() * 4) + 1),
+          visibility: true,
+          group: 'mygroup',
+          createNewContext: false,
+          //createNewContext=false - forces bunny clones to use the original bunny's context object (good speed gain)
+        });
+      }
+      totalBunnies += 10;
+    };
+    canvas.addEventListener('mouseup', addBunnies, false);
+
+    //initialize scene
+    addBunnies();
+
+    //animation object
+    scrawl.newAnimation({
+      fn: function() {
+        moveBunnies();
+        pad.render();
+
+        msg.innerHTML = 'Bunnies: ' + totalBunnies;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
+      },
+    });
+  };
+
+  scrawl.loadModules({
+    path: '../source/',
+    minified: false,
+    modules: ['images', 'animation'],
+    callback: function() {
+      window.addEventListener('load', function() {
+        scrawl.init();
+        mycode();
+      }, false);
+    },
+  });
+  </script>
+</body>
+
 </html>

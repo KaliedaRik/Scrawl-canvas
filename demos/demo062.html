@@ -1,225 +1,232 @@
 <!DOCTYPE html>
 <html>
-    <head>
-		<title>Demo 062</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-    </head>
-    <body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 062</h1>
-		<h2>3D Carousel effect with selectable items (using path)</h2>
-		<h3>Modules: images, animation, path, factories</h3>
-		<p>Move mouse over canvas to rotate the carousel. Click on an image to enlarge it, or to return to the carousel.</p>
-		
-		<canvas id="mycanvas" width="750" height="375"></canvas>
-		
-		<img src="img/carousel/angelfish.png" id="angelfish" class="demo062" />
-		<img src="img/carousel/blackbutterfly.png" id="blackbutterfly" class="demo062" />
-		<img src="img/carousel/cagedparrot.png" id="cagedparrot" class="demo062" />
-		<img src="img/carousel/capuchin.png" id="capuchin" class="demo062" />
-		<img src="img/carousel/greenparrot.png" id="greenparrot" class="demo062" />
-		<img src="img/carousel/ibis.png" id="ibis" class="demo062" />
-		<img src="img/carousel/kookaburra.png" id="kookaburra" class="demo062" />
-		<img src="img/carousel/peacock.png" id="peacock" class="demo062" />
-		<img src="img/carousel/pelican.png" id="pelican" class="demo062" />
-		<img src="img/carousel/pinkcockatoo.png" id="pinkcockatoo" class="demo062" />
-		<img src="img/carousel/swallowtail.png" id="swallowtail" class="demo062" />
-		<img src="img/carousel/swan.png" id="swan" class="demo062" />
-		<img src="img/carousel/tabbycats.png" id="tabbycats" class="demo062" />
-		<img src="img/carousel/terrapin.png" id="terrapin" class="demo062" />
-		<img src="img/carousel/turkey.png" id="turkey" class="demo062" />
 
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//define variables
-				var myPad = scrawl.pad.mycanvas, 
-					here,
-					details = false,
-					myPic, 
-					myPicPath, 
-					mySprite, 
-					mySpeed = 0,
-					items = [
-						'angelfish', 'blackbutterfly', 'cagedparrot', 'capuchin', 'greenparrot', 
-						'ibis', 'kookaburra', 'peacock', 'pelican', 'pinkcockatoo', 
-						'swallowtail', 'swan', 'tabbycats', 'terrapin', 'turkey'
-						],
-					myGroup,
-					myReflections,
-					carousel,
-					selectImage,
-					unselectImage,
-					checkClick,
-					updateCarousel;
-				
-				//set background color for canvas
-				scrawl.cell[myPad.base].set({
-					backgroundColor: 'black',
-					});
+<head>
+  <title>Demo 062</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+</head>
 
-				//import images into scrawl library
-				scrawl.getImagesByClass('demo062');
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 062</h1>
+  <h2>3D Carousel effect with selectable items (using path)</h2>
+  <h3>Modules: images, animation, path, factories</h3>
+  <p>Move mouse over canvas to rotate the carousel. Click on an image to enlarge it, or to return to the carousel.</p>
 
-				//define groups
-				myGroup = scrawl.newGroup({
-					name:	'myGroup',
-					order:	2,
-					});
-				myReflections = scrawl.newGroup({
-					name:	'myReflections',
-					order:	1,
-					});
-					
-				//define sprites - carousel
-				carousel = scrawl.makeEllipse({
-					name: 'carousel',
-					startX:		375,
-					startY:		200,
-					radiusX:	300,
-					radiusY:	100,
-					method:		'none',
-					});
-					
-				//define sprites - display photos
-				for(var i = 0, z = items.length; i < z; i++){
-					scrawl.newPicture({
-						name:				items[i],
-						group:				'myGroup',
-						source:				items[i],
-						width:				150,
-						height:				100,
-						strokeStyle:		'Gold',
-						lineJoin:			'round',
-						method:				'fillDraw',
-						path:				'carousel',
-						pathPlace:			i/z,
-						pathSpeedConstant:	false,
-						handleX:			'center',
-						handleY:			'101%',
-						}).clone({
-						//and their reflections
-						name:				items[i]+'_r',
-						group:				'myReflections',
-						globalAlpha:		0.32,
-						flipUpend:			true,
-						});
-					}
-					
-				//event listener and associated functions
-				selectImage = function(){
-					myPic = myGroup.getSpriteAt(here);
-					if(myPic){
-						myPicPath = myPic.path;
-						details = true;
-						myPic.set({
-							startX:		375,
-							startY:		187.5,
-							path:		false,
-							scale:		3.7,
-							order:		1000,
-							handleY:	'center',
-							});
-						scrawl.sprite[myPic.name+'_r'].set({
-							visibility:	false,
-							});
-						scrawl.render();
-						}
-					};
-				unselectImage = function(){
-					if(myPic){
-						myPic.set({
-							handleY:	'101%',
-							path:		myPicPath,
-							});
-						scrawl.sprite[myPic.name+'_r'].set({
-							visibility:	true,
-							});
-						}
-					details = false;
-					myPic = false;
-					myPicPath = false;
-					};
-				checkClick = function(e){
-					if(e){
-						e.stopPropagation();
-						e.preventDefault();
-						}
-					(details) ? unselectImage() : selectImage();
-					};
-				scrawl.canvas.mycanvas.addEventListener('mouseup', checkClick, false);
-					
-				//animation function
-				updateCarousel = function(){
-					if(!details){
-						mySpeed = -((here.x - 375)/170000);
-						for(var i = 0, z = items.length; i < z; i++){
-							mySprite = scrawl.sprite[items[i]];
-							mySprite.set({
-								scale: (mySprite.start.y/250)+0.5,
-								order: mySprite.start.y,
-								deltaPathPlace: mySpeed,
-								});
-							mySprite = scrawl.sprite[items[i]+'_r'];
-							mySprite.set({
-								scale: (mySprite.start.y/250)+0.5,
-								order: mySprite.start.y,
-								deltaPathPlace: mySpeed,
-								});
-							}
-						myGroup.updateStart();
-						myReflections.updateStart();
-						}
-					myReflections.sortSprites();
-					myGroup.sortSprites();
-					myPad.stampBackground();
-					for(var i = 0, z = items.length; i < z; i++){
-						scrawl.sprite[myReflections.sprites[i]].stamp('clearWithBackground');
-						scrawl.sprite[myReflections.sprites[i]].stamp();
-						scrawl.sprite[myGroup.sprites[i]].stamp();
-						}
-					myPad.show();
-					};
+  <canvas id="mycanvas" width="750" height="375"></canvas>
 
-				//initial display of carousel - for safari
-				here = {x: 350, y: 187.5, active: true};
-				updateCarousel();
-				updateCarousel();
+  <img src="img/carousel/angelfish.png" id="angelfish" class="demo062" />
+  <img src="img/carousel/blackbutterfly.png" id="blackbutterfly" class="demo062" />
+  <img src="img/carousel/cagedparrot.png" id="cagedparrot" class="demo062" />
+  <img src="img/carousel/capuchin.png" id="capuchin" class="demo062" />
+  <img src="img/carousel/greenparrot.png" id="greenparrot" class="demo062" />
+  <img src="img/carousel/ibis.png" id="ibis" class="demo062" />
+  <img src="img/carousel/kookaburra.png" id="kookaburra" class="demo062" />
+  <img src="img/carousel/peacock.png" id="peacock" class="demo062" />
+  <img src="img/carousel/pelican.png" id="pelican" class="demo062" />
+  <img src="img/carousel/pinkcockatoo.png" id="pinkcockatoo" class="demo062" />
+  <img src="img/carousel/swallowtail.png" id="swallowtail" class="demo062" />
+  <img src="img/carousel/swan.png" id="swan" class="demo062" />
+  <img src="img/carousel/tabbycats.png" id="tabbycats" class="demo062" />
+  <img src="img/carousel/terrapin.png" id="terrapin" class="demo062" />
+  <img src="img/carousel/turkey.png" id="turkey" class="demo062" />
 
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						here = myPad.getMouse();
-						if(here.active){
-							updateCarousel();
-							}
-						
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/js/',
-				minified: false,
-				modules: ['images', 'animation', 'path', 'factories'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		</script>
-    </body>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //define variables
+    var myPad = scrawl.pad.mycanvas,
+      here,
+      details = false,
+      myPic,
+      myPicPath,
+      mySprite,
+      mySpeed = 0,
+      items = [
+        'angelfish', 'blackbutterfly', 'cagedparrot', 'capuchin', 'greenparrot',
+        'ibis', 'kookaburra', 'peacock', 'pelican', 'pinkcockatoo',
+        'swallowtail', 'swan', 'tabbycats', 'terrapin', 'turkey'
+      ],
+      myGroup,
+      myReflections,
+      carousel,
+      selectImage,
+      unselectImage,
+      checkClick,
+      updateCarousel;
+
+    //set background color for canvas
+    scrawl.cell[myPad.base].set({
+      backgroundColor: 'black',
+    });
+
+    //import images into scrawl library
+    scrawl.getImagesByClass('demo062');
+
+    //define groups
+    myGroup = scrawl.newGroup({
+      name: 'myGroup',
+      order: 2,
+    });
+    myReflections = scrawl.newGroup({
+      name: 'myReflections',
+      order: 1,
+    });
+
+    //define sprites - carousel
+    carousel = scrawl.makeEllipse({
+      name: 'carousel',
+      startX: 375,
+      startY: 200,
+      radiusX: 300,
+      radiusY: 100,
+      method: 'none',
+    });
+
+    //define sprites - display photos
+    for (var i = 0, z = items.length; i < z; i++) {
+      scrawl.newPicture({
+        name: items[i],
+        group: 'myGroup',
+        source: items[i],
+        width: 150,
+        height: 100,
+        strokeStyle: 'Gold',
+        lineJoin: 'round',
+        method: 'fillDraw',
+        path: 'carousel',
+        pathPlace: i / z,
+        pathSpeedConstant: false,
+        handleX: 'center',
+        handleY: '101%',
+      }).clone({
+        //and their reflections
+        name: items[i] + '_r',
+        group: 'myReflections',
+        globalAlpha: 0.32,
+        flipUpend: true,
+      });
+    }
+
+    //event listener and associated functions
+    selectImage = function() {
+      myPic = myGroup.getSpriteAt(here);
+      if (myPic) {
+        myPicPath = myPic.path;
+        details = true;
+        myPic.set({
+          startX: 375,
+          startY: 187.5,
+          path: false,
+          scale: 3.7,
+          order: 1000,
+          handleY: 'center',
+        });
+        scrawl.sprite[myPic.name + '_r'].set({
+          visibility: false,
+        });
+        scrawl.render();
+      }
+    };
+    unselectImage = function() {
+      if (myPic) {
+        myPic.set({
+          handleY: '101%',
+          path: myPicPath,
+        });
+        scrawl.sprite[myPic.name + '_r'].set({
+          visibility: true,
+        });
+      }
+      details = false;
+      myPic = false;
+      myPicPath = false;
+    };
+    checkClick = function(e) {
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      (details) ? unselectImage() : selectImage();
+    };
+    scrawl.canvas.mycanvas.addEventListener('mouseup', checkClick, false);
+
+    //animation function
+    updateCarousel = function() {
+      if (!details) {
+        mySpeed = -((here.x - 375) / 170000);
+        for (var i = 0, z = items.length; i < z; i++) {
+          mySprite = scrawl.sprite[items[i]];
+          mySprite.set({
+            scale: (mySprite.start.y / 250) + 0.5,
+            order: mySprite.start.y,
+            deltaPathPlace: mySpeed,
+          });
+          mySprite = scrawl.sprite[items[i] + '_r'];
+          mySprite.set({
+            scale: (mySprite.start.y / 250) + 0.5,
+            order: mySprite.start.y,
+            deltaPathPlace: mySpeed,
+          });
+        }
+        myGroup.updateStart();
+        myReflections.updateStart();
+      }
+      myReflections.sortSprites();
+      myGroup.sortSprites();
+      myPad.stampBackground();
+      for (var i = 0, z = items.length; i < z; i++) {
+        scrawl.sprite[myReflections.sprites[i]].stamp('clearWithBackground');
+        scrawl.sprite[myReflections.sprites[i]].stamp();
+        scrawl.sprite[myGroup.sprites[i]].stamp();
+      }
+      myPad.show();
+    };
+
+    //initial display of carousel - for safari
+    here = {
+      x: 350,
+      y: 187.5,
+      active: true
+    };
+    updateCarousel();
+    updateCarousel();
+
+    //animation object
+    scrawl.newAnimation({
+      fn: function() {
+        here = myPad.getMouse();
+        if (here.active) {
+          updateCarousel();
+        }
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
+      },
+    });
+  };
+
+  scrawl.loadModules({
+      path: '../source/js/',
+      minified: false,
+      modules: ['images', 'animation', 'path', 'factories'],
+      callback: function() {
+        window.addEventListener('load', function() {
+            scrawl.init();
+            mycode();
+          };
+        },
+      });
+  </script>
+</body>
+
 </html>

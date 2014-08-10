@@ -1,81 +1,84 @@
 <!DOCTYPE html>
- <html>
-   <head>
-		<title>Demo 030</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    </head>
-    <body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 030</h1>
-		<h2>Rounded corner rectangle Shape sprites</h2>
-		<h3>Modules: path, factories</h3>
-		<canvas id="mycanvas" width="400" height="400"></canvas>
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//makeRectangle factory
-				scrawl.makeRectangle({
-					startX:			200,
-					startY:			80,
-					width:			200,
-					height:			100,
-					radius:			20,
-					lineWidth:		5,
-					fillStyle:		'blue',
-					strokeStyle:	'red',
-					method:			'fillDraw',
-					});
-				scrawl.makeRectangle({
-					startX:			200,
-					startY:			200,
-					width:			350,
-					height:			60,
-					radiusTop:		20,
-					lineWidth:		5,
-					fillStyle:		'blue',
-					strokeStyle:	'red',
-					method:			'fillDraw',
-					});
-				scrawl.makeRectangle({
-					startX:			200,
-					startY:			320,
-					width:			100,
-					height:			100,
-					radius:			100,
-					lineWidth:		5,
-					lineJoin:		'round',
-					fillStyle:		'blue',
-					strokeStyle:	'red',
-					method:			'fillDraw',
-					});
+<html>
 
-				//display canvas
-				scrawl.render();
-				
-				testNow = Date.now();
-				testTime =  testNow - testTicker;
-				testMessage.innerHTML = 'Render time: '+parseInt(testTime)+'ms';
-				};
-				
-			scrawl.loadModules({
-				path: '../source/',
-				minified: false,
-				modules: ['path', 'factories'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						}, false);
-					},
-				});
-		</script>
-    </body>
+<head>
+  <title>Demo 030</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 030</h1>
+  <h2>Rounded corner rectangle Shape sprites</h2>
+  <h3>Modules: path, factories</h3>
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //makeRectangle factory
+    scrawl.makeRectangle({
+      startX: 200,
+      startY: 80,
+      width: 200,
+      height: 100,
+      radius: 20,
+      lineWidth: 5,
+      fillStyle: 'blue',
+      strokeStyle: 'red',
+      method: 'fillDraw',
+    });
+    scrawl.makeRectangle({
+      startX: 200,
+      startY: 200,
+      width: 350,
+      height: 60,
+      radiusTop: 20,
+      lineWidth: 5,
+      fillStyle: 'blue',
+      strokeStyle: 'red',
+      method: 'fillDraw',
+    });
+    scrawl.makeRectangle({
+      startX: 200,
+      startY: 320,
+      width: 100,
+      height: 100,
+      radius: 100,
+      lineWidth: 5,
+      lineJoin: 'round',
+      fillStyle: 'blue',
+      strokeStyle: 'red',
+      method: 'fillDraw',
+    });
+
+    //display canvas
+    scrawl.render();
+
+    testNow = Date.now();
+    testTime = testNow - testTicker;
+    testMessage.innerHTML = 'Render time: ' + parseInt(testTime) + 'ms';
+  };
+
+  scrawl.loadModules({
+    path: '../source/',
+    minified: false,
+    modules: ['path', 'factories'],
+    callback: function() {
+      window.addEventListener('load', function() {
+        scrawl.init();
+        mycode();
+      }, false);
+    },
+  });
+  </script>
+</body>
+
 </html>

@@ -46,8 +46,18 @@ module.exports = function(grunt){
 
 		//jsbeautifier - enforces a set of standard coding conventions on the source .js files
 		jsbeautifier: {
-			files: ["source/*.js", "demos/js/*.js"],
+			files: ["source/*.js", "demos/js/*.js", "demos/*.html"],
 			options: {
+        html: {
+          braceStyle: "collapse",
+          indentChar: " ",
+          indentScripts: "keep",
+          indentSize: 2,
+          maxPreserveNewlines: 10,
+          preserveNewlines: true,
+          unformatted: ["a", "sub", "sup", "b", "i", "u"],
+          wrapLineLength: 0
+        },
 				js: {
 					braceStyle: "end-expand",
 					indentWithTabs: true,
@@ -74,7 +84,7 @@ module.exports = function(grunt){
 		// Demo testing - grunt-watch
 		watch: {
 		    all: {
-	            files: ['demos/*.html', 'source/*.js'],
+	            files: ['demos/*.html', 'demos/js/*.js', 'source/*.js'],
 	            options: {
 	                livereload: true
 		        }

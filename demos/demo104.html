@@ -1,88 +1,91 @@
 <!DOCTYPE html>
 <html>
-   <head>
-		<title>Demo 104</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-    </head>
-    <body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 104</h1>
-		<h2>Convert a single, non-picture sprite to a Picture sprite</h2>
-		<h3>Modules: wheel, images, animation, filters</h3>
-		<img src="img/leaves.png" id="leaves" class="demo104" />
-		<img src="img/warning.png" id="warning" class="demo104" />
-		<canvas id="mycanvas" width="400" height="200"></canvas>
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//define variables
-				var mySprite;
-				
-				//import images; setup variables
-				scrawl.getImagesByClass('demo104');
-				
-				//build sprite
-				scrawl.newPattern({
-					name:	'p1',
-					image:	'warning',
-					}).clone({
-					name:	'p2',
-					image:	'leaves',
-					});
-				mySprite = scrawl.newWheel({
-					name:			'mainWheel',
-					startX:			100,
-					startY:			100,
-					radius:			60,
-					strokeStyle:	'p1',
-					fillStyle:		'p2',
-					lineWidth:		10,
-					method:			'fillDraw',	
-					});
-				mySprite.convertToPicture({
-					name:		'pictureWheel',
-					startX: 	300,
-					startY: 	100,
-					handleX: 	'center',
-					handleY: 	'center',
-					filters: {
-						sepia: {},
-						},
-					roll: 		70,
-					method: 	'fillDraw',
-					lineWidth:	2,
-					});
 
-				scrawl.newAnimation({
-					fn: function(){
-						scrawl.render();
-						
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/js/',
-				minified: false,
-				modules: ['wheel', 'images', 'animation', 'filters'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		</script>
-    </body>
+<head>
+  <title>Demo 104</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 104</h1>
+  <h2>Convert a single, non-picture sprite to a Picture sprite</h2>
+  <h3>Modules: wheel, images, animation, filters</h3>
+  <img src="img/leaves.png" id="leaves" class="demo104" />
+  <img src="img/warning.png" id="warning" class="demo104" />
+  <canvas id="mycanvas" width="400" height="200"></canvas>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //define variables
+    var mySprite;
+
+    //import images; setup variables
+    scrawl.getImagesByClass('demo104');
+
+    //build sprite
+    scrawl.newPattern({
+      name: 'p1',
+      image: 'warning',
+    }).clone({
+      name: 'p2',
+      image: 'leaves',
+    });
+    mySprite = scrawl.newWheel({
+      name: 'mainWheel',
+      startX: 100,
+      startY: 100,
+      radius: 60,
+      strokeStyle: 'p1',
+      fillStyle: 'p2',
+      lineWidth: 10,
+      method: 'fillDraw',
+    });
+    mySprite.convertToPicture({
+      name: 'pictureWheel',
+      startX: 300,
+      startY: 100,
+      handleX: 'center',
+      handleY: 'center',
+      filters: {
+        sepia: {},
+      },
+      roll: 70,
+      method: 'fillDraw',
+      lineWidth: 2,
+    });
+
+    scrawl.newAnimation({
+      fn: function() {
+        scrawl.render();
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
+      },
+    });
+  };
+
+  scrawl.loadModules({
+      path: '../source/js/',
+      minified: false,
+      modules: ['wheel', 'images', 'animation', 'filters'],
+      callback: function() {
+        window.addEventListener('load', function() {
+            scrawl.init();
+            mycode();
+          };
+        },
+      });
+  </script>
+</body>
+
 </html>

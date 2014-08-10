@@ -1,120 +1,125 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Demo 409</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-	</head>
-	<body>
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 409</h1>
-		<h2>Scrawl image filters - pixelate()</h2>
-		<h3>Modules: images, filters, animation</h3>
-		<p>Be aware: smaller pixelate dimensions are considerably slower than larger ones</p>
-		<canvas width="400" height="400" id="mycanvas"></canvas>
-		<p>Width (px): 1 <input id="width" type="range" value="20" min="1" max="100" step="1" /> 100</p>
-		<p>Height (px): 1 <input id="height" type="range" value="20" min="1" max="100" step="1" /> 100</p>
-		<img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo409" />
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				//define variables
-				var width,
-					height,
-					widthVal = 20,
-					heightVal = 20,
-					getWidth,
-					getHeight;
-					
-				//import image
-				scrawl.getImagesByClass('demo409');
-					
-				//clone image and add filter to it
-				scrawl.image.parrot.clone({
-					name: 'pixelateparrot',
-					}).filter('pixelate', {
-						width: 20,
-						height: 20,
-						useSourceData: true,
-						});
 
-				//define sprites
-				scrawl.newPicture({
-					name: 'parrot',
-					startX: 10,
-					startY: 10,
-					scale: 0.5,
-					source: 'parrot',
-					}).clone({
-					startX: 120,
-					startY: 210,
-					source: 'pixelateparrot',
-					});
-					
-				//preparing the DOM input elements
-				width = document.getElementById('width');
-				width.value = 20;
-				height = document.getElementById('height');
-				height.value = 20;
+<head>
+  <title>Demo 409</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+</head>
 
-				//image update function
-				updateInput = function(){
-					scrawl.image.pixelateparrot.filter('pixelate', {
-						width: widthVal,
-						height: heightVal,
-						useSourceData: true,
-						});
-					};
-				
-				//event listeners
-				getWidth = function(e){
-					widthVal = parseFloat(width.value);
-					updateInput();
-					e.preventDefault();
-					e.returnValue = false;
-					};
-				width.addEventListener('change', getWidth, false);
-				getHeight = function(e){
-					heightVal = parseFloat(height.value);
-					updateInput();
-					e.preventDefault();
-					e.returnValue = false;
-					};
-				height.addEventListener('change', getHeight, false);
-				
-				//to make sure everything is in place ...
-				updateInput();
-				
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						scrawl.render();
-						
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime)+'<br />width: '+widthVal+'; height: '+heightVal;
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/js/',
-				minified: false,
-				modules: ['images', 'filters', 'animation'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		</script>
-    </body>
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 409</h1>
+  <h2>Scrawl image filters - pixelate()</h2>
+  <h3>Modules: images, filters, animation</h3>
+  <p>Be aware: smaller pixelate dimensions are considerably slower than larger ones</p>
+  <canvas width="400" height="400" id="mycanvas"></canvas>
+  <p>Width (px): 1
+    <input id="width" type="range" value="20" min="1" max="100" step="1" />100</p>
+  <p>Height (px): 1
+    <input id="height" type="range" value="20" min="1" max="100" step="1" />100</p>
+  <img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo409" />
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //define variables
+    var width,
+      height,
+      widthVal = 20,
+      heightVal = 20,
+      getWidth,
+      getHeight;
+
+    //import image
+    scrawl.getImagesByClass('demo409');
+
+    //clone image and add filter to it
+    scrawl.image.parrot.clone({
+      name: 'pixelateparrot',
+    }).filter('pixelate', {
+      width: 20,
+      height: 20,
+      useSourceData: true,
+    });
+
+    //define sprites
+    scrawl.newPicture({
+      name: 'parrot',
+      startX: 10,
+      startY: 10,
+      scale: 0.5,
+      source: 'parrot',
+    }).clone({
+      startX: 120,
+      startY: 210,
+      source: 'pixelateparrot',
+    });
+
+    //preparing the DOM input elements
+    width = document.getElementById('width');
+    width.value = 20;
+    height = document.getElementById('height');
+    height.value = 20;
+
+    //image update function
+    updateInput = function() {
+      scrawl.image.pixelateparrot.filter('pixelate', {
+        width: widthVal,
+        height: heightVal,
+        useSourceData: true,
+      });
+    };
+
+    //event listeners
+    getWidth = function(e) {
+      widthVal = parseFloat(width.value);
+      updateInput();
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    width.addEventListener('change', getWidth, false);
+    getHeight = function(e) {
+      heightVal = parseFloat(height.value);
+      updateInput();
+      e.preventDefault();
+      e.returnValue = false;
+    };
+    height.addEventListener('change', getHeight, false);
+
+    //to make sure everything is in place ...
+    updateInput();
+
+    //animation object
+    scrawl.newAnimation({
+      fn: function() {
+        scrawl.render();
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime) + '<br />width: ' + widthVal + '; height: ' + heightVal;
+      },
+    });
+  };
+
+  scrawl.loadModules({
+      path: '../source/js/',
+      minified: false,
+      modules: ['images', 'filters', 'animation'],
+      callback: function() {
+        window.addEventListener('load', function() {
+            scrawl.init();
+            mycode();
+          };
+        },
+      });
+  </script>
+</body>
+
 </html>

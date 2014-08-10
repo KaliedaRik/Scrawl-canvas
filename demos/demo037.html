@@ -1,158 +1,160 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Demo 037</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    </head>
-    <body>
-		<!--#1: Load a web page, including the Scrawl javascript modules-->
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 037</h1>
-		<h2>Magnifier over image</h2>
-		<h3>Modules: animation, images, wheel</h3>
-		<p>Move the mouse pointer over the canvas to see the magnifier effect</p>
-		<canvas id="mycanvas" width="750" height="375"></canvas>
-		<img src="img/river01.jpg" id="river" class="demo037" />
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
 
-				//#2: When the web page has finished loading, run a javascript script or file involving Scrawl instructions
-				var myPad = scrawl.pad.mycanvas,
-					backgroundCell,
-					magnifierCell,
-					backgroundSprite,
-					magnifierSprite,
-					stencilSprite,
-					here,
-					mouse;
-					
-				//#3: If not done automatically by Scrawl.js, define stacks and <canvas> elements for the scene(s)
-				//#4: Import images into the scrawl library, if needed
-				scrawl.getImagesByClass('demo037');
-				
-				//#5: Import elements into a Scrawl stack, if required
-				//#6: Define any additional cells that will be used by the scene
-				backgroundCell = myPad.addNewCell({
-					name:		'background',
-					});
-				magnifierCell = myPad.addNewCell({
-					name:		'magnifier',
-					height:		140,
-					width:		140,
-					handleX:	'center',
-					handleY:	'center',
-					pivot:		'mouse',
-					});
-					
-				//#7: Define the sprites and designs to be used in the scene, assigning them to cells and groups as necessary
-				backgroundSprite = scrawl.newPicture({
-					name:		'miniscene',
-					source:		'river',
-					method:		'fill',	
-					group:		'background',
-					width:		750,
-					height:		375,
-					copyX:		60,
-					copyY:		700,
-					copyWidth:	3750,
-					copyHeight:	1875,
-					});
-				magnifierSprite = scrawl.newPicture({
-					name:		'magnifier',
-					source:		'river',
-					method:		'fill',	
-					group:		'magnifier',
-					globalCompositeOperation: 'source-in',
-					width:		140,
-					height:		140,
-					copyWidth:	140,
-					copyHeight:	140,
-					});
-				stencilSprite = scrawl.newWheel({
-					name:			'stencil',
-					startX:			70,
-					startY:			70,
-					radius:			69,
-					lineWidth:		1,
-					strokeStyle:	'Red',
-					group:			'magnifier',
-					});
-					
-				//#8 initial display cycle
-				//	step 1: for animations, perform any necessary sprite or cell manipulations
-				//	step 2: clear any cells that need to be cleared
-				//	step 3: perform sprite or cell manipulations, if required
-				//	step 4: stamp sprites onto their cells, and/or get cells to compile their displays
-				backgroundSprite.stamp();
-				//	step 5: get pads to show the results of their stamp/compile operations
-				myPad.setDrawOrder(['background']);
-				myPad.show();
-				//	step 6: perform any necessary HTML element manipulations and/or transforms
-				
-				//#8 animation display cycle function
-				mouse = function(){
-					//	step 1: perform any necessary sprite or cell manipulations
-					magnifierSprite.set({
-						copyX: (here.x * 5) + 10,
-						copyY: (here.y * 5) + 650,
-						});
-					//	step 2: clear any cells that need to be cleared
-					myPad.clear(['magnifier']);
-					//	step 3: perform further sprite or cell manipulations, if required
-					//	step 4: stamp sprites onto their cells, and/or get cells to compile their displays
-					stencilSprite.stamp('fill');
-					magnifierSprite.stamp();
-					stencilSprite.stamp('draw');
-					//	step 5: get pads to show the results of their stamp/compile operations
-					myPad.setDrawOrder(['background', 'magnifier']);
-					myPad.show();
-					//	step 6: perform any necessary HTML element manipulations and/or transforms
-					};
-					
-				//#9 For animation routines, create an animation object
-				scrawl.newAnimation({
-					fn: function(){
-						//test to see which display cycle needs to be invoked
-						here = myPad.getMouse();
-						if(here.active){
-							//#8 display cycle for when mouse is over canvas - farmed out to a function
-							mouse();
-							}
-						else{
-							//#8 display cycle for when mouse is NOT over canvas
-							myPad.setDrawOrder(['background']);
-							myPad.show();
-							//	step 6: perform any necessary HTML element manipulations and/or transforms
-							}
-						//#10 - in the animation loop, repeat the display cycle, moving sprites, cells and elements as necessary
-						
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/',
-				minified: false,
-				modules: ['animation', 'images', 'wheel'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						}, false);
-					},
-				});
-		</script>
-    </body>
+<head>
+  <title>Demo 037</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <!--#1: Load a web page, including the Scrawl javascript modules-->
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 037</h1>
+  <h2>Magnifier over image</h2>
+  <h3>Modules: animation, images, wheel</h3>
+  <p>Move the mouse pointer over the canvas to see the magnifier effect</p>
+  <canvas id="mycanvas" width="750" height="375"></canvas>
+  <img src="img/river01.jpg" id="river" class="demo037" />
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
+
+    //#2: When the web page has finished loading, run a javascript script or file involving Scrawl instructions
+    var myPad = scrawl.pad.mycanvas,
+      backgroundCell,
+      magnifierCell,
+      backgroundSprite,
+      magnifierSprite,
+      stencilSprite,
+      here,
+      mouse;
+
+    //#3: If not done automatically by Scrawl.js, define stacks and <canvas> elements for the scene(s)
+    //#4: Import images into the scrawl library, if needed
+    scrawl.getImagesByClass('demo037');
+
+    //#5: Import elements into a Scrawl stack, if required
+    //#6: Define any additional cells that will be used by the scene
+    backgroundCell = myPad.addNewCell({
+      name: 'background',
+    });
+    magnifierCell = myPad.addNewCell({
+      name: 'magnifier',
+      height: 140,
+      width: 140,
+      handleX: 'center',
+      handleY: 'center',
+      pivot: 'mouse',
+    });
+
+    //#7: Define the sprites and designs to be used in the scene, assigning them to cells and groups as necessary
+    backgroundSprite = scrawl.newPicture({
+      name: 'miniscene',
+      source: 'river',
+      method: 'fill',
+      group: 'background',
+      width: 750,
+      height: 375,
+      copyX: 60,
+      copyY: 700,
+      copyWidth: 3750,
+      copyHeight: 1875,
+    });
+    magnifierSprite = scrawl.newPicture({
+      name: 'magnifier',
+      source: 'river',
+      method: 'fill',
+      group: 'magnifier',
+      globalCompositeOperation: 'source-in',
+      width: 140,
+      height: 140,
+      copyWidth: 140,
+      copyHeight: 140,
+    });
+    stencilSprite = scrawl.newWheel({
+      name: 'stencil',
+      startX: 70,
+      startY: 70,
+      radius: 69,
+      lineWidth: 1,
+      strokeStyle: 'Red',
+      group: 'magnifier',
+    });
+
+    //#8 initial display cycle
+    //	step 1: for animations, perform any necessary sprite or cell manipulations
+    //	step 2: clear any cells that need to be cleared
+    //	step 3: perform sprite or cell manipulations, if required
+    //	step 4: stamp sprites onto their cells, and/or get cells to compile their displays
+    backgroundSprite.stamp();
+    //	step 5: get pads to show the results of their stamp/compile operations
+    myPad.setDrawOrder(['background']);
+    myPad.show();
+    //	step 6: perform any necessary HTML element manipulations and/or transforms
+
+    //#8 animation display cycle function
+    mouse = function() {
+      //	step 1: perform any necessary sprite or cell manipulations
+      magnifierSprite.set({
+        copyX: (here.x * 5) + 10,
+        copyY: (here.y * 5) + 650,
+      });
+      //	step 2: clear any cells that need to be cleared
+      myPad.clear(['magnifier']);
+      //	step 3: perform further sprite or cell manipulations, if required
+      //	step 4: stamp sprites onto their cells, and/or get cells to compile their displays
+      stencilSprite.stamp('fill');
+      magnifierSprite.stamp();
+      stencilSprite.stamp('draw');
+      //	step 5: get pads to show the results of their stamp/compile operations
+      myPad.setDrawOrder(['background', 'magnifier']);
+      myPad.show();
+      //	step 6: perform any necessary HTML element manipulations and/or transforms
+    };
+
+    //#9 For animation routines, create an animation object
+    scrawl.newAnimation({
+      fn: function() {
+        //test to see which display cycle needs to be invoked
+        here = myPad.getMouse();
+        if (here.active) {
+          //#8 display cycle for when mouse is over canvas - farmed out to a function
+          mouse();
+        } else {
+          //#8 display cycle for when mouse is NOT over canvas
+          myPad.setDrawOrder(['background']);
+          myPad.show();
+          //	step 6: perform any necessary HTML element manipulations and/or transforms
+        }
+        //#10 - in the animation loop, repeat the display cycle, moving sprites, cells and elements as necessary
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
+      },
+    });
+  };
+
+  scrawl.loadModules({
+    path: '../source/',
+    minified: false,
+    modules: ['animation', 'images', 'wheel'],
+    callback: function() {
+      window.addEventListener('load', function() {
+        scrawl.init();
+        mycode();
+      }, false);
+    },
+  });
+  </script>
+</body>
+
 </html>

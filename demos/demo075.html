@@ -1,169 +1,172 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Demo 075</title>
-		<link href="css/normalize.css" rel="stylesheet" />
-		<link href="css/demo.css" rel="stylesheet" />
-	</head>
-	<body>
-		<img src="img/icons/buttonAir.png" id="buttonAir" class="demo075" />
-		<img src="img/icons/buttonBone.png" id="buttonBone" class="demo075" />
-		<img src="img/icons/buttonClay.png" id="buttonClay" class="demo075" />
-		<img src="img/icons/buttonFire.png" id="buttonFire" class="demo075" />
-		<img src="img/icons/buttonMetal.png" id="buttonMetal" class="demo075" />
-		<img src="img/icons/buttonRadiance.png" id="buttonRadiance" class="demo075" />
-		<img src="img/icons/buttonRock.png" id="buttonRock" class="demo075" />
-		<img src="img/icons/buttonSmoke.png" id="buttonSmoke" class="demo075" />
-		<img src="img/icons/buttonWater.png" id="buttonWater" class="demo075" />
-		<img src="img/icons/buttonWood.png" id="buttonWood" class="demo075" />
-		<h1><a href="index.html">Scrawl.js</a> - demonstration 075</h1>
-		<h2>Scrawl collisions - in-Group collision detection</h2>
-		<h3>Modules: block, images, collisions, animation</h3>
-		<canvas id="mycanvas" width="750" height="375"></canvas>
-		<p id="testmessage"></p>
-		<script src="../source/scrawlCore.js"></script>
-		<script id="myscript">
-			var mycode = function(){
-				'use strict'
-				var testTicker = Date.now(),
-					testTime = testTicker,
-					testNow,
-					testMessage = document.getElementById('testmessage');
-					
-				
-				//define variables
-				var myPad = scrawl.pad.mycanvas,
-					spriteList = ['Air', 'Bone', 'Clay', 'Fire', 'Metal', 'Radiance', 'Rock', 'Smoke', 'Water', 'Wood'],
-					myGroup,
-					minX = 10, 
-					minY = 10, 
-					maxX = 740, 
-					maxY = 365,
-					mySprite,
-					coord, 
-					hits,
-					moveSprites,
-					checkBounds,
-					checkCollisions;
-					
-				//load images into scrawl library
-				scrawl.getImagesByClass('demo075');
-					
-				//define groups
-				myGroup = scrawl.newGroup({
-					name: 'myGroup',
-					regionRadius: 80,
-					});
-					
-				//build cell collision map
-				scrawl.newBlock({
-					name:	'fence',
-					startX:	10,
-					startY:	10,
-					width:	730,
-					height:	355,
-					method:	'draw',
-					order:	10,
-					field:	true,
-					});
-				scrawl.buildFields();
-				
-				//define sprites
-				for(var i = 0, z = spriteList.length; i < z; i++){
-					scrawl.newPicture({	
-						name:					spriteList[i],
-						source:					'button'+spriteList[i],
-						startX:					(i * 70) + 80,
-						startY:					(i * 30) + 40,
-						deltaX:					(Math.random() * 8) - 4,
-						deltaY:					(Math.random() * 4) - 2,
-						strokeStyle:			'#d0d0d0',
-						handleX:				'center',
-						handleY:				'center',
-						method:					'drawFill',	
-						group:					'myGroup',
-						collisionPoints:		'edges',
-						checkHitUsingImageData:	true,
-						}).getImageData();
-					}
 
-				//animation functions
-				moveSprites = function(){
-					for(var i = 0, z = myGroup.sprites.length; i < z; i++){
-						mySprite = scrawl.sprite[myGroup.sprites[i]]
-						if(mySprite.scale < 0.2){
-							mySprite.scale = 0.2;
-							}
-						mySprite.setDelta({
-							scale: (mySprite.scale < 1) ? 0.005 : 0,
-							roll: (i/10) + 0.4,
-							});
-						}
-					myGroup.updateStart();
-					};
-					
-				checkBounds = function(){
-					hits = myGroup.getFieldSpriteHits();
-					for(var i = 0, z = hits.length; i < z; i++){
-						mySprite = scrawl.sprite[hits[i][0]];
-						coord = hits[i][1];
-						mySprite.revertStart();
-						if(!scrawl.isBetween(coord.x, minX, maxX, true)){
-							mySprite.reverse('deltaX');
-							mySprite.setDelta({
-								scale: -0.08,
-								});
-							}
-						if(!scrawl.isBetween(coord.y, minY, maxY, true)){
-							mySprite.reverse('deltaY');
-							mySprite.setDelta({
-								scale: -0.08,
-								});
-							}
-						mySprite.updateStart();
-						}
-					};
-					
-				checkCollisions = function(){
-					hits = myGroup.getInGroupSpriteHits();
-					for(var i = 0, z = hits.length; i < z; i++){
-						scrawl.sprite[hits[i][0]].exchange(scrawl.sprite[hits[i][1]], 'delta');
-						for(var j = 0; j < 2; j++){
-							mySprite = scrawl.sprite[hits[i][j]];
-							mySprite.setDelta({
-								scale: -0.08,
-								});
-							}
-						}
-					};
+<head>
+  <title>Demo 075</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+</head>
 
-				//animation object
-				scrawl.newAnimation({
-					fn: function(){
-						checkBounds();
-						checkCollisions();
-						moveSprites();
-						scrawl.render();
+<body>
+  <img src="img/icons/buttonAir.png" id="buttonAir" class="demo075" />
+  <img src="img/icons/buttonBone.png" id="buttonBone" class="demo075" />
+  <img src="img/icons/buttonClay.png" id="buttonClay" class="demo075" />
+  <img src="img/icons/buttonFire.png" id="buttonFire" class="demo075" />
+  <img src="img/icons/buttonMetal.png" id="buttonMetal" class="demo075" />
+  <img src="img/icons/buttonRadiance.png" id="buttonRadiance" class="demo075" />
+  <img src="img/icons/buttonRock.png" id="buttonRock" class="demo075" />
+  <img src="img/icons/buttonSmoke.png" id="buttonSmoke" class="demo075" />
+  <img src="img/icons/buttonWater.png" id="buttonWater" class="demo075" />
+  <img src="img/icons/buttonWood.png" id="buttonWood" class="demo075" />
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 075</h1>
+  <h2>Scrawl collisions - in-Group collision detection</h2>
+  <h3>Modules: block, images, collisions, animation</h3>
+  <canvas id="mycanvas" width="750" height="375"></canvas>
+  <p id="testmessage"></p>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="myscript">
+  var mycode = function() {
+    'use strict'
+    var testTicker = Date.now(),
+      testTime = testTicker,
+      testNow,
+      testMessage = document.getElementById('testmessage');
 
-						testNow = Date.now();
-						testTime =  testNow - testTicker;
-						testTicker = testNow;
-						testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime)+'; fps: '+parseInt(1000/testTime);
-						},
-					});
-				};
-				
-			scrawl.loadModules({
-				path: '../source/js/',
-				minified: false,
-				modules: ['block', 'images', 'collisions', 'animation'],
-				callback: function(){
-					window.addEventListener('load', function(){
-						scrawl.init();
-						mycode();
-						};
-					},
-				});
-		</script>
-    </body>
+
+    //define variables
+    var myPad = scrawl.pad.mycanvas,
+      spriteList = ['Air', 'Bone', 'Clay', 'Fire', 'Metal', 'Radiance', 'Rock', 'Smoke', 'Water', 'Wood'],
+      myGroup,
+      minX = 10,
+      minY = 10,
+      maxX = 740,
+      maxY = 365,
+      mySprite,
+      coord,
+      hits,
+      moveSprites,
+      checkBounds,
+      checkCollisions;
+
+    //load images into scrawl library
+    scrawl.getImagesByClass('demo075');
+
+    //define groups
+    myGroup = scrawl.newGroup({
+      name: 'myGroup',
+      regionRadius: 80,
+    });
+
+    //build cell collision map
+    scrawl.newBlock({
+      name: 'fence',
+      startX: 10,
+      startY: 10,
+      width: 730,
+      height: 355,
+      method: 'draw',
+      order: 10,
+      field: true,
+    });
+    scrawl.buildFields();
+
+    //define sprites
+    for (var i = 0, z = spriteList.length; i < z; i++) {
+      scrawl.newPicture({
+        name: spriteList[i],
+        source: 'button' + spriteList[i],
+        startX: (i * 70) + 80,
+        startY: (i * 30) + 40,
+        deltaX: (Math.random() * 8) - 4,
+        deltaY: (Math.random() * 4) - 2,
+        strokeStyle: '#d0d0d0',
+        handleX: 'center',
+        handleY: 'center',
+        method: 'drawFill',
+        group: 'myGroup',
+        collisionPoints: 'edges',
+        checkHitUsingImageData: true,
+      }).getImageData();
+    }
+
+    //animation functions
+    moveSprites = function() {
+      for (var i = 0, z = myGroup.sprites.length; i < z; i++) {
+        mySprite = scrawl.sprite[myGroup.sprites[i]]
+        if (mySprite.scale < 0.2) {
+          mySprite.scale = 0.2;
+        }
+        mySprite.setDelta({
+          scale: (mySprite.scale < 1) ? 0.005 : 0,
+          roll: (i / 10) + 0.4,
+        });
+      }
+      myGroup.updateStart();
+    };
+
+    checkBounds = function() {
+      hits = myGroup.getFieldSpriteHits();
+      for (var i = 0, z = hits.length; i < z; i++) {
+        mySprite = scrawl.sprite[hits[i][0]];
+        coord = hits[i][1];
+        mySprite.revertStart();
+        if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
+          mySprite.reverse('deltaX');
+          mySprite.setDelta({
+            scale: -0.08,
+          });
+        }
+        if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
+          mySprite.reverse('deltaY');
+          mySprite.setDelta({
+            scale: -0.08,
+          });
+        }
+        mySprite.updateStart();
+      }
+    };
+
+    checkCollisions = function() {
+      hits = myGroup.getInGroupSpriteHits();
+      for (var i = 0, z = hits.length; i < z; i++) {
+        scrawl.sprite[hits[i][0]].exchange(scrawl.sprite[hits[i][1]], 'delta');
+        for (var j = 0; j < 2; j++) {
+          mySprite = scrawl.sprite[hits[i][j]];
+          mySprite.setDelta({
+            scale: -0.08,
+          });
+        }
+      }
+    };
+
+    //animation object
+    scrawl.newAnimation({
+      fn: function() {
+        checkBounds();
+        checkCollisions();
+        moveSprites();
+        scrawl.render();
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
+      },
+    });
+  };
+
+  scrawl.loadModules({
+      path: '../source/js/',
+      minified: false,
+      modules: ['block', 'images', 'collisions', 'animation'],
+      callback: function() {
+        window.addEventListener('load', function() {
+            scrawl.init();
+            mycode();
+          };
+        },
+      });
+  </script>
+</body>
+
 </html>
