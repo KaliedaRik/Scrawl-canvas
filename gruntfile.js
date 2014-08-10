@@ -70,7 +70,7 @@ module.exports = function(grunt){
 		        options: {
 		            bases : [path.resolve('.')], 
 		            port: 8080,
-		            hostname: '*',
+		            hostname: '0.0.0.0',
 		            livereload: true
 		        }
 		    }
@@ -80,11 +80,10 @@ module.exports = function(grunt){
 		watch: {
 		    all: {
 	            files: ['demos/*.html', 'demos/js/*.js', 'source/*.js'],
-	            tasks: ['default'],
+	            tasks: ['jsbeautifier', 'jshint'],
 	            options: {
-	            	spawn: false,
+	            	//spawn: false,
 	                livereload: true,
-	                livereloadOnError: false
 		        }
 		    }
 		},
