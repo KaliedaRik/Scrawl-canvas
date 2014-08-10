@@ -18,81 +18,81 @@
   <p id="testmessage"></p>
   <script src="../source/scrawlCore.js"></script>
   <script id="myscript">
-  var mycode = function() {
-    'use strict'
-    var testTicker = Date.now(),
-      testTime = testTicker,
-      testNow,
-      testMessage = document.getElementById('testmessage');
+    var mycode = function() {
+      'use strict'
+      var testTicker = Date.now(),
+        testTime = testTicker,
+        testNow,
+        testMessage = document.getElementById('testmessage');
 
-    //define variables
-    var myInput,
-      updateInput;
+      //define variables
+      var myInput,
+        updateInput;
 
-    //import image
-    scrawl.getImagesByClass('demo405');
+      //import image
+      scrawl.getImagesByClass('demo405');
 
-    //clone image and add filter to it
-    scrawl.image.parrot.clone({
-      name: 'thresholdparrot',
-    }).filter('threshold', {
-      value: 0.5,
-      useSourceData: true,
-    });
-
-    //define sprites
-    scrawl.newPicture({
-      name: 'parrot',
-      startX: 10,
-      startY: 10,
-      scale: 0.5,
-      source: 'parrot',
-    }).clone({
-      startX: 120,
-      startY: 210,
-      source: 'thresholdparrot',
-    });
-
-    //preparing the DOM input elements
-    myInput = document.getElementById('myvalue');
-    myInput.value = 0.5;
-
-    //event listener
-    updateInput = function(e) {
-      scrawl.image.thresholdparrot.filter('threshold', {
-        value: parseFloat(myInput.value),
+      //clone image and add filter to it
+      scrawl.image.parrot.clone({
+        name: 'thresholdparrot',
+      }).filter('threshold', {
+        value: 0.5,
         useSourceData: true,
       });
-      e.preventDefault();
-      e.returnValue = false;
-    };
-    myInput.addEventListener('input', updateInput, false); //for firefox real-time updating
-    myInput.addEventListener('change', updateInput, false);
 
-    //animation object
-    scrawl.newAnimation({
-      fn: function() {
-        scrawl.render();
+      //define sprites
+      scrawl.newPicture({
+        name: 'parrot',
+        startX: 10,
+        startY: 10,
+        scale: 0.5,
+        source: 'parrot',
+      }).clone({
+        startX: 120,
+        startY: 210,
+        source: 'thresholdparrot',
+      });
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-        testMessage.innerHTML = 'Current threshold value: ' + myInput.value + '. Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
-      },
-    });
-  };
+      //preparing the DOM input elements
+      myInput = document.getElementById('myvalue');
+      myInput.value = 0.5;
 
-  scrawl.loadModules({
-      path: '../source/js/',
-      minified: false,
-      modules: ['images', 'filters', 'animation'],
-      callback: function() {
-        window.addEventListener('load', function() {
-            scrawl.init();
-            mycode();
-          };
+      //event listener
+      updateInput = function(e) {
+        scrawl.image.thresholdparrot.filter('threshold', {
+          value: parseFloat(myInput.value),
+          useSourceData: true,
+        });
+        e.preventDefault();
+        e.returnValue = false;
+      };
+      myInput.addEventListener('input', updateInput, false); //for firefox real-time updating
+      myInput.addEventListener('change', updateInput, false);
+
+      //animation object
+      scrawl.newAnimation({
+        fn: function() {
+          scrawl.render();
+
+          testNow = Date.now();
+          testTime = testNow - testTicker;
+          testTicker = testNow;
+          testMessage.innerHTML = 'Current threshold value: ' + myInput.value + '. Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
         },
       });
+    };
+
+    scrawl.loadModules({
+        path: '../source/js/',
+        minified: false,
+        modules: ['images', 'filters', 'animation'],
+        callback: function() {
+          window.addEventListener('load', function() {
+              scrawl.init();
+              mycode();
+            };
+          },
+        });
   </script>
 </body>
 

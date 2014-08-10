@@ -10,6 +10,7 @@
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 087</h1>
   <h2><a href="http://jsdo.it/djankey/test-fabricjs">djankey canvas performance test</a>
+
   </h2>
   <h3>Modules: images, animation</h3>
   <p>Move mouse over canvas to disturb blobs</p>
@@ -19,116 +20,116 @@
   <p id="testmessage"></p>
   <script src="../source/scrawlCore.js"></script>
   <script id="myscript">
-  var mycode = function() {
-    'use strict'
-    var testTicker = Date.now(),
-      testTime = testTicker,
-      testNow,
-      testMessage = document.getElementById('testmessage');
+    var mycode = function() {
+      'use strict'
+      var testTicker = Date.now(),
+        testTime = testTicker,
+        testNow,
+        testMessage = document.getElementById('testmessage');
 
-    //define variables
-    var here,
-      pad = scrawl.pad.mycanvas,
-      minX = 0,
-      minY = 0,
-      maxX = (465 - 29),
-      maxY = (465 - 29),
-      dx,
-      dy,
-      vx,
-      vy,
-      x,
-      y,
-      r,
-      mySprite,
-      background,
-      myBlob,
-      blobPositions = [],
-      moveBlobs;
+      //define variables
+      var here,
+        pad = scrawl.pad.mycanvas,
+        minX = 0,
+        minY = 0,
+        maxX = (465 - 29),
+        maxY = (465 - 29),
+        dx,
+        dy,
+        vx,
+        vy,
+        x,
+        y,
+        r,
+        mySprite,
+        background,
+        myBlob,
+        blobPositions = [],
+        moveBlobs;
 
-    //load images into scrawl library
-    scrawl.getImagesByClass('demo087');
+      //load images into scrawl library
+      scrawl.getImagesByClass('demo087');
 
-    //define sprites
-    background = scrawl.newPicture({
-      source: 'background',
-      fastStamp: true,
-    });
-
-    myBlob = scrawl.newPicture({
-      source: 'blob',
-      fastStamp: true,
-    });
-    for (var i = 0; i < 999; i++) {
-      blobPositions.push({
-        x: Math.random() * maxX,
-        y: Math.random() * maxY,
-        mx: 0,
-        my: 0,
+      //define sprites
+      background = scrawl.newPicture({
+        source: 'background',
+        fastStamp: true,
       });
-    }
 
-    //animation function
-    moveBlobs = function() {
-      pad.clear();
-      background.stamp();
-      for (var i = 0, z = blobPositions.length; i < z; i++) {
-        dx = blobPositions[i].x - here.x;
-        dy = blobPositions[i].y - here.y;
-        vx = blobPositions[i].mx;
-        vy = blobPositions[i].my;
-
-        if ((dx * dx) + (dy * dy) <= 10000) {
-          vx += dx * 0.01;
-          vy += dy * 0.01;
-        }
-        vx *= 0.95;
-        vy *= 0.95;
-        vx += Math.random() - 0.5;
-        vy += Math.random() - 0.5;
-
-        x = blobPositions[i].x += vx;
-        y = blobPositions[i].y += vy;
-
-        if (x < 0 || x > maxX || y < 0 || y > maxY) {
-          r = Math.atan2(y - (maxY / 2), x - (maxX / 2));
-          vx = -Math.cos(r);
-          vy = -Math.sin(r);
-        }
-        blobPositions[i].mx = vx;
-        blobPositions[i].my = vy;
-        myBlob.start.x = blobPositions[i].x;
-        myBlob.start.y = blobPositions[i].y;
-        myBlob.stamp();
+      myBlob = scrawl.newPicture({
+        source: 'blob',
+        fastStamp: true,
+      });
+      for (var i = 0; i < 999; i++) {
+        blobPositions.push({
+          x: Math.random() * maxX,
+          y: Math.random() * maxY,
+          mx: 0,
+          my: 0,
+        });
       }
-      pad.show();
-    };
 
-    //animation object
-    scrawl.newAnimation({
-      fn: function() {
-        here = pad.getMouse();
-        moveBlobs();
+      //animation function
+      moveBlobs = function() {
+        pad.clear();
+        background.stamp();
+        for (var i = 0, z = blobPositions.length; i < z; i++) {
+          dx = blobPositions[i].x - here.x;
+          dy = blobPositions[i].y - here.y;
+          vx = blobPositions[i].mx;
+          vy = blobPositions[i].my;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
-      },
-    });
-  };
+          if ((dx * dx) + (dy * dy) <= 10000) {
+            vx += dx * 0.01;
+            vy += dy * 0.01;
+          }
+          vx *= 0.95;
+          vy *= 0.95;
+          vx += Math.random() - 0.5;
+          vy += Math.random() - 0.5;
 
-  scrawl.loadModules({
-      path: '../source/js/',
-      minified: false,
-      modules: ['images', 'animation'],
-      callback: function() {
-        window.addEventListener('load', function() {
-            scrawl.init();
-            mycode();
-          };
+          x = blobPositions[i].x += vx;
+          y = blobPositions[i].y += vy;
+
+          if (x < 0 || x > maxX || y < 0 || y > maxY) {
+            r = Math.atan2(y - (maxY / 2), x - (maxX / 2));
+            vx = -Math.cos(r);
+            vy = -Math.sin(r);
+          }
+          blobPositions[i].mx = vx;
+          blobPositions[i].my = vy;
+          myBlob.start.x = blobPositions[i].x;
+          myBlob.start.y = blobPositions[i].y;
+          myBlob.stamp();
+        }
+        pad.show();
+      };
+
+      //animation object
+      scrawl.newAnimation({
+        fn: function() {
+          here = pad.getMouse();
+          moveBlobs();
+
+          testNow = Date.now();
+          testTime = testNow - testTicker;
+          testTicker = testNow;
+          testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
         },
       });
+    };
+
+    scrawl.loadModules({
+        path: '../source/js/',
+        minified: false,
+        modules: ['images', 'animation'],
+        callback: function() {
+          window.addEventListener('load', function() {
+              scrawl.init();
+              mycode();
+            };
+          },
+        });
   </script>
 </body>
 

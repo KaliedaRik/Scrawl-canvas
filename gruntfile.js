@@ -5,6 +5,19 @@ module.exports = function(grunt){
 	// Load Grunt tasks declared in the package.json file
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
+	// for handling only changed files with newer
+	var changedFiles = Object.create(null);
+	var onChange = grunt.util._.debounce(function() {
+		grunt.config('jshint.files', Object.keys(changedFiles));
+		grunt.config('jsbeautifier.files.src', Object.keys(changedFiles));
+		changedFiles = Object.create(null);
+	}, 200);
+
+	grunt.event.on('watch', function(action, filepath) {
+		changedFiles[filepath] = action;
+		onChange();
+	});
+
 	// Project configurations.
 	grunt.initConfig({
 
@@ -46,21 +59,21 @@ module.exports = function(grunt){
 
 		//jsbeautifier - enforces a set of standard coding conventions on the source .js files
 		jsbeautifier: {
-			options: {
-				html: {
-					indentSize: 2,
-				},
-				js: {
-					braceStyle: "end-expand",
-					indentWithTabs: true,
-					keepArrayIndentation: true,
-					keepFunctionIndentation: true,
-					spaceBeforeConditional: true,
-					spaceInParen: false,
-				}
-			},
 			all: {
-				files: ["source/*.js", "demos/js/*.js", "demos/*.html"],
+				options: {
+					html: {
+						indentSize: 2,
+					},
+					js: {
+						braceStyle: "end-expand",
+						indentWithTabs: true,
+						keepArrayIndentation: true,
+						keepFunctionIndentation: true,
+						spaceBeforeConditional: true,
+						spaceInParen: false,
+					}
+				},
+				files: { src: ["source/*.js", "demos/js/*.js", "demos/*.html"]}
 			}
 		},
 
@@ -82,6 +95,7 @@ module.exports = function(grunt){
 	            files: ['demos/*.html', 'demos/js/*.js', 'source/*.js'],
 	            tasks: ['newer:jsbeautifier:all', 'newer:jshint:all'],
 	            options: {
+	            	nospawn: true,
 	                livereload: true
 		        }
 		    }
