@@ -95,8 +95,9 @@ module.exports = function(grunt){
 	            files: ['demos/*.html', 'demos/js/*.js', 'source/*.js'],
 	            tasks: ['newer:jsbeautifier:all', 'newer:jshint:all'],
 	            options: {
-	            	nospawn: true,
-	                livereload: true
+	            	spawn: false,
+	                livereload: true,
+	                livereloadOnError: false
 		        }
 		    }
 		},
