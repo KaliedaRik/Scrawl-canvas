@@ -46,18 +46,10 @@ module.exports = function(grunt){
 
 		//jsbeautifier - enforces a set of standard coding conventions on the source .js files
 		jsbeautifier: {
-			files: ["source/*.js", "demos/js/*.js", "demos/*.html"],
 			options: {
-        html: {
-          braceStyle: "collapse",
-          indentChar: " ",
-          indentScripts: "keep",
-          indentSize: 2,
-          maxPreserveNewlines: 10,
-          preserveNewlines: true,
-          unformatted: ["a", "sub", "sup", "b", "i", "u"],
-          wrapLineLength: 0
-        },
+				html: {
+					indentSize: 2,
+				},
 				js: {
 					braceStyle: "end-expand",
 					indentWithTabs: true,
@@ -66,6 +58,9 @@ module.exports = function(grunt){
 					spaceBeforeConditional: true,
 					spaceInParen: false,
 				}
+			},
+			all: {
+				files: ["source/*.js", "demos/js/*.js", "demos/*.html"],
 			}
 		},
 
@@ -85,6 +80,7 @@ module.exports = function(grunt){
 		watch: {
 		    all: {
 	            files: ['demos/*.html', 'demos/js/*.js', 'source/*.js'],
+	            tasks: ['newer:jsbeautifier:all', 'newer:jshint:all'],
 	            options: {
 	                livereload: true
 		        }
@@ -103,8 +99,8 @@ module.exports = function(grunt){
 	grunt.registerTask('release', ['jsbeautifier', 'jshint', 'uglify', 'yuidoc']);
 	grunt.registerTask('minify', ['uglify']);
 	grunt.registerTask('docs', ['yuidoc']);
-	grunt.registerTask('lint', ['newer:jshint']);
-	grunt.registerTask('beautify', ['newer:jsbeautifier']);
+	grunt.registerTask('lint', ['jshint']);
+	grunt.registerTask('beautify', ['jsbeautifier']);
 	grunt.registerTask('server', ['express', 'open', 'watch']);
 	grunt.registerTask('default', ['beautify', 'lint']);
 };
