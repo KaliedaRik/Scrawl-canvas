@@ -21,7 +21,7 @@ var mycode = function() {
 			testNow = Date.now();
 			testTime =  testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: '+parseInt(testTime, 10)+'; fps: '+parseInt(1000/testTime);
+			testMessage.innerHTML = 'Milliseconds per screen refresh: '+Math.ceil(testTime)+'; fps: '+Math.floor(1000/testTime);
 			*/
 		},
 	});
@@ -29,7 +29,7 @@ var mycode = function() {
 	/* static timing display - remove if using real-time timing display
 	testNow = Date.now();
 	testTime =  testNow - testTicker;
-	testMessage.innerHTML = 'Render time: '+parseInt(testTime, 10)+'ms';
+	testMessage.innerHTML = 'Render time: '+Math.ceil(testTime)+'ms';
 	*/
 };
 

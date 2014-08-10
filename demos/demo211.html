@@ -18,106 +18,113 @@
     <li>Wheel follows mouse correctly in Firefox, both on front and back sides of the canvas</li>
     <li>Wheel remains stationary if mouse does not move in all browsers (desired outcome: wheel moves across canvas as canvas rotates)</li>
     <li>Wheel movement erratic in IE11, Chrome, Opera, SafariWindows (follows the unrotated canvas coordinates), and backface movements are opposite to expected directions</li>
-    <li>mousemove listener not fired on canvas when mouse pointer is over BLAH div, and div is 'in front of' canvas (IE11, Chrome, Opera, SafariWindows) - can be mitigated by setting Blah div's <i>pointerEvents</i> style attribute to 'none', though that in turn disables the Blah link's interactivity ...</li>
+    <li>mousemove listener not fired on canvas when mouse pointer is over BLAH div, and div is 'in front of' canvas (IE11, Chrome, Opera, SafariWindows) - can be mitigated by setting Blah div's <i>pointerEvents</i> style attribute to 'none', though that in
+      turn disables the Blah link's interactivity ...</li>
   </ul>
 
   <div id="mystack" class="scrawlstack">
-    <div id="testpanel"><a href="">BLAH blah blah</a> blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah</div>
+    <div id="testpanel"><a href="">BLAH blah blah</a> blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah</div>
     <canvas id="mycanvas" width="600" height="400"></canvas>
   </div>
 
   <p id="testmessage"></p>
   <script src="../source/scrawlCore.js"></script>
   <script id="myscript">
-  var mycode = function() {
-    'use strict'
-    var testTicker = Date.now(),
-      testTime = testTicker,
-      testNow,
-      testMessage = document.getElementById('testmessage');
+    var mycode = function() {
+      'use strict'
+      var testTicker = Date.now(),
+        testTime = testTicker,
+        testNow,
+        testMessage = document.getElementById('testmessage');
 
-    //define variables
-    var mystack = scrawl.stack.mystack,
-      mypad = scrawl.pad.mycanvas,
-      mydiv = scrawl.element.testpanel,
-      mycanvas = scrawl.pad.mycanvas,
-      eldiv = scrawl.elm.testpanel,
-      elstk = scrawl.stk.mystack,
-      here;
+      //define variables
+      var mystack = scrawl.stack.mystack,
+        mypad = scrawl.pad.mycanvas,
+        mydiv = scrawl.element.testpanel,
+        mycanvas = scrawl.pad.mycanvas,
+        eldiv = scrawl.elm.testpanel,
+        elstk = scrawl.stk.mystack,
+        here;
 
-    //style the stack
-    mystack.set({
-      width: 600,
-      height: 400,
-      perspectiveZ: 1000,
-      border: '1px solid red',
-    });
+      //style the stack
+      mystack.set({
+        width: 600,
+        height: 400,
+        perspectiveZ: 1000,
+        border: '1px solid red',
+      });
 
-    //style the stack elements
-    mycanvas.set({
-      startX: 300,
-      startY: 200,
-      handleX: 'center',
-      handleY: 'center',
-    });
-    mydiv.set({
-      startX: 150,
-      startY: 100,
-      width: 300,
-      height: 200,
-      border: '1px solid black',
-      overflow: 'hidden',
-      handleX: 'center',
-      handleY: 'center',
-      //pointerEvents: 'none',
-    });
+      //style the stack elements
+      mycanvas.set({
+        startX: 300,
+        startY: 200,
+        handleX: 'center',
+        handleY: 'center',
+      });
+      mydiv.set({
+        startX: 150,
+        startY: 100,
+        width: 300,
+        height: 200,
+        border: '1px solid black',
+        overflow: 'hidden',
+        handleX: 'center',
+        handleY: 'center',
+        //pointerEvents: 'none',
+      });
 
-    //build sprite
-    scrawl.newWheel({
-      name: 'mywheel',
-      radius: 70,
-      fillStyle: 'blue',
-      strokeStyle: 'red',
-      lineWidth: 10,
-      method: 'fillDraw',
-      pivot: 'mouse',
-    });
+      //build sprite
+      scrawl.newWheel({
+        name: 'mywheel',
+        radius: 70,
+        fillStyle: 'blue',
+        strokeStyle: 'red',
+        lineWidth: 10,
+        method: 'fillDraw',
+        pivot: 'mouse',
+      });
 
-    //animation object
-    scrawl.newAnimation({
-      fn: function() {
+      //animation object
+      scrawl.newAnimation({
+        fn: function() {
 
-        scrawl.sprite.mywheel.set({
-          visibility: (mycanvas.getMouse().active) ? true : false,
-        });
-        scrawl.render();
-        mycanvas.setDelta({
-          yaw: 0.5,
-        });
-        mydiv.setDelta({
-          pitch: 0.5,
-        });
-        scrawl.renderElements();
+          scrawl.sprite.mywheel.set({
+            visibility: (mycanvas.getMouse().active) ? true : false,
+          });
+          scrawl.render();
+          mycanvas.setDelta({
+            yaw: 0.5,
+          });
+          mydiv.setDelta({
+            pitch: 0.5,
+          });
+          scrawl.renderElements();
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-        testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
-      },
-    });
-  };
-
-  scrawl.loadModules({
-      path: '../source/js/',
-      minified: false,
-      modules: ['animation', 'stacks', 'wheel'],
-      callback: function() {
-        window.addEventListener('load', function() {
-            scrawl.init();
-            mycode();
-          };
+          testNow = Date.now();
+          testTime = testNow - testTicker;
+          testTicker = testNow;
+          testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime) + '; fps: ' + parseInt(1000 / testTime);
         },
       });
+    };
+
+    scrawl.loadModules({
+        path: '../source/js/',
+        minified: false,
+        modules: ['animation', 'stacks', 'wheel'],
+        callback: function() {
+          window.addEventListener('load', function() {
+              scrawl.init();
+              mycode();
+            };
+          },
+        });
   </script>
 </body>
 
