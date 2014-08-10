@@ -57,6 +57,7 @@ The core module is the only essential module in Scrawl. It must always be direct
 
 ## Loading the module
 
+
 @example
 	<script src="path/to/scrawlCore-min.js"></script>
 

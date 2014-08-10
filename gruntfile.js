@@ -90,12 +90,12 @@ module.exports = function(grunt){
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['jsbeautifier', 'jshint']);
 	grunt.registerTask('release', ['jsbeautifier', 'jshint', 'uglify', 'yuidoc']);
 	grunt.registerTask('minify', ['uglify']);
 	grunt.registerTask('docs', ['yuidoc']);
-	grunt.registerTask('lint', ['jshint']);
-	grunt.registerTask('beautify', ['jsbeautifier']);
+	grunt.registerTask('lint', ['newer:jshint']);
+	grunt.registerTask('beautify', ['newer:jsbeautifier']);
 	grunt.registerTask('server', ['express', 'open', 'watch']);
+	grunt.registerTask('default', ['beautify', 'lint']);
 };
 	
