@@ -5,19 +5,6 @@ module.exports = function(grunt){
 	// Load Grunt tasks declared in the package.json file
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-	// for handling only changed files with newer
-	var changedFiles = Object.create(null);
-	var onChange = grunt.util._.debounce(function() {
-		grunt.config('jshint.files', Object.keys(changedFiles));
-		grunt.config('jsbeautifier.files.src', Object.keys(changedFiles));
-		changedFiles = Object.create(null);
-	}, 200);
-
-	grunt.event.on('watch', function(action, filepath) {
-		changedFiles[filepath] = action;
-		onChange();
-	});
-
 	// Project configurations.
 	grunt.initConfig({
 
@@ -93,7 +80,7 @@ module.exports = function(grunt){
 		watch: {
 		    all: {
 	            files: ['demos/*.html', 'demos/js/*.js', 'source/*.js'],
-	            tasks: ['newer:jsbeautifier:all', 'newer:jshint:all'],
+	            tasks: ['default'],
 	            options: {
 	            	spawn: false,
 	                livereload: true,
@@ -117,6 +104,6 @@ module.exports = function(grunt){
 	grunt.registerTask('lint', ['jshint']);
 	grunt.registerTask('beautify', ['jsbeautifier']);
 	grunt.registerTask('server', ['express', 'open', 'watch']);
-	grunt.registerTask('default', ['beautify', 'lint']);
+	grunt.registerTask('default', ['jsbeautifier', 'jshint']);
 };
 	
