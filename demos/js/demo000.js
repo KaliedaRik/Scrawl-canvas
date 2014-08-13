@@ -1,5 +1,6 @@
 var mycode = function() {
 	'use strict';
+
 	/* variables required by the static/real-time timing display
 	var testTicker = Date.now(),
 		testTime = testTicker,

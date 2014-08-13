@@ -1,0 +1,109 @@
+var mycode = function() {
+	'use strict';
+	var testTicker = Date.now(),
+		testTime = testTicker,
+		testNow,
+		testMessage = document.getElementById('testmessage');
+
+	//setup variables
+	var makeLine,
+		checkBounds,
+		minX = 0,
+		minY = 0,
+		maxX = 750,
+		maxY = 375,
+		positions = [150, 200, 300, 200, 450, 200, 600, 200],
+		positionDeltas = [],
+		sprites = [],
+		count = 0,
+		noOfLines = 30,
+		i, iz;
+
+	for (i = 0; i < 8; i++) {
+		positionDeltas.push((Math.random() * 11) - 6);
+	}
+
+	//factory for producing bezier curves
+	makeLine = function(item) {
+		return scrawl.makeBezier({
+			name: item,
+			startX: positions[0],
+			startY: positions[1],
+			startControlX: positions[2],
+			startControlY: positions[3],
+			endControlX: positions[4],
+			endControlY: positions[5],
+			endX: positions[6],
+			endY: positions[7],
+			strokeStyle: 'red',
+		});
+	};
+
+	//bounds checking function
+	checkBounds = function() {
+		var j;
+		for (j = 0; j < 8; j += 2) {
+			if (!scrawl.isBetween((positions[j] + positionDeltas[j]), minX, maxX)) {
+				positionDeltas[j] = -positionDeltas[j];
+			}
+			if (!scrawl.isBetween((positions[j + 1] + positionDeltas[j + 1]), minY, maxY)) {
+				positionDeltas[j + 1] = -positionDeltas[j + 1];
+			}
+			positions[j] += positionDeltas[j];
+			positions[j + 1] += positionDeltas[j + 1];
+		}
+	};
+
+	//build initial set of curves
+	for (i = 0, iz = noOfLines; i < iz; i++) {
+		checkBounds();
+		sprites.push(makeLine('curve' + i));
+	}
+
+	//animation object
+	scrawl.newAnimation({
+		fn: function() {
+			var sprite = sprites[count];
+			checkBounds();
+			sprite.start.set({
+				x: positions[0],
+				y: positions[1],
+			});
+			//scrawl bezier curve points are measured relative to the start point
+			scrawl.point[sprite.name + '_p2'].local.set({
+				x: positions[2] - positions[0],
+				y: positions[3] - positions[1],
+			});
+			scrawl.point[sprite.name + '_p3'].local.set({
+				x: positions[4] - positions[0],
+				y: positions[5] - positions[1],
+			});
+			scrawl.point[sprite.name + '_p4'].local.set({
+				x: positions[6] - positions[0],
+				y: positions[7] - positions[1],
+			});
+			count++;
+			if (count >= noOfLines) {
+				count = 0;
+			}
+			scrawl.render();
+
+			testNow = Date.now();
+			testTime = testNow - testTicker;
+			testTicker = testNow;
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+		},
+	});
+};
+
+scrawl.loadModules({
+	path: '../source/',
+	minified: false,
+	modules: ['animation', 'path', 'factories'],
+	callback: function() {
+		window.addEventListener('load', function() {
+			scrawl.init();
+			mycode();
+		}, false);
+	},
+});
