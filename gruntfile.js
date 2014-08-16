@@ -1,8 +1,12 @@
 module.exports = function(grunt){
 
+	// used by express server
 	var path = require('path');
 	
-	// Load Grunt tasks declared in the package.json file
+	// measures the time each task takes
+  require('time-grunt')(grunt);
+
+ 	// Load Grunt tasks declared in the package.json file
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Project configurations.
@@ -14,7 +18,7 @@ module.exports = function(grunt){
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
 				drop_console: true,
 			},
-			mytarget: {
+			all: {
 				files: [{
 					expand: true,
 					cwd: 'source',
@@ -41,58 +45,66 @@ module.exports = function(grunt){
 
 		//jshint - using default settings to test all .js files in the source directory
 		jshint: {
-			all: ['source/*.js', "demos/js/*.js"]
+			all: {
+				src: ['source/*.js', "demos/js/*.js"]
+			}
 		},
 
 		//jsbeautifier - enforces a set of standard coding conventions on the source .js files
 		jsbeautifier: {
-			all: {
-				options: {
-					html: {
-						indentSize: 2,
-					},
-					js: {
-						braceStyle: "end-expand",
-						indentWithTabs: true,
-						keepArrayIndentation: true,
-						keepFunctionIndentation: true,
-						spaceBeforeConditional: true,
-						spaceInParen: false,
-					}
+			options: {
+				html: {
+					indentSize: 2,
 				},
-				files: { src: ["source/*.js", "demos/js/*.js", "demos/*.html"]}
+				js: {
+					braceStyle: "end-expand",
+					indentWithTabs: true,
+					keepArrayIndentation: true,
+					keepFunctionIndentation: true,
+					spaceBeforeConditional: true,
+					spaceInParen: false,
+				}
+			},
+			htmlfiles: {
+				src: ["demos/*.html"]
+			},
+			jsfiles: {
+				src: ["source/*.js", "demos/js/*.js"]
 			}
 		},
 
 		// Demo testing - Grunt express
 		express: {
-		    all: {
-		        options: {
-		            bases : [path.resolve('.')], 
-		            port: 8080,
-		            hostname: '0.0.0.0',
-		            livereload: true
-		        }
-		    }
+			all: {
+				options: {
+					bases : [path.resolve('.')], 
+					port: 8080,
+					hostname: '0.0.0.0',
+					livereload: true
+				}
+			}
 		},
 
 		// Demo testing - grunt-watch
 		watch: {
-		    all: {
-	            files: ['demos/*.html', 'demos/js/*.js', 'source/*.js'],
-	            tasks: ['jsbeautifier', 'jshint'],
-	            options: {
-	            	//spawn: false,
-	                livereload: true,
-		        }
-		    }
+			htmlfiles: {
+				files: ['demos/*.html'],
+				tasks: ['newer:jsbeautifier:htmlfiles']
+			},
+			jsfiles: {
+				files: ['demos/js/*.js', 'source/*.js'],
+				tasks: ['newer:jsbeautifier:jsfiles', 'newer:jshint:all'],
+				options: {
+					livereload: true,
+				}
+			}
 		},
 
 		// Demo testing - grunt-open
 		open: {
-		    all: {
-		        path: 'http://localhost:8080/demos/index.html'
-		    }
+			all: {
+				path: 'http://localhost:8080/demos/index.html'
+			}
 		}
 	});
 
