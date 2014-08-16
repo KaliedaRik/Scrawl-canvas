@@ -3,9 +3,6 @@ module.exports = function(grunt){
 	// used by express server
 	var path = require('path');
 	
-	// measures the time each task takes
-  require('time-grunt')(grunt);
-
  	// Load Grunt tasks declared in the package.json file
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
