@@ -2934,9 +2934,6 @@ Calculate the DOM element's current display offset values
 			do {
 				dox += myDisplay.offsetLeft;
 				doy += myDisplay.offsetTop;
-				//original
-				//} while (myDisplay = myDisplay.offsetParent);
-				//linted
 				myDisplay = myDisplay.offsetParent;
 			} while (myDisplay.offsetParent);
 		}
