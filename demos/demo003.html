@@ -16,6 +16,22 @@
     <p>It looks like your browser doesn't support the &lt;canvas&gt; element.</p>
   </canvas>
   <p id="testmessage"></p>
+
+  <div id="testdetails">
+    <p><b>Scenario:</b> automatically detect a canvas element defined in the DOM, and populate it with sprites</p>
+    <p><b>Actions:</b>
+    </p>
+    <ol>
+      <li>detect the existence of a canvas element via scrawl.init(), scrawl.pageInit() and scrawl.getCanvases()</li>
+      <li>create several phrase sprites using factory and clone functions, and associate them with canvas element's Cell wrapper</li>
+      <li>display phrase sprites on canvas</li>
+    </ol>
+    <p><b>Known browser issues:</b> none</p>
+    <p><b>Result images:</b>
+    </p>
+    <img src="img/demopics/demo003.png" alt="image of expected test result" />
+  </div>
+
   <script src="../source/scrawlCore.js"></script>
   <script src="js/demo003.js"></script>
 </body>

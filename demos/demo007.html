@@ -14,6 +14,25 @@
   <h3>Modules: block, phrase</h3>
   <canvas id="mycanvas" width="400" height="200"></canvas>
   <p id="testmessage"></p>
+
+  <div id="testdetails">
+    <p><b>Scenario:</b> demonstrate 8 of the possible 'method' stamping actions for a Block sprite</p>
+    <p><b>Actions:</b>
+    </p>
+    <ol>
+      <li>define an array of 'method' attribute strings</li>
+      <li>set the canvas base Cell's background color attribute, and compile it using Pad.compile()</li>
+      <li>create a template block sprite, styling it with an offset shadow and different fill and stroke colors</li>
+      <li>create a template phrase sprite; position the phrase relative to the block sprite using 'pivot' and 'handleY' attributes</li>
+      <li>stamp the Block and Phrase sprites onto the canvas repeatedly (using Block.stamp() and Phrase.stamp()), iterating over the 'method' array to amend the templates' attributes (using Block.set() and Phrase.set())</li>
+      <li>display the final results using Pad.show()</li>
+    </ol>
+    <p><b>Known browser issues:</b> none</p>
+    <p><b>Result images:</b>
+    </p>
+    <img src="img/demopics/demo007.png" alt="image of expected test result" />
+  </div>
+
   <script src="../source/scrawlCore.js"></script>
   <script src="js/demo007.js"></script>
 </body>

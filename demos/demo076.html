@@ -6,309 +6,52 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
   <style>
-    form {
-      margin: 10px 0 -10px 0;
+    #form p {
+      display: inline-block;
+      font-size: 120%;
+      padding-right: 0.6em;
+    }
+    #form select {
+      font-size: 120%;
+    }
+    #form option {
+      font-size: 120%;
     }
   </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 076</h1>
-  <form>
-    <h2>Scrawl collisions - Block.collisionPoints =
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      <select id="collision">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <option value="all">'all'</option>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <option value="perimeter">'perimeter'</option>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <option value="center">'center'</option>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <option value="corners">'corners'</option>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <option value="edges">'edges'</option>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <option value="start">'start'</option>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      </select>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </h2>
-  </form>
   <h3 style="margin-top: 0;">Modules: block, wheel, phrase</h3>
   <p>(used with Block, Phrase, Picture and Shape sprites)</p>
+  <div id="form">
+    <p>Scrawl collisions - Block.collisionPoints =</p>
+    <select id="collision">
+      <option value="all">'all'</option>
+      <option value="perimeter">'perimeter'</option>
+      <option value="center">'center'</option>
+      <option value="corners">'corners'</option>
+      <option value="edges">'edges'</option>
+      <option value="start">'start'</option>
+    </select>
+  </div>
   <canvas id="mycanvas" width="400" height="300"></canvas>
   <p id="testmessage"></p>
+
+  <div id="testdetails">
+    <p><b>Scenario:</b> ???</p>
+    <p><b>Actions:</b>
+    </p>
+    <ol>
+      <li>???</li>
+    </ol>
+    <p><b>Known browser issues:</b> ???</p>
+    <p><b>Result images:</b>
+    </p>
+    <img src="img/demopics/demo076.png" alt="image of expected test result" />
+  </div>
+
   <script src="../source/scrawlCore.js"></script>
   <script src="js/demo076.js"></script>
 </body>
