@@ -269,6 +269,7 @@ The core module is the only essential module in Scrawl. It must always be direct
 
 ## Loading the module
 
+
 @example
 	&lt;script src=&quot;path/to/scrawlCore-min.js&quot;&gt;&lt;/script&gt;
 
@@ -527,9 +528,7 @@ Any supplied callback function will only be run once all modules have been loade
 		var path = items.path || &#x27;&#x27;,
 			modules = (my.isa(items.modules, &#x27;arr&#x27;)) ? items.modules : [items.modules],
 			callback = (my.isa(items.callback, &#x27;fn&#x27;)) ? items.callback : function() {},
-			//FOR DEVELOPMENT TESTING, use mini = false version
-			//mini = (my.xt(items.minified)) ? items.minified : true,
-			mini = (my.xt(items.minified)) ? items.minified : false,
+			mini = (my.xt(items.minified)) ? items.minified : true,
 			tail = (mini) ? &#x27;-min.js&#x27; : &#x27;.js&#x27;,
 			loaded = [].concat(modules),
 			getModule = function(module) {
@@ -3147,9 +3146,6 @@ Calculate the DOM element&#x27;s current display offset values
 			do {
 				dox += myDisplay.offsetLeft;
 				doy += myDisplay.offsetTop;
-				//original
-				//} while (myDisplay = myDisplay.offsetParent);
-				//linted
 				myDisplay = myDisplay.offsetParent;
 			} while (myDisplay.offsetParent);
 		}

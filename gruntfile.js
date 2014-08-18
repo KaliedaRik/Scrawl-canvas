@@ -9,6 +9,8 @@ module.exports = function(grunt){
 	// Project configurations.
 	grunt.initConfig({
 
+		pkg: grunt.file.readJSON('package.json'),
+
 		//uglify is used to minify .js files from source/ to min/ directories
 		uglify: {
 			options: {
@@ -19,7 +21,7 @@ module.exports = function(grunt){
 				files: [{
 					expand: true,
 					cwd: 'source',
-					src: '*.js',
+					src: '**/*.js',
 					dest: 'min',
 					ext: '-min.js'
 				}]

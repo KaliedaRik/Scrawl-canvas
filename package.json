@@ -21,9 +21,9 @@
 		"grunt-contrib-uglify": "~0.2.2",
 		"grunt-jsbeautifier": "~0.2.6",
 		"grunt-contrib-yuidoc": "~0.5.0",
-    "grunt-express": "~1.2.1",
-    "grunt-contrib-watch": "~0.6.0",
-    "grunt-open": "~0.2.3",
-    "grunt-newer": "~0.7.0"
+		"grunt-express": "~1.2.1",
+		"grunt-contrib-watch": "~0.6.0",
+		"grunt-open": "~0.2.3",
+		"grunt-newer": "~0.7.0"
 	}
 }
