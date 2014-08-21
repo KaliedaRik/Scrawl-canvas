@@ -12,10 +12,13 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 003</h1>
   <h2>Importing a canvas into the Scrawl library</h2>
   <h3>Modules: phrase</h3>
+
+  <div id="testsetup">
   <canvas id="mycanvas" width="400" height="200">
     <p>It looks like your browser doesn't support the &lt;canvas&gt; element.</p>
   </canvas>
   <p id="testmessage"></p>
+</div>
 
   <div id="testdetails">
     <p><b>Scenario:</b> automatically detect a canvas element defined in the DOM, and populate it with sprites</p>
@@ -33,7 +36,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo003.js"></script>
+  <script id="testscript" src="js/demo003.js"></script>
 </body>
 
 </html>
