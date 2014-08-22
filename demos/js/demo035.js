@@ -1,10 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
-		testMessage = document.getElementById('testmessage'),
-		status = document.getElementById('status');
+		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var mySprites,
@@ -32,7 +33,8 @@ var mycode = function() {
 		updateXString,
 		updateYString,
 		updateReverse,
-		updateUpend;
+		updateUpend,
+		status = document.getElementById('status');
 
 	//import image into scrawl library
 	scrawl.getImagesByClass('demo035');
@@ -441,10 +443,12 @@ var mycode = function() {
 			scrawl.render();
 
 			status.innerHTML = '<b>Current settings - scale:</b> ' + currentScale + '; <b>handleX:</b> ' + currentXHandle + '; <b>handleY:</b> ' + currentYHandle + '; <b>flipReverse:</b> ' + currentFlipReverse + '; <b>flipUpend:</b> ' + currentFlipUpend;
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			//hide-end
 		},
 	});
 };

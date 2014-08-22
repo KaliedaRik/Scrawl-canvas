@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//add a canvas to the web page
 	scrawl.addCanvasToPage({
@@ -98,10 +100,12 @@ var mycode = function() {
 		fn: function() {
 			scrawl.pad.canvas.render();
 
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			//hide-end
 		},
 	});
 };

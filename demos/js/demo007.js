@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var methods = ['draw', 'fill', 'drawFill', 'fillDraw', 'floatOver', 'sinkInto', 'none', 'clear'],
@@ -55,9 +57,11 @@ var mycode = function() {
 	//display results
 	scrawl.show();
 
+	//hide-start
 	testNow = Date.now();
 	testTime = testNow - testTicker;
 	testMessage.innerHTML = 'Render time: ' + parseInt(testTime, 10) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({

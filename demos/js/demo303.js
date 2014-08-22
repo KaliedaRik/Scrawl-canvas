@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var ticker = Date.now(),
 		sTime = ticker,
 		now,
 		msg = document.getElementById('msg');
+	//hide-end
 
 	//define variables
 	var pad = scrawl.pad.mycanvas,
@@ -214,10 +216,12 @@ var mycode = function() {
 			checkBounds();
 			pad.render();
 
+			//hide-start
 			now = Date.now();
 			sTime = now - ticker;
 			ticker = now;
 			msg.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(sTime) + '; fps: ' + Math.floor(1000 / sTime);
+			//hide-end
 		},
 	});
 };

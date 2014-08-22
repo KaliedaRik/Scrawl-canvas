@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//import images into scrawl library
 	scrawl.getImagesByClass('demo017');
@@ -22,9 +24,11 @@ var mycode = function() {
 	//display the canvas
 	scrawl.render();
 
+	//hide-start
 	testNow = Date.now();
 	testTime = testNow - testTicker;
 	testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({

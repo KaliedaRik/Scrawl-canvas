@@ -17,21 +17,25 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 205</h1>
   <h2>CSS 3d rotating cube in Scrawl stack</h2>
   <h3>Modules: images, phrase, animation, stacks</h3>
-  <div id="mystack" class="scrawlstack">
-    <p id="instructions">Move mouse over stack</p>
-    <canvas id="top" width="200" height="200"></canvas>
-    <canvas id="bottom" width="200" height="200"></canvas>
-    <canvas id="left" width="200" height="200"></canvas>
-    <canvas id="right" width="200" height="200"></canvas>
-    <canvas id="front" width="200" height="200"></canvas>
-    <canvas id="back" width="200" height="200"></canvas>
+
+  <div id="testsetup">
+    <div id="mystack" class="scrawlstack">
+      <p id="instructions">Move mouse over stack</p>
+      <canvas id="top" width="200" height="200"></canvas>
+      <canvas id="bottom" width="200" height="200"></canvas>
+      <canvas id="left" width="200" height="200"></canvas>
+      <canvas id="right" width="200" height="200"></canvas>
+      <canvas id="front" width="200" height="200"></canvas>
+      <canvas id="back" width="200" height="200"></canvas>
+    </div>
+    <img src="img/graphs/burglary-color.jpg" id="burglary" class="demo205" />
+    <img src="img/graphs/damage-color.jpg" id="damage" class="demo205" />
+    <img src="img/graphs/fraud-color.jpg" id="fraud" class="demo205" />
+    <img src="img/graphs/robbery-color.jpg" id="robbery" class="demo205" />
+    <img src="img/graphs/theft-color.jpg" id="theft" class="demo205" />
+    <img src="img/graphs/violence-color.jpg" id="violence" class="demo205" />
   </div>
-  <img src="img/graphs/burglary-color.jpg" id="burglary" class="demo205" />
-  <img src="img/graphs/damage-color.jpg" id="damage" class="demo205" />
-  <img src="img/graphs/fraud-color.jpg" id="fraud" class="demo205" />
-  <img src="img/graphs/robbery-color.jpg" id="robbery" class="demo205" />
-  <img src="img/graphs/theft-color.jpg" id="theft" class="demo205" />
-  <img src="img/graphs/violence-color.jpg" id="violence" class="demo205" />
+
   <p id="testmessage"></p>
 
   <div id="testdetails">
@@ -48,7 +52,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo205.js"></script>
+  <script id="testscript" src="js/demo205.js"></script>
 </body>
 
 </html>

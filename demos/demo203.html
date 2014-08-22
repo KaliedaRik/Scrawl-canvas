@@ -58,20 +58,24 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 203</h1>
   <h2>Adding HTML elements to a Scrawl stack</h2>
   <h3>Modules: phrase, stacks, animation</h3>
-  <h3 id="harry" class="gray inwego">Adding elements to the stack</h3>
-  <ul id="horace">
-    <li>Click to move stuff</li>
-    <li>into the Scrawl stack</li>
-  </ul>
-  <div id="davey" class="inwego">
-    <p id="peter">This &lt;p&gt;tag is in fact in a &lt;div&gt; class, alongside this <a href="http://scrawl.rikweb.org.uk/">link back to the main Scrawl.js page</a>.</p>
+
+  <div id="testsetup">
+    <h3 id="harry" class="gray inwego">Adding elements to the stack</h3>
+    <ul id="horace">
+      <li>Click to move stuff</li>
+      <li>into the Scrawl stack</li>
+    </ul>
+    <div id="davey" class="inwego">
+      <p id="peter">This &lt;p&gt;tag is in fact in a &lt;div&gt; class, alongside this <a href="http://scrawl.rikweb.org.uk/">link back to the main Scrawl.js page</a>.</p>
+    </div>
+    <div id="container">
+      <canvas id="mycanvas" class="stuff nonsense stack:mystack"></canvas>
+      <p>In the initial HTML markup for this page, this &lt;p&gt; element followed the &lt;canvas&gt; element within the 'container' &lt;div&gt;. But picking up canvases and putting them into stacks causes them to be placed at the end of their parent element's
+        child chain, which is why this text now appears above the stack &lt;div&gt; and its canvas element.</p>
+    </div>
+    <img id="cow" src="img/cow01.svg" class="inwego" />
   </div>
-  <div id="container">
-    <canvas id="mycanvas" class="stuff nonsense stack:mystack"></canvas>
-    <p>In the initial HTML markup for this page, this &lt;p&gt; element followed the &lt;canvas&gt; element within the 'container' &lt;div&gt;. But picking up canvases and putting them into stacks causes them to be placed at the end of their parent element's
-      child chain, which is why this text now appears above the stack &lt;div&gt; and its canvas element.</p>
-  </div>
-  <img id="cow" src="img/cow01.svg" class="inwego" />
+
   <p id="testmessage"></p>
 
   <div id="testdetails">
@@ -88,7 +92,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo203.js"></script>
+  <script id="testscript" src="js/demo203.js"></script>
 </body>
 
 </html>

@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var here,
@@ -140,10 +142,12 @@ var mycode = function() {
 			//update canvas display
 			scrawl.render();
 
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime, 10) + '; fps: ' + parseInt(1000 / testTime, 10);
+			//hide-end
 		},
 	});
 };

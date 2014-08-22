@@ -12,9 +12,14 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 401</h1>
   <h2>Scrawl image filters - grayscale()</h2>
   <h3>Modules: images, filters, animation</h3>
-  <canvas width="400" height="400" id="mycanvas"></canvas>
-  <p>Grayscale value: 0 ('0%')
-    <input id="myvalue" type="range" value="1" min="0" max="1" step="0.05" />1 ('100%')</p>
+
+  <div id="testsetup">
+    <canvas width="400" height="400" id="mycanvas"></canvas>
+    <p>Grayscale value: 0 ('0%')
+      <input id="myvalue" type="range" value="1" min="0" max="1" step="0.05" />1 ('100%')
+    </p>
+  </div>
+
   <p id="testmessage"></p>
 
   <div id="testdetails">
@@ -31,7 +36,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo401.js"></script>
+  <script id="testscript" src="js/demo401.js"></script>
 </body>
 
 </html>

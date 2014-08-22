@@ -1,8 +1,5 @@
 var mycode = function() {
 	'use strict';
-	var msg1 = document.getElementById('msg1');
-	var msg2 = document.getElementById('msg2');
-	var msg3 = document.getElementById('msg3');
 
 	//define variables
 	var pad = scrawl.pad.mycanvas,
@@ -25,6 +22,9 @@ var mycode = function() {
 		calculatePositions,
 		updateWind,
 		drawNet,
+		msg1 = document.getElementById('msg1'),
+		msg2 = document.getElementById('msg2'),
+		msg3 = document.getElementById('msg3'),
 		i, j;
 
 	//define physics - forces

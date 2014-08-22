@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var myPad = scrawl.pad.mycanvas,
@@ -42,42 +44,42 @@ var mycode = function() {
 				width: 20,
 				height: 20,
 			},
-			//						grayscale: {},
-			//						sepia: {},
-			//						tint: {
-			//							br: 0.5,
-			//							},
-			//						threshold: {},
-			//						saturation: {
-			//							value: 2,
-			//							},
-			//						brightness: {
-			//							value: 2,
-			//							},
-			//						invert: {},
-			//						channels: {
-			//							blue: 0,
-			//							green: 0,
-			//							},
-			//						channelStep: {
-			//							red: 64,
-			//							blue: 64,
-			//							green: 64,
-			//							},
-			//						glassTile: {
-			//							width: 20,
-			//							height: 20,
-			//							outerWidth: 30,
-			//							outerHeight: 30,
-			//							},
-			//						matrix: {
-			//							data: [-1, 0, 1, -2, 0, 2, -1, 0, 1],
-			//							wrap: true,
-			//							},
-			//						blur: {
-			//							brush: blur,
-			//							},
-			//						sharpen: {},
+			//grayscale: {},
+			//sepia: {},
+			//tint: {
+			//	br: 0.5,
+			//},
+			//threshold: {},
+			//saturation: {
+			//	value: 2,
+			//},
+			//brightness: {
+			//	value: 2,
+			//},
+			//invert: {},
+			//channels: {
+			//	blue: 0,
+			//	green: 0,
+			//},
+			//channelStep: {
+			//	red: 64,
+			//	blue: 64,
+			//	green: 64,
+			//},
+			//glassTile: {
+			//	width: 20,
+			//	height: 20,
+			//	outerWidth: 30,
+			//	outerHeight: 30,
+			//},
+			//matrix: {
+			//	data: [-1, 0, 1, -2, 0, 2, -1, 0, 1],
+			//	wrap: true,
+			//},
+			//blur: {
+			//	brush: blur,
+			//},
+			//sharpen: {},
 		},
 	});
 
@@ -99,10 +101,12 @@ var mycode = function() {
 			}
 			scrawl.render();
 
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			//hide-end
 		},
 	});
 };

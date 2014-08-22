@@ -13,6 +13,7 @@
   <h2>Test mouse tracking on rotating canvas element</h2>
   <h3>Modules: animation, stacks, wheel</h3>
   <p>Move mouse pointer over the canvas.</p>
+
   <ul>
     <li>Wheel follows mouse correctly in Firefox, both on front and back sides of the canvas</li>
     <li>Wheel remains stationary if mouse does not move in all browsers (desired outcome: wheel moves across canvas as canvas rotates)</li>
@@ -21,15 +22,17 @@
       turn disables the Blah link's interactivity ...</li>
   </ul>
 
-  <div id="mystack" class="scrawlstack">
-    <div id="testpanel"><a href="">BLAH blah blah</a> blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-      blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah</div>
-    <canvas id="mycanvas" width="600" height="400"></canvas>
+  <div id="testsetup">
+    <div id="mystack" class="scrawlstack">
+      <div id="testpanel"><a href="">BLAH blah blah</a> blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+        blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+        blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+        blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+        blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+        blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+        blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah</div>
+      <canvas id="mycanvas" width="600" height="400"></canvas>
+    </div>
   </div>
 
   <p id="testmessage"></p>
@@ -48,7 +51,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo211.js"></script>
+  <script id="testscript" src="js/demo211.js"></script>
 </body>
 
 </html>

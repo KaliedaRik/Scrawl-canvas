@@ -17,10 +17,14 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 206</h1>
   <h2>Animated cat across an animated 3D background</h2>
   <h3>Modules: images, animation, stacks</h3>
-  <img id="catGround" src="img/groundimage.png" class="demo206" />
-  <img id="cat" src="img/runningcat.png" class="demo206" />
-  <img src="img/sky.jpg" id="catSky" class="demo206" />
-  <div id="stackholder"></div>
+
+  <div id="testsetup">
+    <img id="catGround" src="img/groundimage.png" class="demo206" />
+    <img id="cat" src="img/runningcat.png" class="demo206" />
+    <img src="img/sky.jpg" id="catSky" class="demo206" />
+    <div id="stackholder"></div>
+  </div>
+
   <p id="testmessage"></p>
 
   <div id="testdetails">
@@ -37,7 +41,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo206.js"></script>
+  <script id="testscript" src="js/demo206.js"></script>
 </body>
 
 </html>

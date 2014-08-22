@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var myGroups = ['corners', 'edges', 'center', 'start'],
@@ -176,9 +178,11 @@ var mycode = function() {
 	//display initial canvas
 	scrawl.render();
 
+	//hide-start
 	testNow = Date.now();
 	testTime = testNow - testTicker;
 	testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({

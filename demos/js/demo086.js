@@ -1,10 +1,12 @@
 var mycode = function() {
 	'use strict';
 	//There's many different ways to build/display data graphs - this is just one possibility
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var Crimes,
@@ -499,10 +501,12 @@ var mycode = function() {
 			}
 			scrawl.render();
 
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			//hide-end
 		},
 	});
 };

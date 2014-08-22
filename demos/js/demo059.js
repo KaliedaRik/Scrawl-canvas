@@ -1,13 +1,15 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
-	var myMessage = document.getElementById('message');
+	//hide-end
 
 	//setup variables
-	var myPad = scrawl.pad.mycanvas,
+	var myMessage = document.getElementById('message'),
+		myPad = scrawl.pad.mycanvas,
 		here,
 		cellRotation = 0,
 		myAngle,
@@ -116,10 +118,12 @@ var mycode = function() {
 				myMessage.innerHTML = 'Move mouse over canvas';
 			}
 
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			//hide-end
 		},
 	});
 };

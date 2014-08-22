@@ -1,10 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
-		testMessage = document.getElementById('testmessage'),
-		msg = document.getElementById('message');
+		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var canvas = scrawl.canvas.mycanvas,
@@ -21,7 +22,8 @@ var mycode = function() {
 		mySprite,
 		hitFlag,
 		moveBunnies,
-		addBunnies;
+		addBunnies,
+		msg = document.getElementById('message');
 
 	//load images into scrawl library
 	scrawl.getImagesByClass('demo032');
@@ -105,10 +107,13 @@ var mycode = function() {
 			pad.render();
 
 			msg.innerHTML = 'Bunnies: ' + totalBunnies;
+
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			//hide-end
 		},
 	});
 };

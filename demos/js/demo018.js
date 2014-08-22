@@ -1,17 +1,19 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
-		testMessage = document.getElementById('testmessage'),
-		myMessage = document.getElementById('message');
+		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var here,
 		myPad = scrawl.pad.mycanvas,
 		myColor,
 		titles = document.getElementById('titleBlock'),
-		myBird;
+		myBird,
+		myMessage = document.getElementById('message');
 
 	//import image into scrawl library
 	scrawl.getImagesByClass('demo018');
@@ -54,12 +56,14 @@ var mycode = function() {
 
 			//update the DOM title block with the current color
 			titles.style.backgroundColor = myColor;
-
 			myMessage.innerHTML = (here.active) ? 'Color at mouse cursor point (x: ' + here.x + ', y: ' + here.y + ') is ' + myColor : 'Move mouse over image';
+
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			//hide-end
 		},
 	});
 };

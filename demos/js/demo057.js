@@ -1,13 +1,15 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
-	var myMessage = document.getElementById('message');
+	//hide-end
 
 	//define variables
-	var mouseDown = false,
+	var myMessage = document.getElementById('message'),
+		mouseDown = false,
 		currentSprite = false,
 		myPad = scrawl.pad.mycanvas,
 		myCanvas = scrawl.canvas.mycanvas,
@@ -121,10 +123,12 @@ var mycode = function() {
 			}
 			scrawl.render();
 
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			//hide-end
 		},
 	});
 };

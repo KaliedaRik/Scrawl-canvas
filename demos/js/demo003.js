@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define some phrase sprites to hold the text
 	scrawl.newPhrase({
@@ -29,9 +31,11 @@ var mycode = function() {
 	//update the canvas display
 	scrawl.render();
 
+	//hide-start
 	testNow = Date.now();
 	testTime = testNow - testTicker;
 	testMessage.innerHTML = 'Render time: ' + parseInt(testTime, 10) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({

@@ -1,10 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
-		testMessage = document.getElementById('testmessage'),
-		lengthText = document.getElementById('curveLength');
+		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var here,
@@ -12,6 +13,7 @@ var mycode = function() {
 		myPos = 0,
 		dPos = 0.005,
 		length,
+		lengthText = document.getElementById('curveLength'),
 		doLines,
 		getWheel,
 		dropWheel;
@@ -136,13 +138,16 @@ var mycode = function() {
 			}
 			myPos = (myPos + dPos > 1) ? 0 : myPos + dPos;
 			doLines(myPos);
+			lengthText.innerHTML = parseInt(length, 10);
+
 			scrawl.render();
 
+			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
 			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + parseInt(testTime, 10) + '; fps: ' + parseInt(1000 / testTime, 10);
-			lengthText.innerHTML = parseInt(length, 10);
+			//hide-end
 		},
 	});
 };

@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables
 	var operations = ['source-over', 'source-atop', 'source-in', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'darker', 'copy', 'xor', 'normal', 'multiply', 'screen', 'overlay', 'color-dodge', 'color-burn', 'hue', 'saturation', 'color', 'luminosity'],
@@ -76,9 +78,11 @@ var mycode = function() {
 	//display canvas
 	scrawl.pad.mycanvas.show();
 
+	//hide-start
 	testNow = Date.now();
 	testTime = testNow - testTicker;
 	testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({

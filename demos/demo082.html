@@ -12,15 +12,19 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 082</h1>
   <h2>Wrapping text dynamically</h2>
   <h3>Modules: phrase, images, animation</h3>
-  <div id="canvasHolder"></div>
-  <p>Change text by typing in this box:
-    <br />
-    <input type="text" size="40" id="textchange" value="Hello world!" />
-  </p>
-  <p>Font size: 16
-    <input id="textsize" type="range" value="20" min="16" max="24" step="0.5" />24</p>
-  <p>Text width: 100
-    <input id="textwidth" type="range" value="150" min="100" max="300" step="2" />300</p>
+
+  <div id="testsetup">
+    <div id="canvasHolder"></div>
+    <p>Change text by typing in this box:
+      <br />
+      <input type="text" size="40" id="textchange" value="Hello world!" />
+    </p>
+    <p>Font size: 16
+      <input id="textsize" type="range" value="20" min="16" max="24" step="0.5" />24</p>
+    <p>Text width: 100
+      <input id="textwidth" type="range" value="150" min="100" max="300" step="2" />300</p>
+  </div>
+
   <p id="testmessage"></p>
 
   <div id="testdetails">
@@ -37,7 +41,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo082.js"></script>
+  <script id="testscript" src="js/demo082.js"></script>
 </body>
 
 </html>

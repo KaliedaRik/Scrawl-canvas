@@ -1,13 +1,15 @@
 var mycode = function() {
 	'use strict';
-	var message = document.getElementById('message'),
-		msg = document.getElementById('msg'),
+	//hide-start
+	var msg = document.getElementById('msg'),
 		ticker = Date.now(),
 		sTime = ticker,
 		now;
+	//hide-end
 
 	//define variables
 	var pad = scrawl.pad.mycanvas,
+		message = document.getElementById('message'),
 		tkr = Date.now(),
 		dTime = 0,
 		pBall,
@@ -69,10 +71,13 @@ var mycode = function() {
 			pad.render();
 
 			message.innerHTML = 'Current speed: ' + Math.ceil(pBall.velocity.getMagnitude(), 10) + ' m/s';
+
+			//hide-start
 			now = Date.now();
 			sTime = now - ticker;
 			ticker = now;
 			msg.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(sTime) + '; fps: ' + Math.floor(1000 / sTime);
+			//hide-end
 		},
 	});
 };

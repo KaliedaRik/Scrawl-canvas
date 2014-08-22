@@ -1,9 +1,11 @@
 var mycode = function() {
 	'use strict';
+	//hide-start
 	var testTicker = Date.now(),
 		testTime = testTicker,
 		testNow,
 		testMessage = document.getElementById('testmessage');
+	//hide-end
 
 	//define variables used in program
 	var myWidth = window.innerWidth - 50,
@@ -46,9 +48,11 @@ var mycode = function() {
 	//update the canvas display
 	scrawl.render();
 
+	//hide-start
 	testNow = Date.now();
 	testTime = testNow - testTicker;
 	testMessage.innerHTML = 'Render time: ' + parseInt(testTime, 10) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({

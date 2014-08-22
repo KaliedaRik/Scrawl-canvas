@@ -17,10 +17,14 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 204</h1>
   <h2>CSS3 animation in a Scrawl stack &lt;div&gt; using two &lt;canvas&gt; elements</h2>
   <h3>Modules: images, stacks, animation</h3>
-  <img id="fish" src="img/carousel/angelfish.png" class="demo204" />
-  <img id="parrot" src="img/carousel/greenparrot.png" class="demo204" />
-  <canvas id="frontcanvas" width="540" height="360" class="stack:mystack"></canvas>
-  <canvas id="backcanvas" width="540" height="360" class="stack:mystack"></canvas>
+
+  <div id="testsetup">
+    <img id="fish" src="img/carousel/angelfish.png" class="demo204" />
+    <img id="parrot" src="img/carousel/greenparrot.png" class="demo204" />
+    <canvas id="frontcanvas" width="540" height="360" class="stack:mystack"></canvas>
+    <canvas id="backcanvas" width="540" height="360" class="stack:mystack"></canvas>
+  </div>
+
   <p id="testmessage"></p>
 
   <div id="testdetails">
@@ -37,7 +41,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo204.js"></script>
+  <script id="testscript" src="js/demo204.js"></script>
 </body>
 
 </html>

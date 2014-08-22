@@ -13,16 +13,24 @@
   <h2>Scrawl image filters - glassTile()</h2>
   <h3>Modules: images, filters, animation</h3>
   <p>Be aware: smaller dimensions are considerably slower than larger ones</p>
-  <canvas width="400" height="400" id="mycanvas"></canvas>
-  <p>Width (px): 1
-    <input id="width" type="range" value="5" min="1" max="100" step="1" />100</p>
-  <p>Height (px): 1
-    <input id="height" type="range" value="5" min="1" max="100" step="1" />100</p>
-  <p>Outer Width (px): 1
-    <input id="outerwidth" type="range" value="8" min="1" max="100" step="1" />100</p>
-  <p>outer Height (px): 1
-    <input id="outerheight" type="range" value="8" min="1" max="100" step="1" />100</p>
-  <img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo414" />
+
+  <div id="testsetup">
+    <canvas width="400" height="400" id="mycanvas"></canvas>
+    <p>Width (px): 1
+      <input id="width" type="range" value="5" min="1" max="100" step="1" />100
+    </p>
+    <p>Height (px): 1
+      <input id="height" type="range" value="5" min="1" max="100" step="1" />100
+    </p>
+    <p>Outer Width (px): 1
+      <input id="outerwidth" type="range" value="8" min="1" max="100" step="1" />100
+    </p>
+    <p>outer Height (px): 1
+      <input id="outerheight" type="range" value="8" min="1" max="100" step="1" />100
+    </p>
+    <img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo414" />
+  </div>
+
   <p id="testmessage"></p>
 
   <div id="testdetails">
@@ -39,7 +47,7 @@
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script src="js/demo414.js"></script>
+  <script id="testscript" src="js/demo414.js"></script>
 </body>
 
 </html>
