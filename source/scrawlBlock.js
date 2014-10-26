@@ -91,8 +91,9 @@ A __factory__ function to generate new Block sprites
 		items = my.safeObject(items);
 		my.Sprite.call(this, items);
 		my.Position.prototype.set.call(this, items);
-		this.width = items.width || my.d.Block.width;
-		this.height = items.height || my.d.Block.height;
+		this.width = my.xtGet([items.width, my.d.Block.width]);
+		this.height = my.xtGet([items.height, my.d.Block.height]);
+		this.setLocalDimensions();
 		this.registerInLibrary();
 		my.pushUnique(my.group[this.group].sprites, this.name);
 		return this;
@@ -106,8 +107,59 @@ A __factory__ function to generate new Block sprites
 **/
 	my.Block.prototype.type = 'Block';
 	my.Block.prototype.classname = 'spritenames';
-	my.d.Block = {};
+	my.d.Block = {
+		/**
+Block display - width, in pixels
+@property localWidth
+@type Number
+@default 0
+**/
+		localWidth: 0,
+		/**
+Block display - height, in pixels
+@property localHeight
+@type Number
+@default 0
+**/
+		localHeight: 0,
+	};
 	my.mergeInto(my.d.Block, my.d.Sprite);
+	/**
+Augments Sprite.set()
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Block.prototype.set = function(items) {
+		my.Sprite.prototype.set.call(this, items);
+		if (my.xto([items.width, items.height, items.scale])) {
+			this.setLocalDimensions();
+		}
+		return this;
+	};
+	/**
+Augments Sprite.set() - sets the local dimensions
+@method setLocalDimensions
+@return This
+@chainable
+**/
+	my.Block.prototype.setLocalDimensions = function() {
+		var cell = my.cell[my.group[this.group].cell];
+		if (my.isa(this.width, 'str')) {
+			this.localWidth = (parseFloat(this.width) / 100) * cell.actualWidth * this.scale;
+		}
+		else {
+			this.localWidth = this.width * this.scale || 0;
+		}
+		if (my.isa(this.height, 'str')) {
+			this.localHeight = (parseFloat(this.height) / 100) * cell.actualHeight * this.scale;
+		}
+		else {
+			this.localHeight = this.height * this.scale || 0;
+		}
+		return this;
+	};
 	/**
 Stamp helper function - perform a 'clip' method draw
 @method clip
@@ -120,9 +172,9 @@ Stamp helper function - perform a 'clip' method draw
 	my.Block.prototype.clip = function(ctx, cell) {
 		var here = this.prepareStamp();
 		ctx.save();
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		ctx.beginPath();
-		ctx.rect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+		ctx.rect(here.x, here.y, this.localWidth, this.localHeight);
 		ctx.clip();
 		return this;
 	};
@@ -138,8 +190,8 @@ Stamp helper function - perform a 'clear' method draw
 	my.Block.prototype.clear = function(ctx, cell) {
 		var here = this.prepareStamp();
 		my.cell[cell].setToClearShape();
-		this.rotateCell(ctx);
-		ctx.clearRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+		this.rotateCell(ctx, cell);
+		ctx.clearRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 	/**
@@ -158,15 +210,13 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 			fillStyle = myCellCtx.get('fillStyle'),
 			strokeStyle = myCellCtx.get('strokeStyle'),
 			globalAlpha = myCellCtx.get('globalAlpha'),
-			here = this.prepareStamp(),
-			width = this.width * this.scale,
-			height = this.height * this.scale;
-		this.rotateCell(ctx);
+			here = this.prepareStamp();
+		this.rotateCell(ctx, cell);
 		ctx.fillStyle = bg;
 		ctx.strokeStyle = bg;
 		ctx.globalAlpha = 1;
-		ctx.strokeRect(here.x, here.y, width, height);
-		ctx.fillRect(here.x, here.y, width, height);
+		ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
+		ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 		ctx.fillStyle = fillStyle;
 		ctx.strokeStyle = strokeStyle;
 		ctx.globalAlpha = globalAlpha;
@@ -184,8 +234,8 @@ Stamp helper function - perform a 'draw' method draw
 	my.Block.prototype.draw = function(ctx, cell) {
 		var here = this.prepareStamp();
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
-		ctx.strokeRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+		this.rotateCell(ctx, cell);
+		ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 	/**
@@ -200,8 +250,8 @@ Stamp helper function - perform a 'fill' method draw
 	my.Block.prototype.fill = function(ctx, cell) {
 		var here = this.prepareStamp();
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
-		ctx.fillRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+		this.rotateCell(ctx, cell);
+		ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 	/**
@@ -214,14 +264,12 @@ Stamp helper function - perform a 'drawFill' method draw
 @private
 **/
 	my.Block.prototype.drawFill = function(ctx, cell) {
-		var here = this.prepareStamp(),
-			width = this.width * this.scale,
-			height = this.height * this.scale;
+		var here = this.prepareStamp();
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
-		ctx.strokeRect(here.x, here.y, width, height);
+		this.rotateCell(ctx, cell);
+		ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 		this.clearShadow(ctx, cell);
-		ctx.fillRect(here.x, here.y, width, height);
+		ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 	/**
@@ -234,14 +282,12 @@ Stamp helper function - perform a 'fillDraw' method draw
 @private
 **/
 	my.Block.prototype.fillDraw = function(ctx, cell) {
-		var here = this.prepareStamp(),
-			width = this.width * this.scale,
-			height = this.height * this.scale;
+		var here = this.prepareStamp();
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
-		ctx.fillRect(here.x, here.y, width, height);
+		this.rotateCell(ctx, cell);
+		ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 		this.clearShadow(ctx, cell);
-		ctx.strokeRect(here.x, here.y, width, height);
+		ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 	/**
@@ -254,13 +300,11 @@ Stamp helper function - perform a 'sinkInto' method draw
 @private
 **/
 	my.Block.prototype.sinkInto = function(ctx, cell) {
-		var here = this.prepareStamp(),
-			width = this.width * this.scale,
-			height = this.height * this.scale;
+		var here = this.prepareStamp();
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
-		ctx.fillRect(here.x, here.y, width, height);
-		ctx.strokeRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+		this.rotateCell(ctx, cell);
+		ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
+		ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 	/**
@@ -273,13 +317,11 @@ Stamp helper function - perform a 'floatOver' method draw
 @private
 **/
 	my.Block.prototype.floatOver = function(ctx, cell) {
-		var here = this.prepareStamp(),
-			width = this.width * this.scale,
-			height = this.height * this.scale;
+		var here = this.prepareStamp();
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
-		ctx.strokeRect(here.x, here.y, width, height);
-		ctx.fillRect(here.x, here.y, width, height);
+		this.rotateCell(ctx, cell);
+		ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
+		ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 

@@ -313,7 +313,7 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 		if (!this.dataSet && this.data) {
 			this.buildDataSet(this.data);
 		}
-		return this.completeOutline(ctx);
+		return this.completeOutline(ctx, cell);
 	};
 	/**
 Helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
@@ -322,7 +322,7 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 @return This
 @private
 **/
-	my.Shape.prototype.completeOutline = function(ctx) {
+	my.Shape.prototype.completeOutline = function(ctx, cell) {
 		if (this.dataSet) {
 			var here = this.prepareStamp(),
 				currentX = 0,
@@ -333,7 +333,7 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 				tempX,
 				tempY,
 				i, iz, k, kz;
-			this.rotateCell(ctx);
+			this.rotateCell(ctx, cell);
 			ctx.translate(here.x, here.y);
 			ctx.beginPath();
 			if (!my.contains(['M'], this.dataSet[0].c)) {
@@ -540,7 +540,7 @@ Stamp helper function - perform a 'clip' method draw
 **/
 	my.Shape.prototype.clip = function(ctx, cell) {
 		ctx.save();
-		this.doOutline(ctx);
+		this.doOutline(ctx, cell);
 		ctx.clip();
 		return this;
 	};
@@ -690,7 +690,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			winding = my.ctx[this.context].winding;
 		ctx.mozFillRule = winding;
 		ctx.msFillRule = winding;
-		this.completeOutline(ctx);
+		this.completeOutline(ctx, my.group[this.group].cell);
 		for (var i = 0, z = tests.length; i < z; i += 2) {
 			result = ctx.isPointInPath(tests[i], tests[i + 1]);
 			if (result) {

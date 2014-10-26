@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo 213</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <style>
+    canvas,
+    #mainstack,
+    #substack,
+    #mainstack p,
+    #substack p {
+      border: 1px solid;
+    }
+    table {
+      width: 100%;
+    }
+    th,
+    td {
+      border: 1px solid gray;
+      font-size: 0.8em;
+      text-align: center;
+    }
+    table input {
+      width: 60%;
+    }
+    td .c1 {
+      width: 18%;
+    }
+    td .c2 {
+      width: 40%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="../index.html">Scrawl.js</a> - demonstration 213</h1>
+  <h2>Element positioning within a stack, including scaling; locking canvases to stacks</h2>
+  <h3>Modules: stacks, animation, wheel</h3>
+  <p>Control the scale and position of each stack and element using the controllers below:</p>
+
+  <!-- this section for the stacks and elements -->
+  <div id="mainstack" class="scrawlstack withcanvas">
+    <p id="maincopytext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integeras nec odio.</p>
+    <div id="substack" class="scrawlstack withcanvas">
+      <p id="subcopytext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integeras nec odio.</p>
+    </div>
+  </div>
+
+  <p id="testmessage"></p>
+
+  <!-- this section for the stack and element status messages -->
+  <p id="status"></p>
+
+  <!-- the remaining section for controllers -->
+  <h4>Main (dark blue) stack</h4>
+  <table>
+    <tr>
+      <td><b>Scale (n)</b>
+      </td>
+      <td>0.5
+        <input id="bluestack_scale" type="range" value="1" min="0.5" max="1.5" step="0.01" />1.5</td>
+    </tr>
+  </table>
+
+  <h4>Main (light blue) paragraph</h4>
+  <table>
+    <tr>
+      <td>
+        <table>
+          <tr>
+            <td class="c1"><b>Starts ('n%')</b>
+            </td>
+            <td class="c2">X: -50%
+              <input id="blueparastart_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+            <td class="c2">Y: -50%
+              <input id="blueparastart_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+          </tr>
+          <tr>
+            <td><b>Starts (n)</b>
+            </td>
+            <td>X: -20
+              <input id="blueparastart_xAbsolute" type="range" value="0" min="-20" max="620" step="1" />620</td>
+            <td>Y: -20
+              <input id="blueparastart_yAbsolute" type="range" value="0" min="-20" max="620" step="1" />620</td>
+          </tr>
+          <tr>
+            <td><b>Starts ('str')</b>
+            </td>
+            <td>X:
+              <select id="blueparastart_xString">
+                <option value="left">left</option>
+                <option value="center">center</option>
+                <option value="right">right</option>
+              </select>
+            </td>
+            <td>Y:
+              <select id="blueparastart_yString">
+                <option value="top">top</option>
+                <option value="center">center</option>
+                <option value="bottom">bottom</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table>
+          <tr>
+            <td class="c1"><b>Handles ('n%')</b>
+            </td>
+            <td class="c2">X: -50%
+              <input id="blueparahandle_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+            <td class="c2">Y: -50%
+              <input id="blueparahandle_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+          </tr>
+          <tr>
+            <td><b>Handles (n)</b>
+            </td>
+            <td>X: -100
+              <input id="blueparahandle_xAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
+            <td>Y: -100
+              <input id="blueparahandle_yAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
+          </tr>
+          <tr>
+            <td><b>Handles ('str')</b>
+            </td>
+            <td>X:
+              <select id="blueparahandle_xString">
+                <option value="left">left</option>
+                <option value="center">center</option>
+                <option value="right">right</option>
+              </select>
+            </td>
+            <td>Y:
+              <select id="blueparahandle_yString">
+                <option value="top">top</option>
+                <option value="center">center</option>
+                <option value="bottom">bottom</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <h4>Sub (red) stack</h4>
+  <table>
+    <tr>
+      <td><b>Scale (n)</b>
+      </td>
+      <td>0.5
+        <input id="redstack_scale" type="range" value="1" min="0.5" max="1.5" step="0.01" />1.5</td>
+    </tr>
+    <tr>
+      <td>
+        <table>
+          <tr>
+            <td class="c1"><b>Starts ('n%')</b>
+            </td>
+            <td class="c2">X: -50%
+              <input id="redstackstart_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+            <td class="c2">Y: -50%
+              <input id="redstackstart_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+          </tr>
+          <tr>
+            <td><b>Starts (n)</b>
+            </td>
+            <td>X: -20
+              <input id="redstackstart_xAbsolute" type="range" value="0" min="-20" max="620" step="1" />620</td>
+            <td>Y: -20
+              <input id="redstackstart_yAbsolute" type="range" value="0" min="-20" max="620" step="1" />620</td>
+          </tr>
+          <tr>
+            <td><b>Starts ('str')</b>
+            </td>
+            <td>X:
+              <select id="redstackstart_xString">
+                <option value="left">left</option>
+                <option value="center">center</option>
+                <option value="right">right</option>
+              </select>
+            </td>
+            <td>Y:
+              <select id="redstackstart_yString">
+                <option value="top">top</option>
+                <option value="center">center</option>
+                <option value="bottom">bottom</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table>
+          <tr>
+            <td class="c1"><b>Handles ('n%')</b>
+            </td>
+            <td class="c2">X: -50%
+              <input id="redstackhandle_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+            <td class="c2">Y: -50%
+              <input id="redstackhandle_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+          </tr>
+          <tr>
+            <td><b>Handles (n)</b>
+            </td>
+            <td>X: -100
+              <input id="redstackhandle_xAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
+            <td>Y: -100
+              <input id="redstackhandle_yAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
+          </tr>
+          <tr>
+            <td><b>Handles ('str')</b>
+            </td>
+            <td>X:
+              <select id="redstackhandle_xString">
+                <option value="left">left</option>
+                <option value="center">center</option>
+                <option value="right">right</option>
+              </select>
+            </td>
+            <td>Y:
+              <select id="redstackhandle_yString">
+                <option value="top">top</option>
+                <option value="center">center</option>
+                <option value="bottom">bottom</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <h4>Sub (pink) paragraph</h4>
+  <table>
+    <tr>
+      <td>
+        <table>
+          <tr>
+            <td class="c1"><b>Starts ('n%')</b>
+            </td>
+            <td class="c2">X: -50%
+              <input id="redparastart_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+            <td class="c2">Y: -50%
+              <input id="redparastart_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+          </tr>
+          <tr>
+            <td><b>Starts (n)</b>
+            </td>
+            <td>X: -20
+              <input id="redparastart_xAbsolute" type="range" value="0" min="-20" max="320" step="1" />320</td>
+            <td>Y: -20
+              <input id="redparastart_yAbsolute" type="range" value="0" min="-20" max="320" step="1" />320</td>
+          </tr>
+          <tr>
+            <td><b>Starts ('str')</b>
+            </td>
+            <td>X:
+              <select id="redparastart_xString">
+                <option value="left">left</option>
+                <option value="center">center</option>
+                <option value="right">right</option>
+              </select>
+            </td>
+            <td>Y:
+              <select id="redparastart_yString">
+                <option value="top">top</option>
+                <option value="center">center</option>
+                <option value="bottom">bottom</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table>
+          <tr>
+            <td class="c1"><b>Handles ('n%')</b>
+            </td>
+            <td class="c2">X: -50%
+              <input id="redparahandle_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+            <td class="c2">Y: -50%
+              <input id="redparahandle_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+          </tr>
+          <tr>
+            <td><b>Handles (n)</b>
+            </td>
+            <td>X: -100
+              <input id="redparahandle_xAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
+            <td>Y: -100
+              <input id="redparahandle_yAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
+          </tr>
+          <tr>
+            <td><b>Handles ('str')</b>
+            </td>
+            <td>X:
+              <select id="redparahandle_xString">
+                <option value="left">left</option>
+                <option value="center">center</option>
+                <option value="right">right</option>
+              </select>
+            </td>
+            <td>Y:
+              <select id="redparahandle_yString">
+                <option value="top">top</option>
+                <option value="center">center</option>
+                <option value="bottom">bottom</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <div id="testdetails">
+    <p><b>Scenario:</b> ???</p>
+    <p><b>Actions:</b>
+    </p>
+    <ol>
+      <li>???</li>
+    </ol>
+    <p><b>Known browser issues:</b> ???</p>
+    <p><b>Result images:</b>
+    </p>
+    <img src="img/demopics/demo213.png" alt="image of expected test result" />
+  </div>
+
+  <script src="../source/scrawlCore.js"></script>
+  <script id="testscript" src="js/demo213.js"></script>
+  <script src="js/changePage.js"></script>
+</body>
+
+</html>

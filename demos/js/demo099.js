@@ -30,8 +30,7 @@ var mycode = function() {
 	scrawl.newGradient({
 		name: 'mygradient',
 		setToSprite: true,
-		startRangeY: 0,
-		endRangeY: 0,
+		endY: 0,
 		color: [{
 			color: 'rgba(127,127,255,0.6)',
 			stop: 0
@@ -139,13 +138,13 @@ var mycode = function() {
 	gradientTween = scrawl.newTween({
 		targets: scrawl.design.mygradient,
 		end: {
-			roll: 0.025
+			shift: 0.025
 		},
 		start: {
-			roll: 0
+			shift: 0
 		},
 		onComplete: {
-			roll: 0
+			shift: 0
 		},
 		duration: 3000,
 		count: 2,

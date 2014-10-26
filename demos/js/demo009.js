@@ -160,7 +160,7 @@ var mycode = function() {
 			}
 			myPos = (myPos + dPos > 1) ? 0 : myPos + dPos;
 			doLines(myPos);
-			lengthText.innerHTML = length;
+			lengthText.innerHTML = parseInt(length, 10);
 			scrawl.render();
 
 			//hide-start

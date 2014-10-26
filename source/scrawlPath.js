@@ -132,10 +132,10 @@ Position constructor hook function - modified by path module
 @private
 **/
 	my.Position.prototype.pathPositionInit = function(items) {
-		this.path = items.path || my.d[this.type].path;
-		this.pathRoll = items.pathRoll || my.d[this.type].pathRoll;
-		this.addPathRoll = items.addPathRoll || my.d[this.type].addPathRoll;
-		this.pathPlace = items.pathPlace || my.d[this.type].pathPlace;
+		this.path = my.xtGet([items.path, my.d[this.type].path]);
+		this.pathRoll = my.xtGet([items.pathRoll, my.d[this.type].pathRoll]);
+		this.addPathRoll = my.xtGet([items.addPathRoll, my.d[this.type].addPathRoll]);
+		this.pathPlace = my.xtGet([items.pathPlace, my.d[this.type].pathPlace]);
 	};
 	/**
 Position.setDelta hook function - modified by path module
@@ -242,13 +242,13 @@ A __factory__ function to generate new Path sprites
 			cy = 0,
 			k = 0,
 			v = 0;
-		var myPivot = (my.xt(items.pivot)) ? my.point[myPivot] || my.sprite[myPivot] : false;
+		var myPivot = my.xtGet([my.point[myPivot], my.sprite[myPivot], false]);
 		items.start = (my.xt(items.start)) ? items.start : {};
 		items.scaleX = items.scaleX || 1;
 		items.scaleY = items.scaleY || 1;
-		items.startX = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.x : myPivot.start.x) : (items.startX || items.start.x || 0);
-		items.startY = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.y : myPivot.start.y) : (items.startY || items.start.y || 0);
-		items.isLine = (my.isa(items.isLine, 'bool')) ? items.isLine : true;
+		items.startX = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.x : myPivot.start.x) : my.xtGet([items.startX, items.start.x, 0]);
+		items.startY = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.y : myPivot.start.y) : my.xtGet([items.startY, items.start.y, 0]);
+		items.isLine = my.xtGet([items.isLine, true]);
 		var checkMinMax = function(cx, cy) {
 			minX = (minX > cx) ? cx : minX;
 			minY = (minY > cy) ? cy : minY;
@@ -451,8 +451,9 @@ A __factory__ function to generate new Path sprites
 								if (i > 0 && my.contains(['C', 'c', 'S', 's'], set [i - 1][0])) {
 									lib[tn + '_p' + (pc - 2)].clone({
 										name: tn + '_p' + pc,
-										currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].currentX),
-										currentY: cy + (cy - lib[tn + '_p' + (pc - 2)].currentY),
+										currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
+										currentY: cy + (cy - lib[tn + '_p' + (pc - 2)].local.y),
+										startLink: tn + '_l' + (lc + 1),
 									});
 									pc++;
 								}
@@ -476,8 +477,9 @@ A __factory__ function to generate new Path sprites
 								if (i > 0 && my.contains(['C', 'c', 'S', 's'], set [i - 1][0])) {
 									lib[tn + '_p' + (pc - 2)].clone({
 										name: tn + '_p' + pc,
-										currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].currentX),
-										currentY: cy + (cy - lib[tn + '_p' + (pc - 2)].currentY),
+										currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
+										currentY: cy + (cy - lib[tn + '_p' + (pc - 2)].local.y),
+										startLink: tn + '_l' + (lc + 1),
 									});
 									pc++;
 								}
@@ -485,9 +487,9 @@ A __factory__ function to generate new Path sprites
 									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
 									pc++;
 								}
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
 								pc++;
-								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
+								generatePoint(tn, pc, sn, cx + data[k + 2], cy + data[k + 3], lc + 1, sx, sy);
 								pc++;
 								generateLink(tn, lc, sn, 'bezier', 'add', lib[tn + '_p' + (pc - 4)], lib[tn + '_p' + (pc - 1)], lib[tn + '_p' + (pc - 3)], lib[tn + '_p' + (pc - 2)]);
 								lc++;
@@ -527,8 +529,9 @@ A __factory__ function to generate new Path sprites
 								if (i > 0 && my.contains(['Q', 'q', 'T', 't'], set [i - 1][0])) {
 									lib[tn + '_p' + (pc - 2)].clone({
 										name: tn + '_p' + pc,
-										currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].currentX),
-										currentY: cy + (cy - lib[tn + '_p' + (pc - 2)].currentY),
+										currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
+										currentY: cy + (cy - lib[tn + '_p' + (pc - 2)].local.y),
+										startLink: tn + '_l' + (lc + 1),
 									});
 									pc++;
 								}
@@ -550,8 +553,9 @@ A __factory__ function to generate new Path sprites
 								if (i > 0 && my.contains(['Q', 'q', 'T', 't'], set [i - 1][0])) {
 									lib[tn + '_p' + (pc - 2)].clone({
 										name: tn + '_p' + pc,
-										currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].currentX),
-										currentY: cy + (cy - lib[tn + '_p' + (pc - 2)].currentY),
+										currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
+										currentY: cy + (cy - lib[tn + '_p' + (pc - 2)].local.y),
+										startLink: tn + '_l' + (lc + 1),
 									});
 									pc++;
 								}
@@ -559,7 +563,7 @@ A __factory__ function to generate new Path sprites
 									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
 									pc++;
 								}
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
 								pc++;
 								generateLink(tn, lc, sn, 'quadratic', 'add', lib[tn + '_p' + (pc - 3)], lib[tn + '_p' + (pc - 1)], lib[tn + '_p' + (pc - 2)]);
 								lc++;
@@ -754,7 +758,7 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 		my.cell[cell].setEngine(this);
 		if (this.firstPoint) {
 			here = this.prepareStamp();
-			this.rotateCell(ctx);
+			this.rotateCell(ctx, cell);
 			ctx.translate(here.x, here.y);
 			ctx.beginPath();
 			my.link[my.point[this.firstPoint].startLink].sketch(ctx);
@@ -820,28 +824,24 @@ Prepare mark sprites for stamping onto Path
 @private
 **/
 	my.Path.prototype.addMarks = function(ctx, cell) {
-		var mark = this.get('mark'),
-			markStart = this.get('markStart'),
-			markMid = this.get('markMid'),
-			markEnd = this.get('markEnd'),
-			myMark = false,
+		var myMark = false,
 			sprite,
 			linkDurations;
-		if (mark || markStart || markMid || markEnd) {
+		if (my.xtGet([this.mark, this.markStart, this.markMid, this.markEnd])) {
 			this.buildPositions();
 			linkDurations = this.get('linkDurations');
-			myMark = markStart || mark || false;
+			myMark = my.xtGetTrue([this.markStart, this.mark]);
 			if (myMark && my.contains(my.spritenames, myMark)) {
 				this.stampMark(my.sprite[myMark], 0, ctx, cell);
 			}
-			myMark = markMid || mark || false;
+			myMark = my.xtGetTrue([this.markMid, this.mark]);
 			if (myMark && my.contains(my.spritenames, myMark)) {
 				sprite = my.sprite[myMark];
 				for (var j = 0, w = linkDurations.length - 1; j < w; j++) {
 					this.stampMark(sprite, linkDurations[j], ctx, cell);
 				}
 			}
-			myMark = markEnd || mark || false;
+			myMark = my.xtGetTrue([this.markEnd, this.mark]);
 			if (myMark && my.contains(my.spritenames, myMark)) {
 				this.stampMark(my.sprite[myMark], 1, ctx, cell);
 			}
@@ -1213,7 +1213,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 		ctx.msFillRule = winding;
 		if (this.firstPoint) {
 			here = this.prepareStamp();
-			this.rotateCell(ctx);
+			this.rotateCell(ctx, my.group[this.group].cell);
 			ctx.translate(here.x, here.y);
 			ctx.beginPath();
 			my.link[my.point[this.firstPoint].startLink].sketch(ctx);
@@ -1318,17 +1318,17 @@ Path creation factories will all create Point objects automatically as part of t
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		var local = (my.xt(items.local)) ? items.local : {};
-		this.sprite = items.sprite || '';
-		this.local = items.local || my.newVector({
-			x: items.startX || items.currentX || local.x || 0,
-			y: items.startY || items.currentY || local.y || 0,
+		this.sprite = my.xtGet([items.sprite, '']);
+		this.local = my.newVector({
+			x: my.xtGet([items.startX, items.currentX, local.x, 0]),
+			y: my.xtGet([items.startY, items.currentY, local.y, 0]),
 		});
 		this.work.local = my.newVector({
 			name: this.type + '.' + this.name + '.work.local'
 		});
 		this.work.local.name = this.type + '.' + this.name + '.work.local';
-		this.startLink = items.startLink || '';
-		this.fixed = items.fixed || false;
+		this.startLink = my.xtGet([items.startLink, '']);
+		this.fixed = my.xtGet([items.fixed, false]);
 		if (my.xto([items.angle, items.distance])) {
 			this.setPolar(items);
 		}
@@ -1601,11 +1601,11 @@ Set Point.fixed attribute
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		my.Base.prototype.set.call(this, items);
-		this.startPoint = items.startPoint || my.d.Link.startPoint;
+		this.startPoint = my.xtGet([items.startPoint, my.d.Link.startPoint]);
 		this.sprite = (my.xt(my.point[this.startPoint])) ? my.point[this.startPoint].sprite : my.d.Link.sprite;
-		this.endPoint = items.endPoint || my.d.Link.endPoint;
-		this.species = items.species || my.d.Link.species;
-		this.action = items.action || my.d.Link.action;
+		this.endPoint = my.xtGet([items.endPoint, my.d.Link.endPoint]);
+		this.species = my.xtGet([items.species, my.d.Link.species]);
+		this.action = my.xtGet([items.action, my.d.Link.action]);
 		my.link[this.name] = this;
 		my.pushUnique(my.linknames, this.name);
 		this.positions = [];
@@ -2038,6 +2038,5 @@ _Note: this function is recursive_
 		}
 		return true;
 	};
-
 	return my;
 }(scrawl));

@@ -17,13 +17,17 @@ var mycode = function() {
 		starStamp,
 		makeSomeStars,
 		updateCells,
-		checkForSplice;
+		checkForSplice,
+		dx,
+		dy,
+		starSpeed = 8,
+		wheelSpeed = 5;
 
 	//add background cells to pad
 	scrawl.addNewCell({
 		name: 'wheelBackground',
-		height: 480,
 		width: 850,
+		height: 480,
 		sourceX: 25,
 		sourceY: 25,
 		sourceWidth: 750,
@@ -35,8 +39,8 @@ var mycode = function() {
 	});
 	scrawl.addNewCell({
 		name: 'starBackground',
-		height: 480,
 		width: 850,
+		height: 480,
 		backgroundColor: 'lightblue',
 		sourceX: 25,
 		sourceY: 25,
@@ -81,8 +85,7 @@ var mycode = function() {
 	//this splice ensures background cell has matching edges
 	myWheels.spliceCell({
 		edge: 'horizontal'
-	});
-	myWheels.spliceCell({
+	}).spliceCell({
 		edge: 'vertical'
 	});
 	makeSomeWheels();
@@ -107,21 +110,26 @@ var mycode = function() {
 	makeSomeStars();
 	myStars.spliceCell({
 		edge: 'horizontal'
-	});
-	myStars.spliceCell({
+	}).spliceCell({
 		edge: 'vertical'
 	});
 	makeSomeStars();
 
 	//cell animation function
 	updateCells = function() {
-		myWheels.sourceDelta.x = Math.floor((here.x - 375) / 120);
-		myWheels.sourceDelta.y = Math.floor((here.y - 190) / 60);
+		dx = (here.x - 375) / 375;
+		dy = (here.y - 190) / 190;
+		myWheels.set({
+			sourceDeltaX: dx * wheelSpeed,
+			sourceDeltaY: dy * wheelSpeed,
+		});
 		checkForSplice(myWheels);
 		myWheels.updateStart('source');
 
-		myStars.sourceDelta.x = Math.floor((here.x - 375) / 80);
-		myStars.sourceDelta.y = Math.floor((here.y - 190) / 40);
+		myStars.set({
+			sourceDeltaX: dx * starSpeed,
+			sourceDeltaY: dy * starSpeed,
+		});
 		checkForSplice(myStars);
 		myStars.updateStart('source');
 	};
@@ -139,37 +147,29 @@ var mycode = function() {
 		if (sx + x < 0) {
 			cell.spliceCell({
 				edge: 'right',
-				strip: 100
-			});
-			cell.setDelta({
-				sourceX: 100
+				strip: 100,
+				shiftSource: true,
 			});
 		}
 		else if (sx + sw + x > aw) {
 			cell.spliceCell({
 				edge: 'left',
-				strip: 100
-			});
-			cell.setDelta({
-				sourceX: -100
+				strip: 100,
+				shiftSource: true,
 			});
 		}
 		if (sy + y < 0) {
 			cell.spliceCell({
 				edge: 'bottom',
-				strip: 100
-			});
-			cell.setDelta({
-				sourceY: 100
+				strip: 100,
+				shiftSource: true,
 			});
 		}
 		else if (sy + sh + y > ah) {
 			cell.spliceCell({
 				edge: 'top',
-				strip: 100
-			});
-			cell.setDelta({
-				sourceY: -100
+				strip: 100,
+				shiftSource: true,
 			});
 		}
 	};

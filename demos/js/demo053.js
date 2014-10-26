@@ -15,25 +15,61 @@ var mycode = function() {
 		star,
 		box;
 
+	scrawl.newRadialGradient({
+		name: 'gradient',
+		startX: '50%',
+		endX: '50%',
+		startY: '50%',
+		endY: '50%',
+		shift: 0.001,
+		autoUpdate: true,
+		setToSprite: true,
+		color: [{
+			color: 'red',
+			stop: 0
+        }, {
+			color: 'green',
+			stop: 0.2
+        }, {
+			color: 'gold',
+			stop: 0.4
+        }, {
+			color: 'purple',
+			stop: 0.6
+        }, {
+			color: 'silver',
+			stop: 0.8
+        }, {
+			color: 'red',
+			stop: 0.999999
+        }, ],
+	});
+
 	//define sprites
 	star = scrawl.makeRegularShape({
 		name: 'star',
 		startX: 200,
 		startY: 185,
 		winding: 'evenodd',
-		fillStyle: 'Pink',
-		strokeStyle: 'Red',
+		fillStyle: 'gradient',
 		lineWidth: 2,
 		scaleOutline: false,
 		method: 'fillDraw',
 		radius: 100,
 		angle: 144,
+		startControlX: 50,
+		startControlY: 75,
+		endControlX: 50,
+		endControlY: 150,
+		lineType: 'c',
+		shape: true,
 	});
 	box = star.clone({
 		name: 'box',
 		startX: 500,
 		startY: 185,
-		data: 'm-100,-100h200v200h-200v-200m50,50h100v100h-100v-100m-50-50z'
+		data: 'm-100,-100h200v200h-200v-200m50,50h100v100h-100v-100m-50-50z',
+		shape: true,
 	});
 
 	//animation object
@@ -65,7 +101,7 @@ var mycode = function() {
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['path', 'animation', 'factories'],
+	modules: ['path', 'shape', 'animation', 'factories', 'phrase'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

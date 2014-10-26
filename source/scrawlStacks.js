@@ -195,7 +195,7 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 				el.push(s[i]);
 			}
 			for (i = 0, iz = s.length; i < iz; i++) {
-				myName = el.id || el.name || false;
+				myName = my.xtGet([el.id, el.name, false]);
 				if (!my.contains(my.elementnames, myName)) {
 					if (el[i].className.indexOf('stack:') !== -1) {
 						myStack = el[i].className.match(/stack:(\w+)/);
@@ -272,7 +272,7 @@ The argument object should include the following attributes:
 		}
 		myParent = my.stk[(myStk.name || myStk.id)] || document.getElementById(items.parentElement) || document.body;
 		myName = my.makeName({
-			name: items.canvasName || items.name || false,
+			name: my.xtGet([items.canvasName, items.name, false]),
 			type: 'Pad',
 			target: 'padnames',
 		});
@@ -667,16 +667,16 @@ PageElement constructor hook function - modified by stacks module
 		this.work.deltaTranslate = my.newVector({
 			name: this.type + '.' + this.name + '.work.deltaTranslate'
 		});
-		this.pivot = items.pivot || my.d[this.type].pivot;
-		this.path = items.path || my.d[this.type].path;
-		this.pathRoll = items.pathRoll || my.d[this.type].pathRoll;
-		this.addPathRoll = items.addPathRoll || my.d[this.type].addPathRoll;
-		this.pathSpeedConstant = (my.isa(items.pathSpeedConstant, 'bool')) ? items.pathSpeedConstant : my.d[this.type].pathSpeedConstant;
-		this.pathPlace = items.pathPlace || my.d[this.type].pathPlace;
-		this.deltaPathPlace = items.deltaPathPlace || my.d[this.type].deltaPathPlace;
-		this.lockX = items.lockX || my.d[this.type].lockX;
-		this.lockY = items.lockY || my.d[this.type].lockY;
-		this.visibility = (my.isa(items.visibility, 'bool')) ? items.visibility : my.d[this.type].visibility;
+		this.pivot = my.xtGet([items.pivot, my.d[this.type].pivot]);
+		this.path = my.xtGet([items.path, my.d[this.type].path]);
+		this.pathRoll = my.xtGet([items.pathRoll, my.d[this.type].pathRoll]);
+		this.addPathRoll = my.xtGet([items.addPathRoll, my.d[this.type].addPathRoll]);
+		this.pathSpeedConstant = my.xtGet([items.pathSpeedConstant, my.d[this.type].pathSpeedConstant]);
+		this.pathPlace = my.xtGet([items.pathPlace, my.d[this.type].pathPlace]);
+		this.deltaPathPlace = my.xtGet([items.deltaPathPlace, my.d[this.type].deltaPathPlace]);
+		this.lockX = my.xtGet([items.lockX, my.d[this.type].lockX]);
+		this.lockY = my.xtGet([items.lockY, my.d[this.type].lockY]);
+		this.visibility = my.xtGet([items.visibility, my.d[this.type].visibility]);
 		this.rotation = my.newQuaternion({
 			name: this.type + '.' + this.name + '.rotation'
 		}).setFromEuler({
@@ -697,7 +697,7 @@ PageElement constructor hook function - modified by stacks module
 		this.work.deltaRotation = my.newQuaternion({
 			name: this.type + '.' + this.name + '.work.deltaRotation'
 		});
-		this.rotationTolerance = items.rotationTolerance || my.d[this.type].rotationTolerance;
+		this.rotationTolerance = my.xtGet([items.rotationTolerance, my.d[this.type].rotationTolerance]);
 	};
 	/**
 Augments Base.get() to retrieve DOM element width and height values, and stack-related attributes
@@ -785,38 +785,38 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			this.start = my.newVector(items.start || this.start);
 		}
 		if (my.xto([items.startX, items.startY])) {
-			this.start.x = (my.xt(items.startX)) ? items.startX : this.start.x;
-			this.start.y = (my.xt(items.startY)) ? items.startY : this.start.y;
+			this.start.x = my.xtGet([items.startX, this.start.x]);
+			this.start.y = my.xtGet([items.startY, this.start.y]);
 		}
 		if (!this.delta.type || this.delta.type !== 'Vector') {
 			this.delta = my.newVector(items.delta || this.delta);
 		}
 		if (my.xto([items.deltaX, items.deltaY])) {
-			this.delta.x = (my.xt(items.deltaX)) ? items.deltaX : this.delta.x;
-			this.delta.y = (my.xt(items.deltaY)) ? items.deltaY : this.delta.y;
+			this.delta.x = my.xtGet([items.deltaX, this.delta.x]);
+			this.delta.y = my.xtGet([items.deltaY, this.delta.y]);
 		}
 		if (!this.translate.type || this.translate.type !== 'Vector') {
 			this.translate = my.newVector(items.translate || this.translate);
 		}
 		if (my.xto([items.translateX, items.translateY, items.translateZ])) {
-			this.translate.x = (my.xt(items.translateX)) ? items.translateX : this.translate.x;
-			this.translate.y = (my.xt(items.translateY)) ? items.translateY : this.translate.y;
-			this.translate.z = (my.xt(items.translateZ)) ? items.translateZ : this.translate.z;
+			this.translate.x = my.xtGet([items.translateX, this.translate.x]);
+			this.translate.y = my.xtGet([items.translateY, this.translate.y]);
+			this.translate.z = my.xtGet([items.translateZ, this.translate.z]);
 		}
 		if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
 			this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
 		}
 		if (my.xto([items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ])) {
-			this.deltaTranslate.x = (my.xt(items.deltaTranslateX)) ? items.deltaTranslateX : this.deltaTranslate.x;
-			this.deltaTranslate.y = (my.xt(items.deltaTranslateY)) ? items.deltaTranslateY : this.deltaTranslate.y;
-			this.deltaTranslate.z = (my.xt(items.deltaTranslateZ)) ? items.deltaTranslateZ : this.deltaTranslate.z;
+			this.deltaTranslate.x = my.xtGet([items.deltaTranslateX, this.deltaTranslate.x]);
+			this.deltaTranslate.y = my.xtGet([items.deltaTranslateY, this.deltaTranslate.y]);
+			this.deltaTranslate.z = my.xtGet([items.deltaTranslateZ, this.deltaTranslate.z]);
 		}
 		if (!this.handle.type || this.handle.type !== 'Vector') {
 			this.handle = my.newVector(items.handle || this.handle);
 		}
 		if (my.xto([items.handleX, items.handleY])) {
-			this.handle.x = (my.xt(items.handleX)) ? items.handleX : this.handle.x;
-			this.handle.y = (my.xt(items.handleY)) ? items.handleY : this.handle.y;
+			this.handle.x = my.xtGet([items.handleX, this.handle.x]);
+			this.handle.y = my.xtGet([items.handleY, this.handle.y]);
 		}
 		if (my.xto([items.pitch, items.yaw, items.roll])) {
 			this.rotation.setFromEuler({
@@ -918,15 +918,15 @@ Adds the value of each attribute supplied in the argument to existing values; on
 		items = my.safeObject(items);
 		if (my.xto([items.translate, items.translateX, items.translateY])) {
 			temp = (my.isa(items.translate, 'obj')) ? items.translate : {};
-			this.translate.x += (my.xt(items.translateX)) ? items.translateX : ((my.xt(temp.x)) ? temp.x : 0);
-			this.translate.y += (my.xt(items.translateY)) ? items.translateY : ((my.xt(temp.y)) ? temp.y : 0);
-			this.translate.z += (my.xt(items.translateZ)) ? items.translateZ : ((my.xt(temp.z)) ? temp.z : 0);
+			this.translate.x += my.xtGet([items.translateX, temp.x, 0]);
+			this.translate.y += my.xtGet([items.translateY, temp.y, 0]);
+			this.translate.z += my.xtGet([items.translateZ, temp.z, 0]);
 		}
 		if (my.xto([items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY])) {
 			temp = (my.isa(items.deltaTranslate, 'obj')) ? items.deltaTranslate : {};
-			this.deltaTranslate.x += (my.xt(items.deltaTranslateX)) ? items.deltaTranslateX : ((my.xt(temp.x)) ? temp.x : 0);
-			this.deltaTranslate.y += (my.xt(items.deltaTranslateY)) ? items.deltaTranslateY : ((my.xt(temp.y)) ? temp.y : 0);
-			this.deltaTranslate.z += (my.xt(items.deltaTranslateZ)) ? items.deltaTranslateZ : ((my.xt(temp.z)) ? temp.z : 0);
+			this.deltaTranslate.x += my.xtGet([items.deltaTranslateX, temp.x, 0]);
+			this.deltaTranslate.y += my.xtGet([items.deltaTranslateY, temp.y, 0]);
+			this.deltaTranslate.z += my.xtGet([items.deltaTranslateZ, temp.z, 0]);
 		}
 		if (my.xto([items.pitch, items.yaw, items.roll])) {
 			temp = my.workquat.q1.setFromEuler({
@@ -972,38 +972,7 @@ Permitted argument values include
 @chainable
 **/
 	my.PageElement.prototype.updateStart = function(item) {
-		switch (item) {
-			case 'x':
-				if (my.isa(this.start.x, 'num')) {
-					this.start.x += this.delta.x || 0;
-				}
-				break;
-			case 'y':
-				if (my.isa(this.start.y, 'num')) {
-					this.start.y += this.delta.y || 0;
-				}
-				break;
-			case 'path':
-				this.pathPlace += this.deltaPathPlace;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
-				break;
-			default:
-				this.pathPlace += this.deltaPathPlace;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
-				if (my.isa(this.start.x, 'num') && my.isa(this.start.y, 'num')) {
-					this.start.vectorAdd(this.delta);
-				}
-		}
+		my.Position.prototype.updateStart.call(this, item);
 		this.setDisplayOffsets();
 		return this;
 	};
@@ -1021,32 +990,7 @@ Permitted argument values include
 @chainable
 **/
 	my.PageElement.prototype.revertStart = function(item) {
-		switch (item) {
-			case 'x':
-				this.start.x -= this.delta.x || 0;
-				break;
-			case 'y':
-				this.start.y -= this.delta.y || 0;
-				break;
-			case 'path':
-				this.pathPlace -= this.deltaPathPlace;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
-				break;
-			default:
-				this.pathPlace += this.deltaPathPlace;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
-				this.start.vectorSubtract(this.delta);
-		}
+		my.Position.prototype.revertStart.call(this, item);
 		this.setDisplayOffsets();
 		return this;
 	};
@@ -1090,23 +1034,7 @@ Changes the sign (+/-) of specified attribute values
 @chainable
 **/
 	my.PageElement.prototype.reverse = function(item) {
-		switch (item) {
-			case 'deltaX':
-				this.delta.x = -this.delta.x;
-				break;
-			case 'deltaY':
-				this.delta.y = -this.delta.y;
-				break;
-			case 'delta':
-				this.delta.reverse();
-				break;
-			case 'deltaPathPlace':
-				this.deltaPathPlace = -this.deltaPathPlace;
-				break;
-			default:
-				this.deltaPathPlace = -this.deltaPathPlace;
-				this.delta.reverse();
-		}
+		my.Position.prototype.reverse.call(this, item);
 		return this;
 	};
 	/**
@@ -1402,7 +1330,7 @@ A __factory__ function to generate new Element objects
 			});
 			this.width = items.width || this.get('width');
 			this.height = items.height || this.get('height');
-			this.scaleText = (my.isa(items.scaleText, 'bool')) ? items.scaleText : false;
+			this.scaleText = my.xtGet([items.scaleText, false]);
 			this.setDimensions();
 			this.setPerspective();
 			this.setStyles(items);
@@ -1474,9 +1402,9 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 			if (!my.isa(this.perspective, 'Vector')) {
 				this.perspective = my.newVector(items.perspective || this.perspective);
 			}
-			this.perspective.x = (my.xt(items.perspectiveX)) ? items.perspectiveX : this.perspective.x;
-			this.perspective.y = (my.xt(items.perspectiveY)) ? items.perspectiveY : this.perspective.y;
-			this.perspective.z = (my.xt(items.perspectiveZ)) ? items.perspectiveZ : this.perspective.z;
+			this.perspective.x = my.xtGet([items.perspectiveX, this.perspective.x]);
+			this.perspective.y = my.xtGet([items.perspectiveY, this.perspective.y]);
+			this.perspective.z = my.xtGet([items.perspectiveZ, this.perspective.z]);
 			this.setPerspective();
 		}
 		if (my.xt(items.scale)) {

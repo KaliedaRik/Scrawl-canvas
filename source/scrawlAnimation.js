@@ -124,14 +124,14 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 	my.Position.prototype.animationPositionInit = function(items) {
 		var temp = my.safeObject(items.delta);
 		this.delta = my.newVector({
-			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : 0),
-			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : 0),
+			x: my.xtGet([items.deltaX, temp.x, 0]),
+			y: my.xtGet([items.deltaY, temp.y, 0]),
 		});
 		this.work.delta = my.newVector({
 			name: this.type + '.' + this.name + '.work.delta'
 		});
-		this.pathSpeedConstant = (my.isa(items.pathSpeedConstant, 'bool')) ? items.pathSpeedConstant : my.d[this.type].pathSpeedConstant;
-		this.deltaPathPlace = items.deltaPathPlace || my.d[this.type].deltaPathPlace;
+		this.pathSpeedConstant = my.xtGet([items.pathSpeedConstant, my.d[this.type].pathSpeedConstant]);
+		this.deltaPathPlace = my.xtGet([items.deltaPathPlace, my.d[this.type].deltaPathPlace]);
 	};
 	/**
 Position.get hook function - modified by animation module
@@ -163,8 +163,8 @@ Position.set hook function - modified by animation module
 			this.delta = my.newVector(items.delta || this.delta);
 		}
 		if (my.xto([items.deltaX, items.deltaY])) {
-			this.delta.x = (my.xt(items.deltaX)) ? items.deltaX : this.delta.x;
-			this.delta.y = (my.xt(items.deltaY)) ? items.deltaY : this.delta.y;
+			this.delta.x = my.xtGet([items.deltaX, this.delta.x]);
+			this.delta.y = my.xtGet([items.deltaY, this.delta.y]);
 		}
 	};
 	/**
@@ -175,8 +175,8 @@ Position.setDelta hook function - modified by animation module
 	my.Position.prototype.animationPositionClone = function(a, items) {
 		var temp = my.safeObject(items.delta);
 		a.delta = my.newVector({
-			x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : a.delta.x),
-			y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : a.delta.y),
+			x: my.xtGet([items.deltaX, temp.x, a.delta.x]),
+			y: my.xtGet([items.deltaY, temp.y, a.delta.y]),
 		});
 		return a;
 	};
@@ -196,29 +196,22 @@ Permitted argument values include
 	my.Position.prototype.updateStart = function(item) {
 		switch (item) {
 			case 'x':
-				this.start.x += this.delta.x || 0;
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
 				break;
 			case 'y':
-				this.start.y += this.delta.y || 0;
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
 				break;
 			case 'path':
-				this.pathPlace += this.deltaPathPlace;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
+				this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
+					action: 'loop'
+				});
 				break;
 			default:
-				this.pathPlace += this.deltaPathPlace;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
-				this.start.vectorAdd(this.delta);
+				this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
+					action: 'loop'
+				});
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
 		}
 		return this;
 	};
@@ -238,29 +231,24 @@ Permitted argument values include
 	my.Position.prototype.revertStart = function(item) {
 		switch (item) {
 			case 'x':
-				this.start.x -= this.delta.x || 0;
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
 				break;
 			case 'y':
-				this.start.y -= this.delta.y || 0;
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
 				break;
 			case 'path':
-				this.pathPlace -= this.deltaPathPlace;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
+				this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
+					action: 'loop',
+					operation: '-'
+				});
 				break;
 			default:
-				this.pathPlace += this.deltaPathPlace;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
-				this.start.vectorSubtract(this.delta);
+				this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
+					action: 'loop',
+					operation: '-'
+				});
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
 		}
 		return this;
 	};
@@ -288,22 +276,25 @@ Changes the sign (+/-) of specified attribute values
 @chainable
 **/
 	my.Position.prototype.reverse = function(item) {
+		var temp;
 		switch (item) {
 			case 'deltaX':
-				this.delta.x = -this.delta.x;
+				this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
 				break;
 			case 'deltaY':
-				this.delta.y = -this.delta.y;
+				this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
 				break;
 			case 'delta':
-				this.delta.reverse();
+				this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
+				this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
 				break;
 			case 'deltaPathPlace':
 				this.deltaPathPlace = -this.deltaPathPlace;
 				break;
 			default:
 				this.deltaPathPlace = -this.deltaPathPlace;
-				this.delta.reverse();
+				this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
+				this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
 		}
 		return this;
 	};
@@ -327,8 +318,8 @@ Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to 
 	my.Cell.prototype.animationCellInit = function(items) {
 		var temp = my.safeObject(items.sourceDelta);
 		this.sourceDelta = my.newVector({
-			x: (my.xt(items.sourceDeltaX)) ? items.sourceDeltaX : ((my.xt(temp.x)) ? temp.x : 0),
-			y: (my.xt(items.sourceDeltaY)) ? items.sourceDeltaY : ((my.xt(temp.y)) ? temp.y : 0),
+			x: my.xtGet([items.sourceDeltaX, temp.x, 0]),
+			y: my.xtGet([items.sourceDeltaY, temp.y, 0]),
 		});
 		this.work.sourceDelta = my.newVector();
 	};
@@ -357,8 +348,8 @@ Cell.set hook function - modified by animation module
 		var temp;
 		if (my.xto([items.sourceDelta, items.sourceDeltaX, items.sourceDeltaY])) {
 			temp = my.safeObject(items.sourceDelta);
-			this.sourceDelta.x = items.sourceDeltaX || temp.x || this.sourceDelta.x;
-			this.sourceDelta.y = items.sourceDeltaY || temp.y || this.sourceDelta.y;
+			this.sourceDelta.x = my.xtGet([items.sourceDeltaX, temp.x, this.sourceDelta.x]);
+			this.sourceDelta.y = my.xtGet([items.sourceDeltaY, temp.y, this.sourceDelta.y]);
 		}
 	};
 	/**
@@ -379,42 +370,40 @@ Permitted argument values include
 	my.Cell.prototype.updateStart = function(item) {
 		switch (item) {
 			case 'x':
-				this.start.x += this.delta.x || 0;
-				this.source.x += this.deltaSource.x || 0;
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+				this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x + this.sourceDelta.x : my.addPercentages(this.source.x, this.sourceDelta.x || 0);
 				break;
 			case 'y':
-				this.start.y += this.delta.y || 0;
-				this.source.y += this.deltaSource.y || 0;
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+				this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y + this.sourceDelta.y : my.addPercentages(this.source.y, this.sourceDelta.y || 0);
 				break;
 			case 'start':
 			case 'target':
-				this.start.vectorAdd(this.delta);
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
 				break;
 			case 'source':
-				this.source.vectorAdd(this.sourceDelta);
+				this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x + this.sourceDelta.x : my.addPercentages(this.source.x, this.sourceDelta.x || 0);
+				this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y + this.sourceDelta.y : my.addPercentages(this.source.y, this.sourceDelta.y || 0);
 				break;
 			case 'path':
-				this.pathPlace += this.deltaPathPlace || 0;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
+				this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
+					action: 'loop'
+				});
 				break;
 			default:
 				if (my.xt(this.pathPlace)) {
-					this.pathPlace += this.deltaPathPlace || 0;
-					if (this.pathPlace > 1) {
-						this.pathPlace -= 1;
-					}
-					if (this.pathPlace < 0) {
-						this.pathPlace += 1;
-					}
+					this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
+						action: 'loop'
+					});
 				}
-				this.start.vectorAdd(this.delta);
-				this.source.vectorAdd(this.sourceDelta);
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+				this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x + this.sourceDelta.x : my.addPercentages(this.source.x, this.sourceDelta.x || 0);
+				this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y + this.sourceDelta.y : my.addPercentages(this.source.y, this.sourceDelta.y || 0);
 		}
+		this.setSource();
+		this.setTarget();
 		return this;
 	};
 	/**
@@ -435,42 +424,42 @@ Permitted argument values include
 	my.Cell.prototype.revertStart = function(item) {
 		switch (item) {
 			case 'x':
-				this.start.x -= this.delta.x || 0;
-				this.source.x -= this.deltaSource.x || 0;
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
+				this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x - this.sourceDelta.x : this.subtractPercentages(this.source.x, this.sourceDelta.x || 0);
 				break;
 			case 'y':
-				this.start.y -= this.delta.y || 0;
-				this.source.y -= this.deltaSource.y || 0;
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
+				this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y - this.sourceDelta.y : this.subtractPercentages(this.source.y, this.sourceDelta.y || 0);
 				break;
 			case 'start':
 			case 'target':
-				this.start.vectorSubtract(this.delta);
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
 				break;
 			case 'source':
-				this.source.vectorSubtract(this.sourceDelta);
+				this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x - this.sourceDelta.x : this.subtractPercentages(this.source.x, this.sourceDelta.x || 0);
+				this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y - this.sourceDelta.y : this.subtractPercentages(this.source.y, this.sourceDelta.y || 0);
 				break;
 			case 'path':
-				this.pathPlace -= this.deltaPathPlace || 0;
-				if (this.pathPlace > 1) {
-					this.pathPlace -= 1;
-				}
-				if (this.pathPlace < 0) {
-					this.pathPlace += 1;
-				}
+				this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
+					action: 'loop',
+					operation: '-'
+				});
 				break;
 			default:
 				if (my.xt(this.pathPlace)) {
-					this.pathPlace -= this.deltaPathPlace || 0;
-					if (this.pathPlace > 1) {
-						this.pathPlace -= 1;
-					}
-					if (this.pathPlace < 0) {
-						this.pathPlace += 1;
-					}
+					this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
+						action: 'loop',
+						operation: '-'
+					});
 				}
-				this.start.vectorSubtract(this.delta);
-				this.source.vectorSubtract(this.sourceDelta);
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
+				this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x - this.sourceDelta.x : this.subtractPercentages(this.source.x, this.sourceDelta.x || 0);
+				this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y - this.sourceDelta.y : this.subtractPercentages(this.source.y, this.sourceDelta.y || 0);
 		}
+		this.setSource();
+		this.setTarget();
 		return this;
 	};
 	/**
@@ -486,10 +475,10 @@ Zooms one cell in relation to another cell
 				sHeight = this.sourceHeight,
 				aWidth = this.actualWidth,
 				aHeight = this.actualHeight,
-				minWidth = this.get('sourceMinWidth') || this.sourceWidth,
-				minHeight = this.get('sourceMinHeight') || this.sourceHeight,
-				maxWidth = this.get('sourceMaxWidth') || this.sourceWidth,
-				maxHeight = this.get('sourceMaxHeight') || this.sourceHeight,
+				minWidth = my.xtGet([this.sourceMinWidth, this.sourceWidth]),
+				minHeight = my.xtGet([this.sourceMinHeight, this.sourceHeight]),
+				maxWidth = my.xtGet([this.sourceMaxWidth, this.sourceWidth]),
+				maxHeight = my.xtGet([this.sourceMaxHeight, this.sourceHeight]),
 				sx = this.source.x,
 				sy = this.source.y,
 				myW = sWidth + item,
@@ -538,6 +527,7 @@ Permitted values for the argument Object's attributes are:
 
 * __edge__ - one from 'horizontal', 'vertical', 'top', 'bottom', 'left', 'right'
 * __strip__ - a width/height Number (in pixels) of the strip that is to be moved from the named edge of the &lt;canvas&gt; to the opposite edge
+* __shiftSource__ - boolean - when true, will automatically shift the sourceX and sourceY coordinates; default: false
 
 _Note that this function is only effective in achieving a parallax effect if the user never clears or updates the cell's &lt;canvas&gt; element, and takes steps to shift the cell's source vector appropriately each time the splice operation is performed_
 
@@ -552,59 +542,65 @@ _Note that this function is only effective in achieving a parallax effect if the
 			var myStrip,
 				myRemains,
 				myEdge,
+				myShift = my.xtGet([items.shiftSource, false]),
 				height = this.actualHeight,
 				width = this.actualWidth,
-				c,
-				e,
-				canvas = my.canvas[this.name],
-				ctx = my.context[this.name];
-			c = document.createElement('canvas');
-			c.width = width;
-			c.height = height;
-			e = c.getContext('2d');
+				ctx = my.context[this.name],
+				c = my.canvas[this.name];
+			my.cv.width = width;
+			my.cv.height = height;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			switch (items.edge) {
 				case 'horizontal':
-					myStrip = myRemains = width / 2;
+					myRemains = width / 2;
+					myStrip = myRemains;
 					myEdge = 'left';
 					break;
 				case 'vertical':
-					myStrip = myRemains = height / 2;
+					myRemains = height / 2;
+					myStrip = myRemains;
 					myEdge = 'top';
 					break;
 				case 'top':
 				case 'bottom':
-					myStrip = items.strip || 20;
+					myStrip = my.xtGet([items.strip, 20]);
 					myRemains = height - myStrip;
 					myEdge = items.edge;
 					break;
 				case 'left':
 				case 'right':
-					myStrip = items.strip || 20;
+					myStrip = my.xtGet([items.strip, 20]);
 					myRemains = width - myStrip;
 					myEdge = items.edge;
 					break;
 			}
 			switch (myEdge) {
 				case 'top':
-					e.drawImage(canvas, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
-					e.drawImage(canvas, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
+					my.cvx.drawImage(c, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
+					my.cvx.drawImage(c, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
+					this.source.y -= (myShift) ? myStrip : 0;
 					break;
 				case 'bottom':
-					e.drawImage(canvas, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
-					e.drawImage(canvas, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
+					my.cvx.drawImage(c, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
+					my.cvx.drawImage(c, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
+					this.source.y += (myShift) ? myStrip : 0;
 					break;
 				case 'left':
-					e.drawImage(canvas, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
-					e.drawImage(canvas, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
+					my.cvx.drawImage(c, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
+					my.cvx.drawImage(c, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
+					this.source.x -= (myShift) ? myStrip : 0;
 					break;
 				case 'right':
-					e.drawImage(canvas, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
-					e.drawImage(canvas, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
+					my.cvx.drawImage(c, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
+					my.cvx.drawImage(c, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
+					this.source.x += (myShift) ? myStrip : 0;
 					break;
 			}
 			ctx.clearRect(0, 0, width, height);
-			ctx.drawImage(c, 0, 0, width, height);
+			ctx.drawImage(my.cv, 0, 0, width, height);
+			if (myShift) {
+				this.setSource();
+			}
 		}
 		return this;
 	};
@@ -653,7 +649,19 @@ Each sprite will change the sign (+/-) of specified attribute values
 		}
 		return this;
 	};
-	my.d.Design.roll = 0;
+	/**
+A value for shifting the color stops (was __roll__ in versions prior to v4.0)
+@property shift
+@type Number
+@default 0
+**/
+	my.d.Design.shift = 0;
+	/**
+A flag to indicate that stop color shifts should be automatically applied
+@property autoUpdate
+@type Boolean
+@default false
+**/
 	my.d.Design.autoUpdate = false;
 	my.mergeInto(my.d.Gradient, my.d.Design);
 	my.mergeInto(my.d.RadialGradient, my.d.Design);
@@ -684,9 +692,9 @@ Gradient builder helper function - sorts color attribute Objects by their stop a
 **/
 	my.Design.prototype.sortStops = function() {
 		var color = this.get('color'),
-			roll = this.get('roll');
+			shift = this.get('shift');
 		for (var i = 0, z = color.length; i < z; i++) {
-			color[i].stop += roll;
+			color[i].stop += shift;
 			if (!my.isBetween(color[i].stop, 0, 1, true)) {
 				color[i].stop = (color[i].stop > 0.5) ? color[i].stop - 1 : color[i].stop + 1;
 			}
@@ -890,7 +898,7 @@ Remove this Animation from the scrawl library
 Tweens are animations defined by duration (how long they should run for) and distance (how much an attribute needs to change over the course of the tween).
 
 * One tween can change several attributes of an object, and can apply these changes to one or more objects as the tween runs its course.
-* Any attribute that holds a Number type value can be tweened
+* Any attribute that holds a Number, or a percentage String (5%), value can be tweened
 * The starting point for each attribute tween is set in the __start__ attribute object
 * The ending point for each attribute tween is set in the __end__ attribute object
 * If an ending point is defined for an attribute, but no starting point, then the tween will use the object's attribute's current value for the starting point.
@@ -912,7 +920,10 @@ Tweens come with a number of flags and attributes to indicate how many times the
 * Set the __count__ attribute to a positive integer to run the tween that many times. Setting the attribute to _true_ will run the tween forever
 * Tween direction can be reversed by setting the __reverse__ flag to _true_
 * Setting the __autoReverse__ flag to true will automatically reverse the tween's direction at the end of each run
-* Setting the __autoReverseAndRun__ reverses the tween's direction and immediately running it again.
+* Setting __autoReverseAndRun__ reverses the tween's direction and immediately running it again.
+* Setting __killOnComplete__ will delete the tween once it has completed.
+
+Tweens can run a callback function on completion by setting the __callback__ attribute to an appropriate (anonymous) function
 
 ## Access
 
@@ -923,6 +934,7 @@ Tweens come with a number of flags and attributes to indicate how many times the
 * Start a tween by calling the __run()__ function on it.
 * Tween animation can be stopped by calling the __halt()__ function on it.
 * A Tween can be deleted by calling the __kill()__ function on it.
+* Tweens can be cloned like many other Scrawl objects, using the __clone()__ function
 
 @class Tween
 @constructor
@@ -1131,7 +1143,9 @@ Tween animation function
 			progress = (currentTime - this.startTime) / this.duration,
 			sprite,
 			argSet,
-			keys = Object.keys(this.end);
+			keys = Object.keys(this.end),
+			temp,
+			percent;
 		if (this.active) {
 			if (progress < 1) {
 				for (var t = 0, tz = this.currentTargets.length; t < tz; t++) {
@@ -1139,11 +1153,15 @@ Tween animation function
 					if (my.xt(sprite)) {
 						argSet = {};
 						for (var k = 0, kz = keys.length; k < kz; k++) {
-							argSet[keys[k]] = this.engine(this.initVals[t][keys[k]].start,
-								this.initVals[t][keys[k]].change,
+							temp = this.initVals[t][keys[k]];
+							percent = (my.isa(temp.start, 'str') || my.isa(temp.change, 'str')) ? true : false;
+							argSet[keys[k]] = this.engine(
+								parseFloat(temp.start),
+								parseFloat(temp.change),
 								progress,
 								this.engines[keys[k]],
 								this.reverse);
+							argSet[keys[k]] = (percent) ? argSet[keys[k]] + '%' : argSet[keys[k]];
 						}
 						sprite.set(argSet);
 					}
@@ -1249,7 +1267,10 @@ Run a tween animation
 			tw,
 			keys,
 			start,
-			change;
+			end,
+			percent,
+			temp,
+			func = my.subtractPercentages;
 		if (!this.active) {
 			activeTweens = [];
 			keys = Object.keys(this.end);
@@ -1285,18 +1306,17 @@ Run a tween animation
 						this.currentTargets[t].set(this.onCommence);
 						this.initVals.push({});
 						for (var m = 0, mz = keys.length; m < mz; m++) {
-							if (my.xt(this.start[keys[m]])) {
-								this.initVals[t][keys[m]] = {
-									start: (this.reverse) ? this.end[keys[m]] : this.start[keys[m]],
-									change: (this.reverse) ? -(this.end[keys[m]] - this.start[keys[m]]) : this.end[keys[m]] - this.start[keys[m]],
-								};
+							start = (my.xt(this.start[keys[m]])) ? this.start[keys[m]] : this.currentTargets[t].get([keys[m]]);
+							end = this.end[keys[m]];
+							percent = (my.isa(start, 'str') || my.isa(end, 'str')) ? true : false;
+							temp = (percent) ? func(end, start) : end - start;
+							if (this.reverse) {
+								temp = (percent) ? -parseFloat(temp) + '%' : -temp;
 							}
-							else {
-								this.initVals[t][keys[m]] = {
-									start: this.currentTargets[t].get([keys[m]]),
-									change: (this.reverse) ? -this.end[keys[m]] : this.end[keys[m]],
-								};
-							}
+							this.initVals[t][keys[m]] = {
+								start: (this.reverse) ? end : start,
+								change: temp,
+							};
 						}
 					}
 				}

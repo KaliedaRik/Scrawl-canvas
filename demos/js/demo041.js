@@ -9,22 +9,21 @@ var mycode = function() {
 
 	//define variables
 	var mySprite,
-		minX = 50,
-		minY = 50,
-		maxX = 700,
-		maxY = 325,
-		result,
+		minX = 1,
+		minY = 1,
+		maxX = 99,
+		maxY = 99,
 		moveSprites;
 
 	//define sprites
 	mySprite = scrawl.newBlock({
 		name: 'block',
-		startX: 375,
-		startY: 187,
-		deltaX: -3,
-		deltaY: 2,
-		width: 100,
-		height: 100,
+		startX: '50%',
+		startY: '50%',
+		deltaX: '-0.35%',
+		deltaY: '0.25%',
+		width: '12%',
+		height: '24%',
 		handleX: 'center',
 		handleY: 'center',
 		strokeStyle: 'Purple',
@@ -42,28 +41,13 @@ var mycode = function() {
 		order: 1,
 	});
 
-	//sprite used to build Cell collision zone image
-	scrawl.newBlock({
-		startX: 50,
-		startY: 50,
-		width: 650,
-		height: 275,
-		method: 'draw',
-		order: 10,
-		field: true,
-	});
-	scrawl.buildFields();
-
 	//animation function
 	moveSprites = function() {
-		result = mySprite.checkField();
-		if (typeof result !== 'boolean') {
-			if (!scrawl.isBetween(result.x, minX, maxX, true)) {
-				mySprite.reverse('deltaX');
-			}
-			if (!scrawl.isBetween(result.y, minY, maxY, true)) {
-				mySprite.reverse('deltaY');
-			}
+		if (!scrawl.isBetween(parseFloat(mySprite.start.x), minX, maxX, true)) {
+			mySprite.reverse('deltaX');
+		}
+		if (!scrawl.isBetween(parseFloat(mySprite.start.y), minY, maxY, true)) {
+			mySprite.reverse('deltaY');
 		}
 		mySprite.updateStart();
 	};

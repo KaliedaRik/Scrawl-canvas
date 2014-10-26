@@ -56,7 +56,7 @@ var mycode = function() {
 		endX: 500,
 		endY: 400,
 		color: color,
-		roll: 0.001,
+		shift: 0.001,
 		autoUpdate: true,
 	});
 

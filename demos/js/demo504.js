@@ -36,7 +36,7 @@ var mycode = function() {
 
 	scrawl.newGradient({
 		name: 'gradient',
-		roll: 0.002,
+		shift: 0.002,
 		setToSprite: true,
 		color: [{
 			color: '#333333',

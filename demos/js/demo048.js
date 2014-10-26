@@ -18,12 +18,37 @@ var mycode = function() {
 	scrawl.canvas.mycanvas.style.cursor = 'crosshair';
 
 	//define sprite
+	scrawl.newGradient({
+		name: 'gradient',
+		shift: 0.002,
+		autoUpdate: true,
+		setToSprite: true,
+		color: [{
+			color: '#333333',
+			stop: 0
+        }, {
+			color: 'orange',
+			stop: 0.2
+        }, {
+			color: 'gold',
+			stop: 0.4
+        }, {
+			color: 'green',
+			stop: 0.6
+        }, {
+			color: '#cccccc',
+			stop: 0.8
+        }, {
+			color: '#333333',
+			stop: 1
+        }, ],
+	});
+
 	myWheel = scrawl.newWheel({
 		strokeStyle: 'Red',
-		fillStyle: 'Blue',
+		fillStyle: 'gradient',
 		radius: 50,
-		lineWidth: 2,
-		scaleOutline: false,
+		lineWidth: 4,
 		pivot: 'mouse',
 		method: 'fillDraw',
 	});

@@ -56,9 +56,7 @@ scrawlFilters module adaptions to the Scrawl library object
 		result.items = items;
 		result.image = image || false;
 		result.useSourceData = myUse;
-		//console.log('filterSetup #1', myUse, items.use);
 		result.imgData = items.use || image.getImageData(myUse);
-		//console.log('filterSetup #2', result.imgData.data[0], result.imgData.data[100], result.imgData.data[200], result.imgData.data[300], result.imgData.data[400], result.imgData.data[500]);
 		result.save = (my.xt(items.save)) ? items.save : true;
 		return result;
 	};
@@ -435,15 +433,15 @@ The argument object can take up to nine additional attributes, used to set the t
 		var args = my.filterSetup(items, image),
 			value = (my.xt(args.items.value)) ? args.items.value : 1,
 			iVal,
-			rr = args.items.rr || args.items.redInRed || 0.393,
-			rg = args.items.rg || args.items.redInGreen || 0.349,
-			rb = args.items.rb || args.items.redInBlue || 0.272,
-			gr = args.items.gr || args.items.greenInRed || 0.769,
-			gg = args.items.gg || args.items.greenInGreen || 0.686,
-			gb = args.items.gb || args.items.greenInBlue || 0.534,
-			br = args.items.br || args.items.blueInRed || 0.189,
-			bg = args.items.bg || args.items.blueInGreen || 0.168,
-			bb = args.items.bb || args.items.blueInBlue || 0.131,
+			rr = my.xtGet([args.items.rr, args.items.redInRed, 0.393]),
+			rg = my.xtGet([args.items.rg, args.items.redInGreen, 0.349]),
+			rb = my.xtGet([args.items.rb, args.items.redInBlue, 0.272]),
+			gr = my.xtGet([args.items.gr, args.items.greenInRed, 0.769]),
+			gg = my.xtGet([args.items.gg, args.items.greenInGreen, 0.686]),
+			gb = my.xtGet([args.items.gb, args.items.greenInBlue, 0.534]),
+			br = my.xtGet([args.items.br, args.items.blueInRed, 0.189]),
+			bg = my.xtGet([args.items.bg, args.items.blueInGreen, 0.168]),
+			bb = my.xtGet([args.items.bb, args.items.blueInBlue, 0.131]),
 			data = args.imgData.data,
 			r, red,
 			g, grn,
@@ -493,8 +491,8 @@ Attributes in the argument object:
 				radiusX = (my.xt(args.items.radiusX)) ? Math.abs(args.items.radiusX) : 2,
 				radiusY = (my.xt(args.items.radiusY)) ? Math.abs(args.items.radiusY) : 2,
 				roll = (my.xt(args.items.roll)) ? args.items.roll : 0,
-				rx = radius || radiusX || 2,
-				ry = radius || radiusY || 2;
+				rx = radiusX || radius,
+				ry = radiusY || radius;
 			args.items.brush = my.filter.getBrush(rx, ry, roll);
 		}
 		args.imgData = my.filter.doMatrix(args.items.brush, args);

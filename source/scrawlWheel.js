@@ -91,13 +91,13 @@ A __factory__ function to generate new Wheel sprites
 		items = my.safeObject(items);
 		my.Sprite.call(this, items);
 		my.Position.prototype.set.call(this, items);
-		this.radius = items.radius || my.d.Wheel.radius;
+		this.radius = my.xtGet([items.radius, my.d.Wheel.radius]);
 		this.width = this.radius * 2;
 		this.height = this.width;
-		this.checkHitUsingRadius = (my.isa(items.checkHitUsingRadius, 'bool')) ? items.checkHitUsingRadius : my.d.Wheel.checkHitUsingRadius;
-		this.closed = (my.isa(items.closed, 'bool')) ? items.closed : my.d.Wheel.closed;
-		this.includeCenter = (my.isa(items.includeCenter, 'bool')) ? items.includeCenter : my.d.Wheel.includeCenter;
-		this.clockwise = (my.isa(items.clockwise, 'bool')) ? items.clockwise : my.d.Wheel.clockwise;
+		this.checkHitUsingRadius = my.xtGet([items.checkHitUsingRadius, my.d.Wheel.checkHitUsingRadius]);
+		this.closed = my.xtGet([items.closed, my.d.Wheel.closed]);
+		this.includeCenter = my.xtGet([items.includeCenter, my.d.Wheel.includeCenter]);
+		this.clockwise = my.xtGet([items.clockwise, my.d.Wheel.clockwise]);
 		this.registerInLibrary();
 		my.pushUnique(my.group[this.group].sprites, this.name);
 		return this;
@@ -172,7 +172,7 @@ Augments Sprite.set()
 **/
 	my.Wheel.prototype.set = function(items) {
 		my.Sprite.prototype.set.call(this, items);
-		this.radius = items.radius || this.radius;
+		this.radius = my.xtGet([items.radius, this.radius]);
 		this.width = this.radius * 2;
 		this.height = this.width;
 		return this;
@@ -278,11 +278,11 @@ Stamp helper function - define the sprite's path on the &lt;canvas&gt; element's
 @chainable
 @private
 **/
-	my.Wheel.prototype.buildPath = function(ctx) {
+	my.Wheel.prototype.buildPath = function(ctx, cell) {
 		var here = this.prepareStamp(),
 			startAngle = this.get('startAngle'),
 			endAngle = this.get('endAngle');
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		ctx.beginPath();
 		ctx.arc(here.x, here.y, (this.radius * this.scale), (startAngle * my.radian), (endAngle * my.radian), this.clockwise);
 		if (this.includeCenter) {
@@ -303,7 +303,7 @@ Stamp helper function - perform a 'clip' method draw
 @private
 **/
 	my.Wheel.prototype.clip = function(ctx, cell) {
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.clip();
 		return this;
 	};
@@ -318,7 +318,7 @@ Stamp helper function - perform a 'clear' method draw
 **/
 	my.Wheel.prototype.clear = function(ctx, cell) {
 		ctx.globalCompositeOperation = 'destination-out';
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.stroke();
 		ctx.fill();
 		ctx.globalCompositeOperation = my.ctx[cell].get('globalCompositeOperation');
@@ -343,7 +343,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 		ctx.fillStyle = bc;
 		ctx.strokeStyle = bc;
 		ctx.globalAlpha = 1;
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.stroke();
 		ctx.fill();
 		ctx.fillStyle = fillStyle;
@@ -362,7 +362,7 @@ Stamp helper function - perform a 'draw' method draw
 **/
 	my.Wheel.prototype.draw = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.stroke();
 		return this;
 	};
@@ -377,7 +377,7 @@ Stamp helper function - perform a 'fill' method draw
 **/
 	my.Wheel.prototype.fill = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.fill();
 		return this;
 	};
@@ -392,7 +392,7 @@ Stamp helper function - perform a 'drawFill' method draw
 **/
 	my.Wheel.prototype.drawFill = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.stroke();
 		this.clearShadow(ctx, cell);
 		ctx.fill();
@@ -409,7 +409,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 **/
 	my.Wheel.prototype.fillDraw = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.fill();
 		this.clearShadow(ctx, cell);
 		ctx.stroke();
@@ -426,7 +426,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 **/
 	my.Wheel.prototype.sinkInto = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.fill();
 		ctx.stroke();
 		return this;
@@ -442,7 +442,7 @@ Stamp helper function - perform a 'floatOver' method draw
 **/
 	my.Wheel.prototype.floatOver = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
-		this.buildPath(ctx);
+		this.buildPath(ctx, cell);
 		ctx.stroke();
 		ctx.fill();
 		return this;

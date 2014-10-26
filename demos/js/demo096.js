@@ -49,11 +49,22 @@ var mycode = function() {
 	}).run();
 	scrawl.animation.tween1.clone({
 		targets: scrawl.sprite.circle2,
-		duration: 4000,
-		onComplete: {
-			startX: 300,
+		start: {
+			startX: '9.2%',
 			globalAlpha: 1,
+			scale: 1,
 		},
+		end: {
+			startX: '91%',
+			globalAlpha: 0.2,
+			lineDashOffset: -100,
+			scale: 1.3,
+		},
+		onComplete: {
+			startX: '9.2%',
+		},
+		count: 4,
+		autoReverseAndRun: true,
 	}).run();
 	scrawl.animation.tween1.clone({
 		targets: scrawl.sprite.circle3,

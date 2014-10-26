@@ -51,67 +51,71 @@ The argument can include:
 * __radiusY__ - Number, vertical radius of ellipse; default: 0 (not retained)
 * __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
 * any other legitimate Sprite, Context or Shape/Path attribute
+
+Percentage String values are relative to the sprite's cell's dimensions
+
 @method makeEllipse
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
 	my.makeEllipse = function(items) {
 		items = my.safeObject(items);
-		items.startX = items.startX || 0;
-		items.startY = items.startY || 0;
-		items.radiusX = items.radiusX || 0;
-		items.radiusY = items.radiusY || 0;
 		items.closed = true;
-		var myData = 'm',
-			cx = items.startX,
-			cy = items.startY,
-			dx = items.startX,
-			dy = items.startY - items.radiusY,
+		var cell = my.Sprite.prototype.getSpriteCell(items),
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0,
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0,
+			radiusX = (my.isa(items.radiusX, 'str')) ? my.convertPercentage(items.radiusX, cell, true) : items.radiusX || 0,
+			radiusY = (my.isa(items.radiusY, 'str')) ? my.convertPercentage(items.radiusY, cell, false) : items.radiusY || 0,
+			myData = 'm',
+			cx = startX,
+			cy = startY,
+			dx = startX,
+			dy = startY - radiusY,
 			myShape;
 		myData += (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX + (items.radiusX * 0.55);
-		dy = items.startY - items.radiusY;
+		dx = startX + (radiusX * 0.55);
+		dy = startY - radiusY;
 		myData += 'c' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX + items.radiusX;
-		dy = items.startY - (items.radiusY * 0.55);
+		dx = startX + radiusX;
+		dy = startY - (radiusY * 0.55);
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX + items.radiusX;
-		dy = items.startY;
+		dx = startX + radiusX;
+		dy = startY;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX + items.radiusX;
-		dy = items.startY + (items.radiusY * 0.55);
+		dx = startX + radiusX;
+		dy = startY + (radiusY * 0.55);
 		myData += 'c' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX + (items.radiusX * 0.55);
-		dy = items.startY + items.radiusY;
+		dx = startX + (radiusX * 0.55);
+		dy = startY + radiusY;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX;
-		dy = items.startY + items.radiusY;
+		dx = startX;
+		dy = startY + radiusY;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX - (items.radiusX * 0.55);
-		dy = items.startY + items.radiusY;
+		dx = startX - (radiusX * 0.55);
+		dy = startY + radiusY;
 		myData += 'c' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX - items.radiusX;
-		dy = items.startY + (items.radiusY * 0.55);
+		dx = startX - radiusX;
+		dy = startY + (radiusY * 0.55);
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX - items.radiusX;
-		dy = items.startY;
+		dx = startX - radiusX;
+		dy = startY;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX - items.radiusX;
-		dy = items.startY - (items.radiusY * 0.55);
+		dx = startX - radiusX;
+		dy = startY - (radiusY * 0.55);
 		myData += 'c' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX - (items.radiusX * 0.55);
-		dy = items.startY - items.radiusY;
+		dx = startX - (radiusX * 0.55);
+		dy = startY - radiusY;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX;
-		dy = items.startY - items.radiusY;
+		dx = startX;
+		dy = startY - radiusY;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
 		myData += 'z';
 		items.isLine = false;
@@ -122,103 +126,107 @@ The argument can include:
 A __factory__ function to generate rectangular Shape or Path sprite objects, with optional rounded corners
 
 The argument can include:
-* __width__ - Number, default: 0
-* __height__ - Number, default: 0
+* __width__ - Number or % String, default: 0
+* __height__ - Number or % String, default: 0
 * also, 0, 1 or more of the following __radius__ attributes (all Number, default: radius=0): radiusTopLeftX, radiusTopLeftY, radiusTopRightX, radiusTopRightY, radiusBottomRightX, radiusBottomRightY, radiusBottomLeftX, radiusBottomLeftY, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft, radiusTopX, radiusTopY, radiusBottomX, radiusBottomY, radiusLeftX, radiusLeftY, radiusRightX, radiusRightY, radiusTop, radiusBottom, radiusRight, radiusLeft, radiusX, radiusY, radius (not retained)
 * __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
 * any other legitimate Sprite, Context or Shape/Path attribute
+
+Percentage String values are relative to the sprite's cell's dimensions
+
 @method makeRectangle
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
 	my.makeRectangle = function(items) {
 		items = my.safeObject(items);
-		items.startX = items.startX || 0;
-		items.startY = items.startY || 0;
-		items.width = items.width || 0;
-		items.height = items.height || 0;
-		items.radius = items.radius || 0;
 		items.closed = true;
-		var _brx = items.radiusTopLeftX || items.radiusTopLeft || items.radiusTopX || items.radiusLeftX || items.radiusTop || items.radiusLeft || items.radiusX || items.radius || 0,
-			_bry = items.radiusTopLeftY || items.radiusTopLeft || items.radiusTopY || items.radiusLeftY || items.radiusTop || items.radiusLeft || items.radiusY || items.radius || 0,
-			_blx = items.radiusTopRightX || items.radiusTopRight || items.radiusTopX || items.radiusRightX || items.radiusTop || items.radiusRight || items.radiusX || items.radius || 0,
-			_bly = items.radiusTopRightY || items.radiusTopRight || items.radiusTopY || items.radiusRightY || items.radiusTop || items.radiusRight || items.radiusY || items.radius || 0,
-			_tlx = items.radiusBottomRightX || items.radiusBottomRight || items.radiusBottomX || items.radiusRightX || items.radiusBottom || items.radiusRight || items.radiusX || items.radius || 0,
-			_tly = items.radiusBottomRightY || items.radiusBottomRight || items.radiusBottomY || items.radiusRightY || items.radiusBottom || items.radiusRight || items.radiusY || items.radius || 0,
-			_trx = items.radiusBottomLeftX || items.radiusBottomLeft || items.radiusBottomX || items.radiusLeftX || items.radiusBottom || items.radiusLeft || items.radiusX || items.radius || 0,
-			_try = items.radiusBottomLeftY || items.radiusBottomLeft || items.radiusBottomY || items.radiusLeftY || items.radiusBottom || items.radiusLeft || items.radiusY || items.radius || 0,
-			halfWidth = (items.width / 2),
-			halfHeight = (items.height / 2),
+		var cell = my.Sprite.prototype.getSpriteCell(items),
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0,
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0,
+			width = (my.isa(items.width, 'str')) ? my.convertPercentage(items.width, cell, true) : items.width || 0,
+			height = (my.isa(items.height, 'str')) ? my.convertPercentage(items.height, cell, false) : items.height || 0,
+			radius = items.radius || 0,
+			_brx = my.xtGet([items.radiusTopLeftX, items.radiusTopLeft, items.radiusTopX, items.radiusLeftX, items.radiusTop, items.radiusLeft, items.radiusX, items.radius, 0]),
+			_bry = my.xtGet([items.radiusTopLeftY, items.radiusTopLeft, items.radiusTopY, items.radiusLeftY, items.radiusTop, items.radiusLeft, items.radiusY, items.radius, 0]),
+			_blx = my.xtGet([items.radiusTopRightX, items.radiusTopRight, items.radiusTopX, items.radiusRightX, items.radiusTop, items.radiusRight, items.radiusX, items.radius, 0]),
+			_bly = my.xtGet([items.radiusTopRightY, items.radiusTopRight, items.radiusTopY, items.radiusRightY, items.radiusTop, items.radiusRight, items.radiusY, items.radius, 0]),
+			_tlx = my.xtGet([items.radiusBottomRightX, items.radiusBottomRight, items.radiusBottomX, items.radiusRightX, items.radiusBottom, items.radiusRight, items.radiusX, items.radius, 0]),
+			_tly = my.xtGet([items.radiusBottomRightY, items.radiusBottomRight, items.radiusBottomY, items.radiusRightY, items.radiusBottom, items.radiusRight, items.radiusY, items.radius, 0]),
+			_trx = my.xtGet([items.radiusBottomLeftX, items.radiusBottomLeft, items.radiusBottomX, items.radiusLeftX, items.radiusBottom, items.radiusLeft, items.radiusX, items.radius, 0]),
+			_try = my.xtGet([items.radiusBottomLeftY, items.radiusBottomLeft, items.radiusBottomY, items.radiusLeftY, items.radiusBottom, items.radiusLeft, items.radiusY, items.radius, 0]),
+			halfWidth = (width / 2),
+			halfHeight = (height / 2),
 			myData = 'm',
-			cx = items.startX,
-			cy = items.startY,
-			dx = items.startX - halfWidth + _tlx,
-			dy = items.startY - halfHeight,
+			cx = startX,
+			cy = startY,
+			dx = startX - halfWidth + _tlx,
+			dy = startY - halfHeight,
 			myShape;
 		myData += (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX + halfWidth - _trx;
-		dy = items.startY - halfHeight;
+		dx = startX + halfWidth - _trx;
+		dy = startY - halfHeight;
 		myData += 'l' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX + halfWidth - _trx + (_trx * 0.55);
-		dy = items.startY - halfHeight;
+		dx = startX + halfWidth - _trx + (_trx * 0.55);
+		dy = startY - halfHeight;
 		myData += 'c' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX + halfWidth;
-		dy = items.startY - halfHeight + _try - (_try * 0.55);
+		dx = startX + halfWidth;
+		dy = startY - halfHeight + _try - (_try * 0.55);
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX + halfWidth;
-		dy = items.startY - halfHeight + _try;
+		dx = startX + halfWidth;
+		dy = startY - halfHeight + _try;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX + halfWidth;
-		dy = items.startY + halfHeight - _bry;
+		dx = startX + halfWidth;
+		dy = startY + halfHeight - _bry;
 		myData += 'l' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX + halfWidth;
-		dy = items.startY + halfHeight - _bry + (_bry * 0.55);
+		dx = startX + halfWidth;
+		dy = startY + halfHeight - _bry + (_bry * 0.55);
 		myData += 'c' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX + halfWidth - _brx + (_brx * 0.55);
-		dy = items.startY + halfHeight;
+		dx = startX + halfWidth - _brx + (_brx * 0.55);
+		dy = startY + halfHeight;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX + halfWidth - _brx;
-		dy = items.startY + halfHeight;
+		dx = startX + halfWidth - _brx;
+		dy = startY + halfHeight;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX - halfWidth + _blx;
-		dy = items.startY + halfHeight;
+		dx = startX - halfWidth + _blx;
+		dy = startY + halfHeight;
 		myData += 'l' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX - halfWidth + _blx - (_blx * 0.55);
-		dy = items.startY + halfHeight;
+		dx = startX - halfWidth + _blx - (_blx * 0.55);
+		dy = startY + halfHeight;
 		myData += 'c' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX - halfWidth;
-		dy = items.startY + halfHeight - _bly + (_bly * 0.55);
+		dx = startX - halfWidth;
+		dy = startY + halfHeight - _bly + (_bly * 0.55);
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX - halfWidth;
-		dy = items.startY + halfHeight - _bly;
+		dx = startX - halfWidth;
+		dy = startY + halfHeight - _bly;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX - halfWidth;
-		dy = items.startY - halfHeight + _tly;
+		dx = startX - halfWidth;
+		dy = startY - halfHeight + _tly;
 		myData += 'l' + (cx - dx) + ',' + (cy - dy);
 		cx = dx;
 		cy = dy;
-		dx = items.startX - halfWidth;
-		dy = items.startY - halfHeight + _tly - (_tly * 0.55);
+		dx = startX - halfWidth;
+		dy = startY - halfHeight + _tly - (_tly * 0.55);
 		myData += 'c' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX - halfWidth + _tlx - (_tlx * 0.55);
-		dy = items.startY - halfHeight;
+		dx = startX - halfWidth + _tlx - (_tlx * 0.55);
+		dy = startY - halfHeight;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
-		dx = items.startX - halfWidth + _tlx;
-		dy = items.startY - halfHeight;
+		dx = startX - halfWidth + _tlx;
+		dy = startY - halfHeight;
 		myData += ' ' + (cx - dx) + ',' + (cy - dy);
 		myData += 'z';
 		items.isLine = false;
@@ -229,44 +237,48 @@ The argument can include:
 A __factory__ function to generate bezier curve Shape or Path sprite objects
 
 The argument can include:
-* __startX__ - Number; default: 0
-* __startY__ - Number; default: 0
-* __startControlX__ - Number; default: 0 (not retained)
-* __startControlY__ - Number; default: 0 (not retained)
-* __endControlX__ - Number; default: 0 (not retained)
-* __endControlY__ - Number; default: 0 (not retained)
-* __endX__ - Number; default: 0 (not retained)
-* __endY__ - Number; default: 0 (not retained)
+* __startX__ - Number or % String; default: 0
+* __startY__ - Number or % String; default: 0
+* __startControlX__ - Number or % String; default: 0 (not retained)
+* __startControlY__ - Number or % String; default: 0 (not retained)
+* __endControlX__ - Number or % String; default: 0 (not retained)
+* __endControlY__ - Number or % String; default: 0 (not retained)
+* __endX__ - Number or % String; default: 0 (not retained)
+* __endY__ - Number or % String; default: 0 (not retained)
 * __shape__ - Boolean, true to create Shape; false (default) to create Path 
 * any other legitimate Sprite, Context or Shape/Path attribute
+
+Percentage String values are relative to the sprite's cell's dimensions
+
 @method makeBezier
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
 	my.makeBezier = function(items) {
 		items = my.safeObject(items);
-		items.startX = items.startX || 0;
-		items.startY = items.startY || 0;
-		items.startControlX = items.startControlX || 0;
-		items.startControlY = items.startControlY || 0;
-		items.endControlX = items.endControlX || 0;
-		items.endControlY = items.endControlY || 0;
-		items.endX = items.endX || 0;
-		items.endY = items.endY || 0;
 		items.closed = false;
 		items.handleX = items.handleX || 'left';
 		items.handleY = items.handleY || 'top';
-		var myFixed = items.fixed || 'none',
+		items.isLine = true;
+		var cell = my.Sprite.prototype.getSpriteCell(items),
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0,
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0,
+			startControlX = (my.isa(items.startControlX, 'str')) ? my.convertPercentage(items.startControlX, cell, true) : items.startControlX || 0,
+			startControlY = (my.isa(items.startControlY, 'str')) ? my.convertPercentage(items.startControlY, cell, false) : items.startControlY || 0,
+			endControlX = (my.isa(items.endControlX, 'str')) ? my.convertPercentage(items.endControlX, cell, true) : items.endControlX || 0,
+			endControlY = (my.isa(items.endControlY, 'str')) ? my.convertPercentage(items.endControlY, cell, false) : items.endControlY || 0,
+			endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0,
+			endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0,
+			myFixed = items.fixed || 'none',
 			myShape,
 			data,
 			tempName;
 		items.fixed = false;
 		data = 'm0,0c' +
-			(items.startControlX - items.startX) + ',' + (items.startControlY - items.startY) + ' ' +
-			(items.endControlX - items.startX) + ',' + (items.endControlY - items.startY) + ' ' +
-			(items.endX - items.startX) + ',' + (items.endY - items.startY);
+			(startControlX - startX) + ',' + (startControlY - startY) + ' ' +
+			(endControlX - startX) + ',' + (endControlY - startY) + ' ' +
+			(endX - startX) + ',' + (endY - startY);
 		items.data = data;
-		items.isLine = true;
 		if (items.shape) {
 			myShape = my.newShape(items);
 		}
@@ -275,26 +287,26 @@ The argument can include:
 			tempName = myShape.name.replace('~', '_', 'g');
 			switch (myFixed) {
 				case 'all':
-					my.point[tempName + '_p1'].setToFixed(items.startX, items.startY);
-					my.point[tempName + '_p2'].setToFixed(items.startControlX, items.startControlY);
-					my.point[tempName + '_p3'].setToFixed(items.endControlX, items.endControlY);
-					my.point[tempName + '_p4'].setToFixed(items.endX, items.endY);
+					my.point[tempName + '_p1'].setToFixed(startX, startY);
+					my.point[tempName + '_p2'].setToFixed(startControlX, startControlY);
+					my.point[tempName + '_p3'].setToFixed(endControlX, endControlY);
+					my.point[tempName + '_p4'].setToFixed(endX, endY);
 					break;
 				case 'both':
-					my.point[tempName + '_p1'].setToFixed(items.startX, items.startY);
-					my.point[tempName + '_p4'].setToFixed(items.endX, items.endY);
+					my.point[tempName + '_p1'].setToFixed(startX, startY);
+					my.point[tempName + '_p4'].setToFixed(endX, endY);
 					break;
 				case 'start':
-					my.point[tempName + '_p1'].setToFixed(items.startX, items.startY);
+					my.point[tempName + '_p1'].setToFixed(startX, startY);
 					break;
 				case 'startControl':
-					my.point[tempName + '_p2'].setToFixed(items.startControlX, items.startControlY);
+					my.point[tempName + '_p2'].setToFixed(startControlX, startControlY);
 					break;
 				case 'endControl':
-					my.point[tempName + '_p3'].setToFixed(items.endControlX, items.endControlY);
+					my.point[tempName + '_p3'].setToFixed(endControlX, endControlY);
 					break;
 				case 'end':
-					my.point[tempName + '_p4'].setToFixed(items.endX, items.endY);
+					my.point[tempName + '_p4'].setToFixed(endX, endY);
 					break;
 			}
 		}
@@ -304,39 +316,43 @@ The argument can include:
 A __factory__ function to generate quadratic curve Shape or Path sprite objects
 
 The argument can include:
-* __startX__ - Number; default: 0
-* __startY__ - Number; default: 0
-* __controlX__ - Number; default: 0 (not retained)
-* __controlY__ - Number; default: 0 (not retained)
-* __endX__ - Number; default: 0 (not retained)
-* __endY__ - Number; default: 0 (not retained)
+* __startX__ - Number or % String; default: 0
+* __startY__ - Number or % String; default: 0
+* __controlX__ - Number or % String; default: 0 (not retained)
+* __controlY__ - Number or % String; default: 0 (not retained)
+* __endX__ - Number or % String; default: 0 (not retained)
+* __endY__ - Number or % String; default: 0 (not retained)
 * __shape__ - Boolean, true to create Shape; false (default) to create Path 
 * any other legitimate Sprite, Context or Shape/Path attribute
+
+Percentage String values are relative to the sprite's cell's dimensions
+
 @method makeQuadratic
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
 	my.makeQuadratic = function(items) {
 		items = my.safeObject(items);
-		items.startX = items.startX || 0;
-		items.startY = items.startY || 0;
-		items.controlX = items.controlX || 0;
-		items.controlY = items.controlY || 0;
-		items.endX = items.endX || 0;
-		items.endY = items.endY || 0;
 		items.closed = false;
 		items.handleX = items.handleX || 'left';
 		items.handleY = items.handleY || 'top';
-		var myFixed = items.fixed || 'none',
+		items.isLine = true;
+		var cell = my.Sprite.prototype.getSpriteCell(items),
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0,
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0,
+			controlX = (my.isa(items.controlX, 'str')) ? my.convertPercentage(items.controlX, cell, true) : items.controlX || 0,
+			controlY = (my.isa(items.controlY, 'str')) ? my.convertPercentage(items.controlY, cell, false) : items.controlY || 0,
+			endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0,
+			endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0,
+			myFixed = items.fixed || 'none',
 			data,
 			myShape,
 			tempName;
 		data = 'm0,0q' +
-			(items.controlX - items.startX) + ',' + (items.controlY - items.startY) + ' ' +
-			(items.endX - items.startX) + ',' + (items.endY - items.startY);
+			(controlX - startX) + ',' + (controlY - startY) + ' ' +
+			(endX - startX) + ',' + (endY - startY);
 		items.fixed = false;
 		items.data = data;
-		items.isLine = true;
 		if (items.shape) {
 			myShape = my.newShape(items);
 		}
@@ -345,22 +361,22 @@ The argument can include:
 			tempName = myShape.name.replace('~', '_', 'g');
 			switch (myFixed) {
 				case 'all':
-					my.point[tempName + '_p1'].setToFixed(items.startX, items.startY);
-					my.point[tempName + '_p2'].setToFixed(items.controlX, items.controlY);
-					my.point[tempName + '_p3'].setToFixed(items.endX, items.endY);
+					my.point[tempName + '_p1'].setToFixed(startX, startY);
+					my.point[tempName + '_p2'].setToFixed(controlX, controlY);
+					my.point[tempName + '_p3'].setToFixed(endX, endY);
 					break;
 				case 'both':
-					my.point[tempName + '_p1'].setToFixed(items.startX, items.startY);
-					my.point[tempName + '_p3'].setToFixed(items.endX, items.endY);
+					my.point[tempName + '_p1'].setToFixed(startX, startY);
+					my.point[tempName + '_p3'].setToFixed(endX, endY);
 					break;
 				case 'start':
-					my.point[tempName + '_p1'].setToFixed(items.startX, items.startY);
+					my.point[tempName + '_p1'].setToFixed(startX, startY);
 					break;
 				case 'control':
-					my.point[tempName + '_p2'].setToFixed(items.controlX, items.controlY);
+					my.point[tempName + '_p2'].setToFixed(controlX, controlY);
 					break;
 				case 'end':
-					my.point[tempName + '_p3'].setToFixed(items.endX, items.endY);
+					my.point[tempName + '_p3'].setToFixed(endX, endY);
 					break;
 			}
 		}
@@ -370,33 +386,37 @@ The argument can include:
 A __factory__ function to generate straight line Shape or Path sprite objects
 
 The argument can include:
-* __startX__ - Number; default: 0
-* __startY__ - Number; default: 0
-* __endX__ - Number; default: 0 (not retained)
-* __endY__ - Number; default: 0 (not retained)
+* __startX__ - Number or % String; default: 0
+* __startY__ - Number or % String; default: 0
+* __endX__ - Number or % String; default: 0 (not retained)
+* __endY__ - Number or % String; default: 0 (not retained)
 * __shape__ - Boolean, true to create Shape; false (default) to create Path 
 * any other legitimate Sprite, Context or Shape/Path attribute
+
+Percentage String values are relative to the sprite's cell's dimensions
+
 @method makeLine
 @param {Object} items Object containing attributes
 @return Shape or Path sprite object
 **/
 	my.makeLine = function(items) {
 		items = my.safeObject(items);
-		items.startX = items.startX || 0;
-		items.startY = items.startY || 0;
-		items.endX = items.endX || 0;
-		items.endY = items.endY || 0;
+		items.isLine = true;
 		items.closed = false;
 		items.handleX = items.handleX || 'left';
 		items.handleY = items.handleY || 'top';
-		var myFixed = items.fixed || 'none',
+		var cell = my.Sprite.prototype.getSpriteCell(items),
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0,
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0,
+			endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0,
+			endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0,
+			myFixed = items.fixed || 'none',
 			data,
 			myShape,
 			tempName;
-		data = 'm0,0 ' + (items.endX - items.startX) + ',' + (items.endY - items.startY);
+		data = 'm0,0 ' + (endX - startX) + ',' + (endY - startY);
 		items.fixed = false;
 		items.data = data;
-		items.isLine = true;
 		if (items.shape) {
 			myShape = my.newShape(items);
 		}
@@ -405,31 +425,47 @@ The argument can include:
 			tempName = myShape.name.replace('~', '_', 'g');
 			switch (myFixed) {
 				case 'both':
-					my.point[tempName + '_p1'].setToFixed(items.startX, items.startY);
-					my.point[tempName + '_p2'].setToFixed(items.endX, items.endY);
+					my.point[tempName + '_p1'].setToFixed(startX, startY);
+					my.point[tempName + '_p2'].setToFixed(endX, endY);
 					break;
 				case 'start':
-					my.point[tempName + '_p1'].setToFixed(items.startX, items.startY);
+					my.point[tempName + '_p1'].setToFixed(startX, startY);
 					break;
 				case 'end':
-					my.point[tempName + '_p2'].setToFixed(items.endX, items.endY);
+					my.point[tempName + '_p2'].setToFixed(endX, endY);
 					break;
 			}
 		}
 		return myShape;
 	};
 	/**
-A __factory__ function to generate straight-edged regular sprites such as triangles, stars, hexagons, etc
+A __factory__ function to generate regular sprites such as triangles, stars, hexagons, etc
 
 The argument can include:
 * __angle__ - Number; eg an angle of 72 produces a pentagon, while 144 produces a five-pointed star - default: 0
 * __sides__ - Number; number of sides to the regular sprite - default: 0
 * __outline__ - Number; default: 0
 * __radius__ - Number; default: 0 (not retained)
-* __shape__ - Boolean, true to create Shape; false (default) to create Path 
+* __startControlX__ - Number or % String - x coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)
+* __controlX__ - alias for startControlX; default: 0 (not retained)
+* __startControlY__ - Number or % String - y coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)
+* __controlY__ - alias for startControlY; default: 0 (not retained)
+* __endControlX__ - Number or % String - x coordinate for endControl (bezier) curve; default: 0 (not retained)
+* __endControlY__ - Number or % String - y coordinate for endControl (bezier) curve; default: 0 (not retained)
+* __lineType__ - String defining type of line/curve to use for generated sprite (not retained)
+* __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
 * any other legitimate Sprite, Context or Shape/Path attribute
 
-_(Either the 'angle' attribute or the 'sides' attribute (but not both) must be included in the argument object)_
+Sprites can be generated using lines, or quadratic or bezier curves. The species of line to use is defined in the __lineType__ attribute which accepts the following values:
+* '__l__' - straight line (default)
+* '__q__' - quadratic curve
+* '__t__' - reflected quadratic curve
+* '__c__' - bezier curve
+* '__s__' - reflected bezier curve
+
+_Either the 'angle' attribute or the 'sides' attribute (but not both) must be included in the argument object_
+
+Percentage String values are relative to the sprite's cell's dimensions
 
 @method makeRegularShape
 @param {Object} items Object containing attributes
@@ -437,35 +473,90 @@ _(Either the 'angle' attribute or the 'sides' attribute (but not both) must be i
 **/
 	my.makeRegularShape = function(items) {
 		items = my.safeObject(items);
+		var cell = my.Sprite.prototype.getSpriteCell(items),
+			startX, startY, radius, turn, currentAngle, count, point, oPoint, test, data,
+			species, c1x, c1y, c2x, c2y, c1, c2;
 		if (my.xto([items.sides, items.angle])) {
-			items.startX = items.startX || 0;
-			items.startY = items.startY || 0;
-			items.radius = items.radius || 20;
 			items.closed = true;
+			items.isLine = false;
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
+			c1x = my.xtGet([items.startControlX, items.controlX, 0]);
+			c1y = my.xtGet([items.startControlY, items.controlY, 0]);
+			c2x = items.endControlX || 0;
+			c2y = items.endControlY || 0;
+			c1x = (my.isa(c1x, 'str')) ? my.convertPercentage(c1x, cell, true) : c1x;
+			c1y = (my.isa(c1y, 'str')) ? my.convertPercentage(c1y, cell, false) : c1y;
+			c2x = (my.isa(c2x, 'str')) ? my.convertPercentage(c2x, cell, true) : c2x;
+			c2y = (my.isa(c2y, 'str')) ? my.convertPercentage(c2y, cell, false) : c2y;
+			species = (my.contains(['c', 's', 'q', 't', 'l'], items.lineType)) ? items.lineType : 'l';
+			radius = items.radius || 20;
 			// - known bug: items.sides has difficulty exiting the loop, hence the count<1000 limit
-			var turn = (my.isa(items.sides, 'num') && items.sides > 1) ? 360 / items.sides : ((my.isa(items.angle, 'num') && items.angle > 0) ? items.angle : 4),
-				currentAngle = 0,
-				count = 0,
-				point = my.worklink.v1.set({
-					x: items.radius,
-					y: 0,
-					z: 0
-				}),
-				oPoint = my.worklink.v2.set(point),
-				test,
-				data = 'm' + point.x.toFixed(4) + ',' + point.y.toFixed(4) + ' ';
+			turn = (my.isa(items.sides, 'num') && items.sides > 1) ? 360 / items.sides : ((my.isa(items.angle, 'num') && items.angle > 0) ? items.angle : 4);
+			currentAngle = 0;
+			count = 0;
+			point = my.worklink.v1.set({
+				x: radius,
+				y: 0,
+				z: 0
+			});
+			oPoint = my.worklink.v2.set(point);
+			c1 = my.worklink.control1.set({
+				x: c1x,
+				y: c1y,
+				z: 0
+			});
+			c2 = my.worklink.control2.set({
+				x: c2x,
+				y: c2y,
+				z: 0
+			});
+			data = 'm' + point.x.toFixed(4) + ' ' + point.y.toFixed(4);
+			if (my.contains(['s', 't'], species)) {
+				data += ('s' === 'species') ? 'c' : 'q';
+			}
+			else {
+				data += species;
+			}
 			do {
 				count++;
 				currentAngle += turn;
 				currentAngle = currentAngle % 360;
 				test = currentAngle.toFixed(0);
 				point.rotate(turn);
-				data += '' + (point.x - oPoint.x).toFixed(4) + ',' + (point.y - oPoint.y).toFixed(4) + ' ';
+				c1.rotate(turn);
+				c2.rotate(turn);
+				if (my.contains(['c', 's', 'q', 't'], species)) {
+					if (1 === count && my.contains(['s', 't'], species)) {
+						if ('s' === 'species') {
+							data += c1.x.toFixed(4) + ',' + c1.y.toFixed(4) + ' ' + c2.x.toFixed(4) + ',' + c2.y.toFixed(4) + ' ';
+						}
+						else {
+							data += c1.x.toFixed(4) + ',' + c1.y.toFixed(4) + ' ';
+						}
+					}
+					else {
+						if ('s' === species) {
+							data += c2.x.toFixed(4) + ',' + c2.y.toFixed(4) + ' ';
+						}
+						else if (my.contains(['q', 'c'], species)) {
+							data += c1.x.toFixed(4) + ',' + c1.y.toFixed(4) + ' ';
+						}
+					}
+				}
+				if ('c' === species) {
+					data += c2.x.toFixed(4) + ',' + c2.y.toFixed(4) + ' ';
+				}
+				data += (point.x - oPoint.x).toFixed(4) + ',' + (point.y - oPoint.y).toFixed(4) + ' ';
+				if (1 === count) {
+					if (my.contains(['s', 't'], species)) {
+						data += ('s' === 'species') ? 's' : 't';
+					}
+				}
 				oPoint.set(point);
 			} while (test !== '0' && count < 1000);
 			data += 'z';
 			items.data = data;
-			items.isLine = false;
 			return (items.shape) ? my.newShape(items) : my.makePath(items);
 		}
 		return false;
@@ -496,6 +587,18 @@ _(Either the 'angle' attribute or the 'sides' attribute (but not both) must be i
 			}),
 		};
 	}
+	/**
+A __factory__ helper function - convert percentage values to pixel values
+@method convertPercentage
+@param {String} val - the percentage to be converted
+@param {Object} cell - the reference cell
+@param {Boolean} useWidth - true calculates the x point along the cell width; false calculates the y point against height
+@return Number result (px)
+@private
+**/
+	my.convertPercentage = function(val, cell, useWidth) {
+		return (useWidth) ? (parseFloat(val) / 100) * cell.actualWidth : (parseFloat(val) / 100) * cell.actualHeight;
+	};
 
 	return my;
 }(scrawl));

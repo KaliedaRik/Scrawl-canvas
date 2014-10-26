@@ -67,7 +67,6 @@ var mycode = function() {
 	myPad.setDrawOrder(['background']);
 	myPad.show();
 
-	//#8 animation display cycle function
 	mouse = function() {
 		magnifierSprite.set({
 			copyX: (here.x * 5) + 10,
@@ -81,7 +80,6 @@ var mycode = function() {
 		myPad.show();
 	};
 
-	//#9 For animation routines, create an animation object
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();

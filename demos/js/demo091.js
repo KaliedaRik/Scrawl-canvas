@@ -13,10 +13,10 @@ var mycode = function() {
 		endX: 200,
 		endY: 200,
 		endRadius: 300,
-		startX: 200,
-		startY: 200,
+		startX: 60,
+		startY: 60,
 		startRadius: 1,
-		roll: 0.0012,
+		shift: 0.0012,
 		autoUpdate: true,
 		color: [{
 			color: 'black',

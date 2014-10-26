@@ -19,17 +19,17 @@ var mycode = function() {
 	scrawl.newGradient({
 		name: 'grad_1',
 		setToSprite: true,
-		startRangeX: 1.5,
-		endRangeX: 1.5,
-		startRangeY: 1,
-		endRangeY: -1,
-		roll: 0.002,
+		startX: '-50%',
+		endX: '150%',
+		startY: '0%',
+		endY: '0%',
+		shift: 0.002,
 		autoUpdate: true,
 		color: [{
-			color: 'rgba(0,0,0,0.05)',
+			color: 'rgba(0,0,0,0)',
 			stop: 0
         }, {
-			color: 'rgba(0,0,0,0.05)',
+			color: 'rgba(0,0,0,0)',
 			stop: 0.1
         }, {
 			color: 'rgba(0,0,0,1)',
@@ -38,10 +38,10 @@ var mycode = function() {
 			color: 'rgba(0,0,0,1)',
 			stop: 0.7
         }, {
-			color: 'rgba(0,0,0,0.05)',
+			color: 'rgba(0,0,0,0)',
 			stop: 0.9
         }, {
-			color: 'rgba(0,0,0,0.05)',
+			color: 'rgba(0,0,0,0)',
 			stop: 0.999999
         }, ],
 	}).clone({
@@ -51,7 +51,7 @@ var mycode = function() {
 		startY: 0,
 		endX: 500,
 		endY: 0,
-		roll: -0.01,
+		shift: -0.01,
 		color: [{
 			color: 'rgb(200,0,0)',
 			stop: 0

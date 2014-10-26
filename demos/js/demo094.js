@@ -90,7 +90,7 @@ var mycode = function() {
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime) + ', ' + tiggy.scale;
 			//hide-end
 		},
 	});

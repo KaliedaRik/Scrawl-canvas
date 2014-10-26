@@ -9,10 +9,13 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl.js</a> - demonstration 212</h1>
+  <h1><a href="../index.html">Scrawl.js</a> - demonstration 212</h1>
   <h2>Animated caption over image</h2>
   <h3>Modules: stacks, animation</h3>
   <p>Hover mouse over image to trigger animation</p>
+
+  <p><i>Why is the text animation smoother in Firefox and IE11 than in Chrome/Opera/Safari?</i> Chrome computes font sizes as integers; Firefox/IE11 compute them as floats. Because this demo is tweening the font size in line with the stack scale, the knock-on
+    effects of this difference adversely affects the animation in Chrome/Opera/Safari.</p>
 
   <div id="mystack" class="scrawlstack">
     <img id="penguin" src="img/penguin.png" />
@@ -38,6 +41,7 @@
 
   <script src="../source/scrawlCore.js"></script>
   <script id="testscript" src="js/demo212.js"></script>
+  <script src="js/changePage.js"></script>
 </body>
 
 </html>

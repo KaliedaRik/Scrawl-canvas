@@ -586,7 +586,6 @@ Color names are limited to those supported by SVGTiny: 'green', 'silver', 'lime'
 						r = 0;
 						g = 0;
 						b = 0;
-						break;
 				}
 			}
 			my.Base.prototype.set.call(this, {

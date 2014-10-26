@@ -99,7 +99,7 @@ A __factory__ function to generate new Phrase sprites
 		my.Sprite.call(this, items);
 		my.Position.prototype.set.call(this, items);
 		this.registerInLibrary();
-		this.lineHeight = items.lineHeight || my.d.Phrase.lineHeight;
+		this.lineHeight = my.xtGet([items.lineHeight, my.d.Phrase.lineHeight]);
 		if (items.font) {
 			this.checkFont(items.font);
 		}
@@ -236,7 +236,7 @@ Allows users to:
 	my.Phrase.prototype.set = function(items) {
 		my.Sprite.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		this.lineHeight = items.lineHeight || this.lineHeight;
+		this.lineHeight = my.xtGet([items.lineHeight, this.lineHeight]);
 		if (items.font) {
 			this.checkFont(items.font);
 			this.offset.flag = false;
@@ -504,7 +504,7 @@ Stamp helper function - perform a 'clear' method draw
 			textY = this.size * this.lineHeight * this.scale;
 		my.cell[cell].setEngine(this);
 		ctx.globalCompositeOperation = 'destination-out';
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		tX = here.x + o.x;
 		for (var i = 0, z = this.texts.length; i < z; i++) {
 			tY = here.y + (textY * i) + o.y;
@@ -529,7 +529,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 			here = this.prepareStamp(),
 			textY = this.size * this.lineHeight * this.scale;
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		tX = here.x + o.x;
 		for (var i = 0, z = this.texts.length; i < z; i++) {
 			tY = here.y + (textY * i) + o.y;
@@ -553,7 +553,7 @@ Stamp helper function - perform a 'draw' method draw
 			here = this.prepareStamp(),
 			textY = this.size * this.lineHeight * this.scale;
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		if (my.xt(this.backgroundColor)) {
 			this.addBackgroundColor(ctx, here);
 		}
@@ -580,7 +580,7 @@ Stamp helper function - perform a 'fill' method draw
 			here = this.prepareStamp(),
 			textY = this.size * this.lineHeight * this.scale;
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		if (my.xt(this.backgroundColor)) {
 			this.addBackgroundColor(ctx, here);
 		}
@@ -607,7 +607,7 @@ Stamp helper function - perform a 'drawFill' method draw
 			here = this.prepareStamp(),
 			textY = this.size * this.lineHeight * this.scale;
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		if (my.xt(this.backgroundColor)) {
 			this.addBackgroundColor(ctx, here);
 		}
@@ -634,7 +634,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 			here = this.prepareStamp(),
 			textY = this.size * this.lineHeight * this.scale;
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		if (my.xt(this.backgroundColor)) {
 			this.addBackgroundColor(ctx, here);
 		}
@@ -661,7 +661,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 			here = this.prepareStamp(),
 			textY = this.size * this.lineHeight * this.scale;
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		if (my.xt(this.backgroundColor)) {
 			this.addBackgroundColor(ctx, here);
 		}
@@ -688,7 +688,7 @@ Stamp helper function - perform a 'floatOver' method draw
 			here = this.prepareStamp(),
 			textY = this.size * this.lineHeight * this.scale;
 		my.cell[cell].setEngine(this);
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		if (my.xt(this.backgroundColor)) {
 			addBackgroundColor(ctx, here);
 		}
@@ -808,11 +808,11 @@ Returns an object with coordinates __x__ and __y__
 	my.Text = function Text(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
-		this.text = items.text || my.d.Text.text;
-		this.phrase = items.phrase || my.d.Text.phrase;
+		this.text = my.xtGet([items.text, my.d.Text.text]);
+		this.phrase = my.xtGet([items.phrase, my.d.Text.phrase]);
 		this.context = my.sprite[this.phrase].context;
-		this.fixedWidth = (my.isa(items.fixedWidth, 'bool')) ? items.fixedWidth : my.d.Text.fixedWidth;
-		this.textAlongPath = items.textAlongPath || my.d.Text.textAlongPath;
+		this.fixedWidth = my.xtGet([items.fixedWidth, my.d.Text.fixedWidth]);
+		this.textAlongPath = my.xtGet([items.textAlongPath, my.d.Text.textAlongPath]);
 		my.text[this.name] = this;
 		my.pushUnique(my.textnames, this.name);
 		my.pushUnique(my.sprite[this.phrase].texts, this.name);

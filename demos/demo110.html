@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo 110</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+
+  <style>
+    table {
+      width: 100%;
+    }
+    th,
+    td {
+      border: 1px solid gray;
+      font-size: 0.65em;
+      text-align: center;
+      width: 24%;
+    }
+    .rowlabel {
+      font-weight: bold;
+    }
+    table input {
+      width: 80%;
+    }
+    .t0 {
+      background-color: lightgreen;
+    }
+    .t1 {
+      background-color: lightblue;
+    }
+    select {
+      display: inline;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <h1><a href="../index.html">Scrawl.js</a> - demonstration 110</h1>
+  <h2>The scrawl.makeRegularShape() factory</h2>
+  <h3>Modules: factories, shape, path, animation, phrase</h3>
+  <p>Use the controls below to reshape the sprites.</p>
+
+  <canvas id="mycanvas" width="750" height="380"></canvas>
+
+  <p id="testmessage"></p>
+
+  <p>Line type:
+    <select id="lineType">
+      <option value="l">Line</option>
+      <option value="q">Quadratic curve</option>
+      <option value="t">Reflected quadratic curve</option>
+      <option value="c">Bezier curve</option>
+      <option value="s">Reflected bezier curve</option>
+    </select>
+  </p>
+
+  <table>
+    <tr class="t0">
+      <td class="rowlabel">Radius</td>
+      <td>
+        <input id="radius" type="range" value="100" min="10" max="150" step="10" />
+      </td>
+      <td class="rowlabel">Angle</td>
+      <td>
+        <select id="angle">
+          <option value="5">5</option>
+          <option value="8">8</option>
+          <option value="15">15</option>
+          <option value="24">24</option>
+          <option value="30">30</option>
+          <option value="36">36</option>
+          <option value="38">38</option>
+          <option value="45">45</option>
+          <option value="54">54</option>
+          <option value="60">60</option>
+          <option value="72">72</option>
+          <option value="75">75</option>
+          <option value="90">90</option>
+          <option value="105">105</option>
+          <option value="120">120</option>
+          <option value="144">144</option>
+          <option value="170">170</option>
+          <option value="180">180</option>
+          <option value="200">200</option>
+          <option value="240">240</option>
+          <option value="270">270</option>
+        </select>
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Start control X</td>
+      <td>
+        <input id="CX1" type="range" value="0" min="-200" max="200" step="10" />
+      </td>
+      <td class="rowlabel">Start control Y</td>
+      <td>
+        <input id="CY1" type="range" value="0" min="-200" max="200" step="10" />
+      </td>
+    </tr>
+    <tr class="t0">
+      <td class="rowlabel">End control X</td>
+      <td>
+        <input id="CX2" type="range" value="0" min="-200" max="200" step="10" />
+      </td>
+      <td class="rowlabel">End control Y</td>
+      <td>
+        <input id="CY2" type="range" value="0" min="-200" max="200" step="10" />
+      </td>
+    </tr>
+  </table>
+
+  <p id="data"></p>
+
+  <div id="testdetails">
+    <p><b>Scenario:</b> ???</p>
+    <p><b>Actions:</b>
+    </p>
+    <ol>
+      <li>???</li>
+    </ol>
+    <p><b>Known browser issues:</b> ???</p>
+    <p><b>Result images:</b>
+    </p>
+    <img src="img/demopics/demo110.png" alt="image of expected test result" />
+  </div>
+
+  <script src="../source/scrawlCore.js"></script>
+  <script id="testscript" src="js/demo110.js"></script>
+</body>
+
+</html>

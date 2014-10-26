@@ -56,8 +56,8 @@ var mycode = function() {
 	});
 	for (i = 0, iz = sides.length; i < iz; i++) {
 		pads[sides[i]].set({
-			startX: 'center',
-			startY: 'center',
+			startX: myWidth / 2,
+			startY: myHeight / 2,
 			handleX: 'center',
 			handleY: 'center',
 			mouse: false,
@@ -155,8 +155,8 @@ var mycode = function() {
 				else {
 					pads[sides[j]].set({
 						pivot: false,
-						startX: 'center',
-						startY: 'center',
+						startX: myWidth / 2,
+						startY: myHeight / 2,
 						handleX: 'center',
 						handleY: 'center',
 					});

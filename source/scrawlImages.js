@@ -72,7 +72,7 @@ A __general__ function to generate ScrawlImage wrapper objects for &lt;img&gt;, 
 				for (var i = s.length; i > 0; i--) {
 					myImg = my.newImage({
 						element: s[i - 1],
-						removeImageFromDOM: kill || true,
+						removeImageFromDOM: my.xtGet([kill, true]),
 					});
 					names.push(myImg.name);
 				}
@@ -93,7 +93,7 @@ A __general__ function to generate a ScrawlImage wrapper object for an &lt;img&g
 		if (idtag) {
 			var myImg = my.newImage({
 				element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-				removeImageFromDOM: kill || true,
+				removeImageFromDOM: my.xtGet([kill, true]),
 			});
 			return myImg.name;
 		}
@@ -264,6 +264,10 @@ Helper function for convert functions
 
 * Defines a pattern
 * Used with sprite.strokeStyle and sprite.fillStyle attributes
+
+Note that a pattern image will always start at the sprite's rotation/reflection (start vector) position, extending in all directions. To move a sprite over a 'static' (cell-bound) pattern, more inventive solutions need to be found - for instance a combination of Picture sprites, dedicated cells and the 'source-in' globalCompositeOperation attribute.
+
+Patterns are not restricted to images. A pattern can also be sourced from another cell (canvas element) or even a video element.
 
 ## Access
 
@@ -534,6 +538,7 @@ Alias for Pattern.makeDesign()
 				this.copyY = items.copyY || y;
 				this.copyWidth = items.copyWidth || w;
 				this.copyHeight = items.copyHeight || h;
+				this.setLocalDimensions();
 			}
 			this.filters = my.safeObject(items.filters);
 			this.filterKeys = Object.keys(this.filters);
@@ -635,6 +640,20 @@ Image display - height, in pixels, from copy start point
 **/
 		copyHeight: 0,
 		/**
+Image display - width, in pixels
+@property localWidth
+@type Number
+@default 0
+**/
+		localWidth: 0,
+		/**
+Image display - height, in pixels
+@property localHeight
+@type Number
+@default 0
+**/
+		localHeight: 0,
+		/**
 Object consisting of filter name keys and filter argument objects
 @property filters
 @type Object
@@ -705,6 +724,9 @@ Augments Sprite.set()
 **/
 	my.Picture.prototype.set = function(items) {
 		my.Sprite.prototype.set.call(this, items);
+		if (my.xto([items.width, items.height, items.scale])) {
+			this.setLocalDimensions();
+		}
 		if (my.xt(this.animSheet)) {
 			my.anim[this.animSheet].set(items);
 		}
@@ -731,6 +753,34 @@ Augments Sprite.setDelta()
 		}
 		if (my.xt(items.copyHeight)) {
 			this.copyHeight += items.copyHeight;
+		}
+		if (my.xto([items.width, items.height, items.scale])) {
+			this.setLocalDimensions();
+		}
+		if (my.xt(this.animSheet)) {
+			my.anim[this.animSheet].set(items);
+		}
+		return this;
+	};
+	/**
+Augments Sprite.set() - sets the local dimensions
+@method setLocalDimensions
+@return This
+@chainable
+**/
+	my.Picture.prototype.setLocalDimensions = function() {
+		var cell = my.cell[my.group[this.group].cell];
+		if (my.isa(this.width, 'str')) {
+			this.localWidth = (parseFloat(this.width) / 100) * cell.actualWidth * this.scale;
+		}
+		else {
+			this.localWidth = this.width * this.scale || 0;
+		}
+		if (my.isa(this.height, 'str')) {
+			this.localHeight = (parseFloat(this.height) / 100) * cell.actualHeight * this.scale;
+		}
+		else {
+			this.localHeight = this.height * this.scale || 0;
 		}
 		return this;
 	};
@@ -839,9 +889,9 @@ Stamp helper function - perform a 'clip' method draw
 	my.Picture.prototype.clip = function(ctx, cell) {
 		var here = this.prepareStamp();
 		ctx.save();
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		ctx.beginPath();
-		ctx.rect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+		ctx.rect(here.x, here.y, this.localWidth, this.localHeight);
 		ctx.clip();
 		return this;
 	};
@@ -856,8 +906,8 @@ Stamp helper function - perform a 'clear' method draw
 **/
 	my.Picture.prototype.clear = function(ctx, cell) {
 		var here = this.prepareStamp();
-		this.rotateCell(ctx);
-		ctx.clearRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+		this.rotateCell(ctx, cell);
+		ctx.clearRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 	/**
@@ -870,15 +920,13 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @private
 **/
 	my.Picture.prototype.clearWithBackground = function(ctx, cell) {
-		var here = this.prepareStamp(),
-			width = this.width * this.scale,
-			height = this.height * this.scale;
-		this.rotateCell(ctx);
+		var here = this.prepareStamp();
+		this.rotateCell(ctx, cell);
 		ctx.fillStyle = my.cell[cell].backgroundColor;
 		ctx.strokeStyle = my.cell[cell].backgroundColor;
 		ctx.globalAlpha = 1;
-		ctx.strokeRect(here.x, here.y, width, height);
-		ctx.fillRect(here.x, here.y, width, height);
+		ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
+		ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 		ctx.fillStyle = my.ctx[cell].fillStyle;
 		ctx.strokeStyle = my.ctx[cell].strokeStyle;
 		ctx.globalAlpha = my.ctx[cell].globalAlpha;
@@ -895,9 +943,9 @@ Stamp helper function - perform a 'draw' method draw
 **/
 	my.Picture.prototype.draw = function(ctx, cell) {
 		var here = this.prepareStamp();
-		this.rotateCell(ctx);
+		this.rotateCell(ctx, cell);
 		my.cell[cell].setEngine(this);
-		ctx.strokeRect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+		ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 		return this;
 	};
 	/**
@@ -914,9 +962,9 @@ Stamp helper function - perform a 'fill' method draw
 			data = this.getImage();
 		if (data.image) {
 			here = this.prepareStamp();
-			this.rotateCell(ctx);
+			this.rotateCell(ctx, cell);
 			my.cell[cell].setEngine(this);
-			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, (this.width * this.scale), (this.height * this.scale));
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
 		}
 		return this;
 	};
@@ -931,18 +979,14 @@ Stamp helper function - perform a 'drawFill' method draw
 **/
 	my.Picture.prototype.drawFill = function(ctx, cell) {
 		var here,
-			width,
-			height,
 			data = this.getImage();
 		if (data.image) {
 			here = this.prepareStamp();
-			width = this.width * this.scale;
-			height = this.height * this.scale;
-			this.rotateCell(ctx);
+			this.rotateCell(ctx, cell);
 			my.cell[cell].setEngine(this);
-			ctx.strokeRect(here.x, here.y, width, height);
+			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 			this.clearShadow(ctx, cell);
-			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, width, height);
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
 		}
 		return this;
 	};
@@ -957,18 +1001,14 @@ Stamp helper function - perform a 'fillDraw' method draw
 **/
 	my.Picture.prototype.fillDraw = function(ctx, cell) {
 		var here,
-			width,
-			height,
 			data = this.getImage();
 		if (data.image) {
 			here = this.prepareStamp();
-			width = this.width * this.scale;
-			height = this.height * this.scale;
-			this.rotateCell(ctx);
+			this.rotateCell(ctx, cell);
 			my.cell[cell].setEngine(this);
-			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, width, height);
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
 			this.clearShadow(ctx, cell);
-			ctx.strokeRect(here.x, here.y, width, height);
+			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 		}
 		return this;
 	};
@@ -983,17 +1023,13 @@ Stamp helper function - perform a 'sinkInto' method draw
 **/
 	my.Picture.prototype.sinkInto = function(ctx, cell) {
 		var here,
-			width,
-			height,
 			data = this.getImage();
 		if (data.image) {
 			here = this.prepareStamp();
-			width = this.width * this.scale;
-			height = this.height * this.scale;
-			this.rotateCell(ctx);
+			this.rotateCell(ctx, cell);
 			my.cell[cell].setEngine(this);
-			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, width, height);
-			ctx.strokeRect(here.x, here.y, width, height);
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
+			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 		}
 		return this;
 	};
@@ -1008,17 +1044,13 @@ Stamp helper function - perform a 'floatOver' method draw
 **/
 	my.Picture.prototype.floatOver = function(ctx, cell) {
 		var here,
-			width,
-			height,
 			data = this.getImage();
 		if (data.image) {
 			here = this.prepareStamp();
-			width = this.width * this.scale;
-			height = this.height * this.scale;
-			this.rotateCell(ctx);
+			this.rotateCell(ctx, cell);
 			my.cell[cell].setEngine(this);
-			ctx.strokeRect(here.x, here.y, width, height);
-			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, width, height);
+			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
+			ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
 		}
 		return this;
 	};
@@ -1080,14 +1112,14 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 		coords.vectorAdd(this.getPivotOffsetVector(this.handle));
 		if (this.imageType === 'animation' && my.image[this.source]) {
 			myData = my.anim[this.get('animSheet')].getData();
-			copyScaleX = this.width / myData.copyWidth;
-			copyScaleY = this.height / myData.copyHeight;
+			copyScaleX = (this.localWidth / this.scale) / myData.copyWidth;
+			copyScaleY = (this.localHeight / this.scale) / myData.copyHeight;
 			myX = Math.round((coords.x / copyScaleX) + myData.copyX);
 			myY = Math.round((coords.y / copyScaleY) + myData.copyY);
 		}
 		else {
-			copyScaleX = this.width / this.copyWidth;
-			copyScaleY = this.height / this.copyHeight;
+			copyScaleX = (this.localWidth / this.scale) / this.copyWidth;
+			copyScaleY = (this.localHeight / this.scale) / this.copyHeight;
 			myX = Math.round(coords.x / copyScaleX);
 			myY = Math.round(coords.y / copyScaleY);
 		}

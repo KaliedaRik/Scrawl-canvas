@@ -2,11 +2,291 @@
 <html>
 
 <head>
-  <title>Spare slot</title>
+  <title>Demo 081</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+
+  <style>
+    table {
+      width: 100%;
+    }
+    th,
+    td {
+      border: 1px solid gray;
+      font-size: 0.65em;
+      text-align: center;
+      width: 13%;
+    }
+    .rowlabel {
+      width: 8%;
+    }
+    .larger {
+      width: 19%;
+    }
+    table input {
+      width: 80%;
+    }
+    .t0 {
+      background-color: lightgreen;
+    }
+    .t1 {
+      background-color: lightblue;
+    }
+    select {
+      display: inline;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
-  <p>New demo required</p>
+  <h1><a href="../index.html">Scrawl.js</a> - demonstration 081</h1>
+  <h2>Gradients assigned to cells and sprites</h2>
+  <h3>Modules: block, wheel, phrase, animation</h3>
+
+  <!-- additional or alternate setup here -->
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="testmessage"></p>
+
+  <p>Flip:
+    <select id="flip">
+      <option value="normal">Normal</option>
+      <option value="reverse">Reverse</option>
+      <option value="upend">Upend</option>
+      <option value="both">Both</option>
+    </select>
+  </p>
+
+  <table>
+    <tr class="t0">
+      <th class="rowlabel">Block using Cell grad</th>
+      <th>startX</th>
+      <th>startY</th>
+      <th>handleX</th>
+      <th>handleY</th>
+      <th>width</th>
+      <th>height</th>
+      <th>roll/scale</th>
+    </tr>
+    <tr class="t0">
+      <td><b>Cell block px</b>
+      </td>
+      <td>
+        <input id="cellblock_startX_abs" type="range" value="50" min="0" max="600" step="10" />
+      </td>
+      <td>
+        <input id="cellblock_startY_abs" type="range" value="50" min="0" max="400" step="10" />
+      </td>
+      <td>
+        <input id="cellblock_handleX_abs" type="range" value="0" min="-200" max="200" step="10" />
+      </td>
+      <td>
+        <input id="cellblock_handleY_abs" type="range" value="0" min="-200" max="200" step="10" />
+      </td>
+      <td>
+        <input id="cellblock_width_abs" type="range" value="100" min="0" max="600" step="10" />
+      </td>
+      <td>
+        <input id="cellblock_height_abs" type="range" value="100" min="0" max="400" step="10" />
+      </td>
+      <td>r:
+        <input id="cellblock_roll" type="range" value="0" min="0" max="360" step="1" />
+      </td>
+    </tr>
+    <tr class="t0">
+      <td><b>Cell block %</b>
+      </td>
+      <td>
+        <input id="cellblock_startX_rel" type="range" value="20" min="0" max="100" step="1" />
+      </td>
+      <td>
+        <input id="cellblock_startY_rel" type="range" value="20" min="0" max="100" step="1" />
+      </td>
+      <td>
+        <input id="cellblock_handleX_rel" type="range" value="0" min="-100" max="200" step="3" />
+      </td>
+      <td>
+        <input id="cellblock_handleY_rel" type="range" value="0" min="-100" max="200" step="3" />
+      </td>
+      <td>
+        <input id="cellblock_width_rel" type="range" value="20" min="0" max="100" step="1" />
+      </td>
+      <td>
+        <input id="cellblock_height_rel" type="range" value="20" min="0" max="100" step="1" />
+      </td>
+      <td>s:
+        <input id="cellblock_scale" type="range" value="0" min="0" max="3" step="0.1" />
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr class="t0">
+      <th class="larger">Cell-based gradient</th>
+      <th class="larger">startX</th>
+      <th class="larger">startY</th>
+      <th class="larger">endX</th>
+      <th class="larger">endY</th>
+    </tr>
+    <tr class="t0">
+      <td class="larger"><b>Cell gradient px</b>
+      </td>
+      <td>
+        <input id="cellgrad_startX_abs" type="range" value="0" min="-50" max="650" step="10" />
+      </td>
+      <td>
+        <input id="cellgrad_startY_abs" type="range" value="0" min="-50" max="450" step="10" />
+      </td>
+      <td>
+        <input id="cellgrad_endX_abs" type="range" value="600" min="-50" max="650" step="10" />
+      </td>
+      <td>
+        <input id="cellgrad_endY_abs" type="range" value="400" min="-50" max="450" step="10" />
+      </td>
+    </tr>
+    <tr class="t0">
+      <td class="larger"><b>Cell gradient %</b>
+      </td>
+      <td>
+        <input id="cellgrad_startX_rel" type="range" value="0" min="-10" max="110" step="1" />
+      </td>
+      <td>
+        <input id="cellgrad_startY_rel" type="range" value="100" min="-10" max="110" step="1" />
+      </td>
+      <td>
+        <input id="cellgrad_endX_rel" type="range" value="0" min="-10" max="110" step="1" />
+      </td>
+      <td>
+        <input id="cellgrad_endY_rel" type="range" value="0" min="-10" max="110" step="1" />
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr class="t1">
+      <th class="rowlabel">Block using Sprite grad</th>
+      <th>startX</th>
+      <th>startY</th>
+      <th>handleX</th>
+      <th>handleY</th>
+      <th>width</th>
+      <th>height</th>
+      <th>roll/scale</th>
+    </tr>
+    <tr class="t1">
+      <td><b>Sprite block px</b>
+      </td>
+      <td>
+        <input id="spriteblock_startX_abs" type="range" value="350" min="0" max="600" step="10" />
+      </td>
+      <td>
+        <input id="spriteblock_startY_abs" type="range" value="50" min="0" max="400" step="10" />
+      </td>
+      <td>
+        <input id="spriteblock_handleX_abs" type="range" value="0" min="-200" max="200" step="10" />
+      </td>
+      <td>
+        <input id="spriteblock_handleY_abs" type="range" value="0" min="-200" max="200" step="10" />
+      </td>
+      <td>
+        <input id="spriteblock_width_abs" type="range" value="100" min="0" max="600" step="10" />
+      </td>
+      <td>
+        <input id="spriteblock_height_abs" type="range" value="100" min="0" max="400" step="10" />
+      </td>
+      <td>r:
+        <input id="spriteblock_roll" type="range" value="0" min="0" max="360" step="1" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td><b>Sprite block %</b>
+      </td>
+      <td>
+        <input id="spriteblock_startX_rel" type="range" value="20" min="0" max="100" step="1" />
+      </td>
+      <td>
+        <input id="spriteblock_startY_rel" type="range" value="20" min="0" max="100" step="1" />
+      </td>
+      <td>
+        <input id="spriteblock_handleX_rel" type="range" value="0" min="-100" max="200" step="3" />
+      </td>
+      <td>
+        <input id="spriteblock_handleY_rel" type="range" value="0" min="-100" max="200" step="3" />
+      </td>
+      <td>
+        <input id="spriteblock_width_rel" type="range" value="20" min="0" max="100" step="1" />
+      </td>
+      <td>
+        <input id="spriteblock_height_rel" type="range" value="20" min="0" max="100" step="1" />
+      </td>
+      <td>s:
+        <input id="spriteblock_scale" type="range" value="1" min="0" max="3" step="0.1" />
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr class="t1">
+      <th class="larger">Sprite-based gradient</th>
+      <th class="larger">startX</th>
+      <th class="larger">startY</th>
+      <th class="larger">endX</th>
+      <th class="larger">endY</th>
+    </tr>
+    <tr class="t1">
+      <td class="larger"><b>Sprite gradient px</b>
+      </td>
+      <td>
+        <input id="spritegrad_startX_abs" type="range" value="0" min="-300" max="300" step="10" />
+      </td>
+      <td>
+        <input id="spritegrad_startY_abs" type="range" value="0" min="-300" max="300" step="10" />
+      </td>
+      <td>
+        <input id="spritegrad_endX_abs" type="range" value="100" min="-300" max="300" step="10" />
+      </td>
+      <td>
+        <input id="spritegrad_endY_abs" type="range" value="100" min="-300" max="300" step="10" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="larger"><b>Sprite gradient %</b>
+      </td>
+      <td>
+        <input id="spritegrad_startX_rel" type="range" value="0" min="-10" max="110" step="1" />
+      </td>
+      <td>
+        <input id="spritegrad_startY_rel" type="range" value="100" min="-10" max="110" step="1" />
+      </td>
+      <td>
+        <input id="spritegrad_endX_rel" type="range" value="0" min="-10" max="110" step="1" />
+      </td>
+      <td>
+        <input id="spritegrad_endY_rel" type="range" value="0" min="-10" max="110" step="1" />
+      </td>
+    </tr>
+  </table>
+
+  <!-- test details block -->
+  <div id="testdetails">
+    <p><b>Scenario:</b> text</p>
+    <p><b>Actions:</b>
+    </p>
+    <ol>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ol>
+    <p><b>Known browser issues:</b> text</p>
+    <p><b>Result images:</b>
+    </p>
+    <img src="img/demopics/demo081.png" alt="image of expected test result" />
+  </div>
+
+  <script src="../source/scrawlCore.js"></script>
+  <script id="testscript" src="js/demo081.js"></script>
 </body>
 
 </html>
