@@ -31,6 +31,10 @@ Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
 Scrawl demo website: <http://scrawl.rikweb.org.uk>
 
+### Be aware that the current develop branch includes changes beyond v3.1.7 that break that version
+
+The next version, being coded up on the develop branch, will be v4.0.0
+
 ## Purpose and features
 
 The core module is the only essential module in Scrawl. It must always be directly, and completely, loaded into the web page before any additional Scrawl modules are added to it. 
@@ -64,7 +68,7 @@ The core module is the only essential module in Scrawl. It must always be direct
 @module scrawlCore
 **/
 
-var scrawl = (function() {
+var scrawl = window.scrawl || (function() {
 	'use strict';
 	var my = {};
 

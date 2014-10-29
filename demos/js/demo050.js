@@ -239,7 +239,8 @@ var mycode = function() {
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['animation', 'color', 'factories', 'block', 'wheel', 'images', 'path', 'phrase'],
+	//test to prevent multi-loading of modules
+	modules: ['animation', 'color', 'factories', 'block', 'wheel', 'images', 'path', 'phrase', 'animation', 'color', 'factories', 'block', 'wheel', 'images', 'path', 'phrase'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

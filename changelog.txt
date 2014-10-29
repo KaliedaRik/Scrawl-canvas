@@ -1,12 +1,24 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.7 - 5 August 2014
+*	version 3.1.5 - 30 July 2014
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
 *
 ***********************************************************************************/
+
+Currently working on ...
+------------------------------------------------------------------------------------
+- integrating canvases with stacks
+	- code up extra functionality for sprite, pad and element widths and heights
+		- allow pad, stack and element width and height to be a % of containing stack's width and height
+		- allow sprite width and height (radius?) to be a % of the containing cell's width and height
+	- stack and element auto height feature
+		- so height includes the heights of all children elements
+	- new sprite lockTo attribute
+		- in particular so block and picture sprites, patterns and gradients use element width/height
+- recode setDelta routines so that they can handle % additions and subtractions
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
@@ -44,12 +56,258 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
-140731-140805
-	- overhauling the library repository on github
-		- to make it easier for other developers to contribute
-		- all source files linted, and beautified
-		- version 3.1.6 released in error
-		- updated to version 3.1.7
+141025-28
+	- creating and adding YouTube videos to the test suite
+		- so people can see the intended animation, rather than me trying to describe it
+		- completed up to demo062
+		
+141023-24
+	- bug fixing
+		- refactored percentage calculation code to be scrawl utility helper functions
+		- rewrote Cell.spliceCell to semi-automate scrolling
+		- tested all demos in Firefox
+			- all work, except for the new Stack demos
+				- stack recoding comes next ...
+		- tested most demos in IE11
+			- looking very good.
+
+141021-22
+	- new utility helpers: 
+		- xtGetTrue()
+			- returns first true value in a given array of values
+		- addWithinBounds()
+			- performs calculations within minimum and maximum bounds
+		- all modules (except Physics) updated to use new utility functions
+	- fixed, and improved, demo052
+		- rewrote Cell.spliceCell() in Animation module
+			- only works with absolute values for now
+
+141020
+	- test demo111 in all browsers - all pass
+	- test all demos in Firefox
+		- fixed broken demos (037 magnifier, 046 zoom, 051 setDelta, 052, parallax scroller)
+	- new utility helper scrawl.xtGet([])
+		- used in particular inb constructors
+		- replaces a=x||y||default code
+
+141017-19
+	- rewritten cell dimension and positioning code
+		- reviewed and changed source and target definitions
+			- adapted code so that source out-of-bounds errors no longer occur
+		- added new private sourceData and targetData attributes to hold numerical data
+		- sourceXYWH and targetXYWH can now accept percentage strings
+			- source XYWH are relative to the cell's actualDimensions
+			- targetXYWH are relative to the cell's pad's dimensions
+		- constructor, set() and setDelta() adapted to accept percentage values
+		- developed demo111 to test new functionality - works
+
+141016
+	- finalized code for scrawl.makeRegularShape() function
+		- new numerical attributes can also take percentage values 
+		- new demo110 to test code
+		- bug - there are a few instances (involving s and t commands) where Path and Shape output differently
+			- bug is in Path drawing; Shape appears to act correctly
+		- updated documentation
+
+141015
+	- investigating scrawl.makeRegularShape() factory function bugs ...
+		- fixed major bugs concerning 's' and 't' path commands
+		- recoded factory to add functionality
+			- factory can take new attributes:
+				- startControlX, controlX, startControlY, controlY, endControlX, endControlY, lineType
+					- control point coordinates and line species
+			- factory can now output curves in addition to line patterns
+
+141014
+	- gradient and radialGradient recoding completed - for all sprites
+		- radial gradient radii can now be a percentage value (based on sprite width)
+		- Design.roll attribute changed to Design.shift
+			- to disambiguate it from Sprite/Cell/Stack.roll, which is rotation in the z plane
+		- all demos involving gradients and gradient animation tested - all good
+			- CHANGES BREAK previous library versions
+		- demos 048 and 053 adapted to use/test gradients
+	
+141012-13
+	- gradient and radialGradient recoding completed - for Block sprites
+		- need to test for other sprites
+		- new demo085 for radial gradients
+		- still need to recode setDelta to take into account percentage values
+	
+141011
+	- big recode of gradients - BREAKS SUPPORT FOR PREVIOUS RELEASES
+		- got rid of ranges (which not even I understood!)
+		- start and end values can now take percentage values
+			- cell gradients (setToSprite: false - default) are relative to the cell, do not roll with the sprites
+			- sprite gradients (setToSprite: true) are relative to the sprite, will roll with the sprite
+		- fixed numerous bugs
+		- new demo081 to test functionality for Gradients
+			- need to add in flipReverse and flipUpend
+				- sprite gradients should follow sprite flip settings
+				- cell gradients will need to counteract the flips
+		- need to recode setDelta to take into account percentage values
+
+141010
+	- recoding complete for:
+		- sprite setDelta to take into account percentage position and dimension values 
+		- tweening routines to tween between percentage values
+			- adapted demo096 as proof of concept for startX percentage values
+
+141009
+	- updated scrawl.isa() to make it a bit more efficient
+	- updated the new/changed Position functions for efficiency
+	- fixed positioning bugs introduced by localWidth/localHeight
+	- fixed Picture.getImageDataValue() bug
+	- fixed Sprite.checkHit() bug
+	- sprite.setDelta() updated
+		- need a new demo to test setDelta for widths/heights, start and handle
+
+141008
+	- recoding complete for:
+		- update Shape/Path factories to allow them to accept % string attributres
+			- specifically startX, startY, endX, endY, various control points (quadratic, bezier), rectangle width and height
+			- most of these attributes are not retained in the final sprite object
+			- see demo 109
+	- recoding in progress for:
+		- sprite setDelta to take into account percentage position and dimension values 
+			- DONE:
+				- Position.updateStart()
+				- Position.revertStart()
+				- Position.reverse() - all in scrawlAnimation.js
+			- ADDED functions:
+				- Position.addPercentages()
+				- Position.subtractPercentages()
+				- Position.reversePercentage() - all in scrawlCore.js
+			- adapted demo041 to use percentages instead of pixels - works
+			- need to run tests on setDelta for startXY, handleXY, width, height
+
+141007
+	- recoding complete for:
+		- sprite positioning relative to canvas (cell) dimensions
+			- 'top', 'bottom', 'center', 'left', 'right'
+			- also percentage values relative to width/height of cell from top left corner
+			- see demo 109
+		- sprite dimensions relative to canvas (cell) dimensions
+			- percentage values relative to width/height of cell
+				- used only with block and picture sprites (width/height)
+			- see demo 109
+
+141006
+	- CODE REVIEW
+		- don't like the direction the later changes are taking the library
+		- revert all changes, start again with clearer direction in mind
+			- in particular, abandon all attempts to 'automagically' add canvases to stacks
+				- should instead be able to pivot a pad to a stack and set its width and height to 100%
+				- offset, transform and scale synchronicity will need to be handled manually
+			- all code must be cleaner!
+	- RECODE OBJECTIVES:
+		- sprite positioning relative to canvas (cell) dimensions
+			- 'top', 'bottom', 'center', 'left', 'right'
+			- also percentage values relative to width/height of cell from top left corner
+		- sprite dimensions relative to canvas (cell) dimensions
+			- percentage values relative to width/height of cell
+				- used only with block and picture sprites (width/height)
+		- update Shape/Path factories to allow them to accept % string attributres
+			- specifically startX, startY, endX, endY, various control points (quadratic, bezier), rectangle width and height
+			- most of these attributes are not retained in the final sprite object
+		- sprite setDelta to take into account percentage position and dimension values 
+		- recode tweening routines to tween between percentage values for those attributes that can accept them
+		- cell positioning relative to canvas (visible cell) dimensions
+			- 'top', 'bottom', 'center', 'left', 'right'
+			- also percentage values relative to width/height of cell from top left corner
+		- cell dimensions relative to canvas (visible cell) dimensions
+			- percentage values relative to width/height of cell
+		- cell setDelta to take into account percentage position and dimension values 
+		- DOM Element (stack/pad/element within a stack) to replicate sprite positioning within a cell
+			- start vector represents the rotation/reflection coordinate
+			- handle vector represents an offset of the top left of the element from the rotation/reflection coordinate
+		- DOM element (stack, pad, element) positioning relative to parent stack dimensions
+			- 'top', 'bottom', 'center', 'left', 'right'
+			- also percentage values relative to width/height of stack from top left corner
+				- must take into account scale of parent stack
+		- DOM element (stack, pad, element) dimensions relative to parent stack dimensions
+			- percentage values relative to width/height of stack
+				- must take into account scale of parent stack
+			- height attribute can also be set to '0%' or 'auto'
+				- in this specific case, height must equal the combined (overlapping) height of all child elements
+		- DOM element (stack, pad, element) setDelta to take into account percentage position and dimension values 
+		- add functionality to allow DOM elements to use sprite and cell start vectors as their own start vector (pivot)
+		- add functionality to allow sprites and cells to use DOM element start vectors as their own start vector (pivot)
+		- add linking functionality to allow a DOM element to associate with another DOM element
+			- emulate (to a degree) standard DOM flow functionality both vertically and horizontally
+				- eg when element height increases due to text reflow, associated elements beneath it reposition automatically 
+
+140920
+	- PageElements can now take a height attribute of 'auto'
+		- also triggered by a value of '0%'
+		- 'auto' sets the height of the element to match the combined heights of all child elements
+
+140918-19
+	- PageElements within a stack can now take percentage values for width and height attributes
+		- percentage is relative to the containing stack's width and height
+
+140909-17
+	- new Dom class - 'withcanvas'
+		- used alongside 'scrawlcanvas' class
+		- when present, will cause Scrawl to generate a canvas attached to that stack
+	- a lot of work to anneal a stack-locked canvas to its stack
+		- canvas can be used to decorate or augment pads, stacks and elements within the stack
+		- new stack attribute - 'canvas' - holds name of Pad locked to stack
+		- sprites can pivot to pads, stacks and elements within a stack
+			- nesting stacks not encouraged
+				- calculating relative positions of nested stack elements currently too difficult
+				- particularly when stacks have different scales
+	- new Display/PageElement attribute - 'localScale'
+		- nested stacks and elements have multiplicative scaling
+	- TODO:
+		- revisit all other stack generating functions to ensure they can also generate canvases
+		- more demos to test new/forthcoming functionality
+		- fix existing demos
+		- release update
+			- this may well be a breaking release - v4.0.0 rather v3.2.0
+
+140908
+	- new functionality added
+		- positioning stacks, pads and elements
+			- rewrote handle functionality to match sprite handle functionality
+			- reinterpreted start (rotation/reflection point) functionality
+				- DOM elements within stacks can now be positioned
+					- using numbers, from top left corner of stack
+					- using strings 'top', 'bottom', 'center', 'left', 'right'
+					- using percentage strings, as percentage of stack's width/height
+			- added new attribute to PageElement (when using stacks module)
+				- localScale
+					- elements will now scale when stack is scaled
+					- will maintain positioning within stack
+					- substacks, pads and elements can have their own scaling
+						- scaling is multiplicative up the stack tree to the root stack
+				- linkTo, linkOn
+					- intended to add flow between substacks, pads and elements
+					- a bit like pivot, but different
+					- not yet coded up
+		- these changes will probably break existing demo functionality
+			- probably not a bad thing ...
+			- new demo213 to test changes
+
+140907
+	- new functionality added
+		- sprites can now take strings for start coordinates
+			- use canvas (cell) actualWidth and actualHeight as a reference grid
+			- startX accepts 'left', 'center', 'right', 'n%'
+			- startY accepts 'top', 'center', 'bottom', 'n%'
+			- all sprite methods adapted to accept new values
+				- tested on Block, Wheel, Phrase, Path, Shape, Picture sprites
+					- works!
+
+September 2014
+	- rewriting the scrawl website
+
+August 2014
+	- developing a development environment for the library via git
+		- uses node and grunt to setup development environment
+		- all code linted and beautified
+		- library structure overhauled to separate it from the needs of the scrawl website
+		- demos included in GitHub
+
 140725-30
 	- developed new demo - 213 - featuring animated elements
 		- fixed element positioning bugs
@@ -61,6 +319,7 @@ CHANGE LOG
 	- included a bower.js file in the distribution
 	- updated to version 3.1.4
 	
+------------------------------------------------------------------------------------
 140704
 	- added the MIT licence text to all scrawl.js JavaScript files
 		- http://opensource.org/licenses/MIT
@@ -207,6 +466,7 @@ CHANGE LOG
 	- tested all demos, and web pages, in Firefox - all pass
 	- UPDATE to Version 3.1.0
 				
+------------------------------------------------------------------------------------
 140412-15
 	- Operation SaveMemory
 		- vector generation is out of hand
@@ -310,6 +570,7 @@ CHANGE LOG
 	- upload VERSION 3.0.0 to sourceforge, github
 	- update website
 	
+------------------------------------------------------------------------------------
 140401
 	- modularization exercise completed
 		- all modules recoded and tested via demos
