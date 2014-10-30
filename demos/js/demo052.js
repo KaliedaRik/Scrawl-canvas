@@ -28,28 +28,28 @@ var mycode = function() {
 		name: 'wheelBackground',
 		width: 850,
 		height: 480,
-		sourceX: 25,
-		sourceY: 25,
-		sourceWidth: 750,
-		sourceHeight: 380,
-		targetX: 0,
-		targetY: 0,
-		targetWidth: 750,
-		targetHeight: 380,
+		copyX: 25,
+		copyY: 25,
+		copyWidth: 750,
+		copyHeight: 380,
+		pasteX: 0,
+		pasteY: 0,
+		pasteWidth: 750,
+		pasteHeight: 380,
 	});
 	scrawl.addNewCell({
 		name: 'starBackground',
 		width: 850,
 		height: 480,
 		backgroundColor: 'lightblue',
-		sourceX: 25,
-		sourceY: 25,
-		sourceWidth: 750,
-		sourceHeight: 380,
-		targetX: 0,
-		targetY: 0,
-		targetWidth: 750,
-		targetHeight: 380,
+		copyX: 25,
+		copyY: 25,
+		copyWidth: 750,
+		copyHeight: 380,
+		pasteX: 0,
+		pasteY: 0,
+		pasteWidth: 750,
+		pasteHeight: 380,
 	});
 	myWheels = scrawl.cell.wheelBackground;
 	myStars = scrawl.cell.starBackground;
@@ -120,56 +120,56 @@ var mycode = function() {
 		dx = (here.x - 375) / 375;
 		dy = (here.y - 190) / 190;
 		myWheels.set({
-			sourceDeltaX: dx * wheelSpeed,
-			sourceDeltaY: dy * wheelSpeed,
+			copyDeltaX: dx * wheelSpeed,
+			copyDeltaY: dy * wheelSpeed,
 		});
 		checkForSplice(myWheels);
-		myWheels.updateStart('source');
+		myWheels.updateStart('copy');
 
 		myStars.set({
-			sourceDeltaX: dx * starSpeed,
-			sourceDeltaY: dy * starSpeed,
+			copyDeltaX: dx * starSpeed,
+			copyDeltaY: dy * starSpeed,
 		});
 		checkForSplice(myStars);
-		myStars.updateStart('source');
+		myStars.updateStart('copy');
 	};
 
 	//splice checker function called by cell animation function
 	checkForSplice = function(cell) {
-		var x = cell.sourceDelta.x,
-			y = cell.sourceDelta.y,
-			sx = cell.source.x,
-			sy = cell.source.y,
-			sw = cell.sourceWidth,
-			sh = cell.sourceHeight,
+		var x = cell.copyDelta.x,
+			y = cell.copyDelta.y,
+			sx = cell.copy.x,
+			sy = cell.copy.y,
+			sw = cell.copyWidth,
+			sh = cell.copyHeight,
 			aw = cell.actualWidth,
 			ah = cell.actualHeight;
 		if (sx + x < 0) {
 			cell.spliceCell({
 				edge: 'right',
 				strip: 100,
-				shiftSource: true,
+				shiftCopy: true,
 			});
 		}
 		else if (sx + sw + x > aw) {
 			cell.spliceCell({
 				edge: 'left',
 				strip: 100,
-				shiftSource: true,
+				shiftCopy: true,
 			});
 		}
 		if (sy + y < 0) {
 			cell.spliceCell({
 				edge: 'bottom',
 				strip: 100,
-				shiftSource: true,
+				shiftCopy: true,
 			});
 		}
 		else if (sy + sh + y > ah) {
 			cell.spliceCell({
 				edge: 'top',
 				strip: 100,
-				shiftSource: true,
+				shiftCopy: true,
 			});
 		}
 	};

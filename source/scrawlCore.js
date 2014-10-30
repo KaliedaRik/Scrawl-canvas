@@ -3937,21 +3937,21 @@ Cell supports the following 'virtual' attributes for this attribute:
 @property source
 @type Vector
 **/
-		source: false,
+		copy: false,
 		/**
 Copy width, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;
 @property sourceWidth
 @type Number
 @default 300
 **/
-		sourceWidth: 300,
+		copyWidth: 300,
 		/**
 Copy height, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;
 @property sourceHeight
 @type Number
 @default 150
 **/
-		sourceHeight: 150,
+		copyHeight: 150,
 		/**
 Local source data
 @property sourceData
@@ -3959,7 +3959,7 @@ Local source data
 @default false
 @private
 **/
-		sourceData: false,
+		copyData: false,
 		/**
 Local target data
 @property targetData
@@ -3967,21 +3967,21 @@ Local target data
 @default false
 @private
 **/
-		targeteData: false,
+		pasteData: false,
 		/**
 Paste width, in pixels. Determines where, and at what scale, the copied portion of this Cell's &lt;canvas&gt; will appear on the target Cell's &lt;canvas&gt;
 @property targetWidth
 @type Number
 @default 300
 **/
-		targetWidth: 300,
+		pasteWidth: 300,
 		/**
 Paste height, in pixels. Determines where, and at what scale, the copied portion of this Cell's &lt;canvas&gt; will appear on the target Cell's &lt;canvas&gt;
 @property targetHeight
 @type Number
 @default 150
 **/
-		targetHeight: 150,
+		pasteHeight: 150,
 		/**
 DOM &lt;canvas&gt; element's width (not CSS width)
 
@@ -4086,47 +4086,47 @@ Cell constructor hook function - core module
 		my.cell[this.name] = this;
 		my.pushUnique(my.cellnames, this.name);
 		this.pad = my.xtGet([items.pad, false]);
-		temp = my.safeObject(items.source);
-		this.source = my.newVector({
-			x: my.xtGet([items.sourceX, temp.x, 0]),
-			y: my.xtGet([items.sourceY, temp.y, 0]),
-			name: this.type + '.' + this.name + '.source'
+		temp = my.safeObject(items.copy);
+		this.copy = my.newVector({
+			x: my.xtGet([items.copyX, temp.x, 0]),
+			y: my.xtGet([items.copyY, temp.y, 0]),
+			name: this.type + '.' + this.name + '.copy'
 		});
-		this.work.source = my.newVector({
-			name: this.type + '.' + this.name + '.work.source'
+		this.work.copy = my.newVector({
+			name: this.type + '.' + this.name + '.work.copy'
 		});
 		this.actualWidth = my.canvas[this.name].width;
 		this.actualHeight = my.canvas[this.name].height;
-		this.sourceWidth = this.actualWidth;
-		this.sourceHeight = this.actualHeight;
-		this.sourceData = {
+		this.copyWidth = this.actualWidth;
+		this.copyHeight = this.actualHeight;
+		this.copyData = {
 			x: 0,
 			y: 0,
 			w: 0,
 			h: 0
 		};
-		this.targetData = {
+		this.pasteData = {
 			x: 0,
 			y: 0,
 			w: 0,
 			h: 0
 		};
-		this.targetWidth = this.actualWidth;
-		this.targetHeight = this.actualHeight;
+		this.pasteWidth = this.actualWidth;
+		this.pasteHeight = this.actualHeight;
 		this.setDimensions(items);
-		if (my.xto([items.targetX, items.targetY])) {
-			this.start.x = my.xtGet([items.targetX, this.start.x]);
-			this.start.y = my.xtGet([items.targetY, this.start.y]);
+		if (my.xto([items.pasteX, items.pasteY])) {
+			this.start.x = my.xtGet([items.pasteX, this.start.x]);
+			this.start.y = my.xtGet([items.pasteY, this.start.y]);
 		}
-		if (my.xto([items.sourceWidth, items.sourceHeight, items.targetWidth, items.targetHeight, items.width, items.height])) {
-			this.sourceWidth = my.xtGet([items.sourceWidth, items.width, this.sourceWidth]);
-			this.sourceHeight = my.xtGet([items.sourceHeight, items.height, this.sourceHeight]);
-			this.targetWidth = my.xtGet([items.targetWidth, items.width, this.targetWidth]);
-			this.targetHeight = my.xtGet([items.targetHeight, items.height, this.targetHeight]);
+		if (my.xto([items.copyWidth, items.copyHeight, items.pasteWidth, items.pasteHeight, items.width, items.height])) {
+			this.copyWidth = my.xtGet([items.copyWidth, items.width, this.copyWidth]);
+			this.copyHeight = my.xtGet([items.copyHeight, items.height, this.copyHeight]);
+			this.pasteWidth = my.xtGet([items.pasteWidth, items.width, this.pasteWidth]);
+			this.pasteHeight = my.xtGet([items.pasteHeight, items.height, this.pasteHeight]);
 		}
-		this.usePadDimensions = (my.isa(items.usePadDimensions, 'bool')) ? items.usePadDimensions : ((my.xto([items.sourceWidth, items.sourceHeight, items.targetWidth, items.targetHeight, items.width, items.height])) ? false : true);
-		this.setSource();
-		this.setTarget();
+		this.usePadDimensions = (my.isa(items.usePadDimensions, 'bool')) ? items.usePadDimensions : ((my.xto([items.copyWidth, items.copyHeight, items.pasteWidth, items.pasteHeight, items.width, items.height])) ? false : true);
+		this.setCopy();
+		this.setPaste();
 		myContext = my.newContext({
 			name: this.name,
 			cell: my.context[this.name]
@@ -4162,24 +4162,24 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 @return Attribute value
 **/
 	my.Cell.prototype.get = function(item) {
-		if (my.contains(['targetX', 'targetY', 'sourceX', 'sourceY'], item)) {
+		if (my.contains(['pasteX', 'pasteY', 'copyX', 'copyY'], item)) {
 			switch (item) {
-				case 'targetX':
+				case 'pasteX':
 					return this.start.x;
-				case 'targetY':
+				case 'pasteY':
 					return this.start.y;
-				case 'sourceX':
-					return this.source.x;
-				case 'sourceY':
-					return this.source.y;
+				case 'copyX':
+					return this.copy.x;
+				case 'copyY':
+					return this.copy.y;
 			}
 		}
-		if (my.contains(['target', 'source'], item)) {
+		if (my.contains(['paste', 'copy'], item)) {
 			switch (item) {
-				case 'target':
+				case 'paste':
 					return this.start.getVector();
-				case 'source':
-					return this.source.getVector();
+				case 'copy':
+					return this.copy.getVector();
 			}
 		}
 		if (my.contains(['width', 'height'], item)) {
@@ -4211,23 +4211,23 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 		var temp;
 		my.Position.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		if (my.xto([items.target, items.targetX, items.targetY])) {
-			temp = my.safeObject(items.target);
-			this.start.x = my.xtGet([items.targetX, temp.x, this.start.x]);
-			this.start.y = my.xtGet([items.targetY, temp.y, this.start.y]);
+		if (my.xto([items.paste, items.pasteX, items.pasteY])) {
+			temp = my.safeObject(items.paste);
+			this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
+			this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
 		}
-		if (my.xto([items.source, items.sourceX, items.sourceY])) {
-			temp = my.safeObject(items.source);
-			this.source.x = my.xtGet([items.sourceX, temp.x, this.source.x]);
-			this.source.y = my.xtGet([items.sourceY, temp.y, this.source.y]);
+		if (my.xto([items.copy, items.copyX, items.copyY])) {
+			temp = my.safeObject(items.copy);
+			this.copy.x = my.xtGet([items.copyX, temp.x, this.copy.x]);
+			this.copy.y = my.xtGet([items.copyY, temp.y, this.copy.y]);
 		}
-		if (my.xto([items.sourceWidth, items.sourceHeight, items.width, items.height])) {
-			this.sourceWidth = my.xtGet([items.sourceWidth, items.width, this.sourceWidth]);
-			this.sourceHeight = my.xtGet([items.sourceHeight, items.height, this.sourceHeight]);
+		if (my.xto([items.copyWidth, items.copyHeight, items.width, items.height])) {
+			this.copyWidth = my.xtGet([items.copyWidth, items.width, this.copyWidth]);
+			this.copyHeight = my.xtGet([items.copyHeight, items.height, this.copyHeight]);
 		}
-		if (my.xto([items.targetWidth, items.targetHeight, items.width, items.height])) {
-			this.targetWidth = my.xtGet([items.targetWidth, items.width, this.targetWidth]);
-			this.targetHeight = my.xtGet([items.targetHeight, items.height, this.targetHeight]);
+		if (my.xto([items.pasteWidth, items.pasteHeight, items.width, items.height])) {
+			this.pasteWidth = my.xtGet([items.pasteWidth, items.width, this.pasteWidth]);
+			this.pasteHeight = my.xtGet([items.pasteHeight, items.height, this.pasteHeight]);
 		}
 		if (my.xto([items.actualWidth, items.actualHeight, items.width, items.height])) {
 			this.actualWidth = my.xtGet([items.actualWidth, items.width, this.actualWidth]);
@@ -4236,11 +4236,11 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
 		}
 		this.animationCellSet(items);
-		if (my.xto([items.source, items.sourceX, items.sourceY, items.sourceWidth, items.sourceHeight, items.width, items.height, items.scale])) {
-			this.setSource();
+		if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale])) {
+			this.setCopy();
 		}
-		if (my.xto([items.start, items.startX, items.startY, items.target, items.targetX, items.targetY, items.targetWidth, items.targetHeight, items.width, items.height, items.scale])) {
-			this.setTarget();
+		if (my.xto([items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale])) {
+			this.setPaste();
 		}
 		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale])) {
 			this.offset.flag = false;
@@ -4266,33 +4266,33 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 		var temp, x, y, w, h;
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
-		if (my.xto([items.source, items.sourceX, items.sourceY])) {
-			temp = my.safeObject(items.source);
-			x = my.xtGet([items.sourceX, temp.x, 0]);
-			y = my.xtGet([items.sourceY, temp.y, 0]);
-			this.source.x = (my.isa(x, 'num')) ? this.source.x + x : my.addPercentages(this.source.x, x);
-			this.source.y = (my.isa(y, 'num')) ? this.source.y + y : my.addPercentages(this.source.y, y);
+		if (my.xto([items.copy, items.copyX, items.copyY])) {
+			temp = my.safeObject(items.copy);
+			x = my.xtGet([items.copyX, temp.x, 0]);
+			y = my.xtGet([items.copyY, temp.y, 0]);
+			this.copy.x = (my.isa(x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
+			this.copy.y = (my.isa(y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
 		}
-		if (my.xto([items.target, items.targetX, items.targetY])) {
-			temp = my.safeObject(items.target);
-			x = my.xtGet([items.targetX, temp.x, 0]);
-			y = my.xtGet([items.targetY, temp.y, 0]);
+		if (my.xto([items.paste, items.pasteX, items.pasteY])) {
+			temp = my.safeObject(items.paste);
+			x = my.xtGet([items.pasteX, temp.x, 0]);
+			y = my.xtGet([items.pasteY, temp.y, 0]);
 			this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
 			this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
 		}
-		if (my.xt([items.sourceWidth])) {
-			this.sourceWidth = (my.isa(this.sourceWidth, 'num')) ? this.sourceWidth + items.sourceWidth : my.addPercentages(this.sourceWidth, items.sourceWidth);
+		if (my.xt([items.copyWidth])) {
+			this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + items.copyWidth : my.addPercentages(this.copyWidth, items.copyWidth);
 		}
-		if (my.xt([items.sourceHeight])) {
-			this.sourceHeight = (my.isa(this.sourceHeight, 'num')) ? this.sourceHeight + items.sourceHeight : my.addPercentages(this.sourceHeight, items.sourceHeight);
+		if (my.xt([items.copyHeight])) {
+			this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + items.copyHeight : my.addPercentages(this.copyHeight, items.copyHeight);
 		}
-		if (my.xto([items.targetWidth, items.width])) {
-			w = my.xtGet([items.targetWidth, items.width]);
-			this.targetWidth = (my.isa(this.targetWidth, 'num')) ? this.targetWidth + w : my.addPercentages(this.targetWidth, w);
+		if (my.xto([items.pasteWidth, items.width])) {
+			w = my.xtGet([items.pasteWidth, items.width]);
+			this.pasteWidth = (my.isa(this.pasteWidth, 'num')) ? this.pasteWidth + w : my.addPercentages(this.pasteWidth, w);
 		}
-		if (my.xto([items.targetHeight, items.height])) {
-			h = my.xtGet([items.targetHeight, items.height]);
-			this.targetHeight = (my.isa(this.targetHeight, 'num')) ? this.targetHeight + h : my.addPercentages(this.targetHeight, h);
+		if (my.xto([items.pasteHeight, items.height])) {
+			h = my.xtGet([items.pasteHeight, items.height]);
+			this.pasteHeight = (my.isa(this.pasteHeight, 'num')) ? this.pasteHeight + h : my.addPercentages(this.pasteHeight, h);
 		}
 		if (my.xto([items.actualWidth, items.width])) {
 			w = my.xtGet([items.actualWidth, items.width]);
@@ -4308,11 +4308,11 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 		if (my.xt(items.globalAlpha)) {
 			this.globalAlpha += items.globalAlpha;
 		}
-		if (my.xto([items.source, items.sourceX, items.sourceY, items.sourceWidth, items.sourceHeight, items.width, items.height, items.scale])) {
-			this.setSource();
+		if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale])) {
+			this.setCopy();
 		}
-		if (my.xto([items.start, items.startX, items.startY, items.target, items.targetX, items.targetY, items.targetWidth, items.targetHeight, items.width, items.height, items.scale])) {
-			this.setTarget();
+		if (my.xto([items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale])) {
+			this.setPaste();
 		}
 		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale])) {
 			this.offset.flag = false;
@@ -4529,7 +4529,7 @@ Cell copy helper function
 			deltaRotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian,
 			cos = Math.cos(deltaRotation),
 			sin = Math.sin(deltaRotation);
-		engine.setTransform((cos * myA), (sin * myA), (-sin * myD), (cos * myD), this.targetData.x, this.targetData.y);
+		engine.setTransform((cos * myA), (sin * myA), (-sin * myD), (cos * myD), this.pasteData.x, this.pasteData.y);
 		return this;
 	};
 	/**
@@ -4543,7 +4543,7 @@ Cell copy helper function
 	my.Cell.prototype.prepareToCopyCell = function(engine) {
 		this.resetWork();
 		if (!this.offset.flag) {
-			this.offset.set(this.calculatePOV(this.work.handle, this.targetData.w, this.targetData.h, false)).reverse();
+			this.offset.set(this.calculatePOV(this.work.handle, this.pasteData.w, this.pasteData.h, false)).reverse();
 			this.offset.flag = true;
 		}
 		if (this.pivot) {
@@ -4552,8 +4552,8 @@ Cell copy helper function
 		else {
 			this.pathPrepareToCopyCell();
 		}
-		this.setSource();
-		this.setTarget();
+		this.setCopy();
+		this.setPaste();
 		this.rotateDestination(engine);
 		return this;
 	};
@@ -4564,61 +4564,61 @@ Cell.prepareToCopyCell hook function - modified by path module
 **/
 	my.Cell.prototype.pathPrepareToCopyCell = function() {};
 	/**
-Cell.setSource update sourceData object values
+Cell.setCopy update copyData object values
 @method setSource
 @chainable
 @private
 **/
-	my.Cell.prototype.setSource = function() {
-		this.sourceData.x = (my.isa(this.source.x, 'str')) ? this.convertX(this.source.x, this.actualWidth) : this.source.x;
-		this.sourceData.y = (my.isa(this.source.y, 'str')) ? this.convertY(this.source.y, this.actualHeight) : this.source.y;
-		if (!my.isBetween(this.sourceData.x, 0, this.actualWidth - 1, true)) {
-			this.sourceData.x = (this.sourceData.x < 0) ? 0 : this.actualWidth - 1;
+	my.Cell.prototype.setCopy = function() {
+		this.copyData.x = (my.isa(this.copy.x, 'str')) ? this.convertX(this.copy.x, this.actualWidth) : this.copy.x;
+		this.copyData.y = (my.isa(this.copy.y, 'str')) ? this.convertY(this.copy.y, this.actualHeight) : this.copy.y;
+		if (!my.isBetween(this.copyData.x, 0, this.actualWidth - 1, true)) {
+			this.copyData.x = (this.copyData.x < 0) ? 0 : this.actualWidth - 1;
 		}
-		if (!my.isBetween(this.sourceData.y, 0, this.actualHeight - 1, true)) {
-			this.sourceData.y = (this.sourceData.y < 0) ? 0 : this.actualHeight - 1;
+		if (!my.isBetween(this.copyData.y, 0, this.actualHeight - 1, true)) {
+			this.copyData.y = (this.copyData.y < 0) ? 0 : this.actualHeight - 1;
 		}
-		this.sourceData.w = (my.isa(this.sourceWidth, 'str')) ? this.convertX(this.sourceWidth, this.actualWidth) : this.sourceWidth;
-		this.sourceData.h = (my.isa(this.sourceHeight, 'str')) ? this.convertY(this.sourceHeight, this.actualHeight) : this.sourceHeight;
-		if (!my.isBetween(this.sourceData.w, 1, this.actualWidth, true)) {
-			this.sourceData.w = (this.sourceData.w < 1) ? 1 : this.actualWidth;
+		this.copyData.w = (my.isa(this.copyWidth, 'str')) ? this.convertX(this.copyWidth, this.actualWidth) : this.copyWidth;
+		this.copyData.h = (my.isa(this.copyHeight, 'str')) ? this.convertY(this.copyHeight, this.actualHeight) : this.copyHeight;
+		if (!my.isBetween(this.copyData.w, 1, this.actualWidth, true)) {
+			this.copyData.w = (this.copyData.w < 1) ? 1 : this.actualWidth;
 		}
-		if (!my.isBetween(this.sourceData.h, 1, this.actualHeight, true)) {
-			this.sourceData.h = (this.sourceData.h < 1) ? 1 : this.actualHeight;
+		if (!my.isBetween(this.copyData.h, 1, this.actualHeight, true)) {
+			this.copyData.h = (this.copyData.h < 1) ? 1 : this.actualHeight;
 		}
-		if (this.sourceData.x + this.sourceData.w > this.actualWidth) {
-			this.sourceData.x = this.actualWidth - this.sourceData.w;
+		if (this.copyData.x + this.copyData.w > this.actualWidth) {
+			this.copyData.x = this.actualWidth - this.copyData.w;
 		}
-		if (this.sourceData.y + this.sourceData.h > this.actualHeight) {
-			this.sourceData.y = this.actualHeight - this.sourceData.h;
+		if (this.copyData.y + this.copyData.h > this.actualHeight) {
+			this.copyData.y = this.actualHeight - this.copyData.h;
 		}
 		return this;
 	};
 	/**
-Cell.setSource update sourceData object values
+Cell.setPaste update pasteData object values
 @method setSource
 @chainable
 @private
 **/
-	my.Cell.prototype.setTarget = function() {
+	my.Cell.prototype.setPaste = function() {
 		var usePadDimensions = this.usePadDimensions,
 			pad = my.pad[this.pad];
 
-		this.targetData.x = (usePadDimensions) ? 0 : this.start.x;
-		this.targetData.y = (usePadDimensions) ? 0 : this.start.y;
-		this.targetData.x = (my.isa(this.targetData.x, 'str')) ? this.convertX(this.targetData.x, pad.width) : this.targetData.x;
-		this.targetData.y = (my.isa(this.targetData.y, 'str')) ? this.convertY(this.targetData.y, pad.height) : this.targetData.y;
-		this.targetData.w = (usePadDimensions) ? pad.width : this.targetWidth;
-		this.targetData.h = (usePadDimensions) ? pad.height : this.targetHeight;
-		this.targetData.w = (my.isa(this.targetData.w, 'str')) ? this.convertX(this.targetData.w, this.actualWidth) : this.targetData.w;
-		this.targetData.h = (my.isa(this.targetData.h, 'str')) ? this.convertY(this.targetData.h, this.actualHeight) : this.targetData.h;
-		this.targetData.w = (this.targetData.w * this.scale) * pad.scale;
-		this.targetData.h = (this.targetData.h * this.scale) * pad.scale;
-		if (this.targetData.w < 1) {
-			this.targetData.w = 1;
+		this.pasteData.x = (usePadDimensions) ? 0 : this.start.x;
+		this.pasteData.y = (usePadDimensions) ? 0 : this.start.y;
+		this.pasteData.x = (my.isa(this.pasteData.x, 'str')) ? this.convertX(this.pasteData.x, pad.width) : this.pasteData.x;
+		this.pasteData.y = (my.isa(this.pasteData.y, 'str')) ? this.convertY(this.pasteData.y, pad.height) : this.pasteData.y;
+		this.pasteData.w = (usePadDimensions) ? pad.width : this.pasteWidth;
+		this.pasteData.h = (usePadDimensions) ? pad.height : this.pasteHeight;
+		this.pasteData.w = (my.isa(this.pasteData.w, 'str')) ? this.convertX(this.pasteData.w, this.actualWidth) : this.pasteData.w;
+		this.pasteData.h = (my.isa(this.pasteData.h, 'str')) ? this.convertY(this.pasteData.h, this.actualHeight) : this.pasteData.h;
+		this.pasteData.w = (this.pasteData.w * this.scale) * pad.scale;
+		this.pasteData.h = (this.pasteData.h * this.scale) * pad.scale;
+		if (this.pasteData.w < 1) {
+			this.pasteData.w = 1;
 		}
-		if (this.targetData.h < 1) {
-			this.targetData.h = 1;
+		if (this.pasteData.h < 1) {
+			this.pasteData.h = 1;
 		}
 		return this;
 	};
@@ -4637,8 +4637,8 @@ Cell copy helper function
 		var lockTo = cell.get('lockTo'),
 			myCell = (lockTo) ? my.cell[lockTo] : cell;
 		if (my.xt(myCell)) {
-			var source = myCell.sourceData,
-				target = myCell.targetData,
+			var copy = myCell.copyData,
+				paste = myCell.pasteData,
 				offset = myCell.offset,
 				context = my.context[this.name],
 				ctx = my.ctx[this.name],
@@ -4660,7 +4660,7 @@ Cell copy helper function
 			}
 			my.context[myCell.name].setTransform(1, 0, 0, 1, 0, 0);
 			myCell.prepareToCopyCell(context);
-			context.drawImage(my.canvas[myCell.name], source.x, source.y, source.w, source.h, offset.x, offset.y, target.w, target.h);
+			context.drawImage(my.canvas[myCell.name], copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h);
 		}
 		return this;
 	};

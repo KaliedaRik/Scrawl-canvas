@@ -523,8 +523,8 @@ if (window.scrawl && !window.scrawl.newPattern) {
 						s = my.cell[this.source];
 						w = s.sourceWidth;
 						h = s.sourceHeight;
-						x = s.source.x;
-						y = s.source.y;
+						x = s.copy.x;
+						y = s.copy.y;
 					}
 					else if (this.imageType === 'animation') {
 						s = my.anim[this.get('animSheet')].getData();

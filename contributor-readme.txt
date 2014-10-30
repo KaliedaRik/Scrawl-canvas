@@ -59,7 +59,7 @@ These two tasks comprise the default task, and can be run together by typing
 
 ## Testing
 
-When developing a new feature, write a new demo to test the feature. Demos can be pretty broad-brush - they're not designed for unit testing. Remember to describe what the demo is testing (and why), and the expected outcome of the demo. Testing animation features is largely visual, and subjective; static features with know end results can be tested more objectively.
+When developing a new feature, write a new demo to test the feature. Demos can be pretty broad-brush - they're not designed for unit testing. Remember to describe what the demo is testing (and why), and the expected outcome of the demo. Testing animation features is largely visual, and subjective; static features with known end results can be tested more objectively.
 
 A default demo template can be found at demos/demo000.html - if in doubt about which number to give the demo, ask. Remember to (manually) add a link to the demo from the demo/index.html page.
 
@@ -124,4 +124,4 @@ Note that these four grunt tasks can be run using a single command:
     $ git push
     $ git push --tags
 
-I'm still working out how releases are published on the GitHub website. At the moment I'm doing releases manually on the website in addition to the above steps. This is probably a Bad Approach, and anyone willing to offer me a clue on how to do it properly will have my deep gratitude.
+I'm still working out how releases are published on the GitHub website. At the moment I'm doing releases manually on the website in addition to the above steps. This is probably a Bad Approach, and anyone willing to offer me A Clue on how to do it properly will have my deepest gratitude.

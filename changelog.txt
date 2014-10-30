@@ -56,6 +56,30 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141030
+	- BREAKING change
+		- renaming Cell attributes
+			- all things 'source' become 'copy'
+			- all things 'target' become 'paste'
+		- updating modules and demos to make this change happen
+		- the purpose of this change is to bring attributes and surface functionality of Cells and Picture sprites into closer alignment
+			- Pictures already make use of 'copy' for defining dmensions to be copied from image
+			- makes sense for cells to do the same
+				- so users/coders don't have to keep in mind different attribute names for essentially the same functionality
+		- will need to add 'paste' attributes to Picture sprite
+			- aliases for start, startX, startY, width, height
+			- also looking to implement copyData and pasteData attributes, for faster rendering of pictures
+			- also, use Cell limitation functionality to prevent out-of-bounds errors for images
+	- additional thoughts:
+		- Picture, ScrawlImage, AnimSheet and the filters could do with a thorough rewrite, to make them more cohesive
+		- want to add proper video functionality to the library
+			- in particular, have video and spritesheets share conventions
+
+141029
+	- added tests to all modules (and core) to ensure they only load once
+		- this should hopefully allow the library to be used more dynamically
+			- for instance if 2 adverts on a web page both use scrawl (and overlapping modules), core and required modules will only run once
+
 141025-28
 	- creating and adding YouTube videos to the test suite
 		- so people can see the intended animation, rather than me trying to describe it

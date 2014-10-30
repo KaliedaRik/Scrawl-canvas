@@ -76,13 +76,13 @@ var mycode = function() {
 		});
 		mycanvas.addNewCell({
 			name: 'kaliedoscope',
-			targetX: 250,
+			pasteX: 250,
 			height: 500,
 			width: 500,
 		});
 		mycanvas.addNewCell({
 			name: 'clock',
-			targetX: 250,
+			pasteX: 250,
 			height: 500,
 			width: 500,
 		});

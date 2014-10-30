@@ -298,15 +298,15 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			}
 			return this;
 		};
-		my.d.Cell.sourceDelta = {
+		my.d.Cell.copyDelta = {
 			x: 0,
 			y: 0,
 			z: 0
 		};
-		my.d.Cell.sourceMinWidth = 0;
-		my.d.Cell.sourceMaxWidth = 0;
-		my.d.Cell.sourceMinHeight = 0;
-		my.d.Cell.sourceMaxHeight = 0;
+		my.d.Cell.copyMinWidth = 0;
+		my.d.Cell.copyMaxWidth = 0;
+		my.d.Cell.copyMinHeight = 0;
+		my.d.Cell.copyMaxHeight = 0;
 		/**
 	Cell constructor hook function
 
@@ -316,12 +316,12 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 	@private
 	**/
 		my.Cell.prototype.animationCellInit = function(items) {
-			var temp = my.safeObject(items.sourceDelta);
-			this.sourceDelta = my.newVector({
-				x: my.xtGet([items.sourceDeltaX, temp.x, 0]),
-				y: my.xtGet([items.sourceDeltaY, temp.y, 0]),
+			var temp = my.safeObject(items.copyDelta);
+			this.copyDelta = my.newVector({
+				x: my.xtGet([items.copyDeltaX, temp.x, 0]),
+				y: my.xtGet([items.copyDeltaY, temp.y, 0]),
 			});
-			this.work.sourceDelta = my.newVector();
+			this.work.copyDelta = my.newVector();
 		};
 		/**
 	Cell.get hook function - modified by animation module
@@ -329,12 +329,12 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 	@private
 	**/
 		my.Cell.prototype.animationCellGet = function(item) {
-			if (my.contains(['sourceDeltaX', 'sourceDeltaY'], item)) {
+			if (my.contains(['copyDeltaX', 'copyDeltaY'], item)) {
 				switch (item) {
-					case 'sourceDeltaX':
-						return this.sourceDelta.x;
-					case 'sourceDeltaY':
-						return this.sourceDelta.y;
+					case 'copyDeltaX':
+						return this.copyDelta.x;
+					case 'copyDeltaY':
+						return this.copyDelta.y;
 				}
 			}
 			return my.Base.prototype.get.call(this, item);
@@ -346,10 +346,10 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 	**/
 		my.Cell.prototype.animationCellSet = function(items) {
 			var temp;
-			if (my.xto([items.sourceDelta, items.sourceDeltaX, items.sourceDeltaY])) {
-				temp = my.safeObject(items.sourceDelta);
-				this.sourceDelta.x = my.xtGet([items.sourceDeltaX, temp.x, this.sourceDelta.x]);
-				this.sourceDelta.y = my.xtGet([items.sourceDeltaY, temp.y, this.sourceDelta.y]);
+			if (my.xto([items.copyDelta, items.copyDeltaX, items.copyDeltaY])) {
+				temp = my.safeObject(items.copyDelta);
+				this.copyDelta.x = my.xtGet([items.copyDeltaX, temp.x, this.copyDelta.x]);
+				this.copyDelta.y = my.xtGet([items.copyDeltaY, temp.y, this.copyDelta.y]);
 			}
 		};
 		/**
@@ -371,20 +371,20 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			switch (item) {
 				case 'x':
 					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x + this.sourceDelta.x : my.addPercentages(this.source.x, this.sourceDelta.x || 0);
+					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
 					break;
 				case 'y':
 					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y + this.sourceDelta.y : my.addPercentages(this.source.y, this.sourceDelta.y || 0);
+					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
 					break;
 				case 'start':
-				case 'target':
+				case 'paste':
 					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
 					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
 					break;
-				case 'source':
-					this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x + this.sourceDelta.x : my.addPercentages(this.source.x, this.sourceDelta.x || 0);
-					this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y + this.sourceDelta.y : my.addPercentages(this.source.y, this.sourceDelta.y || 0);
+				case 'copy':
+					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
 					break;
 				case 'path':
 					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
@@ -399,11 +399,11 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 					}
 					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
 					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x + this.sourceDelta.x : my.addPercentages(this.source.x, this.sourceDelta.x || 0);
-					this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y + this.sourceDelta.y : my.addPercentages(this.source.y, this.sourceDelta.y || 0);
+					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
 			}
-			this.setSource();
-			this.setTarget();
+			this.setCopy();
+			this.setPaste();
 			return this;
 		};
 		/**
@@ -425,20 +425,20 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			switch (item) {
 				case 'x':
 					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x - this.sourceDelta.x : this.subtractPercentages(this.source.x, this.sourceDelta.x || 0);
+					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
 					break;
 				case 'y':
 					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y - this.sourceDelta.y : this.subtractPercentages(this.source.y, this.sourceDelta.y || 0);
+					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
 					break;
 				case 'start':
-				case 'target':
+				case 'paste':
 					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
 					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
 					break;
-				case 'source':
-					this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x - this.sourceDelta.x : this.subtractPercentages(this.source.x, this.sourceDelta.x || 0);
-					this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y - this.sourceDelta.y : this.subtractPercentages(this.source.y, this.sourceDelta.y || 0);
+				case 'copy':
+					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
 					break;
 				case 'path':
 					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
@@ -455,11 +455,11 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 					}
 					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
 					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					this.source.x = (my.isa(this.source.x, 'num')) ? this.source.x - this.sourceDelta.x : this.subtractPercentages(this.source.x, this.sourceDelta.x || 0);
-					this.source.y = (my.isa(this.source.y, 'num')) ? this.source.y - this.sourceDelta.y : this.subtractPercentages(this.source.y, this.sourceDelta.y || 0);
+					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
 			}
-			this.setSource();
-			this.setTarget();
+			this.setCopy();
+			this.setPaste();
 			return this;
 		};
 		/**
@@ -471,16 +471,16 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 	**/
 		my.Cell.prototype.zoom = function(item) {
 			if (my.isa(item, 'num')) {
-				var sWidth = this.sourceWidth,
-					sHeight = this.sourceHeight,
+				var sWidth = this.copyWidth,
+					sHeight = this.copyHeight,
 					aWidth = this.actualWidth,
 					aHeight = this.actualHeight,
-					minWidth = my.xtGet([this.sourceMinWidth, this.sourceWidth]),
-					minHeight = my.xtGet([this.sourceMinHeight, this.sourceHeight]),
-					maxWidth = my.xtGet([this.sourceMaxWidth, this.sourceWidth]),
-					maxHeight = my.xtGet([this.sourceMaxHeight, this.sourceHeight]),
-					sx = this.source.x,
-					sy = this.source.y,
+					minWidth = my.xtGet([this.copyMinWidth, this.copyWidth]),
+					minHeight = my.xtGet([this.copyMinHeight, this.copyHeight]),
+					maxWidth = my.xtGet([this.copyMaxWidth, this.copyWidth]),
+					maxHeight = my.xtGet([this.copyMaxHeight, this.copyHeight]),
+					sx = this.copy.x,
+					sy = this.copy.y,
 					myW = sWidth + item,
 					myH = sHeight + item,
 					myX,
@@ -508,10 +508,10 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 					else {
 						sy = myY;
 					}
-					this.source.x = sx;
-					this.source.y = sy;
-					this.sourceWidth = sWidth;
-					this.sourceHeight = sHeight;
+					this.copy.x = sx;
+					this.copy.y = sy;
+					this.copyWidth = sWidth;
+					this.copyHeight = sHeight;
 				}
 			}
 			return this;
@@ -542,7 +542,7 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 				var myStrip,
 					myRemains,
 					myEdge,
-					myShift = my.xtGet([items.shiftSource, false]),
+					myShift = my.xtGet([items.shiftCopy, false]),
 					height = this.actualHeight,
 					width = this.actualWidth,
 					ctx = my.context[this.name],
@@ -578,28 +578,28 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 					case 'top':
 						my.cvx.drawImage(c, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
 						my.cvx.drawImage(c, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
-						this.source.y -= (myShift) ? myStrip : 0;
+						this.copy.y -= (myShift) ? myStrip : 0;
 						break;
 					case 'bottom':
 						my.cvx.drawImage(c, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
 						my.cvx.drawImage(c, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
-						this.source.y += (myShift) ? myStrip : 0;
+						this.copy.y += (myShift) ? myStrip : 0;
 						break;
 					case 'left':
 						my.cvx.drawImage(c, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
 						my.cvx.drawImage(c, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
-						this.source.x -= (myShift) ? myStrip : 0;
+						this.copy.x -= (myShift) ? myStrip : 0;
 						break;
 					case 'right':
 						my.cvx.drawImage(c, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
 						my.cvx.drawImage(c, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
-						this.source.x += (myShift) ? myStrip : 0;
+						this.copy.x += (myShift) ? myStrip : 0;
 						break;
 				}
 				ctx.clearRect(0, 0, width, height);
 				ctx.drawImage(my.cv, 0, 0, width, height);
 				if (myShift) {
-					this.setSource();
+					this.setCopy();
 				}
 			}
 			return this;

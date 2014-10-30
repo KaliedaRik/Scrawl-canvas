@@ -27,18 +27,18 @@ var mycode = function() {
 		name: 'bigcell',
 		width: 1600,
 		height: 1200,
-		sourceX: 600,
-		sourceY: 400,
-		sourceWidth: 400,
-		sourceHeight: 400,
-		sourceMaxWidth: 1200,
-		sourceMaxHeight: 1200,
-		sourceMinWidth: 100,
-		sourceMinHeight: 100,
-		targetX: 0,
-		targetY: 0,
-		targetWidth: 400,
-		targetHeight: 400,
+		copyX: 600,
+		copyY: 400,
+		copyWidth: 400,
+		copyHeight: 400,
+		copyMaxWidth: 1200,
+		copyMaxHeight: 1200,
+		copyMinWidth: 100,
+		copyMinHeight: 100,
+		pasteX: 0,
+		pasteY: 0,
+		pasteWidth: 400,
+		pasteHeight: 400,
 		backgroundColor: '#f4f4f4',
 	});
 	pad.setDrawOrder(['bigcell']);
@@ -101,16 +101,16 @@ var mycode = function() {
 	moveCell = function(item) {
 		var myX,
 			myY,
-			sw = bigCell.sourceWidth,
-			sh = bigCell.sourceHeight,
-			sx = bigCell.source.x,
-			sy = bigCell.source.y,
+			sw = bigCell.copyWidth,
+			sh = bigCell.copyHeight,
+			sx = bigCell.copy.x,
+			sy = bigCell.copy.y,
 			aw = bigCell.actualWidth,
 			ah = bigCell.actualHeight;
 		myX = (scrawl.isBetween((sx + item.x), 0, (aw - sw), true)) ? sx + item.x : sx;
 		myY = (scrawl.isBetween((sy + item.y), 0, (ah - sh), true)) ? sy + item.y : sy;
-		bigCell.source.x = myX;
-		bigCell.source.y = myY;
+		bigCell.copy.x = myX;
+		bigCell.copy.y = myY;
 	};
 
 	//event listener - mouse wheel
@@ -180,7 +180,7 @@ var mycode = function() {
 			moveSprites();
 			pad.render();
 
-			message.innerHTML = 'Current zoom: ' + ((400 / bigCell.sourceWidth) * 100).toFixed(2) + '%';
+			message.innerHTML = 'Current zoom: ' + ((400 / bigCell.copyWidth) * 100).toFixed(2) + '%';
 
 			//hide-start
 			testNow = Date.now();
