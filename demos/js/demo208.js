@@ -115,7 +115,7 @@ var mycode = function() {
 			order: 1,
 			group: pads[sides[i]].base,
 		});
-		words.sprites.push(sides[i] + 'Text');
+		words.entitys.push(sides[i] + 'Text');
 	}
 	setSize = function() {
 		var widthRatio = (window.innerWidth - widthReduction) / myWidth,
@@ -139,8 +139,8 @@ var mycode = function() {
 				distance: 100,
 			});
 			scrawl.renderElements();
-			//animate the canvas sprites
-			words.updateSpritesBy({
+			//animate the canvas entitys
+			words.updateEntitysBy({
 				roll: 0.5,
 			});
 			scrawl.render();

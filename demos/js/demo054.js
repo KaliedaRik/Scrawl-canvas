@@ -17,7 +17,7 @@ var mycode = function() {
 	//setup canvas
 	scrawl.canvas.mycanvas.style.cursor = 'crosshair';
 
-	//define sprite
+	//define entity
 	mySvg = scrawl.newPicture({
 		name: 'svgCow',
 		source: 'svgCow',

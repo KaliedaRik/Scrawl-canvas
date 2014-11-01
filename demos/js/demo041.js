@@ -8,15 +8,15 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var mySprite,
+	var myEntity,
 		minX = 1,
 		minY = 1,
 		maxX = 99,
 		maxY = 99,
-		moveSprites;
+		moveEntitys;
 
-	//define sprites
-	mySprite = scrawl.newBlock({
+	//define entitys
+	myEntity = scrawl.newBlock({
 		name: 'block',
 		startX: '50%',
 		startY: '50%',
@@ -42,20 +42,20 @@ var mycode = function() {
 	});
 
 	//animation function
-	moveSprites = function() {
-		if (!scrawl.isBetween(parseFloat(mySprite.start.x), minX, maxX, true)) {
-			mySprite.reverse('deltaX');
+	moveEntitys = function() {
+		if (!scrawl.isBetween(parseFloat(myEntity.start.x), minX, maxX, true)) {
+			myEntity.reverse('deltaX');
 		}
-		if (!scrawl.isBetween(parseFloat(mySprite.start.y), minY, maxY, true)) {
-			mySprite.reverse('deltaY');
+		if (!scrawl.isBetween(parseFloat(myEntity.start.y), minY, maxY, true)) {
+			myEntity.reverse('deltaY');
 		}
-		mySprite.updateStart();
+		myEntity.updateStart();
 	};
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			moveSprites();
+			moveEntitys();
 			scrawl.render();
 
 			//hide-start

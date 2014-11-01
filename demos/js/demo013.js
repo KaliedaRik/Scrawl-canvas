@@ -7,17 +7,17 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	var mySprite,
+	var myEntity,
 		minX = 50,
 		minY = 50,
 		maxX = 700,
 		maxY = 325,
 		result,
 		myRoll = -0.7,
-		moveSprites;
+		moveEntitys;
 
 	//bouncing block
-	mySprite = scrawl.newBlock({
+	myEntity = scrawl.newBlock({
 		name: 'myblock',
 		startX: 375,
 		startY: 187,
@@ -65,30 +65,30 @@ var mycode = function() {
 	scrawl.buildFields();
 
 	//animation function
-	moveSprites = function() {
-		mySprite.updateStart();
-		result = mySprite.checkField();
+	moveEntitys = function() {
+		myEntity.updateStart();
+		result = myEntity.checkField();
 		if (typeof result !== 'boolean') {
 			if (!scrawl.isBetween(result.x, minX, maxX, true)) {
-				mySprite.reverse('deltaX');
+				myEntity.reverse('deltaX');
 			}
 			if (!scrawl.isBetween(result.y, minY, maxY, true)) {
-				mySprite.reverse('deltaY');
+				myEntity.reverse('deltaY');
 			}
-			mySprite.setDelta({
+			myEntity.setDelta({
 				scale: -0.08
 			});
 		}
-		mySprite.setDelta({
+		myEntity.setDelta({
 			roll: myRoll,
-			scale: (mySprite.scale < 1) ? 0.005 : 0,
+			scale: (myEntity.scale < 1) ? 0.005 : 0,
 		});
 	};
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			moveSprites();
+			moveEntitys();
 			scrawl.render();
 
 			//hide-start

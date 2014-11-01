@@ -12,7 +12,7 @@ var mycode = function() {
 		updateInput,
 		IETimer = Date.now();
 
-	//define sprites
+	//define entitys
 	scrawl.newPicture({
 		name: 'parrot',
 		startX: 10,

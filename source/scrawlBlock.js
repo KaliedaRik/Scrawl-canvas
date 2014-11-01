@@ -27,7 +27,7 @@
 
 ## Purpose and features
 
-The Block module adds Block sprites - squares and rectangles - to the core module
+The Block module adds Block entitys - squares and rectangles - to the core module
 
 * Defines 'rect' objects for displaying on a Cell's canvas
 * Performs 'rect' based drawing operations on canvases
@@ -47,7 +47,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	**/
 
 		/**
-	A __factory__ function to generate new Block sprites
+	A __factory__ function to generate new Block entitys
 	@method newBlock
 	@param {Object} items Key:value Object argument for setting attributes
 	@return Block object
@@ -81,25 +81,25 @@ if (window.scrawl && !window.scrawl.newBlock) {
 
 	## Access
 
-	* scrawl.sprite.BLOCKNAME - for the Block sprite object
+	* scrawl.entity.BLOCKNAME - for the Block entity object
 
 	@class Block
 	@constructor
-	@extends Sprite
+	@extends Entity
 	@param {Object} [items] Key:value Object argument for setting attributes
 	**/
 		my.Block = function Block(items) {
 			items = my.safeObject(items);
-			my.Sprite.call(this, items);
+			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
 			this.width = my.xtGet([items.width, my.d.Block.width]);
 			this.height = my.xtGet([items.height, my.d.Block.height]);
 			this.setLocalDimensions();
 			this.registerInLibrary();
-			my.pushUnique(my.group[this.group].sprites, this.name);
+			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
 		};
-		my.Block.prototype = Object.create(my.Sprite.prototype);
+		my.Block.prototype = Object.create(my.Entity.prototype);
 		/**
 	@property type
 	@type String
@@ -107,7 +107,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	@final
 	**/
 		my.Block.prototype.type = 'Block';
-		my.Block.prototype.classname = 'spritenames';
+		my.Block.prototype.classname = 'entitynames';
 		my.d.Block = {
 			/**
 	Block display - width, in pixels
@@ -124,23 +124,23 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	**/
 			localHeight: 0,
 		};
-		my.mergeInto(my.d.Block, my.d.Sprite);
+		my.mergeInto(my.d.Block, my.d.Entity);
 		/**
-	Augments Sprite.set()
+	Augments Entity.set()
 	@method set
 	@param {Object} items Object consisting of key:value attributes
 	@return This
 	@chainable
 	**/
 		my.Block.prototype.set = function(items) {
-			my.Sprite.prototype.set.call(this, items);
+			my.Entity.prototype.set.call(this, items);
 			if (my.xto([items.width, items.height, items.scale])) {
 				this.setLocalDimensions();
 			}
 			return this;
 		};
 		/**
-	Augments Sprite.set() - sets the local dimensions
+	Augments Entity.set() - sets the local dimensions
 	@method setLocalDimensions
 	@return This
 	@chainable
@@ -164,7 +164,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 		/**
 	Stamp helper function - perform a 'clip' method draw
 	@method clip
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
 	@return This
 	@chainable
@@ -183,7 +183,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	Stamp helper function - perform a 'clear' method draw
 	@method clear
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -199,7 +199,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	Stamp helper function - perform a 'clearWithBackground' method draw
 	@method clearWithBackground
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -227,7 +227,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	Stamp helper function - perform a 'draw' method draw
 	@method draw
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -243,7 +243,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	Stamp helper function - perform a 'fill' method draw
 	@method fill
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -259,7 +259,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	Stamp helper function - perform a 'drawFill' method draw
 	@method drawFill
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -277,7 +277,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	Stamp helper function - perform a 'fillDraw' method draw
 	@method fillDraw
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -295,7 +295,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	Stamp helper function - perform a 'sinkInto' method draw
 	@method sinkInto
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -312,7 +312,7 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	Stamp helper function - perform a 'floatOver' method draw
 	@method floatOver
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private

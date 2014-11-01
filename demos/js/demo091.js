@@ -84,7 +84,7 @@ var mycode = function() {
         }, ],
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newBlock({
 		name: 'b',
 		width: 400,

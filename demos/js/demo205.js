@@ -94,11 +94,11 @@ var mycode = function() {
 		deltaTranslateZ: 100
 	});
 
-	//define sprites to display on each canvas
+	//define entitys to display on each canvas
 	words = scrawl.newGroup({
 		name: 'words',
 		visibility: false,
-		sprites: sides,
+		entitys: sides,
 	});
 	for (i = 0, iz = sides.length; i < iz; i++) {
 		scrawl.newPicture({
@@ -136,8 +136,8 @@ var mycode = function() {
 				distance: 100,
 			});
 			scrawl.renderElements();
-			//animate the canvas sprites
-			words.updateSpritesBy({
+			//animate the canvas entitys
+			words.updateEntitysBy({
 				roll: 0.5,
 			});
 			scrawl.render();

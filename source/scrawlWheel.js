@@ -26,7 +26,7 @@
 
 ## Purpose and features
 
-The Wheel module adds Wheel sprites - circles, segments and filled arcs - to the core module
+The Wheel module adds Wheel entitys - circles, segments and filled arcs - to the core module
 
 * Defines 'arc' objects for displaying on a Cell's canvas
 * Performs 'arc' based drawing operations on canvases
@@ -46,7 +46,7 @@ scrawlWheel module adaptions to the Scrawl library object
 **/
 
 		/**
-A __factory__ function to generate new Wheel sprites
+A __factory__ function to generate new Wheel entitys
 @method newWheel
 @param {Object} items Key:value Object argument for setting attributes
 @return Wheel object
@@ -81,16 +81,16 @@ A __factory__ function to generate new Wheel sprites
 
 ## Access
 
-* scrawl.sprite.WHEELNAME - for the Wheel sprite object
+* scrawl.entity.WHEELNAME - for the Wheel entity object
 
 @class Wheel
 @constructor
-@extends Sprite
+@extends Entity
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Wheel = function Wheel(items) {
 			items = my.safeObject(items);
-			my.Sprite.call(this, items);
+			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
 			this.radius = my.xtGet([items.radius, my.d.Wheel.radius]);
 			this.width = this.radius * 2;
@@ -100,10 +100,10 @@ A __factory__ function to generate new Wheel sprites
 			this.includeCenter = my.xtGet([items.includeCenter, my.d.Wheel.includeCenter]);
 			this.clockwise = my.xtGet([items.clockwise, my.d.Wheel.clockwise]);
 			this.registerInLibrary();
-			my.pushUnique(my.group[this.group].sprites, this.name);
+			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
 		};
-		my.Wheel.prototype = Object.create(my.Sprite.prototype);
+		my.Wheel.prototype = Object.create(my.Entity.prototype);
 		/**
 @property type
 @type String
@@ -111,7 +111,7 @@ A __factory__ function to generate new Wheel sprites
 @final
 **/
 		my.Wheel.prototype.type = 'Wheel';
-		my.Wheel.prototype.classname = 'spritenames';
+		my.Wheel.prototype.classname = 'entitynames';
 		my.d.Wheel = {
 			/**
 Angle of the path's start point, from due east, in degrees
@@ -163,30 +163,30 @@ Collision calculation value - collision radius, from start vector
 **/
 			checkHitRadius: 0,
 		};
-		my.mergeInto(my.d.Wheel, my.d.Sprite);
+		my.mergeInto(my.d.Wheel, my.d.Entity);
 		/**
-Augments Sprite.set()
+Augments Entity.set()
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
 		my.Wheel.prototype.set = function(items) {
-			my.Sprite.prototype.set.call(this, items);
+			my.Entity.prototype.set.call(this, items);
 			this.radius = my.xtGet([items.radius, this.radius]);
 			this.width = this.radius * 2;
 			this.height = this.width;
 			return this;
 		};
 		/**
-Augments Sprite.setDelta()
+Augments Entity.setDelta()
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
 		my.Wheel.prototype.setDelta = function(items) {
-			my.Sprite.prototype.setDelta.call(this, items);
+			my.Entity.prototype.setDelta.call(this, items);
 			items = (my.isa(items, 'obj')) ? items : {};
 			var f = {};
 			if (my.xt(items.radius)) {
@@ -204,7 +204,7 @@ Augments Sprite.setDelta()
 			return this;
 		};
 		/**
-Check a set of coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+Check a set of coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
 
 Argument object contains the following attributes:
 
@@ -218,7 +218,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 If the __checkHitUsingRadius__ attribute is true, collisions will be detected using a simple distance comparison; otherwise the JavaScript isPointInPath() function will be invoked
 @method checkHit
 @param {Object} items Argument object
-@return The first coordinate to fall within the sprite's path; false if none fall within the path
+@return The first coordinate to fall within the entity's path; false if none fall within the path
 **/
 		my.Wheel.prototype.checkHit = function(items) {
 			items = my.safeObject(items);
@@ -264,17 +264,17 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 		/**
 Position.getOffsetStartVector() helper function
 @method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where sprite drawing should start
+@return A Vector of calculated offset values to help determine where entity drawing should start
 @private
 **/
 		my.Wheel.prototype.getPivotOffsetVector = function() {
 			return this.getCenteredPivotOffsetVector();
 		};
 		/**
-Stamp helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
+Stamp helper function - define the entity's path on the &lt;canvas&gt; element's context engine
 @method buildPath
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -298,7 +298,7 @@ Stamp helper function - define the sprite's path on the &lt;canvas&gt; element's
 Stamp helper function - perform a 'clip' method draw
 @method clip
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -312,7 +312,7 @@ Stamp helper function - perform a 'clip' method draw
 Stamp helper function - perform a 'clear' method draw
 @method clear
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -329,7 +329,7 @@ Stamp helper function - perform a 'clear' method draw
 Stamp helper function - perform a 'clearWithBackground' method draw
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -356,7 +356,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 Stamp helper function - perform a 'draw' method draw
 @method draw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -371,7 +371,7 @@ Stamp helper function - perform a 'draw' method draw
 Stamp helper function - perform a 'fill' method draw
 @method fill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -386,7 +386,7 @@ Stamp helper function - perform a 'fill' method draw
 Stamp helper function - perform a 'drawFill' method draw
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -403,7 +403,7 @@ Stamp helper function - perform a 'drawFill' method draw
 Stamp helper function - perform a 'fillDraw' method draw
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -420,7 +420,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 Stamp helper function - perform a 'sinkInto' method draw
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -436,7 +436,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 Stamp helper function - perform a 'floatOver' method draw
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -451,7 +451,7 @@ Stamp helper function - perform a 'floatOver' method draw
 		/**
 Collision detection helper function
 
-Parses the collisionPoints array to generate coordinate Vectors representing the sprite's collision points
+Parses the collisionPoints array to generate coordinate Vectors representing the entity's collision points
 @method buildCollisionVectors
 @param {Array} [items] Array of collision point data
 @return This

@@ -500,7 +500,7 @@ Where values are Numbers, handle can be treated like any other Vector
 			z: 0
 		};
 		/**
-The SPRITENAME or POINTNAME of a sprite or Point object to be used for setting this object's start point
+The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object's start point
 @property PageElement.pivot
 @type String
 @default ''
@@ -514,7 +514,7 @@ The element's parent stack's STACKNAME
 **/
 		my.d.PageElement.stack = '';
 		/**
-The SPRITENAME of a Shape sprite whose path is used to calculate this object's start point
+The SPRITENAME of a Shape entity whose path is used to calculate this object's start point
 @property PageElement.path
 @type String
 @default ''
@@ -1045,7 +1045,7 @@ Calculates the pixels value of the object's handle attribute
 * (badly named function - getPivotOffsetVector has nothing to do with pivots)
 
 @method PageElement.getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where sprite drawing should start
+@return A Vector of calculated offset values to help determine where entity drawing should start
 @private
 **/
 		my.PageElement.prototype.getPivotOffsetVector = function() {
@@ -1058,7 +1058,7 @@ Calculates the pixels value of the object's start attribute
 
 @method PageElement.getStartValues
 @param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
-@return A Vector of calculated values to help determine where sprite drawing should start
+@return A Vector of calculated values to help determine where entity drawing should start
 @private
 **/
 		my.PageElement.prototype.getStartValues = function(hasElementPivot) {
@@ -1081,7 +1081,7 @@ Calculates the pixels value of the object's start attribute
 		/**
 Calculates the pixels value of the object's handle attribute
 @method PageElement.getOffsetStartVector
-@return Final offset values (as a Vector) to determine where sprite drawing should start
+@return Final offset values (as a Vector) to determine where entity drawing should start
 **/
 		my.PageElement.prototype.getOffsetStartVector = function() {
 			return my.Position.prototype.getOffsetStartVector.call(this);
@@ -1138,7 +1138,7 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 			return this;
 		};
 		/**
-Calculate start Vector in reference to a Shape sprite object's path
+Calculate start Vector in reference to a Shape entity object's path
 @method PageElement.setStampUsingPath
 @return This
 @chainable
@@ -1147,8 +1147,8 @@ Calculate start Vector in reference to a Shape sprite object's path
 		my.PageElement.prototype.setStampUsingPath = function() {
 			var here,
 				angles;
-			if (my.contains(my.spritenames, this.path) && my.sprite[this.path].type === 'Path') {
-				here = my.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+			if (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path') {
+				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 				this.start.x = (!this.lockX) ? here.x : this.start.x;
 				this.start.y = (!this.lockY) ? here.y : this.start.y;
 				this.pathRoll = here.r || 0;
@@ -1162,7 +1162,7 @@ Calculate start Vector in reference to a Shape sprite object's path
 			return this;
 		};
 		/**
-Calculate start Vector in reference to a sprite or Point object's position
+Calculate start Vector in reference to a entity or Point object's position
 @method PageElement.setStampUsingPivot
 @return This
 @chainable
@@ -1173,17 +1173,17 @@ Calculate start Vector in reference to a sprite or Point object's position
 				myCell,
 				myP,
 				myPVector,
-				pSprite,
+				pEntity,
 				temp;
 			if (my.contains(my.pointnames, this.pivot)) {
 				myP = my.point[this.pivot];
-				pSprite = my.sprite[myP.sprite];
-				myPVector = myP.getCurrentCoordinates().rotate(pSprite.roll).vectorAdd(pSprite.getStartValues());
+				pEntity = my.entity[myP.entity];
+				myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.getStartValues());
 				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 			}
-			else if (my.contains(my.spritenames, this.pivot)) {
-				myP = my.sprite[this.pivot];
+			else if (my.contains(my.entitynames, this.pivot)) {
+				myP = my.entity[this.pivot];
 				myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.get('start');
 				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;

@@ -17,7 +17,7 @@ var mycode = function() {
 		report,
 		mouse;
 
-	//build sprites
+	//build entitys
 	scrawl.makeLine({
 		name: 'bgLine',
 		startY: 187.5,

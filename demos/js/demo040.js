@@ -26,7 +26,7 @@ var mycode = function() {
 		source: 'img/parque.png',
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newBlock({
 		name: 'b1',
 		startX: 35,

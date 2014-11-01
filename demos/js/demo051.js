@@ -34,7 +34,7 @@ var mycode = function() {
 		roll: 45,
 	});
 
-	//build sprite
+	//build entity
 	scrawl.newPattern({
 		name: 'p1',
 		image: 'warning',
@@ -50,7 +50,7 @@ var mycode = function() {
 		fillStyle: 'p2',
 		lineWidth: 10,
 		method: 'fillDraw',
-		//sprite is only stamped once - the display cycle will never clear the base cell
+		//entity is only stamped once - the display cycle will never clear the base cell
 	}).stamp();
 	scrawl.newWheel({
 		startX: 25,
@@ -63,7 +63,7 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			//move the base cell's show area - use a basic box collision detection system to keep sprite in view
+			//move the base cell's show area - use a basic box collision detection system to keep entity in view
 			if (!scrawl.isBetween(myCell.start.x, xMax, xMin, true)) {
 				myCell.delta.x = -myCell.delta.x;
 			}

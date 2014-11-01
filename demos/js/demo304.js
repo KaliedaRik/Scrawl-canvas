@@ -14,7 +14,7 @@ var mycode = function() {
 		msg3 = document.getElementById('msg3'),
 		i;
 
-	//define sprites
+	//define entitys
 	rope = scrawl.makePath({
 		name: 'rope',
 		lineWidth: 10,
@@ -53,12 +53,12 @@ var mycode = function() {
 		}).addForce('gravity');
 		scrawl.point['rope_p' + (i + 1)].fixed = 'b_' + i; //assign rope points to particle objects
 	}
-	scrawl.sprite.b_0.set({ //fix top of rope to display
+	scrawl.entity.b_0.set({ //fix top of rope to display
 		mobile: false,
 	});
 
 	for (i = 0; i < 19; i++) { //add in springs between particles
-		scrawl.sprite['b_' + i].addSpring({
+		scrawl.entity['b_' + i].addSpring({
 			end: 'b_' + (i + 1),
 			springConstant: 8000,
 		});

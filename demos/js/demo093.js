@@ -11,12 +11,12 @@ var mycode = function() {
 	var canvas,
 		pad,
 		here,
-		currentSprite,
+		currentEntity,
 		kill = [],
 		offsetX = 8,
 		offsetY = 8,
 		counter = 0,
-		filterSprites,
+		filterEntitys,
 		newRing;
 
 	//add canvas to web page
@@ -55,9 +55,9 @@ var mycode = function() {
 		cell: 'filter',
 		order: 1,
 	});
-	filterSprites = scrawl.group.ripples.sprites;
+	filterEntitys = scrawl.group.ripples.entitys;
 
-	//define sprites
+	//define entitys
 	scrawl.newPicture({
 		name: 'myImage',
 		width: 600,
@@ -66,7 +66,7 @@ var mycode = function() {
 		group: 'background',
 	});
 
-	//event listener - creates sprites
+	//event listener - creates entitys
 	newRing = function(e) {
 		if (e) {
 			e.stopPropagation();
@@ -91,9 +91,9 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			if (scrawl.contains(scrawl.spritenames, 'myImage')) {
-				if (!scrawl.contains(scrawl.spritenames, 'myImageRipple')) {
-					scrawl.sprite.myImage.clone({
+			if (scrawl.contains(scrawl.entitynames, 'myImage')) {
+				if (!scrawl.contains(scrawl.entitynames, 'myImageRipple')) {
+					scrawl.entity.myImage.clone({
 						name: 'myImageRipple',
 						group: 'ripplesOverlay',
 						globalCompositeOperation: 'source-atop',
@@ -101,20 +101,20 @@ var mycode = function() {
 				}
 			}
 			here = pad.getMouse();
-			for (var i = 0, z = filterSprites.length; i < z; i++) {
-				currentSprite = scrawl.sprite[filterSprites[i]];
-				currentSprite.setDelta({
+			for (var i = 0, z = filterEntitys.length; i < z; i++) {
+				currentEntity = scrawl.entity[filterEntitys[i]];
+				currentEntity.setDelta({
 					globalAlpha: -0.0015,
 					radius: 1,
 					lineWidth: 0.05,
 					order: 1,
 				});
-				if (currentSprite.get('globalAlpha') <= 0) {
-					kill.push(currentSprite.name);
+				if (currentEntity.get('globalAlpha') <= 0) {
+					kill.push(currentEntity.name);
 				}
 			}
 			if (kill.length > 0) {
-				scrawl.deleteSprite(kill);
+				scrawl.deleteEntity(kill);
 				kill = [];
 			}
 			pad.render();

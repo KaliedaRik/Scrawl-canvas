@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define sprites - include styling attributes in the definition
+	//define entitys - include styling attributes in the definition
 	scrawl.makeRegularShape({
 		startX: 200,
 		startY: 100,

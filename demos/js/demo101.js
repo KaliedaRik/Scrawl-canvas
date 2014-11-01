@@ -16,7 +16,7 @@ var mycode = function() {
 	//import image into scrawl library
 	scrawl.getImageById('flower');
 
-	//define sprites
+	//define entitys
 	scrawl.newPicture({
 		name: 'background',
 		width: 600,

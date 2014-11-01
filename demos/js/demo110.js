@@ -12,7 +12,7 @@ var mycode = function() {
 		shapeData,
 		path,
 		pathData,
-		buildSprites,
+		buildEntitys,
 
 		data = document.getElementById('data'),
 
@@ -59,7 +59,7 @@ var mycode = function() {
 		endY: '50%',
 		shift: 0.001,
 		autoUpdate: true,
-		setToSprite: true,
+		setToEntity: true,
 		color: [{
 			color: 'red',
 			stop: 0
@@ -81,9 +81,9 @@ var mycode = function() {
         }, ],
 	});
 
-	//define sprites
-	buildSprites = function() {
-		scrawl.deleteSprite(['myshape', 'mypath']);
+	//define entitys
+	buildEntitys = function() {
+		scrawl.deleteEntity(['myshape', 'mypath']);
 		shape = scrawl.makeRegularShape({
 			name: 'myshape',
 			startX: 200,
@@ -124,16 +124,16 @@ var mycode = function() {
 	};
 	scrawl.newPhrase({
 		font: '20pt Arial, sans-serif',
-		text: 'Path Sprite',
+		text: 'Path Entity',
 		handleX: 'center',
 		handleY: 200,
 		pivot: 'mypath',
 	}).clone({
-		text: 'Shape Sprite',
+		text: 'Shape Entity',
 		pivot: 'myshape',
 	});
 
-	buildSprites();
+	buildEntitys();
 
 	//event listeners
 	stopE = function(e) {
@@ -144,14 +144,14 @@ var mycode = function() {
 	event_lineType = function(e) {
 		stopE(e);
 		current_lineType = input_lineType.value;
-		buildSprites();
+		buildEntitys();
 	};
 	input_lineType.addEventListener('change', event_lineType, false);
 
 	event_radius = function(e) {
 		stopE(e);
 		current_radius = parseInt(input_radius.value, 10);
-		buildSprites();
+		buildEntitys();
 	};
 	input_radius.addEventListener('input', event_radius, false);
 	input_radius.addEventListener('change', event_radius, false);
@@ -159,7 +159,7 @@ var mycode = function() {
 	event_angle = function(e) {
 		stopE(e);
 		current_angle = parseInt(input_angle.value, 10);
-		buildSprites();
+		buildEntitys();
 	};
 	input_angle.addEventListener('input', event_angle, false);
 	input_angle.addEventListener('change', event_angle, false);
@@ -167,7 +167,7 @@ var mycode = function() {
 	event_CX1 = function(e) {
 		stopE(e);
 		current_CX1 = parseInt(input_CX1.value, 10);
-		buildSprites();
+		buildEntitys();
 	};
 	input_CX1.addEventListener('input', event_CX1, false);
 	input_CX1.addEventListener('change', event_CX1, false);
@@ -175,7 +175,7 @@ var mycode = function() {
 	event_CY1 = function(e) {
 		stopE(e);
 		current_CY1 = parseInt(input_CY1.value, 10);
-		buildSprites();
+		buildEntitys();
 	};
 	input_CY1.addEventListener('input', event_CY1, false);
 	input_CY1.addEventListener('change', event_CY1, false);
@@ -183,7 +183,7 @@ var mycode = function() {
 	event_CX2 = function(e) {
 		stopE(e);
 		current_CX2 = parseInt(input_CX2.value, 10);
-		buildSprites();
+		buildEntitys();
 	};
 	input_CX2.addEventListener('input', event_CX2, false);
 	input_CX2.addEventListener('change', event_CX2, false);
@@ -191,7 +191,7 @@ var mycode = function() {
 	event_CY2 = function(e) {
 		stopE(e);
 		current_CY2 = parseInt(input_CY2.value, 10);
-		buildSprites();
+		buildEntitys();
 	};
 	input_CY2.addEventListener('input', event_CY2, false);
 	input_CY2.addEventListener('change', event_CY2, false);

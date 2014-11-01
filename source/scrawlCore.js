@@ -53,11 +53,11 @@ The core module is the only essential module in Scrawl. It must always be direct
 
 * Defines mouse functionality in relation to &lt;canvas&gt; elements
 
-* Defines the core functionality for Sprite objects to be displayed on &lt;canvas&gt; elements; the different types of Sprites are defined in separate modules which need to be loaded into the core
+* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate modules which need to be loaded into the core
 
-* Defines Group objects, used to group sprites together for display and interaction purposes
+* Defines Group objects, used to group entitys together for display and interaction purposes
 
-* Defines Design objects - Gradient and RadialGradient - which can be used by Sprite objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate modules
+* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate modules
 
 ## Loading the module
 
@@ -94,12 +94,12 @@ Core creates the following sections in the library:
 * scrawl.__cell__ - Contains CELLNAME:Object pairs for each instantiated Cell canvas wrapper object
 * scrawl.__canvas__ - Contains CELLNAME:object pairs linking to each Cell object's DOM &lt;canvas&gt; element
 * scrawl.__context__ - Contains CELLNAME:Object pairs linking to each &lt;canvas&gt; element's context engine
-* scrawl.__ctx__ - Contains CONTEXTNAME:Object pairs linking to each instantiated Scrawl Context object (used by Cell and Sprite objects)
+* scrawl.__ctx__ - Contains CONTEXTNAME:Object pairs linking to each instantiated Scrawl Context object (used by Cell and Entity objects)
 * scrawl.__imageData__ - Contains key:value pairs linking to JavaScript image data objects
 * scrawl.__group__ - Contains GROUPNAME:Object pairs linking to each instantiated Group object
 * scrawl.__design__ - Contains DESIGNNAME:Object pairs for each instantiated design object (Gradient, RadialGradient, Pattern, Color)
 * scrawl.__dsn__ - Contains DESIGNNAME:precompiled gradient/pattern context object pairs (Gradient, RadialGradient, Pattern)
-* scrawl.__sprite__ - Contains SPRITENAME:Object pairs for each instantiated sprite object (Block, Phrase, Picture, Wheel, Path, Shape, Particle)
+* scrawl.__entity__ - Contains SPRITENAME:Object pairs for each instantiated entity object (Block, Phrase, Picture, Wheel, Path, Shape, Particle)
 
 @class window.scrawl
 **/
@@ -118,14 +118,14 @@ Array of array object keys used to define the sections of the Scrawl library
 @type {Array}
 @private
 **/
-	my.nameslist = ['objectnames', 'padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'spritenames'];
+	my.nameslist = ['objectnames', 'padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'entitynames'];
 	/**
 Array of objects which define the sections of the Scrawl library
 @property sectionlist
 @type {Array}
 @private
 **/
-	my.sectionlist = ['object', 'pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'sprite'];
+	my.sectionlist = ['object', 'pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'entity'];
 	/**
 For converting between degrees and radians
 @property radian
@@ -191,6 +191,7 @@ Key:value pairs of module alias:filename Strings, used by scrawl.loadModules()
 		path: 'scrawlPath',
 		shape: 'scrawlShape',
 		images: 'scrawlImages',
+		frame: 'scrawlFrame',
 		animation: 'scrawlAnimation',
 		collisions: 'scrawlCollisions',
 		factories: 'scrawlPathFactories',
@@ -199,6 +200,39 @@ Key:value pairs of module alias:filename Strings, used by scrawl.loadModules()
 		physics: 'scrawlPhysics',
 		saveload: 'scrawlSaveLoad',
 		stacks: 'scrawlStacks',
+		quaternion: 'scrawlQuaternion',
+		imageload: 'scrawlImageLoad',
+	};
+	/**
+Array of loaded module arrays
+@property modules
+@type {Array}
+@private
+**/
+	my.modules = [];
+	/**
+Key:value pairs of module alias:Array, used by scrawl.loadModules()
+@property loadDependencies
+@type {Object}
+@private
+**/
+	my.loadDependencies = {
+		block: [],
+		wheel: [],
+		phrase: [],
+		path: [],
+		shape: [],
+		images: ['imageload'],
+		frame: ['imageload'],
+		animation: [],
+		collisions: [],
+		factories: [],
+		color: [],
+		filters: [],
+		physics: ['quaternion'],
+		saveload: [],
+		stacks: ['quaternion'],
+		quaternion: [],
 	};
 	/**
 A __general__ function that initializes (or resets) the Scrawl library and populates it with data, including existing &lt;canvas&gt; element data in the web page
@@ -260,19 +294,22 @@ Module names are supplied as an array of Strings and can be either the module fi
 
 Scrawl currently supports the following modules:
 * __scrawlAnimation.js__ - alias __animation__ - adds animation and tween functionality to the core
-* __scrawlBlock.js__ - alias __block__ - adds _Block_ (square and rectangle) sprites to the core
-* __scrawlCollisions.js__ - alias __collisions__ - adds sprite collision detection functionality to the core
+* __scrawlBlock.js__ - alias __block__ - adds _Block_ (square and rectangle) entitys to the core
+* __scrawlCollisions.js__ - alias __collisions__ - adds entity collision detection functionality to the core
 * __scrawlColor.js__ - alias __color__ - adds the _Color_ Design object to the core
 * __scrawlFilters.js__ - alias __filters__ - adds image filter functionality to the core
-* __scrawlImages.js__ - alias __images__ - adds all image functionality, including static and animated _Picture_ sprites and the _Pattern_ Design object, to the core
-* __scrawlPath.js__ - alias __path__ - adds _Path_ (SVGTiny path data) sprites to the core
+* __scrawlFrame.js__ - alias __frame__ - enhanced Picture entity
+* __scrawlImages.js__ - alias __images__ - adds all image functionality, including static and animated _Picture_ entitys and the _Pattern_ Design object, to the core
+* __scrawlPath.js__ - alias __path__ - adds _Path_ (SVGTiny path data) entitys to the core
 * __scrawlPathFactories.js__ - alias __factories__ - adds user-friendly Path and Shape factory functions (for lines, quadratic and bezier curves, ellipses, round-corner rectangles, regular shapes such as stars, triangles, etc) to the core
-* __scrawlPhrase.js__ - alias __phrase__ - adds _Phrase_ (single and multiline text) sprites to the core
+* __scrawlPhrase.js__ - alias __phrase__ - adds _Phrase_ (single and multiline text) entitys to the core
 * __scrawlPhysics.js__ - alias __physics__ - adds a physics engine to the core (experimental)
 * __scrawlSaveLoad.js__ - alias __saveload__ - adds JSON object save and load functionality to the core (experimental)
-* __scrawlShape.js__ - alias __shape__ - adds _Shape_ (path-like shapes) sprites to the core
+* __scrawlShape.js__ - alias __shape__ - adds _Shape_ (path-like shapes) entitys to the core
 * __scrawlStacks.js__ - alias __stacks__ - adds the ability to position, manipulate and animate &lt;canvas&gt; and other DOM elements in a 3d space on the web page
-* __scrawlWheel.js__ - alias __wheel__ - adds _Wheel_ (circle and segment) sprites to the core
+* __scrawlWheel.js__ - alias __wheel__ - adds _Wheel_ (circle and segment) entitys to the core
+* __scrawlImageLoad.js__ - alias __imageload__ - adds the ability to load img elements into the library
+* __scrawlQuaternion.js__ - alias __quaternion__ - adds quaternion maths functionality to the core
 
 Where permitted, Scrawl will load modules asynchronously. Modules have no dependencies beyond their need for the core module, and can be loaded in any order.
 
@@ -318,33 +355,59 @@ Any supplied callback function will only be run once all modules have been loade
 	my.loadModules = function(items) {
 		items = my.safeObject(items);
 		var path = items.path || '',
-			modules = (my.isa(items.modules, 'arr')) ? items.modules : [items.modules],
+			modules = [].concat(items.modules),
 			callback = (my.isa(items.callback, 'fn')) ? items.callback : function() {},
+			error = (my.isa(items.error, 'fn')) ? items.error : function() {},
 			mini = my.xtGet([items.minified, true]),
 			tail = (mini) ? '-min.js' : '.js',
-			loaded = [].concat(modules),
+			loaded = [],
+			required = [],
+			startTime = Date.now(),
+			timeout = 30000, // allow a maximum of 30 seconds to get all modules
+			i, iz, j, jz,
 			getModule = function(module) {
-				var mod = document.createElement('script'),
+				var mod,
 					myMod = my.loadAlias[module] || module;
-				mod.type = 'text/javascript';
-				mod.async = 'true';
-				mod.onload = function(e) {
-					console.log('... ' + module + ' loaded');
-					done(module);
-				};
-				mod.src = (/\.js$/.test(myMod)) ? path + myMod : path + myMod + tail;
-				document.body.appendChild(mod);
+				if (!my.contains(my.modules, myMod)) {
+					mod = document.createElement('script');
+					mod.type = 'text/javascript';
+					mod.async = 'true';
+					mod.onload = function(e) {
+						console.log('... ' + module + ' loaded', my.modules);
+						done(module);
+					};
+					mod.onerror = function(e) {
+						console.log('... ' + module + ' failed to load', my.modules);
+						done(module, true);
+					};
+					mod.src = (/\.js$/.test(myMod)) ? path + myMod : path + myMod + tail;
+					document.body.appendChild(mod);
+				}
 			},
-			done = function(m) {
+			done = function(m, e) {
 				my.removeItem(loaded, m);
+				if (e || Date.now() > startTime + timeout) {
+					console.log('failed to load all modules');
+					error();
+				}
+				else {
+					my.pushUnique(my.modules, m);
+				}
 				if (loaded.length === 0) {
-					console.log('All modules loaded');
+					console.log('All modules loaded', my.modules);
 					callback();
 				}
 			};
-		console.log('Modules to be loaded: ', modules);
-		for (var i = 0, iz = modules.length; i < iz; i++) {
-			getModule(modules[i]);
+		for (i = 0, iz = modules.length; i < iz; i++) {
+			for (j = 0, jz = my.loadDependencies[modules[i]].length; j < jz; j++) {
+				my.pushUnique(required, my.loadDependencies[modules[i]][j]);
+			}
+			my.pushUnique(required, modules[i]);
+		}
+		loaded = [].concat(required);
+		console.log('Modules to be loaded: ', required);
+		for (i = 0, iz = required.length; i < iz; i++) {
+			getModule(required[i]);
 		}
 		return my;
 	};
@@ -1134,48 +1197,48 @@ Argument takes the form:
 		return false;
 	};
 	/**
-A __general__ function which adds supplied spritenames to Group.sprites attribute
-@method addSpritesToGroups
+A __general__ function which adds supplied entitynames to Group.entitys attribute
+@method addEntitysToGroups
 @param {Array} groups Array of GROUPNAME Strings - can also be a String
-@param {Array} sprites Array of SPRITENAME Strings - can also be a String
+@param {Array} entitys Array of SPRITENAME Strings - can also be a String
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.addSpritesToGroups = function(groups, sprites) {
-		if (my.xta([groups, sprites])) {
+	my.addEntitysToGroups = function(groups, entitys) {
+		if (my.xta([groups, entitys])) {
 			var myGroups = [].concat(groups),
-				mySprites = [].concat(sprites);
+				myEntitys = [].concat(entitys);
 			for (var i = 0, iz = myGroups.length; i < iz; i++) {
 				if (my.contains(my.groupnames, myGroups[i])) {
-					my.group[myGroups[i]].addSpritesToGroup(mySprites);
+					my.group[myGroups[i]].addEntitysToGroup(myEntitys);
 				}
 			}
 		}
 		return my;
 	};
 	/**
-A __general__ function which removes supplied spritenames from Group.sprites attribute
-@method removeSpritesFromGroups
+A __general__ function which removes supplied entitynames from Group.entitys attribute
+@method removeEntitysFromGroups
 @param {Array} groups Array of GROUPNAME Strings - can also be a String
-@param {Array} sprites Array of SPRITENAME Strings - can also be a String
+@param {Array} entitys Array of SPRITENAME Strings - can also be a String
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.removeSpritesFromGroups = function(groups, sprites) {
-		if (my.xta([groups, sprites])) {
+	my.removeEntitysFromGroups = function(groups, entitys) {
+		if (my.xta([groups, entitys])) {
 			var myGroups = [].concat(groups),
-				mySprites = [].concat(sprites);
+				myEntitys = [].concat(entitys);
 			for (var i = 0, iz = myGroups.length; i < iz; i++) {
 				if (my.contains(my.groupnames, myGroups[i])) {
-					my.group[myGroups[i]].removeSpritesFromGroup(mySprites);
+					my.group[myGroups[i]].removeEntitysFromGroup(myEntitys);
 				}
 			}
 		}
 		return my;
 	};
 	/**
-A __general__ function to delete sprite objects
-@method deleteSprite
+A __general__ function to delete entity objects
+@method deleteEntity
 @param {Array} items Array of SPRITENAME Strings - can also be a String
 @return The Scrawl library object (scrawl)
 @chainable
@@ -1183,37 +1246,37 @@ A __general__ function to delete sprite objects
 	scrawl.newBlock({
 		name: 'myblock',
 		});
-	scrawl.deleteSprite(['myblock']);
+	scrawl.deleteEntity(['myblock']);
 **/
-	my.deleteSprite = function(items) {
+	my.deleteEntity = function(items) {
 		var myItems = (my.isa(items, 'str')) ? [items] : [].concat(items),
 			myPointList,
 			myLinkList,
 			myCtx,
 			search,
-			mySprite;
+			myEntity;
 		for (var i = 0, iz = myItems.length; i < iz; i++) {
-			if (my.contains(my.spritenames, myItems[i])) {
-				mySprite = my.sprite[myItems[i]];
-				my.pathDeleteSprite(mySprite);
-				myCtx = mySprite.context;
+			if (my.contains(my.entitynames, myItems[i])) {
+				myEntity = my.entity[myItems[i]];
+				my.pathDeleteEntity(myEntity);
+				myCtx = myEntity.context;
 				my.removeItem(my.ctxnames, myCtx);
 				delete my.ctx[myCtx];
-				my.removeItem(my.spritenames, myItems[i]);
-				delete my.sprite[myItems[i]];
+				my.removeItem(my.entitynames, myItems[i]);
+				delete my.entity[myItems[i]];
 				for (var j = 0, jz = my.groupnames.length; j < jz; j++) {
-					my.removeItem(my.group[my.groupnames[j]].sprites, myItems[i]);
+					my.removeItem(my.group[my.groupnames[j]].entitys, myItems[i]);
 				}
 			}
 		}
 		return my;
 	};
 	/**
-scrawl.deleteSprite hook function - modified by path module
-@method pathDeleteSprite
+scrawl.deleteEntity hook function - modified by path module
+@method pathDeleteEntity
 @private
 **/
-	my.pathDeleteSprite = function(items) {};
+	my.pathDeleteEntity = function(items) {};
 	/**
 A __factory__ function to generate new Vector objects
 @method newVector
@@ -1227,34 +1290,6 @@ A __factory__ function to generate new Vector objects
 **/
 	my.newVector = function(items) {
 		return new my.Vector(items);
-	};
-	/**
-A __factory__ function to generate new Quaternion objects - see also scrawl.makeQuaternion()
-@method newQuaternion
-@param {Object} items Key:value Object argument for setting attributes
-@return Quaternion object
-**/
-	my.newQuaternion = function(items) {
-		return new my.Quaternion(items);
-	};
-	/**
-A __factory__ function to build a Quaternion object from Euler angle values
-
-Argument object can be in the following form, where all values (which default to 0) are in degrees:
-* {pitch:Number, yaw:Number, roll:Number}
-* {x:Number, y:Number, z:Number}
-* or a mixture of the two
-@method makeQuaternion
-@param {Object} [items] Key:value Object argument for setting attributes
-@return New quaternion
-@example
-	var myQuart = scrawl.makeQuaternion({
-		pitch: 90,
-		yaw: 10,
-		});
-**/
-	my.makeQuaternion = function(items) {
-		return my.Quaternion.prototype.makeFromEuler(items);
 	};
 	/**
 A __factory__ function to generate new Pad objects
@@ -1732,519 +1767,6 @@ Rotate a Vector object by a Quaternion rotation
 	};
 
 	/**
-# Quaternion
-
-## Instantiation
-
-* scrawl.newQuaternion()
-
-## Purpose
-
-* To hold quaternion (3d rotation) data
-@class Quaternion
-@constructor
-@param {Object} [items] Key:value Object argument for setting attributes
-**/
-	my.Quaternion = function(items) {
-		items = my.safeObject(items);
-		var vector = my.safeObject(items.v);
-		this.name = items.name || 'generic';
-		this.n = items.n || 1;
-		this.v = my.newVector({
-			x: vector.x || items.x || 0,
-			y: vector.y || items.y || 0,
-			z: vector.z || items.z || 0,
-		});
-		return this;
-	};
-	my.Quaternion.prototype = Object.create(Object.prototype);
-	/**
-@property type
-@type String
-@default 'Quaternion'
-@final
-**/
-	my.Quaternion.prototype.type = 'Quaternion';
-	my.d.Quaternion = {
-		/**
-Quaternion name
-@property name
-@type String
-@default 'generic'
-**/
-		name: 'generic',
-		/**
-3d rotation value
-@property n
-@type Number
-@default 1
-**/
-		n: 1,
-		/**
-3d rotation axis
-@property v
-@type Vector
-@default {x:0, y:0, z:0}
-**/
-		v: {
-			x: 0,
-			y: 0,
-			z: 0
-		},
-	};
-	/**
-set to zero quaternion (n = 1)
-@method zero
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.zero = function() {
-		this.n = 1;
-		this.v.x = 0;
-		this.v.y = 0;
-		this.v.z = 0;
-		return this;
-	};
-	/**
-Calculate magnitude of a quaternion
-@method getMagnitude
-@return Magnitude value
-**/
-	my.Quaternion.prototype.getMagnitude = function() {
-		return Math.sqrt((this.n * this.n) + (this.v.x * this.v.x) + (this.v.y * this.v.y) + (this.v.z * this.v.z));
-	};
-	/**
-Normalize the quaternion
-@method normalize
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.normalize = function() {
-		var mag = this.getMagnitude();
-		if (mag !== 0) {
-			this.n /= mag;
-			this.v.x /= mag;
-			this.v.y /= mag;
-			this.v.z /= mag;
-		}
-		return this;
-	};
-	/**
-Check to see if quaternion is a unit quaternion, within permitted tolerance
-@method checkNormal
-@param {Number} [tolerance] Tolerance value; default: 0
-@return True if quaternion is a normalized quaternion; false otherwise
-**/
-	my.Quaternion.prototype.checkNormal = function(tolerance) {
-		tolerance = (my.xt(tolerance)) ? tolerance : 0;
-		var check = this.getMagnitude();
-		if (check >= 1 - tolerance && check <= 1 + tolerance) {
-			return true;
-		}
-		return false;
-	};
-	/**
-Retrieve quaternion's vector (rotation axis) component
-@method getVector
-@return Vector component
-**/
-	my.Quaternion.prototype.getVector = function() {
-		return this.v;
-	};
-	/**
-Retrieve quaternion's scalar (rotation around axis) component
-@method getScalar
-@return Number - scalar component of this quaternion
-**/
-	my.Quaternion.prototype.getScalar = function() {
-		return this.n;
-	};
-	/**
-Add a quaternion to this quaternion
-@method quaternionAdd
-@param {Quaternion} item Quaternion to be added to this quaternion
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.quaternionAdd = function(item) {
-		if (my.isa(item, 'quaternion')) {
-			this.n += item.n || 0;
-			this.v.x += item.v.x || 0;
-			this.v.y += item.v.y || 0;
-			this.v.z += item.v.z || 0;
-			return this;
-		}
-		console.log('Quaternion.quaternionAdd() error: argument is not a Quaternion object');
-		return this;
-	};
-	/**
-Subtract a quaternion from this quaternion
-@method quaternionSubtract
-@param {Quaternion} item Quaternion to be subtracted from this quaternion
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.quaternionSubtract = function(item) {
-		if (my.isa(item, 'quaternion')) {
-			this.n -= item.n || 0;
-			this.v.x -= item.v.x || 0;
-			this.v.y -= item.v.y || 0;
-			this.v.z -= item.v.z || 0;
-			return this;
-		}
-		console.log('Quaternion.quaternionSubtract() error: argument is not a Quaternion object');
-		return this;
-	};
-	/**
-Multiply quaternion by a scalar value
-@method scalarMultiply
-@param {Number} item Value to multiply quaternion by
-@return This
-**/
-	my.Quaternion.prototype.scalarMultiply = function(item) {
-		if (my.isa(item, 'num')) {
-			this.n *= item;
-			this.v.x *= item;
-			this.v.y *= item;
-			this.v.z *= item;
-			return this;
-		}
-		console.log('Quaternion.scalarMultiply() error: argument is not a number');
-		return this;
-	};
-	/**
-Divide quaternion by a scalar value
-@method scalarDivide
-@param {Number} item Value to divide quaternion by
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.scalarDivide = function(item) {
-		if (my.isa(item, 'num') && item !== 0) {
-			this.n /= item;
-			this.v.x /= item;
-			this.v.y /= item;
-			this.v.z /= item;
-			return this;
-		}
-		console.log('Quaternion.scalarMultiply() error: argument is not a number, or is zero');
-		return this;
-	};
-	/**
-Conjugate (reverse) value for this quaternion
-@method conjugate
-@return Conjugated quaternion
-**/
-	my.Quaternion.prototype.conjugate = function() {
-		this.v.x = -this.v.x;
-		this.v.y = -this.v.y;
-		this.v.z = -this.v.z;
-		return this;
-	};
-	/**
-Set the values for this quaternion
-
-Argument object can contain the following attributes:
-
-* for the scalar (n) value, __scalar__ or __n__ (Number)
-* for the vector (v) value, __vector__ or __v__ (Vector object, or object containing xyz attribnutes)
-* for the x value (v.x), __x__ (Number)
-* for the y value (v.y), __y__ (Number)
-* for the z value (v.z), __z__ (Number)
-
-If the argument object includes values for __pitch__, __yaw__ or __roll__, the set will be performed via the setFromEuler() function
-
-Argument can also be either an existing Quaternion object, or an existing Vector object - for vectors, the scalar value will be set to 0
-@method set
-@param items Object containing key:value attributes
-@return Amended quaternion
-**/
-	my.Quaternion.prototype.set = function(items) {
-		items = my.safeObject(items);
-		var x, y, z, n, v;
-		if (my.isa(items, 'quaternion')) {
-			return this.setFromQuaternion(items);
-		}
-		if (my.isa(items, 'vector')) {
-			return this.setFromVector(items);
-		}
-		if (my.xto([items.pitch, items.yaw, items.roll])) {
-			return this.setFromEuler(items);
-		}
-		v = (my.xt(items.vector) || my.xt(items.v)) ? (items.vector || items.v) : false;
-		n = (my.xt(items.scalar) || my.xt(items.n)) ? (items.scalar || items.n || 0) : false;
-		x = (v) ? (v.x || 0) : items.x;
-		y = (v) ? (v.y || 0) : items.y;
-		z = (v) ? (v.z || 0) : items.z;
-		this.n = (my.isa(n, 'num')) ? n : this.n;
-		this.v.x = (my.isa(x, 'num')) ? x : this.v.x;
-		this.v.y = (my.isa(y, 'num')) ? y : this.v.y;
-		this.v.z = (my.isa(z, 'num')) ? z : this.v.z;
-		return this;
-	};
-	/**
-Set the values for this quaternion based on the values of the argument quaternion
-@method setFromQuaternion
-@param {Quaternion} item Reference quaternion
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.setFromQuaternion = function(item) {
-		if (my.isa(item, 'quaternion')) {
-			this.n = item.n;
-			this.v.x = item.v.x;
-			this.v.y = item.v.y;
-			this.v.z = item.v.z;
-			return this;
-		}
-		console.log('Quaternion.setFromQuaternion() error: argument is not a Quaternion object');
-		return this;
-	};
-	/**
-Set the values for this quaternion based on the values of the reference vector
-@method setFromVector
-@param {Vector} item Reference vector
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.setFromVector = function(item) {
-		if (my.isa(item, 'vector')) {
-			this.n = 0;
-			this.v.x = item.x;
-			this.v.y = item.y;
-			this.v.z = item.z;
-			return this;
-		}
-		console.log('Quaternion.setFromVector() error: argument is not a Vector object');
-		return this;
-	};
-	/**
-Multiply this quaternion by a second quaternion
-
-_Quaternion multiplication is not comutative - arithmetic is this*item, not item*this_
-@method quaternionMultiply
-@param {Quaternion} item Quaternion to multiply this quaternion by
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.quaternionMultiply = function(item) {
-		if (my.isa(item, 'quaternion')) {
-			var n1 = this.n,
-				x1 = this.v.x,
-				y1 = this.v.y,
-				z1 = this.v.z,
-				n2 = item.n,
-				x2 = item.v.x,
-				y2 = item.v.y,
-				z2 = item.v.z;
-			this.n = (n1 * n2) - (x1 * x2) - (y1 * y2) - (z1 * z2);
-			this.v.x = (n1 * x2) + (x1 * n2) + (y1 * z2) - (z1 * y2);
-			this.v.y = (n1 * y2) + (y1 * n2) + (z1 * x2) - (x1 * z2);
-			this.v.z = (n1 * z2) + (z1 * n2) + (x1 * y2) - (y1 * x2);
-			return this;
-		}
-		console.log('Quaternion.quaternionMultiply() error: argument is not a Quaternion object');
-		return this;
-	};
-	/**
-Multiply this quaternion by a Vector
-
-_Quaternion multiplication is not comutative - arithmetic is this*item, not item*this_
-@method getVectorMultiply
-@param {Vector} item Vector to multiply this quaternion by
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.vectorMultiply = function(item) {
-		if (my.isa(item, 'vector')) {
-			var n1 = this.n,
-				x1 = this.v.x,
-				y1 = this.v.y,
-				z1 = this.v.z,
-				x2 = item.x,
-				y2 = item.y,
-				z2 = item.z;
-			this.n = -((x1 * x2) + (y1 * y2) + (z1 * z2));
-			this.v.x = (n1 * x2) + (y1 * z2) - (z1 * y2);
-			this.v.y = (n1 * y2) + (z1 * x2) - (x1 * z2);
-			this.v.z = (n1 * z2) + (x1 * y2) - (y1 * x2);
-			return this;
-		}
-		console.log('Quaternion.vectorMultiply() error: argument is not a Vector object');
-		return this;
-	};
-	/**
-Retrieve rotational component of this quaternion
-@method getAngle
-@param {Boolean} [degree] Returns rotation in degrees if true; false (radians) by default
-@return Rotation angle
-**/
-	my.Quaternion.prototype.getAngle = function(degree) {
-		degree = (my.xt(degree)) ? degree : false;
-		var result = 2 * Math.acos(this.n);
-		return (degree) ? result * (1 / my.radian) : result;
-	};
-	/**
-Retrieve axis component of this quaternion
-@method getAxis
-@return Normalized Vector (scrawl.v Vector)
-**/
-	my.Quaternion.prototype.getAxis = function() {
-		var vector = my.v.set(this.v),
-			magnitude = this.getMagnitude();
-		return (magnitude !== 0) ? vector.scalarDivide(magnitude) : vector;
-	};
-	/**
-Rotate this quaternion by another quaternion
-
-_Quaternion multiplication is not comutative - arithmetic is item (representing the local rotation to be applied) * this, not this * item (for which, use quaternionMultiply)_
-@method quaternionRotate
-@param {Quaternion} item Quaternion to rotate this quaternion by
-@return This
-@chainable
-**/
-	my.Quaternion.prototype.quaternionRotate = function(item) {
-		if (my.isa(item, 'quaternion')) {
-			var q4 = my.workquat.q4.set(item),
-				q5 = my.workquat.q5.set(this);
-			return this.set(q4.quaternionMultiply(q5));
-		}
-		console.log('Quaternion.quaternionRotate() error: argument is not a Quaternion object');
-		return this;
-	};
-	/**
-Rotate a Vector by this quaternion
-@method vectorRotate
-@param {Vector} item Vector to be rotated by this quaternion
-@return Vector (amended argument); false on failure
-**/
-	my.Quaternion.prototype.vectorRotate = function(item) {
-		if (my.isa(item, 'vector')) {
-			return item.rotate3d(this);
-		}
-		console.log('Quaternion.vectorRotate() error: argument is not a Vector object');
-		return false;
-	};
-	/**
-Build a quaternion from Euler angle values
-
-Argument object can be in the form, where all values (which default to 0) are in degrees:
-* {pitch:Number, yaw:Number, roll:Number}
-* {x:Number, y:Number, z:Number}
-* or a mixture of the two
-@method makeFromEuler
-@param {Object} [items] Key:value Object argument for setting attributes
-@return New quaternion
-@example
-	var myQuart = scrawl.quaternion.makeFromEuler({
-		roll: 30,
-		pitch: 90,
-		yaw: 125,
-		});
-**/
-	my.Quaternion.prototype.makeFromEuler = function(items) {
-		console.log('makeFromEuler');
-		items = my.safeObject(items);
-		var pitch = (items.pitch || items.x || 0) * my.radian,
-			yaw = (items.yaw || items.y || 0) * my.radian,
-			roll = (items.roll || items.z || 0) * my.radian,
-			c1 = Math.cos(yaw / 2),
-			c2 = Math.cos(roll / 2),
-			c3 = Math.cos(pitch / 2),
-			s1 = Math.sin(yaw / 2),
-			s2 = Math.sin(roll / 2),
-			s3 = Math.sin(pitch / 2),
-			w = (c1 * c2 * c3) - (s1 * s2 * s3),
-			x = (s1 * s2 * c3) + (c1 * c2 * s3),
-			y = (s1 * c2 * c3) + (c1 * s2 * s3),
-			z = (c1 * s2 * c3) - (s1 * c2 * s3);
-		return my.newQuaternion({
-			n: w,
-			x: x,
-			y: y,
-			z: z
-		});
-	};
-	/**
-Update quaternion with Euler angle values
-
-Argument object can be in the form, where all values (which default to 0) are in degrees:
-* {pitch:Number, yaw:Number, roll:Number}
-* {x:Number, y:Number, z:Number}
-* or a mixture of the two
-@method setFromEuler
-@param {Object} [items] Key:value Object argument for setting attributes
-@return New quaternion
-@example
-	var myQuart = scrawl.quaternion.setFromEuler({
-		roll: 30,
-		pitch: 90,
-		yaw: 125,
-		});
-**/
-	my.Quaternion.prototype.setFromEuler = function(items) {
-		items = my.safeObject(items);
-		var pitch = (items.pitch || items.x || 0) * my.radian,
-			yaw = (items.yaw || items.y || 0) * my.radian,
-			roll = (items.roll || items.z || 0) * my.radian,
-			c1 = Math.cos(yaw / 2),
-			c2 = Math.cos(roll / 2),
-			c3 = Math.cos(pitch / 2),
-			s1 = Math.sin(yaw / 2),
-			s2 = Math.sin(roll / 2),
-			s3 = Math.sin(pitch / 2),
-			w = (c1 * c2 * c3) - (s1 * s2 * s3),
-			x = (s1 * s2 * c3) + (c1 * c2 * s3),
-			y = (s1 * c2 * c3) + (c1 * s2 * s3),
-			z = (c1 * s2 * c3) - (s1 * c2 * s3);
-		return this.set({
-			n: w,
-			x: x,
-			y: y,
-			z: z
-		});
-	};
-	/**
-Retrieve rotations (Euler angles) from a quaternion
-@method getEulerAngles
-@return Object in the form {pitch:Number, yaw:Number, roll:Number}
-**/
-	my.Quaternion.prototype.getEulerAngles = function() {
-		var sqw = this.n * this.n,
-			sqx = this.v.x * this.v.x,
-			sqy = this.v.y * this.v.y,
-			sqz = this.v.z * this.v.z,
-			unit = sqw + sqx + sqy + sqz,
-			test = (this.v.x * this.v.y) + (this.v.z * this.n),
-			result = {
-				pitch: 0,
-				yaw: 0,
-				roll: 0
-			},
-			t0, t1;
-		if (test > 0.499999 * unit) {
-			result.yaw = (2 * Math.atan2(this.v.x, this.n)) / my.radian;
-			result.roll = (Math.PI / 2) / my.radian;
-			result.pitch = 0;
-			return result;
-		}
-		if (test < -0.499999 * unit) {
-			result.yaw = (-2 * Math.atan2(this.v.x, this.n)) / my.radian;
-			result.roll = (-Math.PI / 2) / my.radian;
-			result.pitch = 0;
-			return result;
-		}
-		t0 = (2 * this.v.y * this.n) - (2 * this.v.x * this.v.z);
-		t1 = sqx - sqy - sqz + sqw;
-		result.yaw = (Math.atan2(t0, t1)) / my.radian;
-		result.roll = (Math.asin((2 * test) / unit)) / my.radian;
-		t0 = (2 * this.v.x * this.n) - (2 * this.v.y * this.v.z);
-		t1 = sqy - sqx - sqz + sqw;
-		result.pitch = (Math.atan2(t0, t1)) / my.radian;
-		return result;
-	};
-
-	/**
 # Base 
 
 ## Instantiation
@@ -2382,7 +1904,7 @@ Clone a Scrawl.js object, optionally altering attribute values in the cloned obj
 **/
 	my.Base.prototype.clone = function(items) {
 		var b = my.mergeOver(this.parse(), my.safeObject(items));
-		delete b.context; //required for successful cloning of sprites
+		delete b.context; //required for successful cloning of entitys
 		return new my[this.type](b);
 	};
 	/**
@@ -2420,7 +1942,7 @@ Restore workspece vector values to their current specified values
 * start coordinates are relative to the top left corner of the object's Cell
 * handle coordinates are relative to the object's start coordinate
 
-Certain Scrawl modules will add functionality to this object, for instance scrawlAnimation adds delta attributes which can be used to automatically update the position of a Scrawl sprite.
+Certain Scrawl modules will add functionality to this object, for instance scrawlAnimation adds delta attributes which can be used to automatically update the position of a Scrawl entity.
 @class Position
 @constructor
 @extends Base
@@ -2471,7 +1993,7 @@ Where values are Numbers, handle can be treated like any other Vector
 **/
 		handle: false,
 		/**
-The SPRITENAME or POINTNAME of a sprite or Point object to be used for setting this object's start point
+The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object's start point
 @property pivot
 @type String
 @default ''
@@ -2485,14 +2007,14 @@ The object's scale value - larger values increase the object's size
 **/
 		scale: 1,
 		/**
-Reflection flag; set to true to flip sprite, cell or element along the Y axis
+Reflection flag; set to true to flip entity, cell or element along the Y axis
 @property flipReverse
 @type Boolean
 @default false
 **/
 		flipReverse: false,
 		/**
-Reflection flag; set to true to flip sprite, cell or element along the X axis
+Reflection flag; set to true to flip entity, cell or element along the X axis
 @property flipUpend
 @type Boolean
 @default false
@@ -2513,21 +2035,21 @@ Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axi
 **/
 		lockY: false,
 		/**
-Current rotation of the sprite, cell or element (in degrees)
+Current rotation of the entity, cell or element (in degrees)
 @property roll
 @type Number
 @default 0
 **/
 		roll: 0,
 		/**
-Sprite, cell or element width (in pixels)
+Entity, cell or element width (in pixels)
 @property width
 @type Number
 @default 0
 **/
 		width: 0,
 		/**
-Sprite, cell or element height (in pixels)
+Entity, cell or element height (in pixels)
 @property width
 @type Number
 @default 0
@@ -2535,7 +2057,7 @@ Sprite, cell or element height (in pixels)
 		height: 0,
 		/**
 (Added by the path module)
-The SPRITENAME of a Shape sprite whose path is used to calculate this object's start point
+The SPRITENAME of a Shape entity whose path is used to calculate this object's start point
 @property path
 @type String
 @default ''
@@ -2757,7 +2279,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 * (badly named function - getPivotOffsetVector has nothing to do with pivots)
 
 @method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where sprite/cell/element drawing should start
+@return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
 @private
 **/
 	my.Position.prototype.getPivotOffsetVector = function() {
@@ -2773,7 +2295,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 * (badly named function - getPivotOffsetVector has nothing to do with pivots)
 
 @method getCenteredPivotOffsetVector
-@return A Vector of calculated offset values to help determine where sprite/cell/element drawing should start
+@return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
 @private
 **/
 	my.Position.prototype.getCenteredPivotOffsetVector = function() {
@@ -2836,7 +2358,7 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 	/**
 Calculates the pixel values of the object's handle attribute
 @method getOffsetStartVector
-@return Final offset values (as a Vector) to determine where sprite, cell or element drawing should start
+@return Final offset values (as a Vector) to determine where entity, cell or element drawing should start
 **/
 	my.Position.prototype.getOffsetStartVector = function() {
 		this.resetWork();
@@ -2848,7 +2370,7 @@ Calculates the pixel values of the object's handle attribute
 		return myH.reverse();
 	};
 	/**
-Stamp helper function - set this sprite, cell or element start values to its pivot sprite/point start value, or to the current mouse coordinates
+Stamp helper function - set this entity, cell or element start values to its pivot entity/point start value, or to the current mouse coordinates
 
 Takes into account lock flag settings
 @method setStampUsingPivot
@@ -2860,17 +2382,17 @@ Takes into account lock flag settings
 	my.Position.prototype.setStampUsingPivot = function(cell) {
 		var myP,
 			myPVector,
-			pSprite;
+			pEntity;
 		if (my.xt(my.pointnames) && my.contains(my.pointnames, this.pivot)) {
 			myP = my.point[this.pivot];
-			pSprite = my.sprite[myP.sprite];
-			myPVector = myP.getCurrentCoordinates().rotate(pSprite.roll).vectorAdd(pSprite.start);
+			pEntity = my.entity[myP.entity];
+			myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.start);
 			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 			return this;
 		}
-		if (my.contains(my.spritenames, this.pivot)) {
-			myP = my.sprite[this.pivot];
+		if (my.contains(my.entitynames, this.pivot)) {
+			myP = my.entity[this.pivot];
 			myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.start;
 			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
@@ -3872,8 +3394,8 @@ Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use stylin
 * Responsible clearing &lt;canvas&gt; elements, and for copying one &lt;canvas&gt; to another
 * Includes functionality to pivot, path, flip, lock and roll cell positioning in the display scene
 * Controls scrolling and zoom effects between &lt;canvas&gt; elements
-* Builds &lt;canvas&gt; element collision fields from sprite data
-* Undertakes collision detection between sprites and a collision field
+* Builds &lt;canvas&gt; element collision fields from entity data
+* Undertakes collision detection between entitys and a collision field
 
 _Note: A Cell is entirely responsible for determining what portion of its &lt;canvas&gt; element's content will be copied to another &lt;canvas&gt; and where that copy will appear on the destination &lt;canvas&gt;._
 
@@ -4338,21 +3860,21 @@ Return the Cell object's default Pad (&lt;canvas&gt; element) height
 		return my.pad[this.pad].get('height');
 	};
 	/**
-Set the Cell's &lt;canvas&gt; element's context engine to the specification supplied by the sprite about to be drawn on the canvas
+Set the Cell's &lt;canvas&gt; element's context engine to the specification supplied by the entity about to be drawn on the canvas
 @method setEngine
-@param {Sprite} sprite Sprite object
-@return Sprite object
+@param {Entity} entity Entity object
+@return Entity object
 @private
 **/
-	my.Cell.prototype.setEngine = function(sprite) {
-		if (!sprite.fastStamp) {
+	my.Cell.prototype.setEngine = function(entity) {
+		if (!entity.fastStamp) {
 			var myContext = my.ctx[this.context],
-				spriteContext = my.ctx[sprite.context],
+				entityContext = my.ctx[entity.context],
 				engine,
 				tempFillStyle,
 				tempStrokeStyle,
 				des,
-				changes = spriteContext.getChanges(myContext, sprite.scale, sprite.scaleOutline);
+				changes = entityContext.getChanges(myContext, entity.scale, entity.scaleOutline);
 			if (changes) {
 				delete changes.count;
 				engine = my.context[this.name];
@@ -4365,7 +3887,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 									if (my.xt(my.design[changes[item]])) {
 										des = my.design[changes[item]];
 										if (my.contains(['Gradient', 'RadialGradient'], des.type)) {
-											des.update(sprite.name, this.name);
+											des.update(entity.name, this.name);
 										}
 										tempFillStyle = des.getData();
 									}
@@ -4430,7 +3952,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 									if (my.xt(my.design[changes[item]])) {
 										des = my.design[changes[item]];
 										if (my.contains(['Gradient', 'RadialGradient'], des.type)) {
-											des.update(sprite.name, this.name);
+											des.update(entity.name, this.name);
 										}
 										tempStrokeStyle = des.getData();
 									}
@@ -4463,7 +3985,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 				}
 			}
 		}
-		return sprite;
+		return entity;
 	};
 	/**
 Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
@@ -4478,7 +4000,7 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 		return this;
 	};
 	/**
-Prepare to draw sprites onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
+Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
 @method compile
 @return This
 @chainable
@@ -4707,7 +4229,7 @@ Cell stamp helper function - convert string percent values to numerical values
 		}
 	};
 	/**
-Sprite stamp helper function
+Entity stamp helper function
 @method clearShadow
 @return This
 @chainable
@@ -4727,16 +4249,16 @@ Sprite stamp helper function
 		return this;
 	};
 	/**
-Sprite stamp helper function
+Entity stamp helper function
 @method restoreShadow
 @return This
 @chainable
 @private
 **/
-	my.Cell.prototype.restoreShadow = function(spritecontext) {
+	my.Cell.prototype.restoreShadow = function(entitycontext) {
 		var engine = my.context[this.name],
 			context = my.ctx[this.context],
-			s = my.ctx[spritecontext],
+			s = my.ctx[entitycontext],
 			sx = s.get('shadowOffsetX'),
 			sy = s.get('shadowOffsetY'),
 			sb = s.get('shadowBlur');
@@ -4751,7 +4273,7 @@ Sprite stamp helper function
 		return this;
 	};
 	/**
-Sprite stamp helper function
+Entity stamp helper function
 @method setToClearShape
 @return This
 @chainable
@@ -4855,9 +4377,9 @@ Default values are:
 
 ## Purpose
 
-* wraps a given context for a Cell or Sprite object
-* responsible for comparing contexts and listing changes that need to be made for successful Sprite stamping on a canvas
-* all updates to a Context object's attributes should be performed via the Sprite object's set() function
+* wraps a given context for a Cell or Entity object
+* responsible for comparing contexts and listing changes that need to be made for successful Entity stamping on a canvas
+* all updates to a Context object's attributes should be performed via the Entity object's set() function
 
 @class Context
 @constructor
@@ -4888,7 +4410,7 @@ Default values are:
 	my.Context.prototype.classname = 'ctxnames';
 	my.d.Context = {
 		/**
-Color, gradient or pattern used to fill a sprite. Can be:
+Color, gradient or pattern used to fill a entity. Can be:
 
 * Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
 * COLORNAME String
@@ -4901,17 +4423,17 @@ Color, gradient or pattern used to fill a sprite. Can be:
 **/
 		fillStyle: '#000000',
 		/**
-Shape and Path sprite fill method. Can be:
+Shape and Path entity fill method. Can be:
 
-* 'nonzero' - all areas enclosed by the sprite's path are flooded
-* 'evenodd' - only 'odd' areas of the sprite's path are flooded
+* 'nonzero' - all areas enclosed by the entity's path are flooded
+* 'evenodd' - only 'odd' areas of the entity's path are flooded
 @property winding
 @type String
 @default 'nonzero'
 **/
 		winding: 'nonzero',
 		/**
-Color, gradient or pattern used to outline a sprite. Can be:
+Color, gradient or pattern used to outline a entity. Can be:
 
 * Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
 * COLORNAME String
@@ -4924,14 +4446,14 @@ Color, gradient or pattern used to outline a sprite. Can be:
 **/
 		strokeStyle: '#000000',
 		/**
-Sprite transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
+Entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
 @property globalAlpha
 @type Number
 @default 1
 **/
 		globalAlpha: 1,
 		/**
-Compositing method for applying the sprite to an existing Cell (&lt;canvas&gt;) display. Permitted values include
+Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include
 
 * 'source-over'
 * 'source-atop'
@@ -4992,7 +4514,7 @@ Line dash format - an array of Numbers representing line and gap values (in pixe
 **/
 		lineDash: [],
 		/**
-Line dash offset - distance along the sprite's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect
+Line dash offset - distance along the entity's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect
 @property lineDashOffset
 @type Number
 @default 0
@@ -5006,28 +4528,28 @@ miterLimit - affecting the 'pointiness' of the line join where two lines join at
 **/
 		miterLimit: 10,
 		/**
-Horizontal offset of a sprite's shadow, in pixels
+Horizontal offset of a entity's shadow, in pixels
 @property shadowOffsetX
 @type Number
 @default 0
 **/
 		shadowOffsetX: 0,
 		/**
-Vertical offset of a sprite's shadow, in pixels
+Vertical offset of a entity's shadow, in pixels
 @property shadowOffsetY
 @type Number
 @default 0
 **/
 		shadowOffsetY: 0,
 		/**
-Blur border for a sprite's shadow, in pixels
+Blur border for a entity's shadow, in pixels
 @property shadowBlur
 @type Number
 @default 0
 **/
 		shadowBlur: 0,
 		/**
-Color, gradient or pattern used for sprite shadow effect. Can be:
+Color, gradient or pattern used for entity shadow effect. Can be:
 
 * Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
 * COLORNAME String
@@ -5037,14 +4559,14 @@ Color, gradient or pattern used for sprite shadow effect. Can be:
 **/
 		shadowColor: 'rgba(0,0,0,0)',
 		/**
-Cascading Style Sheet font String, for Phrase sprites
+Cascading Style Sheet font String, for Phrase entitys
 @property font
 @type String
 @default '10pt sans-serif'
 **/
 		font: '10pt sans-serif',
 		/**
-Text alignment for multi-line Phrase sprites. Permitted values include:
+Text alignment for multi-line Phrase entitys. Permitted values include:
 
 * 'start'
 * 'left'
@@ -5058,7 +4580,7 @@ Text alignment for multi-line Phrase sprites. Permitted values include:
 **/
 		textAlign: 'start',
 		/**
-Text baseline value for single-line Phrase sprites set to follow a Path sprite path. Permitted values include:
+Text baseline value for single-line Phrase entitys set to follow a Path entity path. Permitted values include:
 
 * 'alphabetic'
 * 'top'
@@ -5215,9 +4737,9 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 
 ## Purpose
 
-* associates sprite objects with a cell object, for stamping/compiling the &lt;canvas&gt; scene
-* groups Sprite objects for specific purposes
-* (with collisions module) plays a key role in collision detection between Sprites
+* associates entity objects with a cell object, for stamping/compiling the &lt;canvas&gt; scene
+* groups Entity objects for specific purposes
+* (with collisions module) plays a key role in collision detection between Entitys
 
 ## Access
 
@@ -5232,11 +4754,11 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 	my.Group = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
-		this.sprites = (my.xt(items.sprites)) ? [].concat(items.sprites) : [];
+		this.entitys = (my.xt(items.entitys)) ? [].concat(items.entitys) : [];
 		this.cell = items.cell || my.pad[my.currentPad].current;
 		this.order = my.xtGet([items.order, 0]);
 		this.visibility = my.xtGet([items.visibility, true]);
-		this.spriteSort = my.xtGet([items.spriteSort, true]);
+		this.entitySort = my.xtGet([items.entitySort, true]);
 		this.regionRadius = my.xtGet([items.regionRadius, 0]);
 		my.group[this.name] = this;
 		my.pushUnique(my.groupnames, this.name);
@@ -5254,12 +4776,12 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 	my.Group.prototype.classname = 'groupnames';
 	my.d.Group = {
 		/**
- Array of SPRITENAME Strings of sprites that comprise this Group
-@property sprites
+ Array of SPRITENAME Strings of entitys that comprise this Group
+@property entitys
 @type Array
 @default []
 **/
-		sprites: [],
+		entitys: [],
 		/**
 CELLNAME of the default Cell object to which this group is associated
 @property cell
@@ -5275,21 +4797,21 @@ Group order value - lower order Groups are drawn on &lt;canvas&gt; elements befo
 **/
 		order: 0,
 		/**
-Visibility flag - Group sprites will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
+Visibility flag - Group entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
 @property visibility
 @type Boolean
 @default true
 **/
 		visibility: true,
 		/**
-Sorting flag - when set to true, Groups will sort their constituent sprite object according to their sprite.order attribute for each iteration of the display cycle
-@property spriteSort
+Sorting flag - when set to true, Groups will sort their constituent entity object according to their entity.order attribute for each iteration of the display cycle
+@property entitySort
 @type Boolean
 @default true
 **/
-		spriteSort: true,
+		entitySort: true,
 		/**
-Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked sprite is to the current reference sprite or mouse coordinate; when set to 0, this collision check step is skipped and all sprites move on to the next step
+Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked entity is to the current reference entity or mouse coordinate; when set to 0, this collision check step is skipped and all entitys move on to the next step
 @property regionRadius
 @type Number
 @default 0
@@ -5298,23 +4820,23 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 	};
 	my.mergeInto(my.d.Group, my.d.Base);
 	/**
-Sprite sorting routine - sprites are sorted according to their sprite.order attribute value, in ascending order
-@method sortSprites
+Entity sorting routine - entitys are sorted according to their entity.order attribute value, in ascending order
+@method sortEntitys
 @return Nothing
 @private
 **/
-	my.Group.prototype.sortSprites = function() {
-		if (this.spriteSort) {
-			this.sprites.sort(function(a, b) {
-				return my.sprite[a].order - my.sprite[b].order;
+	my.Group.prototype.sortEntitys = function() {
+		if (this.entitySort) {
+			this.entitys.sort(function(a, b) {
+				return my.entity[a].order - my.entity[b].order;
 			});
 		}
 	};
 	/**
-Tell the Group to ask _all_ of its constituent sprites to draw themselves on a &lt;canvas&gt; element, regardless of their visibility
+Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &lt;canvas&gt; element, regardless of their visibility
 @method forceStamp
 @param {String} [method] Drawing method String
-@param {String} [cell] CELLNAME of cell on which sprites are to draw themselves
+@param {String} [cell] CELLNAME of cell on which entitys are to draw themselves
 @return This
 @chainable
 **/
@@ -5332,63 +4854,63 @@ Tell the Group to ask _all_ of its constituent sprites to draw themselves on a &
 		return this;
 	};
 	/**
-Tell the Group to ask its constituent sprites to draw themselves on a &lt;canvas&gt; element; only sprites whose visibility attribute is set to true will comply
+Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas&gt; element; only entitys whose visibility attribute is set to true will comply
 @method stamp
 @param {String} [method] Drawing method String
-@param {String} [cell] CELLNAME of cell on which sprites are to draw themselves
+@param {String} [cell] CELLNAME of cell on which entitys are to draw themselves
 @return This
 @chainable
 **/
 	my.Group.prototype.stamp = function(method, cell) {
 		if (this.visibility) {
-			this.sortSprites();
-			for (var i = 0, iz = this.sprites.length; i < iz; i++) {
-				my.sprite[this.sprites[i]].stamp(method, cell);
+			this.sortEntitys();
+			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+				my.entity[this.entitys[i]].stamp(method, cell);
 			}
 		}
 		return this;
 	};
 	/**
-Add sprites to the Group
-@method addSpritesToGroup
+Add entitys to the Group
+@method addEntitysToGroup
 @param {Array} item Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument
 @return This
 @chainable
 **/
-	my.Group.prototype.addSpritesToGroup = function(item) {
+	my.Group.prototype.addEntitysToGroup = function(item) {
 		item = (my.xt(item)) ? [].concat(item) : [];
 		for (var i = 0, iz = item.length; i < iz; i++) {
-			my.pushUnique(this.sprites, item[i]);
+			my.pushUnique(this.entitys, item[i]);
 		}
 		return this;
 	};
 	/**
-Remove sprites from the Group
-@method removeSpritesFromGroup
+Remove entitys from the Group
+@method removeEntitysFromGroup
 @param {Array} item Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument
 @return This
 @chainable
 **/
-	my.Group.prototype.removeSpritesFromGroup = function(item) {
+	my.Group.prototype.removeEntitysFromGroup = function(item) {
 		item = (my.xt(item)) ? [].concat(item) : [];
 		for (var i = 0, iz = item.length; i < iz; i++) {
-			my.removeItem(this.sprites, item[i]);
+			my.removeItem(this.entitys, item[i]);
 		}
 		return this;
 	};
 	/**
-Ask all sprites in the Group to perform a setDelta() operation
+Ask all entitys in the Group to perform a setDelta() operation
 
-The following sprite attributes can be amended by this function: startX, startY, scale, roll.
-@method updateSpritesBy
+The following entity attributes can be amended by this function: startX, startY, scale, roll.
+@method updateEntitysBy
 @param {Object} items Object containing attribute key:value pairs
 @return This
 @chainable
 **/
-	my.Group.prototype.updateSpritesBy = function(items) {
+	my.Group.prototype.updateEntitysBy = function(items) {
 		items = my.safeObject(items);
-		for (var i = 0, iz = this.sprites.length; i < iz; i++) {
-			my.sprite[this.sprites[i]].setDelta({
+		for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+			my.entity[this.entitys[i]].setDelta({
 				startX: my.xtGet([items.x, items.startX, 0]),
 				startY: my.xtGet([items.y, items.startY, 0]),
 				scale: my.xtGet([items.scale, 0]),
@@ -5398,42 +4920,42 @@ The following sprite attributes can be amended by this function: startX, startY,
 		return this;
 	};
 	/**
-Ask all sprites in the Group to perform a set() operation
-@method setSpritesTo
+Ask all entitys in the Group to perform a set() operation
+@method setEntitysTo
 @param {Object} items Object containing attribute key:value pairs
 @return This
 @chainable
 **/
-	my.Group.prototype.setSpritesTo = function(items) {
-		for (var i = 0, iz = this.sprites.length; i < iz; i++) {
-			my.sprite[this.sprites[i]].set(items);
+	my.Group.prototype.setEntitysTo = function(items) {
+		for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+			my.entity[this.entitys[i]].set(items);
 		}
 		return this;
 	};
 	/**
-Require all sprites in the Group to set their pivot attribute to the supplied POINTNAME or SPRITENAME string, and set their handle Vector to reflect the current vector between that sprite or Point object's start Vector and their own Vector
+Require all entitys in the Group to set their pivot attribute to the supplied POINTNAME or SPRITENAME string, and set their handle Vector to reflect the current vector between that entity or Point object's start Vector and their own Vector
 
-This has the effect of turning a set of disparate sprites into a single, coordinated group.
-@method pivotSpritesTo
+This has the effect of turning a set of disparate entitys into a single, coordinated group.
+@method pivotEntitysTo
 @param {String} item SPRITENAME or POINTNAME String
 @return This
 @chainable
 **/
-	my.Group.prototype.pivotSpritesTo = function(item) {
+	my.Group.prototype.pivotEntitysTo = function(item) {
 		item = (my.isa(item, 'str')) ? item : false;
 		var p,
 			pStart,
-			sprite,
+			entity,
 			sv;
 		if (item) {
-			p = my.sprite[item] || my.point[item] || false;
+			p = my.entity[item] || my.point[item] || false;
 			if (p) {
 				pStart = (p.type === 'Point') ? p.get('current') : p.start;
-				for (var i = 0, iz = this.sprites.length; i < iz; i++) {
-					sprite = my.sprite[this.sprites[i]];
-					sv = my.v.set(sprite.start);
+				for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+					entity = my.entity[this.entitys[i]];
+					sv = my.v.set(entity.start);
 					sv.vectorSubtract(pStart);
-					sprite.set({
+					entity.set({
 						pivot: item,
 						handleX: -sv.x,
 						handleY: -sv.y,
@@ -5444,76 +4966,76 @@ This has the effect of turning a set of disparate sprites into a single, coordin
 		return this;
 	};
 	/**
-Check all sprites in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the sprites have been sorted; the sprite Object with the highest order value that is colliding with the coordinate is returned
-@method getSpriteAt
+Check all entitys in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the entitys have been sorted; the entity Object with the highest order value that is colliding with the coordinate is returned
+@method getEntityAt
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
-@return Sprite object, or false if no sprites are colliding with the coordinate
+@return Entity object, or false if no entitys are colliding with the coordinate
 **/
-	my.Group.prototype.getSpriteAt = function(items) {
+	my.Group.prototype.getEntityAt = function(items) {
 		items = my.safeObject(items);
 		var coordinate = my.v.set({
 				x: (items.x || 0),
 				y: (items.y || 0)
 			}),
-			sprite,
+			entity,
 			cell,
 			result;
 		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
-		this.sortSprites();
-		for (var i = this.sprites.length - 1; i >= 0; i--) {
-			sprite = my.sprite[this.sprites[i]];
+		this.sortEntitys();
+		for (var i = this.entitys.length - 1; i >= 0; i--) {
+			entity = my.entity[this.entitys[i]];
 			if (this.regionRadius) {
-				sprite.resetWork();
-				result = sprite.work.start.vectorSubtract(coordinate);
+				entity.resetWork();
+				result = entity.work.start.vectorSubtract(coordinate);
 				if (result.getMagnitude() > this.regionRadius) {
 					continue;
 				}
 			}
-			if (sprite.checkHit({
+			if (entity.checkHit({
 				x: coordinate.x,
 				y: coordinate.y
 			})) {
-				return sprite;
+				return entity;
 			}
 		}
 		return false;
 	};
 	/**
-Check all sprites in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the sprites have been sorted; all sprites (in the group) colliding with the coordinate are returned as an array of sprite objects
-@method getSpriteAt
+Check all entitys in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the entitys have been sorted; all entitys (in the group) colliding with the coordinate are returned as an array of entity objects
+@method getEntityAt
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
-@return Sprite object, or false if no sprites are colliding with the coordinate
+@return Entity object, or false if no entitys are colliding with the coordinate
 **/
-	my.Group.prototype.getAllSpritesAt = function(items) {
+	my.Group.prototype.getAllEntitysAt = function(items) {
 		items = my.safeObject(items);
 		var coordinate = my.v.set({
 				x: (items.x || 0),
 				y: (items.y || 0)
 			}),
-			sprite,
+			entity,
 			cell,
 			result,
 			resArray = [];
 		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
-		this.sortSprites();
-		for (var i = this.sprites.length - 1; i >= 0; i--) {
-			sprite = my.sprite[this.sprites[i]];
+		this.sortEntitys();
+		for (var i = this.entitys.length - 1; i >= 0; i--) {
+			entity = my.entity[this.entitys[i]];
 			if (this.regionRadius) {
-				sprite.resetWork();
-				result = sprite.work.start.vectorSubtract(coordinate);
+				entity.resetWork();
+				result = entity.work.start.vectorSubtract(coordinate);
 				if (result.getMagnitude() > this.regionRadius) {
 					continue;
 				}
 			}
-			if (sprite.checkHit(coordinate)) {
-				resArray.push(sprite);
+			if (entity.checkHit(coordinate)) {
+				resArray.push(entity);
 			}
 		}
 		return (resArray.length > 0) ? resArray : false;
 	};
 
 	/**
-# Sprite
+# Entity
 
 ## Instantiation
 
@@ -5521,28 +5043,28 @@ Check all sprites in the Group to see if they are colliding with the supplied co
 
 ## Purpose
 
-* Supplies the common methodology for all Scrawl sprites: Phrase, Block, Wheel, Picture, Path, Shape
-* Sets up the attributes for holding a sprite's current state: position, visibility, rotation, drawing order, context
-* Describes how sprites should be stamped onto a Cell's canvas
+* Supplies the common methodology for all Scrawl entitys: Phrase, Block, Wheel, Picture, Path, Shape
+* Sets up the attributes for holding a entity's current state: position, visibility, rotation, drawing order, context
+* Describes how entitys should be stamped onto a Cell's canvas
 * Provides drag-and-drop functionality
 
-__Scrawl core does not include any sprite type constructors.__ Each sprite type used on a web page canvas needs to be added to the core by loading its associated module:
+__Scrawl core does not include any entity type constructors.__ Each entity type used on a web page canvas needs to be added to the core by loading its associated module:
 
-* __Block__ sprites are defined in the _scrawlBlock_ module (alias: block)
-* __Wheel__ sprites are defined in the _scrawlWheel_ module (alias: wheel)
-* __Phrase__ sprites are defined in the _scrawlPhrase_ module (alias: phrase)
-* __Picture__ sprites are defined as part of the _scrawlImages_ module (alias: images)
-* __Path__ sprites are defined in the _scrawlPath_ module (alias: path)
-* __Shape__ sprites are defined in the _scrawlShape_ module (alias: shape)
+* __Block__ entitys are defined in the _scrawlBlock_ module (alias: block)
+* __Wheel__ entitys are defined in the _scrawlWheel_ module (alias: wheel)
+* __Phrase__ entitys are defined in the _scrawlPhrase_ module (alias: phrase)
+* __Picture__ entitys are defined as part of the _scrawlImages_ module (alias: images)
+* __Path__ entitys are defined in the _scrawlPath_ module (alias: path)
+* __Shape__ entitys are defined in the _scrawlShape_ module (alias: shape)
 * additional factory functions for defining common Path and Shape objects (lines, curves, ovals, triangles, stars, etc) are supplied by the _scrawlPathFactories_ module (alias: factories)
 
-@class Sprite
+@class Entity
 @constructor
 @extends Position
 @uses Context
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-	my.Sprite = function(items) {
+	my.Entity = function(items) {
 		items = my.safeObject(items);
 		my.Position.call(this, items);
 		items.name = this.name;
@@ -5554,62 +5076,62 @@ __Scrawl core does not include any sprite type constructors.__ Each sprite type 
 		this.order = my.xtGet([items.order, 0]);
 		this.visibility = my.xtGet([items.visibility, true]);
 		this.method = my.xtGet([items.method, my.d[this.type].method]);
-		this.collisionsSpriteConstructor(items);
+		this.collisionsEntityConstructor(items);
 		return this;
 	};
-	my.Sprite.prototype = Object.create(my.Position.prototype);
+	my.Entity.prototype = Object.create(my.Position.prototype);
 	/**
 @property type
 @type String
-@default 'Sprite'
+@default 'Entity'
 @final
 **/
-	my.Sprite.prototype.type = 'Sprite';
-	my.Sprite.prototype.classname = 'spritenames';
-	my.d.Sprite = {
+	my.Entity.prototype.type = 'Entity';
+	my.Entity.prototype.classname = 'entitynames';
+	my.d.Entity = {
 		/**
-Sprite order value - lower order sprites are drawn on &lt;canvas&gt; elements before higher order sprites
+Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys
 @property order
 @type Number
 @default 0
 **/
 		order: 0,
 		/**
-Visibility flag - sprites will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
+Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
 @property visibility
 @type Boolean
 @default true
 **/
 		visibility: true,
 		/**
-Sprite drawing method. A sprite can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
+Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
 
-* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
-* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
-* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
-* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
-* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
-* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
-* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
-* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
-* 'clip' - clip the drawing zone to the sprite's path (not tested)
-* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient
+* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions
+* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the entity's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the entity onto the canvas
 
-_Note: not all sprites support all of these operations_
+_Note: not all entitys support all of these operations_
 @property method
 @type String
 @default 'fill'
 **/
 		method: 'fill',
 		/**
-Current SVGTiny data string for the sprite (only supported by Path and Shape sprites)
+Current SVGTiny data string for the entity (only supported by Path and Shape entitys)
 @property data
 @type String
 @default ''
 **/
 		data: '',
 		/**
-Sprite radius, in pixels - not supported by all sprite objects
+Entity radius, in pixels - not supported by all entity objects
 @property radius
 @type Number
 @default 0
@@ -5623,14 +5145,14 @@ Scaling flag; set to true to ensure lineWidth scales in line with the scale attr
 **/
 		scaleOutline: true,
 		/**
-Display cycle flag; if set to true, sprite will not change the &lt;canvas&gt; element's context engine's settings before drawing itself on the cell
+Display cycle flag; if set to true, entity will not change the &lt;canvas&gt; element's context engine's settings before drawing itself on the cell
 @property fastStamp
 @type Boolean
 @default false
 **/
 		fastStamp: false,
 		/**
-CTXNAME of this Sprite's Context object
+CTXNAME of this Entity's Context object
 @property context
 @type String
 @default ''
@@ -5638,51 +5160,51 @@ CTXNAME of this Sprite's Context object
 **/
 		context: '',
 		/**
-GROUPNAME String for this sprite's default group
+GROUPNAME String for this entity's default group
 
-_Note: a sprite can belong to more than one group by being added to other Group objects via the __scrawl.addSpritesToGroups()__ and __Group.addSpriteToGroup()__ functions_
+_Note: a entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_
 @property group
 @type String
 @default ''
 **/
 		group: '',
 	};
-	my.mergeInto(my.d.Sprite, my.d.Position);
+	my.mergeInto(my.d.Entity, my.d.Position);
 	/**
-Sprite constructor hook function - modified by collisions module
-@method collisionsSpriteConstructor
+Entity constructor hook function - modified by collisions module
+@method collisionsEntityConstructor
 @private
 **/
-	my.Sprite.prototype.collisionsSpriteConstructor = function(items) {};
+	my.Entity.prototype.collisionsEntityConstructor = function(items) {};
 	/**
-Constructor helper function - register sprite object in the scrawl library
+Constructor helper function - register entity object in the scrawl library
 @method registerInLibrary
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.registerInLibrary = function() {
-		my.sprite[this.name] = this;
-		my.pushUnique(my.spritenames, this.name);
-		my.group[this.group].addSpritesToGroup(this.name);
-		this.collisionsSpriteRegisterInLibrary();
+	my.Entity.prototype.registerInLibrary = function() {
+		my.entity[this.name] = this;
+		my.pushUnique(my.entitynames, this.name);
+		my.group[this.group].addEntitysToGroup(this.name);
+		this.collisionsEntityRegisterInLibrary();
 		return this;
 	};
 	/**
-Sprite.registerInLibrary hook function - modified by collisions module
-@method collisionsSpriteRegisterInLibrary
+Entity.registerInLibrary hook function - modified by collisions module
+@method collisionsEntityRegisterInLibrary
 @private
 **/
-	my.Sprite.prototype.collisionsSpriteRegisterInLibrary = function() {};
+	my.Entity.prototype.collisionsEntityRegisterInLibrary = function() {};
 	/**
 Augments Position.get()
 
-Allows users to retrieve a sprite's Context object's values via the sprite
+Allows users to retrieve a entity's Context object's values via the entity
 @method get
 @param {String} item attribute key string
 @return Attribute value
 **/
-	my.Sprite.prototype.get = function(item) {
+	my.Entity.prototype.get = function(item) {
 		//retrieve title, comment, timestamp - which might otherwise be returned with the context object's values
 		if (my.xt(my.d.Base[item])) {
 			return my.Base.prototype.get.call(this, item);
@@ -5691,51 +5213,51 @@ Allows users to retrieve a sprite's Context object's values via the sprite
 		if (my.xt(my.d.Context[item])) {
 			return my.ctx[this.context].get(item);
 		}
-		//sprite attributes
+		//entity attributes
 		return my.Position.prototype.get.call(this, item);
 	};
 	/**
 Augments Position.set()
 
 Allows users to:
-* set a sprite's Context object's values via the sprite
-* shift a sprite between groups
+* set a entity's Context object's values via the entity
+* shift a entity between groups
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
-	my.Sprite.prototype.set = function(items) {
+	my.Entity.prototype.set = function(items) {
 		my.Position.prototype.set.call(this, items);
 		my.ctx[this.context].set(items);
 		items = my.safeObject(items);
 		if (my.xt(items.group)) {
-			my.group[this.group].removeSpritesFromGroup(this.name);
+			my.group[this.group].removeEntitysFromGroup(this.name);
 			this.group = this.getGroup(items.group);
-			my.group[this.group].addSpritesToGroup(this.name);
+			my.group[this.group].addEntitysToGroup(this.name);
 		}
-		this.collisionsSpriteSet(items);
+		this.collisionsEntitySet(items);
 		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale])) {
 			this.offset.flag = false;
 		}
 		return this;
 	};
 	/**
-Sprite.set hook function - modified by collisions module
-@method collisionsSpriteSet
+Entity.set hook function - modified by collisions module
+@method collisionsEntitySet
 @private
 **/
-	my.Sprite.prototype.collisionsSpriteSet = function(items) {};
+	my.Entity.prototype.collisionsEntitySet = function(items) {};
 	/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
 
-Allows users to amend a sprite's Context object's values via the sprite, in addition to its own attribute values
+Allows users to amend a entity's Context object's values via the entity, in addition to its own attribute values
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
-	my.Sprite.prototype.setDelta = function(items) {
+	my.Entity.prototype.setDelta = function(items) {
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
 		var ctx = my.ctx[this.context];
@@ -5763,7 +5285,7 @@ Augments Position.clone()
 @return Cloned object
 @chainable
 **/
-	my.Sprite.prototype.clone = function(items) {
+	my.Entity.prototype.clone = function(items) {
 		items = my.safeObject(items);
 		var a,
 			b,
@@ -5780,13 +5302,13 @@ Augments Position.clone()
 		return a;
 	};
 	/**
-Constructor helper function - discover this sprite's default group affiliation
+Constructor helper function - discover this entity's default group affiliation
 @method getGroup
 @param {Object} [items] Constructor argument
 @return GROUPNAME String
 @private
 **/
-	my.Sprite.prototype.getGroup = function(items) {
+	my.Entity.prototype.getGroup = function(items) {
 		items = my.safeObject(items);
 		if (my.xt(items.group) && my.contains(my.groupnames, items.group)) {
 			return items.group;
@@ -5796,37 +5318,37 @@ Constructor helper function - discover this sprite's default group affiliation
 		}
 	};
 	/**
-Helper function - get a sprite's cell onbject
-@method getSpriteCell
+Helper function - get a entity's cell onbject
+@method getEntityCell
 @return Cell object
 @private
 **/
-	my.Sprite.prototype.getSpriteCell = function(items) {
+	my.Entity.prototype.getEntityCell = function(items) {
 		var group = this.getGroup(items);
 		return my.cell[group];
 	};
 	/**
-Stamp function - instruct sprite to draw itself on a Cell's &lt;canvas&gt; element, regardless of the setting of its visibility attribute
+Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, regardless of the setting of its visibility attribute
 
 Permitted methods include:
 
-* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
-* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
-* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
-* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
-* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
-* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
-* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
-* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
-* 'clip' - clip the drawing zone to the sprite's path (not tested)
-* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient
+* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions
+* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the entity's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the entity onto the canvas
 @method forceStamp
-@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
-@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
+@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 **/
-	my.Sprite.prototype.forceStamp = function(method, cell) {
+	my.Entity.prototype.forceStamp = function(method, cell) {
 		var temp = this.visibility;
 		this.visibility = true;
 		this.stamp(method, cell);
@@ -5840,7 +5362,7 @@ Stamp helper function - get handle offset values
 @chainable
 @private
 **/
-	my.Sprite.prototype.prepareStamp = function() {
+	my.Entity.prototype.prepareStamp = function() {
 		if (!this.offset.flag) {
 			this.offset.set(this.getOffsetStartVector());
 			this.offset.flag = true;
@@ -5848,27 +5370,27 @@ Stamp helper function - get handle offset values
 		return this.offset;
 	};
 	/**
-Stamp function - instruct sprite to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true
+Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true
 
 Permitted methods include:
 
-* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
-* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
-* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
-* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
-* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
-* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
-* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
-* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
-* 'clip' - clip the drawing zone to the sprite's path (not tested)
-* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient
+* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions
+* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the entity's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the entity onto the canvas
 @method stamp
-@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
-@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
+@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 **/
-	my.Sprite.prototype.stamp = function(method, cell) {
+	my.Entity.prototype.stamp = function(method, cell) {
 		if (this.visibility) {
 			var myCell = my.cell[cell] || my.cell[my.group[this.group].cell],
 				engine = my.context[myCell.name],
@@ -5884,22 +5406,22 @@ Permitted methods include:
 		return this;
 	};
 	/**
-Sprite.stamp hook function - modified by path module
+Entity.stamp hook function - modified by path module
 @method pathStamp
 @private
 **/
-	my.Sprite.prototype.pathStamp = function() {};
+	my.Entity.prototype.pathStamp = function() {};
 	/**
-Stamp helper function - direct sprite to the required drawing method function
+Stamp helper function - direct entity to the required drawing method function
 @method callMethod
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Object} engine JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
+@param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.callMethod = function(engine, cell, method) {
+	my.Entity.prototype.callMethod = function(engine, cell, method) {
 		switch (method) {
 			case 'clear':
 				this.clear(engine, cell);
@@ -5935,7 +5457,7 @@ Stamp helper function - direct sprite to the required drawing method function
 		return this;
 	};
 	/**
-Stamp helper function - rotate and position canvas ready for drawing sprite
+Stamp helper function - rotate and position canvas ready for drawing entity
 @method rotateCell
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
 @param {String} cell Cell name
@@ -5943,7 +5465,7 @@ Stamp helper function - rotate and position canvas ready for drawing sprite
 @chainable
 @private
 **/
-	my.Sprite.prototype.rotateCell = function(ctx, cell) {
+	my.Entity.prototype.rotateCell = function(ctx, cell) {
 		var myA = (this.flipReverse) ? -1 : 1,
 			myD = (this.flipUpend) ? -1 : 1,
 			deltaRotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian,
@@ -5968,7 +5490,7 @@ Stamp helper function - convert string start.x values to numerical values
 @return Number - x value
 @private
 **/
-	my.Sprite.prototype.convertX = function(x, cell) {
+	my.Entity.prototype.convertX = function(x, cell) {
 		var w = scrawl.cell[cell].actualWidth;
 		switch (x) {
 			case 'left':
@@ -5990,7 +5512,7 @@ Stamp helper function - convert string start.y values to numerical values
 @return Number - y value
 @private
 **/
-	my.Sprite.prototype.convertY = function(y, cell) {
+	my.Entity.prototype.convertY = function(y, cell) {
 		var h = scrawl.cell[cell].actualHeight;
 		switch (y) {
 			case 'top':
@@ -6007,139 +5529,139 @@ Stamp helper function - convert string start.y values to numerical values
 	/**
 Stamp helper function - perform a 'clear' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method clear
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.clear = function(ctx, cell) {
+	my.Entity.prototype.clear = function(ctx, cell) {
 		return this;
 	};
 	/**
 Stamp helper function - perform a 'clearWithBackground' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.clearWithBackground = function(ctx, cell) {
+	my.Entity.prototype.clearWithBackground = function(ctx, cell) {
 		return this;
 	};
 	/**
 Stamp helper function - perform a 'draw' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method draw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.draw = function(ctx, cell) {
+	my.Entity.prototype.draw = function(ctx, cell) {
 		return this;
 	};
 	/**
 Stamp helper function - perform a 'fill' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method fill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.fill = function(ctx, cell) {
+	my.Entity.prototype.fill = function(ctx, cell) {
 		return this;
 	};
 	/**
 Stamp helper function - perform a 'drawFill' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.drawFill = function(ctx, cell) {
+	my.Entity.prototype.drawFill = function(ctx, cell) {
 		return this;
 	};
 	/**
 Stamp helper function - perform a 'fillDraw' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.fillDraw = function(ctx, cell) {
+	my.Entity.prototype.fillDraw = function(ctx, cell) {
 		return this;
 	};
 	/**
 Stamp helper function - perform a 'sinkInto' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.sinkInto = function(ctx, cell) {
+	my.Entity.prototype.sinkInto = function(ctx, cell) {
 		return this;
 	};
 	/**
 Stamp helper function - perform a 'floatOver' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.floatOver = function(ctx, cell) {
+	my.Entity.prototype.floatOver = function(ctx, cell) {
 		return this;
 	};
 	/**
 Stamp helper function - perform a 'clip' method draw
 
-_Note: not supported by this sprite_
+_Note: not supported by this entity_
 @method clip
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.clip = function(ctx, cell) {
+	my.Entity.prototype.clip = function(ctx, cell) {
 		return this;
 	};
 	/**
-Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this sprite's context values, but not defining or drawing the sprite on the canvas.
+Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this entity's context values, but not defining or drawing the entity on the canvas.
 @method none
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.none = function(ctx, cell) {
+	my.Entity.prototype.none = function(ctx, cell) {
 		my.cell[cell].setEngine(this);
 		return this;
 	};
@@ -6147,12 +5669,12 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)
 @method clearShadow
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.clearShadow = function(ctx, cell) {
+	my.Entity.prototype.clearShadow = function(ctx, cell) {
 		var c = my.ctx[this.context];
 		if (c.shadowOffsetX || c.shadowOffsetY || c.shadowBlur) {
 			my.cell[cell].clearShadow();
@@ -6163,12 +5685,12 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 Stamp helper function - clear shadow parameters during a multi draw operation (Phrase text-along-path drawFill and fillDraw methods)
 @method restoreShadow
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
-	my.Sprite.prototype.restoreShadow = function(ctx, cell) {
+	my.Entity.prototype.restoreShadow = function(ctx, cell) {
 		var c = my.ctx[this.context];
 		if (c.shadowOffsetX || c.shadowOffsetY || c.shadowBlur) {
 			my.cell[cell].restoreShadow(this.context);
@@ -6176,13 +5698,13 @@ Stamp helper function - clear shadow parameters during a multi draw operation (P
 		return this;
 	};
 	/**
-Set sprite's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999
-@method pickupSprite
+Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999
+@method pickupEntity
 @param {Vector} items Coordinate vector; alternatively an object with {x, y} attributes can be used
 @return This
 @chainable
 **/
-	my.Sprite.prototype.pickupSprite = function(items) {
+	my.Entity.prototype.pickupEntity = function(items) {
 		items = my.safeObject(items);
 		var coordinate = my.v.set({
 				x: (items.x || 0),
@@ -6200,13 +5722,13 @@ Set sprite's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		return this;
 	};
 	/**
-Revert pickupSprite() actions, ensuring sprite is left where the user drops it
-@method dropSprite
+Revert pickupEntity() actions, ensuring entity is left where the user drops it
+@method dropEntity
 @param {String} [items] Alternative pivot String
 @return This
 @chainable
 **/
-	my.Sprite.prototype.dropSprite = function(item) {
+	my.Entity.prototype.dropEntity = function(item) {
 		var order = this.order;
 		this.set({
 			pivot: my.xtGet([item, this.realPivot, false]),
@@ -6218,7 +5740,7 @@ Revert pickupSprite() actions, ensuring sprite is left where the user drops it
 		return this;
 	};
 	/**
-Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
 
 Argument object contains the following attributes:
 
@@ -6229,15 +5751,15 @@ Argument object contains the following attributes:
 Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
 @method checkHit
 @param {Object} items Argument object
-@return The first coordinate to fall within the sprite's path; false if none fall within the path
+@return The first coordinate to fall within the entity's path; false if none fall within the path
 **/
-	my.Sprite.prototype.checkHit = function(items) {
+	my.Entity.prototype.checkHit = function(items) {
 		items = my.safeObject(items);
 		var ctx = my.cvx,
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
 			here,
 			result;
-		this.rotateCell(ctx, this.getSpriteCell().name);
+		this.rotateCell(ctx, this.getEntityCell().name);
 		here = this.prepareStamp();
 		ctx.beginPath();
 		ctx.rect(here.x, here.y, (this.width * this.scale), (this.height * this.scale));
@@ -6262,7 +5784,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 
 ## Purpose
 
-* Defines gradients and radial gradients used with sprite objects' strokeStyle and fillStyle attributes
+* Defines gradients and radial gradients used with entity objects' strokeStyle and fillStyle attributes
 
 @class Design
 @constructor
@@ -6302,12 +5824,12 @@ Objects take the form {color:String, stop:Number} where:
 			stop: 0.999999
 		}],
 		/**
-Drawing flag - when set to true, will use sprite-based 'range' coordinates to calculate the start and end points of the gradient; when false, will use Cell-based coordinates
-@property setToSprite
+Drawing flag - when set to true, will use entity-based 'range' coordinates to calculate the start and end points of the gradient; when false, will use Cell-based coordinates
+@property setToEntity
 @type Boolean
 @default false
 **/
-		setToSprite: false,
+		setToEntity: false,
 		/**
 CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set
 @property cell
@@ -6392,13 +5914,13 @@ Creates the gradient
 
 _This function is replaced by the animation module_
 @method update
-@param {String} [sprite] SPRITENAME String
+@param {String} [entity] SPRITENAME String
 @param {String} [cell] CELLNAME String
 @return This
 @chainable
 **/
-	my.Design.prototype.update = function(sprite, cell) {
-		this.makeGradient(sprite, cell);
+	my.Design.prototype.update = function(entity, cell) {
+		this.makeGradient(entity, cell);
 		this.applyStops();
 		return this;
 	};
@@ -6414,19 +5936,19 @@ Returns &lt;canvas&gt; element's contenxt engine's gradient object, or 'rgba(0,0
 	/**
 Design.update() helper function - builds &lt;canvas&gt; element's contenxt engine's gradient object
 @method makeGradient
-@param {String} [sprite] SPRITENAME String
+@param {String} [entity] SPRITENAME String
 @param {String} [cell] CELLNAME String
 @return This
 @chainable
 @private
 **/
-	my.Design.prototype.makeGradient = function(sprite, cell) {
-		sprite = my.sprite[sprite] || false;
+	my.Design.prototype.makeGradient = function(entity, cell) {
+		entity = my.entity[entity] || false;
 		if (my.xt(cell)) {
 			cell = (my.contains(my.cellnames, cell)) ? my.cell[cell] : my.cell[this.get('cell')];
 		}
-		else if (sprite) {
-			cell = my.cell[sprite.group];
+		else if (entity) {
+			cell = my.cell[entity.group];
 		}
 		else {
 			cell = my.cell[this.get('cell')];
@@ -6453,31 +5975,31 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 			w,
 			h,
 			r;
-		//in all cases, the canvas origin will have been translated to the current sprite's start
-		if (this.get('setToSprite')) {
-			temp = sprite.getOffsetStartVector();
-			switch (sprite.type) {
+		//in all cases, the canvas origin will have been translated to the current entity's start
+		if (this.get('setToEntity')) {
+			temp = entity.getOffsetStartVector();
+			switch (entity.type) {
 				case 'Wheel':
-					x = -temp.x + (sprite.radius * sprite.scale);
-					y = -temp.y + (sprite.radius * sprite.scale);
+					x = -temp.x + (entity.radius * entity.scale);
+					y = -temp.y + (entity.radius * entity.scale);
 					break;
 				case 'Shape':
 				case 'Path':
-					if (sprite.isLine) {
+					if (entity.isLine) {
 						x = -temp.x;
 						y = -temp.y;
 					}
 					else {
-						x = -temp.x + ((sprite.width / 2) * sprite.scale);
-						y = -temp.y + ((sprite.height / 2) * sprite.scale);
+						x = -temp.x + ((entity.width / 2) * entity.scale);
+						y = -temp.y + ((entity.height / 2) * entity.scale);
 					}
 					break;
 				default:
 					x = -temp.x;
 					y = -temp.y;
 			}
-			w = (my.xt(sprite.localWidth)) ? sprite.localWidth : sprite.width * sprite.scale;
-			h = (my.xt(sprite.localHeight)) ? sprite.localHeight : sprite.height * sprite.scale;
+			w = (my.xt(entity.localWidth)) ? entity.localWidth : entity.width * entity.scale;
+			h = (my.xt(entity.localHeight)) ? entity.localHeight : entity.height * entity.scale;
 			sx = (my.xt(this.startX)) ? this.startX : 0;
 			if (typeof sx === 'string') {
 				sx = (parseFloat(sx) / 100) * w;
@@ -6510,45 +6032,45 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 			}
 		}
 		else {
-			x = sprite.start.x;
+			x = entity.start.x;
 			if (typeof x === 'string') {
-				x = sprite.convertX(x, cell.name);
+				x = entity.convertX(x, cell.name);
 			}
-			y = sprite.start.y;
+			y = entity.start.y;
 			if (typeof y === 'string') {
-				y = sprite.convertY(y, cell.name);
+				y = entity.convertY(y, cell.name);
 			}
 			sx = (my.xt(this.startX)) ? this.startX : 0;
 			if (typeof sx === 'string') {
-				sx = sprite.convertX(sx, cell.name);
+				sx = entity.convertX(sx, cell.name);
 			}
 			sy = (my.xt(this.startY)) ? this.startY : 0;
 			if (typeof sy === 'string') {
-				sy = sprite.convertY(sy, cell.name);
+				sy = entity.convertY(sy, cell.name);
 			}
 			ex = (my.xt(this.endX)) ? this.endX : cell.actualWidth;
 			if (typeof ex === 'string') {
-				ex = sprite.convertX(ex, cell.name);
+				ex = entity.convertX(ex, cell.name);
 			}
 			ey = (my.xt(this.endY)) ? this.endY : cell.actualWidth;
 			if (typeof ey === 'string') {
-				ey = sprite.convertY(ey, cell.name);
+				ey = entity.convertY(ey, cell.name);
 			}
-			x = (sprite.flipReverse) ? cell.actualWidth - x : x;
-			y = (sprite.flipUpend) ? cell.actualHeight - y : y;
-			sx = (sprite.flipReverse) ? cell.actualWidth - sx : sx;
-			sy = (sprite.flipUpend) ? cell.actualHeight - sy : sy;
-			ex = (sprite.flipReverse) ? cell.actualWidth - ex : ex;
-			ey = (sprite.flipUpend) ? cell.actualHeight - ey : ey;
+			x = (entity.flipReverse) ? cell.actualWidth - x : x;
+			y = (entity.flipUpend) ? cell.actualHeight - y : y;
+			sx = (entity.flipReverse) ? cell.actualWidth - sx : sx;
+			sy = (entity.flipUpend) ? cell.actualHeight - sy : sy;
+			ex = (entity.flipReverse) ? cell.actualWidth - ex : ex;
+			ey = (entity.flipUpend) ? cell.actualHeight - ey : ey;
 			fsx = sx - x;
 			fsy = sy - y;
 			fex = ex - x;
 			fey = ey - y;
-			r = sprite.roll;
-			if ((sprite.flipReverse && sprite.flipUpend) || (!sprite.flipReverse && !sprite.flipUpend)) {
-				r = -sprite.roll;
+			r = entity.roll;
+			if ((entity.flipReverse && entity.flipUpend) || (!entity.flipReverse && !entity.flipUpend)) {
+				r = -entity.roll;
 			}
-			if (sprite.roll) {
+			if (entity.roll) {
 				my.v.set({
 					x: fsx,
 					y: fsy,
@@ -6620,7 +6142,7 @@ Remove this gradient from the scrawl library
 ## Purpose
 
 * Defines a linear gradient
-* Used with sprite.strokeStyle and sprite.fillStyle attributes
+* Used with entity.strokeStyle and entity.fillStyle attributes
 
 ## Access
 
@@ -6681,7 +6203,7 @@ Swap start and end attributes
 ## Purpose
 
 * Defines a radial gradient
-* Used with sprite.strokeStyle and sprite.fillStyle attributes
+* Used with entity.strokeStyle and entity.fillStyle attributes
 
 ## Access
 
@@ -6711,17 +6233,17 @@ Swap start and end attributes
 	my.RadialGradient.prototype.classname = 'designnames';
 	my.d.RadialGradient = {
 		/**
-Start circle radius, in pixels or percentage of sprite/cell width
+Start circle radius, in pixels or percentage of entity/cell width
 @property startRadius
 @type Number (by default), or String percentage value
 @default 0
 **/
 		startRadius: 0,
 		/**
-End circle radius, in pixels or percentage of sprite/cell width
+End circle radius, in pixels or percentage of entity/cell width
 @property endRadius
 @type Number (by default), or String percentage value
-@default 0 (though in practice, an undefined end radius will default to the sprite's width, or the cell's width)
+@default 0 (though in practice, an undefined end radius will default to the entity's width, or the cell's width)
 **/
 		endRadius: 0,
 	};
@@ -6754,23 +6276,6 @@ Swap start and end attributes
 	my.v = my.newVector({
 		name: 'scrawl.v'
 	});
-	my.workquat = {
-		q1: my.newQuaternion({
-			name: 'scrawl.workquat.q1'
-		}),
-		q2: my.newQuaternion({
-			name: 'scrawl.workquat.q2'
-		}),
-		q3: my.newQuaternion({
-			name: 'scrawl.workquat.q3'
-		}),
-		q4: my.newQuaternion({
-			name: 'scrawl.workquat.q4'
-		}),
-		q5: my.newQuaternion({
-			name: 'scrawl.workquat.q5'
-		}),
-	};
 
 	return my;
 }());

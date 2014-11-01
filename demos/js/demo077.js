@@ -30,7 +30,7 @@ var mycode = function() {
 		order: 2
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newWheel({
 		startX: 200,
 		startY: 200,

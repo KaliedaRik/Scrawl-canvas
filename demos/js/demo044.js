@@ -36,7 +36,7 @@ var mycode = function() {
 		autoUpdate: true,
 	});
 
-	//define sprite
+	//define entity
 	myWheel = scrawl.newWheel({
 		startX: 200,
 		startY: 200,

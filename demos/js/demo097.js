@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//sprites
+	//entitys
 	scrawl.newBlock({
 		name: 'block1',
 		startX: 50,
@@ -32,7 +32,7 @@ var mycode = function() {
 	//tweens
 	scrawl.newTween({
 		name: 'tween1',
-		targets: scrawl.sprite.block1,
+		targets: scrawl.entity.block1,
 		start: {
 			startX: 50,
 			width: 80,
@@ -49,7 +49,7 @@ var mycode = function() {
 	}).run();
 	scrawl.animation.tween1.clone({
 		name: 'tween2',
-		targets: scrawl.sprite.block3,
+		targets: scrawl.entity.block3,
 		duration: 4000,
 		start: {
 			startX: 50,
@@ -64,7 +64,7 @@ var mycode = function() {
 	}).run();
 	scrawl.newTween({
 		name: 'tween3',
-		targets: scrawl.sprite.block2,
+		targets: scrawl.entity.block2,
 		duration: 2000,
 		start: {
 			startX: 50,
@@ -78,7 +78,7 @@ var mycode = function() {
 		nextTween: 'tween4',
 	}).clone({
 		name: 'tween4',
-		targets: scrawl.sprite.block2,
+		targets: scrawl.entity.block2,
 		start: {
 			startX: 300,
 			width: 20,
@@ -91,7 +91,7 @@ var mycode = function() {
 		nextTween: 'tween5',
 	}).clone({
 		name: 'tween5',
-		targets: scrawl.sprite.block2,
+		targets: scrawl.entity.block2,
 		start: {
 			startX: 550,
 			width: 80,
@@ -104,7 +104,7 @@ var mycode = function() {
 		nextTween: 'tween6',
 	}).clone({
 		name: 'tween6',
-		targets: scrawl.sprite.block2,
+		targets: scrawl.entity.block2,
 		start: {
 			startX: 300,
 			width: 120,

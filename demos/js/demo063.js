@@ -17,7 +17,7 @@ var mycode = function() {
 		regionRadius: 190,
 	});
 
-	//define, and stamp, sprites
+	//define, and stamp, entitys
 	scrawl.makeRegularShape({
 		name: 'star1',
 		startX: 200,
@@ -33,7 +33,7 @@ var mycode = function() {
 		winding: 'evenodd',
 	}).stamp();
 
-	//define brush sprite ...
+	//define brush entity ...
 	brush = scrawl.newWheel({
 		radius: 3,
 		method: 'fill',
@@ -45,7 +45,7 @@ var mycode = function() {
 			brush.set({
 				startX: dx,
 				startY: dy,
-				fillStyle: (myGroup.getSpriteAt({
+				fillStyle: (myGroup.getEntityAt({
 					x: dx,
 					y: dy
 				})) ? 'rgba(255,0,0,0.5)' : 'rgba(0,0,255,0.5)',

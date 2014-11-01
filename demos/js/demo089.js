@@ -22,7 +22,7 @@ var mycode = function() {
 		name: 'texts',
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newPicture({
 		name: 'b0',
 		source: 'fraud',
@@ -97,10 +97,10 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			myPics.updateSpritesBy({
+			myPics.updateEntitysBy({
 				roll: 1,
 			});
-			myTexts.updateSpritesBy({
+			myTexts.updateEntitysBy({
 				roll: -1,
 			});
 			scrawl.render();

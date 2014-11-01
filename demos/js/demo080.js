@@ -39,7 +39,7 @@ var mycode = function() {
 		bShift: 5,
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.makeLine({
 		name: 'strutOne',
 		startX: 200,
@@ -89,22 +89,22 @@ var mycode = function() {
 
 	//define animation functions
 	var moveStruts = function() {
-		scrawl.sprite.strutOne.setDelta({
+		scrawl.entity.strutOne.setDelta({
 			roll: s1rotate,
 		});
-		scrawl.sprite.strutTwo.setDelta({
+		scrawl.entity.strutTwo.setDelta({
 			roll: s2rotate,
 		});
-		if (scrawl.sprite.strutOne.roll > 360) {
-			currentScale = scrawl.sprite.strutOne.get('scale');
-			scrawl.sprite.strutOne.roll -= 360;
+		if (scrawl.entity.strutOne.roll > 360) {
+			currentScale = scrawl.entity.strutOne.get('scale');
+			scrawl.entity.strutOne.roll -= 360;
 			if (!scrawl.isBetween((currentScale + s1scale), 0.3, 1, true)) {
 				s1scale = -s1scale;
 			}
-			scrawl.sprite.strutOne.setDelta({
+			scrawl.entity.strutOne.setDelta({
 				scale: s1scale,
 			});
-			scrawl.sprite.strutOne.set({
+			scrawl.entity.strutOne.set({
 				lineWidth: (1 / currentScale) * 2,
 			});
 			myCol.update();

@@ -116,11 +116,11 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 		/**
 A __save__ function
 
-Argument should be a String literal: 'pads', 'groups', 'sprites', 'designs', 'animsheets'
+Argument should be a String literal: 'pads', 'groups', 'entitys', 'designs', 'animsheets'
 
 _Note: this function does not check for duplicate objects_
 @method save
-@param {string} item A String literal: 'pads', 'cells', 'groups', 'sprites', 'designs', 'animsheets', 'springs'
+@param {string} item A String literal: 'pads', 'cells', 'groups', 'entitys', 'designs', 'animsheets', 'springs'
 @return Array of saved data
 **/
 		my.save = function(item) {
@@ -142,9 +142,9 @@ _Note: this function does not check for duplicate objects_
 						results = results.concat(my.group[my.groupnames[i]].toString());
 					}
 					break;
-				case 'sprites':
-					for (i = 0, iz = my.spritenames.length; i < iz; i++) {
-						results = results.concat(my.sprite[my.spritenames[i]].toString());
+				case 'entitys':
+					for (i = 0, iz = my.entitynames.length; i < iz; i++) {
+						results = results.concat(my.entity[my.entitynames[i]].toString());
 					}
 					break;
 				case 'designs':
@@ -265,7 +265,7 @@ Turn the object into a JSON String
 		/**
 Turn the object into a JSON String
 @method Pad.toString
-@param {Boolean} [noexternalobjects] True to exclude external objects such as sprites, designs and groups
+@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, designs and groups
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Pad.prototype.toString = function(noexternalobjects) {
@@ -273,7 +273,7 @@ Turn the object into a JSON String
 				result = {},
 				resarray = [],
 				groups = [],
-				sprites = [],
+				entitys = [],
 				ctx,
 				designs = [],
 				i, iz, j, jz;
@@ -302,13 +302,13 @@ Turn the object into a JSON String
 					resarray.push(my.cell[this.cells[i]].toString(true));
 				}
 				for (i = 0, iz = groups.length; i < iz; i++) {
-					for (j = 0, jz = my.group[groups[i]].sprites.length; j < jz; j++) {
-						my.pushUnique(sprites, my.group[groups[i]].sprites[j]);
+					for (j = 0, jz = my.group[groups[i]].entitys.length; j < jz; j++) {
+						my.pushUnique(entitys, my.group[groups[i]].entitys[j]);
 					}
 					resarray.push(my.group[groups[i]].toString(true));
 				}
-				for (i = 0, iz = sprites.length; i < iz; i++) {
-					ctx = my.ctx[my.sprite[sprites[i]].context];
+				for (i = 0, iz = entitys.length; i < iz; i++) {
+					ctx = my.ctx[my.entity[entitys[i]].context];
 					if (my.contains(my.designnames, ctx.fillStyle)) {
 						my.pushUnique(designs, ctx.fillStyle);
 					}
@@ -322,8 +322,8 @@ Turn the object into a JSON String
 				for (i = 0, iz = designs.length; i < iz; i++) {
 					resarray.push(my.design[designs[i]].toString());
 				}
-				for (i = 0, iz = sprites.length; i < iz; i++) {
-					resarray.push(my.sprite[sprites[i]].toString(true));
+				for (i = 0, iz = entitys.length; i < iz; i++) {
+					resarray.push(my.entity[entitys[i]].toString(true));
 				}
 			}
 			return resarray;
@@ -332,14 +332,14 @@ Turn the object into a JSON String
 		/**
 Turn the object into a JSON String
 @method Cell.toString
-@param {Boolean} [noexternalobjects] True to exclude external objects such as sprites, designs and groups
+@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, designs and groups
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Cell.prototype.toString = function(noexternalobjects) {
 			var keys = Object.keys(my.d[this.type]),
 				result = {},
 				resarray = [],
-				sprites = [],
+				entitys = [],
 				ctx,
 				designs = [],
 				i, iz, j, jz;
@@ -359,13 +359,13 @@ Turn the object into a JSON String
 			resarray.push(JSON.stringify(result));
 			if (!noexternalobjects) {
 				for (i = 0, iz = this.groups.length; i < iz; i++) {
-					for (j = 0, jz = my.group[this.groups[i]].sprites.length; j < jz; j++) {
-						my.pushUnique(sprites, my.group[this.groups[i]].sprites[j]);
+					for (j = 0, jz = my.group[this.groups[i]].entitys.length; j < jz; j++) {
+						my.pushUnique(entitys, my.group[this.groups[i]].entitys[j]);
 					}
 					resarray.push(my.group[this.groups[i]].toString(true));
 				}
-				for (i = 0, iz = sprites.length; i < iz; i++) {
-					ctx = my.ctx[my.sprite[sprites[i]].context];
+				for (i = 0, iz = entitys.length; i < iz; i++) {
+					ctx = my.ctx[my.entity[entitys[i]].context];
 					if (my.contains(my.designnames, ctx.fillStyle)) {
 						my.pushUnique(designs, ctx.fillStyle);
 					}
@@ -379,8 +379,8 @@ Turn the object into a JSON String
 				for (i = 0, iz = designs.length; i < iz; i++) {
 					resarray.push(my.design[designs[i]].toString());
 				}
-				for (i = 0, iz = sprites.length; i < iz; i++) {
-					resarray.push(my.sprite[sprites[i]].toString(true));
+				for (i = 0, iz = entitys.length; i < iz; i++) {
+					resarray.push(my.entity[entitys[i]].toString(true));
 				}
 			}
 			return resarray;
@@ -407,12 +407,12 @@ Turn the object into a JSON String; doesn't include name and type attributes
 		/**
 Turn the object into a JSON String
 
-Automatically removes the sprites attribute from the result; when loading, existing sprites need to be re-added to the group
+Automatically removes the entitys attribute from the result; when loading, existing entitys need to be re-added to the group
 @method Group.toString
-@param {Boolean} [nosprites] True to exclude the sprites attribute; false will return an array containing this and each of the sprites in the sprites array
+@param {Boolean} [noentitys] True to exclude the entitys attribute; false will return an array containing this and each of the entitys in the entitys array
 @return Array of JSON strings of non-default value attributes
 **/
-		my.Group.prototype.toString = function(nosprites) {
+		my.Group.prototype.toString = function(noentitys) {
 			var keys = Object.keys(my.d[this.type]),
 				result = {},
 				resarray = [],
@@ -427,11 +427,11 @@ Automatically removes the sprites attribute from the result; when loading, exist
 					result[keys[i]] = this[keys[i]];
 				}
 			}
-			delete result.sprites;
+			delete result.entitys;
 			resarray.push(JSON.stringify(result));
-			if (!nosprites) {
-				for (i = 0, iz = this.sprites.length; i < iz; i++) {
-					ctx = my.ctx[my.sprite[this.sprites[i]].context];
+			if (!noentitys) {
+				for (i = 0, iz = this.entitys.length; i < iz; i++) {
+					ctx = my.ctx[my.entity[this.entitys[i]].context];
 					if (my.contains(my.designnames, ctx.fillStyle)) {
 						my.pushUnique(designs, ctx.fillStyle);
 					}
@@ -445,8 +445,8 @@ Automatically removes the sprites attribute from the result; when loading, exist
 				for (i = 0, iz = designs.length; i < iz; i++) {
 					resarray.push(my.design[designs[i]].toString());
 				}
-				for (i = 0, iz = this.sprites.length; i < iz; i++) {
-					resarray.push(my.sprite[this.sprites[i]].toString(true));
+				for (i = 0, iz = this.entitys.length; i < iz; i++) {
+					resarray.push(my.entity[this.entitys[i]].toString(true));
 				}
 			}
 			return resarray;
@@ -455,7 +455,7 @@ Automatically removes the sprites attribute from the result; when loading, exist
 		/**
 Turn the object into a JSON String
 
-Retains the sprites attribute Array; does not include any other objects in the return Array
+Retains the entitys attribute Array; does not include any other objects in the return Array
 @method Group.save
 @return Array of JSON Strings
 **/
@@ -475,10 +475,10 @@ Retains the sprites attribute Array; does not include any other objects in the r
 
 		/**
 Turn the object into a JSON String
-@method Sprite.toString
+@method Entity.toString
 @return JSON string of non-default value attributes, including non-default context values
 **/
-		my.Sprite.prototype.toString = function(noexternalobjects) {
+		my.Entity.prototype.toString = function(noexternalobjects) {
 			noexternalobjects = (my.xt(noexternalobjects)) ? noexternalobjects : false;
 			var keys = Object.keys(my.d[this.type]),
 				result = {},
@@ -526,7 +526,7 @@ Turn the object into a JSON String
 			if (this.type === 'Picture') {
 				result.url = my.image[this.source].source;
 			}
-			resarray.push(JSON.stringify(result).replace('\\n', '\\\\n')); //replace required for multiline Phrase sprites
+			resarray.push(JSON.stringify(result).replace('\\n', '\\\\n')); //replace required for multiline Phrase entitys
 			return resarray;
 		};
 

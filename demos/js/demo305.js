@@ -58,10 +58,10 @@ var mycode = function() {
 		}
 	}
 
-	scrawl.sprite.b_0_0.set({
+	scrawl.entity.b_0_0.set({
 		mobile: false,
 	});
-	scrawl.sprite['b_0_' + (cols - 1)].set({
+	scrawl.entity['b_0_' + (cols - 1)].set({
 		mobile: false,
 	});
 
@@ -69,7 +69,7 @@ var mycode = function() {
 	for (i = 0; i < rows; i++) {
 		for (j = 0; j < cols; j++) {
 			if (i < (rows - 1)) {
-				scrawl.sprite['b_' + i + '_' + j].addSpring({
+				scrawl.entity['b_' + i + '_' + j].addSpring({
 					name: 's_' + i + '_' + j + '_across',
 					end: 'b_' + (i + 1) + '_' + j,
 					springConstant: 1000,
@@ -77,7 +77,7 @@ var mycode = function() {
 				});
 			}
 			if (j < (cols - 1)) {
-				scrawl.sprite['b_' + i + '_' + j].addSpring({
+				scrawl.entity['b_' + i + '_' + j].addSpring({
 					name: 's_' + i + '_' + j + '_down',
 					end: 'b_' + i + '_' + (j + 1),
 					springConstant: 1000,
@@ -121,8 +121,8 @@ var mycode = function() {
 		ctx.beginPath();
 		for (k = 0, kz = scrawl.springnames.length; k < kz; k++) {
 			mySpring = scrawl.spring[scrawl.springnames[k]];
-			pt1 = scrawl.sprite[mySpring.start].place;
-			pt2 = scrawl.sprite[mySpring.end].place;
+			pt1 = scrawl.entity[mySpring.start].place;
+			pt2 = scrawl.entity[mySpring.end].place;
 			ctx.moveTo(pt1.x, pt1.y);
 			ctx.lineTo(pt2.x, pt2.y);
 		}

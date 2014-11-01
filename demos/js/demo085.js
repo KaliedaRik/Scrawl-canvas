@@ -8,9 +8,9 @@ var mycode = function() {
 
 	//define variables
 	var cellBox,
-		spriteBox,
+		entityBox,
 		cellGrad,
-		spriteGrad,
+		entityGrad,
 
 		current_flip = 'normal',
 
@@ -22,26 +22,26 @@ var mycode = function() {
 		current_cellblock_height = 100,
 		current_cellblock_roll = 0,
 		current_cellblock_scale = 1,
-		current_spriteblock_startX = 450,
-		current_spriteblock_startY = 200,
-		current_spriteblock_handleX = 0,
-		current_spriteblock_handleY = 0,
-		current_spriteblock_width = 100,
-		current_spriteblock_height = 100,
-		current_spriteblock_roll = 0,
-		current_spriteblock_scale = 1,
+		current_entityblock_startX = 450,
+		current_entityblock_startY = 200,
+		current_entityblock_handleX = 0,
+		current_entityblock_handleY = 0,
+		current_entityblock_width = 100,
+		current_entityblock_height = 100,
+		current_entityblock_roll = 0,
+		current_entityblock_scale = 1,
 		current_cellgrad_startX = 300,
 		current_cellgrad_startY = 200,
 		current_cellgrad_endX = 300,
 		current_cellgrad_endY = 200,
-		current_spritegrad_startX = 50,
-		current_spritegrad_startY = 50,
-		current_spritegrad_endX = 50,
-		current_spritegrad_endY = 50,
+		current_entitygrad_startX = 50,
+		current_entitygrad_startY = 50,
+		current_entitygrad_endX = 50,
+		current_entitygrad_endY = 50,
 		current_cellgrad_startRad = 0,
 		current_cellgrad_endRad = 400,
-		current_spritegrad_startRad = 0,
-		current_spritegrad_endRad = 80,
+		current_entitygrad_startRad = 0,
+		current_entitygrad_endRad = 80,
 
 		input_flip = document.getElementById('flip'),
 
@@ -53,46 +53,46 @@ var mycode = function() {
 		input_cellblock_height_abs = document.getElementById('cellblock_height_abs'),
 		input_cellblock_roll = document.getElementById('cellblock_roll'),
 		input_cellblock_scale = document.getElementById('cellblock_scale'),
-		input_spriteblock_startX_abs = document.getElementById('spriteblock_startX_abs'),
-		input_spriteblock_startY_abs = document.getElementById('spriteblock_startY_abs'),
-		input_spriteblock_handleX_abs = document.getElementById('spriteblock_handleX_abs'),
-		input_spriteblock_handleY_abs = document.getElementById('spriteblock_handleY_abs'),
-		input_spriteblock_width_abs = document.getElementById('spriteblock_width_abs'),
-		input_spriteblock_height_abs = document.getElementById('spriteblock_height_abs'),
-		input_spriteblock_roll = document.getElementById('spriteblock_roll'),
-		input_spriteblock_scale = document.getElementById('spriteblock_scale'),
+		input_entityblock_startX_abs = document.getElementById('entityblock_startX_abs'),
+		input_entityblock_startY_abs = document.getElementById('entityblock_startY_abs'),
+		input_entityblock_handleX_abs = document.getElementById('entityblock_handleX_abs'),
+		input_entityblock_handleY_abs = document.getElementById('entityblock_handleY_abs'),
+		input_entityblock_width_abs = document.getElementById('entityblock_width_abs'),
+		input_entityblock_height_abs = document.getElementById('entityblock_height_abs'),
+		input_entityblock_roll = document.getElementById('entityblock_roll'),
+		input_entityblock_scale = document.getElementById('entityblock_scale'),
 		input_cellgrad_startX_abs = document.getElementById('cellgrad_startX_abs'),
 		input_cellgrad_startY_abs = document.getElementById('cellgrad_startY_abs'),
 		input_cellgrad_endX_abs = document.getElementById('cellgrad_endX_abs'),
 		input_cellgrad_endY_abs = document.getElementById('cellgrad_endY_abs'),
-		input_spritegrad_startX_abs = document.getElementById('spritegrad_startX_abs'),
-		input_spritegrad_startY_abs = document.getElementById('spritegrad_startY_abs'),
-		input_spritegrad_endX_abs = document.getElementById('spritegrad_endX_abs'),
-		input_spritegrad_endY_abs = document.getElementById('spritegrad_endY_abs'),
+		input_entitygrad_startX_abs = document.getElementById('entitygrad_startX_abs'),
+		input_entitygrad_startY_abs = document.getElementById('entitygrad_startY_abs'),
+		input_entitygrad_endX_abs = document.getElementById('entitygrad_endX_abs'),
+		input_entitygrad_endY_abs = document.getElementById('entitygrad_endY_abs'),
 		input_cellblock_startX_rel = document.getElementById('cellblock_startX_rel'),
 		input_cellblock_startY_rel = document.getElementById('cellblock_startY_rel'),
 		input_cellblock_handleX_rel = document.getElementById('cellblock_handleX_rel'),
 		input_cellblock_handleY_rel = document.getElementById('cellblock_handleY_rel'),
 		input_cellblock_width_rel = document.getElementById('cellblock_width_rel'),
 		input_cellblock_height_rel = document.getElementById('cellblock_height_rel'),
-		input_spriteblock_startX_rel = document.getElementById('spriteblock_startX_rel'),
-		input_spriteblock_startY_rel = document.getElementById('spriteblock_startY_rel'),
-		input_spriteblock_handleX_rel = document.getElementById('spriteblock_handleX_rel'),
-		input_spriteblock_handleY_rel = document.getElementById('spriteblock_handleY_rel'),
-		input_spriteblock_width_rel = document.getElementById('spriteblock_width_rel'),
-		input_spriteblock_height_rel = document.getElementById('spriteblock_height_rel'),
+		input_entityblock_startX_rel = document.getElementById('entityblock_startX_rel'),
+		input_entityblock_startY_rel = document.getElementById('entityblock_startY_rel'),
+		input_entityblock_handleX_rel = document.getElementById('entityblock_handleX_rel'),
+		input_entityblock_handleY_rel = document.getElementById('entityblock_handleY_rel'),
+		input_entityblock_width_rel = document.getElementById('entityblock_width_rel'),
+		input_entityblock_height_rel = document.getElementById('entityblock_height_rel'),
 		input_cellgrad_startX_rel = document.getElementById('cellgrad_startX_rel'),
 		input_cellgrad_startY_rel = document.getElementById('cellgrad_startY_rel'),
 		input_cellgrad_endX_rel = document.getElementById('cellgrad_endX_rel'),
 		input_cellgrad_endY_rel = document.getElementById('cellgrad_endY_rel'),
-		input_spritegrad_startX_rel = document.getElementById('spritegrad_startX_rel'),
-		input_spritegrad_startY_rel = document.getElementById('spritegrad_startY_rel'),
-		input_spritegrad_endX_rel = document.getElementById('spritegrad_endX_rel'),
-		input_spritegrad_endY_rel = document.getElementById('spritegrad_endY_rel'),
+		input_entitygrad_startX_rel = document.getElementById('entitygrad_startX_rel'),
+		input_entitygrad_startY_rel = document.getElementById('entitygrad_startY_rel'),
+		input_entitygrad_endX_rel = document.getElementById('entitygrad_endX_rel'),
+		input_entitygrad_endY_rel = document.getElementById('entitygrad_endY_rel'),
 		input_cellgrad_startRad = document.getElementById('cellgrad_startRad'),
 		input_cellgrad_endRad = document.getElementById('cellgrad_endRad'),
-		input_spritegrad_startRad = document.getElementById('spritegrad_startRad'),
-		input_spritegrad_endRad = document.getElementById('spritegrad_endRad'),
+		input_entitygrad_startRad = document.getElementById('entitygrad_startRad'),
+		input_entitygrad_endRad = document.getElementById('entitygrad_endRad'),
 
 		event_flip,
 
@@ -104,53 +104,53 @@ var mycode = function() {
 		event_cellblock_height_abs,
 		event_cellblock_roll,
 		event_cellblock_scale,
-		event_spriteblock_startX_abs,
-		event_spriteblock_startY_abs,
-		event_spriteblock_handleX_abs,
-		event_spriteblock_handleY_abs,
-		event_spriteblock_width_abs,
-		event_spriteblock_height_abs,
-		event_spriteblock_roll,
-		event_spriteblock_scale,
+		event_entityblock_startX_abs,
+		event_entityblock_startY_abs,
+		event_entityblock_handleX_abs,
+		event_entityblock_handleY_abs,
+		event_entityblock_width_abs,
+		event_entityblock_height_abs,
+		event_entityblock_roll,
+		event_entityblock_scale,
 		event_cellgrad_startX_abs,
 		event_cellgrad_startY_abs,
 		event_cellgrad_endX_abs,
 		event_cellgrad_endY_abs,
-		event_spritegrad_startX_abs,
-		event_spritegrad_startY_abs,
-		event_spritegrad_endX_abs,
-		event_spritegrad_endY_abs,
+		event_entitygrad_startX_abs,
+		event_entitygrad_startY_abs,
+		event_entitygrad_endX_abs,
+		event_entitygrad_endY_abs,
 		event_cellblock_startX_rel,
 		event_cellblock_startY_rel,
 		event_cellblock_handleX_rel,
 		event_cellblock_handleY_rel,
 		event_cellblock_width_rel,
 		event_cellblock_height_rel,
-		event_spriteblock_startX_rel,
-		event_spriteblock_startY_rel,
-		event_spriteblock_handleX_rel,
-		event_spriteblock_handleY_rel,
-		event_spriteblock_width_rel,
-		event_spriteblock_height_rel,
+		event_entityblock_startX_rel,
+		event_entityblock_startY_rel,
+		event_entityblock_handleX_rel,
+		event_entityblock_handleY_rel,
+		event_entityblock_width_rel,
+		event_entityblock_height_rel,
 		event_cellgrad_startX_rel,
 		event_cellgrad_startY_rel,
 		event_cellgrad_endX_rel,
 		event_cellgrad_endY_rel,
-		event_spritegrad_startX_rel,
-		event_spritegrad_startY_rel,
-		event_spritegrad_endX_rel,
-		event_spritegrad_endY_rel,
+		event_entitygrad_startX_rel,
+		event_entitygrad_startY_rel,
+		event_entitygrad_endX_rel,
+		event_entitygrad_endY_rel,
 		event_cellgrad_startRad,
 		event_cellgrad_endRad,
-		event_spritegrad_startRad,
-		event_spritegrad_endRad,
+		event_entitygrad_startRad,
+		event_entitygrad_endRad,
 
 		stopE;
 
 	//code here
 	cellGrad = scrawl.newRadialGradient({
 		name: 'g1',
-		setToSprite: false,
+		setToEntity: false,
 		startX: 400,
 		startY: 300,
 		startRadius: 0,
@@ -174,9 +174,9 @@ var mycode = function() {
 			stop: 1
         }, ],
 	});
-	spriteGrad = scrawl.newRadialGradient({
+	entityGrad = scrawl.newRadialGradient({
 		name: 'g2',
-		setToSprite: true,
+		setToEntity: true,
 		startX: 100,
 		startY: 100,
 		startRadius: 0,
@@ -214,7 +214,7 @@ var mycode = function() {
 		lineWidth: 2,
 		fillStyle: 'g1',
 	});
-	spriteBox = scrawl.newBlock({
+	entityBox = scrawl.newBlock({
 		name: 'box2',
 		startX: 450,
 		startY: 200,
@@ -232,7 +232,7 @@ var mycode = function() {
 		handleY: -20,
 	}).clone({
 		pivot: 'box2',
-		text: 'Sprite gradient',
+		text: 'Entity gradient',
 	});
 
 	input_flip.value = 'normal';
@@ -261,30 +261,30 @@ var mycode = function() {
 	input_cellgrad_endY_rel.value = 50;
 	input_cellgrad_startRad.value = 0;
 	input_cellgrad_endRad.value = 400;
-	input_spriteblock_startX_abs.value = 450;
-	input_spriteblock_startY_abs.value = 200;
-	input_spriteblock_handleX_abs.value = 0;
-	input_spriteblock_handleY_abs.value = 0;
-	input_spriteblock_width_abs.value = 100;
-	input_spriteblock_height_abs.value = 100;
-	input_spriteblock_roll.value = 0;
-	input_spriteblock_scale.value = 1;
-	input_spriteblock_startX_rel.value = 75;
-	input_spriteblock_startY_rel.value = 50;
-	input_spriteblock_handleX_rel.value = 0;
-	input_spriteblock_handleY_rel.value = 0;
-	input_spriteblock_width_rel.value = 20;
-	input_spriteblock_height_rel.value = 20;
-	input_spritegrad_startX_abs.value = 50;
-	input_spritegrad_startY_abs.value = 50;
-	input_spritegrad_endX_abs.value = 50;
-	input_spritegrad_endY_abs.value = 50;
-	input_spritegrad_startX_rel.value = 50;
-	input_spritegrad_startY_rel.value = 50;
-	input_spritegrad_endX_rel.value = 50;
-	input_spritegrad_endY_rel.value = 50;
-	input_spritegrad_startRad.value = 0;
-	input_spritegrad_endRad.value = 80;
+	input_entityblock_startX_abs.value = 450;
+	input_entityblock_startY_abs.value = 200;
+	input_entityblock_handleX_abs.value = 0;
+	input_entityblock_handleY_abs.value = 0;
+	input_entityblock_width_abs.value = 100;
+	input_entityblock_height_abs.value = 100;
+	input_entityblock_roll.value = 0;
+	input_entityblock_scale.value = 1;
+	input_entityblock_startX_rel.value = 75;
+	input_entityblock_startY_rel.value = 50;
+	input_entityblock_handleX_rel.value = 0;
+	input_entityblock_handleY_rel.value = 0;
+	input_entityblock_width_rel.value = 20;
+	input_entityblock_height_rel.value = 20;
+	input_entitygrad_startX_abs.value = 50;
+	input_entitygrad_startY_abs.value = 50;
+	input_entitygrad_endX_abs.value = 50;
+	input_entitygrad_endY_abs.value = 50;
+	input_entitygrad_startX_rel.value = 50;
+	input_entitygrad_startY_rel.value = 50;
+	input_entitygrad_endX_rel.value = 50;
+	input_entitygrad_endY_rel.value = 50;
+	input_entitygrad_startRad.value = 0;
+	input_entitygrad_endRad.value = 80;
 
 	//event listeners
 	stopE = function(e) {
@@ -301,7 +301,7 @@ var mycode = function() {
 					flipReverse: true,
 					flipUpend: false,
 				});
-				spriteBox.set({
+				entityBox.set({
 					flipReverse: true,
 					flipUpend: false,
 				});
@@ -311,7 +311,7 @@ var mycode = function() {
 					flipReverse: false,
 					flipUpend: true,
 				});
-				spriteBox.set({
+				entityBox.set({
 					flipReverse: false,
 					flipUpend: true,
 				});
@@ -321,7 +321,7 @@ var mycode = function() {
 					flipReverse: true,
 					flipUpend: true,
 				});
-				spriteBox.set({
+				entityBox.set({
 					flipReverse: true,
 					flipUpend: true,
 				});
@@ -331,7 +331,7 @@ var mycode = function() {
 					flipReverse: false,
 					flipUpend: false,
 				});
-				spriteBox.set({
+				entityBox.set({
 					flipReverse: false,
 					flipUpend: false,
 				});
@@ -339,25 +339,25 @@ var mycode = function() {
 	};
 	input_flip.addEventListener('change', event_flip, false);
 
-	event_spritegrad_startRad = function(e) {
+	event_entitygrad_startRad = function(e) {
 		stopE(e);
-		current_spritegrad_startRad = parseInt(input_spritegrad_startRad.value, 10);
-		spriteGrad.set({
-			startRadius: current_spritegrad_startRad,
+		current_entitygrad_startRad = parseInt(input_entitygrad_startRad.value, 10);
+		entityGrad.set({
+			startRadius: current_entitygrad_startRad,
 		});
 	};
-	input_spritegrad_startRad.addEventListener('input', event_spritegrad_startRad, false);
-	input_spritegrad_startRad.addEventListener('change', event_spritegrad_startRad, false);
+	input_entitygrad_startRad.addEventListener('input', event_entitygrad_startRad, false);
+	input_entitygrad_startRad.addEventListener('change', event_entitygrad_startRad, false);
 
-	event_spritegrad_endRad = function(e) {
+	event_entitygrad_endRad = function(e) {
 		stopE(e);
-		current_spritegrad_endRad = parseInt(input_spritegrad_endRad.value, 10);
-		spriteGrad.set({
-			endRadius: current_spritegrad_endRad,
+		current_entitygrad_endRad = parseInt(input_entitygrad_endRad.value, 10);
+		entityGrad.set({
+			endRadius: current_entitygrad_endRad,
 		});
 	};
-	input_spritegrad_endRad.addEventListener('input', event_spritegrad_endRad, false);
-	input_spritegrad_endRad.addEventListener('change', event_spritegrad_endRad, false);
+	input_entitygrad_endRad.addEventListener('input', event_entitygrad_endRad, false);
+	input_entitygrad_endRad.addEventListener('change', event_entitygrad_endRad, false);
 
 	event_cellgrad_startRad = function(e) {
 		stopE(e);
@@ -459,85 +459,85 @@ var mycode = function() {
 	input_cellblock_scale.addEventListener('input', event_cellblock_scale, false);
 	input_cellblock_scale.addEventListener('change', event_cellblock_scale, false);
 
-	event_spriteblock_startX_abs = function(e) {
+	event_entityblock_startX_abs = function(e) {
 		stopE(e);
-		current_spriteblock_startX = parseInt(input_spriteblock_startX_abs.value, 10);
-		spriteBox.set({
-			startX: current_spriteblock_startX,
+		current_entityblock_startX = parseInt(input_entityblock_startX_abs.value, 10);
+		entityBox.set({
+			startX: current_entityblock_startX,
 		});
 	};
-	input_spriteblock_startX_abs.addEventListener('input', event_spriteblock_startX_abs, false);
-	input_spriteblock_startX_abs.addEventListener('change', event_spriteblock_startX_abs, false);
+	input_entityblock_startX_abs.addEventListener('input', event_entityblock_startX_abs, false);
+	input_entityblock_startX_abs.addEventListener('change', event_entityblock_startX_abs, false);
 
-	event_spriteblock_startY_abs = function(e) {
+	event_entityblock_startY_abs = function(e) {
 		stopE(e);
-		current_spriteblock_startY = parseInt(input_spriteblock_startY_abs.value, 10);
-		spriteBox.set({
-			startY: current_spriteblock_startY,
+		current_entityblock_startY = parseInt(input_entityblock_startY_abs.value, 10);
+		entityBox.set({
+			startY: current_entityblock_startY,
 		});
 	};
-	input_spriteblock_startY_abs.addEventListener('input', event_spriteblock_startY_abs, false);
-	input_spriteblock_startY_abs.addEventListener('change', event_spriteblock_startY_abs, false);
+	input_entityblock_startY_abs.addEventListener('input', event_entityblock_startY_abs, false);
+	input_entityblock_startY_abs.addEventListener('change', event_entityblock_startY_abs, false);
 
-	event_spriteblock_handleX_abs = function(e) {
+	event_entityblock_handleX_abs = function(e) {
 		stopE(e);
-		current_spriteblock_handleX = parseInt(input_spriteblock_handleX_abs.value, 10);
-		spriteBox.set({
-			handleX: current_spriteblock_handleX,
+		current_entityblock_handleX = parseInt(input_entityblock_handleX_abs.value, 10);
+		entityBox.set({
+			handleX: current_entityblock_handleX,
 		});
 	};
-	input_spriteblock_handleX_abs.addEventListener('input', event_spriteblock_handleX_abs, false);
-	input_spriteblock_handleX_abs.addEventListener('change', event_spriteblock_handleX_abs, false);
+	input_entityblock_handleX_abs.addEventListener('input', event_entityblock_handleX_abs, false);
+	input_entityblock_handleX_abs.addEventListener('change', event_entityblock_handleX_abs, false);
 
-	event_spriteblock_handleY_abs = function(e) {
+	event_entityblock_handleY_abs = function(e) {
 		stopE(e);
-		current_spriteblock_handleY = parseInt(input_spriteblock_handleY_abs.value, 10);
-		spriteBox.set({
-			handleY: current_spriteblock_handleY,
+		current_entityblock_handleY = parseInt(input_entityblock_handleY_abs.value, 10);
+		entityBox.set({
+			handleY: current_entityblock_handleY,
 		});
 	};
-	input_spriteblock_handleY_abs.addEventListener('input', event_spriteblock_handleY_abs, false);
-	input_spriteblock_handleY_abs.addEventListener('change', event_spriteblock_handleY_abs, false);
+	input_entityblock_handleY_abs.addEventListener('input', event_entityblock_handleY_abs, false);
+	input_entityblock_handleY_abs.addEventListener('change', event_entityblock_handleY_abs, false);
 
-	event_spriteblock_width_abs = function(e) {
+	event_entityblock_width_abs = function(e) {
 		stopE(e);
-		current_spriteblock_width = parseInt(input_spriteblock_width_abs.value, 10);
-		spriteBox.set({
-			width: current_spriteblock_width,
+		current_entityblock_width = parseInt(input_entityblock_width_abs.value, 10);
+		entityBox.set({
+			width: current_entityblock_width,
 		});
 	};
-	input_spriteblock_width_abs.addEventListener('input', event_spriteblock_width_abs, false);
-	input_spriteblock_width_abs.addEventListener('change', event_spriteblock_width_abs, false);
+	input_entityblock_width_abs.addEventListener('input', event_entityblock_width_abs, false);
+	input_entityblock_width_abs.addEventListener('change', event_entityblock_width_abs, false);
 
-	event_spriteblock_height_abs = function(e) {
+	event_entityblock_height_abs = function(e) {
 		stopE(e);
-		current_spriteblock_height = parseInt(input_spriteblock_height_abs.value, 10);
-		spriteBox.set({
-			height: current_spriteblock_height,
+		current_entityblock_height = parseInt(input_entityblock_height_abs.value, 10);
+		entityBox.set({
+			height: current_entityblock_height,
 		});
 	};
-	input_spriteblock_height_abs.addEventListener('input', event_spriteblock_height_abs, false);
-	input_spriteblock_height_abs.addEventListener('change', event_spriteblock_height_abs, false);
+	input_entityblock_height_abs.addEventListener('input', event_entityblock_height_abs, false);
+	input_entityblock_height_abs.addEventListener('change', event_entityblock_height_abs, false);
 
-	event_spriteblock_roll = function(e) {
+	event_entityblock_roll = function(e) {
 		stopE(e);
-		current_spriteblock_roll = parseInt(input_spriteblock_roll.value, 10);
-		spriteBox.set({
-			roll: current_spriteblock_roll,
+		current_entityblock_roll = parseInt(input_entityblock_roll.value, 10);
+		entityBox.set({
+			roll: current_entityblock_roll,
 		});
 	};
-	input_spriteblock_roll.addEventListener('input', event_spriteblock_roll, false);
-	input_spriteblock_roll.addEventListener('change', event_spriteblock_roll, false);
+	input_entityblock_roll.addEventListener('input', event_entityblock_roll, false);
+	input_entityblock_roll.addEventListener('change', event_entityblock_roll, false);
 
-	event_spriteblock_scale = function(e) {
+	event_entityblock_scale = function(e) {
 		stopE(e);
-		current_spriteblock_scale = parseFloat(input_spriteblock_scale.value);
-		spriteBox.set({
-			scale: current_spriteblock_scale,
+		current_entityblock_scale = parseFloat(input_entityblock_scale.value);
+		entityBox.set({
+			scale: current_entityblock_scale,
 		});
 	};
-	input_spriteblock_scale.addEventListener('input', event_spriteblock_scale, false);
-	input_spriteblock_scale.addEventListener('change', event_spriteblock_scale, false);
+	input_entityblock_scale.addEventListener('input', event_entityblock_scale, false);
+	input_entityblock_scale.addEventListener('change', event_entityblock_scale, false);
 
 	event_cellgrad_startX_abs = function(e) {
 		stopE(e);
@@ -579,45 +579,45 @@ var mycode = function() {
 	input_cellgrad_endY_abs.addEventListener('input', event_cellgrad_endY_abs, false);
 	input_cellgrad_endY_abs.addEventListener('change', event_cellgrad_endY_abs, false);
 
-	event_spritegrad_startX_abs = function(e) {
+	event_entitygrad_startX_abs = function(e) {
 		stopE(e);
-		current_spritegrad_startX = parseInt(input_spritegrad_startX_abs.value, 10);
-		spriteGrad.set({
-			startX: current_spritegrad_startX,
+		current_entitygrad_startX = parseInt(input_entitygrad_startX_abs.value, 10);
+		entityGrad.set({
+			startX: current_entitygrad_startX,
 		});
 	};
-	input_spritegrad_startX_abs.addEventListener('input', event_spritegrad_startX_abs, false);
-	input_spritegrad_startX_abs.addEventListener('change', event_spritegrad_startX_abs, false);
+	input_entitygrad_startX_abs.addEventListener('input', event_entitygrad_startX_abs, false);
+	input_entitygrad_startX_abs.addEventListener('change', event_entitygrad_startX_abs, false);
 
-	event_spritegrad_startY_abs = function(e) {
+	event_entitygrad_startY_abs = function(e) {
 		stopE(e);
-		current_spritegrad_startY = parseInt(input_spritegrad_startY_abs.value, 10);
-		spriteGrad.set({
-			startY: current_spritegrad_startY,
+		current_entitygrad_startY = parseInt(input_entitygrad_startY_abs.value, 10);
+		entityGrad.set({
+			startY: current_entitygrad_startY,
 		});
 	};
-	input_spritegrad_startY_abs.addEventListener('input', event_spritegrad_startY_abs, false);
-	input_spritegrad_startY_abs.addEventListener('change', event_spritegrad_startY_abs, false);
+	input_entitygrad_startY_abs.addEventListener('input', event_entitygrad_startY_abs, false);
+	input_entitygrad_startY_abs.addEventListener('change', event_entitygrad_startY_abs, false);
 
-	event_spritegrad_endX_abs = function(e) {
+	event_entitygrad_endX_abs = function(e) {
 		stopE(e);
-		current_spritegrad_endX = parseInt(input_spritegrad_endX_abs.value, 10);
-		spriteGrad.set({
-			endX: current_spritegrad_endX,
+		current_entitygrad_endX = parseInt(input_entitygrad_endX_abs.value, 10);
+		entityGrad.set({
+			endX: current_entitygrad_endX,
 		});
 	};
-	input_spritegrad_endX_abs.addEventListener('input', event_spritegrad_endX_abs, false);
-	input_spritegrad_endX_abs.addEventListener('change', event_spritegrad_endX_abs, false);
+	input_entitygrad_endX_abs.addEventListener('input', event_entitygrad_endX_abs, false);
+	input_entitygrad_endX_abs.addEventListener('change', event_entitygrad_endX_abs, false);
 
-	event_spritegrad_endY_abs = function(e) {
+	event_entitygrad_endY_abs = function(e) {
 		stopE(e);
-		current_spritegrad_endY = parseInt(input_spritegrad_endY_abs.value, 10);
-		spriteGrad.set({
-			endY: current_spritegrad_endY,
+		current_entitygrad_endY = parseInt(input_entitygrad_endY_abs.value, 10);
+		entityGrad.set({
+			endY: current_entitygrad_endY,
 		});
 	};
-	input_spritegrad_endY_abs.addEventListener('input', event_spritegrad_endY_abs, false);
-	input_spritegrad_endY_abs.addEventListener('change', event_spritegrad_endY_abs, false);
+	input_entitygrad_endY_abs.addEventListener('input', event_entitygrad_endY_abs, false);
+	input_entitygrad_endY_abs.addEventListener('change', event_entitygrad_endY_abs, false);
 
 	event_cellblock_startX_rel = function(e) {
 		stopE(e);
@@ -679,65 +679,65 @@ var mycode = function() {
 	input_cellblock_height_rel.addEventListener('input', event_cellblock_height_rel, false);
 	input_cellblock_height_rel.addEventListener('change', event_cellblock_height_rel, false);
 
-	event_spriteblock_startX_rel = function(e) {
+	event_entityblock_startX_rel = function(e) {
 		stopE(e);
-		current_spriteblock_startX = input_spriteblock_startX_rel.value + '%';
-		spriteBox.set({
-			startX: current_spriteblock_startX,
+		current_entityblock_startX = input_entityblock_startX_rel.value + '%';
+		entityBox.set({
+			startX: current_entityblock_startX,
 		});
 	};
-	input_spriteblock_startX_rel.addEventListener('input', event_spriteblock_startX_rel, false);
-	input_spriteblock_startX_rel.addEventListener('change', event_spriteblock_startX_rel, false);
+	input_entityblock_startX_rel.addEventListener('input', event_entityblock_startX_rel, false);
+	input_entityblock_startX_rel.addEventListener('change', event_entityblock_startX_rel, false);
 
-	event_spriteblock_startY_rel = function(e) {
+	event_entityblock_startY_rel = function(e) {
 		stopE(e);
-		current_spriteblock_startY = input_spriteblock_startY_rel.value + '%';
-		spriteBox.set({
-			startY: current_spriteblock_startY,
+		current_entityblock_startY = input_entityblock_startY_rel.value + '%';
+		entityBox.set({
+			startY: current_entityblock_startY,
 		});
 	};
-	input_spriteblock_startY_rel.addEventListener('input', event_spriteblock_startY_rel, false);
-	input_spriteblock_startY_rel.addEventListener('change', event_spriteblock_startY_rel, false);
+	input_entityblock_startY_rel.addEventListener('input', event_entityblock_startY_rel, false);
+	input_entityblock_startY_rel.addEventListener('change', event_entityblock_startY_rel, false);
 
-	event_spriteblock_handleX_rel = function(e) {
+	event_entityblock_handleX_rel = function(e) {
 		stopE(e);
-		current_spriteblock_handleX = input_spriteblock_handleX_rel.value + '%';
-		spriteBox.set({
-			handleX: current_spriteblock_handleX,
+		current_entityblock_handleX = input_entityblock_handleX_rel.value + '%';
+		entityBox.set({
+			handleX: current_entityblock_handleX,
 		});
 	};
-	input_spriteblock_handleX_rel.addEventListener('input', event_spriteblock_handleX_rel, false);
-	input_spriteblock_handleX_rel.addEventListener('change', event_spriteblock_handleX_rel, false);
+	input_entityblock_handleX_rel.addEventListener('input', event_entityblock_handleX_rel, false);
+	input_entityblock_handleX_rel.addEventListener('change', event_entityblock_handleX_rel, false);
 
-	event_spriteblock_handleY_rel = function(e) {
+	event_entityblock_handleY_rel = function(e) {
 		stopE(e);
-		current_spriteblock_handleY = input_spriteblock_handleY_rel.value + '%';
-		spriteBox.set({
-			handleY: current_spriteblock_handleY,
+		current_entityblock_handleY = input_entityblock_handleY_rel.value + '%';
+		entityBox.set({
+			handleY: current_entityblock_handleY,
 		});
 	};
-	input_spriteblock_handleY_rel.addEventListener('input', event_spriteblock_handleY_rel, false);
-	input_spriteblock_handleY_rel.addEventListener('change', event_spriteblock_handleY_rel, false);
+	input_entityblock_handleY_rel.addEventListener('input', event_entityblock_handleY_rel, false);
+	input_entityblock_handleY_rel.addEventListener('change', event_entityblock_handleY_rel, false);
 
-	event_spriteblock_width_rel = function(e) {
+	event_entityblock_width_rel = function(e) {
 		stopE(e);
-		current_spriteblock_width = input_spriteblock_width_rel.value + '%';
-		spriteBox.set({
-			width: current_spriteblock_width,
+		current_entityblock_width = input_entityblock_width_rel.value + '%';
+		entityBox.set({
+			width: current_entityblock_width,
 		});
 	};
-	input_spriteblock_width_rel.addEventListener('input', event_spriteblock_width_rel, false);
-	input_spriteblock_width_rel.addEventListener('change', event_spriteblock_width_rel, false);
+	input_entityblock_width_rel.addEventListener('input', event_entityblock_width_rel, false);
+	input_entityblock_width_rel.addEventListener('change', event_entityblock_width_rel, false);
 
-	event_spriteblock_height_rel = function(e) {
+	event_entityblock_height_rel = function(e) {
 		stopE(e);
-		current_spriteblock_height = input_spriteblock_height_rel.value + '%';
-		spriteBox.set({
-			height: current_spriteblock_height,
+		current_entityblock_height = input_entityblock_height_rel.value + '%';
+		entityBox.set({
+			height: current_entityblock_height,
 		});
 	};
-	input_spriteblock_height_rel.addEventListener('input', event_spriteblock_height_rel, false);
-	input_spriteblock_height_rel.addEventListener('change', event_spriteblock_height_rel, false);
+	input_entityblock_height_rel.addEventListener('input', event_entityblock_height_rel, false);
+	input_entityblock_height_rel.addEventListener('change', event_entityblock_height_rel, false);
 
 	event_cellgrad_startX_rel = function(e) {
 		stopE(e);
@@ -779,45 +779,45 @@ var mycode = function() {
 	input_cellgrad_endY_rel.addEventListener('input', event_cellgrad_endY_rel, false);
 	input_cellgrad_endY_rel.addEventListener('change', event_cellgrad_endY_rel, false);
 
-	event_spritegrad_startX_rel = function(e) {
+	event_entitygrad_startX_rel = function(e) {
 		stopE(e);
-		current_spritegrad_startX = input_spritegrad_startX_rel.value + '%';
-		spriteGrad.set({
-			startX: current_spritegrad_startX,
+		current_entitygrad_startX = input_entitygrad_startX_rel.value + '%';
+		entityGrad.set({
+			startX: current_entitygrad_startX,
 		});
 	};
-	input_spritegrad_startX_rel.addEventListener('input', event_spritegrad_startX_rel, false);
-	input_spritegrad_startX_rel.addEventListener('change', event_spritegrad_startX_rel, false);
+	input_entitygrad_startX_rel.addEventListener('input', event_entitygrad_startX_rel, false);
+	input_entitygrad_startX_rel.addEventListener('change', event_entitygrad_startX_rel, false);
 
-	event_spritegrad_startY_rel = function(e) {
+	event_entitygrad_startY_rel = function(e) {
 		stopE(e);
-		current_spritegrad_startY = input_spritegrad_startY_rel.value + '%';
-		spriteGrad.set({
-			startY: current_spritegrad_startY,
+		current_entitygrad_startY = input_entitygrad_startY_rel.value + '%';
+		entityGrad.set({
+			startY: current_entitygrad_startY,
 		});
 	};
-	input_spritegrad_startY_rel.addEventListener('input', event_spritegrad_startY_rel, false);
-	input_spritegrad_startY_rel.addEventListener('change', event_spritegrad_startY_rel, false);
+	input_entitygrad_startY_rel.addEventListener('input', event_entitygrad_startY_rel, false);
+	input_entitygrad_startY_rel.addEventListener('change', event_entitygrad_startY_rel, false);
 
-	event_spritegrad_endX_rel = function(e) {
+	event_entitygrad_endX_rel = function(e) {
 		stopE(e);
-		current_spritegrad_endX = input_spritegrad_endX_rel.value + '%';
-		spriteGrad.set({
-			endX: current_spritegrad_endX,
+		current_entitygrad_endX = input_entitygrad_endX_rel.value + '%';
+		entityGrad.set({
+			endX: current_entitygrad_endX,
 		});
 	};
-	input_spritegrad_endX_rel.addEventListener('input', event_spritegrad_endX_rel, false);
-	input_spritegrad_endX_rel.addEventListener('change', event_spritegrad_endX_rel, false);
+	input_entitygrad_endX_rel.addEventListener('input', event_entitygrad_endX_rel, false);
+	input_entitygrad_endX_rel.addEventListener('change', event_entitygrad_endX_rel, false);
 
-	event_spritegrad_endY_rel = function(e) {
+	event_entitygrad_endY_rel = function(e) {
 		stopE(e);
-		current_spritegrad_endY = input_spritegrad_endY_rel.value + '%';
-		spriteGrad.set({
-			endY: current_spritegrad_endY,
+		current_entitygrad_endY = input_entitygrad_endY_rel.value + '%';
+		entityGrad.set({
+			endY: current_entitygrad_endY,
 		});
 	};
-	input_spritegrad_endY_rel.addEventListener('input', event_spritegrad_endY_rel, false);
-	input_spritegrad_endY_rel.addEventListener('change', event_spritegrad_endY_rel, false);
+	input_entitygrad_endY_rel.addEventListener('input', event_entitygrad_endY_rel, false);
+	input_entitygrad_endY_rel.addEventListener('change', event_entitygrad_endY_rel, false);
 
 
 	//animation object

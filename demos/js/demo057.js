@@ -10,7 +10,7 @@ var mycode = function() {
 	//define variables
 	var myMessage = document.getElementById('message'),
 		mouseDown = false,
-		currentSprite = false,
+		currentEntity = false,
 		myPad = scrawl.pad.mycanvas,
 		myCanvas = scrawl.canvas.mycanvas,
 		here,
@@ -47,7 +47,7 @@ var mycode = function() {
 	//event listeners
 	startDrawing = function(e) {
 		mouseDown = true;
-		currentSprite = scrawl.newShape({
+		currentEntity = scrawl.newShape({
 			start: here.getData(),
 			method: 'draw',
 			lineWidth: 10,
@@ -70,8 +70,8 @@ var mycode = function() {
 	scrawl.canvas.mycanvas.addEventListener('mousedown', startDrawing, false);
 
 	endDrawing = function(e) {
-		if (currentSprite) {
-			currentSprite = false;
+		if (currentEntity) {
+			currentEntity = false;
 		}
 		mouseDown = false;
 		if (e) {
@@ -83,10 +83,10 @@ var mycode = function() {
 
 	//animation functions
 	keepDrawing = function() {
-		if (currentSprite) {
+		if (currentEntity) {
 			if (here.x !== sX || here.y !== sY) {
-				currentSprite.set({
-					data: currentSprite.data + ' ' + (here.x - sX) + ',' + (here.y - sY),
+				currentEntity.set({
+					data: currentEntity.data + ' ' + (here.x - sX) + ',' + (here.y - sY),
 				});
 				sX = here.x;
 				sY = here.y;
@@ -94,8 +94,8 @@ var mycode = function() {
 		}
 	};
 	spinLines = function() {
-		for (var i = 0, z = lines.sprites.length; i < z; i++) {
-			scrawl.sprite[lines.sprites[i]].setDelta({
+		for (var i = 0, z = lines.entitys.length; i < z; i++) {
+			scrawl.entity[lines.entitys[i]].setDelta({
 				roll: 1,
 			});
 		}
@@ -115,7 +115,7 @@ var mycode = function() {
 				myMessage.innerHTML = (mouseDown) ? 'Drawing...' : 'Click-and-drag to draw lines';
 			}
 			else {
-				if (currentSprite) {
+				if (currentEntity) {
 					endDrawing();
 				}
 				myMessage.innerHTML = 'Click-and-drag to draw lines';

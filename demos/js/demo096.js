@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//sprites
+	//entitys
 	scrawl.newWheel({
 		name: 'circle1',
 		startX: 50,
@@ -33,7 +33,7 @@ var mycode = function() {
 	//tweens
 	scrawl.newTween({
 		name: 'tween1',
-		targets: scrawl.sprite.circle1,
+		targets: scrawl.entity.circle1,
 		start: {
 			startX: 50,
 			globalAlpha: 1,
@@ -48,7 +48,7 @@ var mycode = function() {
 		duration: 3500,
 	}).run();
 	scrawl.animation.tween1.clone({
-		targets: scrawl.sprite.circle2,
+		targets: scrawl.entity.circle2,
 		start: {
 			startX: '9.2%',
 			globalAlpha: 1,
@@ -67,13 +67,13 @@ var mycode = function() {
 		autoReverseAndRun: true,
 	}).run();
 	scrawl.animation.tween1.clone({
-		targets: scrawl.sprite.circle3,
+		targets: scrawl.entity.circle3,
 		duration: 2500,
 		count: 2,
 		autoReverseAndRun: true,
 	}).run();
 	scrawl.animation.tween1.clone({
-		targets: scrawl.sprite.circle4,
+		targets: scrawl.entity.circle4,
 		duration: 3000,
 		count: true,
 		autoReverseAndRun: true,

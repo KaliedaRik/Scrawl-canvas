@@ -31,7 +31,7 @@ var mycode = function() {
 	});
 	patternGroup = scrawl.group.patternCell;
 
-	//add sprites to the pattern cell ...
+	//add entitys to the pattern cell ...
 	scrawl.newWheel({
 		radius: 10,
 		fillStyle: 'red',
@@ -56,7 +56,7 @@ var mycode = function() {
 		canvas: 'patternCell',
 	});
 
-	//add a block sprite, for showing off the pattern
+	//add a block entity, for showing off the pattern
 	frame = scrawl.newBlock({
 		startX: 200,
 		startY: 200,

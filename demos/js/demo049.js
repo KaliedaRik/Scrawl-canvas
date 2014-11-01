@@ -10,8 +10,8 @@ var mycode = function() {
 	//define variables
 	var myPad = scrawl.pad.mycanvas,
 		here,
-		mySprite = false,
-		spriteList = ['Air', 'Bone', 'Clay', 'Fire', 'Metal', 'Radiance', 'Rock', 'Smoke', 'Water', 'Wood'],
+		myEntity = false,
+		entityList = ['Air', 'Bone', 'Clay', 'Fire', 'Metal', 'Radiance', 'Rock', 'Smoke', 'Water', 'Wood'],
 		myGroup,
 		getIcon,
 		dropIcon;
@@ -24,11 +24,11 @@ var mycode = function() {
 		name: 'myGroup',
 	});
 
-	//define sprites; get their image data
-	for (var i = 0, z = spriteList.length; i < z; i++) {
+	//define entitys; get their image data
+	for (var i = 0, z = entityList.length; i < z; i++) {
 		scrawl.newPicture({
-			name: spriteList[i],
-			source: 'button' + spriteList[i],
+			name: entityList[i],
+			source: 'button' + entityList[i],
 			startX: (i * 58) + 85,
 			startY: 187.5,
 			order: i,
@@ -40,9 +40,9 @@ var mycode = function() {
 
 	//event listeners
 	getIcon = function(e) {
-		mySprite = myGroup.getSpriteAt(here);
-		if (mySprite) {
-			mySprite.pickupSprite(here);
+		myEntity = myGroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -50,9 +50,9 @@ var mycode = function() {
 		}
 	};
 	dropIcon = function(e) {
-		if (mySprite) {
-			mySprite.dropSprite();
-			mySprite = false;
+		if (myEntity) {
+			myEntity.dropEntity();
+			myEntity = false;
 		}
 		if (e) {
 			e.stopPropagation();
@@ -66,7 +66,7 @@ var mycode = function() {
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();
-			if (!here.active && mySprite) {
+			if (!here.active && myEntity) {
 				dropIcon();
 			}
 			scrawl.render();

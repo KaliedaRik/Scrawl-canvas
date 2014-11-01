@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	var here,
-		mySprite = false,
+		myEntity = false,
 		myGroup,
 		doLines,
 		getWheel,
@@ -107,26 +107,26 @@ var mycode = function() {
 			startMidPos,
 			midEndPos,
 			startMidEndPos;
-		startlinePos = scrawl.sprite.startline.getPerimeterPosition(pos, false);
+		startlinePos = scrawl.entity.startline.getPerimeterPosition(pos, false);
 		scrawl.point.startMid_p1.local.set(startlinePos);
-		midlinePos = scrawl.sprite.midline.getPerimeterPosition(pos, false);
+		midlinePos = scrawl.entity.midline.getPerimeterPosition(pos, false);
 		scrawl.point.startMid_p2.local.set(midlinePos);
 		scrawl.point.midEnd_p1.local.set(midlinePos);
-		endlinePos = scrawl.sprite.endline.getPerimeterPosition(pos, false);
+		endlinePos = scrawl.entity.endline.getPerimeterPosition(pos, false);
 		scrawl.point.midEnd_p2.local.set(endlinePos);
-		startMidPos = scrawl.sprite.startMid.getPerimeterPosition(pos, false);
+		startMidPos = scrawl.entity.startMid.getPerimeterPosition(pos, false);
 		scrawl.point.startMidEnd_p1.local.set(startMidPos);
-		midEndPos = scrawl.sprite.midEnd.getPerimeterPosition(pos, false);
+		midEndPos = scrawl.entity.midEnd.getPerimeterPosition(pos, false);
 		scrawl.point.startMidEnd_p2.local.set(midEndPos);
-		startMidEndPos = scrawl.sprite.startMidEnd.getPerimeterPosition(pos, false);
-		scrawl.sprite.goldwheel.start.set(startMidEndPos);
+		startMidEndPos = scrawl.entity.startMidEnd.getPerimeterPosition(pos, false);
+		scrawl.entity.goldwheel.start.set(startMidEndPos);
 	};
 
 	//event listeners
 	getWheel = function(e) {
-		mySprite = myGroup.getSpriteAt(here);
-		if (mySprite) {
-			mySprite.pickupSprite(here);
+		myEntity = myGroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -134,9 +134,9 @@ var mycode = function() {
 		}
 	};
 	dropWheel = function(e) {
-		if (mySprite) {
-			mySprite.dropSprite();
-			mySprite = false;
+		if (myEntity) {
+			myEntity.dropEntity();
+			myEntity = false;
 		}
 		if (e) {
 			e.stopPropagation();
@@ -146,17 +146,17 @@ var mycode = function() {
 	scrawl.canvas.mycanvas.addEventListener('mousedown', getWheel, false);
 	scrawl.canvas.mycanvas.addEventListener('mouseup', dropWheel, false);
 
-	length = scrawl.sprite.mycurve.getPerimeterLength(true);
+	length = scrawl.entity.mycurve.getPerimeterLength(true);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
 			here = scrawl.pad.mycanvas.getMouse();
-			if (!here.active && mySprite) {
+			if (!here.active && myEntity) {
 				dropWheel();
 			}
-			if (mySprite) {
-				length = scrawl.sprite.mycurve.getPerimeterLength(true);
+			if (myEntity) {
+				length = scrawl.entity.mycurve.getPerimeterLength(true);
 			}
 			myPos = (myPos + dPos > 1) ? 0 : myPos + dPos;
 			doLines(myPos);

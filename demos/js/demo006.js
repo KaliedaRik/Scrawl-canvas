@@ -9,7 +9,7 @@ var mycode = function() {
 
 	//define variables
 	var here,
-		mySprite = false,
+		myEntity = false,
 		myPos = 0,
 		dPos = 0.005,
 		length,
@@ -23,7 +23,7 @@ var mycode = function() {
 		name: 'mygroup',
 	});
 
-	//define sprites
+	//define entitys
 	for (var i = 0; i < 3; i++) {
 		scrawl.newWheel({
 			name: 'wheel_' + i,
@@ -87,24 +87,24 @@ var mycode = function() {
 		order: 1,
 	});
 
-	//sprite animation function
+	//entity animation function
 	doLines = function(pos) {
 		var startlinePos,
 			endlinePos,
 			startMidEndPos;
-		startlinePos = scrawl.sprite.startline.getPerimeterPosition(pos, false);
+		startlinePos = scrawl.entity.startline.getPerimeterPosition(pos, false);
 		scrawl.point.startMidEnd_p1.local.set(startlinePos);
-		endlinePos = scrawl.sprite.endline.getPerimeterPosition(pos, false);
+		endlinePos = scrawl.entity.endline.getPerimeterPosition(pos, false);
 		scrawl.point.startMidEnd_p2.local.set(endlinePos);
-		startMidEndPos = scrawl.sprite.startMidEnd.getPerimeterPosition(pos, false);
-		scrawl.sprite.goldwheel.start.set(startMidEndPos);
+		startMidEndPos = scrawl.entity.startMidEnd.getPerimeterPosition(pos, false);
+		scrawl.entity.goldwheel.start.set(startMidEndPos);
 	};
 
 	//event listeners
 	getWheel = function(e) {
-		mySprite = scrawl.group.mygroup.getSpriteAt(here);
-		if (mySprite) {
-			mySprite.pickupSprite(here);
+		myEntity = scrawl.group.mygroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -112,9 +112,9 @@ var mycode = function() {
 		}
 	};
 	dropWheel = function(e) {
-		if (mySprite) {
-			mySprite.dropSprite();
-			mySprite = false;
+		if (myEntity) {
+			myEntity.dropEntity();
+			myEntity = false;
 		}
 		if (e) {
 			e.stopPropagation();
@@ -124,17 +124,17 @@ var mycode = function() {
 	scrawl.canvas.mycanvas.addEventListener('mousedown', getWheel, false);
 	scrawl.canvas.mycanvas.addEventListener('mouseup', dropWheel, false);
 
-	length = scrawl.sprite.mycurve.getPerimeterLength(true);
+	length = scrawl.entity.mycurve.getPerimeterLength(true);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
 			here = scrawl.pad.mycanvas.getMouse();
-			if (!here.active && mySprite) {
+			if (!here.active && myEntity) {
 				dropWheel();
 			}
-			if (mySprite) {
-				length = scrawl.sprite.mycurve.getPerimeterLength(true);
+			if (myEntity) {
+				length = scrawl.entity.mycurve.getPerimeterLength(true);
 			}
 			myPos = (myPos + dPos > 1) ? 0 : myPos + dPos;
 			doLines(myPos);

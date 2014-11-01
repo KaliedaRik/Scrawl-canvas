@@ -16,7 +16,7 @@ var mycode = function() {
 		maxY = 375,
 		positions = [150, 200, 300, 200, 450, 200, 600, 200],
 		positionDeltas = [],
-		sprites = [],
+		entitys = [],
 		count = 0,
 		noOfLines = 30,
 		i, iz;
@@ -59,28 +59,28 @@ var mycode = function() {
 	//build initial set of curves
 	for (i = 0, iz = noOfLines; i < iz; i++) {
 		checkBounds();
-		sprites.push(makeLine('curve' + i));
+		entitys.push(makeLine('curve' + i));
 	}
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			var sprite = sprites[count];
+			var entity = entitys[count];
 			checkBounds();
-			sprite.start.set({
+			entity.start.set({
 				x: positions[0],
 				y: positions[1],
 			});
 			//scrawl bezier curve points are measured relative to the start point
-			scrawl.point[sprite.name + '_p2'].local.set({
+			scrawl.point[entity.name + '_p2'].local.set({
 				x: positions[2] - positions[0],
 				y: positions[3] - positions[1],
 			});
-			scrawl.point[sprite.name + '_p3'].local.set({
+			scrawl.point[entity.name + '_p3'].local.set({
 				x: positions[4] - positions[0],
 				y: positions[5] - positions[1],
 			});
-			scrawl.point[sprite.name + '_p4'].local.set({
+			scrawl.point[entity.name + '_p4'].local.set({
 				x: positions[6] - positions[0],
 				y: positions[7] - positions[1],
 			});

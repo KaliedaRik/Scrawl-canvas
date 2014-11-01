@@ -27,9 +27,9 @@
 
 ## Purpose and features
 
-The Shape module adds Shape sprites - path-based objects - to the core module
+The Shape module adds Shape entitys - path-based objects - to the core module
 
-* Defines a sprite composed of lines, quadratic and bezier curves, etc
+* Defines a entity composed of lines, quadratic and bezier curves, etc
 * See also Path object, which achieves a similar thing in a different way
 
 @module scrawlShape
@@ -48,7 +48,7 @@ scrawlShape module adaptions to the Scrawl library object
 **/
 
 		/**
-A __factory__ function to generate new Shape sprites
+A __factory__ function to generate new Shape entitys
 @method newShape
 @param {Object} items Key:value Object argument for setting attributes
 @return Shape object
@@ -75,29 +75,29 @@ Additional factory functions to instantiate Shape objects are available in the _
 
 ## Purpose
 
-* Defines a sprite composed of lines, quadratic and bezier curves, etc
+* Defines a entity composed of lines, quadratic and bezier curves, etc
 * See also Path object, which achieves a similar thing in a different way
 
 ## Access
 
-* scrawl.sprite.SHAPENAME - for the Shape sprite object
+* scrawl.entity.SHAPENAME - for the Shape entity object
 
 @class Shape
 @constructor
-@extends Sprite
+@extends Entity
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Shape = function Shape(items) {
 			items = (my.isa(items, 'obj')) ? items : {};
-			my.Sprite.call(this, items);
+			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
 			this.isLine = (my.isa(items.isLine, 'bool')) ? items.isLine : true;
 			this.dataSet = (my.xt(this.data)) ? this.buildDataSet(this.data) : '';
 			this.registerInLibrary();
-			my.pushUnique(my.group[this.group].sprites, this.name);
+			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
 		};
-		my.Shape.prototype = Object.create(my.Sprite.prototype);
+		my.Shape.prototype = Object.create(my.Entity.prototype);
 		/**
 @property type
 @type String
@@ -105,7 +105,7 @@ Additional factory functions to instantiate Shape objects are available in the _
 @final
 **/
 		my.Shape.prototype.type = 'Shape';
-		my.Shape.prototype.classname = 'spritenames';
+		my.Shape.prototype.classname = 'entitynames';
 		my.d.Shape = {
 			/**
 Interpreted path data - calculated by scrawl from the data attribute
@@ -125,23 +125,23 @@ Generally this is set automatically as part of a shape factory function
 **/
 			isLine: true,
 			/**
-Shape sprite default method attribute is 'draw', not 'fill'
+Shape entity default method attribute is 'draw', not 'fill'
 @property method
 @type String
 @default 'draw'
 **/
 			method: 'draw',
 		};
-		my.mergeInto(my.d.Shape, my.d.Sprite);
+		my.mergeInto(my.d.Shape, my.d.Entity);
 		/**
-Augments Sprite.set()
+Augments Entity.set()
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
 		my.Shape.prototype.set = function(items) {
-			my.Sprite.prototype.set.call(this, items);
+			my.Entity.prototype.set.call(this, items);
 			items = (my.isa(items, 'obj')) ? items : {};
 			if (my.xt(items.data)) {
 				this.dataSet = this.buildDataSet(this.data);
@@ -152,11 +152,11 @@ Augments Sprite.set()
 		/**
 Augments Position.getPivotOffsetVector()
 @method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where sprite drawing should start
+@return A Vector of calculated offset values to help determine where entity drawing should start
 @private
 **/
 		my.Shape.prototype.getPivotOffsetVector = function() {
-			return (this.isLine) ? my.Sprite.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
+			return (this.isLine) ? my.Entity.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
 		};
 		/**
 Constructor, clone and set helper function
@@ -302,10 +302,10 @@ Create native path data from data attribute String
 			return myData;
 		};
 		/**
-Helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
+Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
 @method doOutline
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @private
 **/
@@ -317,7 +317,7 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 			return this.completeOutline(ctx, cell);
 		};
 		/**
-Helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
+Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
 @method completeOutline
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
 @return This
@@ -534,7 +534,7 @@ Helper function - define the sprite's path on the &lt;canvas&gt; element's conte
 Stamp helper function - perform a 'clip' method draw
 @method clip
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -549,7 +549,7 @@ Stamp helper function - perform a 'clip' method draw
 Stamp helper function - perform a 'clear' method draw
 @method clear
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -565,7 +565,7 @@ Stamp helper function - perform a 'clear' method draw
 Stamp helper function - perform a 'clearWithBackground' method draw
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -583,7 +583,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 Stamp helper function - perform a 'draw' method draw
 @method draw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -597,7 +597,7 @@ Stamp helper function - perform a 'draw' method draw
 Stamp helper function - perform a 'fill' method draw
 @method fill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -611,7 +611,7 @@ Stamp helper function - perform a 'fill' method draw
 Stamp helper function - perform a 'drawFill' method draw
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -627,7 +627,7 @@ Stamp helper function - perform a 'drawFill' method draw
 Stamp helper function - perform a 'fillDraw' method draw
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -643,7 +643,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 Stamp helper function - perform a 'sinkInto' method draw
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -658,7 +658,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 Stamp helper function - perform a 'floatOver' method draw
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -670,7 +670,7 @@ Stamp helper function - perform a 'floatOver' method draw
 			return this;
 		};
 		/**
-Check Cell coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
 
 Argument object contains the following attributes:
 
@@ -681,7 +681,7 @@ Argument object contains the following attributes:
 Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
 @method checkHit
 @param {Object} items Argument object
-@return The first coordinate to fall within the sprite's path; false if none fall within the path
+@return The first coordinate to fall within the entity's path; false if none fall within the path
 **/
 		my.Shape.prototype.checkHit = function(items) {
 			items = (my.isa(items, 'obj')) ? items : {};
@@ -706,7 +706,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 		/**
 Collision detection helper function
 
-Parses the collisionPoints array to generate coordinate Vectors representing the sprite's collision points
+Parses the collisionPoints array to generate coordinate Vectors representing the entity's collision points
 @method buildCollisionVectors
 @param {Array} [items] Array of collision point data
 @return This
@@ -715,7 +715,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 **/
 		my.Shape.prototype.buildCollisionVectors = function(items) {
 			if (this.isLine) {
-				my.Sprite.prototype.buildCollisionVectors.call(this, items);
+				my.Entity.prototype.buildCollisionVectors.call(this, items);
 			}
 			else {
 				var p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,

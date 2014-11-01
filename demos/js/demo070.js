@@ -9,7 +9,7 @@ var mycode = function() {
 
 	//define variables
 	var myPad = scrawl.pad.mycanvas,
-		mySprite,
+		myEntity,
 		here,
 		dragGroup,
 		getPhrase,
@@ -20,7 +20,7 @@ var mycode = function() {
 		name: 'drag',
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newPhrase({
 		name: 'lefty',
 		group: 'drag',
@@ -52,9 +52,9 @@ var mycode = function() {
 
 	//event listeners
 	getPhrase = function(e) {
-		mySprite = dragGroup.getSpriteAt(here);
-		if (mySprite) {
-			mySprite.pickupSprite(here);
+		myEntity = dragGroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -62,9 +62,9 @@ var mycode = function() {
 		}
 	};
 	dropPhrase = function(e) {
-		if (mySprite) {
-			mySprite.dropSprite();
-			mySprite = false;
+		if (myEntity) {
+			myEntity.dropEntity();
+			myEntity = false;
 		}
 		if (e) {
 			e.stopPropagation();
@@ -78,7 +78,7 @@ var mycode = function() {
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();
-			if (!here.active && mySprite) {
+			if (!here.active && myEntity) {
 				dropPhrase();
 			}
 			scrawl.render();

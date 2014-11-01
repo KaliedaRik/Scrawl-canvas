@@ -228,7 +228,7 @@ var mycode = function() {
 		visibility: false,
 	});
 
-	//define sprites
+	//define entitys
 	background = scrawl.newPicture({
 		name: 'background',
 		width: 400,
@@ -402,7 +402,7 @@ var mycode = function() {
 
 	//hover effect over graph selector labels
 	checkGraphLabels = function() {
-		var tempLabel = myGraphs.getSpriteAt(here);
+		var tempLabel = myGraphs.getEntityAt(here);
 		if (tempLabel && tempLabel.name !== hoverLabel.name) {
 			tempLabel.set({
 				fillStyle: 'red',
@@ -424,7 +424,7 @@ var mycode = function() {
 
 	//hover effect over pins
 	checkPins = function() {
-		var tempPin = myPins.getSpriteAt(here);
+		var tempPin = myPins.getEntityAt(here);
 		if (tempPin && tempPin.name !== hoverPin.name) {
 			tempPin.set({
 				strokeStyle: 'red',
@@ -458,7 +458,7 @@ var mycode = function() {
 
 	//event listener - changing graphs
 	changeGraph = function(e) {
-		var tempLabel = myGraphs.getSpriteAt(here),
+		var tempLabel = myGraphs.getEntityAt(here),
 			k, kz;
 		if (e) {
 			e.stopPropagation();

@@ -93,7 +93,7 @@ var mycode = function() {
 	});
 
 
-	//build sprite
+	//build entity
 	scrawl.newPicture({
 		startX: '50%',
 		startY: '50%',
@@ -107,7 +107,7 @@ var mycode = function() {
 		source: 'cats',
 	});
 
-	//sprite is only stamped once - the display cycle will never clear the base cell in this demo
+	//entity is only stamped once - the display cycle will never clear the base cell in this demo
 	scrawl.render();
 
 	//set the initial imput values

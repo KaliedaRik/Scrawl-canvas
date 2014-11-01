@@ -8,12 +8,12 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var mySprite;
+	var myEntity;
 
 	//import images; setup variables
 	scrawl.getImagesByClass('demo104');
 
-	//build sprite
+	//build entity
 	scrawl.newPattern({
 		name: 'p1',
 		image: 'warning',
@@ -21,7 +21,7 @@ var mycode = function() {
 		name: 'p2',
 		image: 'leaves',
 	});
-	mySprite = scrawl.newWheel({
+	myEntity = scrawl.newWheel({
 		name: 'mainWheel',
 		startX: 100,
 		startY: 100,
@@ -31,7 +31,7 @@ var mycode = function() {
 		lineWidth: 10,
 		method: 'fillDraw',
 	});
-	mySprite.convertToPicture({
+	myEntity.convertToPicture({
 		name: 'pictureWheel',
 		startX: 300,
 		startY: 100,

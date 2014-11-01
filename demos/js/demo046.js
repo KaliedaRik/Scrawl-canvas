@@ -18,8 +18,8 @@ var mycode = function() {
 		bigCell,
 		myGroup,
 		myColor,
-		moveSprites,
-		mySprite,
+		moveEntitys,
+		myEntity,
 		msg = document.getElementById('message');
 
 	//add cell to canvas
@@ -53,7 +53,7 @@ var mycode = function() {
 		bMax: 200,
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newBlock({
 		startX: 10,
 		startY: 10,
@@ -161,23 +161,23 @@ var mycode = function() {
 	});
 
 	//animation function
-	moveSprites = function() {
-		for (var i = 0, z = myGroup.sprites.length; i < z; i++) {
-			mySprite = scrawl.sprite[myGroup.sprites[i]];
-			if (!scrawl.isBetween((mySprite.start.x + mySprite.delta.x), 0, 1600)) {
-				mySprite.delta.x = -mySprite.delta.x;
+	moveEntitys = function() {
+		for (var i = 0, z = myGroup.entitys.length; i < z; i++) {
+			myEntity = scrawl.entity[myGroup.entitys[i]];
+			if (!scrawl.isBetween((myEntity.start.x + myEntity.delta.x), 0, 1600)) {
+				myEntity.delta.x = -myEntity.delta.x;
 			}
-			if (!scrawl.isBetween((mySprite.start.y + mySprite.delta.y), 0, 1200)) {
-				mySprite.delta.y = -mySprite.delta.y;
+			if (!scrawl.isBetween((myEntity.start.y + myEntity.delta.y), 0, 1200)) {
+				myEntity.delta.y = -myEntity.delta.y;
 			}
-			mySprite.updateStart();
+			myEntity.updateStart();
 		}
 	};
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			moveSprites();
+			moveEntitys();
 			pad.render();
 
 			message.innerHTML = 'Current zoom: ' + ((400 / bigCell.copyWidth) * 100).toFixed(2) + '%';

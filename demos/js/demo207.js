@@ -16,7 +16,7 @@ var mycode = function() {
 		myGroup,
 		doButtons,
 		here,
-		mySprite = false,
+		myEntity = false,
 		getWheel,
 		dropWheel,
 		moveButton,
@@ -41,14 +41,14 @@ var mycode = function() {
 	canvas = scrawl.canvas.canvas;
 	pad = scrawl.pad.canvas;
 
-	//easing path sprite
+	//easing path entity
 	guide = scrawl.makeBezier({
 		name: 'guide',
 		lineWidth: 2,
 		strokeStyle: '#880000',
 		precision: 100,
 	});
-	//dragging sprites to change the curve of the easing path sprite
+	//dragging entitys to change the curve of the easing path entity
 	myGroup = scrawl.newGroup({
 		name: 'myGroup',
 	});
@@ -65,7 +65,7 @@ var mycode = function() {
 			fillStyle: 'yellow',
 		});
 	}
-	//fix easing path Point objects to dragging sprites
+	//fix easing path Point objects to dragging entitys
 	scrawl.point.guide_p1.setToFixed('wheel_0');
 	scrawl.point.guide_p2.setToFixed('wheel_1');
 	scrawl.point.guide_p3.setToFixed('wheel_2');
@@ -112,11 +112,11 @@ var mycode = function() {
 		}
 	};
 
-	//dragging sprite event listeners
+	//dragging entity event listeners
 	getWheel = function(e) {
-		mySprite = myGroup.getSpriteAt(here);
-		if (mySprite) {
-			mySprite.pickupSprite(here);
+		myEntity = myGroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -124,9 +124,9 @@ var mycode = function() {
 		}
 	};
 	dropWheel = function(e) {
-		if (mySprite) {
-			mySprite.dropSprite();
-			mySprite = false;
+		if (myEntity) {
+			myEntity.dropEntity();
+			myEntity = false;
 			guide.buildPositions();
 		}
 		if (e) {
@@ -155,7 +155,7 @@ var mycode = function() {
 		fn: function() {
 			here = pad.getMouse();
 			if (!here.active) {
-				if (mySprite) {
+				if (myEntity) {
 					dropWheel();
 				}
 			}

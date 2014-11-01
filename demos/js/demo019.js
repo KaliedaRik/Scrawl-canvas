@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//load spritesheet into scrawl library
+	//load entitysheet into scrawl library
 	scrawl.getImagesByClass('demo019');
 
 	//define AnimSheet object
@@ -67,7 +67,7 @@ var mycode = function() {
         }, ],
 	});
 
-	//define Picture sprite which will display animation
+	//define Picture entity which will display animation
 	scrawl.newPicture({
 		width: 400,
 		height: 200,

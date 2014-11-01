@@ -13,7 +13,7 @@ var mycode = function() {
 		details = false,
 		myPic,
 		myPicPath,
-		mySprite,
+		myEntity,
 		mySpeed = 0,
 		items = [
           'angelfish', 'blackbutterfly', 'cagedparrot', 'capuchin', 'greenparrot',
@@ -46,7 +46,7 @@ var mycode = function() {
 		order: 1,
 	});
 
-	//define sprites - carousel
+	//define entitys - carousel
 	carousel = scrawl.makeEllipse({
 		name: 'carousel',
 		startX: 375,
@@ -56,7 +56,7 @@ var mycode = function() {
 		method: 'none',
 	});
 
-	//define sprites - display photos
+	//define entitys - display photos
 	for (var i = 0, z = items.length; i < z; i++) {
 		scrawl.newPicture({
 			name: items[i],
@@ -83,7 +83,7 @@ var mycode = function() {
 
 	//event listener and associated functions
 	selectImage = function() {
-		myPic = myGroup.getSpriteAt(here);
+		myPic = myGroup.getEntityAt(here);
 		if (myPic) {
 			myPicPath = myPic.path;
 			details = true;
@@ -95,7 +95,7 @@ var mycode = function() {
 				order: 1000,
 				handleY: 'center',
 			});
-			scrawl.sprite[myPic.name + '_r'].set({
+			scrawl.entity[myPic.name + '_r'].set({
 				visibility: false,
 			});
 			scrawl.render();
@@ -107,7 +107,7 @@ var mycode = function() {
 				handleY: '101%',
 				path: myPicPath,
 			});
-			scrawl.sprite[myPic.name + '_r'].set({
+			scrawl.entity[myPic.name + '_r'].set({
 				visibility: true,
 			});
 		}
@@ -135,29 +135,29 @@ var mycode = function() {
 		if (!details) {
 			mySpeed = -((here.x - 375) / 170000);
 			for (i = 0, iz = items.length; i < iz; i++) {
-				mySprite = scrawl.sprite[items[i]];
-				mySprite.set({
-					scale: (mySprite.start.y / 250) + 0.5,
-					order: mySprite.start.y,
+				myEntity = scrawl.entity[items[i]];
+				myEntity.set({
+					scale: (myEntity.start.y / 250) + 0.5,
+					order: myEntity.start.y,
 					deltaPathPlace: mySpeed,
 				});
-				mySprite = scrawl.sprite[items[i] + '_r'];
-				mySprite.set({
-					scale: (mySprite.start.y / 250) + 0.5,
-					order: mySprite.start.y,
+				myEntity = scrawl.entity[items[i] + '_r'];
+				myEntity.set({
+					scale: (myEntity.start.y / 250) + 0.5,
+					order: myEntity.start.y,
 					deltaPathPlace: mySpeed,
 				});
 			}
 			myGroup.updateStart();
 			myReflections.updateStart();
 		}
-		myReflections.sortSprites();
-		myGroup.sortSprites();
+		myReflections.sortEntitys();
+		myGroup.sortEntitys();
 		myPad.stampBackground();
 		for (i = 0, iz = items.length; i < iz; i++) {
-			scrawl.sprite[myReflections.sprites[i]].stamp('clearWithBackground');
-			scrawl.sprite[myReflections.sprites[i]].stamp();
-			scrawl.sprite[myGroup.sprites[i]].stamp();
+			scrawl.entity[myReflections.entitys[i]].stamp('clearWithBackground');
+			scrawl.entity[myReflections.entitys[i]].stamp();
+			scrawl.entity[myGroup.entitys[i]].stamp();
 		}
 		myPad.show();
 	};

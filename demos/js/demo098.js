@@ -13,7 +13,7 @@ var mycode = function() {
 		myPad = scrawl.pad[scrawl.currentPad],
 		myCanvas = scrawl.canvas[scrawl.currentPad],
 		startNewTween,
-		mySprite,
+		myEntity,
 		myClone,
 		here;
 
@@ -22,7 +22,7 @@ var mycode = function() {
 		name: 'blocks',
 	});
 
-	//sprites
+	//entitys
 	scrawl.newBlock({
 		startX: 50,
 		startY: 70,
@@ -69,10 +69,10 @@ var mycode = function() {
 
 	//event listener
 	startNewTween = function(e) {
-		mySprite = myBlocks.getSpriteAt(here);
-		if (mySprite) {
+		myEntity = myBlocks.getEntityAt(here);
+		if (myEntity) {
 			myClone = myTween.clone({
-				targets: mySprite,
+				targets: myEntity,
 			});
 			if (!myClone.run()) {
 				myClone.kill();

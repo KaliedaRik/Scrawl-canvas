@@ -27,10 +27,10 @@
 
 ## Purpose and features
 
-The Path module adds Path sprites - path-based objects - to the core module
+The Path module adds Path entitys - path-based objects - to the core module
 
-* Defines a sprite composed of lines, quadratic and bezier curves, etc
-* Can act as a path along which other sprites can be positioned and animated
+* Defines a entity composed of lines, quadratic and bezier curves, etc
+* Can act as a path along which other entitys can be positioned and animated
 * See also Shape object, which achieves a similar thing in a different way
 
 @module scrawlPath
@@ -61,16 +61,16 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 
 		/**
-	scrawl.deleteSprite hook function - modified by path module
-	@method pathDeleteSprite
+	scrawl.deleteEntity hook function - modified by path module
+	@method pathDeleteEntity
 	@private
 	**/
-		my.pathDeleteSprite = function(mySprite) {
+		my.pathDeleteEntity = function(myEntity) {
 			var myPointList,
 				myLinkList;
-			if (mySprite.type === 'Path') {
-				myPointList = mySprite.getFullPointList();
-				myLinkList = mySprite.getFullLinkList();
+			if (myEntity.type === 'Path') {
+				myPointList = myEntity.getFullPointList();
+				myLinkList = myEntity.getFullLinkList();
 				for (var j = 0, jz = myPointList.length; j < jz; j++) {
 					my.removeItem(my.pointnames, myPointList[j]);
 					delete my.point[myPointList[j]];
@@ -103,7 +103,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 		my.Base.prototype.clone = function(items) {
 			var b = my.mergeOver(this.parse(), my.safeObject(items));
-			delete b.context; //required for successful cloning of sprites
+			delete b.context; //required for successful cloning of entitys
 			return (this.type === 'Path') ? my.makePath(b) : new my[this.type](b);
 		};
 		my.d.Position.pathPlace = 0;
@@ -111,21 +111,21 @@ if (window.scrawl && !window.scrawl.newPath) {
 		my.d.Position.addPathRoll = false;
 		my.d.Position.path = '';
 		my.mergeInto(my.d.Cell, my.d.Position);
-		my.mergeInto(my.d.Sprite, my.d.Position);
+		my.mergeInto(my.d.Entity, my.d.Position);
 		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Sprite);
+			my.mergeInto(my.d.Block, my.d.Entity);
 		}
 		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Sprite);
+			my.mergeInto(my.d.Shape, my.d.Entity);
 		}
 		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Sprite);
+			my.mergeInto(my.d.Wheel, my.d.Entity);
 		}
 		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Sprite);
+			my.mergeInto(my.d.Picture, my.d.Entity);
 		}
 		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Sprite);
+			my.mergeInto(my.d.Phrase, my.d.Entity);
 		}
 		/**
 	Position constructor hook function - modified by path module
@@ -155,22 +155,22 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 		my.Cell.prototype.pathPrepareToCopyCell = function() {
 			var here;
-			if (my.contains(my.spritenames, this.path) && my.sprite[this.path].type === 'Path') {
-				here = my.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+			if (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path') {
+				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 				this.start.x = (!this.lockX) ? here.x : this.start.x;
 				this.start.y = (!this.lockY) ? here.y : this.start.y;
 				this.pathRoll = here.r || 0;
 			}
 		};
 		/**
-	Sprite.stamp hook function - modified by path module
+	Entity.stamp hook function - modified by path module
 	@method pathStamp
 	@private
 	**/
-		my.Sprite.prototype.pathStamp = function(method, cell) {
+		my.Entity.prototype.pathStamp = function(method, cell) {
 			var here;
-			if (my.contains(my.spritenames, this.path) && my.sprite[this.path].type === 'Path') {
-				here = my.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+			if (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path') {
+				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 				this.start.x = (!this.lockX) ? here.x : this.start.x;
 				this.start.y = (!this.lockY) ? here.y : this.start.y;
 				this.pathRoll = here.r || 0;
@@ -199,7 +199,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 		/**
 	A __factory__ function to generate new Path objects
 
-	_Note: this function does NOT produce Path sprites_ - use scrawl.makePath()
+	_Note: this function does NOT produce Path entitys_ - use scrawl.makePath()
 	@method newPath
 	@param {Object} items Key:value Object argument for setting attributes
 	@return Path object
@@ -209,10 +209,10 @@ if (window.scrawl && !window.scrawl.newPath) {
 			return new my.Path(items);
 		};
 		/**
-	A __factory__ function to generate new Path sprites
+	A __factory__ function to generate new Path entitys
 	@method makePath
 	@param {Object} items Key:value Object argument for setting attributes
-	@return Path sprite
+	@return Path entity
 	@example
 		scrawl.makePath({
 			startX: 50,
@@ -243,7 +243,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 				cy = 0,
 				k = 0,
 				v = 0;
-			var myPivot = my.xtGet([my.point[myPivot], my.sprite[myPivot], false]);
+			var myPivot = my.xtGet([my.point[myPivot], my.entity[myPivot], false]);
 			items.start = (my.xt(items.start)) ? items.start : {};
 			items.scaleX = items.scaleX || 1;
 			items.scaleY = items.scaleY || 1;
@@ -269,7 +269,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 			var generatePoint = function(_tempname, _pcount, _shapename, _x, _y, _lcount, _sx, _sy) {
 				my.newPoint({
 					name: _tempname + '_p' + _pcount,
-					sprite: _shapename,
+					entity: _shapename,
 					currentX: _x * _sx,
 					currentY: _y * _sy,
 					startLink: _tempname + '_l' + _lcount,
@@ -281,7 +281,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 				_cp2 = (my.xt(_cp2)) ? _cp2 : {};
 				my.newLink({
 					name: _tempname + '_l' + _lcount,
-					sprite: _shapename,
+					entity: _shapename,
 					species: _spec,
 					startPoint: _spt.name,
 					endPoint: _ept.name || false,
@@ -604,33 +604,33 @@ if (window.scrawl && !window.scrawl.newPath) {
 
 	## Purpose
 
-	* Defines a sprite composed of lines, quadratic and bezier curves, etc
-	* Makes use of, but doesn't contain, Point and Link objects to define the sprite
-	* Can be used as a path for placing and animating other sprites
-	* Point objects can be used as pivots by other sprites
+	* Defines a entity composed of lines, quadratic and bezier curves, etc
+	* Makes use of, but doesn't contain, Point and Link objects to define the entity
+	* Can be used as a path for placing and animating other entitys
+	* Point objects can be used as pivots by other entitys
 
 	## Access
 
-	* scrawl.sprite.PATHNAME - for the Path sprite object
+	* scrawl.entity.PATHNAME - for the Path entity object
 
 	@class Path
 	@constructor
-	@extends Sprite
+	@extends Entity
 	@param {Object} [items] Key:value Object argument for setting attributes
 	**/
 		my.Path = function(items) {
 			items = my.safeObject(items);
-			my.Sprite.call(this, items);
+			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
 			this.isLine = (my.isa(items.isLine, 'bool')) ? items.isLine : true;
 			this.linkList = [];
 			this.linkDurations = [];
 			this.pointList = [];
 			this.registerInLibrary();
-			my.pushUnique(my.group[this.group].sprites, this.name);
+			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
 		};
-		my.Path.prototype = Object.create(my.Sprite.prototype);
+		my.Path.prototype = Object.create(my.Entity.prototype);
 		/**
 	@property type
 	@type String
@@ -638,7 +638,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	@final
 	**/
 		my.Path.prototype.type = 'Path';
-		my.Path.prototype.classname = 'spritenames';
+		my.Path.prototype.classname = 'entitynames';
 		my.d.Path = {
 			/**
 	POINTNAME of the Point object that commences the drawing operation
@@ -669,7 +669,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 			closed: true,
 			/**
-	Array of LINKNAME Strings for Link objects associated with this Path sprite
+	Array of LINKNAME Strings for Link objects associated with this Path entity
 	@property linkList
 	@type Array
 	@default []
@@ -677,7 +677,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 			linkList: [],
 			/**
-	Array of length (Number) values for each Link object associated with this Path sprite
+	Array of length (Number) values for each Link object associated with this Path entity
 	@property linkDurations
 	@type Array
 	@default []
@@ -685,7 +685,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 			linkDurations: [],
 			/**
-	Array of POINTNAME Strings for Point objects associated with this Path sprite
+	Array of POINTNAME Strings for Point objects associated with this Path entity
 	@property pointList
 	@type Array
 	@default []
@@ -702,54 +702,54 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 			perimeterLength: 0,
 			/**
-	Path marker sprites - SPRITENAME String of sprite used at start of the Path
+	Path marker entitys - SPRITENAME String of entity used at start of the Path
 	@property markStart
 	@type String
 	@default ''
 	**/
 			markStart: '',
 			/**
-	Path marker sprites - SPRITENAME String of sprite used at the line/curve joints along the Path
+	Path marker entitys - SPRITENAME String of entity used at the line/curve joints along the Path
 	@property markMid
 	@type String
 	@default ''
 	**/
 			markMid: '',
 			/**
-	Path marker sprites - SPRITENAME String of sprite used at end of the Path
+	Path marker entitys - SPRITENAME String of entity used at end of the Path
 	@property markEnd
 	@type String
 	@default ''
 	**/
 			markEnd: '',
 			/**
-	Path marker sprites - SPRITENAME String of sprite used as the fallback when markStart, markMid or markEnd attributes are not set
+	Path marker entitys - SPRITENAME String of entity used as the fallback when markStart, markMid or markEnd attributes are not set
 	@property mark
 	@type String
 	@default ''
 	**/
 			mark: '',
 			/**
-	Path sprite default method attribute is 'draw', not 'fill'
+	Path entity default method attribute is 'draw', not 'fill'
 	@property method
 	@type String
 	@default 'draw'
 	**/
 			method: 'draw',
 			/**
-	Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure sprites will follow the path more accurately
+	Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure entitys will follow the path more accurately
 	@property precision
 	@type Number
 	@default 10
 	**/
 			precision: 10,
 		};
-		my.mergeInto(my.d.Path, my.d.Sprite);
+		my.mergeInto(my.d.Path, my.d.Entity);
 		/**
-	Helper function - define the sprite's path on the &lt;canvas&gt; element's context engine
+	Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
 	@method prepareShape
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -769,42 +769,42 @@ if (window.scrawl && !window.scrawl.newPath) {
 		/**
 	Augments Position.getPivotOffsetVector()
 	@method getPivotOffsetVector
-	@return A Vector of calculated offset values to help determine where sprite drawing should start
+	@return A Vector of calculated offset values to help determine where entity drawing should start
 	@private
 	**/
 		my.Path.prototype.getPivotOffsetVector = function() {
-			return (this.isLine) ? my.Sprite.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
+			return (this.isLine) ? my.Entity.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
 		};
 		/**
 	Display helper function
 
-	Stamp mark sprites onto Path
+	Stamp mark entitys onto Path
 
 	@method stampMark
-	@param {Sprite} sprite Sprite object to be stamped
+	@param {Entity} entity Entity object to be stamped
 	@param {Number} pos Path position (between 0 and 1)
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
 	**/
-		my.Path.prototype.stampMark = function(sprite, pos, ctx, cell) {
+		my.Path.prototype.stampMark = function(entity, pos, ctx, cell) {
 			var tPath,
 				tPathPlace,
 				tGroup,
 				tHandle;
-			tPath = sprite.path;
-			tPathPlace = sprite.pathPlace;
-			tGroup = sprite.group;
-			tHandle = sprite.handle;
-			sprite.set({
+			tPath = entity.path;
+			tPathPlace = entity.pathPlace;
+			tGroup = entity.group;
+			tHandle = entity.handle;
+			entity.set({
 				path: this.name,
 				pathPlace: pos,
 				group: cell,
 				handle: this.handle,
 			}).forceStamp();
-			sprite.set({
+			entity.set({
 				path: tPath,
 				pathPlace: tPathPlace,
 				group: tGroup,
@@ -815,36 +815,36 @@ if (window.scrawl && !window.scrawl.newPath) {
 		/**
 	Display helper function
 
-	Prepare mark sprites for stamping onto Path
+	Prepare mark entitys for stamping onto Path
 
 	@method addMarks
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
 	**/
 		my.Path.prototype.addMarks = function(ctx, cell) {
 			var myMark = false,
-				sprite,
+				entity,
 				linkDurations;
 			if (my.xtGet([this.mark, this.markStart, this.markMid, this.markEnd])) {
 				this.buildPositions();
 				linkDurations = this.get('linkDurations');
 				myMark = my.xtGetTrue([this.markStart, this.mark]);
-				if (myMark && my.contains(my.spritenames, myMark)) {
-					this.stampMark(my.sprite[myMark], 0, ctx, cell);
+				if (myMark && my.contains(my.entitynames, myMark)) {
+					this.stampMark(my.entity[myMark], 0, ctx, cell);
 				}
 				myMark = my.xtGetTrue([this.markMid, this.mark]);
-				if (myMark && my.contains(my.spritenames, myMark)) {
-					sprite = my.sprite[myMark];
+				if (myMark && my.contains(my.entitynames, myMark)) {
+					entity = my.entity[myMark];
 					for (var j = 0, w = linkDurations.length - 1; j < w; j++) {
-						this.stampMark(sprite, linkDurations[j], ctx, cell);
+						this.stampMark(entity, linkDurations[j], ctx, cell);
 					}
 				}
 				myMark = my.xtGetTrue([this.markEnd, this.mark]);
-				if (myMark && my.contains(my.spritenames, myMark)) {
-					this.stampMark(my.sprite[myMark], 1, ctx, cell);
+				if (myMark && my.contains(my.entitynames, myMark)) {
+					this.stampMark(my.entity[myMark], 1, ctx, cell);
 				}
 			}
 			return this;
@@ -853,7 +853,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'clip' method draw
 	@method clip
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -869,7 +869,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'clear' method draw
 	@method clear
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -886,7 +886,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'clearWithBackground' method draw
 	@method clearWithBackground
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -913,7 +913,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'fill' method draw
 	@method fill
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -930,7 +930,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'draw' method draw
 	@method draw
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -945,7 +945,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'drawFill' method draw
 	@method drawFill
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -964,7 +964,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'fillDraw' method draw
 	@method fillDraw
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -983,7 +983,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'sinkInto' method draw
 	@method sinkInto
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -1001,7 +1001,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Stamp helper function - perform a 'floatOver' method draw
 	@method floatOver
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -1016,10 +1016,10 @@ if (window.scrawl && !window.scrawl.newPath) {
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this sprite's context values and defining the sprites path, on the canvas, but not drawing (fill stroke) the sprite.
+	Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this entity's context values and defining the entitys path, on the canvas, but not drawing (fill stroke) the entity.
 	@method none
 	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 	@return This
 	@chainable
 	@private
@@ -1104,12 +1104,12 @@ if (window.scrawl && !window.scrawl.newPath) {
 			return this;
 		};
 		/**
-	Calculate coordinates of point at given distance along the Shape sprite's path
+	Calculate coordinates of point at given distance along the Shape entity's path
 	@method getPerimeterPosition
 	@param {Number} [val] Distance along path, between 0 (start) and 1 (end); default: 1
 	@param {Boolean} [steady] Steady flag - if true, return 'steady calculation' coordinates; otherwise return 'simple calculation' coordinates. Default: true
 	@param {Boolean} [roll] Roll flag - if true, return tangent angle (degrees) at that point along the path. Default: false
-	@param {Boolean} [local] Local flag - if true, return coordinate Vector relative to Sprite start parameter; otherwise return Cell coordinate Vector. Default: false
+	@param {Boolean} [local] Local flag - if true, return coordinate Vector relative to Entity start parameter; otherwise return Cell coordinate Vector. Default: false
 	@return Vector coordinates
 	**/
 		my.Path.prototype.getPerimeterPosition = function(val, steady, roll, local) {
@@ -1190,7 +1190,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 			return false;
 		};
 		/**
-	Check a set of coordinates to see if any of them fall within this sprite's path - uses JavaScript's _isPointInPath_ function
+	Check a set of coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
 
 	Argument object contains the following attributes:
 
@@ -1201,7 +1201,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
 	@method checkHit
 	@param {Object} items Argument object
-	@return The first coordinate to fall within the sprite's path; false if none fall within the path
+	@return The first coordinate to fall within the entity's path; false if none fall within the path
 	**/
 		my.Path.prototype.checkHit = function(items) {
 			items = my.safeObject(items);
@@ -1233,7 +1233,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 		/**
 	Collision detection helper function
 
-	Parses the collisionPoints array to generate coordinate Vectors representing the sprite's collision points
+	Parses the collisionPoints array to generate coordinate Vectors representing the entity's collision points
 	@method buildCollisionVectors
 	@param {Array} [items] Array of collision point data
 	@return This
@@ -1295,7 +1295,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 
 	## Purpose
 
-	* Defines a movable point within a Path sprite object
+	* Defines a movable point within a Path entity object
 	* Acts as a coordinate vector for Link drawing
 
 	Path creation factories will all create Point objects automatically as part of the generation process. Point objects will be named regularly, depending on the factory:
@@ -1319,7 +1319,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 			items = my.safeObject(items);
 			my.Base.call(this, items);
 			var local = (my.xt(items.local)) ? items.local : {};
-			this.sprite = my.xtGet([items.sprite, '']);
+			this.entity = my.xtGet([items.entity, '']);
 			this.local = my.newVector({
 				x: my.xtGet([items.startX, items.currentX, local.x, 0]),
 				y: my.xtGet([items.startY, items.currentY, local.y, 0]),
@@ -1335,8 +1335,8 @@ if (window.scrawl && !window.scrawl.newPath) {
 			}
 			my.point[this.name] = this;
 			my.pushUnique(my.pointnames, this.name);
-			if (this.sprite && my.sprite[this.sprite].type === 'Path') {
-				my.pushUnique(my.sprite[this.sprite].pointList, this.name);
+			if (this.entity && my.entity[this.entity].type === 'Path') {
+				my.pushUnique(my.entity[this.entity].pointList, this.name);
 			}
 			return this;
 		};
@@ -1351,14 +1351,14 @@ if (window.scrawl && !window.scrawl.newPath) {
 		my.Point.prototype.classname = 'pointnames';
 		my.d.Point = {
 			/**
-	SPRITENAME String of point object's parent sprite
-	@property sprite
+	SPRITENAME String of point object's parent entity
+	@property entity
 	@type String
 	@default ''
 	**/
-			sprite: '',
+			entity: '',
 			/**
-	Point's coordinate Vector - generally the Vector marks the Point's position (in pixels) from the Parent sprite's start coordinates, though this can be changed by setting the __fixed__ attribute to true.
+	Point's coordinate Vector - generally the Vector marks the Point's position (in pixels) from the Parent entity's start coordinates, though this can be changed by setting the __fixed__ attribute to true.
 
 	The following argument attributes can be used to initialize, set and get this attribute's component values:
 
@@ -1382,7 +1382,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 			startLink: '',
 			/**
-	Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (true), or to a Sprite start Vector (SPRITENAME). Default action is to treat the Point as local to its parent Sprite's start coordinate
+	Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (true), or to a Entity start Vector (SPRITENAME). Default action is to treat the Point as local to its parent Entity's start coordinate
 	@property fixed
 	@type Boolean
 	@default false
@@ -1499,15 +1499,15 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 		my.Point.prototype.getData = function() {
 			var c,
-				s = my.sprite[this.sprite],
+				s = my.entity[this.entity],
 				myPivot,
 				fixed = this.fixed,
 				scale = s.scale;
 			this.resetWork();
 			if (my.xt(this.local) && this.local.type === 'Vector') {
 				c = this.work.local;
-				if (my.isa(fixed, 'str') && (my.contains(my.spritenames, fixed) || my.contains(my.pointnames, fixed))) {
-					myPivot = my.sprite[fixed] || my.point[fixed];
+				if (my.isa(fixed, 'str') && (my.contains(my.entitynames, fixed) || my.contains(my.pointnames, fixed))) {
+					myPivot = my.entity[fixed] || my.point[fixed];
 					if (myPivot.type === 'Point') {
 						c.set(myPivot.local);
 						c.scalarMultiply(scale || 1);
@@ -1603,15 +1603,15 @@ if (window.scrawl && !window.scrawl.newPath) {
 			my.Base.call(this, items);
 			my.Base.prototype.set.call(this, items);
 			this.startPoint = my.xtGet([items.startPoint, my.d.Link.startPoint]);
-			this.sprite = (my.xt(my.point[this.startPoint])) ? my.point[this.startPoint].sprite : my.d.Link.sprite;
+			this.entity = (my.xt(my.point[this.startPoint])) ? my.point[this.startPoint].entity : my.d.Link.entity;
 			this.endPoint = my.xtGet([items.endPoint, my.d.Link.endPoint]);
 			this.species = my.xtGet([items.species, my.d.Link.species]);
 			this.action = my.xtGet([items.action, my.d.Link.action]);
 			my.link[this.name] = this;
 			my.pushUnique(my.linknames, this.name);
 			this.positions = [];
-			if (this.startPoint && this.sprite && this.action === 'add') {
-				my.pushUnique(my.sprite[this.sprite].linkList, this.name);
+			if (this.startPoint && this.entity && this.action === 'add') {
+				my.pushUnique(my.entity[this.entity].linkList, this.name);
 			}
 			return this;
 		};
@@ -1665,12 +1665,12 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 			startPoint: '',
 			/**
-	SPRITENAME of this Link's parent sprite object
-	@property sprite
+	SPRITENAME of this Link's parent entity object
+	@property entity
 	@type String
 	@default ''
 	**/
-			sprite: '',
+			entity: '',
 			/**
 	POINTNAME of end Point object - used by line, quadratic and bezier links
 	@property endPoint
@@ -1700,7 +1700,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 			action: 'add',
 			/**
-	Link length - this value will be affected by the value of the parent Sprite object's __precision__ attribute
+	Link length - this value will be affected by the value of the parent Entity object's __precision__ attribute
 	@property length
 	@type Number
 	@default 0
@@ -1708,7 +1708,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 			length: 0,
 			/**
-	Positions Array along the length of the Link's path - these values will be affected by the value of the parent Sprite object's __precision__ attribute
+	Positions Array along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
 	@property positions
 	@type Array
 	@default []
@@ -1727,15 +1727,15 @@ if (window.scrawl && !window.scrawl.newPath) {
 		my.Link.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
 			items = my.safeObject(items);
-			if (my.isa(items.sprite, 'str') && items.sprite !== this.sprite && this.sprite) {
-				my.removeItem(my.sprite[this.sprite].linkList, this.name);
+			if (my.isa(items.entity, 'str') && items.entity !== this.entity && this.entity) {
+				my.removeItem(my.entity[this.entity].linkList, this.name);
 			}
-			if (my.isa(items.action, 'str') && this.sprite && my.contains(my.spritenames, this.sprite)) {
+			if (my.isa(items.action, 'str') && this.entity && my.contains(my.entitynames, this.entity)) {
 				if (items.action === 'add') {
-					my.pushUnique(my.sprite[this.sprite].linkList, this.name);
+					my.pushUnique(my.entity[this.entity].linkList, this.name);
 				}
 				else {
-					my.removeItem(my.sprite[this.sprite].linkList, this.name);
+					my.removeItem(my.entity[this.entity].linkList, this.name);
 				}
 			}
 			return this;
@@ -1844,13 +1844,13 @@ if (window.scrawl && !window.scrawl.newPath) {
 	@private
 	**/
 		my.Link.prototype.getPositionOnLink = function(val) {
-			var mySprite = my.sprite[this.sprite],
-				scale = mySprite.scale,
-				roll = mySprite.roll,
+			var myEntity = my.entity[this.entity],
+				scale = myEntity.scale,
+				roll = myEntity.roll,
 				result;
 			if (my.isa(val, 'num')) {
 				result = this.getLocalPositionOnLink(val);
-				return result.rotate(roll).vectorAdd(mySprite.start);
+				return result.rotate(roll).vectorAdd(myEntity.start);
 			}
 			return false;
 		};
@@ -1866,7 +1866,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 			var s,
 				d,
 				dPos,
-				precision = my.sprite[this.sprite].get('precision'),
+				precision = my.entity[this.entity].get('precision'),
 				positions = this.positions,
 				length = this.length,
 				distance = length * val;
@@ -1890,9 +1890,9 @@ if (window.scrawl && !window.scrawl.newPath) {
 	@private
 	**/
 		my.Link.prototype.getSteadyPositionOnLink = function(val) {
-			var mySprite = my.sprite[this.sprite],
+			var myEntity = my.entity[this.entity],
 				d = this.getLocalSteadyPositionOnLink(val);
-			d.rotate(mySprite.roll).vectorAdd(mySprite.start);
+			d.rotate(myEntity.roll).vectorAdd(myEntity.start);
 			return d;
 		};
 		/**
@@ -1914,7 +1914,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 		my.Link.prototype.setPositions = function(val) {
 			if (this.action === 'add') {
 				var pts = this.getPointCoordinates(),
-					precision = (my.isa(val, 'num') && val > 0) ? val : (my.sprite[this.sprite].get('precision')),
+					precision = (my.isa(val, 'num') && val > 0) ? val : (my.entity[this.entity].get('precision')),
 					step = 1 / precision,
 					pos,
 					here,
@@ -1923,8 +1923,8 @@ if (window.scrawl && !window.scrawl.newPath) {
 					d,
 					cumLen = 0,
 					cur = my.worklink.v2.set(pts.start), //my.worklink.v2
-					sprite = my.sprite[this.sprite],
-					temp = sprite.roll;
+					entity = my.entity[this.entity],
+					temp = entity.roll;
 				if (this.positions.length !== precision + 1) {
 					this.positions.length = 0;
 					for (var i = 0; i <= precision; i++) {
@@ -1936,13 +1936,13 @@ if (window.scrawl && !window.scrawl.newPath) {
 					}
 				}
 				this.positions[0].p.set(cur);
-				sprite.set({
+				entity.set({
 					roll: 0,
 				});
 				for (var j = 1; j <= precision; j++) {
 					pos = step * ((j - 1) + 1);
 					here = this.getPositionOnLink(pos); //my.worklink.v1
-					here.vectorSubtract(sprite.start);
+					here.vectorSubtract(entity.start);
 					vHere.set(here); //my.worklink.v3
 					dist = here.vectorSubtract(cur).getMagnitude();
 					cur.set(vHere); //my.worklink.v2
@@ -1952,7 +1952,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 					this.positions[j].cumulativeLength = cumLen;
 				}
 				this.length = this.positions[precision].cumulativeLength;
-				sprite.roll = temp;
+				entity.roll = temp;
 			}
 			return this;
 		};
@@ -1962,7 +1962,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	_Note: this function is recursive_
 
 	@method sketch
-	@param {Object} ctx Sprite Cell's &lt;canvas&gt; element's context engine Object
+	@param {Object} ctx Entity Cell's &lt;canvas&gt; element's context engine Object
 	@return True (eventually)
 	@private
 	**/

@@ -37,7 +37,7 @@ var mycode = function() {
 		starburstIn, starburstOut, doStarburst, buildStarburst,
 		rollerIn, rollerOut, doRoller, buildRoller,
 		clearCirclesIn, clearCirclesOut, doClearCircles, buildClearCircles,
-		showPad, hidePad, switchPages, clearSprites;
+		showPad, hidePad, switchPages, clearEntitys;
 
 	//initial setup of DOM elements in stack
 	stack.set({
@@ -94,12 +94,12 @@ var mycode = function() {
 		currentFrame = Math.floor(Math.random() * frameSources.length);
 	};
 
-	//define sprites to be used in animations
-	clearSprites = function() {
-		scrawl.group[pad.base].setSpritesTo({
+	//define entitys to be used in animations
+	clearEntitys = function() {
+		scrawl.group[pad.base].setEntitysTo({
 			visibility: false,
 		});
-		myCirclesGroup.setSpritesTo({
+		myCirclesGroup.setEntitysTo({
 			visibility: false,
 		});
 	};
@@ -174,7 +174,7 @@ var mycode = function() {
 	effectSelector.addEventListener('change', getEffect, false);
 
 	doButtons = function(e) {
-		clearSprites();
+		clearEntitys();
 		switch (currentEffect) {
 			case 'clearFromCenter':
 				doClearFromCenter();

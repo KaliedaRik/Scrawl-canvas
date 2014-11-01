@@ -11,11 +11,11 @@ var mycode = function() {
 	var groundSpeed = 3.2,
 		myGround,
 		myGroundCell,
-		groundSprite,
+		groundEntity,
 		skySpeed = 2.8,
 		mySky,
 		mySkyCell,
-		skySprite,
+		skyEntity,
 		catSpeed = 1,
 		myCat;
 
@@ -83,8 +83,8 @@ var mycode = function() {
 		height: 500,
 		group: 'skyImage',
 	}).stamp();
-	scrawl.deleteSprite('temporary');
-	skySprite = scrawl.newPicture({
+	scrawl.deleteEntity('temporary');
+	skyEntity = scrawl.newPicture({
 		source: 'skyImage',
 		width: 1000,
 		height: 500,
@@ -106,8 +106,8 @@ var mycode = function() {
 		height: 500,
 		group: 'groundImage',
 	}).stamp();
-	scrawl.deleteSprite('temporary');
-	groundSprite = scrawl.newPicture({
+	scrawl.deleteEntity('temporary');
+	groundEntity = scrawl.newPicture({
 		source: 'groundImage',
 		width: 1000,
 		height: 500,
@@ -186,16 +186,16 @@ var mycode = function() {
 		name: 'sky',
 		delay: true,
 		fn: function() {
-			if (skySprite.copyX + skySpeed >= 100) {
+			if (skyEntity.copyX + skySpeed >= 100) {
 				mySkyCell.spliceCell({
 					edge: 'left',
 					strip: 100,
 				});
-				skySprite.setDelta({
+				skyEntity.setDelta({
 					copyX: -100
 				});
 			}
-			skySprite.setDelta({
+			skyEntity.setDelta({
 				copyX: skySpeed
 			});
 			mySky.render({
@@ -209,16 +209,16 @@ var mycode = function() {
 		name: 'ground',
 		delay: true,
 		fn: function() {
-			if (groundSprite.copyX + groundSpeed >= 100) {
+			if (groundEntity.copyX + groundSpeed >= 100) {
 				myGroundCell.spliceCell({
 					edge: 'left',
 					strip: 100,
 				});
-				groundSprite.setDelta({
+				groundEntity.setDelta({
 					copyX: -100
 				});
 			}
-			groundSprite.setDelta({
+			groundEntity.setDelta({
 				copyX: groundSpeed
 			});
 			myGround.render({

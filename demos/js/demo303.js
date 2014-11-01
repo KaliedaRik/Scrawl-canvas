@@ -75,7 +75,7 @@ var mycode = function() {
 	scrawl.newForce({
 		name: 'jet',
 		fn: function(ball) {
-			if (scrawl.sprite.jet.checkHit(ball.place)) {
+			if (scrawl.entity.jet.checkHit(ball.place)) {
 				var c = 0.5 * scrawl.physics.airDensity * scrawl.physics.jetSpeed * scrawl.physics.jetSpeed,
 					j = c * ball.get('area') * ball.get('drag'),
 					wind = scrawl.workphys.v1.set({
@@ -83,8 +83,8 @@ var mycode = function() {
 						y: j,
 					}),
 					effect = scrawl.workphys.v2.set({
-						x: (1 - ((scrawl.sprite.jet.start.x - ball.place.x) / scrawl.sprite.jet.radius)) * 0.1,
-						y: 1 - ((scrawl.sprite.jet.start.y - ball.place.y) / scrawl.sprite.jet.radius),
+						x: (1 - ((scrawl.entity.jet.start.x - ball.place.x) / scrawl.entity.jet.radius)) * 0.1,
+						y: 1 - ((scrawl.entity.jet.start.y - ball.place.y) / scrawl.entity.jet.radius),
 					});
 				wind.vectorMultiply(effect).reverse();
 				ball.load.vectorAdd(wind);
@@ -107,7 +107,7 @@ var mycode = function() {
 	});
 	pBall.addForce('gravity').addForce('drag').addForce('wind').addForce('jet');
 
-	//define sprites
+	//define entitys
 	scrawl.newWheel({
 		name: 'jet',
 		startX: 590,
@@ -132,7 +132,7 @@ var mycode = function() {
 		radius: 10,
 		collisionPoints: 'perimeter',
 		method: 'fillDraw',
-		fillStyle: getColor(scrawl.sprite.pBall_0.get('mass')),
+		fillStyle: getColor(scrawl.entity.pBall_0.get('mass')),
 		strokeStyle: 'orange',
 	});
 
@@ -145,7 +145,7 @@ var mycode = function() {
 		dWheel.clone({
 			name: 'dWheel_' + i,
 			pivot: 'pBall_' + i,
-			fillStyle: getColor(scrawl.sprite['pBall_' + i].get('mass')),
+			fillStyle: getColor(scrawl.entity['pBall_' + i].get('mass')),
 		});
 	}
 
@@ -159,8 +159,8 @@ var mycode = function() {
 
 	inflateBalls = function() {
 		var w;
-		for (var i = 0, z = group.sprites.length; i < z; i++) {
-			w = scrawl.sprite[group.sprites[i]];
+		for (var i = 0, z = group.entitys.length; i < z; i++) {
+			w = scrawl.entity[group.entitys[i]];
 			w.setDelta({
 				scale: (w.scale + 0.01 <= 1) ? 0.01 : 0,
 			});
@@ -169,15 +169,15 @@ var mycode = function() {
 
 	//animation functions
 	checkBounds = function() {
-		var hits = group.getFieldSpriteHits(),
+		var hits = group.getFieldEntityHits(),
 			b1,
 			w1;
 		for (var i = 0, z = hits.length; i < z; i++) {
-			w1 = scrawl.sprite[hits[i][0]];
+			w1 = scrawl.entity[hits[i][0]];
 			w1.setDelta({
 				scale: (w1.scale > 0.8) ? -0.03 : 0,
 			});
-			b1 = scrawl.sprite[w1.pivot];
+			b1 = scrawl.entity[w1.pivot];
 			b1.revert();
 			b1.linearCollide(fieldBall.set({
 				startX: hits[i][1].x,
@@ -187,22 +187,22 @@ var mycode = function() {
 	};
 
 	checkCollisions = function() {
-		var hits = group.getInGroupSpriteHits(),
+		var hits = group.getInGroupEntityHits(),
 			b1,
 			b2,
 			w1,
 			w2;
 		for (var i = 0, z = hits.length; i < z; i++) {
-			w1 = scrawl.sprite[hits[i][0]];
-			w2 = scrawl.sprite[hits[i][1]];
+			w1 = scrawl.entity[hits[i][0]];
+			w2 = scrawl.entity[hits[i][1]];
 			w1.setDelta({
 				scale: (w1.scale > 0.8) ? -0.03 : 0,
 			});
 			w2.setDelta({
 				scale: (w2.scale > 0.8) ? -0.03 : 0,
 			});
-			b1 = scrawl.sprite[w1.pivot];
-			b2 = scrawl.sprite[w2.pivot];
+			b1 = scrawl.entity[w1.pivot];
+			b2 = scrawl.entity[w2.pivot];
 			b1.linearCollide(b2);
 		}
 	};

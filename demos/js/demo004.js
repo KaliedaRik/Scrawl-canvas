@@ -14,7 +14,7 @@ var mycode = function() {
 		bendy,
 		getWheel,
 		dropWheel,
-		mySprite = false;
+		myEntity = false;
 
 	//define groups
 	myGroup = scrawl.newGroup({
@@ -24,7 +24,7 @@ var mycode = function() {
 		name: 'balls',
 	});
 
-	//define sprites
+	//define entitys
 	for (var i = 0; i < 3; i++) {
 		scrawl.newWheel({
 			name: 'wheel_' + i,
@@ -84,9 +84,9 @@ var mycode = function() {
 
 	//event listeners
 	getWheel = function(e) {
-		mySprite = myGroup.getSpriteAt(here);
-		if (mySprite) {
-			mySprite.pickupSprite(here);
+		myEntity = myGroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -94,9 +94,9 @@ var mycode = function() {
 		}
 	};
 	dropWheel = function(e) {
-		if (mySprite) {
-			mySprite.dropSprite();
-			mySprite = false;
+		if (myEntity) {
+			myEntity.dropEntity();
+			myEntity = false;
 		}
 		if (e) {
 			e.stopPropagation();
@@ -109,7 +109,7 @@ var mycode = function() {
 	//tweens
 	scrawl.newTween({
 		name: 'goldTween',
-		targets: scrawl.sprite.goldwheel,
+		targets: scrawl.entity.goldwheel,
 		start: {
 			pathPlace: 0
 		},
@@ -121,7 +121,7 @@ var mycode = function() {
 	}).run();
 	scrawl.animation.goldTween.clone({
 		name: 'pinkTween',
-		targets: scrawl.sprite.pinkwheel,
+		targets: scrawl.entity.pinkwheel,
 		nextTween: 'pinkTween',
 	}).run();
 
@@ -130,12 +130,12 @@ var mycode = function() {
 		fn: function() {
 			//get mouse coordinates
 			here = scrawl.pad.mycanvas.getMouse();
-			if (!here.active && mySprite) {
+			if (!here.active && myEntity) {
 				dropWheel();
 			}
 
 			//update curve
-			if (mySprite) {
+			if (myEntity) {
 				bendy.buildPositions();
 			}
 

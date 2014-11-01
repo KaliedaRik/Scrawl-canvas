@@ -26,7 +26,7 @@ var mycode = function() {
 		backgroundColor: '#cfe8f8',
 	});
 
-	//define sprites
+	//define entitys
 	carousel = scrawl.makeEllipse({
 		name: 'carousel',
 		startX: 300,

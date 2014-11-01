@@ -49,7 +49,7 @@ var mycode = function() {
 	scrawl.newForce({
 		name: 'jet',
 		fn: function(ball) {
-			if (scrawl.sprite.jet.checkHit(ball.place)) {
+			if (scrawl.entity.jet.checkHit(ball.place)) {
 				var c = 0.5 * scrawl.physics.airDensity * scrawl.physics.jetSpeed * scrawl.physics.jetSpeed,
 					j = c * ball.get('area') * ball.get('drag'),
 					wind = scrawl.workphys.v1.set({
@@ -57,8 +57,8 @@ var mycode = function() {
 						y: j,
 					}),
 					effect = scrawl.workphys.v2.set({
-						x: (1 - ((scrawl.sprite.jet.start.x - ball.place.x) / scrawl.sprite.jet.radius)) * 0.1,
-						y: 1 - ((scrawl.sprite.jet.start.y - ball.place.y) / scrawl.sprite.jet.radius),
+						x: (1 - ((scrawl.entity.jet.start.x - ball.place.x) / scrawl.entity.jet.radius)) * 0.1,
+						y: 1 - ((scrawl.entity.jet.start.y - ball.place.y) / scrawl.entity.jet.radius),
 					});
 				wind.vectorMultiply(effect).reverse();
 				ball.load.vectorAdd(wind);
@@ -76,7 +76,7 @@ var mycode = function() {
 	});
 	pBall.addForce('gravity').addForce('drag').addForce('wind').addForce('jet');
 
-	//define sprites
+	//define entitys
 	scrawl.newBlock({ //cell collision zone
 		name: 'dFence',
 		startX: 10.5,
@@ -89,7 +89,7 @@ var mycode = function() {
 	});
 	scrawl.buildFields();
 
-	scrawl.newWheel({ //jet sprite
+	scrawl.newWheel({ //jet entity
 		name: 'jet',
 		startX: 590,
 		startY: 600,
@@ -113,7 +113,7 @@ var mycode = function() {
 		radius: 10,
 		collisionPoints: 'edges',
 		method: 'fillDraw',
-		fillStyle: getColor(scrawl.sprite.pBall_0.get('mass')),
+		fillStyle: getColor(scrawl.entity.pBall_0.get('mass')),
 		strokeStyle: 'orange',
 	});
 
@@ -127,7 +127,7 @@ var mycode = function() {
 		dWheel.clone({
 			name: 'dWheel_' + i,
 			pivot: 'pBall_' + i,
-			fillStyle: getColor(scrawl.sprite['pBall_' + i].get('mass')),
+			fillStyle: getColor(scrawl.entity['pBall_' + i].get('mass')),
 		});
 	}
 
@@ -141,9 +141,9 @@ var mycode = function() {
 
 	//bounce function
 	checkBounds = function() {
-		hits = group.getFieldSpriteHits();
+		hits = group.getFieldEntityHits();
 		for (var i = 0, z = hits.length; i < z; i++) {
-			myBall = scrawl.sprite[scrawl.sprite[hits[i][0]].pivot];
+			myBall = scrawl.entity[scrawl.entity[hits[i][0]].pivot];
 			myBall.revert();
 			myBall.velocity.set({
 				x: (scrawl.isBetween(hits[i][1].x, minX, maxX)) ? myBall.velocity.x : -myBall.velocity.x,

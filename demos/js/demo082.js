@@ -50,7 +50,7 @@ var mycode = function() {
 		name: 'texts',
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newPicture({
 		name: 'penguin',
 		url: 'img/penguin02.jpg',
@@ -103,9 +103,9 @@ var mycode = function() {
 
 	//event listeners
 	getText = function(e) { //text drag-and-drop
-		myText = texts.getSpriteAt(here);
+		myText = texts.getEntityAt(here);
 		if (myText) {
-			myText.pickupSprite(here);
+			myText.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -114,7 +114,7 @@ var mycode = function() {
 	};
 	dropText = function(e) {
 		if (myText) {
-			myText.dropSprite();
+			myText.dropEntity();
 			myText = false;
 		}
 		if (e) {

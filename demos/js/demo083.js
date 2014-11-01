@@ -17,7 +17,7 @@ var mycode = function() {
 		baseline,
 		myGroup,
 		here,
-		mySprite = false,
+		myEntity = false,
 		getWheel,
 		dropWheel,
 		doTransform,
@@ -44,7 +44,7 @@ var mycode = function() {
 	});
 	original = scrawl.canvas.original;
 
-	//... and a Phrase sprite to place on the holding cell
+	//... and a Phrase entity to place on the holding cell
 	scrawl.newPhrase({
 		text: 'HELLO',
 		font: '80pt 900 Arial, sans-serif',
@@ -92,27 +92,27 @@ var mycode = function() {
 		});
 	}
 	//set the circles' start coordinates and styling ...
-	scrawl.sprite.wheel_0.set({
+	scrawl.entity.wheel_0.set({
 		startX: 0,
 		startY: 100
 	});
-	scrawl.sprite.wheel_1.set({
+	scrawl.entity.wheel_1.set({
 		startX: 200,
 		startY: 100
 	});
-	scrawl.sprite.wheel_2.set({
+	scrawl.entity.wheel_2.set({
 		startX: 400,
 		startY: 100
 	});
-	scrawl.sprite.wheel_3.set({
+	scrawl.entity.wheel_3.set({
 		startX: 0,
 		startY: 300
 	});
-	scrawl.sprite.wheel_4.set({
+	scrawl.entity.wheel_4.set({
 		startX: 200,
 		startY: 300
 	});
-	scrawl.sprite.wheel_5.set({
+	scrawl.entity.wheel_5.set({
 		startX: 400,
 		startY: 300
 	});
@@ -127,9 +127,9 @@ var mycode = function() {
 
 	//event listeners, for drag-dropping the circles
 	getWheel = function(e) {
-		mySprite = myGroup.getSpriteAt(here);
-		if (mySprite) {
-			mySprite.pickupSprite(here);
+		myEntity = myGroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -137,9 +137,9 @@ var mycode = function() {
 		}
 	};
 	dropWheel = function(e) {
-		if (mySprite) {
-			mySprite.dropSprite();
-			mySprite = false;
+		if (myEntity) {
+			myEntity.dropEntity();
+			myEntity = false;
 		}
 		if (e) {
 			e.stopPropagation();
@@ -188,11 +188,11 @@ var mycode = function() {
 	scrawl.newAnimation({
 		fn: function() {
 			here = pad.getMouse();
-			if (!here.active && mySprite) {
+			if (!here.active && myEntity) {
 				dropWheel();
 			}
 			//only refresh the scene if guidelines have changed
-			if (mySprite) {
+			if (myEntity) {
 				updateScene();
 			}
 

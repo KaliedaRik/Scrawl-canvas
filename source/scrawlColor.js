@@ -27,7 +27,7 @@
 
 ## Purpose and features
 
-The Color module adds a controllable color object that can be used with sprite fillStyle and strokeStyle attributes
+The Color module adds a controllable color object that can be used with entity fillStyle and strokeStyle attributes
 
 @module scrawlColor
 **/
@@ -64,7 +64,7 @@ if (window.scrawl && !window.scrawl.newColor) {
 	## Purpose
 
 	* Defines a color object
-	* Used with sprite.strokeStyle and sprite.fillStyle attributes
+	* Used with entity.strokeStyle and entity.fillStyle attributes
 
 	## Access
 

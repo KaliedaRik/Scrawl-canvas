@@ -17,7 +17,7 @@ var mycode = function() {
 		regionRadius: 90,
 	});
 
-	//define, and stamp, sprites
+	//define, and stamp, entitys
 	scrawl.newWheel({
 		startX: 100,
 		startY: 100,
@@ -38,7 +38,7 @@ var mycode = function() {
 		includeCenter: false,
 	}).stamp();
 
-	//define brush sprite ...
+	//define brush entity ...
 	brush = scrawl.newWheel({
 		radius: 3,
 		method: 'fill',
@@ -50,7 +50,7 @@ var mycode = function() {
 			brush.set({
 				startX: dx,
 				startY: dy,
-				fillStyle: (myGroup.getSpriteAt({
+				fillStyle: (myGroup.getEntityAt({
 					x: dx,
 					y: dy
 				})) ? 'rgba(255,0,0,0.5)' : 'rgba(0,0,255,0.5)',

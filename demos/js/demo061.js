@@ -20,7 +20,7 @@ var mycode = function() {
 		name: 'trains',
 	});
 
-	//define sprites
+	//define entitys
 	track = scrawl.makeEllipse({ //train track
 		name: 'track',
 		startX: 300,
@@ -206,7 +206,7 @@ var mycode = function() {
 		group: 'trains',
 	});
 
-	trains.setSpritesTo({
+	trains.setEntitysTo({
 		path: 'track',
 		deltaPathPlace: 0.0015,
 		addPathRoll: true,

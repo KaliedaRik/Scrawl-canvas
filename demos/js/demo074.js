@@ -13,15 +13,15 @@ var mycode = function() {
 		phrase = ['Canvas', 'just', 'wanna\nwanna', 'have', 'some\nFUN', 'innit!'],
 		groupA,
 		groupB,
-		allSprites,
+		allEntitys,
 		minX = 10,
 		minY = 10,
 		maxX = 740,
 		maxY = 365,
-		mySprite,
+		myEntity,
 		coord,
 		hits,
-		moveSprites,
+		moveEntitys,
 		checkBounds,
 		checkCollisions;
 
@@ -34,7 +34,7 @@ var mycode = function() {
 		name: 'B',
 		regionRadius: 200,
 	});
-	allSprites = scrawl.newGroup({
+	allEntitys = scrawl.newGroup({
 		name: 'all',
 	});
 
@@ -50,7 +50,7 @@ var mycode = function() {
 	});
 	scrawl.buildFields();
 
-	//define sprites
+	//define entitys
 	for (var i = 0; i < 6; i++) {
 		scrawl.newPhrase({
 			name: 'text' + i,
@@ -91,57 +91,57 @@ var mycode = function() {
 			collisionPoints: 'corners',
 		});
 	}
-	allSprites.sprites = groupA.sprites.concat(groupB.sprites);
+	allEntitys.entitys = groupA.entitys.concat(groupB.entitys);
 
 	//animation functions
-	moveSprites = function() {
-		for (var i = 0, z = allSprites.sprites.length; i < z; i++) {
-			mySprite = scrawl.sprite[allSprites.sprites[i]];
-			if (mySprite.scale < 0.2) {
-				mySprite.scale = 0.2;
+	moveEntitys = function() {
+		for (var i = 0, z = allEntitys.entitys.length; i < z; i++) {
+			myEntity = scrawl.entity[allEntitys.entitys[i]];
+			if (myEntity.scale < 0.2) {
+				myEntity.scale = 0.2;
 			}
-			mySprite.setDelta({
-				scale: (mySprite.scale < 1) ? 0.005 : 0,
+			myEntity.setDelta({
+				scale: (myEntity.scale < 1) ? 0.005 : 0,
 			});
 		}
-		groupA.updateSpritesBy({
+		groupA.updateEntitysBy({
 			roll: 1,
 		});
-		groupB.updateSpritesBy({
+		groupB.updateEntitysBy({
 			roll: -1,
 		});
-		allSprites.updateStart();
+		allEntitys.updateStart();
 	};
 
 	checkBounds = function() {
-		hits = allSprites.getFieldSpriteHits();
+		hits = allEntitys.getFieldEntityHits();
 		for (var i = 0, z = hits.length; i < z; i++) {
-			mySprite = scrawl.sprite[hits[i][0]];
+			myEntity = scrawl.entity[hits[i][0]];
 			coord = hits[i][1];
-			mySprite.revertStart();
+			myEntity.revertStart();
 			if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
-				mySprite.reverse('deltaX');
-				mySprite.setDelta({
+				myEntity.reverse('deltaX');
+				myEntity.setDelta({
 					scale: -0.08,
 				});
 			}
 			if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
-				mySprite.reverse('deltaY');
-				mySprite.setDelta({
+				myEntity.reverse('deltaY');
+				myEntity.setDelta({
 					scale: -0.08,
 				});
 			}
-			allSprites.updateStart();
+			allEntitys.updateStart();
 		}
 	};
 
 	checkCollisions = function() {
-		hits = groupB.getBetweenGroupSpriteHits(groupA);
+		hits = groupB.getBetweenGroupEntityHits(groupA);
 		for (var i = 0, z = hits.length; i < z; i++) {
-			scrawl.sprite[hits[i][0]].exchange(scrawl.sprite[hits[i][1]], 'delta');
+			scrawl.entity[hits[i][0]].exchange(scrawl.entity[hits[i][1]], 'delta');
 			for (var j = 0; j < 2; j++) {
-				mySprite = scrawl.sprite[hits[i][j]];
-				mySprite.setDelta({
+				myEntity = scrawl.entity[hits[i][j]];
+				myEntity.setDelta({
 					scale: -0.08,
 				});
 			}
@@ -153,7 +153,7 @@ var mycode = function() {
 		fn: function() {
 			checkBounds();
 			checkCollisions();
-			moveSprites();
+			moveEntitys();
 			scrawl.render();
 
 			//hide-start

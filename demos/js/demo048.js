@@ -17,12 +17,12 @@ var mycode = function() {
 	//setup canvas
 	scrawl.canvas.mycanvas.style.cursor = 'crosshair';
 
-	//define sprite
+	//define entity
 	scrawl.newGradient({
 		name: 'gradient',
 		shift: 0.002,
 		autoUpdate: true,
-		setToSprite: true,
+		setToEntity: true,
 		color: [{
 			color: '#333333',
 			stop: 0

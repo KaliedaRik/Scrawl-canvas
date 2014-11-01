@@ -23,7 +23,7 @@ var mycode = function() {
 		height: myHeight,
 	}).makeCurrent();
 
-	//define a phrase sprite to hold some text
+	//define a phrase entity to hold some text
 	scrawl.newPhrase({
 		text: 'Hello, Scrawl World!',
 		startX: myWidth / 2,
@@ -33,7 +33,7 @@ var mycode = function() {
 		font: parseInt(myHeight / 10, 10) + 'pt serif',
 		method: 'fillDraw',
 		fillStyle: 'red',
-		// ... and clone it to define a second phrase sprite
+		// ... and clone it to define a second phrase entity
 	}).clone({
 		handleY: 'top',
 		text: 'canvas id: ' + scrawl.canvas.mycanvas.id +

@@ -21,7 +21,7 @@ var mycode = function() {
 		x,
 		y,
 		r,
-		mySprite,
+		myEntity,
 		background,
 		myBlob,
 		blobPositions = [],
@@ -30,7 +30,7 @@ var mycode = function() {
 	//load images into scrawl library
 	scrawl.getImagesByClass('demo087');
 
-	//define sprites
+	//define entitys
 	background = scrawl.newPicture({
 		source: 'background',
 		fastStamp: true,

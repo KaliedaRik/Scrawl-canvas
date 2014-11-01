@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define sprite ...
+	//define entity ...
 	scrawl.newPhrase({
 		startX: 200,
 		startY: 100,

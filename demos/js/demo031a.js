@@ -28,9 +28,9 @@ var mycode = function() {
 		totalBunnies = 0,
 		group,
 		bunny,
-		moveSprites,
+		moveEntitys,
 		checkBounds,
-		mySprite,
+		myEntity,
 		coord,
 		hits,
 		moveBunnies,
@@ -44,7 +44,7 @@ var mycode = function() {
 		name: 'mygroup',
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newBlock({ //cell collision zone
 		startX: 5,
 		startY: 5,
@@ -55,7 +55,7 @@ var mycode = function() {
 	});
 	scrawl.buildFields();
 
-	bunny = scrawl.newPicture({ //bunny sprite template
+	bunny = scrawl.newPicture({ //bunny entity template
 		name: 'bunny',
 		source: 'bunny',
 		handleX: 'center',
@@ -65,28 +65,28 @@ var mycode = function() {
 	});
 
 	//animation functions
-	moveSprites = function() {
+	moveEntitys = function() {
 		group.updateStart();
 	};
 
 	checkBounds = function() {
-		hits = group.getFieldSpriteHits();
+		hits = group.getFieldEntityHits();
 		for (var i = 0, z = hits.length; i < z; i++) {
-			mySprite = scrawl.sprite[hits[i][0]];
+			myEntity = scrawl.entity[hits[i][0]];
 			coord = hits[i][1];
-			mySprite.revertStart();
+			myEntity.revertStart();
 			if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
-				mySprite.reverse('deltaX');
+				myEntity.reverse('deltaX');
 			}
 			if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
-				mySprite.reverse('deltaY');
+				myEntity.reverse('deltaY');
 			}
-			mySprite.updateStart();
+			myEntity.updateStart();
 		}
 	};
 
 	moveBunnies = function() {
-		moveSprites();
+		moveEntitys();
 		checkBounds();
 	};
 

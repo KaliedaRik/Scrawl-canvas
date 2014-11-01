@@ -23,7 +23,7 @@ var mycode = function() {
 		height: myHeight,
 	}).makeCurrent();
 
-	//define sprites
+	//define entitys
 	scrawl.newPhrase({
 		text: 'Hello, Scrawl World!',
 		handleX: 'center',
@@ -54,7 +54,7 @@ var mycode = function() {
 		height: 200,
 	}).makeCurrent();
 
-	//define some more sprites
+	//define some more entitys
 	scrawl.newPhrase({
 		text: 'Hello, I\'m a second canvas',
 		handleX: 'center',

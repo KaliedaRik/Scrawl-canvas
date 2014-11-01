@@ -16,7 +16,7 @@ var mycode = function() {
 		name: 'mylines',
 	});
 
-	//define, and stamp, sprites
+	//define, and stamp, entitys
 	scrawl.makeLine({
 		startX: 50,
 		startY: 60,
@@ -64,7 +64,7 @@ var mycode = function() {
 		group: 'mylines',
 	}).stamp();
 
-	//define brush sprite ...
+	//define brush entity ...
 	brush = scrawl.newWheel({
 		radius: 4,
 		method: 'fill',
@@ -76,7 +76,7 @@ var mycode = function() {
 			brush.set({
 				startX: dx,
 				startY: dy,
-				fillStyle: (myGroup.getSpriteAt({
+				fillStyle: (myGroup.getEntityAt({
 					x: dx,
 					y: dy
 				})) ? 'rgba(255,0,0,0.5)' : 'rgba(0,0,255,0.5)',

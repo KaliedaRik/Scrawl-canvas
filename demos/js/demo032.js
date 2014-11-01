@@ -17,9 +17,9 @@ var mycode = function() {
 		totalBunnies = 0,
 		group,
 		bunny,
-		moveSprites,
+		moveEntitys,
 		checkBounds,
-		mySprite,
+		myEntity,
 		hitFlag,
 		moveBunnies,
 		addBunnies,
@@ -31,47 +31,47 @@ var mycode = function() {
 	//define groups
 	group = scrawl.newGroup({
 		name: 'mygroup',
-		spriteSort: false,
-		//spriteSort=false - turns off pre-sorting of sprites before each display cycle (small speed gain)
+		entitySort: false,
+		//entitySort=false - turns off pre-sorting of entitys before each display cycle (small speed gain)
 	});
 
-	//define sprites
-	bunny = scrawl.newPicture({ //bunny sprite template
+	//define entitys
+	bunny = scrawl.newPicture({ //bunny entity template
 		name: 'bunny',
 		source: 'bunny',
 		handleX: 'center',
 		handleY: 'center',
 		visibility: false,
 		fastStamp: true,
-		//fastStamp=true - switches off context engine updating before each sprite is stamped (large speed gain)
+		//fastStamp=true - switches off context engine updating before each entity is stamped (large speed gain)
 	});
 
 	//animation functions
-	moveSprites = function() {
+	moveEntitys = function() {
 		group.updateStart();
 	};
 
 	// - use manual checking instead of cell collision field checking (small speed gain)
 	checkBounds = function() {
-		for (var i = 0, iz = group.sprites.length; i < iz; i++) {
+		for (var i = 0, iz = group.entitys.length; i < iz; i++) {
 			hitFlag = false;
-			mySprite = scrawl.sprite[group.sprites[i]];
-			if (!scrawl.isBetween(mySprite.start.x, minX, maxX, true)) {
-				mySprite.delta.x = -mySprite.delta.x;
+			myEntity = scrawl.entity[group.entitys[i]];
+			if (!scrawl.isBetween(myEntity.start.x, minX, maxX, true)) {
+				myEntity.delta.x = -myEntity.delta.x;
 				hitFlag = true;
 			}
-			if (!scrawl.isBetween(mySprite.start.y, minY, maxY, true)) {
-				mySprite.delta.y = -mySprite.delta.y;
+			if (!scrawl.isBetween(myEntity.start.y, minY, maxY, true)) {
+				myEntity.delta.y = -myEntity.delta.y;
 				hitFlag = true;
 			}
 			if (hitFlag) {
-				mySprite.updateStart();
+				myEntity.updateStart();
 			}
 		}
 	};
 
 	moveBunnies = function() {
-		moveSprites();
+		moveEntitys();
 		checkBounds();
 	};
 

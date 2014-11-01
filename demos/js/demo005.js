@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define block sprites
+	//define block entitys
 	scrawl.newBlock({
 		startX: 10,
 		startY: 10,

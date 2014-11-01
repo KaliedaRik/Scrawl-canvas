@@ -27,7 +27,7 @@
 
 ## Purpose and features
 
-The Collisions module adds support for detecting collisions between sprites
+The Collisions module adds support for detecting collisions between entitys
 
 * Adds functionality to various core objects and functions so they can take detect collisions
 
@@ -46,10 +46,10 @@ if (window.scrawl && !window.scrawl.workcols) {
 
 	* Position.delta - default: {x:0,y:0,z:0};
 	* Cell.fieldLabel - default: '';
-	* Sprite.fieldChannel - default: 'anycolor';
-	* Sprite.fieldTest - default: 0;
-	* Sprite.collisionVectors - default: [];
-	* Sprite.collisionPoints - default: [];
+	* Entity.fieldChannel - default: 'anycolor';
+	* Entity.fieldTest - default: 0;
+	* Entity.collisionVectors - default: [];
+	* Entity.collisionPoints - default: [];
 
 	@class window.scrawl_Collisions
 	**/
@@ -114,7 +114,7 @@ if (window.scrawl && !window.scrawl.workcols) {
 				visibility: false,
 			});
 			if (items.field) {
-				my.group[this.name + '_field'].sprites = [].concat(items.field);
+				my.group[this.name + '_field'].entitys = [].concat(items.field);
 			}
 			my.newGroup({
 				name: this.name + '_fence',
@@ -122,48 +122,48 @@ if (window.scrawl && !window.scrawl.workcols) {
 				visibility: false,
 			});
 			if (items.fence) {
-				my.group[this.name + '_fence'].sprites = [].concat(items.fence);
+				my.group[this.name + '_fence'].entitys = [].concat(items.fence);
 			}
 		};
 
 		my.d.Cell.fieldLabel = '';
 		/**
-	Builds a collision map image from sprites, for use in sprite field collision detection functions
+	Builds a collision map image from entitys, for use in entity field collision detection functions
 	@method Cell.buildField
 	@return This
 	@chainable
 	**/
 		my.Cell.prototype.buildField = function() {
-			var fieldSprites = [],
-				fenceSprites = [],
-				tempsprite = '',
+			var fieldEntitys = [],
+				fenceEntitys = [],
+				tempentity = '',
 				tempfill,
 				tempstroke,
 				myfill = my.ctx[this.context].get('fillStyle');
 			my.context[this.context].fillStyle = 'rgba(0,0,0,1)';
 			my.context[this.context].fillRect(0, 0, this.actualWidth, this.actualHeight);
 			my.context[this.context].fillStyle = myfill;
-			fieldSprites = my.group[this.name + '_field'].sprites;
-			for (var i = 0, iz = fieldSprites.length; i < iz; i++) {
-				tempsprite = my.sprite[fieldSprites[i]];
-				tempfill = my.ctx[tempsprite.context].fillStyle;
-				tempstroke = my.ctx[tempsprite.context].strokeStyle;
-				my.ctx[tempsprite.context].fillStyle = 'rgba(255,255,255,1)';
-				my.ctx[tempsprite.context].strokeStyle = 'rgba(255,255,255,1)';
-				tempsprite.forceStamp('fillDraw', this.name);
-				my.ctx[tempsprite.context].fillStyle = tempfill;
-				my.ctx[tempsprite.context].strokeStyle = tempstroke;
+			fieldEntitys = my.group[this.name + '_field'].entitys;
+			for (var i = 0, iz = fieldEntitys.length; i < iz; i++) {
+				tempentity = my.entity[fieldEntitys[i]];
+				tempfill = my.ctx[tempentity.context].fillStyle;
+				tempstroke = my.ctx[tempentity.context].strokeStyle;
+				my.ctx[tempentity.context].fillStyle = 'rgba(255,255,255,1)';
+				my.ctx[tempentity.context].strokeStyle = 'rgba(255,255,255,1)';
+				tempentity.forceStamp('fillDraw', this.name);
+				my.ctx[tempentity.context].fillStyle = tempfill;
+				my.ctx[tempentity.context].strokeStyle = tempstroke;
 			}
-			fenceSprites = my.group[this.name + '_fence'].sprites;
-			for (var j = 0, jz = fenceSprites.length; j < jz; j++) {
-				tempsprite = my.sprite[fenceSprites[j]];
-				tempfill = my.ctx[tempsprite.context].fillStyle;
-				tempstroke = my.ctx[tempsprite.context].strokeStyle;
-				my.ctx[tempsprite.context].fillStyle = 'rgba(0,0,0,1)';
-				my.ctx[tempsprite.context].strokeStyle = 'rgba(0,0,0,1)';
-				tempsprite.forceStamp('fillDraw', this.name);
-				my.ctx[tempsprite.context].fillStyle = tempfill;
-				my.ctx[tempsprite.context].strokeStyle = tempstroke;
+			fenceEntitys = my.group[this.name + '_fence'].entitys;
+			for (var j = 0, jz = fenceEntitys.length; j < jz; j++) {
+				tempentity = my.entity[fenceEntitys[j]];
+				tempfill = my.ctx[tempentity.context].fillStyle;
+				tempstroke = my.ctx[tempentity.context].strokeStyle;
+				my.ctx[tempentity.context].fillStyle = 'rgba(0,0,0,1)';
+				my.ctx[tempentity.context].strokeStyle = 'rgba(0,0,0,1)';
+				tempentity.forceStamp('fillDraw', this.name);
+				my.ctx[tempentity.context].fillStyle = tempfill;
+				my.ctx[tempentity.context].strokeStyle = tempstroke;
 			}
 			this.set({
 				fieldLabel: this.getImageData({
@@ -191,7 +191,7 @@ if (window.scrawl && !window.scrawl.workcols) {
 
 	Test will return: 
 	* false if it encounters a coordinate outside the bou8ds of its image map
-	* true if all coordinates exceed the test level (thus a sprite testing in the red channel will report true if it is entirely within a red part of the collision map
+	* true if all coordinates exceed the test level (thus a entity testing in the red channel will report true if it is entirely within a red part of the collision map
 	* the first coordinate that falls below, or equals, the test level
 	@method Cell.checkFieldAt
 	@param {Object} items Argument containing details of how and where to check the cell's collision map image
@@ -265,23 +265,23 @@ if (window.scrawl && !window.scrawl.workcols) {
 		};
 
 		/**
-	Check all sprites in the Group to see if they are colliding with the supplied sprite object. An Array of all sprite objects colliding with the reference sprite will be returned
-	@method Group.getSpritesCollidingWith
-	@param {String} sprite SPRITENAME String of the reference sprite; alternatively the sprite Object itself can be passed as the argument
-	@return Array of visible sprite Objects currently colliding with the reference sprite
+	Check all entitys in the Group to see if they are colliding with the supplied entity object. An Array of all entity objects colliding with the reference entity will be returned
+	@method Group.getEntitysCollidingWith
+	@param {String} entity SPRITENAME String of the reference entity; alternatively the entity Object itself can be passed as the argument
+	@return Array of visible entity Objects currently colliding with the reference entity
 	**/
-		my.Group.prototype.getSpritesCollidingWith = function(sprite) {
-			sprite = (my.isa(sprite, 'str')) ? my.sprite[sprite] : sprite;
-			if (my.contains(my.spritenames, sprite.name)) {
+		my.Group.prototype.getEntitysCollidingWith = function(entity) {
+			entity = (my.isa(entity, 'str')) ? my.entity[entity] : entity;
+			if (my.contains(my.entitynames, entity.name)) {
 				var hits = [],
-					myTests = sprite.getCollisionPoints();
-				for (var i = 0, iz = this.sprites.length; i < iz; i++) {
-					if (my.sprite[this.sprites[i]].name !== sprite.name) {
-						if (my.sprite[this.sprites[i]].get('visibility')) {
-							if (my.sprite[this.sprites[i]].checkHit({
+					myTests = entity.getCollisionPoints();
+				for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+					if (my.entity[this.entitys[i]].name !== entity.name) {
+						if (my.entity[this.entitys[i]].get('visibility')) {
+							if (my.entity[this.entitys[i]].checkHit({
 								tests: myTests
 							})) {
-								hits.push(this.sprites[i]);
+								hits.push(this.entitys[i]);
 							}
 						}
 					}
@@ -291,11 +291,11 @@ if (window.scrawl && !window.scrawl.workcols) {
 			return false;
 		};
 		/**
-	Check all sprites in the Group against each other to see if they are in collision
-	@method Group.getInGroupSpriteHits
-	@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of sprites currently in collision
+	Check all entitys in the Group against each other to see if they are in collision
+	@method Group.getInGroupEntityHits
+	@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
 	**/
-		my.Group.prototype.getInGroupSpriteHits = function() {
+		my.Group.prototype.getInGroupEntityHits = function() {
 			var hits = [],
 				cPoints = {},
 				cViz = {},
@@ -303,35 +303,35 @@ if (window.scrawl && !window.scrawl.workcols) {
 				ts1,
 				ts2,
 				tresult;
-			for (var i = 0, iz = this.sprites.length; i < iz; i++) {
-				temp = my.sprite[this.sprites[i]];
+			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+				temp = my.entity[this.entitys[i]];
 				cViz[temp.name] = temp.visibility;
 				if (cViz[temp.name]) {
 					cPoints[temp.name] = temp.getCollisionPoints();
 				}
 			}
-			for (var k = 0, kz = this.sprites.length; k < kz; k++) {
-				if (cViz[this.sprites[k]]) {
-					for (var j = k + 1, jz = this.sprites.length; j < jz; j++) {
-						if (cViz[this.sprites[j]]) {
+			for (var k = 0, kz = this.entitys.length; k < kz; k++) {
+				if (cViz[this.entitys[k]]) {
+					for (var j = k + 1, jz = this.entitys.length; j < jz; j++) {
+						if (cViz[this.entitys[j]]) {
 							if (this.regionRadius) {
-								ts1 = my.workcols.v1.set(my.sprite[this.sprites[k]].start);
-								ts2 = my.workcols.v2.set(my.sprite[this.sprites[j]].start);
+								ts1 = my.workcols.v1.set(my.entity[this.entitys[k]].start);
+								ts2 = my.workcols.v2.set(my.entity[this.entitys[j]].start);
 								tresult = ts1.vectorSubtract(ts2).getMagnitude();
 								if (tresult > this.regionRadius) {
 									continue;
 								}
 							}
-							if (my.sprite[this.sprites[j]].checkHit({
-								tests: cPoints[this.sprites[k]]
+							if (my.entity[this.entitys[j]].checkHit({
+								tests: cPoints[this.entitys[k]]
 							})) {
-								hits.push([this.sprites[k], this.sprites[j]]);
+								hits.push([this.entitys[k], this.entitys[j]]);
 								continue;
 							}
-							if (my.sprite[this.sprites[k]].checkHit({
-								tests: cPoints[this.sprites[j]]
+							if (my.entity[this.entitys[k]].checkHit({
+								tests: cPoints[this.entitys[j]]
 							})) {
-								hits.push([this.sprites[k], this.sprites[j]]);
+								hits.push([this.entitys[k], this.entitys[j]]);
 								continue;
 							}
 						}
@@ -341,12 +341,12 @@ if (window.scrawl && !window.scrawl.workcols) {
 			return hits;
 		};
 		/**
-	Check all sprites in this Group against all sprites in the argument Group, to see if they are in collision
-	@method Group.getBetweenGroupSpriteHits
+	Check all entitys in this Group against all entitys in the argument Group, to see if they are in collision
+	@method Group.getBetweenGroupEntityHits
 	@param {String} g GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument
-	@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of sprites currently in collision
+	@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
 	**/
-		my.Group.prototype.getBetweenGroupSpriteHits = function(g) {
+		my.Group.prototype.getBetweenGroupEntityHits = function(g) {
 			var hits = [],
 				cPoints = {},
 				cViz = {},
@@ -368,42 +368,42 @@ if (window.scrawl && !window.scrawl.workcols) {
 						return false;
 					}
 				}
-				for (var l = 0, lz = this.sprites.length; l < lz; l++) {
-					temp = my.sprite[this.sprites[l]];
+				for (var l = 0, lz = this.entitys.length; l < lz; l++) {
+					temp = my.entity[this.entitys[l]];
 					cViz[temp.name] = temp.visibility;
 					if (cViz[temp.name]) {
 						cPoints[temp.name] = temp.getCollisionPoints();
 					}
 				}
-				for (var i = 0, iz = g.sprites.length; i < iz; i++) {
-					temp = my.sprite[g.sprites[i]];
+				for (var i = 0, iz = g.entitys.length; i < iz; i++) {
+					temp = my.entity[g.entitys[i]];
 					cViz[temp.name] = temp.visibility;
 					if (cViz[temp.name]) {
 						cPoints[temp.name] = temp.getCollisionPoints();
 					}
 				}
-				for (var k = 0, kz = this.sprites.length; k < kz; k++) {
-					if (cViz[this.sprites[k]]) {
-						for (var j = 0, jz = g.sprites.length; j < jz; j++) {
-							if (cViz[g.sprites[j]]) {
+				for (var k = 0, kz = this.entitys.length; k < kz; k++) {
+					if (cViz[this.entitys[k]]) {
+						for (var j = 0, jz = g.entitys.length; j < jz; j++) {
+							if (cViz[g.entitys[j]]) {
 								if (this.regionRadius) {
-									ts1 = my.workcols.v1.set(my.sprite[this.sprites[k]].start);
-									ts2 = my.workcols.v2.set(my.sprite[g.sprites[j]].start);
+									ts1 = my.workcols.v1.set(my.entity[this.entitys[k]].start);
+									ts2 = my.workcols.v2.set(my.entity[g.entitys[j]].start);
 									tresult = ts1.vectorSubtract(ts2).getMagnitude();
 									if (tresult > this.regionRadius) {
 										continue;
 									}
 								}
-								if (my.sprite[g.sprites[j]].checkHit({
-									tests: cPoints[this.sprites[k]]
+								if (my.entity[g.entitys[j]].checkHit({
+									tests: cPoints[this.entitys[k]]
 								})) {
-									hits.push([this.sprites[k], g.sprites[j]]);
+									hits.push([this.entitys[k], g.entitys[j]]);
 									continue;
 								}
-								if (my.sprite[this.sprites[k]].checkHit({
-									tests: cPoints[g.sprites[j]]
+								if (my.entity[this.entitys[k]].checkHit({
+									tests: cPoints[g.entitys[j]]
 								})) {
-									hits.push([this.sprites[k], g.sprites[j]]);
+									hits.push([this.entitys[k], g.entitys[j]]);
 									continue;
 								}
 							}
@@ -415,69 +415,69 @@ if (window.scrawl && !window.scrawl.workcols) {
 			return false;
 		};
 		/**
-	Check all sprites in this Group against a &lt;canvas&gt; element's collision field image
+	Check all entitys in this Group against a &lt;canvas&gt; element's collision field image
 
 	If no argument is supplied, the Group's default Cell's &lt;canvas&gt; element will be used for the check
 
-	An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the sprite that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring
-	@method Group.getFieldSpriteHits
+	An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the entity that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring
+	@method Group.getFieldEntityHits
 	@param {String} [cell] CELLNAME of Cell whose &lt;canvas&gt; element is to be used for the check
 	@return Array of [SPRITENAME, Vector] Arrays
 	**/
-		my.Group.prototype.getFieldSpriteHits = function(cell) {
+		my.Group.prototype.getFieldEntityHits = function(cell) {
 			cell = (my.xt(cell)) ? cell : this.cell;
 			var hits = [],
 				result;
-			for (var j = 0, jz = this.sprites.length; j < jz; j++) {
-				result = my.sprite[this.sprites[j]].checkField(cell);
+			for (var j = 0, jz = this.entitys.length; j < jz; j++) {
+				result = my.entity[this.entitys[j]].checkField(cell);
 				if (!my.isa(result, 'bool')) {
-					hits.push([this.sprites[j], result]);
+					hits.push([this.entitys[j], result]);
 				}
 			}
 			return hits;
 		};
 
-		my.d.Sprite.fieldChannel = 'anycolor';
-		my.d.Sprite.fieldTest = 0;
-		my.d.Sprite.collisionVectors = [];
-		my.d.Sprite.collisionPoints = [];
+		my.d.Entity.fieldChannel = 'anycolor';
+		my.d.Entity.fieldTest = 0;
+		my.d.Entity.collisionVectors = [];
+		my.d.Entity.collisionPoints = [];
 		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Sprite);
+			my.mergeInto(my.d.Block, my.d.Entity);
 		}
 		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Sprite);
+			my.mergeInto(my.d.Shape, my.d.Entity);
 		}
 		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Sprite);
+			my.mergeInto(my.d.Wheel, my.d.Entity);
 		}
 		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Sprite);
+			my.mergeInto(my.d.Picture, my.d.Entity);
 		}
 		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Sprite);
+			my.mergeInto(my.d.Phrase, my.d.Entity);
 		}
 		if (my.xt(my.d.Path)) {
-			my.mergeInto(my.d.Path, my.d.Sprite);
+			my.mergeInto(my.d.Path, my.d.Entity);
 		}
 		/**
-	Sprite constructor hook function - modified by collisions module
-	@method Sprite.collisionsSpriteConstructor
+	Entity constructor hook function - modified by collisions module
+	@method Entity.collisionsEntityConstructor
 	@private
 	**/
-		my.Sprite.prototype.collisionsSpriteConstructor = function(items) {
+		my.Entity.prototype.collisionsEntityConstructor = function(items) {
 			if (my.xt(items.field)) {
-				this.addSpriteToCellFields();
+				this.addEntityToCellFields();
 			}
 			if (my.xt(items.fence)) {
-				this.addSpriteToCellFences();
+				this.addEntityToCellFences();
 			}
 		};
 		/**
-	Sprite.registerInLibrary hook function - modified by collisions module
-	@method Sprite.collisionsSpriteRegisterInLibrary
+	Entity.registerInLibrary hook function - modified by collisions module
+	@method Entity.collisionsEntityRegisterInLibrary
 	@private
 	**/
-		my.Sprite.prototype.collisionsSpriteRegisterInLibrary = function() {
+		my.Entity.prototype.collisionsEntityRegisterInLibrary = function() {
 			if (my.xt(this.collisionPoints)) {
 				this.collisionPoints = (my.isa(this.collisionPoints, 'arr')) ? this.collisionPoints : [this.collisionPoints];
 				this.collisionPoints = this.parseCollisionPoints(this.collisionPoints);
@@ -485,11 +485,11 @@ if (window.scrawl && !window.scrawl.workcols) {
 			return this;
 		};
 		/**
-	Sprite.set hook function - modified by collisions module
-	@method Sprite.collisionsSpriteSet
+	Entity.set hook function - modified by collisions module
+	@method Entity.collisionsEntitySet
 	@private
 	**/
-		my.Sprite.prototype.collisionsSpriteSet = function(items) {
+		my.Entity.prototype.collisionsEntitySet = function(items) {
 			if (my.xto([items.collisionPoints, items.field, items.fence])) {
 				if (my.xt(items.collisionPoints)) {
 					this.collisionPoints = (my.isa(items.collisionPoints, 'arr')) ? items.collisionPoints : [items.collisionPoints];
@@ -497,84 +497,84 @@ if (window.scrawl && !window.scrawl.workcols) {
 					delete this.collisionVectors;
 				}
 				if (my.xt(items.field)) {
-					this.addSpriteToCellFields();
+					this.addEntityToCellFields();
 				}
 				if (my.xt(items.fence)) {
-					this.addSpriteToCellFences();
+					this.addEntityToCellFences();
 				}
 			}
 		};
 		/**
-	Add this sprite to a (range of) Cell object field groups
-	@method Sprite.addSpriteToCellFields
+	Add this entity to a (range of) Cell object field groups
+	@method Entity.addEntityToCellFields
 	@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
 	@return This
 	@chainable
 	**/
-		my.Sprite.prototype.addSpriteToCellFields = function(cells) {
+		my.Entity.prototype.addEntityToCellFields = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (var i = 0, iz = cells.length; i < iz; i++) {
 				if (my.contains(my.cellnames, cells[i])) {
-					my.group[cells[i] + '_field'].addSpritesToGroup(this.name);
+					my.group[cells[i] + '_field'].addEntitysToGroup(this.name);
 				}
 			}
 			return this;
 		};
 		/**
-	Add this sprite to a (range of) Cell object fence groups
-	@method Sprite.addSpriteToCellFences
+	Add this entity to a (range of) Cell object fence groups
+	@method Entity.addEntityToCellFences
 	@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
 	@return This
 	@chainable
 	**/
-		my.Sprite.prototype.addSpriteToCellFences = function(cells) {
+		my.Entity.prototype.addEntityToCellFences = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (var i = 0, iz = cells.length; i < iz; i++) {
 				if (my.contains(my.cellnames, cells[i])) {
-					my.group[cells[i] + '_fence'].addSpritesToGroup(this.name);
+					my.group[cells[i] + '_fence'].addEntitysToGroup(this.name);
 				}
 			}
 			return this;
 		};
 		/**
-	Remove this sprite from a (range of) Cell object field groups
-	@method Sprite.removeSpriteFromCellFields
+	Remove this entity from a (range of) Cell object field groups
+	@method Entity.removeEntityFromCellFields
 	@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
 	@return This
 	@chainable
 	**/
-		my.Sprite.prototype.removeSpriteFromCellFields = function(cells) {
+		my.Entity.prototype.removeEntityFromCellFields = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (var i = 0, iz = cells.length; i < iz; i++) {
 				if (my.contains(my.cellnames, cells[i])) {
-					my.group[cells[i] + '_field'].removeSpritesFromGroup(this.name);
+					my.group[cells[i] + '_field'].removeEntitysFromGroup(this.name);
 				}
 			}
 			return this;
 		};
 		/**
-	Remove this sprite from a (range of) Cell object fence groups
-	@method Sprite.removeSpriteFromCellFences
+	Remove this entity from a (range of) Cell object fence groups
+	@method Entity.removeEntityFromCellFences
 	@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
 	@return This
 	@chainable
 	**/
-		my.Sprite.prototype.removeSpriteFromCellFences = function(cells) {
+		my.Entity.prototype.removeEntityFromCellFences = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (var i = 0, iz = cells.length; i < iz; i++) {
 				if (my.contains(my.cellnames, cells[i])) {
-					my.group[cells[i] + '_fence'].removeSpritesFromGroup(this.name);
+					my.group[cells[i] + '_fence'].removeEntitysFromGroup(this.name);
 				}
 			}
 			return this;
 		};
 		/**
-	Check this sprite's collision Vectors against a Cell object's collision field image to see if any of them are colliding with the Cell's field sprites
-	@method Sprite.checkField
+	Check this entity's collision Vectors against a Cell object's collision field image to see if any of them are colliding with the Cell's field entitys
+	@method Entity.checkField
 	@param {String} [cell] CELLNAME String of the Cell to be checked against
 	@return First Vector coordinate to 'pass' the Cell.checkFieldAt() function's test; true if none pass; false if the test parameters are out of bounds
 	**/
-		my.Sprite.prototype.checkField = function(cell) {
+		my.Entity.prototype.checkField = function(cell) {
 			var myCell = (cell) ? my.cell[cell] : my.cell[my.group[this.group].cell];
 			return myCell.checkFieldAt({
 				coordinates: this.getCollisionPoints(),
@@ -583,11 +583,11 @@ if (window.scrawl && !window.scrawl.workcols) {
 			});
 		};
 		/**
-	Calculate the current positions of this sprite's collision Vectors, taking into account the sprite's current position, roll and scale
-	@method Sprite.getCollisionPoints
+	Calculate the current positions of this entity's collision Vectors, taking into account the entity's current position, roll and scale
+	@method Entity.getCollisionPoints
 	@return Array of coordinate Vectors
 	**/
-		my.Sprite.prototype.getCollisionPoints = function() {
+		my.Entity.prototype.getCollisionPoints = function() {
 			var p = [],
 				v,
 				c;
@@ -619,14 +619,14 @@ if (window.scrawl && !window.scrawl.workcols) {
 		/**
 	Collision detection helper function
 
-	Parses the collisionPoints array to generate coordinate Vectors representing the sprite's collision points
-	@method Sprite.buildCollisionVectors
+	Parses the collisionPoints array to generate coordinate Vectors representing the entity's collision points
+	@method Entity.buildCollisionVectors
 	@param {Array} [items] Array of collision point data
 	@return This
 	@chainable
 	@private
 	**/
-		my.Sprite.prototype.buildCollisionVectors = function(items) {
+		my.Entity.prototype.buildCollisionVectors = function(items) {
 			var p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,
 				o = this.getOffsetStartVector().reverse(),
 				w = this.width,
@@ -689,13 +689,13 @@ if (window.scrawl && !window.scrawl.workcols) {
 	Collision detection helper function
 
 	Parses user input for the collisionPoint attribute
-	@method Sprite.parseCollisionPoints
+	@method Entity.parseCollisionPoints
 	@param {Array} [items] Array of collision point data
 	@return This
 	@chainable
 	@private
 	**/
-		my.Sprite.prototype.parseCollisionPoints = function(items) {
+		my.Entity.prototype.parseCollisionPoints = function(items) {
 			var myItems = (my.xt(items)) ? [].concat(items) : [],
 				p = [];
 			for (var i = 0, iz = myItems.length; i < iz; i++) {

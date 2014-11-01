@@ -30,7 +30,7 @@ var mycode = function() {
 	});
 	pat = scrawl.group.pat;
 
-	//add sprites to the pattern cell ...
+	//add entitys to the pattern cell ...
 	scrawl.makeLine({
 		name: 'guide',
 		startX: -25,
@@ -69,7 +69,7 @@ var mycode = function() {
 		canvas: 'pat',
 	});
 
-	//add a block sprite, for showing off the pattern
+	//add a block entity, for showing off the pattern
 	scrawl.newBlock({
 		startX: 200,
 		startY: 200,

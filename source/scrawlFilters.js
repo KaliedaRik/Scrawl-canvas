@@ -76,7 +76,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 
 	* __value__ - Number or String. Percentage value of grayscaling effect: as a Number, between 0 (no effect) and 1 (full grayscale effect); as a String, between '0%' and '100%' (default: 1)
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method grayscale
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -111,7 +111,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 
 	* __value__ - Number or String. Percentage value of sharpen effect: as a Number, between 0 (no effect) and 1 (full sharpen effect); as a String, between '0%' and '100%' (default: 1)
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method sharpen
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -183,7 +183,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 
 	* __value__ - Number or String. Percentage value of invert effect: as a Number, between 0 (no effect) and 1 (full invert effect); as a String, between '0%' and '100%' (default: 1)
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method invert
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -214,7 +214,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 
 	* __value__ - Number or String. Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1.
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method brightness
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -244,7 +244,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 
 	* __value__ - Number or String. Percentage value of saturation effect: as a Number, between 0 (gray) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1.
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method saturation
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -274,7 +274,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 
 	* __value__ - Number or String. Percentage value of threshold border: as a Number, between 0 (black) and 1 (white); as a String, between '0%' and '100%' (default: 0.5)
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method threshold
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -316,7 +316,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 	* __blue__ - Number or String. Percentage value of blue channel effect on the pixel: as a Number, between 0 (set blue channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
 	* __alpha__ - Number or String. Percentage value of alpha channel effect on the pixel: as a Number, between 0 (set alpha channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method channels
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -360,7 +360,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 	* __blue__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
 	* __alpha__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method channelStep
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -395,7 +395,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 
 	* __value__ - Number or String. Percentage value of sepia effect: as a Number, between 0 (no effect) and 1 (full sepia tint); as a String, between '0%' and '100%' (default: 1).
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method sepia
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -412,7 +412,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 
 	* __value__ - Number or String. Percentage value of tint effect: as a Number, between 0 (no effect) and 1 (full tint); as a String, between '0%' and '100%' (default: 1).
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 
 	The argument object can take up to nine additional attributes, used to set the tinting effect. Default values for these attributes will generate a sepia tint. All values are Numbers between 0 and 1:
@@ -477,7 +477,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 	* __radius__ - Number. Blur brush x and y radius (default: 0)
 	* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method blur
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -554,7 +554,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 	* __height__ - Number. Block height (default: 5)
 	* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method pixelate
 	@param {Object} [items] Key:value Object argument for setting attributes
@@ -620,7 +620,7 @@ if (window.scrawl && !window.scrawl.filterSetup) {
 	* __outerWidth__ - Number. Block width (default: 8)
 	* __outerHeight__ - Number. Block height (default: 8)
 	* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-	* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
+	* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
 	* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
 	@method glassTile
 	@param {Object} [items] Key:value Object argument for setting attributes

@@ -13,10 +13,11 @@ var mycode = function() {
 		myShape,
 		control,
 		now,
-		spritePie,
+		entityPie,
 		hourHand,
 		minuteHand,
 		secondHand,
+		backplate,
 		minX = -30,
 		maxX = 270,
 		minY = -30,
@@ -28,7 +29,7 @@ var mycode = function() {
 		regularShapes = 4,
 		linearShapes = 1,
 		wheels = 2,
-		count = 0,
+		count = 1,
 		regularShapesAlpha = 0.5,
 		linearShapesAlpha = 0.75,
 		wheelsAlpha = 0.5,
@@ -37,7 +38,7 @@ var mycode = function() {
 		doClock,
 		buildCells,
 		buildClock,
-		buildSprites,
+		buildEntitys,
 		myX,
 		myY,
 		myS,
@@ -59,7 +60,7 @@ var mycode = function() {
 	doClock = function() {
 		buildCells();
 		buildClock();
-		buildSprites();
+		buildEntitys();
 	};
 
 	//define cells
@@ -89,9 +90,10 @@ var mycode = function() {
 		mycanvas.setDrawOrder(['kaliedoscope', 'clock']);
 	};
 
-	//define kaliedoscope sprites
-	buildSprites = function() {
+	//define kaliedoscope entitys
+	buildEntitys = function() {
 		var i;
+
 		for (i = 0; i < regularShapes; i++) {
 			myShape = scrawl.makeRegularShape({
 				startX: (Math.floor(Math.random() * 140)) + 50,
@@ -164,8 +166,41 @@ var mycode = function() {
 		}
 	};
 
-	//define clock sprites
+	//define clock entitys
 	buildClock = function() {
+		var i, cols = [];
+
+		for (i = 0; i <= 1; i += 0.01) {
+			cols.push({
+				color: 'transparent',
+				stop: i
+			});
+			cols.push({
+				color: 'rgba(160, 160, 160, 0.2)',
+				stop: i + 0.005
+			});
+		}
+		scrawl.newRadialGradient({
+			name: 'myradial',
+			startX: '50%',
+			startY: '50%',
+			startRadius: 1,
+			endX: '50%',
+			endY: '50%',
+			endRadius: 240,
+			color: cols,
+			setToEntity: true,
+			shift: 0.0002,
+			autoUpdate: true,
+		});
+		backplate = scrawl.newWheel({
+			radius: 240,
+			startX: '50%',
+			startY: '50%',
+			group: mycanvas.base,
+			fillStyle: 'myradial',
+			method: 'fill',
+		});
 		scrawl.newPicture({
 			name: 'segment',
 			source: 'kaliedoscopeBackground',
@@ -203,7 +238,7 @@ var mycode = function() {
 			order: 8,
 			group: 'clock',
 		});
-		spritePie = scrawl.newPicture({
+		entityPie = scrawl.newPicture({
 			name: 'kaliedoscope',
 			source: 'kaliedoscopeSegment',
 			method: 'fill',
@@ -247,17 +282,25 @@ var mycode = function() {
 			data: 'l200,8-200,8z',
 			handleY: '100%',
 			handleX: '5%',
+			shadowColor: 'rgba(0, 0, 0, 0.2)',
+			shadowOffsetX: 1,
+			shadowOffsetY: 1,
+			shadowBlur: 3,
 		});
 		minuteHand = hourHand.clone({
 			name: 'minute',
 			data: 'l230,6-230,6z',
 			order: 6,
+			shadowOffsetX: 2,
+			shadowOffsetY: 2,
 		});
 		secondHand = hourHand.clone({
 			name: 'second',
 			order: 7,
 			data: 'l250,5-250,5z',
 			fillStyle: 'darkred',
+			shadowOffsetX: 3,
+			shadowOffsetY: 4,
 		});
 	};
 
@@ -289,8 +332,9 @@ var mycode = function() {
 			minuteHand.roll = (((tM * 60) + tS) * (360 / 3600)) - 90;
 			hourHand.roll = (((tH * 60) + tM) * (360 / 720)) - 90;
 			mycanvas.compile(['kaliedoscopeBackground', 'kaliedoscopeSegment']);
+			backplate.stamp();
 			for (i = 1; i < 7; i++) {
-				spritePie.set({
+				entityPie.set({
 					roll: (i * 60) + 15,
 					flipReverse: false,
 				}).stamp().set({

@@ -35,10 +35,10 @@ var mycode = function() {
 		direction: 'left',
 	};
 
-	//import sprite sheet into scrawl library
+	//import entity sheet into scrawl library
 	scrawl.getImagesByClass('demo058');
 
-	//define sprite sheet objects - one for each animation sequence
+	//define entity sheet objects - one for each animation sequence
 	scrawl.newAnimSheet({
 		name: 'tiger_leftStand',
 		running: 'forward',
@@ -291,7 +291,7 @@ var mycode = function() {
         }, ],
 	});
 
-	//define sprite
+	//define entity
 	myTiger = scrawl.newPicture({
 		name: 'tigerFrame',
 		startX: 375,

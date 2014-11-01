@@ -56,6 +56,55 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141101
+	- Sprite to Entity change:
+		- completed change for all demos
+		- partial testing suggest change has been successful
+			- filter demos no longer working
+				- not a great loss - filters are going to change anyway
+	- decisions:
+		- keep ScrawlImage, but massively simplified
+			- no filters
+		- new Entity - Frame
+			- will have 3 parts:
+				- first, a source (img element, video element, canvas element, or img element generated from another Entity or Group)
+					- much like simplified ScrawlImage
+				- second, a path to act as a mask or stencil (default to rectangle)
+					- for clipping the frame, and for collision detection
+				- third, a set of filters to be applied to Frame
+	- updated scrawl.loadModules() function
+		- modules can now have (hardcoded) dependencies - stored in new scrawl.loadDependencies object
+		- added new scrawl.modules attribute
+			- array of loaded module aliases
+			- can be used as a (better?) check before running a module's code
+		- added in some rudimentary error checking
+		- finally separated quaternion code out of core and into its own module - scrawlQuaternion.js
+			- alias 'quaternion'
+			- stacks and physics modules require quaternion module
+				- tested on demo204 - concept works
+		- put scrawl.getImagesByClass() and .getImageById() functions into their own module - scrawlImageLoad.js
+			- alias 'imageload'
+			- required by frame and images modules
+
+141031
+	- fixed demo090 - kaliedoscope clock
+	- MAJOR BREAKING CHANGE - renaming objects
+		- Sprite -> Entity; sprite -> entity (plural entitys)
+			- changed all modules
+			- changed demos up to demo111
+		- Picture -> Frame
+		- ScrawlImage -> Image
+		- AnimSheet -> Spritesheet
+		- new Video wrapper object
+		- getting rid of scrawl.img
+		- renamed scrawl.object to scrawl.asset
+			- badly damages the scrawlImages module
+				- but the whole images thing needs sorting out
+		- reasoning:
+			- make object names reflect what they do
+				- Frame (previously Picture) frames either images, sprites or video, or parts of them
+				- Sprite to most people means animated image
+	
 141030
 	- BREAKING change
 		- renaming Cell attributes

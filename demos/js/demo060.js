@@ -21,12 +21,12 @@ var mycode = function() {
 		animateStar,
 		fieldBall,
 		myBall,
-		mySprite,
+		myEntity,
 		updateTimer,
 		dTime,
 		tkr;
 
-	//set out the field within which the sprite will move
+	//set out the field within which the entity will move
 	scrawl.cell[scrawl.pad.mycanvas.base].set({
 		backgroundColor: 'rgba(0,127,0,0.2)',
 	});
@@ -39,12 +39,12 @@ var mycode = function() {
 		strokeStyle: 'green',
 		order: 10,
 		field: true,
-	}).clone({ //field attribute not retained by sprite, so cloned sprite not part of field
+	}).clone({ //field attribute not retained by entity, so cloned entity not part of field
 		method: 'fill',
 		fillStyle: 'white',
 		order: 0,
 	});
-	//add some fences in the field which sprite will not be able to cross
+	//add some fences in the field which entity will not be able to cross
 	scrawl.newWheel({
 		startX: 500,
 		startY: 125,
@@ -82,7 +82,7 @@ var mycode = function() {
 	//build the field/fences collision array
 	scrawl.buildFields();
 
-	//define physics sprites
+	//define physics entitys
 	fieldBall = scrawl.newParticle({
 		mass: 1000000,
 	});
@@ -96,8 +96,8 @@ var mycode = function() {
 		radius: 0.2,
 	});
 
-	//define displayed sprites
-	mySprite = scrawl.makeRegularShape({
+	//define displayed entitys
+	myEntity = scrawl.makeRegularShape({
 		name: 'star',
 		lineWidth: 5,
 		lineJoin: 'round',
@@ -124,7 +124,7 @@ var mycode = function() {
 	myGroup = scrawl.newGroup({
 		name: 'colgroup',
 		visibility: false,
-		sprites: ['fender'],
+		entitys: ['fender'],
 	});
 
 	//physics update function
@@ -140,7 +140,7 @@ var mycode = function() {
 		myFender.setDelta({
 			scale: (myFender.scale + 0.01 <= 1) ? 0.01 : 0,
 		});
-		result = myGroup.getFieldSpriteHits();
+		result = myGroup.getFieldEntityHits();
 		if (result.length > 0) {
 			myFender.setDelta({
 				scale: (myFender.scale > 0.8) ? -0.03 : 0,
@@ -162,7 +162,7 @@ var mycode = function() {
 				distance: radius,
 			});
 		}
-		mySprite.setDelta({
+		myEntity.setDelta({
 			roll: dRoll,
 		});
 	};

@@ -43,7 +43,7 @@ var mycode = function() {
 		//pointerEvents: 'none',
 	});
 
-	//build sprite
+	//build entity
 	scrawl.newWheel({
 		name: 'mywheel',
 		radius: 70,
@@ -58,7 +58,7 @@ var mycode = function() {
 	scrawl.newAnimation({
 		fn: function() {
 
-			scrawl.sprite.mywheel.set({
+			scrawl.entity.mywheel.set({
 				visibility: (mycanvas.getMouse().active) ? true : false,
 			});
 			scrawl.render();

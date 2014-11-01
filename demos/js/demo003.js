@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define some phrase sprites to hold the text
+	//define some phrase entitys to hold the text
 	scrawl.newPhrase({
 		text: 'Hello, Scrawl World!',
 		handleX: 'center',

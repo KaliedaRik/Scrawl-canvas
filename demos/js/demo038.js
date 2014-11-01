@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define Shape sprite
+	//define Shape entity
 	scrawl.makePath({
 		name: 'track',
 		data: 'm-150-150 100,0 100,100 100,0 0,-50 -50,-50 -150,100 -100,0',
@@ -23,7 +23,7 @@ var mycode = function() {
 		precision: 1,
 	});
 
-	//define mark sprites
+	//define mark entitys
 	scrawl.newWheel({
 		name: 'circle',
 		visibility: false,

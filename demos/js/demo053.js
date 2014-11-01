@@ -23,7 +23,7 @@ var mycode = function() {
 		endY: '50%',
 		shift: 0.001,
 		autoUpdate: true,
-		setToSprite: true,
+		setToEntity: true,
 		color: [{
 			color: 'red',
 			stop: 0
@@ -45,7 +45,7 @@ var mycode = function() {
         }, ],
 	});
 
-	//define sprites
+	//define entitys
 	star = scrawl.makeRegularShape({
 		name: 'star',
 		startX: 200,

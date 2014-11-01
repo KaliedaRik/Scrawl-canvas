@@ -17,7 +17,7 @@ var mycode = function() {
 		name: 'mygroup',
 	});
 
-	//build sprite
+	//build entity
 	scrawl.newPattern({
 		name: 'p1',
 		image: 'warning',
@@ -51,7 +51,7 @@ var mycode = function() {
 		roll: 270,
 	});
 
-	myGroup.convertToSprite({
+	myGroup.convertToEntity({
 		startX: 300,
 		startY: 100,
 		handleX: 'center',

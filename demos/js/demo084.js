@@ -27,11 +27,11 @@ var mycode = function() {
 		myX,
 		myY,
 		hit,
-		mySprite,
+		myEntity,
 		startTileMove,
 		endTileMove,
 		mixTiles,
-		handleSprite;
+		handleEntity;
 
 	//import images into scrawl library
 	scrawl.getImagesByClass('demo084');
@@ -50,7 +50,7 @@ var mycode = function() {
 		order: 2,
 	});
 
-	//define sprites
+	//define entitys
 	myTile = scrawl.newPicture({
 		source: 'gun',
 		group: 'tiles',
@@ -74,7 +74,7 @@ var mycode = function() {
 			});
 		}
 	}
-	scrawl.deleteSprite([myTile.name, 'tile44']);
+	scrawl.deleteEntity([myTile.name, 'tile44']);
 
 	scrawl.newShape({
 		strokeStyle: 'white',
@@ -102,7 +102,7 @@ var mycode = function() {
 	//animation functions
 	getLegalTiles = function() { //get tiles next to the mySpace tile
 		legalTiles = [];
-		hit = mySpace.getBetweenGroupSpriteHits(myTiles);
+		hit = mySpace.getBetweenGroupEntityHits(myTiles);
 		for (var i = 0, z = hit.length; i < z; i++) {
 			scrawl.pushUnique(legalTiles, hit[i][1]);
 		}
@@ -165,7 +165,7 @@ var mycode = function() {
 			}
 			previousTile = selectedTile;
 			selectedTile = legalTiles[Math.floor(Math.random() * legalTiles.length)];
-			startTileMove(scrawl.sprite[selectedTile]);
+			startTileMove(scrawl.entity[selectedTile]);
 			mixCounter++;
 			if (mixCounter >= 25) {
 				prepare = false;
@@ -175,24 +175,24 @@ var mycode = function() {
 	};
 
 	//event handler
-	handleSprite = function(e) {
+	handleEntity = function(e) {
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
 		}
 		if (!prepare) {
 			if (!moving) {
-				mySprite = myTiles.getSpriteAt(here);
-				if (mySprite) {
+				myEntity = myTiles.getEntityAt(here);
+				if (myEntity) {
 					getLegalTiles();
-					if (scrawl.contains(legalTiles, mySprite.name)) {
-						startTileMove(mySprite);
+					if (scrawl.contains(legalTiles, myEntity.name)) {
+						startTileMove(myEntity);
 					}
 				}
 			}
 		}
 	};
-	myCanvas.addEventListener('mouseup', handleSprite, false);
+	myCanvas.addEventListener('mouseup', handleEntity, false);
 
 	//animation object
 	scrawl.newAnimation({

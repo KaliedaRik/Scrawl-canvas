@@ -12,7 +12,7 @@ var mycode = function() {
 		here,
 		mouseArrow = false;
 
-	//define sprites
+	//define entitys
 	scrawl.makePath({
 		name: 'arrow',
 		startX: 200,
@@ -43,10 +43,10 @@ var mycode = function() {
 			handleX: 'center',
 		});
 	}
-	scrawl.sprite.aPoint1.set({
+	scrawl.entity.aPoint1.set({
 		handleX: 'right'
 	});
-	scrawl.sprite.aPoint4.set({
+	scrawl.entity.aPoint4.set({
 		handleX: 'left'
 	});
 
@@ -58,14 +58,14 @@ var mycode = function() {
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {
-				scrawl.sprite.arrow.set({
+				scrawl.entity.arrow.set({
 					pivot: 'mouse',
 					roll: Math.atan2(here.y - 200, here.x - 200) / scrawl.radian,
 				});
 				scrawl.render();
 			}
 			else {
-				scrawl.sprite.arrow.set({
+				scrawl.entity.arrow.set({
 					pivot: false,
 				});
 			}

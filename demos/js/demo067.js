@@ -15,7 +15,7 @@ var mycode = function() {
 		name: 'phrases',
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.makeEllipse({
 		name: 'track',
 		startX: 300,

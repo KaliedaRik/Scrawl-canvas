@@ -18,7 +18,7 @@ var mycode = function() {
 	//define designs (gradients)
 	scrawl.newGradient({
 		name: 'grad_1',
-		setToSprite: true,
+		setToEntity: true,
 		startX: '-50%',
 		endX: '150%',
 		startY: '0%',
@@ -46,7 +46,7 @@ var mycode = function() {
         }, ],
 	}).clone({
 		name: 'grad_2',
-		setToSprite: false,
+		setToEntity: false,
 		startX: -100,
 		startY: 0,
 		endX: 500,
@@ -73,7 +73,7 @@ var mycode = function() {
         }, ],
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newPhrase({
 		name: 'filter',
 		text: 'Look what\nScrawl.js\ncan do!',

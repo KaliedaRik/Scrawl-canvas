@@ -45,7 +45,7 @@ var mycode = function() {
 		}).stamp();
 	}
 
-	//limit the checking region for country sprite collision detection
+	//limit the checking region for country entity collision detection
 	countries.regionRadius = 465;
 
 	//animation object
@@ -53,7 +53,7 @@ var mycode = function() {
 		fn: function() {
 			//update display; check if mouse cursor is over an outline
 			here = mypad.show().getMouse();
-			newCountry = countries.getSpriteAt(here);
+			newCountry = countries.getEntityAt(here);
 
 			//action for when mouse cursor crosses a border
 			if (newCountry && newCountry !== currentCountry) {

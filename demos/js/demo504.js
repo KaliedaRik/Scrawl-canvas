@@ -15,7 +15,7 @@ var mycode = function() {
 		clickedObject,
 		myCol,
 		myGroup = scrawl.group[myPad.base],
-		handleSprite;
+		handleEntity;
 
 	//import images into scrawl library
 	scrawl.getImagesByClass('demo504');
@@ -37,7 +37,7 @@ var mycode = function() {
 	scrawl.newGradient({
 		name: 'gradient',
 		shift: 0.002,
-		setToSprite: true,
+		setToEntity: true,
 		color: [{
 			color: '#333333',
 			stop: 0
@@ -98,7 +98,7 @@ var mycode = function() {
         }],
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.makeRegularShape({
 		startX: 420,
 		startY: 100,
@@ -106,7 +106,7 @@ var mycode = function() {
 		radius: 50,
 		winding: 'evenodd',
 		fillStyle: 'myRed',
-		order: myGroup.sprites.length,
+		order: myGroup.entitys.length,
 		method: 'fillDraw',
 	});
 
@@ -117,7 +117,7 @@ var mycode = function() {
 		method: 'fillDraw',
 		width: 150,
 		height: 100,
-		order: myGroup.sprites.length,
+		order: myGroup.entitys.length,
 		shadowBlur: 4,
 		shadowColor: 'Black',
 		startX: 80,
@@ -129,7 +129,7 @@ var mycode = function() {
 		fillStyle: 'myBlue',
 		lineWidth: 6,
 		method: 'fillDraw',
-		order: myGroup.sprites.length,
+		order: myGroup.entitys.length,
 		width: 100,
 		height: 100,
 		startX: 300,
@@ -146,7 +146,7 @@ var mycode = function() {
 		startX: 600,
 		startY: 90,
 		lineDash: [20, 5, 5, 5],
-		order: myGroup.sprites.length,
+		order: myGroup.entitys.length,
 	});
 
 	scrawl.newPicture({
@@ -156,7 +156,7 @@ var mycode = function() {
 		method: 'fill',
 		source: 'tiger',
 		animSheet: 'mytiger',
-		order: myGroup.sprites.length,
+		order: myGroup.entitys.length,
 		checkHitUsingImageData: true,
 		handleX: 'center',
 		handleY: 'center',
@@ -166,7 +166,7 @@ var mycode = function() {
 
 	scrawl.newPhrase({
 		method: 'fill',
-		order: myGroup.sprites.length,
+		order: myGroup.entitys.length,
 		text: 'No! Clone me! Me!',
 		startX: 500,
 		startY: 300,
@@ -174,13 +174,13 @@ var mycode = function() {
 	});
 
 	//event listener
-	handleSprite = function(e) {
+	handleEntity = function(e) {
 		var i, iz, a, b, r;
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
 		}
-		clickedObject = myGroup.getSpriteAt(here);
+		clickedObject = myGroup.getEntityAt(here);
 		if (clickedObject) {
 			if (clickedObject.name === 'cat') {
 				a = clickedObject.toString();
@@ -209,31 +209,31 @@ var mycode = function() {
 			myPad.setDisplayOffsets();
 		}
 	};
-	myCanvas.addEventListener('mouseup', handleSprite, false);
+	myCanvas.addEventListener('mouseup', handleEntity, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();
-			for (var i = 0, z = myGroup.sprites.length; i < z; i++) {
-				if (scrawl.sprite[myGroup.sprites[i]].type === 'Path') {
-					scrawl.sprite[myGroup.sprites[i]].setDelta({
+			for (var i = 0, z = myGroup.entitys.length; i < z; i++) {
+				if (scrawl.entity[myGroup.entitys[i]].type === 'Path') {
+					scrawl.entity[myGroup.entitys[i]].setDelta({
 						roll: 0.5,
 					});
 				}
-				if (scrawl.sprite[myGroup.sprites[i]].type === 'Block') {
-					scrawl.sprite[myGroup.sprites[i]].setDelta({
+				if (scrawl.entity[myGroup.entitys[i]].type === 'Block') {
+					scrawl.entity[myGroup.entitys[i]].setDelta({
 						lineDashOffset: (i % 2 === 0) ? 0.1 : -0.1,
 					});
 				}
-				if (scrawl.sprite[myGroup.sprites[i]].type === 'Wheel') {
-					scrawl.sprite[myGroup.sprites[i]].setDelta({
+				if (scrawl.entity[myGroup.entitys[i]].type === 'Wheel') {
+					scrawl.entity[myGroup.entitys[i]].setDelta({
 						roll: (i % 2 === 0) ? 0.2 : -0.2,
 					});
 				}
 			}
 			if (here.active) {
-				myCanvas.style.cursor = (myGroup.getSpriteAt(here)) ? 'pointer' : 'auto';
+				myCanvas.style.cursor = (myGroup.getEntityAt(here)) ? 'pointer' : 'auto';
 			}
 			scrawl.render();
 

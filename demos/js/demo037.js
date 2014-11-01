@@ -10,9 +10,9 @@ var mycode = function() {
 	var myPad = scrawl.pad.mycanvas,
 		backgroundCell,
 		magnifierCell,
-		backgroundSprite,
-		magnifierSprite,
-		stencilSprite,
+		backgroundEntity,
+		magnifierEntity,
+		stencilEntity,
 		here,
 		mouse;
 
@@ -30,7 +30,7 @@ var mycode = function() {
 		pivot: 'mouse',
 	});
 
-	backgroundSprite = scrawl.newPicture({
+	backgroundEntity = scrawl.newPicture({
 		name: 'miniscene',
 		source: 'river',
 		method: 'fill',
@@ -42,7 +42,7 @@ var mycode = function() {
 		copyWidth: 3750,
 		copyHeight: 1875,
 	});
-	magnifierSprite = scrawl.newPicture({
+	magnifierEntity = scrawl.newPicture({
 		name: 'magnifier',
 		source: 'river',
 		method: 'fill',
@@ -53,7 +53,7 @@ var mycode = function() {
 		copyWidth: 140,
 		copyHeight: 140,
 	});
-	stencilSprite = scrawl.newWheel({
+	stencilEntity = scrawl.newWheel({
 		name: 'stencil',
 		startX: 70,
 		startY: 70,
@@ -63,19 +63,19 @@ var mycode = function() {
 		group: 'magnifier',
 	});
 
-	backgroundSprite.stamp();
+	backgroundEntity.stamp();
 	myPad.setDrawOrder(['background']);
 	myPad.show();
 
 	mouse = function() {
-		magnifierSprite.set({
+		magnifierEntity.set({
 			copyX: (here.x * 5) + 10,
 			copyY: (here.y * 5) + 650,
 		});
 		myPad.clear(['magnifier']);
-		stencilSprite.stamp('fill');
-		magnifierSprite.stamp();
-		stencilSprite.stamp('draw');
+		stencilEntity.stamp('fill');
+		magnifierEntity.stamp();
+		stencilEntity.stamp('draw');
 		myPad.setDrawOrder(['background', 'magnifier']);
 		myPad.show();
 	};

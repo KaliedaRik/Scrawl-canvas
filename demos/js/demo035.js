@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var mySprites,
+	var myEntitys,
 		pin,
 		myCol,
 		currentScale = 1,
@@ -55,8 +55,8 @@ var mycode = function() {
 		name: 'mylabels',
 		order: 0,
 	});
-	mySprites = scrawl.newGroup({
-		name: 'mysprites',
+	myEntitys = scrawl.newGroup({
+		name: 'myentitys',
 		order: 1,
 	});
 	scrawl.newGroup({
@@ -81,7 +81,7 @@ var mycode = function() {
 	scrawl.newGradient({
 		name: 'gradient',
 		shift: 0.002,
-		setToSprite: true,
+		setToEntity: true,
 		color: [{
 			color: '#333333',
 			stop: 0
@@ -103,8 +103,8 @@ var mycode = function() {
         }, ],
 	});
 
-	//define sprites
-	pin = scrawl.newWheel({ //template sprite
+	//define entitys
+	pin = scrawl.newWheel({ //template entity
 		radius: 3,
 		method: 'fillDraw',
 		fillStyle: '#880000',
@@ -119,14 +119,14 @@ var mycode = function() {
 		font: '40pt Arial, sans-serif',
 		handleX: 'center',
 		handleY: 'center',
-		text: 'Path sprites',
+		text: 'Path entitys',
 		group: 'mylabels',
 	}).clone({
 		startY: 300,
-		text: 'Shape sprites',
+		text: 'Shape entitys',
 	}).clone({
 		startY: 500,
-		text: 'Other sprites',
+		text: 'Other entitys',
 	});
 
 	scrawl.makeRegularShape({
@@ -138,7 +138,7 @@ var mycode = function() {
 		winding: 'evenodd',
 		fillStyle: 'myRed',
 		method: 'fillDraw',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'myregularshape',
@@ -154,7 +154,7 @@ var mycode = function() {
 		lineWidth: 4,
 		lineCap: 'round',
 		strokeStyle: 'blue',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'mylineshape',
@@ -172,7 +172,7 @@ var mycode = function() {
 		lineWidth: 4,
 		lineCap: 'round',
 		strokeStyle: 'blue',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'myquadshape',
@@ -190,7 +190,7 @@ var mycode = function() {
 		lineJoin: 'round',
 		fillStyle: 'lightblue',
 		method: 'fillDraw',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'myrectshape',
@@ -207,7 +207,7 @@ var mycode = function() {
 		winding: 'evenodd',
 		fillStyle: 'myRed',
 		method: 'fillDraw',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'myregularoutline',
@@ -224,7 +224,7 @@ var mycode = function() {
 		lineWidth: 4,
 		lineCap: 'round',
 		strokeStyle: 'blue',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'mylineoutline',
@@ -243,7 +243,7 @@ var mycode = function() {
 		lineWidth: 4,
 		lineCap: 'round',
 		strokeStyle: 'blue',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'myquadoutline',
@@ -262,7 +262,7 @@ var mycode = function() {
 		lineJoin: 'round',
 		fillStyle: 'lightblue',
 		method: 'fillDraw',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'myrectoutline',
@@ -281,7 +281,7 @@ var mycode = function() {
 		shadowColor: 'Black',
 		startX: 100,
 		startY: 500,
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'mypicture',
@@ -299,7 +299,7 @@ var mycode = function() {
 		startX: 300,
 		startY: 500,
 		lineDash: [20, 5],
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'myblock',
@@ -316,7 +316,7 @@ var mycode = function() {
 		startX: 500,
 		startY: 500,
 		lineDash: [20, 5, 5, 5],
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'mywheel',
@@ -329,7 +329,7 @@ var mycode = function() {
 		startX: 700,
 		startY: 500,
 		font: '16pt Arial, Helvetica',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	pin.clone({
 		pivot: 'myphrase',
@@ -339,7 +339,7 @@ var mycode = function() {
 	//event listeners
 	updateScale = function(e) {
 		currentScale = scaleInput.value;
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			scale: parseFloat(currentScale),
 		});
 		e.preventDefault();
@@ -350,7 +350,7 @@ var mycode = function() {
 
 	updateXPercent = function(e) {
 		currentXHandle = xPercentInput.value + '%';
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			handleX: currentXHandle,
 		});
 		e.preventDefault();
@@ -361,7 +361,7 @@ var mycode = function() {
 
 	updateYPercent = function(e) {
 		currentYHandle = yPercentInput.value + '%';
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			handleY: currentYHandle,
 		});
 		e.preventDefault();
@@ -372,7 +372,7 @@ var mycode = function() {
 
 	updateXAbsolute = function(e) {
 		currentXHandle = xAbsoluteInput.value;
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			handleX: parseFloat(currentXHandle),
 		});
 		e.preventDefault();
@@ -383,7 +383,7 @@ var mycode = function() {
 
 	updateYAbsolute = function(e) {
 		currentYHandle = yAbsoluteInput.value;
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			handleY: parseFloat(currentYHandle),
 		});
 		e.preventDefault();
@@ -394,7 +394,7 @@ var mycode = function() {
 
 	updateXString = function(e) {
 		currentXHandle = xStringInput.value;
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			handleX: currentXHandle,
 		});
 		e.preventDefault();
@@ -405,7 +405,7 @@ var mycode = function() {
 
 	updateYString = function(e) {
 		currentYHandle = yStringInput.value;
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			handleY: currentYHandle,
 		});
 		e.preventDefault();
@@ -416,7 +416,7 @@ var mycode = function() {
 
 	updateReverse = function(e) {
 		currentFlipReverse = reverseInput.value;
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			flipReverse: (currentFlipReverse === 'true') ? true : false,
 		});
 		e.preventDefault();
@@ -426,7 +426,7 @@ var mycode = function() {
 
 	updateUpend = function(e) {
 		currentFlipUpend = upendInput.value;
-		mySprites.setSpritesTo({
+		myEntitys.setEntitysTo({
 			flipUpend: (currentFlipUpend === 'true') ? true : false,
 		});
 		e.preventDefault();
@@ -437,7 +437,7 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			mySprites.updateSpritesBy({
+			myEntitys.updateEntitysBy({
 				roll: 1,
 			});
 			scrawl.render();

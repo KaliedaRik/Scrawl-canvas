@@ -13,7 +13,7 @@ var mycode = function() {
 		height: 200,
 	}).makeCurrent();
 
-	//define a phrase sprite to hold some text
+	//define a phrase entity to hold some text
 	scrawl.newPhrase({
 		text: 'Hello, Scrawl World!',
 		startX: 50,

@@ -24,7 +24,7 @@ var mycode = function() {
 	//load image into scrawl library
 	scrawl.getImagesByClass('demo033');
 
-	//define a single bunny sprite - start and delta values will be stored in the bunnyPos array
+	//define a single bunny entity - start and delta values will be stored in the bunnyPos array
 	bunny = scrawl.newPicture({
 		name: 'bunny',
 		source: 'bunny',

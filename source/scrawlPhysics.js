@@ -50,7 +50,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 	* scrawl.spring - for Spring objects
 	* scrawl.physics - an area for storing physics constants and variables that affect multiple particles
 
-	Particle objects are treated like sprites, and stored in the scrawl.sprite section of the library
+	Particle objects are treated like entitys, and stored in the scrawl.entity section of the library
 
 	@class window.scrawl_Physics
 	**/
@@ -184,7 +184,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 
 	## Access
 
-	* scrawl.sprite.PARTICLENAME - for the Animation object
+	* scrawl.entity.PARTICLENAME - for the Animation object
 
 	@class Particle
 	@constructor
@@ -212,10 +212,10 @@ if (window.scrawl && !window.scrawl.newParticle) {
 				this.area = items.area || 2 * Math.PI * this.get('radius') * this.get('radius') || my.d.Particle.area;
 			}
 			this.load = my.newVector();
-			my.sprite[this.name] = this;
-			my.pushUnique(my.spritenames, this.name);
-			this.group = my.Sprite.prototype.getGroup.call(this, items);
-			my.group[this.group].addSpritesToGroup(this.name);
+			my.entity[this.name] = this;
+			my.pushUnique(my.entitynames, this.name);
+			this.group = my.Entity.prototype.getGroup.call(this, items);
+			my.group[this.group].addEntitysToGroup(this.name);
 			return this;
 		};
 		my.Particle.prototype = Object.create(my.Base.prototype);
@@ -226,8 +226,8 @@ if (window.scrawl && !window.scrawl.newParticle) {
 	@final
 	**/
 		my.Particle.prototype.type = 'Particle';
-		my.Particle.prototype.classname = 'spritenames';
-		my.Particle.prototype.order = 0; //included to allow normal sprites to sort themselves properly
+		my.Particle.prototype.classname = 'entitynames';
+		my.Particle.prototype.order = 0; //included to allow normal entitys to sort themselves properly
 		my.d.Particle = {
 			/**
 	Current group
@@ -574,7 +574,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 		my.Particle.prototype.addSpring = function(items) {
 			var mySpring = false,
 				end = false;
-			if (my.isa(items, 'str') && my.contains(my.spritenames, items)) {
+			if (my.isa(items, 'str') && my.contains(my.entitynames, items)) {
 				end = items;
 				var myItems = {};
 				myItems.start = this.name;
@@ -584,14 +584,14 @@ if (window.scrawl && !window.scrawl.newParticle) {
 			else {
 				items = (my.isa(items, 'obj')) ? items : {};
 				end = items.end || false;
-				if (end && my.contains(my.spritenames, end)) {
+				if (end && my.contains(my.entitynames, end)) {
 					items.start = this.name;
 					mySpring = my.newSpring(items);
 				}
 			}
 			if (mySpring) {
 				my.pushUnique(this.springs, mySpring.name);
-				my.pushUnique(my.sprite[end].springs, mySpring.name);
+				my.pushUnique(my.entity[end].springs, mySpring.name);
 			}
 			return this;
 		};
@@ -616,7 +616,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 	@chainable
 	**/
 		my.Particle.prototype.removeSpringsTo = function(item) {
-			if (my.xt(item) && my.contains(my.spritenames, item)) {
+			if (my.xt(item) && my.contains(my.entitynames, item)) {
 				var temp = [],
 					s, i, iz;
 				for (i = 0, iz = this.springs.length; i < iz; i++) {
@@ -631,11 +631,11 @@ if (window.scrawl && !window.scrawl.newParticle) {
 			}
 			return this;
 		};
-		//the following dummy functions allow Particle objects to play nicely as part of a wider sprite Group object
-		my.Particle.prototype.pickupSprite = function(item) {
+		//the following dummy functions allow Particle objects to play nicely as part of a wider entity Group object
+		my.Particle.prototype.pickupEntity = function(item) {
 			return this;
 		};
-		my.Particle.prototype.dropSprite = function(item) {
+		my.Particle.prototype.dropEntity = function(item) {
 			return this;
 		};
 		my.Particle.prototype.updateStart = function() {
@@ -668,8 +668,8 @@ if (window.scrawl && !window.scrawl.newParticle) {
 		my.Spring = function Spring(items) {
 			items = my.safeObject(items);
 			if (my.xta([items.start, items.end])) {
-				var b1 = my.sprite[items.start];
-				var b2 = my.sprite[items.end];
+				var b1 = my.entity[items.start];
+				var b2 = my.entity[items.end];
 				my.Base.call(this, items);
 				this.start = items.start;
 				this.end = items.end;
@@ -771,8 +771,8 @@ if (window.scrawl && !window.scrawl.newParticle) {
 	@private
 	**/
 		my.Spring.prototype.update = function() {
-			var vr = my.workphys.v1.set(my.sprite[this.end].velocity).vectorSubtract(my.sprite[this.start].velocity),
-				r = my.workphys.v2.set(my.sprite[this.end].place).vectorSubtract(my.sprite[this.start].place),
+			var vr = my.workphys.v1.set(my.entity[this.end].velocity).vectorSubtract(my.entity[this.start].velocity),
+				r = my.workphys.v2.set(my.entity[this.end].place).vectorSubtract(my.entity[this.start].place),
 				r_norm = my.workphys.v3.set(r).normalize(),
 				r_norm2 = my.workphys.v4.set(r_norm);
 			this.force.set(r_norm.scalarMultiply(this.springConstant * (r.getMagnitude() - this.restLength)).vectorAdd(vr.vectorMultiply(r_norm2).scalarMultiply(this.damperConstant).vectorMultiply(r_norm2)));
@@ -784,8 +784,8 @@ if (window.scrawl && !window.scrawl.newParticle) {
 	@return Always true
 	**/
 		my.Spring.prototype.kill = function() {
-			my.removeItem(my.sprite[this.start].springs, this.name);
-			my.removeItem(my.sprite[this.end].springs, this.name);
+			my.removeItem(my.entity[this.start].springs, this.name);
+			my.removeItem(my.entity[this.end].springs, this.name);
 			delete my.spring[this.name];
 			my.removeItem(my.springnames, this.name);
 			return true;

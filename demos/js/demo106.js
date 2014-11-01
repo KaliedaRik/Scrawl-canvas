@@ -15,7 +15,7 @@ var mycode = function() {
 		hitbubbles,
 		color;
 
-	//define bar sprite
+	//define bar entity
 	scrawl.newGroup({
 		name: 'bargroup',
 		order: 1,
@@ -30,7 +30,7 @@ var mycode = function() {
 		group: 'bargroup',
 	});
 
-	//define bubble sprites
+	//define bubble entitys
 	bubbles = scrawl.newGroup({
 		name: 'bubbles',
 	});
@@ -60,22 +60,22 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			hitbubbles.setSpritesTo({
+			hitbubbles.setEntitysTo({
 				globalAlpha: 0.4,
 			});
-			//getSpritesCollidingWith() returns an array of SPRITENAME Strings, or false when no hits are detected
-			hitbubbles.sprites = bubbles.getSpritesCollidingWith(bar) || [];
-			//getAllSpritesAt() returns an array of sprite objects
-			hits = bubbles.getAllSpritesAt(pad.getMouse());
+			//getEntitysCollidingWith() returns an array of SPRITENAME Strings, or false when no hits are detected
+			hitbubbles.entitys = bubbles.getEntitysCollidingWith(bar) || [];
+			//getAllEntitysAt() returns an array of entity objects
+			hits = bubbles.getAllEntitysAt(pad.getMouse());
 			if (hits.length > 0) {
 				for (var i = 0, iz = hits.length; i < iz; i++) {
-					hitbubbles.addSpritesToGroup(hits[i].name);
+					hitbubbles.addEntitysToGroup(hits[i].name);
 				}
 			}
-			hitbubbles.setSpritesTo({
+			hitbubbles.setEntitysTo({
 				globalAlpha: 0.9,
 			});
-			bubbles.updateSpritesBy({
+			bubbles.updateEntitysBy({
 				roll: 0.5,
 			});
 			scrawl.render();

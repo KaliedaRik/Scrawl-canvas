@@ -16,7 +16,7 @@ var mycode = function() {
 		vector = scrawl.newVector(),
 		updateSnake;
 
-	//define sprites
+	//define entitys
 	for (var i = 0; i < 29; i++) {
 		scrawl.newWheel({
 			name: 'seg_' + i,

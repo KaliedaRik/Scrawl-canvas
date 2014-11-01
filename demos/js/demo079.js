@@ -12,7 +12,7 @@ var mycode = function() {
 		myBaseGroup = scrawl.group[myBase.name],
 		myCollisionMap,
 		myWheels,
-		mySprite,
+		myEntity,
 		hits,
 		checkBounds,
 		fieldBall,
@@ -38,7 +38,7 @@ var mycode = function() {
 		width: 600,
 		backgroundColor: 'black',
 	}).compile();
-	scrawl.newBlock({ //add, and stamp, sprites
+	scrawl.newBlock({ //add, and stamp, entitys
 		startX: 10,
 		startY: 50,
 		width: 580,
@@ -81,9 +81,9 @@ var mycode = function() {
 		group: 'collisionMap',
 	}).stamp('fill');
 	myBase.fieldLabel = myCollisionMap.getImageData();
-	myBaseGroup.addSpritesToGroup(scrawl.group.collisionMap.sprites);
+	myBaseGroup.addEntitysToGroup(scrawl.group.collisionMap.entitys);
 
-	//define physics sprites
+	//define physics entitys
 	fieldBall = scrawl.newParticle({
 		mass: 1000000,
 	});
@@ -114,7 +114,7 @@ var mycode = function() {
 		deltaY: 80,
 	});
 
-	//define other sprites
+	//define other entitys
 	scrawl.newWheel({
 		name: 'redB',
 		radius: 20,
@@ -150,19 +150,19 @@ var mycode = function() {
 	//animation function
 	checkBounds = function() {
 		var i, iz;
-		for (i = 0, iz = myWheels.sprites.length; i < iz; i++) {
-			mySprite = scrawl.sprite[myWheels.sprites[i]];
-			mySprite.setDelta({
-				scale: (mySprite.scale + 0.01 <= 1) ? 0.005 : 0,
+		for (i = 0, iz = myWheels.entitys.length; i < iz; i++) {
+			myEntity = scrawl.entity[myWheels.entitys[i]];
+			myEntity.setDelta({
+				scale: (myEntity.scale + 0.01 <= 1) ? 0.005 : 0,
 			});
 		}
-		hits = myWheels.getFieldSpriteHits();
+		hits = myWheels.getFieldEntityHits();
 		for (i = 0, iz = hits.length; i < iz; i++) {
-			mySprite = scrawl.sprite[hits[i][0]];
-			mySprite.setDelta({
-				scale: (mySprite.scale > 0.8) ? -0.04 : 0,
+			myEntity = scrawl.entity[hits[i][0]];
+			myEntity.setDelta({
+				scale: (myEntity.scale > 0.8) ? -0.04 : 0,
 			});
-			myBall = scrawl.sprite[mySprite.pivot];
+			myBall = scrawl.entity[myEntity.pivot];
 			myBall.revert();
 			myBall.linearCollide(fieldBall.set({
 				startX: hits[i][1].x,

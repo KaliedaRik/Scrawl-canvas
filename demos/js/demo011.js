@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define sprites
+	//define entitys
 	scrawl.newWheel({
 		name: 'mywheel',
 		startX: 200,
@@ -31,7 +31,7 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			scrawl.sprite.mywheel.setDelta({
+			scrawl.entity.mywheel.setDelta({
 				roll: 0.5,
 			});
 			scrawl.render();

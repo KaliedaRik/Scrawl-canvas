@@ -23,7 +23,7 @@ var mycode = function() {
 		height: 150,
 	});
 
-	//define sprites
+	//define entitys
 	circle = scrawl.newWheel({
 		name: 'here',
 		startX: 75,

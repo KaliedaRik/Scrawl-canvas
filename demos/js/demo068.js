@@ -9,7 +9,7 @@ var mycode = function() {
 
 	//define variables
 	var here,
-		currentSprite,
+		currentEntity,
 		canvas = scrawl.canvas.mycanvas,
 		pad = scrawl.pad.mycanvas,
 		background,
@@ -19,8 +19,8 @@ var mycode = function() {
 		dragdrop,
 		handleFiles,
 		handleFile,
-		pickupSprite,
-		dropSprite;
+		pickupEntity,
+		dropEntity;
 
 	//define groups
 	background = scrawl.newGroup({
@@ -32,7 +32,7 @@ var mycode = function() {
 		order: 1,
 	});
 
-	//define initial sprite
+	//define initial entity
 	scrawl.newPhrase({
 		font: '40pt Arial, sans-serif',
 		text: 'Drag image files\nonto this canvas',
@@ -99,43 +99,43 @@ var mycode = function() {
 	canvas.addEventListener("dragover", dragover, false);
 	canvas.addEventListener("drop", dragdrop, false);
 
-	//event listeners for dragging and dropping sprites within the canvas
-	pickupSprite = function(e) {
+	//event listeners for dragging and dropping entitys within the canvas
+	pickupEntity = function(e) {
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
 		}
-		if (currentSprite) {
-			dropSprite();
+		if (currentEntity) {
+			dropEntity();
 		}
-		currentSprite = myImages.getSpriteAt(here);
-		if (currentSprite) {
-			currentSprite.pickupSprite(here);
+		currentEntity = myImages.getEntityAt(here);
+		if (currentEntity) {
+			currentEntity.pickupEntity(here);
 		}
 	};
-	dropSprite = function(e) {
+	dropEntity = function(e) {
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
 		}
-		if (currentSprite) {
-			currentSprite.dropSprite();
-			currentSprite = false;
+		if (currentEntity) {
+			currentEntity.dropEntity();
+			currentEntity = false;
 		}
 	};
-	canvas.addEventListener('mousedown', pickupSprite, false);
-	document.body.addEventListener('mouseup', dropSprite, false);
-	document.body.addEventListener('mouseleave', dropSprite, false);
+	canvas.addEventListener('mousedown', pickupEntity, false);
+	document.body.addEventListener('mouseup', dropEntity, false);
+	document.body.addEventListener('mouseleave', dropEntity, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			if (!here.active) {
-				dropSprite();
+				dropEntity();
 			}
 			scrawl.render();
-			myImages.updateSpritesBy({
+			myImages.updateEntitysBy({
 				roll: 0.2,
 			});
 

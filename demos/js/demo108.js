@@ -18,9 +18,9 @@ var mycode = function() {
 	link.rel = 'shortcut icon';
 	head.appendChild(link);
 
-	//define sprite(s)
+	//define entity(s)
 	icon = scrawl.newGroup({
-		name: 'mysprites',
+		name: 'myentitys',
 	});
 	scrawl.newBlock({
 		name: 'blocky',
@@ -31,7 +31,7 @@ var mycode = function() {
 		handleY: 'center',
 		startX: '50%',
 		startY: '50%',
-		group: 'mysprites',
+		group: 'myentitys',
 	});
 	scrawl.newWheel({
 		name: 'wheely',
@@ -41,7 +41,7 @@ var mycode = function() {
 		includeCenter: true,
 		fillStyle: 'red',
 		method: 'fill',
-		group: 'mysprites',
+		group: 'myentitys',
 		pivot: 'blocky',
 		handleX: -10,
 		handleY: 18,
@@ -53,8 +53,8 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			//animate sprite
-			icon.updateSpritesBy({
+			//animate entity
+			icon.updateEntitysBy({
 				roll: 2,
 			});
 			//render canvas

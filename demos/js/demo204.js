@@ -34,7 +34,7 @@ var mycode = function() {
 		title: 'fish picture',
 	});
 
-	//build sprites
+	//build entitys
 	scrawl.newPicture({
 		width: 540,
 		height: 360,

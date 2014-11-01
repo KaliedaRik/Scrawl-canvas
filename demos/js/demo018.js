@@ -18,7 +18,7 @@ var mycode = function() {
 	//import image into scrawl library
 	scrawl.getImagesByClass('demo018');
 
-	//define Picture sprite ...
+	//define Picture entity ...
 	myBird = scrawl.newPicture({
 		name: 'bird',
 		source: 'peacock',

@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var mySprite = false,
+	var myEntity = false,
 		here,
 		myPad = scrawl.pad.mycanvas,
 		myGroup = scrawl.group[myPad.base],
@@ -16,7 +16,7 @@ var mycode = function() {
 		catchStar,
 		dropStar;
 
-	//define star sprite
+	//define star entity
 	star = scrawl.makeRegularShape({
 		name: 'star',
 		startX: 200,
@@ -35,7 +35,7 @@ var mycode = function() {
 		roll: -36,
 	});
 
-	//add in some Phrase sprites
+	//add in some Phrase entitys
 	scrawl.newPhrase({
 		text: '1',
 		pivot: 'star_p1',
@@ -44,8 +44,8 @@ var mycode = function() {
 		handleY: 'center',
 		backgroundColor: 'rgba(200,20,50,0.3)',
 		backgroundMargin: 2,
-		//picking up a sprite increases its order attribute by 9,999 -
-		//other sprites need an order > 9,999 to appear over a picked-up sprite 
+		//picking up a entity increases its order attribute by 9,999 -
+		//other entitys need an order > 9,999 to appear over a picked-up entity 
 		order: 10000,
 	}).clone({
 		text: '2',
@@ -63,9 +63,9 @@ var mycode = function() {
 
 	//event listeners
 	catchStar = function(e) {
-		mySprite = myGroup.getSpriteAt(here);
-		if (mySprite) {
-			mySprite.pickupSprite(here);
+		myEntity = myGroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
 		}
 		if (e) {
 			e.stopPropagation();
@@ -73,9 +73,9 @@ var mycode = function() {
 		}
 	};
 	dropStar = function(e) {
-		if (mySprite) {
-			mySprite.dropSprite();
-			mySprite = false;
+		if (myEntity) {
+			myEntity.dropEntity();
+			myEntity = false;
 		}
 		if (e) {
 			e.stopPropagation();
@@ -89,7 +89,7 @@ var mycode = function() {
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();
-			if (!here.active && mySprite) {
+			if (!here.active && myEntity) {
 				dropStar();
 			}
 			star.setDelta({

@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define sprite
+	//define entity
 	scrawl.makeEllipse({
 		name: 'ellie',
 		startX: 200,
@@ -24,11 +24,11 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			scrawl.sprite.ellie.setDelta({
+			scrawl.entity.ellie.setDelta({
 				roll: 1,
 			});
 			scrawl.cell.mycanvas_base.set({
-				backgroundColor: (scrawl.sprite.ellie.checkHit(scrawl.pad.mycanvas.getMouse())) ? 'lightblue' : 'lightgreen',
+				backgroundColor: (scrawl.entity.ellie.checkHit(scrawl.pad.mycanvas.getMouse())) ? 'lightblue' : 'lightgreen',
 			});
 			scrawl.render();
 

@@ -60,7 +60,7 @@ var mycode = function() {
 		autoUpdate: true,
 	});
 
-	//add a sprite to display the gradient in the background ...
+	//add a entity to display the gradient in the background ...
 	scrawl.newBlock({
 		name: 'curtain',
 		width: 400,
@@ -71,7 +71,7 @@ var mycode = function() {
 		order: 0,
 	});
 
-	//set up a Shape sprite for drawing the thick line on the hidden cell
+	//set up a Shape entity for drawing the thick line on the hidden cell
 	myLine = scrawl.newShape({
 		name: 'reveal',
 		method: 'draw',
@@ -86,7 +86,7 @@ var mycode = function() {
 		group: 'hidden',
 	});
 
-	//animation sprite sheet for the cat sprite
+	//animation entity sheet for the cat entity
 	scrawl.newAnimSheet({
 		name: 'animatedCat',
 		sheet: 'cat',
@@ -143,7 +143,7 @@ var mycode = function() {
 			d: 100,
         }, ],
 	});
-	//the cat sprite stamps over the line, so only part of the image is visible
+	//the cat entity stamps over the line, so only part of the image is visible
 	scrawl.newPicture({
 		name: 'runningcat',
 		startX: 200,

@@ -10,7 +10,7 @@ var mycode = function() {
 	//import images into scrawl library
 	scrawl.getImagesByClass('demo017');
 
-	//define the sprite
+	//define the entity
 	scrawl.newPicture({
 		source: 'peacock',
 		width: 400,

@@ -38,7 +38,7 @@ var mycode = function() {
 		ball.load.vectorAdd(wind);
 	});
 
-	//define sprites
+	//define entitys
 	dBall = scrawl.newWheel({
 		pivot: 'myball',
 		radius: 10,

@@ -27,7 +27,7 @@
 
 ## Purpose and features
 
-The Phrase module adds Phrase sprites - single and multi-line text objects - to the core module
+The Phrase module adds Phrase entitys - single and multi-line text objects - to the core module
 
 * Defines text objects for displaying on a Cell's canvas
 * Handles all related font functionality
@@ -53,7 +53,7 @@ scrawlPhrase module adaptions to the Scrawl library object
 **/
 
 		/**
-A __factory__ function to generate new Phrase sprites
+A __factory__ function to generate new Phrase entitys
 @method newPhrase
 @param {Object} items Key:value Object argument for setting attributes
 @return Phrase object
@@ -88,16 +88,16 @@ A __factory__ function to generate new Phrase sprites
 
 ## Access
 
-* scrawl.sprite.PHRASENAME - for the Phrase sprite object
+* scrawl.entity.PHRASENAME - for the Phrase entity object
 
 @class Phrase
 @constructor
-@extends Sprite
+@extends Entity
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Phrase = function Phrase(items) {
 			items = my.safeObject(items);
-			my.Sprite.call(this, items);
+			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
 			this.registerInLibrary();
 			this.lineHeight = my.xtGet([items.lineHeight, my.d.Phrase.lineHeight]);
@@ -110,7 +110,7 @@ A __factory__ function to generate new Phrase sprites
 			this.getMetrics();
 			return this;
 		};
-		my.Phrase.prototype = Object.create(my.Sprite.prototype);
+		my.Phrase.prototype = Object.create(my.Entity.prototype);
 		/**
 @property type
 @type String
@@ -118,7 +118,7 @@ A __factory__ function to generate new Phrase sprites
 @final
 **/
 		my.Phrase.prototype.type = 'Phrase';
-		my.Phrase.prototype.classname = 'spritenames';
+		my.Phrase.prototype.classname = 'entitynames';
 		my.d.Phrase = {
 			/**
 Text string to be displayed - for multiline text, insert __\n__ where the text line breaks
@@ -221,21 +221,21 @@ Users should never interfere with Text objects, as they are destroyed and recrea
 **/
 			texts: [],
 		};
-		my.mergeInto(my.d.Phrase, my.d.Sprite);
+		my.mergeInto(my.d.Phrase, my.d.Entity);
 		/**
-Augments Sprite.set()
+Augments Entity.set()
 
 Allows users to:
 * alter the font either by the font attribute, or by individual font content attributes
 * update the text
-* change other Sprite and Phrase object attributes
+* change other Entity and Phrase object attributes
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
 		my.Phrase.prototype.set = function(items) {
-			my.Sprite.prototype.set.call(this, items);
+			my.Entity.prototype.set.call(this, items);
 			items = my.safeObject(items);
 			this.lineHeight = my.xtGet([items.lineHeight, this.lineHeight]);
 			if (items.font) {
@@ -252,14 +252,14 @@ Allows users to:
 			return this;
 		};
 		/**
-Augments Sprite.detDelta()
+Augments Entity.detDelta()
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
 		my.Phrase.prototype.setDelta = function(items) {
-			my.Sprite.prototype.setDelta.call(this, items);
+			my.Entity.prototype.setDelta.call(this, items);
 			if (items.text) {
 				this.offset.flag = false;
 			}
@@ -271,7 +271,7 @@ Augments Sprite.detDelta()
 			return this;
 		};
 		/**
-Augments Sprite.clone()
+Augments Entity.clone()
 @method clone
 @param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
 @return Cloned object
@@ -279,7 +279,7 @@ Augments Sprite.clone()
 **/
 		my.Phrase.prototype.clone = function(items) {
 			items.texts = [];
-			return my.Sprite.prototype.clone.call(this, items);
+			return my.Entity.prototype.clone.call(this, items);
 		};
 		/**
 Helper function - creates Text objects for each line of text in a multiline Phrase
@@ -326,7 +326,7 @@ Helper function - checks to see if font needs to be (re)constructed from its par
 			return this;
 		};
 		/**
-Helper function - creates font-related attributes from sprite's Context object's font attribute
+Helper function - creates font-related attributes from entity's Context object's font attribute
 @method deconstructFont
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -438,7 +438,7 @@ Helper function - creates font-related attributes from sprite's Context object's
 			return this;
 		};
 		/**
-Helper function - creates sprite's Context object's phrase attribute from other font-related attributes
+Helper function - creates entity's Context object's phrase attribute from other font-related attributes
 @method constructFont
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -468,19 +468,19 @@ Helper function - creates sprite's Context object's phrase attribute from other 
 			return this;
 		};
 		/**
-Augments Sprite.stamp()
+Augments Entity.stamp()
 @method stamp
-@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
-@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
+@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 **/
 		my.Phrase.prototype.stamp = function(method, cell) {
 			var test;
 			if (this.visibility) {
-				test = (my.contains(my.spritenames, this.path) && my.sprite[this.path].type === 'Path');
+				test = (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path');
 				if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
-					my.Sprite.prototype.stamp.call(this, method, cell);
+					my.Entity.prototype.stamp.call(this, method, cell);
 				}
 				else {
 					my.text[this.texts[0]].stampAlongPath(method, cell);
@@ -492,7 +492,7 @@ Augments Sprite.stamp()
 Stamp helper function - perform a 'clear' method draw
 @method clear
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -518,7 +518,7 @@ Stamp helper function - perform a 'clear' method draw
 Stamp helper function - perform a 'clearWithBackground' method draw
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -542,7 +542,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 Stamp helper function - perform a 'draw' method draw
 @method draw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -569,7 +569,7 @@ Stamp helper function - perform a 'draw' method draw
 Stamp helper function - perform a 'fill' method draw
 @method fill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -596,7 +596,7 @@ Stamp helper function - perform a 'fill' method draw
 Stamp helper function - perform a 'drawFill' method draw
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -623,7 +623,7 @@ Stamp helper function - perform a 'drawFill' method draw
 Stamp helper function - perform a 'fillDraw' method draw
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -650,7 +650,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 Stamp helper function - perform a 'sinkInto' method draw
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -677,7 +677,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 Stamp helper function - perform a 'floatOver' method draw
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
@@ -701,7 +701,7 @@ Stamp helper function - perform a 'floatOver' method draw
 			return this;
 		};
 		/**
-Helper function - calculate sprite's width and height attributes, taking into account font size, scaling, etc
+Helper function - calculate entity's width and height attributes, taking into account font size, scaling, etc
 @method getMetrics
 @param {String} cellname CELLNAME String (any &lt;canvas&gt; will do for this function)
 @return This
@@ -741,7 +741,7 @@ Drawing function - stamps a background block onto the &lt;canvas&gt; element
 			return this;
 		};
 		/**
-Drawing function - get sprite offset values
+Drawing function - get entity offset values
 
 Returns an object with coordinates __x__ and __y__
 @method getOffset
@@ -811,12 +811,12 @@ Returns an object with coordinates __x__ and __y__
 			my.Base.call(this, items);
 			this.text = my.xtGet([items.text, my.d.Text.text]);
 			this.phrase = my.xtGet([items.phrase, my.d.Text.phrase]);
-			this.context = my.sprite[this.phrase].context;
+			this.context = my.entity[this.phrase].context;
 			this.fixedWidth = my.xtGet([items.fixedWidth, my.d.Text.fixedWidth]);
 			this.textAlongPath = my.xtGet([items.textAlongPath, my.d.Text.textAlongPath]);
 			my.text[this.name] = this;
 			my.pushUnique(my.textnames, this.name);
-			my.pushUnique(my.sprite[this.phrase].texts, this.name);
+			my.pushUnique(my.entity[this.phrase].texts, this.name);
 			this.getMetrics();
 			return this;
 		};
@@ -905,35 +905,35 @@ Glyph widths array
 		};
 		my.mergeInto(my.d.Text, my.d.Base);
 		/**
-Stamp function - stamp phrases, words or individual glyphs (letters and spaces) along a Shape sprite path
+Stamp function - stamp phrases, words or individual glyphs (letters and spaces) along a Shape entity path
 
 Permitted methods include:
 
-* 'draw' - stroke the sprite's path with the sprite's strokeStyle color, pattern or gradient
-* 'fill' - fill the sprite's path with the sprite's fillStyle color, pattern or gradient
-* 'drawFill' - stroke, and then fill, the sprite's path; if a shadow offset is present, the shadow is added only to the stroke action
-* 'fillDraw' - fill, and then stroke, the sprite's path; if a shadow offset is present, the shadow is added only to the fill action
-* 'floatOver' - stroke, and then fill, the sprite's path; shadow offset is added to both actions
-* 'sinkInto' - fill, and then stroke, the sprite's path; shadow offset is added to both actions
-* 'clear' - fill the sprite's path with transparent color 'rgba(0, 0, 0, 0)'
-* 'clearWithBackground' - fill the sprite's path with the Cell's current backgroundColor
-* 'clip' - clip the drawing zone to the sprite's path (not tested)
-* 'none' - perform all necessary updates, but do not draw the sprite onto the canvas
+* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient
+* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient
+* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action
+* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action
+* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions
+* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions
+* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'
+* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor
+* 'clip' - clip the drawing zone to the entity's path (not tested)
+* 'none' - perform all necessary updates, but do not draw the entity onto the canvas
 @method stampAlongPath
-@param {String} [method] Permitted method attribute String; by default, will use sprite's own method setting
-@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
+@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @return This
 @chainable
 @private
 **/
 		my.Text.prototype.stampAlongPath = function(method, cell) {
-			var p = my.sprite[this.phrase];
+			var p = my.entity[this.phrase];
 			method = (my.isa(method, 'str')) ? method : p.method;
 			cell = (my.isa(cell, 'str') && my.contains(my.cellnames, cell)) ? cell : my.cell[my.group[p.group].cell];
 			var engine = my.context[cell],
 				myCell = my.cell[cell],
 				here,
-				pathLength = my.sprite[p.path].getPerimeterLength(),
+				pathLength = my.entity[p.path].getPerimeterLength(),
 				width = this.width * p.scale,
 				ratio = width / pathLength,
 				pos = p.pathPlace,
@@ -953,7 +953,7 @@ Permitted methods include:
 					if (!my.isBetween(nowPos, 0, 1, true)) {
 						nowPos += (nowPos > 0.5) ? -1 : 1;
 					}
-					here = my.sprite[p.path].getPerimeterPosition(nowPos, p.pathSpeedConstant, true);
+					here = my.entity[p.path].getPerimeterPosition(nowPos, p.pathSpeedConstant, true);
 					x = here.x;
 					y = here.y;
 					r = here.r * my.radian;
@@ -996,7 +996,7 @@ Permitted methods include:
 Stamp helper function - perform a 'clear' method draw
 @method clear
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
 @return This
@@ -1011,7 +1011,7 @@ Stamp helper function - perform a 'clear' method draw
 Stamp helper function - perform a 'clearWithBackground' method draw
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
 @return This
@@ -1030,7 +1030,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 Stamp helper function - perform a 'draw' method draw
 @method draw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
 @return This
@@ -1045,7 +1045,7 @@ Stamp helper function - perform a 'draw' method draw
 Stamp helper function - perform a 'fill' method draw
 @method fill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
 @return This
@@ -1060,10 +1060,10 @@ Stamp helper function - perform a 'fill' method draw
 Stamp helper function - perform a 'drawFill' method draw
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
-@param {Phrase} p Parent Phrase sprite object
+@param {Phrase} p Parent Phrase entity object
 @return This
 @chainable
 @private
@@ -1079,10 +1079,10 @@ Stamp helper function - perform a 'drawFill' method draw
 Stamp helper function - perform a 'fillDraw' method draw
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
-@param {Phrase} p Parent Phrase sprite object
+@param {Phrase} p Parent Phrase entity object
 @return This
 @chainable
 @private
@@ -1098,7 +1098,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 Stamp helper function - perform a 'sinkInto' method draw
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
 @return This
@@ -1114,7 +1114,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 Stamp helper function - perform a 'floatOver' method draw
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
 @return This
@@ -1130,7 +1130,7 @@ Stamp helper function - perform a 'floatOver' method draw
 Stamp helper function - perform a 'clip' method draw
 @method clip
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite's Group object
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
 @param {Number} x Glyph horizontal coordinate
 @param {Number} y Glyph vertical coordinate
 @return This
@@ -1148,7 +1148,7 @@ Calculate metrics for each phrase, word or glyph in the glyphs array
 @private
 **/
 		my.Text.prototype.getMetrics = function() {
-			var p = my.sprite[this.phrase],
+			var p = my.entity[this.phrase],
 				myContext = my.context[my.pad[my.currentPad].current],
 				myEngine = my.ctx[this.context],
 				tempFont = myContext.font,

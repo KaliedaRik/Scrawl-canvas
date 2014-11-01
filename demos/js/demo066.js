@@ -12,11 +12,11 @@ var mycode = function() {
 		pad2,
 		pad1Here,
 		pad2Here,
-		currentSprite,
+		currentEntity,
 		group1,
 		group2,
-		pickupSprite,
-		dropSprite,
+		pickupEntity,
+		dropEntity,
 		dragenter,
 		dragover;
 
@@ -43,7 +43,7 @@ var mycode = function() {
 	//make first pad the current pad
 	pad1.makeCurrent();
 
-	//define sprites
+	//define entitys
 	scrawl.newBlock({
 		name: 'box1',
 		startX: 10,
@@ -64,18 +64,18 @@ var mycode = function() {
 	});
 
 	//event listeners
-	pickupSprite = function(e) {
-		currentSprite = group1.getSpriteAt(pad1Here) || group2.getSpriteAt(pad2Here);
-		if (currentSprite) {
-			currentSprite.pickupSprite((pad1Here.active) ? pad1Here : pad2Here);
+	pickupEntity = function(e) {
+		currentEntity = group1.getEntityAt(pad1Here) || group2.getEntityAt(pad2Here);
+		if (currentEntity) {
+			currentEntity.pickupEntity((pad1Here.active) ? pad1Here : pad2Here);
 		}
 		e.stopPropagation();
 		e.preventDefault();
 	};
-	dropSprite = function(e) {
-		if (currentSprite) {
-			currentSprite.dropSprite();
-			currentSprite = false;
+	dropEntity = function(e) {
+		if (currentEntity) {
+			currentEntity.dropEntity();
+			currentEntity = false;
 		}
 		e.stopPropagation();
 		e.preventDefault();
@@ -88,14 +88,14 @@ var mycode = function() {
 		e.stopPropagation();
 		e.preventDefault();
 	};
-	scrawl.canvas.canvas1.addEventListener('mousedown', pickupSprite, false);
+	scrawl.canvas.canvas1.addEventListener('mousedown', pickupEntity, false);
 	scrawl.canvas.canvas1.addEventListener('dragenter', dragenter, false);
 	scrawl.canvas.canvas1.addEventListener('dragover', dragover, false);
-	scrawl.canvas.canvas2.addEventListener('mousedown', pickupSprite, false);
+	scrawl.canvas.canvas2.addEventListener('mousedown', pickupEntity, false);
 	scrawl.canvas.canvas2.addEventListener('dragenter', dragenter, false);
 	scrawl.canvas.canvas2.addEventListener('dragover', dragover, false);
-	document.body.addEventListener('mouseup', dropSprite, false);
-	document.body.addEventListener('mouseleave', dropSprite, false);
+	document.body.addEventListener('mouseup', dropEntity, false);
+	document.body.addEventListener('mouseleave', dropEntity, false);
 
 	//animation object
 	scrawl.newAnimation({
@@ -108,17 +108,17 @@ var mycode = function() {
 			scrawl.cell[pad2.base].set({
 				backgroundColor: (pad2Here.active) ? 'lightblue' : 'white',
 			});
-			if (currentSprite) {
-				if (scrawl.contains(group1.sprites, currentSprite.name)) {
+			if (currentEntity) {
+				if (scrawl.contains(group1.entitys, currentEntity.name)) {
 					if (pad2Here.active) {
-						group1.removeSpritesFromGroup(currentSprite.name);
-						group2.addSpritesToGroup(currentSprite.name);
+						group1.removeEntitysFromGroup(currentEntity.name);
+						group2.addEntitysToGroup(currentEntity.name);
 					}
 				}
-				else if (scrawl.contains(group2.sprites, currentSprite.name)) {
+				else if (scrawl.contains(group2.entitys, currentEntity.name)) {
 					if (pad1Here.active) {
-						group2.removeSpritesFromGroup(currentSprite.name);
-						group1.addSpritesToGroup(currentSprite.name);
+						group2.removeEntitysFromGroup(currentEntity.name);
+						group1.addEntitysToGroup(currentEntity.name);
 					}
 				}
 			}

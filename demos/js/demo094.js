@@ -56,7 +56,7 @@ var mycode = function() {
 	//import image into scrawl library
 	scrawl.getImagesByClass('demo094');
 
-	//define sprite
+	//define entity
 	tiggy = scrawl.newPicture({
 		width: 200,
 		height: 200,

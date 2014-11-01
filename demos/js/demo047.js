@@ -32,7 +32,7 @@ var mycode = function() {
 		order: 2,
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newPicture({
 		name: 'air',
 		source: 'buttonAir',
@@ -98,8 +98,8 @@ var mycode = function() {
 		collisionPoints: 'start',
 	});
 
-	//set iGroup sprites' pivot attribute to pivot sprite ('centerpoint')
-	iGroup.pivotSpritesTo(pivot.name);
+	//set iGroup entitys' pivot attribute to pivot entity ('centerpoint')
+	iGroup.pivotEntitysTo(pivot.name);
 
 	//build cell collision field
 	scrawl.newBlock({
@@ -123,7 +123,7 @@ var mycode = function() {
 				pivot.reverse('deltaY');
 			}
 		}
-		iGroup.updateSpritesBy({
+		iGroup.updateEntitysBy({
 			roll: 0.8,
 		});
 		pivot.updateStart();

@@ -31,7 +31,7 @@ var mycode = function() {
         }, ],
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newPicture({
 		source: 'flower',
 		width: 750,

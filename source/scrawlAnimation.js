@@ -94,24 +94,24 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		my.d.Position.deltaPathPlace = 0;
 		my.d.Position.pathSpeedConstant = true;
 		my.mergeInto(my.d.Cell, my.d.Position);
-		my.mergeInto(my.d.Sprite, my.d.Position);
+		my.mergeInto(my.d.Entity, my.d.Position);
 		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Sprite);
+			my.mergeInto(my.d.Block, my.d.Entity);
 		}
 		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Sprite);
+			my.mergeInto(my.d.Shape, my.d.Entity);
 		}
 		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Sprite);
+			my.mergeInto(my.d.Wheel, my.d.Entity);
 		}
 		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Sprite);
+			my.mergeInto(my.d.Picture, my.d.Entity);
 		}
 		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Sprite);
+			my.mergeInto(my.d.Phrase, my.d.Entity);
 		}
 		if (my.xt(my.d.Path)) {
-			my.mergeInto(my.d.Path, my.d.Sprite);
+			my.mergeInto(my.d.Path, my.d.Entity);
 		}
 		/**
 	Position constructor hook function
@@ -605,47 +605,47 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Ask all sprites in the Group to perform an updateStart() operation
+	Ask all entitys in the Group to perform an updateStart() operation
 
-	Each sprite will add their delta values to their start Vector, and/or add deltaPathPlace from pathPlace
+	Each entity will add their delta values to their start Vector, and/or add deltaPathPlace from pathPlace
 	@method Group.updateStart
 	@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
 	@return This
 	@chainable
 	**/
 		my.Group.prototype.updateStart = function(item) {
-			for (var i = 0, z = this.sprites.length; i < z; i++) {
-				my.sprite[this.sprites[i]].updateStart(item);
+			for (var i = 0, z = this.entitys.length; i < z; i++) {
+				my.entity[this.entitys[i]].updateStart(item);
 			}
 			return this;
 		};
 		/**
-	Ask all sprites in the Group to perform a revertStart() operation
+	Ask all entitys in the Group to perform a revertStart() operation
 
-	Each sprite will subtract their delta values to their start Vector, and/or subtract deltaPathPlace from pathPlace
+	Each entity will subtract their delta values to their start Vector, and/or subtract deltaPathPlace from pathPlace
 	@method Group.revertStart
 	@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
 	@return This
 	@chainable
 	**/
 		my.Group.prototype.revertStart = function(item) {
-			for (var i = 0, z = this.sprites.length; i < z; i++) {
-				my.sprite[this.sprites[i]].revertStart(item);
+			for (var i = 0, z = this.entitys.length; i < z; i++) {
+				my.entity[this.entitys[i]].revertStart(item);
 			}
 			return this;
 		};
 		/**
-	Ask all sprites in the group to perform a reverse() operation
+	Ask all entitys in the group to perform a reverse() operation
 
-	Each sprite will change the sign (+/-) of specified attribute values
+	Each entity will change the sign (+/-) of specified attribute values
 	@method Group.reverse
 	@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
 	@return This
 	@chainable
 	**/
 		my.Group.prototype.reverse = function(item) {
-			for (var i = 0, z = this.sprites.length; i < z; i++) {
-				my.sprite[this.sprites[i]].reverse(item);
+			for (var i = 0, z = this.entitys.length; i < z; i++) {
+				my.entity[this.entitys[i]].reverse(item);
 			}
 			return this;
 		};
@@ -673,13 +673,13 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 
 	_This function replaces the one in the core module_
 	@method Design.update
-	@param {String} [sprite] SPRITENAME String
+	@param {String} [entity] SPRITENAME String
 	@param {String} [cell] CELLNAME String
 	@return This
 	@chainable
 	**/
-		my.Design.prototype.update = function(sprite, cell) {
-			this.makeGradient(sprite, cell);
+		my.Design.prototype.update = function(entity, cell) {
+			this.makeGradient(entity, cell);
 			this.sortStops();
 			this.applyStops();
 			return this;
@@ -979,14 +979,14 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		my.Tween.prototype.classname = 'animationnames';
 		my.d.Tween = {
 			/**
-	Array of sprites, cells, etc to be animated using this tween; expects to be passed handles to the sprite objects, not SPRITENAME strings
+	Array of entitys, cells, etc to be animated using this tween; expects to be passed handles to the entity objects, not SPRITENAME strings
 	@property targets
 	@type Array
 	@default []
 	**/
 			targets: [],
 			/**
-	Array of sprites, cells, etc currently being animated using this tween
+	Array of entitys, cells, etc currently being animated using this tween
 	@property currentTargets
 	@type Array
 	@default []
@@ -1141,7 +1141,7 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		my.Tween.prototype.fn = function() {
 			var currentTime = Date.now(),
 				progress = (currentTime - this.startTime) / this.duration,
-				sprite,
+				entity,
 				argSet,
 				keys = Object.keys(this.end),
 				temp,
@@ -1149,8 +1149,8 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			if (this.active) {
 				if (progress < 1) {
 					for (var t = 0, tz = this.currentTargets.length; t < tz; t++) {
-						sprite = this.currentTargets[t];
-						if (my.xt(sprite)) {
+						entity = this.currentTargets[t];
+						if (my.xt(entity)) {
 							argSet = {};
 							for (var k = 0, kz = keys.length; k < kz; k++) {
 								temp = this.initVals[t][keys[k]];
@@ -1163,7 +1163,7 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 									this.reverse);
 								argSet[keys[k]] = (percent) ? argSet[keys[k]] + '%' : argSet[keys[k]];
 							}
-							sprite.set(argSet);
+							entity.set(argSet);
 						}
 					}
 				}

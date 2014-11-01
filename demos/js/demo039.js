@@ -124,7 +124,7 @@ var mycode = function() {
         }, ],
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newBlock({
 		startX: 10,
 		startY: 10,

@@ -18,7 +18,7 @@ var mycode = function() {
 		backgroundColor: 'lightblue',
 	}).compile();
 
-	//define sprites
+	//define entitys
 	myBlock = scrawl.newBlock({ //template
 		name: 'template',
 		width: 50,

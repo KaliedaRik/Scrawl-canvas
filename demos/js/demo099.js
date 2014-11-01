@@ -14,7 +14,7 @@ var mycode = function() {
 		myPad = scrawl.pad[scrawl.currentPad],
 		myCanvas = scrawl.canvas[scrawl.currentPad],
 		startNewTween,
-		mySprite,
+		myEntity,
 		here;
 
 	//group
@@ -29,7 +29,7 @@ var mycode = function() {
 
 	scrawl.newGradient({
 		name: 'mygradient',
-		setToSprite: true,
+		setToEntity: true,
 		endY: 0,
 		color: [{
 			color: 'rgba(127,127,255,0.6)',
@@ -97,7 +97,7 @@ var mycode = function() {
         }, ],
 	});
 
-	//sprites
+	//entitys
 	scrawl.newBlock({
 		name: 'block1',
 		startX: 25,
@@ -153,9 +153,9 @@ var mycode = function() {
 
 	//event listener
 	startNewTween = function(e) {
-		mySprite = myBlocks.getSpriteAt(here);
-		if (mySprite) {
-			switch (mySprite.name) {
+		myEntity = myBlocks.getEntityAt(here);
+		if (myEntity) {
+			switch (myEntity.name) {
 				case 'block1':
 					colorTween.run();
 					break;

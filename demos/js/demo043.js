@@ -13,17 +13,17 @@ var mycode = function() {
 		minY = 50,
 		maxX = 700,
 		maxY = 325,
-		mySprite,
+		myEntity,
 		points = ['frame_p2', 'frame_p4', 'frame_p6', 'frame_p8', 'frame_p10'],
 		dRadius = 2,
 		minRad = 20,
 		maxRad = 80,
 		radius = 50,
 		dRoll = -1,
-		moveSprites;
+		moveEntitys;
 
-	//define sprites
-	mySprite = scrawl.makeRegularShape({
+	//define entitys
+	myEntity = scrawl.makeRegularShape({
 		name: 'frame',
 		startX: 562,
 		startY: 187,
@@ -51,7 +51,7 @@ var mycode = function() {
 		method: 'fill',
 	});
 
-	//sprite used to build Cell collision zone image
+	//entity used to build Cell collision zone image
 	scrawl.newBlock({
 		startX: 50,
 		startY: 50,
@@ -64,17 +64,17 @@ var mycode = function() {
 	scrawl.buildFields();
 
 	//animation function
-	moveSprites = function() {
-		result = mySprite.checkField();
+	moveEntitys = function() {
+		result = myEntity.checkField();
 		if (typeof result !== 'boolean') {
 			if (!scrawl.isBetween(result.x, minX, maxX, true)) {
-				mySprite.reverse('deltaX');
+				myEntity.reverse('deltaX');
 			}
 			if (!scrawl.isBetween(result.y, minY, maxY, true)) {
-				mySprite.reverse('deltaY');
+				myEntity.reverse('deltaY');
 			}
 		}
-		mySprite.updateStart();
+		myEntity.updateStart();
 		if (!scrawl.isBetween((radius + dRadius), maxRad, minRad)) {
 			dRadius = -dRadius;
 		}
@@ -84,7 +84,7 @@ var mycode = function() {
 				distance: radius,
 			});
 		}
-		mySprite.setDelta({
+		myEntity.setDelta({
 			roll: dRoll,
 		});
 	};
@@ -92,7 +92,7 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			moveSprites();
+			moveEntitys();
 			scrawl.render();
 
 			//hide-start

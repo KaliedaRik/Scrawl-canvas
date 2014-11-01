@@ -24,7 +24,7 @@ var mycode = function() {
 		image: 'marble',
 	});
 
-	//define sprite
+	//define entity
 	hello = scrawl.newPhrase({
 		name: 'hello',
 		text: 'Hello, from Scrawl!',

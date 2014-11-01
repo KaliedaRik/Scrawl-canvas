@@ -28,7 +28,7 @@ var mycode = function() {
 		useSourceData: true,
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newPicture({
 		name: 'parrot',
 		startX: 10,

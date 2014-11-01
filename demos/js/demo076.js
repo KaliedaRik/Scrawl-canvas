@@ -30,7 +30,7 @@ var mycode = function() {
 		order: 2
 	});
 
-	//define sprites
+	//define entitys
 	scrawl.newBlock({
 		startX: 50,
 		startY: 50,

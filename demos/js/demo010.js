@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define sprites
+	//define entitys
 	scrawl.newWheel({
 		name: 'mywheel',
 		startX: 100,
