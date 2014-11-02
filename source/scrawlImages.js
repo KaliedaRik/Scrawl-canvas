@@ -436,6 +436,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					src = my.xtGet([my.image[items.source], my.video[items.source], my.cell[items.source], false]);
 					if (src) {
 						my.Entity.call(this, items);
+						temp = my.safeObject(items.paste);
+						this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
+						this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
+						this.width = my.xtGet([items.pasteWidth, items.width, this.copyWidth]);
+						this.height = my.xtGet([items.pasteHeight, items.height, this.copyHeight]);
+						my.Position.prototype.set.call(this, items);
 						this.source = items.source;
 						this.imageType = this.sourceImage();
 						temp = my.safeObject(items.copy);
@@ -449,8 +455,6 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						});
 						this.copyWidth = my.xtGet([items.copyWidth, items.width, src.actualWidth, src.width, 0]);
 						this.copyHeight = my.xtGet([items.copyHeight, items.height, src.actualHeight, src.height, 0]);
-						this.width = my.xtGet([items.pasteWidth, items.width, this.copyWidth]);
-						this.height = my.xtGet([items.pasteHeight, items.height, this.copyHeight]);
 						this.copyData = {};
 						this.pasteData = {};
 						this.setCopy();

@@ -73,7 +73,7 @@ CHANGE LOG
 			- calculating widths, heights etc now restricted to when attributes are changed via set/setDelta
 				- hopefully means quicker Picture rendering
 		- all needs to be tested thoroughly
-			- TODO: rewrite demo017 with sliders to allow testing
+			- TODO: rewrite demo017 with sliders to allow testing - done
 
 141101
 	- Sprite to Entity change:

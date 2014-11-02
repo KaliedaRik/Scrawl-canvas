@@ -2286,6 +2286,12 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 		var result = this.work.handle,
 			height = this.targetHeight || (this.localHeight / this.scale) || this.height || this.get('height'),
 			width = this.targetWidth || (this.localWidth / this.scale) || this.width || this.get('width');
+		if (my.isa(height, 'str')) {
+			height = this.pasteData.h;
+		}
+		if (my.isa(width, 'str')) {
+			width = this.pasteData.w;
+		}
 		return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 	};
 	/**
@@ -2316,9 +2322,6 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 @private
 **/
 	my.Position.prototype.calculatePOV = function(result, width, height, centered) {
-		// width = width || 0;
-		// height = height || 0;
-		// centered = centered || false;
 		if ((my.isa(result.x, 'str')) && !my.contains(['left', 'center', 'right'], result.x)) {
 			result.x = (centered) ? ((parseFloat(result.x) / 100) * width) - (width / 2) : (parseFloat(result.x) / 100) * width;
 		}
@@ -5491,7 +5494,7 @@ Stamp helper function - convert string start.x values to numerical values
 @private
 **/
 	my.Entity.prototype.convertX = function(x, cell) {
-		var w = scrawl.cell[cell].actualWidth;
+		var w = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualWidth : cell;
 		switch (x) {
 			case 'left':
 				return 0;
@@ -5513,7 +5516,7 @@ Stamp helper function - convert string start.y values to numerical values
 @private
 **/
 	my.Entity.prototype.convertY = function(y, cell) {
-		var h = scrawl.cell[cell].actualHeight;
+		var h = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualHeight : cell;
 		switch (y) {
 			case 'top':
 				return 0;

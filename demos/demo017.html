@@ -5,18 +5,176 @@
   <title>Demo 017</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
+
+  <style>
+    table {
+      width: 100%;
+    }
+    th,
+    td {
+      border: 1px solid gray;
+      font-size: 0.65em;
+      text-align: center;
+      width: 12%;
+    }
+    .rowlabel {
+      font-weight: bold;
+    }
+    table input {
+      width: 80%;
+    }
+    .t0 {
+      background-color: lightgreen;
+    }
+    .t1 {
+      background-color: lightblue;
+    }
+  </style>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 017</h1>
-  <h2>Using the Picture sprite 'copy' attributes</h2>
-  <h3>Modules: images</h3>
+  <h2>Using the Picture sprite 'copy' and 'paste' attributes</h2>
+  <h3>Modules: images, animation</h3>
 
   <img id="peacock" src="img/carousel/peacock.png" class="demo017" />
-  <canvas id="mycanvas" width="400" height="200"></canvas>
+  <canvas id="mycanvas" width="580" height="400"></canvas>
 
   <p id="testmessage"></p>
+
+  <table>
+    <tr class="t0">
+      <td class="rowlabel">startX / pasteX (px)</td>
+      <td>
+        <input id="pasteX_abs" type="range" value="290" min="0" max="580" step="10" />
+      </td>
+      <td class="rowlabel">startY / pasteY (px)</td>
+      <td>
+        <input id="pasteY_abs" type="range" value="200" min="0" max="400" step="10" />
+      </td>
+      <td class="rowlabel">startX / pasteX (%)</td>
+      <td>
+        <input id="pasteX_rel" type="range" value="50" min="0" max="100" step="1" />
+      </td>
+      <td class="rowlabel">startY / pasteY (%)</td>
+      <td>
+        <input id="pasteY_rel" type="range" value="50" min="0" max="100" step="1" />
+      </td>
+    </tr>
+    <tr class="t0">
+      <td class="rowlabel">pasteWidth (px)</td>
+      <td>
+        <input id="pasteWidth_abs" type="range" value="290" min="0" max="580" step="10" />
+      </td>
+      <td class="rowlabel">pasteHeight (px)</td>
+      <td>
+        <input id="pasteHeight_abs" type="range" value="200" min="0" max="400" step="10" />
+      </td>
+      <td class="rowlabel">pasteWidth (%)</td>
+      <td>
+        <input id="pasteWidth_rel" type="range" value="50" min="0" max="100" step="1" />
+      </td>
+      <td class="rowlabel">pasteHeight (%)</td>
+      <td>
+        <input id="pasteHeight_rel" type="range" value="50" min="0" max="100" step="1" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">handleX (px)</td>
+      <td>
+        <input id="handleX_abs" type="range" value="290" min="-290" max="290" step="10" />
+      </td>
+      <td class="rowlabel">handleY (px)</td>
+      <td>
+        <input id="handleY_abs" type="range" value="200" min="-200" max="200" step="10" />
+      </td>
+      <td class="rowlabel">handleX (%)</td>
+      <td>
+        <input id="handleX_rel" type="range" value="50" min="-50" max="50" step="1" />
+      </td>
+      <td class="rowlabel">handleY (%)</td>
+      <td>
+        <input id="handleY_rel" type="range" value="50" min="-50" max="50" step="1" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td colspan="2" class="rowlabel">handleX (string)</td>
+      <td colspan="2">
+        <select id="handleX_str">
+          <option value="left">left</option>
+          <option value="center">center</option>
+          <option value="right">right</option>
+        </select>
+      </td>
+      <td colspan="2" class="rowlabel">handleY (string)</td>
+      <td colspan="2">
+        <select id="handleY_str">
+          <option value="top">top</option>
+          <option value="center">center</option>
+          <option value="bottom">bottom</option>
+        </select>
+      </td>
+    </tr>
+    <tr class="t0">
+      <td class="rowlabel">copyX (px)</td>
+      <td>
+        <input id="copyX_abs" type="range" value="0" min="0" max="580" step="10" />
+      </td>
+      <td class="rowlabel">copyY (px)</td>
+      <td>
+        <input id="copyY_abs" type="range" value="0" min="0" max="400" step="10" />
+      </td>
+      <td class="rowlabel">copyX (%)</td>
+      <td>
+        <input id="copyX_rel" type="range" value="0" min="0" max="100" step="1" />
+      </td>
+      <td class="rowlabel">copyY (%)</td>
+      <td>
+        <input id="copyY_rel" type="range" value="0" min="0" max="100" step="1" />
+      </td>
+    </tr>
+    <tr class="t0">
+      <td class="rowlabel">copyWidth (px)</td>
+      <td>
+        <input id="copyWidth_abs" type="range" value="580" min="0" max="580" step="10" />
+      </td>
+      <td class="rowlabel">copyHeight (px)</td>
+      <td>
+        <input id="copyHeight_abs" type="range" value="400" min="0" max="400" step="10" />
+      </td>
+      <td class="rowlabel">copyWidth (%)</td>
+      <td>
+        <input id="copyWidth_rel" type="range" value="100" min="0" max="100" step="1" />
+      </td>
+      <td class="rowlabel">copyHeight (%)</td>
+      <td>
+        <input id="copyHeight_rel" type="range" value="100" min="0" max="100" step="1" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">scale</td>
+      <td>
+        <input id="scale" type="range" value="1" min="0" max="2" step="0.1" />
+      </td>
+      <td class="rowlabel">roll</td>
+      <td>
+        <input id="roll" type="range" value="0" min="0" max="360" step="5" />
+      </td>
+      <td class="rowlabel" colspan="2">flip</td>
+      <td colspan="2">
+        <select id="flip">
+          <option value="normal">normal</option>
+          <option value="reverse">reverse</option>
+          <option value="upend">upend</option>
+          <option value="both">both</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <p id="data"></p>
 
   <div id="testdetails">
     <p><b>Scenario:</b> ???</p>
