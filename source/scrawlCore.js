@@ -373,11 +373,11 @@ Any supplied callback function will only be run once all modules have been loade
 					mod.type = 'text/javascript';
 					mod.async = 'true';
 					mod.onload = function(e) {
-						console.log('... ' + module + ' loaded', my.modules);
+						console.log('... ' + module + ' loaded');
 						done(module);
 					};
 					mod.onerror = function(e) {
-						console.log('... ' + module + ' failed to load', my.modules);
+						console.log('... ' + module + ' failed to load');
 						done(module, true);
 					};
 					mod.src = (/\.js$/.test(myMod)) ? path + myMod : path + myMod + tail;
@@ -3453,30 +3453,30 @@ The coordinate Vector representing the Cell's copy source position on its &lt;ca
 
 Cell supports the following 'virtual' attributes for this attribute:
 
-* __sourceX__ - (Number) the x coordinate on the source &lt;canvas&gt;
-* __sourceY__ - (Number) the y coordinate on the source &lt;canvas&gt;
+* __copyX__ - (Number) the x coordinate on the source &lt;canvas&gt;
+* __copyY__ - (Number) the y coordinate on the source &lt;canvas&gt;
 
-@property source
+@property copy
 @type Vector
 **/
 		copy: false,
 		/**
 Copy width, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;
-@property sourceWidth
+@property copyWidth
 @type Number
 @default 300
 **/
 		copyWidth: 300,
 		/**
 Copy height, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;
-@property sourceHeight
+@property copyHeight
 @type Number
 @default 150
 **/
 		copyHeight: 150,
 		/**
 Local source data
-@property sourceData
+@property copyData
 @type Object
 @default false
 @private
@@ -3484,7 +3484,7 @@ Local source data
 		copyData: false,
 		/**
 Local target data
-@property targetData
+@property pasteData
 @type Object
 @default false
 @private
@@ -3492,14 +3492,14 @@ Local target data
 		pasteData: false,
 		/**
 Paste width, in pixels. Determines where, and at what scale, the copied portion of this Cell's &lt;canvas&gt; will appear on the target Cell's &lt;canvas&gt;
-@property targetWidth
+@property pasteWidth
 @type Number
 @default 300
 **/
 		pasteWidth: 300,
 		/**
 Paste height, in pixels. Determines where, and at what scale, the copied portion of this Cell's &lt;canvas&gt; will appear on the target Cell's &lt;canvas&gt;
-@property targetHeight
+@property pasteHeight
 @type Number
 @default 150
 **/
@@ -4087,7 +4087,7 @@ Cell.prepareToCopyCell hook function - modified by path module
 	my.Cell.prototype.pathPrepareToCopyCell = function() {};
 	/**
 Cell.setCopy update copyData object values
-@method setSource
+@method setCopy
 @chainable
 @private
 **/
@@ -4118,7 +4118,7 @@ Cell.setCopy update copyData object values
 	};
 	/**
 Cell.setPaste update pasteData object values
-@method setSource
+@method setPaste
 @chainable
 @private
 **/

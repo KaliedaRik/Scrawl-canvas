@@ -56,6 +56,25 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141102
+	- rewrote ScrawlImage object as Image
+		- moved to scrawlImageLoad module
+		- all img DOM elements added to scrawl.asset object
+		- all Image objects saved in scrawl.image/scrawl.imagenames
+	- rewrote Picture object
+		- massively simplified
+			- took out all filter stuff - filters are to be restricted to the new Frame entity
+			- sources now limited to Image, Video or Canvas
+			- replicated Cell copy and paste attribute functionality
+				- Pictures can be constructed with aliases paste, pasteX, pasteY (for start) and pasteWidth, pasteHeight (for width, height)
+				- Picture copy functionality - copy, copyX, copyY,copyWidth, copyHeight
+					- all values now percentage enabled
+					- setting and getting these values should enforce values so that image out of bounds errors should no longer be a problem
+			- calculating widths, heights etc now restricted to when attributes are changed via set/setDelta
+				- hopefully means quicker Picture rendering
+		- all needs to be tested thoroughly
+			- TODO: rewrite demo017 with sliders to allow testing
+
 141101
 	- Sprite to Entity change:
 		- completed change for all demos

@@ -426,61 +426,45 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @param {Object} [items] Key:value Object argument for setting attributes
     **/
 		my.Picture = function(items) {
+			var temp, src;
 			if (my.isa(items, 'obj') && my.xt(items.url)) {
 				return this.importImage(items);
 			}
 			else {
 				items = my.safeObject(items);
-				my.Entity.call(this, items);
-				my.Position.prototype.set.call(this, items);
-				var s,
-					w,
-					h,
-					x,
-					y;
-				this.source = items.source || false;
-				this.imageType = this.sourceImage(items.source) || false;
-				if (this.source) {
-					if (this.imageType === 'img' || this.imageType === 'video') {
-						s = my.image[this.source];
-						w = s.width;
-						h = s.height;
-						x = 0;
-						y = 0;
+				if (my.xt(items.source)) {
+					src = my.xtGet([my.image[items.source], my.video[items.source], my.cell[items.source], false]);
+					if (src) {
+						my.Entity.call(this, items);
+						this.source = items.source;
+						this.imageType = this.sourceImage();
+						temp = my.safeObject(items.copy);
+						this.copy = my.newVector({
+							x: my.xtGet([items.copyX, temp.x, 0]),
+							y: my.xtGet([items.copyY, temp.y, 0]),
+							name: this.type + '.' + this.name + '.copy'
+						});
+						this.work.copy = my.newVector({
+							name: this.type + '.' + this.name + '.work.copy'
+						});
+						this.copyWidth = my.xtGet([items.copyWidth, items.width, src.actualWidth, src.width, 0]);
+						this.copyHeight = my.xtGet([items.copyHeight, items.height, src.actualHeight, src.height, 0]);
+						this.width = my.xtGet([items.pasteWidth, items.width, this.copyWidth]);
+						this.height = my.xtGet([items.pasteHeight, items.height, this.copyHeight]);
+						this.copyData = {};
+						this.pasteData = {};
+						this.setCopy();
+						this.setPaste();
+						this.registerInLibrary();
+						my.pushUnique(my.group[this.group].entitys, this.name);
+						if (my.isa(items.callback, 'fn')) {
+							items.callback();
+						}
+						return this;
 					}
-					else if (this.imageType === 'canvas') {
-						s = my.cell[this.source];
-						w = s.copyWidth;
-						h = s.copyHeight;
-						x = s.copy.x;
-						y = s.copy.y;
-					}
-					else if (this.imageType === 'animation') {
-						s = my.anim[this.get('animSheet')].getData();
-						w = s.copyWidth;
-						h = s.copyHeight;
-						x = s.copyX;
-						y = s.copyY;
-					}
-					this.width = items.width || w;
-					this.height = items.height || h;
-					this.copyX = items.copyX || x;
-					this.copyY = items.copyY || y;
-					this.copyWidth = items.copyWidth || w;
-					this.copyHeight = items.copyHeight || h;
-					this.setLocalDimensions();
 				}
-				this.filters = my.safeObject(items.filters);
-				this.filterKeys = Object.keys(this.filters);
-				this.checkSum = 0;
-				this.calculateFilters = false;
-				this.registerInLibrary();
-				my.pushUnique(my.group[this.group].entitys, this.name);
-				if (my.isa(items.callback, 'fn')) {
-					items.callback.call(this);
-				}
-				return this;
 			}
+			return false;
 		};
 		my.Picture.prototype = Object.create(my.Entity.prototype);
 		/**
@@ -523,7 +507,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @type String
     @default ;;
     **/
-			animSheet: '',
+			animation: '',
 			/**
     Identifier String - permitted values include: 'animation', 'canvas', 'img'
 
@@ -542,77 +526,47 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 			checkHitUsingImageData: false,
 			/**
-    Image display - horizontal offset, in pixels, from the image's top left corner
-    @property copyX
-    @type Number
-    @default 0
-    **/
-			copyX: 0,
+The coordinate Vector representing the Picture's copy source position on its source;
+
+Picture supports the following 'virtual' attributes for this attribute:
+
+* __copyX__ - (Number) the x coordinate on the source
+* __copyY__ - (Number) the y coordinate on the sourcecopy
+
+@property copy
+@type Vector
+**/
+			copy: false,
 			/**
-    Image display - vertical offset, in pixels, from the image's top left corner
-    @property copyY
-    @type Number
-    @default 0
-    **/
-			copyY: 0,
+Copy width, in pixels. Determines which portion of this Picture's source will be copied
+@property copyWidth
+@type Number
+@default 300
+**/
+			copyWidth: 300,
 			/**
-    Image display - width, in pixels, from copy start point
-    @property copyWidth
-    @type Number
-    @default 0
-    **/
-			copyWidth: 0,
+Copy height, in pixels. Determines which portion of this Picture's source will be copied
+@property copyHeight
+@type Number
+@default 150
+**/
+			copyHeight: 150,
 			/**
-    Image display - height, in pixels, from copy start point
-    @property copyHeight
-    @type Number
-    @default 0
-    **/
-			copyHeight: 0,
+Local source data
+@property copyData
+@type Object
+@default false
+@private
+**/
+			copyData: false,
 			/**
-    Image display - width, in pixels
-    @property localWidth
-    @type Number
-    @default 0
-    **/
-			localWidth: 0,
-			/**
-    Image display - height, in pixels
-    @property localHeight
-    @type Number
-    @default 0
-    **/
-			localHeight: 0,
-			/**
-    Object consisting of filter name keys and filter argument objects
-    @property filters
-    @type Object
-    @default Object
-    **/
-			filters: {},
-			/**
-    Array of this.filters{} attribute keys
-    @property filterKeys
-    @type Array
-    @default Array
-    @private
-    **/
-			filterKeys: [],
-			/**
-    Checksum - used to determine whether filters need to be calculated
-    @property checkSum
-    @type Number
-    @default 0
-    **/
-			checkSum: 0,
-			/**
-    Dirty filter flag - if true, recalculate filtered image
-    @property calculateFilters
-    @type Boolean
-    @default false
-    @private
-    **/
-			calculateFilters: false,
+Local target data
+@property pasteData
+@type Object
+@default false
+@private
+**/
+			pasteData: false,
 			/**
     Asynchronous loading of image file from the server - path/to/image file
 
@@ -653,12 +607,30 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @chainable
     **/
 		my.Picture.prototype.set = function(items) {
+			var temp;
 			my.Entity.prototype.set.call(this, items);
-			if (my.xto([items.width, items.height, items.scale])) {
-				this.setLocalDimensions();
+			if (my.xto([items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight])) {
+				temp = my.safeObject(items.paste);
+				this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
+				this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
+				this.width = my.xtGet([items.pasteWidth, this.width]);
+				this.height = my.xtGet([items.pasteHeight, this.height]);
 			}
-			if (my.xt(this.animSheet)) {
-				my.anim[this.animSheet].set(items);
+			if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight])) {
+				temp = my.safeObject(items.copy);
+				this.copy.x = my.xtGet([items.copyX, temp.x, this.copy.x]);
+				this.copy.y = my.xtGet([items.copyY, temp.y, this.copy.y]);
+				this.copyWidth = my.xtGet([items.copyWidth, this.copyWidth]);
+				this.copyHeight = my.xtGet([items.copyHeight, this.copyHeight]);
+			}
+			if (my.xto([items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale])) {
+				this.setPaste();
+			}
+			if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height])) {
+				this.setCopy();
+			}
+			if (my.xt(this.animation)) {
+				my.spriteanimation[this.animation].set(items);
 			}
 			return this;
 		};
@@ -670,47 +642,118 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @chainable
     **/
 		my.Picture.prototype.setDelta = function(items) {
+			var temp, x, y, w, h;
 			my.Entity.prototype.setDelta.call(this, items);
 			items = my.safeObject(items);
-			if (my.xt(items.copyX)) {
-				this.copyX += items.copyX;
+			if (my.xto([items.paste, items.pasteX, items.pasteY])) {
+				temp = my.safeObject(items.paste);
+				x = my.xtGet([items.pasteX, temp.x, 0]);
+				y = my.xtGet([items.pasteY, temp.y, 0]);
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
 			}
-			if (my.xt(items.copyY)) {
-				this.copyY += items.copyY;
+			if (my.xto([items.pasteWidth, items.width])) {
+				w = my.xtGet([items.pasteWidth, items.width]);
+				this.width = (my.isa(this.width, 'num')) ? this.width + w : my.addPercentages(this.width, w);
 			}
-			if (my.xt(items.copyWidth)) {
-				this.copyWidth += items.copyWidth;
+			if (my.xto([items.pasteHeight, items.height])) {
+				h = my.xtGet([items.pasteHeight, items.height]);
+				this.height = (my.isa(this.height, 'num')) ? this.height + h : my.addPercentages(this.height, h);
 			}
-			if (my.xt(items.copyHeight)) {
-				this.copyHeight += items.copyHeight;
+			if (my.xto([items.copy, items.copyX, items.copyY])) {
+				temp = my.safeObject(items.copy);
+				x = my.xtGet([items.copyX, temp.x, 0]);
+				y = my.xtGet([items.copyY, temp.y, 0]);
+				this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
+				this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
 			}
-			if (my.xto([items.width, items.height, items.scale])) {
-				this.setLocalDimensions();
+			if (my.xto([items.copyWidth, items.width])) {
+				w = my.xtGet([items.copyWidth, items.width]);
+				this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + w : my.addPercentages(this.copyWidth, w);
 			}
-			if (my.xt(this.animSheet)) {
-				my.anim[this.animSheet].set(items);
+			if (my.xto([items.copyHeight, items.height])) {
+				h = my.xtGet([items.copyHeight, items.height]);
+				this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + h : my.addPercentages(this.copyHeight, h);
+			}
+			if (my.xto([items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale])) {
+				this.setPaste();
+			}
+			if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height])) {
+				this.setCopy();
 			}
 			return this;
 		};
 		/**
-    Augments Entity.set() - sets the local dimensions
-    @method setLocalDimensions
-    @return This
-    @chainable
-    **/
-		my.Picture.prototype.setLocalDimensions = function() {
-			var cell = my.cell[my.group[this.group].cell];
-			if (my.isa(this.width, 'str')) {
-				this.localWidth = (parseFloat(this.width) / 100) * cell.actualWidth * this.scale;
+Picture.setCopy update copyData object values
+@method setSource
+@chainable
+@private
+**/
+		my.Picture.prototype.setCopy = function() {
+			var w, h;
+			switch (this.imageType) {
+				case 'canvas':
+					w = my.cell[this.source].actualWidth;
+					h = my.cell[this.source].actualHeight;
+					break;
+				case 'video':
+					w = my.video[this.source].width;
+					h = my.video[this.source].height;
+					break;
+				case 'img':
+					w = my.image[this.source].width;
+					h = my.image[this.source].height;
+					break;
+				default:
+					//do nothing for animations
 			}
-			else {
-				this.localWidth = this.width * this.scale || 0;
+			if (this.imageType !== 'animation') {
+				this.copyData.x = (my.isa(this.copy.x, 'str')) ? this.convertX(this.copy.x, w) : this.copy.x;
+				this.copyData.y = (my.isa(this.copy.y, 'str')) ? this.convertY(this.copy.y, h) : this.copy.y;
+				if (!my.isBetween(this.copyData.x, 0, w - 1, true)) {
+					this.copyData.x = (this.copyData.x < 0) ? 0 : w - 1;
+				}
+				if (!my.isBetween(this.copyData.y, 0, h - 1, true)) {
+					this.copyData.y = (this.copyData.y < 0) ? 0 : h - 1;
+				}
+				this.copyData.w = (my.isa(this.copyWidth, 'str')) ? this.convertX(this.copyWidth, w) : this.copyWidth;
+				this.copyData.h = (my.isa(this.copyHeight, 'str')) ? this.convertY(this.copyHeight, h) : this.copyHeight;
+				if (!my.isBetween(this.copyData.w, 1, w, true)) {
+					this.copyData.w = (this.copyData.w < 1) ? 1 : w;
+				}
+				if (!my.isBetween(this.copyData.h, 1, h, true)) {
+					this.copyData.h = (this.copyData.h < 1) ? 1 : h;
+				}
+				if (this.copyData.x + this.copyData.w > w) {
+					this.copyData.x = w - this.copyData.w;
+				}
+				if (this.copyData.y + this.copyData.h > h) {
+					this.copyData.y = h - this.copyData.h;
+				}
 			}
-			if (my.isa(this.height, 'str')) {
-				this.localHeight = (parseFloat(this.height) / 100) * cell.actualHeight * this.scale;
+			return this;
+		};
+		/**
+Picture.setPaste update pasteData object values
+@method setPaste
+@chainable
+@private
+**/
+		my.Picture.prototype.setPaste = function() {
+			var w,
+				h,
+				cell = my.cell[my.group[this.group].cell];
+			this.pasteData.x = (my.isa(this.start.x, 'str')) ? this.convertX(this.start.x, cell.actualWidth) : this.start.x;
+			this.pasteData.y = (my.isa(this.start.y, 'str')) ? this.convertY(this.start.y, cell.actualHeight) : this.start.y;
+			this.pasteData.w = (my.isa(this.width, 'str')) ? this.convertX(this.width, cell.actualWidth) : this.width;
+			this.pasteData.h = (my.isa(this.height, 'str')) ? this.convertY(this.height, cell.actualHeight) : this.height;
+			this.pasteData.w *= this.scale;
+			this.pasteData.h *= this.scale;
+			if (this.pasteData.w < 1) {
+				this.pasteData.w = 1;
 			}
-			else {
-				this.localHeight = this.height * this.scale || 0;
+			if (this.pasteData.h < 1) {
+				this.pasteData.h = 1;
 			}
 			return this;
 		};
@@ -795,16 +838,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 		my.Picture.prototype.sourceImage = function() {
 			var home;
-			if (this.get('animSheet') && my.contains(my.imagenames, this.source)) {
-				return 'animation';
+			if (my.contains(my.videonames, this.source)) {
+				return 'video';
 			}
 			if (my.contains(my.imagenames, this.source)) {
-				home = my.asset[this.source];
-				return (my.isa(home, 'video')) ? 'video' : 'img';
+				if (my.contains(my.spriteanimationnames, this.animation)) {
+					return 'animation';
+				}
+				return 'img';
 			}
-			if (my.contains(my.cellnames, this.source)) {
+			if (my.contains(my.canvasnames, this.source)) {
 				return 'canvas';
 			}
+
 			return false;
 		};
 		/**
@@ -821,7 +867,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			ctx.save();
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
-			ctx.rect(here.x, here.y, this.localWidth, this.localHeight);
+			ctx.rect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			ctx.clip();
 			return this;
 		};
@@ -837,7 +883,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Picture.prototype.clear = function(ctx, cell) {
 			var here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
-			ctx.clearRect(here.x, here.y, this.localWidth, this.localHeight);
+			ctx.clearRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			return this;
 		};
 		/**
@@ -855,8 +901,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			ctx.fillStyle = my.cell[cell].backgroundColor;
 			ctx.strokeStyle = my.cell[cell].backgroundColor;
 			ctx.globalAlpha = 1;
-			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
-			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
+			ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+			ctx.fillRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			ctx.fillStyle = my.ctx[cell].fillStyle;
 			ctx.strokeStyle = my.ctx[cell].strokeStyle;
 			ctx.globalAlpha = my.ctx[cell].globalAlpha;
@@ -875,7 +921,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			var here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
 			my.cell[cell].setEngine(this);
-			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
+			ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			return this;
 		};
 		/**
@@ -890,11 +936,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Picture.prototype.fill = function(ctx, cell) {
 			var here,
 				data = this.getImage();
-			if (data.image) {
+			if (data) {
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -910,13 +956,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Picture.prototype.drawFill = function(ctx, cell) {
 			var here,
 				data = this.getImage();
-			if (data.image) {
+			if (data) {
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
+				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 				this.clearShadow(ctx, cell);
-				ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -932,13 +978,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Picture.prototype.fillDraw = function(ctx, cell) {
 			var here,
 				data = this.getImage();
-			if (data.image) {
+			if (data) {
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 				this.clearShadow(ctx, cell);
-				ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
+				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -954,12 +1000,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Picture.prototype.sinkInto = function(ctx, cell) {
 			var here,
 				data = this.getImage();
-			if (data.image) {
+			if (data) {
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
-				ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -975,12 +1021,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Picture.prototype.floatOver = function(ctx, cell) {
 			var here,
 				data = this.getImage();
-			if (data.image) {
+			if (data) {
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
-				ctx.drawImage(data.image, data.copyX, data.copyY, data.copyWidth, data.copyHeight, here.x, here.y, this.localWidth, this.localHeight);
+				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -1087,92 +1133,23 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @private
     **/
 		my.Picture.prototype.getImage = function() {
-			var myData,
-				myReturn = {},
-				myImage,
-				iObject,
-				home;
-			myReturn.copyX = this.copyX;
-			myReturn.copyY = this.copyY;
-			myReturn.copyWidth = this.copyWidth;
-			myReturn.copyHeight = this.copyHeight;
+			var result;
 			switch (this.imageType) {
-				case 'canvas':
-					myReturn.image = (my.isa(my.canvas[this.source], 'canvas')) ? my.canvas[this.source] : false;
-					break;
 				case 'animation':
-					myReturn = my.anim[this.animSheet].getData();
-					this.copyX = myReturn.copyX;
-					this.copyY = myReturn.copyY;
-					this.copyWidth = myReturn.copyWidth;
-					this.copyHeight = myReturn.copyHeight;
-					home = (my.xt(my.img[this.source])) ? my.img[this.source] : my.object[this.source];
-					myReturn.image = (my.isa(home, 'img')) ? home : false;
+					result = my.spriteanimation[this.animation].getData();
+					this.copyData.x = result.x;
+					this.copyData.y = result.y;
+					this.copyData.w = result.w;
+					this.copyData.h = result.h;
+					result = my.asset[this.source];
+					break;
+				case 'canvas':
+					result = my.canvas[this.source];
 					break;
 				default:
-					home = my.asset[this.source];
-					myReturn.image = (my.isa(home, 'img') || my.isa(home, 'video')) ? home : false;
+					result = my.asset[this.source];
 			}
-			this.filterKeys = Object.keys(this.filters);
-			if (this.filterKeys.length > 0) {
-				this.calculateCheckSum();
-				if (this.calculateFilters) {
-					iObject = my.image[this.source];
-					my.cv.width = iObject.width;
-					my.cv.height = iObject.height;
-					my.cvx.drawImage(myReturn.image, 0, 0);
-					myImage = my.cvx.getImageData(this.copyX, this.copyY, this.copyWidth, this.copyHeight);
-					for (var i = 0, iz = this.filterKeys.length; i < iz; i++) {
-						if (my.xt(my.filter[this.filterKeys[i]])) {
-							this.filters[this.filterKeys[i]].use = myImage;
-							this.filters[this.filterKeys[i]].save = false;
-							myImage = my.filter[this.filterKeys[i]](this.filters[this.filterKeys[i]], my.image[this.source]);
-						}
-					}
-					myImage = iObject.getImageDataUrl(myImage, true);
-					iObject.makeImage(myImage, this.name + '_brush', this.copyWidth, this.copyHeight);
-				}
-				myReturn.copyX = 0;
-				myReturn.copyY = 0;
-				myImage = my.f.querySelector('#' + this.name + '_brush');
-				myReturn.image = (my.isa(myImage, 'img')) ? myImage : false;
-				if (myReturn.image) {
-					this.calculateFilters = false;
-				}
-			}
-			return myReturn;
-		};
-		/**
-    Display helper function - check to see if filtered image needs to be recalculated
-    @method calculateCheckSum
-    @return Boolean False if filters need recalculating; true otherwise.
-    @private
-    **/
-		my.Picture.prototype.calculateCheckSum = function() {
-			var check = ((this.copyX * this.copyX) || 1) * ((this.copyY * this.copyY) || 1) * ((this.copyWidth * this.copyWidth) || 1) * ((this.copyHeight * this.copyHeight) || 1),
-				filtercheck = Object.keys(this.filters);
-			//check if copy parameters have changed
-			if (this.checkSum !== check) {
-				this.calculateFilters = true;
-				this.checkSum = check;
-			}
-			//check if a filter has been added/removed from the filters object
-			if (this.filterKeys.length !== filtercheck.length) {
-				this.calculateFilters = true;
-			}
-			//at this point, know enough to return if something has changed
-			if (this.calculateFilters) {
-				return false;
-			}
-			//final, deep check to see if filter order has changed, or if a filter has been replaced by another one
-			for (var i = 0, iz = filtercheck.length; i < iz; i++) {
-				if (this.filterKeys[i] !== filtercheck[i]) {
-					this.calculateFilters = true;
-					return false;
-				}
-			}
-			//nothing changed
-			return true;
+			return result;
 		};
 		/**
     Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
