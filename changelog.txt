@@ -56,6 +56,10 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141103
+	- fixing Picture.getImageData(), Picture.getImageDataValue()
+		- for testing, replicate demo017 in demo018, and add in the demo018 getImageData() getImageDataValue() stuff
+		
 141102
 	- rewrote ScrawlImage object as Image
 		- moved to scrawlImageLoad module

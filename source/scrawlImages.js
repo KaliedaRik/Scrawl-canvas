@@ -1043,22 +1043,13 @@ Picture.setPaste update pasteData object values
     **/
 		my.Picture.prototype.getImageData = function(label) {
 			label = (my.xt(label)) ? label : 'data';
-			var data = this.getImage(),
-				myImage;
-			if (data.image) {
-				if (this.imageType === 'animation') {
-					myImage = my.image[this.source];
-					my.cv.width = myImage.get('width');
-					my.cv.height = myImage.get('height');
-					my.cvx.drawImage(data.image, 0, 0);
-				}
-				else {
-					my.cv.width = this.copyWidth;
-					my.cv.height = this.copyHeight;
-					my.cvx.drawImage(data.image, this.copyX, this.copyY, this.copyWidth, this.copyHeight, 0, 0, this.copyWidth, this.copyHeight);
-				}
+			var data = this.getImage();
+			if (data) {
+				my.imageCanvas.width = this.copyData.w;
+				my.imageCanvas.height = this.copyData.h;
+				my.imageCvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, 0, 0, this.copyData.w, this.copyData.h);
 				this.imageData = this.name + '_' + label;
-				my.imageData[this.imageData] = my.cvx.getImageData(0, 0, my.cv.width, my.cv.height);
+				my.imageData[this.imageData] = my.imageCvx.getImageData(0, 0, this.copyData.w, this.copyData.h);
 			}
 			return this;
 		};
@@ -1090,19 +1081,10 @@ Picture.setPaste update pasteData object values
 			coords.x = (this.flipReverse) ? -coords.x : coords.x;
 			coords.y = (this.flipUpend) ? -coords.y : coords.y;
 			coords.vectorAdd(this.getPivotOffsetVector(this.handle));
-			if (this.imageType === 'animation' && my.image[this.source]) {
-				myData = my.anim[this.get('animSheet')].getData();
-				copyScaleX = (this.localWidth / this.scale) / myData.copyWidth;
-				copyScaleY = (this.localHeight / this.scale) / myData.copyHeight;
-				myX = Math.round((coords.x / copyScaleX) + myData.copyX);
-				myY = Math.round((coords.y / copyScaleY) + myData.copyY);
-			}
-			else {
-				copyScaleX = (this.localWidth / this.scale) / this.copyWidth;
-				copyScaleY = (this.localHeight / this.scale) / this.copyHeight;
-				myX = Math.round(coords.x / copyScaleX);
-				myY = Math.round(coords.y / copyScaleY);
-			}
+			copyScaleX = (this.copyData.w / this.pasteData.w) * this.scale;
+			copyScaleY = (this.copyData.h / this.pasteData.h) * this.scale;
+			myX = Math.round(coords.x * copyScaleX);
+			myY = Math.round(coords.y * copyScaleY);
 			result = false;
 			myEl = ((myY * d.width) + myX) * 4;
 			if (my.isBetween(myX, 0, d.width - 1, true) && my.isBetween(myY, 0, d.height - 1, true)) {
