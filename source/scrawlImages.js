@@ -428,6 +428,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Picture = function(items) {
 			var temp, src;
 			if (my.isa(items, 'obj') && my.xt(items.url)) {
+				console.log('picture loading dynamically');
 				return this.importImage(items);
 			}
 			else {
@@ -439,6 +440,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						temp = my.safeObject(items.paste);
 						this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
 						this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
+						this.copyWidth = my.xtGet([items.copyWidth, items.width, src.actualWidth, src.width, 0]);
+						this.copyHeight = my.xtGet([items.copyHeight, items.height, src.actualHeight, src.height, 0]);
 						this.width = my.xtGet([items.pasteWidth, items.width, this.copyWidth]);
 						this.height = my.xtGet([items.pasteHeight, items.height, this.copyHeight]);
 						my.Position.prototype.set.call(this, items);
@@ -453,8 +456,6 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						this.work.copy = my.newVector({
 							name: this.type + '.' + this.name + '.work.copy'
 						});
-						this.copyWidth = my.xtGet([items.copyWidth, items.width, src.actualWidth, src.width, 0]);
-						this.copyHeight = my.xtGet([items.copyHeight, items.height, src.actualHeight, src.height, 0]);
 						this.copyData = {};
 						this.pasteData = {};
 						this.setCopy();
@@ -735,6 +736,7 @@ Picture.setCopy update copyData object values
 					this.copyData.y = h - this.copyData.h;
 				}
 			}
+			this.imageData = false;
 			return this;
 		};
 		/**
@@ -1035,82 +1037,6 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library
-    @method getImageData
-    @param {String} [label] IMAGEDATANAME - default: PICTURENAME_data
-    @return This
-    @chainable
-    **/
-		my.Picture.prototype.getImageData = function(label) {
-			label = (my.xt(label)) ? label : 'data';
-			var data = this.getImage();
-			if (data) {
-				my.imageCanvas.width = this.copyData.w;
-				my.imageCanvas.height = this.copyData.h;
-				my.imageCvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, 0, 0, this.copyData.w, this.copyData.h);
-				this.imageData = this.name + '_' + label;
-				my.imageData[this.imageData] = my.imageCvx.getImageData(0, 0, this.copyData.w, this.copyData.h);
-			}
-			return this;
-		};
-		/**
-    Get the pixel color or channel data from Picture object's image at given coordinate
-
-    Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha', 'color' (default)
-    @method getImageDataValue
-    @param {Object} items Coordinate Vector or Object
-    @return Color value at coordinate; false if no color found
-    **/
-		my.Picture.prototype.getImageDataValue = function(items) {
-			items = my.safeObject(items);
-			var coords = my.workimg.v1.set({
-					x: (items.x || 0),
-					y: (items.y || 0)
-				}),
-				d = my.imageData[this.get('imageData')],
-				myX,
-				myY,
-				myData,
-				copyScaleX,
-				copyScaleY,
-				result,
-				myEl,
-				imageDataChannel = this.get('imageDataChannel');
-			this.resetWork();
-			coords.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
-			coords.x = (this.flipReverse) ? -coords.x : coords.x;
-			coords.y = (this.flipUpend) ? -coords.y : coords.y;
-			coords.vectorAdd(this.getPivotOffsetVector(this.handle));
-			copyScaleX = (this.copyData.w / this.pasteData.w) * this.scale;
-			copyScaleY = (this.copyData.h / this.pasteData.h) * this.scale;
-			myX = Math.round(coords.x * copyScaleX);
-			myY = Math.round(coords.y * copyScaleY);
-			result = false;
-			myEl = ((myY * d.width) + myX) * 4;
-			if (my.isBetween(myX, 0, d.width - 1, true) && my.isBetween(myY, 0, d.height - 1, true)) {
-				switch (items.channel || imageDataChannel) {
-					case 'red':
-						result = (my.xt(d.data[myEl])) ? d.data[myEl] : false;
-						break;
-					case 'blue':
-						result = (my.xt(d.data[myEl + 1])) ? d.data[myEl + 1] : false;
-						break;
-					case 'green':
-						result = (my.xt(d.data[myEl + 2])) ? d.data[myEl + 2] : false;
-						break;
-					case 'alpha':
-						result = (my.xt(d.data[myEl + 3])) ? d.data[myEl + 3] : false;
-						break;
-					case 'color':
-						result = (my.xta([d.data[myEl], d.data[myEl + 1], d.data[myEl + 2], d.data[myEl + 3]])) ? 'rgba(' + d.data[myEl] + ',' + d.data[myEl + 1] + ',' + d.data[myEl + 2] + ',' + d.data[myEl + 3] + ')' : false;
-						break;
-					default:
-						result = false;
-				}
-			}
-			return result;
-		};
-		/**
     Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for entity sheet images
 
     Also generates new filtered images, when necessary
@@ -1132,10 +1058,78 @@ Picture.setPaste update pasteData object values
 				case 'canvas':
 					result = my.canvas[this.source];
 					break;
-				default:
+				case 'video':
 					result = my.asset[this.source];
+					break;
+				case 'img':
+					result = my.asset[this.source];
+					break;
+				default:
+					result = false;
 			}
 			return result;
+		};
+		/**
+    Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library
+    @method getImageData
+    @param {String} [label] IMAGEDATANAME - default: PICTURENAME_data
+    @return This
+    @chainable
+    **/
+		my.Picture.prototype.getImageData = function(label) {
+			label = (my.xt(label)) ? label : 'data';
+			var data = this.getImage();
+			if (data) {
+				my.imageCanvas.width = this.copyData.w;
+				my.imageCanvas.height = this.copyData.h;
+				my.imageCvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, 0, 0, this.copyData.w, this.copyData.h);
+				this.imageData = this.name + '_' + label;
+				my.imageData[this.imageData] = my.imageCvx.getImageData(0, 0, this.copyData.w, this.copyData.h);
+			}
+			return this;
+		};
+		/**
+    Get the pixel color or channel data from Picture object's image at given coordinate
+
+    Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha' (default), 'color'
+    @method getImageDataValue
+    @param {Object} items Coordinate Vector or Object
+    @return Color value at coordinate; false if no color found
+    **/
+		my.Picture.prototype.getImageDataValue = function(items) {
+			items = my.safeObject(items);
+			var coords = my.workimg.v1.set({
+					x: (items.x || 0),
+					y: (items.y || 0)
+				}),
+				myEl,
+				d;
+			coords.vectorSubtract(this.pasteData).rotate(-this.roll);
+			coords.x = (this.flipReverse) ? -coords.x : coords.x;
+			coords.y = (this.flipUpend) ? -coords.y : coords.y;
+			coords.vectorSubtract(this.getPivotOffsetVector(this.handle));
+			coords.x = Math.round(coords.x * (this.copyData.w / this.pasteData.w));
+			coords.y = Math.round(coords.y * (this.copyData.h / this.pasteData.h));
+			if (!this.imageData) {
+				this.getImageData();
+			}
+			d = my.imageData[this.imageData];
+			myEl = ((coords.y * d.width) + coords.x) * 4;
+			if (my.isBetween(coords.x, 0, d.width - 1, true) && my.isBetween(coords.y, 0, d.height - 1, true)) {
+				switch (items.channel || this.get('imageDataChannel')) {
+					case 'red':
+						return (my.xt(d.data[myEl])) ? d.data[myEl] : false;
+					case 'green':
+						return (my.xt(d.data[myEl + 1])) ? d.data[myEl + 1] : false;
+					case 'blue':
+						return (my.xt(d.data[myEl + 2])) ? d.data[myEl + 2] : false;
+					case 'color':
+						return (my.xta([d.data[myEl], d.data[myEl + 1], d.data[myEl + 2], d.data[myEl + 3]])) ? 'rgba(' + d.data[myEl] + ',' + d.data[myEl + 1] + ',' + d.data[myEl + 2] + ',' + d.data[myEl + 3] + ')' : false;
+					default: // alpha
+						return (my.xt(d.data[myEl + 3])) ? d.data[myEl + 3] : false;
+				}
+			}
+			return false;
 		};
 		/**
     Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
@@ -1163,8 +1157,8 @@ Picture.setPaste update pasteData object values
 				});
 				if (this.checkHitUsingImageData) {
 					if (hit) {
-						hit.x = parseInt(hit.x, 10);
-						hit.y = parseInt(hit.y, 10);
+						hit.x = Math.floor(hit.x);
+						hit.y = Math.floor(hit.y);
 						c = this.getImageDataValue(hit);
 						if (this.get('imageDataChannel') === 'color') {
 							hit = (c === 'rgba(0,0,0,0)') ? false : hit;
@@ -1179,6 +1173,18 @@ Picture.setPaste update pasteData object values
 				}
 			}
 			return (hit) ? hit : false;
+		};
+		/**
+Revert pickupEntity() actions, ensuring entity is left where the user drops it
+@method dropEntity
+@param {String} [items] Alternative pivot String
+@return This
+@chainable
+**/
+		my.Picture.prototype.dropEntity = function(item) {
+			my.Entity.prototype.dropEntity.call(this, item);
+			this.setPaste();
+			return this;
 		};
 
 
