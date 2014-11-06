@@ -60,7 +60,7 @@ var mycode = function() {
 	});
 
 	//define animation sheets
-	scrawl.newAnimSheet({
+	scrawl.newSpriteAnimation({
 		name: 'mytiger',
 		running: 'forward',
 		loop: 'loop',
@@ -114,13 +114,13 @@ var mycode = function() {
 		strokeStyle: 'Gold',
 		lineWidth: 3,
 		method: 'fillDraw',
-		width: 150,
-		height: 100,
 		order: myGroup.entitys.length,
 		shadowBlur: 4,
 		shadowColor: 'Black',
 		startX: 80,
 		startY: 50,
+		scale: 0.3,
+		scaleOutline: false,
 	});
 
 	scrawl.newBlock({
@@ -151,16 +151,18 @@ var mycode = function() {
 	scrawl.newPicture({
 		startX: 100,
 		startY: 300,
+		pasteWidth: 120,
+		pasteHeight: 66,
 		method: 'fill',
 		source: 'tiger',
-		animSheet: 'mytiger',
+		animation: 'mytiger',
 		order: myGroup.entitys.length,
 		checkHitUsingImageData: true,
 		handleX: 'center',
 		handleY: 'center',
 		flipReverse: true,
 		roll: 10,
-	}).getImageData();
+	});
 
 	scrawl.newPhrase({
 		method: 'fill',

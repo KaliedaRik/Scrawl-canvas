@@ -56,6 +56,16 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141104-05
+	- fixing Picture
+		- fixed getImage(), getImageData(), .getImageDataValue() bugs
+			- no longer a need for developers to explicitly call .getImageData on new Picture Entitys
+			- demo018 updated to test functionality
+		- fixed .checkHit(), .dropEntity() functions
+			- demo049 updated for testing
+		- fixed SpriteAnimation (formerly AnimSheet) object
+			- adapted demo019 to test functionality
+			- fixed demo034
 141103
 	- fixing Picture.getImageData(), Picture.getImageDataValue()
 		- for testing, replicate demo017 in demo018, and add in the demo018 getImageData() getImageDataValue() stuff

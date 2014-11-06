@@ -1159,6 +1159,9 @@ Picture.setPaste update pasteData object values
 					if (hit) {
 						hit.x = Math.floor(hit.x);
 						hit.y = Math.floor(hit.y);
+						if (this.animation) {
+							this.imageData = false;
+						}
 						c = this.getImageDataValue(hit);
 						if (this.get('imageDataChannel') === 'color') {
 							hit = (c === 'rgba(0,0,0,0)') ? false : hit;

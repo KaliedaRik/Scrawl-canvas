@@ -35,7 +35,7 @@ var mycode = function() {
 			method: 'fill',
 			group: 'myGroup',
 			checkHitUsingImageData: true,
-		}).getImageData();
+		});
 	}
 
 	//event listeners

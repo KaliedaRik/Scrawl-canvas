@@ -848,7 +848,7 @@ Generate unique names for new Scrawl objects
 			nameArray = name.split('~~~');
 			return (my.contains(my[o.target], nameArray[0])) ? nameArray[0] + '~~~' + Math.floor(Math.random() * 100000000) : nameArray[0];
 		}
-		console.log('scrawl.makeName() error: insufficient or incorrect argument attributes');
+		console.log('scrawl.makeName() error: insufficient or incorrect argument attributes', item, o);
 		return false;
 	};
 	/**

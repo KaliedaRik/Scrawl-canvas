@@ -351,8 +351,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			this.loop = (my.isa(items.loop, 'str')) ? items.loop : 'end';
 			this.running = (my.isa(items.running, 'str')) ? items.running : 'complete';
 			this.lastCalled = (my.xt(items.lastCalled)) ? items.lastCalled : Date.now();
-			my.anim[this.name] = this;
-			my.pushUnique(my.animnames, this.name);
+			my.spriteanimation[this.name] = this;
+			my.pushUnique(my.spriteanimationnames, this.name);
 			return this;
 		};
 		my.SpriteAnimation.prototype = Object.create(my.Base.prototype);
@@ -524,12 +524,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						break;
 				}
 			}
-			return {
-				copyX: this.frames[this.currentFrame].x,
-				copyY: this.frames[this.currentFrame].y,
-				copyWidth: this.frames[this.currentFrame].w,
-				copyHeight: this.frames[this.currentFrame].h,
-			};
+			return this.frames[this.currentFrame];
 		};
 
 		return my;

@@ -87,9 +87,8 @@ var mycode = function() {
 	});
 
 	//animation entity sheet for the cat entity
-	scrawl.newAnimSheet({
+	scrawl.newSpriteAnimation({
 		name: 'animatedCat',
-		sheet: 'cat',
 		running: 'forward',
 		loop: 'loop',
 		speed: 1.2,
@@ -154,7 +153,7 @@ var mycode = function() {
 		height: 256,
 		roll: -30,
 		url: 'img/runningcat.png',
-		animSheet: 'animatedCat',
+		animation: 'animatedCat',
 		order: 1,
 		group: 'hidden',
 		//known browser issue: Safari renders 'source-in' GCO incorrectly
