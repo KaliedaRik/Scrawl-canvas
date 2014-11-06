@@ -39,7 +39,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo058');
 
 	//define entity sheet objects - one for each animation sequence
-	scrawl.newAnimSheet({
+	scrawl.newSpriteAnimation({
 		name: 'tiger_leftStand',
 		running: 'forward',
 		loop: 'pause',
@@ -298,8 +298,10 @@ var mycode = function() {
 		startY: 187,
 		handleX: 'center',
 		handleY: 'center',
+		width: 120,
+		height: 66,
 		source: 'tiger',
-		animSheet: a[a.direction + a.action],
+		animation: a[a.direction + a.action],
 	});
 
 	//animation functions
@@ -312,7 +314,7 @@ var mycode = function() {
 			switch (a.action) {
 				case 'Run':
 					myTiger.set({
-						animSheet: a[a.direction + a.action],
+						animation: a[a.direction + a.action],
 						startX: (dx > 0) ? myTiger.start.x - 1 : myTiger.start.x + 1,
 						startY: (dy > 0) ? myTiger.start.y - 1 : myTiger.start.y + 1,
 					});
@@ -321,14 +323,14 @@ var mycode = function() {
 				case 'Stand':
 					a.action = 'Run';
 					myTiger.set({
-						animSheet: a[a.direction + a.action],
+						animation: a[a.direction + a.action],
 						running: 'forward',
 					});
 					break;
 				case 'Sleep':
 					a.action = 'Wake';
 					myTiger.set({
-						animSheet: a[a.direction + a.action],
+						animation: a[a.direction + a.action],
 						running: 'forward',
 					});
 					break;
@@ -336,7 +338,7 @@ var mycode = function() {
 					if (myTiger.get('running') === 'complete') {
 						a.action = 'Run';
 						myTiger.set({
-							animSheet: a[a.direction + a.action],
+							animation: a[a.direction + a.action],
 							running: 'forward',
 						});
 					}
@@ -352,13 +354,13 @@ var mycode = function() {
 				switch (a.action) {
 					case 'Bite':
 						myTiger.set({
-							animSheet: a[a.direction + a.action],
+							animation: a[a.direction + a.action],
 						});
 						break;
 					default:
 						a.action = 'Bite';
 						myTiger.set({
-							animSheet: a[a.direction + a.action],
+							animation: a[a.direction + a.action],
 							running: 'forward',
 						});
 				}
@@ -367,13 +369,13 @@ var mycode = function() {
 				switch (a.action) {
 					case 'Sleep':
 						myTiger.set({
-							animSheet: a[a.direction + a.action],
+							animation: a[a.direction + a.action],
 						});
 						break;
 					default:
 						a.action = 'Sleep';
 						myTiger.set({
-							animSheet: a[a.direction + a.action],
+							animation: a[a.direction + a.action],
 							running: 'forward',
 						});
 						break;
@@ -385,7 +387,7 @@ var mycode = function() {
 	stopTiger = function() {
 		a.action = 'Stand';
 		myTiger.set({
-			animSheet: a[a.direction + a.action],
+			animation: a[a.direction + a.action],
 		});
 		chaseMouse = false;
 		timeAtMouse = false;

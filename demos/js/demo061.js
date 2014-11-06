@@ -138,7 +138,7 @@ var mycode = function() {
 		group: 'trains',
 	});
 
-	scrawl.newAnimSheet({
+	scrawl.newSpriteAnimation({
 		name: 'animatedCat',
 		running: 'forward',
 		loop: 'loop',
@@ -201,7 +201,7 @@ var mycode = function() {
 		handleY: 'bottom',
 		method: 'fill',
 		source: 'runningcat',
-		animSheet: 'animatedCat',
+		animation: 'animatedCat',
 		pathPlace: 0.9,
 		group: 'trains',
 	});

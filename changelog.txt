@@ -56,6 +56,11 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141106
+	- fixed demos 050, 058, 061, 102 (partly - still need to code up filters)
+	- started recoding filters
+		- adapted Entity.stamp() to take account of filters
+
 141104-05
 	- fixing Picture
 		- fixed getImage(), getImageData(), .getImageDataValue() bugs
@@ -66,6 +71,7 @@ CHANGE LOG
 		- fixed SpriteAnimation (formerly AnimSheet) object
 			- adapted demo019 to test functionality
 			- fixed demo034
+
 141103
 	- fixing Picture.getImageData(), Picture.getImageDataValue()
 		- for testing, replicate demo017 in demo018, and add in the demo018 getImageData() getImageDataValue() stuff

@@ -598,7 +598,7 @@ Local target data
     **/
 		my.Picture.prototype.get = function(item) {
 			if (my.contains(my.animKeys, item)) {
-				return my.anim[this.animSheet].get(item);
+				return my.spriteanimation[this.animation].get(item);
 			}
 			else {
 				return my.Entity.prototype.get.call(this, item);

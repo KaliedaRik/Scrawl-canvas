@@ -11,7 +11,7 @@ var mycode = function() {
 	scrawl.getImageById('runningcat');
 
 	//define AnimSheet object
-	scrawl.newAnimSheet({
+	scrawl.newSpriteAnimation({
 		name: 'animatedCat',
 		running: 'forward',
 		loop: 'loop',
@@ -73,7 +73,7 @@ var mycode = function() {
 		height: 200,
 		method: 'fill',
 		source: 'runningcat',
-		animSheet: 'animatedCat',
+		animation: 'animatedCat',
 		filters: {
 			glassTile: {
 				width: 20,

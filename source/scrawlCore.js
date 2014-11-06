@@ -248,6 +248,7 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 		my.setDisplayOffsets('all');
 		my.animationInit();
 		my.physicsInit();
+		my.filtersInit();
 		return my;
 	};
 	/**
@@ -270,6 +271,12 @@ scrawl.init hook function - modified by physics module
 @private
 **/
 	my.physicsInit = function() {};
+	/**
+scrawl.init hook function - modified by filters module
+@method filtersInit
+@private
+**/
+	my.filtersInit = function() {};
 	/**
 A __general__ function that resets the Scrawl library to empty arrays and objects
 @method reset
@@ -5405,6 +5412,9 @@ Permitted methods include:
 				this.pathStamp();
 			}
 			this.callMethod(engine, myCell.name, myMethod);
+			if (this.filter) {
+				this.stampFilter(engine, myCell.name);
+			}
 		}
 		return this;
 	};
@@ -5414,6 +5424,12 @@ Entity.stamp hook function - modified by path module
 @private
 **/
 	my.Entity.prototype.pathStamp = function() {};
+	/**
+Entity.stamp hook function - modified by filters module
+@method stampFilter
+@private
+**/
+	my.Entity.prototype.stampFilter = function() {};
 	/**
 Stamp helper function - direct entity to the required drawing method function
 @method callMethod
