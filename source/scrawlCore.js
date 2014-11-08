@@ -2057,7 +2057,7 @@ Entity, cell or element width (in pixels)
 		width: 0,
 		/**
 Entity, cell or element height (in pixels)
-@property width
+@property height
 @type Number
 @default 0
 **/
@@ -5087,6 +5087,7 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 		this.visibility = my.xtGet([items.visibility, true]);
 		this.method = my.xtGet([items.method, my.d[this.type].method]);
 		this.collisionsEntityConstructor(items);
+		this.filters = [].concat(my.xtGet([items.filters, []]));
 		return this;
 	};
 	my.Entity.prototype = Object.create(my.Position.prototype);
@@ -5169,6 +5170,13 @@ CTXNAME of this Entity's Context object
 @private
 **/
 		context: '',
+		/**
+Array of FILTERNAME strings, for filters to be applied to this entity
+@property filters
+@type Array
+@default []
+**/
+		filters: [],
 		/**
 GROUPNAME String for this entity's default group
 
@@ -5412,7 +5420,7 @@ Permitted methods include:
 				this.pathStamp();
 			}
 			this.callMethod(engine, myCell.name, myMethod);
-			if (this.filter) {
+			if (this.filters.length > 0) {
 				this.stampFilter(engine, myCell.name);
 			}
 		}

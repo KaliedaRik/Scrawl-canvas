@@ -56,6 +56,14 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141108
+	- new GreyscaleFilter object created
+		- adapted demo101 to test filter
+			- works with Block, Wheel
+			
+141107
+	- new Filter object created
+
 141106
 	- fixed demos 050, 058, 061, 102 (partly - still need to code up filters)
 	- started recoding filters

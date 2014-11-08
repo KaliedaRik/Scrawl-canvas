@@ -35,7 +35,7 @@ The Block module adds Block entitys - squares and rectangles - to the core modul
 @module scrawlBlock
 **/
 
-if (window.scrawl && !window.scrawl.newBlock) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'block')) {
 	var scrawl = (function(my) {
 		'use strict';
 		/**
@@ -172,7 +172,6 @@ if (window.scrawl && !window.scrawl.newBlock) {
 	**/
 		my.Block.prototype.clip = function(ctx, cell) {
 			var here = this.prepareStamp();
-			ctx.save();
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
 			ctx.rect(here.x, here.y, this.localWidth, this.localHeight);

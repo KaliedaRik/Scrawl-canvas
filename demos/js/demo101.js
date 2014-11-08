@@ -9,12 +9,21 @@ var mycode = function() {
 
 	//define variables
 	var myPad = scrawl.pad.mycanvas,
-		brush,
-		blur,
+		blocky,
+		wheely,
+		currentEntity,
+		currentFilter,
 		here;
 
 	//import image into scrawl library
 	scrawl.getImageById('flower');
+
+	//define filters
+	scrawl.newGreyscaleFilter({
+		name: 'myGreyscale',
+	});
+
+	currentFilter = 'myGreyscale';
 
 	//define entitys
 	scrawl.newPicture({
@@ -27,75 +36,42 @@ var mycode = function() {
 		copyHeight: 300,
 		source: 'flower',
 	});
-	//				blur = scrawl.filter.getBrush(6, 6, 0);
-	brush = scrawl.newPicture({
-		name: 'highlight',
-		source: 'flower',
-		method: 'fillDraw',
+	blocky = scrawl.newBlock({
+		width: 100,
+		height: 100,
+		roll: 30,
+		method: 'draw',
 		handleX: 'center',
 		handleY: 'center',
 		pivot: 'mouse',
-		width: 100,
-		height: 100,
-		copyWidth: 100,
-		copyHeight: 100,
-		filters: {
-			pixelate: {
-				width: 20,
-				height: 20,
-			},
-			//grayscale: {},
-			//sepia: {},
-			//tint: {
-			//	br: 0.5,
-			//},
-			//threshold: {},
-			//saturation: {
-			//	value: 2,
-			//},
-			//brightness: {
-			//	value: 2,
-			//},
-			//invert: {},
-			//channels: {
-			//	blue: 0,
-			//	green: 0,
-			//},
-			//channelStep: {
-			//	red: 64,
-			//	blue: 64,
-			//	green: 64,
-			//},
-			//glassTile: {
-			//	width: 20,
-			//	height: 20,
-			//	outerWidth: 30,
-			//	outerHeight: 30,
-			//},
-			//matrix: {
-			//	data: [-1, 0, 1, -2, 0, 2, -1, 0, 1],
-			//	wrap: true,
-			//},
-			//blur: {
-			//	brush: blur,
-			//},
-			//sharpen: {},
-		},
+		visibility: false,
+		filters: [currentFilter],
 	});
+	wheely = scrawl.newWheel({
+		radius: 70,
+		startAngle: 20,
+		endAngle: 340,
+		includeCenter: true,
+		roll: 90,
+		method: 'draw',
+		pivot: 'mouse',
+		visibility: false,
+		filters: [currentFilter],
+	});
+
+	currentEntity = blocky;
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {
-				brush.set({
+				currentEntity.set({
 					visibility: true,
-					copyX: here.x,
-					copyY: here.y,
 				});
 			}
 			else {
-				brush.set({
+				currentEntity.set({
 					visibility: false,
 				});
 			}
@@ -114,7 +90,7 @@ var mycode = function() {
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'animation', 'filters'],
+	modules: ['images', 'animation', 'filters', 'block', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();
