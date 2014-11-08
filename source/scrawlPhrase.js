@@ -484,6 +484,9 @@ Augments Entity.stamp()
 				}
 				else {
 					my.text[this.texts[0]].stampAlongPath(method, cell);
+					if (this.filters.length > 0) {
+						this.stampFilter(my.context[cell], cell);
+					}
 				}
 			}
 			return this;
@@ -786,6 +789,57 @@ Returns an object with coordinates __x__ and __y__
 				y: oY
 			};
 		};
+		/**
+Entity.stamp hook function - apply a filter to a Phrase, and any background detail enclosed by the Phrase
+
+Use only with the ScrawlFilters module!
+
+@method stampFilter
+@private
+**/
+		my.Phrase.prototype.stampFilter = function(engine, cell) {
+			var imageData, i, iz, canvas, ctx, tX, tY, o, here, textY, test;
+			if (this.filters.length > 0) {
+				canvas = my.canvas[cell];
+				ctx = my.ctx[this.context];
+				my.cv.width = canvas.width;
+				my.cv.height = canvas.height;
+				my.cvx.save();
+				my.cvx.font = ctx.font;
+				my.cvx.fillStyle = 'rgb(0, 0, 0)';
+				my.cvx.textAlign = ctx.textAlign;
+				my.cvx.textBaseline = ctx.textBaseline;
+				test = (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path');
+				if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
+					o = this.getOffset();
+					here = this.prepareStamp();
+					textY = this.size * this.lineHeight * this.scale;
+					this.rotateCell(my.cvx, my.cv);
+					tX = here.x + o.x;
+					for (i = 0, iz = this.texts.length; i < iz; i++) {
+						tY = here.y + (textY * i) + o.y;
+						my.text[this.texts[i]].fill(my.cvx, cell, tX, tY);
+					}
+				}
+				else {
+					my.text[this.texts[0]].clipAlongPath();
+				}
+				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+				my.cvx.globalCompositeOperation = 'source-in';
+				my.cvx.drawImage(canvas, 0, 0);
+				my.cvx.globalCompositeOperation = 'source-over';
+				imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+				for (i = 0, iz = this.filters.length; i < iz; i++) {
+					if (my.contains(my.filternames, this.filters[i])) {
+						imageData = my.filter[this.filters[i]].apply(imageData);
+					}
+				}
+				my.cvx.putImageData(imageData, 0, 0);
+				engine.setTransform(1, 0, 0, 1, 0, 0);
+				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+				my.cvx.restore();
+			}
+		};
 
 		/**
 # Text
@@ -984,6 +1038,52 @@ Permitted methods include:
 							//do nothing
 					}
 					pos += (this.glyphWidths[j] / width) * ratio;
+					if (!my.isBetween(pos, 0, 1, true)) {
+						pos += (pos > 0.5) ? -1 : 1;
+					}
+				}
+			}
+			this.text = oldText;
+			return this;
+		};
+		/**
+Filter function - prepare the clip for the filter
+@method clipAlongPath
+@return This
+@chainable
+@private
+**/
+		my.Text.prototype.clipAlongPath = function() {
+			var p = my.entity[this.phrase],
+				engine = my.cvx,
+				here,
+				pathLength = my.entity[p.path].getPerimeterLength(),
+				width = this.width * p.scale,
+				ratio = width / pathLength,
+				pos = p.pathPlace,
+				nowPos,
+				oldText = this.text,
+				x, y, r, i, iz;
+			if (!my.xt(this.glyphs)) {
+				this.getMetrics();
+			}
+			for (i = 0, iz = this.glyphs.length; i < iz; i++) {
+				if (my.xt(this.glyphs[i])) {
+					this.text = this.glyphs[i];
+					nowPos = pos + (((this.glyphWidths[i] / 2) / width) * ratio);
+					if (!my.isBetween(nowPos, 0, 1, true)) {
+						nowPos += (nowPos > 0.5) ? -1 : 1;
+					}
+					here = my.entity[p.path].getPerimeterPosition(nowPos, p.pathSpeedConstant, true);
+					x = here.x;
+					y = here.y;
+					r = here.r * my.radian;
+					engine.setTransform(1, 0, 0, 1, 0, 0);
+					engine.translate(x, y);
+					engine.rotate(r);
+					engine.translate(-x, -y);
+					engine.fillText(this.text, x, y);
+					pos += (this.glyphWidths[i] / width) * ratio;
 					if (!my.isBetween(pos, 0, 1, true)) {
 						pos += (pos > 0.5) ? -1 : 1;
 					}

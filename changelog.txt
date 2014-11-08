@@ -39,7 +39,6 @@ Currently known bugs
 - Image loading
 	- Internet Explorer (11) prefers pre-loaded images
 	- Firefox has cache issues with Pictures created from other sprites
-		- particularly when an image filter is applied to the Picture sprite
 	
 - Video
 	- Internet Explorer(11), Chrome and Safari(Windows) have issues playing non-visible videos in the canvas
@@ -54,12 +53,19 @@ Currently known bugs
 - Sprite ordering
 	- Sprites with the same order value, in the same group, may occasionally flicker when overlapping (Chrome, Opera)
 
+- Text along path
+	- The text does not yet take into account any path handle offsets
+
 CHANGE LOG
 ------------------------------------------------------------------------------------
 141108
+	- added Entity.stampFilter() method to handle filtering on Entitys
+		- uses clip
+		- Phrase and Picture get their own versions of the function
+			- they don't/can't use clip
 	- new GreyscaleFilter object created
 		- adapted demo101 to test filter
-			- works with Block, Wheel
+			- works with Block, Wheel, Phrase, Picture, Path, Shape
 			
 141107
 	- new Filter object created

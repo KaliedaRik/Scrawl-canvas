@@ -85,7 +85,6 @@ Entity.stamp hook function - apply a filter to an Entity, and any background det
 			var imageData, i, iz, canvas, ctx;
 			if (this.filters.length > 0) {
 				canvas = my.canvas[cell];
-				ctx = my.context[cell];
 				my.cv.width = canvas.width;
 				my.cv.height = canvas.height;
 				this.clip(my.cvx, cell);
@@ -98,8 +97,8 @@ Entity.stamp hook function - apply a filter to an Entity, and any background det
 					}
 				}
 				my.cvx.putImageData(imageData, 0, 0);
-				ctx.setTransform(1, 0, 0, 1, 0, 0);
-				ctx.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+				engine.setTransform(1, 0, 0, 1, 0, 0);
+				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
 			}
 		};
 

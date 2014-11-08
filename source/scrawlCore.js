@@ -5513,12 +5513,13 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 Stamp helper function - convert string start.x values to numerical values
 @method convertX
 @param {String} x coordinate String
-@param {String} cell reference cell name String
+@param {String} cell reference cell name String; or alternatively DOM canvas object
 @return Number - x value
 @private
 **/
 	my.Entity.prototype.convertX = function(x, cell) {
-		var w = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualWidth : cell;
+		var w = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualWidth : cell.width;
+		console.log(this.name, x, cell, w);
 		switch (x) {
 			case 'left':
 				return 0;
@@ -5540,7 +5541,7 @@ Stamp helper function - convert string start.y values to numerical values
 @private
 **/
 	my.Entity.prototype.convertY = function(y, cell) {
-		var h = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualHeight : cell;
+		var h = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualHeight : cell.height;
 		switch (y) {
 			case 'top':
 				return 0;

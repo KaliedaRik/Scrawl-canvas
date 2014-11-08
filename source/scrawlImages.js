@@ -870,7 +870,6 @@ Picture.setPaste update pasteData object values
     **/
 		my.Picture.prototype.clip = function(ctx, cell) {
 			var here = this.prepareStamp();
-			ctx.save();
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
 			ctx.rect(here.x, here.y, this.pasteData.w, this.pasteData.h);
@@ -1036,6 +1035,45 @@ Picture.setPaste update pasteData object values
 			}
 			return this;
 		};
+		/**
+Entity.stamp hook function - apply a filter to a Picture, ignoring any transparent areas
+
+Use only with the ScrawlFilters module!
+
+@method stampFilter
+@private
+**/
+		my.Picture.prototype.stampFilter = function(engine, cell) {
+			var imageData, i, iz, canvas, ctx, here, data;
+			if (this.filters.length > 0) {
+				canvas = my.canvas[cell];
+				ctx = my.ctx[this.context];
+				my.cv.width = canvas.width;
+				my.cv.height = canvas.height;
+				my.cvx.save();
+				data = this.getImage();
+				if (data) {
+					here = this.prepareStamp();
+					this.rotateCell(my.cvx, my.cv);
+					my.cvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+					my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+					my.cvx.globalCompositeOperation = 'source-in';
+					my.cvx.drawImage(canvas, 0, 0);
+					my.cvx.globalCompositeOperation = 'source-over';
+					imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+					for (i = 0, iz = this.filters.length; i < iz; i++) {
+						if (my.contains(my.filternames, this.filters[i])) {
+							imageData = my.filter[this.filters[i]].apply(imageData);
+						}
+					}
+					my.cvx.putImageData(imageData, 0, 0);
+					engine.setTransform(1, 0, 0, 1, 0, 0);
+					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+				}
+				my.cvx.restore();
+			}
+		};
+
 		/**
     Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for entity sheet images
 
