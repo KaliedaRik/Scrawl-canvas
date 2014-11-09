@@ -877,6 +877,19 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
+    Stamp helper function - perform a 'none' method draw
+    @method none
+    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Picture.prototype.none = function(ctx, cell) {
+			this.prepareStamp();
+			return this;
+		};
+		/**
     Stamp helper function - perform a 'clear' method draw
     @method clear
     @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -1063,7 +1076,7 @@ Use only with the ScrawlFilters module!
 					imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
 					for (i = 0, iz = this.filters.length; i < iz; i++) {
 						if (my.contains(my.filternames, this.filters[i])) {
-							imageData = my.filter[this.filters[i]].apply(imageData);
+							imageData = my.filter[this.filters[i]].add(imageData);
 						}
 					}
 					my.cvx.putImageData(imageData, 0, 0);

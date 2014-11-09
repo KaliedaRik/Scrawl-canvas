@@ -831,7 +831,7 @@ Use only with the ScrawlFilters module!
 				imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
 				for (i = 0, iz = this.filters.length; i < iz; i++) {
 					if (my.contains(my.filternames, this.filters[i])) {
-						imageData = my.filter[this.filters[i]].apply(imageData);
+						imageData = my.filter[this.filters[i]].add(imageData);
 					}
 				}
 				my.cvx.putImageData(imageData, 0, 0);

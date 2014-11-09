@@ -5,6 +5,33 @@
   <title>Demo 101</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
+
+  <style>
+    table {
+      width: 100%;
+      margin-bottom: 1em;
+    }
+    th,
+    td {
+      border: 1px solid gray;
+      font-size: 0.65em;
+      text-align: center;
+      width: 24%;
+    }
+    .rowlabel {
+      font-weight: bold;
+    }
+    table input {
+      width: 80%;
+    }
+    .t0 {
+      background-color: lightgreen;
+    }
+    .t1 {
+      background-color: lightblue;
+    }
+  </style>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
@@ -20,6 +47,31 @@
   <canvas id="tempcanvas" width="600" height="300"></canvas>
 
   <p id="testmessage"></p>
+
+  <table>
+    <tr class="t1">
+      <td class="rowlabel">Entity</td>
+      <td>
+        <select id="entity">
+          <option value="blocky">Block</option>
+          <option value="wheely">Wheel</option>
+          <option value="texty">Phrase</option>
+          <option value="shapy">Shape</option>
+          <option value="pathy">Path</option>
+          <option value="piccy">Picture</option>
+        </select>
+      </td>
+      <td class="rowlabel">Filter</td>
+      <td>
+        <select id="filter">
+          <option value="myGreyscale">Greyscale</option>
+          <option value="myInvert">Invert</option>
+          <option value="myBrightness">Brightness</option>
+          <option value="mySaturation">Saturation</option>
+        </select>
+      </td>
+    </tr>
+  </table>
 
   <div id="testdetails">
     <p><b>Scenario:</b> ???</p>

@@ -22,6 +22,7 @@ Currently working on ...
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
+- improving the code base (always)
 - user accessibility issues
 - physics engine - rigid body interactions
 - better, more responsive stacks
@@ -58,6 +59,15 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141109
+	- added 'none' method to Picture entity
+		- allows an image (even an animated sprite) to act as a clipping zone for the filter
+			- where only non-transparent pixels will be affected by filter
+	- added new filter objects:
+		- invert
+		- brightness
+		- saturation
+
 141108
 	- added Entity.stampFilter() method to handle filtering on Entitys
 		- uses clip

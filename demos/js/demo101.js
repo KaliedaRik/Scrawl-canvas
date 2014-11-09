@@ -9,15 +9,26 @@ var mycode = function() {
 
 	//define variables
 	var myPad = scrawl.pad.mycanvas,
+		here,
+
 		blocky,
 		wheely,
 		texty,
 		pathy,
 		shapy,
 		piccy,
-		currentEntity,
-		currentFilter,
-		here;
+
+		current_entity,
+		entitys,
+		current_filter,
+
+		input_entity = document.getElementById('entity'),
+		input_filter = document.getElementById('filter'),
+
+		event_entity,
+		event_filter,
+
+		stopE;
 
 	//import image into scrawl library
 	scrawl.getImagesByClass('demo101');
@@ -25,9 +36,21 @@ var mycode = function() {
 	//define filters
 	scrawl.newGreyscaleFilter({
 		name: 'myGreyscale',
+		filterStrength: 0.9,
+	});
+	scrawl.newInvertFilter({
+		name: 'myInvert',
+	});
+	scrawl.newBrightnessFilter({
+		name: 'myBrightness',
+		brightness: 0.4,
+	});
+	scrawl.newSaturationFilter({
+		name: 'mySaturation',
+		saturation: 0.4,
 	});
 
-	currentFilter = 'myGreyscale';
+	current_filter = 'myGreyscale';
 
 	//define entitys
 	scrawl.newPicture({
@@ -49,7 +72,7 @@ var mycode = function() {
 		handleY: 'center',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [currentFilter],
+		filters: [current_filter],
 	});
 	wheely = scrawl.newWheel({
 		radius: 70,
@@ -60,7 +83,7 @@ var mycode = function() {
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [currentFilter],
+		filters: [current_filter],
 	});
 	scrawl.makeQuadratic({
 		name: 'phrasepath',
@@ -76,13 +99,13 @@ var mycode = function() {
 	texty = scrawl.newPhrase({
 		method: 'draw',
 		textAlign: 'center',
-		font: '70pt bold Arial, sans-serif',
+		font: '70pt bold Arial, sans - serif',
 		text: 'Hello!',
 		path: 'phrasepath',
 		pathPlace: 0,
 		textAlongPath: 'glyph',
 		visibility: false,
-		filters: [currentFilter],
+		filters: [current_filter],
 	});
 	pathy = scrawl.makeRegularShape({
 		radius: 70,
@@ -93,7 +116,7 @@ var mycode = function() {
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [currentFilter],
+		filters: [current_filter],
 	});
 	shapy = scrawl.makeRegularShape({
 		radius: 70,
@@ -107,7 +130,7 @@ var mycode = function() {
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [currentFilter],
+		filters: [current_filter],
 	});
 	scrawl.newSpriteAnimation({
 		name: 'animatedCat',
@@ -169,22 +192,67 @@ var mycode = function() {
 		handleY: 'center',
 		width: 400,
 		height: 200,
-		method: 'fill',
+		method: 'none',
 		source: 'runningcat',
 		animation: 'animatedCat',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [currentFilter],
+		filters: [current_filter],
 	});
 
-	currentEntity = piccy;
+	current_entity = blocky;
+	entitys = [blocky, wheely, texty, pathy, shapy, piccy];
+	input_entity.value = 'blocky';
+	input_filter.value = 'myGreyscale';
+
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
+
+	event_entity = function(e) {
+		stopE(e);
+		switch (input_entity.value) {
+			case 'wheely':
+				current_entity = wheely;
+				break;
+			case 'texty':
+				current_entity = texty;
+				break;
+			case 'pathy':
+				current_entity = pathy;
+				break;
+			case 'shapy':
+				current_entity = shapy;
+				break;
+			case 'piccy':
+				current_entity = piccy;
+				break;
+			default:
+				current_entity = blocky;
+		}
+	};
+	input_entity.addEventListener('change', event_entity, false);
+
+	event_filter = function(e) {
+		stopE(e);
+		current_filter = input_filter.value;
+
+		for (var i = 0, iz = entitys.length; i < iz; i++) {
+			entitys[i].set({
+				filters: [current_filter],
+			});
+		}
+	};
+	input_filter.addEventListener('change', event_filter, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 
-			currentEntity.set({
+			current_entity.set({
 				visibility: (here.active) ? true : false,
 			});
 

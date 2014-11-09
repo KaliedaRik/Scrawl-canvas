@@ -37,17 +37,17 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	var scrawl = (function(my) {
 		'use strict';
 		/**
-  # window.scrawl
+# window.scrawl
 
-  scrawlFilters module adaptions to the Scrawl library object
+scrawlFilters module adaptions to the Scrawl library object
 
-  ## New library sections
+## New library sections
 
-  * scrawl.filter - for filter objects
-  * scrawl.filterFactory - for filter factory objects
+* scrawl.filter - for filter objects
+* scrawl.filterFactory - for filter factory objects
 
-  @class window.scrawl_Filters
-  **/
+@class window.scrawl_Filters
+**/
 		my.pushUnique(my.sectionlist, 'filter');
 		my.pushUnique(my.nameslist, 'filternames');
 		//temporary - to go after all filters converted
@@ -55,29 +55,73 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.pushUnique(my.nameslist, 'filterFactorynames');
 		my.filterFactory = {};
 		my.filterFactorynames = [];
-
 		/**
-A __factory__ function to generate new Filter objects
-@method newFilter
-@param {Object} items Key:value Object argument for setting attributes
-@return newFilter object
+DOM document fragment
+@property filterFragment
+@type {Object}
+@private
 **/
-		my.newFilter = function(items) {
-			return new my.Filter(items);
-		};
+		my.filterFragment = document.createDocumentFragment();
 		/**
-A __factory__ function to generate new Greyscale objects
+Utility canvases - never displayed
+@property filterCanvas1 and filterCanvas2
+@type {CasnvasObject}
+@private
+**/
+		my.filterCanvas1 = document.createElement('canvas');
+		my.filterCanvas1.id = 'filterHiddenCanvasElement';
+		my.filterFragment.appendChild(my.filterCanvas1);
+		my.filterCanvas2 = document.createElement('canvas');
+		my.filterCanvas2.id = 'filterHiddenCanvasElement';
+		my.filterFragment.appendChild(my.filterCanvas2);
+		/**
+Utility canvas 2d context engine
+@property filterCvx
+@type {CasnvasContextObject}
+@private
+**/
+		my.filterCvx1 = my.filterCanvas1.getContext('2d');
+		my.filterCvx2 = my.filterCanvas2.getContext('2d');
+		/**
+A __factory__ function to generate new Greyscale filter objects
 @method newGreyscaleFilter
 @param {Object} items Key:value Object argument for setting attributes
-@return newGreyscaleFilter object
+@return GreyscaleFilter object
 **/
 		my.newGreyscaleFilter = function(items) {
 			return new my.GreyscaleFilter(items);
 		};
+		/**
+A __factory__ function to generate new Invert filter objects
+@method newInvertFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return InvertFilter object
+**/
+		my.newInvertFilter = function(items) {
+			return new my.InvertFilter(items);
+		};
+		/**
+A __factory__ function to generate new Brightness filter objects
+@method newBrightnessFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return BrightnessFilter object
+**/
+		my.newBrightnessFilter = function(items) {
+			return new my.BrightnessFilter(items);
+		};
+		/**
+A __factory__ function to generate new Saturation filter objects
+@method newSaturationFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return SaturationFilter object
+**/
+		my.newSaturationFilter = function(items) {
+			return new my.SaturationFilter(items);
+		};
 
 
 		/**
-Entity.stamp hook function - apply a filter to an Entity, and any background detail enclosed by the Entity
+Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
 @method stampFilter
 @private
 **/
@@ -93,7 +137,7 @@ Entity.stamp hook function - apply a filter to an Entity, and any background det
 				imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
 				for (i = 0, iz = this.filters.length; i < iz; i++) {
 					if (my.contains(my.filternames, this.filters[i])) {
-						imageData = my.filter[this.filters[i]].apply(imageData);
+						imageData = my.filter[this.filters[i]].add(imageData);
 					}
 				}
 				my.cvx.putImageData(imageData, 0, 0);
@@ -101,10 +145,6 @@ Entity.stamp hook function - apply a filter to an Entity, and any background det
 				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
 			}
 		};
-
-
-
-
 		/**
 # Filter
 
@@ -153,14 +193,75 @@ values between 0 (no effect) and 1 (full effect); or '0%' and '100%'
 		};
 		my.mergeInto(my.d.Filter, my.d.Base);
 		/**
-Apply function - overwritten by individual filters
+Add function - overwritten by individual filters
 
-@method apply
-@param {Object} canvas getImageData object
+@method add
+@param {Object} data - canvas getImageData object
 @return original image data
 **/
-		my.Filter.prototype.apply = function(data) {
+		my.Filter.prototype.add = function(data) {
 			return data;
+		};
+		/**
+Merge function - take two imageData objects and merge them in line with the filterStrength value
+
+@method merge
+@param {Object} original - canvas getImageData object
+@param {Object} amended - canvas getImageData object
+@param {Number} threshold - amount of amended object to be displayed over original object
+@return merged image data; false on error
+**/
+		my.Filter.prototype.merge = function(original, amended, threshold) {
+			var w, h;
+			if (my.xta([original, amended, this.filterStrength])) {
+				if (my.xta([original.width, original.height])) {
+					if (1 === this.filterStrength) {
+						return amended;
+					}
+					else if (0 === this.filterStrength) {
+						return original;
+					}
+					else {
+						w = original.width;
+						h = original.height;
+						my.filterCanvas1.width = w;
+						my.filterCanvas1.height = h;
+						my.filterCanvas2.width = w;
+						my.filterCanvas2.height = h;
+						my.filterCvx1.putImageData(original, 0, 0);
+						my.filterCvx2.globalAlpha = 1 - threshold;
+						my.filterCvx2.drawImage(my.filterCanvas1, 0, 0, w, h);
+						my.filterCvx1.clearRect(0, 0, w, h);
+						my.filterCvx1.putImageData(amended, 0, 0);
+						my.filterCvx2.globalAlpha = threshold;
+						my.filterCvx2.drawImage(my.filterCanvas1, 0, 0, w, h);
+						my.filterCvx2.globalAlpha = 1;
+						return my.filterCvx2.getImageData(0, 0, w, h);
+					}
+				}
+			}
+			return false;
+		};
+		/**
+cloneImageData function
+
+@method cloneImageData
+@param {Object} original - canvas getImageData object
+@return cloned image data object; false on error
+**/
+		my.Filter.prototype.cloneImageData = function(original) {
+			var w, h;
+			if (my.xt(original)) {
+				if (my.xta([original.width, original.height])) {
+					w = original.width;
+					h = original.height;
+					my.filterCanvas1.width = w;
+					my.filterCanvas1.height = h;
+					my.filterCvx1.putImageData(original, 0, 0);
+					return my.filterCvx1.getImageData(0, 0, w, h);
+				}
+			}
+			return false;
 		};
 		/**
 # GreyscaleFilter
@@ -201,13 +302,13 @@ Apply function - overwritten by individual filters
 		my.d.GreyscaleFilter = {};
 		my.mergeInto(my.d.GreyscaleFilter, my.d.Filter);
 		/**
-Apply function - takes data, calculates its greyscale and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its greyscale and combines it with data in line with the filterStrength value
 
-@method apply
-@param {Object} canvas getImageData object
+@method add
+@param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.GreyscaleFilter.prototype.apply = function(data) {
+		my.GreyscaleFilter.prototype.add = function(data) {
 			var value = (my.isa(this.filterStrength, 'str')) ? parseFloat(this.filterStrength) / 100 : this.filterStrength,
 				d = data.data,
 				here, i, iz, j, grey;
@@ -218,12 +319,305 @@ Apply function - takes data, calculates its greyscale and combines it with data 
 					grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
 					for (j = 0; j < 3; j++) {
 						here = i + j;
-						d[here] = d[here] + ((grey - d[here]) * value);
+						d[here] = (grey * value) + (d[here] * (1 - value));
 					}
 				}
 			}
 			return data;
 		};
+		/**
+# InvertFilter
+
+## Instantiation
+
+* scrawl.newInvertFilter()
+
+## Purpose
+
+* Adds an invert filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the InvertFilter object
+
+@class InvertFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.InvertFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.InvertFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.InvertFilter.prototype.type = 'InvertFilter';
+		my.InvertFilter.prototype.classname = 'filternames';
+		my.d.InvertFilter = {};
+		my.mergeInto(my.d.InvertFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its invert and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.InvertFilter.prototype.add = function(data) {
+			var value = (my.isa(this.filterStrength, 'str')) ? parseFloat(this.filterStrength) / 100 : this.filterStrength,
+				d = data.data,
+				here, i, iz, j, iVal;
+			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+			iVal = 1 - value;
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i] + 3 !== 0) {
+					for (j = 0; j < 3; j++) {
+						here = i + j;
+						d[here] = (d[here] * iVal) + ((255 - d[here]) * value);
+					}
+				}
+			}
+			return data;
+		};
+		/**
+# BrightnessFilter
+
+## Instantiation
+
+* scrawl.newBrightnessFilter()
+
+## Purpose
+
+* Adds a brightness filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the BrightnessFilter object
+
+@class BrightnessFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.BrightnessFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.brightness = my.xtGet([items.brightness, 1]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.BrightnessFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.BrightnessFilter.prototype.type = 'BrightnessFilter';
+		my.BrightnessFilter.prototype.classname = 'filternames';
+		my.d.BrightnessFilter = {
+			/**
+brightness
+
+Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1 or 100%
+
+@property brightness
+@type Number - or alternatively percentage String
+@default 1
+**/
+			brightness: 1,
+		};
+		my.mergeInto(my.d.BrightnessFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its brightness and replaces the old color data with new
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.BrightnessFilter.prototype.add = function(data) {
+			var value = (my.isa(this.brightness, 'str')) ? parseFloat(this.brightness) / 100 : this.brightness,
+				d = data.data,
+				here, i, iz, j;
+			value = (value < 0) ? 0 : value;
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i] + 3 !== 0) {
+					for (j = 0; j < 3; j++) {
+						here = i + j;
+						d[here] = d[here] * value;
+					}
+				}
+			}
+			return data;
+		};
+		/**
+# SaturationFilter
+
+## Instantiation
+
+* scrawl.newSaturationFilter()
+
+## Purpose
+
+* Adds a saturation filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the SaturationFilter object
+
+@class SaturationFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.SaturationFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.saturation = my.xtGet([items.saturation, 1]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.SaturationFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.SaturationFilter.prototype.type = 'SaturationFilter';
+		my.SaturationFilter.prototype.classname = 'filternames';
+		my.d.SaturationFilter = {
+			/**
+saturation
+
+Percentage value of saturation effect: as a Number, between 0 (uniform grey) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1 or 100%
+
+@property saturation
+@type Number - or alternatively percentage String
+@default 1
+**/
+			saturation: 1,
+		};
+		my.mergeInto(my.d.SaturationFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its saturation and replaces the old color data with new
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.SaturationFilter.prototype.add = function(data) {
+			var value = (my.isa(this.saturation, 'str')) ? parseFloat(this.saturation) / 100 : this.saturation,
+				d = data.data,
+				here, i, iz, j;
+			value = (value < 0) ? 0 : value;
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i] + 3 !== 0) {
+					for (j = 0; j < 3; j++) {
+						here = i + j;
+						d[here] = 127 + ((d[here] - 127) * value);
+					}
+				}
+			}
+			return data;
+		};
+
+
+
+
+		/**
+# ThresholdFilter
+
+## Instantiation
+
+* scrawl.newThresholdFilter()
+
+## Purpose
+
+* Adds a threshold filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the ThresholdFilter object
+
+@class ThresholdFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.ThresholdFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.threshold = my.xtGet([items.threshold, 0.5]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.ThresholdFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.ThresholdFilter.prototype.type = 'ThresholdFilter';
+		my.ThresholdFilter.prototype.classname = 'filternames';
+		my.d.ThresholdFilter = {
+			/**
+threshold
+
+Percentage value of saturation effect: as a Number, between 0 (all black) and 1 (all white); as a String, between '0%' and '100%' (default: 0.5).
+
+@property threshold
+@type Number - or alternatively percentage String
+@default 1
+**/
+			threshold: 0.5,
+		};
+		my.mergeInto(my.d.ThresholdFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its threshold and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.ThresholdFilter.prototype.add = function(data) {
+			var value = (my.isa(this.filterStrength, 'str')) ? parseFloat(this.filterStrength) / 100 : this.filterStrength,
+				threshold = (my.isa(this.threshold, 'str')) ? parseFloat(this.threshold) / 100 : this.threshold,
+				d = data.data,
+				here, i, iz, j, t;
+			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold > 0.5) ? 1 : 0);
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i] + 3 !== 0) {
+					for (j = 0; j < 3; j++) {
+						here = i + j;
+						t = (d[here] > threshold) ? 255 : 0;
+						d[here] = (t * value) + (d[here] * (1 - value));
+					}
+				}
+			}
+			return data;
+		};
+
+
+
+
+
+
+
+
+
 
 
 
@@ -309,97 +703,6 @@ Attributes in the argument object:
 			return false;
 		};
 		my.pushUnique(my.filterFactorynames, 'mergeImages');
-		/**
-Invert filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of invert effect: as a Number, between 0 (no effect) and 1 (full invert effect); as a String, between '0%' and '100%' (default: 1)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method invert
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.invert = function(items, image) {
-			var args = my.filterSetup(items, image),
-				value = (my.xt(args.items.value)) ? args.items.value : 1,
-				data = args.imgData.data,
-				iVal, here;
-			value = (my.isa(value, 'str')) ? parseFloat(value) / 100 : value;
-			value = (my.isBetween(value, 0, 1, true)) ? value : (value > 0.5) ? 1 : 0;
-			iVal = 1 - value;
-			for (var i = 0, iz = data.length; i < iz; i += 4) {
-				for (var j = 0; j < 3; j++) {
-					here = i + j;
-					data[here] = (data[here] * iVal) + ((255 - data[here]) * value);
-				}
-			}
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'invert');
-		/**
-Brightness filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method brightness
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.brightness = function(items, image) {
-			var args = my.filterSetup(items, image),
-				value = (my.xt(args.items.value)) ? args.items.value : 1,
-				data = args.imgData.data,
-				here;
-			value = (my.isa(value, 'str')) ? parseFloat(value) / 100 : value;
-			value = (value < 0) ? 0 : value;
-			for (var i = 0, iz = data.length; i < iz; i += 4) {
-				for (var j = 0; j < 3; j++) {
-					here = i + j;
-					data[here] = data[here] * value;
-				}
-			}
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'brightness');
-		/**
-Saturation filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of saturation effect: as a Number, between 0 (gray) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method saturation
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.saturation = function(items, image) {
-			var args = my.filterSetup(items, image),
-				value = (my.xt(args.items.value)) ? args.items.value : 1,
-				data = args.imgData.data,
-				here;
-			value = (my.isa(value, 'str')) ? parseFloat(value) / 100 : value;
-			value = (value < 0) ? 0 : value;
-			for (var i = 0, iz = data.length; i < iz; i += 4) {
-				for (var j = 0; j < 3; j++) {
-					here = i + j;
-					data[here] = 127 + ((data[here] - 127) * value);
-				}
-			}
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'saturation');
 		/**
 Threshold filter (added to the core by the scrawlFilters module)
 
