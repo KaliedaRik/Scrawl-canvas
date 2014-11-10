@@ -56,7 +56,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 		my.imageCanvas = document.createElement('canvas');
 		my.imageCanvas.id = 'imageHiddenCanvasElement';
-		my.imageFragment.appendChild(my.cv);
+		my.imageFragment.appendChild(my.imageCanvas);
 		/**
     Utility canvas 2d context engine
     @property imageCvx

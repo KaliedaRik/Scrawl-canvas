@@ -67,6 +67,20 @@ CHANGE LOG
 		- invert
 		- brightness
 		- saturation
+		- threshold
+		- channels
+		- channelStep
+		- tint
+		- sepia
+	- started work on creating the matrix filter
+		- used in itself as a filter, and also required by the blur and sharpen filters
+		- may also use it for the pixellate and glasstile filters
+			- though might be easier to construct those ones using the canvases ...
+	- TODO - work for when filters are completed:
+		- want ability to apply filters immediately after Entity is stamped (current does this)
+			- but also ability to delay filter application until after the cell, or pad, has completed compiling
+		- also need to apply filters to entire cells
+		- also want to look at convolution filters ...
 
 141108
 	- added Entity.stampFilter() method to handle filtering on Entitys

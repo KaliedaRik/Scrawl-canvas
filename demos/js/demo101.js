@@ -49,6 +49,35 @@ var mycode = function() {
 		name: 'mySaturation',
 		saturation: 0.4,
 	});
+	scrawl.newThresholdFilter({
+		name: 'myThreshold',
+		filterStrength: 0.8,
+		threshold: 0.6,
+	});
+	scrawl.newChannelsFilter({
+		name: 'myChannels',
+		red: 1.3,
+		green: '120%',
+		blue: 0,
+	});
+	scrawl.newChannelStepFilter({
+		name: 'myChannelStep',
+		red: 64,
+		green: 64,
+		blue: 64,
+	});
+	scrawl.newTintFilter({
+		name: 'myTint',
+		greenInGreen: 0,
+		blueInGreen: 1,
+	});
+	scrawl.newSepiaFilter({
+		name: 'mySepia',
+	});
+	scrawl.newMatrixFilter({
+		name: 'myMatrix',
+		data: [0, 1, 0, 1, 0, 1, 0, 1],
+	});
 
 	current_filter = 'myGreyscale';
 
@@ -99,7 +128,7 @@ var mycode = function() {
 	texty = scrawl.newPhrase({
 		method: 'draw',
 		textAlign: 'center',
-		font: '70pt bold Arial, sans - serif',
+		font: '70pt bold Arial, sans-serif',
 		text: 'Hello!',
 		path: 'phrasepath',
 		pathPlace: 0,

@@ -118,6 +118,69 @@ A __factory__ function to generate new Saturation filter objects
 		my.newSaturationFilter = function(items) {
 			return new my.SaturationFilter(items);
 		};
+		/**
+A __factory__ function to generate new Threshold filter objects
+@method newThresholdFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return ThresholdFilter object
+**/
+		my.newThresholdFilter = function(items) {
+			return new my.ThresholdFilter(items);
+		};
+		/**
+A __factory__ function to generate new Channels filter objects
+@method newChannelsFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return ChannelsFilter object
+**/
+		my.newChannelsFilter = function(items) {
+			return new my.ChannelsFilter(items);
+		};
+		/**
+A __factory__ function to generate new ChannelStep filter objects
+@method newChannelStepFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return ChannelStepFilter object
+**/
+		my.newChannelStepFilter = function(items) {
+			return new my.ChannelStepFilter(items);
+		};
+		/**
+A __factory__ function to generate new Tint filter objects
+@method newTintFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return TintFilter object
+**/
+		my.newTintFilter = function(items) {
+			return new my.TintFilter(items);
+		};
+		/**
+A __factory__ function to generate new Tint filter objects preset with values for creating a sepia tint
+@method newSepiaFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return TintFilter object
+**/
+		my.newSepiaFilter = function(items) {
+			items.redInRed = 0.393;
+			items.redInGreen = 0.349;
+			items.redInBlue = 0.272;
+			items.greenInRed = 0.769;
+			items.greenInGreen = 0.686;
+			items.greenInBlue = 0.534;
+			items.blueInRed = 0.189;
+			items.blueInGreen = 0.168;
+			items.blueInBlue = 0.131;
+			return new my.TintFilter(items);
+		};
+		/**
+A __factory__ function to generate new Matrix filter objects
+@method newMatrixFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return MatrixFilter object
+**/
+		my.newMatrixFilter = function(items) {
+			return new my.MatrixFilter(items);
+		};
 
 
 		/**
@@ -169,6 +232,7 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 			items = my.safeObject(items);
 			my.Base.call(this, items);
 			this.filterStrength = my.xtGet([items.filterStrength, 1]);
+			this.alpha = my.xtGet([items.alpha, 1]);
 			return this;
 		};
 		my.Filter.prototype = Object.create(my.Base.prototype);
@@ -190,6 +254,15 @@ values between 0 (no effect) and 1 (full effect); or '0%' and '100%'
 @default 1
 **/
 			filterStrength: 1,
+			/**
+Filter alpha
+
+values between 0 (transparent) and 1 (current alpha values); or '0%' and '100%'
+@property alpha
+@type Number - or alternatively percentage String
+@default 1
+**/
+			alpha: 1,
 		};
 		my.mergeInto(my.d.Filter, my.d.Base);
 		/**
@@ -264,6 +337,38 @@ cloneImageData function
 			return false;
 		};
 		/**
+getFilterStrength function
+
+@method getFilterStrength
+@return numerical strength value, between 0 and 1
+@private
+**/
+		my.Filter.prototype.getFilterStrength = function() {
+			var s = (my.isa(this.filterStrength, 'str')) ? parseFloat(this.filterStrength) / 100 : this.filterStrength;
+			if (my.isBetween(s, 0, 1, true)) {
+				return s;
+			}
+			else {
+				return (s > 0.5) ? 1 : 0;
+			}
+		};
+		/**
+getAlpha function
+
+@method getAlpha
+@return numerical strength value, between 0 and 1
+@private
+**/
+		my.Filter.prototype.getAlpha = function() {
+			var a = (my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) / 100 : this.alpha;
+			if (my.isBetween(a, 0, 1, true)) {
+				return a;
+			}
+			else {
+				return (a > 0.5) ? 1 : 0;
+			}
+		};
+		/**
 # GreyscaleFilter
 
 ## Instantiation
@@ -309,17 +414,27 @@ Add function - takes data, calculates its greyscale and combines it with data in
 @return amended image data object
 **/
 		my.GreyscaleFilter.prototype.add = function(data) {
-			var value = (my.isa(this.filterStrength, 'str')) ? parseFloat(this.filterStrength) / 100 : this.filterStrength,
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
 				d = data.data,
-				here, i, iz, j, grey;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+				here, i, iz, j, grey, current;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i] + 3 !== 0) {
+				if (d[i + 3] !== 0) {
 					here = i;
 					grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
 					for (j = 0; j < 3; j++) {
 						here = i + j;
-						d[here] = (grey * value) + (d[here] * (1 - value));
+						current = d[here];
+						if (1 === strength) {
+							d[here] = grey;
+						}
+						else if (0 !== strength) {
+							d[here] = (grey * strength) + (current * iStrength);
+						}
+					}
+					if (alpha < 1) {
+						d[i + 3] *= alpha;
 					}
 				}
 			}
@@ -371,16 +486,25 @@ Add function - takes data, calculates its invert and combines it with data in li
 @return amended image data object
 **/
 		my.InvertFilter.prototype.add = function(data) {
-			var value = (my.isa(this.filterStrength, 'str')) ? parseFloat(this.filterStrength) / 100 : this.filterStrength,
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
 				d = data.data,
-				here, i, iz, j, iVal;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
-			iVal = 1 - value;
+				here, i, iz, j, current;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i] + 3 !== 0) {
+				if (d[i + 3] !== 0) {
 					for (j = 0; j < 3; j++) {
 						here = i + j;
-						d[here] = (d[here] * iVal) + ((255 - d[here]) * value);
+						current = d[here];
+						if (1 === strength) {
+							d[here] = 255 - current;
+						}
+						else if (0 !== strength) {
+							d[here] = (current * iStrength) + ((255 - current) * strength);
+						}
+					}
+					if (alpha < 1) {
+						d[i + 3] *= alpha;
 					}
 				}
 			}
@@ -425,8 +549,6 @@ Add function - takes data, calculates its invert and combines it with data in li
 		my.BrightnessFilter.prototype.classname = 'filternames';
 		my.d.BrightnessFilter = {
 			/**
-brightness
-
 Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1 or 100%
 
 @property brightness
@@ -444,15 +566,27 @@ Add function - takes data, calculates its brightness and replaces the old color 
 @return amended image data object
 **/
 		my.BrightnessFilter.prototype.add = function(data) {
-			var value = (my.isa(this.brightness, 'str')) ? parseFloat(this.brightness) / 100 : this.brightness,
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				brightness = (my.isa(this.brightness, 'str')) ? parseFloat(this.brightness) / 100 : this.brightness,
 				d = data.data,
-				here, i, iz, j;
-			value = (value < 0) ? 0 : value;
+				here, i, iz, j, current;
+			brightness = (brightness < 0) ? 0 : brightness;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i] + 3 !== 0) {
+				if (d[i + 3] !== 0) {
 					for (j = 0; j < 3; j++) {
 						here = i + j;
-						d[here] = d[here] * value;
+						current = d[here];
+						if (1 === strength) {
+							d[here] = current * brightness;
+						}
+						else if (0 !== strength) {
+							d[here] = ((current * brightness) * strength) + (current * iStrength);
+						}
+					}
+					if (alpha < 1) {
+						d[i + 3] *= alpha;
 					}
 				}
 			}
@@ -497,8 +631,6 @@ Add function - takes data, calculates its brightness and replaces the old color 
 		my.SaturationFilter.prototype.classname = 'filternames';
 		my.d.SaturationFilter = {
 			/**
-saturation
-
 Percentage value of saturation effect: as a Number, between 0 (uniform grey) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1 or 100%
 
 @property saturation
@@ -516,24 +648,32 @@ Add function - takes data, calculates its saturation and replaces the old color 
 @return amended image data object
 **/
 		my.SaturationFilter.prototype.add = function(data) {
-			var value = (my.isa(this.saturation, 'str')) ? parseFloat(this.saturation) / 100 : this.saturation,
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				saturation = (my.isa(this.saturation, 'str')) ? parseFloat(this.saturation) / 100 : this.saturation,
 				d = data.data,
-				here, i, iz, j;
-			value = (value < 0) ? 0 : value;
+				here, i, iz, j, current;
+			saturation = (saturation < 0) ? 0 : saturation;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i] + 3 !== 0) {
+				if (d[i + 3] !== 0) {
 					for (j = 0; j < 3; j++) {
 						here = i + j;
-						d[here] = 127 + ((d[here] - 127) * value);
+						current = d[here];
+						if (1 === strength) {
+							d[here] = 127 + ((current - 127) * saturation);
+						}
+						else if (0 !== strength) {
+							d[here] = (127 + ((current - 127) * saturation) * strength) + (current * iStrength);
+						}
+					}
+					if (alpha < 1) {
+						d[i + 3] *= alpha;
 					}
 				}
 			}
 			return data;
 		};
-
-
-
-
 		/**
 # ThresholdFilter
 
@@ -573,9 +713,7 @@ Add function - takes data, calculates its saturation and replaces the old color 
 		my.ThresholdFilter.prototype.classname = 'filternames';
 		my.d.ThresholdFilter = {
 			/**
-threshold
-
-Percentage value of saturation effect: as a Number, between 0 (all black) and 1 (all white); as a String, between '0%' and '100%' (default: 0.5).
+Percentage value of threshold effect: as a Number, between 0 (all black) and 1 (all white); as a String, between '0%' and '100%' (default: 0.5).
 
 @property threshold
 @type Number - or alternatively percentage String
@@ -592,18 +730,399 @@ Add function - takes data, calculates its threshold and combines it with data in
 @return amended image data object
 **/
 		my.ThresholdFilter.prototype.add = function(data) {
-			var value = (my.isa(this.filterStrength, 'str')) ? parseFloat(this.filterStrength) / 100 : this.filterStrength,
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
 				threshold = (my.isa(this.threshold, 'str')) ? parseFloat(this.threshold) / 100 : this.threshold,
+				clone = this.cloneImageData(data),
 				d = data.data,
-				here, i, iz, j, t;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
+				c, here, i, iz, j, t, oCurrent, cCurrent;
 			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold > 0.5) ? 1 : 0);
+			threshold *= 255;
+			clone = my.GreyscaleFilter.prototype.add.call(this, clone);
+			c = clone.data;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i] + 3 !== 0) {
+				if (d[i + 3] !== 0) {
+					t = (c[i] > threshold) ? 255 : 0;
 					for (j = 0; j < 3; j++) {
 						here = i + j;
-						t = (d[here] > threshold) ? 255 : 0;
-						d[here] = (t * value) + (d[here] * (1 - value));
+						oCurrent = d[here];
+						cCurrent = c[here];
+						if (1 === strength) {
+							d[here] = t;
+						}
+						else if (0 !== strength) {
+							d[here] = (t * strength) + (oCurrent * iStrength);
+						}
+					}
+					if (alpha < 1) {
+						d[i + 3] *= alpha;
+					}
+				}
+			}
+			return data;
+		};
+		/**
+# ChannelsFilter
+
+## Instantiation
+
+* scrawl.newChannelsFilter()
+
+## Purpose
+
+* Adds a channels filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the ChannelsFilter object
+
+@class ChannelsFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.ChannelsFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.red = my.xtGet([items.red, 1]);
+			this.green = my.xtGet([items.green, 1]);
+			this.blue = my.xtGet([items.blue, 1]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.ChannelsFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.ChannelsFilter.prototype.type = 'ChannelsFilter';
+		my.ChannelsFilter.prototype.classname = 'filternames';
+		my.d.ChannelsFilter = {
+			/**
+value of red channel, from 0 or 0% upwards beyond 1 or 100%
+
+@property red
+@type Number - or alternatively percentage String
+@default 1
+**/
+			red: 1,
+			/**
+value of green channel, from 0 or 0% upwards beyond 1 or 100%
+
+@property green
+@type Number - or alternatively percentage String
+@default 1
+**/
+			green: 1,
+			/**
+value of blue channel, from 0 or 0% upwards beyond 1 or 100%
+
+@property blue
+@type Number - or alternatively percentage String
+@default 1
+**/
+			blue: 1,
+		};
+		my.mergeInto(my.d.ChannelsFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.ChannelsFilter.prototype.add = function(data) {
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				red = (my.isa(this.red, 'str')) ? parseFloat(this.red) / 100 : this.red,
+				green = (my.isa(this.green, 'str')) ? parseFloat(this.green) / 100 : this.green,
+				blue = (my.isa(this.blue, 'str')) ? parseFloat(this.blue) / 100 : this.blue,
+				d = data.data,
+				here, i, iz, r, g, b, a;
+			red = (red < 0) ? 0 : red;
+			green = (green < 0) ? 0 : green;
+			blue = (blue < 0) ? 0 : blue;
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					r = d[i];
+					g = d[i + 1];
+					b = d[i + 2];
+					a = d[i + 3];
+					if (1 === strength) {
+						d[i] = r * red;
+						d[i + 1] = g * green;
+						d[i + 2] = b * blue;
+						d[i + 3] = a * alpha;
+					}
+					else if (0 !== strength) {
+						d[i] = ((r * red) * strength) + (r * iStrength);
+						d[i + 1] = ((g * green) * strength) + (g * iStrength);
+						d[i + 2] = ((b * blue) * strength) + (b * iStrength);
+						d[i + 3] = ((a * alpha) * strength) + (a * iStrength);
+					}
+				}
+			}
+			return data;
+		};
+		/**
+# ChannelStepFilter
+
+## Instantiation
+
+* scrawl.newChannelStepFilter()
+
+## Purpose
+
+* Adds a channel step filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the ChannelStepFilter object
+
+@class ChannelStepFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.ChannelStepFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.red = my.xtGet([items.red, 1]);
+			this.green = my.xtGet([items.green, 1]);
+			this.blue = my.xtGet([items.blue, 1]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.ChannelStepFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.ChannelStepFilter.prototype.type = 'ChannelStepFilter';
+		my.ChannelStepFilter.prototype.classname = 'filternames';
+		my.d.ChannelStepFilter = {
+			/**
+Step value of red channel, between 1 (256 steps, default) and 128 (2 steps)
+
+@property red
+@type Number
+@default 1
+**/
+			red: 1,
+			/**
+Step value of green channel, between 1 (256 steps, default) and 128 (2 steps)
+
+@property green
+@type Number
+@default 1
+**/
+			green: 1,
+			/**
+Step value of blue channel, between 1 (256 steps, default) and 128 (2 steps)
+
+@property blue
+@type Number
+@default 1
+**/
+			blue: 1,
+		};
+		my.mergeInto(my.d.ChannelStepFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.ChannelStepFilter.prototype.add = function(data) {
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				red = this.red,
+				green = this.green,
+				blue = this.blue,
+				d = data.data,
+				here, i, iz, r, g, b;
+			red = (red < 1) ? 1 : red;
+			green = (green < 1) ? 1 : green;
+			blue = (blue < 1) ? 1 : blue;
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					r = d[i];
+					g = d[i + 1];
+					b = d[i + 2];
+					if (1 === strength) {
+						d[i] = Math.floor(r / red) * red;
+						d[i + 1] = Math.floor(g / green) * green;
+						d[i + 2] = Math.floor(b / blue) * blue;
+					}
+					else if (0 !== strength) {
+						d[i] = ((Math.floor(r / red) * red) * strength) + (r * iStrength);
+						d[i + 1] = ((Math.floor(g / green) * green) * strength) + (g * iStrength);
+						d[i + 2] = ((Math.floor(b / blue) * blue) * strength) + (b * iStrength);
+					}
+					if (alpha < 1) {
+						d[i + 3] *= alpha;
+					}
+				}
+			}
+			return data;
+		};
+		/**
+# TintFilter
+
+## Instantiation
+
+* scrawl.newTintFilter()
+
+## Purpose
+
+* Adds a tint filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the TintFilter object
+
+@class TintFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.TintFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.redInRed = my.xtGet([items.redInRed, 1]);
+			this.redInGreen = my.xtGet([items.redInGreen, 0]);
+			this.redInBlue = my.xtGet([items.redInBlue, 0]);
+			this.greenInRed = my.xtGet([items.greenInRed, 0]);
+			this.greenInGreen = my.xtGet([items.greenInGreen, 1]);
+			this.greenInBlue = my.xtGet([items.greenInBlue, 0]);
+			this.blueInRed = my.xtGet([items.blueInRed, 0]);
+			this.blueInGreen = my.xtGet([items.blueInGreen, 0]);
+			this.blueInBlue = my.xtGet([items.blueInBlue, 1]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.TintFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.TintFilter.prototype.type = 'TintFilter';
+		my.TintFilter.prototype.classname = 'filternames';
+		my.d.TintFilter = {
+			/**
+@property redInRed
+@type Number - or alternatively percentage String
+@default 1
+**/
+			redInRed: 1,
+			/**
+@property greenInRed
+@type Number - or alternatively percentage String
+@default 0
+**/
+			greenInRed: 0,
+			/**
+@property blueInRed
+@type Number - or alternatively percentage String
+@default 0
+**/
+			blueInRed: 0,
+			/**
+@property redInGreen
+@type Number - or alternatively percentage String
+@default 0
+**/
+			redInGreen: 0,
+			/**
+@property greenInGreen
+@type Number - or alternatively percentage String
+@default 1
+**/
+			greenInGreen: 1,
+			/**
+@property blueInGreen
+@type Number - or alternatively percentage String
+@default 0
+**/
+			blueInGreen: 0,
+			/**
+@property redInBlue
+@type Number - or alternatively percentage String
+@default 0
+**/
+			redInBlue: 0,
+			/**
+@property greenInBlue
+@type Number - or alternatively percentage String
+@default 0
+**/
+			greenInBlue: 0,
+			/**
+@property blueInBlue
+@type Number - or alternatively percentage String
+@default 1
+**/
+			blueInBlue: 1,
+		};
+		my.mergeInto(my.d.TintFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.TintFilter.prototype.add = function(data) {
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				rr = (my.isa(this.redInRed, 'str')) ? parseFloat(this.redInRed) / 100 : this.redInRed,
+				rg = (my.isa(this.redInGreen, 'str')) ? parseFloat(this.redInGreen) / 100 : this.redInGreen,
+				rb = (my.isa(this.redInBlue, 'str')) ? parseFloat(this.redInBlue) / 100 : this.redInBlue,
+				gr = (my.isa(this.greenInRed, 'str')) ? parseFloat(this.greenInRed) / 100 : this.greenInRed,
+				gg = (my.isa(this.greenInGreen, 'str')) ? parseFloat(this.greenInGreen) / 100 : this.greenInGreen,
+				gb = (my.isa(this.greenInBlue, 'str')) ? parseFloat(this.greenInBlue) / 100 : this.greenInBlue,
+				br = (my.isa(this.blueInRed, 'str')) ? parseFloat(this.blueInRed) / 100 : this.blueInRed,
+				bg = (my.isa(this.blueInGreen, 'str')) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen,
+				bb = (my.isa(this.blueInBlue, 'str')) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue,
+				d = data.data,
+				here, i, iz, r, g, b, red, grn, blu;
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					if (1 === strength) {
+						r = d[i];
+						g = d[i + 1];
+						b = d[i + 2];
+						d[i] = (r * rr) + (g * gr) + (b * br);
+						d[i + 1] = (r * rg) + (g * gg) + (b * bg);
+						d[i + 2] = (r * rb) + (g * gb) + (b * bb);
+					}
+					else if (0 !== strength) {
+						r = d[i];
+						g = d[i + 1];
+						b = d[i + 2];
+						red = (r * rr) + (g * gr) + (b * br);
+						grn = (r * rg) + (g * gg) + (b * bg);
+						blu = (r * rb) + (g * gb) + (b * bb);
+						d[i] = (r * iStrength) + (red * strength);
+						d[i + 1] = (g * iStrength) + (grn * strength);
+						d[i + 2] = (b * iStrength) + (blu * strength);
+					}
+					if (alpha < 1) {
+						d[i + 3] *= alpha;
 					}
 				}
 			}
@@ -611,6 +1130,328 @@ Add function - takes data, calculates its threshold and combines it with data in
 		};
 
 
+
+		/**
+# MatrixFilter
+
+## Instantiation
+
+* scrawl.newMatrixFilter()
+
+## Purpose
+
+* Adds a matrix filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the MatrixFilter object
+
+@class MatrixFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.MatrixFilter = function(items) {
+			var reqLen,
+				i, j, k,
+				counter = 0;
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.width = my.xtGet([items.width, false]);
+			this.height = my.xtGet([items.height, false]);
+			this.rowWrap = my.xtGet([items.rowWrap, false]);
+			this.colWrap = my.xtGet([items.colWrap, false]);
+			this.data = my.xtGet([items.data, [1]]);
+			//at this point we can check whether dimensions and the home coordinates have been supplied and, if not, guess them
+			if (!this.height && this.width && my.isa(this.width, 'num') && this.width >= 1) {
+				this.width = Math.floor(this.width);
+				reqLen = Math.ceil(this.data.length / this.width);
+				this.height = reqLen;
+				reqLen = this.width * this.height;
+			}
+			else if (!this.width && this.height && my.isa(this.height, 'num') && this.height >= 1) {
+				this.height = Math.floor(this.height);
+				reqLen = Math.ceil(this.data.length / this.height);
+				this.width = reqLen;
+				reqLen = this.width * this.height;
+			}
+			else if (this.width && my.isa(this.width, 'num') && this.width >= 1 && this.height && my.isa(this.height, 'num') && this.height >= 1) {
+				this.width = Math.round(this.width);
+				this.height = Math.round(this.height);
+				reqLen = this.width * this.height;
+			}
+			else {
+				reqLen = Math.ceil(Math.sqrt(this.data.length));
+				reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
+				this.width = Math.round(Math.sqrt(reqLen));
+				this.height = this.width;
+			}
+			for (k = 0; k < reqLen; k++) {
+				this.data[k] = (my.xt(this.data[k])) ? parseFloat(this.data[k]) : 0;
+				this.data[k] = (isNaN(this.data[k])) ? 0 : this.data[k];
+			}
+			this.x = my.xtGet([items.x, Math.floor(this.width / 2)]);
+			this.y = my.xtGet([items.y, Math.floor(this.height / 2)]);
+			//after which, we can generate the matrix cells
+			this.cells = [];
+			for (i = 0; i < this.height; i++) { //col (y)
+				for (j = 0; j < this.width; j++) { //row (x)
+					if (this.data[counter] !== 0) {
+						this.cells.push(new my.MatrixCell({
+							row: j - this.x,
+							col: i - this.y,
+							weight: this.data[counter],
+							rowWrap: this.rowWrap,
+							colWrap: this.colWrap,
+							name: this.name + '_' + counter,
+						}));
+					}
+					counter++;
+				}
+			}
+			console.log(this.name, this.width, this.height, this.x, this.y, this.data, this.cells.length);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.MatrixFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.MatrixFilter.prototype.type = 'MatrixFilter';
+		my.MatrixFilter.prototype.classname = 'filternames';
+		my.d.MatrixFilter = {
+			/**
+@property width - matrix maximum width
+@type Number
+@default 1
+**/
+			width: 1,
+			/**
+@property height - matrix maximum height
+@type Number
+@default 1
+**/
+			height: 1,
+			/**
+@property x - home cell along the horizontal
+@type Number
+@default 0
+**/
+			x: 0,
+			/**
+@property y - home cell along the vertical
+@type Number
+@default 0
+**/
+			y: 0,
+			/**
+@property rowWrap - whether the matrix will wrap along horizontal edges
+@type Boolean
+@default false
+**/
+			rowWrap: false,
+			/**
+@property colWrap - whether the matrix will wrap along vertical edges
+@type Boolean
+@default false
+**/
+			colWrap: false,
+			/**
+Data is made up of an array of weightings - for instance a 3 x 3 matrix will contain 9 Number values; this data then gets converted into Matrix cells
+
+The data array has no meaning without width and height dimensions - if no dimension values are supplied, the constructor will assume a odd-numbered square larger than the square root of the length of the data array (eg 3x3, 5x5), with home coordinates at the center of the square, and pad empty spaces at the end of the array with zero weights (which then get ignored)
+
+@property data - raw data supplied
+@type Array
+@default false
+**/
+			data: false,
+		};
+		my.mergeInto(my.d.MatrixFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.MatrixFilter.prototype.add = function(data) {
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				red = this.red,
+				green = this.green,
+				blue = this.blue,
+				d = data.data,
+				here, i, iz, r, g, b;
+			red = (red < 1) ? 1 : red;
+			green = (green < 1) ? 1 : green;
+			blue = (blue < 1) ? 1 : blue;
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					r = d[i];
+					g = d[i + 1];
+					b = d[i + 2];
+					if (1 === strength) {
+						d[i] = Math.floor(r / red) * red;
+						d[i + 1] = Math.floor(g / green) * green;
+						d[i + 2] = Math.floor(b / blue) * blue;
+					}
+					else if (0 !== strength) {
+						d[i] = ((Math.floor(r / red) * red) * strength) + (r * iStrength);
+						d[i + 1] = ((Math.floor(g / green) * green) * strength) + (g * iStrength);
+						d[i + 2] = ((Math.floor(b / blue) * blue) * strength) + (b * iStrength);
+					}
+					if (alpha < 1) {
+						d[i + 3] *= alpha;
+					}
+				}
+			}
+			return data;
+		};
+
+
+
+
+
+
+
+		/**
+# MatrixCell
+
+## Instantiation
+
+* scrawl.newMatrixCell()
+
+## Purpose
+
+* To hold filter matrix cell data
+@class MatrixCell
+@constructor
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.MatrixCell = function(items) {
+			items = my.safeObject(items);
+			this.row = items.row || 0;
+			this.col = items.col || 0;
+			this.weight = items.weight || 1;
+			this.rowWrap = items.rowWrap || false;
+			this.colWrap = items.colWrap || false;
+			this.name = items.name || 'generic';
+			return this;
+		};
+		my.MatrixCell.prototype = Object.create(Object.prototype);
+		/**
+@property type
+@type String
+@default 'MatrixCell'
+@final
+**/
+		my.MatrixCell.prototype.type = 'MatrixCell';
+		my.d.MatrixCell = {
+			/**
+row position (relative, px)
+@property row
+@type Number
+@default 0
+**/
+			row: 0,
+			/**
+column position (relative, px)
+@property col
+@type Number
+@default 0
+**/
+			col: 0,
+			/**
+weight
+@property weight
+@type Number
+@default 1
+**/
+			weight: 1,
+			/**
+row wrap - when true, will wrap rows when calculating values
+@property rowWrap
+@type Boolean
+@default false
+**/
+			rowWrap: false,
+			/**
+column wrap - when true, will wrap rows when calculating values
+@property col
+@type Boolean
+@default false
+**/
+			colWrap: false,
+			/**
+MatrixCell name - not guaranteed to be unique
+@property name
+@type String
+@default 'generic'
+**/
+			name: 'generic',
+		};
+		/**
+Given a coordinate and dimensions, calculate the cell's position within the imageData data array
+@method index
+@param {Number} x - horizontal coordinate
+@param {Number} y - vertical coordinate
+@param {Number} w - horizontal dimension
+@param {Number} h - vertical dimension
+@return Number - the index position for this cell
+**/
+		my.MatrixCell.prototype.index = function(x, y, w, h) {
+			var bounds = true;
+			x += this.row;
+			if (!my.isBetween(x, 0, w - 1, true)) {
+				if (this.rowWrap) {
+					x = (x > 0) ? x - w : x + w;
+				}
+				else {
+					bounds = false;
+				}
+			}
+			y += this.col;
+			if (!my.isBetween(y, 0, h - 1, true)) {
+				if (this.colWrap) {
+					y = (y > 0) ? y - h : y + h;
+				}
+				else {
+					bounds = false;
+				}
+			}
+			if (bounds) {
+				return ((y * w) + x) * 4;
+			}
+			return false;
+		};
+		/**
+Given a value, multiply it by the cell's weighting
+@method getWeight
+@param {Number} item - original value
+@return Number - weighted value
+**/
+		my.MatrixCell.prototype.getWeight = function(item) {
+			return item * this.weight;
+		};
+		/**
+Given an array of 4 values (rgba), multiply them by the cell's weighting
+@method getWeights
+@param {Array} item - array of 4 original values
+@return Array - weighted values
+**/
+		my.MatrixCell.prototype.getWeights = function(item) {
+			item[0] *= this.weight;
+			item[1] *= this.weight;
+			item[2] *= this.weight;
+			item[3] *= this.weight;
+			return item;
+		};
 
 
 
@@ -663,244 +1504,6 @@ Attributes in the argument object:
 			return args.imgData;
 		};
 		my.pushUnique(my.filterFactorynames, 'sharpen');
-		/**
-Filter helper function - merge one image data object into another
-
-Attributes in the argument object:
-
-* __value__ - Number. Percentage value of merge, between 0 (image1 returned) and 1 (image2 returned)
-* __image1__ - First image data object - fully displayed when _value_ is 0
-* __image2__ - Second image data object - fully displayed when _value_ is 1
-@method mergeImages
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.mergeImages = function(items) {
-			if (my.isa(items, 'obj') && my.xta([items.image1, items.image2, items.value])) {
-				var img1 = items.image1,
-					dat1 = img1.data,
-					img2 = items.image2,
-					dat2 = img2.data,
-					val = items.value,
-					iVal = 1 - val,
-					here;
-				if (val === 0) {
-					return img1;
-				}
-				else if (val === 1) {
-					return img2;
-				}
-				else {
-					for (var i = 0, z = dat1.length; i < z; i += 4) {
-						for (var j = 0; j < 3; j++) {
-							here = i + j;
-							dat1[here] = (dat1[here] * iVal) + (dat2[here] * val);
-						}
-					}
-					return img1;
-				}
-			}
-			return false;
-		};
-		my.pushUnique(my.filterFactorynames, 'mergeImages');
-		/**
-Threshold filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of threshold border: as a Number, between 0 (black) and 1 (white); as a String, between '0%' and '100%' (default: 0.5)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method threshold
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.threshold = function(items, image) {
-			var args = my.filterSetup(items, image),
-				value = (my.xt(items.value)) ? items.value : 0.5,
-				data,
-				here;
-			value = (my.isa(value, 'str')) ? parseFloat(value) / 100 : value;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
-			value *= 255;
-			args.imgData = my.filterFactory.grayscale({
-				useSourceData: args.useSourceData,
-				use: args.imgData,
-				save: false,
-			}, args.image);
-			data = args.imgData.data;
-			for (var i = 0, iz = data.length; i < iz; i += 4) {
-				for (var j = 0; j < 3; j++) {
-					here = i + j;
-					data[here] = (data[here] > value) ? 255 : 0;
-				}
-			}
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'threshold');
-		/**
-Channels filter (added to the core by the scrawlFilters module)
-
-Alter the relative channel levels for an image
-
-Attributes in the argument object:
-
-* __red__ - Number or String. Percentage value of red channel effect on the pixel: as a Number, between 0 (set red channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
-* __green__ - Number or String. Percentage value of green channel effect on the pixel: as a Number, between 0 (set green channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
-* __blue__ - Number or String. Percentage value of blue channel effect on the pixel: as a Number, between 0 (set blue channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
-* __alpha__ - Number or String. Percentage value of alpha channel effect on the pixel: as a Number, between 0 (set alpha channel to zero) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method channels
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.channels = function(items, image) {
-			var args = my.filterSetup(items, image),
-				red = (my.xt(args.items.red)) ? args.items.red : 1,
-				green = (my.xt(args.items.green)) ? args.items.green : 1,
-				blue = (my.xt(args.items.blue)) ? args.items.blue : 1,
-				alpha = (my.xt(args.items.alpha)) ? args.items.alpha : 1,
-				data = args.imgData.data,
-				here;
-			red = (my.isa(red, 'str')) ? parseFloat(red) / 100 : red;
-			green = (my.isa(green, 'str')) ? parseFloat(green) / 100 : green;
-			blue = (my.isa(blue, 'str')) ? parseFloat(blue) / 100 : blue;
-			alpha = (my.isa(alpha, 'str')) ? parseFloat(alpha) / 100 : alpha;
-			for (var i = 0, z = data.length; i < z; i += 4) {
-				here = i;
-				data[here] = data[here] * red;
-				here++;
-				data[here] = data[here] * green;
-				here++;
-				data[here] = data[here] * blue;
-				here++;
-				data[here] = data[here] * alpha;
-			}
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'channels');
-		/**
-ChannelStep filter (added to the core by the scrawlFilters module)
-
-Limit the number of values used in each channel
-
-Attributes in the argument object:
-
-* __red__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __green__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __blue__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __alpha__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method channelStep
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.channelStep = function(items, image) {
-			var args = my.filterSetup(items, image),
-				red = (my.xt(args.items.red)) ? args.items.red : 1,
-				green = (my.xt(args.items.green)) ? args.items.green : 1,
-				blue = (my.xt(args.items.blue)) ? args.items.blue : 1,
-				alpha = (my.xt(args.items.alpha)) ? args.items.alpha : 1,
-				data = args.imgData.data,
-				here;
-			for (var i = 0, z = data.length; i < z; i += 4) {
-				here = i;
-				data[here] = Math.floor(data[here] / red) * red;
-				here++;
-				data[here] = Math.floor(data[here] / green) * green;
-				here++;
-				data[here] = Math.floor(data[here] / blue) * blue;
-				here++;
-				data[here] = Math.floor(data[here] / alpha) * alpha;
-			}
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'channelStep');
-		/**
-Sepia filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of sepia effect: as a Number, between 0 (no effect) and 1 (full sepia tint); as a String, between '0%' and '100%' (default: 1).
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method sepia
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.sepia = function(items, image) {
-			return my.filterFactory.tint(items, image);
-		};
-		my.pushUnique(my.filterFactorynames, 'sepia');
-		/**
-Tint filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of tint effect: as a Number, between 0 (no effect) and 1 (full tint); as a String, between '0%' and '100%' (default: 1).
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-
-The argument object can take up to nine additional attributes, used to set the tinting effect. Default values for these attributes will generate a sepia tint. All values are Numbers between 0 and 1:
-
-* __redInRed__ or __rr__ - default 0.393
-* __redInGreen__ or __rg__ - default 0.349
-* __redInBlue__ or __rb__ - default 0.272
-* __greenInRed__ or __gr__ - default 0.769
-* __greenInGreen__ or __gg__ - default 0.686
-* __greenInBlue__ or __gb__ - default 0.534
-* __blueInRed__ or __br__ - default 0.189
-* __blueInGreen__ or __bg__ - default 0.168
-* __blueInBlue__ or __bb__ - default 0.131
-@method tint
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.tint = function(items, image) {
-			var args = my.filterSetup(items, image),
-				value = (my.xt(args.items.value)) ? args.items.value : 1,
-				iVal,
-				rr = my.xtGet([args.items.rr, args.items.redInRed, 0.393]),
-				rg = my.xtGet([args.items.rg, args.items.redInGreen, 0.349]),
-				rb = my.xtGet([args.items.rb, args.items.redInBlue, 0.272]),
-				gr = my.xtGet([args.items.gr, args.items.greenInRed, 0.769]),
-				gg = my.xtGet([args.items.gg, args.items.greenInGreen, 0.686]),
-				gb = my.xtGet([args.items.gb, args.items.greenInBlue, 0.534]),
-				br = my.xtGet([args.items.br, args.items.blueInRed, 0.189]),
-				bg = my.xtGet([args.items.bg, args.items.blueInGreen, 0.168]),
-				bb = my.xtGet([args.items.bb, args.items.blueInBlue, 0.131]),
-				data = args.imgData.data,
-				r, red,
-				g, grn,
-				b, blu;
-			value = (my.isa(value, 'str')) ? parseFloat(value) / 100 : value;
-			value = (my.isBetween(value, 0, 1, true)) ? value : ((value > 0.5) ? 1 : 0);
-			iVal = 1 - value;
-			for (var i = 0, iz = data.length; i < iz; i += 4) {
-				r = data[i];
-				g = data[i + 1];
-				b = data[i + 2];
-				red = (r * rr) + (g * gr) + (b * br);
-				grn = (r * rg) + (g * gg) + (b * bg);
-				blu = (r * rb) + (g * gb) + (b * bb);
-				data[i] = (r * iVal) + (red * value);
-				data[i + 1] = (g * iVal) + (grn * value);
-				data[i + 2] = (b * iVal) + (blu * value);
-			}
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'tint');
 		/**
 Blur filter (added to the core by the scrawlFilters module)
 
