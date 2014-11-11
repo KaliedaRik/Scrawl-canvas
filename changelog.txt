@@ -59,6 +59,11 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141110
+	- added new filter objects:
+		- matrix
+		- sharpen
+	
 141109
 	- added 'none' method to Picture entity
 		- allows an image (even an animated sprite) to act as a clipping zone for the filter

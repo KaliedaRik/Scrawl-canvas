@@ -181,6 +181,43 @@ A __factory__ function to generate new Matrix filter objects
 		my.newMatrixFilter = function(items) {
 			return new my.MatrixFilter(items);
 		};
+		/**
+A __factory__ function to generate new Sharpen filter objects
+@method newSharpenFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return SharpenFilter object
+**/
+		my.newSharpenFilter = function(items) {
+			items.data = [0, -1, 0, -1, 5, -1, 0, -1, 0];
+			return new my.MatrixFilter(items);
+		};
+		/**
+A __factory__ function to generate new Pixelate filter objects
+@method newPixelateFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return PixelateFilter object
+**/
+		my.newPixelateFilter = function(items) {
+			return new my.PixelateFilter(items);
+		};
+		/**
+A __factory__ function to generate new Blur filter objects
+@method newBlurFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return BlurFilter object
+**/
+		my.newBlurFilter = function(items) {
+			return new my.BlurFilter(items);
+		};
+		/**
+A __factory__ function to generate new GlassTile filter objects
+@method newGlassTileFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return GlassTileFilter object
+**/
+		my.newGlassTileFilter = function(items) {
+			return new my.GlassTileFilter(items);
+		};
 
 
 		/**
@@ -1128,9 +1165,6 @@ Add function - takes data, calculates its channels and combines it with data in 
 			}
 			return data;
 		};
-
-
-
 		/**
 # MatrixFilter
 
@@ -1197,19 +1231,11 @@ Add function - takes data, calculates its channels and combines it with data in 
 			for (i = 0; i < this.height; i++) { //col (y)
 				for (j = 0; j < this.width; j++) { //row (x)
 					if (this.data[counter] !== 0) {
-						this.cells.push(new my.MatrixCell({
-							row: j - this.x,
-							col: i - this.y,
-							weight: this.data[counter],
-							rowWrap: this.rowWrap,
-							colWrap: this.colWrap,
-							name: this.name + '_' + counter,
-						}));
+						this.cells.push([j - this.x, i - this.y, this.data[counter]]);
 					}
 					counter++;
 				}
 			}
-			console.log(this.name, this.width, this.height, this.x, this.y, this.data, this.cells.length);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1249,18 +1275,6 @@ Add function - takes data, calculates its channels and combines it with data in 
 **/
 			y: 0,
 			/**
-@property rowWrap - whether the matrix will wrap along horizontal edges
-@type Boolean
-@default false
-**/
-			rowWrap: false,
-			/**
-@property colWrap - whether the matrix will wrap along vertical edges
-@type Boolean
-@default false
-**/
-			colWrap: false,
-			/**
 Data is made up of an array of weightings - for instance a 3 x 3 matrix will contain 9 Number values; this data then gets converted into Matrix cells
 
 The data array has no meaning without width and height dimensions - if no dimension values are supplied, the constructor will assume a odd-numbered square larger than the square root of the length of the data array (eg 3x3, 5x5), with home coordinates at the center of the square, and pad empty spaces at the end of the array with zero weights (which then get ignored)
@@ -1283,34 +1297,265 @@ Add function - takes data, calculates its channels and combines it with data in 
 			var strength = this.getFilterStrength(),
 				iStrength = 1 - strength,
 				alpha = this.getAlpha(),
-				red = this.red,
-				green = this.green,
-				blue = this.blue,
-				d = data.data,
-				here, i, iz, r, g, b;
-			red = (red < 1) ? 1 : red;
-			green = (green < 1) ? 1 : green;
-			blue = (blue < 1) ? 1 : blue;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					r = d[i];
-					g = d[i + 1];
-					b = d[i + 2];
-					if (1 === strength) {
-						d[i] = Math.floor(r / red) * red;
-						d[i + 1] = Math.floor(g / green) * green;
-						d[i + 2] = Math.floor(b / blue) * blue;
-					}
-					else if (0 !== strength) {
-						d[i] = ((Math.floor(r / red) * red) * strength) + (r * iStrength);
-						d[i + 1] = ((Math.floor(g / green) * green) * strength) + (g * iStrength);
-						d[i + 2] = ((Math.floor(b / blue) * blue) * strength) + (b * iStrength);
-					}
-					if (alpha < 1) {
-						d[i + 3] *= alpha;
+				d0 = data.data,
+				result = my.cvx.createImageData(data),
+				dR = result.data,
+				i, iz, j, jz, k, kz, r, g, b, a, w, c, e, e0, x, y;
+			if (strength === 0) {
+				return data;
+			}
+			else {
+				for (i = 0, iz = data.height; i < iz; i++) {
+					for (j = 0, jz = data.width; j < jz; j++) {
+						e0 = ((i * jz) + j) * 4;
+						r = 0;
+						g = 0;
+						b = 0;
+						a = 0;
+						c = 0;
+						for (k = 0, kz = this.cells.length; k < kz; k++) {
+							x = j + this.cells[k][0];
+							y = i + this.cells[k][1];
+							if (x >= 0 && x < jz && y >= 0 && y < iz) {
+								e = ((y * jz) + x) * 4;
+								w = this.cells[k][2];
+								c += w;
+								r += (d0[e] * w);
+								g += (d0[++e] * w);
+								b += (d0[++e] * w);
+								a += d0[++e];
+							}
+						}
+						if (a > 0) {
+							r = (c !== 0) ? r / c : r;
+							g = (c !== 0) ? g / c : g;
+							b = (c !== 0) ? b / c : b;
+							if (strength === 1) {
+								dR[e0] = r;
+								e0++;
+								dR[e0] = g;
+								e0++;
+								dR[e0] = b;
+								e0++;
+								dR[e0] = d0[e0] * alpha;
+							}
+							else {
+								dR[e0] = (r * strength) + (d0[e0] * iStrength);
+								e0++;
+								dR[e0] = (g * strength) + (d0[e0] * iStrength);
+								e0++;
+								dR[e0] = (b * strength) + (d0[e0] * iStrength);
+								e0++;
+								dR[e0] = d0[e0] * alpha;
+							}
+						}
 					}
 				}
 			}
+			return result;
+		};
+		/**
+# PixelateFilter
+
+## Instantiation
+
+* scrawl.newPixelateFilter()
+
+## Purpose
+
+* Adds a pixelate filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the PixelateFilter object
+
+@class PixelateFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.PixelateFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.width = my.xtGet([items.width, 5]);
+			this.height = my.xtGet([items.height, 5]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.PixelateFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.PixelateFilter.prototype.type = 'PixelateFilter';
+		my.PixelateFilter.prototype.classname = 'filternames';
+		my.d.PixelateFilter = {
+			/**
+@property width - pixelization width
+@type Number
+@default 5
+**/
+			width: 5,
+			/**
+@property height - pixelization height
+@type Number
+@default 5
+**/
+			height: 5,
+};
+		my.mergeInto(my.d.PixelateFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.PixelateFilter.prototype.add = function(data) {
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				d = data.data,
+				here, i, iz, r, g, b;
+			return data;
+		};
+		/**
+# BlurFilter
+
+## Instantiation
+
+* scrawl.newBlurFilter()
+
+## Purpose
+
+* Adds a blur filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the BlurFilter object
+
+@class BlurFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.BlurFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.width = my.xtGet([items.width, 5]);
+			this.height = my.xtGet([items.height, 5]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.BlurFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.BlurFilter.prototype.type = 'BlurFilter';
+		my.BlurFilter.prototype.classname = 'filternames';
+		my.d.BlurFilter = {
+			/**
+@property width - pixelization width
+@type Number
+@default 5
+**/
+			width: 5,
+			/**
+@property height - pixelization height
+@type Number
+@default 5
+**/
+			height: 5,
+};
+		my.mergeInto(my.d.BlurFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.BlurFilter.prototype.add = function(data) {
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				d = data.data,
+				here, i, iz, r, g, b;
+			return data;
+		};
+		/**
+# GlassTileFilter
+
+## Instantiation
+
+* scrawl.newGlassTileFilter()
+
+## Purpose
+
+* Adds a glass tile filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the GlassTileFilter object
+
+@class GlassTileFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.GlassTileFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.width = my.xtGet([items.width, 5]);
+			this.height = my.xtGet([items.height, 5]);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.GlassTileFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.GlassTileFilter.prototype.type = 'GlassTileFilter';
+		my.GlassTileFilter.prototype.classname = 'filternames';
+		my.d.GlassTileFilter = {
+			/**
+@property width - pixelization width
+@type Number
+@default 5
+**/
+			width: 5,
+			/**
+@property height - pixelization height
+@type Number
+@default 5
+**/
+			height: 5,
+};
+		my.mergeInto(my.d.GlassTileFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.GlassTileFilter.prototype.add = function(data) {
+			var strength = this.getFilterStrength(),
+				iStrength = 1 - strength,
+				alpha = this.getAlpha(),
+				d = data.data,
+				here, i, iz, r, g, b;
 			return data;
 		};
 
@@ -1320,138 +1565,6 @@ Add function - takes data, calculates its channels and combines it with data in 
 
 
 
-		/**
-# MatrixCell
-
-## Instantiation
-
-* scrawl.newMatrixCell()
-
-## Purpose
-
-* To hold filter matrix cell data
-@class MatrixCell
-@constructor
-@param {Object} [items] Key:value Object argument for setting attributes
-**/
-		my.MatrixCell = function(items) {
-			items = my.safeObject(items);
-			this.row = items.row || 0;
-			this.col = items.col || 0;
-			this.weight = items.weight || 1;
-			this.rowWrap = items.rowWrap || false;
-			this.colWrap = items.colWrap || false;
-			this.name = items.name || 'generic';
-			return this;
-		};
-		my.MatrixCell.prototype = Object.create(Object.prototype);
-		/**
-@property type
-@type String
-@default 'MatrixCell'
-@final
-**/
-		my.MatrixCell.prototype.type = 'MatrixCell';
-		my.d.MatrixCell = {
-			/**
-row position (relative, px)
-@property row
-@type Number
-@default 0
-**/
-			row: 0,
-			/**
-column position (relative, px)
-@property col
-@type Number
-@default 0
-**/
-			col: 0,
-			/**
-weight
-@property weight
-@type Number
-@default 1
-**/
-			weight: 1,
-			/**
-row wrap - when true, will wrap rows when calculating values
-@property rowWrap
-@type Boolean
-@default false
-**/
-			rowWrap: false,
-			/**
-column wrap - when true, will wrap rows when calculating values
-@property col
-@type Boolean
-@default false
-**/
-			colWrap: false,
-			/**
-MatrixCell name - not guaranteed to be unique
-@property name
-@type String
-@default 'generic'
-**/
-			name: 'generic',
-		};
-		/**
-Given a coordinate and dimensions, calculate the cell's position within the imageData data array
-@method index
-@param {Number} x - horizontal coordinate
-@param {Number} y - vertical coordinate
-@param {Number} w - horizontal dimension
-@param {Number} h - vertical dimension
-@return Number - the index position for this cell
-**/
-		my.MatrixCell.prototype.index = function(x, y, w, h) {
-			var bounds = true;
-			x += this.row;
-			if (!my.isBetween(x, 0, w - 1, true)) {
-				if (this.rowWrap) {
-					x = (x > 0) ? x - w : x + w;
-				}
-				else {
-					bounds = false;
-				}
-			}
-			y += this.col;
-			if (!my.isBetween(y, 0, h - 1, true)) {
-				if (this.colWrap) {
-					y = (y > 0) ? y - h : y + h;
-				}
-				else {
-					bounds = false;
-				}
-			}
-			if (bounds) {
-				return ((y * w) + x) * 4;
-			}
-			return false;
-		};
-		/**
-Given a value, multiply it by the cell's weighting
-@method getWeight
-@param {Number} item - original value
-@return Number - weighted value
-**/
-		my.MatrixCell.prototype.getWeight = function(item) {
-			return item * this.weight;
-		};
-		/**
-Given an array of 4 values (rgba), multiply them by the cell's weighting
-@method getWeights
-@param {Array} item - array of 4 original values
-@return Array - weighted values
-**/
-		my.MatrixCell.prototype.getWeights = function(item) {
-			item[0] *= this.weight;
-			item[1] *= this.weight;
-			item[2] *= this.weight;
-			item[3] *= this.weight;
-			return item;
-		};
 
 
 
@@ -1462,48 +1575,6 @@ Given an array of 4 values (rgba), multiply them by the cell's weighting
 
 
 
-
-
-
-
-
-
-
-
-
-
-		/**
-Sharpen filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of sharpen effect: as a Number, between 0 (no effect) and 1 (full sharpen effect); as a String, between '0%' and '100%' (default: 1)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method sharpen
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.sharpen = function(items, image) {
-			var args = my.filterSetup(items, image),
-				value = (my.xt(args.items.value)) ? args.items.value : 1,
-				mask;
-			value = (my.isa(value, 'str')) ? parseFloat(value) / 100 : value;
-			mask = my.filterFactory.matrix({
-				use: args.imgData,
-				data: [0, -1, 0, -1, 5, -1, 0, -1, 0],
-				save: false,
-			}, args.image);
-			args.imgData = my.filterFactory.mergeImages({
-				image1: args.imgData,
-				image2: mask,
-				value: value,
-			});
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'sharpen');
 		/**
 Blur filter (added to the core by the scrawlFilters module)
 
@@ -1689,139 +1760,6 @@ Attributes in the argument object:
 			return args.imgData;
 		};
 		my.pushUnique(my.filterFactorynames, 'glassTile');
-		/**
-Matrix filter (added to the core by the scrawlFilters module)
-
-Transforms an image using a weighted matrix
-
-Matrix is composed of an array of weightings to be applied to the colors of surrounding pixels. The function expects the weightings data to equate to a square matrix with an odd number of colums/rows - thusthe data array should consist of 9, 25, 49, etc elements. if the data array is missing the requisite number of elements, the function will add zeros to it to pad it out.
-
-Attributes in the argument object:
-
-* __data__ - Array of Numbers. (default: [1])
-* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
-* __wrap__ - Boolean. When true, offset pixels that fall outside the boundaries of the image will be wrapped to the opposite end of the image row or column; when false, the offset pixels are ignored and their weightings excluded from the calculation (default: false)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method matrix
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended data image object
-**/
-		my.filterFactory.matrix = function(items, image) {
-			var args = my.filterSetup(items, image),
-				myArray = (my.isa(args.items.data, 'arr')) ? args.items.data : [1],
-				matrix = [],
-				reqLen,
-				matrixMid,
-				matrixDim,
-				matrixCenter,
-				counter = 0,
-				imgData;
-			args.items.includeAlpha = (my.isa(args.items.includeAlpha, 'bool')) ? args.items.includeAlpha : false;
-			args.items.wrap = (my.isa(args.items.wrap, 'bool')) ? args.items.wrap : false;
-			reqLen = Math.ceil(Math.sqrt(myArray.length));
-			reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
-			for (var k = 0; k < reqLen; k++) {
-				myArray[k] = (my.xt(myArray[k])) ? parseFloat(myArray[k]) : 0;
-				myArray[k] = (isNaN(myArray[k])) ? 0 : myArray[k];
-			}
-			matrixMid = Math.floor(myArray.length / 2);
-			matrixDim = Math.sqrt(myArray.length);
-			matrixCenter = Math.floor(matrixDim / 2);
-			for (var i = 0; i < matrixDim; i++) { //col (y)
-				for (var j = 0; j < matrixDim; j++) { //row (x)
-					if (myArray[counter] !== 0) {
-						matrix.push({
-							ox: j - matrixCenter,
-							oy: i - matrixCenter,
-							wt: myArray[counter],
-						});
-					}
-					counter++;
-				}
-			}
-			args.imgData = my.filterFactory.doMatrix(matrix, args);
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'matrix');
-		/**
-Helper function
-
-The matrix array consists of objects with the following attributes:
-
-* __ox__ horizontal offset from the current pixel
-* __oy__ vertical offset from the current pixel
-* __wt__ weighting to be used when adding the color values of the offset pixel to the resulting color for current pixel
-
-Function used by matrix() and blur() filter functions
-
-@method doMatrix
-@param {Array} matrix Array of matrix objects
-@param {Object} args Arguments object supplied by filter
-@return Updated ImageData data on success; false otherwise
-**/
-		my.filterFactory.doMatrix = function(matrix, args) {
-			var width = args.imgData.width,
-				height = args.imgData.height,
-				source = args.imgData.data,
-				result = my.cvx.createImageData(args.imgData),
-				destination = result.data,
-				addAlpha = args.items.includeAlpha,
-				wrap = args.items.wrap,
-				w, r, g, b, a, x, y, wt,
-				here, there, addPix, boundX, boundY,
-				length = matrix.length;
-			if (length > 0) {
-				for (var i = 0; i < height; i++) { //rows (y)
-					for (var j = 0; j < width; j++) { //cols (x)
-						r = 0;
-						b = 0;
-						g = 0;
-						a = 0;
-						w = 0;
-						here = 4 * ((i * width) + j);
-						for (var k = 0; k < length; k++) {
-							addPix = true;
-							x = matrix[k].ox;
-							y = matrix[k].oy;
-							wt = matrix[k].wt;
-							boundX = my.isBetween(j + x, 0, width - 1, true);
-							boundY = my.isBetween(i + y, 0, height - 1, true);
-							if (!boundX || !boundY) {
-								if (wrap) {
-									if (!boundX) {
-										x += (x > 0) ? -width : width;
-									}
-									if (!boundY) {
-										y += (y > 0) ? -height : height;
-									}
-								}
-								else {
-									addPix = false;
-								}
-							}
-							if (addPix) {
-								there = here + (4 * ((y * width) + x));
-								r += source[there] * wt;
-								g += source[++there] * wt;
-								b += source[++there] * wt;
-								w += wt;
-								if (addAlpha) {
-									a += source[++there] * wt;
-								}
-							}
-						}
-						destination[here] = (w !== 0) ? r / w : r;
-						destination[++here] = (w !== 0) ? g / w : g;
-						destination[++here] = (w !== 0) ? b / w : b;
-						destination[++here] = (addAlpha) ? ((w !== 0) ? a / w : a) : source[here];
-					}
-				}
-				return result;
-			}
-			return false;
-		};
-		my.pushUnique(my.filterFactorynames, 'doMatrix');
 
 		return my;
 	}(scrawl));

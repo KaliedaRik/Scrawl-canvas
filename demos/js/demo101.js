@@ -76,7 +76,19 @@ var mycode = function() {
 	});
 	scrawl.newMatrixFilter({
 		name: 'myMatrix',
-		data: [0, 1, 0, 1, 0, 1, 0, 1],
+		data: [1, 1, 1, 1, 0.7, -1, -1, -1, -1],
+	});
+	scrawl.newSharpenFilter({
+		name: 'mySharpen',
+	});
+	scrawl.newPixelateFilter({
+		name: 'myPixelate',
+	});
+	scrawl.newBlurFilter({
+		name: 'myBlur',
+	});
+	scrawl.newGlassTileFilter({
+		name: 'myGlassTile',
 	});
 
 	current_filter = 'myGreyscale';
