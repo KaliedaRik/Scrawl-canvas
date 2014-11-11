@@ -86,6 +86,9 @@ var mycode = function() {
 	});
 	scrawl.newBlurFilter({
 		name: 'myBlur',
+		radiusX: 12,
+		radiusY: 4,
+		roll: 45,
 	});
 	scrawl.newGlassTileFilter({
 		name: 'myGlassTile',

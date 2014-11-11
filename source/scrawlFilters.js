@@ -1308,45 +1308,47 @@ Add function - takes data, calculates its channels and combines it with data in 
 				for (i = 0, iz = data.height; i < iz; i++) {
 					for (j = 0, jz = data.width; j < jz; j++) {
 						e0 = ((i * jz) + j) * 4;
-						r = 0;
-						g = 0;
-						b = 0;
-						a = 0;
-						c = 0;
-						for (k = 0, kz = this.cells.length; k < kz; k++) {
-							x = j + this.cells[k][0];
-							y = i + this.cells[k][1];
-							if (x >= 0 && x < jz && y >= 0 && y < iz) {
-								e = ((y * jz) + x) * 4;
-								w = this.cells[k][2];
-								c += w;
-								r += (d0[e] * w);
-								g += (d0[++e] * w);
-								b += (d0[++e] * w);
-								a += d0[++e];
+						if (d0[e0 + 3] > 0) {
+							r = 0;
+							g = 0;
+							b = 0;
+							a = 0;
+							c = 0;
+							for (k = 0, kz = this.cells.length; k < kz; k++) {
+								x = j + this.cells[k][0];
+								y = i + this.cells[k][1];
+								if (x >= 0 && x < jz && y >= 0 && y < iz) {
+									e = ((y * jz) + x) * 4;
+									w = this.cells[k][2];
+									c += w;
+									r += (d0[e] * w);
+									g += (d0[++e] * w);
+									b += (d0[++e] * w);
+									a += d0[++e];
+								}
 							}
-						}
-						if (a > 0) {
-							r = (c !== 0) ? r / c : r;
-							g = (c !== 0) ? g / c : g;
-							b = (c !== 0) ? b / c : b;
-							if (strength === 1) {
-								dR[e0] = r;
-								e0++;
-								dR[e0] = g;
-								e0++;
-								dR[e0] = b;
-								e0++;
-								dR[e0] = d0[e0] * alpha;
-							}
-							else {
-								dR[e0] = (r * strength) + (d0[e0] * iStrength);
-								e0++;
-								dR[e0] = (g * strength) + (d0[e0] * iStrength);
-								e0++;
-								dR[e0] = (b * strength) + (d0[e0] * iStrength);
-								e0++;
-								dR[e0] = d0[e0] * alpha;
+							if (a > 0) {
+								r = (c !== 0) ? r / c : r;
+								g = (c !== 0) ? g / c : g;
+								b = (c !== 0) ? b / c : b;
+								if (strength === 1) {
+									dR[e0] = r;
+									e0++;
+									dR[e0] = g;
+									e0++;
+									dR[e0] = b;
+									e0++;
+									dR[e0] = d0[e0] * alpha;
+								}
+								else {
+									dR[e0] = (r * strength) + (d0[e0] * iStrength);
+									e0++;
+									dR[e0] = (g * strength) + (d0[e0] * iStrength);
+									e0++;
+									dR[e0] = (b * strength) + (d0[e0] * iStrength);
+									e0++;
+									dR[e0] = d0[e0] * alpha;
+								}
 							}
 						}
 					}
@@ -1405,7 +1407,7 @@ Add function - takes data, calculates its channels and combines it with data in 
 @default 5
 **/
 			height: 5,
-};
+		};
 		my.mergeInto(my.d.PixelateFilter, my.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
@@ -1445,8 +1447,13 @@ Add function - takes data, calculates its channels and combines it with data in 
 		my.BlurFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.width = my.xtGet([items.width, 5]);
-			this.height = my.xtGet([items.height, 5]);
+			this.radiusX = my.xtGet([items.radiusX, 2]);
+			this.radiusY = my.xtGet([items.radiusY, 2]);
+			this.roll = my.xtGet([items.roll, 2]);
+			this.cells = my.xtGet([items.cells, false]);
+			if (!my.isa(this.cells, 'arr')) {
+				this.cells = this.getBrush();
+			}
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1462,18 +1469,24 @@ Add function - takes data, calculates its channels and combines it with data in 
 		my.BlurFilter.prototype.classname = 'filternames';
 		my.d.BlurFilter = {
 			/**
-@property width - pixelization width
+@property radiusX
 @type Number
-@default 5
+@default 2
 **/
-			width: 5,
+			radiusX: 2,
 			/**
-@property height - pixelization height
+@property radiusY
 @type Number
-@default 5
+@default 2
 **/
-			height: 5,
-};
+			radiusY: 2,
+			/**
+@property roll
+@type Number
+@default 0
+**/
+			roll: 0,
+		};
 		my.mergeInto(my.d.BlurFilter, my.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
@@ -1483,12 +1496,51 @@ Add function - takes data, calculates its channels and combines it with data in 
 @return amended image data object
 **/
 		my.BlurFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
-				d = data.data,
-				here, i, iz, r, g, b;
-			return data;
+			return my.MatrixFilter.prototype.add.call(this, data);
+		};
+		/**
+Blur helper function
+
+@method getBrush
+@param x {Number} brush x radius
+@param y {Number} brush y radius
+@param r {Number} brush roll (in degrees)
+@return Array of objects used for the blur brush
+**/
+		my.BlurFilter.prototype.getBrush = function() {
+			var x = this.radiusX,
+				y = this.radiusY,
+				r = this.roll,
+				dim = (x > y) ? x + 2 : y + 2,
+				hDim = Math.floor(dim / 2),
+				cos = Math.cos(r * my.radian),
+				sin = Math.sin(r * my.radian),
+				brush = [],
+				cv = my.filterCanvas1,
+				cvx = my.filterCvx1;
+			cv.width = dim;
+			cv.height = dim;
+			cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
+			cvx.beginPath();
+			cvx.moveTo(-x, 0);
+			cvx.lineTo(-1, -1);
+			cvx.lineTo(0, -y);
+			cvx.lineTo(1, -1);
+			cvx.lineTo(x, 0);
+			cvx.lineTo(1, 1);
+			cvx.lineTo(0, y);
+			cvx.lineTo(-1, 1);
+			cvx.lineTo(-x, 0);
+			cvx.closePath();
+			for (var i = 0; i < dim; i++) { //rows (y)
+				for (var j = 0; j < dim; j++) { //cols (x)
+					if (cvx.isPointInPath(j, i)) {
+						brush.push([j - hDim, i - hDim, 1]);
+					}
+				}
+			}
+			cvx.setTransform(1, 0, 0, 1, 0, 0);
+			return brush;
 		};
 		/**
 # GlassTileFilter
@@ -1541,7 +1593,7 @@ Add function - takes data, calculates its channels and combines it with data in 
 @default 5
 **/
 			height: 5,
-};
+		};
 		my.mergeInto(my.d.GlassTileFilter, my.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
