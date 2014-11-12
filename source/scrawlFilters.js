@@ -1193,9 +1193,8 @@ Add function - takes data, calculates its channels and combines it with data in 
 			my.Filter.call(this, items);
 			this.width = my.xtGet([items.width, false]);
 			this.height = my.xtGet([items.height, false]);
-			this.rowWrap = my.xtGet([items.rowWrap, false]);
-			this.colWrap = my.xtGet([items.colWrap, false]);
 			this.data = my.xtGet([items.data, [1]]);
+			this.includeInvisiblePoints = my.xtGet([items.includeInvisiblePoints, false]);
 			//at this point we can check whether dimensions and the home coordinates have been supplied and, if not, guess them
 			if (!this.height && this.width && my.isa(this.width, 'num') && this.width >= 1) {
 				this.width = Math.floor(this.width);
@@ -1275,6 +1274,12 @@ Add function - takes data, calculates its channels and combines it with data in 
 **/
 			y: 0,
 			/**
+@property includeInvisiblePoints
+@type Number
+@default false
+**/
+			includeInvisiblePoints: false,
+			/**
 Data is made up of an array of weightings - for instance a 3 x 3 matrix will contain 9 Number values; this data then gets converted into Matrix cells
 
 The data array has no meaning without width and height dimensions - if no dimension values are supplied, the constructor will assume a odd-numbered square larger than the square root of the length of the data array (eg 3x3, 5x5), with home coordinates at the center of the square, and pad empty spaces at the end of the array with zero weights (which then get ignored)
@@ -1308,7 +1313,7 @@ Add function - takes data, calculates its channels and combines it with data in 
 				for (i = 0, iz = data.height; i < iz; i++) {
 					for (j = 0, jz = data.width; j < jz; j++) {
 						e0 = ((i * jz) + j) * 4;
-						if (d0[e0 + 3] > 0) {
+						if (d0[e0 + 3] > 0 || this.includeInvisiblePoints) {
 							r = 0;
 							g = 0;
 							b = 0;
@@ -1381,6 +1386,8 @@ Add function - takes data, calculates its channels and combines it with data in 
 			my.Filter.call(this, items);
 			this.width = my.xtGet([items.width, 5]);
 			this.height = my.xtGet([items.height, 5]);
+			this.offsetX = my.xtGet([items.offsetX, 0]);
+			this.offsetY = my.xtGet([items.offsetY, 0]);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1407,6 +1414,18 @@ Add function - takes data, calculates its channels and combines it with data in 
 @default 5
 **/
 			height: 5,
+			/**
+@property offsetX - horizontal coordinate from which to begin pexelization
+@type Number
+@default 0
+**/
+			offsetX: 0,
+			/**
+@property offsetY - vertical coordinate from which to begin pexelization
+@type Number
+@default 0
+**/
+			offsetY: 0,
 		};
 		my.mergeInto(my.d.PixelateFilter, my.d.Filter);
 		/**
@@ -1420,9 +1439,56 @@ Add function - takes data, calculates its channels and combines it with data in 
 			var strength = this.getFilterStrength(),
 				iStrength = 1 - strength,
 				alpha = this.getAlpha(),
-				d = data.data,
-				here, i, iz, r, g, b;
-			return data;
+				d0 = data.data,
+				result = my.cvx.createImageData(data),
+				dR = result.data,
+				i, j, iz, jz, r, g, b, a, x, y, w, h, xj, yi, dW, dH, tW, tH, count, pos, test;
+			dW = data.width;
+			dH = data.height;
+			tW = dW - 1;
+			tH = dH - 1;
+			w = this.width;
+			h = this.height;
+			for (x = this.offsetX - w; x < dW; x += w) {
+				for (y = this.offsetY - h; y < dH; y += h) {
+					r = 0;
+					g = 0;
+					b = 0;
+					a = 0;
+					count = 0;
+					for (i = y, iz = y + h; i < iz; i++) {
+						for (j = x, jz = x + w; j < jz; j++) {
+							test = (j < 0 || j > tW || i < 0 || i > tH) ? true : false;
+							if (!test) {
+								pos = ((i * dW) + j) * 4;
+								r += d0[pos];
+								g += d0[++pos];
+								b += d0[++pos];
+								a += d0[++pos];
+								count++;
+							}
+						}
+					}
+					if (count > 0 && a > 0) {
+						r = Math.round(r / count);
+						g = Math.round(g / count);
+						b = Math.round(b / count);
+						a = Math.round(a / count) * alpha;
+						pos = ((y * dW) + x) * 4;
+						//console.log(count, a, r, g, b, pos, d0[pos], d0[pos + 1], d0[pos + 2], d0[pos + 3]);
+						for (i = y, iz = y + h; i < iz; i++) {
+							for (j = x, jz = x + w; j < jz; j++) {
+								pos = ((i * dW) + j) * 4;
+								dR[pos] = r;
+								dR[++pos] = g;
+								dR[++pos] = b;
+								dR[++pos] = a;
+							}
+						}
+					}
+				}
+			}
+			return result;
 		};
 		/**
 # BlurFilter
@@ -1451,6 +1517,7 @@ Add function - takes data, calculates its channels and combines it with data in 
 			this.radiusY = my.xtGet([items.radiusY, 2]);
 			this.roll = my.xtGet([items.roll, 2]);
 			this.cells = my.xtGet([items.cells, false]);
+			this.includeInvisiblePoints = my.xtGet([items.includeInvisiblePoints, false]);
 			if (!my.isa(this.cells, 'arr')) {
 				this.cells = this.getBrush();
 			}
@@ -1486,6 +1553,12 @@ Add function - takes data, calculates its channels and combines it with data in 
 @default 0
 **/
 			roll: 0,
+			/**
+@property includeInvisiblePoints
+@type Number
+@default false
+**/
+			includeInvisiblePoints: false,
 		};
 		my.mergeInto(my.d.BlurFilter, my.d.Filter);
 		/**
@@ -1627,86 +1700,6 @@ Add function - takes data, calculates its channels and combines it with data in 
 
 
 
-		/**
-Blur filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __brush__ - Array. A pre-compiled filter.getBrush() array to be used with the blur filter; alternatively, define the brush dynamically using the radius/radiusX/radiusY/roll attributes below
-* __radiusX__ - Number. Blur brush x radius (default: 2)
-* __radiusY__ - Number. Blur brush y radius (default: 2)
-* __roll__ - Number. Blur brush roll value (default: 0)
-* __radius__ - Number. Blur brush x and y radius (default: 0)
-* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture entitys using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method blur
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-		my.filterFactory.blur = function(items, image) {
-			var args = my.filterSetup(items, image);
-			args.items.includeAlpha = (my.isa(args.items.includeAlpha, 'bool')) ? args.items.includeAlpha : false;
-			args.items.wrap = false;
-			if (!my.xt(args.items.brush)) {
-				var radius = (my.xt(args.items.radius)) ? Math.abs(args.items.radius) : 0,
-					radiusX = (my.xt(args.items.radiusX)) ? Math.abs(args.items.radiusX) : 2,
-					radiusY = (my.xt(args.items.radiusY)) ? Math.abs(args.items.radiusY) : 2,
-					roll = (my.xt(args.items.roll)) ? args.items.roll : 0,
-					rx = radiusX || radius,
-					ry = radiusY || radius;
-				args.items.brush = my.filterFactory.getBrush(rx, ry, roll);
-			}
-			args.imgData = my.filterFactory.doMatrix(args.items.brush, args);
-			my.filterSave(args);
-			return args.imgData;
-		};
-		my.pushUnique(my.filterFactorynames, 'blur');
-		/**
-Blur helper function
-
-@method getBrush
-@param x {Number} brush x radius
-@param y {Number} brush y radius
-@param r {Number} brush roll (in degrees)
-@return Array of objects used for the blur brush
-**/
-		my.filterFactory.getBrush = function(x, y, r) {
-			var dim = (x > y) ? x + 2 : y + 2,
-				hDim = Math.floor(dim / 2),
-				cos = Math.cos(r * my.radian),
-				sin = Math.sin(r * my.radian),
-				brush = [];
-			my.cv.width = dim;
-			my.cv.height = dim;
-			my.cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
-			my.cvx.beginPath();
-			my.cvx.moveTo(-x, 0);
-			my.cvx.lineTo(-1, -1);
-			my.cvx.lineTo(0, -y);
-			my.cvx.lineTo(1, -1);
-			my.cvx.lineTo(x, 0);
-			my.cvx.lineTo(1, 1);
-			my.cvx.lineTo(0, y);
-			my.cvx.lineTo(-1, 1);
-			my.cvx.lineTo(-x, 0);
-			my.cvx.closePath();
-			for (var i = 0; i < dim; i++) { //rows (y)
-				for (var j = 0; j < dim; j++) { //cols (x)
-					if (my.cvx.isPointInPath(j, i)) {
-						brush.push({
-							ox: j - hDim,
-							oy: i - hDim,
-							wt: 1
-						});
-					}
-				}
-			}
-			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-			return brush;
-		};
-		my.pushUnique(my.filterFactorynames, 'getBrush');
 		/**
 Pixelate filter (added to the core by the scrawlFilters module)
 

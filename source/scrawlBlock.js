@@ -324,6 +324,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 			return this;
 		};
+		/**
+	Stamp helper function - perform a 'none' method draw
+	@method floatOver
+	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+	@return This
+	@chainable
+	@private
+	**/
+		my.Block.prototype.none = function(ctx, cell) {
+			this.prepareStamp();
+			return this;
+		};
 
 		return my;
 	}(scrawl));

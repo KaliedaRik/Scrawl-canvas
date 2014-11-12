@@ -83,6 +83,8 @@ var mycode = function() {
 	});
 	scrawl.newPixelateFilter({
 		name: 'myPixelate',
+		width: 8,
+		height: 8,
 	});
 	scrawl.newBlurFilter({
 		name: 'myBlur',

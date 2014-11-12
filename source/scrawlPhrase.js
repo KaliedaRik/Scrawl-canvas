@@ -704,6 +704,19 @@ Stamp helper function - perform a 'floatOver' method draw
 			return this;
 		};
 		/**
+Stamp helper function - perform a 'none' method draw
+@method none
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
+		my.Phrase.prototype.none = function(ctx, cell) {
+			this.prepareStamp();
+			return this;
+		};
+		/**
 Helper function - calculate entity's width and height attributes, taking into account font size, scaling, etc
 @method getMetrics
 @param {String} cellname CELLNAME String (any &lt;canvas&gt; will do for this function)

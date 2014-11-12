@@ -670,6 +670,19 @@ Stamp helper function - perform a 'floatOver' method draw
 			return this;
 		};
 		/**
+Stamp helper function - perform a 'none' method draw
+@method none
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
+		my.Shape.prototype.none = function(ctx, cell) {
+			this.doOutline(ctx, cell);
+			return this;
+		};
+		/**
 Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
 
 Argument object contains the following attributes:
