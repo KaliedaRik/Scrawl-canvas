@@ -59,10 +59,20 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
-141110
+141110-12
 	- added new filter objects:
 		- matrix
 		- sharpen
+		- blur
+		- pixelate
+		- leach
+			- leach is a new filter, can emulate a 'greenscreen' effect
+	- decided to get rid of the glassTile filter
+		- required copying and pasting between two canvases - just took too long to be useful
+	- added in set functions for those filters that need their set to override the default Base.set()
+	- demo101 tests all filters against all Entity types
+	- ditching the idea of a new Frame entity
+		- filters can be applied to any Entity, so no need for a dedicated frame for them
 	
 141109
 	- added 'none' method to Picture entity
@@ -1211,7 +1221,7 @@ August 2014
 			- do some videos for YouTube/Twitter
 				- to get in some practice on making better videos, talking to camera, adding audio to videos, etc
 
-140122
+140222
 	- safari issues
 		- demo034
 			- difficult to fix - safari does GCO source-in different to other browsers

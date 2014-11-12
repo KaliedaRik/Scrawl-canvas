@@ -76,7 +76,7 @@ var mycode = function() {
 	});
 	scrawl.newMatrixFilter({
 		name: 'myMatrix',
-		data: [1, 1, 1, 1, 0.7, -1, -1, -1, -1],
+		data: [-2, -1, 0, -1, 1, 1, 0, 1, 2],
 	});
 	scrawl.newSharpenFilter({
 		name: 'mySharpen',
@@ -92,8 +92,17 @@ var mycode = function() {
 		radiusY: 4,
 		roll: 45,
 	});
-	scrawl.newGlassTileFilter({
-		name: 'myGlassTile',
+	scrawl.newLeachFilter({
+		name: 'myLeach',
+		maxRed: 150,
+		maxBlue: 150,
+		minGreen: 100,
+	});
+	scrawl.newStereoFilter({
+		name: 'myStereo',
+		//filterStrength: 0.5,
+		redshift: -4,
+		cyanshift: 4,
 	});
 
 	current_filter = 'myGreyscale';

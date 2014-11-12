@@ -811,7 +811,7 @@ Use only with the ScrawlFilters module!
 @private
 **/
 		my.Phrase.prototype.stampFilter = function(engine, cell) {
-			var imageData, i, iz, canvas, ctx, tX, tY, o, here, textY, test;
+			var imageData, i, iz, canvas, ctx, tX, tY, o, here, textY, test, composite;
 			if (this.filters.length > 0) {
 				canvas = my.canvas[cell];
 				ctx = my.ctx[this.context];
@@ -849,7 +849,11 @@ Use only with the ScrawlFilters module!
 				}
 				my.cvx.putImageData(imageData, 0, 0);
 				engine.setTransform(1, 0, 0, 1, 0, 0);
+				my.cvx.putImageData(imageData, 0, 0);
+				composite = engine.globalCompositeOperation;
+				engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
 				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+				engine.globalCompositeOperation = composite;
 				my.cvx.restore();
 			}
 		};
