@@ -2912,6 +2912,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				}
 				items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
 				this.initMouse(items);
+				this.filters = [];
 				return this;
 			}
 		}
@@ -2964,6 +2965,14 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 @deprecated
 **/
 		current: '',
+		/**
+Array of FILTERNAME strings, for filters to be applied to this Pad
+@property filters
+@type Array
+@default []
+@private
+**/
+		filters: [],
 	};
 	my.mergeInto(my.d.Pad, my.d.PageElement);
 	/**
@@ -3159,6 +3168,7 @@ The argument can also be an Array of CELLNAME strings
 @chainable
 **/
 	my.Pad.prototype.compile = function(command) {
+		this.filters.length = 0;
 		var temp = this.getCellsForDisplayAction(command);
 		for (var i = 0, iz = temp.length; i < iz; i++) {
 			my.cell[temp[i]].compile();
@@ -3213,24 +3223,30 @@ The base canvas is then copied onto the display canvas, as the last copy operati
 @chainable
 **/
 	my.Pad.prototype.show = function(command) {
+		var d = my.cell[this.display],
+			b = my.cell[this.base],
+			i, iz;
 		switch (command) {
 			case 'wipe-base':
-				my.cell[this.base].clear();
+				b.clear();
 				break;
 			case 'wipe-both':
-				my.cell[this.base].clear();
-				my.cell[this.display].clear();
+				b.clear();
+				d.clear();
 				break;
 			default:
-				my.cell[this.display].clear();
+				d.clear();
 				break;
 		}
 		if (this.drawOrder.length > 0) {
-			for (var i = 0, iz = this.drawOrder.length; i < iz; i++) {
-				my.cell[this.base].copyCellToSelf(my.cell[this.drawOrder[i]]);
+			for (i = 0, iz = this.drawOrder.length; i < iz; i++) {
+				b.copyCellToSelf(my.cell[this.drawOrder[i]]);
 			}
 		}
-		my.cell[this.display].copyCellToSelf(my.cell[this.base], true);
+		for (i = 0, iz = this.filters.length; i < iz; i++) {
+			my.entity[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
+		}
+		d.copyCellToSelf(b, true);
 		return this;
 	};
 	/**
@@ -3594,6 +3610,13 @@ Array of GROUPNAMES that contribute to building this Cell's scene
 **/
 		groups: [],
 		/**
+Array of FILTERNAME strings, for filters to be applied to this cell once the entity stamping process has completed
+@property filters
+@type Array
+@default []
+**/
+		filters: [],
+		/**
 Pad dimension flag: when true, instructs the Cell to use its Pad object's dimensions as its source dimensions (sourceWidth, sourceHeight)
 @property usePadDimensions
 @type Boolean
@@ -3670,6 +3693,7 @@ Cell constructor hook function - core module
 		this.lockY = my.xtGet([items.lockY, my.d.Cell.lockY]);
 		this.roll = my.xtGet([items.roll, my.d.Cell.roll]);
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
+		this.filters = [];
 		my.newGroup({
 			name: this.name,
 			cell: this.name,
@@ -4016,16 +4040,21 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 @chainable
 **/
 	my.Cell.prototype.compile = function() {
+		var i, iz;
+		this.filters.length = 0;
 		if (this.get('backgroundColor') !== 'rgba(0,0,0,0)') {
 			this.stampBackground();
 		}
 		this.groups.sort(function(a, b) {
 			return my.group[a].order - my.group[b].order;
 		});
-		for (var i = 0, iz = this.groups.length; i < iz; i++) {
+		for (i = 0, iz = this.groups.length; i < iz; i++) {
 			if (my.group[this.groups[i]].get('visibility')) {
 				my.group[this.groups[i]].stamp(false, this.name);
 			}
+		}
+		for (i = 0, iz = this.filters.length; i < iz; i++) {
+			my.entity[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
 		}
 		return this;
 	};
@@ -4872,10 +4901,13 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 @chainable
 **/
 	my.Group.prototype.stamp = function(method, cell) {
+		var ent;
 		if (this.visibility) {
 			this.sortEntitys();
 			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].stamp(method, cell);
+				ent = my.entity[this.entitys[i]];
+				ent.group = this.name;
+				ent.stamp(method, cell);
 			}
 		}
 		return this;
@@ -5088,6 +5120,7 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 		this.method = my.xtGet([items.method, my.d[this.type].method]);
 		this.collisionsEntityConstructor(items);
 		this.filters = [].concat(my.xtGet([items.filters, []]));
+		this.filterLevel = my.xtGet([items.filterLevel, 'entity']);
 		return this;
 	};
 	my.Entity.prototype = Object.create(my.Position.prototype);
@@ -5177,6 +5210,18 @@ Array of FILTERNAME strings, for filters to be applied to this entity
 @default []
 **/
 		filters: [],
+		/**
+The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
+
+* '__entity__' - filter is applied immediately after the Entity has stamped itself onto a cell
+* '__cell__' - filter is applied after all Entites have completed stamping themselves onto the cell
+* '__pad__' - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
+
+@property filterLevel
+@type String
+@default 'entity'
+**/
+		filterLevel: 'entity',
 		/**
 GROUPNAME String for this entity's default group
 

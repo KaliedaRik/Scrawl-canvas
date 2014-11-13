@@ -217,8 +217,9 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 @method stampFilter
 @private
 **/
-		my.Entity.prototype.stampFilter = function(engine, cell) {
+		my.Entity.prototype.stampFilter = function(engine, cell, force) {
 			var imageData, i, iz, canvas, ctx, composite;
+			force = my.xtGet([force, false]);
 			if (this.filters.length > 0) {
 				canvas = my.canvas[cell];
 				my.cv.width = canvas.width;
@@ -228,7 +229,13 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 				my.cvx.drawImage(canvas, 0, 0);
 				imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
 				for (i = 0, iz = this.filters.length; i < iz; i++) {
-					if (my.contains(my.filternames, this.filters[i])) {
+					if (this.filterLevel === 'pad' && !force) {
+						my.pad[my.cell[my.group[this.group].cell].pad].filters.push(this.name);
+					}
+					else if (this.filterLevel === 'cell' && !force) {
+						my.cell[my.group[this.group].cell].filters.push(this.name);
+					}
+					else if (my.contains(my.filternames, this.filters[i])) {
 						imageData = my.filter[this.filters[i]].add(imageData);
 					}
 				}

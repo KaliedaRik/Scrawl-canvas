@@ -59,6 +59,9 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141113
+	- added new filter: stereo
+	
 141110-12
 	- added new filter objects:
 		- matrix
