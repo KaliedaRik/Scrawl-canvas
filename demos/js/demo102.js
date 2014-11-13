@@ -75,6 +75,9 @@ var mycode = function() {
 	};
 
 	toggleState = function(e) {
+		//hide-start
+		testTicker = Date.now();
+		//hide-end
 		stopE(e);
 		toggle = !toggle;
 		if (toggle) {
@@ -94,6 +97,11 @@ var mycode = function() {
 			});
 		}
 		scrawl.render();
+		//hide-start
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
+		//hide-end
 	};
 	canvas.addEventListener('click', toggleState, false);
 

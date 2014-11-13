@@ -61,7 +61,12 @@ CHANGE LOG
 ------------------------------------------------------------------------------------
 141113
 	- added new filter: stereo
-	
+	- recoded Entity constructor and associated Cell and Pad functions
+		- new Entity.filterLevel attribute
+			- permitted values: 'entity', 'cell', 'pad'
+			- determines at which point in the display cycle the filter will be stamped onto a canvas
+		- recoded demo102 to test new functionality
+
 141110-12
 	- added new filter objects:
 		- matrix
