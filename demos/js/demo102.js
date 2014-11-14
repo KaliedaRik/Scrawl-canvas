@@ -47,7 +47,7 @@ var mycode = function() {
 	scrawl.newWheel({
 		name: 'eWheel',
 		radius: 200,
-		method: 'draw',
+		method: 'none',
 		order: 3,
 		startX: 50,
 		startY: 100,

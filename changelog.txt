@@ -66,6 +66,11 @@ CHANGE LOG
 			- permitted values: 'entity', 'cell', 'pad'
 			- determines at which point in the display cycle the filter will be stamped onto a canvas
 		- recoded demo102 to test new functionality
+		- current rewrite of Filters module complete
+	- TODO:
+		- Patterns are broken by image changes- fix
+		- convert Entity to Picture functionality - fix
+		- add in video
 
 141110-12
 	- added new filter objects:
@@ -101,8 +106,8 @@ CHANGE LOG
 			- though might be easier to construct those ones using the canvases ...
 	- TODO - work for when filters are completed:
 		- want ability to apply filters immediately after Entity is stamped (current does this)
-			- but also ability to delay filter application until after the cell, or pad, has completed compiling
-		- also need to apply filters to entire cells
+			- but also ability to delay filter application until after the cell, or pad, has completed compiling - DONE
+		- also need to apply filters to entire cells - DONE (create block sprite of 100% w/h, method = 'none', and filterLevel = 'cell' or 'pad')
 		- also want to look at convolution filters ...
 
 141108
