@@ -9,10 +9,9 @@ var mycode = function() {
 
 	//define variables
 	var pad,
-		pat,
-		dotty;
+		patternCellGroup;
 
-	//add canvass to web page
+	//add canvas to web page
 	scrawl.addCanvasToPage({
 		canvasName: 'canvas',
 		parentElement: 'canvasHolder',
@@ -23,12 +22,12 @@ var mycode = function() {
 
 	//create a new cell for the pattern
 	pad.addNewCell({
-		name: 'pat',
+		name: 'myCell',
 		width: 50,
 		height: 50,
 		backgroundColor: 'blue',
 	});
-	pat = scrawl.group.pat;
+	patternCellGroup = scrawl.group.myCell;
 
 	//add entitys to the pattern cell ...
 	scrawl.makeLine({
@@ -38,7 +37,7 @@ var mycode = function() {
 		endX: 75,
 		endY: 25,
 		visibility: false,
-		group: 'pat',
+		group: 'myCell',
 	});
 	scrawl.newWheel({
 		radius: 10,
@@ -46,9 +45,9 @@ var mycode = function() {
 		method: 'fill',
 		path: 'guide',
 		pathPlace: 0.25,
-		deltaPathPlace: 0.002,
+		deltaPathPlace: 0.005,
 		handleY: -25,
-		group: 'pat',
+		group: 'myCell',
 	}).clone({
 		pathPlace: 0.75,
 	}).clone({
@@ -61,15 +60,15 @@ var mycode = function() {
 	}).clone({
 		pathPlace: 0,
 	});
-	scrawl.cell[pad.base].groups.push('pat');
 
 	//build the pattern
-	dotty = scrawl.newPattern({
+	scrawl.newPattern({
 		name: 'dotty',
-		canvas: 'pat',
+		canvas: 'myCell',
+		autoUpdate: true,
 	});
 
-	//add a block entity, for showing off the pattern
+	//add a block entity, for displaying the pattern
 	scrawl.newBlock({
 		startX: 200,
 		startY: 200,
@@ -82,24 +81,15 @@ var mycode = function() {
 		lineCaps: 'round',
 		method: 'draw',
 		strokeStyle: 'dotty',
-	});
-	scrawl.newGroup({
-		name: 'cover',
-		order: 5,
-	});
-	scrawl.newBlock({
-		width: 90,
-		height: 75,
-		fillStyle: 'white',
-		group: 'cover',
+		roll: 30,
 	});
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			pat.updateStart();
-			dotty.update();
-			pad.render();
+
+			patternCellGroup.updateStart();
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

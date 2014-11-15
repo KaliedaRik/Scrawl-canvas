@@ -168,11 +168,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				el,
 				kill = my.xtGet([items.removeImageFromDOM, true]);
 			if (my.xt(items.element)) {
-				items.name = my.xtGet([items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '']);
-				my.Base.call(this, items);
-				this.width = parseFloat(my.xtGet([items.width, items.element.offsetWidth, items.element.width, items.element.style.width, 0]));
-				this.height = parseFloat(my.xtGet([items.height, items.element.offsetHeight, items.element.height, items.element.style.height, 0]));
 				if (my.isa(items.element, 'img')) {
+					items.name = my.xtGet([items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '']);
+					my.Base.call(this, items);
+					this.width = parseFloat(my.xtGet([items.width, items.element.offsetWidth, items.element.width, items.element.style.width, 0]));
+					this.height = parseFloat(my.xtGet([items.height, items.element.offsetHeight, items.element.height, items.element.style.height, 0]));
 					if (kill) {
 						el = items.element;
 					}
@@ -184,17 +184,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					}
 				}
 				else {
+					items.name = my.xtGet([items.name, '']);
+					my.Base.call(this, items);
+					this.width = parseFloat(my.xtGet([items.width, items.element.width, 0]));
+					this.height = parseFloat(my.xtGet([items.height, items.element.height, 0]));
 					url = items.element;
-					el = this.makeImage(url, this.name, this.width, this.height);
+					el = this.makeImage(url, this.name, this.width, this.height, items.callback);
+					items.callback = false;
 				}
 				my.imageFragment.appendChild(el);
 				my.asset[this.name] = el;
 				my.pushUnique(my.assetnames, this.name);
 				my.image[this.name] = this;
 				my.pushUnique(my.imagenames, this.name);
-				if (my.isa(items.fn, 'fn')) {
-					items.fn.call(this);
-				}
 				return this;
 			}
 			return false;
@@ -232,6 +234,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @default true
     **/
 			/**
+    Constructor/clone function - some functions can call the Image constructor with a callback function
+
+    _This attribute is not retained by the object_
+    @property callback 
+    @type function
+    @default undefined - callback is always removed once run
+    **/
+			/**
     Constructor argument attribute - either the DOM &lt;img&gt; element; or an image URL object
 
     _This attribute is not retained by the object_
@@ -249,16 +259,21 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @return new DOM &lt;img&gt; object
     @private
     **/
-		my.Image.prototype.makeImage = function(data, id, width, height) {
+		my.Image.prototype.makeImage = function(data, id, width, height, callback) {
 			var image = document.createElement('img'),
 				old = my.imageFragment.querySelector('#' + id);
 			image.width = width || data.width;
 			image.height = height || data.height;
-			image.src = data;
-			if (old) {
-				my.imageFragment.removeChild(old);
-			}
 			image.id = id;
+			image.onload = function() {
+				if (old) {
+					my.imageFragment.removeChild(old);
+				}
+				if (my.isa(callback, 'fn')) {
+					callback();
+				}
+			};
+			image.src = data;
 			return image;
 		};
 		/**

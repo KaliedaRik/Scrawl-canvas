@@ -67,27 +67,22 @@ var mycode = function() {
 		convert: true,
 		method: 'fillDraw',
 		lineWidth: 2,
-	});
-
-	//display canvas
-	scrawl.newAnimation({
-		fn: function() {
+		callback: function() {
 			scrawl.render();
-
-			//hide-start
-			testNow = Date.now();
-			testTime = testNow - testTicker;
-			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
-			//hide-end
 		},
 	});
+
+	//hide-start
+	testNow = Date.now();
+	testTime = testNow - testTicker;
+	testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'wheel', 'path', 'shape', 'images', 'animation'],
+	modules: ['block', 'wheel', 'path', 'shape', 'images'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

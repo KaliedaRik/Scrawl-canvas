@@ -13,7 +13,7 @@ var mycode = function() {
 		dotty,
 		frame;
 
-	//add canvass to web page
+	//add canvas to web page
 	scrawl.addCanvasToPage({
 		canvasName: 'canvas',
 		parentElement: 'canvasHolder',
@@ -47,8 +47,6 @@ var mycode = function() {
 		startX: 25,
 		startY: 25,
 	});
-	//... and compile it
-	scrawl.cell.patternCell.compile();
 
 	//build the pattern
 	dotty = scrawl.newPattern({

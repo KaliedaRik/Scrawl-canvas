@@ -17,6 +17,10 @@ var mycode = function() {
 		name: 'mygroup',
 	});
 
+	scrawl.newGreyscaleFilter({
+		name: 'gscale',
+	});
+
 	//build entity
 	scrawl.newPattern({
 		name: 'p1',
@@ -51,37 +55,33 @@ var mycode = function() {
 		roll: 270,
 	});
 
-	myGroup.convertToEntity({
+	myGroup.convertGroupToPicture({
 		startX: 300,
 		startY: 100,
 		handleX: 'center',
 		handleY: 'center',
-		filters: {
-			grayscale: {},
-		},
+		filters: ['gscale'],
 		roll: 70,
 		method: 'fillDraw',
 		lineWidth: 2,
-	});
-
-	scrawl.newAnimation({
-		fn: function() {
+		callback: function() {
 			scrawl.render();
-
-			//hide-start
-			testNow = Date.now();
-			testTime = testNow - testTicker;
-			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
-			//hide-end
 		},
 	});
+
+	scrawl.render();
+
+	//hide-start
+	testNow = Date.now();
+	testTime = testNow - testTicker;
+	testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['wheel', 'images', 'animation', 'filters'],
+	modules: ['wheel', 'images', 'filters'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

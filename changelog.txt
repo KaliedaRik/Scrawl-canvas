@@ -59,6 +59,26 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141115
+	- fixed bug in Pad.getCellsForDisplayAction()
+		- in any Pad.clear or .compile operation, the base cell must be cleared or compiled last
+			- was clearing/compiling first, making use of other cells as patterns almost impossible
+		- demo029 recoded, made much simpler
+			- using an animated canvas as a pattern is now a lot easier
+	- fixed bugs in Entity.convertToPicture(), Group.convertGroupToPicture (previously called Group.convertToEntity())
+		- also included ability for both functions to pass a callback function
+		- demos103, 104, 105 fixed
+
+141114
+	- Base.clone() now makes sure that objects containing callback functions reference that function in the clone
+		- both objects will refer to the same function
+	- Scrawl.Pattern fixes:
+		- loading images from library, and dynamically
+			- demo040 now works
+		- trying to make demo029 work with fewer kludges in the code
+			- added new Cell.visibility attribute
+				- if set to false, cell will not be displayed as part of the Pad.show() function
+				
 141113
 	- added new filter: stereo
 	- recoded Entity constructor and associated Cell and Pad functions
@@ -68,8 +88,8 @@ CHANGE LOG
 		- recoded demo102 to test new functionality
 		- current rewrite of Filters module complete
 	- TODO:
-		- Patterns are broken by image changes- fix
-		- convert Entity to Picture functionality - fix
+		- Patterns are broken by image changes- DONE
+		- convert Entity to Picture functionality - DONE
 		- add in video
 
 141110-12

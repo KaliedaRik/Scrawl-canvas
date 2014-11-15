@@ -380,7 +380,6 @@ Any supplied callback function will only be run once all modules have been loade
 					mod.type = 'text/javascript';
 					mod.async = 'true';
 					mod.onload = function(e) {
-						console.log('... ' + module + ' loaded');
 						done(module);
 					};
 					mod.onerror = function(e) {
@@ -401,7 +400,6 @@ Any supplied callback function will only be run once all modules have been loade
 					my.pushUnique(my.modules, m);
 				}
 				if (loaded.length === 0) {
-					console.log('All modules loaded', my.modules);
 					callback();
 				}
 			};
@@ -412,7 +410,6 @@ Any supplied callback function will only be run once all modules have been loade
 			my.pushUnique(required, modules[i]);
 		}
 		loaded = [].concat(required);
-		console.log('Modules to be loaded: ', required);
 		for (i = 0, iz = required.length; i < iz; i++) {
 			getModule(required[i]);
 		}
@@ -1892,6 +1889,8 @@ An attribute value will only be set if the object already has a default value fo
 	/**
 Clone a Scrawl.js object, optionally altering attribute values in the cloned object
 
+Note that any callback or fn attribute functions will be referenced by the clone, not copied to the clone; these can be overwritten with new anonymous functions by including them in the items argument object
+
 (This function is replaced by the path module)
 
 @method clone
@@ -1910,8 +1909,16 @@ Clone a Scrawl.js object, optionally altering attribute values in the cloned obj
 	newBox.get('height');		//returns 100
 **/
 	my.Base.prototype.clone = function(items) {
-		var b = my.mergeOver(this.parse(), my.safeObject(items));
+		var b = my.mergeOver(this.parse(), my.safeObject(items)),
+			keys, i, iz, that;
 		delete b.context; //required for successful cloning of entitys
+		keys = Object.keys(this);
+		that = this;
+		for (i = 0, iz = keys.length; i < iz; i++) {
+			if (my.isa(this[keys[i]], 'fn')) {
+				b[keys[i]] = that[keys[i]];
+			}
+		}
 		return new my[this.type](b);
 	};
 	/**
@@ -3112,6 +3119,11 @@ The argument can also be an Array of CELLNAME strings
 					break;
 			}
 		}
+		//always clear or compile the base cell last
+		if (my.contains(temp, this.base)) {
+			my.removeItem(temp, this.base);
+			temp.push(this.base);
+		}
 		return temp;
 	};
 	/**
@@ -3225,7 +3237,7 @@ The base canvas is then copied onto the display canvas, as the last copy operati
 	my.Pad.prototype.show = function(command) {
 		var d = my.cell[this.display],
 			b = my.cell[this.base],
-			i, iz;
+			i, iz, c;
 		switch (command) {
 			case 'wipe-base':
 				b.clear();
@@ -3240,7 +3252,10 @@ The base canvas is then copied onto the display canvas, as the last copy operati
 		}
 		if (this.drawOrder.length > 0) {
 			for (i = 0, iz = this.drawOrder.length; i < iz; i++) {
-				b.copyCellToSelf(my.cell[this.drawOrder[i]]);
+				c = my.cell[this.drawOrder[i]];
+				if (c.visibility) {
+					b.copyCellToSelf(c);
+				}
 			}
 		}
 		for (i = 0, iz = this.filters.length; i < iz; i++) {
@@ -3624,6 +3639,13 @@ Pad dimension flag: when true, instructs the Cell to use its Pad object's dimens
 @private
 **/
 		usePadDimensions: false,
+		/**
+On true (default), the cell will render to the base pad, if included in a Pad's drawOrder array attribute
+@property visibility
+@type Boolean
+@default true
+**/
+		visibility: true,
 	};
 	my.mergeInto(my.d.Cell, my.d.Position);
 	/**
@@ -3692,6 +3714,7 @@ Cell constructor hook function - core module
 		this.lockX = my.xtGet([items.lockX, my.d.Cell.lockX]);
 		this.lockY = my.xtGet([items.lockY, my.d.Cell.lockY]);
 		this.roll = my.xtGet([items.roll, my.d.Cell.roll]);
+		this.visibility = my.xtGet([items.visibility, my.d.Cell.visibility]);
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
 		this.filters = [];
 		my.newGroup({
@@ -3920,7 +3943,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 								case 'fillStyle':
 									if (my.xt(my.design[changes[item]])) {
 										des = my.design[changes[item]];
-										if (my.contains(['Gradient', 'RadialGradient'], des.type)) {
+										if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], des.type)) {
 											des.update(entity.name, this.name);
 										}
 										tempFillStyle = des.getData();
@@ -3985,7 +4008,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 								case 'strokeStyle':
 									if (my.xt(my.design[changes[item]])) {
 										des = my.design[changes[item]];
-										if (my.contains(['Gradient', 'RadialGradient'], des.type)) {
+										if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], des.type)) {
 											des.update(entity.name, this.name);
 										}
 										tempStrokeStyle = des.getData();
@@ -4734,7 +4757,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 				}
 			}
 			//handle fillStyle, strokeStyle that use RadialGradient, Gradient design objects
-			else if (my.contains(['fillStyle', 'strokeStyle'], my.contextKeys[i]) && my.contains(my.designnames, temp) && my.contains(['Gradient', 'RadialGradient'], my.design[temp].type) && my.design[temp].autoUpdate) {
+			else if (my.contains(['fillStyle', 'strokeStyle'], my.contextKeys[i]) && my.contains(my.designnames, temp) && my.contains(['Gradient', 'RadialGradient', 'Pattern'], my.design[temp].type) && my.design[temp].autoUpdate) {
 				r[my.contextKeys[i]] = temp;
 				count++;
 			}
@@ -5564,7 +5587,7 @@ Stamp helper function - convert string start.x values to numerical values
 **/
 	my.Entity.prototype.convertX = function(x, cell) {
 		var w = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualWidth : cell.width;
-		console.log(this.name, x, cell, w);
+		console.log(x, cell, w);
 		switch (x) {
 			case 'left':
 				return 0;
@@ -5897,12 +5920,19 @@ Objects take the form {color:String, stop:Number} where:
 			stop: 0.999999
 		}],
 		/**
-Drawing flag - when set to true, will use entity-based 'range' coordinates to calculate the start and end points of the gradient; when false, will use Cell-based coordinates
+Drawing flag - when set to true, will use entity-based coordinates to calculate the start and end points of the gradient; when false, will use Cell-based coordinates
 @property setToEntity
 @type Boolean
 @default false
 **/
 		setToEntity: false,
+		/**
+Drawing flag - when set to true, force the gradient to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
+@property autoUpdate
+@type Boolean
+@default false
+**/
+		autoUpdate: false,
 		/**
 CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set
 @property cell
@@ -5948,8 +5978,6 @@ Add values to Number attributes
 @chainable
 **/
 	my.Design.prototype.setDelta = function(items) {
-		//NEEDS TO BE REWRITTEN - to take into account percentage deltas for startXY, endXY
-		//also don't like generating an object for setDelta - don't do it elsewhere
 		var temp;
 		items = my.safeObject(items);
 		if (items.startX) {

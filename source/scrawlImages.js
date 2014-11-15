@@ -111,11 +111,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     * __convert__ - when set to true, existing entitys in the group will be deleted; default: false
 
     If no name attribute is supplied in the argument object, the new Picture entity will be given the name: GROUPNAME+'_entity'
-    @method Group.convertToEntity
+    @method Group.convertGroupToPicture
     @param {Object} items Key:value Object argument for setting attributes
     @return Picture entity object; false if no entitys contained in group
     **/
-		my.Group.prototype.convertToEntity = function(items) {
+		my.Group.prototype.convertGroupToPicture = function(items) {
 			items = my.safeObject(items);
 			var image,
 				cell,
@@ -179,7 +179,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			items.element = my.cv.toDataURL();
 			items.width = image.width;
 			items.height = image.height;
-			image = new my.ScrawlImage(items);
+			image = new my.Image(items);
 			items.source = image.name;
 			return my.newPicture(items);
 		};
@@ -214,7 +214,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			my.Base.prototype.set.call(this, items);
 			this.repeat = items.repeat || 'repeat';
 			this.cell = items.cell || my.pad[my.currentPad].current;
-			this.setImage((items.source || items.imageData || my.image[items.image] || my.cell[items.canvas] || false), items.callback);
+			this.setImage((items.source || items.imageData || my.image[items.image] || my.video[items.video] || my.cell[items.canvas] || false), items.callback);
 			return this;
 		};
 		my.Pattern.prototype = Object.create(my.Base.prototype);
@@ -242,7 +242,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 			cell: '',
 			/**
-    SCRAWLIMAGENAME String - used when pattern is based on an image already imported into the scrawl library
+    IMAGENAME String - used when pattern is based on an image already imported into the scrawl library
     @property image
     @type String
     @default ''
@@ -262,6 +262,27 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @default ''
     **/
 			canvas: '',
+			/**
+    VIDEONAME String - used when pattern is based on a video already imported into the scrawl library
+    @property video
+    @type String
+    @default ''
+    **/
+			video: '',
+			/**
+    Anonymous callback function - used when loading (or cloning) a a dynamic image or video
+    @property callback
+    @type Function
+    @default false
+    **/
+			callback: false,
+			/**
+	Drawing flag - when set to true, force the pattern to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
+	@property autoUpdate
+	@type Boolean
+	@default false
+	**/
+			autoUpdate: false,
 		};
 		my.mergeInto(my.d.Pattern, my.d.Base);
 		/**
@@ -290,7 +311,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				var myImage = new Image();
 				var that = this;
 				myImage.id = this.name;
-				myImage.onload = function(callback) {
+				myImage.onload = function() {
 					try {
 						var iObj = my.newImage({
 							name: that.name,
@@ -313,7 +334,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				myImage.src = source;
 			}
 			else if (my.isa(source, 'obj')) {
-				if (source.type === 'ScrawlImage') {
+				if (source.type === 'Image') {
 					try {
 						this.image = source.name;
 						my.design[this.name] = this;
@@ -365,17 +386,21 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @chainable
     @private
     **/
-		my.Pattern.prototype.makeDesign = function() {
-			var ctx = my.context[this.cell],
-				img = (my.xt(my.img[this.image])) ? my.img[this.image] : my.object[this.image];
-			if (this.image) {
-				if (img) {
-					my.dsn[this.name] = ctx.createPattern(img, this.repeat);
+		my.Pattern.prototype.makeDesign = function(entity, cell) {
+			cell = my.xtGet([cell, this.cell]);
+			var ctx = my.context[cell];
+			if (my.xt(ctx)) {
+				if (this.image) {
+					my.dsn[this.name] = ctx.createPattern(my.asset[this.image], this.repeat);
+				}
+				else if (this.video) {
+					my.dsn[this.name] = ctx.createPattern(my.asset[this.video], this.repeat);
+				}
+				else if (this.canvas) {
+					my.dsn[this.name] = ctx.createPattern(my.canvas[this.canvas], this.repeat);
 				}
 			}
-			else if (this.canvas) {
-				my.dsn[this.name] = ctx.createPattern(my.canvas[this.canvas], this.repeat);
-			}
+			//console.log(this.name, my.dsn[this.name]);
 			return this;
 		};
 		/**
@@ -395,9 +420,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @return This
     @chainable
     **/
-		my.Pattern.prototype.update = function() {
-			this.makeDesign();
-			return this;
+		my.Pattern.prototype.update = function(entity, cell) {
+			return this.makeDesign(entity, cell);
 		};
 
 		/**
@@ -749,6 +773,7 @@ Picture.setPaste update pasteData object values
 			var w,
 				h,
 				cell = my.cell[my.group[this.group].cell];
+			console.log(this.start.x, cell.actualWidth, this.convertX(this.start.x, cell.actualWidth));
 			this.pasteData.x = (my.isa(this.start.x, 'str')) ? this.convertX(this.start.x, cell.actualWidth) : this.start.x;
 			this.pasteData.y = (my.isa(this.start.y, 'str')) ? this.convertY(this.start.y, cell.actualHeight) : this.start.y;
 			this.pasteData.w = (my.isa(this.width, 'str')) ? this.convertX(this.width, cell.actualWidth) : this.width;

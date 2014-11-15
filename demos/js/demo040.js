@@ -21,6 +21,9 @@ var mycode = function() {
 	scrawl.newPattern({ //loads images dynamically before using them
 		name: 'marble',
 		source: 'img/marble.png',
+		callback: function() {
+			scrawl.render();
+		},
 	}).clone({
 		name: 'parque',
 		source: 'img/parque.png',
@@ -59,26 +62,19 @@ var mycode = function() {
 		startX: 35,
 	});
 
-	//animation object
-	// - necessary because dynamic loading of images takes time
-	scrawl.newAnimation({
-		fn: function() {
-			scrawl.render();
+	scrawl.render();
 
-			//hide-start
-			testNow = Date.now();
-			testTime = testNow - testTicker;
-			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
-			//hide-end
-		},
-	});
+	//hide-start
+	testNow = Date.now();
+	testTime = testNow - testTicker;
+	testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
+	//hide-end
 };
 
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'images', 'animation'],
+	modules: ['block', 'images'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();
