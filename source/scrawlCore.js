@@ -5586,8 +5586,17 @@ Stamp helper function - convert string start.x values to numerical values
 @private
 **/
 	my.Entity.prototype.convertX = function(x, cell) {
-		var w = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualWidth : cell.width;
-		console.log(x, cell, w);
+		var w;
+		switch (typeof cell) {
+			case 'string':
+				w = scrawl.cell[cell].actualWidth;
+				break;
+			case 'number':
+				w = cell;
+				break;
+			default:
+				w = cell.width;
+		}
 		switch (x) {
 			case 'left':
 				return 0;
@@ -5609,7 +5618,17 @@ Stamp helper function - convert string start.y values to numerical values
 @private
 **/
 	my.Entity.prototype.convertY = function(y, cell) {
-		var h = (my.isa(cell, 'str')) ? scrawl.cell[cell].actualHeight : cell.height;
+		var h;
+		switch (typeof cell) {
+			case 'string':
+				h = scrawl.cell[cell].actualHeight;
+				break;
+			case 'number':
+				h = cell;
+				break;
+			default:
+				h = cell.height;
+		}
 		switch (y) {
 			case 'top':
 				return 0;

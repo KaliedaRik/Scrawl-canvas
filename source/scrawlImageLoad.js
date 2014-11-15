@@ -162,44 +162,88 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @param {Object} [items] Key:value Object argument for setting attributes
     **/
 		my.Image = function(items) {
-			//assume items.element is either an <img> element, or an imageDataURL object (with width, height, data attributes)
+			// assume: 
+			// - items.element is an <img> element (containing dimensions data either in direct attributes, or in style attributes)
+			// - items.data is an imageDataURL object (with width, height, data attributes)
+			// - items.url is a string url for dynamically loading an image
+			// at least one of .element, .data or .url must be presented in the items object; failure to present any will lead to a false return
+			// if more than one is presented, then processing priority is: .element > .data > .url
+			// in all cases, the final product will be: 
+			// - the <img> element (or a clone of it) attached as a child element to the shadow DOM fragment scrawl.imageFragment
+			// - a reference (getElementById) to the <img> element in scrawl.assets[name]
+			// - a scrawl.image[name] object that wraps the <img> element
+			//   - the image wrapper should contain data about the image's actual width and height
+
 			items = my.safeObject(items);
-			var url,
-				el,
-				kill = my.xtGet([items.removeImageFromDOM, true]);
-			if (my.xt(items.element)) {
-				if (my.isa(items.element, 'img')) {
+			var tempname;
+			this.width = 0;
+			this.height = 0;
+			if (my.xto([items.element, items.data, items.url])) {
+				if (my.xt(items.element)) {
 					items.name = my.xtGet([items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '']);
-					my.Base.call(this, items);
-					this.width = parseFloat(my.xtGet([items.width, items.element.offsetWidth, items.element.width, items.element.style.width, 0]));
-					this.height = parseFloat(my.xtGet([items.height, items.element.offsetHeight, items.element.height, items.element.style.height, 0]));
-					if (kill) {
-						el = items.element;
-					}
-					else {
-						el = items.element.cloneNode();
-						items.name = el.id;
-						my.Base.call(this, items);
-						el.id = this.name;
-					}
 				}
-				else {
+				else if (my.xt(items.data)) {
 					items.name = my.xtGet([items.name, '']);
-					my.Base.call(this, items);
-					this.width = parseFloat(my.xtGet([items.width, items.element.width, 0]));
-					this.height = parseFloat(my.xtGet([items.height, items.element.height, 0]));
-					url = items.element;
-					el = this.makeImage(url, this.name, this.width, this.height, items.callback);
-					items.callback = false;
 				}
-				my.imageFragment.appendChild(el);
-				my.asset[this.name] = el;
-				my.pushUnique(my.assetnames, this.name);
+				else if (my.xt(items.url)) {
+					tempname = items.url.replace('.', '-');
+					items.name = my.xtGet([items.name, tempname, '']);
+				}
+				my.Base.call(this, items);
 				my.image[this.name] = this;
 				my.pushUnique(my.imagenames, this.name);
+				// assume that all work associated with moving/assigning/building the <img> element will be asynchronous
+				// - it's up to Pattern and Picture objects to check the Image wrapper width/height data > 0 before attempting to use the image
+				if (my.xt(items.element)) {
+					this.addImageByElement(items);
+				}
+				else if (my.xt(items.data)) {
+					this.addImageByData(items);
+				}
+				else if (my.xt(items.url)) {
+					this.addImageByUrl(items);
+				}
 				return this;
 			}
 			return false;
+			// items = my.safeObject(items);
+			// var url,
+			//     el,
+			//     kill = my.xtGet([items.removeImageFromDOM, true]);
+			// if (my.xt(items.element)) {
+			//     console.log(items.element);
+			//     if (my.isa(items.element, 'img')) {
+			//         items.name = my.xtGet([items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '']);
+			//         my.Base.call(this, items);
+			//         this.width = parseFloat(my.xtGet([items.width, items.element.offsetWidth, items.element.width, items.element.style.width, 0]));
+			//         this.height = parseFloat(my.xtGet([items.height, items.element.offsetHeight, items.element.height, items.element.style.height, 0]));
+			//         if (kill) {
+			//             el = items.element;
+			//         }
+			//         else {
+			//             el = items.element.cloneNode();
+			//             items.name = el.id;
+			//             my.Base.call(this, items);
+			//             el.id = this.name;
+			//         }
+			//     }
+			//     else {
+			//         items.name = my.xtGet([items.name, '']);
+			//         my.Base.call(this, items);
+			//         this.width = parseFloat(my.xtGet([items.width, items.element.width, 0]));
+			//         this.height = parseFloat(my.xtGet([items.height, items.element.height, 0]));
+			//         url = items.element;
+			//         el = this.makeImage(url, this.name, this.width, this.height, items.callback);
+			//         items.callback = false;
+			//     }
+			//     my.imageFragment.appendChild(el);
+			//     my.asset[this.name] = el;
+			//     my.pushUnique(my.assetnames, this.name);
+			//     my.image[this.name] = this;
+			//     my.pushUnique(my.imagenames, this.name);
+			//     return this;
+			// }
+			// return false;
 		};
 		my.Image.prototype = Object.create(my.Base.prototype);
 		/**
@@ -242,15 +286,111 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @default undefined - callback is always removed once run
     **/
 			/**
-    Constructor argument attribute - either the DOM &lt;img&gt; element; or an image URL object
+    Constructor argument attribute - a DOM &lt;img&gt; element
 
     _This attribute is not retained by the object_
     @property element 
     @type Object
     @default undefined
     **/
+			/**
+    Constructor argument attribute - a canvas imageData object
+
+    _This attribute is not retained by the object_
+    @property data 
+    @type Object
+    @default undefined
+    **/
+			/**
+    Constructor argument attribute - a String URL for dynamically loading an image
+
+    _This attribute is not retained by the object_
+    @property url 
+    @type Object
+    @default undefined
+    **/
 		};
 		my.mergeInto(my.d.Image, my.d.Base);
+		/**
+    Adds a DOM &lt;img&gt; element to the library
+
+    * items.element MUST be a reference to the element, and the element MUST be present in the DOM
+
+    @method addImageByElement
+    @param {Object} [items] Key:value Object argument for setting attributes
+    @return always true
+    @private
+    **/
+		my.Image.prototype.addImageByElement = function(items) {
+			var el,
+				kill = my.xtGet([items.removeImageFromDOM, true]);
+			if (kill) {
+				el = items.element;
+			}
+			else {
+				el = items.element.cloneNode();
+			}
+			el.id = this.name;
+			my.imageFragment.appendChild(el);
+			my.asset[this.name] = my.imageFragment.getElementById(this.name);
+			my.pushUnique(my.assetnames, this.name);
+			this.width = parseFloat(my.xtGet([el.offsetWidth, el.width, el.style.width, 0]));
+			this.height = parseFloat(my.xtGet([el.offsetHeight, el.height, el.style.height, 0]));
+			// callback code here
+			return true;
+		};
+		/**
+    Creates a new &lt;img&gt; element from a canvas ImageData object
+
+    @method addImageByData
+    @param {Object} [items] Key:value Object argument for setting attributes
+    @return always true
+    @private
+    **/
+		my.Image.prototype.addImageByData = function(items) {
+			// var image = document.createElement('img'),
+			//     old = my.imageFragment.querySelector('#' + id);
+			// image.width = width || data.width;
+			// image.height = height || data.height;
+			// image.id = id;
+			// image.onload = function() {
+			//     if (old) {
+			//         my.imageFragment.removeChild(old);
+			//     }
+			//     if (my.isa(callback, 'fn')) {
+			//         callback();
+			//     }
+			// };
+			// image.src = data;
+			// return image;
+		};
+		/**
+    Import an image using the supplied url string
+
+    @method addImageByUrl
+    @param {Object} [items] Key:value Object argument for setting attributes
+    @return true; false on failure
+    @private
+    **/
+		my.Image.prototype.addImageByUrl = function(items) {
+			var el;
+			if (my.isa(items.url, 'str')) {
+				el = document.createElement('img');
+				el.id = this.name;
+				el.onload = function() {
+					my.imageFragment.appendChild(el);
+					my.asset[this.name] = my.imageFragment.getElementById(this.name);
+					my.pushUnique(my.assetnames, this.name);
+					this.width = parseFloat(my.xtGet([el.offsetWidth, el.width, el.style.width, 0]));
+					this.height = parseFloat(my.xtGet([el.offsetHeight, el.height, el.style.height, 0]));
+					// callback code here
+				};
+				el.src = items.url;
+				return true;
+			}
+			return false;
+		};
+
 		/**
     Makes a virtual image from an imageDataUrl
 

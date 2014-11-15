@@ -464,8 +464,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						temp = my.safeObject(items.paste);
 						this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
 						this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
-						this.copyWidth = my.xtGet([items.copyWidth, items.width, src.actualWidth, src.width, 0]);
-						this.copyHeight = my.xtGet([items.copyHeight, items.height, src.actualHeight, src.height, 0]);
+						this.copyWidth = my.xtGet([items.copyWidth, src.actualWidth, src.width, '100%']);
+						this.copyHeight = my.xtGet([items.copyHeight, src.actualHeight, src.height, '100%']);
 						this.width = my.xtGet([items.pasteWidth, items.width, this.copyWidth]);
 						this.height = my.xtGet([items.pasteHeight, items.height, this.copyHeight]);
 						my.Position.prototype.set.call(this, items);
@@ -480,12 +480,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						this.work.copy = my.newVector({
 							name: this.type + '.' + this.name + '.work.copy'
 						});
+						this.registerInLibrary();
 						this.copyData = {};
 						this.pasteData = {};
 						this.setCopy();
 						this.setPaste();
-						this.registerInLibrary();
-						my.pushUnique(my.group[this.group].entitys, this.name);
 						if (my.isa(items.callback, 'fn')) {
 							items.callback();
 						}
@@ -773,7 +772,6 @@ Picture.setPaste update pasteData object values
 			var w,
 				h,
 				cell = my.cell[my.group[this.group].cell];
-			console.log(this.start.x, cell.actualWidth, this.convertX(this.start.x, cell.actualWidth));
 			this.pasteData.x = (my.isa(this.start.x, 'str')) ? this.convertX(this.start.x, cell.actualWidth) : this.start.x;
 			this.pasteData.y = (my.isa(this.start.y, 'str')) ? this.convertY(this.start.y, cell.actualHeight) : this.start.y;
 			this.pasteData.w = (my.isa(this.width, 'str')) ? this.convertX(this.width, cell.actualWidth) : this.width;
@@ -983,6 +981,7 @@ Picture.setPaste update pasteData object values
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
+				console.log(this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
