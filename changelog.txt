@@ -59,6 +59,32 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141116
+	- rewrote Image constructor
+		- got rid of all the spaghetti code
+		- Image object will be created if it is supplied with an argument object containing one of the following attributes:
+			- .element - the DOM <img> element to be added to the library
+			- .data - a canvas element ImageDataObject to be converted into an <img> element
+			- .url - either the String address to a remote image file, or an url64 encoded image String
+		- recoded Picture constructor to work with new Image coding
+		- tested in Firefox - all image stuff seems to be working as expected
+	- rewrote the display cycle stuff
+		- replaced Pad.drawOrder attribute with new Cell attributes:
+			- Cell.cleared (boolean) - cell will clear if this is set to true (default)
+			- Cell.compiled (boolean) - cell will compile if this is set to true (default for most cells)
+			- Cell.shown (boolean) - cell will partake in show functionality if set to true (default for most cells)
+			- Cell.compileOrder (number) - Pad compiles cells in ascending compileOrder
+			- Cell.showOrder (number) - Pad shows cells in ascending showOrder
+		- got rid of all Pad and Cell .stampBackground functionality
+			- Cells now have a default .backgroundColor (transparent black)
+			- all clearing of cells is done by ctx.fillRect, not ctx.clearRect
+		- rewrote all clear, compile, show and render functions
+		- rewrote Pad constructor
+			- base cells have defaults of - cleared:true, compiled:true, shown:false, compileOrder:9999, showOrder:0
+			- display cells have defaults of - cleared:true, compiled:false, shown:false, compileOrder:0, showOrder:0
+	- testing:
+		- tested up to demo034 - fixed as I go
+
 141115
 	- fixed bug in Pad.getCellsForDisplayAction()
 		- in any Pad.clear or .compile operation, the base cell must be cleared or compiled last

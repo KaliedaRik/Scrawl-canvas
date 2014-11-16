@@ -17,7 +17,7 @@ var mycode = function() {
 	//set and display canvas background color
 	scrawl.cell[mypad.base].set({
 		backgroundColor: 'lightblue',
-	}).compile();
+	}).clear().compile();
 
 	//build and display outlines from SVG path data
 	//data is contained in a separate javascript file with a structure of:

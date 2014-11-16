@@ -318,6 +318,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						}
 					}
 					if (my.isa(items.callback, 'fn')) {
+						console.log('Image callback');
 						items.callback();
 					}
 				};

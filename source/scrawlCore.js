@@ -730,7 +730,7 @@ Check to see if variable is an Object
 @private
 **/
 	my.safeObject = function(items) {
-		return (my.isa(items, 'obj')) ? items : {};
+		return (Object.prototype.toString.call(items) === '[object Object]') ? items : {};
 	};
 	/**
 A __utility__ function for variable type checking
@@ -958,116 +958,58 @@ The argument object should include the following attributes:
 		return myPad;
 	};
 	/**
-A __private__ function - def9ines the filter sections in the library
-@method prepareFilterSection
-@return The Scrawl library object (scrawl)
-@chainable
-@private
-**/
-	my.prepareFilterSection = function() {
-		if (!my.xt(my.filter)) {
-			my.filter = {};
-			my.filternames = [];
-		}
-		return my;
-	};
-	/**
-A __general__ function which passes on requests to pads to update their drawOrder property - see Pad.setDrawOrder() for more details
-@method setDrawOrder
-@param {Array} order Array of CELLNAMEs - Cells listed first will be drawn first (beneath other cells/layers)
-@param {Array} pads Array of PADNAMESs - can also be a String
-@return The Scrawl library object (scrawl)
-@chainable
-**/
-	my.setDrawOrder = function(order, pads) {
-		var p = (my.xt(pads)) ? [].concat(pads) : [my.currentPad];
-		for (var i = 0, iz = p.length; i < iz; i++) {
-			my.pad[p[i]].setDrawOrder(order);
-		}
-		return my;
-	};
-	/**
-A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&gt; elements - see Pad.clear() for more details
+A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&gt; elements
 @method clear
-@param {String} [command] Command String
 @param {Array} [pads] Array of PADNAMEs - can also be a String
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.clear = function(command, pads) {
+	my.clear = function(pads) {
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		if (p.length > 0) {
-			for (var i = 0, iz = p.length; i < iz; i++) {
-				my.pad[p[i]].clear(command);
-			}
+		for (var i = 0, iz = p.length; i < iz; i++) {
+			my.pad[p[i]].clear();
 		}
 		return my;
 	};
 	/**
-A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&gt; elements using their background color - see Pad.stampBackground() for more details
-@method stampBackground
-@param {String} [command] Command String
-@param {Array} [pads] Array of PADNAMEs - can also be a String
-@return The Scrawl library object (scrawl)
-@chainable
-**/
-	my.stampBackground = function(command, pads) {
-		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		if (p.length > 0) {
-			for (var i = 0, iz = p.length; i < iz; i++) {
-				my.pad[p[i]].stampBackground(command);
-			}
-		}
-		return my;
-	};
-	/**
-A __display__ function to ask Pads to get their Cells to compile their scenes - see Pad.compile() for more details
+A __display__ function to ask Pads to get their Cells to compile their scenes
 @method compile
-@param {String} [command] Command String
 @param {Array} [pads] Array of PADNAMEs - can also be a String
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.compile = function(command, pads) {
+	my.compile = function(pads) {
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		if (p.length > 0) {
-			for (var i = 0, iz = p.length; i < iz; i++) {
-				my.pad[p[i]].compile(command);
-			}
+		for (var i = 0, iz = p.length; i < iz; i++) {
+			my.pad[p[i]].compile();
 		}
 		return my;
 	};
 	/**
-A __display__ function to ask Pads to show the results of their latest display cycle - see Pad.show() for more details
+A __display__ function to ask Pads to show the results of their latest display cycle
 @method show
-@param {String} [command] Command String
 @param {Array} [pads] Array of PADNAMEs - can also be a String
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.show = function(command, pads) {
+	my.show = function(pads) {
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		if (p.length > 0) {
-			for (var i = 0, iz = p.length; i < iz; i++) {
-				my.pad[p[i]].show(command);
-			}
+		for (var i = 0, iz = p.length; i < iz; i++) {
+			my.pad[p[i]].show();
 		}
 		return my;
 	};
 	/**
 A __display__ function to ask Pads to undertake a complete clear-compile-show display cycle
 @method render
-@param {Object} [command] Object with attributes: clear:COMMAND, compile:COMMAND, show:COMMAND - all are optional
 @param {Array} [pads] Array of PADNAMEs - can also be a String
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.render = function(command, pads) {
+	my.render = function(pads) {
 		var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		if (p.length > 0) {
-			for (var i = 0, iz = p.length; i < iz; i++) {
-				my.pad[p[i]].render(command);
-			}
+		for (var i = 0, iz = p.length; i < iz; i++) {
+			my.pad[p[i]].render();
 		}
 		return my;
 	};
@@ -2851,8 +2793,8 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 ## Access
 
 * scrawl.pad.PADNAME - for the Pad object
-* scrawl.canvas.PADNAME - for the Pad object's visible &lt;canvas&gt; element
-* scrawl.context.PADNAME - for the &ltcanvas&gt; element's 2d context engine
+* scrawl.canvas.PADNAME - for the Pad object's visible (display) &lt;canvas&gt; element
+* scrawl.context.PADNAME - for the visible (display) &ltcanvas&gt; element's 2d context engine
 * scrawl.cell[scrawl.pad.PADNAME.display] - for the Pad object's display cell
 * scrawl.cell[scrawl.pad.PADNAME.base] - for the Pad object's base cell
 
@@ -2885,7 +2827,6 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			}
 			if (!my.contains(my.cellnames, this.name)) {
 				this.cells = [];
-				this.drawOrder = [];
 				this.width = my.xtGet([items.width, this.get('width')]);
 				this.height = my.xtGet([items.height, this.get('height')]);
 				this.setDimensions();
@@ -2898,6 +2839,9 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 					name: this.name,
 					pad: this.name,
 					canvas: items.canvasElement,
+					// backgroundColor: items.backgroundColor,
+					compiled: false,
+					shown: false,
 				});
 				my.pushUnique(this.cells, myCell.name);
 				this.display = myCell.name;
@@ -2908,7 +2852,9 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 					name: this.name + '_base',
 					pad: this.name,
 					canvas: baseCanvas,
-					backgroundColor: items.backgroundColor,
+					// backgroundColor: items.backgroundColor,
+					compileOrder: 9999,
+					shown: false,
 				});
 				my.pushUnique(this.cells, myCellBase.name);
 				this.base = myCellBase.name;
@@ -2937,13 +2883,6 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 	my.Pad.prototype.classname = 'padnames';
 	my.d.Pad = {
 		/**
-Array of CELLNAME Strings determining the order in which non-display &lt;canvas&gt; elements are to be copied onto the display &lt;canvas&gt;
-@property drawOrder
-@type Array
-@default []
-**/
-		drawOrder: [],
-		/**
 Array of CELLNAME Strings associated with this Pad
 @property cells
 @type Array
@@ -2966,6 +2905,9 @@ Pad's base (hidden) &lt;canvas&gt; element - CELLNAME
 		base: '',
 		/**
 Pad's currently active &lt;canvas&gt; element - CELLNAME
+
+//not convinced there's any point in keeping this attribute anymore - take it out?
+
 @property current
 @type String
 @default ''
@@ -2992,7 +2934,7 @@ Retrieve Pad's visible &lt;canvas&gt; element object
 		return my.canvas[this.display];
 	};
 	/**
-Augments PageElement.set(), to allow users to set Pad.drawOrder correctly, and also cascade scale, backgroundColor, globalAlpha and globalCompositeOperation changes to associated Cell objects
+Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and globalCompositeOperation changes to associated Cell objects
 				
 @method set
 @param {Object} items Object consisting of key:value attributes
@@ -3002,7 +2944,6 @@ Augments PageElement.set(), to allow users to set Pad.drawOrder correctly, and a
 	my.Pad.prototype.set = function(items) {
 		my.PageElement.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		this.setDrawOrder(items.drawOrder || this.get('drawOrder'));
 		if (my.isa(items.scale, 'num')) {
 			my.cell[this.display].scale = items.scale;
 			this.scale = items.scale;
@@ -3033,204 +2974,81 @@ Augments PageElement.set(), to allow users to set Pad.drawOrder correctly, and a
 		return this;
 	};
 	/**
-Set the drawOrder attribute
-@method setDrawOrder
-@param {Array} items Array of CELLNAME Strings; alternatively, supply a CELLNAME String argument
-@return This
-@chainable
-@example
-	scrawl.addCanvasToPage({
-		name: 'mycanvas',
-		});
-	scrawl.pad.mycanvas.addNewCell({
-		name: 'action',
-		});
-	scrawl.pad.mycanvas.addNewCell({
-		name: 'background',
-		});
-	scrawl.pad.mycanvas.setDrawOrder(['background', 'action']);
-**/
-	my.Pad.prototype.setDrawOrder = function(order) {
-		this.drawOrder = (my.xt(order)) ? [].concat(order) : [];
-		return this;
-	};
-	/**
-Display helper function - determines which Cell &lt;canvas&gt; elements need to be manipulated in line with the supplied 'command' argument
-
-Argument String can be in the form of:
-
-* 'all' - for all canvases
-* 'display' - for the display canvas only
-* 'base' - for the base canvas only
-* 'non-base' for all canvases except the base canvas
-* 'current' - for the current canvas only
-* 'non-current' - for all canvases except the current canvas
-* 'additionals' - for all canvases except the display and base canvases
-* 'non-additionals' - for the display and base canvases only
-* 'none' - for no canvases
-* the __default__ is to return an Array containing all canvases except the display canvas
-
-The argument can also be an Array of CELLNAME strings 
-
-@method getCellsForDisplayAction
-@param {String} [command] Command String; or alternatively an Array of CELLNAME Strings
-@return Array of CELLNAME Strings
+Display function sorting routine - cells are sorted according to their compileOrder attribute value, in ascending order
+@method sortCellsCompile
+@return Nothing
 @private
 **/
-	my.Pad.prototype.getCellsForDisplayAction = function(command) {
-		var temp = [];
-		if (my.isa(command, 'arr')) {
-			temp = command;
-		}
-		else {
-			for (var i = 0, iz = this.cells.length; i < iz; i++) {
-				temp.push(this.cells[i]);
-			}
-			switch (command) {
-				case 'all':
-					break;
-				case 'display':
-					temp = [this.display];
-					break;
-				case 'base':
-					temp = [this.base];
-					break;
-				case 'non-base':
-					my.removeItem(temp, this.base);
-					break;
-				case 'current':
-					temp = [this.current];
-					break;
-				case 'non-current':
-					my.removeItem(temp, this.current);
-					break;
-				case 'additionals':
-					my.removeItem(temp, this.display);
-					my.removeItem(temp, this.base);
-					break;
-				case 'non-additionals':
-					temp = [this.display, this.base];
-					break;
-				case 'none':
-					temp = [];
-					break;
-				default:
-					my.removeItem(temp, this.display);
-					break;
-			}
-		}
-		//always clear or compile the base cell last
-		if (my.contains(temp, this.base)) {
-			my.removeItem(temp, this.base);
-			temp.push(this.base);
-		}
-		return temp;
+	my.Pad.prototype.sortCellsCompile = function() {
+		this.cells.sort(function(a, b) {
+			return my.cell[a].compileOrder - my.cell[b].compileOrder;
+		});
+	};
+	/**
+Display function sorting routine - cells are sorted according to their showOrder attribute value, in ascending order
+@method sortCellsShow
+@return Nothing
+@private
+**/
+	my.Pad.prototype.sortCellsShow = function() {
+		this.cells.sort(function(a, b) {
+			return my.cell[a].showOrder - my.cell[b].showOrder;
+		});
 	};
 	/**
 Display function - requests Cells to clear their &lt;canvas&gt; element
 
-Argument String can be in the form of:
-
-* 'all' - for all canvases
-* 'display' - for the display canvas only
-* 'base' - for the base canvas only
-* 'non-base' for all canvases except the base canvas
-* 'current' - for the current canvas only
-* 'non-current' - for all canvases except the current canvas
-* 'additionals' - for all canvases except the display and base canvases
-* 'non-additionals' - for the display and base canvases only
-* 'none' - for no canvases
-* the __default__ is to return an Array containing all canvases except the display canvas
-
-The argument can also be an Array of CELLNAME strings 
+Cells with cleared = true will clear theid displays in preparation for compile/stamp operations
 
 @method clear
-@param {String} [command] Command String; or alternatively an Array of CELLNAME Strings
 @return This
 @chainable
 **/
-	my.Pad.prototype.clear = function(command) {
-		var temp = this.getCellsForDisplayAction(command);
-		for (var i = 0, iz = temp.length; i < iz; i++) {
-			my.cell[temp[i]].clear();
+	my.Pad.prototype.clear = function() {
+		var i, iz, c;
+		for (i = 0, iz = this.cells.length; i < iz; i++) {
+			c = my.cell[this.cells[i]];
+			if (c.cleared) {
+				c.clear();
+			}
 		}
 		return this;
 	};
 	/**
 Display function - requests Cells to compile their &lt;canvas&gt; element
 
-Argument String can be in the form of:
+Cells will compile in ascending order of their compileOrder attributes, if their compiled attribute = true
 
-* 'all' - for all canvases
-* 'display' - for the display canvas only
-* 'base' - for the base canvas only
-* 'non-base' for all canvases except the base canvas
-* 'current' - for the current canvas only
-* 'non-current' - for all canvases except the current canvas
-* 'additionals' - for all canvases except the display and base canvases
-* 'non-additionals' - for the display and base canvases only
-* 'none' - for no canvases
-* the __default__ is to return an Array containing all canvases except the display canvas
-
-The argument can also be an Array of CELLNAME strings 
+By default:
+* the initial base canvas has a compileOrder of 9999 and compiles last
+* the initial display canvas has compiled = false and will not compile
 
 @method compile
-@param {String} [command] Command String; or alternatively an Array of CELLNAME Strings
 @return This
 @chainable
 **/
-	my.Pad.prototype.compile = function(command) {
+	my.Pad.prototype.compile = function() {
+		var c, i, iz;
 		this.filters.length = 0;
-		var temp = this.getCellsForDisplayAction(command);
-		for (var i = 0, iz = temp.length; i < iz; i++) {
-			my.cell[temp[i]].compile();
+		this.sortCellsCompile();
+		for (i = 0, iz = this.cells.length; i < iz; i++) {
+			c = my.cell[this.cells[i]];
+			if (c.compiled) {
+				c.compile();
+			}
 		}
 		return this;
 	};
 	/**
-Display function - requests Cells to clear their &lt;canvas&gt; element using their backgroundColor
+Display function - requests Cells to show their &lt;canvas&gt; element 
 
-Argument String can be in the form of:
+Cells will show in ascending order of their showOrder attributes, if their show attribute = true
 
-* 'all' - for all canvases
-* 'display' - for the display canvas only
-* 'base' - for the base canvas only
-* 'non-base' for all canvases except the base canvas
-* 'current' - for the current canvas only
-* 'non-current' - for all canvases except the current canvas
-* 'additionals' - for all canvases except the display and base canvases
-* 'non-additionals' - for the display and base canvases only
-* 'none' - for no canvases
-* the __default__ is to return an Array containing all canvases except the display canvas
+By default, the initial base and display canvases have shown = false:
+* 'show' involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
+* the last action is to copy the base cell onto the display cell
 
-The argument can also be an Array of CELLNAME strings 
-
-@method stampBackground
-@param {String} [command] Command String; or alternatively an Array of CELLNAME Strings
-@return This
-@chainable
-**/
-	my.Pad.prototype.stampBackground = function(command) {
-		var temp = this.getCellsForDisplayAction(command);
-		for (var i = 0, iz = temp.length; i < iz; i++) {
-			my.cell[temp[i]].stampBackground();
-		}
-		return this;
-	};
-	/**
-Display function - Pad tells its visible &lt;canvas&gt; element to clear itself and then copy associated canvases onto itself
-
-Argument String can be in the form of:
-
-* 'wipe-base' - base canvas is cleared before copy operation starts
-* 'wipe both' - both the base canvas and the display canvas are cleared before the copy operation starts
-* the __default__ is to only clear the display canvas before the copy operation starts
-
-Canvases are copied onto the _base_ (not display) canvas in the order supplied by the Pad.drawOrder Array. This means that anything drawn on the base canvas will be at the bottom of the eventual scene.
-
-The base canvas is then copied onto the display canvas, as the last copy operation.
 @method show
-@param {String} [command] Command String
 @return This
 @chainable
 **/
@@ -3238,24 +3056,11 @@ The base canvas is then copied onto the display canvas, as the last copy operati
 		var d = my.cell[this.display],
 			b = my.cell[this.base],
 			i, iz, c;
-		switch (command) {
-			case 'wipe-base':
-				b.clear();
-				break;
-			case 'wipe-both':
-				b.clear();
-				d.clear();
-				break;
-			default:
-				d.clear();
-				break;
-		}
-		if (this.drawOrder.length > 0) {
-			for (i = 0, iz = this.drawOrder.length; i < iz; i++) {
-				c = my.cell[this.drawOrder[i]];
-				if (c.visibility) {
-					b.copyCellToSelf(c);
-				}
+		this.sortCellsShow();
+		for (i = 0, iz = this.cells.length; i < iz; i++) {
+			c = my.cell[this.cells[i]];
+			if (c.shown) {
+				b.copyCellToSelf(c);
 			}
 		}
 		for (i = 0, iz = this.filters.length; i < iz; i++) {
@@ -3267,21 +3072,14 @@ The base canvas is then copied onto the display canvas, as the last copy operati
 	/**
 Display function - Pad tells its associated Cell objects to undertake a complete clear-compile-show display cycle
 
-Argument Object can have the following (optional) attributes:
-
-* clear:COMMAND
-* compile:COMMAND
-* show:COMMAND
 @method render
-@param {Object} [command] Command Object
 @return This
 @chainable
 **/
-	my.Pad.prototype.render = function(command) {
-		command = my.safeObject(command);
-		this.clear(command.clear);
-		this.compile(command.compile);
-		this.show(command.show);
+	my.Pad.prototype.render = function() {
+		this.clear();
+		this.compile();
+		this.show();
 		return this;
 	};
 	/**
@@ -3331,7 +3129,6 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 		for (var i = 0, iz = items.length; i < iz; i++) {
 			if (my.contains(my.cellnames, items[i])) {
 				this.cells.push(items[i]);
-				this.drawOrder.push(items[i]);
 			}
 		}
 		return this;
@@ -3640,12 +3437,40 @@ Pad dimension flag: when true, instructs the Cell to use its Pad object's dimens
 **/
 		usePadDimensions: false,
 		/**
-On true (default), the cell will render to the base pad, if included in a Pad's drawOrder array attribute
-@property visibility
+Display cycle flag - on true (default), the cell will clear itself as part of the display cycle
+@property cleared
 @type Boolean
 @default true
 **/
-		visibility: true,
+		cleared: true,
+		/**
+Display cycle flag - on true (default), the cell will compile itself as part of the display cycle
+@property compiled
+@type Boolean
+@default true
+**/
+		compiled: true,
+		/**
+Display cycle flag - on true (default), the cell will show itself as part of the display cycle
+@property shown
+@type Boolean
+@default true
+**/
+		shown: true,
+		/**
+Display cycle attribute - order in which the cell will compile itself (if compile attribute = true)
+@property compileOrder
+@type Number
+@default 0
+**/
+		compileOrder: 0,
+		/**
+Display cycle attribute - order in which the cell will show itself (if show attribute = true)
+@property showOrder
+@type Number
+@default 0
+**/
+		showOrder: 0,
 	};
 	my.mergeInto(my.d.Cell, my.d.Position);
 	/**
@@ -3714,13 +3539,19 @@ Cell constructor hook function - core module
 		this.lockX = my.xtGet([items.lockX, my.d.Cell.lockX]);
 		this.lockY = my.xtGet([items.lockY, my.d.Cell.lockY]);
 		this.roll = my.xtGet([items.roll, my.d.Cell.roll]);
-		this.visibility = my.xtGet([items.visibility, my.d.Cell.visibility]);
+		this.cleared = my.xtGet([items.cleared, true]);
+		this.compiled = my.xtGet([items.compiled, true]);
+		this.shown = my.xtGet([items.shown, true]);
+		this.compileOrder = my.xtGet([items.compileOrder, 0]);
+		this.showOrder = my.xtGet([items.showOrder, 0]);
+		this.backgroundColor = my.xtGet([items.backgroundColor, 'rgba(0,0,0,0)']);
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
 		this.filters = [];
 		my.newGroup({
 			name: this.name,
 			cell: this.name,
 		});
+		console.log(this.name, this.backgroundColor, this.cleared, this.compiled, this.shown, this.compileOrder, this.showOrder);
 	};
 	/**
 Cell constructor hook function - modified by collisions module
@@ -4051,9 +3882,18 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 @chainable
 **/
 	my.Cell.prototype.clear = function() {
-		var ctx = my.context[this.name];
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.clearRect(0, 0, this.actualWidth, this.actualHeight);
+		var engine = my.context[this.name],
+			context = my.ctx[this.context],
+			col = this.backgroundColor,
+			w = this.actualWidth,
+			h = this.actualHeight;
+		engine.setTransform(1, 0, 0, 1, 0, 0);
+		engine.clearRect(0, 0, w, h);
+		if (col !== 'rgba(0,0,0,0)') {
+			engine.fillStyle = col;
+			engine.fillRect(0, 0, w, h);
+			context.fillStyle = col;
+		}
 		return this;
 	};
 	/**
@@ -4063,40 +3903,20 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 @chainable
 **/
 	my.Cell.prototype.compile = function() {
-		var i, iz;
+		var i, iz, g;
 		this.filters.length = 0;
-		if (this.get('backgroundColor') !== 'rgba(0,0,0,0)') {
-			this.stampBackground();
-		}
 		this.groups.sort(function(a, b) {
 			return my.group[a].order - my.group[b].order;
 		});
 		for (i = 0, iz = this.groups.length; i < iz; i++) {
-			if (my.group[this.groups[i]].get('visibility')) {
-				my.group[this.groups[i]].stamp(false, this.name);
+			g = my.group[this.groups[i]];
+			if (g.get('visibility')) {
+				g.stamp(false, this.name);
 			}
 		}
 		for (i = 0, iz = this.filters.length; i < iz; i++) {
 			my.entity[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
 		}
-		return this;
-	};
-	/**
-Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.fillRect(), using the cell's .backgroundColor attribute
-@method stampBackground
-@return This
-@chainable
-**/
-	my.Cell.prototype.stampBackground = function() {
-		var ctx = my.context[this.name],
-			fill = this.get('backgroundColor'),
-			w = this.actualWidth,
-			h = this.actualHeight,
-			tempFillStyle = ctx.fillStyle;
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.fillStyle = fill;
-		ctx.fillRect(0, 0, w, h);
-		ctx.fillStyle = tempFillStyle;
 		return this;
 	};
 	/**
@@ -4224,27 +4044,27 @@ Cell copy helper function
 			var copy = myCell.copyData,
 				paste = myCell.pasteData,
 				offset = myCell.offset,
-				context = my.context[this.name],
-				ctx = my.ctx[this.name],
+				engine = my.context[this.name],
+				context = my.ctx[this.name],
 				cga = myCell.get('globalAlpha'),
-				xga = ctx.get('globalAlpha'),
+				xga = context.get('globalAlpha'),
 				cgco = myCell.get('globalCompositeOperation'),
-				xgco = ctx.get('globalCompositeOperation');
+				xgco = context.get('globalCompositeOperation');
 			if (cga !== xga) {
-				context.globalAlpha = cga;
-				ctx.set({
+				engine.globalAlpha = cga;
+				context.set({
 					globalAlpha: cga
 				});
 			}
 			if (cgco !== xgco) {
-				context.globalCompositeOperation = cgco;
-				ctx.set({
+				engine.globalCompositeOperation = cgco;
+				context.set({
 					globalCompositeOperation: cgco
 				});
 			}
 			my.context[myCell.name].setTransform(1, 0, 0, 1, 0, 0);
-			myCell.prepareToCopyCell(context);
-			context.drawImage(my.canvas[myCell.name], copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h);
+			myCell.prepareToCopyCell(engine);
+			engine.drawImage(my.canvas[myCell.name], copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h);
 		}
 		return this;
 	};

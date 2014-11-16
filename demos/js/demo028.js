@@ -28,6 +28,7 @@ var mycode = function() {
 		width: 50,
 		height: 50,
 		backgroundColor: 'blue',
+		shown: false,
 	});
 	patternGroup = scrawl.group.patternCell;
 

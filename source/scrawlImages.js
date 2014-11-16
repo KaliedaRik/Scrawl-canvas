@@ -451,10 +451,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 		my.Picture = function(items) {
 			var temp, src;
-			if (my.isa(items, 'obj') && my.xt(items.url)) {
+			if (my.isa(items, 'obj') && my.xt(items.url) && !my.xt(items.dynamic)) {
+				items.dynamic = true;
 				temp = my.newImage(items);
 				items.source = temp.name;
-				delete items.url;
 				return my.newPicture(items);
 			}
 			else {
@@ -487,9 +487,6 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						this.pasteData = {};
 						this.setCopy();
 						this.setPaste();
-						if (my.isa(items.callback, 'fn')) {
-							items.callback();
-						}
 						return this;
 					}
 				}

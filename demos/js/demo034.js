@@ -14,8 +14,7 @@ var mycode = function() {
 		data,
 		color = [],
 		myPad,
-		myLine,
-		imageReady = false;
+		myLine;
 
 	//add canvas to web page ...
 	scrawl.addCanvasToPage({
@@ -29,9 +28,12 @@ var mycode = function() {
 	//... and add two extra cells to it
 	myPad.addNewCell({
 		name: 'hidden',
+		showOrder: 2,
+		shown: false,
 	});
 	myPad.addNewCell({
 		name: 'background',
+		showOrder: 1,
 	});
 
 	//build a gradient for the background display
@@ -159,18 +161,15 @@ var mycode = function() {
 		//known browser issue: Safari renders 'source-in' GCO incorrectly
 		globalCompositeOperation: 'source-in',
 		callback: function() {
-			imageReady = true;
+			scrawl.cell.hidden.set({
+				shown: true,
+			});
 		},
 	});
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			//only compile hidden canvas if cat image has been fully loaded
-			myPad.set({
-				drawOrder: (imageReady) ? ['background', 'hidden'] : ['background'],
-			});
-
 			//get current mouse coordinates over the visible canvas
 			here = myPad.getMouse();
 
