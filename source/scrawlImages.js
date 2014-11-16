@@ -277,11 +277,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 			callback: false,
 			/**
-	Drawing flag - when set to true, force the pattern to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
-	@property autoUpdate
-	@type Boolean
-	@default false
-	**/
+    Drawing flag - when set to true, force the pattern to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
+    @property autoUpdate
+    @type Boolean
+    @default false
+    **/
 			autoUpdate: false,
 		};
 		my.mergeInto(my.d.Pattern, my.d.Base);
@@ -452,8 +452,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Picture = function(items) {
 			var temp, src;
 			if (my.isa(items, 'obj') && my.xt(items.url)) {
-				console.log('picture loading dynamically');
-				return this.importImage(items);
+				temp = my.newImage(items);
+				items.source = temp.name;
+				delete items.url;
+				return my.newPicture(items);
 			}
 			else {
 				items = my.safeObject(items);
@@ -464,8 +466,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						temp = my.safeObject(items.paste);
 						this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
 						this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
-						this.copyWidth = my.xtGet([items.copyWidth, src.actualWidth, src.width, '100%']);
-						this.copyHeight = my.xtGet([items.copyHeight, src.actualHeight, src.height, '100%']);
+						this.copyWidth = my.xtGetTrue([items.copyWidth, src.actualWidth, src.width, '100%']);
+						this.copyHeight = my.xtGetTrue([items.copyHeight, src.actualHeight, src.height, '100%']);
 						this.width = my.xtGet([items.pasteWidth, items.width, this.copyWidth]);
 						this.height = my.xtGet([items.pasteHeight, items.height, this.copyHeight]);
 						my.Position.prototype.set.call(this, items);
@@ -787,45 +789,6 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Constructor helper function
-
-    Loads an image from an URL path, creates a ScrawlImage wrapper for it and then creates the Picture entity
-
-    _Note: this function is asynchronous_
-    @method importImage
-    @param {Object} items Object consisting of key:value attributes
-    @return New Picture object; false on failure
-    @chainable
-    @private
-    **/
-		my.Picture.prototype.importImage = function(items) {
-			items = my.safeObject(items);
-			if (my.xt(items.url)) {
-				var myImage = new Image();
-				myImage.id = items.name || 'image' + Math.floor(Math.random() * 100000000);
-				myImage.crossOrigin = 'Anonymous';
-				myImage.onload = function() {
-					var iObj = my.newImage({
-						name: myImage.id,
-						element: myImage,
-					});
-					delete items.url;
-					items.source = myImage.id;
-					console.log('Picture.importImage() - <' + myImage.id + '> loaded');
-					return my.newPicture(items);
-				};
-				myImage.onerror = function() {
-					console.log('Picture.importImage() failed - <' + myImage.id + '> failed to load');
-					return false;
-				};
-				myImage.src = items.url;
-			}
-			else {
-				console.log('Picture.importImage() failed - no url supplied');
-				return false;
-			}
-		};
-		/**
     Augments Entity.clone()
     @method clone
     @param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
@@ -981,8 +944,9 @@ Picture.setPaste update pasteData object values
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				console.log(this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				if (this.copyData.w > 0 && this.copyData.h > 0) {
+					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				}
 			}
 			return this;
 		};
@@ -1004,7 +968,9 @@ Picture.setPaste update pasteData object values
 				my.cell[cell].setEngine(this);
 				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 				this.clearShadow(ctx, cell);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				if (this.copyData.w > 0 && this.copyData.h > 0) {
+					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				}
 			}
 			return this;
 		};
@@ -1024,7 +990,9 @@ Picture.setPaste update pasteData object values
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				if (this.copyData.w > 0 && this.copyData.h > 0) {
+					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				}
 				this.clearShadow(ctx, cell);
 				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
@@ -1046,7 +1014,9 @@ Picture.setPaste update pasteData object values
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				if (this.copyData.w > 0 && this.copyData.h > 0) {
+					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				}
 				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
@@ -1068,7 +1038,9 @@ Picture.setPaste update pasteData object values
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
 				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				if (this.copyData.w > 0 && this.copyData.h > 0) {
+					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				}
 			}
 			return this;
 		};

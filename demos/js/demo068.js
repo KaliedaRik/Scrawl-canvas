@@ -14,8 +14,7 @@ var mycode = function() {
 		pad = scrawl.pad.mycanvas,
 		background,
 		myImages,
-		dragenter,
-		dragover,
+		drag,
 		dragdrop,
 		handleFiles,
 		handleFile,
@@ -45,11 +44,7 @@ var mycode = function() {
 	});
 
 	//event listener functions for dragging and dropping files onto canvas
-	dragenter = function(e) {
-		e.stopPropagation();
-		e.preventDefault();
-	};
-	dragover = function(e) {
+	drag = function(e) {
 		e.stopPropagation();
 		e.preventDefault();
 	};
@@ -70,33 +65,24 @@ var mycode = function() {
 	handleFile = function(file, offset) {
 		var reader = new FileReader();
 		reader.onload = function() {
-			var image = document.createElement('img');
-			image.id = file.name;
-			image.onload = function() {
-				scrawl.newImage({
-					element: image,
-					fn: function() {
-						scrawl.newPicture({
-							source: this.name,
-							scale: 150 / this.width,
-							strokeStyle: 'red',
-							scaleOutline: false,
-							method: 'fillDraw',
-							startX: here.x + (offset * 10),
-							startY: here.y + (offset * 10),
-							handleX: 'center',
-							handleY: 'center',
-							group: 'myImages',
-						});
-					},
-				});
-			};
-			image.src = reader.result;
+			scrawl.newPicture({
+				name: file.name,
+				url: reader.result,
+				strokeStyle: 'red',
+				method: 'fillDraw',
+				startX: here.x + (offset * 10),
+				startY: here.y + (offset * 10),
+				width: 150,
+				height: 100,
+				handleX: 'center',
+				handleY: 'center',
+				group: 'myImages',
+			});
 		};
 		reader.readAsDataURL(file);
 	};
-	canvas.addEventListener("dragenter", dragenter, false);
-	canvas.addEventListener("dragover", dragover, false);
+	canvas.addEventListener("dragenter", drag, false);
+	canvas.addEventListener("dragover", drag, false);
 	canvas.addEventListener("drop", dragdrop, false);
 
 	//event listeners for dragging and dropping entitys within the canvas
