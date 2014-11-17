@@ -41,7 +41,6 @@ var mycode = function() {
 		pasteHeight: 400,
 		backgroundColor: '#f4f4f4',
 	});
-	pad.setDrawOrder(['bigcell']);
 	myGroup = scrawl.group.bigcell;
 
 	//define designs (colors)

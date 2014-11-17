@@ -13,20 +13,20 @@ var mycode = function() {
 	//define patterns
 	scrawl.newPattern({ //uses preloaded images
 		name: 'leaves',
-		image: 'leaves',
+		source: 'leaves',
 	}).clone({
 		name: 'water',
-		image: 'water',
+		source: 'water',
 	});
 	scrawl.newPattern({ //loads images dynamically before using them
 		name: 'marble',
-		source: 'img/marble.png',
+		url: 'img/marble.png',
 		callback: function() {
 			scrawl.render();
 		},
 	}).clone({
 		name: 'parque',
-		source: 'img/parque.png',
+		url: 'img/parque.png',
 	});
 
 	//define entitys

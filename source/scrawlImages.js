@@ -209,12 +209,23 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @param {Object} [items] Key:value Object argument for setting attributes
     **/
 		my.Pattern = function(items) {
-			items = my.safeObject(items);
-			my.Base.call(this, items);
-			my.Base.prototype.set.call(this, items);
-			this.repeat = items.repeat || 'repeat';
-			this.cell = items.cell || my.pad[my.currentPad].current;
-			this.setImage((items.source || items.imageData || my.image[items.image] || my.video[items.video] || my.cell[items.canvas] || false), items.callback);
+			var temp;
+			if (my.isa(items, 'obj') && my.xt(items.url) && !my.xt(items.dynamic)) {
+				items.dynamic = true;
+				temp = my.newImage(items);
+				items.source = temp.name;
+				return my.newPattern(items);
+			}
+			else {
+				items = my.safeObject(items);
+				my.Base.call(this, items);
+				my.Base.prototype.set.call(this, items);
+				this.repeat = items.repeat || 'repeat';
+				this.sourceType = this.getSourceType();
+				my.design[this.name] = this;
+				my.pushUnique(my.designnames, this.name);
+				this.makeDesign();
+			}
 			return this;
 		};
 		my.Pattern.prototype = Object.create(my.Base.prototype);
@@ -235,47 +246,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 			repeat: 'repeat',
 			/**
-    CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set
-    @property cell
-    @type String
-    @default ''
-    **/
-			cell: '',
-			/**
-    IMAGENAME String - used when pattern is based on an image already imported into the scrawl library
-    @property image
-    @type String
-    @default ''
-    **/
-			image: '',
-			/**
-    Full path to image file on server - used when pattern is based on a dynamically loaded image
+    CELLNAME, VIDEONAME or IMAGENAME of Pattern source data
     @property source
     @type String
     @default ''
     **/
 			source: '',
-			/**
-    CELLNAME String - used when pattern is based on a &lt;canvas&gt; element's image
-    @property canvas
-    @type String
-    @default ''
-    **/
-			canvas: '',
-			/**
-    VIDEONAME String - used when pattern is based on a video already imported into the scrawl library
-    @property video
-    @type String
-    @default ''
-    **/
-			video: '',
-			/**
-    Anonymous callback function - used when loading (or cloning) a a dynamic image or video
-    @property callback
-    @type Function
-    @default false
-    **/
-			callback: false,
 			/**
     Drawing flag - when set to true, force the pattern to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
     @property autoUpdate
@@ -283,8 +259,42 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @default false
     **/
 			autoUpdate: false,
+			/**
+    Asynchronous loading of image file from the server - path/to/image file
+
+    Used only with __scrawl.newPattern()__ and __Pattern.clone()__ operations. This attribute is not retained
+    @property url
+    @type String
+    @default ''
+    **/
+			/**
+    Asynchronous loading of image file from the server - function to run once image has successfully loaded
+
+    Used only with __scrawl.newPattern()__ and __Pattern.clone()__ operations. This attribute is not retained
+    @property callback
+    @type Function
+    @default undefined
+    **/
+			callback: false,
 		};
 		my.mergeInto(my.d.Pattern, my.d.Base);
+		/**
+    Constructor/set helper
+    @method getSourceType
+    @return String - one from: 'image', 'cell', 'video'; false on failure to identify source type
+    **/
+		my.Pattern.prototype.getSourceType = function() {
+			if (my.contains(my.imagenames, this.source)) {
+				return 'image';
+			}
+			if (my.contains(my.cellnames, this.source)) {
+				return 'cell';
+			}
+			if (my.contains(my.videonames, this.source)) {
+				return 'video';
+			}
+			return false;
+		};
 		/**
     Augments Base.set()
     @method set
@@ -294,80 +304,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 		my.Pattern.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
-			this.setImage();
-			return this;
-		};
-		/**
-    Discover this Pattern's image source, loading it if necessary
-    @method setImage
-    @param {Mixed} source
-    @param {Function} [callback] Function to be run once Image is successfully loaded
-    @return This
-    @chainable
-    @private
-    **/
-		my.Pattern.prototype.setImage = function(source, callback) {
-			if (my.isa(source, 'str')) {
-				var myImage = new Image();
-				var that = this;
-				myImage.id = this.name;
-				myImage.onload = function() {
-					try {
-						var iObj = my.newImage({
-							name: that.name,
-							element: myImage,
-						});
-						my.design[that.name] = that;
-						my.design[that.name].image = iObj.name;
-						my.design[that.name].source = myImage.src;
-						my.pushUnique(my.designnames, that.name);
-						my.design[that.name].makeDesign();
-						if (my.isa(callback, 'fn')) {
-							callback();
-						}
-					}
-					catch (e) {
-						console.log('Pattern ' + [that.name] + ' - setImage() #1 failed - ' + e.name + ' error: ' + e.message);
-						return that;
-					}
-				};
-				myImage.src = source;
-			}
-			else if (my.isa(source, 'obj')) {
-				if (source.type === 'Image') {
-					try {
-						this.image = source.name;
-						my.design[this.name] = this;
-						my.pushUnique(my.designnames, this.name);
-						this.makeDesign();
-						if (my.isa(callback, 'fn')) {
-							callback();
-						}
-					}
-					catch (e) {
-						console.log('Pattern ' + [this.name] + ' - setImage() #2 failed - ' + e.name + ' error: ' + e.message);
-						return that;
-					}
-				}
-				else if (source.type === 'Cell') {
-					try {
-						this.canvas = source.name;
-						my.design[this.name] = this;
-						my.pushUnique(my.designnames, this.name);
-						this.makeDesign();
-						if (my.isa(callback, 'fn')) {
-							callback();
-						}
-					}
-					catch (e) {
-						console.log('Pattern ' + [this.name] + ' - setImage() #3 failed - ' + e.name + ' error: ' + e.message);
-						return that;
-					}
-				}
-			}
-			else {
-				console.log('Pattern ' + [this.name] + ' - setImage() #4 failed - source not a string or an object', source);
-			}
+			this.sourceType = this.getSourceType();
+			this.makeDesign();
 			return this;
 		};
 		/**
@@ -376,7 +314,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @return JavaScript pattern object, or String
     @private
     **/
-		my.Pattern.prototype.getData = function() {
+		my.Pattern.prototype.getData = function(entity, cell) {
+			if (!this.sourceType) {
+				this.sourceType = this.getSourceType();
+				this.makeDesign(entity, cell);
+			}
 			return (my.xt(my.dsn[this.name])) ? my.dsn[this.name] : 'rgba(0,0,0,0)';
 		};
 		/**
@@ -390,17 +332,24 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			cell = my.xtGet([cell, this.cell]);
 			var ctx = my.context[cell];
 			if (my.xt(ctx)) {
-				if (this.image) {
-					my.dsn[this.name] = ctx.createPattern(my.asset[this.image], this.repeat);
-				}
-				else if (this.video) {
-					my.dsn[this.name] = ctx.createPattern(my.asset[this.video], this.repeat);
-				}
-				else if (this.canvas) {
-					my.dsn[this.name] = ctx.createPattern(my.canvas[this.canvas], this.repeat);
+				switch (this.sourceType) {
+					case 'video':
+						if (scrawl.xt(my.asset[this.source])) {
+							my.dsn[this.name] = ctx.createPattern(my.asset[this.source], this.repeat);
+						}
+						break;
+					case 'cell':
+						if (scrawl.xt(my.canvas[this.source])) {
+							my.dsn[this.name] = ctx.createPattern(my.canvas[this.source], this.repeat);
+						}
+						break;
+					case 'image':
+						if (scrawl.xt(my.asset[this.source])) {
+							my.dsn[this.name] = ctx.createPattern(my.asset[this.source], this.repeat);
+						}
+						break;
 				}
 			}
-			//console.log(this.name, my.dsn[this.name]);
 			return this;
 		};
 		/**
@@ -529,7 +478,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 			imageDataChannel: 'alpha',
 			/**
-    ANIMSHEET String - Entity sheet image linked to this entity
+    SPRITEANIMATIONNAME String - Entity sheet image linked to this entity
     @property animSheet
     @type String
     @default ;;
@@ -610,6 +559,7 @@ Local target data
     @type Function
     @default undefined
     **/
+			callback: false,
 		};
 		my.mergeInto(my.d.Picture, my.d.Entity);
 		/**

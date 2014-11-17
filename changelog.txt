@@ -59,6 +59,15 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141117
+	- added Cell.rendered attribute
+		- determines whether the cell should take part in any part of the display cycle
+	- rewrote Pattern constructor and associated functions
+		- now makes use of the Image constructor and associated functionality, including callbacks
+		- simplifies the Pattern object
+	- testing:
+		- tested up to demo077 - fixed as I go
+
 141116
 	- rewrote Image constructor
 		- got rid of all the spaghetti code

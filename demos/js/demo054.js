@@ -9,7 +9,8 @@ var mycode = function() {
 
 	//define variables
 	var here,
-		mySvg;
+		mySvg,
+		myScale;
 
 	//load images into scrawl library
 	scrawl.getImagesByClass('demo054');
@@ -34,14 +35,13 @@ var mycode = function() {
 		fn: function() {
 			here = scrawl.pad.mycanvas.getMouse();
 			if (here.active) {
-				mySvg.set({
-					scale: 1 - (((Math.abs(here.y - 200) / 200) * 0.49) + ((Math.abs(here.x - 300) / 300) * 0.49)),
-				});
-				scrawl.render();
+				myScale = 1 - (((Math.abs(here.y - 200) / 200) * 0.49) + ((Math.abs(here.x - 300) / 300) * 0.49));
 			}
-			else {
-				scrawl.clear('display');
-			}
+			mySvg.set({
+				scale: myScale,
+				visibility: (here.active) ? true : false,
+			});
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

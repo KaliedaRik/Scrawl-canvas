@@ -21,7 +21,7 @@ var mycode = function() {
 	//define designs (pattern)
 	scrawl.newPattern({
 		name: 'marble',
-		image: 'marble',
+		source: 'marble',
 	});
 
 	//define entity

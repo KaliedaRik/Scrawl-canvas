@@ -11,8 +11,7 @@ var mycode = function() {
 	var myPad = scrawl.pad.mycanvas,
 		here,
 		myScale,
-		myWheel,
-		mouse;
+		myWheel;
 
 	//setup canvas
 	scrawl.canvas.mycanvas.style.cursor = 'crosshair';
@@ -53,25 +52,18 @@ var mycode = function() {
 		method: 'fillDraw',
 	});
 
-	//animation function
-	mouse = function() {
-		myScale = (50 - Math.floor(((Math.abs(here.y - 187.5) / 187.5) * 24) + ((Math.abs(here.x - 375) / 375) * 24))) / 25;
-		myWheel.set({
-			scale: myScale,
-		});
-	};
-
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {
-				mouse();
-				scrawl.render();
+				myScale = (50 - Math.floor(((Math.abs(here.y - 187.5) / 187.5) * 24) + ((Math.abs(here.x - 375) / 375) * 24))) / 25;
 			}
-			else {
-				scrawl.clear('display');
-			}
+			myWheel.set({
+				scale: myScale,
+				visibility: (here.active) ? true : false,
+			});
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

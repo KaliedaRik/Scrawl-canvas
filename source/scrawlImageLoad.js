@@ -304,21 +304,30 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				el = document.createElement('img');
 				el.id = this.name;
 				el.onload = function() {
+					var entity, design, i, iz;
 					that.width = el.width;
 					that.height = el.height;
 					my.imageFragment.appendChild(el);
 					my.asset[that.name] = my.imageFragment.getElementById(that.name);
 					my.pushUnique(my.assetnames, that.name);
-					for (var i = 0, iz = my.entitynames.length; i < iz; i++) {
-						var entity = my.entity[my.entitynames[i]];
+					for (i = 0, iz = my.entitynames.length; i < iz; i++) {
+						entity = my.entity[my.entitynames[i]];
 						if (entity.type === 'Picture') {
 							if (entity.source === that.name) {
 								entity.setCopy();
 							}
 						}
 					}
+					for (i = 0, iz = my.designnames.length; i < iz; i++) {
+						design = my.design[my.designnames[i]];
+						if (design.type === 'Pattern') {
+							if (design.source === that.name) {
+								design.sourceType = 'image';
+								design.makeDesign();
+							}
+						}
+					}
 					if (my.isa(items.callback, 'fn')) {
-						console.log('Image callback');
 						items.callback();
 					}
 				};

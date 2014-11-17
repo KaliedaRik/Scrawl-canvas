@@ -13,7 +13,8 @@ var mycode = function() {
 		xMin = 65,
 		yMin = 65,
 		xMax = 750 - 65,
-		yMax = 375 - 65;
+		yMax = 375 - 65,
+		deltaRoll = 0.3;
 
 	//import images; setup variables
 	scrawl.getImagesByClass('demo051');
@@ -31,16 +32,15 @@ var mycode = function() {
 		deltaY: 2,
 		flipReverse: true,
 		flipUpend: true,
-		roll: 45,
 	});
 
 	//build entity
 	scrawl.newPattern({
 		name: 'p1',
-		image: 'warning',
+		source: 'warning',
 	}).clone({
 		name: 'p2',
-		image: 'nops',
+		source: 'nops',
 	});
 	scrawl.newWheel({
 		startX: 65,
@@ -58,6 +58,7 @@ var mycode = function() {
 		radius: 8,
 		fillStyle: 'red',
 	}).stamp();
+	myCell.compile();
 
 
 	//animation object
@@ -71,8 +72,11 @@ var mycode = function() {
 				myCell.delta.y = -myCell.delta.y;
 			}
 			myCell.updateStart();
+			myCell.set({
+				roll: myCell.roll + deltaRoll,
+			});
 
-			scrawl.show();
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

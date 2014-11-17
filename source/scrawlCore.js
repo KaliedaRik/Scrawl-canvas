@@ -3559,7 +3559,6 @@ Cell constructor hook function - core module
 			name: this.name,
 			cell: this.name,
 		});
-		console.log(this.name, this.backgroundColor, this.cleared, this.compiled, this.shown, this.compileOrder, this.showOrder);
 	};
 	/**
 Cell constructor hook function - modified by collisions module

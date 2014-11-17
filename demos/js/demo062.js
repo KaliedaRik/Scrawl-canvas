@@ -153,7 +153,7 @@ var mycode = function() {
 		}
 		myReflections.sortEntitys();
 		myGroup.sortEntitys();
-		myPad.stampBackground();
+		myPad.clear();
 		for (i = 0, iz = items.length; i < iz; i++) {
 			scrawl.entity[myReflections.entitys[i]].stamp('clearWithBackground');
 			scrawl.entity[myReflections.entitys[i]].stamp();

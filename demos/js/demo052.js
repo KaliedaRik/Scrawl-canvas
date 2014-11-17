@@ -36,6 +36,7 @@ var mycode = function() {
 		pasteY: 0,
 		pasteWidth: 750,
 		pasteHeight: 380,
+		showOrder: 2,
 	});
 	scrawl.addNewCell({
 		name: 'starBackground',
@@ -50,14 +51,11 @@ var mycode = function() {
 		pasteY: 0,
 		pasteWidth: 750,
 		pasteHeight: 380,
+		showOrder: 1,
 	});
 	myWheels = scrawl.cell.wheelBackground;
 	myStars = scrawl.cell.starBackground;
-	//backgrounds only need to be drawn once
-	scrawl.clear('all');
-	//compiling at this stage to draw the background color
-	scrawl.compile();
-	scrawl.setDrawOrder(['starBackground', 'wheelBackground']);
+	scrawl.render();
 
 	//finish drawing the background cells by adding wheels and stars to them
 	myColor = scrawl.newColor({
@@ -114,6 +112,15 @@ var mycode = function() {
 		edge: 'vertical'
 	});
 	makeSomeStars();
+
+	myWheels.set({
+		cleared: false,
+		compiled: false,
+	});
+	myStars.set({
+		cleared: false,
+		compiled: false,
+	});
 
 	//cell animation function
 	updateCells = function() {
