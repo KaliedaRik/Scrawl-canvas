@@ -13,23 +13,17 @@ var mycode = function() {
 		backgroundEntity,
 		magnifierEntity,
 		stencilEntity,
-		here,
-		mouse;
+		here;
 
 	scrawl.getImagesByClass('demo037');
 
 	backgroundCell = myPad.addNewCell({
 		name: 'background',
+		//restrict this cell's activity within the display cycle
+		cleared: false,
+		compiled: false,
+		showOrder: 1,
 	});
-	magnifierCell = myPad.addNewCell({
-		name: 'magnifier',
-		height: 140,
-		width: 140,
-		handleX: 'center',
-		handleY: 'center',
-		pivot: 'mouse',
-	});
-
 	backgroundEntity = scrawl.newPicture({
 		name: 'miniscene',
 		source: 'river',
@@ -41,6 +35,19 @@ var mycode = function() {
 		copyY: 700,
 		copyWidth: 3750,
 		copyHeight: 1875,
+	});
+	backgroundCell.compile();
+
+	magnifierCell = myPad.addNewCell({
+		name: 'magnifier',
+		height: 140,
+		width: 140,
+		handleX: 'center',
+		handleY: 'center',
+		pivot: 'mouse',
+		//take the cell out of the display cycle
+		rendered: false,
+		showOrder: 2,
 	});
 	magnifierEntity = scrawl.newPicture({
 		name: 'magnifier',
@@ -63,33 +70,25 @@ var mycode = function() {
 		group: 'magnifier',
 	});
 
-	backgroundEntity.stamp();
-	myPad.setDrawOrder(['background']);
-	myPad.show();
-
-	mouse = function() {
-		magnifierEntity.set({
-			copyX: (here.x * 5) + 10,
-			copyY: (here.y * 5) + 650,
-		});
-		myPad.clear(['magnifier']);
-		stencilEntity.stamp('fill');
-		magnifierEntity.stamp();
-		stencilEntity.stamp('draw');
-		myPad.setDrawOrder(['background', 'magnifier']);
-		myPad.show();
-	};
-
 	scrawl.newAnimation({
 		fn: function() {
 			here = myPad.getMouse();
+			//only render the magnifier cell when the mouse is over the canvas
+			magnifierCell.set({
+				rendered: (here.active) ? true : false,
+			});
+			//split the display cycle into its clear, compile/stamp and show components
+			myPad.clear();
 			if (here.active) {
-				mouse();
+				magnifierEntity.set({
+					copyX: (here.x * 5) + 10,
+					copyY: (here.y * 5) + 650,
+				});
+				stencilEntity.stamp('fill');
+				magnifierEntity.stamp();
+				stencilEntity.stamp('draw');
 			}
-			else {
-				myPad.setDrawOrder(['background']);
-				myPad.show();
-			}
+			myPad.show();
 
 			//hide-start
 			testNow = Date.now();

@@ -3008,7 +3008,7 @@ Cells with cleared = true will clear theid displays in preparation for compile/s
 		var i, iz, c;
 		for (i = 0, iz = this.cells.length; i < iz; i++) {
 			c = my.cell[this.cells[i]];
-			if (c.cleared) {
+			if (c.rendered && c.cleared) {
 				c.clear();
 			}
 		}
@@ -3033,7 +3033,7 @@ By default:
 		this.sortCellsCompile();
 		for (i = 0, iz = this.cells.length; i < iz; i++) {
 			c = my.cell[this.cells[i]];
-			if (c.compiled) {
+			if (c.rendered && c.compiled) {
 				c.compile();
 			}
 		}
@@ -3059,7 +3059,7 @@ By default, the initial base and display canvases have shown = false:
 		this.sortCellsShow();
 		for (i = 0, iz = this.cells.length; i < iz; i++) {
 			c = my.cell[this.cells[i]];
-			if (c.shown) {
+			if (c.rendered && c.shown) {
 				b.copyCellToSelf(c);
 			}
 		}
@@ -3437,6 +3437,13 @@ Pad dimension flag: when true, instructs the Cell to use its Pad object's dimens
 **/
 		usePadDimensions: false,
 		/**
+Display cycle flag - on true (default), the cell will take part in the display cycle
+@property rendered
+@type Boolean
+@default true
+**/
+		rendered: true,
+		/**
 Display cycle flag - on true (default), the cell will clear itself as part of the display cycle
 @property cleared
 @type Boolean
@@ -3539,6 +3546,7 @@ Cell constructor hook function - core module
 		this.lockX = my.xtGet([items.lockX, my.d.Cell.lockX]);
 		this.lockY = my.xtGet([items.lockY, my.d.Cell.lockY]);
 		this.roll = my.xtGet([items.roll, my.d.Cell.roll]);
+		this.rendered = my.xtGet([items.rendered, true]);
 		this.cleared = my.xtGet([items.cleared, true]);
 		this.compiled = my.xtGet([items.compiled, true]);
 		this.shown = my.xtGet([items.shown, true]);
