@@ -17,11 +17,13 @@ var mycode = function() {
 	//define cells
 	scrawl.addNewCell({
 		name: 'struts',
+		showOrder: 2,
 	});
 	scrawl.addNewCell({
 		name: 'paper',
+		showOrder: 1,
+		cleared: false,
 	});
-	scrawl.setDrawOrder(['paper', 'struts']);
 
 	//define designs (color)
 	myCol = scrawl.newColor({
@@ -115,9 +117,7 @@ var mycode = function() {
 	scrawl.newAnimation({
 		fn: function() {
 			moveStruts();
-			scrawl.render({
-				clear: ['struts', 'mycanvas_base'],
-			});
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

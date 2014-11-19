@@ -2865,7 +2865,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				}
 				items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
 				this.initMouse(items);
-				this.filters = [];
+				this.filtersPadInit();
 				return this;
 			}
 		}
@@ -2914,14 +2914,6 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 @deprecated
 **/
 		current: '',
-		/**
-Array of FILTERNAME strings, for filters to be applied to this Pad
-@property filters
-@type Array
-@default []
-@private
-**/
-		filters: [],
 	};
 	my.mergeInto(my.d.Pad, my.d.PageElement);
 	/**
@@ -2933,6 +2925,12 @@ Retrieve Pad's visible &lt;canvas&gt; element object
 	my.Pad.prototype.getElement = function() {
 		return my.canvas[this.display];
 	};
+	/**
+Pad constructor hook function - modified by filters module
+@method filtersCellInit
+@private
+**/
+	my.Pad.prototype.filtersPadInit = function(items) {};
 	/**
 Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and globalCompositeOperation changes to associated Cell objects
 				
@@ -3023,13 +3021,14 @@ By default:
 * the initial base canvas has a compileOrder of 9999 and compiles last
 * the initial display canvas has compiled = false and will not compile
 
+(This function is replaced by the Filters module)
+
 @method compile
 @return This
 @chainable
 **/
 	my.Pad.prototype.compile = function() {
 		var c, i, iz;
-		this.filters.length = 0;
 		this.sortCellsCompile();
 		for (i = 0, iz = this.cells.length; i < iz; i++) {
 			c = my.cell[this.cells[i]];
@@ -3048,6 +3047,8 @@ By default, the initial base and display canvases have shown = false:
 * 'show' involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
 * the last action is to copy the base cell onto the display cell
 
+(This function is replaced by the Filters module)
+
 @method show
 @return This
 @chainable
@@ -3062,9 +3063,6 @@ By default, the initial base and display canvases have shown = false:
 			if (c.rendered && c.shown) {
 				b.copyCellToSelf(c);
 			}
-		}
-		for (i = 0, iz = this.filters.length; i < iz; i++) {
-			my.entity[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
 		}
 		d.copyCellToSelf(b, true);
 		return this;
@@ -3264,6 +3262,7 @@ Cell supports the following 'virtual' attributes for this attribute:
 			this.coreCellInit(items);
 			this.animationCellInit(items);
 			this.collisionsCellInit(items);
+			this.filtersCellInit(items);
 			return this;
 		}
 		console.log('Cell constructor encountered an error: no canvas element supplied to it');
@@ -3422,13 +3421,6 @@ Array of GROUPNAMES that contribute to building this Cell's scene
 **/
 		groups: [],
 		/**
-Array of FILTERNAME strings, for filters to be applied to this cell once the entity stamping process has completed
-@property filters
-@type Array
-@default []
-**/
-		filters: [],
-		/**
 Pad dimension flag: when true, instructs the Cell to use its Pad object's dimensions as its source dimensions (sourceWidth, sourceHeight)
 @property usePadDimensions
 @type Boolean
@@ -3554,7 +3546,6 @@ Cell constructor hook function - core module
 		this.showOrder = my.xtGet([items.showOrder, 0]);
 		this.backgroundColor = my.xtGet([items.backgroundColor, 'rgba(0,0,0,0)']);
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
-		this.filters = [];
 		my.newGroup({
 			name: this.name,
 			cell: this.name,
@@ -3566,6 +3557,12 @@ Cell constructor hook function - modified by collisions module
 @private
 **/
 	my.Cell.prototype.collisionsCellInit = function(items) {};
+	/**
+Cell constructor hook function - modified by filters module
+@method filtersCellInit
+@private
+**/
+	my.Cell.prototype.filtersCellInit = function(items) {};
 	/**
 Cell constructor hook function - modified by animation module
 @method animationCellInit
@@ -3718,6 +3715,9 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 		if (my.xto([items.actualHeight, items.height])) {
 			h = my.xtGet([items.actualHeight, items.height]);
 			this.actualHeight = (my.isa(h, 'num')) ? this.actualHeight + h : this.actualHeight;
+		}
+		if (my.xt(items.roll)) {
+			this.roll += items.roll;
 		}
 		if (my.xto([items.actualWidth, items.width, items.actualHeight, items.height])) {
 			this.setDimensions(items);
@@ -3905,13 +3905,14 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 	};
 	/**
 Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
+
+(This function is replaced by the Filters module)
 @method compile
 @return This
 @chainable
 **/
 	my.Cell.prototype.compile = function() {
 		var i, iz, g;
-		this.filters.length = 0;
 		this.groups.sort(function(a, b) {
 			return my.group[a].order - my.group[b].order;
 		});
@@ -3920,9 +3921,6 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 			if (g.get('visibility')) {
 				g.stamp(false, this.name);
 			}
-		}
-		for (i = 0, iz = this.filters.length; i < iz; i++) {
-			my.entity[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
 		}
 		return this;
 	};
@@ -4650,6 +4648,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 		this.entitySort = my.xtGet([items.entitySort, true]);
 		this.regionRadius = my.xtGet([items.regionRadius, 0]);
 		my.group[this.name] = this;
+		this.filtersGroupInit(items);
 		my.pushUnique(my.groupnames, this.name);
 		my.pushUnique(my.cell[this.cell].groups, this.name);
 		return this;
@@ -4665,7 +4664,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 	my.Group.prototype.classname = 'groupnames';
 	my.d.Group = {
 		/**
- Array of SPRITENAME Strings of entitys that comprise this Group
+Array of SPRITENAME Strings of entitys that comprise this Group
 @property entitys
 @type Array
 @default []
@@ -4759,9 +4758,18 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 				ent.group = this.name;
 				ent.stamp(method, cell);
 			}
+			this.stampFilter(my.context[this.cell], this.cell);
 		}
 		return this;
 	};
+	/**
+Group stamp helper function
+
+(Replaced by Filters module)
+@method stampFilter
+@private
+**/
+	my.Group.prototype.stampFilter = function() {};
 	/**
 Add entitys to the Group
 @method addEntitysToGroup
@@ -4969,8 +4977,7 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 		this.visibility = my.xtGet([items.visibility, true]);
 		this.method = my.xtGet([items.method, my.d[this.type].method]);
 		this.collisionsEntityConstructor(items);
-		this.filters = [].concat(my.xtGet([items.filters, []]));
-		this.filterLevel = my.xtGet([items.filterLevel, 'entity']);
+		this.filtersEntityInit(items);
 		return this;
 	};
 	my.Entity.prototype = Object.create(my.Position.prototype);
@@ -5054,25 +5061,6 @@ CTXNAME of this Entity's Context object
 **/
 		context: '',
 		/**
-Array of FILTERNAME strings, for filters to be applied to this entity
-@property filters
-@type Array
-@default []
-**/
-		filters: [],
-		/**
-The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
-
-* '__entity__' - filter is applied immediately after the Entity has stamped itself onto a cell
-* '__cell__' - filter is applied after all Entites have completed stamping themselves onto the cell
-* '__pad__' - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
-
-@property filterLevel
-@type String
-@default 'entity'
-**/
-		filterLevel: 'entity',
-		/**
 GROUPNAME String for this entity's default group
 
 _Note: a entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_
@@ -5083,6 +5071,12 @@ _Note: a entity can belong to more than one group by being added to other Group 
 		group: '',
 	};
 	my.mergeInto(my.d.Entity, my.d.Position);
+	/**
+Entity constructor hook function - modified by filters module
+@method filtersEntityInit
+@private
+**/
+	my.Entity.prototype.filtersEntityInit = function(items) {};
 	/**
 Entity constructor hook function - modified by collisions module
 @method collisionsEntityConstructor
@@ -5315,9 +5309,7 @@ Permitted methods include:
 				this.pathStamp();
 			}
 			this.callMethod(engine, myCell.name, myMethod);
-			if (this.filters.length > 0) {
-				this.stampFilter(engine, myCell.name);
-			}
+			this.stampFilter(engine, myCell.name);
 		}
 		return this;
 	};

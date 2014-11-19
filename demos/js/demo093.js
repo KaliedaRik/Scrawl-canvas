@@ -13,8 +13,6 @@ var mycode = function() {
 		here,
 		currentEntity,
 		kill = [],
-		offsetX = 8,
-		offsetY = 8,
 		counter = 0,
 		filterEntitys,
 		newRing;
@@ -29,31 +27,18 @@ var mycode = function() {
 	canvas = scrawl.canvas.myCanvas;
 	pad = scrawl.pad.myCanvas;
 
-	//add cells to canvas
-	pad.addNewCell({
-		name: 'background',
-		width: 600,
-		height: 400,
+	//define filters
+	scrawl.newSaturationFilter({
+		name: 'sat',
+		saturation: 3,
 	});
-	pad.addNewCell({
-		name: 'filter',
-		width: 600,
-		height: 400,
-		targetX: offsetX,
-		targetY: offsetY,
-	});
-	pad.setDrawOrder(['background', 'filter']);
 
 	//define groups
 	scrawl.newGroup({
 		name: 'ripples',
-		cell: 'filter',
-		order: 0,
-	});
-	scrawl.newGroup({
-		name: 'ripplesOverlay',
-		cell: 'filter',
 		order: 1,
+		filters: ['sat'],
+		filterOnStroke: true,
 	});
 	filterEntitys = scrawl.group.ripples.entitys;
 
@@ -63,7 +48,6 @@ var mycode = function() {
 		width: 600,
 		height: 400,
 		url: 'img/carousel/kookaburra.png',
-		group: 'background',
 	});
 
 	//event listener - creates entitys
@@ -75,13 +59,10 @@ var mycode = function() {
 		counter++;
 		scrawl.newWheel({
 			name: 'drop' + counter,
-			startX: here.x - offsetX,
-			startY: here.y - offsetY,
+			start: here,
 			radius: 1,
-			method: 'draw',
-			lineWidth: 3,
-			shadowBlur: 15,
-			globalAlpha: 1,
+			method: 'none',
+			lineWidth: 4,
 			group: 'ripples',
 			order: counter,
 		});
@@ -91,25 +72,16 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			if (scrawl.contains(scrawl.entitynames, 'myImage')) {
-				if (!scrawl.contains(scrawl.entitynames, 'myImageRipple')) {
-					scrawl.entity.myImage.clone({
-						name: 'myImageRipple',
-						group: 'ripplesOverlay',
-						globalCompositeOperation: 'source-atop',
-					});
-				}
-			}
 			here = pad.getMouse();
 			for (var i = 0, z = filterEntitys.length; i < z; i++) {
 				currentEntity = scrawl.entity[filterEntitys[i]];
 				currentEntity.setDelta({
-					globalAlpha: -0.0015,
 					radius: 1,
-					lineWidth: 0.05,
+					lineWidth: 0.2,
+					globalAlpha: -0.006,
 					order: 1,
 				});
-				if (currentEntity.get('globalAlpha') <= 0) {
+				if (currentEntity.get('radius') > 180) {
 					kill.push(currentEntity.name);
 				}
 			}
@@ -132,7 +104,7 @@ var mycode = function() {
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'wheel', 'animation'],
+	modules: ['images', 'wheel', 'animation', 'filters'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

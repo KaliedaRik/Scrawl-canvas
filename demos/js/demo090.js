@@ -69,25 +69,36 @@ var mycode = function() {
 			name: 'kaliedoscopeBackground',
 			height: 240,
 			width: 240,
+			compileOrder: 2,
+			shown: false,
 		});
 		mycanvas.addNewCell({
 			name: 'kaliedoscopeSegment',
 			height: 240,
 			width: 120,
+			compileOrder: 3,
+			shown: false,
 		});
 		mycanvas.addNewCell({
 			name: 'kaliedoscope',
 			pasteX: 250,
 			height: 500,
 			width: 500,
+			compiled: false,
+			showOrder: 2,
 		});
 		mycanvas.addNewCell({
 			name: 'clock',
 			pasteX: 250,
 			height: 500,
 			width: 500,
+			compileOrder: 4,
+			showOrder: 3,
 		});
-		mycanvas.setDrawOrder(['kaliedoscope', 'clock']);
+		scrawl.cell[mycanvas.base].set({
+			compileOrder: 1,
+			showOrder: 1,
+		});
 	};
 
 	//define kaliedoscope entitys
@@ -322,7 +333,6 @@ var mycode = function() {
 					scale: shape[i].r,
 				});
 			}
-			mycanvas.clear();
 			now = new Date();
 			var tH = (now.getHours() >= 12) ? now.getHours() - 12 : now.getHours();
 			var tM = now.getMinutes();
@@ -331,8 +341,8 @@ var mycode = function() {
 			secondHand.roll = (((tS * 1000) + tL) * (360 / 60000)) - 90;
 			minuteHand.roll = (((tM * 60) + tS) * (360 / 3600)) - 90;
 			hourHand.roll = (((tH * 60) + tM) * (360 / 720)) - 90;
-			mycanvas.compile(['kaliedoscopeBackground', 'kaliedoscopeSegment']);
-			backplate.stamp();
+			mycanvas.clear();
+			mycanvas.compile();
 			for (i = 1; i < 7; i++) {
 				entityPie.set({
 					roll: (i * 60) + 15,
@@ -342,7 +352,6 @@ var mycode = function() {
 					flipReverse: true,
 				}).stamp();
 			}
-			mycanvas.compile(['clock']);
 			mycanvas.show();
 		}
 	};

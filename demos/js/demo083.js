@@ -41,7 +41,8 @@ var mycode = function() {
 		width: 400,
 		height: 200,
 		backgroundColor: 'lightblue',
-	});
+		rendered: false,
+	}).clear();
 	original = scrawl.canvas.original;
 
 	//... and a Phrase entity to place on the holding cell
@@ -57,10 +58,7 @@ var mycode = function() {
 		lineWidth: 3,
 		method: 'fillDraw',
 		group: 'original',
-	});
-
-	//compile the cell once - no need to include it in the animation loop
-	pad.compile('original');
+	}).stamp();
 
 	//we need some guide lines to tell us how we want the text to bend ...
 	topline = scrawl.makeQuadratic({

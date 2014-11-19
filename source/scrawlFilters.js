@@ -67,6 +67,129 @@ Utility canvas 2d context engine
 **/
 		my.filterCvx = my.filterCanvas.getContext('2d');
 		/**
+Array of FILTERNAME strings, for filters to be applied to the Pad
+@property filters
+@type Array
+@default []
+**/
+		my.d.Pad.filters = [];
+		/**
+Array of FILTERNAME strings, for filters to be applied to the Cell
+@property filters
+@type Array
+@default []
+**/
+		my.d.Cell.filters = [];
+		/**
+Array of FILTERNAME strings, for filters to be applied to Entitys in this group
+@property filters
+@type Array
+@default []
+**/
+		my.d.Group.filters = [];
+		/**
+Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
+@property filterOnStroke
+@type Boolean
+@default false
+**/
+		my.d.Group.filterOnStroke = false;
+		/**
+The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
+
+* '__entity__' - filter is applied immediately after the Entity has stamped itself onto a cell
+* '__cell__' - filter is applied after all Entites have completed stamping themselves onto the cell
+* '__pad__' - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
+
+@property filterLevel
+@type String
+@default 'entity'
+**/
+		my.d.Group.filterLevel = 'entity';
+		/**
+Array of FILTERNAME strings, for filters to be applied to this entity
+@property filters
+@type Array
+@default []
+**/
+		my.d.Entity.filters = [];
+		/**
+Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
+@property filterOnStroke
+@type Boolean
+@default false
+**/
+		my.d.Entity.filterOnStroke = false;
+		/**
+The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
+
+* '__entity__' - filter is applied immediately after the Entity has stamped itself onto a cell
+* '__cell__' - filter is applied after all Entites have completed stamping themselves onto the cell
+* '__pad__' - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
+
+@property filterLevel
+@type String
+@default 'entity'
+**/
+		my.d.Entity.filterLevel = 'entity';
+		if (my.xt(my.d.Block)) {
+			my.mergeInto(my.d.Block, my.d.Entity);
+		}
+		if (my.xt(my.d.Shape)) {
+			my.mergeInto(my.d.Shape, my.d.Entity);
+		}
+		if (my.xt(my.d.Wheel)) {
+			my.mergeInto(my.d.Wheel, my.d.Entity);
+		}
+		if (my.xt(my.d.Picture)) {
+			my.mergeInto(my.d.Picture, my.d.Entity);
+		}
+		if (my.xt(my.d.Phrase)) {
+			my.mergeInto(my.d.Phrase, my.d.Entity);
+		}
+		if (my.xt(my.d.Path)) {
+			my.mergeInto(my.d.Path, my.d.Entity);
+		}
+		/**
+Pad constructor hook function - modified by filters module
+@method filtersPadInit
+@private
+**/
+		my.Pad.prototype.filtersPadInit = function(items) {
+			this.filters = [];
+		};
+		/**
+Cell constructor hook function - modified by filters module
+@method filtersCellInit
+@private
+**/
+		my.Cell.prototype.filtersCellInit = function(items) {
+			this.filters = [];
+		};
+		/**
+Group constructor hook function - modified by filters module
+@method filtersGroupInit
+@private
+**/
+		my.Group.prototype.filtersGroupInit = function(items) {
+			items = my.safeObject(items);
+			this.filters = my.xtGet([items.filters, []]);
+			this.filterOnStroke = my.xtGet([items.filterOnStroke, false]);
+			this.filterLevel = my.xtGet([items.filterLevel, 'entity']);
+		};
+		/**
+Entity constructor hook function - modified by filters module
+@method filtersEntityInit
+@private
+**/
+		my.Entity.prototype.filtersEntityInit = function(items) {
+			items = my.safeObject(items);
+			this.filters = my.xtGet([items.filters, []]);
+			this.filterOnStroke = my.xtGet([items.filterOnStroke, false]);
+			this.filterLevel = my.xtGet([items.filterLevel, 'entity']);
+		};
+
+		/**
 A __factory__ function to generate new Greyscale filter objects
 @method newGreyscaleFilter
 @param {Object} items Key:value Object argument for setting attributes
@@ -213,30 +336,148 @@ A __factory__ function to generate new Stereo filter objects
 		};
 
 		/**
-Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
+Display function - requests Cells to compile their &lt;canvas&gt; element
+
+Cells will compile in ascending order of their compileOrder attributes, if their compiled attribute = true
+
+By default:
+* the initial base canvas has a compileOrder of 9999 and compiles last
+* the initial display canvas has compiled = false and will not compile
+
+(As amended by Filters module)
+
+@method compile
+@return This
+@chainable
+**/
+		my.Pad.prototype.compile = function() {
+			var c, i, iz;
+			this.filters.length = 0;
+			this.sortCellsCompile();
+			for (i = 0, iz = this.cells.length; i < iz; i++) {
+				c = my.cell[this.cells[i]];
+				if (c.rendered && c.compiled) {
+					c.compile();
+				}
+			}
+			return this;
+		};
+		/**
+Display function - requests Cells to show their &lt;canvas&gt; element 
+
+Cells will show in ascending order of their showOrder attributes, if their show attribute = true
+
+By default, the initial base and display canvases have shown = false:
+* 'show' involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
+* the last action is to copy the base cell onto the display cell
+
+(As amended by Filters module)
+
+@method show
+@return This
+@chainable
+**/
+		my.Pad.prototype.show = function(command) {
+			var d = my.cell[this.display],
+				b = my.cell[this.base],
+				i, iz, c;
+			this.sortCellsShow();
+			for (i = 0, iz = this.cells.length; i < iz; i++) {
+				c = my.cell[this.cells[i]];
+				if (c.rendered && c.shown) {
+					b.copyCellToSelf(c);
+				}
+			}
+			for (i = 0, iz = this.filters.length; i < iz; i++) {
+				if (my.xt(my.entity[this.filters[i]])) {
+					my.entity[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
+				}
+				if (my.xt(my.group[this.filters[i]])) {
+					my.group[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
+				}
+			}
+			d.copyCellToSelf(b, true);
+			return this;
+		};
+		/**
+Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array 
+
+(As amended by Filters module)
+@method compileFilters
+@return always true
+@chainable
+**/
+		my.Cell.prototype.compile = function() {
+			var i, iz, g;
+			this.filters.length = 0;
+			this.groups.sort(function(a, b) {
+				return my.group[a].order - my.group[b].order;
+			});
+			for (i = 0, iz = this.groups.length; i < iz; i++) {
+				g = my.group[this.groups[i]];
+				if (g.get('visibility')) {
+					g.stamp(false, this.name);
+				}
+			}
+			for (i = 0, iz = this.filters.length; i < iz; i++) {
+				if (my.xt(my.entity[this.filters[i]])) {
+					my.entity[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
+				}
+				else if (my.xt(my.group[this.filters[i]])) {
+					my.group[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
+				}
+			}
+			return true;
+		};
+		/**
+Group.stamp hook function - add a filter to a group of Entitys, and any background detail enclosed by them
 @method stampFilter
 @private
 **/
-		my.Entity.prototype.stampFilter = function(engine, cell, force) {
-			var imageData, i, iz, canvas, ctx, composite;
+		my.Group.prototype.stampFilter = function(engine, cell, force) {
+			var imageData, i, iz, canvas, composite, e, eStroke;
 			force = my.xtGet([force, false]);
 			if (this.filters.length > 0) {
 				canvas = my.canvas[cell];
 				my.cv.width = canvas.width;
 				my.cv.height = canvas.height;
-				this.clip(my.cvx, cell);
-				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-				my.cvx.drawImage(canvas, 0, 0);
-				imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
-				for (i = 0, iz = this.filters.length; i < iz; i++) {
-					if (this.filterLevel === 'pad' && !force) {
-						my.pad[my.cell[my.group[this.group].cell].pad].filters.push(this.name);
+				my.filterCanvas.width = canvas.width;
+				my.filterCanvas.height = canvas.height;
+				my.filterCvx.clearRect(0, 0, canvas.width, canvas.height);
+				for (i = 0, iz = this.entitys.length; i < iz; i++) {
+					e = my.entity[this.entitys[i]];
+					eStroke = e.filterOnStroke;
+					e.filterOnStroke = this.filterOnStroke;
+					my.cvx.save();
+					switch (e.type) {
+						case 'Phrase':
+							imageData = e.stampFilterPhrase(engine, cell, force);
+							break;
+						case 'Picture':
+							imageData = e.stampFilterPicture(engine, cell, force);
+							break;
+						case 'Wheel':
+							imageData = e.stampFilterWheel(engine, cell, force);
+							break;
+						default:
+							imageData = e.stampFilterDefault(engine, cell, force);
 					}
-					else if (this.filterLevel === 'cell' && !force) {
-						my.cell[my.group[this.group].cell].filters.push(this.name);
-					}
-					else if (my.contains(my.filternames, this.filters[i])) {
-						imageData = my.filter[this.filters[i]].add(imageData);
+					e.filterOnStroke = eStroke;
+					my.filterCvx.putImageData(imageData, 0, 0);
+					my.cvx.restore();
+				}
+				imageData = my.filterCvx.getImageData(0, 0, canvas.width, canvas.height);
+				if (imageData) {
+					for (i = 0, iz = this.filters.length; i < iz; i++) {
+						if (this.filterLevel === 'pad' && !force) {
+							my.pad[my.cell[this.cell].pad].filters.push(this.name);
+						}
+						else if (this.filterLevel === 'cell' && !force) {
+							my.cell[this.cell].filters.push(this.name);
+						}
+						else if (my.contains(my.filternames, this.filters[i])) {
+							imageData = my.filter[this.filters[i]].add(imageData);
+						}
 					}
 				}
 				my.cvx.putImageData(imageData, 0, 0);
@@ -247,6 +488,161 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 				engine.globalCompositeOperation = composite;
 			}
 		};
+		/**
+Entity.stamp hook function - modified by filters module
+@method stampFilter
+@private
+**/
+		my.Entity.prototype.stampFilter = function() {};
+		/**
+Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
+@method stampFilter
+@private
+**/
+		my.Entity.prototype.stampFilter = function(engine, cell, force) {
+			var imageData, i, iz, canvas, composite;
+			force = my.xtGet([force, false]);
+			if (this.filters.length > 0) {
+				canvas = my.canvas[cell];
+				my.cv.width = canvas.width;
+				my.cv.height = canvas.height;
+				my.cvx.save();
+				switch (this.type) {
+					case 'Phrase':
+						imageData = this.stampFilterPhrase(engine, cell, force);
+						break;
+					case 'Picture':
+						imageData = this.stampFilterPicture(engine, cell, force);
+						break;
+					case 'Wheel':
+						imageData = this.stampFilterWheel(engine, cell, force);
+						break;
+					default:
+						imageData = this.stampFilterDefault(engine, cell, force);
+				}
+				if (imageData) {
+					for (i = 0, iz = this.filters.length; i < iz; i++) {
+						if (this.filterLevel === 'pad' && !force) {
+							my.pad[my.cell[my.group[this.group].cell].pad].filters.push(this.name);
+						}
+						else if (this.filterLevel === 'cell' && !force) {
+							my.cell[my.group[this.group].cell].filters.push(this.name);
+						}
+						else if (my.contains(my.filternames, this.filters[i])) {
+							imageData = my.filter[this.filters[i]].add(imageData);
+						}
+					}
+				}
+				my.cvx.putImageData(imageData, 0, 0);
+				composite = engine.globalCompositeOperation;
+				engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
+				engine.setTransform(1, 0, 0, 1, 0, 0);
+				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+				engine.globalCompositeOperation = composite;
+				my.cvx.restore();
+			}
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterPhrase
+@private
+**/
+		my.Entity.prototype.stampFilterPhrase = function(engine, cell, force) {
+			var canvas = my.canvas[cell],
+				ctx = my.ctx[this.context],
+				test;
+			my.cvx.font = ctx.font;
+			my.cvx.fillStyle = 'rgb(0, 0, 0)';
+			my.cvx.textAlign = ctx.textAlign;
+			my.cvx.textBaseline = ctx.textBaseline;
+			test = (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path');
+			if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
+				o = this.getOffset();
+				here = this.prepareStamp();
+				textY = this.size * this.lineHeight * this.scale;
+				this.rotateCell(my.cvx, my.cv);
+				tX = here.x + o.x;
+				for (i = 0, iz = this.texts.length; i < iz; i++) {
+					tY = here.y + (textY * i) + o.y;
+					my.text[this.texts[i]].fill(my.cvx, cell, tX, tY);
+				}
+			}
+			else {
+				my.text[this.texts[0]].clipAlongPath();
+			}
+			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+			my.cvx.globalCompositeOperation = 'source-in';
+			my.cvx.drawImage(canvas, 0, 0);
+			my.cvx.globalCompositeOperation = 'source-over';
+			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterWheel
+@private
+**/
+		my.Entity.prototype.stampFilterWheel = function(engine, cell, force) {
+			var canvas = my.canvas[cell],
+				context = my.ctx[this.context];
+			if (this.filterOnStroke) {
+				my.cvx.lineWidth = context.lineWidth;
+				my.cvx.shadowOffsetX = context.shadowOffsetX;
+				my.cvx.shadowOffsetY = context.shadowOffsetY;
+				my.cvx.shadowBlur = context.shadowBlur;
+				my.cvx.lineJoin = context.lineJoin;
+				my.cvx.lineCap = context.lineCap;
+				my.cvx.miterLimit = context.miterLimit;
+				my.cvx.lineDash = context.lineDash;
+				my.cvx.lineDashOffset = context.lineDashOffset;
+				my.cvx.globalAlpha = context.globalAlpha;
+				this.buildPath(my.cvx, my.cv);
+				my.cvx.stroke();
+				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+				my.cvx.globalCompositeOperation = 'source-in';
+				my.cvx.drawImage(canvas, 0, 0);
+				my.cvx.globalCompositeOperation = 'source-over';
+			}
+			else {
+				this.clip(my.cvx, cell);
+				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+				my.cvx.drawImage(canvas, 0, 0);
+			}
+			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterPicture
+@private
+**/
+		my.Entity.prototype.stampFilterPicture = function(engine, cell, force) {
+			var canvas, here, data;
+			canvas = my.canvas[cell];
+			data = this.getImage();
+			if (data) {
+				here = this.prepareStamp();
+				this.rotateCell(my.cvx, my.cv);
+				my.cvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+				my.cvx.globalCompositeOperation = 'source-in';
+				my.cvx.drawImage(canvas, 0, 0);
+				my.cvx.globalCompositeOperation = 'source-over';
+				return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+			}
+			return false;
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterDefault
+@private
+**/
+		my.Entity.prototype.stampFilterDefault = function(engine, cell, force) {
+			var canvas = my.canvas[cell];
+			this.clip(my.cvx, cell);
+			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+			my.cvx.drawImage(canvas, 0, 0);
+			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+		};
+
 		/**
 # Filter
 

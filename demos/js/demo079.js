@@ -37,7 +37,8 @@ var mycode = function() {
 		height: 400,
 		width: 600,
 		backgroundColor: 'black',
-	}).compile();
+		rendered: false,
+	}).clear();
 	scrawl.newBlock({ //add, and stamp, entitys
 		startX: 10,
 		startY: 50,

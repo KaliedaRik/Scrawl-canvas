@@ -176,11 +176,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			my.cv.width = image.width;
 			my.cv.height = image.height;
 			my.cvx.putImageData(image, 0, 0);
-			items.element = my.cv.toDataURL();
+			items.url = my.cv.toDataURL();
 			items.width = image.width;
 			items.height = image.height;
 			image = new my.Image(items);
-			items.source = image.name;
+			items.url = image.name;
 			return my.newPicture(items);
 		};
 		/**
@@ -786,7 +786,7 @@ Picture.setPaste update pasteData object values
 				}
 				return 'img';
 			}
-			if (my.contains(my.canvasnames, this.source)) {
+			if (my.contains(my.cellnames, this.source)) {
 				return 'canvas';
 			}
 
@@ -990,47 +990,6 @@ Picture.setPaste update pasteData object values
 				}
 			}
 			return this;
-		};
-		/**
-Entity.stamp hook function - apply a filter to a Picture, ignoring any transparent areas
-
-Use only with the ScrawlFilters module!
-
-@method stampFilter
-@private
-**/
-		my.Picture.prototype.stampFilter = function(engine, cell) {
-			var imageData, i, iz, canvas, ctx, here, data, composite;
-			if (this.filters.length > 0) {
-				canvas = my.canvas[cell];
-				ctx = my.ctx[this.context];
-				my.cv.width = canvas.width;
-				my.cv.height = canvas.height;
-				my.cvx.save();
-				data = this.getImage();
-				if (data) {
-					here = this.prepareStamp();
-					this.rotateCell(my.cvx, my.cv);
-					my.cvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-					my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-					my.cvx.globalCompositeOperation = 'source-in';
-					my.cvx.drawImage(canvas, 0, 0);
-					my.cvx.globalCompositeOperation = 'source-over';
-					imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
-					for (i = 0, iz = this.filters.length; i < iz; i++) {
-						if (my.contains(my.filternames, this.filters[i])) {
-							imageData = my.filter[this.filters[i]].add(imageData);
-						}
-					}
-					my.cvx.putImageData(imageData, 0, 0);
-					composite = engine.globalCompositeOperation;
-					engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
-					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-					engine.globalCompositeOperation = composite;
-				}
-				my.cvx.restore();
-			}
 		};
 
 		/**

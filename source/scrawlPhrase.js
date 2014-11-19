@@ -802,61 +802,6 @@ Returns an object with coordinates __x__ and __y__
 				y: oY
 			};
 		};
-		/**
-Entity.stamp hook function - apply a filter to a Phrase, and any background detail enclosed by the Phrase
-
-Use only with the ScrawlFilters module!
-
-@method stampFilter
-@private
-**/
-		my.Phrase.prototype.stampFilter = function(engine, cell) {
-			var imageData, i, iz, canvas, ctx, tX, tY, o, here, textY, test, composite;
-			if (this.filters.length > 0) {
-				canvas = my.canvas[cell];
-				ctx = my.ctx[this.context];
-				my.cv.width = canvas.width;
-				my.cv.height = canvas.height;
-				my.cvx.save();
-				my.cvx.font = ctx.font;
-				my.cvx.fillStyle = 'rgb(0, 0, 0)';
-				my.cvx.textAlign = ctx.textAlign;
-				my.cvx.textBaseline = ctx.textBaseline;
-				test = (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path');
-				if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
-					o = this.getOffset();
-					here = this.prepareStamp();
-					textY = this.size * this.lineHeight * this.scale;
-					this.rotateCell(my.cvx, my.cv);
-					tX = here.x + o.x;
-					for (i = 0, iz = this.texts.length; i < iz; i++) {
-						tY = here.y + (textY * i) + o.y;
-						my.text[this.texts[i]].fill(my.cvx, cell, tX, tY);
-					}
-				}
-				else {
-					my.text[this.texts[0]].clipAlongPath();
-				}
-				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-				my.cvx.globalCompositeOperation = 'source-in';
-				my.cvx.drawImage(canvas, 0, 0);
-				my.cvx.globalCompositeOperation = 'source-over';
-				imageData = my.cvx.getImageData(0, 0, canvas.width, canvas.height);
-				for (i = 0, iz = this.filters.length; i < iz; i++) {
-					if (my.contains(my.filternames, this.filters[i])) {
-						imageData = my.filter[this.filters[i]].add(imageData);
-					}
-				}
-				my.cvx.putImageData(imageData, 0, 0);
-				engine.setTransform(1, 0, 0, 1, 0, 0);
-				my.cvx.putImageData(imageData, 0, 0);
-				composite = engine.globalCompositeOperation;
-				engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
-				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-				engine.globalCompositeOperation = composite;
-				my.cvx.restore();
-			}
-		};
 
 		/**
 # Text

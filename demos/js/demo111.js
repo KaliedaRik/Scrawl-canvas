@@ -416,7 +416,7 @@ var mycode = function() {
 	scrawl.newAnimation({
 		fn: function() {
 
-			scrawl.show();
+			scrawl.render();
 
 			data.innerHTML = '<br />pasteX: ' + current_pasteX + ', pasteY: ' + current_pasteY + ', pasteWidth: ' + current_pasteWidth + ', pasteHeight: ' + current_pasteHeight + '<br />copyX: ' + current_copyX + ', copyY: ' + current_copyY + ', copyWidth: ' + current_copyWidth + ', copyHeight: ' + current_copyHeight + '<br />handleX: ' + current_handleX + ', handleY: ' + current_handleY + ', scale: ' + current_scale + ', roll: ' + current_roll + ', flip: ' + current_flip + '<br />&nbsp;<br />start.x: ' + myCell.start.x + '; start.y: ' + myCell.start.y + '; handle.x: ' + myCell.handle.x + '; handle.y: ' + myCell.handle.y + '; copy.x: ' + myCell.copy.x + '; copy.y: ' + myCell.copy.y + '<br />pasteWidth: ' + myCell.pasteWidth + '; pasteHeight: ' + myCell.pasteHeight + '; copyWidth: ' + myCell.copyWidth + '; copyHeight: ' + myCell.copyHeight + '; scale: ' + myCell.scale;
 

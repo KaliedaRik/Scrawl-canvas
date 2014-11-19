@@ -59,6 +59,13 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141118
+	- testing:
+		- tested up to demo111 
+			- need to fix 103, 104
+	- condensed all filters stuff into the filters module
+		- because it was spreading across many other modules
+
 141117
 	- added Cell.rendered attribute
 		- determines whether the cell should take part in any part of the display cycle

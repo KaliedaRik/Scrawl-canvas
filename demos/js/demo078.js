@@ -16,21 +16,17 @@ var mycode = function() {
 		counter = 0,
 		camera;
 
-	//define cells
-	tester = scrawl.pad.mycanvas.addNewCell({
-		name: 'tester',
-		width: 150,
-		height: 150,
+	//stop display cell cleareing itself on each display cycle
+	scrawl.cell[scrawl.pad.mycanvas.display].set({
+		cleared: false,
 	});
 
 	//define entitys
 	circle = scrawl.newWheel({
 		name: 'here',
-		startX: 75,
-		startY: 75,
 		radius: 50,
 		fillStyle: 'red',
-		group: 'tester',
+		globalCompositeOperation: 'source-over',
 	});
 	square = scrawl.newBlock({
 		pivot: 'here',
@@ -39,44 +35,34 @@ var mycode = function() {
 		width: 120,
 		height: 50,
 		fillStyle: 'blue',
-		group: 'tester',
 	});
 	label = scrawl.newPhrase({
 		pivot: 'here',
 		handleX: 'center',
 		handleY: 75,
 		font: '14pt sans-serif',
-		group: 'tester',
-	});
-	camera = scrawl.newPicture({
-		width: 150,
-		height: 150,
-		source: 'tester',
+		globalCompositeOperation: 'source-over',
 	});
 
-	//compile scene
+	//build scene
 	for (var y = 0; y < 6; y++) {
 		for (var x = 0; x < 4; x++) {
 			if (operations[counter]) {
-				tester.clear();
-				circle.stamp();
+				circle.set({
+					startX: (x * 150) + 75,
+					startY: (y * 150) + 75,
+				});
 				square.set({
 					globalCompositeOperation: operations[counter],
-				}).stamp();
+				});
 				label.set({
 					text: operations[counter],
-				}).stamp();
-				camera.set({
-					startX: x * 150,
-					startY: y * 150,
-				}).stamp();
+				});
 			}
+			scrawl.render();
 			counter++;
 		}
 	}
-
-	//display canvas
-	scrawl.pad.mycanvas.show();
 
 	//hide-start
 	testNow = Date.now();
