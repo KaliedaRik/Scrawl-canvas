@@ -65,7 +65,7 @@ var mycode = function() {
 	//build the pattern
 	scrawl.newPattern({
 		name: 'dotty',
-		canvas: 'myCell',
+		source: 'myCell',
 		autoUpdate: true,
 	});
 

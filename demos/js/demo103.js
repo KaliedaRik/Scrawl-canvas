@@ -24,10 +24,10 @@ var mycode = function() {
 	//build entity
 	scrawl.newPattern({
 		name: 'p1',
-		image: 'warning',
+		source: 'warning',
 	}).clone({
 		name: 'p2',
-		image: 'leaves',
+		source: 'leaves',
 	});
 	scrawl.newWheel({
 		name: 'mainWheel',

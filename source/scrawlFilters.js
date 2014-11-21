@@ -489,12 +489,6 @@ Group.stamp hook function - add a filter to a group of Entitys, and any backgrou
 			}
 		};
 		/**
-Entity.stamp hook function - modified by filters module
-@method stampFilter
-@private
-**/
-		my.Entity.prototype.stampFilter = function() {};
-		/**
 Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
 @method stampFilter
 @private
@@ -532,13 +526,13 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 							imageData = my.filter[this.filters[i]].add(imageData);
 						}
 					}
+					my.cvx.putImageData(imageData, 0, 0);
+					composite = engine.globalCompositeOperation;
+					engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
+					engine.setTransform(1, 0, 0, 1, 0, 0);
+					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+					engine.globalCompositeOperation = composite;
 				}
-				my.cvx.putImageData(imageData, 0, 0);
-				composite = engine.globalCompositeOperation;
-				engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
-				engine.setTransform(1, 0, 0, 1, 0, 0);
-				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-				engine.globalCompositeOperation = composite;
 				my.cvx.restore();
 			}
 		};
@@ -666,7 +660,6 @@ Entity.stamp hook helper function
 		my.Filter = function Filter(items) {
 			items = my.safeObject(items);
 			my.Base.call(this, items);
-			this.filterStrength = my.xtGet([items.filterStrength, 1]);
 			this.alpha = my.xtGet([items.alpha, 1]);
 			this.composite = my.xtGet([items.composite, 'source-over']);
 			return this;
@@ -681,15 +674,6 @@ Entity.stamp hook helper function
 		my.Filter.prototype.type = 'Filter';
 		my.Filter.prototype.classname = 'filternames';
 		my.d.Filter = {
-			/**
-Filter strength - many filters will combine with the underlying image
-
-values between 0 (no effect) and 1 (full effect); or '0%' and '100%'
-@property filterStrength
-@type Number - or alternatively percentage String
-@default 1
-**/
-			filterStrength: 1,
 			/**
 Filter alpha
 
@@ -742,22 +726,6 @@ cloneImageData function
 			return false;
 		};
 		/**
-getFilterStrength function
-
-@method getFilterStrength
-@return numerical strength value, between 0 and 1
-@private
-**/
-		my.Filter.prototype.getFilterStrength = function() {
-			var s = (my.isa(this.filterStrength, 'str')) ? parseFloat(this.filterStrength) / 100 : this.filterStrength;
-			if (my.isBetween(s, 0, 1, true)) {
-				return s;
-			}
-			else {
-				return (s > 0.5) ? 1 : 0;
-			}
-		};
-		/**
 getAlpha function
 
 @method getAlpha
@@ -765,12 +733,12 @@ getAlpha function
 @private
 **/
 		my.Filter.prototype.getAlpha = function() {
-			var a = (my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) / 100 : this.alpha;
-			if (my.isBetween(a, 0, 1, true)) {
+			var a = Math.round((my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) * 2.55 : this.alpha);
+			if (my.isBetween(a, 0, 255, true)) {
 				return a;
 			}
 			else {
-				return (a > 0.5) ? 1 : 0;
+				return (a > 127) ? 255 : 0;
 			}
 		};
 		/**
@@ -819,28 +787,18 @@ Add function - takes data, calculates its greyscale and combines it with data in
 @return amended image data object
 **/
 		my.GreyscaleFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				d = data.data,
-				here, i, iz, j, grey, current;
+				here, i, iz, grey;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
 					here = i;
 					grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
-					for (j = 0; j < 3; j++) {
-						here = i + j;
-						current = d[here];
-						if (1 === strength) {
-							d[here] = grey;
-						}
-						else if (0 !== strength) {
-							d[here] = (grey * strength) + (current * iStrength);
-						}
-					}
-					if (alpha < 1) {
-						d[i + 3] *= alpha;
-					}
+					here = i;
+					d[here] = grey;
+					d[++here] = grey;
+					d[++here] = grey;
+					d[++here] = alpha;
 				}
 			}
 			return data;

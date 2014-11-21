@@ -89,6 +89,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @return Picture entity object
     **/
 		my.Entity.prototype.convertToPicture = function(items) {
+			console.log(this.name, 'cTP');
 			items = my.safeObject(items);
 			var image,
 				cell,
@@ -116,6 +117,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @return Picture entity object; false if no entitys contained in group
     **/
 		my.Group.prototype.convertGroupToPicture = function(items) {
+			console.log(this.name, 'cGTP');
 			items = my.safeObject(items);
 			var image,
 				cell,
@@ -140,6 +142,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @private
     **/
 		my.prepareConvert = function(cell, ctx, obj) {
+			console.log(obj.name, 'pC');
 			var left = cell.actualWidth,
 				right = 0,
 				top = cell.actualHeight,
@@ -148,7 +151,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				data,
 				pos;
 			cell.clear();
-			obj.stamp();
+			obj.stamp(null, cell.name);
 			image = ctx.getImageData(0, 0, cell.actualWidth, cell.actualHeight);
 			data = image.data;
 			for (var i = 0, iz = cell.actualHeight; i < iz; i++) {
@@ -173,14 +176,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @private
     **/
 		my.doConvert = function(image, items) {
-			my.cv.width = image.width;
-			my.cv.height = image.height;
-			my.cvx.putImageData(image, 0, 0);
-			items.url = my.cv.toDataURL();
+			console.log('dC');
+			my.imageCanvas.width = image.width;
+			my.imageCanvas.height = image.height;
+			my.imageCvx.putImageData(image, 0, 0);
+			items.url = my.imageCanvas.toDataURL();
 			items.width = image.width;
 			items.height = image.height;
 			image = new my.Image(items);
-			items.url = image.name;
 			return my.newPicture(items);
 		};
 		/**

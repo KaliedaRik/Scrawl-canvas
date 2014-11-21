@@ -484,9 +484,7 @@ Augments Entity.stamp()
 				}
 				else {
 					my.text[this.texts[0]].stampAlongPath(method, cell);
-					if (this.filters.length > 0) {
-						this.stampFilter(my.context[cell], cell);
-					}
+					this.stampFilter(my.context[cell], cell);
 				}
 			}
 			return this;

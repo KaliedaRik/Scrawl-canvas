@@ -3762,6 +3762,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 @private
 **/
 	my.Cell.prototype.setEngine = function(entity) {
+
 		if (!entity.fastStamp) {
 			var myContext = my.ctx[this.context],
 				entityContext = my.ctx[entity.context],
@@ -4762,6 +4763,14 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 		}
 		return this;
 	};
+	/**
+Group constructor hook helper function
+
+(Replaced by Filters module)
+@method filtersGroupInit
+@private
+**/
+	my.Group.prototype.filtersGroupInit = function() {};
 	/**
 Group stamp helper function
 

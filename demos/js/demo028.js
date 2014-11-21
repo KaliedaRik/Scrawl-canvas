@@ -52,7 +52,7 @@ var mycode = function() {
 	//build the pattern
 	dotty = scrawl.newPattern({
 		name: 'dotty',
-		canvas: 'patternCell',
+		source: 'patternCell',
 	});
 
 	//add a block entity, for showing off the pattern

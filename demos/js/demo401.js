@@ -8,69 +8,64 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var myInput,
-		updateInput,
-		IETimer = Date.now();
+	var filter,
 
-	//define entitys
-	scrawl.newPicture({
-		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
-		callback: function() {
-			//clone image and add filter to it
-			scrawl.image.parrot.clone({
-				name: 'grayparrot',
-			}).filter('grayscale', {
-				useSourceData: true,
-				value: 1,
-			});
-			this.clone({
-				startX: 120,
-				startY: 210,
-				source: 'grayparrot',
-			});
-		},
+		current_alpha = 255,
+		input_alpha = document.getElementById('alpha'),
+		event_alpha,
+		stopE;
+
+	//set the initial imput values
+	input_alpha.value = '255';
+
+	//define filter
+	filter = scrawl.newGreyscaleFilter({
+		name: 'myfilter',
+		alpha: 255,
 	});
 
-	//preparing the DOM input elements
-	myInput = document.getElementById('myvalue');
-	myInput.value = 1;
+	//define entity
+	scrawl.newPicture({
+		name: 'parrot',
+		copyWidth: 360,
+		copyHeight: 360,
+		pasteWidth: 360,
+		pasteHeight: 360,
+		copyX: 50,
+		pasteX: 20,
+		pasteY: 20,
+		filters: ['myfilter'],
+		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		url: 'img/carousel/cagedparrot.png',
+	});
 
-	//event listener
-	updateInput = function(e) {
-		if (scrawl.xt(scrawl.image.grayparrot)) {
-			scrawl.image.grayparrot.filter('grayscale', {
-				value: parseFloat(myInput.value),
-				useSourceData: true,
-			});
-		}
-		if (e) {
-			e.preventDefault();
-			e.returnValue = false;
-		}
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
 	};
-	myInput.addEventListener('input', updateInput, false); //for firefox real-time updating
-	myInput.addEventListener('change', updateInput, false);
+
+	event_alpha = function(e) {
+		stopE(e);
+		current_alpha = parseFloat(input_alpha.value);
+		filter.set({
+			alpha: current_alpha,
+		});
+	};
+	input_alpha.addEventListener('input', event_alpha, false);
+	input_alpha.addEventListener('change', event_alpha, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			//known bug re importing images dynamically - IE11 
-			// - repeating the update after a second fixes the undisplayed grayscale image issue
-			if (IETimer && IETimer + 1000 < Date.now()) {
-				updateInput();
-				IETimer = false;
-			}
+
 			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Current grayscale value: ' + myInput.value + '. Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
