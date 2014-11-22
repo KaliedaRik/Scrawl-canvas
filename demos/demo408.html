@@ -5,31 +5,66 @@
   <title>Demo 408</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
+
+  <style>
+    table {
+      width: 100%;
+    }
+    th,
+    td {
+      border: 1px solid gray;
+      font-size: 0.65em;
+      text-align: center;
+      width: 24%;
+    }
+    .rowlabel {
+      font-weight: bold;
+    }
+    table input {
+      width: 80%;
+    }
+    .t0 {
+      background-color: lightgreen;
+    }
+    .t1 {
+      background-color: lightblue;
+    }
+  </style>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 408</h1>
-  <h2>Scrawl image filters - blur()</h2>
+  <h2>Scrawl filters - blur</h2>
   <h3>Modules: images, filters, animation</h3>
-  <p>Be aware: larger blur brush sizes are considerably slower than smaller ones</p>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
-  <p>Radius value (px): 0.5
-    <input id="radius" type="range" value="2" min="0.5" max="20" step="0.5" />20
-  </p>
-  <p>Radius X value (px): 0.5
-    <input id="radiusx" type="range" value="2" min="0.5" max="20" step="0.5" />20
-  </p>
-  <p>Radius Y value (px): 0.5
-    <input id="radiusy" type="range" value="2" min="0.5" max="20" step="0.5" />20
-  </p>
-  <p>Roll value (degrees): 0
-    <input id="roll" type="range" value="0" min="0" max="180" step="1" />180
-  </p>
-  <img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo408" />
 
   <p id="testmessage"></p>
+
+  <table>
+    <tr class="t0">
+      <td class="rowlabel">Alpha</td>
+      <td>
+        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Roll</td>
+      <td>
+        <input id="roll" type="range" value="0" min="0" max="360" step="1" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Radius x</td>
+      <td>
+        <input id="radiusX" type="range" value="3" min="0" max="10" step="0.1" />
+      </td>
+      <td class="rowlabel">Radius y</td>
+      <td>
+        <input id="radiusY" type="range" value="3" min="0" max="10" step="0.1" />
+      </td>
+    </tr>
+  </table>
 
   <div id="testdetails">
     <p><b>Scenario:</b> ???</p>

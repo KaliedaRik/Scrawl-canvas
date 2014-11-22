@@ -8,112 +8,118 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var radius,
-		radiusX,
-		radiusY,
-		roll,
-		radX = 5,
-		radY = 5,
-		rollVal = 0,
-		updateInput,
-		getRadius,
-		getRadiusX,
-		getRadiusY,
-		getRoll;
+	var filter,
 
-	//import image
-	scrawl.getImagesByClass('demo408');
+		current_alpha = 1,
+		input_alpha = document.getElementById('alpha'),
+		event_alpha,
 
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'blurparrot',
-	}).filter('blur', {
-		radius: 5,
-		useSourceData: true,
+		current_roll = 0,
+		input_roll = document.getElementById('roll'),
+		event_roll,
+
+		current_radiusX = 3,
+		input_radiusX = document.getElementById('radiusX'),
+		event_radiusX,
+
+		current_radiusY = 3,
+		input_radiusY = document.getElementById('radiusY'),
+		event_radiusY,
+
+		stopE;
+
+	//set the initial imput values
+	input_alpha.value = '1';
+	input_roll.value = '0';
+	input_radiusX.value = '3';
+	input_radiusY.value = '3';
+
+	//define filter
+	filter = scrawl.newBlurFilter({
+		name: 'myfilter',
+		alpha: 1,
+		roll: 0,
+		radiusX: 3,
+		radiusY: 3,
+		includeInvisiblePoints: false,
 	});
 
-	//define entitys
+	//define entity
 	scrawl.newPicture({
 		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-	}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'blurparrot',
+		copyWidth: 360,
+		copyHeight: 360,
+		pasteWidth: 360,
+		pasteHeight: 360,
+		copyX: 50,
+		pasteX: 20,
+		pasteY: 20,
+		filters: ['myfilter'],
+		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//preparing the DOM input elements
-	radius = document.getElementById('radius');
-	radius.value = 5;
-	radiusX = document.getElementById('radiusx');
-	radiusX.value = 5;
-	radiusY = document.getElementById('radiusy');
-	radiusY.value = 5;
-	roll = document.getElementById('roll');
-	roll.value = 0;
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
 
-	//image update function
-	updateInput = function() {
-		scrawl.image.blurparrot.filter('blur', {
-			radiusX: radX,
-			radiusY: radY,
-			roll: rollVal,
-			useSourceData: true,
+	event_alpha = function(e) {
+		stopE(e);
+		current_alpha = parseFloat(input_alpha.value);
+		filter.set({
+			alpha: current_alpha,
 		});
 	};
+	input_alpha.addEventListener('input', event_alpha, false);
+	input_alpha.addEventListener('change', event_alpha, false);
 
-	//event listeners
-	getRadius = function(e) {
-		radX = parseFloat(radius.value);
-		radiusX.value = radX;
-		radY = parseFloat(radius.value);
-		radiusY.value = radY;
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
+	event_roll = function(e) {
+		stopE(e);
+		current_roll = parseFloat(input_roll.value);
+		filter.set({
+			roll: current_roll,
+		});
 	};
-	radius.addEventListener('change', getRadius, false);
-	getRadiusX = function(e) {
-		radX = parseFloat(radiusX.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	radiusX.addEventListener('change', getRadiusX, false);
-	getRadiusY = function(e) {
-		radY = parseFloat(radiusY.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	radiusY.addEventListener('change', getRadiusY, false);
-	getRoll = function(e) {
-		rollVal = parseFloat(roll.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	roll.addEventListener('change', getRoll, false);
+	input_roll.addEventListener('input', event_roll, false);
+	input_roll.addEventListener('change', event_roll, false);
 
-	//to make sure everything is in place ...
-	updateInput();
+	event_radiusX = function(e) {
+		stopE(e);
+		current_radiusX = parseFloat(input_radiusX.value);
+		filter.set({
+			radiusX: current_radiusX,
+		});
+	};
+	input_radiusX.addEventListener('input', event_radiusX, false);
+	input_radiusX.addEventListener('change', event_radiusX, false);
+
+	event_radiusY = function(e) {
+		stopE(e);
+		current_radiusY = parseFloat(input_radiusY.value);
+		filter.set({
+			radiusY: current_radiusY,
+		});
+	};
+	input_radiusY.addEventListener('input', event_radiusY, false);
+	input_radiusY.addEventListener('change', event_radiusY, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
+
 			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime) + '<br />radius x: ' + radX + '; radius y: ' + radY + '; roll: ' + rollVal;
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
+
 };
 
 scrawl.loadModules({

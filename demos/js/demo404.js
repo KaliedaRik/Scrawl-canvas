@@ -8,62 +8,84 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var myInput,
-		updateInput;
+	var filter,
 
-	//import image
-	scrawl.getImagesByClass('demo404');
+		current_alpha = 1,
+		input_alpha = document.getElementById('alpha'),
+		event_alpha,
 
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'saturationparrot',
-	}).filter('saturation', {
-		value: 1.5,
-		useSourceData: true,
+		current_saturation = 1.5,
+		input_saturation = document.getElementById('saturation'),
+		event_saturation,
+		stopE;
+
+	//set the initial imput values
+	input_alpha.value = '1';
+	input_saturation.value = '1.5';
+
+	//define filter
+	filter = scrawl.newSaturationFilter({
+		name: 'myfilter',
+		alpha: 1,
+		saturation: 1.5,
 	});
 
-	//define entitys
+	//define entity
 	scrawl.newPicture({
 		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-	}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'saturationparrot',
+		copyWidth: 360,
+		copyHeight: 360,
+		pasteWidth: 360,
+		pasteHeight: 360,
+		copyX: 50,
+		pasteX: 20,
+		pasteY: 20,
+		filters: ['myfilter'],
+		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//preparing the DOM input elements
-	myInput = document.getElementById('myvalue');
-	myInput.value = 1.5;
-
-	//event listener
-	updateInput = function(e) {
-		scrawl.image.saturationparrot.filter('saturation', {
-			value: parseFloat(myInput.value),
-			useSourceData: true,
-		});
+	//event listeners
+	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
 	};
-	myInput.addEventListener('input', updateInput, false); //for firefox real-time updating
-	myInput.addEventListener('change', updateInput, false);
+
+	event_alpha = function(e) {
+		stopE(e);
+		current_alpha = parseFloat(input_alpha.value);
+		filter.set({
+			alpha: current_alpha,
+		});
+	};
+	input_alpha.addEventListener('input', event_alpha, false);
+	input_alpha.addEventListener('change', event_alpha, false);
+
+	event_saturation = function(e) {
+		stopE(e);
+		current_saturation = parseFloat(input_saturation.value);
+		filter.set({
+			saturation: current_saturation,
+		});
+	};
+	input_saturation.addEventListener('input', event_saturation, false);
+	input_saturation.addEventListener('change', event_saturation, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
+
 			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Current saturation value: ' + myInput.value + '. Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
+
 };
 
 scrawl.loadModules({

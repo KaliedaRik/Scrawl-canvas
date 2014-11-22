@@ -5,34 +5,149 @@
   <title>Demo 410</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
+
   <style>
-    input {
-      width: 50%;
+    table {
+      width: 100%;
+    }
+    th,
+    td {
+      border: 1px solid gray;
+      font-size: 0.65em;
+      text-align: center;
+      width: 24%;
+    }
+    .rowlabel {
+      font-weight: bold;
+    }
+    table input {
+      width: 80%;
+    }
+    .t0 {
+      background-color: lightgreen;
+    }
+    .t1 {
+      background-color: lightblue;
+    }
+    #matrix td {
+      width: 19%;
+      font-size: 1em;
+    }
+    #matrix input {
+      width: 100%;
     }
   </style>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 410</h1>
-  <h2>Scrawl image filters - matrix()</h2>
+  <h2>Scrawl filters - matrix</h2>
   <h3>Modules: images, filters, animation</h3>
-  <p>Try these other strings to see different results (copy/paste strings into box below):</p>
-  <p>-1, -1, -1, -1, 8, -1, -1, -1, -1
-    <br />1, 1, 1, 1, 0.7, -1, -1, -1, -1
-    <br />-1, 0, 1, -2, 0, 2, -1, 0, 1
-    <br />0, -1, 0, -1, 5, -1, 0, -1, 0
-    <br />1, 3, 10, 3, 1, 3, 10, 21, 10, 3, 10, 21, 43, 21, 10, 3, 10, 21, 10, 3, 1, 3, 10, 3, 1
-  </p>
-  </div>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
-  <p>Matrix string:
-    <input id="matrix" type="text" value="-1, -1, -1, -1, 8, -1, -1, -1, -1" />
-  </p>
-  <img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo410" />
 
   <p id="testmessage"></p>
+
+  <table>
+    <tr class="t0">
+      <td class="rowlabel">Alpha</td>
+      <td>
+        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Matrix</td>
+      <td>
+        <table id="matrix">
+          <tr class="t1">
+            <td>
+              <input id="cell00" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell01" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell02" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell03" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell04" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+          </tr>
+          <tr class="t1">
+            <td>
+              <input id="cell05" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell06" type="number" min="-20" max="20" value="-2" step="0.1" />
+            </td>
+            <td>
+              <input id="cell07" type="number" min="-20" max="20" value="-1" step="0.1" />
+            </td>
+            <td>
+              <input id="cell08" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell09" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+          </tr>
+          <tr class="t1">
+            <td>
+              <input id="cell10" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell11" type="number" min="-20" max="20" value="-1" step="0.1" />
+            </td>
+            <td>
+              <input id="cell12" type="number" min="-20" max="20" value="1" step="0.1" />
+            </td>
+            <td>
+              <input id="cell13" type="number" min="-20" max="20" value="1" step="0.1" />
+            </td>
+            <td>
+              <input id="cell14" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+          </tr>
+          <tr class="t1">
+            <td>
+              <input id="cell15" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell16" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell17" type="number" min="-20" max="20" value="1" step="0.1" />
+            </td>
+            <td>
+              <input id="cell18" type="number" min="-20" max="20" value="2" step="0.1" />
+            </td>
+            <td>
+              <input id="cell19" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+          </tr>
+          <tr class="t1">
+            <td>
+              <input id="cell20" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell21" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell22" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell23" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+            <td>
+              <input id="cell24" type="number" min="-20" max="20" value="0" step="0.1" />
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 
   <div id="testdetails">
     <p><b>Scenario:</b> ???</p>
@@ -45,9 +160,10 @@
     <p><b>Result images:</b>
     </p>
     <img src="img/demopics/demo410.png" alt="image of expected test result" />
+  </div>
 
-    <script src="../source/scrawlCore.js"></script>
-    <script id="testscript" src="js/demo410.js"></script>
+  <script src="../source/scrawlCore.js"></script>
+  <script id="testscript" src="js/demo410.js"></script>
 </body>
 
 </html>

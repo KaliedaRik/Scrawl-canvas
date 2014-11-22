@@ -76,7 +76,7 @@ var mycode = function() {
 	});
 	scrawl.newMatrixFilter({
 		name: 'myMatrix',
-		data: [-2, -1, 0, -1, 1, 1, 0, 1, 2],
+		data: [-2, -1, 0, -1, 0, 1, 0, 1, 2],
 	});
 	scrawl.newSharpenFilter({
 		name: 'mySharpen',

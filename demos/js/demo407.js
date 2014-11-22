@@ -8,168 +8,213 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var myInput,
-		updateInput,
-		rr, rg, rb, gr, gg, gb, br, bg, bb,
-		rrVal = 0.39,
-		rgVal = 0.35,
-		rbVal = 0.27,
-		grVal = 0.77,
-		ggVal = 0.69,
-		gbVal = 0.53,
-		brVal = 0.19,
-		bgVal = 0.17,
-		bbVal = 0.13,
-		_rr, _rg, _rb, _gr, _gg, _gb, _br, _bg, _bb;
+	var filter,
 
-	//import image
-	scrawl.getImagesByClass('demo407');
+		current_alpha = 1,
+		input_alpha = document.getElementById('alpha'),
+		event_alpha,
 
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'tintparrot',
-	}).filter('tint', {
-		value: 1,
-		useSourceData: true,
+		current_redInRed = 0,
+		input_redInRed = document.getElementById('redInRed'),
+		event_redInRed,
+
+		current_redInGreen = 1,
+		input_redInGreen = document.getElementById('redInGreen'),
+		event_redInGreen,
+
+		current_redInBlue = 0,
+		input_redInBlue = document.getElementById('redInBlue'),
+		event_redInBlue,
+
+		current_greenInRed = 0,
+		input_greenInRed = document.getElementById('greenInRed'),
+		event_greenInRed,
+
+		current_greenInGreen = 0,
+		input_greenInGreen = document.getElementById('greenInGreen'),
+		event_greenInGreen,
+
+		current_greenInBlue = 1,
+		input_greenInBlue = document.getElementById('greenInBlue'),
+		event_greenInBlue,
+
+		current_blueInRed = 1,
+		input_blueInRed = document.getElementById('blueInRed'),
+		event_blueInRed,
+
+		current_blueInGreen = 0,
+		input_blueInGreen = document.getElementById('blueInGreen'),
+		event_blueInGreen,
+
+		current_blueInBlue = 0,
+		input_blueInBlue = document.getElementById('blueInBlue'),
+		event_blueInBlue,
+
+		stopE;
+
+	//set the initial imput values
+	input_alpha.value = '1';
+	input_redInRed.value = '0';
+	input_redInGreen.value = '1';
+	input_redInBlue.value = '0';
+	input_greenInRed.value = '0';
+	input_greenInGreen.value = '0';
+	input_greenInBlue.value = '1';
+	input_blueInRed.value = '1';
+	input_blueInGreen.value = '0';
+	input_blueInBlue.value = '0';
+
+	//define filter
+	filter = scrawl.newTintFilter({
+		name: 'myfilter',
+		alpha: 1,
+		redInRed: 0,
+		redInGreen: 1,
+		redInBlue: 0,
+		greenInRed: 0,
+		greenInGreen: 0,
+		greenInBlue: 1,
+		blueInRed: 1,
+		blueInGreen: 0,
+		blueInBlue: 0,
 	});
 
-	//define entitys
+	//define entity
 	scrawl.newPicture({
 		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-	}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'tintparrot',
+		copyWidth: 360,
+		copyHeight: 360,
+		pasteWidth: 360,
+		pasteHeight: 360,
+		copyX: 50,
+		pasteX: 20,
+		pasteY: 20,
+		filters: ['myfilter'],
+		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//preparing the DOM input elements
-	myInput = document.getElementById('myvalue');
-	myInput.value = 1;
-	rr = document.getElementById('rr');
-	rr.value = rrVal;
-	rg = document.getElementById('rg');
-	rg.value = rgVal;
-	rb = document.getElementById('rb');
-	rb.value = rbVal;
-	gr = document.getElementById('gr');
-	gr.value = grVal;
-	gg = document.getElementById('gg');
-	gg.value = ggVal;
-	gb = document.getElementById('gb');
-	gb.value = gbVal;
-	br = document.getElementById('br');
-	br.value = brVal;
-	bg = document.getElementById('bg');
-	bg.value = bgVal;
-	bb = document.getElementById('bb');
-	bb.value = bbVal;
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
 
-	//event listener
-	updateInput = function(e) {
-		scrawl.image.tintparrot.filter('tint', {
-			value: parseFloat(myInput.value),
-			useSourceData: true,
-			rr: rrVal,
-			rg: rgVal,
-			rb: rbVal,
-			gr: grVal,
-			gg: ggVal,
-			gb: gbVal,
-			br: brVal,
-			bg: bgVal,
-			bb: bbVal,
+	event_alpha = function(e) {
+		stopE(e);
+		current_alpha = parseFloat(input_alpha.value);
+		filter.set({
+			alpha: current_alpha,
 		});
-		if (e) {
-			e.preventDefault();
-			e.returnValue = false;
-		}
 	};
-	myInput.addEventListener('input', updateInput, false); //for firefox real-time updating
-	myInput.addEventListener('change', updateInput, false);
-	_rr = function(e) {
-		rrVal = parseFloat(rr.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	rr.addEventListener('change', _rr, false);
-	_rg = function(e) {
-		rgVal = parseFloat(rg.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	rg.addEventListener('change', _rg, false);
-	_rb = function(e) {
-		rbVal = parseFloat(rb.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	rb.addEventListener('change', _rb, false);
-	_gr = function(e) {
-		grVal = parseFloat(gr.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	gr.addEventListener('change', _gr, false);
-	_gg = function(e) {
-		ggVal = parseFloat(gg.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	gg.addEventListener('change', _gg, false);
-	_gb = function(e) {
-		gbVal = parseFloat(gb.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	gb.addEventListener('change', _gb, false);
-	_br = function(e) {
-		brVal = parseFloat(br.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	br.addEventListener('change', _br, false);
-	_bg = function(e) {
-		bgVal = parseFloat(bg.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	bg.addEventListener('change', _bg, false);
-	_bb = function(e) {
-		bbVal = parseFloat(bb.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	bb.addEventListener('change', _bb, false);
+	input_alpha.addEventListener('input', event_alpha, false);
+	input_alpha.addEventListener('change', event_alpha, false);
 
-	//to make sure everything is in place ...
-	updateInput();
+	event_redInRed = function(e) {
+		stopE(e);
+		current_redInRed = parseFloat(input_redInRed.value);
+		filter.set({
+			redInRed: current_redInRed,
+		});
+	};
+	input_redInRed.addEventListener('input', event_redInRed, false);
+	input_redInRed.addEventListener('change', event_redInRed, false);
+
+	event_redInGreen = function(e) {
+		stopE(e);
+		current_redInGreen = parseFloat(input_redInGreen.value);
+		filter.set({
+			redInGreen: current_redInGreen,
+		});
+	};
+	input_redInGreen.addEventListener('input', event_redInGreen, false);
+	input_redInGreen.addEventListener('change', event_redInGreen, false);
+
+	event_redInBlue = function(e) {
+		stopE(e);
+		current_redInBlue = parseFloat(input_redInBlue.value);
+		filter.set({
+			redInBlue: current_redInBlue,
+		});
+	};
+	input_redInBlue.addEventListener('input', event_redInBlue, false);
+	input_redInBlue.addEventListener('change', event_redInBlue, false);
+
+	event_greenInRed = function(e) {
+		stopE(e);
+		current_greenInRed = parseFloat(input_greenInRed.value);
+		filter.set({
+			greenInRed: current_greenInRed,
+		});
+	};
+	input_greenInRed.addEventListener('input', event_greenInRed, false);
+	input_greenInRed.addEventListener('change', event_greenInRed, false);
+
+	event_greenInGreen = function(e) {
+		stopE(e);
+		current_greenInGreen = parseFloat(input_greenInGreen.value);
+		filter.set({
+			greenInGreen: current_greenInGreen,
+		});
+	};
+	input_greenInGreen.addEventListener('input', event_greenInGreen, false);
+	input_greenInGreen.addEventListener('change', event_greenInGreen, false);
+
+	event_greenInBlue = function(e) {
+		stopE(e);
+		current_greenInBlue = parseFloat(input_greenInBlue.value);
+		filter.set({
+			greenInBlue: current_greenInBlue,
+		});
+	};
+	input_greenInBlue.addEventListener('input', event_greenInBlue, false);
+	input_greenInBlue.addEventListener('change', event_greenInBlue, false);
+
+	event_blueInRed = function(e) {
+		stopE(e);
+		current_blueInRed = parseFloat(input_blueInRed.value);
+		filter.set({
+			blueInRed: current_blueInRed,
+		});
+	};
+	input_blueInRed.addEventListener('input', event_blueInRed, false);
+	input_blueInRed.addEventListener('change', event_blueInRed, false);
+
+	event_blueInGreen = function(e) {
+		stopE(e);
+		current_blueInGreen = parseFloat(input_blueInGreen.value);
+		filter.set({
+			blueInGreen: current_blueInGreen,
+		});
+	};
+	input_blueInGreen.addEventListener('input', event_blueInGreen, false);
+	input_blueInGreen.addEventListener('change', event_blueInGreen, false);
+
+	event_blueInBlue = function(e) {
+		stopE(e);
+		current_blueInBlue = parseFloat(input_blueInBlue.value);
+		filter.set({
+			blueInBlue: current_blueInBlue,
+		});
+	};
+	input_blueInBlue.addEventListener('input', event_blueInBlue, false);
+	input_blueInBlue.addEventListener('change', event_blueInBlue, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
+
 			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Current tint value: ' + myInput.value + '. Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime) + '<br />rr: ' + rrVal + '; rg: ' + rgVal + '; rb: ' + rbVal + '; gr: ' + grVal + '; gg: ' + ggVal + '; gb: ' + gbVal + '; br: ' + brVal + '; bg: ' + bgVal + '; bb: ' + bbVal;
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
+
 };
 
 scrawl.loadModules({

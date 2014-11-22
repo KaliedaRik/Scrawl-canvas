@@ -5,76 +5,96 @@
   <title>Demo 407</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
+
   <style>
     table {
       width: 100%;
     }
     th,
     td {
-      border: 1px solid black;
+      border: 1px solid gray;
+      font-size: 0.65em;
       text-align: center;
-      width: 24%;
+      width: 12%;
+    }
+    .rowlabel {
+      font-weight: bold;
     }
     table input {
       width: 80%;
     }
+    .t0 {
+      background-color: lightgreen;
+    }
+    .t1 {
+      background-color: lightblue;
+    }
   </style>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 407</h1>
-  <h2>Scrawl image filters - tint()</h2>
+  <h2>Scrawl filters - tint</h2>
   <h3>Modules: images, filters, animation</h3>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
-  <p>Tint value: 0 ('0%')
-    <input id="myvalue" type="range" value="1" min="0" max="1" step="0.05" />1 ('100%')
-  </p>
-  <table>
-    <tr>
-      <th rowspan="2">Source channel</th>
-      <th colspan="3">Destination channels</th>
-    </tr>
-    <tr>
-      <th>Red</th>
-      <th>Green</th>
-      <th>Blue</th>
-    </tr>
-    <tr>
-      <td><b>Red</b>
-      </td>
-      <td>0
-        <input id="rr" type="range" value="0.39" min="0" max="1" step="0.01" />1</td>
-      <td>0
-        <input id="rg" type="range" value="0.35" min="0" max="1" step="0.01" />1</td>
-      <td>0
-        <input id="rb" type="range" value="0.27" min="0" max="1" step="0.01" />1</td>
-    </tr>
-    <tr>
-      <td><b>Green</b>
-      </td>
-      <td>0
-        <input id="gr" type="range" value="0.77" min="0" max="1" step="0.01" />1</td>
-      <td>0
-        <input id="gg" type="range" value="0.69" min="0" max="1" step="0.01" />1</td>
-      <td>0
-        <input id="gb" type="range" value="0.53" min="0" max="1" step="0.01" />1</td>
-    </tr>
-    <tr>
-      <td><b>Blue</b>
-      </td>
-      <td>0
-        <input id="br" type="range" value="0.19" min="0" max="1" step="0.01" />1</td>
-      <td>0
-        <input id="bg" type="range" value="0.17" min="0" max="1" step="0.01" />1</td>
-      <td>0
-        <input id="bb" type="range" value="0.13" min="0" max="1" step="0.01" />1</td>
-    </tr>
-  </table>
-  <img src="img/carousel/cagedparrot.png" id="parrot" alt="color version of parrot" class="demo407" />
 
   <p id="testmessage"></p>
+
+  <table>
+    <tr class="t0">
+      <td class="rowlabel">Alpha</td>
+      <td>
+        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Red-in-red</td>
+      <td>
+        <input id="redInRed" type="range" value="0" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Green-in-red</td>
+      <td>
+        <input id="greenInRed" type="range" value="1" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Blue-in-red</td>
+      <td>
+        <input id="blueInRed" type="range" value="0" min="0" max="1" step="0.01" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td class="rowlabel">Red-in-green</td>
+      <td>
+        <input id="redInGreen" type="range" value="0" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Green-in-green</td>
+      <td>
+        <input id="greenInGreen" type="range" value="0" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Blue-in-green</td>
+      <td>
+        <input id="blueInGreen" type="range" value="1" min="0" max="1" step="0.01" />
+      </td>
+    </tr>
+    <tr class="t0">
+      <td class="rowlabel">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td class="rowlabel">Red-in-blue</td>
+      <td>
+        <input id="redInBlue" type="range" value="1" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Green-in-blue</td>
+      <td>
+        <input id="greenInBlue" type="range" value="0" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">Blue-in-blue</td>
+      <td>
+        <input id="blueInBlue" type="range" value="0" min="0" max="1" step="0.01" />
+      </td>
+    </tr>
+  </table>
 
   <div id="testdetails">
     <p><b>Scenario:</b> ???</p>

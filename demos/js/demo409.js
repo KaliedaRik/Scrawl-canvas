@@ -8,86 +8,133 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var width,
-		height,
-		widthVal = 20,
-		heightVal = 20,
-		getWidth,
-		getHeight,
-		updateInput;
+	var filter,
 
-	//import image
-	scrawl.getImagesByClass('demo409');
+		current_alpha = 1,
+		input_alpha = document.getElementById('alpha'),
+		event_alpha,
 
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'pixelateparrot',
-	}).filter('pixelate', {
-		width: 20,
-		height: 20,
-		useSourceData: true,
+		current_width = 10,
+		input_width = document.getElementById('width'),
+		event_width,
+
+		current_height = 10,
+		input_height = document.getElementById('height'),
+		event_height,
+
+		current_offsetX = 0,
+		input_offsetX = document.getElementById('offsetX'),
+		event_offsetX,
+
+		current_offsetY = 0,
+		input_offsetY = document.getElementById('offsetY'),
+		event_offsetY,
+
+		stopE;
+
+	//set the initial imput values
+	input_alpha.value = '1';
+	input_width.value = '10';
+	input_height.value = '10';
+	input_offsetX.value = '0';
+	input_offsetY.value = '0';
+
+	//define filter
+	filter = scrawl.newPixelateFilter({
+		name: 'myfilter',
+		alpha: 1,
+		width: 10,
+		height: 10,
+		offsetX: 0,
+		offsetY: 0,
 	});
 
-	//define entitys
+	//define entity
 	scrawl.newPicture({
 		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-	}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'pixelateparrot',
+		copyWidth: 360,
+		copyHeight: 360,
+		pasteWidth: 360,
+		pasteHeight: 360,
+		copyX: 50,
+		pasteX: 20,
+		pasteY: 20,
+		filters: ['myfilter'],
+		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//preparing the DOM input elements
-	width = document.getElementById('width');
-	width.value = 20;
-	height = document.getElementById('height');
-	height.value = 20;
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
 
-	//image update function
-	updateInput = function() {
-		scrawl.image.pixelateparrot.filter('pixelate', {
-			width: widthVal,
-			height: heightVal,
-			useSourceData: true,
+	event_alpha = function(e) {
+		stopE(e);
+		current_alpha = parseFloat(input_alpha.value);
+		filter.set({
+			alpha: current_alpha,
 		});
 	};
+	input_alpha.addEventListener('input', event_alpha, false);
+	input_alpha.addEventListener('change', event_alpha, false);
 
-	//event listeners
-	getWidth = function(e) {
-		widthVal = parseFloat(width.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
+	event_width = function(e) {
+		stopE(e);
+		current_width = parseFloat(input_width.value);
+		filter.set({
+			width: current_width,
+		});
 	};
-	width.addEventListener('change', getWidth, false);
-	getHeight = function(e) {
-		heightVal = parseFloat(height.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	height.addEventListener('change', getHeight, false);
+	input_width.addEventListener('input', event_width, false);
+	input_width.addEventListener('change', event_width, false);
 
-	//to make sure everything is in place ...
-	updateInput();
+	event_height = function(e) {
+		stopE(e);
+		current_height = parseFloat(input_height.value);
+		filter.set({
+			height: current_height,
+		});
+	};
+	input_height.addEventListener('input', event_height, false);
+	input_height.addEventListener('change', event_height, false);
+
+	event_offsetX = function(e) {
+		stopE(e);
+		current_offsetX = parseFloat(input_offsetX.value);
+		filter.set({
+			offsetX: current_offsetX,
+		});
+	};
+	input_offsetX.addEventListener('input', event_offsetX, false);
+	input_offsetX.addEventListener('change', event_offsetX, false);
+
+	event_offsetY = function(e) {
+		stopE(e);
+		current_offsetY = parseFloat(input_offsetY.value);
+		filter.set({
+			offsetY: current_offsetY,
+		});
+	};
+	input_offsetY.addEventListener('input', event_offsetY, false);
+	input_offsetY.addEventListener('change', event_offsetY, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
+
 			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime) + '<br />width: ' + widthVal + '; height: ' + heightVal;
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
+
 };
 
 scrawl.loadModules({

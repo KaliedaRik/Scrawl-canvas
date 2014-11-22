@@ -8,67 +8,69 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var myInput,
-		updateInput;
+	var filter,
 
-	//import image
-	scrawl.getImagesByClass('demo406');
+		current_alpha = 1,
+		input_alpha = document.getElementById('alpha'),
+		event_alpha,
 
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'sepiaparrot',
-	}).filter('sepia', {
-		value: 1,
-		useSourceData: true,
+		stopE;
+
+	//set the initial imput values
+	input_alpha.value = '1';
+
+	//define filter
+	filter = scrawl.newSepiaFilter({
+		name: 'myfilter',
+		alpha: 1,
 	});
 
-	//define entitys
+	//define entity
 	scrawl.newPicture({
 		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-	}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'sepiaparrot',
+		copyWidth: 360,
+		copyHeight: 360,
+		pasteWidth: 360,
+		pasteHeight: 360,
+		copyX: 50,
+		pasteX: 20,
+		pasteY: 20,
+		filters: ['myfilter'],
+		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//preparing the DOM input elements
-	myInput = document.getElementById('myvalue');
-	myInput.value = 1;
-
-	//event listener
-	updateInput = function(e) {
-		scrawl.image.sepiaparrot.filter('sepia', {
-			value: parseFloat(myInput.value),
-			useSourceData: true,
-		});
-		if (e) {
-			e.preventDefault();
-			e.returnValue = false;
-		}
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
 	};
-	myInput.addEventListener('input', updateInput, false); //for firefox real-time updating
-	myInput.addEventListener('change', updateInput, false);
 
-	//to make sure everything is in place ...
-	updateInput();
+	event_alpha = function(e) {
+		stopE(e);
+		current_alpha = parseFloat(input_alpha.value);
+		filter.set({
+			alpha: current_alpha,
+		});
+	};
+	input_alpha.addEventListener('input', event_alpha, false);
+	input_alpha.addEventListener('change', event_alpha, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
+
 			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Current sepia value: ' + myInput.value + '. Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
+
 };
 
 scrawl.loadModules({

@@ -8,100 +8,117 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var red,
-		green,
-		blue,
-		redVal = 1,
-		greenVal = 1,
-		blueVal = 1,
-		updateInput,
-		getRed,
-		getGreen,
-		getBlue;
+	var filter,
 
-	//import image
-	scrawl.getImagesByClass('demo411');
+		current_alpha = 1,
+		input_alpha = document.getElementById('alpha'),
+		event_alpha,
 
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'channelsparrot',
-	}).filter('channels', {
-		red: 1,
+		current_red = 2,
+		input_red = document.getElementById('red'),
+		event_red,
+
+		current_green = 1,
+		input_green = document.getElementById('green'),
+		event_green,
+
+		current_blue = 0,
+		input_blue = document.getElementById('blue'),
+		event_blue,
+
+		stopE;
+
+	//set the initial imput values
+	input_alpha.value = '1';
+	input_red.value = '2';
+	input_green.value = '1';
+	input_blue.value = '0';
+
+	//define filter
+	filter = scrawl.newChannelsFilter({
+		name: 'myfilter',
+		alpha: 1,
+		red: 2,
 		green: 1,
-		blue: 1,
-		useSourceData: true,
+		blue: 0,
 	});
 
-	//define entitys
+	//define entity
 	scrawl.newPicture({
 		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-	}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'channelsparrot',
+		copyWidth: 360,
+		copyHeight: 360,
+		pasteWidth: 360,
+		pasteHeight: 360,
+		copyX: 50,
+		pasteX: 20,
+		pasteY: 20,
+		filters: ['myfilter'],
+		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//preparing the DOM input elements
-	red = document.getElementById('red');
-	red.value = 1;
-	green = document.getElementById('green');
-	green.value = 1;
-	blue = document.getElementById('blue');
-	blue.value = 1;
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
 
-	//image update function
-	updateInput = function() {
-		scrawl.image.channelsparrot.filter('channels', {
-			red: redVal,
-			green: greenVal,
-			blue: blueVal,
-			useSourceData: true,
+	event_alpha = function(e) {
+		stopE(e);
+		current_alpha = parseFloat(input_alpha.value);
+		filter.set({
+			alpha: current_alpha,
 		});
 	};
+	input_alpha.addEventListener('input', event_alpha, false);
+	input_alpha.addEventListener('change', event_alpha, false);
 
-	//event listeners
-	getRed = function(e) {
-		redVal = parseFloat(red.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
+	event_red = function(e) {
+		stopE(e);
+		current_red = parseFloat(input_red.value);
+		filter.set({
+			red: current_red,
+		});
 	};
-	red.addEventListener('change', getRed, false);
-	getGreen = function(e) {
-		greenVal = parseFloat(green.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	green.addEventListener('change', getGreen, false);
-	getBlue = function(e) {
-		blueVal = parseFloat(blue.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	blue.addEventListener('change', getBlue, false);
+	input_red.addEventListener('input', event_red, false);
+	input_red.addEventListener('change', event_red, false);
 
-	//to make sure everything is in place ...
-	updateInput();
+	event_green = function(e) {
+		stopE(e);
+		current_green = parseFloat(input_green.value);
+		filter.set({
+			green: current_green,
+		});
+	};
+	input_green.addEventListener('input', event_green, false);
+	input_green.addEventListener('change', event_green, false);
+
+	event_blue = function(e) {
+		stopE(e);
+		current_blue = parseFloat(input_blue.value);
+		filter.set({
+			blue: current_blue,
+		});
+	};
+	input_blue.addEventListener('input', event_blue, false);
+	input_blue.addEventListener('change', event_blue, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
+
 			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime) + '<br />Red: ' + redVal + '; Green: ' + greenVal + '; Blue: ' + blueVal;
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
+
 };
 
 scrawl.loadModules({

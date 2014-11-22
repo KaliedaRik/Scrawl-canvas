@@ -733,12 +733,12 @@ getAlpha function
 @private
 **/
 		my.Filter.prototype.getAlpha = function() {
-			var a = Math.round((my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) * 2.55 : this.alpha);
-			if (my.isBetween(a, 0, 255, true)) {
+			var a = (my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) / 100 : this.alpha;
+			if (my.isBetween(a, 0, 1, true)) {
 				return a;
 			}
 			else {
-				return (a > 127) ? 255 : 0;
+				return (a > 0.5) ? 1 : 0;
 			}
 		};
 		/**
@@ -780,7 +780,7 @@ getAlpha function
 		my.d.GreyscaleFilter = {};
 		my.mergeInto(my.d.GreyscaleFilter, my.d.Filter);
 		/**
-Add function - takes data, calculates its greyscale and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its greyscale and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
@@ -798,7 +798,7 @@ Add function - takes data, calculates its greyscale and combines it with data in
 					d[here] = grey;
 					d[++here] = grey;
 					d[++here] = grey;
-					d[++here] = alpha;
+					d[++here] *= alpha;
 				}
 			}
 			return data;
@@ -842,33 +842,23 @@ Add function - takes data, calculates its greyscale and combines it with data in
 		my.d.InvertFilter = {};
 		my.mergeInto(my.d.InvertFilter, my.d.Filter);
 		/**
-Add function - takes data, calculates its invert and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its invert and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
 		my.InvertFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				d = data.data,
-				here, i, iz, j, current;
+				here, i, iz;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
-					for (j = 0; j < 3; j++) {
-						here = i + j;
-						current = d[here];
-						if (1 === strength) {
-							d[here] = 255 - current;
-						}
-						else if (0 !== strength) {
-							d[here] = (current * iStrength) + ((255 - current) * strength);
-						}
-					}
-					if (alpha < 1) {
-						d[i + 3] *= alpha;
-					}
+					here = i;
+					d[here] = 255 - d[here];
+					d[++here] = 255 - d[here];
+					d[++here] = 255 - d[here];
+					d[++here] *= alpha;
 				}
 			}
 			return data;
@@ -929,28 +919,18 @@ Add function - takes data, calculates its brightness and replaces the old color 
 @return amended image data object
 **/
 		my.BrightnessFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				brightness = (my.isa(this.brightness, 'str')) ? parseFloat(this.brightness) / 100 : this.brightness,
 				d = data.data,
-				here, i, iz, j, current;
+				here, i, iz;
 			brightness = (brightness < 0) ? 0 : brightness;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
-					for (j = 0; j < 3; j++) {
-						here = i + j;
-						current = d[here];
-						if (1 === strength) {
-							d[here] = current * brightness;
-						}
-						else if (0 !== strength) {
-							d[here] = ((current * brightness) * strength) + (current * iStrength);
-						}
-					}
-					if (alpha < 1) {
-						d[i + 3] *= alpha;
-					}
+					here = i;
+					d[here] *= brightness;
+					d[++here] *= brightness;
+					d[++here] *= brightness;
+					d[++here] *= alpha;
 				}
 			}
 			return data;
@@ -1011,28 +991,18 @@ Add function - takes data, calculates its saturation and replaces the old color 
 @return amended image data object
 **/
 		my.SaturationFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				saturation = (my.isa(this.saturation, 'str')) ? parseFloat(this.saturation) / 100 : this.saturation,
 				d = data.data,
-				here, i, iz, j, current;
+				here, i, iz;
 			saturation = (saturation < 0) ? 0 : saturation;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
-					for (j = 0; j < 3; j++) {
-						here = i + j;
-						current = d[here];
-						if (1 === strength) {
-							d[here] = 127 + ((current - 127) * saturation);
-						}
-						else if (0 !== strength) {
-							d[here] = (127 + ((current - 127) * saturation) * strength) + (current * iStrength);
-						}
-					}
-					if (alpha < 1) {
-						d[i + 3] *= alpha;
-					}
+					here = i;
+					d[here] = 127 + ((d[here] - 127) * saturation);
+					d[++here] = 127 + ((d[here] - 127) * saturation);
+					d[++here] = 127 + ((d[here] - 127) * saturation);
+					d[++here] *= alpha;
 				}
 			}
 			return data;
@@ -1086,41 +1056,27 @@ Percentage value of threshold effect: as a Number, between 0 (all black) and 1 (
 		};
 		my.mergeInto(my.d.ThresholdFilter, my.d.Filter);
 		/**
-Add function - takes data, calculates its threshold and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its threshold and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
 		my.ThresholdFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				threshold = (my.isa(this.threshold, 'str')) ? parseFloat(this.threshold) / 100 : this.threshold,
-				clone = this.cloneImageData(data),
-				d = data.data,
-				c, here, i, iz, j, t, oCurrent, cCurrent;
+				d, here, i, iz;
 			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold > 0.5) ? 1 : 0);
 			threshold *= 255;
-			clone = my.GreyscaleFilter.prototype.add.call(this, clone);
-			c = clone.data;
+			data = my.GreyscaleFilter.prototype.add.call(this, data);
+			d = data.data;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
-					t = (c[i] > threshold) ? 255 : 0;
-					for (j = 0; j < 3; j++) {
-						here = i + j;
-						oCurrent = d[here];
-						cCurrent = c[here];
-						if (1 === strength) {
-							d[here] = t;
-						}
-						else if (0 !== strength) {
-							d[here] = (t * strength) + (oCurrent * iStrength);
-						}
-					}
-					if (alpha < 1) {
-						d[i + 3] *= alpha;
-					}
+					here = i;
+					d[here] = (d[here] > threshold) ? 255 : 0;
+					d[++here] = (d[here] > threshold) ? 255 : 0;
+					d[++here] = (d[here] > threshold) ? 255 : 0;
+					d[++here] *= alpha;
 				}
 			}
 			return data;
@@ -1192,42 +1148,29 @@ value of blue channel, from 0 or 0% upwards beyond 1 or 100%
 		};
 		my.mergeInto(my.d.ChannelsFilter, my.d.Filter);
 		/**
-Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its channels and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
 		my.ChannelsFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				red = (my.isa(this.red, 'str')) ? parseFloat(this.red) / 100 : this.red,
 				green = (my.isa(this.green, 'str')) ? parseFloat(this.green) / 100 : this.green,
 				blue = (my.isa(this.blue, 'str')) ? parseFloat(this.blue) / 100 : this.blue,
 				d = data.data,
-				here, i, iz, r, g, b, a;
+				i, iz, here;
 			red = (red < 0) ? 0 : red;
 			green = (green < 0) ? 0 : green;
 			blue = (blue < 0) ? 0 : blue;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
-					r = d[i];
-					g = d[i + 1];
-					b = d[i + 2];
-					a = d[i + 3];
-					if (1 === strength) {
-						d[i] = r * red;
-						d[i + 1] = g * green;
-						d[i + 2] = b * blue;
-						d[i + 3] = a * alpha;
-					}
-					else if (0 !== strength) {
-						d[i] = ((r * red) * strength) + (r * iStrength);
-						d[i + 1] = ((g * green) * strength) + (g * iStrength);
-						d[i + 2] = ((b * blue) * strength) + (b * iStrength);
-						d[i + 3] = ((a * alpha) * strength) + (a * iStrength);
-					}
+					here = i;
+					d[here] *= red;
+					d[++here] *= green;
+					d[++here] *= blue;
+					d[++here] *= alpha;
 				}
 			}
 			return data;
@@ -1299,16 +1242,14 @@ Step value of blue channel, between 1 (256 steps, default) and 128 (2 steps)
 		};
 		my.mergeInto(my.d.ChannelStepFilter, my.d.Filter);
 		/**
-Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its channels and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
 		my.ChannelStepFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				red = this.red,
 				green = this.green,
 				blue = this.blue,
@@ -1319,22 +1260,15 @@ Add function - takes data, calculates its channels and combines it with data in 
 			blue = (blue < 1) ? 1 : blue;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
-					r = d[i];
-					g = d[i + 1];
-					b = d[i + 2];
-					if (1 === strength) {
-						d[i] = Math.floor(r / red) * red;
-						d[i + 1] = Math.floor(g / green) * green;
-						d[i + 2] = Math.floor(b / blue) * blue;
-					}
-					else if (0 !== strength) {
-						d[i] = ((Math.floor(r / red) * red) * strength) + (r * iStrength);
-						d[i + 1] = ((Math.floor(g / green) * green) * strength) + (g * iStrength);
-						d[i + 2] = ((Math.floor(b / blue) * blue) * strength) + (b * iStrength);
-					}
-					if (alpha < 1) {
-						d[i + 3] *= alpha;
-					}
+					here = i;
+					r = d[here];
+					g = d[++here];
+					b = d[++here];
+					here = i;
+					d[here] = Math.floor(r / red) * red;
+					d[++here] = Math.floor(g / green) * green;
+					d[++here] = Math.floor(b / blue) * blue;
+					d[++here] *= alpha;
 				}
 			}
 			return data;
@@ -1442,16 +1376,14 @@ Add function - takes data, calculates its channels and combines it with data in 
 		};
 		my.mergeInto(my.d.TintFilter, my.d.Filter);
 		/**
-Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its channels and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
 		my.TintFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				rr = (my.isa(this.redInRed, 'str')) ? parseFloat(this.redInRed) / 100 : this.redInRed,
 				rg = (my.isa(this.redInGreen, 'str')) ? parseFloat(this.redInGreen) / 100 : this.redInGreen,
 				rb = (my.isa(this.redInBlue, 'str')) ? parseFloat(this.redInBlue) / 100 : this.redInBlue,
@@ -1462,31 +1394,18 @@ Add function - takes data, calculates its channels and combines it with data in 
 				bg = (my.isa(this.blueInGreen, 'str')) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen,
 				bb = (my.isa(this.blueInBlue, 'str')) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue,
 				d = data.data,
-				here, i, iz, r, g, b, red, grn, blu;
+				here, i, iz, r, g, b;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
-					if (1 === strength) {
-						r = d[i];
-						g = d[i + 1];
-						b = d[i + 2];
-						d[i] = (r * rr) + (g * gr) + (b * br);
-						d[i + 1] = (r * rg) + (g * gg) + (b * bg);
-						d[i + 2] = (r * rb) + (g * gb) + (b * bb);
-					}
-					else if (0 !== strength) {
-						r = d[i];
-						g = d[i + 1];
-						b = d[i + 2];
-						red = (r * rr) + (g * gr) + (b * br);
-						grn = (r * rg) + (g * gg) + (b * bg);
-						blu = (r * rb) + (g * gb) + (b * bb);
-						d[i] = (r * iStrength) + (red * strength);
-						d[i + 1] = (g * iStrength) + (grn * strength);
-						d[i + 2] = (b * iStrength) + (blu * strength);
-					}
-					if (alpha < 1) {
-						d[i + 3] *= alpha;
-					}
+					here = i;
+					r = d[here];
+					g = d[++here];
+					b = d[++here];
+					here = i;
+					d[here] = (r * rr) + (g * gr) + (b * br);
+					d[++here] = (r * rg) + (g * gg) + (b * bg);
+					d[++here] = (r * rb) + (g * gb) + (b * bb);
+					d[++here] *= alpha;
 				}
 			}
 			return data;
@@ -1587,6 +1506,8 @@ Set attribute values.
 **/
 		my.MatrixFilter.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
+			this.width = my.xtGet([items.width, false]);
+			this.height = my.xtGet([items.height, false]);
 			this.setFilter();
 		};
 		/**
@@ -1640,69 +1561,92 @@ SetFilter builds the matrix from width, height and data attributes already suppl
 			return this;
 		};
 		/**
-Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its channels and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
 		my.MatrixFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				d0 = data.data,
 				result = my.cvx.createImageData(data),
 				dR = result.data,
-				i, iz, j, jz, k, kz, r, g, b, a, w, c, e, e0, x, y;
-			if (strength === 0) {
-				return data;
+				i, iz, j, jz, k, kz, r, g, b, w, c, e, e0, x, y;
+			if (this.includeInvisiblePoints) {
+				for (i = 0, iz = data.height; i < iz; i++) {
+					for (j = 0, jz = data.width; j < jz; j++) {
+						e0 = ((i * jz) + j) * 4;
+						r = 0;
+						g = 0;
+						b = 0;
+						c = 0;
+						for (k = 0, kz = this.cells.length; k < kz; k++) {
+							x = j + this.cells[k][0];
+							y = i + this.cells[k][1];
+							if (x >= 0 && x < jz && y >= 0 && y < iz) {
+								w = this.cells[k][2];
+								e = ((y * jz) + x) * 4;
+								c += w;
+								r += (d0[e] * w);
+								e++;
+								g += (d0[e] * w);
+								e++;
+								b += (d0[e] * w);
+							}
+						}
+						if (c !== 0) {
+							r /= c;
+							g /= c;
+							b /= c;
+						}
+						dR[e0] = r;
+						e0++;
+						dR[e0] = g;
+						e0++;
+						dR[e0] = b;
+						e0++;
+						dR[e0] = d0[e0] * alpha;
+					}
+				}
 			}
 			else {
 				for (i = 0, iz = data.height; i < iz; i++) {
 					for (j = 0, jz = data.width; j < jz; j++) {
 						e0 = ((i * jz) + j) * 4;
-						if (d0[e0 + 3] > 0 || this.includeInvisiblePoints) {
+						if (d0[e0 + 3] > 0) {
 							r = 0;
 							g = 0;
 							b = 0;
-							a = 0;
 							c = 0;
 							for (k = 0, kz = this.cells.length; k < kz; k++) {
 								x = j + this.cells[k][0];
 								y = i + this.cells[k][1];
 								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									e = ((y * jz) + x) * 4;
 									w = this.cells[k][2];
-									c += w;
-									r += (d0[e] * w);
-									g += (d0[++e] * w);
-									b += (d0[++e] * w);
-									a += d0[++e];
+									e = ((y * jz) + x) * 4;
+									if (d0[e + 3] > 0) {
+										c += w;
+										r += (d0[e] * w);
+										e++;
+										g += (d0[e] * w);
+										e++;
+										b += (d0[e] * w);
+									}
 								}
 							}
-							if (a > 0) {
-								r = (c !== 0) ? r / c : r;
-								g = (c !== 0) ? g / c : g;
-								b = (c !== 0) ? b / c : b;
-								if (strength === 1) {
-									dR[e0] = r;
-									e0++;
-									dR[e0] = g;
-									e0++;
-									dR[e0] = b;
-									e0++;
-									dR[e0] = d0[e0] * alpha;
-								}
-								else {
-									dR[e0] = (r * strength) + (d0[e0] * iStrength);
-									e0++;
-									dR[e0] = (g * strength) + (d0[e0] * iStrength);
-									e0++;
-									dR[e0] = (b * strength) + (d0[e0] * iStrength);
-									e0++;
-									dR[e0] = d0[e0] * alpha;
-								}
+							if (c !== 0) {
+								r /= c;
+								g /= c;
+								b /= c;
 							}
+							dR[e0] = r;
+							e0++;
+							dR[e0] = g;
+							e0++;
+							dR[e0] = b;
+							e0++;
+							dR[e0] = d0[e0] * alpha;
 						}
 					}
 				}
@@ -1777,16 +1721,14 @@ Add function - takes data, calculates its channels and combines it with data in 
 		};
 		my.mergeInto(my.d.PixelateFilter, my.d.Filter);
 		/**
-Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its channels and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
 		my.PixelateFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+			var alpha = this.getAlpha(),
 				d0 = data.data,
 				result = my.cvx.createImageData(data),
 				dR = result.data,
@@ -1809,11 +1751,13 @@ Add function - takes data, calculates its channels and combines it with data in 
 							test = (j < 0 || j > tW || i < 0 || i > tH) ? true : false;
 							if (!test) {
 								pos = ((i * dW) + j) * 4;
-								r += d0[pos];
-								g += d0[++pos];
-								b += d0[++pos];
-								a += d0[++pos];
-								count++;
+								if (d0[pos + 3] > 0) {
+									r += d0[pos];
+									g += d0[++pos];
+									b += d0[++pos];
+									a += d0[++pos];
+									count++;
+								}
 							}
 						}
 					}
@@ -1821,16 +1765,14 @@ Add function - takes data, calculates its channels and combines it with data in 
 						r = Math.round(r / count);
 						g = Math.round(g / count);
 						b = Math.round(b / count);
-						a = Math.round(a / count) * alpha;
 						pos = ((y * dW) + x) * 4;
-						//console.log(count, a, r, g, b, pos, d0[pos], d0[pos + 1], d0[pos + 2], d0[pos + 3]);
 						for (i = y, iz = y + h; i < iz; i++) {
 							for (j = x, jz = x + w; j < jz; j++) {
 								pos = ((i * dW) + j) * 4;
 								dR[pos] = r;
 								dR[++pos] = g;
 								dR[++pos] = b;
-								dR[++pos] = a;
+								dR[++pos] = d0[pos] * alpha;
 							}
 						}
 					}
@@ -1917,14 +1859,14 @@ Set attribute values.
 @return This
 @chainable
 **/
-		my.MatrixFilter.prototype.set = function(items) {
+		my.BlurFilter.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
 			if (!my.isa(items.cells, 'arr')) {
 				this.cells = this.getBrush();
 			}
 		};
 		/**
-Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its channels and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
@@ -2082,7 +2024,7 @@ Set attribute values.
 			}
 		};
 		/**
-Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its channels and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object
@@ -2169,7 +2111,7 @@ Add function - takes data, calculates its channels and combines it with data in 
 		};
 		my.mergeInto(my.d.StereoFilter, my.d.Filter);
 		/**
-Add function - takes data, calculates its channels and combines it with data in line with the filterStrength value
+Add function - takes data, calculates its channels and combines it with data
 
 @method add
 @param {Object} data - canvas getImageData object

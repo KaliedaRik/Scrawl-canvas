@@ -10,18 +10,18 @@ var mycode = function() {
 	//define variables
 	var filter,
 
-		current_alpha = 255,
+		current_alpha = 1,
 		input_alpha = document.getElementById('alpha'),
 		event_alpha,
 		stopE;
 
 	//set the initial imput values
-	input_alpha.value = '255';
+	input_alpha.value = '1';
 
 	//define filter
 	filter = scrawl.newGreyscaleFilter({
 		name: 'myfilter',
-		alpha: 255,
+		alpha: 1,
 	});
 
 	//define entity

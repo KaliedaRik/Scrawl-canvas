@@ -59,7 +59,13 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
-141118
+141121-23
+	- simplifying filter.add() functions
+		- because filterStrength and alpha attributes effectively do the same thing, but alpha is a lot simpler to work with
+		- filterStrength attribute deleted
+		- demos 401-412 fixed
+		
+141118-20
 	- testing:
 		- tested up to demo111 
 			- need to fix 103, 104
