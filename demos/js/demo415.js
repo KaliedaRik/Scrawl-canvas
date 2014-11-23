@@ -14,15 +14,21 @@ var mycode = function() {
 		input_alpha = document.getElementById('alpha'),
 		event_alpha,
 
+		current_channel = 'red',
+		input_channel = document.getElementById('channel'),
+		event_channel,
+
 		stopE;
 
 	//set the initial imput values
 	input_alpha.value = '1';
+	input_channel.value = 'red';
 
 	//define filter
-	filter = scrawl.newSharpenFilter({
+	filter = scrawl.newSeparateFilter({
 		name: 'myfilter',
 		alpha: 1,
+		channel: 'red',
 	});
 
 	//define entity
@@ -55,6 +61,15 @@ var mycode = function() {
 	};
 	input_alpha.addEventListener('input', event_alpha, false);
 	input_alpha.addEventListener('change', event_alpha, false);
+
+	event_channel = function(e) {
+		stopE(e);
+		current_channel = input_channel.value;
+		filter.set({
+			channel: current_channel,
+		});
+	};
+	input_channel.addEventListener('change', event_channel, false);
 
 	//animation object
 	scrawl.newAnimation({

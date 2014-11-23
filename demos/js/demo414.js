@@ -8,110 +8,166 @@ var mycode = function() {
 	//hide-end
 
 	//define variables
-	var width,
-		height,
-		outerWidth,
-		outerHeight,
-		widthVal = 50,
-		heightVal = 50,
-		outerWidthVal = 80,
-		outerHeightVal = 80,
-		getWidth,
-		getHeight,
-		getOuterWidth,
-		getOuterHeight,
-		updateInput;
+	var filter,
 
-	//import image
-	scrawl.getImagesByClass('demo414');
+		current_alpha = 1,
+		input_alpha = document.getElementById('alpha'),
+		event_alpha,
 
-	//clone image and add filter to it
-	scrawl.image.parrot.clone({
-		name: 'glasstileparrot',
-	}).filter('glassTile', {
-		useSourceData: true,
+		current_minRed = 0,
+		input_minRed = document.getElementById('minRed'),
+		event_minRed,
+
+		current_minGreen = 0,
+		input_minGreen = document.getElementById('minGreen'),
+		event_minGreen,
+
+		current_minBlue = 0,
+		input_minBlue = document.getElementById('minBlue'),
+		event_minBlue,
+
+		current_maxRed = 50,
+		input_maxRed = document.getElementById('maxRed'),
+		event_maxRed,
+
+		current_maxGreen = 50,
+		input_maxGreen = document.getElementById('maxGreen'),
+		event_maxGreen,
+
+		current_maxBlue = 50,
+		input_maxBlue = document.getElementById('maxBlue'),
+		event_maxBlue,
+
+		stopE;
+
+	//set the initial imput values
+	input_alpha.value = '1';
+	input_minRed.value = '0';
+	input_minGreen.value = '0';
+	input_minBlue.value = '0';
+	input_maxRed.value = '50';
+	input_maxGreen.value = '50';
+	input_maxBlue.value = '50';
+
+	//define filter
+	filter = scrawl.newLeachFilter({
+		name: 'myfilter',
+		alpha: 1,
+		minRed: 0,
+		minGreen: 0,
+		minBlue: 0,
+		maxRed: 50,
+		maxGreen: 50,
+		maxBlue: 50,
+		preserve: true,
 	});
 
-	//define entitys
+	//define entity
 	scrawl.newPicture({
 		name: 'parrot',
-		startX: 10,
-		startY: 10,
-		scale: 0.5,
-		source: 'parrot',
-	}).clone({
-		startX: 120,
-		startY: 210,
-		source: 'glasstileparrot',
+		copyWidth: 360,
+		copyHeight: 360,
+		pasteWidth: 360,
+		pasteHeight: 360,
+		copyX: 50,
+		pasteX: 20,
+		pasteY: 20,
+		filters: ['myfilter'],
+		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//preparing the DOM input elements
-	width = document.getElementById('width');
-	width.value = 50;
-	height = document.getElementById('height');
-	height.value = 50;
-	outerWidth = document.getElementById('outerwidth');
-	outerWidth.value = 80;
-	outerHeight = document.getElementById('outerheight');
-	outerHeight.value = 80;
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
 
-	//image update function
-	updateInput = function() {
-		scrawl.image.glasstileparrot.filter('glassTile', {
-			width: widthVal,
-			height: heightVal,
-			outerWidth: outerWidthVal,
-			outerHeight: outerHeightVal,
-			useSourceData: true,
+	event_alpha = function(e) {
+		stopE(e);
+		current_alpha = parseFloat(input_alpha.value);
+		filter.set({
+			alpha: current_alpha,
 		});
 	};
+	input_alpha.addEventListener('input', event_alpha, false);
+	input_alpha.addEventListener('change', event_alpha, false);
 
-	//event listeners
-	getWidth = function(e) {
-		widthVal = parseFloat(width.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
+	event_minRed = function(e) {
+		stopE(e);
+		current_minRed = parseFloat(input_minRed.value);
+		filter.set({
+			minRed: current_minRed,
+		});
 	};
-	width.addEventListener('change', getWidth, false);
-	getHeight = function(e) {
-		heightVal = parseFloat(height.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	height.addEventListener('change', getHeight, false);
-	getOuterWidth = function(e) {
-		outerWidthVal = parseFloat(outerWidth.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	outerWidth.addEventListener('change', getOuterWidth, false);
-	getOuterHeight = function(e) {
-		outerHeightVal = parseFloat(outerHeight.value);
-		updateInput();
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	outerHeight.addEventListener('change', getOuterHeight, false);
+	input_minRed.addEventListener('input', event_minRed, false);
+	input_minRed.addEventListener('change', event_minRed, false);
 
-	//to make sure everything is in place ...
-	updateInput();
+	event_minGreen = function(e) {
+		stopE(e);
+		current_minGreen = parseFloat(input_minGreen.value);
+		filter.set({
+			minGreen: current_minGreen,
+		});
+	};
+	input_minGreen.addEventListener('input', event_minGreen, false);
+	input_minGreen.addEventListener('change', event_minGreen, false);
+
+	event_minBlue = function(e) {
+		stopE(e);
+		current_minBlue = parseFloat(input_minBlue.value);
+		filter.set({
+			minBlue: current_minBlue,
+		});
+	};
+	input_minBlue.addEventListener('input', event_minBlue, false);
+	input_minBlue.addEventListener('change', event_minBlue, false);
+
+	event_maxRed = function(e) {
+		stopE(e);
+		current_maxRed = parseFloat(input_maxRed.value);
+		filter.set({
+			maxRed: current_maxRed,
+		});
+	};
+	input_maxRed.addEventListener('input', event_maxRed, false);
+	input_maxRed.addEventListener('change', event_maxRed, false);
+
+	event_maxGreen = function(e) {
+		stopE(e);
+		current_maxGreen = parseFloat(input_maxGreen.value);
+		filter.set({
+			maxGreen: current_maxGreen,
+		});
+	};
+	input_maxGreen.addEventListener('input', event_maxGreen, false);
+	input_maxGreen.addEventListener('change', event_maxGreen, false);
+
+	event_maxBlue = function(e) {
+		stopE(e);
+		current_maxBlue = parseFloat(input_maxBlue.value);
+		filter.set({
+			maxBlue: current_maxBlue,
+		});
+	};
+	input_maxBlue.addEventListener('input', event_maxBlue, false);
+	input_maxBlue.addEventListener('change', event_maxBlue, false);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
+
 			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime) + '<br />width: ' + widthVal + '; height: ' + heightVal + '; outer width: ' + outerWidthVal + '; outer height: ' + outerHeightVal;
+			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
+
 };
 
 scrawl.loadModules({

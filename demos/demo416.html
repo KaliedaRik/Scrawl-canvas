@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Demo 414</title>
+  <title>Demo 416</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
 
@@ -15,7 +15,7 @@
       border: 1px solid gray;
       font-size: 0.65em;
       text-align: center;
-      width: 12%;
+      width: 24%;
     }
     .rowlabel {
       font-weight: bold;
@@ -35,8 +35,8 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl.js</a> - demonstration 414</h1>
-  <h2>Scrawl filters - leach</h2>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 416</h1>
+  <h2>Scrawl filters - noise</h2>
   <h3>Modules: images, filters, animation</h3>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
@@ -49,34 +49,28 @@
       <td>
         <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
       </td>
-      <td class="rowlabel">Minimum red</td>
+      <td class="rowlabel">Strength</td>
       <td>
-        <input id="minRed" type="range" value="0" min="0" max="255" step="1" />
-      </td>
-      <td class="rowlabel">Minimum green</td>
-      <td>
-        <input id="minGreen" type="range" value="0" min="0" max="255" step="1" />
-      </td>
-      <td class="rowlabel">Minimum blue</td>
-      <td>
-        <input id="minBlue" type="range" value="0" min="0" max="255" step="1" />
+        <input id="strength" type="range" value="0.3" min="0" max="1" step="0.01" />
       </td>
     </tr>
-    <tr class="t0">
+    <tr class="t1">
+      <td class="rowlabel">Radius x</td>
+      <td>
+        <input id="radiusX" type="range" value="3" min="0" max="10" step="0.1" />
+      </td>
+      <td class="rowlabel">Radius y</td>
+      <td>
+        <input id="radiusY" type="range" value="3" min="0" max="10" step="0.1" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Roll</td>
+      <td>
+        <input id="roll" type="range" value="0" min="0" max="360" step="1" />
+      </td>
       <td class="rowlabel">&nbsp;</td>
       <td>&nbsp;</td>
-      <td class="rowlabel">Maximum red</td>
-      <td>
-        <input id="maxRed" type="range" value="50" min="0" max="255" step="1" />
-      </td>
-      <td class="rowlabel">Maximum green</td>
-      <td>
-        <input id="maxGreen" type="range" value="50" min="0" max="255" step="1" />
-      </td>
-      <td class="rowlabel">Maximum blue</td>
-      <td>
-        <input id="maxBlue" type="range" value="50" min="0" max="255" step="1" />
-      </td>
     </tr>
   </table>
 
@@ -90,11 +84,11 @@
     <p><b>Known browser issues:</b> ???</p>
     <p><b>Result images:</b>
     </p>
-    <img src="img/demopics/demo414.png" alt="image of expected test result" />
+    <img src="img/demopics/demo416.png" alt="image of expected test result" />
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script id="testscript" src="js/demo414.js"></script>
+  <script id="testscript" src="js/demo416.js"></script>
 </body>
 
 </html>

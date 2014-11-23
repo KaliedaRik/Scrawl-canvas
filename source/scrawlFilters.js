@@ -326,13 +326,22 @@ A __factory__ function to generate new Leach filter objects
 			return new my.LeachFilter(items);
 		};
 		/**
-A __factory__ function to generate new Stereo filter objects
-@method newStereoFilter
+A __factory__ function to generate new Separate filter objects
+@method newSeparateFilter
 @param {Object} items Key:value Object argument for setting attributes
-@return StereoFilter object
+@return newSeparateFilter object
 **/
-		my.newStereoFilter = function(items) {
-			return new my.StereoFilter(items);
+		my.newSeparateFilter = function(items) {
+			return new my.SeparateFilter(items);
+		};
+		/**
+A __factory__ function to generate new Noise filter objects
+@method newNoiseFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return NoiseFilter object
+**/
+		my.newNoiseFilter = function(items) {
+			return new my.NoiseFilter(items);
 		};
 
 		/**
@@ -1577,36 +1586,38 @@ Add function - takes data, calculates its channels and combines it with data
 				for (i = 0, iz = data.height; i < iz; i++) {
 					for (j = 0, jz = data.width; j < jz; j++) {
 						e0 = ((i * jz) + j) * 4;
-						r = 0;
-						g = 0;
-						b = 0;
-						c = 0;
-						for (k = 0, kz = this.cells.length; k < kz; k++) {
-							x = j + this.cells[k][0];
-							y = i + this.cells[k][1];
-							if (x >= 0 && x < jz && y >= 0 && y < iz) {
-								w = this.cells[k][2];
-								e = ((y * jz) + x) * 4;
-								c += w;
-								r += (d0[e] * w);
-								e++;
-								g += (d0[e] * w);
-								e++;
-								b += (d0[e] * w);
+						if (d0[e0 + 3] > 0) {
+							r = 0;
+							g = 0;
+							b = 0;
+							c = 0;
+							for (k = 0, kz = this.cells.length; k < kz; k++) {
+								x = j + this.cells[k][0];
+								y = i + this.cells[k][1];
+								if (x >= 0 && x < jz && y >= 0 && y < iz) {
+									w = this.cells[k][2];
+									e = ((y * jz) + x) * 4;
+									c += w;
+									r += (d0[e] * w);
+									e++;
+									g += (d0[e] * w);
+									e++;
+									b += (d0[e] * w);
+								}
 							}
+							if (c !== 0) {
+								r /= c;
+								g /= c;
+								b /= c;
+							}
+							dR[e0] = r;
+							e0++;
+							dR[e0] = g;
+							e0++;
+							dR[e0] = b;
+							e0++;
+							dR[e0] = d0[e0] * alpha;
 						}
-						if (c !== 0) {
-							r /= c;
-							g /= c;
-							b /= c;
-						}
-						dR[e0] = r;
-						e0++;
-						dR[e0] = g;
-						e0++;
-						dR[e0] = b;
-						e0++;
-						dR[e0] = d0[e0] * alpha;
 					}
 				}
 			}
@@ -2031,7 +2042,8 @@ Add function - takes data, calculates its channels and combines it with data
 @return amended image data object
 **/
 		my.LeachFilter.prototype.add = function(data) {
-			var rMax = this.maxRed,
+			var alpha = Math.floor(this.getAlpha() * 255),
+				rMax = this.maxRed,
 				gMax = this.maxGreen,
 				bMax = this.maxBlue,
 				rMin = this.minRed,
@@ -2045,7 +2057,7 @@ Add function - takes data, calculates its channels and combines it with data
 					if (my.isBetween(d[i], rMin, rMax, true)) {
 						if (my.isBetween(d[i + 1], gMin, gMax, true)) {
 							if (my.isBetween(d[i + 2], bMin, bMax, true)) {
-								d[i + 3] = 255;
+								d[i + 3] = alpha;
 								flag = true;
 							}
 						}
@@ -2058,15 +2070,15 @@ Add function - takes data, calculates its channels and combines it with data
 			return data;
 		};
 		/**
-# StereoFilter
+# SeparateFilter
 
 ## Instantiation
 
-* scrawl.newStereoFilter()
+* scrawl.newSeparateFilter()
 
 ## Purpose
 
-* Adds a stereo filter effect to an Entity or cell. Leaching turns certain color ranges to transparency
+* separate and reposition the color channels
 
 ## Access
 
@@ -2077,39 +2089,35 @@ Add function - takes data, calculates its channels and combines it with data
 @extends Filter
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-		my.StereoFilter = function(items) {
+		my.SeparateFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.redshift = my.xtGet([items.redshift, 0]);
-			this.cyanshift = my.xtGet([items.cyanshift, 0]);
+			this.channel = my.xtGet([items.channel, 'all']);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
 		};
-		my.StereoFilter.prototype = Object.create(my.Filter.prototype);
+		my.SeparateFilter.prototype = Object.create(my.Filter.prototype);
 		/**
 @property type
 @type String
 @default 'Filter'
 @final
 **/
-		my.StereoFilter.prototype.type = 'StereoFilter';
-		my.StereoFilter.prototype.classname = 'filternames';
-		my.d.StereoFilter = {
+		my.SeparateFilter.prototype.type = 'SeparateFilter';
+		my.SeparateFilter.prototype.classname = 'filternames';
+		my.d.SeparateFilter = {
 			/**
-@property redshift
-@type Number
-@default 0
+@property channel
+
+Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'all'
+
+@type String
+@default 'all'
 **/
-			redshift: 0,
-			/**
-@property cyanshift
-@type Number
-@default 0
-**/
-			cyanshift: 0,
+			channel: 'all',
 		};
-		my.mergeInto(my.d.StereoFilter, my.d.Filter);
+		my.mergeInto(my.d.SeparateFilter, my.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2117,31 +2125,185 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.StereoFilter.prototype.add = function(data) {
-			var strength = this.getFilterStrength(),
-				iStrength = 1 - strength,
-				alpha = this.getAlpha(),
+		my.SeparateFilter.prototype.add = function(data) {
+			var alpha = this.getAlpha(),
+				channel = this.channel,
+				d = data.data,
+				i, iz, col;
+			console.log(channel);
+			for (i = 0, iz = d.length; i < iz; i += 4) {
+				if (d[i + 3] > 0) {
+					switch (channel) {
+						case 'red':
+							d[i + 1] = 0;
+							d[i + 2] = 0;
+							break;
+						case 'green':
+							d[i] = 0;
+							d[i + 2] = 0;
+							break;
+						case 'blue':
+							d[i] = 0;
+							d[i + 1] = 0;
+							break;
+						case 'cyan':
+							col = (d[i + 1] + d[i + 2]) / 2;
+							d[i] = 0;
+							d[i + 1] = col;
+							d[i + 2] = col;
+							break;
+						case 'magenta':
+							col = (d[i] + d[i + 2]) / 2;
+							d[i + 1] = 0;
+							d[i] = col;
+							d[i + 2] = col;
+							break;
+						case 'yellow':
+							col = (d[i] + d[i + 1]) / 2;
+							d[i + 2] = 0;
+							d[i + 1] = col;
+							d[i] = col;
+							break;
+						default:
+							// case 'all' - do nothing
+					}
+					d[i + 3] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# NoiseFilter
+
+## Instantiation
+
+* scrawl.newNoiseFilter()
+
+## Purpose
+
+* Adds a noise filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the NoiseFilter object
+
+@class NoiseFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.NoiseFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.radiusX = my.xtGet([items.radiusX, 2]);
+			this.radiusY = my.xtGet([items.radiusY, 2]);
+			this.roll = my.xtGet([items.roll, 2]);
+			this.cells = my.xtGet([items.cells, false]);
+			this.strength = my.xtGet([items.strength, 0.3]);
+			if (!my.isa(this.cells, 'arr')) {
+				this.cells = this.getBrush();
+			}
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.NoiseFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.NoiseFilter.prototype.type = 'NoiseFilter';
+		my.NoiseFilter.prototype.classname = 'filternames';
+		my.d.NoiseFilter = {
+			/**
+@property radiusX
+@type Number
+@default 2
+**/
+			radiusX: 2,
+			/**
+@property radiusY
+@type Number
+@default 2
+**/
+			radiusY: 2,
+			/**
+@property roll
+@type Number
+@default 0
+**/
+			roll: 0,
+			/**
+@property strength
+@type Number
+@default 0.3
+**/
+			strength: 0.3,
+		};
+		my.mergeInto(my.d.NoiseFilter, my.d.Filter);
+		/**
+Set attribute values.
+
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.NoiseFilter.prototype.set = function(items) {
+			return my.BlurFilter.prototype.set.call(this, items);
+		};
+		/**
+Set attribute values.
+
+@method getBrush
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.NoiseFilter.prototype.getBrush = function() {
+			return my.BlurFilter.prototype.getBrush.call(this);
+		};
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.NoiseFilter.prototype.add = function(data) {
+			var alpha = this.getAlpha(),
 				d0 = data.data,
 				result = my.cvx.createImageData(data),
 				dR = result.data,
-				rs = this.redshift,
-				cs = this.cyanshift,
-				i, iz, l, dI;
-			l = d0.length;
-			for (i = 0, iz = l; i < iz; i += 4) {
-				dI = i + (rs * 4);
-				if (my.isBetween(dI, -1, l)) {
-					dR[dI] += d0[i] * strength;
-					dR[i] += d0[i] * iStrength;
+				strength = this.strength,
+				i, iz, j, jz, k, kz, e, e0, x, y, cell,
+				cellLen = this.cells.length;
+			for (i = 0, iz = data.height; i < iz; i++) {
+				for (j = 0, jz = data.width; j < jz; j++) {
+					e0 = ((i * jz) + j) * 4;
+					if (d0[e0 + 3] > 0) {
+						if (Math.random() < strength) {
+							cell = this.cells[Math.floor(Math.random() * cellLen)];
+							x = j + cell[0];
+							y = i + cell[1];
+							if (x >= 0 && x < jz && y >= 0 && y < iz) {
+								e = ((y * jz) + x) * 4;
+								dR[e0] = d0[e];
+								dR[e0 + 1] = d0[e + 1];
+								dR[e0 + 2] = d0[e + 2];
+								dR[e0 + 3] = d0[e0 + 3] * alpha;
+							}
+						}
+						else {
+							dR[e0] = d0[e0];
+							dR[e0 + 1] = d0[e0 + 1];
+							dR[e0 + 2] = d0[e0 + 2];
+							dR[e0 + 3] = d0[e0 + 3] * alpha;
+						}
+					}
 				}
-				dI = i + (cs * 4);
-				if (my.isBetween(dI, -1, l)) {
-					dR[dI + 1] += d0[i + 1] * strength;
-					dR[dI + 2] += d0[i + 2] * strength;
-					dR[i + 1] += d0[i + 1] * iStrength;
-					dR[i + 2] += d0[i + 2] * iStrength;
-				}
-				dR[i + 3] = d0[i + 3] * alpha;
 			}
 			return result;
 		};

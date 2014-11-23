@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Demo 413</title>
+  <title>Demo 415</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
 
@@ -35,8 +35,8 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl.js</a> - demonstration 413</h1>
-  <h2>Scrawl filters - sharpen</h2>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 415</h1>
+  <h2>Scrawl filters - separate</h2>
   <h3>Modules: images, filters, animation</h3>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
@@ -49,8 +49,18 @@
       <td>
         <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
       </td>
-      <td class="rowlabel">&nbsp;</td>
-      <td>&nbsp;</td>
+      <td class="rowlabel">Channel</td>
+      <td>
+        <select id="channel">
+          <option value="all">all</option>
+          <option value="red">red</option>
+          <option value="green">green</option>
+          <option value="blue">blue</option>
+          <option value="yellow">yellow</option>
+          <option value="cyan">cyan</option>
+          <option value="magenta">magenta</option>
+        </select>
+      </td>
     </tr>
   </table>
 
@@ -64,11 +74,11 @@
     <p><b>Known browser issues:</b> ???</p>
     <p><b>Result images:</b>
     </p>
-    <img src="img/demopics/demo413.png" alt="image of expected test result" />
+    <img src="img/demopics/demo415.png" alt="image of expected test result" />
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script id="testscript" src="js/demo413.js"></script>
+  <script id="testscript" src="js/demo415.js"></script>
 </body>
 
 </html>

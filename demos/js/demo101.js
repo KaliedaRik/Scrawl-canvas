@@ -91,6 +91,7 @@ var mycode = function() {
 		radiusX: 12,
 		radiusY: 4,
 		roll: 45,
+		includeInvisiblePoints: true,
 	});
 	scrawl.newLeachFilter({
 		name: 'myLeach',
@@ -98,11 +99,16 @@ var mycode = function() {
 		maxBlue: 150,
 		minGreen: 100,
 	});
-	scrawl.newStereoFilter({
-		name: 'myStereo',
-		//filterStrength: 0.5,
-		redshift: -4,
-		cyanshift: 4,
+	scrawl.newSeparateFilter({
+		name: 'mySeparate',
+		channel: 'yellow',
+	});
+	scrawl.newNoiseFilter({
+		name: 'myNoise',
+		radiusX: 12,
+		radiusY: 4,
+		roll: 45,
+		noise: 1,
 	});
 
 	current_filter = 'myGreyscale';
