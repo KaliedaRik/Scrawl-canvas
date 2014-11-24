@@ -37,13 +37,6 @@ Topics that I want|need to look at (in no particular order) ...
 	
 Currently known bugs
 ------------------------------------------------------------------------------------
-- Image loading
-	- Internet Explorer (11) prefers pre-loaded images
-	- Firefox has cache issues with Pictures created from other sprites
-	
-- Video
-	- Internet Explorer(11), Chrome and Safari(Windows) have issues playing non-visible videos in the canvas
-	
 - Composite operations
 	- Safari(windows) is non-compliant for some global composite operations
 	
@@ -63,7 +56,32 @@ CHANGE LOG
 	- simplifying filter.add() functions
 		- because filterStrength and alpha attributes effectively do the same thing, but alpha is a lot simpler to work with
 		- filterStrength attribute deleted
-		- demos 401-412 fixed
+		- demos 401-413 fixed
+		- abandoned StereoFilter
+		- added new filters:
+			- SeparateFilter
+			- NoiseFilter
+		- new demos written for leach, separate and noise filters (demos 414-416)
+		- demo101 adapted to showcase new filters
+		- tested demo101 in Firefox, Chrome, Opera, Safari(Windows), IE11 - works in all tested browsers
+			- IE doesn't like DocumentFragment.getElementById()
+				- replaced with .querySelect() where demo was failing
+	- videos
+		- first stab at writing the video object
+			- works in main browsers except Safari(Windows)
+			- IE(11) is very sensitive about sizing issues
+			- currently can only import via DOM
+				- declaring a video element with correct source child elements
+				- Scrawl then imports the videos into the library by moving the video element into the shadow DOM
+					- cloning the video DOM element is a world of hurt
+			- can control the video via native API commands
+				- video can be reached via scrawl.asset.VIDEOID
+				- firefox is not looping current video
+			- filters work on video
+				- good speed with simpler filters
+				- more complex filters (eg matrix) give slower performance - expected
+					- running demo (new demo112) for any length of time leads to memory leaks and slowdowns
+						- needs to be investigated ...
 		
 141118-20
 	- testing:

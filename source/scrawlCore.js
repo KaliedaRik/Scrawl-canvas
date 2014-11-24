@@ -201,7 +201,7 @@ Key:value pairs of module alias:filename Strings, used by scrawl.loadModules()
 		saveload: 'scrawlSaveLoad',
 		stacks: 'scrawlStacks',
 		quaternion: 'scrawlQuaternion',
-		imageload: 'scrawlImageLoad',
+		imageload: 'scrawlImageLoad'
 	};
 	/**
 Array of loaded module arrays
@@ -232,7 +232,7 @@ Key:value pairs of module alias:Array, used by scrawl.loadModules()
 		physics: ['quaternion'],
 		saveload: [],
 		stacks: ['quaternion'],
-		quaternion: [],
+		quaternion: []
 	};
 	/**
 A __general__ function that initializes (or resets) the Scrawl library and populates it with data, including existing &lt;canvas&gt; element data in the web page
@@ -430,14 +430,14 @@ A __utility__ function that adds the attributes of the additive object to those 
 		new = {
 			age: 32,
 			job: 'coder',
-			pet: 'cat',
+			pet: 'cat'
 			};
 	scrawl.mergeInto(old, new);
 	//result is {
 	//	name: 'Peter',
 	//	age: 42,
 	//	job: 'lawyer'
-	//	pet: 'cat',
+	//	pet: 'cat'
 	//	}
 **/
 	my.mergeInto = function(o1, o2) {
@@ -463,14 +463,14 @@ A __utility__ function that adds the attributes of the additive object to those 
 		new = {
 			age: 32,
 			job: 'coder',
-			pet: 'cat',
+			pet: 'cat'
 			};
 	scrawl.mergeOver(old, new);
 	//result is {
 	//	name: 'Peter',
 	//	age: 32,
 	//	job: 'coder'
-	//	pet: 'cat',
+	//	pet: 'cat'
 	//	}
 **/
 	my.mergeOver = function(o1, o2) {
@@ -845,7 +845,7 @@ Generate unique names for new Scrawl objects
 			o = {
 				name: (my.isa(item.name, 'str')) ? item.name : u,
 				type: (my.isa(item.type, 'str')) ? item.type : u,
-				target: (my.isa(item.target, 'str')) ? item.target : u,
+				target: (my.isa(item.target, 'str')) ? item.target : u
 			};
 		if (my.contains(my.nameslist, o.target)) {
 			name = my.xtGetTrue([o.name, o.type, 'default']);
@@ -893,7 +893,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 			}
 			for (var j = 0, jz = s.length; j < jz; j++) {
 				myPad = my.newPad({
-					canvasElement: canvases[j],
+					canvasElement: canvases[j]
 				});
 				if (j === 0) {
 					my.currentPad = myPad.name;
@@ -942,7 +942,7 @@ The argument object should include the following attributes:
 		myName = my.makeName({
 			name: my.xtGet([items.canvasName, items.name, false]),
 			type: 'Pad',
-			target: 'padnames',
+			target: 'padnames'
 		});
 		myCanvas = document.createElement('canvas');
 		myCanvas.id = myName;
@@ -951,7 +951,7 @@ The argument object should include the following attributes:
 		DOMCanvas.width = items.width;
 		DOMCanvas.height = items.height;
 		myPad = my.newPad({
-			canvasElement: DOMCanvas,
+			canvasElement: DOMCanvas
 		});
 		myPad.set(items);
 		my.setDisplayOffsets();
@@ -1353,7 +1353,7 @@ Vector name - not guaranteed to be unique
 @type String
 @default 'generic'
 **/
-		name: 'generic',
+		name: 'generic'
 	};
 	/**
 Set the Vector's coordinates to values that will result in the given magnitude
@@ -1609,7 +1609,7 @@ Arithmetic is v(crossProduct)u, not u(crossProduct)v
 			return my.newVector({
 				x: (v1y * v2z) - (v1z * v2y),
 				y: -(v1x * v2z) + (v1z * v2x),
-				z: (v1x * v2y) + (v1y * v2x),
+				z: (v1x * v2y) + (v1y * v2x)
 			});
 		}
 		console.log('Vector.getCrossProduct() error: argument is not a Vector');
@@ -1781,7 +1781,7 @@ Creation timestamp
 @type String
 @default ''
 **/
-		timestamp: '',
+		timestamp: ''
 	};
 	/**
 Retrieve an attribute value. If the attribute value has not been set, then the default value for that attribute will be returned.
@@ -1810,11 +1810,11 @@ An attribute value will only be set if the object already has a default value fo
 @example
 	var box = scrawl.newBlock({
 		width: 50,
-		height: 50,
+		height: 50
 		});
 	box.set({
 		height: 100,
-		favouriteAnimal: 'cat',
+		favouriteAnimal: 'cat'
 		});
 	box.get('width');				//returns 50
 	box.get('height');				//returns 100
@@ -1842,10 +1842,10 @@ Note that any callback or fn attribute functions will be referenced by the clone
 @example
 	var box = scrawl.newBlock({
 		width: 50,
-		height: 50,
+		height: 50
 		});
 	var newBox = box.clone({
-		height: 100,
+		height: 100
 		});
 	newBox.get('width');		//returns 50
 	newBox.get('height');		//returns 100
@@ -2010,7 +2010,7 @@ Entity, cell or element height (in pixels)
 @type Number
 @default 0
 **/
-		height: 0,
+		height: 0
 		/**
 (Added by the path module)
 The SPRITENAME of a Shape entity whose path is used to calculate this object's start point
@@ -2051,7 +2051,7 @@ Position constructor hook function - core functionality
 		this.start = my.newVector({
 			x: my.xtGet([items.startX, temp.x, 0]),
 			y: my.xtGet([items.startY, temp.y, 0]),
-			name: this.type + '.' + this.name + '.start',
+			name: this.type + '.' + this.name + '.start'
 		});
 		this.work.start = my.newVector({
 			name: this.type + '.' + this.name + '.work.start'
@@ -2060,7 +2060,7 @@ Position constructor hook function - core functionality
 		this.handle = my.newVector({
 			x: my.xtGet([items.handleX, temp.x, 0]),
 			y: my.xtGet([items.handleY, temp.y, 0]),
-			name: this.type + '.' + this.name + '.handle',
+			name: this.type + '.' + this.name + '.handle'
 		});
 		this.work.handle = my.newVector({
 			name: this.type + '.' + this.name + '.work.handle'
@@ -2209,13 +2209,13 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 		a.start = my.newVector({
 			x: my.xtGet([items.startX, temp.x, a.start.x]),
 			y: my.xtGet([items.startY, temp.y, a.start.y]),
-			name: a.type + '.' + a.name + '.start',
+			name: a.type + '.' + a.name + '.start'
 		});
 		temp = my.safeObject(items.handle);
 		a.handle = my.newVector({
 			x: my.xtGet([items.handleX, temp.x, a.handle.x]),
 			y: my.xtGet([items.handleY, temp.y, a.handle.y]),
-			name: a.type + '.' + a.name + '.handle',
+			name: a.type + '.' + a.name + '.handle'
 		});
 		a = this.animationPositionClone(a, items);
 		return a;
@@ -2488,7 +2488,7 @@ Element CSS position styling attribute
 @type String
 @default 'static'
 **/
-		position: 'static',
+		position: 'static'
 	};
 	my.mergeInto(my.d.PageElement, my.d.Base);
 	/**
@@ -2817,7 +2817,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				tempname = my.xtGet([items.canvasElement.id, items.canvasElement.name, tempname]);
 			}
 			my.PageElement.call(this, {
-				name: tempname,
+				name: tempname
 			});
 			if (this.name.match(/~~~/)) {
 				this.name = this.name.replace(/~~~/g, '_');
@@ -2839,9 +2839,8 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 					name: this.name,
 					pad: this.name,
 					canvas: items.canvasElement,
-					// backgroundColor: items.backgroundColor,
 					compiled: false,
-					shown: false,
+					shown: false
 				});
 				my.pushUnique(this.cells, myCell.name);
 				this.display = myCell.name;
@@ -2852,9 +2851,8 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 					name: this.name + '_base',
 					pad: this.name,
 					canvas: baseCanvas,
-					// backgroundColor: items.backgroundColor,
 					compileOrder: 9999,
-					shown: false,
+					shown: false
 				});
 				my.pushUnique(this.cells, myCellBase.name);
 				this.base = myCellBase.name;
@@ -2913,7 +2911,7 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 @default ''
 @deprecated
 **/
-		current: '',
+		current: ''
 	};
 	my.mergeInto(my.d.Pad, my.d.PageElement);
 	/**
@@ -2948,13 +2946,13 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 		}
 		if (my.xt(items.width)) {
 			my.cell[this.display].set({
-				width: items.width,
+				width: items.width
 			});
 			this.width = items.width;
 		}
 		if (my.xt(items.height)) {
 			my.cell[this.display].set({
-				height: items.height,
+				height: items.height
 			});
 			this.height = items.height;
 		}
@@ -2966,7 +2964,7 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 			my.cell[this.base].set({
 				backgroundColor: items.backgroundColor || cell.backgroundColor,
 				globalAlpha: items.globalAlpha || cell.globalAlpha,
-				globalCompositeOperation: items.globalCompositeOperation || cell.globalCompositeOperation,
+				globalCompositeOperation: items.globalCompositeOperation || cell.globalCompositeOperation
 			});
 		}
 		return this;
@@ -3166,7 +3164,7 @@ Set scrawl.currentPad attribute to this Pad's PADNAME String
 	scrawl.addCanvasToPage({
 		name: 'mycanvas',
 		width: 200,
-		height: 200,
+		height: 200
 		}).makeCurrent();
 **/
 	my.Pad.prototype.makeCurrent = function() {
@@ -3469,7 +3467,7 @@ Display cycle attribute - order in which the cell will show itself (if show attr
 @type Number
 @default 0
 **/
-		showOrder: 0,
+		showOrder: 0
 	};
 	my.mergeInto(my.d.Cell, my.d.Position);
 	/**
@@ -3548,7 +3546,7 @@ Cell constructor hook function - core module
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
 		my.newGroup({
 			name: this.name,
-			cell: this.name,
+			cell: this.name
 		});
 	};
 	/**
@@ -4132,7 +4130,7 @@ Entity stamp helper function
 		context.set({
 			shadowOffsetX: 0.0,
 			shadowOffsetY: 0.0,
-			shadowBlur: 0.0,
+			shadowBlur: 0.0
 		});
 		return this;
 	};
@@ -4156,7 +4154,7 @@ Entity stamp helper function
 		context.set({
 			shadowOffsetX: sx,
 			shadowOffsetY: sy,
-			shadowBlur: sb,
+			shadowBlur: sb
 		});
 		return this;
 	};
@@ -4176,7 +4174,7 @@ Entity stamp helper function
 		context.set({
 			fillStyle: 'rgba(0, 0, 0, 0)',
 			strokeStyle: 'rgba(0, 0, 0, 0)',
-			shadowColor: 'rgba(0, 0, 0, 0)',
+			shadowColor: 'rgba(0, 0, 0, 0)'
 		});
 		return this;
 	};
@@ -4206,7 +4204,7 @@ Omitting the argument will force the &lt;canvas&gt; to set itself to its Pad obj
 		my.canvas[this.name].height = myHeight;
 		my.Base.prototype.set.call(this, {
 			actualWidth: myWidth,
-			actualHeight: myHeight,
+			actualHeight: myHeight
 		});
 		return this;
 	};
@@ -4481,7 +4479,7 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 @type String
 @default 'alphabetic'
 **/
-		textBaseline: 'alphabetic',
+		textBaseline: 'alphabetic'
 	};
 	my.contextKeys = Object.keys(my.d.Context);
 	my.mergeInto(my.d.Context, my.d.Base);
@@ -4705,7 +4703,7 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 @type Number
 @default 0
 **/
-		regionRadius: 0,
+		regionRadius: 0
 	};
 	my.mergeInto(my.d.Group, my.d.Base);
 	/**
@@ -4823,7 +4821,7 @@ The following entity attributes can be amended by this function: startX, startY,
 				startX: my.xtGet([items.x, items.startX, 0]),
 				startY: my.xtGet([items.y, items.startY, 0]),
 				scale: my.xtGet([items.scale, 0]),
-				roll: my.xtGet([items.roll, 0]),
+				roll: my.xtGet([items.roll, 0])
 			});
 		}
 		return this;
@@ -4867,7 +4865,7 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 					entity.set({
 						pivot: item,
 						handleX: -sv.x,
-						handleY: -sv.y,
+						handleY: -sv.y
 					});
 				}
 			}
@@ -5077,7 +5075,7 @@ _Note: a entity can belong to more than one group by being added to other Group 
 @type String
 @default ''
 **/
-		group: '',
+		group: ''
 	};
 	my.mergeInto(my.d.Entity, my.d.Position);
 	/**
@@ -5660,7 +5658,7 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		this.realPivot = this.pivot;
 		this.set({
 			pivot: 'mouse',
-			order: this.order + 9999,
+			order: this.order + 9999
 		});
 		return this;
 	};
@@ -5675,7 +5673,7 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 		var order = this.order;
 		this.set({
 			pivot: my.xtGet([item, this.realPivot, false]),
-			order: (order >= 9999) ? order - 9999 : 0,
+			order: (order >= 9999) ? order - 9999 : 0
 		});
 		delete this.realPivot;
 		delete this.oldX;
@@ -5814,7 +5812,7 @@ Vertical end coordinate, in pixels, from the top-left corner of the gradient's &
 @type Number
 @default 0
 **/
-		endY: 0,
+		endY: 0
 	};
 	my.mergeInto(my.d.Design, my.d.Base);
 	/**
@@ -6135,7 +6133,7 @@ Swap start and end attributes
 			startX: ex,
 			startY: ey,
 			endX: sx,
-			endY: sy,
+			endY: sy
 		});
 		this.update();
 		return this;
@@ -6193,7 +6191,7 @@ End circle radius, in pixels or percentage of entity/cell width
 @type Number (by default), or String percentage value
 @default 0 (though in practice, an undefined end radius will default to the entity's width, or the cell's width)
 **/
-		endRadius: 0,
+		endRadius: 0
 	};
 	my.mergeInto(my.d.RadialGradient, my.d.Design);
 	/**
@@ -6215,7 +6213,7 @@ Swap start and end attributes
 			startRadius: er,
 			endX: sx,
 			endY: sy,
-			endRadius: sr,
+			endRadius: sr
 		});
 		this.update();
 		return this;
