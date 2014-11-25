@@ -333,12 +333,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     **/
 		my.Pattern.prototype.makeDesign = function(entity, cell) {
 			cell = my.xtGet([cell, this.cell]);
-			var ctx = my.context[cell];
+			var ctx = my.context[cell],
+				temp;
 			if (my.xt(ctx)) {
 				switch (this.sourceType) {
 					case 'video':
 						if (scrawl.xt(my.asset[this.source])) {
-							my.dsn[this.name] = ctx.createPattern(my.asset[this.source], this.repeat);
+							temp = my.video[this.source].api;
+							if (temp.readyState > 1) {
+								my.dsn[this.name] = ctx.createPattern(my.asset[this.source], this.repeat);
+							}
+							else {
+								my.dsn[this.name] = undefined;
+							}
 						}
 						break;
 					case 'cell':

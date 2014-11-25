@@ -9,31 +9,36 @@ var mycode = function() {
 
 	//define variables
 	var video,
-		picture;
+		picture,
+		wheel;
 
 	//import video into library
 	scrawl.getVideoById('myvideo');
-	video = scrawl.asset.myvideo;
-	// video.width = 600;
-	// video.height = 450;
-	// video.videoWidth = 600;
-	// video.videoHeight = 450;
-	// video.clientWidth = 600;
-	// video.clientHeight = 450;
-	// video.loop = true;
-	video.play();
+	video = scrawl.video.myvideo;
+	if (video.api.readyState > 2) {
+		video.api.loop = true;
+		video.api.muted = true;
+		video.api.play();
+	}
+	else {
+		video.api.addEventListener('canplay', function() {
+			video.api.loop = true;
+			video.api.muted = true;
+			video.api.play();
+		}, false);
+	}
 
-	scrawl.newMatrixFilter({
-		name: 'myfilter',
-		data: [-2, -1, 0, -1, 1, 1, 0, 1, 2],
+	scrawl.newPattern({
+		name: 'mypattern',
+		source: 'myvideo',
 	});
 
 	//build entity
 	picture = scrawl.newPicture({
 		method: 'fill',
-		pasteWidth: '80%',
-		pasteHeight: '80%',
-		pasteX: 'center',
+		pasteWidth: '50%',
+		pasteHeight: '50%',
+		pasteX: '30%',
 		pasteY: 'center',
 		copyWidth: '100%',
 		copyHeight: '100%',
@@ -41,7 +46,16 @@ var mycode = function() {
 		handleY: 'center',
 		copyY: 0,
 		source: 'myvideo',
-		//filters: ['myfilter'],
+	});
+
+	wheel = scrawl.newWheel({
+		radius: 140,
+		startX: 220,
+		startY: -50,
+		method: 'fill',
+		handleX: -260,
+		handleY: -230,
+		fillStyle: 'mypattern',
 	});
 
 	//animation object
@@ -67,7 +81,7 @@ var mycode = function() {
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'animation', 'filters'],
+	modules: ['images', 'animation', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -757,11 +757,12 @@ Adds a DOM &lt;video&gt; element to the library
 **/
 		my.Video.prototype.addVideoByElement = function(items) {
 			var el = items.element,
-				stream = my.xtGet([items.stream, 'raw']);
+				stream = my.xtGet([items.stream, 'raw']),
+				that = this;
 			if (my.xt(el)) {
 				el.id = this.name;
-				this.width = parseFloat(my.xtGetTrue([el.width, 0]));
-				this.height = parseFloat(my.xtGetTrue([el.height, 0]));
+				this.width = 0;
+				this.height = 0;
 				my.imageFragment.appendChild(el);
 				my.asset[this.name] = my.imageFragment.querySelector('#' + this.name);
 				my.pushUnique(my.assetnames, this.name);
@@ -771,7 +772,13 @@ Adds a DOM &lt;video&gt; element to the library
 					case 'videojs':
 						break;
 					default:
-						this.api = el;
+						this.api = my.asset[this.name];
+						if (this.api.readyState > 0) {
+							this.setIntrinsicDimensions();
+						}
+						else {
+							this.api.addEventListener('loadedmetadata', this.setIntrinsicDimensions, false);
+						}
 				}
 				if (my.isa(items.callback, 'fn')) {
 					items.callback();
@@ -779,6 +786,25 @@ Adds a DOM &lt;video&gt; element to the library
 				return true;
 			}
 			return false;
+		};
+		/**
+Video constructor helper function
+
+@method setIntrinsicDimensions
+@return true; false on failure
+@private
+**/
+		my.Video.prototype.setIntrinsicDimensions = function() {
+			var i, iz, ent;
+			this.width = this.api.videoWidth;
+			this.height = this.api.videoHeight;
+			for (i = 0, iz = my.entitynames.length; i < iz; i++) {
+				ent = my.entity[my.entitynames[i]];
+				if (ent.type === 'Picture') {
+					ent.setCopy();
+				}
+			}
+			return true;
 		};
 		/**
 Import a video using the supplied url string
@@ -789,45 +815,6 @@ Import a video using the supplied url string
 @private
 **/
 		my.Video.prototype.addVideoByUrl = function(items) {
-			// var el,
-			//  that = this;
-			// if (my.isa(items.url, 'str')) {
-			//  el = document.createElement('img');
-			//  el.id = this.name;
-			//  el.onload = function() {
-			//    var entity, design, i, iz;
-			//    that.width = el.width;
-			//    that.height = el.height;
-			//    my.imageFragment.appendChild(el);
-			//    my.asset[that.name] = my.imageFragment.getElementById(that.name);
-			//    my.pushUnique(my.assetnames, that.name);
-			//    for (i = 0, iz = my.entitynames.length; i < iz; i++) {
-			//      entity = my.entity[my.entitynames[i]];
-			//      if (entity.type === 'Picture') {
-			//        if (entity.source === that.name) {
-			//          entity.setCopy();
-			//        }
-			//      }
-			//    }
-			//    for (i = 0, iz = my.designnames.length; i < iz; i++) {
-			//      design = my.design[my.designnames[i]];
-			//      if (design.type === 'Pattern') {
-			//        if (design.source === that.name) {
-			//          design.sourceType = 'image';
-			//          design.makeDesign();
-			//        }
-			//      }
-			//    }
-			//    if (my.isa(items.callback, 'fn')) {
-			//      items.callback();
-			//    }
-			//  };
-			//  el.onerror = function(e) {
-			//    console.log('Download of image failed for ', that.name);
-			//  };
-			//  el.src = items.url;
-			//  return true;
-			// }
 			return false;
 		};
 

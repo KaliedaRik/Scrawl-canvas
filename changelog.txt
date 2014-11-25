@@ -52,6 +52,9 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141124-25
+	- refining the Video object
+	
 141121-23
 	- simplifying filter.add() functions
 		- because filterStrength and alpha attributes effectively do the same thing, but alpha is a lot simpler to work with
