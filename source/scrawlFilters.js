@@ -1579,7 +1579,7 @@ Add function - takes data, calculates its channels and combines it with data
 		my.MatrixFilter.prototype.add = function(data) {
 			var alpha = this.getAlpha(),
 				d0 = data.data,
-				result = my.cvx.createImageData(data),
+				result = my.cvx.createImageData(data.width, data.height),
 				dR = result.data,
 				i, iz, j, jz, k, kz, r, g, b, w, c, e, e0, x, y;
 			if (this.includeInvisiblePoints) {
@@ -1741,7 +1741,7 @@ Add function - takes data, calculates its channels and combines it with data
 		my.PixelateFilter.prototype.add = function(data) {
 			var alpha = this.getAlpha(),
 				d0 = data.data,
-				result = my.cvx.createImageData(data),
+				result = my.cvx.createImageData(data.width, data.height),
 				dR = result.data,
 				i, j, iz, jz, r, g, b, a, x, y, w, h, xj, yi, dW, dH, tW, tH, count, pos, test;
 			dW = data.width;
@@ -2275,7 +2275,7 @@ Add function - takes data, calculates its channels and combines it with data
 		my.NoiseFilter.prototype.add = function(data) {
 			var alpha = this.getAlpha(),
 				d0 = data.data,
-				result = my.cvx.createImageData(data),
+				result = my.cvx.createImageData(data.width, data.height),
 				dR = result.data,
 				strength = this.strength,
 				i, iz, j, jz, k, kz, e, e0, x, y, cell,

@@ -2240,13 +2240,23 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 **/
 	my.Position.prototype.getPivotOffsetVector = function() {
 		var result = this.work.handle,
-			height = this.targetHeight || (this.localHeight / this.scale) || this.height || this.get('height'),
-			width = this.targetWidth || (this.localWidth / this.scale) || this.width || this.get('width');
-		if (my.isa(height, 'str')) {
-			height = this.pasteData.h;
-		}
-		if (my.isa(width, 'str')) {
-			width = this.pasteData.w;
+			height, width;
+		switch (this.type) {
+			case 'Block':
+				height = (this.localHeight / this.scale) || this.get('height');
+				width = (this.localWidth / this.scale) || this.get('width');
+				break;
+			case 'Picture':
+				height = (this.pasteData.h / this.scale) || this.get('height');
+				width = (this.pasteData.w / this.scale) || this.get('width');
+				break;
+			case 'Cell':
+				height = (this.pasteData.h / this.scale) || this.get('height');
+				width = (this.pasteData.w / this.scale) || this.get('width');
+				break;
+			default:
+				height = this.height || this.get('height');
+				width = this.width || this.get('width');
 		}
 		return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 	};
@@ -5187,7 +5197,7 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 		if (my.xt(items.height)) {
 			this.height = (my.isa(this.height, 'num')) ? this.height + items.height : my.addPercentages(this.height, items.height);
 		}
-		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale])) {
+		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.pasteWidth, items.pasteHeight, items.radius, items.scale])) {
 			this.offset.flag = false;
 		}
 		return this;

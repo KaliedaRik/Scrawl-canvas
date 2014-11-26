@@ -666,7 +666,7 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 			var tempname;
 			this.width = 0;
 			this.height = 0;
-			if (my.xto([items.element, items.url])) {
+			if (my.xt(items.element)) {
 				if (my.xt(items.element)) {
 					items.name = my.xtGet([items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '']);
 				}
@@ -677,12 +677,7 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 				my.Base.call(this, items);
 				my.video[this.name] = this;
 				my.pushUnique(my.videonames, this.name);
-				if (my.xt(items.element)) {
-					this.addVideoByElement(items);
-				}
-				else if (my.xt(items.url)) {
-					this.addVideoByUrl(items);
-				}
+				this.addVideoByElement(items);
 				return this;
 			}
 			return false;
@@ -712,14 +707,6 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
     **/
 			height: 0,
 			/**
-Constructor/clone flag - if set to true (default), will remove the &lt;img&gt; element from the web page DOM
-
-_This attribute is not retained by the object_
-@property removeImageFromDOM 
-@type Boolean
-@default true
-**/
-			/**
 Constructor/clone function - some functions can call the Video constructor with a callback function
 
 _This attribute is not retained by the object_
@@ -732,14 +719,6 @@ Constructor argument attribute - a DOM &lt;video&gt; element
 
 _This attribute is not retained by the object_
 @property element 
-@type Object
-@default undefined
-**/
-			/**
-Constructor argument attribute - a String URL for dynamically loading an image
-
-_This attribute is not retained by the object_
-@property url 
 @type Object
 @default undefined
 **/
@@ -766,19 +745,12 @@ Adds a DOM &lt;video&gt; element to the library
 				my.imageFragment.appendChild(el);
 				my.asset[this.name] = my.imageFragment.querySelector('#' + this.name);
 				my.pushUnique(my.assetnames, this.name);
-				switch (stream) {
-					case 'youtube':
-						break;
-					case 'videojs':
-						break;
-					default:
-						this.api = my.asset[this.name];
-						if (this.api.readyState > 0) {
-							this.setIntrinsicDimensions();
-						}
-						else {
-							this.api.addEventListener('loadedmetadata', this.setIntrinsicDimensions, false);
-						}
+				this.api = my.asset[this.name];
+				if (this.api.readyState > 0) {
+					this.setIntrinsicDimensions();
+				}
+				else {
+					this.api.addEventListener('loadedmetadata', this.setIntrinsicDimensions, false);
 				}
 				if (my.isa(items.callback, 'fn')) {
 					items.callback();
