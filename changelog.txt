@@ -52,6 +52,10 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+141127
+	- absolute and relative positioning for Pad objects within a stack
+		- startXY, handleXY - can be positioned using px numbers and stack percentage strings
+		- tested on demo201
 141126
 	- Picture and Cell scaled positioning bug - fixed
 		- tested on demos017 and 111

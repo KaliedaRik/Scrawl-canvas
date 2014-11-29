@@ -50,8 +50,12 @@ var mycode = function() {
 	scrawl.addCanvasToPage({
 		stackName: 'mystack',
 		canvasName: 'mysecondcanvas',
-		width: 400,
-		height: 200,
+		startX: 'right',
+		startY: 'top',
+		handleX: 'right',
+		handleY: 'top',
+		width: '30%',
+		height: '30%',
 	}).makeCurrent();
 
 	//define some more entitys
@@ -60,8 +64,8 @@ var mycode = function() {
 		handleX: 'center',
 		handleY: 'top',
 		textAlign: 'center',
-		startX: 200,
-		startY: 50,
+		startX: '50%',
+		startY: '20%',
 		font: '24pt serif',
 		method: 'fillDraw',
 		fillStyle: 'Red',
@@ -73,7 +77,7 @@ var mycode = function() {
 		method: 'fill',
 		fillStyle: 'Black',
 		font: '12pt sans-serif',
-		startY: 90,
+		startY: '45%',
 	});
 
 	//display the canvases

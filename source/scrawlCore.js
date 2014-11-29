@@ -2243,13 +2243,13 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 			height, width;
 		switch (this.type) {
 			case 'Block':
+			case 'Pad':
+			case 'Stack':
+			case 'Element':
 				height = (this.localHeight / this.scale) || this.get('height');
 				width = (this.localWidth / this.scale) || this.get('width');
 				break;
 			case 'Picture':
-				height = (this.pasteData.h / this.scale) || this.get('height');
-				width = (this.pasteData.w / this.scale) || this.get('width');
-				break;
 			case 'Cell':
 				height = (this.pasteData.h / this.scale) || this.get('height');
 				width = (this.pasteData.w / this.scale) || this.get('width');
@@ -2429,7 +2429,9 @@ The core implementation of this object is a stub that supplies Pad objects with 
 	my.PageElement = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
+		console.log(this.name, items);
 		this.scale = my.xtGet([items.scale, my.d[this.type].scale]);
+		this.setLocalDimensions();
 		this.stacksPageElementConstructor(items);
 		return this;
 	};
@@ -2457,6 +2459,20 @@ DOM element height
 @default 150
 **/
 		height: 150,
+		/**
+DOM element localWidth
+@property localWidth
+@type Number
+@default 300
+**/
+		localWidth: 300,
+		/**
+DOM element localHeight
+@property localHeight
+@type Number
+@default 150
+**/
+		localHeight: 150,
 		/**
 DOM element's current horizontal offset from the top of the web page
 @property displayOffsetX
@@ -2521,9 +2537,9 @@ Augments Base.get() to retrieve DOM element width and height values
 		if (my.contains(['width', 'height'], item)) {
 			switch (item) {
 				case 'width':
-					return my.xtGet([this.width, parseFloat(el.width), my.d[this.type].width]);
+					return my.xtGet([this.localWidth, parseFloat(el.width), my.d[this.type].width]);
 				case 'height':
-					return my.xtGet([this.height, parseFloat(el.height), my.d[this.type].height]);
+					return my.xtGet([this.localHeight, parseFloat(el.height), my.d[this.type].height]);
 				case 'position':
 					return my.xtGet([this.position, el.style.position]);
 			}
@@ -2545,6 +2561,7 @@ Augments Base.set() to allow the setting of DOM element dimension values
 		my.Base.prototype.set.call(this, items);
 		var el = this.getElement();
 		if (my.xto([items.width, items.height, items.scale])) {
+			this.setLocalDimensions();
 			this.setDimensions();
 			this.setDisplayOffsets();
 		}
@@ -2624,6 +2641,19 @@ Scale DOM element dimensions (width, height)
 		return this;
 	};
 	/**
+Helper function - set local dimensions (width, height)
+@method setLocalDimensions
+@return This
+@chainable
+@private
+**/
+	my.PageElement.prototype.setLocalDimensions = function() {
+		console.log(this.name, 'core version', this.width, this.scale);
+		this.localWidth = this.width * this.scale;
+		this.localHeight = this.height * this.scale;
+		return this;
+	};
+	/**
 Helper function - set DOM element dimensions (width, height)
 @method setDimensions
 @return This
@@ -2632,8 +2662,8 @@ Helper function - set DOM element dimensions (width, height)
 **/
 	my.PageElement.prototype.setDimensions = function() {
 		var el = this.getElement();
-		el.style.width = (this.width * this.scale) + 'px';
-		el.style.height = (this.height * this.scale) + 'px';
+		el.style.width = this.localWidth + 'px';
+		el.style.height = this.localHeight + 'px';
 		return this;
 	};
 	/**
@@ -2815,12 +2845,14 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 **/
 	my.Pad = function(items) {
 		items = my.safeObject(items);
-		my.PageElement.call(this, items);
 		var tempname = 'Pad',
 			myCell,
 			baseCanvas,
 			myCellBase;
 		if (my.xt(items.canvasElement)) {
+			my.PageElement.call(this, items);
+			this.width = my.xtGet([items.width, items.canvasElement.width, my.d[this.type].width]);
+			this.height = my.xtGet([items.height, items.canvasElement.height, my.d[this.type].height]);
 			my.canvas.PadConstructorTemporaryCanvas = items.canvasElement;
 			this.display = 'PadConstructorTemporaryCanvas';
 			if (my.xto([items.canvasElement.id, items.canvasElement.name])) {
@@ -2837,9 +2869,6 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			}
 			if (!my.contains(my.cellnames, this.name)) {
 				this.cells = [];
-				this.width = my.xtGet([items.width, this.get('width')]);
-				this.height = my.xtGet([items.height, this.get('height')]);
-				this.setDimensions();
 				my.pad[this.name] = this;
 				my.pushUnique(my.padnames, this.name);
 				if (items.length > 1) {
@@ -2850,7 +2879,9 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 					pad: this.name,
 					canvas: items.canvasElement,
 					compiled: false,
-					shown: false
+					shown: false,
+					width: this.localWidth,
+					height: this.localHeight
 				});
 				my.pushUnique(this.cells, myCell.name);
 				this.display = myCell.name;
@@ -2862,7 +2893,9 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 					pad: this.name,
 					canvas: baseCanvas,
 					compileOrder: 9999,
-					shown: false
+					shown: false,
+					width: this.localWidth / this.scale,
+					height: this.localHeight / this.scale
 				});
 				my.pushUnique(this.cells, myCellBase.name);
 				this.base = myCellBase.name;
@@ -2956,15 +2989,13 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 		}
 		if (my.xt(items.width)) {
 			my.cell[this.display].set({
-				width: items.width
+				width: this.localWidth
 			});
-			this.width = items.width;
 		}
 		if (my.xt(items.height)) {
 			my.cell[this.display].set({
-				height: items.height
+				height: items.localHeight
 			});
-			this.height = items.height;
 		}
 		if (my.xto([items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.width, items.height])) {
 			this.setDisplayOffsets();
@@ -3215,8 +3246,8 @@ Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use stylin
 **/
 	my.Pad.prototype.setDimensions = function() {
 		var el = this.getElement();
-		el.width = this.width * this.scale;
-		el.height = this.height * this.scale;
+		el.width = this.localWidth;
+		el.height = this.localHeight;
 		return this;
 	};
 

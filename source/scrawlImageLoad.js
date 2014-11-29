@@ -310,7 +310,7 @@ Adds a DOM &lt;img&gt; element to the library
 			this.width = parseFloat(my.xtGetTrue([el.offsetWidth, el.width, el.style.width, 0]));
 			this.height = parseFloat(my.xtGetTrue([el.offsetHeight, el.height, el.style.height, 0]));
 			my.imageFragment.appendChild(el);
-			my.asset[this.name] = my.imageFragment.querySelector('#' + this.name);
+			my.asset[this.name] = el;
 			my.pushUnique(my.assetnames, this.name);
 			if (my.isa(items.callback, 'fn')) {
 				items.callback();

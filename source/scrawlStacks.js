@@ -281,8 +281,18 @@ The argument object should include the following attributes:
 			myCanvas.id = myName;
 			myParent.appendChild(myCanvas);
 			DOMCanvas = document.getElementById(myName);
-			DOMCanvas.width = items.width;
-			DOMCanvas.height = items.height;
+			if (my.isa(items.width, 'str')) {
+				DOMCanvas.width = (parseFloat(items.width) / 100) * parseFloat(myParent.style.width);
+			}
+			else {
+				DOMCanvas.width = items.width;
+			}
+			if (my.isa(items.height, 'str')) {
+				DOMCanvas.height = (parseFloat(items.height) / 100) * parseFloat(myParent.style.height);
+			}
+			else {
+				DOMCanvas.height = items.height;
+			}
 			myPad = my.newPad({
 				canvasElement: DOMCanvas,
 			});
@@ -1259,6 +1269,35 @@ Calculate the element's display offset values
 			return this;
 		};
 		/**
+Helper function - set local dimensions (width, height)
+@method setLocalDimensions
+@return This
+@chainable
+@private
+**/
+		my.PageElement.prototype.setLocalDimensions = function() {
+			console.log(this.name, 'stack version', this.width, this.scale, this.stack);
+			var parent = my.stack[this.stack],
+				w, h;
+			if (parent) {
+				w = parent.localWidth / parent.scale;
+				h = parent.localHeight / parent.scale;
+			}
+			if (parent && my.isa(this.width, 'str')) {
+				this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+			}
+			else {
+				this.localWidth = this.width * this.scale;
+			}
+			if (parent && my.isa(this.height, 'str')) {
+				this.localHeight = ((parseFloat(this.height) / 100) * w) * this.scale;
+			}
+			else {
+				this.localHeight = this.height * this.scale;
+			}
+			return this;
+		};
+		/**
 A __factory__ function to generate new Stack objects
 @method newStack
 @param {Object} items Key:value Object argument for setting attributes
@@ -1311,6 +1350,8 @@ A __factory__ function to generate new Element objects
 				if (my.xto([items.stackElement.id, items.stackElement.name])) {
 					tempname = items.stackElement.id || items.stackElement.name;
 				}
+				this.width = items.width || items.stackElement.style.width;
+				this.height = items.height || items.stackElement.style.height;
 				my.PageElement.call(this, {
 					name: tempname,
 				});
@@ -1329,8 +1370,6 @@ A __factory__ function to generate new Element objects
 				this.work.perspective = my.newVector({
 					name: this.type + '.' + this.name + '.work.perspective'
 				});
-				this.width = items.width || this.get('width');
-				this.height = items.height || this.get('height');
 				this.scaleText = my.xtGet([items.scaleText, false]);
 				this.setDimensions();
 				this.setPerspective();
