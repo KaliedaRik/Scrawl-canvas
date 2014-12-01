@@ -510,13 +510,6 @@ The SPRITENAME or POINTNAME of a entity or Point object to be used for setting t
 **/
 		my.d.PageElement.pivot = '';
 		/**
-The element's parent stack's STACKNAME
-@property PageElement.stack
-@type String
-@default ''
-**/
-		//		my.d.PageElement.stack = '';
-		/**
 The element's current ELEMENTGROUPNAME
 @property PageElement.group
 @type String
@@ -964,7 +957,6 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 					else {
 						this.visibility = (items.visibility) ? true : false;
 					}
-					// if (this.stack) {
 					if (this.group) {
 						el.style.opacity = (this.visibility) ? 1 : 0;
 					}

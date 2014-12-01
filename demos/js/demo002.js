@@ -17,7 +17,7 @@ var mycode = function() {
 
 	//add a canvas to the 'benny' div element, and make it current
 	scrawl.addCanvasToPage({
-		canvasName: 'mycanvas',
+		name: 'mycanvas',
 		parentElement: 'benny',
 		width: myWidth,
 		height: myHeight,

@@ -22,13 +22,13 @@ var mycode = function() {
 
 	//add canvases to page
 	pad1 = scrawl.addCanvasToPage({
-		canvasName: 'canvas1',
+		name: 'canvas1',
 		parentElement: 'canvas1Host',
 		width: 400,
 		height: 200,
 	});
 	pad2 = scrawl.addCanvasToPage({
-		canvasName: 'canvas2',
+		name: 'canvas2',
 		parentElement: 'canvas2Host',
 		width: 400,
 		height: 200,

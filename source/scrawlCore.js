@@ -895,7 +895,6 @@ A __private__ function that searches the DOM for canvas elements and generates P
 			myPad;
 		if (s.length > 0) {
 			for (var i = 0, iz = s.length; i < iz; i++) {
-				console.log('gC core: pad for', s[i]);
 				myPad = my.newPad({
 					canvasElement: s[i]
 				});
@@ -2644,7 +2643,6 @@ Helper function - set local dimensions (width, height)
 @private
 **/
 	my.PageElement.prototype.setLocalDimensions = function() {
-		console.log(this.name, this.width, this.height, this.scale);
 		this.localWidth = this.width * this.scale;
 		this.localHeight = this.height * this.scale;
 		return this;

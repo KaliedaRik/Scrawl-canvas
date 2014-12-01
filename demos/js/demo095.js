@@ -9,7 +9,7 @@ var mycode = function() {
 
 	//add a canvas to the web page
 	scrawl.addCanvasToPage({
-		canvasName: 'canvas',
+		name: 'canvas',
 		parentElement: 'canvashost',
 		width: 400,
 		height: 200,

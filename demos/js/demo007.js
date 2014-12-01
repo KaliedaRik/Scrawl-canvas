@@ -16,7 +16,7 @@ var mycode = function() {
 	//set cell background color
 	scrawl.cell[scrawl.pad.mycanvas.base].set({
 		backgroundColor: 'lightblue',
-	}).compile();
+	}).clear();
 
 	//define entitys
 	myBlock = scrawl.newBlock({ //template
