@@ -104,19 +104,21 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 				}
 				for (i = 0, iz = s.length; i < iz; i++) {
 					myStack = my.newStack({
-						stackElement: stacks[i],
+						stackElement: stacks[i]
 					});
 					for (j = 0, jz = my.stk[myStack.name].children.length; j < jz; j++) {
 						my.stk[myStack.name].children[j].style.position = 'absolute';
 						if (my.stk[myStack.name].children[j].tagName !== 'CANVAS') {
 							my.newElement({
 								domElement: my.stk[myStack.name].children[j],
-								stack: myStack.name,
+								// stack: myStack.name
+								group: myStack.name
 							});
 						}
 					}
 					if (my.contains(my.elementnames, myStack.name)) {
-						myStack.stack = my.element[myStack.name].stack;
+						// myStack.stack = my.element[myStack.name].stack;
+						myStack.group = my.element[myStack.name].stack;
 						delete my.element[myStack.name];
 						delete my.elm[myStack.name];
 						my.removeItem(my.elementnames, myStack.name);
@@ -124,7 +126,6 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 				}
 				return true;
 			}
-			console.log('my.getStacks() failed to find any elements with class="scrawlstack" on the page');
 			return false;
 		};
 		/**
@@ -140,35 +141,38 @@ A __private__ function that searches the DOM for canvas elements and generates P
 				myPad,
 				myStack,
 				myElement,
-				myNewStack,
-				canvases = [],
+				el = [],
 				i, iz;
 			if (s.length > 0) {
 				for (i = 0, iz = s.length; i < iz; i++) {
-					canvases.push(s[i]);
+					el.push(s[i]);
 				}
 				for (i = 0, iz = s.length; i < iz; i++) {
-					if (canvases[i].className.indexOf('stack:') !== -1) {
-						myStack = canvases[i].className.match(/stack:(\w+)/);
-						if (my.contains(my.stacknames, myStack[1])) {
-							my.stk[myStack[1]].appendChild(canvases[i]);
+					if (s[i].className.indexOf('stack:') !== -1) {
+						myStack = el[i].className.match(/stack:(\w+)/);
+						myStack = myStack[1];
+						if (my.contains(my.stacknames, myStack)) {
+							my.stk[myStack].appendChild(el[i]);
 						}
 						else {
 							myElement = document.createElement('div');
-							myElement.id = myStack[1];
-							canvases[i].parentElement.appendChild(myElement);
-							myElement.appendChild(canvases[i]);
-							myNewStack = my.newStack({
-								stackElement: document.getElementById(myStack[1]),
+							myElement.id = myStack;
+							el[i].parentElement.appendChild(myElement);
+							myElement.appendChild(el[i]);
+							my.newStack({
+								stackElement: myElement,
 							});
 						}
 					}
 					myPad = my.newPad({
-						canvasElement: canvases[i],
+						canvasElement: el[i],
 					});
-					if (my.contains(my.stacknames, canvases[i].parentElement.id)) {
-						myPad.stack = canvases[i].parentElement.id;
-						canvases[i].style.position = 'absolute';
+					if (my.contains(my.stacknames, el[i].parentElement.id)) {
+						myPad.set({
+							// stack: el[i].parentElement.id
+							group: el[i].parentElement.id
+						});
+						el[i].style.position = 'absolute';
 					}
 					if (i === 0) {
 						my.currentPad = myPad.name;
@@ -176,7 +180,6 @@ A __private__ function that searches the DOM for canvas elements and generates P
 				}
 				return true;
 			}
-			console.log('my.getCanvases() failed to find any <canvas> elements on the page');
 			return false;
 		};
 		/**
@@ -204,7 +207,8 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 								my.stk[myStack[1]].appendChild(el[i]);
 								my.newElement({
 									domElement: el[i],
-									stack: myStack[1],
+									// stack: myStack[1],
+									group: myStack[1],
 								});
 							}
 						}
@@ -212,7 +216,6 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 				}
 				return true;
 			}
-			console.log('my.getElements() failed to find any elements with class="scrawl" on the page');
 			return false;
 		};
 		/**
@@ -234,8 +237,8 @@ The argument object should include the following attributes:
 		<script src="js/scrawlCore-min.js"></script>
 		<script>
 			scrawl.addCanvasToPage({
-				canvasName:	'mycanvas',
-				parentElement: 'canvasholder',
+				name:	'mycanvas',
+				stackName: 'mystack',
 				width: 400,
 				height: 200,
 				}).makeCurrent();
@@ -245,16 +248,16 @@ The argument object should include the following attributes:
 <a href="../../demo002.html">Live demo</a>
 **/
 		my.addCanvasToPage = function(items) {
-			items = (my.isa(items, 'obj')) ? items : {};
-			var myStk = false,
-				myParent,
-				myName,
+			items = my.safeObject(items);
+			var myParent,
 				myCanvas,
-				DOMCanvas,
 				myPad,
+				myStk,
 				stackParent;
+			items.width = my.xtGet([items.width, 300]);
+			items.height = my.xtGet([items.height, 150]);
 			if (my.xt(items.stackName)) {
-				myStk = document.getElementById(items.stackName) || false;
+				myStk = my.stack[items.stackName];
 				if (!myStk) {
 					if (!my.xt(items.parentElement)) {
 						stackParent = document.body;
@@ -266,41 +269,25 @@ The argument object should include the following attributes:
 						stackName: items.stackName,
 						width: items.width,
 						height: items.height,
-						parentElement: stackParent,
+						parentElement: stackParent
 					});
 				}
-				items.stack = myStk.name;
+				//items.stack = myStk.name;
+				items.group = myStk.name;
+				items.parentElement = myStk.name;
 			}
-			myParent = my.stk[(myStk.name || myStk.id)] || document.getElementById(items.parentElement) || document.body;
-			myName = my.makeName({
-				name: my.xtGet([items.canvasName, items.name, false]),
-				type: 'Pad',
-				target: 'padnames',
-			});
-			myCanvas = document.createElement('canvas');
-			myCanvas.id = myName;
-			myParent.appendChild(myCanvas);
-			DOMCanvas = document.getElementById(myName);
+			myParent = document.getElementById(items.parentElement) || document.body;
 			if (my.isa(items.width, 'str')) {
-				DOMCanvas.width = (parseFloat(items.width) / 100) * parseFloat(myParent.style.width);
-			}
-			else {
-				DOMCanvas.width = items.width;
+				items.width = Math.round((parseFloat(items.width) / 100) * parseFloat(myParent.style.width));
 			}
 			if (my.isa(items.height, 'str')) {
-				DOMCanvas.height = (parseFloat(items.height) / 100) * parseFloat(myParent.style.height);
+				items.height = Math.round((parseFloat(items.height) / 100) * parseFloat(myParent.style.height));
 			}
-			else {
-				DOMCanvas.height = items.height;
-			}
-			myPad = my.newPad({
-				canvasElement: DOMCanvas,
-			});
-			if (my.xt(items.position) || myStk) {
-				items.position = items.position || 'absolute';
-			}
-			items.stack = (items.stackName) ? items.stackName : '';
-			myPad.set(items);
+			myCanvas = document.createElement('canvas');
+			myCanvas.style.position = my.xtGet([items.position, 'absolute']);
+			myParent.appendChild(myCanvas);
+			items.canvasElement = myCanvas;
+			myPad = new my.Pad(items);
 			my.setDisplayOffsets();
 			return myPad;
 		};
@@ -323,10 +310,13 @@ The argument object should include the following attributes:
 				items.parentElement = (my.isa(items.parentElement, 'str')) ? document.getElementById(items.parentElement) : items.parentElement;
 				myElement = document.createElement('div');
 				myElement.id = items.stackName;
+				myElement.style.width = my.xtGet([items.width, 300]) + 'px';
+				myElement.style.height = my.xtGet([items.height, 150]) + 'px';
 				items.parentElement.appendChild(myElement);
-				items.stackElement = document.getElementById(items.stackName);
+				items.stackElement = myElement;
 				myStack = my.newStack(items);
-				myStack.stack = (my.contains(my.stacknames, items.parentElement.id)) ? items.parentElement.id : '';
+				// myStack.stack = (my.contains(my.stacknames, items.parentElement.id)) ? items.parentElement.id : '';
+				myStack.group = (my.contains(my.stacknames, items.parentElement.id)) ? items.parentElement.id : '';
 				return myStack;
 			}
 			return false;
@@ -365,20 +355,36 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 			return true;
 		};
 		/**
+A __display__ function to ask Pads to undertake a complete clear-compile-show display cycle, and stacks to undertake a render cycle
+
+(Replaces Core.render)
+
+@method render
+@param {Array} [pads] Array of PADNAMEs - can also be a String
+@return The Scrawl library object (scrawl)
+@chainable
+**/
+		my.render = function(pads) {
+			my.renderElements();
+			var p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+			for (var i = 0, iz = p.length; i < iz; i++) {
+				my.pad[p[i]].render();
+			}
+			return my;
+		};
+		/**
 A __display__ function to move DOM elements within a Stack
 @method renderElements
 @return Always true
 **/
 		my.renderElements = function() {
-			var i, iz;
+			var i, iz, s;
 			for (i = 0, iz = my.stacknames.length; i < iz; i++) {
-				my.stack[my.stacknames[i]].renderElement();
-			}
-			for (i = 0, iz = my.padnames.length; i < iz; i++) {
-				my.pad[my.padnames[i]].renderElement();
-			}
-			for (i = 0, iz = my.elementnames.length; i < iz; i++) {
-				my.element[my.elementnames[i]].renderElement();
+				s = my.stack[my.stacknames[i]];
+				// if (!s.stack) {
+				if (!s.group) {
+					s.render();
+				}
 			}
 			return true;
 		};
@@ -390,37 +396,24 @@ Argument can contain the following (optional) attributes:
 
 * __quaternion__ - quaternion representing the rotation to be applied to the element
 * __distance__ - distance of element from the rotation origin
-* __action__ - elements to be rotated/positioned
+* __group__ - optional String name of ElementGroup on which to commence the operation; the operation will also be performed on the groups of any Stack elements cotained within this group. If this argument is not included in the argument object then all Pads, Stacks and Elements will be updated.
 
-Where the _action_ attribute can contain either an array of Scrawl objects to be operated upon, or one of the following Strings: '__all__' (default), '__stacks__', '__pads__', or '__elements__'
-
-@method update3d
+@method update
 @param {Object} [items] Argument object containing key:value pairs
 @return Always true
 **/
-		my.update3d = function(items) {
+		my.update = function(items) {
 			items = my.safeObject(items);
-			var action = items.action || 'all',
-				i, iz;
-			if (action === 'stacks' || action === 'all') {
+			var i, iz, s;
+			if (my.isa(items.group, 'str') && my.contains(my.groupnames, items.group) && my.group[items.group].type === 'ElementGroup') {
+				my.group[items.group].update(items);
+			}
+			else {
 				for (i = 0, iz = my.stacknames.length; i < iz; i++) {
-					my.stack[my.stacknames[i]].update3d(items);
-				}
-			}
-			if (action === 'pads' || action === 'all') {
-				for (i = 0, iz = my.padnames.length; i < iz; i++) {
-					my.pad[my.padnames[i]].update3d(items);
-				}
-			}
-			if (action === 'elements' || action === 'all') {
-				for (i = 0, iz = my.elementnames.length; i < iz; i++) {
-					my.element[my.elementnames[i]].update3d(items);
-				}
-			}
-			if (my.isa(action, 'arr')) {
-				for (i = 0, iz = action; i < iz; i++) {
-					if (my.contains(['Pad', 'Stack', 'Element'], action[i].type)) {
-						action[i].update3d(items);
+					s = my.stack[my.stacknames[i]];
+					// if (!s.stack) {
+					if (!s.group) {
+						s.update(items);
 					}
 				}
 			}
@@ -522,7 +515,14 @@ The element's parent stack's STACKNAME
 @type String
 @default ''
 **/
-		my.d.PageElement.stack = '';
+		//		my.d.PageElement.stack = '';
+		/**
+The element's current ELEMENTGROUPNAME
+@property PageElement.group
+@type String
+@default ''
+**/
+		my.d.PageElement.group = '';
 		/**
 The SPRITENAME of a Shape entity whose path is used to calculate this object's start point
 @property PageElement.path
@@ -631,17 +631,18 @@ PageElement constructor hook function - modified by stacks module
 			var temp = my.safeObject(items.start);
 			this.start = my.newVector({
 				name: this.type + '.' + this.name + '.start',
-				x: (my.xt(items.startX)) ? items.startX : ((my.xt(temp.x)) ? temp.x : 0),
-				y: (my.xt(items.startY)) ? items.startY : ((my.xt(temp.y)) ? temp.y : 0),
+				x: my.xtGet([items.startX, temp.x, 0]),
+				y: my.xtGet([items.startY, temp.y, 0])
 			});
+			this.correctStart();
 			this.work.start = my.newVector({
 				name: this.type + '.' + this.name + '.work.start'
 			});
 			temp = my.safeObject(items.delta);
 			this.delta = my.newVector({
 				name: this.type + '.' + this.name + '.delta',
-				x: (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : 0),
-				y: (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : 0),
+				x: my.xtGet([items.deltaX, temp.x, 0]),
+				y: my.xtGet([items.deltaY, temp.y, 0])
 			});
 			this.work.delta = my.newVector({
 				name: this.type + '.' + this.name + '.work.delta'
@@ -649,8 +650,8 @@ PageElement constructor hook function - modified by stacks module
 			temp = my.safeObject(items.handle);
 			this.handle = my.newVector({
 				name: this.type + '.' + this.name + '.handle',
-				x: (my.xt(items.handleX)) ? items.handleX : ((my.xt(temp.x)) ? temp.x : 0),
-				y: (my.xt(items.handleY)) ? items.handleY : ((my.xt(temp.y)) ? temp.y : 0),
+				x: my.xtGet([items.handleX, temp.x, 0]),
+				y: my.xtGet([items.handleY, temp.y, 0])
 			});
 			this.work.handle = my.newVector({
 				name: this.type + '.' + this.name + '.work.handle'
@@ -661,9 +662,9 @@ PageElement constructor hook function - modified by stacks module
 			temp = my.safeObject(items.translate);
 			this.translate = my.newVector({
 				name: this.type + '.' + this.name + '.translate',
-				x: (my.xt(items.translateX)) ? items.translateX : ((my.xt(temp.x)) ? temp.x : 0),
-				y: (my.xt(items.translateY)) ? items.translateY : ((my.xt(temp.y)) ? temp.y : 0),
-				z: (my.xt(items.translateZ)) ? items.translateZ : ((my.xt(temp.y)) ? temp.y : 0),
+				x: my.xtGet([items.translateX, temp.x, 0]),
+				y: my.xtGet([items.translateY, temp.y, 0]),
+				z: my.xtGet([items.translateZ, temp.z, 0])
 			});
 			this.work.translate = my.newVector({
 				name: this.type + '.' + this.name + '.work.translate'
@@ -671,9 +672,9 @@ PageElement constructor hook function - modified by stacks module
 			temp = my.safeObject(items.deltaTranslate);
 			this.deltaTranslate = my.newVector({
 				name: this.type + '.' + this.name + '.deltaTranslate',
-				x: (my.xt(items.translateX)) ? items.deltaTranslateX : ((my.xt(temp.x)) ? temp.x : 0),
-				y: (my.xt(items.translateY)) ? items.deltaTranslateY : ((my.xt(temp.y)) ? temp.y : 0),
-				z: (my.xt(items.translateZ)) ? items.deltaTranslateZ : ((my.xt(temp.y)) ? temp.y : 0),
+				x: my.xtGet([items.deltaTranslateX, temp.x, 0]),
+				y: my.xtGet([items.deltaTranslateY, temp.y, 0]),
+				z: my.xtGet([items.deltaTranslateZ, temp.z, 0])
 			});
 			this.work.deltaTranslate = my.newVector({
 				name: this.type + '.' + this.name + '.work.deltaTranslate'
@@ -709,6 +710,10 @@ PageElement constructor hook function - modified by stacks module
 				name: this.type + '.' + this.name + '.work.deltaRotation'
 			});
 			this.rotationTolerance = my.xtGet([items.rotationTolerance, my.d[this.type].rotationTolerance]);
+			this.group = my.xtGet([items.group, false]);
+			if (this.group) {
+				my.group[this.group].addElementsToGroup(this.name);
+			}
 		};
 		/**
 Augments Base.get() to retrieve DOM element width and height values, and stack-related attributes
@@ -789,45 +794,51 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 **/
 		my.PageElement.prototype.set = function(items) {
 			var el = this.getElement(),
-				temp;
+				temp, i, iz;
 			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
 			if (!this.start.type || this.start.type !== 'Vector') {
 				this.start = my.newVector(items.start || this.start);
 			}
-			if (my.xto([items.startX, items.startY])) {
-				this.start.x = my.xtGet([items.startX, this.start.x]);
-				this.start.y = my.xtGet([items.startY, this.start.y]);
+			if (my.xto([items.start, items.startX, items.startY])) {
+				temp = my.safeObject(items.start);
+				this.start.x = my.xtGet([items.startX, temp.x, this.start.x]);
+				this.start.y = my.xtGet([items.startY, temp.y, this.start.y]);
 			}
+			this.correctStart();
 			if (!this.delta.type || this.delta.type !== 'Vector') {
 				this.delta = my.newVector(items.delta || this.delta);
 			}
-			if (my.xto([items.deltaX, items.deltaY])) {
-				this.delta.x = my.xtGet([items.deltaX, this.delta.x]);
-				this.delta.y = my.xtGet([items.deltaY, this.delta.y]);
+			if (my.xto([items.delta, items.deltaX, items.deltaY])) {
+				temp = my.safeObject(items.delta);
+				this.delta.x = my.xtGet([items.deltaX, temp.x, this.delta.x]);
+				this.delta.y = my.xtGet([items.deltaY, temp.y, this.delta.y]);
 			}
 			if (!this.translate.type || this.translate.type !== 'Vector') {
 				this.translate = my.newVector(items.translate || this.translate);
 			}
-			if (my.xto([items.translateX, items.translateY, items.translateZ])) {
-				this.translate.x = my.xtGet([items.translateX, this.translate.x]);
-				this.translate.y = my.xtGet([items.translateY, this.translate.y]);
-				this.translate.z = my.xtGet([items.translateZ, this.translate.z]);
+			if (my.xto([items.translate, items.translateX, items.translateY, items.translateZ])) {
+				temp = my.safeObject(items.translate);
+				this.translate.x = my.xtGet([items.translateX, temp.x, this.translate.x]);
+				this.translate.y = my.xtGet([items.translateY, temp.y, this.translate.y]);
+				this.translate.z = my.xtGet([items.translateZ, temp.z, this.translate.z]);
 			}
 			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
 				this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
 			}
-			if (my.xto([items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ])) {
-				this.deltaTranslate.x = my.xtGet([items.deltaTranslateX, this.deltaTranslate.x]);
-				this.deltaTranslate.y = my.xtGet([items.deltaTranslateY, this.deltaTranslate.y]);
-				this.deltaTranslate.z = my.xtGet([items.deltaTranslateZ, this.deltaTranslate.z]);
+			if (my.xto([items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ])) {
+				temp = my.safeObject(items.deltaTranslate);
+				this.deltaTranslate.x = my.xtGet([items.deltaTranslateX, temp.x, this.deltaTranslate.x]);
+				this.deltaTranslate.y = my.xtGet([items.deltaTranslateY, temp.y, this.deltaTranslate.y]);
+				this.deltaTranslate.z = my.xtGet([items.deltaTranslateZ, temp.z, this.deltaTranslate.z]);
 			}
 			if (!this.handle.type || this.handle.type !== 'Vector') {
 				this.handle = my.newVector(items.handle || this.handle);
 			}
-			if (my.xto([items.handleX, items.handleY])) {
-				this.handle.x = my.xtGet([items.handleX, this.handle.x]);
-				this.handle.y = my.xtGet([items.handleY, this.handle.y]);
+			if (my.xto([items.handle, items.handleX, items.handleY])) {
+				temp = my.safeObject(items.handle);
+				this.handle.x = my.xtGet([items.handleX, temp.x, this.handle.x]);
+				this.handle.y = my.xtGet([items.handleY, temp.y, this.handle.y]);
 			}
 			if (my.xto([items.pitch, items.yaw, items.roll])) {
 				this.rotation.setFromEuler({
@@ -844,6 +855,7 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 				});
 			}
 			if (my.xto([items.width, items.height, items.scale])) {
+				this.setLocalDimensions();
 				this.setDimensions();
 			}
 			if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale])) {
@@ -863,6 +875,21 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 					mouse: items.mouse
 				});
 			}
+			if (my.xt(items.group)) {
+				for (i = 0, iz = my.groupnames.length; i < iz; i++) {
+					temp = my.group[my.groupnames[i]];
+					if (temp.type === 'ElementGroup') {
+						if (my.groupnames[i] === items.group) {
+							temp.addElementsToGroup(this.name);
+						}
+						else {
+							if (my.contains(temp.elements, this.name)) {
+								temp.removeElementsFromGroup(this.name);
+							}
+						}
+					}
+				}
+			}
 			if (my.xt(items.pivot)) {
 				this.pivot = items.pivot;
 				if (!this.pivot) {
@@ -874,6 +901,42 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 				this.setAccessibility(items);
 			}
 			this.setStyles(items);
+			return this;
+		};
+		/**
+Constructor / set helper function
+@method PageElement.correctStart
+@return This
+@chainable
+@private
+**/
+		my.PageElement.prototype.correctStart = function() {
+			if (my.contains(['left', 'center', 'right'], this.start.x)) {
+				switch (this.start.x) {
+					case 'left':
+						this.start.x = '0%';
+						break;
+					case 'center':
+						this.start.x = '50%';
+						break;
+					case 'right':
+						this.start.x = '100%';
+						break;
+				}
+			}
+			if (my.contains(['top', 'center', 'bottom'], this.start.y)) {
+				switch (this.start.y) {
+					case 'top':
+						this.start.y = '0%';
+						break;
+					case 'center':
+						this.start.y = '50%';
+						break;
+					case 'bottom':
+						this.start.y = '100%';
+						break;
+				}
+			}
 			return this;
 		};
 		/**
@@ -901,7 +964,8 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 					else {
 						this.visibility = (items.visibility) ? true : false;
 					}
-					if (this.stack) {
+					// if (this.stack) {
+					if (this.group) {
 						el.style.opacity = (this.visibility) ? 1 : 0;
 					}
 					else {
@@ -965,6 +1029,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				this.setTransformOrigin();
 			}
 			if (my.xto([items.width, items.height, items.scale])) {
+				this.setLocalDimensions();
 				this.setDimensions();
 			}
 			return this;
@@ -1075,7 +1140,8 @@ Calculates the pixels value of the object's start attribute
 			hasElementPivot = (my.xt(hasElementPivot)) ? hasElementPivot : false;
 			var result,
 				height,
-				width;
+				width,
+				stack = my.group[this.group].stack;
 			if (hasElementPivot) {
 				result = my.v.set(my.element[this.pivot].start);
 				height = my.element[this.pivot].get(height);
@@ -1083,9 +1149,10 @@ Calculates the pixels value of the object's start attribute
 			}
 			else {
 				result = my.v.set(this.start);
-				height = (this.stack) ? my.stack[this.stack].get('height') : this.height || this.get('height');
-				width = (this.stack) ? my.stack[this.stack].get('width') : this.width || this.get('width');
+				height = (stack) ? my.stack[stack].get('height') : this.localHeight / this.scale || this.get('height');
+				width = (stack) ? my.stack[stack].get('width') : this.localWidth / this.scale || this.get('width');
 			}
+			console.log(this.name, 'gSV', stack, width, this.localWidth, this.scale);
 			return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 		};
 		/**
@@ -1211,8 +1278,10 @@ Calculate start Vector in reference to a entity or Point object's position
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 			}
 			else if (this.pivot === 'mouse') {
-				if (this.stack) {
-					here = my.stack[this.stack].getMouse();
+				// if (this.stack) {
+				if (this.group) {
+					//here = my.stack[this.stack].getMouse();
+					here = my.stack[my.group[this.group].stack].getMouse();
 					temp = this.getStartValues();
 					if (!my.xta([this.mouseX, this.mouseY])) {
 						this.oldX = temp.x;
@@ -1236,14 +1305,17 @@ Set the transform origin style attribute
 **/
 		my.PageElement.prototype.setTransformOrigin = function() {
 			var el = this.getElement(),
-				x = (my.isa(this.handle.x, 'str')) ? this.handle.x : (this.handle.x * this.scale) + 'px',
-				y = (my.isa(this.handle.y, 'str')) ? this.handle.y : (this.handle.y * this.scale) + 'px',
+				x, y, t;
+			if (el) {
+				x = (my.isa(this.handle.x, 'str')) ? this.handle.x : (this.handle.x * this.scale) + 'px';
+				y = (my.isa(this.handle.y, 'str')) ? this.handle.y : (this.handle.y * this.scale) + 'px';
 				t = x + ' ' + y;
-			el.style.mozTransformOrigin = t;
-			el.style.webkitTransformOrigin = t;
-			el.style.msTransformOrigin = t;
-			el.style.oTransformOrigin = t;
-			el.style.transformOrigin = t;
+				el.style.mozTransformOrigin = t;
+				el.style.webkitTransformOrigin = t;
+				el.style.msTransformOrigin = t;
+				el.style.oTransformOrigin = t;
+				el.style.transformOrigin = t;
+			}
 			return this;
 		};
 		/**
@@ -1276,8 +1348,7 @@ Helper function - set local dimensions (width, height)
 @private
 **/
 		my.PageElement.prototype.setLocalDimensions = function() {
-			console.log(this.name, 'stack version', this.width, this.scale, this.stack);
-			var parent = my.stack[this.stack],
+			var parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false,
 				w, h;
 			if (parent) {
 				w = parent.localWidth / parent.scale;
@@ -1290,7 +1361,7 @@ Helper function - set local dimensions (width, height)
 				this.localWidth = this.width * this.scale;
 			}
 			if (parent && my.isa(this.height, 'str')) {
-				this.localHeight = ((parseFloat(this.height) / 100) * w) * this.scale;
+				this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
 			}
 			else {
 				this.localHeight = this.height * this.scale;
@@ -1316,6 +1387,16 @@ A __factory__ function to generate new Element objects
 **/
 		my.newElement = function(items) {
 			return new my.Element(items);
+		};
+		/**
+A __factory__ function to generate new ElementGroup objects
+@method newElementGroup
+@param {Object} items Key:value Object argument for setting attributes
+@return ElementGroup object
+@private
+**/
+		my.newElementGroup = function(items) {
+			return new my.ElementGroup(items);
 		};
 
 		my.pushUnique(my.sectionlist, 'stack');
@@ -1344,41 +1425,44 @@ A __factory__ function to generate new Element objects
 **/
 		my.Stack = function(items) {
 			items = my.safeObject(items);
+			var temp;
 			if (my.xt(items.stackElement)) {
-				var tempname = '',
-					temp;
-				if (my.xto([items.stackElement.id, items.stackElement.name])) {
-					tempname = items.stackElement.id || items.stackElement.name;
+				items.width = my.xtGet([items.width, items.stackElement.style.width, my.d.Stack.width]);
+				items.height = my.xtGet([items.height, items.stackElement.style.height, my.d.Stack.height]);
+				items.name = my.xtGet([items.stackName, items.name, items.stackElement.id, items.stackElement.name, 'Stack']);
+				my.PageElement.call(this, items);
+				if (this.name.match(/~~~/)) {
+					this.name = this.name.replace(/~~~/g, '_');
 				}
-				this.width = items.width || items.stackElement.style.width;
-				this.height = items.height || items.stackElement.style.height;
-				my.PageElement.call(this, {
-					name: tempname,
-				});
+				items.stackElement.id = this.name;
+				items.stackElement.style.position = 'relative';
 				my.stack[this.name] = this;
 				my.stk[this.name] = items.stackElement;
 				my.pushUnique(my.stacknames, this.name);
-				my.stk[this.name].id = this.name;
-				my.stk[this.name].style.position = 'relative';
 				this.setDisplayOffsets();
-				temp = (my.isa(items.perspective, 'obj')) ? items.perspective : {};
+				this.setAccessibility(items);
+				temp = my.safeObject(items.perspective);
 				this.perspective = my.newVector({
-					x: (my.xt(items.perspectiveX)) ? items.perspectiveX : ((my.xt(temp.x)) ? temp.x : 'center'),
-					y: (my.xt(items.perspectiveY)) ? items.perspectiveY : ((my.xt(temp.y)) ? temp.y : 'center'),
-					z: (my.xt(items.perspectiveZ)) ? items.perspectiveZ : ((my.xt(temp.z)) ? temp.z : 0),
+					name: this.type + '.' + this.name + '.perspective',
+					x: my.xtGet([items.perspectiveX, temp.x, 'center']),
+					y: my.xtGet([items.perspectiveY, temp.y, 'center']),
+					z: my.xtGet([items.perspectiveZ, temp.z, 0])
 				});
 				this.work.perspective = my.newVector({
 					name: this.type + '.' + this.name + '.work.perspective'
 				});
-				this.scaleText = my.xtGet([items.scaleText, false]);
-				this.setDimensions();
-				this.setPerspective();
-				this.setStyles(items);
-				if (my.xto([items.title, items.comment])) {
-					this.setAccessibility(items);
+				this.initMouse({
+					mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
+				});
+				my.newElementGroup({
+					name: this.name,
+					stack: this.name
+				});
+				this.groups = [this.name];
+				this.group = my.xtGet([items.group, false]);
+				if (this.group) {
+					my.group[this.group].addElementsToGroup(this.name);
 				}
-				items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
-				this.initMouse(items);
 				return this;
 			}
 			console.log('Failed to generate a Stack wrapper - no DOM element supplied');
@@ -1418,6 +1502,14 @@ A flag to indicate whether element text should be scaled at the same time as the
 @default false
 **/
 			scaleText: false,
+			/**
+Groups array
+
+@property groups
+@type Array
+@default []
+**/
+			groups: []
 		};
 		my.mergeInto(my.d.Stack, my.d.PageElement);
 		/**
@@ -1436,15 +1528,19 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 @chainable
 **/
 		my.Stack.prototype.set = function(items) {
-			items = (my.xt(items)) ? items : {};
+			items = my.safeObject(items);
+			var temp;
 			my.PageElement.prototype.set.call(this, items);
 			if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
-				if (!my.isa(this.perspective, 'Vector')) {
+				if (!this.perspective.type || this.perspective.type !== 'Vector') {
 					this.perspective = my.newVector(items.perspective || this.perspective);
 				}
-				this.perspective.x = my.xtGet([items.perspectiveX, this.perspective.x]);
-				this.perspective.y = my.xtGet([items.perspectiveY, this.perspective.y]);
-				this.perspective.z = my.xtGet([items.perspectiveZ, this.perspective.z]);
+				if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
+					temp = my.safeObject(items.perspective);
+					this.perspective.x = my.xtGet([items.perspectiveX, temp.x, this.perspective.x]);
+					this.perspective.y = my.xtGet([items.perspectiveY, temp.y, this.perspective.y]);
+					this.perspective.z = my.xtGet([items.perspectiveZ, temp.z, this.perspective.z]);
+				}
 				this.setPerspective();
 			}
 			if (my.xt(items.scale)) {
@@ -1462,7 +1558,8 @@ Import elements into the stack DOM object, and create element object wrappers fo
 			if (my.isa(item, 'str')) {
 				var myElement = my.newElement({
 					domElement: document.getElementById(item),
-					stack: this.name,
+					//					stack: this.name,
+					group: this.name,
 				});
 				my.stk[this.name].appendChild(my.elm[myElement.name]);
 				my.elm[myElement.name] = document.getElementById(myElement.name);
@@ -1490,7 +1587,8 @@ Import elements into the stack DOM object, and create element object wrappers fo
 					if (thisElement.nodeName !== 'CANVAS') {
 						myElement = my.newElement({
 							domElement: thisElement,
-							stack: this.name,
+							//							stack: this.name,
+							group: this.name,
 						});
 						myElements.push(myElement);
 					}
@@ -1504,31 +1602,26 @@ Import elements into the stack DOM object, and create element object wrappers fo
 			return false;
 		};
 		/**
-Move DOM elements within a Stack
-@method renderElements
+Move DOM elements within a Stack, via the Stack's groups
+@method render
 @return Always true
 **/
-		my.Stack.prototype.renderElements = function() {
-			var temp,
-				i, iz;
-			for (i = 0, iz = my.stacknames.length; i < iz; i++) {
-				temp = my.stack[my.stacknames[i]];
-				if (temp.stack === this.name) {
-					temp.renderElement();
-				}
+		my.Stack.prototype.render = function() {
+			for (var i = 0, iz = this.groups.length; i < iz; i++) {
+				my.group[this.groups[i]].render();
 			}
-			for (i = 0, iz = my.padnames.length; i < iz; i++) {
-				temp = my.pad[my.padnames[i]];
-				if (temp.stack === this.name) {
-					temp.renderElement();
-				}
+			return true;
+		};
+		/**
+Update element 3d transitions, via the Stack's groups
+@method update
+@return Always true
+**/
+		my.Stack.prototype.update = function() {
+			for (var i = 0, iz = this.groups.length; i < iz; i++) {
+				my.group[this.groups[i]].update();
 			}
-			for (i = 0, iz = my.elementnames.length; i < iz; i++) {
-				temp = my.element[my.elementnames[i]];
-				if (temp.stack === this.name) {
-					temp.renderElement();
-				}
-			}
+
 			return true;
 		};
 		/**
@@ -1577,6 +1670,7 @@ By default, this function does not scale text contained in any stack element. If
 @return This
 @chainable
 **/
+		//PROBABLY NEEDS CHANGING
 		my.Stack.prototype.scaleStack = function(item, scaleFont) {
 			var i, iz;
 			scaleFont = (my.xt(scaleFont)) ? scaleFont : this.scaleText;
@@ -1633,32 +1727,24 @@ By default, this function does not scale text contained in any stack element. If
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Element = function(items) {
-			items = (my.isa(items, 'obj')) ? items : {};
+			items = my.safeObject(items);
 			if (my.xt(items.domElement)) {
-				var tempname = '';
-				if (my.xto([items.domElement.id, items.domElement.name])) {
-					tempname = items.domElement.id || items.domElement.name;
+				items.width = my.xtGet([items.width, items.domElement.style.width, my.d.Stack.width]);
+				items.height = my.xtGet([items.height, items.domElement.style.height, my.d.Stack.height]);
+				items.name = my.xtGet([items.elementName, items.name, items.domElement.id, items.domElement.name, 'Element']);
+				my.PageElement.call(this, items);
+				if (this.name.match(/~~~/)) {
+					this.name = this.name.replace(/~~~/g, '_');
 				}
-				my.PageElement.call(this, {
-					name: tempname,
-				});
+				items.domElement.id = this.name;
+				items.domElement.style.position = 'absolute';
 				my.element[this.name] = this;
 				my.elm[this.name] = items.domElement;
 				my.pushUnique(my.elementnames, this.name);
-				my.elm[this.name].id = this.name;
-				my.elm[this.name].style.position = 'absolute';
-				my.elm[this.name].style.visibility = 'visible';
-				this.stack = items.stack || '';
-				this.width = items.width || this.get('width');
-				this.height = items.height || this.get('height');
-				this.setDimensions();
 				this.setDisplayOffsets();
-				this.setStyles(items);
-				if (my.xto([items.title, items.comment])) {
-					this.setAccessibility(items);
-				}
-				items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : false;
-				this.initMouse(items);
+				this.initMouse({
+					mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
+				});
 				return this;
 			}
 			console.log('Failed to generate an Element wrapper - no DOM element supplied');
@@ -1673,7 +1759,15 @@ By default, this function does not scale text contained in any stack element. If
 **/
 		my.Element.prototype.type = 'Element';
 		my.Element.prototype.classname = 'elementnames';
-		my.d.Element = {};
+		my.d.Element = {
+			/**
+Element's default height
+@property height
+@type String
+@default 'auto'
+**/
+			height: 'auto'
+		};
 		my.mergeInto(my.d.Element, my.d.PageElement);
 		/**
 Return the DOM element wrapped by this object
@@ -1682,6 +1776,307 @@ Return the DOM element wrapped by this object
 **/
 		my.Element.prototype.getElement = function() {
 			return my.elm[this.name];
+		};
+
+
+		/**
+# ElementGroup
+
+## Instantiation
+
+* scrawl.newElementGroup()
+
+## Purpose
+
+* associates DOM elements with a Stack object, for rendering the stack scene
+* groups DOM elements for specific purposes
+
+## Access
+
+* scrawl.group.GROUPNAME - for the ElementGroup object
+* scrawl.stack[scrawl.group.ELEMENTGROUPNAME.stack] - for the ElementGroup object's default Stack object
+
+@class ElementGroup
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.ElementGroup = function(items) {
+			items = my.safeObject(items);
+			my.Base.call(this, items);
+			this.entitys = (my.xt(items.entitys)) ? [].concat(items.entitys) : [];
+			this.elements = (my.xt(items.elements)) ? [].concat(items.elements) : [];
+			this.stack = items.stack || false;
+			my.group[this.name] = this;
+			my.pushUnique(my.groupnames, this.name);
+			return this;
+		};
+		my.ElementGroup.prototype = Object.create(my.Base.prototype);
+		/**
+@property type
+@type String
+@default 'ElementGroup'
+@final
+**/
+		my.ElementGroup.prototype.type = 'ElementGroup';
+		my.ElementGroup.prototype.classname = 'groupnames';
+		my.d.ElementGroup = {
+			/**
+Array of SPRITENAME Strings of entitys that complement this ElementGroup
+@property entitys
+@type Array
+@default []
+**/
+			entitys: [],
+			/**
+Array of ELEMENTNAME Strings of elements that complement this ElementGroup
+@property elements
+@type Array
+@default []
+**/
+			elements: [],
+			/**
+STACKNAME of the default Stack object to which this group is associated
+@property stack
+@type String
+@default ''
+**/
+			stack: ''
+		};
+		my.mergeInto(my.d.ElementGroup, my.d.Base);
+		/**
+Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas&gt; element; only entitys whose visibility attribute is set to true will comply
+@method stamp
+@param {String} [method] Drawing method String
+@param {String} [cell] CELLNAME of cell on which entitys are to draw themselves
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.stamp = function() {
+			var i, iz,
+				stack = my.stack[this.stack];
+			for (i = 0, iz = this.entitys.length; i < iz; i++) {
+				//PROBABLY NEED TO amend the varous stampijng routines to accommodate using a Stack's data instead of Cell data
+				my.entity[this.entitys[i]].stamp('none', stack);
+			}
+			return this;
+		};
+		/**
+Tell the Group to ask its constituent elements to render
+@method render
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.render = function() {
+			var temp, i, iz;
+			for (i = 0, iz = this.elements.length; i < iz; i++) {
+				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				temp.renderElement();
+				if (temp.type === 'Stack') {
+					my.group[temp.name].render();
+				}
+			}
+			return this;
+		};
+		/**
+A __display__ function to update DOM elements' 3d position/rotation
+
+Argument can contain the following (optional) attributes:
+
+* __quaternion__ - quaternion representing the rotation to be applied to the element
+* __distance__ - distance of element from the rotation origin
+
+@method update
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.update = function(items) {
+			var temp, i, iz;
+			for (i = 0, iz = this.elements.length; i < iz; i++) {
+				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				temp.update3d(items);
+				if (temp.type === 'Stack') {
+					my.group[temp.name].update(items);
+				}
+			}
+			return this;
+		};
+		/**
+Add elements to the Group
+@method addElementsToGroup
+@param {Array} item Array of ELEMENTNAME Strings; alternatively, a single ELEMENTNAME String can be supplied as the argument
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.addElementsToGroup = function(item) {
+			item = (my.xt(item)) ? [].concat(item) : [];
+			for (var i = 0, iz = item.length; i < iz; i++) {
+				my.pushUnique(this.elements, item[i]);
+			}
+			return this;
+		};
+		/**
+Remove elements from the Group
+@method removeElementsFromGroup
+@param {Array} item Array of ELEMENTNAME Strings; alternatively, a single ELEMENTNAME String can be supplied as the argument
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.removeElementsFromGroup = function(item) {
+			item = (my.xt(item)) ? [].concat(item) : [];
+			for (var i = 0, iz = item.length; i < iz; i++) {
+				my.removeItem(this.elements, item[i]);
+			}
+			return this;
+		};
+		/**
+Add entitys to the Group
+@method addEntitysToGroup
+@param {Array} item Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.addEntitysToGroup = function(item) {
+			item = (my.xt(item)) ? [].concat(item) : [];
+			for (var i = 0, iz = item.length; i < iz; i++) {
+				my.pushUnique(this.entitys, item[i]);
+			}
+			return this;
+		};
+		/**
+Remove entitys from the Group
+@method removeEntitysFromGroup
+@param {Array} item Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.removeEntitysFromGroup = function(item) {
+			item = (my.xt(item)) ? [].concat(item) : [];
+			for (var i = 0, iz = item.length; i < iz; i++) {
+				my.removeItem(this.entitys, item[i]);
+			}
+			return this;
+		};
+		/**
+Ask all elements in the Group to perform a setDelta() operation
+
+@method updateElementsBy
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.updateElementsBy = function(items) {
+			var temp, i, iz;
+			items = my.safeObject(items);
+			for (i = 0, iz = this.elements.length; i < iz; i++) {
+				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				temp.setDelta(items);
+			}
+			return this;
+		};
+		/**
+Ask all entitys in the Group to perform a setDelta() operation
+
+@method updateEntitysBy
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.updateEntitysBy = function(items) {
+			items = my.safeObject(items);
+			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+				my.entity[this.entitys[i]].setDelta(items);
+			}
+			return this;
+		};
+		/**
+Ask all elements and entitys in the Group to perform a setDelta() operation
+
+@method updateBy
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.updateBy = function(items) {
+			this.updateElementsBy(items);
+			this.updateEntitysBy(items);
+			return this;
+		};
+		/**
+Ask all elements in the Group to perform a set() operation
+@method setElementsTo
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.setElementsTo = function(items) {
+			var temp, i, iz;
+			for (i = 0, iz = this.elements.length; i < iz; i++) {
+				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				temp.set(items);
+			}
+			return this;
+		};
+		/**
+Ask all entitys in the Group to perform a set() operation
+@method setEntitysTo
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.setEntitysTo = function(items) {
+			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+				my.entity[this.entitys[i]].set(items);
+			}
+			return this;
+		};
+		/**
+Ask all elements and entitys in the Group to perform a set() operation
+@method setEntitysTo
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.setTo = function(items) {
+			this.setElementsTo(items);
+			this.setEntitysTo(items);
+			return this;
+		};
+		/**
+Require all elements in the Group to set their pivot attribute to the supplied STACKNAME, PADNAME, ELEMENTNAME, POINTNAME or SPRITENAME string, and set their handle Vector to reflect the current vector between that object's start Vector and their own Vector
+
+This has the effect of turning a set of disparate eelements into a single, coordinated group.
+@method pivotElementsTo
+@param {String} item STACKNAME, PADNAME, ELEMENTNAME, POINTNAME or SPRITENAME String
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.pivotElementsTo = function(item) {
+			item = (my.isa(item, 'str')) ? item : false;
+			var p,
+				pStart,
+				element,
+				sv;
+			if (item) {
+				p = my.stack[item] || my.pad[item] || my.element[item] || my.entity[item] || my.point[item] || false;
+				if (p) {
+					pStart = (p.type === 'Point') ? p.local : p.start;
+					for (var i = 0, iz = this.elements.length; i < iz; i++) {
+						element = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+						if (element) {
+							sv = my.v.set(element.start);
+							sv.vectorSubtract(pStart);
+							element.set({
+								pivot: item,
+								handleX: -sv.x,
+								handleY: -sv.y
+							});
+						}
+					}
+				}
+			}
+			return this;
 		};
 
 		return my;

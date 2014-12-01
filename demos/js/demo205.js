@@ -27,6 +27,7 @@ var mycode = function() {
 			back: scrawl.cell[pads.back.base],
 		},
 		mystack = scrawl.stack.mystack,
+		group = scrawl.group.mystack,
 		//use a virtual cube to determine the constructed cube's orientation
 		cube = scrawl.makeQuaternion(),
 		//the amount (in degrees) by which the virtual cube will rotate on each screen refresh
@@ -50,24 +51,27 @@ var mycode = function() {
 	});
 
 	//initialize instructions element
+	scrawl.newElementGroup({
+		name: 'instructions',
+		stack: 'mystack'
+	});
 	instructions.set({
 		startX: '50%',
 		startY: '60%',
 		handleX: 'center',
 		handleY: 'center',
 		pointerEvents: 'none',
+		group: 'instructions'
 	});
 
 	//initialize DOM 3d effects - canvas elements
-	for (i = 0, iz = sides.length; i < iz; i++) {
-		pads[sides[i]].set({
-			pivot: 'mouse',
-			handleX: 'center',
-			handleY: 'center',
-			mouse: false,
-			pointerEvents: 'none',
-		});
-	}
+	group.setElementsTo({
+		pivot: 'mouse',
+		handleX: 'center',
+		handleY: 'center',
+		mouse: false,
+		pointerEvents: 'none'
+	});
 	//each of the canvas elements has its own initial rotation and translation values
 	pads.top.set({
 		deltaPitch: 90,
@@ -130,12 +134,10 @@ var mycode = function() {
 		fn: function() {
 			//rotate the cube
 			cube.quaternionMultiply(deltaCube);
-			scrawl.update3d({
+			group.update({
 				action: 'pads',
 				quaternion: cube,
-				distance: 100,
 			});
-			scrawl.renderElements();
 			//animate the canvas entitys
 			words.updateEntitysBy({
 				roll: 0.5,

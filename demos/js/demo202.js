@@ -40,7 +40,7 @@ var mycode = function() {
 				width: (here.active) ? Math.floor(cw * myScale) : 0,
 				height: (here.active) ? Math.floor(ch * myScale) : 0,
 			});
-			mystack.renderElements();
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

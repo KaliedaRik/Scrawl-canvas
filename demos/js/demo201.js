@@ -17,7 +17,7 @@ var mycode = function() {
 	//add canvas to page; make it current
 	scrawl.addCanvasToPage({
 		stackName: 'mystack',
-		canvasName: 'mycanvas',
+		name: 'mycanvas',
 		parentElement: 'stackholder',
 		width: myWidth,
 		height: myHeight,
@@ -49,7 +49,7 @@ var mycode = function() {
 	//add another canvas to page; make it current
 	scrawl.addCanvasToPage({
 		stackName: 'mystack',
-		canvasName: 'mysecondcanvas',
+		name: 'mysecondcanvas',
 		startX: 'right',
 		startY: 'top',
 		handleX: 'right',
@@ -81,7 +81,6 @@ var mycode = function() {
 	});
 
 	//display the canvases
-	scrawl.renderElements();
 	scrawl.render();
 
 	//hide-start

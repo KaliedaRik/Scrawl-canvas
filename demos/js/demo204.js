@@ -50,15 +50,11 @@ var mycode = function() {
 		group: myBack.base,
 	});
 
-	//render the canvases - only needs to be done once
-	// - all the animation is CSS/DOM animation, not canvas animation
-	scrawl.render();
-
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			scrawl.update3d();
-			scrawl.renderElements();
+			scrawl.update();
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

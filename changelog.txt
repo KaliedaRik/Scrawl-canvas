@@ -52,10 +52,34 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
-141127
+141129
+	- fixed localWidth, localHeight for Stack and Element objects
+	- NEW OBJECT
+		- Scrawl.ElementGroup
+			- serves a similar purpose to the Group object
+				- connects Stacks, Pads and Elements to their parent Stack
+				- should allow groups of DOM elements to be controlled via their ElementGroup
+			- rewrote the Stack, Pad, Element and PageElement constructors to include ElementGroup
+			- rewrote PageElement.set to take into account changing an element from one stack to another
+				- change the group
+			- rewrote the scrawl canvas, stack and element factory functions
+			- amended scrawl.render() to include scrawl.renderElements()
+				- element render functions rewritten to use ElementGroup
+			- still needs more cleanup work
+		- tested on demos 201-205 - all now working.
+			- 203, 204 and 205 need tweaking to see if they can use the new group update functionality
+
+141127-28
 	- absolute and relative positioning for Pad objects within a stack
 		- startXY, handleXY - can be positioned using px numbers and stack percentage strings
-		- tested on demo201
+	- setting pad dimensions relative to container stack dimensions
+		- added localWidth, localHeight to core.PageElement
+		- rewrote Cell and Pad constructors
+			- all Cells now given an actualWidth, actualHeight
+			- removed Cell.usePadDimensions flag
+			- removed Cell.getPadWidth(), Cell.getPadHeight() functions
+	- tested revisions in demo111, demo201 - working (so far)
+
 141126
 	- Picture and Cell scaled positioning bug - fixed
 		- tested on demos017 and 111

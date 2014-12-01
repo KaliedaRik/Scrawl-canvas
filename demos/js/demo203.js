@@ -15,14 +15,13 @@ var mycode = function() {
 		cow,
 		davey;
 
-	//add stuff to the canvas, and display it
+	//add stuff to the canvas
 	scrawl.newPhrase({
 		startX: 20,
 		startY: 50,
 		size: 20,
 		text: 'Hi! I\'m the canvas.',
 	});
-	scrawl.render();
 
 	//event listener
 	function moveIn(e) {
@@ -49,27 +48,34 @@ var mycode = function() {
 
 			//modify DOM elements - position and dimensions within stack; rotations
 			harry.set({
-				startX: 300,
-				startY: 5,
-				width: 500,
+				startX: 302,
+				width: 486,
 			});
 			horace.set({
-				startX: 300,
-				startY: 60,
-				width: 500,
+				startX: 'center',
+				startY: 'center',
+				handleX: 80,
+				handleY: 140,
+				width: '50%',
 				deltaPitch: 1,
 			});
 			davey.set({
-				width: 300,
+				width: '25%',
 				startX: 50,
 				startY: 230,
 				deltaYaw: 1,
 			});
 			cow.set({
-				width: 200,
-				height: 200,
-				startX: 500,
-				startY: 150,
+				width: '25%',
+				height: '50%',
+				handle: {
+					x: 'center',
+					y: 'center'
+				},
+				start: {
+					x: '80%',
+					y: '65%'
+				},
 				deltaRoll: 1,
 			});
 		}
@@ -82,8 +88,8 @@ var mycode = function() {
 		name: 'myanim',
 		delay: true,
 		fn: function() {
-			scrawl.update3d();
-			scrawl.renderElements();
+			scrawl.update();
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

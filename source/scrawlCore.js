@@ -149,6 +149,13 @@ Work vector, for calculations
 **/
 	my.v = null;
 	/**
+Default empty object - passed to various functions, to prevent them generating superfluous objects
+@property o
+@type {Object}
+@private
+**/
+	my.o = {};
+	/**
 Work quaternions, for calculations
 @property workquat
 @type {Object}
@@ -730,7 +737,7 @@ Check to see if variable is an Object
 @private
 **/
 	my.safeObject = function(items) {
-		return (Object.prototype.toString.call(items) === '[object Object]') ? items : {};
+		return (Object.prototype.toString.call(items) === '[object Object]') ? items : my.o;
 	};
 	/**
 A __utility__ function for variable type checking
@@ -885,23 +892,19 @@ A __private__ function that searches the DOM for canvas elements and generates P
 **/
 	my.getCanvases = function() {
 		var s = document.getElementsByTagName("canvas"),
-			myPad,
-			canvases = [];
+			myPad;
 		if (s.length > 0) {
 			for (var i = 0, iz = s.length; i < iz; i++) {
-				canvases.push(s[i]);
-			}
-			for (var j = 0, jz = s.length; j < jz; j++) {
+				console.log('gC core: pad for', s[i]);
 				myPad = my.newPad({
-					canvasElement: canvases[j]
+					canvasElement: s[i]
 				});
-				if (j === 0) {
+				if (i === 0) {
 					my.currentPad = myPad.name;
 				}
 			}
 			return true;
 		}
-		console.log('scrawl.getCanvases() failed to find any <canvas> elements on the page');
 		return false;
 	};
 	/**
@@ -923,7 +926,7 @@ The argument object should include the following attributes:
 		<script src="js/scrawlCore-min.js"></script>
 		<script>
 			scrawl.addCanvasToPage({
-				canvasName:	'mycanvas',
+				name:	'mycanvas',
 				parentElement: 'canvasholder',
 				width: 400,
 				height: 200,
@@ -934,26 +937,15 @@ The argument object should include the following attributes:
 	my.addCanvasToPage = function(items) {
 		items = my.safeObject(items);
 		var myParent,
-			myName,
 			myCanvas,
-			DOMCanvas,
 			myPad;
 		myParent = document.getElementById(items.parentElement) || document.body;
-		myName = my.makeName({
-			name: my.xtGet([items.canvasName, items.name, false]),
-			type: 'Pad',
-			target: 'padnames'
-		});
 		myCanvas = document.createElement('canvas');
-		myCanvas.id = myName;
 		myParent.appendChild(myCanvas);
-		DOMCanvas = document.getElementById(myName);
-		DOMCanvas.width = items.width;
-		DOMCanvas.height = items.height;
-		myPad = my.newPad({
-			canvasElement: DOMCanvas
-		});
-		myPad.set(items);
+		items.width = my.xtGet([items.width, 300]);
+		items.height = my.xtGet([items.height, 150]);
+		items.canvasElement = myCanvas;
+		myPad = new my.Pad(items);
 		my.setDisplayOffsets();
 		return myPad;
 	};
@@ -2129,20 +2121,23 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 **/
 	my.Position.prototype.set = function(items) {
 		items = my.safeObject(items);
+		var temp;
 		my.Base.prototype.set.call(this, items);
 		if (!my.isa(this.start, 'vector')) {
 			this.start = my.newVector(items.start || this.start);
 		}
-		if (my.xto([items.startX, items.startY])) {
-			this.start.x = my.xtGet([items.startX, this.start.x]);
-			this.start.y = my.xtGet([items.startY, this.start.y]);
+		if (my.xto([items.start, items.startX, items.startY])) {
+			temp = my.safeObject(items.start);
+			this.start.x = my.xtGet([items.startX, temp.x, this.start.x]);
+			this.start.y = my.xtGet([items.startY, temp.y, this.start.y]);
 		}
 		if (!my.isa(this.handle, 'vector')) {
 			this.handle = my.newVector(items.handle || this.handle);
 		}
-		if (my.xto([items.handleX, items.handleY])) {
-			this.handle.x = my.xtGet([items.handleX, this.handle.x]);
-			this.handle.y = my.xtGet([items.handleY, this.handle.y]);
+		if (my.xto([items.handle, items.handleX, items.handleY])) {
+			temp = my.safeObject(items.handle);
+			this.handle.x = my.xtGet([items.handleX, temp.x, this.handle.x]);
+			this.handle.y = my.xtGet([items.handleY, temp.y, this.handle.y]);
 		}
 		this.animationPositionSet(items);
 		return this;
@@ -2429,7 +2424,8 @@ The core implementation of this object is a stub that supplies Pad objects with 
 	my.PageElement = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
-		console.log(this.name, items);
+		this.width = my.xtGet([items.width, my.d[this.type].width]);
+		this.height = my.xtGet([items.height, my.d[this.type].height]);
 		this.scale = my.xtGet([items.scale, my.d[this.type].scale]);
 		this.setLocalDimensions();
 		this.stacksPageElementConstructor(items);
@@ -2648,7 +2644,7 @@ Helper function - set local dimensions (width, height)
 @private
 **/
 	my.PageElement.prototype.setLocalDimensions = function() {
-		console.log(this.name, 'core version', this.width, this.scale);
+		console.log(this.name, this.width, this.height, this.scale);
 		this.localWidth = this.width * this.scale;
 		this.localHeight = this.height * this.scale;
 		return this;
@@ -2845,71 +2841,77 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 **/
 	my.Pad = function(items) {
 		items = my.safeObject(items);
-		var tempname = 'Pad',
-			myCell,
-			baseCanvas,
-			myCellBase;
-		if (my.xt(items.canvasElement)) {
+		var myCell, baseCanvas, myCellBase;
+
+		// only proceed if a canvas element has been supplied as the value of items.canvasElement 
+		if (my.isa(items.canvasElement, 'canvas')) {
+
+			// enhance/amend the items object with essdential data - name, width, height
+			items.width = my.xtGet([items.width, items.canvasElement.width, my.d.Pad.width]);
+			items.height = my.xtGet([items.height, items.canvasElement.height, my.d.Pad.height]);
+			items.name = my.xtGet([items.name, items.canvasElement.id, items.canvasElement.name, 'Pad']);
+
+			// go up the line to populate this Pad with data
 			my.PageElement.call(this, items);
-			this.width = my.xtGet([items.width, items.canvasElement.width, my.d[this.type].width]);
-			this.height = my.xtGet([items.height, items.canvasElement.height, my.d[this.type].height]);
-			my.canvas.PadConstructorTemporaryCanvas = items.canvasElement;
-			this.display = 'PadConstructorTemporaryCanvas';
-			if (my.xto([items.canvasElement.id, items.canvasElement.name])) {
-				tempname = my.xtGet([items.canvasElement.id, items.canvasElement.name, tempname]);
-			}
-			my.PageElement.call(this, {
-				name: tempname
-			});
+
+			//amend name if necessary, and set canvas element id
 			if (this.name.match(/~~~/)) {
 				this.name = this.name.replace(/~~~/g, '_');
 			}
-			if (!items.canvasElement.id) {
-				items.canvasElement.id = this.name;
-			}
-			if (!my.contains(my.cellnames, this.name)) {
-				this.cells = [];
-				my.pad[this.name] = this;
-				my.pushUnique(my.padnames, this.name);
-				if (items.length > 1) {
-					this.set(items);
-				}
-				myCell = my.newCell({
-					name: this.name,
-					pad: this.name,
-					canvas: items.canvasElement,
-					compiled: false,
-					shown: false,
-					width: this.localWidth,
-					height: this.localHeight
-				});
-				my.pushUnique(this.cells, myCell.name);
-				this.display = myCell.name;
-				delete my.canvas.PadConstructorTemporaryCanvas;
-				baseCanvas = items.canvasElement.cloneNode(true);
-				baseCanvas.setAttribute('id', this.name + '_base');
-				myCellBase = my.newCell({
-					name: this.name + '_base',
-					pad: this.name,
-					canvas: baseCanvas,
-					compileOrder: 9999,
-					shown: false,
-					width: this.localWidth / this.scale,
-					height: this.localHeight / this.scale
-				});
-				my.pushUnique(this.cells, myCellBase.name);
-				this.base = myCellBase.name;
-				this.current = myCellBase.name;
-				this.setDisplayOffsets();
-				if (my.xto([items.title, items.comment])) {
-					this.setAccessibility(items);
-				}
-				items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
-				this.initMouse(items);
-				this.filtersPadInit();
-				return this;
-			}
+			items.canvasElement.id = this.name;
+
+			// register this Pad in library
+			my.pad[this.name] = this;
+			my.pushUnique(my.padnames, this.name);
+
+			// prepare for cell creation
+			this.cells = [];
+
+			// create a wrapper for the display canvas element
+			myCell = my.newCell({
+				name: this.name,
+				pad: this.name,
+				canvas: items.canvasElement,
+				compiled: false,
+				shown: false,
+				width: this.localWidth,
+				height: this.localHeight
+			});
+			my.pushUnique(this.cells, myCell.name);
+			this.display = myCell.name;
+
+			// create a new canvas element to act as the base
+			baseCanvas = items.canvasElement.cloneNode(true);
+			baseCanvas.setAttribute('id', this.name + '_base');
+
+			// create a wrapper for the base canvas element
+			myCellBase = my.newCell({
+				name: this.name + '_base',
+				pad: this.name,
+				canvas: baseCanvas,
+				compileOrder: 9999,
+				shown: false,
+				width: this.localWidth / this.scale,
+				height: this.localHeight / this.scale
+			});
+			my.pushUnique(this.cells, myCellBase.name);
+			this.base = myCellBase.name;
+			this.current = myCellBase.name;
+
+			// finalise stuff for this Pad
+			this.setDisplayOffsets();
+			this.setAccessibility(items);
+			//items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
+			this.initMouse({
+				mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
+			});
+			this.filtersPadInit();
+
+			// return this
+			return this;
 		}
+
+		// on failure, return false
 		console.log('Failed to generate a Pad controller - no canvas element supplied');
 		return false;
 	};
@@ -2968,10 +2970,16 @@ Retrieve Pad's visible &lt;canvas&gt; element object
 	};
 	/**
 Pad constructor hook function - modified by filters module
-@method filtersCellInit
+@method filtersPadInit
 @private
 **/
 	my.Pad.prototype.filtersPadInit = function(items) {};
+	/**
+Pad constructor hook function - modified by stacks module
+@method stacksPadInit
+@private
+**/
+	my.Pad.prototype.stacksPadInit = function(items) {};
 	/**
 Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and globalCompositeOperation changes to associated Cell objects
 				
@@ -3460,14 +3468,6 @@ Array of GROUPNAMES that contribute to building this Cell's scene
 **/
 		groups: [],
 		/**
-Pad dimension flag: when true, instructs the Cell to use its Pad object's dimensions as its source dimensions (sourceWidth, sourceHeight)
-@property usePadDimensions
-@type Boolean
-@default false
-@private
-**/
-		usePadDimensions: false,
-		/**
 Display cycle flag - on true (default), the cell will take part in the display cycle
 @property rendered
 @type Boolean
@@ -3564,7 +3564,6 @@ Cell constructor hook function - core module
 			this.pasteWidth = my.xtGet([items.pasteWidth, items.width, this.pasteWidth]);
 			this.pasteHeight = my.xtGet([items.pasteHeight, items.height, this.pasteHeight]);
 		}
-		this.usePadDimensions = (my.isa(items.usePadDimensions, 'bool')) ? items.usePadDimensions : ((my.xto([items.copyWidth, items.copyHeight, items.pasteWidth, items.pasteHeight, items.width, items.height])) ? false : true);
 		this.setCopy();
 		this.setPaste();
 		myContext = my.newContext({
@@ -3638,9 +3637,9 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 		if (my.contains(['width', 'height'], item)) {
 			switch (item) {
 				case 'width':
-					return (this.usePadDimensions) ? this.getPadWidth() : this.actualWidth;
+					return this.actualWidth;
 				case 'height':
-					return (this.usePadDimensions) ? this.getPadHeight() : this.actualHeight;
+					return this.actualHeight;
 			}
 		}
 		return (this.animationCellGet(item) || my.Position.prototype.get.call(this, item));
@@ -3774,24 +3773,6 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 			this.offset.flag = false;
 		}
 		return this;
-	};
-	/**
-Return the Cell object's default Pad (&lt;canvas&gt; element) width
-
-@method getPadWidth
-@return Pad width
-**/
-	my.Cell.prototype.getPadWidth = function() {
-		return my.pad[this.pad].get('width');
-	};
-	/**
-Return the Cell object's default Pad (&lt;canvas&gt; element) height
-
-@method getPadHeight
-@return Pad height
-**/
-	my.Cell.prototype.getPadHeight = function() {
-		return my.pad[this.pad].get('height');
 	};
 	/**
 Set the Cell's &lt;canvas&gt; element's context engine to the specification supplied by the entity about to be drawn on the canvas
@@ -4050,19 +4031,27 @@ Cell.setPaste update pasteData object values
 @private
 **/
 	my.Cell.prototype.setPaste = function() {
-		var usePadDimensions = this.usePadDimensions,
-			pad = my.pad[this.pad];
-
-		this.pasteData.x = (usePadDimensions) ? 0 : this.start.x;
-		this.pasteData.y = (usePadDimensions) ? 0 : this.start.y;
-		this.pasteData.x = (my.isa(this.pasteData.x, 'str')) ? this.convertX(this.pasteData.x, pad.width) : this.pasteData.x;
-		this.pasteData.y = (my.isa(this.pasteData.y, 'str')) ? this.convertY(this.pasteData.y, pad.height) : this.pasteData.y;
-		this.pasteData.w = (usePadDimensions) ? pad.width : this.pasteWidth;
-		this.pasteData.h = (usePadDimensions) ? pad.height : this.pasteHeight;
-		this.pasteData.w = (my.isa(this.pasteData.w, 'str')) ? this.convertX(this.pasteData.w, this.actualWidth) : this.pasteData.w;
-		this.pasteData.h = (my.isa(this.pasteData.h, 'str')) ? this.convertY(this.pasteData.h, this.actualHeight) : this.pasteData.h;
-		this.pasteData.w = (this.pasteData.w * this.scale) * pad.scale;
-		this.pasteData.h = (this.pasteData.h * this.scale) * pad.scale;
+		var p = my.pad[this.pad],
+			w = p.localWidth,
+			h = p.localHeight;
+		this.pasteData.x = this.start.x;
+		if (my.isa(this.pasteData.x, 'str')) {
+			this.pasteData.x = this.convertX(this.pasteData.x, w);
+		}
+		this.pasteData.y = this.start.y;
+		if (my.isa(this.pasteData.y, 'str')) {
+			this.pasteData.y = this.convertY(this.pasteData.y, h);
+		}
+		this.pasteData.w = this.pasteWidth;
+		if (my.isa(this.pasteData.w, 'str')) {
+			this.pasteData.w = this.convertX(this.pasteData.w, w);
+		}
+		this.pasteData.w *= this.scale;
+		this.pasteData.h = this.pasteHeight;
+		if (my.isa(this.pasteData.h, 'str')) {
+			this.pasteData.h = this.convertY(this.pasteData.h, h);
+		}
+		this.pasteData.h *= this.scale;
 		if (this.pasteData.w < 1) {
 			this.pasteData.w = 1;
 		}
@@ -4230,23 +4219,22 @@ Omitting the argument will force the &lt;canvas&gt; to set itself to its Pad obj
 **/
 	my.Cell.prototype.setDimensions = function(items) {
 		var myWidth,
-			myHeight;
-		if (my.xt(items) && !this.usePadDimensions) {
-			myWidth = my.xtGet([items.width, items.actualWidth, this.actualWidth]);
-			myWidth = (my.isa(myWidth, 'str')) ? (parseFloat(myWidth) / 100) * this.getPadWidth() : myWidth;
-			myHeight = my.xtGet([items.height, items.actualHeight, this.actualHeight]);
-			myHeight = (my.isa(myHeight, 'str')) ? (parseFloat(myHeight) / 100) * this.getPadHeight() : myHeight;
-		}
-		else {
-			myWidth = this.getPadWidth();
-			myHeight = this.getPadHeight();
+			myHeight,
+			myPad = my.pad[this.pad];
+		myWidth = my.xtGet([items.width, items.actualWidth, this.actualWidth]);
+		myHeight = my.xtGet([items.height, items.actualHeight, this.actualHeight]);
+		if (myPad) {
+			if (my.isa(myWidth, 'str')) {
+				myWidth = (parseFloat(myWidth) / 100) * (myPad.localWidth / myPad.scale);
+			}
+			if (my.isa(myHeight, 'str')) {
+				myHeight = (parseFloat(myHeight) / 100) * (myPad.localHeight / myPad.scale);
+			}
 		}
 		my.canvas[this.name].width = myWidth;
 		my.canvas[this.name].height = myHeight;
-		my.Base.prototype.set.call(this, {
-			actualWidth: myWidth,
-			actualHeight: myHeight
-		});
+		this.actualWidth = myWidth;
+		this.actualHeight = myHeight;
 		return this;
 	};
 	/**
@@ -4898,7 +4886,7 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 		if (item) {
 			p = my.entity[item] || my.point[item] || false;
 			if (p) {
-				pStart = (p.type === 'Point') ? p.get('current') : p.start;
+				pStart = (p.type === 'Point') ? p.local : p.start;
 				for (var i = 0, iz = this.entitys.length; i < iz; i++) {
 					entity = my.entity[this.entitys[i]];
 					sv = my.v.set(entity.start);
