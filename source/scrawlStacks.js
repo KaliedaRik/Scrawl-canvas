@@ -1144,7 +1144,6 @@ Calculates the pixels value of the object's start attribute
 				height = (stack) ? my.stack[stack].get('height') : this.localHeight / this.scale || this.get('height');
 				width = (stack) ? my.stack[stack].get('width') : this.localWidth / this.scale || this.get('width');
 			}
-			console.log(this.name, 'gSV', stack, width, this.localWidth, this.scale);
 			return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 		};
 		/**
@@ -1163,16 +1162,22 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 **/
 		my.PageElement.prototype.renderElement = function() {
 			var el = this.getElement(),
-				temp = '',
+				trans = '',
+				pos,
 				m = [];
 			if (!my.xt(this.offset)) {
 				this.offset = this.getOffsetStartVector();
 			}
 			if (this.path) {
 				this.setStampUsingPath();
+				pos = this.start;
 			}
 			else if (this.pivot) {
 				this.setStampUsingPivot();
+				pos = this.start;
+			}
+			else {
+				pos = this.getStartValues();
 			}
 			this.updateStart();
 
@@ -1193,17 +1198,14 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 					m[i] = 0;
 				}
 			}
-			temp += 'translate3d(' + m[0] + 'px,' + m[1] + 'px,' + m[2] + 'px) rotate3d(' + m[3] + ',' + m[4] + ',' + m[5] + ',' + m[6] + 'rad)';
-
-			el.style.webkitTransform = temp;
-			el.style.transform = temp;
+			trans += 'translate3d(' + m[0] + 'px,' + m[1] + 'px,' + m[2] + 'px) rotate3d(' + m[3] + ',' + m[4] + ',' + m[5] + ',' + m[6] + 'rad)';
+			el.style.webkitTransform = trans;
+			el.style.transform = trans;
 
 			el.style.zIndex = m[2];
 
-			temp = this.getStartValues();
-
-			el.style.left = ((temp.x * this.scale) + this.offset.x) + 'px';
-			el.style.top = ((temp.y * this.scale) + this.offset.y) + 'px';
+			el.style.left = ((pos.x * this.scale) + this.offset.x) + 'px';
+			el.style.top = ((pos.y * this.scale) + this.offset.y) + 'px';
 			return this;
 		};
 		/**
@@ -1446,11 +1448,11 @@ A __factory__ function to generate new ElementGroup objects
 				this.initMouse({
 					mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
 				});
+				this.groups = [this.name];
 				my.newElementGroup({
 					name: this.name,
 					stack: this.name
 				});
-				this.groups = [this.name];
 				this.group = my.xtGet([items.group, false]);
 				if (this.group) {
 					my.group[this.group].addElementsToGroup(this.name);
@@ -1550,7 +1552,6 @@ Import elements into the stack DOM object, and create element object wrappers fo
 			if (my.isa(item, 'str')) {
 				var myElement = my.newElement({
 					domElement: document.getElementById(item),
-					//					stack: this.name,
 					group: this.name,
 				});
 				my.stk[this.name].appendChild(my.elm[myElement.name]);
@@ -1579,7 +1580,6 @@ Import elements into the stack DOM object, and create element object wrappers fo
 					if (thisElement.nodeName !== 'CANVAS') {
 						myElement = my.newElement({
 							domElement: thisElement,
-							//							stack: this.name,
 							group: this.name,
 						});
 						myElements.push(myElement);
@@ -1799,6 +1799,9 @@ Return the DOM element wrapped by this object
 			this.entitys = (my.xt(items.entitys)) ? [].concat(items.entitys) : [];
 			this.elements = (my.xt(items.elements)) ? [].concat(items.elements) : [];
 			this.stack = items.stack || false;
+			if (this.stack) {
+				my.pushUnique(my.stack[this.stack].groups, this.name);
+			}
 			my.group[this.name] = this;
 			my.pushUnique(my.groupnames, this.name);
 			return this;

@@ -33,7 +33,7 @@ var mycode = function() {
 	//add canvas to stack
 	scrawl.addCanvasToPage({
 		stackName: 'stack',
-		canvasName: 'canvas',
+		name: 'canvas',
 		width: 600,
 		height: 400,
 	}).makeCurrent();

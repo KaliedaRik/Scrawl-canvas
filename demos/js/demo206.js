@@ -26,7 +26,7 @@ var mycode = function() {
 	scrawl.addStackToPage({
 		stackName: 'catstack',
 		parentElement: 'stackholder',
-		overflow: 'hidden',
+		//overflow: 'hidden',
 		width: 1000,
 		height: 500,
 		perspectiveY: 270,
@@ -35,7 +35,7 @@ var mycode = function() {
 
 	//add three new canvases/pads to the stack
 	mySky = scrawl.addCanvasToPage({
-		canvasName: 'sky',
+		name: 'sky',
 		stackName: 'catstack',
 		width: 1000,
 		height: 280,
@@ -43,10 +43,10 @@ var mycode = function() {
 		title: 'Background canvas',
 		handleY: 'bottom',
 		startY: 280,
-		pitch: -45,
+		pitch: 45,
 	});
 	myGround = scrawl.addCanvasToPage({
-		canvasName: 'ground',
+		name: 'ground',
 		stackName: 'catstack',
 		width: 1000,
 		height: 350,
@@ -57,7 +57,7 @@ var mycode = function() {
 		position: 'relative',
 	});
 	myCat = scrawl.addCanvasToPage({
-		canvasName: 'catCanvas',
+		name: 'catCanvas',
 		stackName: 'catstack',
 		width: 300,
 		height: 150,
@@ -75,6 +75,9 @@ var mycode = function() {
 		name: 'skyImage',
 		width: 1100,
 		height: 500,
+		compiled: false,
+		cleared: false,
+		shown: false,
 	});
 	scrawl.newPicture({
 		name: 'temporary',
@@ -83,7 +86,6 @@ var mycode = function() {
 		height: 500,
 		group: 'skyImage',
 	}).stamp();
-	scrawl.deleteEntity('temporary');
 	skyEntity = scrawl.newPicture({
 		source: 'skyImage',
 		width: 1000,
@@ -98,6 +100,9 @@ var mycode = function() {
 		name: 'groundImage',
 		width: 1100,
 		height: 500,
+		compiled: false,
+		cleared: false,
+		shown: false
 	});
 	scrawl.newPicture({
 		name: 'temporary',
@@ -117,9 +122,8 @@ var mycode = function() {
 	});
 
 	//build cat canvas
-	scrawl.newAnimSheet({
+	scrawl.newSpriteAnimation({
 		name: 'animatedCat',
-		sheet: 'cat',
 		running: 'forward',
 		loop: 'loop',
 		speed: catSpeed,
@@ -177,16 +181,15 @@ var mycode = function() {
 		width: 300,
 		height: 150,
 		source: 'cat',
-		animSheet: 'animatedCat',
+		animation: 'animatedCat',
 		group: myCat.base,
 	});
 
 	//animation objects
 	scrawl.newAnimation({
 		name: 'sky',
-		delay: true,
 		fn: function() {
-			if (skyEntity.copyX + skySpeed >= 100) {
+			if (skyEntity.copy.x + skySpeed >= 100) {
 				mySkyCell.spliceCell({
 					edge: 'left',
 					strip: 100,
@@ -198,18 +201,12 @@ var mycode = function() {
 			skyEntity.setDelta({
 				copyX: skySpeed
 			});
-			mySky.render({
-				clear: 'base',
-				compile: 'base',
-				show: 'wipe-display',
-			});
 		},
 	});
 	scrawl.newAnimation({
 		name: 'ground',
-		delay: true,
 		fn: function() {
-			if (groundEntity.copyX + groundSpeed >= 100) {
+			if (groundEntity.copy.x + groundSpeed >= 100) {
 				myGroundCell.spliceCell({
 					edge: 'left',
 					strip: 100,
@@ -221,18 +218,12 @@ var mycode = function() {
 			groundEntity.setDelta({
 				copyX: groundSpeed
 			});
-			myGround.render({
-				clear: 'base',
-				compile: 'base',
-				show: 'wipe-display',
-			});
 		},
 	});
 	scrawl.newAnimation({
 		name: 'cat',
-		delay: true,
 		fn: function() {
-			myCat.render();
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();
@@ -242,13 +233,6 @@ var mycode = function() {
 			//hide-end
 		},
 	});
-
-	//render initial scene
-	scrawl.renderElements();
-
-	//start animation
-	scrawl.animate = ['sky', 'ground']; //setting the animate array directly
-	scrawl.animation.cat.run(); //adding an animation to the end of the animate array
 };
 
 scrawl.loadModules({
