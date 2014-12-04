@@ -2904,6 +2904,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
 			});
 			this.filtersPadInit();
+			this.padStacksConstructor(items);
 
 			// return this
 			return this;
@@ -3016,6 +3017,13 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 		}
 		return this;
 	};
+	/**
+Pad constructor hook function - amended by Stacks module
+@method sortCellsCompile
+@return Nothing
+@private
+**/
+	my.Pad.prototype.padStacksConstructor = function() {};
 	/**
 Display function sorting routine - cells are sorted according to their compileOrder attribute value, in ascending order
 @method sortCellsCompile

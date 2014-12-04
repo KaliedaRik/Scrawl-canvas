@@ -117,7 +117,6 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 						}
 					}
 					if (my.contains(my.elementnames, myStack.name)) {
-						// myStack.stack = my.element[myStack.name].stack;
 						myStack.group = my.element[myStack.name].stack;
 						delete my.element[myStack.name];
 						delete my.elm[myStack.name];
@@ -207,7 +206,6 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 								my.stk[myStack[1]].appendChild(el[i]);
 								my.newElement({
 									domElement: el[i],
-									// stack: myStack[1],
 									group: myStack[1],
 								});
 							}
@@ -315,7 +313,6 @@ The argument object should include the following attributes:
 				items.parentElement.appendChild(myElement);
 				items.stackElement = myElement;
 				myStack = my.newStack(items);
-				// myStack.stack = (my.contains(my.stacknames, items.parentElement.id)) ? items.parentElement.id : '';
 				myStack.group = (my.contains(my.stacknames, items.parentElement.id)) ? items.parentElement.id : '';
 				return myStack;
 			}
@@ -381,7 +378,6 @@ A __display__ function to move DOM elements within a Stack
 			var i, iz, s;
 			for (i = 0, iz = my.stacknames.length; i < iz; i++) {
 				s = my.stack[my.stacknames[i]];
-				// if (!s.stack) {
 				if (!s.group) {
 					s.render();
 				}
@@ -411,7 +407,6 @@ Argument can contain the following (optional) attributes:
 			else {
 				for (i = 0, iz = my.stacknames.length; i < iz; i++) {
 					s = my.stack[my.stacknames[i]];
-					// if (!s.stack) {
 					if (!s.group) {
 						s.update(items);
 					}
@@ -649,9 +644,6 @@ PageElement constructor hook function - modified by stacks module
 			this.work.handle = my.newVector({
 				name: this.type + '.' + this.name + '.work.handle'
 			});
-			if (my.xto([items.handleX, items.handleY, items.handle])) {
-				this.setTransformOrigin();
-			}
 			temp = my.safeObject(items.translate);
 			this.translate = my.newVector({
 				name: this.type + '.' + this.name + '.translate',
@@ -1397,6 +1389,16 @@ A __factory__ function to generate new ElementGroup objects
 		my.pushUnique(my.sectionlist, 'stk');
 		my.pushUnique(my.nameslist, 'stacknames');
 		/**
+Pad constructor hook function - amended by Stacks module
+@method sortCellsCompile
+@return Nothing
+@private
+**/
+		my.Pad.prototype.padStacksConstructor = function(items) {
+			this.setStyles(items);
+			this.setTransformOrigin();
+		};
+		/**
 # Stack
 
 ## Instantiation
@@ -1457,6 +1459,9 @@ A __factory__ function to generate new ElementGroup objects
 				if (this.group) {
 					my.group[this.group].addElementsToGroup(this.name);
 				}
+				this.setStyles(items);
+				this.setPerspective();
+				this.setTransformOrigin();
 				return this;
 			}
 			console.log('Failed to generate a Stack wrapper - no DOM element supplied');
@@ -1737,6 +1742,8 @@ By default, this function does not scale text contained in any stack element. If
 				this.initMouse({
 					mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
 				});
+				this.setStyles(items);
+				this.setTransformOrigin();
 				return this;
 			}
 			console.log('Failed to generate an Element wrapper - no DOM element supplied');

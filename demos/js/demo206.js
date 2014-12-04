@@ -26,10 +26,10 @@ var mycode = function() {
 	scrawl.addStackToPage({
 		stackName: 'catstack',
 		parentElement: 'stackholder',
-		//overflow: 'hidden',
+		overflow: 'hidden',
 		width: 1000,
 		height: 500,
-		perspectiveY: 270,
+		perspectiveY: 280,
 		perspectiveZ: 400,
 	});
 
@@ -43,7 +43,7 @@ var mycode = function() {
 		title: 'Background canvas',
 		handleY: 'bottom',
 		startY: 280,
-		pitch: 45,
+		pitch: -45,
 	});
 	myGround = scrawl.addCanvasToPage({
 		name: 'ground',
@@ -52,7 +52,7 @@ var mycode = function() {
 		height: 350,
 		handleY: 'top',
 		startY: 280,
-		pitch: 80,
+		pitch: 85,
 		title: 'canvas showing scrolled 3d ground',
 		position: 'relative',
 	});
@@ -62,7 +62,7 @@ var mycode = function() {
 		width: 300,
 		height: 150,
 		//necessary for Safari, which only shows the cat if it is 'in front of' the scenery
-		translateZ: 150,
+		//translateZ: 150,
 		handleX: 'center',
 		handleY: '65%',
 		startX: 'center',
