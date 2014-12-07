@@ -23,7 +23,7 @@ var mycode = function() {
 		endY: '50%',
 		shift: 0.001,
 		autoUpdate: true,
-		setToEntity: true,
+		lockTo: true,
 		color: [{
 			color: 'red',
 			stop: 0

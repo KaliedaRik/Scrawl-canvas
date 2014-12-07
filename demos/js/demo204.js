@@ -9,6 +9,7 @@ var mycode = function() {
 
 	//define variables
 	var myStack = scrawl.stack.mystack,
+		myPads = scrawl.group.mystack,
 		myFront = scrawl.pad.frontcanvas,
 		myBack = scrawl.pad.backcanvas;
 
@@ -20,18 +21,15 @@ var mycode = function() {
 		width: 540,
 		height: 360,
 		perspectiveZ: 2000,
-		title: 'containing stack',
 	});
-	myFront.set({
+	myPads.setTo({
 		backfaceVisibility: 'hidden',
 		deltaYaw: 1,
-		title: 'parrot picture',
+		startX: 'center',
+		handleX: 'center',
 	});
 	myBack.set({
-		backfaceVisibility: 'hidden',
-		yaw: 179.9999,
-		deltaYaw: 1,
-		title: 'fish picture',
+		yaw: 180,
 	});
 
 	//build entitys

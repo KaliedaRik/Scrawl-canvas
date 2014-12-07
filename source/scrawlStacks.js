@@ -97,6 +97,7 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 			var s = document.getElementsByClassName("scrawlstack"),
 				stacks = [],
 				myStack,
+				myCanvas,
 				i, iz, j, jz;
 			if (s.length > 0) {
 				for (i = 0, iz = s.length; i < iz; i++) {
@@ -111,16 +112,22 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 						if (my.stk[myStack.name].children[j].tagName !== 'CANVAS') {
 							my.newElement({
 								domElement: my.stk[myStack.name].children[j],
-								// stack: myStack.name
 								group: myStack.name
 							});
 						}
 					}
 					if (my.contains(my.elementnames, myStack.name)) {
-						myStack.group = my.element[myStack.name].stack;
+						myStack.group = my.element[myStack.name].group;
 						delete my.element[myStack.name];
 						delete my.elm[myStack.name];
 						my.removeItem(my.elementnames, myStack.name);
+					}
+					if (stacks[i].className.match(/withcanvas/)) {
+						myCanvas = document.createElement('canvas');
+						myCanvas.style.position = 'absolute';
+						myCanvas.id = myStack.name + '_canvas';
+						myCanvas.className = 'lockTo:' + myStack.name;
+						my.stk[myStack.name].appendChild(myCanvas);
 					}
 				}
 				return true;
@@ -139,6 +146,8 @@ A __private__ function that searches the DOM for canvas elements and generates P
 			var s = document.getElementsByTagName("canvas"),
 				myPad,
 				myStack,
+				stack,
+				locked,
 				myElement,
 				el = [],
 				i, iz;
@@ -147,31 +156,51 @@ A __private__ function that searches the DOM for canvas elements and generates P
 					el.push(s[i]);
 				}
 				for (i = 0, iz = s.length; i < iz; i++) {
-					if (s[i].className.indexOf('stack:') !== -1) {
+					myStack = false;
+					stack = false;
+					locked = false;
+					if (el[i].className.indexOf('stack:') !== -1) {
 						myStack = el[i].className.match(/stack:(\w+)/);
 						myStack = myStack[1];
+					}
+					else if (el[i].className.indexOf('lockTo:') !== -1) {
+						myStack = el[i].className.match(/lockTo:(\w+)/);
+						myStack = myStack[1];
+						locked = true;
+					}
+					if (myStack) {
 						if (my.contains(my.stacknames, myStack)) {
 							my.stk[myStack].appendChild(el[i]);
+							stack = my.stack[myStack];
 						}
 						else {
 							myElement = document.createElement('div');
 							myElement.id = myStack;
 							el[i].parentElement.appendChild(myElement);
 							myElement.appendChild(el[i]);
-							my.newStack({
-								stackElement: myElement,
+							stack = my.newStack({
+								stackElement: myElement
 							});
 						}
 					}
 					myPad = my.newPad({
 						canvasElement: el[i],
 					});
-					if (my.contains(my.stacknames, el[i].parentElement.id)) {
+					if (stack) {
 						myPad.set({
-							// stack: el[i].parentElement.id
-							group: el[i].parentElement.id
+							group: stack.name,
+							position: 'absolute'
 						});
-						el[i].style.position = 'absolute';
+						if (locked) {
+							stack.set({
+								canvas: myPad.name
+							});
+							myPad.set({
+								width: '100%',
+								height: '100%',
+								lockTo: stack.name
+							});
+						}
 					}
 					if (i === 0) {
 						my.currentPad = myPad.name;
@@ -498,12 +527,19 @@ Where values are Numbers, handle can be treated like any other Vector
 			z: 0
 		};
 		/**
-The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object's start point
+The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point
 @property PageElement.pivot
 @type String
 @default ''
 **/
 		my.d.PageElement.pivot = '';
+		/**
+The STACKNAME, PADNAME or ELEMENTNAME of an DOM object to be used for setting this object's local coordinate system (eg for setting positional or dimensional data)
+@property PageElement.lockTo
+@type String
+@default ''
+**/
+		my.d.PageElement.lockTo = '';
 		/**
 The element's current ELEMENTGROUPNAME
 @property PageElement.group
@@ -756,15 +792,6 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 			if (my.xt(el.style[item])) {
 				return el.style[item];
 			}
-			if (item === 'position') {
-				return el.style.position;
-			}
-			if (item === 'overflow') {
-				return el.style.overflow;
-			}
-			if (item === 'backfaceVisibility') {
-				return el.style.backfaceVisibility;
-			}
 			return my.Base.prototype.get.call(this, item);
 		};
 		/**
@@ -936,8 +963,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 			var el = this.getElement(),
 				k = Object.keys(items);
 			for (var i = 0, iz = k.length; i < iz; i++) {
-				if (my.contains(['width', 'height', 'translate', 'translateX', 'translateY', 'translateZ'], k[i])) {}
-				else if (k[i] === 'backfaceVisibility') {
+				if (k[i] === 'backfaceVisibility') {
 					el.style.webkitBackfaceVisibility = items.backfaceVisibility;
 					el.style.mozBackfaceVisibility = items.backfaceVisibility;
 					el.style.backfaceVisibility = items.backfaceVisibility;
@@ -957,8 +983,10 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 					}
 				}
 				else {
-					if (my.xt(el.style[k[i]])) {
-						el.style[k[i]] = items[k[i]];
+					if (!my.contains(['backfaceVisibility', 'opacity', 'display', 'width', 'height', 'translate', 'translateX', 'translateY', 'translateZ'], k[i])) {
+						if (my.xt(el.style[k[i]])) {
+							el.style[k[i]] = items[k[i]];
+						}
 					}
 				}
 			}
@@ -1125,16 +1153,24 @@ Calculates the pixels value of the object's start attribute
 			var result,
 				height,
 				width,
-				stack = my.group[this.group].stack;
+				stackname = my.group[this.group].stack,
+				stack;
 			if (hasElementPivot) {
 				result = my.v.set(my.element[this.pivot].start);
-				height = my.element[this.pivot].get(height);
-				width = my.element[this.pivot].get(width);
+				height = my.element[this.pivot].localHeight;
+				width = my.element[this.pivot].localWidth;
 			}
 			else {
 				result = my.v.set(this.start);
-				height = (stack) ? my.stack[stack].get('height') : this.localHeight / this.scale || this.get('height');
-				width = (stack) ? my.stack[stack].get('width') : this.localWidth / this.scale || this.get('width');
+				if (stackname) {
+					stack = my.stack[stackname];
+					height = stack.localHeight / this.scale;
+					width = stack.localWidth / this.scale;
+				}
+				else {
+					height = this.localHeight / this.scale;
+					width = this.localWidth / this.scale;
+				}
 			}
 			return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 		};
@@ -1264,9 +1300,7 @@ Calculate start Vector in reference to a entity or Point object's position
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 			}
 			else if (this.pivot === 'mouse') {
-				// if (this.stack) {
 				if (this.group) {
-					//here = my.stack[this.stack].getMouse();
 					here = my.stack[my.group[this.group].stack].getMouse();
 					temp = this.getStartValues();
 					if (!my.xta([this.mouseX, this.mouseY])) {
@@ -1334,11 +1368,11 @@ Helper function - set local dimensions (width, height)
 @private
 **/
 		my.PageElement.prototype.setLocalDimensions = function() {
-			var parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false,
-				w, h;
+			var parent, w, h;
+			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
 			if (parent) {
-				w = parent.localWidth / parent.scale;
-				h = parent.localHeight / parent.scale;
+				w = parent.localWidth;
+				h = parent.localHeight;
 			}
 			if (parent && my.isa(this.width, 'str')) {
 				this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
@@ -1502,6 +1536,14 @@ A flag to indicate whether element text should be scaled at the same time as the
 **/
 			scaleText: false,
 			/**
+The PADNAME String of a canvas locked to the stack
+
+@property canvas
+@type String
+@default ''
+**/
+			canvas: '',
+			/**
 Groups array
 
 @property groups
@@ -1528,7 +1570,7 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 **/
 		my.Stack.prototype.set = function(items) {
 			items = my.safeObject(items);
-			var temp;
+			var temp, i, iz, g;
 			my.PageElement.prototype.set.call(this, items);
 			if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
@@ -1542,8 +1584,48 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 				}
 				this.setPerspective();
 			}
-			if (my.xt(items.scale)) {
-				this.scaleStack(items.scale);
+			if (my.xto([items.width, items.height, items.scale])) {
+				for (i = 0, iz = my.groupnames.length; i < iz; i++) {
+					g = my.group[my.groupnames[i]];
+					if (g.type === 'ElementGroup') {
+						if (g.stack === this.name) {
+							g.updateDimensions();
+						}
+					}
+				}
+			}
+			return this;
+		};
+		/**
+Augments PageElement.setDelta(), to allow users to set the stack perspective using perspectiveX, perspectiveY, perspectiveZ
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.Stack.prototype.setDelta = function(items) {
+			items = my.safeObject(items);
+			var temp, i, iz, g;
+			my.PageElement.prototype.setDelta.call(this, items);
+			if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
+				if (!this.perspective.type || this.perspective.type !== 'Vector') {
+					this.perspective = my.newVector(items.perspective || this.perspective);
+				}
+				if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
+					temp = my.safeObject(items.perspective);
+					this.perspective.x += my.xtGet([items.perspectiveX, temp.x, 0]);
+					this.perspective.y += my.xtGet([items.perspectiveY, temp.y, 0]);
+					this.perspective.z += my.xtGet([items.perspectiveZ, temp.z, 0]);
+				}
+				this.setPerspective();
+			}
+			for (i = 0, iz = my.groupnames.length; i < iz; i++) {
+				g = my.group[my.groupnames[i]];
+				if (g.type === 'ElementGroup') {
+					if (g.stack === this.name) {
+						g.updateDimensions();
+					}
+				}
 			}
 			return this;
 		};
@@ -1653,49 +1735,6 @@ Calculates the pixels value of the object's perspective attribute
 			el.style.mozPerspective = myH.z + 'px';
 			el.style.webkitPerspective = myH.z + 'px';
 			el.style.perspective = myH.z + 'px';
-		};
-		/**
-Scale the stack, and all objects contained in stack
-
-An item value of 1 will scale the stack to its preset size. Values less than 1 will shrink the stack; values greater than 1 will enlarge it.
-
-By default, this function does not scale text contained in any stack element. If the scaleFont boolean is is passed as true, then the function will set the stack's font-size style attribute to (item * 100)%. Element font sizes will not scale unless they have been initially set to relative unit values.
-
-@method scaleStack
-@param {Number} item - Scale value
-@param {Boolean} scaleFont - if set to true, will also scale element font sizes; default: false
-@return This
-@chainable
-**/
-		//PROBABLY NEEDS CHANGING
-		my.Stack.prototype.scaleStack = function(item, scaleFont) {
-			var i, iz;
-			scaleFont = (my.xt(scaleFont)) ? scaleFont : this.scaleText;
-			if (my.isa(item, 'num') && this.type === 'Stack') {
-				for (i = 0, iz = my.stacknames.length; i < iz; i++) {
-					if (my.stack[my.stacknames[i]].stack === this.name) {
-						my.stack[my.stacknames[i]].scaleStack(item);
-					}
-				}
-				for (i = 0, iz = my.elementnames.length; i < iz; i++) {
-					if (my.element[my.elementnames[i]].stack === this.name) {
-						my.element[my.elementnames[i]].scaleDimensions(item);
-					}
-				}
-				for (i = 0, iz = my.padnames.length; i < iz; i++) {
-					if (my.pad[my.padnames[i]].stack === this.name) {
-						my.pad[my.padnames[i]].scaleDimensions(item);
-					}
-				}
-				this.scaleDimensions(item);
-				if (this.type === 'Stack') {
-					this.setPerspective();
-					if (scaleFont) {
-						my.stk[this.name].style.fontSize = (item * 100) + '%';
-					}
-				}
-			}
-			return this;
 		};
 
 		my.pushUnique(my.sectionlist, 'element');
@@ -2017,6 +2056,26 @@ Ask all elements in the Group to perform a set() operation
 			for (i = 0, iz = this.elements.length; i < iz; i++) {
 				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
 				temp.set(items);
+			}
+			return this;
+		};
+		/**
+Ask all elements in the Group to perform a dimension update operation
+@method updateDimensions
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.updateDimensions = function() {
+			var temp, i, iz;
+			for (i = 0, iz = this.elements.length; i < iz; i++) {
+				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				temp.setLocalDimensions();
+				temp.setDimensions();
+				delete temp.offset;
+				if (temp.type === 'Stack') {
+					my.group[temp.name].updateDimensions();
+				}
 			}
 			return this;
 		};

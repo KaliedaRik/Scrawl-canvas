@@ -21,7 +21,7 @@ var mycode = function() {
 		name: 'gradient',
 		shift: 0.002,
 		autoUpdate: true,
-		setToEntity: true,
+		lockTo: true,
 		color: [{
 			color: '#333333',
 			stop: 0

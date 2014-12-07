@@ -37,7 +37,7 @@ var mycode = function() {
 	scrawl.newGradient({
 		name: 'gradient',
 		shift: 0.002,
-		setToEntity: true,
+		lockTo: true,
 		color: [{
 			color: '#333333',
 			stop: 0

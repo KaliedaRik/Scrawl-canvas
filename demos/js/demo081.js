@@ -138,7 +138,7 @@ var mycode = function() {
 	//code here
 	cellGrad = scrawl.newGradient({
 		name: 'g1',
-		setToEntity: false,
+		lockTo: false,
 		color: [{
 			color: 'red',
 			stop: 0
@@ -158,7 +158,7 @@ var mycode = function() {
 	});
 	entityGrad = scrawl.newGradient({
 		name: 'g2',
-		setToEntity: true,
+		lockTo: true,
 		color: [{
 			color: 'green',
 			stop: 0

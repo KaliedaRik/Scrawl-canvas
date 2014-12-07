@@ -29,6 +29,7 @@ var mycode = function() {
 		overflow: 'hidden',
 		width: 1000,
 		height: 500,
+		border: '5px solid red',
 		perspectiveY: 280,
 		perspectiveZ: 400,
 	});
@@ -62,9 +63,9 @@ var mycode = function() {
 		width: 300,
 		height: 150,
 		//necessary for Safari, which only shows the cat if it is 'in front of' the scenery
-		//translateZ: 150,
+		translateZ: 150,
 		handleX: 'center',
-		handleY: '65%',
+		handleY: '70%',
 		startX: 'center',
 		startY: 'center',
 		title: 'Canvas showing running cat',

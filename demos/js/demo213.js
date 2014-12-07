@@ -129,7 +129,7 @@ var mycode = function() {
 		borderColor: 'blue',
 	});
 	bluepara.set({
-		width: 400,
+		width: '50%',
 		borderColor: 'lightblue',
 		startX: 'center',
 		startY: 'center',
@@ -137,13 +137,13 @@ var mycode = function() {
 		handleY: 'center',
 	});
 	redstack.set({
-		width: 300,
-		height: 300,
+		width: '50%',
+		height: '50%',
 		position: 'absolute',
 		borderColor: 'red',
 	});
 	redpara.set({
-		width: 200,
+		width: '50%',
 		borderColor: 'pink',
 		startX: 'center',
 		startY: 'center',

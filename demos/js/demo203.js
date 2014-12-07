@@ -22,6 +22,7 @@ var mycode = function() {
 		size: 20,
 		text: 'Hi! I\'m the canvas.',
 	});
+	scrawl.render();
 
 	//event listener
 	function moveIn(e) {
@@ -61,8 +62,9 @@ var mycode = function() {
 			});
 			davey.set({
 				width: '25%',
-				startX: 50,
+				startX: 120,
 				startY: 230,
+				handleX: '35%',
 				deltaYaw: 1,
 			});
 			cow.set({

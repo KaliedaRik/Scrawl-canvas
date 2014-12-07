@@ -5769,6 +5769,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Design = function(items) {
 		my.Base.call(this, items);
+		this.lockTo = my.xtGet([items.lockTo, my.d[this.type].lockTo]);
 		return this;
 	};
 	my.Design.prototype = Object.create(my.Base.prototype);
@@ -5800,12 +5801,12 @@ Objects take the form {color:String, stop:Number} where:
 			stop: 0.999999
 		}],
 		/**
-Drawing flag - when set to true, will use entity-based coordinates to calculate the start and end points of the gradient; when false, will use Cell-based coordinates
-@property setToEntity
-@type Boolean
-@default false
+Drawing flag - when set to 'entity' (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to 'cell' (or false - default), will use Cell-based coordinates
+@property lockTo
+@type String - or alternatively Boolean
+@default 'cell'
 **/
-		setToEntity: false,
+		lockTo: 'cell',
 		/**
 Drawing flag - when set to true, force the gradient to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
 @property autoUpdate
@@ -5936,10 +5937,6 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 		}
 		var ctx = my.context[cell.name],
 			g,
-			north,
-			south,
-			east,
-			west,
 			x,
 			y,
 			sx,
@@ -5957,7 +5954,7 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 			h,
 			r;
 		//in all cases, the canvas origin will have been translated to the current entity's start
-		if (this.get('setToEntity')) {
+		if (this.lockTo && this.lockTo !== 'cell') {
 			temp = entity.getOffsetStartVector();
 			switch (entity.type) {
 				case 'Wheel':
