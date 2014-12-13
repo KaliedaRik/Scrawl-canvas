@@ -120,7 +120,7 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 					for (var i = s.length; i > 0; i--) {
 						myImg = my.newImage({
 							element: s[i - 1],
-							removeImageFromDOM: my.xtGet([kill, true]),
+							removeImageFromDOM: my.xtGet(kill, true),
 						});
 						names.push(myImg.name);
 					}
@@ -141,7 +141,7 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 			if (idtag) {
 				var myImg = my.newImage({
 					element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-					removeImageFromDOM: my.xtGet([kill, true]),
+					removeImageFromDOM: my.xtGet(kill, true),
 				});
 				return myImg.name;
 			}
@@ -159,7 +159,7 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 			if (idtag) {
 				var myVideo = my.newVideo({
 					element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-					stream: my.xtGet([stream, 'raw']),
+					stream: my.xtGet(stream, 'raw'),
 				});
 				return myVideo.name;
 			}
@@ -194,16 +194,16 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 			var tempname;
 			this.width = 0;
 			this.height = 0;
-			if (my.xto([items.element, items.data, items.url])) {
+			if (my.xto(items.element, items.data, items.url)) {
 				if (my.xt(items.element)) {
-					items.name = my.xtGet([items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '']);
+					items.name = my.xtGet(items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '');
 				}
 				else if (my.xt(items.data)) {
-					items.name = my.xtGet([items.name, '']);
+					items.name = my.xtGet(items.name, '');
 				}
 				else if (my.xt(items.url)) {
 					tempname = items.url.substr(0, 128);
-					items.name = my.xtGet([items.name, tempname, '']);
+					items.name = my.xtGet(items.name, tempname, '');
 				}
 				my.Base.call(this, items);
 				my.image[this.name] = this;
@@ -299,7 +299,7 @@ Adds a DOM &lt;img&gt; element to the library
 **/
 		my.Image.prototype.addImageByElement = function(items) {
 			var el,
-				kill = my.xtGet([items.removeImageFromDOM, true]);
+				kill = my.xtGet(items.removeImageFromDOM, true);
 			if (kill) {
 				el = items.element;
 			}
@@ -307,8 +307,8 @@ Adds a DOM &lt;img&gt; element to the library
 				el = items.element.cloneNode();
 			}
 			el.id = this.name;
-			this.width = parseFloat(my.xtGetTrue([el.offsetWidth, el.width, el.style.width, 0]));
-			this.height = parseFloat(my.xtGetTrue([el.offsetHeight, el.height, el.style.height, 0]));
+			this.width = parseFloat(my.xtGetTrue(el.offsetWidth, el.width, el.style.width, 1));
+			this.height = parseFloat(my.xtGetTrue(el.offsetHeight, el.height, el.style.height, 1));
 			my.imageFragment.appendChild(el);
 			my.asset[this.name] = el;
 			my.pushUnique(my.assetnames, this.name);
@@ -406,7 +406,7 @@ Creates a new &lt;img&gt; element from an existing cell's current display - uses
 					if (my.xt(data)) {
 						return this.addImageByUrl({
 							url: data,
-							name: my.xtGet([name, cell.name, 'cell-image']),
+							name: my.xtGet(name, cell.name, 'cell-image'),
 							width: cell.actualWidth,
 							height: cell.actualHeight,
 						});
@@ -668,11 +668,11 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 			this.height = 0;
 			if (my.xt(items.element)) {
 				if (my.xt(items.element)) {
-					items.name = my.xtGet([items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '']);
+					items.name = my.xtGet(items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '');
 				}
 				else if (my.xt(items.url)) {
 					tempname = items.url.substr(0, 128);
-					items.name = my.xtGet([items.name, tempname, '']);
+					items.name = my.xtGet(items.name, tempname, '');
 				}
 				my.Base.call(this, items);
 				my.video[this.name] = this;
@@ -736,7 +736,7 @@ Adds a DOM &lt;video&gt; element to the library
 **/
 		my.Video.prototype.addVideoByElement = function(items) {
 			var el = items.element,
-				stream = my.xtGet([items.stream, 'raw']),
+				stream = my.xtGet(items.stream, 'raw'),
 				that = this;
 			if (my.xt(el)) {
 				el.id = this.name;

@@ -332,7 +332,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @private
     **/
 		my.Pattern.prototype.makeDesign = function(entity, cell) {
-			cell = my.xtGet([cell, this.cell]);
+			cell = my.xtGet(cell, this.cell);
 			var ctx = my.context[cell],
 				temp;
 			if (my.xt(ctx)) {
@@ -419,23 +419,23 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			else {
 				items = my.safeObject(items);
 				if (my.xt(items.source)) {
-					src = my.xtGet([my.image[items.source], my.video[items.source], my.cell[items.source], false]);
+					src = my.xtGet(my.image[items.source], my.video[items.source], my.cell[items.source], false);
 					if (src) {
 						my.Entity.call(this, items);
 						temp = my.safeObject(items.paste);
-						this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
-						this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
-						this.copyWidth = my.xtGetTrue([items.copyWidth, src.actualWidth, src.width, '100%']);
-						this.copyHeight = my.xtGetTrue([items.copyHeight, src.actualHeight, src.height, '100%']);
-						this.width = my.xtGet([items.pasteWidth, items.width, this.copyWidth]);
-						this.height = my.xtGet([items.pasteHeight, items.height, this.copyHeight]);
+						this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
+						this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
+						this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');
+						this.copyHeight = my.xtGetTrue(items.copyHeight, src.actualHeight, src.height, '100%');
+						this.width = my.xtGet(items.pasteWidth, items.width, this.copyWidth);
+						this.height = my.xtGet(items.pasteHeight, items.height, this.copyHeight);
 						my.Position.prototype.set.call(this, items);
 						this.source = items.source;
 						this.imageType = this.sourceImage();
 						temp = my.safeObject(items.copy);
 						this.copy = my.newVector({
-							x: my.xtGet([items.copyX, temp.x, 0]),
-							y: my.xtGet([items.copyY, temp.y, 0]),
+							x: my.xtGet(items.copyX, temp.x, 0),
+							y: my.xtGet(items.copyY, temp.y, 0),
 							name: this.type + '.' + this.name + '.copy'
 						});
 						this.work.copy = my.newVector({
@@ -596,24 +596,32 @@ Local target data
 		my.Picture.prototype.set = function(items) {
 			var temp;
 			my.Entity.prototype.set.call(this, items);
-			if (my.xto([items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight])) {
+			if (my.xto(items.paste, items.pasteX, items.pasteY)) {
 				temp = my.safeObject(items.paste);
-				this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
-				this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
-				this.width = my.xtGet([items.pasteWidth, this.width]);
-				this.height = my.xtGet([items.pasteHeight, this.height]);
+				this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
+				this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
 			}
-			if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight])) {
+			if (my.xt(items.pasteWidth)) {
+				this.width = my.xtGet(items.pasteWidth, this.width);
+			}
+			if (my.xt(items.pasteHeight)) {
+				this.height = my.xtGet(items.pasteHeight, this.height);
+			}
+			if (my.xto(items.copy, items.copyX, items.copyY)) {
 				temp = my.safeObject(items.copy);
-				this.copy.x = my.xtGet([items.copyX, temp.x, this.copy.x]);
-				this.copy.y = my.xtGet([items.copyY, temp.y, this.copy.y]);
-				this.copyWidth = my.xtGet([items.copyWidth, this.copyWidth]);
-				this.copyHeight = my.xtGet([items.copyHeight, this.copyHeight]);
+				this.copy.x = my.xtGet(items.copyX, temp.x, this.copy.x);
+				this.copy.y = my.xtGet(items.copyY, temp.y, this.copy.y);
 			}
-			if (my.xto([items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale])) {
+			if (my.xt(items.copyWidth)) {
+				this.copyWidth = my.xtGet(items.copyWidth, this.copyWidth);
+			}
+			if (my.xt(items.copyHeight)) {
+				this.copyHeight = my.xtGet(items.copyHeight, this.copyHeight);
+			}
+			if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
-			if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height])) {
+			if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
 				this.setCopy();
 			}
 			if (my.xt(this.animation)) {
@@ -632,40 +640,40 @@ Local target data
 			var temp, x, y, w, h;
 			my.Entity.prototype.setDelta.call(this, items);
 			items = my.safeObject(items);
-			if (my.xto([items.paste, items.pasteX, items.pasteY])) {
+			if (my.xto(items.paste, items.pasteX, items.pasteY)) {
 				temp = my.safeObject(items.paste);
-				x = my.xtGet([items.pasteX, temp.x, 0]);
-				y = my.xtGet([items.pasteY, temp.y, 0]);
+				x = my.xtGet(items.pasteX, temp.x, 0);
+				y = my.xtGet(items.pasteY, temp.y, 0);
 				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
 				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
 			}
-			if (my.xto([items.pasteWidth, items.width])) {
-				w = my.xtGet([items.pasteWidth, items.width]);
+			if (my.xto(items.pasteWidth, items.width)) {
+				w = my.xtGet(items.pasteWidth, items.width);
 				this.width = (my.isa(this.width, 'num')) ? this.width + w : my.addPercentages(this.width, w);
 			}
-			if (my.xto([items.pasteHeight, items.height])) {
-				h = my.xtGet([items.pasteHeight, items.height]);
+			if (my.xto(items.pasteHeight, items.height)) {
+				h = my.xtGet(items.pasteHeight, items.height);
 				this.height = (my.isa(this.height, 'num')) ? this.height + h : my.addPercentages(this.height, h);
 			}
-			if (my.xto([items.copy, items.copyX, items.copyY])) {
+			if (my.xto(items.copy, items.copyX, items.copyY)) {
 				temp = my.safeObject(items.copy);
-				x = my.xtGet([items.copyX, temp.x, 0]);
-				y = my.xtGet([items.copyY, temp.y, 0]);
+				x = my.xtGet(items.copyX, temp.x, 0);
+				y = my.xtGet(items.copyY, temp.y, 0);
 				this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
 				this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
 			}
-			if (my.xto([items.copyWidth, items.width])) {
-				w = my.xtGet([items.copyWidth, items.width]);
+			if (my.xto(items.copyWidth, items.width)) {
+				w = my.xtGet(items.copyWidth, items.width);
 				this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + w : my.addPercentages(this.copyWidth, w);
 			}
-			if (my.xto([items.copyHeight, items.height])) {
-				h = my.xtGet([items.copyHeight, items.height]);
+			if (my.xto(items.copyHeight, items.height)) {
+				h = my.xtGet(items.copyHeight, items.height);
 				this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + h : my.addPercentages(this.copyHeight, h);
 			}
-			if (my.xto([items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale])) {
+			if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
-			if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height])) {
+			if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
 				this.setCopy();
 			}
 			return this;

@@ -94,10 +94,9 @@ var mycode = function() {
 	});
 	scrawl.newBlurFilter({
 		name: 'myBlur',
-		radiusX: 12,
-		radiusY: 4,
-		roll: 45,
-		includeInvisiblePoints: true,
+		radiusX: 10,
+		radiusY: 10,
+		skip: 10,
 	});
 	scrawl.newLeachFilter({
 		name: 'myLeach',

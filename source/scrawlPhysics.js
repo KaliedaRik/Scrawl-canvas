@@ -367,18 +367,18 @@ if (window.scrawl && !window.scrawl.newParticle) {
 			if (!this.place.type || this.place.type !== 'Vector') {
 				this.place = my.newVector(items.place || this.place);
 			}
-			if (my.xto([items.start, items.startX, items.startY])) {
-				temp = (my.isa(items.start, 'obj')) ? items.start : {};
-				this.place.x = (my.xt(items.startX)) ? items.startX : ((my.xt(temp.x)) ? temp.x : this.place.x);
-				this.place.y = (my.xt(items.startY)) ? items.startY : ((my.xt(temp.y)) ? temp.y : this.place.y);
+			if (my.xto(items.start, items.startX, items.startY)) {
+				temp = my.safeObject(items.start);
+				this.place.x = my.xtGet(items.startX, temp.x, this.place.x);
+				this.place.y = my.xtGet(items.startY, temp.y, this.place.y);
 			}
 			if (!this.velocity.type || this.velocity.type !== 'Vector') {
 				this.velocity = my.newVector(items.velocity || this.velocity);
 			}
-			if (my.xto([items.delta, items.deltaX, items.deltaY])) {
-				temp = (my.isa(items.delta, 'obj')) ? items.delta : {};
-				this.velocity.x = (my.xt(items.deltaX)) ? items.deltaX : ((my.xt(temp.x)) ? temp.x : this.velocity.x);
-				this.velocity.y = (my.xt(items.deltaY)) ? items.deltaY : ((my.xt(temp.y)) ? temp.y : this.velocity.y);
+			if (my.xto(items.delta, items.deltaX, items.deltaY)) {
+				temp = my.safeObject(items.delta);
+				this.velocity.x = my.xtGet(items.deltaX, temp.x, this.velocity.x);
+				this.velocity.y = my.xtGet(items.deltaY, temp.y, this.velocity.y);
 			}
 			return this;
 		};
@@ -667,7 +667,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 	**/
 		my.Spring = function Spring(items) {
 			items = my.safeObject(items);
-			if (my.xta([items.start, items.end])) {
+			if (my.xta(items.start, items.end)) {
 				var b1 = my.entity[items.start];
 				var b2 = my.entity[items.end];
 				my.Base.call(this, items);

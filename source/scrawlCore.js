@@ -156,6 +156,13 @@ Default empty object - passed to various functions, to prevent them generating s
 **/
 	my.o = {};
 	/**
+Object containing static arrays
+@property statArr
+@type {Object}
+@private
+**/
+	my.statArr = {};
+	/**
 Work quaternions, for calculations
 @property workquat
 @type {Object}
@@ -372,7 +379,7 @@ Any supplied callback function will only be run once all modules have been loade
 			modules = [].concat(items.modules),
 			callback = (my.isa(items.callback, 'fn')) ? items.callback : function() {},
 			error = (my.isa(items.error, 'fn')) ? items.error : function() {},
-			mini = my.xtGet([items.minified, true]),
+			mini = my.xtGet(items.minified, true),
 			tail = (mini) ? '-min.js' : '.js',
 			loaded = [],
 			required = [],
@@ -595,13 +602,14 @@ The action attribute refers to the action taken when the result of the operation
 @return result of calculation
 **/
 	my.addWithinBounds = function(a, b, items) {
+		//console.log('awb');
 		items = my.safeObject(items);
-		a = my.xtGet([a, 0]);
-		b = my.xtGet([b, 0]);
-		var min = my.xtGet([items.min, 0]),
-			max = my.xtGet([items.max, 1]),
-			action = my.xtGet([items.action, 'stick']),
-			operation = my.xtGet([items.operation, 'add']),
+		a = my.xtGet(a, 0);
+		b = my.xtGet(b, 0);
+		var min = my.xtGet(items.min, 0),
+			max = my.xtGet(items.max, 1),
+			action = my.xtGet(items.action, 'stick'),
+			operation = my.xtGet(items.operation, 'add'),
 			result,
 			bound,
 			count = 20;
@@ -670,57 +678,61 @@ Valid identifier Strings include:
 	scrawl.isa(myboolean, 'bool');	//returns true
 	scrawl.isa(myboolean, 'str');	//returns false
 **/
-	my.isa = function(item, identifier) {
-		if (my.xta([item, identifier])) {
-			var myId = identifier.toLowerCase(),
-				f = myId[0];
-			if (f < 'm') {
-				if (f < 'd') {
-					switch (myId) {
+	my.isa = function() {
+		var args = Array.prototype.slice.call(arguments);
+		if (args.length == 2 && my.xt(args[0])) {
+			//because we mostly test for str or fn
+			if (args[1] == 'str') {
+				return (args[0].substring) ? true : false;
+			}
+			if (args[1] == 'fn') {
+				return (typeof args[0] === 'function') ? true : false;
+			}
+			//divide and conquer the rest
+			args.push(args[1][0]);
+			if (args[2] < 'm') {
+				if (args[2] < 'd') {
+					switch (args[1]) {
 						case 'arr':
-							return (Array.isArray(item)) ? true : false;
+							return (Array.isArray(args[0])) ? true : false;
 						case 'bool':
-							return (typeof item === 'boolean') ? true : false;
+							return (typeof args[0] === 'boolean') ? true : false;
 						case 'canvas':
-							return (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
+							return (Object.prototype.toString.call(args[0]) === '[object HTMLCanvasElement]') ? true : false;
 						default:
 							return false;
 					}
 				}
 				else {
-					switch (myId) {
+					switch (args[1]) {
 						case 'date':
-							return (Object.prototype.toString.call(item) === '[object Date]') ? true : false;
-						case 'fn':
-							return (typeof item === 'function') ? true : false;
+							return (Object.prototype.toString.call(args[0]) === '[object Date]') ? true : false;
 						case 'img':
-							return (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
+							return (Object.prototype.toString.call(args[0]) === '[object HTMLImageElement]') ? true : false;
 						default:
 							return false;
 					}
 				}
 			}
 			else {
-				if (f < 's') {
-					switch (myId) {
+				if (args[2] < 's') {
+					switch (args[1]) {
 						case 'num':
-							return (item.toFixed) ? true : false;
+							return (args[0].toFixed) ? true : false;
 						case 'obj':
-							return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
+							return (Object.prototype.toString.call(args[0]) === '[object Object]') ? true : false;
 						case 'quaternion':
-							return (item.type && item.type === 'Quaternion') ? true : false;
+							return (args[0].type && args[0].type === 'Quaternion') ? true : false;
 						default:
 							return false;
 					}
 				}
 				else {
-					switch (myId) {
-						case 'str':
-							return (item.substring) ? true : false;
+					switch (args[1]) {
 						case 'vector':
-							return (item.type && item.type === 'Vector') ? true : false;
+							return (args[0].type && args[0].type === 'Vector') ? true : false;
 						case 'video':
-							return (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
+							return (Object.prototype.toString.call(args[0]) === '[object HTMLVideoElement]') ? true : false;
 						default:
 							return false;
 					}
@@ -751,16 +763,19 @@ A __utility__ function for variable type checking
 	scrawl.xt(myboolean);	//returns false
 **/
 	my.xt = function(item) {
-		return (typeof item !== 'undefined') ? true : false;
+		return (typeof item == 'undefined') ? false : true;
 	};
 	/**
-A __utility__ function that checks an array of values and returns the first value that exists
+A __utility__ function that checks an argument list of values and returns the first value that exists
 @method xtGet
-@param {Array} array of (mixed) values
 @return first defined variable; null if all values are undefined
 **/
-	my.xtGet = function(item) {
-		var a = [].concat(item);
+	my.xtGet = function() {
+		var a = Array.prototype.slice.call(arguments);
+		if (Array.isArray(a[0])) {
+			console.log('xtGet - needs updating: ', a);
+			a = a[0];
+		}
 		if (a.length > 0) {
 			for (var i = 0, iz = a.length; i < iz; i++) {
 				if (typeof a[i] !== 'undefined') {
@@ -771,16 +786,19 @@ A __utility__ function that checks an array of values and returns the first valu
 		return null;
 	};
 	/**
-A __utility__ function that checks an array of values and returns the first value that evaluates to true
+A __utility__ function that checks an argument list values and returns the first value that evaluates to true
 
 False: 0, -0, '', undefined, null, false, NaN
 
 @method xtGetTrue
-@param {Array} array of (mixed) values
 @return first true variable; null if all values are false
 **/
-	my.xtGetTrue = function(item) {
-		var a = [].concat(item);
+	my.xtGetTrue = function() {
+		var a = Array.prototype.slice.call(arguments);
+		if (Array.isArray(a[0])) {
+			console.log('xtGetTrue - needs updating: ', a);
+			a = a[0];
+		}
 		if (a.length > 0) {
 			for (var i = 0, iz = a.length; i < iz; i++) {
 				if (a[i]) {
@@ -802,8 +820,12 @@ A __utility__ function for variable type checking
 	scrawl.xta([mystring, mynumber]);	//returns true
 	scrawl.xta([mystring, myboolean]);	//returns false
 **/
-	my.xta = function(item) {
-		var a = [].concat(item);
+	my.xta = function() {
+		var a = Array.prototype.slice.call(arguments);
+		if (Array.isArray(a[0])) {
+			console.log('xta - needs updating: ', a);
+			a = a[0];
+		}
 		if (a.length > 0) {
 			for (var i = 0, iz = a.length; i < iz; i++) {
 				if (typeof a[i] === 'undefined') {
@@ -817,17 +839,20 @@ A __utility__ function for variable type checking
 	/**
 A __utility__ function for variable type checking
 @method xto
-@param {Array} item Array of primatives or objects for identification
 @return True if any item is not 'undefined'
 @example
 	var mystring = 'string',
 		mynumber = 0,
 		myboolean;
-	scrawl.xto([mystring, mynumber]);	//returns true
-	scrawl.xto([mystring, myboolean]);	//returns true
+	scrawl.xto(mystring, mynumber);	//returns true
+	scrawl.xto(mystring, myboolean);	//returns true
 **/
-	my.xto = function(item) {
-		var a = [].concat(item);
+	my.xto = function() {
+		var a = Array.prototype.slice.call(arguments);
+		if (Array.isArray(a[0])) {
+			console.log('xto - needs updating: ', a);
+			a = a[0];
+		}
 		if (a.length > 0) {
 			for (var i = 0, iz = a.length; i < iz; i++) {
 				if (typeof a[i] !== 'undefined') {
@@ -847,19 +872,13 @@ Generate unique names for new Scrawl objects
 	my.makeName = function(item) {
 		item = my.safeObject(item);
 		var name,
-			u,
-			nameArray,
-			o = {
-				name: (my.isa(item.name, 'str')) ? item.name : u,
-				type: (my.isa(item.type, 'str')) ? item.type : u,
-				target: (my.isa(item.target, 'str')) ? item.target : u
-			};
-		if (my.contains(my.nameslist, o.target)) {
-			name = my.xtGetTrue([o.name, o.type, 'default']);
+			nameArray;
+		if (my.contains(my.nameslist, item.target)) {
+			name = my.xtGetTrue(item.name, item.type, 'default');
 			nameArray = name.split('~~~');
-			return (my.contains(my[o.target], nameArray[0])) ? nameArray[0] + '~~~' + Math.floor(Math.random() * 100000000) : nameArray[0];
+			return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '~~~' + Math.floor(Math.random() * 100000000) : nameArray[0];
 		}
-		console.log('scrawl.makeName() error: insufficient or incorrect argument attributes', item, o);
+		console.log('scrawl.makeName() error: insufficient or incorrect argument attributes', item);
 		return false;
 	};
 	/**
@@ -941,8 +960,8 @@ The argument object should include the following attributes:
 		myParent = document.getElementById(items.parentElement) || document.body;
 		myCanvas = document.createElement('canvas');
 		myParent.appendChild(myCanvas);
-		items.width = my.xtGet([items.width, 300]);
-		items.height = my.xtGet([items.height, 150]);
+		items.width = my.xtGet(items.width, 300);
+		items.height = my.xtGet(items.height, 150);
 		items.canvasElement = myCanvas;
 		myPad = new my.Pad(items);
 		my.setDisplayOffsets();
@@ -1059,26 +1078,28 @@ A __general__ function which deletes Cell objects and their associated paraphina
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.deleteCells = function(cells) {
-		if (my.xt(cells)) {
-			var c = [].concat(cells);
-			for (var i = 0, iz = c.length; i < iz; i++) {
-				for (var j = 0, jz = my.padnames.length; j < jz; j++) {
-					my.pad[my.padnames[j]].deleteCell(c[i]);
-				}
-				delete my.group[c[i]];
-				delete my.group[c[i] + '_field'];
-				delete my.group[c[i] + '_fence'];
-				my.removeItem(my.groupnames, c[i]);
-				my.removeItem(my.groupnames, c[i] + '_field');
-				my.removeItem(my.groupnames, c[i] + '_fence');
-				delete my.context[c[i]];
-				delete my.canvas[c[i]];
-				delete my.ctx[my.cell[c[i]].context];
-				my.removeItem(my.ctxnames, my.cell[c[i]].context);
-				delete my.cell[c[i]];
-				my.removeItem(my.cellnames, c[i]);
+	my.deleteCells = function() {
+		var c = Array.prototype.slice.call(arguments);
+		if (Array.isArray(c[0])) {
+			console.log('deleteCells - needs updating: ', c);
+			c = c[0];
+		}
+		for (var i = 0, iz = c.length; i < iz; i++) {
+			for (var j = 0, jz = my.padnames.length; j < jz; j++) {
+				my.pad[my.padnames[j]].deleteCell(c[i]);
 			}
+			delete my.group[c[i]];
+			delete my.group[c[i] + '_field'];
+			delete my.group[c[i] + '_fence'];
+			my.removeItem(my.groupnames, c[i]);
+			my.removeItem(my.groupnames, c[i] + '_field');
+			my.removeItem(my.groupnames, c[i] + '_fence');
+			delete my.context[c[i]];
+			delete my.canvas[c[i]];
+			delete my.ctx[my.cell[c[i]].context];
+			my.removeItem(my.ctxnames, my.cell[c[i]].context);
+			delete my.cell[c[i]];
+			my.removeItem(my.cellnames, c[i]);
 		}
 		return my;
 	};
@@ -1095,7 +1116,7 @@ Argument takes the form:
 **/
 	my.getImageDataValue = function(items) {
 		items = my.safeObject(items);
-		if (my.xta([items.table, items.channel]) && my.isa(items.x, 'num') && my.isa(items.y, 'num')) {
+		if (my.xta(items.table, items.channel) && my.isa(items.x, 'num') && my.isa(items.y, 'num')) {
 			var myTable,
 				myEl,
 				result,
@@ -1142,7 +1163,7 @@ A __general__ function which adds supplied entitynames to Group.entitys attribut
 @chainable
 **/
 	my.addEntitysToGroups = function(groups, entitys) {
-		if (my.xta([groups, entitys])) {
+		if (my.xta(groups, entitys)) {
 			var myGroups = [].concat(groups),
 				myEntitys = [].concat(entitys);
 			for (var i = 0, iz = myGroups.length; i < iz; i++) {
@@ -1162,7 +1183,7 @@ A __general__ function which removes supplied entitynames from Group.entitys att
 @chainable
 **/
 	my.removeEntitysFromGroups = function(groups, entitys) {
-		if (my.xta([groups, entitys])) {
+		if (my.xta(groups, entitys)) {
 			var myGroups = [].concat(groups),
 				myEntitys = [].concat(entitys);
 			for (var i = 0, iz = myGroups.length; i < iz; i++) {
@@ -1185,24 +1206,28 @@ A __general__ function to delete entity objects
 		});
 	scrawl.deleteEntity(['myblock']);
 **/
-	my.deleteEntity = function(items) {
-		var myItems = (my.isa(items, 'str')) ? [items] : [].concat(items),
-			myPointList,
+	my.deleteEntity = function() {
+		var items = Array.prototype.slice.call(arguments);
+		if (Array.isArray(items[0])) {
+			console.log('deleteEntity - needs updating: ', items);
+			items = items[0];
+		}
+		var myPointList,
 			myLinkList,
 			myCtx,
 			search,
 			myEntity;
-		for (var i = 0, iz = myItems.length; i < iz; i++) {
-			if (my.contains(my.entitynames, myItems[i])) {
-				myEntity = my.entity[myItems[i]];
+		for (var i = 0, iz = items.length; i < iz; i++) {
+			if (my.contains(my.entitynames, items[i])) {
+				myEntity = my.entity[items[i]];
 				my.pathDeleteEntity(myEntity);
 				myCtx = myEntity.context;
 				my.removeItem(my.ctxnames, myCtx);
 				delete my.ctx[myCtx];
-				my.removeItem(my.entitynames, myItems[i]);
-				delete my.entity[myItems[i]];
+				my.removeItem(my.entitynames, items[i]);
+				delete my.entity[items[i]];
 				for (var j = 0, jz = my.groupnames.length; j < jz; j++) {
-					my.removeItem(my.group[my.groupnames[j]].entitys, myItems[i]);
+					my.removeItem(my.group[my.groupnames[j]].entitys, items[i]);
 				}
 			}
 		}
@@ -1454,7 +1479,7 @@ Comparea vector-like object to this one for equality
 @return True if argument possesses x and y attributes
 **/
 	my.Vector.prototype.hasCoordinates = function(item) {
-		return (my.xta([item, item.x, item.y])) ? true : false;
+		return (my.xta(item, item.x, item.y)) ? true : false;
 	};
 	/**
 Add a Vector to this Vector
@@ -2040,8 +2065,8 @@ Position constructor hook function - core functionality
 	my.Position.prototype.corePositionInit = function(items) {
 		var temp = my.safeObject(items.start);
 		this.start = my.newVector({
-			x: my.xtGet([items.startX, temp.x, 0]),
-			y: my.xtGet([items.startY, temp.y, 0]),
+			x: my.xtGet(items.startX, temp.x, 0),
+			y: my.xtGet(items.startY, temp.y, 0),
 			name: this.type + '.' + this.name + '.start'
 		});
 		this.work.start = my.newVector({
@@ -2049,20 +2074,20 @@ Position constructor hook function - core functionality
 		});
 		temp = my.safeObject(items.handle);
 		this.handle = my.newVector({
-			x: my.xtGet([items.handleX, temp.x, 0]),
-			y: my.xtGet([items.handleY, temp.y, 0]),
+			x: my.xtGet(items.handleX, temp.x, 0),
+			y: my.xtGet(items.handleY, temp.y, 0),
 			name: this.type + '.' + this.name + '.handle'
 		});
 		this.work.handle = my.newVector({
 			name: this.type + '.' + this.name + '.work.handle'
 		});
-		this.pivot = my.xtGet([items.pivot, my.d[this.type].pivot]);
-		this.scale = my.xtGet([items.scale, my.d[this.type].scale]);
-		this.roll = my.xtGet([items.roll, my.d[this.type].roll]);
-		this.flipReverse = my.xtGet([items.flipReverse, my.d[this.type].flipReverse]);
-		this.flipUpend = my.xtGet([items.flipUpend, my.d[this.type].flipUpend]);
-		this.lockX = my.xtGet([items.lockX, my.d[this.type].lockX]);
-		this.lockY = my.xtGet([items.lockY, my.d[this.type].lockY]);
+		this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
+		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
+		this.roll = my.xtGet(items.roll, my.d[this.type].roll);
+		this.flipReverse = my.xtGet(items.flipReverse, my.d[this.type].flipReverse);
+		this.flipUpend = my.xtGet(items.flipUpend, my.d[this.type].flipUpend);
+		this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
+		this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
 		this.offset = my.newVector({
 			name: this.type + '.' + this.name + '.offset'
 		});
@@ -2088,8 +2113,9 @@ For 'start' and 'handle', returns a copy of the Vector
 @param {String} get Attribute key
 @return Attribute value
 **/
+	my.statArr.positionGet = ['startX', 'startY', 'handleX', 'handleY'];
 	my.Position.prototype.get = function(item) {
-		if (my.contains(['startX', 'startY', 'handleX', 'handleY'], item)) {
+		if (my.contains(my.statArr.positionGet, item)) {
 			switch (item) {
 				case 'startX':
 					return this.start.x;
@@ -2122,23 +2148,49 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 		items = my.safeObject(items);
 		var temp;
 		my.Base.prototype.set.call(this, items);
+		if (my.xto(items.start, items.startX, items.startY)) {
+			this.setStart(items);
+		}
+		if (my.xto(items.handle, items.handleX, items.handleY)) {
+			this.setHandle(items);
+		}
+		this.animationPositionSet(items);
+		return this;
+	};
+	/**
+Augments Base.setStart(), to allow users to set the start attributes using start, startX, startY
+@method setStart
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Position.prototype.setStart = function(items) {
+		items = my.safeObject(items);
+		var temp;
 		if (!my.isa(this.start, 'vector')) {
 			this.start = my.newVector(items.start || this.start);
 		}
-		if (my.xto([items.start, items.startX, items.startY])) {
-			temp = my.safeObject(items.start);
-			this.start.x = my.xtGet([items.startX, temp.x, this.start.x]);
-			this.start.y = my.xtGet([items.startY, temp.y, this.start.y]);
-		}
+		temp = my.safeObject(items.start);
+		this.start.x = my.xtGet(items.startX, temp.x, this.start.x);
+		this.start.y = my.xtGet(items.startY, temp.y, this.start.y);
+		return this;
+	};
+	/**
+Augments Base.setHandle(), to allow users to set the handle attributes using handle, handleX, handleY
+@method setHandle
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Position.prototype.setHandle = function(items) {
+		items = my.safeObject(items);
+		var temp;
 		if (!my.isa(this.handle, 'vector')) {
 			this.handle = my.newVector(items.handle || this.handle);
 		}
-		if (my.xto([items.handle, items.handleX, items.handleY])) {
-			temp = my.safeObject(items.handle);
-			this.handle.x = my.xtGet([items.handleX, temp.x, this.handle.x]);
-			this.handle.y = my.xtGet([items.handleY, temp.y, this.handle.y]);
-		}
-		this.animationPositionSet(items);
+		temp = my.safeObject(items.handle);
+		this.handle.x = my.xtGet(items.handleX, temp.x, this.handle.x);
+		this.handle.y = my.xtGet(items.handleY, temp.y, this.handle.y);
 		return this;
 	};
 	/**
@@ -2160,25 +2212,61 @@ Adds the value of each attribute supplied in the argument to existing values; on
 **/
 	my.Position.prototype.setDelta = function(items) {
 		items = my.safeObject(items);
-		var temp, x, y;
-		if (my.xto([items.start, items.startX, items.startY])) {
-			temp = my.safeObject(items.start);
-			x = my.xtGet([items.startX, temp.x, 0]);
-			y = my.xtGet([items.startY, temp.y, 0]);
-			this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
-			this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
+		if (my.xto(items.start, items.startX, items.startY)) {
+			this.setDeltaStart(items);
 		}
 		my.Position.prototype.pathPositionSetDelta.call(this, items);
-		if (my.xto([items.handle, items.handleX, items.handleY])) {
-			temp = my.safeObject(items.handle);
-			x = my.xtGet([items.handleX, temp.x, 0]);
-			y = my.xtGet([items.handleY, temp.y, 0]);
-			this.handle.x = (my.isa(this.handle.x, 'num')) ? this.handle.x + x : my.addPercentages(this.handle.x, x);
-			this.handle.y = (my.isa(this.handle.y, 'num')) ? this.handle.y + y : my.addPercentages(this.handle.y, y);
+		if (my.xto(items.handle, items.handleX, items.handleY)) {
+			this.setDeltaHandle(items);
 		}
 		if (items.scale) {
-			this.scale += items.scale;
+			this.setDeltaScale(items);
 		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values; This function accepts start, startX, startY
+@method setDeltaStart
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Position.prototype.setDeltaStart = function(items) {
+		var temp, x, y;
+		items = my.safeObject(items);
+		temp = my.safeObject(items.start);
+		x = my.xtGet(items.startX, temp.x, 0);
+		y = my.xtGet(items.startY, temp.y, 0);
+		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
+		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY
+@method setDeltaHandle
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Position.prototype.setDeltaHandle = function(items) {
+		var temp, x, y;
+		items = my.safeObject(items);
+		temp = my.safeObject(items.handle);
+		x = my.xtGet(items.handleX, temp.x, 0);
+		y = my.xtGet(items.handleY, temp.y, 0);
+		this.handle.x = (my.isa(this.handle.x, 'num')) ? this.handle.x + x : my.addPercentages(this.handle.x, x);
+		this.handle.y = (my.isa(this.handle.y, 'num')) ? this.handle.y + y : my.addPercentages(this.handle.y, y);
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values. This function accepts scale
+@method setDeltaScale
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Position.prototype.setDeltaScale = function(items) {
+		items = my.safeObject(items);
+		this.scale += items.scale;
 		return this;
 	};
 	/**
@@ -2201,14 +2289,14 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 			temp;
 		temp = my.safeObject(items.start);
 		a.start = my.newVector({
-			x: my.xtGet([items.startX, temp.x, a.start.x]),
-			y: my.xtGet([items.startY, temp.y, a.start.y]),
+			x: my.xtGet(items.startX, temp.x, a.start.x),
+			y: my.xtGet(items.startY, temp.y, a.start.y),
 			name: a.type + '.' + a.name + '.start'
 		});
 		temp = my.safeObject(items.handle);
 		a.handle = my.newVector({
-			x: my.xtGet([items.handleX, temp.x, a.handle.x]),
-			y: my.xtGet([items.handleY, temp.y, a.handle.y]),
+			x: my.xtGet(items.handleX, temp.x, a.handle.x),
+			y: my.xtGet(items.handleY, temp.y, a.handle.y),
 			name: a.type + '.' + a.name + '.handle'
 		});
 		a = this.animationPositionClone(a, items);
@@ -2237,9 +2325,6 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 			height, width;
 		switch (this.type) {
 			case 'Block':
-			case 'Pad':
-			case 'Stack':
-			case 'Element':
 				height = (this.localHeight / this.scale) || this.get('height');
 				width = (this.localWidth / this.scale) || this.get('width');
 				break;
@@ -2281,8 +2366,10 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 @return A Vector of calculated offset values
 @private
 **/
+	my.statArr.horizontal = ['left', 'center', 'right'];
+	my.statArr.vertical = ['top', 'center', 'bottom'];
 	my.Position.prototype.calculatePOV = function(result, width, height, centered) {
-		if ((my.isa(result.x, 'str')) && !my.contains(['left', 'center', 'right'], result.x)) {
+		if ((my.isa(result.x, 'str')) && !my.contains(my.statArr.horizontal, result.x)) {
 			result.x = (centered) ? ((parseFloat(result.x) / 100) * width) - (width / 2) : (parseFloat(result.x) / 100) * width;
 		}
 		else {
@@ -2298,7 +2385,7 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 					break;
 			}
 		}
-		if ((my.isa(result.y, 'str')) && !my.contains(['top', 'center', 'bottom'], result.y)) {
+		if ((my.isa(result.y, 'str')) && !my.contains(my.statArr.vertical, result.y)) {
 			result.y = (centered) ? ((parseFloat(result.y) / 100) * height) - (height / 2) : (parseFloat(result.y) / 100) * height;
 		}
 		else {
@@ -2365,7 +2452,7 @@ Takes into account lock flag settings
 			var myCell = my.cell[cell],
 				myPad = my.pad[myCell.pad],
 				here = this.correctCoordinates(myPad.mouse, cell);
-			if (!my.xta([this.oldX, this.oldY])) {
+			if (!my.xta(this.oldX, this.oldY)) {
 				this.oldX = this.start.x;
 				this.oldY = this.start.y;
 			}
@@ -2373,13 +2460,13 @@ Takes into account lock flag settings
 			this.start.y = (!this.lockY) ? this.start.y + here.y - this.oldY : this.start.y;
 			this.oldX = here.x;
 			this.oldY = here.y;
+			return this;
 		}
-		return this;
+		return this.setStampUsingStacksPivot();
 	};
 	/**
 Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions
 
-Takes into account lock flag settings
 @method correctCoordinates
 @param {Object} coords An object containing x and y attributes
 @param {String} [cell] CELLNAME String
@@ -2388,7 +2475,7 @@ Takes into account lock flag settings
 	my.Position.prototype.correctCoordinates = function(coords, cell) {
 		coords = my.safeObject(coords);
 		var v = my.v.set(coords);
-		if (scrawl.xta([coords.x, coords.y])) {
+		if (scrawl.xta(coords.x, coords.y)) {
 			cell = (my.contains(my.cellnames, cell)) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
 			var pad = my.pad[cell.pad];
 			if (pad.width !== cell.actualWidth) {
@@ -2400,6 +2487,15 @@ Takes into account lock flag settings
 			return v;
 		}
 		return false;
+	};
+	/**
+Stamp helper hook function - amended by stacks module
+
+@method setStampUsingStacksPivot
+@return this
+**/
+	my.Position.prototype.setStampUsingStacksPivot = function() {
+		return this;
 	};
 
 	/**
@@ -2423,9 +2519,9 @@ The core implementation of this object is a stub that supplies Pad objects with 
 	my.PageElement = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
-		this.width = my.xtGet([items.width, my.d[this.type].width]);
-		this.height = my.xtGet([items.height, my.d[this.type].height]);
-		this.scale = my.xtGet([items.scale, my.d[this.type].scale]);
+		this.width = my.xtGet(items.width, my.d[this.type].width);
+		this.height = my.xtGet(items.height, my.d[this.type].height);
+		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
 		this.setLocalDimensions();
 		this.stacksPageElementConstructor(items);
 		return this;
@@ -2527,16 +2623,17 @@ Augments Base.get() to retrieve DOM element width and height values
 @param {String} get Attribute key
 @return Attribute value
 **/
+	my.statArr.pageElementGet = ['width', 'height', 'position'];
 	my.PageElement.prototype.get = function(item) {
 		var el = this.getElement();
-		if (my.contains(['width', 'height'], item)) {
+		if (my.contains(my.statArr.pageElementGet, item)) {
 			switch (item) {
 				case 'width':
-					return my.xtGet([this.localWidth, parseFloat(el.width), my.d[this.type].width]);
+					return my.xtGet(this.localWidth, parseFloat(el.width), my.d[this.type].width);
 				case 'height':
-					return my.xtGet([this.localHeight, parseFloat(el.height), my.d[this.type].height]);
+					return my.xtGet(this.localHeight, parseFloat(el.height), my.d[this.type].height);
 				case 'position':
-					return my.xtGet([this.position, el.style.position]);
+					return my.xtGet(this.position, el.style.position);
 			}
 		}
 		return my.Base.prototype.get.call(this, item);
@@ -2555,7 +2652,7 @@ Augments Base.set() to allow the setting of DOM element dimension values
 		items = my.safeObject(items);
 		my.Base.prototype.set.call(this, items);
 		var el = this.getElement();
-		if (my.xto([items.width, items.height, items.scale])) {
+		if (my.xto(items.width, items.height, items.scale)) {
 			this.setLocalDimensions();
 			this.setDimensions();
 			this.setDisplayOffsets();
@@ -2575,7 +2672,7 @@ Augments Base.set() to allow the setting of DOM element dimension values
 				delete this.oldY;
 			}
 		}
-		if (my.xto([items.title, items.comment])) {
+		if (my.xto(items.title, items.comment)) {
 			this.setAccessibility(items);
 		}
 		return this;
@@ -2685,6 +2782,7 @@ mousemove event listener function
 @return This
 @private
 **/
+	my.statArr.pageElementHandleMouseMove = ['relative', 'absolute', 'fixed', 'sticky'];
 	my.PageElement.prototype.handleMouseMove = function(e) {
 		e = (my.xt(e)) ? e : window.event;
 		var wrap = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false,
@@ -2696,7 +2794,7 @@ mousemove event listener function
 			wrap.mouse.active = false;
 			wrap.mouse.element = wrap.name;
 			wrap.mouse.type = wrap.type;
-			if (wrap.mouse.layer || my.xta([e, e.layerX]) && my.contains(['relative', 'absolute', 'fixed', 'sticky'], wrap.position)) {
+			if (wrap.mouse.layer || my.xta(e, e.layerX) && my.contains(my.statArr.pageElementHandleMouseMove, wrap.position)) {
 				mouseX = e.layerX;
 				mouseY = e.layerY;
 				if (mouseX >= 0 && mouseX <= (wrap.width * wrap.scale) && mouseY >= 0 && mouseY <= (wrap.height * wrap.scale)) {
@@ -2845,9 +2943,9 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 		if (my.isa(items.canvasElement, 'canvas')) {
 
 			// enhance/amend the items object with essdential data - name, width, height
-			items.width = my.xtGet([items.width, items.canvasElement.width, my.d.Pad.width]);
-			items.height = my.xtGet([items.height, items.canvasElement.height, my.d.Pad.height]);
-			items.name = my.xtGet([items.name, items.canvasElement.id, items.canvasElement.name, 'Pad']);
+			items.width = my.xtGet(items.width, items.canvasElement.width, my.d.Pad.width);
+			items.height = my.xtGet(items.height, items.canvasElement.height, my.d.Pad.height);
+			items.name = my.xtGet(items.name, items.canvasElement.id, items.canvasElement.name, 'Pad');
 
 			// go up the line to populate this Pad with data
 			my.PageElement.call(this, items);
@@ -3001,13 +3099,15 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 		}
 		if (my.xt(items.height)) {
 			my.cell[this.display].set({
-				height: items.localHeight
+				height: this.localHeight
 			});
 		}
-		if (my.xto([items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.width, items.height])) {
+		console.log(this.name, 'Pad.set()', items.width, items.height);
+		this.padStacksSet(items);
+		if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.width, items.height)) {
 			this.setDisplayOffsets();
 		}
-		if (my.xto([items.backgroundColor, items.globalAlpha, items.globalCompositeOperation])) {
+		if (my.xto(items.backgroundColor, items.globalAlpha, items.globalCompositeOperation)) {
 			var cell = my.cell[this.base];
 			my.cell[this.base].set({
 				backgroundColor: items.backgroundColor || cell.backgroundColor,
@@ -3019,11 +3119,18 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 	};
 	/**
 Pad constructor hook function - amended by Stacks module
-@method sortCellsCompile
+@method padStacksConstructor
 @return Nothing
 @private
 **/
 	my.Pad.prototype.padStacksConstructor = function() {};
+	/**
+Pad set hook function - amended by Stacks module
+@method padStacksSet
+@return Nothing
+@private
+**/
+	my.Pad.prototype.padStacksSet = function() {};
 	/**
 Display function sorting routine - cells are sorted according to their compileOrder attribute value, in ascending order
 @method sortCellsCompile
@@ -3175,8 +3282,12 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 @return This
 @chainable
 **/
-	my.Pad.prototype.addCells = function(items) {
-		items = [].concat(items);
+	my.Pad.prototype.addCells = function() {
+		var items = Array.prototype.slice.call(arguments);
+		if (Array.isArray(items[0])) {
+			console.log('addCells - needs updating: ', items);
+			items = items[0];
+		}
 		for (var i = 0, iz = items.length; i < iz; i++) {
 			if (my.contains(my.cellnames, items[i])) {
 				this.cells.push(items[i]);
@@ -3300,7 +3411,7 @@ _Note: A Cell is entirely responsible for determining what portion of its &lt;ca
 **/
 	my.Cell = function(items) {
 		items = my.safeObject(items);
-		if (my.xta([items, items.canvas])) { //flag used by Pad constructor when calling Cell constructor
+		if (my.xta(items, items.canvas)) { //flag used by Pad constructor when calling Cell constructor
 			/**
 The coordinate Vector representing the Cell's target position on the &lt;canvas&gt; to which it is to be copied
 
@@ -3531,11 +3642,11 @@ Cell constructor hook function - core module
 		my.context[this.name] = items.canvas.getContext('2d');
 		my.cell[this.name] = this;
 		my.pushUnique(my.cellnames, this.name);
-		this.pad = my.xtGet([items.pad, false]);
+		this.pad = my.xtGet(items.pad, false);
 		temp = my.safeObject(items.copy);
 		this.copy = my.newVector({
-			x: my.xtGet([items.copyX, temp.x, 0]),
-			y: my.xtGet([items.copyY, temp.y, 0]),
+			x: my.xtGet(items.copyX, temp.x, 0),
+			y: my.xtGet(items.copyY, temp.y, 0),
 			name: this.type + '.' + this.name + '.copy'
 		});
 		this.work.copy = my.newVector({
@@ -3560,15 +3671,15 @@ Cell constructor hook function - core module
 		this.pasteWidth = this.actualWidth;
 		this.pasteHeight = this.actualHeight;
 		this.setDimensions(items);
-		if (my.xto([items.pasteX, items.pasteY])) {
-			this.start.x = my.xtGet([items.pasteX, this.start.x]);
-			this.start.y = my.xtGet([items.pasteY, this.start.y]);
+		if (my.xto(items.pasteX, items.pasteY)) {
+			this.start.x = my.xtGet(items.pasteX, this.start.x);
+			this.start.y = my.xtGet(items.pasteY, this.start.y);
 		}
-		if (my.xto([items.copyWidth, items.copyHeight, items.pasteWidth, items.pasteHeight, items.width, items.height])) {
-			this.copyWidth = my.xtGet([items.copyWidth, items.width, this.copyWidth]);
-			this.copyHeight = my.xtGet([items.copyHeight, items.height, this.copyHeight]);
-			this.pasteWidth = my.xtGet([items.pasteWidth, items.width, this.pasteWidth]);
-			this.pasteHeight = my.xtGet([items.pasteHeight, items.height, this.pasteHeight]);
+		if (my.xto(items.copyWidth, items.copyHeight, items.pasteWidth, items.pasteHeight, items.width, items.height)) {
+			this.copyWidth = my.xtGet(items.copyWidth, items.width, this.copyWidth);
+			this.copyHeight = my.xtGet(items.copyHeight, items.height, this.copyHeight);
+			this.pasteWidth = my.xtGet(items.pasteWidth, items.width, this.pasteWidth);
+			this.pasteHeight = my.xtGet(items.pasteHeight, items.height, this.pasteHeight);
 		}
 		this.setCopy();
 		this.setPaste();
@@ -3577,18 +3688,18 @@ Cell constructor hook function - core module
 			cell: my.context[this.name]
 		});
 		this.context = myContext.name;
-		this.flipUpend = my.xtGet([items.flipUpend, my.d.Cell.flipUpend]);
-		this.flipReverse = my.xtGet([items.flipReverse, my.d.Cell.flipReverse]);
-		this.lockX = my.xtGet([items.lockX, my.d.Cell.lockX]);
-		this.lockY = my.xtGet([items.lockY, my.d.Cell.lockY]);
-		this.roll = my.xtGet([items.roll, my.d.Cell.roll]);
-		this.rendered = my.xtGet([items.rendered, true]);
-		this.cleared = my.xtGet([items.cleared, true]);
-		this.compiled = my.xtGet([items.compiled, true]);
-		this.shown = my.xtGet([items.shown, true]);
-		this.compileOrder = my.xtGet([items.compileOrder, 0]);
-		this.showOrder = my.xtGet([items.showOrder, 0]);
-		this.backgroundColor = my.xtGet([items.backgroundColor, 'rgba(0,0,0,0)']);
+		this.flipUpend = my.xtGet(items.flipUpend, my.d.Cell.flipUpend);
+		this.flipReverse = my.xtGet(items.flipReverse, my.d.Cell.flipReverse);
+		this.lockX = my.xtGet(items.lockX, my.d.Cell.lockX);
+		this.lockY = my.xtGet(items.lockY, my.d.Cell.lockY);
+		this.roll = my.xtGet(items.roll, my.d.Cell.roll);
+		this.rendered = my.xtGet(items.rendered, true);
+		this.cleared = my.xtGet(items.cleared, true);
+		this.compiled = my.xtGet(items.compiled, true);
+		this.shown = my.xtGet(items.shown, true);
+		this.compileOrder = my.xtGet(items.compileOrder, 0);
+		this.showOrder = my.xtGet(items.showOrder, 0);
+		this.backgroundColor = my.xtGet(items.backgroundColor, 'rgba(0,0,0,0)');
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
 		my.newGroup({
 			name: this.name,
@@ -3619,8 +3730,11 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 @param {String} item Attribute key
 @return Attribute value
 **/
+	my.statArr.cellGet1 = ['pasteX', 'pasteY', 'copyX', 'copyY'];
+	my.statArr.cellGet2 = ['paste', 'copy'];
+	my.statArr.cellGet3 = ['width', 'height'];
 	my.Cell.prototype.get = function(item) {
-		if (my.contains(['pasteX', 'pasteY', 'copyX', 'copyY'], item)) {
+		if (my.contains(my.statArr.cellGet1, item)) {
 			switch (item) {
 				case 'pasteX':
 					return this.start.x;
@@ -3632,7 +3746,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 					return this.copy.y;
 			}
 		}
-		if (my.contains(['paste', 'copy'], item)) {
+		if (my.contains(my.statArr.cellGet2, item)) {
 			switch (item) {
 				case 'paste':
 					return this.start.getVector();
@@ -3640,7 +3754,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 					return this.copy.getVector();
 			}
 		}
-		if (my.contains(['width', 'height'], item)) {
+		if (my.contains(my.statArr.cellGet3, item)) {
 			switch (item) {
 				case 'width':
 					return this.actualWidth;
@@ -3666,42 +3780,191 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 @chainable
 **/
 	my.Cell.prototype.set = function(items) {
-		var temp;
 		my.Position.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		if (my.xto([items.paste, items.pasteX, items.pasteY])) {
-			temp = my.safeObject(items.paste);
-			this.start.x = my.xtGet([items.pasteX, temp.x, this.start.x]);
-			this.start.y = my.xtGet([items.pasteY, temp.y, this.start.y]);
+		if (my.xto(items.paste, items.pasteX, items.pasteY)) {
+			this.setPasteVector(items, false);
 		}
-		if (my.xto([items.copy, items.copyX, items.copyY])) {
-			temp = my.safeObject(items.copy);
-			this.copy.x = my.xtGet([items.copyX, temp.x, this.copy.x]);
-			this.copy.y = my.xtGet([items.copyY, temp.y, this.copy.y]);
+		if (my.xto(items.copy, items.copyX, items.copyY)) {
+			this.setCopyVector(items, false);
 		}
-		if (my.xto([items.copyWidth, items.copyHeight, items.width, items.height])) {
-			this.copyWidth = my.xtGet([items.copyWidth, items.width, this.copyWidth]);
-			this.copyHeight = my.xtGet([items.copyHeight, items.height, this.copyHeight]);
+		if (my.xto(items.copyWidth, items.width)) {
+			this.setCopyWidth(items, false);
 		}
-		if (my.xto([items.pasteWidth, items.pasteHeight, items.width, items.height])) {
-			this.pasteWidth = my.xtGet([items.pasteWidth, items.width, this.pasteWidth]);
-			this.pasteHeight = my.xtGet([items.pasteHeight, items.height, this.pasteHeight]);
+		if (my.xto(items.copyHeight, items.height)) {
+			this.setCopyHeight(items, false);
 		}
-		if (my.xto([items.actualWidth, items.actualHeight, items.width, items.height])) {
-			this.actualWidth = my.xtGet([items.actualWidth, items.width, this.actualWidth]);
-			this.actualHeight = my.xtGet([items.actualHeight, items.height, this.actualHeight]);
+		if (my.xto(items.pasteWidth, items.width)) {
+			this.setPasteWidth(items, false);
+		}
+		if (my.xto(items.pasteHeight, items.height)) {
+			this.setPasteHeight(items, false);
+		}
+		if (my.xto(items.actualWidth, items.width)) {
+			this.setActualWidth(items, false);
+		}
+		if (my.xto(items.actualHeight, items.height)) {
+			this.setActualHeight(items, false);
+		}
+		if (my.xto(items.actualWidth, items.actualHeight, items.width, items.height)) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
 		}
 		this.animationCellSet(items);
-		if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale])) {
+		if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale)) {
 			this.setCopy();
 		}
-		if (my.xto([items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale])) {
+		if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 			this.setPaste();
 		}
-		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale])) {
+		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
 			this.offset.flag = false;
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setActualHeight
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setActualHeight = function(items, recalc) {
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		this.actualHeight = my.xtGet(items.actualHeight, items.height, this.actualHeight);
+		if (recalc) {
+			this.setDimensions(items);
+			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
+			this.offset.flag = false;
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setActualWidth
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setActualWidth = function(items, recalc) {
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		this.actualWidth = my.xtGet(items.actualWidth, items.width, this.actualWidth);
+		if (recalc) {
+			this.setDimensions(items);
+			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
+			this.offset.flag = false;
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setPasteHeight
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setPasteHeight = function(items, recalc) {
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		this.pasteHeight = my.xtGet(items.pasteHeight, items.height, this.pasteHeight);
+		if (recalc) {
+			this.setPaste();
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setPasteWidth
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setPasteWidth = function(items, recalc) {
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		this.pasteWidth = my.xtGet(items.pasteWidth, items.width, this.pasteWidth);
+		if (recalc) {
+			this.setPaste();
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setCopyHeight
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setCopyHeight = function(items, recalc) {
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		this.copyHeight = my.xtGet(items.copyHeight, items.height, this.copyHeight);
+		if (recalc) {
+			this.setCopy();
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setCopyWidth
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setCopyWidth = function(items, recalc) {
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		this.copyWidth = my.xtGet(items.copyWidth, items.width, this.copyWidth);
+		if (recalc) {
+			this.setCopy();
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setPasteVector
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setPasteVector = function(items, recalc) {
+		var temp;
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		temp = my.safeObject(items.paste);
+		this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
+		this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
+		if (recalc) {
+			this.setPaste();
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setCopyVector
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setCopyVector = function(items, recalc) {
+		var temp;
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		temp = my.safeObject(items.copy);
+		this.copy.x = my.xtGet(items.copyX, temp.x, this.copy.x);
+		this.copy.y = my.xtGet(items.copyY, temp.y, this.copy.y);
+		if (recalc) {
+			this.setCopy();
 		}
 		return this;
 	};
@@ -3712,7 +3975,7 @@ Cell.set hook function - modified by animation module
 **/
 	my.Cell.prototype.animationCellSet = function(items) {};
 	/**
-Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
+Adds the value of each attribute supplied in the argument to existing values
 
 Augments Position.setDelta to allow changes to be made using attributes: source, sourceX, sourceY, sourceWidth, sourceHeight, start, startX, startY, target, targetX, targetY, targetWidth, targetHeight, globalAlpha
 @method setDelta
@@ -3721,62 +3984,250 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 @chainable
 **/
 	my.Cell.prototype.setDelta = function(items) {
-		var temp, x, y, w, h;
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
-		if (my.xto([items.copy, items.copyX, items.copyY])) {
-			temp = my.safeObject(items.copy);
-			x = my.xtGet([items.copyX, temp.x, 0]);
-			y = my.xtGet([items.copyY, temp.y, 0]);
-			this.copy.x = (my.isa(x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
-			this.copy.y = (my.isa(y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
+		if (my.xto(items.copy, items.copyX, items.copyY)) {
+			this.setDeltaCopy(items, false);
 		}
-		if (my.xto([items.paste, items.pasteX, items.pasteY])) {
-			temp = my.safeObject(items.paste);
-			x = my.xtGet([items.pasteX, temp.x, 0]);
-			y = my.xtGet([items.pasteY, temp.y, 0]);
-			this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
-			this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
+		if (my.xto(items.paste, items.pasteX, items.pasteY)) {
+			this.setDeltaPaste(items, false);
 		}
-		if (my.xt([items.copyWidth])) {
-			this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + items.copyWidth : my.addPercentages(this.copyWidth, items.copyWidth);
+		if (my.xt(items.copyWidth)) {
+			this.setDeltaCopyWidth(items, false);
 		}
-		if (my.xt([items.copyHeight])) {
-			this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + items.copyHeight : my.addPercentages(this.copyHeight, items.copyHeight);
+		if (my.xt(items.copyHeight)) {
+			this.setDeltaCopyHeight(items, false);
 		}
-		if (my.xto([items.pasteWidth, items.width])) {
-			w = my.xtGet([items.pasteWidth, items.width]);
-			this.pasteWidth = (my.isa(this.pasteWidth, 'num')) ? this.pasteWidth + w : my.addPercentages(this.pasteWidth, w);
+		if (my.xto(items.pasteWidth, items.width)) {
+			this.setDeltaPasteWidth(items, false);
 		}
-		if (my.xto([items.pasteHeight, items.height])) {
-			h = my.xtGet([items.pasteHeight, items.height]);
-			this.pasteHeight = (my.isa(this.pasteHeight, 'num')) ? this.pasteHeight + h : my.addPercentages(this.pasteHeight, h);
+		if (my.xto(items.pasteHeight, items.height)) {
+			this.setDeltaPasteHeight(items, false);
 		}
-		if (my.xto([items.actualWidth, items.width])) {
-			w = my.xtGet([items.actualWidth, items.width]);
-			this.actualWidth = (my.isa(w, 'num')) ? this.actualWidth + w : this.actualWidth;
+		if (my.xto(items.actualWidth, items.width)) {
+			this.setDeltaActualWidth(items, false);
 		}
-		if (my.xto([items.actualHeight, items.height])) {
-			h = my.xtGet([items.actualHeight, items.height]);
-			this.actualHeight = (my.isa(h, 'num')) ? this.actualHeight + h : this.actualHeight;
+		if (my.xto(items.actualHeight, items.height)) {
+			this.setDeltaActualHeight(items, false);
 		}
 		if (my.xt(items.roll)) {
-			this.roll += items.roll;
-		}
-		if (my.xto([items.actualWidth, items.width, items.actualHeight, items.height])) {
-			this.setDimensions(items);
+			this.setDeltaRoll(items);
 		}
 		if (my.xt(items.globalAlpha)) {
-			this.globalAlpha += items.globalAlpha;
+			this.setDeltaGlobalAlpha(items);
 		}
-		if (my.xto([items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale])) {
+		if (my.xto(items.actualWidth, items.width, items.actualHeight, items.height)) {
+			this.setDimensions(items);
+			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
+		}
+		if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale)) {
 			this.setCopy();
 		}
-		if (my.xto([items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale])) {
+		if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 			this.setPaste();
 		}
-		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale])) {
+		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
 			this.offset.flag = false;
+		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaGlobalAlpha
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaGlobalAlpha = function(items) {
+		items = my.safeObject(items);
+		this.globalAlpha += items.globalAlpha;
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaRoll
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaRoll = function(items) {
+		items = my.safeObject(items);
+		this.roll += items.roll;
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaActualHeight
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaActualHeight = function(items, recalc) {
+		var h;
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		h = my.xtGet(items.actualHeight, items.height);
+		this.actualHeight = (my.isa(h, 'num')) ? this.actualHeight + h : this.actualHeight;
+		if (recalc) {
+			this.setDimensions(items);
+			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
+		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaActualWidth
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaActualWidth = function(items, recalc) {
+		var w;
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		w = my.xtGet(items.actualWidth, items.width);
+		this.actualWidth = (my.isa(w, 'num')) ? this.actualWidth + w : this.actualWidth;
+		if (recalc) {
+			this.setDimensions(items);
+			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
+		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaPasteHeight
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaPasteHeight = function(items, recalc) {
+		var h;
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		h = my.xtGet(items.pasteHeight, items.height);
+		this.pasteHeight = (my.isa(this.pasteHeight, 'num')) ? this.pasteHeight + h : my.addPercentages(this.pasteHeight, h);
+		if (recalc) {
+			this.setPaste();
+		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaCopyHeight
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaCopyHeight = function(items, recalc) {
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + items.copyHeight : my.addPercentages(this.copyHeight, items.copyHeight);
+		if (recalc) {
+			this.setCopy();
+		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaPasteWidth
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaPasteWidth = function(items, recalc) {
+		var w;
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		w = my.xtGet(items.pasteWidth, items.width);
+		this.pasteWidth = (my.isa(this.pasteWidth, 'num')) ? this.pasteWidth + w : my.addPercentages(this.pasteWidth, w);
+		if (recalc) {
+			this.setPaste();
+		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaCopyWidth
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaCopyWidth = function(items, recalc) {
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + items.copyWidth : my.addPercentages(this.copyWidth, items.copyWidth);
+		if (recalc) {
+			this.setCopy();
+		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaPaste
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaPaste = function(items, recalc) {
+		var temp, x, y;
+		items = my.safeObject(items);
+		recalc = my.xtGet(recalc, true);
+		temp = my.safeObject(items.paste);
+		x = my.xtGet(items.pasteX, temp.x, 0);
+		y = my.xtGet(items.pasteY, temp.y, 0);
+		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
+		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
+		if (recalc) {
+			this.setPaste();
+		}
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values
+
+Augments Cell.setDelta
+@method setDeltaCopy
+@param {Object} items Object consisting of key:value attributes
+@param {Boolean} recalc When true (default), triggers variable recalculation
+@return This
+@chainable
+**/
+	my.Cell.prototype.setDeltaCopy = function(items, recalc) {
+		var temp, x, y;
+		items = my.safeObject(items);
+		temp = my.safeObject(items.copy);
+		recalc = my.xtGet(recalc, true);
+		x = my.xtGet(items.copyX, temp.x, 0);
+		y = my.xtGet(items.copyY, temp.y, 0);
+		this.copy.x = (my.isa(x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
+		this.copy.y = (my.isa(y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
+		if (recalc) {
+			this.setCopy();
 		}
 		return this;
 	};
@@ -3787,6 +4238,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 @return Entity object
 @private
 **/
+	my.statArr.designTypes = ['Gradient', 'RadialGradient', 'Pattern'];
 	my.Cell.prototype.setEngine = function(entity) {
 
 		if (!entity.fastStamp) {
@@ -3808,7 +4260,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 								case 'fillStyle':
 									if (my.xt(my.design[changes[item]])) {
 										des = my.design[changes[item]];
-										if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], des.type)) {
+										if (my.contains(my.statArr.designTypes, des.type)) {
 											des.update(entity.name, this.name);
 										}
 										tempFillStyle = des.getData();
@@ -3873,7 +4325,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 								case 'strokeStyle':
 									if (my.xt(my.design[changes[item]])) {
 										des = my.design[changes[item]];
-										if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], des.type)) {
+										if (my.contains(my.statArr.designTypes, des.type)) {
 											des.update(entity.name, this.name);
 										}
 										tempStrokeStyle = des.getData();
@@ -4077,7 +4529,7 @@ Cell copy helper function
 **/
 	my.Cell.prototype.copyCellToSelf = function(cell, usePadScale) {
 		cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
-		usePadScale = my.xtGet([usePadScale, false]);
+		usePadScale = my.xtGet(usePadScale, false);
 		var lockTo = cell.get('lockTo'),
 			myCell = (lockTo) ? my.cell[lockTo] : cell;
 		if (my.xt(myCell)) {
@@ -4227,8 +4679,8 @@ Omitting the argument will force the &lt;canvas&gt; to set itself to its Pad obj
 		var myWidth,
 			myHeight,
 			myPad = my.pad[this.pad];
-		myWidth = my.xtGet([items.width, items.actualWidth, this.actualWidth]);
-		myHeight = my.xtGet([items.height, items.actualHeight, this.actualHeight]);
+		myWidth = my.xtGet(items.width, items.actualWidth, this.actualWidth);
+		myHeight = my.xtGet(items.height, items.actualHeight, this.actualHeight);
 		if (myPad) {
 			if (my.isa(myWidth, 'str')) {
 				myWidth = (parseFloat(myWidth) / 100) * (myPad.localWidth / myPad.scale);
@@ -4281,10 +4733,10 @@ Default values are:
 	my.Cell.prototype.getImageData = function(dimensions) {
 		dimensions = my.safeObject(dimensions);
 		var myLabel = (my.isa(dimensions.name, 'str')) ? this.name + '_' + dimensions.name : this.name + '_imageData',
-			myX = my.xtGet([dimensions.x, 0]),
-			myY = my.xtGet([dimensions.y, 0]),
-			myW = my.xtGet([dimensions.width, this.actualWidth]),
-			myH = my.xtGet([dimensions.height, this.actualHeight]);
+			myX = my.xtGet(dimensions.x, 0),
+			myY = my.xtGet(dimensions.y, 0),
+			myW = my.xtGet(dimensions.width, this.actualWidth),
+			myH = my.xtGet(dimensions.height, this.actualHeight);
 		my.imageData[myLabel] = my.context[this.name].getImageData(myX, myY, myW, myH);
 		return myLabel;
 	};
@@ -4570,9 +5022,9 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 		for (var i = 0, iz = my.contextKeys.length; i < iz; i++) {
 			this[my.contextKeys[i]] = ctx[my.contextKeys[i]];
 		}
-		this.winding = my.xtGet([ctx.mozFillRule, ctx.msFillRule, 'nonzero']);
-		this.lineDash = my.xtGet([ctx.lineDash, []]);
-		this.lineDashOffset = my.xtGet([ctx.mozDashOffset, ctx.lineDashOffset, 0]);
+		this.winding = my.xtGet(ctx.mozFillRule, ctx.msFillRule, 'nonzero');
+		this.lineDash = (my.xt(ctx.lineDash)) ? ctx.lineDash : [];
+		this.lineDashOffset = my.xtGet(ctx.mozDashOffset, ctx.lineDashOffset, 0);
 		return this;
 	};
 	/**
@@ -4585,6 +5037,11 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @chainable
 @private
 **/
+	my.statArr.contextGetChanges1 = ['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
+	my.statArr.contextGetChanges2 = ['fillStyle', 'strokeStyle', 'shadowColor'];
+	my.statArr.contextGetChanges3 = ['fillStyle', 'strokeStyle'];
+	my.statArr.contextGetChanges4 = ['lineDash'];
+	my.statArr.contextGetChanges5 = ['name', 'timestamp'];
 	my.Context.prototype.getChanges = function(ctx, scale, doscale) {
 		var r = {},
 			count = 0,
@@ -4593,7 +5050,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 		for (var i = 0, iz = my.contextKeys.length; i < iz; i++) {
 			temp = this.get(my.contextKeys[i]);
 			//handle scalable items
-			if (my.contains(['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'], my.contextKeys[i])) {
+			if (my.contains(my.statArr.contextGetChanges1, my.contextKeys[i])) {
 				if (doscale) {
 					if (temp * scale !== ctx[my.contextKeys[i]]) {
 						r[my.contextKeys[i]] = temp * scale;
@@ -4608,7 +5065,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 				}
 			}
 			//handle fillStyle, strokeStyle, shadowColor that use Color design objects
-			else if (my.contains(['fillStyle', 'strokeStyle', 'shadowColor'], my.contextKeys[i]) && my.contains(my.designnames, temp) && my.design[temp].type === 'Color') {
+			else if (my.contains(my.statArr.contextGetChanges2, my.contextKeys[i]) && my.contains(my.designnames, temp) && my.design[temp].type === 'Color') {
 				tempCol = my.design[temp].getData();
 				if (tempCol !== ctx[my.contextKeys[i]]) {
 					r[my.contextKeys[i]] = tempCol;
@@ -4616,12 +5073,12 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 				}
 			}
 			//handle fillStyle, strokeStyle that use RadialGradient, Gradient design objects
-			else if (my.contains(['fillStyle', 'strokeStyle'], my.contextKeys[i]) && my.contains(my.designnames, temp) && my.contains(['Gradient', 'RadialGradient', 'Pattern'], my.design[temp].type) && my.design[temp].autoUpdate) {
+			else if (my.contains(my.statArr.contextGetChanges3, my.contextKeys[i]) && my.contains(my.designnames, temp) && my.contains(my.statArr.designTypes, my.design[temp].type) && my.design[temp].autoUpdate) {
 				r[my.contextKeys[i]] = temp;
 				count++;
 			}
 			//handle linedash - an array that needs deep inspection to check for difference
-			else if (my.contains(['lineDash'], my.contextKeys[i]) && my.xt(ctx.lineDash)) {
+			else if (my.contains(my.statArr.contextGetChanges4, my.contextKeys[i]) && my.xt(ctx.lineDash)) {
 				if (temp.length !== ctx.lineDash.length) {
 					r.lineDash = temp;
 					count++;
@@ -4637,7 +5094,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 				}
 			}
 			//exclude items that have no equivalent in the context engine
-			else if (my.contains(['name', 'timestamp'], my.contextKeys[i])) {}
+			else if (my.contains(my.statArr.contextGetChanges5, my.contextKeys[i])) {}
 			//capture all other changes
 			else {
 				if (temp !== ctx[my.contextKeys[i]]) {
@@ -4677,10 +5134,10 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 		my.Base.call(this, items);
 		this.entitys = (my.xt(items.entitys)) ? [].concat(items.entitys) : [];
 		this.cell = items.cell || my.pad[my.currentPad].current;
-		this.order = my.xtGet([items.order, 0]);
-		this.visibility = my.xtGet([items.visibility, true]);
-		this.entitySort = my.xtGet([items.entitySort, true]);
-		this.regionRadius = my.xtGet([items.regionRadius, 0]);
+		this.order = my.xtGet(items.order, 0);
+		this.visibility = my.xtGet(items.visibility, true);
+		this.entitySort = my.xtGet(items.entitySort, true);
+		this.regionRadius = my.xtGet(items.regionRadius, 0);
 		my.group[this.name] = this;
 		this.filtersGroupInit(items);
 		my.pushUnique(my.groupnames, this.name);
@@ -4819,8 +5276,12 @@ Add entitys to the Group
 @return This
 @chainable
 **/
-	my.Group.prototype.addEntitysToGroup = function(item) {
-		item = (my.xt(item)) ? [].concat(item) : [];
+	my.Group.prototype.addEntitysToGroup = function() {
+		var item = Array.prototype.slice.call(arguments);
+		if (Array.isArray(item[0])) {
+			console.log('my.Group.prototype.addEntitysToGroup - needs updating: ', item);
+			item = items[0];
+		}
 		for (var i = 0, iz = item.length; i < iz; i++) {
 			my.pushUnique(this.entitys, item[i]);
 		}
@@ -4833,8 +5294,12 @@ Remove entitys from the Group
 @return This
 @chainable
 **/
-	my.Group.prototype.removeEntitysFromGroup = function(item) {
-		item = (my.xt(item)) ? [].concat(item) : [];
+	my.Group.prototype.removeEntitysFromGroup = function() {
+		var item = Array.prototype.slice.call(arguments);
+		if (Array.isArray(item[0])) {
+			console.log('my.Group.prototype.removeEntitysFromGroup - needs updating: ', item);
+			item = items[0];
+		}
 		for (var i = 0, iz = item.length; i < iz; i++) {
 			my.removeItem(this.entitys, item[i]);
 		}
@@ -4853,10 +5318,10 @@ The following entity attributes can be amended by this function: startX, startY,
 		items = my.safeObject(items);
 		for (var i = 0, iz = this.entitys.length; i < iz; i++) {
 			my.entity[this.entitys[i]].setDelta({
-				startX: my.xtGet([items.x, items.startX, 0]),
-				startY: my.xtGet([items.y, items.startY, 0]),
-				scale: my.xtGet([items.scale, 0]),
-				roll: my.xtGet([items.roll, 0])
+				startX: my.xtGet(items.x, items.startX, 0),
+				startY: my.xtGet(items.y, items.startY, 0),
+				scale: my.xtGet(items.scale, 0),
+				roll: my.xtGet(items.roll, 0)
 			});
 		}
 		return this;
@@ -5013,11 +5478,11 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 		var myContext = my.newContext(items);
 		this.context = myContext.name;
 		this.group = this.getGroup(items);
-		this.fastStamp = my.xtGet([items.fastStamp, false]);
-		this.scaleOutline = my.xtGet([items.scaleOutline, true]);
-		this.order = my.xtGet([items.order, 0]);
-		this.visibility = my.xtGet([items.visibility, true]);
-		this.method = my.xtGet([items.method, my.d[this.type].method]);
+		this.fastStamp = my.xtGet(items.fastStamp, false);
+		this.scaleOutline = my.xtGet(items.scaleOutline, true);
+		this.order = my.xtGet(items.order, 0);
+		this.visibility = my.xtGet(items.visibility, true);
+		this.method = my.xtGet(items.method, my.d[this.type].method);
 		this.collisionsEntityConstructor(items);
 		this.filtersEntityInit(items);
 		return this;
@@ -5186,7 +5651,7 @@ Allows users to:
 			my.group[this.group].addEntitysToGroup(this.name);
 		}
 		this.collisionsEntitySet(items);
-		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale])) {
+		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale)) {
 			this.offset.flag = false;
 		}
 		return this;
@@ -5210,7 +5675,7 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
 		var ctx = my.ctx[this.context];
-		if (my.xto([items.lineDashOffset, items.lineWidth, items.globalAlpha])) {
+		if (my.xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
 			ctx.setDelta(items);
 		}
 		if (my.xt(items.roll)) {
@@ -5222,7 +5687,7 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 		if (my.xt(items.height)) {
 			this.height = (my.isa(this.height, 'num')) ? this.height + items.height : my.addPercentages(this.height, items.height);
 		}
-		if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.pasteWidth, items.pasteHeight, items.radius, items.scale])) {
+		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.pasteWidth, items.pasteHeight, items.radius, items.scale)) {
 			this.offset.flag = false;
 		}
 		return this;
@@ -5378,37 +5843,56 @@ Stamp helper function - direct entity to the required drawing method function
 @private
 **/
 	my.Entity.prototype.callMethod = function(engine, cell, method) {
-		switch (method) {
-			case 'clear':
-				this.clear(engine, cell);
-				break;
-			case 'clearWithBackground':
-				this.clearWithBackground(engine, cell);
-				break;
-			case 'draw':
-				this.draw(engine, cell);
-				break;
-			case 'fill':
-				this.fill(engine, cell);
-				break;
-			case 'drawFill':
-				this.drawFill(engine, cell);
-				break;
-			case 'fillDraw':
-				this.fillDraw(engine, cell);
-				break;
-			case 'sinkInto':
-				this.sinkInto(engine, cell);
-				break;
-			case 'floatOver':
-				this.floatOver(engine, cell);
-				break;
-			case 'clip':
-				this.clip(engine, cell);
-				break;
-			case 'none':
-				this.none(engine, cell);
-				break;
+		var test = method[0];
+		if (test < 'f') {
+			if (test === 'c') {
+				switch (method) {
+					case 'clear':
+						this.clear(engine, cell);
+						break;
+					case 'clearWithBackground':
+						this.clearWithBackground(engine, cell);
+						break;
+					case 'clip':
+						this.clip(engine, cell);
+						break;
+				}
+			}
+			else {
+				switch (method) {
+					case 'draw':
+						this.draw(engine, cell);
+						break;
+					case 'drawFill':
+						this.drawFill(engine, cell);
+						break;
+				}
+			}
+		}
+		else {
+			if (test === 'f') {
+				switch (method) {
+					case 'fill':
+						this.fill(engine, cell);
+						break;
+					case 'fillDraw':
+						this.fillDraw(engine, cell);
+						break;
+					case 'floatOver':
+						this.floatOver(engine, cell);
+						break;
+				}
+			}
+			else {
+				switch (method) {
+					case 'none':
+						this.none(engine, cell);
+						break;
+					case 'sinkInto':
+						this.sinkInto(engine, cell);
+						break;
+				}
+			}
 		}
 		return this;
 	};
@@ -5707,7 +6191,7 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 	my.Entity.prototype.dropEntity = function(item) {
 		var order = this.order;
 		this.set({
-			pivot: my.xtGet([item, this.realPivot, false]),
+			pivot: my.xtGet(item, this.realPivot, false),
 			order: (order >= 9999) ? order - 9999 : 0
 		});
 		delete this.realPivot;
@@ -5769,7 +6253,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Design = function(items) {
 		my.Base.call(this, items);
-		this.lockTo = my.xtGet([items.lockTo, my.d[this.type].lockTo]);
+		this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
 		return this;
 	};
 	my.Design.prototype = Object.create(my.Base.prototype);

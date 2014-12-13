@@ -133,10 +133,10 @@ if (window.scrawl && !window.scrawl.newPath) {
 	@private
 	**/
 		my.Position.prototype.pathPositionInit = function(items) {
-			this.path = my.xtGet([items.path, my.d[this.type].path]);
-			this.pathRoll = my.xtGet([items.pathRoll, my.d[this.type].pathRoll]);
-			this.addPathRoll = my.xtGet([items.addPathRoll, my.d[this.type].addPathRoll]);
-			this.pathPlace = my.xtGet([items.pathPlace, my.d[this.type].pathPlace]);
+			this.path = my.xtGet(items.path, my.d[this.type].path);
+			this.pathRoll = my.xtGet(items.pathRoll, my.d[this.type].pathRoll);
+			this.addPathRoll = my.xtGet(items.addPathRoll, my.d[this.type].addPathRoll);
+			this.pathPlace = my.xtGet(items.pathPlace, my.d[this.type].pathPlace);
 		};
 		/**
 	Position.setDelta hook function - modified by path module
@@ -221,6 +221,8 @@ if (window.scrawl && !window.scrawl.newPath) {
 			data: 'M0,0 50,0 60,20, 10,20 0,0z',
 			});
 	**/
+		my.statArr.makePath1 = ['C', 'c', 'S', 's'];
+		my.statArr.makePath2 = ['Q', 'q', 'T', 't'];
 		my.makePath = function(items) {
 			items = (my.isa(items, 'obj')) ? items : {};
 			var minX = 999999,
@@ -243,13 +245,13 @@ if (window.scrawl && !window.scrawl.newPath) {
 				cy = 0,
 				k = 0,
 				v = 0;
-			var myPivot = my.xtGet([my.point[myPivot], my.entity[myPivot], false]);
+			var myPivot = my.xtGet(my.point[myPivot], my.entity[myPivot], false);
 			items.start = (my.xt(items.start)) ? items.start : {};
 			items.scaleX = items.scaleX || 1;
 			items.scaleY = items.scaleY || 1;
-			items.startX = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.x : myPivot.start.x) : my.xtGet([items.startX, items.start.x, 0]);
-			items.startY = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.y : myPivot.start.y) : my.xtGet([items.startY, items.start.y, 0]);
-			items.isLine = my.xtGet([items.isLine, true]);
+			items.startX = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.x : myPivot.start.x) : my.xtGet(items.startX, items.start.x, 0);
+			items.startY = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.y : myPivot.start.y) : my.xtGet(items.startY, items.start.y, 0);
+			items.isLine = my.xtGet(items.isLine, true);
 			var checkMinMax = function(cx, cy) {
 				minX = (minX > cx) ? cx : minX;
 				minY = (minY > cy) ? cy : minY;
@@ -449,7 +451,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 								break;
 							case 'S':
 								for (k = 0, v = data.length; k < v; k += 4) {
-									if (i > 0 && my.contains(['C', 'c', 'S', 's'], set [i - 1][0])) {
+									if (i > 0 && my.contains(my.statArr.makePath1, set [i - 1][0])) {
 										lib[tn + '_p' + (pc - 2)].clone({
 											name: tn + '_p' + pc,
 											currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
@@ -475,7 +477,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 								break;
 							case 's':
 								for (k = 0, v = data.length; k < v; k += 4) {
-									if (i > 0 && my.contains(['C', 'c', 'S', 's'], set [i - 1][0])) {
+									if (i > 0 && my.contains(my.statArr.makePath1, set [i - 1][0])) {
 										lib[tn + '_p' + (pc - 2)].clone({
 											name: tn + '_p' + pc,
 											currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
@@ -527,7 +529,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 								break;
 							case 'T':
 								for (k = 0, v = data.length; k < v; k += 2) {
-									if (i > 0 && my.contains(['Q', 'q', 'T', 't'], set [i - 1][0])) {
+									if (i > 0 && my.contains(my.statArr.makePath2, set [i - 1][0])) {
 										lib[tn + '_p' + (pc - 2)].clone({
 											name: tn + '_p' + pc,
 											currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
@@ -551,7 +553,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 								break;
 							case 't':
 								for (k = 0, v = data.length; k < v; k += 2) {
-									if (i > 0 && my.contains(['Q', 'q', 'T', 't'], set [i - 1][0])) {
+									if (i > 0 && my.contains(my.statArr.makePath2, set [i - 1][0])) {
 										lib[tn + '_p' + (pc - 2)].clone({
 											name: tn + '_p' + pc,
 											currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
@@ -828,21 +830,21 @@ if (window.scrawl && !window.scrawl.newPath) {
 			var myMark = false,
 				entity,
 				linkDurations;
-			if (my.xtGet([this.mark, this.markStart, this.markMid, this.markEnd])) {
+			if (my.xtGet(this.mark, this.markStart, this.markMid, this.markEnd)) {
 				this.buildPositions();
 				linkDurations = this.get('linkDurations');
-				myMark = my.xtGetTrue([this.markStart, this.mark]);
+				myMark = my.xtGetTrue(this.markStart, this.mark);
 				if (myMark && my.contains(my.entitynames, myMark)) {
 					this.stampMark(my.entity[myMark], 0, ctx, cell);
 				}
-				myMark = my.xtGetTrue([this.markMid, this.mark]);
+				myMark = my.xtGetTrue(this.markMid, this.mark);
 				if (myMark && my.contains(my.entitynames, myMark)) {
 					entity = my.entity[myMark];
 					for (var j = 0, w = linkDurations.length - 1; j < w; j++) {
 						this.stampMark(entity, linkDurations[j], ctx, cell);
 					}
 				}
-				myMark = my.xtGetTrue([this.markEnd, this.mark]);
+				myMark = my.xtGetTrue(this.markEnd, this.mark);
 				if (myMark && my.contains(my.entitynames, myMark)) {
 					this.stampMark(my.entity[myMark], 1, ctx, cell);
 				}
@@ -1318,19 +1320,19 @@ if (window.scrawl && !window.scrawl.newPath) {
 		my.Point = function(items) {
 			items = my.safeObject(items);
 			my.Base.call(this, items);
-			var local = (my.xt(items.local)) ? items.local : {};
-			this.entity = my.xtGet([items.entity, '']);
+			var local = my.safeObject(items.local);
+			this.entity = my.xtGet(items.entity, '');
 			this.local = my.newVector({
-				x: my.xtGet([items.startX, items.currentX, local.x, 0]),
-				y: my.xtGet([items.startY, items.currentY, local.y, 0]),
+				x: my.xtGet(items.startX, items.currentX, local.x, 0),
+				y: my.xtGet(items.startY, items.currentY, local.y, 0),
 			});
 			this.work.local = my.newVector({
 				name: this.type + '.' + this.name + '.work.local'
 			});
 			this.work.local.name = this.type + '.' + this.name + '.work.local';
-			this.startLink = my.xtGet([items.startLink, '']);
-			this.fixed = my.xtGet([items.fixed, false]);
-			if (my.xto([items.angle, items.distance])) {
+			this.startLink = my.xtGet(items.startLink, '');
+			this.fixed = my.xtGet(items.fixed, false);
+			if (my.xto(items.angle, items.distance)) {
 				this.setPolar(items);
 			}
 			my.point[this.name] = this;
@@ -1401,10 +1403,10 @@ if (window.scrawl && !window.scrawl.newPath) {
 			my.Base.prototype.set.call(this, items);
 			items = my.safeObject(items);
 			var local = (my.xt(items.local)) ? items.local : {};
-			if (my.xto([items.distance, items.angle])) {
+			if (my.xto(items.distance, items.angle)) {
 				this.setPolar(items);
 			}
-			else if (my.xto([items.startX, items.startY, items.currentX, items.currentY, items.local])) {
+			else if (my.xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
 				this.local.x = (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : this.local.x));
 				this.local.y = (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : this.local.y));
 			}
@@ -1428,7 +1430,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 				a,
 				local = (my.xt(items.local)) ? items.local : {};
 			items = my.safeObject(items);
-			if (my.xto([items.startX, items.startY, items.currentX, items.currentY, items.local])) {
+			if (my.xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
 				this.local.x += (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : 0));
 				this.local.y += (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : 0));
 			}
@@ -1461,7 +1463,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 				a;
 			my.Base.prototype.set.call(this, items);
 			items = my.safeObject(items);
-			if (my.xta([items.distance, items.angle])) {
+			if (my.xta(items.distance, items.angle)) {
 				a = items.angle * my.radian;
 				this.local.x = items.distance * Math.cos(a);
 				this.local.y = items.distance * Math.sin(a);
@@ -1602,11 +1604,11 @@ if (window.scrawl && !window.scrawl.newPath) {
 			items = my.safeObject(items);
 			my.Base.call(this, items);
 			my.Base.prototype.set.call(this, items);
-			this.startPoint = my.xtGet([items.startPoint, my.d.Link.startPoint]);
+			this.startPoint = my.xtGet(items.startPoint, my.d.Link.startPoint);
 			this.entity = (my.xt(my.point[this.startPoint])) ? my.point[this.startPoint].entity : my.d.Link.entity;
-			this.endPoint = my.xtGet([items.endPoint, my.d.Link.endPoint]);
-			this.species = my.xtGet([items.species, my.d.Link.species]);
-			this.action = my.xtGet([items.action, my.d.Link.action]);
+			this.endPoint = my.xtGet(items.endPoint, my.d.Link.endPoint);
+			this.species = my.xtGet(items.species, my.d.Link.species);
+			this.action = my.xtGet(items.action, my.d.Link.action);
 			my.link[this.name] = this;
 			my.pushUnique(my.linknames, this.name);
 			this.positions = [];

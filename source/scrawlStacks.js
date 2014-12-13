@@ -186,6 +186,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 					myPad = my.newPad({
 						canvasElement: el[i],
 					});
+					console.log('getCanvas #1', el[i].width, el[i].height, myPad.width, myPad.height);
 					if (stack) {
 						myPad.set({
 							group: stack.name,
@@ -202,6 +203,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 							});
 						}
 					}
+					console.log('getCanvas #2', el[i].width, el[i].height, myPad.width, myPad.height);
 					if (i === 0) {
 						my.currentPad = myPad.name;
 					}
@@ -227,7 +229,7 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 					el.push(s[i]);
 				}
 				for (i = 0, iz = s.length; i < iz; i++) {
-					myName = my.xtGet([el.id, el.name, false]);
+					myName = my.xtGet(el.id, el.name, false);
 					if (!my.contains(my.elementnames, myName)) {
 						if (el[i].className.indexOf('stack:') !== -1) {
 							myStack = el[i].className.match(/stack:(\w+)/);
@@ -281,8 +283,8 @@ The argument object should include the following attributes:
 				myPad,
 				myStk,
 				stackParent;
-			items.width = my.xtGet([items.width, 300]);
-			items.height = my.xtGet([items.height, 150]);
+			items.width = my.xtGet(items.width, 300);
+			items.height = my.xtGet(items.height, 150);
 			if (my.xt(items.stackName)) {
 				myStk = my.stack[items.stackName];
 				if (!myStk) {
@@ -311,7 +313,7 @@ The argument object should include the following attributes:
 				items.height = Math.round((parseFloat(items.height) / 100) * parseFloat(myParent.style.height));
 			}
 			myCanvas = document.createElement('canvas');
-			myCanvas.style.position = my.xtGet([items.position, 'absolute']);
+			myCanvas.style.position = my.xtGet(items.position, 'absolute');
 			myParent.appendChild(myCanvas);
 			items.canvasElement = myCanvas;
 			myPad = new my.Pad(items);
@@ -337,8 +339,8 @@ The argument object should include the following attributes:
 				items.parentElement = (my.isa(items.parentElement, 'str')) ? document.getElementById(items.parentElement) : items.parentElement;
 				myElement = document.createElement('div');
 				myElement.id = items.stackName;
-				myElement.style.width = my.xtGet([items.width, 300]) + 'px';
-				myElement.style.height = my.xtGet([items.height, 150]) + 'px';
+				myElement.style.width = my.xtGet(items.width, 300) + 'px';
+				myElement.style.height = my.xtGet(items.height, 150) + 'px';
 				items.parentElement.appendChild(myElement);
 				items.stackElement = myElement;
 				myStack = my.newStack(items);
@@ -655,8 +657,8 @@ PageElement constructor hook function - modified by stacks module
 			var temp = my.safeObject(items.start);
 			this.start = my.newVector({
 				name: this.type + '.' + this.name + '.start',
-				x: my.xtGet([items.startX, temp.x, 0]),
-				y: my.xtGet([items.startY, temp.y, 0])
+				x: my.xtGet(items.startX, temp.x, 0),
+				y: my.xtGet(items.startY, temp.y, 0)
 			});
 			this.correctStart();
 			this.work.start = my.newVector({
@@ -665,8 +667,8 @@ PageElement constructor hook function - modified by stacks module
 			temp = my.safeObject(items.delta);
 			this.delta = my.newVector({
 				name: this.type + '.' + this.name + '.delta',
-				x: my.xtGet([items.deltaX, temp.x, 0]),
-				y: my.xtGet([items.deltaY, temp.y, 0])
+				x: my.xtGet(items.deltaX, temp.x, 0),
+				y: my.xtGet(items.deltaY, temp.y, 0)
 			});
 			this.work.delta = my.newVector({
 				name: this.type + '.' + this.name + '.work.delta'
@@ -674,8 +676,8 @@ PageElement constructor hook function - modified by stacks module
 			temp = my.safeObject(items.handle);
 			this.handle = my.newVector({
 				name: this.type + '.' + this.name + '.handle',
-				x: my.xtGet([items.handleX, temp.x, 0]),
-				y: my.xtGet([items.handleY, temp.y, 0])
+				x: my.xtGet(items.handleX, temp.x, 0),
+				y: my.xtGet(items.handleY, temp.y, 0)
 			});
 			this.work.handle = my.newVector({
 				name: this.type + '.' + this.name + '.work.handle'
@@ -683,9 +685,9 @@ PageElement constructor hook function - modified by stacks module
 			temp = my.safeObject(items.translate);
 			this.translate = my.newVector({
 				name: this.type + '.' + this.name + '.translate',
-				x: my.xtGet([items.translateX, temp.x, 0]),
-				y: my.xtGet([items.translateY, temp.y, 0]),
-				z: my.xtGet([items.translateZ, temp.z, 0])
+				x: my.xtGet(items.translateX, temp.x, 0),
+				y: my.xtGet(items.translateY, temp.y, 0),
+				z: my.xtGet(items.translateZ, temp.z, 0)
 			});
 			this.work.translate = my.newVector({
 				name: this.type + '.' + this.name + '.work.translate'
@@ -693,23 +695,23 @@ PageElement constructor hook function - modified by stacks module
 			temp = my.safeObject(items.deltaTranslate);
 			this.deltaTranslate = my.newVector({
 				name: this.type + '.' + this.name + '.deltaTranslate',
-				x: my.xtGet([items.deltaTranslateX, temp.x, 0]),
-				y: my.xtGet([items.deltaTranslateY, temp.y, 0]),
-				z: my.xtGet([items.deltaTranslateZ, temp.z, 0])
+				x: my.xtGet(items.deltaTranslateX, temp.x, 0),
+				y: my.xtGet(items.deltaTranslateY, temp.y, 0),
+				z: my.xtGet(items.deltaTranslateZ, temp.z, 0)
 			});
 			this.work.deltaTranslate = my.newVector({
 				name: this.type + '.' + this.name + '.work.deltaTranslate'
 			});
-			this.pivot = my.xtGet([items.pivot, my.d[this.type].pivot]);
-			this.path = my.xtGet([items.path, my.d[this.type].path]);
-			this.pathRoll = my.xtGet([items.pathRoll, my.d[this.type].pathRoll]);
-			this.addPathRoll = my.xtGet([items.addPathRoll, my.d[this.type].addPathRoll]);
-			this.pathSpeedConstant = my.xtGet([items.pathSpeedConstant, my.d[this.type].pathSpeedConstant]);
-			this.pathPlace = my.xtGet([items.pathPlace, my.d[this.type].pathPlace]);
-			this.deltaPathPlace = my.xtGet([items.deltaPathPlace, my.d[this.type].deltaPathPlace]);
-			this.lockX = my.xtGet([items.lockX, my.d[this.type].lockX]);
-			this.lockY = my.xtGet([items.lockY, my.d[this.type].lockY]);
-			this.visibility = my.xtGet([items.visibility, my.d[this.type].visibility]);
+			this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
+			this.path = my.xtGet(items.path, my.d[this.type].path);
+			this.pathRoll = my.xtGet(items.pathRoll, my.d[this.type].pathRoll);
+			this.addPathRoll = my.xtGet(items.addPathRoll, my.d[this.type].addPathRoll);
+			this.pathSpeedConstant = my.xtGet(items.pathSpeedConstant, my.d[this.type].pathSpeedConstant);
+			this.pathPlace = my.xtGet(items.pathPlace, my.d[this.type].pathPlace);
+			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, my.d[this.type].deltaPathPlace);
+			this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
+			this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
+			this.visibility = my.xtGet(items.visibility, my.d[this.type].visibility);
 			this.rotation = my.newQuaternion({
 				name: this.type + '.' + this.name + '.rotation'
 			}).setFromEuler({
@@ -730,8 +732,8 @@ PageElement constructor hook function - modified by stacks module
 			this.work.deltaRotation = my.newQuaternion({
 				name: this.type + '.' + this.name + '.work.deltaRotation'
 			});
-			this.rotationTolerance = my.xtGet([items.rotationTolerance, my.d[this.type].rotationTolerance]);
-			this.group = my.xtGet([items.group, false]);
+			this.rotationTolerance = my.xtGet(items.rotationTolerance, my.d[this.type].rotationTolerance);
+			this.group = my.xtGet(items.group, false);
 			if (this.group) {
 				my.group[this.group].addElementsToGroup(this.name);
 			}
@@ -745,9 +747,11 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 @param {String} get Attribute key
 @return Attribute value
 **/
+		my.statArr.pageElementGet1 = ['width', 'height'];
+		my.statArr.pageElementGet2 = ['startX', 'startY', 'handleX', 'handleY', 'deltaX', 'deltaY', 'translateX', 'translateY', 'translateZ'];
 		my.PageElement.prototype.get = function(item) {
 			var el = this.getElement();
-			if (my.contains(['width', 'height'], item)) {
+			if (my.contains(my.statArr.pageElementGet1, item)) {
 				switch (this.type) {
 					case 'Pad':
 						if ('width' === item) {
@@ -766,7 +770,7 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 						}
 				}
 			}
-			if (my.contains(['startX', 'startY', 'handleX', 'handleY', 'deltaX', 'deltaY', 'translateX', 'translateY', 'translateZ'], item)) {
+			if (my.contains(my.statArr.pageElementGet2, item)) {
 				switch (item) {
 					case 'startX':
 						return this.start.x;
@@ -812,71 +816,71 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			if (!this.start.type || this.start.type !== 'Vector') {
 				this.start = my.newVector(items.start || this.start);
 			}
-			if (my.xto([items.start, items.startX, items.startY])) {
+			if (my.xto(items.start, items.startX, items.startY)) {
 				temp = my.safeObject(items.start);
-				this.start.x = my.xtGet([items.startX, temp.x, this.start.x]);
-				this.start.y = my.xtGet([items.startY, temp.y, this.start.y]);
+				this.start.x = my.xtGet(items.startX, temp.x, this.start.x);
+				this.start.y = my.xtGet(items.startY, temp.y, this.start.y);
 			}
 			this.correctStart();
 			if (!this.delta.type || this.delta.type !== 'Vector') {
 				this.delta = my.newVector(items.delta || this.delta);
 			}
-			if (my.xto([items.delta, items.deltaX, items.deltaY])) {
+			if (my.xto(items.delta, items.deltaX, items.deltaY)) {
 				temp = my.safeObject(items.delta);
-				this.delta.x = my.xtGet([items.deltaX, temp.x, this.delta.x]);
-				this.delta.y = my.xtGet([items.deltaY, temp.y, this.delta.y]);
+				this.delta.x = my.xtGet(items.deltaX, temp.x, this.delta.x);
+				this.delta.y = my.xtGet(items.deltaY, temp.y, this.delta.y);
 			}
 			if (!this.translate.type || this.translate.type !== 'Vector') {
 				this.translate = my.newVector(items.translate || this.translate);
 			}
-			if (my.xto([items.translate, items.translateX, items.translateY, items.translateZ])) {
+			if (my.xto(items.translate, items.translateX, items.translateY, items.translateZ)) {
 				temp = my.safeObject(items.translate);
-				this.translate.x = my.xtGet([items.translateX, temp.x, this.translate.x]);
-				this.translate.y = my.xtGet([items.translateY, temp.y, this.translate.y]);
-				this.translate.z = my.xtGet([items.translateZ, temp.z, this.translate.z]);
+				this.translate.x = my.xtGet(items.translateX, temp.x, this.translate.x);
+				this.translate.y = my.xtGet(items.translateY, temp.y, this.translate.y);
+				this.translate.z = my.xtGet(items.translateZ, temp.z, this.translate.z);
 			}
 			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
 				this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
 			}
-			if (my.xto([items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ])) {
+			if (my.xto(items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ)) {
 				temp = my.safeObject(items.deltaTranslate);
-				this.deltaTranslate.x = my.xtGet([items.deltaTranslateX, temp.x, this.deltaTranslate.x]);
-				this.deltaTranslate.y = my.xtGet([items.deltaTranslateY, temp.y, this.deltaTranslate.y]);
-				this.deltaTranslate.z = my.xtGet([items.deltaTranslateZ, temp.z, this.deltaTranslate.z]);
+				this.deltaTranslate.x = my.xtGet(items.deltaTranslateX, temp.x, this.deltaTranslate.x);
+				this.deltaTranslate.y = my.xtGet(items.deltaTranslateY, temp.y, this.deltaTranslate.y);
+				this.deltaTranslate.z = my.xtGet(items.deltaTranslateZ, temp.z, this.deltaTranslate.z);
 			}
 			if (!this.handle.type || this.handle.type !== 'Vector') {
 				this.handle = my.newVector(items.handle || this.handle);
 			}
-			if (my.xto([items.handle, items.handleX, items.handleY])) {
+			if (my.xto(items.handle, items.handleX, items.handleY)) {
 				temp = my.safeObject(items.handle);
-				this.handle.x = my.xtGet([items.handleX, temp.x, this.handle.x]);
-				this.handle.y = my.xtGet([items.handleY, temp.y, this.handle.y]);
+				this.handle.x = my.xtGet(items.handleX, temp.x, this.handle.x);
+				this.handle.y = my.xtGet(items.handleY, temp.y, this.handle.y);
 			}
-			if (my.xto([items.pitch, items.yaw, items.roll])) {
+			if (my.xto(items.pitch, items.yaw, items.roll)) {
 				this.rotation.setFromEuler({
 					pitch: items.pitch || 0,
 					yaw: items.yaw || 0,
 					roll: items.roll || 0,
 				});
 			}
-			if (my.xto([items.deltaPitch, items.deltaYaw, items.deltaRoll])) {
+			if (my.xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
 				this.deltaRotation.setFromEuler({
 					pitch: items.deltaPitch || 0,
 					yaw: items.deltaYaw || 0,
 					roll: items.deltaRoll || 0,
 				});
 			}
-			if (my.xto([items.width, items.height, items.scale])) {
+			if (my.xto(items.width, items.height, items.scale)) {
 				this.setLocalDimensions();
 				this.setDimensions();
 			}
-			if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale])) {
+			if (my.xto(tems.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
 				delete this.offset;
 			}
-			if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start])) {
+			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start)) {
 				this.setDisplayOffsets();
 			}
-			if (my.xto([items.handleX, items.handleY, items.handle])) {
+			if (my.xto(items.handleX, items.handleY, items.handle)) {
 				this.setTransformOrigin();
 			}
 			if (my.xt(items.position)) {
@@ -909,7 +913,7 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 					delete this.oldY;
 				}
 			}
-			if (my.xto([items.title, items.comment])) {
+			if (my.xto(items.title, items.comment)) {
 				this.setAccessibility(items);
 			}
 			this.setStyles(items);
@@ -922,8 +926,10 @@ Constructor / set helper function
 @chainable
 @private
 **/
+		my.statArr.pageElementCorrectStart1 = ['left', 'center', 'right'];
+		my.statArr.pageElementCorrectStart2 = ['top', 'center', 'bottom'];
 		my.PageElement.prototype.correctStart = function() {
-			if (my.contains(['left', 'center', 'right'], this.start.x)) {
+			if (my.contains(my.statArr.pageElementCorrectStart1, this.start.x)) {
 				switch (this.start.x) {
 					case 'left':
 						this.start.x = '0%';
@@ -936,7 +942,7 @@ Constructor / set helper function
 						break;
 				}
 			}
-			if (my.contains(['top', 'center', 'bottom'], this.start.y)) {
+			if (my.contains(my.statArr.pageElementCorrectStart2, this.start.y)) {
 				switch (this.start.y) {
 					case 'top':
 						this.start.y = '0%';
@@ -970,7 +976,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 				}
 				else if (k[i] === 'visibility') {
 					if (my.isa(items.visibility, 'str')) {
-						this.visibility = (!my.contains(['hidden', 'none'], items.visibility)) ? true : false;
+						this.visibility = (!my.contains(my.statArr.pageElementSetStyles1, items.visibility)) ? true : false;
 					}
 					else {
 						this.visibility = (items.visibility) ? true : false;
@@ -983,10 +989,14 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 					}
 				}
 				else {
-					if (!my.contains(['backfaceVisibility', 'opacity', 'display', 'width', 'height', 'translate', 'translateX', 'translateY', 'translateZ'], k[i])) {
+					if (!my.contains(my.statArr.pageElementSetStyles2, k[i])) {
 						if (my.xt(el.style[k[i]])) {
 							el.style[k[i]] = items[k[i]];
 						}
+						// need an 'else' here with a whitelist of browser-specific css styles that require prefixes to work
+						// Scrawl users shouldn't care about prefixing ...
+						// also - zIndex changes by the user must be prevented at all costs
+						// in scrawlWorld, zIndex = translateZ * scale
 					}
 				}
 			}
@@ -1003,19 +1013,19 @@ Adds the value of each attribute supplied in the argument to existing values; on
 			var temp;
 			my.Position.prototype.setDelta.call(this, items);
 			items = my.safeObject(items);
-			if (my.xto([items.translate, items.translateX, items.translateY])) {
-				temp = (my.isa(items.translate, 'obj')) ? items.translate : {};
-				this.translate.x += my.xtGet([items.translateX, temp.x, 0]);
-				this.translate.y += my.xtGet([items.translateY, temp.y, 0]);
-				this.translate.z += my.xtGet([items.translateZ, temp.z, 0]);
+			if (my.xto(items.translate, items.translateX, items.translateY)) {
+				temp = my.safeObject(items.translate);
+				this.translate.x += my.xtGet(items.translateX, temp.x, 0);
+				this.translate.y += my.xtGet(items.translateY, temp.y, 0);
+				this.translate.z += my.xtGet(items.translateZ, temp.z, 0);
 			}
-			if (my.xto([items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY])) {
+			if (my.xto(items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY)) {
 				temp = (my.isa(items.deltaTranslate, 'obj')) ? items.deltaTranslate : {};
-				this.deltaTranslate.x += my.xtGet([items.deltaTranslateX, temp.x, 0]);
-				this.deltaTranslate.y += my.xtGet([items.deltaTranslateY, temp.y, 0]);
-				this.deltaTranslate.z += my.xtGet([items.deltaTranslateZ, temp.z, 0]);
+				this.deltaTranslate.x += my.xtGet(items.deltaTranslateX, temp.x, 0);
+				this.deltaTranslate.y += my.xtGet(items.deltaTranslateY, temp.y, 0);
+				this.deltaTranslate.z += my.xtGet(tems.deltaTranslateZ, temp.z, 0);
 			}
-			if (my.xto([items.pitch, items.yaw, items.roll])) {
+			if (my.xto(items.pitch, items.yaw, items.roll)) {
 				temp = my.workquat.q1.setFromEuler({
 					pitch: items.pitch || 0,
 					yaw: items.yaw || 0,
@@ -1023,7 +1033,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				});
 				this.rotation.quaternionMultiply(temp);
 			}
-			if (my.xto([items.deltaPitch, items.deltaYaw, items.deltaRoll])) {
+			if (my.xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
 				temp = my.workquat.q1.setFromEuler({
 					pitch: items.deltaPitch || 0,
 					yaw: items.deltaYaw || 0,
@@ -1031,16 +1041,16 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				});
 				this.deltaRotation.quaternionMultiply(temp);
 			}
-			if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale])) {
+			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
 				delete this.offset;
 			}
-			if (my.xto([items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start])) {
+			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start)) {
 				this.setDisplayOffsets();
 			}
-			if (my.xto([items.handleX, items.handleY, items.handle])) {
+			if (my.xto(items.handleX, items.handleY, items.handle)) {
 				this.setTransformOrigin();
 			}
-			if (my.xto([items.width, items.height, items.scale])) {
+			if (my.xto(items.width, items.height, items.scale)) {
 				this.setLocalDimensions();
 				this.setDimensions();
 			}
@@ -1144,33 +1154,23 @@ Calculates the pixels value of the object's start attribute
 * doesn't take into account the object's scaling or orientation
 
 @method PageElement.getStartValues
-@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
 @return A Vector of calculated values to help determine where entity drawing should start
 @private
 **/
-		my.PageElement.prototype.getStartValues = function(hasElementPivot) {
-			hasElementPivot = (my.xt(hasElementPivot)) ? hasElementPivot : false;
-			var result,
+		my.PageElement.prototype.getStartValues = function() {
+			var result = my.v.set(this.start),
 				height,
 				width,
 				stackname = my.group[this.group].stack,
 				stack;
-			if (hasElementPivot) {
-				result = my.v.set(my.element[this.pivot].start);
-				height = my.element[this.pivot].localHeight;
-				width = my.element[this.pivot].localWidth;
+			if (stackname) {
+				stack = my.stack[stackname];
+				height = stack.localHeight / this.scale;
+				width = stack.localWidth / this.scale;
 			}
 			else {
-				result = my.v.set(this.start);
-				if (stackname) {
-					stack = my.stack[stackname];
-					height = stack.localHeight / this.scale;
-					width = stack.localWidth / this.scale;
-				}
-				else {
-					height = this.localHeight / this.scale;
-					width = this.localWidth / this.scale;
-				}
+				height = this.localHeight / this.scale;
+				width = this.localWidth / this.scale;
 			}
 			return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
 		};
@@ -1267,6 +1267,8 @@ Calculate start Vector in reference to a entity or Point object's position
 @chainable
 @private
 **/
+		my.statArr.pageElementSetStyles1 = ['hidden', 'none'];
+		my.statArr.pageElementSetStyles2 = ['backfaceVisibility', 'opacity', 'display', 'width', 'height', 'translate', 'translateX', 'translateY', 'translateZ', 'top', 'left'];
 		my.PageElement.prototype.setStampUsingPivot = function() {
 			var here,
 				myCell,
@@ -1303,7 +1305,7 @@ Calculate start Vector in reference to a entity or Point object's position
 				if (this.group) {
 					here = my.stack[my.group[this.group].stack].getMouse();
 					temp = this.getStartValues();
-					if (!my.xta([this.mouseX, this.mouseY])) {
+					if (!my.xta(this.mouseX, this.mouseY)) {
 						this.oldX = temp.x;
 						this.oldY = temp.y;
 					}
@@ -1374,17 +1376,23 @@ Helper function - set local dimensions (width, height)
 				w = parent.localWidth;
 				h = parent.localHeight;
 			}
-			if (parent && my.isa(this.width, 'str')) {
-				this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
-			}
-			else {
-				this.localWidth = this.width * this.scale;
-			}
-			if (parent && my.isa(this.height, 'str')) {
-				this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
-			}
-			else {
-				this.localHeight = this.height * this.scale;
+			if (this.scale) {
+				if (this.width) {
+					if (parent && my.isa(this.width, 'str') && w) {
+						this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+					}
+					else {
+						this.localWidth = this.width * this.scale;
+					}
+				}
+				if (this.height) {
+					if (parent && my.isa(this.height, 'str') && h) {
+						this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+					}
+					else {
+						this.localHeight = this.height * this.scale;
+					}
+				}
 			}
 			return this;
 		};
@@ -1433,6 +1441,71 @@ Pad constructor hook function - amended by Stacks module
 			this.setTransformOrigin();
 		};
 		/**
+Pad set hook function - amended by Stacks module
+@method padStacksSet
+@return Nothing
+@private
+**/
+		my.Pad.prototype.padStacksSet = function(items) {
+			console.log('pSS', this.name, this.lockTo, this.base, this.localWidth, this.localHeight);
+			if (my.xt(items.width) && this.lockTo) {
+				my.cell[this.base].set({
+					width: this.localWidth
+				});
+			}
+			if (my.xt(items.height && this.lockTo)) {
+				my.cell[this.base].set({
+					height: this.localHeight
+				});
+			}
+		};
+		/**
+Stamp helper hook function - amended by stacks module
+
+@method setStampUsingStacksPivot
+@return always true
+**/
+		my.Position.prototype.setStampUsingStacksPivot = function() {
+			var myP = my.element[this.pivot] || my.stack[this.pivot] || my.pad[this.pivot] || false;
+			if (myP) {
+				this.start.x = (!this.lockX) ? myP.start.x + myP.displayOffsetX : this.start.x;
+				this.start.y = (!this.lockY) ? myP.start.y + myP.displayOffsetY : this.start.y;
+				return this;
+			}
+		};
+		/**
+Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object's handle attribute, where the object's frame of reference is its top-left corner
+
+* doesn't take into account the object's scaling or orientation
+* (badly named function - getPivotOffsetVector has nothing to do with pivots)
+
+@method getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
+@private
+**/
+		my.Position.prototype.getPivotOffsetVector = function() {
+			var result = this.work.handle,
+				height, width;
+			switch (this.type) {
+				case 'Block':
+				case 'Pad':
+				case 'Stack':
+				case 'Element':
+					height = (this.localHeight / this.scale) || this.get('height');
+					width = (this.localWidth / this.scale) || this.get('width');
+					break;
+				case 'Picture':
+				case 'Cell':
+					height = (this.pasteData.h / this.scale) || this.get('height');
+					width = (this.pasteData.w / this.scale) || this.get('width');
+					break;
+				default:
+					height = this.height || this.get('height');
+					width = this.width || this.get('width');
+			}
+			return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
+		};
+		/**
 # Stack
 
 ## Instantiation
@@ -1457,9 +1530,9 @@ Pad constructor hook function - amended by Stacks module
 			items = my.safeObject(items);
 			var temp;
 			if (my.xt(items.stackElement)) {
-				items.width = my.xtGet([items.width, items.stackElement.style.width, my.d.Stack.width]);
-				items.height = my.xtGet([items.height, items.stackElement.style.height, my.d.Stack.height]);
-				items.name = my.xtGet([items.stackName, items.name, items.stackElement.id, items.stackElement.name, 'Stack']);
+				items.width = my.xtGet(items.width, items.stackElement.style.width, my.d.Stack.width);
+				items.height = my.xtGet(items.height, items.stackElement.style.height, my.d.Stack.height);
+				items.name = my.xtGet(items.stackName, items.name, items.stackElement.id, items.stackElement.name, 'Stack');
 				my.PageElement.call(this, items);
 				if (this.name.match(/~~~/)) {
 					this.name = this.name.replace(/~~~/g, '_');
@@ -1474,9 +1547,9 @@ Pad constructor hook function - amended by Stacks module
 				temp = my.safeObject(items.perspective);
 				this.perspective = my.newVector({
 					name: this.type + '.' + this.name + '.perspective',
-					x: my.xtGet([items.perspectiveX, temp.x, 'center']),
-					y: my.xtGet([items.perspectiveY, temp.y, 'center']),
-					z: my.xtGet([items.perspectiveZ, temp.z, 0])
+					x: my.xtGet(items.perspectiveX, temp.x, 'center'),
+					y: my.xtGet(items.perspectiveY, temp.y, 'center'),
+					z: my.xtGet(items.perspectiveZ, temp.z, 0)
 				});
 				this.work.perspective = my.newVector({
 					name: this.type + '.' + this.name + '.work.perspective'
@@ -1489,7 +1562,7 @@ Pad constructor hook function - amended by Stacks module
 					name: this.name,
 					stack: this.name
 				});
-				this.group = my.xtGet([items.group, false]);
+				this.group = my.xtGet(items.group, false);
 				if (this.group) {
 					my.group[this.group].addElementsToGroup(this.name);
 				}
@@ -1572,19 +1645,19 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 			items = my.safeObject(items);
 			var temp, i, iz, g;
 			my.PageElement.prototype.set.call(this, items);
-			if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
+			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
 					this.perspective = my.newVector(items.perspective || this.perspective);
 				}
-				if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
+				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 					temp = my.safeObject(items.perspective);
-					this.perspective.x = my.xtGet([items.perspectiveX, temp.x, this.perspective.x]);
-					this.perspective.y = my.xtGet([items.perspectiveY, temp.y, this.perspective.y]);
-					this.perspective.z = my.xtGet([items.perspectiveZ, temp.z, this.perspective.z]);
+					this.perspective.x = my.xtGet(items.perspectiveX, temp.x, this.perspective.x);
+					this.perspective.y = my.xtGet(items.perspectiveY, temp.y, this.perspective.y);
+					this.perspective.z = my.xtGet(items.perspectiveZ, temp.z, this.perspective.z);
 				}
 				this.setPerspective();
 			}
-			if (my.xto([items.width, items.height, items.scale])) {
+			if (my.xto(items.width, items.height, items.scale)) {
 				for (i = 0, iz = my.groupnames.length; i < iz; i++) {
 					g = my.group[my.groupnames[i]];
 					if (g.type === 'ElementGroup') {
@@ -1607,15 +1680,15 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 			items = my.safeObject(items);
 			var temp, i, iz, g;
 			my.PageElement.prototype.setDelta.call(this, items);
-			if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
+			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
 					this.perspective = my.newVector(items.perspective || this.perspective);
 				}
-				if (my.xto([items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ])) {
+				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 					temp = my.safeObject(items.perspective);
-					this.perspective.x += my.xtGet([items.perspectiveX, temp.x, 0]);
-					this.perspective.y += my.xtGet([items.perspectiveY, temp.y, 0]);
-					this.perspective.z += my.xtGet([items.perspectiveZ, temp.z, 0]);
+					this.perspective.x += my.xtGet(items.perspectiveX, temp.x, 0);
+					this.perspective.y += my.xtGet(items.perspectiveY, temp.y, 0);
+					this.perspective.z += my.xtGet(items.perspectiveZ, temp.z, 0);
 				}
 				this.setPerspective();
 			}
@@ -1765,9 +1838,9 @@ Calculates the pixels value of the object's perspective attribute
 		my.Element = function(items) {
 			items = my.safeObject(items);
 			if (my.xt(items.domElement)) {
-				items.width = my.xtGet([items.width, items.domElement.style.width, my.d.Stack.width]);
-				items.height = my.xtGet([items.height, items.domElement.style.height, my.d.Stack.height]);
-				items.name = my.xtGet([items.elementName, items.name, items.domElement.id, items.domElement.name, 'Element']);
+				items.width = my.xtGet(items.width, items.domElement.style.width, my.d.Stack.width);
+				items.height = my.xtGet(items.height, items.domElement.style.height, my.d.Stack.height);
+				items.name = my.xtGet(items.elementName, items.name, items.domElement.id, items.domElement.name, 'Element');
 				my.PageElement.call(this, items);
 				if (this.name.match(/~~~/)) {
 					this.name = this.name.replace(/~~~/g, '_');

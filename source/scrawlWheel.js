@@ -92,13 +92,13 @@ A __factory__ function to generate new Wheel entitys
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
-			this.radius = my.xtGet([items.radius, my.d.Wheel.radius]);
+			this.radius = my.xtGet(items.radius, my.d.Wheel.radius);
 			this.width = this.radius * 2;
 			this.height = this.width;
-			this.checkHitUsingRadius = my.xtGet([items.checkHitUsingRadius, my.d.Wheel.checkHitUsingRadius]);
-			this.closed = my.xtGet([items.closed, my.d.Wheel.closed]);
-			this.includeCenter = my.xtGet([items.includeCenter, my.d.Wheel.includeCenter]);
-			this.clockwise = my.xtGet([items.clockwise, my.d.Wheel.clockwise]);
+			this.checkHitUsingRadius = my.xtGet(items.checkHitUsingRadius, my.d.Wheel.checkHitUsingRadius);
+			this.closed = my.xtGet(items.closed, my.d.Wheel.closed);
+			this.includeCenter = my.xtGet(items.includeCenter, my.d.Wheel.includeCenter);
+			this.clockwise = my.xtGet(items.clockwise, my.d.Wheel.clockwise);
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
@@ -173,7 +173,7 @@ Augments Entity.set()
 **/
 		my.Wheel.prototype.set = function(items) {
 			my.Entity.prototype.set.call(this, items);
-			this.radius = my.xtGet([items.radius, this.radius]);
+			this.radius = my.xtGet(items.radius, this.radius);
 			this.width = this.radius * 2;
 			this.height = this.width;
 			return this;

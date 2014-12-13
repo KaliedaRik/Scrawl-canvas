@@ -173,9 +173,9 @@ Group constructor hook function - modified by filters module
 **/
 		my.Group.prototype.filtersGroupInit = function(items) {
 			items = my.safeObject(items);
-			this.filters = my.xtGet([items.filters, []]);
-			this.filterOnStroke = my.xtGet([items.filterOnStroke, false]);
-			this.filterLevel = my.xtGet([items.filterLevel, 'entity']);
+			this.filters = (my.xt(items.filters)) ? items.filters : [];
+			this.filterOnStroke = my.xtGet(items.filterOnStroke, false);
+			this.filterLevel = my.xtGet(items.filterLevel, 'entity');
 		};
 		/**
 Entity constructor hook function - modified by filters module
@@ -184,9 +184,9 @@ Entity constructor hook function - modified by filters module
 **/
 		my.Entity.prototype.filtersEntityInit = function(items) {
 			items = my.safeObject(items);
-			this.filters = my.xtGet([items.filters, []]);
-			this.filterOnStroke = my.xtGet([items.filterOnStroke, false]);
-			this.filterLevel = my.xtGet([items.filterLevel, 'entity']);
+			this.filters = (my.xt(items.filters)) ? items.filters : [];
+			this.filterOnStroke = my.xtGet(items.filterOnStroke, false);
+			this.filterLevel = my.xtGet(items.filterLevel, 'entity');
 		};
 
 		/**
@@ -445,7 +445,7 @@ Group.stamp hook function - add a filter to a group of Entitys, and any backgrou
 **/
 		my.Group.prototype.stampFilter = function(engine, cell, force) {
 			var imageData, i, iz, canvas, composite, e, eStroke;
-			force = my.xtGet([force, false]);
+			force = my.xtGet(force, false);
 			if (this.filters.length > 0) {
 				canvas = my.canvas[cell];
 				my.cv.width = canvas.width;
@@ -504,7 +504,7 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 **/
 		my.Entity.prototype.stampFilter = function(engine, cell, force) {
 			var imageData, i, iz, canvas, composite;
-			force = my.xtGet([force, false]);
+			force = my.xtGet(force, false);
 			if (this.filters.length > 0) {
 				canvas = my.canvas[cell];
 				my.cv.width = canvas.width;
@@ -669,8 +669,8 @@ Entity.stamp hook helper function
 		my.Filter = function Filter(items) {
 			items = my.safeObject(items);
 			my.Base.call(this, items);
-			this.alpha = my.xtGet([items.alpha, 1]);
-			this.composite = my.xtGet([items.composite, 'source-over']);
+			this.alpha = my.xtGet(items.alpha, 1);
+			this.composite = my.xtGet(items.composite, 'source-over');
 			return this;
 		};
 		my.Filter.prototype = Object.create(my.Base.prototype);
@@ -723,7 +723,7 @@ cloneImageData function
 		my.Filter.prototype.cloneImageData = function(original) {
 			var w, h;
 			if (my.xt(original)) {
-				if (my.xta([original.width, original.height])) {
+				if (my.xta(original.width, original.height)) {
 					w = original.width;
 					h = original.height;
 					my.filterCanvas.width = w;
@@ -743,7 +743,7 @@ getAlpha function
 **/
 		my.Filter.prototype.getAlpha = function() {
 			var a = (my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) / 100 : this.alpha;
-			if (my.isBetween(a, 0, 1, true)) {
+			if (a >= 0 && a <= 1) {
 				return a;
 			}
 			else {
@@ -895,7 +895,7 @@ Add function - takes data, calculates its invert and combines it with data
 		my.BrightnessFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.brightness = my.xtGet([items.brightness, 1]);
+			this.brightness = my.xtGet(items.brightness, 1);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -967,7 +967,7 @@ Add function - takes data, calculates its brightness and replaces the old color 
 		my.SaturationFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.saturation = my.xtGet([items.saturation, 1]);
+			this.saturation = my.xtGet(items.saturation, 1);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1039,7 +1039,7 @@ Add function - takes data, calculates its saturation and replaces the old color 
 		my.ThresholdFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.threshold = my.xtGet([items.threshold, 0.5]);
+			this.threshold = my.xtGet(items.threshold, 0.5);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1113,9 +1113,9 @@ Add function - takes data, calculates its threshold and combines it with data
 		my.ChannelsFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.red = my.xtGet([items.red, 1]);
-			this.green = my.xtGet([items.green, 1]);
-			this.blue = my.xtGet([items.blue, 1]);
+			this.red = my.xtGet(items.red, 1);
+			this.green = my.xtGet(items.green, 1);
+			this.blue = my.xtGet(items.blue, 1);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1207,9 +1207,9 @@ Add function - takes data, calculates its channels and combines it with data
 		my.ChannelStepFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.red = my.xtGet([items.red, 1]);
-			this.green = my.xtGet([items.green, 1]);
-			this.blue = my.xtGet([items.blue, 1]);
+			this.red = my.xtGet(items.red, 1);
+			this.green = my.xtGet(items.green, 1);
+			this.blue = my.xtGet(items.blue, 1);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1305,15 +1305,15 @@ Add function - takes data, calculates its channels and combines it with data
 		my.TintFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.redInRed = my.xtGet([items.redInRed, 1]);
-			this.redInGreen = my.xtGet([items.redInGreen, 0]);
-			this.redInBlue = my.xtGet([items.redInBlue, 0]);
-			this.greenInRed = my.xtGet([items.greenInRed, 0]);
-			this.greenInGreen = my.xtGet([items.greenInGreen, 1]);
-			this.greenInBlue = my.xtGet([items.greenInBlue, 0]);
-			this.blueInRed = my.xtGet([items.blueInRed, 0]);
-			this.blueInGreen = my.xtGet([items.blueInGreen, 0]);
-			this.blueInBlue = my.xtGet([items.blueInBlue, 1]);
+			this.redInRed = my.xtGet(items.redInRed, 1);
+			this.redInGreen = my.xtGet(items.redInGreen, 0);
+			this.redInBlue = my.xtGet(items.redInBlue, 0);
+			this.greenInRed = my.xtGet(items.greenInRed, 0);
+			this.greenInGreen = my.xtGet(items.greenInGreen, 1);
+			this.greenInBlue = my.xtGet(items.greenInBlue, 0);
+			this.blueInRed = my.xtGet(items.blueInRed, 0);
+			this.blueInGreen = my.xtGet(items.blueInGreen, 0);
+			this.blueInBlue = my.xtGet(items.blueInBlue, 1);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1442,12 +1442,12 @@ Add function - takes data, calculates its channels and combines it with data
 		my.MatrixFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.width = my.xtGet([items.width, false]);
-			this.height = my.xtGet([items.height, false]);
-			this.data = my.xtGet([items.data, [1]]);
-			this.x = my.xtGet([items.x, Math.floor(this.width / 2)]);
-			this.y = my.xtGet([items.y, Math.floor(this.height / 2)]);
-			this.includeInvisiblePoints = my.xtGet([items.includeInvisiblePoints, false]);
+			this.width = my.xtGet(items.width, false);
+			this.height = my.xtGet(items.height, false);
+			this.data = (my.xt(items.data)) ? items.data : [1];
+			this.x = my.xtGet(items.x, Math.floor(this.width / 2));
+			this.y = my.xtGet(items.y, Math.floor(this.height / 2));
+			this.includeInvisiblePoints = my.xtGet(items.includeInvisiblePoints, false);
 			this.setFilter();
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
@@ -1515,8 +1515,8 @@ Set attribute values.
 **/
 		my.MatrixFilter.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
-			this.width = my.xtGet([items.width, false]);
-			this.height = my.xtGet([items.height, false]);
+			this.width = my.xtGet(items.width, false);
+			this.height = my.xtGet(items.height, false);
 			this.setFilter();
 		};
 		/**
@@ -1687,10 +1687,10 @@ Add function - takes data, calculates its channels and combines it with data
 		my.PixelateFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.width = my.xtGet([items.width, 5]);
-			this.height = my.xtGet([items.height, 5]);
-			this.offsetX = my.xtGet([items.offsetX, 0]);
-			this.offsetY = my.xtGet([items.offsetY, 0]);
+			this.width = my.xtGet(items.width, 5);
+			this.height = my.xtGet(items.height, 5);
+			this.offsetX = my.xtGet(items.offsetX, 0);
+			this.offsetY = my.xtGet(items.offsetY, 0);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1814,11 +1814,12 @@ Add function - takes data, calculates its channels and combines it with data
 		my.BlurFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.radiusX = my.xtGet([items.radiusX, 2]);
-			this.radiusY = my.xtGet([items.radiusY, 2]);
-			this.roll = my.xtGet([items.roll, 2]);
-			this.cells = my.xtGet([items.cells, false]);
-			this.includeInvisiblePoints = my.xtGet([items.includeInvisiblePoints, false]);
+			this.radiusX = my.xtGet(items.radiusX, 2);
+			this.radiusY = my.xtGet(items.radiusY, 2);
+			this.roll = my.xtGet(items.roll, 2);
+			this.skip = my.xtGet(items.skip, 1);
+			this.cells = (my.xt(items.cells)) ? items.cells : false;
+			this.includeInvisiblePoints = my.xtGet(items.includeInvisiblePoints, false);
 			if (!my.isa(this.cells, 'arr')) {
 				this.cells = this.getBrush();
 			}
@@ -1848,6 +1849,12 @@ Add function - takes data, calculates its channels and combines it with data
 @default 2
 **/
 			radiusY: 2,
+			/**
+@property skip
+@type Number
+@default 1
+**/
+			skip: 1,
 			/**
 @property roll
 @type Number
@@ -1884,7 +1891,91 @@ Add function - takes data, calculates its channels and combines it with data
 @return amended image data object
 **/
 		my.BlurFilter.prototype.add = function(data) {
-			return my.MatrixFilter.prototype.add.call(this, data);
+			var alpha = this.getAlpha(),
+				d0 = data.data,
+				result = my.cvx.createImageData(data.width, data.height),
+				dR = result.data,
+				c = this.cells.length,
+				s = Math.floor(c / this.skip),
+				count,
+				i, iz, j, jz, k, kz, r, g, b, e, e0, x, y;
+			if (this.includeInvisiblePoints) {
+				for (i = 0, iz = data.height; i < iz; i++) {
+					for (j = 0, jz = data.width; j < jz; j++) {
+						e0 = ((i * jz) + j) * 4;
+						if (d0[e0 + 3] > 0) {
+							r = 0;
+							g = 0;
+							b = 0;
+							for (k = 0, kz = c; k < kz; k += this.skip) {
+								x = j + this.cells[k][0];
+								y = i + this.cells[k][1];
+								if (x >= 0 && x < jz && y >= 0 && y < iz) {
+									e = ((y * jz) + x) * 4;
+									r += d0[e];
+									e++;
+									g += d0[e];
+									e++;
+									b += d0[e];
+								}
+							}
+							if (s !== 0) {
+								r /= s;
+								g /= s;
+								b /= s;
+							}
+							dR[e0] = r;
+							e0++;
+							dR[e0] = g;
+							e0++;
+							dR[e0] = b;
+							e0++;
+							dR[e0] = d0[e0] * alpha;
+						}
+					}
+				}
+			}
+			else {
+				for (i = 0, iz = data.height; i < iz; i++) {
+					for (j = 0, jz = data.width; j < jz; j++) {
+						e0 = ((i * jz) + j) * 4;
+						if (d0[e0 + 3] > 0) {
+							r = 0;
+							g = 0;
+							b = 0;
+							count = 0;
+							for (k = 0, kz = c; k < kz; k += this.skip) {
+								x = j + this.cells[k][0];
+								y = i + this.cells[k][1];
+								if (x >= 0 && x < jz && y >= 0 && y < iz) {
+									e = ((y * jz) + x) * 4;
+									if (d0[e + 3] > 0) {
+										count++;
+										r += d0[e];
+										e++;
+										g += d0[e];
+										e++;
+										b += d0[e];
+									}
+								}
+							}
+							if (count !== 0) {
+								r /= count;
+								g /= count;
+								b /= count;
+							}
+							dR[e0] = r;
+							e0++;
+							dR[e0] = g;
+							e0++;
+							dR[e0] = b;
+							e0++;
+							dR[e0] = d0[e0] * alpha;
+						}
+					}
+				}
+			}
+			return result;
 		};
 		/**
 Blur helper function
@@ -1953,13 +2044,13 @@ Blur helper function
 		my.LeachFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.minRed = my.xtGet([items.minRed, 0]);
-			this.minGreen = my.xtGet([items.minGreen, 0]);
-			this.minBlue = my.xtGet([items.minBlue, 0]);
-			this.maxRed = my.xtGet([items.maxRed, 255]);
-			this.maxGreen = my.xtGet([items.maxGreen, 255]);
-			this.maxBlue = my.xtGet([items.maxBlue, 255]);
-			this.preserve = my.xtGet([items.preserve, false]);
+			this.minRed = my.xtGet(items.minRed, 0);
+			this.minGreen = my.xtGet(items.minGreen, 0);
+			this.minBlue = my.xtGet(items.minBlue, 0);
+			this.maxRed = my.xtGet(items.maxRed, 255);
+			this.maxGreen = my.xtGet(items.maxGreen, 255);
+			this.maxBlue = my.xtGet(items.maxBlue, 255);
+			this.preserve = my.xtGet(items.preserve, false);
 			this.composite = (this.preserve) ? 'destination-in' : 'destination-out';
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
@@ -2092,7 +2183,7 @@ Add function - takes data, calculates its channels and combines it with data
 		my.SeparateFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.channel = my.xtGet([items.channel, 'all']);
+			this.channel = my.xtGet(items.channel, 'all');
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -2195,11 +2286,11 @@ Add function - takes data, calculates its channels and combines it with data
 		my.NoiseFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.radiusX = my.xtGet([items.radiusX, 2]);
-			this.radiusY = my.xtGet([items.radiusY, 2]);
-			this.roll = my.xtGet([items.roll, 2]);
-			this.cells = my.xtGet([items.cells, false]);
-			this.strength = my.xtGet([items.strength, 0.3]);
+			this.radiusX = my.xtGet(items.radiusX, 2);
+			this.radiusY = my.xtGet(items.radiusY, 2);
+			this.roll = my.xtGet(items.roll, 2);
+			this.cells = (my.xt(items.cells)) ? items.cells : false;
+			this.strength = my.xtGet(items.strength, 0.3);
 			if (!my.isa(this.cells, 'arr')) {
 				this.cells = this.getBrush();
 			}

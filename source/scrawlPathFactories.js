@@ -148,14 +148,14 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 				width = (my.isa(items.width, 'str')) ? my.convertPercentage(items.width, cell, true) : items.width || 0,
 				height = (my.isa(items.height, 'str')) ? my.convertPercentage(items.height, cell, false) : items.height || 0,
 				radius = items.radius || 0,
-				_brx = my.xtGet([items.radiusTopLeftX, items.radiusTopLeft, items.radiusTopX, items.radiusLeftX, items.radiusTop, items.radiusLeft, items.radiusX, items.radius, 0]),
-				_bry = my.xtGet([items.radiusTopLeftY, items.radiusTopLeft, items.radiusTopY, items.radiusLeftY, items.radiusTop, items.radiusLeft, items.radiusY, items.radius, 0]),
-				_blx = my.xtGet([items.radiusTopRightX, items.radiusTopRight, items.radiusTopX, items.radiusRightX, items.radiusTop, items.radiusRight, items.radiusX, items.radius, 0]),
-				_bly = my.xtGet([items.radiusTopRightY, items.radiusTopRight, items.radiusTopY, items.radiusRightY, items.radiusTop, items.radiusRight, items.radiusY, items.radius, 0]),
-				_tlx = my.xtGet([items.radiusBottomRightX, items.radiusBottomRight, items.radiusBottomX, items.radiusRightX, items.radiusBottom, items.radiusRight, items.radiusX, items.radius, 0]),
-				_tly = my.xtGet([items.radiusBottomRightY, items.radiusBottomRight, items.radiusBottomY, items.radiusRightY, items.radiusBottom, items.radiusRight, items.radiusY, items.radius, 0]),
-				_trx = my.xtGet([items.radiusBottomLeftX, items.radiusBottomLeft, items.radiusBottomX, items.radiusLeftX, items.radiusBottom, items.radiusLeft, items.radiusX, items.radius, 0]),
-				_try = my.xtGet([items.radiusBottomLeftY, items.radiusBottomLeft, items.radiusBottomY, items.radiusLeftY, items.radiusBottom, items.radiusLeft, items.radiusY, items.radius, 0]),
+				_brx = my.xtGet(items.radiusTopLeftX, items.radiusTopLeft, items.radiusTopX, items.radiusLeftX, items.radiusTop, items.radiusLeft, items.radiusX, items.radius, 0),
+				_bry = my.xtGet(items.radiusTopLeftY, items.radiusTopLeft, items.radiusTopY, items.radiusLeftY, items.radiusTop, items.radiusLeft, items.radiusY, items.radius, 0),
+				_blx = my.xtGet(items.radiusTopRightX, items.radiusTopRight, items.radiusTopX, items.radiusRightX, items.radiusTop, items.radiusRight, items.radiusX, items.radius, 0),
+				_bly = my.xtGet(items.radiusTopRightY, items.radiusTopRight, items.radiusTopY, items.radiusRightY, items.radiusTop, items.radiusRight, items.radiusY, items.radius, 0),
+				_tlx = my.xtGet(items.radiusBottomRightX, items.radiusBottomRight, items.radiusBottomX, items.radiusRightX, items.radiusBottom, items.radiusRight, items.radiusX, items.radius, 0),
+				_tly = my.xtGet(items.radiusBottomRightY, items.radiusBottomRight, items.radiusBottomY, items.radiusRightY, items.radiusBottom, items.radiusRight, items.radiusY, items.radius, 0),
+				_trx = my.xtGet(items.radiusBottomLeftX, items.radiusBottomLeft, items.radiusBottomX, items.radiusLeftX, items.radiusBottom, items.radiusLeft, items.radiusX, items.radius, 0),
+				_try = my.xtGet(items.radiusBottomLeftY, items.radiusBottomLeft, items.radiusBottomY, items.radiusLeftY, items.radiusBottom, items.radiusLeft, items.radiusY, items.radius, 0),
 				halfWidth = (width / 2),
 				halfHeight = (height / 2),
 				myData = 'm',
@@ -472,25 +472,29 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 	@param {Object} items Object containing attributes
 	@return Shape or Path entity object
 	**/
+		my.statArr.makeRegularShape1 = ['c', 's', 'q', 't', 'l'];
+		my.statArr.makeRegularShape2 = ['s', 't'];
+		my.statArr.makeRegularShape3 = ['c', 's', 'q', 't'];
+		my.statArr.makeRegularShape4 = ['q', 't'];
 		my.makeRegularShape = function(items) {
 			items = my.safeObject(items);
 			var cell = my.Entity.prototype.getEntityCell(items),
 				startX, startY, radius, turn, currentAngle, count, point, oPoint, test, data,
 				species, c1x, c1y, c2x, c2y, c1, c2;
-			if (my.xto([items.sides, items.angle])) {
+			if (my.xto(items.sides, items.angle)) {
 				items.closed = true;
 				items.isLine = false;
 				startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
 				startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
-				c1x = my.xtGet([items.startControlX, items.controlX, 0]);
-				c1y = my.xtGet([items.startControlY, items.controlY, 0]);
+				c1x = my.xtGet(items.startControlX, items.controlX, 0);
+				c1y = my.xtGet(items.startControlY, items.controlY, 0);
 				c2x = items.endControlX || 0;
 				c2y = items.endControlY || 0;
 				c1x = (my.isa(c1x, 'str')) ? my.convertPercentage(c1x, cell, true) : c1x;
 				c1y = (my.isa(c1y, 'str')) ? my.convertPercentage(c1y, cell, false) : c1y;
 				c2x = (my.isa(c2x, 'str')) ? my.convertPercentage(c2x, cell, true) : c2x;
 				c2y = (my.isa(c2y, 'str')) ? my.convertPercentage(c2y, cell, false) : c2y;
-				species = (my.contains(['c', 's', 'q', 't', 'l'], items.lineType)) ? items.lineType : 'l';
+				species = (my.contains(my.statArr.makeRegularShape1, items.lineType)) ? items.lineType : 'l';
 				radius = items.radius || 20;
 				// - known bug: items.sides has difficulty exiting the loop, hence the count<1000 limit
 				turn = (my.isa(items.sides, 'num') && items.sides > 1) ? 360 / items.sides : ((my.isa(items.angle, 'num') && items.angle > 0) ? items.angle : 4);
@@ -513,7 +517,7 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 					z: 0
 				});
 				data = 'm' + point.x.toFixed(4) + ' ' + point.y.toFixed(4);
-				if (my.contains(['s', 't'], species)) {
+				if (my.contains(my.statArr.makeRegularShape2, species)) {
 					data += ('s' === 'species') ? 'c' : 'q';
 				}
 				else {
@@ -527,8 +531,8 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 					point.rotate(turn);
 					c1.rotate(turn);
 					c2.rotate(turn);
-					if (my.contains(['c', 's', 'q', 't'], species)) {
-						if (1 === count && my.contains(['s', 't'], species)) {
+					if (my.contains(my.statArr.makeRegularShape3, species)) {
+						if (1 === count && my.contains(my.statArr.makeRegularShape2, species)) {
 							if ('s' === 'species') {
 								data += c1.x.toFixed(4) + ',' + c1.y.toFixed(4) + ' ' + c2.x.toFixed(4) + ',' + c2.y.toFixed(4) + ' ';
 							}
@@ -540,7 +544,7 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 							if ('s' === species) {
 								data += c2.x.toFixed(4) + ',' + c2.y.toFixed(4) + ' ';
 							}
-							else if (my.contains(['q', 'c'], species)) {
+							else if (my.contains(my.statArr.makeRegularShape4, species)) {
 								data += c1.x.toFixed(4) + ',' + c1.y.toFixed(4) + ' ';
 							}
 						}
@@ -550,7 +554,7 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 					}
 					data += (point.x - oPoint.x).toFixed(4) + ',' + (point.y - oPoint.y).toFixed(4) + ' ';
 					if (1 === count) {
-						if (my.contains(['s', 't'], species)) {
+						if (my.contains(my.statArr.makeRegularShape2, species)) {
 							data += ('s' === 'species') ? 's' : 't';
 						}
 					}

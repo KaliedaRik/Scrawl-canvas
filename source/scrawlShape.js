@@ -168,6 +168,7 @@ Create native path data from data attribute String
 @return Native path data
 @private
 **/
+		my.statArr.shapeBuildDataSet1 = ['M', 'L', 'C', 'Q', 'S', 'T'];
 		my.Shape.prototype.buildDataSet = function(d) {
 			var myData = [],
 				command,
@@ -280,7 +281,7 @@ Create native path data from data attribute String
 				});
 			}
 			for (i = 0, iz = myData.length; i < iz; i++) {
-				if (my.contains(['M', 'L', 'C', 'Q', 'S', 'T'], myData[i].c)) {
+				if (my.contains(my.statArr.shapeBuildDataSet1, myData[i].c)) {
 					for (j = 0, jz = myData[i].p.length; j < jz; j += 2) {
 						myData[i].p[j] -= minX;
 						myData[i].p[j + 1] -= minY;
@@ -323,6 +324,9 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 @return This
 @private
 **/
+		my.statArr.shapeCompleteOutline1 = ['M'];
+		my.statArr.shapeCompleteOutline2 = ['C', 'c', 'S', 's'];
+		my.statArr.shapeCompleteOutline3 = ['Q', 'q', 'T', 't'];
 		my.Shape.prototype.completeOutline = function(ctx, cell) {
 			if (this.dataSet) {
 				var here = this.prepareStamp(),
@@ -337,7 +341,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 				this.rotateCell(ctx, cell);
 				ctx.translate(here.x, here.y);
 				ctx.beginPath();
-				if (!my.contains(['M'], this.dataSet[0].c)) {
+				if (!my.contains(my.statArr.shapeCompleteOutline1, this.dataSet[0].c)) {
 					ctx.moveTo(currentX, currentY);
 				}
 				for (i = 0, iz = this.dataSet.length; i < iz; i++) {
@@ -441,7 +445,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 							break;
 						case 'S':
 							for (k = 0, kz = d.p.length; k < kz; k += 4) {
-								if (i > 0 && my.contains(['C', 'c', 'S', 's'], this.dataSet[i - 1].c)) {
+								if (i > 0 && my.contains(my.statArr.shapeCompleteOutline2, this.dataSet[i - 1].c)) {
 									tempX = currentX + (currentX - reflectX);
 									tempY = currentY + (currentY - reflectY);
 								}
@@ -458,7 +462,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 							break;
 						case 's':
 							for (k = 0, kz = d.p.length; k < kz; k += 4) {
-								if (i > 0 && my.contains(['C', 'c', 'S', 's'], this.dataSet[i - 1].c)) {
+								if (i > 0 && my.contains(my.statArr.shapeCompleteOutline2, this.dataSet[i - 1].c)) {
 									tempX = currentX + (currentX - reflectX);
 									tempY = currentY + (currentY - reflectY);
 								}
@@ -493,7 +497,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 							break;
 						case 'T':
 							for (k = 0, kz = d.p.length; k < kz; k += 2) {
-								if (i > 0 && my.contains(['Q', 'q', 'T', 't'], this.dataSet[i - 1].c)) {
+								if (i > 0 && my.contains(my.statArr.shapeCompleteOutline3, this.dataSet[i - 1].c)) {
 									tempX = currentX + (currentX - reflectX);
 									tempY = currentY + (currentY - reflectY);
 								}
@@ -510,7 +514,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 							break;
 						case 't':
 							for (k = 0, kz = d.p.length; k < kz; k += 2) {
-								if (i > 0 && my.contains(['Q', 'q', 'T', 't'], this.dataSet[i - 1].c)) {
+								if (i > 0 && my.contains(my.statArr.shapeCompleteOutline3, this.dataSet[i - 1].c)) {
 									tempX = currentX + (currentX - reflectX);
 									tempY = currentY + (currentY - reflectY);
 								}

@@ -124,22 +124,23 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		my.Position.prototype.animationPositionInit = function(items) {
 			var temp = my.safeObject(items.delta);
 			this.delta = my.newVector({
-				x: my.xtGet([items.deltaX, temp.x, 0]),
-				y: my.xtGet([items.deltaY, temp.y, 0]),
+				x: my.xtGet(items.deltaX, temp.x, 0),
+				y: my.xtGet(items.deltaY, temp.y, 0),
 			});
 			this.work.delta = my.newVector({
 				name: this.type + '.' + this.name + '.work.delta'
 			});
-			this.pathSpeedConstant = my.xtGet([items.pathSpeedConstant, my.d[this.type].pathSpeedConstant]);
-			this.deltaPathPlace = my.xtGet([items.deltaPathPlace, my.d[this.type].deltaPathPlace]);
+			this.pathSpeedConstant = my.xtGet(items.pathSpeedConstant, my.d[this.type].pathSpeedConstant);
+			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, my.d[this.type].deltaPathPlace);
 		};
 		/**
 	Position.get hook function - modified by animation module
 	@method animationPositionGet
 	@private
 	**/
+		my.statArr.positionAnimationPositionGet = ['deltaX', 'deltaY'];
 		my.Position.prototype.animationPositionGet = function(item) {
-			if (my.contains(['deltaX', 'deltaY'], item)) {
+			if (my.contains(my.statArr.positionAnimationPositionGet, item)) {
 				switch (item) {
 					case 'deltaX':
 						return this.delta.x;
@@ -162,9 +163,9 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			if (!my.isa(this.delta, 'vector')) {
 				this.delta = my.newVector(items.delta || this.delta);
 			}
-			if (my.xto([items.deltaX, items.deltaY])) {
-				this.delta.x = my.xtGet([items.deltaX, this.delta.x]);
-				this.delta.y = my.xtGet([items.deltaY, this.delta.y]);
+			if (my.xto(items.deltaX, items.deltaY)) {
+				this.delta.x = my.xtGet(items.deltaX, this.delta.x);
+				this.delta.y = my.xtGet(items.deltaY, this.delta.y);
 			}
 		};
 		/**
@@ -175,8 +176,8 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		my.Position.prototype.animationPositionClone = function(a, items) {
 			var temp = my.safeObject(items.delta);
 			a.delta = my.newVector({
-				x: my.xtGet([items.deltaX, temp.x, a.delta.x]),
-				y: my.xtGet([items.deltaY, temp.y, a.delta.y]),
+				x: my.xtGet(items.deltaX, temp.x, a.delta.x),
+				y: my.xtGet(items.deltaY, temp.y, a.delta.y),
 			});
 			return a;
 		};
@@ -318,8 +319,8 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		my.Cell.prototype.animationCellInit = function(items) {
 			var temp = my.safeObject(items.copyDelta);
 			this.copyDelta = my.newVector({
-				x: my.xtGet([items.copyDeltaX, temp.x, 0]),
-				y: my.xtGet([items.copyDeltaY, temp.y, 0]),
+				x: my.xtGet(items.copyDeltaX, temp.x, 0),
+				y: my.xtGet(items.copyDeltaY, temp.y, 0),
 			});
 			this.work.copyDelta = my.newVector();
 		};
@@ -328,8 +329,9 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 	@method animationCellGet
 	@private
 	**/
+		my.statArr.cellAnimationCellGet = ['copyDeltaX', 'copyDeltaY'];
 		my.Cell.prototype.animationCellGet = function(item) {
-			if (my.contains(['copyDeltaX', 'copyDeltaY'], item)) {
+			if (my.contains(my.statArr.cellAnimationCellGet, item)) {
 				switch (item) {
 					case 'copyDeltaX':
 						return this.copyDelta.x;
@@ -346,10 +348,10 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 	**/
 		my.Cell.prototype.animationCellSet = function(items) {
 			var temp;
-			if (my.xto([items.copyDelta, items.copyDeltaX, items.copyDeltaY])) {
+			if (my.xto(items.copyDelta, items.copyDeltaX, items.copyDeltaY)) {
 				temp = my.safeObject(items.copyDelta);
-				this.copyDelta.x = my.xtGet([items.copyDeltaX, temp.x, this.copyDelta.x]);
-				this.copyDelta.y = my.xtGet([items.copyDeltaY, temp.y, this.copyDelta.y]);
+				this.copyDelta.x = my.xtGet(items.copyDeltaX, temp.x, this.copyDelta.x);
+				this.copyDelta.y = my.xtGet(items.copyDeltaY, temp.y, this.copyDelta.y);
 			}
 		};
 		/**
@@ -475,10 +477,10 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 					sHeight = this.copyHeight,
 					aWidth = this.actualWidth,
 					aHeight = this.actualHeight,
-					minWidth = my.xtGet([this.copyMinWidth, this.copyWidth]),
-					minHeight = my.xtGet([this.copyMinHeight, this.copyHeight]),
-					maxWidth = my.xtGet([this.copyMaxWidth, this.copyWidth]),
-					maxHeight = my.xtGet([this.copyMaxHeight, this.copyHeight]),
+					minWidth = my.xtGet(this.copyMinWidth, this.copyWidth),
+					minHeight = my.xtGet(this.copyMinHeight, this.copyHeight),
+					maxWidth = my.xtGet(this.copyMaxWidth, this.copyWidth),
+					maxHeight = my.xtGet(this.copyMaxHeight, this.copyHeight),
 					sx = this.copy.x,
 					sy = this.copy.y,
 					myW = sWidth + item,
@@ -536,13 +538,14 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 	@return This
 	@chainable
 	**/
+		my.statArr.cellSpliceCell = ['horizontal', 'vertical', 'top', 'bottom', 'left', 'right'];
 		my.Cell.prototype.spliceCell = function(items) {
 			items = my.safeObject(items);
-			if (my.contains(['horizontal', 'vertical', 'top', 'bottom', 'left', 'right'], items.edge)) {
+			if (my.contains(my.statArr.cellSpliceCell, items.edge)) {
 				var myStrip,
 					myRemains,
 					myEdge,
-					myShift = my.xtGet([items.shiftCopy, false]),
+					myShift = my.xtGet(items.shiftCopy, false),
 					height = this.actualHeight,
 					width = this.actualWidth,
 					ctx = my.context[this.name],
@@ -563,13 +566,13 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 						break;
 					case 'top':
 					case 'bottom':
-						myStrip = my.xtGet([items.strip, 20]);
+						myStrip = my.xtGet(items.strip, 20);
 						myRemains = height - myStrip;
 						myEdge = items.edge;
 						break;
 					case 'left':
 					case 'right':
-						myStrip = my.xtGet([items.strip, 20]);
+						myStrip = my.xtGet(items.strip, 20);
 						myRemains = width - myStrip;
 						myEdge = items.edge;
 						break;

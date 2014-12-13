@@ -100,7 +100,7 @@ A __factory__ function to generate new Phrase entitys
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
 			this.registerInLibrary();
-			this.lineHeight = my.xtGet([items.lineHeight, my.d.Phrase.lineHeight]);
+			this.lineHeight = my.xtGet(items.lineHeight, my.d.Phrase.lineHeight);
 			if (items.font) {
 				this.checkFont(items.font);
 			}
@@ -237,7 +237,7 @@ Allows users to:
 		my.Phrase.prototype.set = function(items) {
 			my.Entity.prototype.set.call(this, items);
 			items = my.safeObject(items);
-			this.lineHeight = my.xtGet([items.lineHeight, this.lineHeight]);
+			this.lineHeight = my.xtGet(items.lineHeight, this.lineHeight);
 			if (items.font) {
 				this.checkFont(items.font);
 				this.offset.flag = false;
@@ -823,11 +823,11 @@ Returns an object with coordinates __x__ and __y__
 		my.Text = function Text(items) {
 			items = my.safeObject(items);
 			my.Base.call(this, items);
-			this.text = my.xtGet([items.text, my.d.Text.text]);
-			this.phrase = my.xtGet([items.phrase, my.d.Text.phrase]);
+			this.text = my.xtGet(items.text, my.d.Text.text);
+			this.phrase = my.xtGet(items.phrase, my.d.Text.phrase);
 			this.context = my.entity[this.phrase].context;
-			this.fixedWidth = my.xtGet([items.fixedWidth, my.d.Text.fixedWidth]);
-			this.textAlongPath = my.xtGet([items.textAlongPath, my.d.Text.textAlongPath]);
+			this.fixedWidth = my.xtGet(items.fixedWidth, my.d.Text.fixedWidth);
+			this.textAlongPath = my.xtGet(items.textAlongPath, my.d.Text.textAlongPath);
 			my.text[this.name] = this;
 			my.pushUnique(my.textnames, this.name);
 			my.pushUnique(my.entity[this.phrase].texts, this.name);

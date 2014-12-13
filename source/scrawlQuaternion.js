@@ -291,7 +291,7 @@ Argument can also be either an existing Quaternion object, or an existing Vector
 			if (my.isa(items, 'vector')) {
 				return this.setFromVector(items);
 			}
-			if (my.xto([items.pitch, items.yaw, items.roll])) {
+			if (my.xto(items.pitch, items.yaw, items.roll)) {
 				return this.setFromEuler(items);
 			}
 			v = (my.xt(items.vector) || my.xt(items.v)) ? (items.vector || items.v) : false;

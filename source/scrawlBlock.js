@@ -92,8 +92,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
-			this.width = my.xtGet([items.width, my.d.Block.width]);
-			this.height = my.xtGet([items.height, my.d.Block.height]);
+			this.width = my.xtGet(items.width, my.d.Block.width);
+			this.height = my.xtGet(items.height, my.d.Block.height);
 			this.setLocalDimensions();
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
@@ -134,7 +134,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	**/
 		my.Block.prototype.set = function(items) {
 			my.Entity.prototype.set.call(this, items);
-			if (my.xto([items.width, items.height, items.scale])) {
+			if (my.xto(items.width, items.height, items.scale)) {
 				this.setLocalDimensions();
 			}
 			return this;
