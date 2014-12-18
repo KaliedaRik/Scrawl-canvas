@@ -115,6 +115,9 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 								group: myStack.name
 							});
 						}
+						else {
+							my.stk[myStack.name].children[j].className += ' stack:' + myStack.name;
+						}
 					}
 					if (my.contains(my.elementnames, myStack.name)) {
 						myStack.group = my.element[myStack.name].group;
@@ -186,7 +189,6 @@ A __private__ function that searches the DOM for canvas elements and generates P
 					myPad = my.newPad({
 						canvasElement: el[i],
 					});
-					console.log('getCanvas #1', el[i].width, el[i].height, myPad.width, myPad.height);
 					if (stack) {
 						myPad.set({
 							group: stack.name,
@@ -203,7 +205,6 @@ A __private__ function that searches the DOM for canvas elements and generates P
 							});
 						}
 					}
-					console.log('getCanvas #2', el[i].width, el[i].height, myPad.width, myPad.height);
 					if (i === 0) {
 						my.currentPad = myPad.name;
 					}
@@ -809,72 +810,35 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 @chainable
 **/
 		my.PageElement.prototype.set = function(items) {
-			var el = this.getElement(),
-				temp, i, iz;
 			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
-			if (!this.start.type || this.start.type !== 'Vector') {
-				this.start = my.newVector(items.start || this.start);
-			}
 			if (my.xto(items.start, items.startX, items.startY)) {
-				temp = my.safeObject(items.start);
-				this.start.x = my.xtGet(items.startX, temp.x, this.start.x);
-				this.start.y = my.xtGet(items.startY, temp.y, this.start.y);
+				my.Position.prototype.setStart.call(this, items);
 			}
 			this.correctStart();
-			if (!this.delta.type || this.delta.type !== 'Vector') {
-				this.delta = my.newVector(items.delta || this.delta);
+			if (my.xto(items.handle, items.handleX, items.handleY)) {
+				my.Position.prototype.setHandle.call(this, items);
 			}
 			if (my.xto(items.delta, items.deltaX, items.deltaY)) {
-				temp = my.safeObject(items.delta);
-				this.delta.x = my.xtGet(items.deltaX, temp.x, this.delta.x);
-				this.delta.y = my.xtGet(items.deltaY, temp.y, this.delta.y);
-			}
-			if (!this.translate.type || this.translate.type !== 'Vector') {
-				this.translate = my.newVector(items.translate || this.translate);
+				my.Position.prototype.setDeltaAttribute.call(this, items);
 			}
 			if (my.xto(items.translate, items.translateX, items.translateY, items.translateZ)) {
-				temp = my.safeObject(items.translate);
-				this.translate.x = my.xtGet(items.translateX, temp.x, this.translate.x);
-				this.translate.y = my.xtGet(items.translateY, temp.y, this.translate.y);
-				this.translate.z = my.xtGet(items.translateZ, temp.z, this.translate.z);
-			}
-			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
-				this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
+				this.setTranslate(items);
 			}
 			if (my.xto(items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ)) {
-				temp = my.safeObject(items.deltaTranslate);
-				this.deltaTranslate.x = my.xtGet(items.deltaTranslateX, temp.x, this.deltaTranslate.x);
-				this.deltaTranslate.y = my.xtGet(items.deltaTranslateY, temp.y, this.deltaTranslate.y);
-				this.deltaTranslate.z = my.xtGet(items.deltaTranslateZ, temp.z, this.deltaTranslate.z);
-			}
-			if (!this.handle.type || this.handle.type !== 'Vector') {
-				this.handle = my.newVector(items.handle || this.handle);
-			}
-			if (my.xto(items.handle, items.handleX, items.handleY)) {
-				temp = my.safeObject(items.handle);
-				this.handle.x = my.xtGet(items.handleX, temp.x, this.handle.x);
-				this.handle.y = my.xtGet(items.handleY, temp.y, this.handle.y);
+				this.setDeltaTranslate(items);
 			}
 			if (my.xto(items.pitch, items.yaw, items.roll)) {
-				this.rotation.setFromEuler({
-					pitch: items.pitch || 0,
-					yaw: items.yaw || 0,
-					roll: items.roll || 0,
-				});
+				this.setRotation(items);
 			}
 			if (my.xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
-				this.deltaRotation.setFromEuler({
-					pitch: items.deltaPitch || 0,
-					yaw: items.deltaYaw || 0,
-					roll: items.deltaRoll || 0,
-				});
+				this.setDeltaRotation(items);
 			}
 			if (my.xto(items.width, items.height, items.scale)) {
 				this.setLocalDimensions();
 				this.setDimensions();
 			}
-			if (my.xto(tems.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
+			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
 				delete this.offset;
 			}
 			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start)) {
@@ -883,40 +847,128 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			if (my.xto(items.handleX, items.handleY, items.handle)) {
 				this.setTransformOrigin();
 			}
-			if (my.xt(items.position)) {
-				this.position = items.position;
-			}
 			if (my.xt(items.mouse)) {
 				this.initMouse({
 					mouse: items.mouse
 				});
 			}
 			if (my.xt(items.group)) {
-				for (i = 0, iz = my.groupnames.length; i < iz; i++) {
-					temp = my.group[my.groupnames[i]];
-					if (temp.type === 'ElementGroup') {
-						if (my.groupnames[i] === items.group) {
-							temp.addElementsToGroup(this.name);
-						}
-						else {
-							if (my.contains(temp.elements, this.name)) {
-								temp.removeElementsFromGroup(this.name);
-							}
-						}
-					}
-				}
+				this.setGroupAttribute(items);
 			}
 			if (my.xt(items.pivot)) {
-				this.pivot = items.pivot;
-				if (!this.pivot) {
-					delete this.oldX;
-					delete this.oldY;
-				}
+				this.setPivotAttribute(items);
 			}
 			if (my.xto(items.title, items.comment)) {
 				this.setAccessibility(items);
 			}
 			this.setStyles(items);
+			return this;
+		};
+		/**
+Augments PageElement.set()
+@method setPivotAttribute
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setPivotAttribute = function(items) {
+			this.pivot = items.pivot;
+			if (!this.pivot) {
+				delete this.oldX;
+				delete this.oldY;
+			}
+			return this;
+		};
+		/**
+Augments PageElement.set()
+@method setGroupAttribute
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setGroupAttribute = function(items) {
+			var temp, i, iz;
+			for (i = 0, iz = my.groupnames.length; i < iz; i++) {
+				temp = my.group[my.groupnames[i]];
+				if (temp.type === 'ElementGroup') {
+					if (my.groupnames[i] === items.group) {
+						temp.addElementsToGroup(this.name);
+					}
+					else {
+						if (my.contains(temp.elements, this.name)) {
+							temp.removeElementsFromGroup(this.name);
+						}
+					}
+				}
+			}
+			return this;
+		};
+		/**
+Augments PageElement.set()
+@method setRotation
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setRotation = function(items) {
+			this.rotation.setFromEuler({
+				pitch: items.pitch || 0,
+				yaw: items.yaw || 0,
+				roll: items.roll || 0,
+			});
+			return this;
+		};
+		/**
+Augments PageElement.set()
+@method setDeltaRotation
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setDeltaRotation = function(items) {
+			this.deltaRotation.setFromEuler({
+				pitch: items.deltaPitch || 0,
+				yaw: items.deltaYaw || 0,
+				roll: items.deltaRoll || 0,
+			});
+			return this;
+		};
+		/**
+Augments PageElement.set()
+@method setTranslate
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setTranslate = function(items) {
+			items = my.safeObject(items);
+			var temp;
+			if (!this.translate.type || this.translate.type !== 'Vector') {
+				this.translate = my.newVector(items.translate || this.translate);
+			}
+			temp = my.safeObject(items.translate);
+			this.translate.x = my.xtGet(items.translateX, temp.x, this.translate.x);
+			this.translate.y = my.xtGet(items.translateY, temp.y, this.translate.y);
+			this.translate.z = my.xtGet(items.translateZ, temp.z, this.translate.z);
+			return this;
+		};
+		/**
+Augments PageElement.set()
+@method setDeltaTranslate
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setDeltaTranslate = function(items) {
+			items = my.safeObject(items);
+			var temp;
+			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
+				this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
+			}
+			temp = my.safeObject(items.deltaTranslate);
+			this.deltaTranslate.x = my.xtGet(items.deltaTranslateX, temp.x, this.deltaTranslate.x);
+			this.deltaTranslate.y = my.xtGet(items.deltaTranslateY, temp.y, this.deltaTranslate.y);
+			this.deltaTranslate.z = my.xtGet(items.deltaTranslateZ, temp.z, this.deltaTranslate.z);
 			return this;
 		};
 		/**
@@ -964,8 +1016,10 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 @return This
 @chainable
 **/
+		my.statArr.pageElementSetStyles1 = ['hidden', 'none'];
+		my.statArr.pageElementSetStyles2 = ['backfaceVisibility', 'opacity', 'display', 'width', 'height', 'transform', 'translate', 'translateX', 'translateY', 'translateZ', 'top', 'left', 'bottom', 'right', 'zIndex', 'title', 'comment'];
 		my.PageElement.prototype.setStyles = function(items) {
-			items = (my.xt(items)) ? items : {};
+			items = my.safeObject(items);
 			var el = this.getElement(),
 				k = Object.keys(items);
 			for (var i = 0, iz = k.length; i < iz; i++) {
@@ -995,8 +1049,6 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 						}
 						// need an 'else' here with a whitelist of browser-specific css styles that require prefixes to work
 						// Scrawl users shouldn't care about prefixing ...
-						// also - zIndex changes by the user must be prevented at all costs
-						// in scrawlWorld, zIndex = translateZ * scale
 					}
 				}
 			}
@@ -1267,8 +1319,6 @@ Calculate start Vector in reference to a entity or Point object's position
 @chainable
 @private
 **/
-		my.statArr.pageElementSetStyles1 = ['hidden', 'none'];
-		my.statArr.pageElementSetStyles2 = ['backfaceVisibility', 'opacity', 'display', 'width', 'height', 'translate', 'translateX', 'translateY', 'translateZ', 'top', 'left'];
 		my.PageElement.prototype.setStampUsingPivot = function() {
 			var here,
 				myCell,
@@ -1279,29 +1329,33 @@ Calculate start Vector in reference to a entity or Point object's position
 			if (my.contains(my.pointnames, this.pivot)) {
 				myP = my.point[this.pivot];
 				pEntity = my.entity[myP.entity];
-				myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.getStartValues());
+				myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.start);
 				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+				return this;
 			}
-			else if (my.contains(my.entitynames, this.pivot)) {
+			if (my.contains(my.entitynames, this.pivot)) {
 				myP = my.entity[this.pivot];
 				myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.get('start');
 				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+				return this;
 			}
-			else if (my.contains(my.padnames, this.pivot)) {
+			if (my.contains(my.padnames, this.pivot)) {
 				myP = my.pad[this.pivot];
 				myPVector = myP.getStartValues();
 				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+				return this;
 			}
-			else if (my.contains(my.elementnames, this.pivot)) {
+			if (my.contains(my.elementnames, this.pivot)) {
 				myP = my.element[this.pivot];
 				myPVector = myP.getStartValues();
 				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+				return this;
 			}
-			else if (this.pivot === 'mouse') {
+			if (this.pivot === 'mouse') {
 				if (this.group) {
 					here = my.stack[my.group[this.group].stack].getMouse();
 					temp = this.getStartValues();
@@ -1393,6 +1447,9 @@ Helper function - set local dimensions (width, height)
 						this.localHeight = this.height * this.scale;
 					}
 				}
+				if (this.type === 'Pad') {
+					this.setCellLocalDimensions();
+				}
 			}
 			return this;
 		};
@@ -1447,16 +1504,29 @@ Pad set hook function - amended by Stacks module
 @private
 **/
 		my.Pad.prototype.padStacksSet = function(items) {
-			console.log('pSS', this.name, this.lockTo, this.base, this.localWidth, this.localHeight);
-			if (my.xt(items.width) && this.lockTo) {
-				my.cell[this.base].set({
-					width: this.localWidth
-				});
+			items = my.safeObject(items);
+			if (this.lockTo) {
+				if (my.xto(items.width, items.height, items.scale)) {
+					this.setLocalDimensions();
+				}
 			}
-			if (my.xt(items.height && this.lockTo)) {
-				my.cell[this.base].set({
-					height: this.localHeight
-				});
+		};
+		/**
+Pad lockTo helper
+@method setCellLocalDimensions
+@return Nothing
+@private
+**/
+		my.Pad.prototype.setCellLocalDimensions = function() {
+			var i, iz, cell;
+			if (this.lockTo && my.xt(this.cells)) {
+				for (i = 0, iz = this.cells.length; i < iz; i++) {
+					cell = my.cell[this.cells[i]];
+					cell.set({
+						width: this.localWidth,
+						height: this.localHeight
+					});
+				}
 			}
 		};
 		/**

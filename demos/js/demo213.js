@@ -122,7 +122,6 @@ var mycode = function() {
 		stopE;
 
 	//set stacks and elements to initial values
-	console.log('demo213 set mainstack');
 	bluestack.set({
 		width: 600,
 		height: 600,
@@ -137,7 +136,6 @@ var mycode = function() {
 		handleX: 'center',
 		handleY: 'center',
 	});
-	console.log('demo213 set substack');
 	redstack.set({
 		width: '50%',
 		height: '50%',

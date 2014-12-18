@@ -11,6 +11,8 @@ var mycode = function() {
 	var stack,
 		buttons = [],
 		moveButton,
+		left = '10%',
+		right = '90%',
 		i;
 
 	//add stack to web page
@@ -32,10 +34,12 @@ var mycode = function() {
 	//position and size buttons
 	for (i = 0; i < 4; i++) {
 		buttons[i].set({
-			startX: 30,
+			startX: left,
 			startY: (i * 50) + 20,
 			width: 100,
 			height: 40,
+			handleX: 'center',
+			handleY: 'center',
 		});
 	}
 	scrawl.renderElements();
@@ -44,7 +48,7 @@ var mycode = function() {
 		name: 'button0',
 		targets: buttons,
 		start: {
-			startX: 30,
+			startX: left,
 			roll: 0,
 		},
 		engines: {
@@ -52,11 +56,11 @@ var mycode = function() {
 			roll: 'easeOutIn3',
 		},
 		end: {
-			startX: 500,
+			startX: right,
 			roll: 360,
 		},
 		onComplete: {
-			startX: 30,
+			startX: left,
 			roll: 0,
 		},
 		duration: 3000,
@@ -70,7 +74,7 @@ var mycode = function() {
 			color: 'red',
 		},
 		onComplete: {
-			startX: 30,
+			startX: left,
 			roll: 0,
 			fontSize: '100%',
 			color: 'black',
@@ -84,15 +88,15 @@ var mycode = function() {
 		targets: scrawl.element.button2,
 		onCommence: {},
 		start: {
-			startX: 30,
+			startX: left,
 			height: 40,
 		},
 		end: {
-			startX: 500,
+			startX: right,
 			height: 100,
 		},
 		onComplete: {
-			startX: 30,
+			startX: left,
 			height: 40,
 		},
 		engines: {
@@ -104,19 +108,19 @@ var mycode = function() {
 		name: 'button3',
 		targets: [scrawl.element.button1, buttons[3]],
 		start: {
-			startX: 30,
+			startX: left,
 			roll: 0,
 			pitch: 0,
 			yaw: 0,
 		},
 		end: {
-			startX: 500,
+			startX: right,
 			roll: 360,
 			pitch: 360,
 			yaw: 360,
 		},
 		onComplete: {
-			startX: 30,
+			startX: left,
 			roll: 0,
 			pitch: 0,
 			yaw: 0,

@@ -1,7 +1,9 @@
 var mycode = function() {
 	'use strict';
 	//define variables
-	var grid,
+	var stack,
+		elementGroup,
+		grid,
 		line,
 		yOffsetStep = 75,
 		xOffsetStep = 60,
@@ -11,6 +13,14 @@ var mycode = function() {
 		updateLine,
 		i, iz;
 
+	//stack (and canvas) dimensions
+	stack = scrawl.stack.mystack;
+	elementGroup = scrawl.group.mystack;
+	stack.set({
+		width: 600,
+		height: 400,
+	});
+
 	//event listener function
 	updateLine = function(e) {
 		//get new data
@@ -19,7 +29,7 @@ var mycode = function() {
 			index = xAxisLabels.indexOf(target) + 1;
 		//calculate point's new position
 		scrawl.point['line_p' + index].set({
-			startY: -(300 * value),
+			startY: (1 - value) * 300,
 		});
 		//update chart view
 		scrawl.render();
@@ -56,34 +66,13 @@ var mycode = function() {
 		handleY: '270%',
 		roll: -90,
 	});
-	for (i = 0, iz = xAxisLabels.length; i < iz; i++) {
-		scrawl.newPhrase({ //x-axis day labels
-			name: xAxisLabels[i],
-			pivot: 'grid',
-			family: 'monospace',
-			handleX: (-xOffsetStep * i) - xOffsetStep + 9,
-			handleY: -310,
-			text: xAxisLabels[i],
-		});
-		//Position the selector boxes at the same time ...
-		scrawl.element[xAxisLabels[i]].set({
-			pivot: 'grid',
-			handleX: (-xOffsetStep * i) - xOffsetStep + 23,
-			handleY: -330,
-		});
-		//... then set their initial values, and add event listeners to them
-		scrawl.elm[xAxisLabels[i]].value = 0;
-		scrawl.elm[xAxisLabels[i]].addEventListener('change', updateLine, false);
-	}
 
 	//define and position the graph line ...
 	line = scrawl.makePath({
 		name: 'line',
-		data: 'M60,0 120,0 180,0 240,0 300,0,360,0 420,0',
+		data: 'm65,300 60,0 60,0 60,0 60,0 60,0 60,0',
 		mark: 'circle',
 		pivot: 'grid',
-		handleX: -5,
-		handleY: -300,
 		lineWidth: 4,
 	});
 	//... and the line marks
@@ -95,9 +84,33 @@ var mycode = function() {
 		method: 'fillDraw',
 	});
 
+	for (i = 0, iz = xAxisLabels.length; i < iz; i++) {
+		scrawl.newPhrase({ //x-axis day labels
+			name: xAxisLabels[i],
+			pivot: 'line_p' + (i + 1),
+			family: 'monospace',
+			handleX: 'center',
+			startY: 330,
+			lockY: true,
+			text: xAxisLabels[i],
+		});
+		//Position the selector boxes at the same time ...
+		scrawl.element[xAxisLabels[i]].set({
+			startY: 355,
+			lockY: true,
+			pivot: 'line_p' + (i + 1),
+			handleX: 'center',
+			width: 56,
+			translateZ: 1,
+		});
+		scrawl.render();
+		//... then set their initial values, and add event listeners to them
+		scrawl.elm[xAxisLabels[i]].value = 0;
+		scrawl.elm[xAxisLabels[i]].addEventListener('change', updateLine, false);
+	}
+
 	//display initial scene
 	scrawl.render();
-	scrawl.renderElements();
 };
 
 scrawl.loadModules({

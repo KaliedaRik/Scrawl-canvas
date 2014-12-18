@@ -47,41 +47,41 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		'use strict';
 
 		/**
-	# window.scrawl
+# window.scrawl
 
-	scrawlAnimation module adaptions to the Scrawl library object
+scrawlAnimation module adaptions to the Scrawl library object
 
-	## New library sections
+## New library sections
 
-	* scrawl.animation - for Animation and Tween objects
+* scrawl.animation - for Animation and Tween objects
 
-	* scrawl.doAnimation - a boolean switch to start/stop the animation loop
-	* scrawl.animate - the animation loop function
+* scrawl.doAnimation - a boolean switch to start/stop the animation loop
+* scrawl.animate - the animation loop function
 
-	## New default attributes
+## New default attributes
 
-	* Position.delta - default: {x:0,y:0,z:0};
-	* Position.deltaPathPlace - default: 0;
-	* Position.pathSpeedConstant - default: true;
-	* Position.path - default: '';
+* Position.delta - default: {x:0,y:0,z:0};
+* Position.deltaPathPlace - default: 0;
+* Position.pathSpeedConstant - default: true;
+* Position.path - default: '';
 
-	* Cell.sourceDelta - default: {x:0, y:0, z:0};
-	* Cell.sourceMinWidth - default: 0;
-	* Cell.sourceMaxWidth - default: 0;
-	* Cell.sourceMinHeight - default: 0;
-	* Cell.sourceMaxHeight - default: 0;
+* Cell.sourceDelta - default: {x:0, y:0, z:0};
+* Cell.sourceMinWidth - default: 0;
+* Cell.sourceMaxWidth - default: 0;
+* Cell.sourceMinHeight - default: 0;
+* Cell.sourceMaxHeight - default: 0;
 
-	* Design.roll - default: 0;
-	* Design.autoUpdate - default: false;
+* Design.roll - default: 0;
+* Design.autoUpdate - default: false;
 
-	@class window.scrawl_Animation
-	**/
+@class window.scrawl_Animation
+**/
 
 		/**
-	Starts the animation loop
-	@method animationInit
-	@private
-	**/
+Starts the animation loop
+@method animationInit
+@private
+**/
 		my.animationInit = function() {
 			my.doAnimation = true;
 			my.animationLoop();
@@ -114,13 +114,13 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			my.mergeInto(my.d.Path, my.d.Entity);
 		}
 		/**
-	Position constructor hook function
+Position constructor hook function
 
-	Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a 'velocity'
+Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a 'velocity'
 
-	@method animationPositionInit
-	@private
-	**/
+@method animationPositionInit
+@private
+**/
 		my.Position.prototype.animationPositionInit = function(items) {
 			var temp = my.safeObject(items.delta);
 			this.delta = my.newVector({
@@ -134,10 +134,10 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, my.d[this.type].deltaPathPlace);
 		};
 		/**
-	Position.get hook function - modified by animation module
-	@method animationPositionGet
-	@private
-	**/
+Position.get hook function - modified by animation module
+@method animationPositionGet
+@private
+**/
 		my.statArr.positionAnimationPositionGet = ['deltaX', 'deltaY'];
 		my.Position.prototype.animationPositionGet = function(item) {
 			if (my.contains(my.statArr.positionAnimationPositionGet, item)) {
@@ -155,24 +155,43 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return false;
 		};
 		/**
-	Position.set hook function - modified by animation module
-	@method animationPositionSet
-	@private
-	**/
+Position.set hook function - modified by animation module
+@method animationPositionSet
+@private
+**/
 		my.Position.prototype.animationPositionSet = function(items) {
-			if (!my.isa(this.delta, 'vector')) {
-				this.delta = my.newVector(items.delta || this.delta);
-			}
-			if (my.xto(items.deltaX, items.deltaY)) {
-				this.delta.x = my.xtGet(items.deltaX, this.delta.x);
-				this.delta.y = my.xtGet(items.deltaY, this.delta.y);
+			if (my.xto(items.delta, items.deltaX, items.deltaY)) {
+				this.setDeltaAttribute(items);
 			}
 		};
 		/**
-	Position.setDelta hook function - modified by animation module
-	@method animationPositionClone
-	@private
-	**/
+Augments Position.set(), to allow users to set the delta attributes using delta, deltaX, deltaY
+
+The scrawlAnimation module adds a __delta__ attribute to Cells and Entitys - this is an inbuilt delta vector which can be used to automatically animate the start vector of these objects - via the updateStart, revertStart and reverse functions - as part of the animation cycle.
+
+Be aware that this is different to the Position.setDelta() function inherited by Cells and Entitys. setDelta is used to add a supplied argument value to the existing values of any numerical attribute of a Cell or Entity object, and is thus not limited to the animation cycle.
+
+@method setDeltaAttribute
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.Position.prototype.setDeltaAttribute = function(items) {
+			items = my.safeObject(items);
+			var temp;
+			if (!my.isa(this.delta, 'vector')) {
+				this.delta = my.newVector(items.delta || this.delta);
+			}
+			temp = my.safeObject(items.delta);
+			this.delta.x = my.xtGet(items.deltaX, temp.x, this.delta.x);
+			this.delta.y = my.xtGet(items.deltaY, temp.y, this.delta.y);
+			return this;
+		};
+		/**
+Position.clone hook function - modified by animation module
+@method animationPositionClone
+@private
+**/
 		my.Position.prototype.animationPositionClone = function(a, items) {
 			var temp = my.safeObject(items.delta);
 			a.delta = my.newVector({
@@ -182,18 +201,18 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return a;
 		};
 		/**
-	Adds delta values to the start vector; adds deltaPathPlace to pathPlace
+Adds delta values to the start vector; adds deltaPathPlace to pathPlace
 
-	Permitted argument values include 
-	* 'x' - delta.x added to start.x
-	* 'y' - delta.y added to start.y
-	* 'path' - deltaPathPlace added to pathPlace 
-	* undefined: all values are amended
-	@method Position.updateStart
-	@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
-	@return This
-	@chainable
-	**/
+Permitted argument values include 
+* 'x' - delta.x added to start.x
+* 'y' - delta.y added to start.y
+* 'path' - deltaPathPlace added to pathPlace 
+* undefined: all values are amended
+@method Position.updateStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
 		my.Position.prototype.updateStart = function(item) {
 			switch (item) {
 				case 'x':
@@ -217,18 +236,18 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
+Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
 
-	Permitted argument values include 
-	* 'x' - delta.x subtracted from start.x
-	* 'y' - delta.y subtracted from start.y
-	* 'path' - deltaPathPlace subtracted from pathPlace 
-	* undefined: all values are amended
-	@method Position.revertStart
-	@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
-	@return This
-	@chainable
-	**/
+Permitted argument values include 
+* 'x' - delta.x subtracted from start.x
+* 'y' - delta.y subtracted from start.y
+* 'path' - deltaPathPlace subtracted from pathPlace 
+* undefined: all values are amended
+@method Position.revertStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
 		my.Position.prototype.revertStart = function(item) {
 			switch (item) {
 				case 'x':
@@ -254,13 +273,13 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Swaps the values of an attribute between two objects
-	@method Position.exchange
-	@param {Object} obj Object with which this object will swap attribute values
-	@param {String} item Attribute to be swapped
-	@return This
-	@chainable
-	**/
+Swaps the values of an attribute between two objects
+@method Position.exchange
+@param {Object} obj Object with which this object will swap attribute values
+@param {String} item Attribute to be swapped
+@return This
+@chainable
+**/
 		my.Position.prototype.exchange = function(obj, item) {
 			if (my.isa(obj, 'obj')) {
 				var temp = this[item] || this.get(item);
@@ -270,12 +289,12 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Changes the sign (+/-) of specified attribute values
-	@method Position.reverse
-	@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
-	@return This
-	@chainable
-	**/
+Changes the sign (+/-) of specified attribute values
+@method Position.reverse
+@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
+@return This
+@chainable
+**/
 		my.Position.prototype.reverse = function(item) {
 			var temp;
 			switch (item) {
@@ -309,13 +328,13 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		my.d.Cell.copyMinHeight = 0;
 		my.d.Cell.copyMaxHeight = 0;
 		/**
-	Cell constructor hook function
+Cell constructor hook function
 
-	Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to give it a 'velocity'
+Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to give it a 'velocity'
 
-	@method animationCellInit
-	@private
-	**/
+@method animationCellInit
+@private
+**/
 		my.Cell.prototype.animationCellInit = function(items) {
 			var temp = my.safeObject(items.copyDelta);
 			this.copyDelta = my.newVector({
@@ -325,10 +344,10 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			this.work.copyDelta = my.newVector();
 		};
 		/**
-	Cell.get hook function - modified by animation module
-	@method animationCellGet
-	@private
-	**/
+Cell.get hook function - modified by animation module
+@method animationCellGet
+@private
+**/
 		my.statArr.cellAnimationCellGet = ['copyDeltaX', 'copyDeltaY'];
 		my.Cell.prototype.animationCellGet = function(item) {
 			if (my.contains(my.statArr.cellAnimationCellGet, item)) {
@@ -342,10 +361,10 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return my.Base.prototype.get.call(this, item);
 		};
 		/**
-	Cell.set hook function - modified by animation module
-	@method animationCellSet
-	@private
-	**/
+Cell.set hook function - modified by animation module
+@method animationCellSet
+@private
+**/
 		my.Cell.prototype.animationCellSet = function(items) {
 			var temp;
 			if (my.xto(items.copyDelta, items.copyDeltaX, items.copyDeltaY)) {
@@ -355,20 +374,20 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			}
 		};
 		/**
-	Adds delta values to the start vector; adds sourceDelta values to the source vector; adds deltaPathPlace to pathPlace
+Adds delta values to the start vector; adds sourceDelta values to the source vector; adds deltaPathPlace to pathPlace
 
-	Permitted argument values include 
-	* 'x' - delta.x added to start.x; deltaSource.x added to source.x
-	* 'y' - delta.y added to start.y; deltaSource.y added to source.y
-	* 'start', 'target' - delta added to start
-	* 'source' - deltaSource added to source
-	* 'path' - deltaPathPlace added to pathPlace 
-	* undefined: all values are amended
-	@method Cell.updateStart
-	@param {String} [item] String used to limit this function's actions
-	@return This
-	@chainable
-	**/
+Permitted argument values include 
+* 'x' - delta.x added to start.x; deltaSource.x added to source.x
+* 'y' - delta.y added to start.y; deltaSource.y added to source.y
+* 'start', 'target' - delta added to start
+* 'source' - deltaSource added to source
+* 'path' - deltaPathPlace added to pathPlace 
+* undefined: all values are amended
+@method Cell.updateStart
+@param {String} [item] String used to limit this function's actions
+@return This
+@chainable
+**/
 		my.Cell.prototype.updateStart = function(item) {
 			switch (item) {
 				case 'x':
@@ -409,20 +428,20 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Subtracts delta values from the start vector; subtracts sourceDelta values from the source vector; subtracts deltaPathPlace to pathPlace
+Subtracts delta values from the start vector; subtracts sourceDelta values from the source vector; subtracts deltaPathPlace to pathPlace
 
-	Permitted argument values include 
-	* 'x' - delta.x subtracted from start.x; deltaSource.x subtracted from source.x
-	* 'y' - delta.y subtracted from start.y; deltaSource.y subtracted from source.y
-	* 'start', 'target' - delta subtracted from start
-	* 'source' - deltaSource subtracted from source
-	* 'path' - deltaPathPlace subtracted from pathPlace 
-	* undefined: all values are amended
-	@method Cell.revertStart
-	@param {String} [item] String used to limit this function's actions
-	@return This
-	@chainable
-	**/
+Permitted argument values include 
+* 'x' - delta.x subtracted from start.x; deltaSource.x subtracted from source.x
+* 'y' - delta.y subtracted from start.y; deltaSource.y subtracted from source.y
+* 'start', 'target' - delta subtracted from start
+* 'source' - deltaSource subtracted from source
+* 'path' - deltaPathPlace subtracted from pathPlace 
+* undefined: all values are amended
+@method Cell.revertStart
+@param {String} [item] String used to limit this function's actions
+@return This
+@chainable
+**/
 		my.Cell.prototype.revertStart = function(item) {
 			switch (item) {
 				case 'x':
@@ -465,12 +484,12 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Zooms one cell in relation to another cell
-	@method Cell.zoom
-	@param {Number} item Number of pixels to amend the zoomed cell's start and dimensions by
-	@return This
-	@chainable
-	**/
+Zooms one cell in relation to another cell
+@method Cell.zoom
+@param {Number} item Number of pixels to amend the zoomed cell's start and dimensions by
+@return This
+@chainable
+**/
 		my.Cell.prototype.zoom = function(item) {
 			if (my.isa(item, 'num')) {
 				var sWidth = this.copyWidth,
@@ -519,25 +538,25 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Perform a splice-shift-join operation on the &lt;canvas&gt; element's current scene
+Perform a splice-shift-join operation on the &lt;canvas&gt; element's current scene
 
-	Argument is an Object in the form:
+Argument is an Object in the form:
 
-	* {edge:String, strip:Number}
+* {edge:String, strip:Number}
 
-	Permitted values for the argument Object's attributes are:
+Permitted values for the argument Object's attributes are:
 
-	* __edge__ - one from 'horizontal', 'vertical', 'top', 'bottom', 'left', 'right'
-	* __strip__ - a width/height Number (in pixels) of the strip that is to be moved from the named edge of the &lt;canvas&gt; to the opposite edge
-	* __shiftSource__ - boolean - when true, will automatically shift the sourceX and sourceY coordinates; default: false
+* __edge__ - one from 'horizontal', 'vertical', 'top', 'bottom', 'left', 'right'
+* __strip__ - a width/height Number (in pixels) of the strip that is to be moved from the named edge of the &lt;canvas&gt; to the opposite edge
+* __shiftSource__ - boolean - when true, will automatically shift the sourceX and sourceY coordinates; default: false
 
-	_Note that this function is only effective in achieving a parallax effect if the user never clears or updates the cell's &lt;canvas&gt; element, and takes steps to shift the cell's source vector appropriately each time the splice operation is performed_
+_Note that this function is only effective in achieving a parallax effect if the user never clears or updates the cell's &lt;canvas&gt; element, and takes steps to shift the cell's source vector appropriately each time the splice operation is performed_
 
-	@method Cell.spliceCell
-	@param {Object} items Object containing data for the splice operation
-	@return This
-	@chainable
-	**/
+@method Cell.spliceCell
+@param {Object} items Object containing data for the splice operation
+@return This
+@chainable
+**/
 		my.statArr.cellSpliceCell = ['horizontal', 'vertical', 'top', 'bottom', 'left', 'right'];
 		my.Cell.prototype.spliceCell = function(items) {
 			items = my.safeObject(items);
@@ -608,14 +627,14 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Ask all entitys in the Group to perform an updateStart() operation
+Ask all entitys in the Group to perform an updateStart() operation
 
-	Each entity will add their delta values to their start Vector, and/or add deltaPathPlace from pathPlace
-	@method Group.updateStart
-	@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
-	@return This
-	@chainable
-	**/
+Each entity will add their delta values to their start Vector, and/or add deltaPathPlace from pathPlace
+@method Group.updateStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
 		my.Group.prototype.updateStart = function(item) {
 			for (var i = 0, z = this.entitys.length; i < z; i++) {
 				my.entity[this.entitys[i]].updateStart(item);
@@ -623,14 +642,14 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Ask all entitys in the Group to perform a revertStart() operation
+Ask all entitys in the Group to perform a revertStart() operation
 
-	Each entity will subtract their delta values to their start Vector, and/or subtract deltaPathPlace from pathPlace
-	@method Group.revertStart
-	@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
-	@return This
-	@chainable
-	**/
+Each entity will subtract their delta values to their start Vector, and/or subtract deltaPathPlace from pathPlace
+@method Group.revertStart
+@param {String} [item] String used to limit this function's actions - permitted values include 'x', 'y', 'path'; default action: all values are amended
+@return This
+@chainable
+**/
 		my.Group.prototype.revertStart = function(item) {
 			for (var i = 0, z = this.entitys.length; i < z; i++) {
 				my.entity[this.entitys[i]].revertStart(item);
@@ -638,14 +657,14 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Ask all entitys in the group to perform a reverse() operation
+Ask all entitys in the group to perform a reverse() operation
 
-	Each entity will change the sign (+/-) of specified attribute values
-	@method Group.reverse
-	@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
-	@return This
-	@chainable
-	**/
+Each entity will change the sign (+/-) of specified attribute values
+@method Group.reverse
+@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
+@return This
+@chainable
+**/
 		my.Group.prototype.reverse = function(item) {
 			for (var i = 0, z = this.entitys.length; i < z; i++) {
 				my.entity[this.entitys[i]].reverse(item);
@@ -653,18 +672,18 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	A value for shifting the color stops (was __roll__ in versions prior to v4.0)
-	@property shift
-	@type Number
-	@default 0
-	**/
+A value for shifting the color stops (was __roll__ in versions prior to v4.0)
+@property shift
+@type Number
+@default 0
+**/
 		my.d.Design.shift = 0;
 		/**
-	A flag to indicate that stop color shifts should be automatically applied
-	@property autoUpdate
-	@type Boolean
-	@default false
-	**/
+A flag to indicate that stop color shifts should be automatically applied
+@property autoUpdate
+@type Boolean
+@default false
+**/
 		my.d.Design.autoUpdate = false;
 		my.mergeInto(my.d.Gradient, my.d.Design);
 		my.mergeInto(my.d.RadialGradient, my.d.Design);
@@ -672,15 +691,15 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			my.mergeInto(my.d.Pattern, my.d.Design);
 		}
 		/**
-	Creates the gradient
+Creates the gradient
 
-	_This function replaces the one in the core module_
-	@method Design.update
-	@param {String} [entity] SPRITENAME String
-	@param {String} [cell] CELLNAME String
-	@return This
-	@chainable
-	**/
+_This function replaces the one in the core module_
+@method Design.update
+@param {String} [entity] SPRITENAME String
+@param {String} [cell] CELLNAME String
+@return This
+@chainable
+**/
 		my.Design.prototype.update = function(entity, cell) {
 			this.makeGradient(entity, cell);
 			this.sortStops();
@@ -688,11 +707,11 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return this;
 		};
 		/**
-	Gradient builder helper function - sorts color attribute Objects by their stop attribute values, after adding the roll value to them
-	@method Design.sortStops
-	@return Nothing
-	@private
-	**/
+Gradient builder helper function - sorts color attribute Objects by their stop attribute values, after adding the roll value to them
+@method Design.sortStops
+@return Nothing
+@private
+**/
 		my.Design.prototype.sortStops = function() {
 			var color = this.get('color'),
 				shift = this.get('shift');
@@ -716,20 +735,20 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			});
 		};
 		/**
-	A __factory__ function to generate new Animation objects
-	@method newAnimation
-	@param {Object} items Key:value Object argument for setting attributes
-	@return Animation object
-	**/
+A __factory__ function to generate new Animation objects
+@method newAnimation
+@param {Object} items Key:value Object argument for setting attributes
+@return Animation object
+**/
 		my.newAnimation = function(items) {
 			return new my.Animation(items);
 		};
 		/**
-	A __factory__ function to generate new Tween objects
-	@method newTween
-	@param {Object} items Key:value Object argument for setting attributes
-	@return Tween object
-	**/
+A __factory__ function to generate new Tween objects
+@method newTween
+@param {Object} items Key:value Object argument for setting attributes
+@return Tween object
+**/
 		my.newTween = function(items) {
 			return new my.Tween(items);
 		};
@@ -737,32 +756,32 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		my.pushUnique(my.nameslist, 'animate');
 		my.pushUnique(my.nameslist, 'animationnames');
 		/**
-	Animation flag: set to false to stop animation loop
-	@property doAnimation
-	@type {Boolean}
-	**/
+Animation flag: set to false to stop animation loop
+@property doAnimation
+@type {Boolean}
+**/
 		my.doAnimation = false;
 		/**
-	Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
-	@property orderAnimations
-	@type {Boolean}
-	@default true
-	**/
+Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
+@property orderAnimations
+@type {Boolean}
+@default true
+**/
 		my.orderAnimations = true;
 		/**
-	The Scrawl animation loop
+The Scrawl animation loop
 
-	Animation loop is invoked automatically as part of the initialization process
+Animation loop is invoked automatically as part of the initialization process
 
-	Scrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the __scrawl.animate__ Array
+Scrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the __scrawl.animate__ Array
 
-	All animation can be halted by setting the __scrawl.doAnimation__ flag to false
+All animation can be halted by setting the __scrawl.doAnimation__ flag to false
 
-	To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnimation_ to true and call __scrawl.animationLoop()
+To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnimation_ to true and call __scrawl.animationLoop()
 
-	@method animationLoop
-	@return Recursively calls itself - never returns
-	**/
+@method animationLoop
+@return Recursively calls itself - never returns
+**/
 		my.animationLoop = function() {
 			if (my.orderAnimations) {
 				my.sortAnimations();
@@ -779,11 +798,11 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			}
 		};
 		/**
-	Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order
-	@method sortAnimations
-	@return Nothing
-	@private
-	**/
+Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order
+@method sortAnimations
+@return Nothing
+@private
+**/
 		my.sortAnimations = function() {
 			my.animate.sort(function(a, b) {
 				return my.animation[a].order - my.animation[b].order;
@@ -791,25 +810,25 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		};
 
 		/**
-	# Animation
+# Animation
 
-	## Instantiation
+## Instantiation
 
-	* scrawl.newAnimation()
+* scrawl.newAnimation()
 
-	## Purpose
+## Purpose
 
-	* Defines an animation function to be run by the scrawl.animationLoop() function
+* Defines an animation function to be run by the scrawl.animationLoop() function
 
-	## Access
+## Access
 
-	* scrawl.animation.ANIMATIONNAME - for the Animation object
+* scrawl.animation.ANIMATIONNAME - for the Animation object
 
-	@class Animation
-	@constructor
-	@extends Base
-	@param {Object} [items] Key:value Object argument for setting attributes
-	**/
+@class Animation
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Animation = function(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
@@ -819,13 +838,13 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
 			/**
-	Pseudo-attribute used to prevent immediate running of animation when first created
+Pseudo-attribute used to prevent immediate running of animation when first created
 
-	_This attribute is not retained by the Animation object_
-	@property delay
-	@type Boolean
-	@default false
-	**/
+_This attribute is not retained by the Animation object_
+@property delay
+@type Boolean
+@default false
+**/
 			if (!delay) {
 				this.run();
 			}
@@ -833,53 +852,53 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		};
 		my.Animation.prototype = Object.create(my.Base.prototype);
 		/**
-	@property type
-	@type String
-	@default 'Animation'
-	@final
-	**/
+@property type
+@type String
+@default 'Animation'
+@final
+**/
 		my.Animation.prototype.type = 'Animation';
 		my.Animation.prototype.classname = 'animationnames';
 		my.d.Animation = {
 			/**
-	Anonymous function for an animation routine
-	@property fn
-	@type Function
-	@default function(){}
-	**/
+Anonymous function for an animation routine
+@property fn
+@type Function
+@default function(){}
+**/
 			fn: function() {},
 			/**
-	Lower order animations are run during each frame before higher order ones
-	@property order
-	@type Number
-	@default 0
-	**/
+Lower order animations are run during each frame before higher order ones
+@property order
+@type Number
+@default 0
+**/
 			order: 0,
 		};
 		my.mergeInto(my.d.Animation, my.d.Base);
 		/**
-	Run an animation
-	@method run
-	@return Always true
-	**/
+Run an animation
+@method run
+@return Always true
+**/
 		my.Animation.prototype.run = function() {
 			my.pushUnique(my.animate, this.name);
 			return true;
 		};
 		/**
-	Stop an animation
-	@method halt
-	@return Always true
-	**/
+Stop an animation
+@method halt
+@return Always true
+**/
 		my.Animation.prototype.halt = function() {
 			my.removeItem(my.animate, this.name);
 			return true;
 		};
 		/**
-	Remove this Animation from the scrawl library
-	@method kill
-	@return Always true
-	**/
+Remove this Animation from the scrawl library
+@method kill
+@return Always true
+**/
 		my.Animation.prototype.kill = function() {
 			delete my.animation[this.name];
 			my.removeItem(my.animationnames, this.name);
@@ -888,62 +907,62 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		};
 
 		/**
-	# Tween
+# Tween
 
-	## Instantiation
+## Instantiation
 
-	* scrawl.newTween()
+* scrawl.newTween()
 
-	## Purpose
+## Purpose
 
-	* Defines an animation to be applied to a Scrawl object
+* Defines an animation to be applied to a Scrawl object
 
-	Tweens are animations defined by duration (how long they should run for) and distance (how much an attribute needs to change over the course of the tween).
+Tweens are animations defined by duration (how long they should run for) and distance (how much an attribute needs to change over the course of the tween).
 
-	* One tween can change several attributes of an object, and can apply these changes to one or more objects as the tween runs its course.
-	* Any attribute that holds a Number, or a percentage String (5%), value can be tweened
-	* The starting point for each attribute tween is set in the __start__ attribute object
-	* The ending point for each attribute tween is set in the __end__ attribute object
-	* If an ending point is defined for an attribute, but no starting point, then the tween will use the object's attribute's current value for the starting point.
-	* Individual _easing engines_ can be defined for each attribute in the __engines__ attribute object.
+* One tween can change several attributes of an object, and can apply these changes to one or more objects as the tween runs its course.
+* Any attribute that holds a Number, or a percentage String (5%), value can be tweened
+* The starting point for each attribute tween is set in the __start__ attribute object
+* The ending point for each attribute tween is set in the __end__ attribute object
+* If an ending point is defined for an attribute, but no starting point, then the tween will use the object's attribute's current value for the starting point.
+* Individual _easing engines_ can be defined for each attribute in the __engines__ attribute object.
 
-	The objects on which the tween will operate are passed to the tween as an array of objects, in the __targets__ attribute
+The objects on which the tween will operate are passed to the tween as an array of objects, in the __targets__ attribute
 
-	* A tween will only run on an object that is not currently being animated by another tween
-	* A tween cannot be run if it is already running.
+* A tween will only run on an object that is not currently being animated by another tween
+* A tween cannot be run if it is already running.
 
-	The duration of the tween is set in the __duration__ attribute, in milliseconds.
+The duration of the tween is set in the __duration__ attribute, in milliseconds.
 
-	Tweens can hold data for attribute changes to be applied to their object(s) before the tween starts(__onCommence__) and after the tween ends (__onComplete__).
+Tweens can hold data for attribute changes to be applied to their object(s) before the tween starts(__onCommence__) and after the tween ends (__onComplete__).
 
-	Tweens can be chained by setting the __nextTween__ attribute to the String _name_ attribute of the next tween to be run.
+Tweens can be chained by setting the __nextTween__ attribute to the String _name_ attribute of the next tween to be run.
 
-	Tweens come with a number of flags and attributes to indicate how many times they should be run before completing:
+Tweens come with a number of flags and attributes to indicate how many times they should be run before completing:
 
-	* Set the __count__ attribute to a positive integer to run the tween that many times. Setting the attribute to _true_ will run the tween forever
-	* Tween direction can be reversed by setting the __reverse__ flag to _true_
-	* Setting the __autoReverse__ flag to true will automatically reverse the tween's direction at the end of each run
-	* Setting __autoReverseAndRun__ reverses the tween's direction and immediately running it again.
-	* Setting __killOnComplete__ will delete the tween once it has completed.
+* Set the __count__ attribute to a positive integer to run the tween that many times. Setting the attribute to _true_ will run the tween forever
+* Tween direction can be reversed by setting the __reverse__ flag to _true_
+* Setting the __autoReverse__ flag to true will automatically reverse the tween's direction at the end of each run
+* Setting __autoReverseAndRun__ reverses the tween's direction and immediately running it again.
+* Setting __killOnComplete__ will delete the tween once it has completed.
 
-	Tweens can run a callback function on completion by setting the __callback__ attribute to an appropriate (anonymous) function
+Tweens can run a callback function on completion by setting the __callback__ attribute to an appropriate (anonymous) function
 
-	## Access
+## Access
 
-	* scrawl.animation.TWEENNAME - for the Tween object
+* scrawl.animation.TWEENNAME - for the Tween object
 
-	## Tween functions
+## Tween functions
 
-	* Start a tween by calling the __run()__ function on it.
-	* Tween animation can be stopped by calling the __halt()__ function on it.
-	* A Tween can be deleted by calling the __kill()__ function on it.
-	* Tweens can be cloned like many other Scrawl objects, using the __clone()__ function
+* Start a tween by calling the __run()__ function on it.
+* Tween animation can be stopped by calling the __halt()__ function on it.
+* A Tween can be deleted by calling the __kill()__ function on it.
+* Tweens can be cloned like many other Scrawl objects, using the __clone()__ function
 
-	@class Tween
-	@constructor
-	@extends Base
-	@param {Object} [items] Key:value Object argument for setting attributes
-	**/
+@class Tween
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Tween = function(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
@@ -973,174 +992,174 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 		};
 		my.Tween.prototype = Object.create(my.Base.prototype);
 		/**
-	@property type
-	@type String
-	@default 'Tween'
-	@final
-	**/
+@property type
+@type String
+@default 'Tween'
+@final
+**/
 		my.Tween.prototype.type = 'Tween';
 		my.Tween.prototype.classname = 'animationnames';
 		my.d.Tween = {
 			/**
-	Array of entitys, cells, etc to be animated using this tween; expects to be passed handles to the entity objects, not SPRITENAME strings
-	@property targets
-	@type Array
-	@default []
-	**/
+Array of entitys, cells, etc to be animated using this tween; expects to be passed handles to the entity objects, not SPRITENAME strings
+@property targets
+@type Array
+@default []
+**/
 			targets: [],
 			/**
-	Array of entitys, cells, etc currently being animated using this tween
-	@property currentTargets
-	@type Array
-	@default []
-	@private
-	**/
+Array of entitys, cells, etc currently being animated using this tween
+@property currentTargets
+@type Array
+@default []
+@private
+**/
 			currentTargets: [],
 			/**
-	Object containing the start positions (for absolute transitions) or delta values (for relative transitions) for given settable (ie: Number) attributes
-	@property start
-	@type Object
-	@default {}
-	**/
+Object containing the start positions (for absolute transitions) or delta values (for relative transitions) for given settable (ie: Number) attributes
+@property start
+@type Object
+@default {}
+**/
 			start: {},
 			/**
-	Object containing attribute: value pairs determining which easing engine will be applied to each tweened attribute
+Object containing attribute: value pairs determining which easing engine will be applied to each tweened attribute
 
-	Currently, Scrawl offers the following easing engines. _Out_ signifies that the end of the tween is faster than the start; _In_ signifies the the end of the tween is slower. (This is the opposite of 'Flash' usage, but in line with wider programming conventions):
+Currently, Scrawl offers the following easing engines. _Out_ signifies that the end of the tween is faster than the start; _In_ signifies the the end of the tween is slower. (This is the opposite of 'Flash' usage, but in line with wider programming conventions):
 
-	* __in__, __easeIn__, __easeIn3__, __easeIn4__, __easeIn5__
-	* __out__, __easeOut__, __easeOut3__, __easeOut4__, __easeOut5__
-	* __easeOutIn__, __easeOutIn3__, __easeOutIn4__, __easeOutIn5__
-	* __linear__ (default) - an even speed throughout the duration of the tween
-	@property engines
-	@type Object
-	@default {}
-	**/
+* __in__, __easeIn__, __easeIn3__, __easeIn4__, __easeIn5__
+* __out__, __easeOut__, __easeOut3__, __easeOut4__, __easeOut5__
+* __easeOutIn__, __easeOutIn3__, __easeOutIn4__, __easeOutIn5__
+* __linear__ (default) - an even speed throughout the duration of the tween
+@property engines
+@type Object
+@default {}
+**/
 			engines: {},
 			/**
-	Object containing the end positions for given settable (ie: Number) attributes
-	@property end
-	@type Object
-	@default {}
-	**/
+Object containing the end positions for given settable (ie: Number) attributes
+@property end
+@type Object
+@default {}
+**/
 			end: {},
 			/**
-	Object containing set instructions to be performed at the end of the tween
-	@property onComplete
-	@type Object
-	@default {}
-	**/
+Object containing set instructions to be performed at the end of the tween
+@property onComplete
+@type Object
+@default {}
+**/
 			onComplete: {},
 			/**
-	Object containing runtime initial values for each object being tweened
-	@property initVals
-	@type Object
-	@default {}
-	@private
-	**/
+Object containing runtime initial values for each object being tweened
+@property initVals
+@type Object
+@default {}
+@private
+**/
 			initVals: [],
 			/**
-	Object containing set instructions to be performed at the start of the tween
-	@property onCommence
-	@type Object
-	@default {}
-	**/
+Object containing set instructions to be performed at the start of the tween
+@property onCommence
+@type Object
+@default {}
+**/
 			onCommence: {},
 			/**
-	Datetime when the tween starts running
-	@property startTime
-	@type Number - Date.now()
-	@default 0
-	@private
-	**/
+Datetime when the tween starts running
+@property startTime
+@type Number - Date.now()
+@default 0
+@private
+**/
 			startTime: 0,
 			/**
-	Duration of the tween, measured in milliseconds
-	@property duration
-	@type Number
-	@default 0
-	**/
+Duration of the tween, measured in milliseconds
+@property duration
+@type Number
+@default 0
+**/
 			duration: 0,
 			/**
-	Flag - when true, tween is running
-	@property active
-	@type Boolean
-	@default false
-	@private
-	**/
+Flag - when true, tween is running
+@property active
+@type Boolean
+@default false
+@private
+**/
 			active: false,
 			/**
-	Flag - when true, tween runs in reverse, from end values to start values (for absolute transitions) or applying negative start values (for relative transitions)
-	@property reverse
-	@type Boolean
-	@default false
-	**/
+Flag - when true, tween runs in reverse, from end values to start values (for absolute transitions) or applying negative start values (for relative transitions)
+@property reverse
+@type Boolean
+@default false
+**/
 			reverse: false,
 			/**
-	Flag - when true, tween will automatically reverse its direction when it completes
-	@property autoReverse
-	@type Boolean
-	@default false
-	**/
+Flag - when true, tween will automatically reverse its direction when it completes
+@property autoReverse
+@type Boolean
+@default false
+**/
 			autoReverse: false,
 			/**
-	Callback function to run when tween completes - will not run if nextTween is set
-	@property callback
-	@type Function
-	@default false
-	**/
+Callback function to run when tween completes - will not run if nextTween is set
+@property callback
+@type Function
+@default false
+**/
 			callback: false,
 			/**
-	Flag - when true, tween will automatically reverse its direction when it completes, and immediately run again
-	@property autoReverseAndRun
-	@type Boolean
-	@default false
-	**/
+Flag - when true, tween will automatically reverse its direction when it completes, and immediately run again
+@property autoReverseAndRun
+@type Boolean
+@default false
+**/
 			autoReverseAndRun: false,
 			/**
-	Counter for the number of cycles the tween will run; set to true for countinuous repetition
-	@property count
-	@type Mixed - Number or Boolean
-	@default 0
-	**/
+Counter for the number of cycles the tween will run; set to true for countinuous repetition
+@property count
+@type Mixed - Number or Boolean
+@default 0
+**/
 			count: 0,
 			/**
-	Internal attribute
-	@property currentCount
-	@type Mixed - Number or Boolean
-	@default 0
-	@private
-	**/
+Internal attribute
+@property currentCount
+@type Mixed - Number or Boolean
+@default 0
+@private
+**/
 			currentCount: 0,
 			/**
-	Flag - when true, tween will automatically delete itself when it completes
-	@property killOnComplete
-	@type Boolean
-	@default false
-	**/
+Flag - when true, tween will automatically delete itself when it completes
+@property killOnComplete
+@type Boolean
+@default false
+**/
 			killOnComplete: false,
 			/**
-	TWEENNAME Sring of the tween to be run when this tween completes
-	@property nextTween
-	@type String
-	@default ''
-	**/
+TWEENNAME Sring of the tween to be run when this tween completes
+@property nextTween
+@type String
+@default ''
+**/
 			nextTween: '',
 			/**
-	Lower order animations are run during each frame before higher order ones
-	@property order
-	@type Number
-	@default 0
-	**/
+Lower order animations are run during each frame before higher order ones
+@property order
+@type Number
+@default 0
+**/
 			order: 0,
 		};
 		my.mergeInto(my.d.Tween, my.d.Base);
 		/**
-	Tween animation function
-	@method fn
-	@return Always true
-	@private
-	**/
+Tween animation function
+@method fn
+@return Always true
+@private
+**/
 		my.Tween.prototype.fn = function() {
 			var currentTime = Date.now(),
 				progress = (currentTime - this.startTime) / this.duration,
@@ -1197,73 +1216,91 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return true;
 		};
 		/**
-	Tween engines
-	@method engine
-	@return calculated current value for an attribute, which will vary depending on which engine has been selected 
-	@param {Number} start Start point for tween action
-	@param {Number} change Total change required for tween action
-	@param {Number} position Normalized time (time elapsed/duration)
-	@param {String} engine Calculation engine to be used
-	@param {Boolean} reverse Reverse flag - true if tween is reversed
-	@private
-	**/
+Tween engines
+@method engine
+@return calculated current value for an attribute, which will vary depending on which engine has been selected 
+@param {Number} start Start point for tween action
+@param {Number} change Total change required for tween action
+@param {Number} position Normalized time (time elapsed/duration)
+@param {String} engine Calculation engine to be used
+@param {Boolean} reverse Reverse flag - true if tween is reversed
+@private
+**/
 		my.Tween.prototype.engine = function(start, change, position, engine, reverse) {
 			var temp;
+			if (engine.length < 4) {
+				switch (engine) {
+					case 'out':
+						temp = 1 - position;
+						return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
+					case 'in':
+						return start + (Math.sin((position * 90) * my.radian) * change);
+					default:
+						return start + (position * change);
+				}
+			}
+			if (engine[4] == 'I') {
+				switch (engine) {
+					case 'easeIn': //OPPOSITE of Flash easeIn - slow at end, not start
+						temp = 1 - position;
+						return (start + change) + ((temp * temp) * -change);
+					case 'easeIn3':
+						temp = 1 - position;
+						return (start + change) + ((temp * temp * temp) * -change);
+					case 'easeIn4':
+						temp = 1 - position;
+						return (start + change) + ((temp * temp * temp * temp) * -change);
+					case 'easeIn5':
+						temp = 1 - position;
+						return (start + change) + ((temp * temp * temp * temp * temp) * -change);
+					default:
+						return start + (position * change);
+				}
+			}
+			if (engine.length > 8) {
+				switch (engine) {
+					case 'easeOutIn':
+						temp = 1 - position;
+						return (position < 0.5) ?
+							start + ((position * position) * change * 2) :
+							(start + change) + ((temp * temp) * -change * 2);
+					case 'easeOutIn3':
+						temp = 1 - position;
+						return (position < 0.5) ?
+							start + ((position * position * position) * change * 4) :
+							(start + change) + ((temp * temp * temp) * -change * 4);
+					case 'easeOutIn4':
+						temp = 1 - position;
+						return (position < 0.5) ?
+							start + ((position * position * position * position) * change * 8) :
+							(start + change) + ((temp * temp * temp * temp) * -change * 8);
+					case 'easeOutIn5':
+						temp = 1 - position;
+						return (position < 0.5) ?
+							start + ((position * position * position * position * position) * change * 16) :
+							(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
+					default:
+						return start + (position * change);
+				}
+			}
 			switch (engine) {
 				case 'easeOut': //OPPOSITE of Flash easeOut - slow at start, not end
 					return start + ((position * position) * change);
-				case 'easeIn': //OPPOSITE of Flash easeIn - slow at end, not start
-					temp = 1 - position;
-					return (start + change) + ((temp * temp) * -change);
 				case 'easeOut3':
 					return start + ((position * position * position) * change);
-				case 'easeIn3':
-					temp = 1 - position;
-					return (start + change) + ((temp * temp * temp) * -change);
 				case 'easeOut4':
 					return start + ((position * position * position * position) * change);
-				case 'easeIn4':
-					temp = 1 - position;
-					return (start + change) + ((temp * temp * temp * temp) * -change);
 				case 'easeOut5':
 					return start + ((position * position * position * position * position) * change);
-				case 'easeIn5':
-					temp = 1 - position;
-					return (start + change) + ((temp * temp * temp * temp * temp) * -change);
-				case 'easeOutIn':
-					temp = 1 - position;
-					return (position < 0.5) ?
-						start + ((position * position) * change * 2) :
-						(start + change) + ((temp * temp) * -change * 2);
-				case 'easeOutIn3':
-					temp = 1 - position;
-					return (position < 0.5) ?
-						start + ((position * position * position) * change * 4) :
-						(start + change) + ((temp * temp * temp) * -change * 4);
-				case 'easeOutIn4':
-					temp = 1 - position;
-					return (position < 0.5) ?
-						start + ((position * position * position * position) * change * 8) :
-						(start + change) + ((temp * temp * temp * temp) * -change * 8);
-				case 'easeOutIn5':
-					temp = 1 - position;
-					return (position < 0.5) ?
-						start + ((position * position * position * position * position) * change * 16) :
-						(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
-				case 'out':
-					temp = 1 - position;
-					return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
-				case 'in':
-					return start + (Math.sin((position * 90) * my.radian) * change);
 				default:
 					return start + (position * change);
 			}
 		};
 		/**
-	Run a tween animation
-	@method run
-	@return Always true
-	**/
+Run a tween animation
+@method run
+@return Always true
+**/
 		my.Tween.prototype.run = function() {
 			var test,
 				activeTweens,
@@ -1332,11 +1369,11 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return false;
 		};
 		/**
-	Finish running a tween
-	@method runComplete
-	@return Always true
-	@private
-	**/
+Finish running a tween
+@method runComplete
+@return Always true
+@private
+**/
 		my.Tween.prototype.runComplete = function() {
 			for (var t = 0, tz = this.currentTargets.length; t < tz; t++) {
 				if (my.xt(this.currentTargets[t])) {
@@ -1357,20 +1394,20 @@ if (window.scrawl && !window.scrawl.newAnimation) {
 			return true;
 		};
 		/**
-	Stop a tween animation
-	@method halt
-	@return Always true
-	**/
+Stop a tween animation
+@method halt
+@return Always true
+**/
 		my.Tween.prototype.halt = function() {
 			this.active = false;
 			my.removeItem(my.animate, this.name);
 			return true;
 		};
 		/**
-	Remove this tween from the scrawl library
-	@method kill
-	@return Always true
-	**/
+Remove this tween from the scrawl library
+@method kill
+@return Always true
+**/
 		my.Tween.prototype.kill = function() {
 			if (this.active) {
 				for (var t = 0, tz = this.currentTargets.length; t < tz; t++) {

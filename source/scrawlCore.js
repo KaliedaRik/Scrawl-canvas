@@ -2202,6 +2202,7 @@ Position.set hook function - modified by animation module
 	my.Position.prototype.updateStart = function(item) {};
 	my.Position.prototype.revertStart = function(item) {};
 	my.Position.prototype.reverse = function(item) {};
+	my.Position.prototype.setDeltaAttribute = function(items) {};
 
 	/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function. This function also accepts startX, startY, handleX, handleY
@@ -3102,7 +3103,6 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 				height: this.localHeight
 			});
 		}
-		console.log(this.name, 'Pad.set()', items.width, items.height);
 		this.padStacksSet(items);
 		if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.width, items.height)) {
 			this.setDisplayOffsets();
@@ -4556,7 +4556,8 @@ Cell copy helper function
 			}
 			my.context[myCell.name].setTransform(1, 0, 0, 1, 0, 0);
 			myCell.prepareToCopyCell(engine);
-			engine.drawImage(my.canvas[myCell.name], copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h);
+			//console.log(this.name, myCell.name, copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h, 'dims', myCell.actualWidth, myCell.actualHeight, this.actualWidth, this.actualHeight);
+			engine.drawImage(my.canvas[myCell.name], Math.floor(copy.x), Math.floor(copy.y), Math.floor(copy.w), Math.floor(copy.h), Math.floor(offset.x), Math.floor(offset.y), Math.floor(paste.w), Math.floor(paste.h));
 		}
 		return this;
 	};

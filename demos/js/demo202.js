@@ -37,8 +37,8 @@ var mycode = function() {
 			here = mystack.getMouse();
 			myScale = (1 - ((Math.abs(here.y - (mystack.height / 2)) / mystack.height) + (Math.abs(here.x - (mystack.width / 2)) / mystack.width))) + 0.1;
 			mycow.set({
-				width: (here.active) ? Math.floor(cw * myScale) : 0,
-				height: (here.active) ? Math.floor(ch * myScale) : 0,
+				width: (here.active) ? Math.floor(cw * myScale) : 1,
+				height: (here.active) ? Math.floor(ch * myScale) : 1,
 			});
 			scrawl.render();
 

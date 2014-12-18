@@ -17,8 +17,8 @@ var mycode = function() {
 		totalBunnies = 0,
 		group,
 		bunny,
-		moveEntitys,
-		checkBounds,
+		//moveEntitys,
+		//checkBounds,
 		myEntity,
 		coord,
 		hits,
@@ -54,12 +54,9 @@ var mycode = function() {
 		collisionPoints: 'center',
 	});
 
-	//animation functions
-	moveEntitys = function() {
+	//animation function
+	moveBunnies = function() {
 		group.updateStart();
-	};
-
-	checkBounds = function() {
 		hits = group.getFieldEntityHits();
 		for (var i = 0, z = hits.length; i < z; i++) {
 			myEntity = scrawl.entity[hits[i][0]];
@@ -73,11 +70,6 @@ var mycode = function() {
 			}
 			myEntity.updateStart();
 		}
-	};
-
-	moveBunnies = function() {
-		moveEntitys();
-		checkBounds();
 	};
 
 	//event handlers
@@ -94,6 +86,7 @@ var mycode = function() {
 				deltaY: Math.floor((Math.random() * 4) + 1),
 				visibility: true,
 				group: 'mygroup',
+				roll: Math.floor(Math.random() * 360),
 			});
 		}
 		totalBunnies += 10;
