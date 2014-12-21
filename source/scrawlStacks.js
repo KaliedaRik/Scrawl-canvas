@@ -593,6 +593,15 @@ A flag to determine whether the object will calculate the rotation value of its 
 **/
 		my.d.PageElement.addPathRoll = false;
 		/**
+When element is pivoted to another element, determines placement in relation to that element
+
+Permitted values: 'top', 'right', 'bottom', 'left', '' (default)
+@property PageElement.lockTo
+@type String
+@default ''
+**/
+		my.d.PageElement.lockTo = '';
+		/**
 When true, element ignores horizontal placement data via pivot and path attributes
 @property PageElement.lockX
 @type Boolean
@@ -712,6 +721,7 @@ PageElement constructor hook function - modified by stacks module
 			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, my.d[this.type].deltaPathPlace);
 			this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
 			this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
+			this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
 			this.visibility = my.xtGet(items.visibility, my.d[this.type].visibility);
 			this.rotation = my.newQuaternion({
 				name: this.type + '.' + this.name + '.rotation'
@@ -1344,17 +1354,15 @@ Calculate start Vector in reference to a entity or Point object's position
 				return this;
 			}
 			if (my.contains(my.padnames, this.pivot)) {
-				myP = my.pad[this.pivot];
-				myPVector = myP.getStartValues();
-				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
-				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+				this.setStampUsingDomElement(my.pad[this.pivot]);
 				return this;
 			}
 			if (my.contains(my.elementnames, this.pivot)) {
-				myP = my.element[this.pivot];
-				myPVector = myP.getStartValues();
-				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
-				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+				this.setStampUsingDomElement(my.element[this.pivot]);
+				return this;
+			}
+			if (my.contains(my.stacknames, this.pivot)) {
+				this.setStampUsingDomElement(my.stack[this.pivot]);
 				return this;
 			}
 			if (this.pivot === 'mouse') {
@@ -1374,6 +1382,42 @@ Calculate start Vector in reference to a entity or Point object's position
 				}
 			}
 			return this;
+		};
+		/**
+setStampUsingPivot helper function
+@method PageElement.setStampUsingDomElement
+@return nothing
+@private
+**/
+		my.PageElement.prototype.setStampUsingDomElement = function(e) {
+			if (this.lockTo) {
+				this.setStampUsingLockTo(e);
+			}
+			else {
+				this.setStampUsingDomElementPivot(e);
+			}
+		};
+		/**
+setStampUsingPivot helper function
+@method PageElement.setStampUsingDomElementPivot
+@return nothing
+@private
+**/
+		my.PageElement.prototype.setStampUsingDomElementPivot = function(e) {
+			var myPVector = e.getStartValues();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+		};
+		/**
+setStampUsingPivot helper function
+@method PageElement.setStampUsingLockTo
+@return nothing
+@private
+**/
+		my.PageElement.prototype.setStampUsingLockTo = function(e) {
+			var myPVector = e.getStartValues();
+			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 		};
 		/**
 Set the transform origin style attribute

@@ -1227,6 +1227,7 @@ Tween engines
 @private
 **/
 		my.Tween.prototype.engine = function(start, change, position, engine, reverse) {
+			engine = my.xtGet(engine, 'x');
 			var temp;
 			if (engine.length < 4) {
 				switch (engine) {

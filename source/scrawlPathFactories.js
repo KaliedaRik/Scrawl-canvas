@@ -475,7 +475,7 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 		my.statArr.makeRegularShape1 = ['c', 's', 'q', 't', 'l'];
 		my.statArr.makeRegularShape2 = ['s', 't'];
 		my.statArr.makeRegularShape3 = ['c', 's', 'q', 't'];
-		my.statArr.makeRegularShape4 = ['q', 't'];
+		my.statArr.makeRegularShape4 = ['c', 'q'];
 		my.makeRegularShape = function(items) {
 			items = my.safeObject(items);
 			var cell = my.Entity.prototype.getEntityCell(items),
@@ -516,9 +516,9 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 					y: c2y,
 					z: 0
 				});
-				data = 'm' + point.x.toFixed(4) + ' ' + point.y.toFixed(4);
+				data = 'm' + point.x.toFixed(4) + ',' + point.y.toFixed(4);
 				if (my.contains(my.statArr.makeRegularShape2, species)) {
-					data += ('s' === 'species') ? 'c' : 'q';
+					data += ('s' === species) ? 'c' : 'q';
 				}
 				else {
 					data += species;
@@ -533,7 +533,7 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 					c2.rotate(turn);
 					if (my.contains(my.statArr.makeRegularShape3, species)) {
 						if (1 === count && my.contains(my.statArr.makeRegularShape2, species)) {
-							if ('s' === 'species') {
+							if ('s' === species) {
 								data += c1.x.toFixed(4) + ',' + c1.y.toFixed(4) + ' ' + c2.x.toFixed(4) + ',' + c2.y.toFixed(4) + ' ';
 							}
 							else {
@@ -555,7 +555,7 @@ if (window.scrawl && !window.scrawl.makeEllipse) {
 					data += (point.x - oPoint.x).toFixed(4) + ',' + (point.y - oPoint.y).toFixed(4) + ' ';
 					if (1 === count) {
 						if (my.contains(my.statArr.makeRegularShape2, species)) {
-							data += ('s' === 'species') ? 's' : 't';
+							data += ('s' === species) ? 's' : 't';
 						}
 					}
 					oPoint.set(point);

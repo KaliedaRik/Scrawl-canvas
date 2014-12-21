@@ -12,6 +12,7 @@ var mycode = function() {
 	//shorthand variables for manipulating each stack and element
 	var bluestack = scrawl.stack.mainstack,
 		bluepara = scrawl.element.maincopytext,
+		pinkpara = scrawl.element.myparagraph,
 
 		//initial settings for stack and element control values
 		current_bluestack_scale = 1,
@@ -22,6 +23,10 @@ var mycode = function() {
 		current_blueparastart_y = 'center',
 		current_blueparahandle_x = 'center',
 		current_blueparahandle_y = 'center',
+		current_borderWidth = 1,
+		current_padding = 0,
+		current_boxSizing = 'content-box',
+		current_borderStyle = 'solid',
 
 		//grabbing the controller elements (which are not part of the stack)
 		input_bluestack_scale = document.getElementById('bluestack_scale'),
@@ -43,6 +48,11 @@ var mycode = function() {
 		input_blueparahandle_yAbsolute = document.getElementById('blueparahandle_yAbsolute'),
 		input_blueparahandle_xString = document.getElementById('blueparahandle_xString'),
 		input_blueparahandle_yString = document.getElementById('blueparahandle_yString'),
+		input_borderWidth = document.getElementById('borderWidth'),
+		input_padding = document.getElementById('padding'),
+		input_boxSizing = document.getElementById('boxSizing'),
+		input_borderStyle = document.getElementById('borderStyle'),
+
 		event_bluepara_widthPercent,
 		event_bluepara_heightPercent,
 		event_bluepara_widthAbsolute,
@@ -59,6 +69,10 @@ var mycode = function() {
 		event_blueparahandle_yAbsolute,
 		event_blueparahandle_xString,
 		event_blueparahandle_yString,
+		event_borderWidth,
+		event_padding,
+		event_boxSizing,
+		event_borderStyle,
 
 		//grabbing the status div
 		status = document.getElementById('status'),
@@ -71,28 +85,22 @@ var mycode = function() {
 		width: 600,
 		height: 600,
 		target: 'both',
-		borderColor: 'blue',
+		border: '1px solid blue',
 	});
 	bluepara.set({
 		width: '50%',
 		height: '0%',
-		borderColor: 'lightblue',
+		border: '1px solid lightblue',
 		startX: 'center',
 		startY: 'center',
+		handleX: 'center',
+		handleY: 'center',
 	});
-
-	//canvas stuff
-	scrawl.newBlock({
-		method: 'sinkInto',
-		strokeStyle: 'red',
-		fillStyle: 'transparent',
-		shadowColor: 'black',
-		shadowOffsetX: 3,
-		shadowOffsetY: 3,
-		shadowBlur: 2,
-		lineWidth: 5,
-		lockTo: 'maincopytext',
-		scale: 1.05,
+	pinkpara.set({
+		height: 0,
+		border: '1px solid pink',
+		pivot: 'maincopytext',
+		lockTo: 'bottom',
 	});
 
 	//initial values for the input controllers
@@ -114,6 +122,10 @@ var mycode = function() {
 	input_blueparahandle_yAbsolute.value = 0;
 	input_blueparahandle_xString.options.selectedIndex = 1;
 	input_blueparahandle_yString.options.selectedIndex = 1;
+	input_borderWidth.value = 1;
+	input_padding.value = 0;
+	input_boxSizing.options.selectedIndex = 0;
+	input_borderStyle.options.selectedIndex = 0;
 
 	//event listeners
 	stopE = function(e) {
@@ -130,6 +142,40 @@ var mycode = function() {
 	input_bluestack_scale.addEventListener('input', event_bluestack_scale, false);
 	input_bluestack_scale.addEventListener('change', event_bluestack_scale, false);
 
+	event_boxSizing = function(e) {
+		stopE(e);
+		current_boxSizing = input_boxSizing.value;
+		bluepara.set({
+			boxSizing: current_boxSizing,
+		});
+	};
+	input_boxSizing.addEventListener('change', event_boxSizing, false);
+	event_borderStyle = function(e) {
+		stopE(e);
+		current_borderStyle = input_borderStyle.value;
+		bluepara.set({
+			borderStyle: current_borderStyle,
+		});
+	};
+	input_borderStyle.addEventListener('change', event_borderStyle, false);
+	event_borderWidth = function(e) {
+		stopE(e);
+		current_borderWidth = input_borderWidth.value + 'px';
+		bluepara.set({
+			borderWidth: current_borderWidth,
+		});
+	};
+	input_borderWidth.addEventListener('input', event_borderWidth, false);
+	input_borderWidth.addEventListener('change', event_borderWidth, false);
+	event_padding = function(e) {
+		stopE(e);
+		current_padding = input_padding.value + 'px';
+		bluepara.set({
+			padding: current_padding,
+		});
+	};
+	input_padding.addEventListener('input', event_padding, false);
+	input_padding.addEventListener('change', event_padding, false);
 	event_bluepara_widthPercent = function(e) {
 		stopE(e);
 		current_bluepara_width = input_bluepara_widthPercent.value + '%';
@@ -279,10 +325,6 @@ var mycode = function() {
 	scrawl.newAnimation({
 		fn: function() {
 
-			//move stacks and elements in line with controller input
-			scrawl.renderElements();
-
-			//move circles in line with their stack and element pivots
 			scrawl.render();
 
 			//report on the current values of each controller
@@ -308,7 +350,7 @@ var mycode = function() {
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['stacks', 'animation', 'block'],
+	modules: ['stacks', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

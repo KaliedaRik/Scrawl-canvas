@@ -84,12 +84,12 @@ var mycode = function() {
 		width: 600,
 		height: 600,
 		target: 'both',
-		borderColor: 'blue',
+		border: '1px solid blue',
 	});
 	bluepara.set({
 		width: '50%',
 		height: '0%',
-		borderColor: 'lightblue',
+		border: '1px solid lightblue',
 		startX: 'center',
 		startY: 'center',
 		handleX: 'center',
@@ -317,9 +317,6 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-
-			//move stacks and elements in line with controller input
-			scrawl.renderElements();
 
 			//move circles in line with their stack and element pivots
 			scrawl.render();
