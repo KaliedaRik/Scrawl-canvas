@@ -1473,9 +1473,9 @@ extracts x and y data
 		};
 	};
 	/**
-Comparea vector-like object to this one for equality
+Check if x and y attributes are set
 @method hasCoordinates
-@param {Mixed} item Object to be tested against this
+@param {Mixed} item Object to be tested
 @return True if argument possesses x and y attributes
 **/
 	my.Vector.prototype.hasCoordinates = function(item) {
@@ -1681,13 +1681,14 @@ Rotate the Vector by a given angle
 @return This
 @chainable
 **/
+	my.statArr.vr = [0, 0];
 	my.Vector.prototype.rotate = function(angle) {
 		if (my.isa(angle, 'num')) {
-			var a = Math.atan2(this.y, this.x);
-			a += (angle * my.radian);
-			var m = this.getMagnitude();
-			this.x = m * Math.cos(a);
-			this.y = m * Math.sin(a);
+			my.statArr.vr[0] = Math.atan2(this.y, this.x);
+			my.statArr.vr[0] += (angle * my.radian);
+			my.statArr.vr[1] = this.getMagnitude();
+			this.x = my.statArr.vr[1] * Math.cos(my.statArr.vr[0]);
+			this.y = my.statArr.vr[1] * Math.sin(my.statArr.vr[0]);
 			return this;
 		}
 		console.log('Vector.rotate() error: argument is not a Number');
@@ -4433,6 +4434,8 @@ Cell copy helper function
 		if (!this.offset.flag) {
 			this.offset.set(this.calculatePOV(this.work.handle, this.pasteData.w, this.pasteData.h, false)).reverse();
 			this.offset.flag = true;
+			this.offset.x = Math.floor(this.offset.x);
+			this.offset.y = Math.floor(this.offset.y);
 		}
 		if (this.pivot) {
 			this.setStampUsingPivot(my.pad[this.pad].base);
@@ -4480,6 +4483,10 @@ Cell.setCopy update copyData object values
 		if (this.copyData.y + this.copyData.h > this.actualHeight) {
 			this.copyData.y = this.actualHeight - this.copyData.h;
 		}
+		this.copyData.x = Math.floor(this.copyData.x);
+		this.copyData.y = Math.floor(this.copyData.y);
+		this.copyData.w = Math.floor(this.copyData.w);
+		this.copyData.h = Math.floor(this.copyData.h);
 		return this;
 	};
 	/**
@@ -4516,6 +4523,10 @@ Cell.setPaste update pasteData object values
 		if (this.pasteData.h < 1) {
 			this.pasteData.h = 1;
 		}
+		this.pasteData.x = Math.floor(this.pasteData.x);
+		this.pasteData.y = Math.floor(this.pasteData.y);
+		this.pasteData.w = Math.floor(this.pasteData.w);
+		this.pasteData.h = Math.floor(this.pasteData.h);
 		return this;
 	};
 	/**
@@ -4530,17 +4541,15 @@ Cell copy helper function
 	my.Cell.prototype.copyCellToSelf = function(cell, usePadScale) {
 		cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
 		usePadScale = my.xtGet(usePadScale, false);
-		var lockTo = cell.get('lockTo'),
-			myCell = (lockTo) ? my.cell[lockTo] : cell;
-		if (my.xt(myCell)) {
-			var copy = myCell.copyData,
-				paste = myCell.pasteData,
-				offset = myCell.offset,
+		if (my.xt(cell)) {
+			var copy = cell.copyData,
+				paste = cell.pasteData,
+				offset = cell.offset,
 				engine = my.context[this.name],
 				context = my.ctx[this.name],
-				cga = myCell.get('globalAlpha'),
+				cga = cell.get('globalAlpha'),
 				xga = context.get('globalAlpha'),
-				cgco = myCell.get('globalCompositeOperation'),
+				cgco = cell.get('globalCompositeOperation'),
 				xgco = context.get('globalCompositeOperation');
 			if (cga !== xga) {
 				engine.globalAlpha = cga;
@@ -4554,10 +4563,9 @@ Cell copy helper function
 					globalCompositeOperation: cgco
 				});
 			}
-			my.context[myCell.name].setTransform(1, 0, 0, 1, 0, 0);
-			myCell.prepareToCopyCell(engine);
-			//console.log(this.name, myCell.name, copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h, 'dims', myCell.actualWidth, myCell.actualHeight, this.actualWidth, this.actualHeight);
-			engine.drawImage(my.canvas[myCell.name], Math.floor(copy.x), Math.floor(copy.y), Math.floor(copy.w), Math.floor(copy.h), Math.floor(offset.x), Math.floor(offset.y), Math.floor(paste.w), Math.floor(paste.h));
+			my.context[cell.name].setTransform(1, 0, 0, 1, 0, 0);
+			cell.prepareToCopyCell(engine);
+			engine.drawImage(my.canvas[cell.name], copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h);
 		}
 		return this;
 	};

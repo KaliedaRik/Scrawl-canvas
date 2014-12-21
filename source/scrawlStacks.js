@@ -834,14 +834,14 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			if (my.xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
 				this.setDeltaRotation(items);
 			}
-			if (my.xto(items.width, items.height, items.scale)) {
+			if (my.xto(items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing)) {
 				this.setLocalDimensions();
 				this.setDimensions();
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
+			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing)) {
 				delete this.offset;
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start)) {
+			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing)) {
 				this.setDisplayOffsets();
 			}
 			if (my.xto(items.handleX, items.handleY, items.handle)) {
@@ -1240,52 +1240,54 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 @return This left
 @chainable
 **/
+		my.statArr.pere = [0, 0, 0, 0, 0, 0, 0];
+		my.statArr.pere2 = [0, 0, 0, 0, 0];
 		my.PageElement.prototype.renderElement = function() {
-			var el = this.getElement(),
-				trans = '',
-				pos,
-				m = [];
+			my.statArr.pere2[0] = this.getElement();
 			if (!my.xt(this.offset)) {
 				this.offset = this.getOffsetStartVector();
 			}
 			if (this.path) {
 				this.setStampUsingPath();
-				pos = this.start;
+				my.statArr.pere2[1] = this.start;
 			}
 			else if (this.pivot) {
 				this.setStampUsingPivot();
-				pos = this.start;
+				my.statArr.pere2[1] = this.start;
 			}
 			else {
-				pos = this.getStartValues();
+				my.statArr.pere2[1] = this.getStartValues();
 			}
 			this.updateStart();
+			my.statArr.pere2[2] = (my.isa(this.start.x, 'str')) ? true : false;
+			my.statArr.pere2[3] = (my.isa(this.start.y, 'str')) ? true : false;
 
 			if (this.rotation.getMagnitude() !== 1) {
 				this.rotation.normalize();
 			}
 
-			m.push(Math.round(this.translate.x * this.scale));
-			m.push(Math.round(this.translate.y * this.scale));
-			m.push(Math.round(this.translate.z * this.scale));
-			m.push(this.rotation.v.x);
-			m.push(this.rotation.v.y);
-			m.push(this.rotation.v.z);
-			m.push(this.rotation.getAngle(false));
+			my.statArr.pere[0] = Math.round(this.translate.x * this.scale);
+			my.statArr.pere[1] = Math.round(this.translate.y * this.scale);
+			my.statArr.pere[2] = Math.round(this.translate.z * this.scale);
+			my.statArr.pere[3] = this.rotation.v.x;
+			my.statArr.pere[4] = this.rotation.v.y;
+			my.statArr.pere[5] = this.rotation.v.z;
+			my.statArr.pere[6] = this.rotation.getAngle(false);
 
-			for (var i = 0, z = m.length; i < z; i++) {
-				if (my.isBetween(m[i], 0.000001, -0.000001)) {
-					m[i] = 0;
+			for (var i = 0; i < 7; i++) {
+				if (my.statArr.pere[i] < 0.000001 && my.statArr.pere[i] > -0.000001) {
+					my.statArr.pere[i] = 0;
 				}
 			}
-			trans += 'translate3d(' + m[0] + 'px,' + m[1] + 'px,' + m[2] + 'px) rotate3d(' + m[3] + ',' + m[4] + ',' + m[5] + ',' + m[6] + 'rad)';
-			el.style.webkitTransform = trans;
-			el.style.transform = trans;
 
-			el.style.zIndex = m[2];
+			my.statArr.pere2[4] = 'translate3d(' + my.statArr.pere[0] + 'px,' + my.statArr.pere[1] + 'px,' + my.statArr.pere[2] + 'px) rotate3d(' + my.statArr.pere[3] + ',' + my.statArr.pere[4] + ',' + my.statArr.pere[5] + ',' + my.statArr.pere[6] + 'rad)';
+			my.statArr.pere2[0].style.webkitTransform = my.statArr.pere2[4];
+			my.statArr.pere2[0].style.transform = my.statArr.pere2[4];
 
-			el.style.left = ((pos.x * this.scale) + this.offset.x) + 'px';
-			el.style.top = ((pos.y * this.scale) + this.offset.y) + 'px';
+			my.statArr.pere2[0].style.zIndex = my.statArr.pere[2];
+
+			my.statArr.pere2[0].style.left = (my.statArr.pere2[2]) ? ((my.statArr.pere2[1].x * this.scale) + this.offset.x) + 'px' : (my.statArr.pere2[1].x + this.offset.x) + 'px';
+			my.statArr.pere2[0].style.top = (my.statArr.pere2[3]) ? ((my.statArr.pere2[1].y * this.scale) + this.offset.y) + 'px' : (my.statArr.pere2[1].y + this.offset.y) + 'px';
 			return this;
 		};
 		/**
@@ -1321,7 +1323,7 @@ Calculate start Vector in reference to a entity or Point object's position
 **/
 		my.PageElement.prototype.setStampUsingPivot = function() {
 			var here,
-				myCell,
+				// myCell,
 				myP,
 				myPVector,
 				pEntity,
@@ -1424,32 +1426,55 @@ Helper function - set local dimensions (width, height)
 @private
 **/
 		my.PageElement.prototype.setLocalDimensions = function() {
-			var parent, w, h;
+			var parent, w, h, hVal, el, s;
 			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
 			if (parent) {
 				w = parent.localWidth;
 				h = parent.localHeight;
 			}
 			if (this.scale) {
-				if (this.width) {
-					if (parent && my.isa(this.width, 'str') && w) {
-						this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
-					}
-					else {
-						this.localWidth = this.width * this.scale;
+				if (parent && my.isa(this.width, 'str') && w) {
+					this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+				}
+				else {
+					this.localWidth = this.width * this.scale;
+				}
+				hVal = parseFloat(this.height);
+				if (hVal === 0 || isNaN(hVal)) {
+					el = this.getElement();
+					if (el) {
+						el.style.height = 'auto';
+						s = window.getComputedStyle(el, null);
+						this.localHeight = parseFloat(s.getPropertyValue('height'));
 					}
 				}
-				if (this.height) {
-					if (parent && my.isa(this.height, 'str') && h) {
-						this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
-					}
-					else {
-						this.localHeight = this.height * this.scale;
-					}
+				else if (parent && my.isa(this.height, 'str') && h) {
+					this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+				}
+				else {
+					this.localHeight = this.height * this.scale;
 				}
 				if (this.type === 'Pad') {
 					this.setCellLocalDimensions();
 				}
+			}
+			return this;
+		};
+		/**
+Helper function - set DOM element dimensions (width, height)
+
+Overwritesa core setDimensions()
+@method setDimensions
+@return This
+@chainable
+@private
+**/
+		my.PageElement.prototype.setDimensions = function() {
+			var el = this.getElement(),
+				s;
+			if (el) {
+				el.style.width = this.localWidth + 'px';
+				el.style.height = this.localHeight + 'px';
 			}
 			return this;
 		};
@@ -1536,10 +1561,16 @@ Stamp helper hook function - amended by stacks module
 @return always true
 **/
 		my.Position.prototype.setStampUsingStacksPivot = function() {
-			var myP = my.element[this.pivot] || my.stack[this.pivot] || my.pad[this.pivot] || false;
+			var myP = my.element[this.pivot] || my.stack[this.pivot] || my.pad[this.pivot] || false,
+				myPVector;
 			if (myP) {
-				this.start.x = (!this.lockX) ? myP.start.x + myP.displayOffsetX : this.start.x;
-				this.start.y = (!this.lockY) ? myP.start.y + myP.displayOffsetY : this.start.y;
+				myPVector = myP.getStartValues();
+				if (!this.lockX) {
+					this.start.x = (my.isa(myP.start.x, 'str')) ? myPVector.x * myP.scale : myPVector.x;
+				}
+				if (!this.lockY) {
+					this.start.y = (my.isa(myP.start.y, 'str')) ? myPVector.y * myP.scale : myPVector.y;
+				}
 				return this;
 			}
 		};
