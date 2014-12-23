@@ -11,8 +11,9 @@ var mycode = function() {
 
 	//shorthand variables for manipulating each stack and element
 	var bluestack = scrawl.stack.mainstack,
-		bluepara = scrawl.element.maincopytext,
-		pinkpara = scrawl.element.myparagraph,
+		bluepara = scrawl.element.element1,
+		redpara = scrawl.element.element2,
+		greenpara = scrawl.element.element3,
 
 		//initial settings for stack and element control values
 		current_bluestack_scale = 1,
@@ -23,10 +24,13 @@ var mycode = function() {
 		current_blueparastart_y = 'center',
 		current_blueparahandle_x = 'center',
 		current_blueparahandle_y = 'center',
-		current_borderWidth = 1,
-		current_padding = 0,
-		current_boxSizing = 'content-box',
-		current_borderStyle = 'solid',
+		current_bluepara_borderWidth = 1,
+		current_bluepara_padding = 0,
+		current_bluepara_boxSizing = 'content-box',
+		current_bluepara_borderStyle = 'solid',
+
+		current_redpara_lockto = 'bottom',
+		current_greenpara_lockto = 'bottom',
 
 		//grabbing the controller elements (which are not part of the stack)
 		input_bluestack_scale = document.getElementById('bluestack_scale'),
@@ -48,10 +52,13 @@ var mycode = function() {
 		input_blueparahandle_yAbsolute = document.getElementById('blueparahandle_yAbsolute'),
 		input_blueparahandle_xString = document.getElementById('blueparahandle_xString'),
 		input_blueparahandle_yString = document.getElementById('blueparahandle_yString'),
-		input_borderWidth = document.getElementById('borderWidth'),
-		input_padding = document.getElementById('padding'),
-		input_boxSizing = document.getElementById('boxSizing'),
-		input_borderStyle = document.getElementById('borderStyle'),
+		input_bluepara_borderWidth = document.getElementById('bluepara_borderWidth'),
+		input_bluepara_padding = document.getElementById('bluepara_padding'),
+		input_bluepara_boxSizing = document.getElementById('bluepara_boxSizing'),
+		input_bluepara_borderStyle = document.getElementById('bluepara_borderStyle'),
+
+		input_redpara_lockto = document.getElementById('redpara_lockto'),
+		input_greenpara_lockto = document.getElementById('greenpara_lockto'),
 
 		event_bluepara_widthPercent,
 		event_bluepara_heightPercent,
@@ -69,10 +76,13 @@ var mycode = function() {
 		event_blueparahandle_yAbsolute,
 		event_blueparahandle_xString,
 		event_blueparahandle_yString,
-		event_borderWidth,
-		event_padding,
-		event_boxSizing,
-		event_borderStyle,
+		event_bluepara_borderWidth,
+		event_bluepara_padding,
+		event_bluepara_boxSizing,
+		event_bluepara_borderStyle,
+
+		event_redpara_lockto,
+		event_greenpara_lockto,
 
 		//grabbing the status div
 		status = document.getElementById('status'),
@@ -96,10 +106,16 @@ var mycode = function() {
 		handleX: 'center',
 		handleY: 'center',
 	});
-	pinkpara.set({
+	redpara.set({
 		height: 0,
 		border: '1px solid pink',
-		pivot: 'maincopytext',
+		pivot: 'element1',
+		lockTo: 'bottom',
+	});
+	greenpara.set({
+		height: 0,
+		border: '1px solid green',
+		pivot: 'element2',
 		lockTo: 'bottom',
 	});
 
@@ -122,10 +138,13 @@ var mycode = function() {
 	input_blueparahandle_yAbsolute.value = 0;
 	input_blueparahandle_xString.options.selectedIndex = 1;
 	input_blueparahandle_yString.options.selectedIndex = 1;
-	input_borderWidth.value = 1;
-	input_padding.value = 0;
-	input_boxSizing.options.selectedIndex = 0;
-	input_borderStyle.options.selectedIndex = 0;
+	input_bluepara_borderWidth.value = 1;
+	input_bluepara_padding.value = 0;
+	input_bluepara_boxSizing.options.selectedIndex = 0;
+	input_bluepara_borderStyle.options.selectedIndex = 0;
+
+	input_redpara_lockto.options.selectedIndex = 3;
+	input_greenpara_lockto.options.selectedIndex = 3;
 
 	//event listeners
 	stopE = function(e) {
@@ -142,40 +161,40 @@ var mycode = function() {
 	input_bluestack_scale.addEventListener('input', event_bluestack_scale, false);
 	input_bluestack_scale.addEventListener('change', event_bluestack_scale, false);
 
-	event_boxSizing = function(e) {
+	event_bluepara_boxSizing = function(e) {
 		stopE(e);
-		current_boxSizing = input_boxSizing.value;
+		current_bluepara_boxSizing = input_bluepara_boxSizing.value;
 		bluepara.set({
-			boxSizing: current_boxSizing,
+			boxSizing: current_bluepara_boxSizing,
 		});
 	};
-	input_boxSizing.addEventListener('change', event_boxSizing, false);
-	event_borderStyle = function(e) {
+	input_bluepara_boxSizing.addEventListener('change', event_bluepara_boxSizing, false);
+	event_bluepara_borderStyle = function(e) {
 		stopE(e);
-		current_borderStyle = input_borderStyle.value;
+		current_bluepara_borderStyle = input_bluepara_borderStyle.value;
 		bluepara.set({
-			borderStyle: current_borderStyle,
+			borderStyle: current_bluepara_borderStyle,
 		});
 	};
-	input_borderStyle.addEventListener('change', event_borderStyle, false);
-	event_borderWidth = function(e) {
+	input_bluepara_borderStyle.addEventListener('change', event_bluepara_borderStyle, false);
+	event_bluepara_borderWidth = function(e) {
 		stopE(e);
-		current_borderWidth = input_borderWidth.value + 'px';
+		current_bluepara_borderWidth = input_bluepara_borderWidth.value + 'px';
 		bluepara.set({
-			borderWidth: current_borderWidth,
+			borderWidth: current_bluepara_borderWidth,
 		});
 	};
-	input_borderWidth.addEventListener('input', event_borderWidth, false);
-	input_borderWidth.addEventListener('change', event_borderWidth, false);
-	event_padding = function(e) {
+	input_bluepara_borderWidth.addEventListener('input', event_bluepara_borderWidth, false);
+	input_bluepara_borderWidth.addEventListener('change', event_bluepara_borderWidth, false);
+	event_bluepara_padding = function(e) {
 		stopE(e);
-		current_padding = input_padding.value + 'px';
+		current_bluepara_padding = input_bluepara_padding.value + 'px';
 		bluepara.set({
-			padding: current_padding,
+			padding: current_bluepara_padding,
 		});
 	};
-	input_padding.addEventListener('input', event_padding, false);
-	input_padding.addEventListener('change', event_padding, false);
+	input_bluepara_padding.addEventListener('input', event_bluepara_padding, false);
+	input_bluepara_padding.addEventListener('change', event_bluepara_padding, false);
 	event_bluepara_widthPercent = function(e) {
 		stopE(e);
 		current_bluepara_width = input_bluepara_widthPercent.value + '%';
@@ -320,6 +339,23 @@ var mycode = function() {
 	};
 	input_blueparahandle_yString.addEventListener('input', event_blueparahandle_yString, false);
 	input_blueparahandle_yString.addEventListener('change', event_blueparahandle_yString, false);
+
+	event_redpara_lockto = function(e) {
+		stopE(e);
+		current_redpara_lockto = input_redpara_lockto.value;
+		redpara.set({
+			lockTo: current_redpara_lockto,
+		});
+	};
+	input_redpara_lockto.addEventListener('change', event_redpara_lockto, false);
+	event_greenpara_lockto = function(e) {
+		stopE(e);
+		current_greenpara_lockto = input_greenpara_lockto.value;
+		greenpara.set({
+			lockTo: current_greenpara_lockto,
+		});
+	};
+	input_greenpara_lockto.addEventListener('change', event_greenpara_lockto, false);
 
 	//animation object
 	scrawl.newAnimation({

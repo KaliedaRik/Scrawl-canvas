@@ -537,13 +537,6 @@ The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting t
 **/
 		my.d.PageElement.pivot = '';
 		/**
-The STACKNAME, PADNAME or ELEMENTNAME of an DOM object to be used for setting this object's local coordinate system (eg for setting positional or dimensional data)
-@property PageElement.lockTo
-@type String
-@default ''
-**/
-		my.d.PageElement.lockTo = '';
-		/**
 The element's current ELEMENTGROUPNAME
 @property PageElement.group
 @type String
@@ -722,6 +715,7 @@ PageElement constructor hook function - modified by stacks module
 			this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
 			this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
 			this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
+			this.scale = my.xtGet(items.scale, 1);
 			this.visibility = my.xtGet(items.visibility, my.d[this.type].visibility);
 			this.rotation = my.newQuaternion({
 				name: this.type + '.' + this.name + '.rotation'
@@ -844,14 +838,14 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			if (my.xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
 				this.setDeltaRotation(items);
 			}
-			if (my.xto(items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing)) {
+			if (my.xto(items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				this.setLocalDimensions();
 				this.setDimensions();
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing)) {
+			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				delete this.offset;
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing)) {
+			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				this.setDisplayOffsets();
 			}
 			if (my.xto(items.handleX, items.handleY, items.handle)) {
@@ -1415,9 +1409,36 @@ setStampUsingPivot helper function
 @private
 **/
 		my.PageElement.prototype.setStampUsingLockTo = function(e) {
-			var myPVector = e.getStartValues();
-			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
-			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			var myPVector = e.getStartValues(),
+				x, y;
+			var temp = this.getElement();
+			if (e.lockTo) {
+				x = myPVector.x;
+				y = myPVector.y;
+			}
+			else {
+				if (!my.xt(e.offset)) {
+					e.offset = e.getOffsetStartVector();
+				}
+				x = myPVector.x + e.offset.x;
+				y = myPVector.y + e.offset.y;
+			}
+			switch (this.lockTo) {
+				case 'bottom':
+					y += e.localHeight;
+					break;
+				case 'right':
+					x += e.localWidth;
+					break;
+				case 'left':
+					x -= this.localWidth;
+					break;
+				case 'top':
+					y -= this.localHeight;
+					break;
+			}
+			this.start.x = x;
+			this.start.y = y;
 		};
 		/**
 Set the transform origin style attribute
@@ -1470,37 +1491,44 @@ Helper function - set local dimensions (width, height)
 @private
 **/
 		my.PageElement.prototype.setLocalDimensions = function() {
-			var parent, w, h, hVal, el, s;
+			var parent, w, h, wVal, hVal, el, s;
 			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
 			if (parent) {
 				w = parent.localWidth;
 				h = parent.localHeight;
 			}
-			if (this.scale) {
-				if (parent && my.isa(this.width, 'str') && w) {
-					this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+			el = this.getElement();
+			if (el) {
+				s = window.getComputedStyle(el, null);
+			}
+			wVal = parseFloat(this.width);
+			if (wVal === 0 || isNaN(wVal)) {
+				if (el) {
+					el.style.width = 'auto';
+					this.localWidth = parseFloat(s.getPropertyValue('width'));
 				}
-				else {
-					this.localWidth = this.width * this.scale;
+			}
+			else if (parent && my.isa(this.width, 'str') && w) {
+				this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+			}
+			else {
+				this.localWidth = this.width * this.scale;
+			}
+			hVal = parseFloat(this.height);
+			if (hVal === 0 || isNaN(hVal)) {
+				if (el) {
+					el.style.height = 'auto';
+					this.localHeight = parseFloat(s.getPropertyValue('height'));
 				}
-				hVal = parseFloat(this.height);
-				if (hVal === 0 || isNaN(hVal)) {
-					el = this.getElement();
-					if (el) {
-						el.style.height = 'auto';
-						s = window.getComputedStyle(el, null);
-						this.localHeight = parseFloat(s.getPropertyValue('height'));
-					}
-				}
-				else if (parent && my.isa(this.height, 'str') && h) {
-					this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
-				}
-				else {
-					this.localHeight = this.height * this.scale;
-				}
-				if (this.type === 'Pad') {
-					this.setCellLocalDimensions();
-				}
+			}
+			else if (parent && my.isa(this.height, 'str') && h) {
+				this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+			}
+			else {
+				this.localHeight = this.height * this.scale;
+			}
+			if (this.type === 'Pad') {
+				this.setCellLocalDimensions();
 			}
 			return this;
 		};
@@ -1578,6 +1606,9 @@ Pad set hook function - amended by Stacks module
 				if (my.xto(items.width, items.height, items.scale)) {
 					this.setLocalDimensions();
 				}
+			}
+			if (this.group) {
+				my.canvas[this.name].style.margin = '0';
 			}
 		};
 		/**
@@ -1714,6 +1745,9 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.setStyles(items);
 				this.setPerspective();
 				this.setTransformOrigin();
+				if (this.group) {
+					my.stk[this.name].style.margin = '0';
+				}
 				return this;
 			}
 			console.log('Failed to generate a Stack wrapper - no DOM element supplied');
@@ -2001,6 +2035,9 @@ Calculates the pixels value of the object's perspective attribute
 				});
 				this.setStyles(items);
 				this.setTransformOrigin();
+				if (this.group) {
+					my.elm[this.name].style.margin = '0';
+				}
 				return this;
 			}
 			console.log('Failed to generate an Element wrapper - no DOM element supplied');

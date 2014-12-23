@@ -46,16 +46,13 @@
 
   <!-- this section for the stacks and elements -->
   <div id="mainstack" class="scrawlstack">
-    <div id="maincopytext">
-      <h4>Lorem ipsum dolor sit amet.</h4>
-      <p>Consectetur adipiscing elit. Integeras nec odio.</p>
-      <ul>
-        <li>Lorem ipsum dolor sit amet</li>
-        <li>Consectetur adipiscing elit</li>
-        <li>Integeras nec odio</li>
-      </ul>
-    </div>
-    <p id="myparagraph">Lorem ipsum dolor sit amet consectetur adipiscing elit integeras nec odio</p>
+    <h4 id="element1">Lorem ipsum dolor sit amet.</h4>
+    <p id="element2">Consectetur adipiscing elit. Integeras nec odio.</p>
+    <ul id="element3">
+      <li>Lorem ipsum dolor sit amet</li>
+      <li>Consectetur adipiscing elit</li>
+      <li>Integeras nec odio</li>
+    </ul>
   </div>
 
   <p id="testmessage"></p>
@@ -147,10 +144,10 @@
     <tr class="t0">
       <td class="rowlabel">Border width</td>
       <td colspan="2">0
-        <input id="borderWidth" type="range" value="1" min="0" max="50" step="1" />50</td>
+        <input id="bluepara_borderWidth" type="range" value="1" min="0" max="50" step="1" />50</td>
       <td class="rowlabel">Border style</td>
       <td colspan="2">
-        <select id="borderStyle">
+        <select id="bluepara_borderStyle">
           <option value="solid">solid</option>
           <option value="dotted">dotted</option>
           <option value="dashed">dashed</option>
@@ -165,12 +162,38 @@
     <tr class="t1">
       <td class="rowlabel">Padding</td>
       <td colspan="2">0
-        <input id="padding" type="range" value="0" min="0" max="50" step="1" />50</td>
+        <input id="bluepara_padding" type="range" value="0" min="0" max="50" step="1" />50</td>
       <td class="rowlabel">Box sizing</td>
       <td colspan="2">
-        <select id="boxSizing">
+        <select id="bluepara_boxSizing">
           <option value="content-box">content-box</option>
           <option value="border-box">border-box</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <h4>Other elements</h4>
+  <table>
+    <tr class="t1">
+      <td class="rowlabel">Red element - lock to</td>
+      <td>
+        <select id="redpara_lockto">
+          <option value="">(empty string)</option>
+          <option value="top">top</option>
+          <option value="right">right</option>
+          <option value="bottom">bottom</option>
+          <option value="left">left</option>
+        </select>
+      </td>
+      <td class="rowlabel">Green element - lock to</td>
+      <td>
+        <select id="greenpara_lockto">
+          <option value="">(empty string)</option>
+          <option value="top">top</option>
+          <option value="right">right</option>
+          <option value="bottom">bottom</option>
+          <option value="left">left</option>
         </select>
       </td>
     </tr>
