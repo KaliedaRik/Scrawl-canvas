@@ -1247,6 +1247,7 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 		my.statArr.pere = [0, 0, 0, 0, 0, 0, 0];
 		my.statArr.pere2 = [0, 0, 0, 0, 0];
 		my.PageElement.prototype.renderElement = function() {
+			var g = my.group[this.group];
 			my.statArr.pere2[0] = this.getElement();
 			if (!my.xt(this.offset)) {
 				this.offset = this.getOffsetStartVector();
@@ -1261,6 +1262,10 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 			}
 			else {
 				my.statArr.pere2[1] = this.getStartValues();
+			}
+
+			if (g && (g.equalWidth || g.equalHeight)) {
+				this.setDimensions();
 			}
 			this.updateStart();
 			my.statArr.pere2[2] = (my.isa(this.start.x, 'str')) ? true : false;
@@ -1410,25 +1415,28 @@ setStampUsingPivot helper function
 **/
 		my.PageElement.prototype.setStampUsingLockTo = function(e) {
 			var myPVector = e.getStartValues(),
-				x, y;
+				x, y, g;
 			if (!my.xt(e.offset)) {
 				e.offset = e.getOffsetStartVector();
 			}
 			x = myPVector.x + e.offset.x;
 			y = myPVector.y + e.offset.y;
-			switch (this.lockTo) {
-				case 'bottom':
-					y += e.localHeight;
-					break;
-				case 'right':
-					x += e.localWidth;
-					break;
-				case 'left':
-					x -= this.localWidth;
-					break;
-				case 'top':
-					y -= this.localHeight;
-					break;
+			if (this.lockTo) {
+				g = my.group[this.group];
+				switch (this.lockTo) {
+					case 'bottom':
+						y += (g.equalHeight) ? g.currentHeight : e.localHeight;
+						break;
+					case 'right':
+						x += (g.equalWidth) ? g.currentWidth : e.localWidth;
+						break;
+					case 'left':
+						x -= (g.equalWidth) ? g.currentWidth : e.localWidth;
+						break;
+					case 'top':
+						y -= (g.equalHeight) ? g.currentHeight : e.localHeight;
+						break;
+				}
 			}
 			this.start.x = x;
 			this.start.y = y;
@@ -1536,10 +1544,32 @@ Overwritesa core setDimensions()
 **/
 		my.PageElement.prototype.setDimensions = function() {
 			var el = this.getElement(),
-				s;
+				group, w, h;
 			if (el) {
-				el.style.width = this.localWidth + 'px';
-				el.style.height = this.localHeight + 'px';
+				group = my.group[this.group];
+				w = (group && group.equalWidth) ? group.currentWidth : this.localWidth;
+				h = (group && group.equalHeight) ? group.currentHeight : this.localHeight;
+				el.style.width = w + 'px';
+				el.style.height = h + 'px';
+			}
+			return this;
+		};
+		/**
+Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use styling to set their drawing region dimensions
+
+@method setDimensions
+@return This
+@chainable
+**/
+		my.Pad.prototype.setDimensions = function() {
+			var el = this.getElement(),
+				group, w, h;
+			if (el) {
+				group = my.group[this.group];
+				w = (group && group.equalWidth) ? group.currentWidth : this.localWidth;
+				h = (group && group.equalHeight) ? group.currentHeight : this.localHeight;
+				el.width = w;
+				el.height = h;
 			}
 			return this;
 		};
@@ -2096,6 +2126,10 @@ Return the DOM element wrapped by this object
 			this.entitys = (my.xt(items.entitys)) ? [].concat(items.entitys) : [];
 			this.elements = (my.xt(items.elements)) ? [].concat(items.elements) : [];
 			this.stack = items.stack || false;
+			this.equalWidth = my.xtGet(items.equalWidth, false);
+			this.equalHeight = my.xtGet(items.equalHeight, false);
+			this.currentWidth = 0;
+			this.currentHeight = 0;
 			if (this.stack) {
 				my.pushUnique(my.stack[this.stack].groups, this.name);
 			}
@@ -2127,6 +2161,34 @@ Array of ELEMENTNAME Strings of elements that complement this ElementGroup
 @default []
 **/
 			elements: [],
+			/**
+current value of widest element width
+@property currentWidth
+@type Number
+@default 0
+**/
+			currentWidth: false,
+			/**
+Current value of takkest element height
+@property currentHeight
+@type Number
+@default 0
+**/
+			currentHeight: false,
+			/**
+When true, forces all elements (including stacks, pads) to use the width of the currently widest element; default: false
+@property equalWidth
+@type Boolean
+@default false
+**/
+			equalWidth: false,
+			/**
+When true, forces all elements (including stacks, pads) to use the height of the currently tallest element; default: false
+@property equalHeight
+@type Boolean
+@default false
+**/
+			equalHeight: false,
 			/**
 STACKNAME of the default Stack object to which this group is associated
 @property stack
@@ -2160,12 +2222,26 @@ Tell the Group to ask its constituent elements to render
 @chainable
 **/
 		my.ElementGroup.prototype.render = function() {
-			var temp, i, iz;
+			var el, i, iz, w, h;
+			if (this.equalHeight || this.equalWidth) {
+				this.currentWidth = 0;
+				this.currentHeight = 0;
+				for (i = 0, iz = this.elements.length; i < iz; i++) {
+					el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+					el.group = this.name;
+					if (el.localWidth > this.currentWidth) {
+						this.currentWidth = el.localWidth;
+					}
+					if (el.localHeight > this.currentHeight) {
+						this.currentHeight = el.localHeight;
+					}
+				}
+			}
 			for (i = 0, iz = this.elements.length; i < iz; i++) {
-				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
-				temp.renderElement();
-				if (temp.type === 'Stack') {
-					my.group[temp.name].render();
+				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				el.renderElement();
+				if (el.type === 'Stack') {
+					my.group[el.name].render();
 				}
 			}
 			return this;

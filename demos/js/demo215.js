@@ -14,6 +14,7 @@ var mycode = function() {
 		bluepara = scrawl.element.element1,
 		redpara = scrawl.element.element2,
 		greenpara = scrawl.element.element3,
+		paragroup = scrawl.group.mainstack,
 
 		//initial settings for stack and element control values
 		current_bluestack_scale = 1,
@@ -31,6 +32,9 @@ var mycode = function() {
 
 		current_redpara_lockto = 'bottom',
 		current_greenpara_lockto = 'bottom',
+
+		current_equalwidth = 0,
+		current_equalheight = 0,
 
 		//grabbing the controller elements (which are not part of the stack)
 		input_bluestack_scale = document.getElementById('bluestack_scale'),
@@ -60,6 +64,9 @@ var mycode = function() {
 		input_redpara_lockto = document.getElementById('redpara_lockto'),
 		input_greenpara_lockto = document.getElementById('greenpara_lockto'),
 
+		input_equalwidth = document.getElementById('equalwidth'),
+		input_equalheight = document.getElementById('equalheight'),
+
 		event_bluepara_widthPercent,
 		event_bluepara_heightPercent,
 		event_bluepara_widthAbsolute,
@@ -83,6 +90,9 @@ var mycode = function() {
 
 		event_redpara_lockto,
 		event_greenpara_lockto,
+
+		event_equalheight,
+		event_equalwidth,
 
 		//grabbing the status div
 		status = document.getElementById('status'),
@@ -118,7 +128,7 @@ var mycode = function() {
 		pivot: 'element2',
 		lockTo: 'bottom',
 	});
-	//recalculate sizes
+	//recalculate dimensions - so they display correctly on initial load
 	bluestack.set({
 		scale: 1,
 	});
@@ -149,6 +159,9 @@ var mycode = function() {
 
 	input_redpara_lockto.options.selectedIndex = 3;
 	input_greenpara_lockto.options.selectedIndex = 3;
+
+	input_equalwidth.options.selectedIndex = 0;
+	input_equalheight.options.selectedIndex = 0;
 
 	//event listeners
 	stopE = function(e) {
@@ -360,6 +373,23 @@ var mycode = function() {
 		});
 	};
 	input_greenpara_lockto.addEventListener('change', event_greenpara_lockto, false);
+
+	event_equalwidth = function(e) {
+		stopE(e);
+		current_equalwidth = Math.round(input_equalwidth.value);
+		paragroup.set({
+			equalWidth: (current_equalwidth) ? true : false,
+		});
+	};
+	input_equalwidth.addEventListener('change', event_equalwidth, false);
+	event_equalheight = function(e) {
+		stopE(e);
+		current_equalheight = Math.round(input_equalheight.value);
+		paragroup.set({
+			equalHeight: (current_equalheight) ? true : false,
+		});
+	};
+	input_equalheight.addEventListener('change', event_equalheight, false);
 
 	//animation object
 	scrawl.newAnimation({
