@@ -118,6 +118,10 @@ var mycode = function() {
 		pivot: 'element2',
 		lockTo: 'bottom',
 	});
+	//recalculate sizes
+	bluestack.set({
+		scale: 1,
+	});
 
 	//initial values for the input controllers
 	input_bluestack_scale.value = 1;

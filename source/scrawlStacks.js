@@ -1411,18 +1411,11 @@ setStampUsingPivot helper function
 		my.PageElement.prototype.setStampUsingLockTo = function(e) {
 			var myPVector = e.getStartValues(),
 				x, y;
-			var temp = this.getElement();
-			if (e.lockTo) {
-				x = myPVector.x;
-				y = myPVector.y;
+			if (!my.xt(e.offset)) {
+				e.offset = e.getOffsetStartVector();
 			}
-			else {
-				if (!my.xt(e.offset)) {
-					e.offset = e.getOffsetStartVector();
-				}
-				x = myPVector.x + e.offset.x;
-				y = myPVector.y + e.offset.y;
-			}
+			x = myPVector.x + e.offset.x;
+			y = myPVector.y + e.offset.y;
 			switch (this.lockTo) {
 				case 'bottom':
 					y += e.localHeight;
@@ -1609,6 +1602,7 @@ Pad set hook function - amended by Stacks module
 			}
 			if (this.group) {
 				my.canvas[this.name].style.margin = '0';
+				my.canvas[this.name].style.boxSizing = 'border-box';
 			}
 		};
 		/**
@@ -1747,6 +1741,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.setTransformOrigin();
 				if (this.group) {
 					my.stk[this.name].style.margin = '0';
+					my.stk[this.name].style.boxSizing = 'border-box';
 				}
 				return this;
 			}
@@ -2037,6 +2032,7 @@ Calculates the pixels value of the object's perspective attribute
 				this.setTransformOrigin();
 				if (this.group) {
 					my.elm[this.name].style.margin = '0';
+					my.elm[this.name].style.boxSizing = 'border-box';
 				}
 				return this;
 			}
