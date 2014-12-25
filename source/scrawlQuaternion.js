@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-if (window.scrawl && !window.scrawl.newQuaternion) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'quaternion')) {
 	var scrawl = (function(my) {
 		'use strict';
 

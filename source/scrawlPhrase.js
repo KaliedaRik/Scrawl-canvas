@@ -36,7 +36,7 @@ The Phrase module adds Phrase entitys - single and multi-line text objects - to 
 @module scrawlPhrase
 **/
 
-if (window.scrawl && !window.scrawl.newPhrase) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'phrase')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -478,7 +478,7 @@ Augments Entity.stamp()
 		my.Phrase.prototype.stamp = function(method, cell) {
 			var test;
 			if (this.visibility) {
-				test = (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path');
+				test = (my.entity[this.path] && my.entity[this.path].type === 'Path');
 				if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
 					my.Entity.prototype.stamp.call(this, method, cell);
 				}
@@ -943,7 +943,7 @@ Permitted methods include:
 		my.Text.prototype.stampAlongPath = function(method, cell) {
 			var p = my.entity[this.phrase];
 			method = (my.isa(method, 'str')) ? method : p.method;
-			cell = (my.isa(cell, 'str') && my.contains(my.cellnames, cell)) ? cell : my.cell[my.group[p.group].cell];
+			cell = (my.isa(cell, 'str') && my.cell[cell]) ? cell : my.cell[my.group[p.group].cell];
 			var engine = my.context[cell],
 				myCell = my.cell[cell],
 				here,

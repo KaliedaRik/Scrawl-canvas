@@ -32,7 +32,7 @@ The Color module adds a controllable color object that can be used with entity f
 @module scrawlColor
 **/
 
-if (window.scrawl && !window.scrawl.newColor) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'color')) {
 	var scrawl = (function(my) {
 		'use strict';
 

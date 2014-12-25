@@ -32,7 +32,7 @@ The Factories module adds a set of factory functions to the Scrawl library, whic
 @module scrawlPathFactories
 **/
 
-if (window.scrawl && !window.scrawl.makeEllipse) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'factories')) {
 	var scrawl = (function(my) {
 		'use strict';
 

@@ -33,7 +33,7 @@ The Wheel module adds Wheel entitys - circles, segments and filled arcs - to the
 
 @module scrawlWheel
 **/
-if (window.scrawl && !window.scrawl.newWheel) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'wheel')) {
 	var scrawl = (function(my) {
 		'use strict';
 

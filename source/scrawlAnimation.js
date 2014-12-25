@@ -42,7 +42,7 @@ The Animation module adds support for animation and tweening to the core
 
 @module scrawlAnimation
 **/
-if (window.scrawl && !window.scrawl.newAnimation) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'animation')) {
 	var scrawl = (function(my) {
 		'use strict';
 

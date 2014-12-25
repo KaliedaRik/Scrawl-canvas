@@ -35,7 +35,7 @@ Adds an (experimental) physics engine to the core
 @module scrawlPhysics
 **/
 
-if (window.scrawl && !window.scrawl.newParticle) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'physics')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -468,7 +468,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 				iz = 0;
 			this.load.zero();
 			for (i = 0, iz = this.forces.length; i < iz; i++) {
-				if (my.isa(this.forces[i], 'str') && my.contains(my.forcenames, this.forces[i])) {
+				if (my.isa(this.forces[i], 'str') && my.force[this.forces[i]]) {
 					my.force[this.forces[i]].run(this);
 				}
 				else {
@@ -574,7 +574,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 		my.Particle.prototype.addSpring = function(items) {
 			var mySpring = false,
 				end = false;
-			if (my.isa(items, 'str') && my.contains(my.entitynames, items)) {
+			if (my.isa(items, 'str') && my.entity[items]) {
 				end = items;
 				var myItems = {};
 				myItems.start = this.name;
@@ -584,7 +584,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 			else {
 				items = (my.isa(items, 'obj')) ? items : {};
 				end = items.end || false;
-				if (end && my.contains(my.entitynames, end)) {
+				if (end && my.entity[end]) {
 					items.start = this.name;
 					mySpring = my.newSpring(items);
 				}
@@ -616,7 +616,7 @@ if (window.scrawl && !window.scrawl.newParticle) {
 	@chainable
 	**/
 		my.Particle.prototype.removeSpringsTo = function(item) {
-			if (my.xt(item) && my.contains(my.entitynames, item)) {
+			if (my.xt(item) && my.entity[item]) {
 				var temp = [],
 					s, i, iz;
 				for (i = 0, iz = this.springs.length; i < iz; i++) {

@@ -34,7 +34,7 @@ _This module is experimental and thus likely to change significantly as Scrawl e
 @module scrawlSaveLoad
 **/
 
-if (window.scrawl && !window.scrawl.load) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'saveload')) {
 	var scrawl = (function(my) {
 		'use strict';
 

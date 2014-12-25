@@ -35,7 +35,7 @@ The Shape module adds Shape entitys - path-based objects - to the core module
 @module scrawlShape
 **/
 
-if (window.scrawl && !window.scrawl.newShape) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'shape')) {
 	var scrawl = (function(my) {
 		'use strict';
 

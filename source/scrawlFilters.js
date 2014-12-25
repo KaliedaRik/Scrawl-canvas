@@ -484,7 +484,7 @@ Group.stamp hook function - add a filter to a group of Entitys, and any backgrou
 						else if (this.filterLevel === 'cell' && !force) {
 							my.cell[this.cell].filters.push(this.name);
 						}
-						else if (my.contains(my.filternames, this.filters[i])) {
+						else if (my.filter[this.filters[i]]) {
 							imageData = my.filter[this.filters[i]].add(imageData);
 						}
 					}
@@ -531,7 +531,7 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 						else if (this.filterLevel === 'cell' && !force) {
 							my.cell[my.group[this.group].cell].filters.push(this.name);
 						}
-						else if (my.contains(my.filternames, this.filters[i])) {
+						else if (my.filter[this.filters[i]]) {
 							imageData = my.filter[this.filters[i]].add(imageData);
 						}
 					}
@@ -558,7 +558,7 @@ Entity.stamp hook helper function
 			my.cvx.fillStyle = 'rgb(0, 0, 0)';
 			my.cvx.textAlign = ctx.textAlign;
 			my.cvx.textBaseline = ctx.textBaseline;
-			test = (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path');
+			test = (my.entity[this.path] && my.entity[this.path].type === 'Path');
 			if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
 				o = this.getOffset();
 				here = this.prepareStamp();

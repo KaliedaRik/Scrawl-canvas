@@ -36,7 +36,7 @@ The Path module adds Path entitys - path-based objects - to the core module
 @module scrawlPath
 **/
 
-if (window.scrawl && !window.scrawl.newPath) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'path')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -155,7 +155,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 		my.Cell.prototype.pathPrepareToCopyCell = function() {
 			var here;
-			if (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path') {
+			if (my.entity[this.path] && my.entity[this.path].type === 'Path') {
 				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 				this.start.x = (!this.lockX) ? here.x : this.start.x;
 				this.start.y = (!this.lockY) ? here.y : this.start.y;
@@ -169,7 +169,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 	**/
 		my.Entity.prototype.pathStamp = function(method, cell) {
 			var here;
-			if (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path') {
+			if (my.entity[this.path] && my.entity[this.path].type === 'Path') {
 				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 				this.start.x = (!this.lockX) ? here.x : this.start.x;
 				this.start.y = (!this.lockY) ? here.y : this.start.y;
@@ -834,18 +834,18 @@ if (window.scrawl && !window.scrawl.newPath) {
 				this.buildPositions();
 				linkDurations = this.get('linkDurations');
 				myMark = my.xtGetTrue(this.markStart, this.mark);
-				if (myMark && my.contains(my.entitynames, myMark)) {
+				if (myMark && my.entity[myMark]) {
 					this.stampMark(my.entity[myMark], 0, ctx, cell);
 				}
 				myMark = my.xtGetTrue(this.markMid, this.mark);
-				if (myMark && my.contains(my.entitynames, myMark)) {
+				if (myMark && my.entity[myMark]) {
 					entity = my.entity[myMark];
 					for (var j = 0, w = linkDurations.length - 1; j < w; j++) {
 						this.stampMark(entity, linkDurations[j], ctx, cell);
 					}
 				}
 				myMark = my.xtGetTrue(this.markEnd, this.mark);
-				if (myMark && my.contains(my.entitynames, myMark)) {
+				if (myMark && my.entity[myMark]) {
 					this.stampMark(my.entity[myMark], 1, ctx, cell);
 				}
 			}
@@ -1508,7 +1508,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 			this.resetWork();
 			if (my.xt(this.local) && this.local.type === 'Vector') {
 				c = this.work.local;
-				if (my.isa(fixed, 'str') && (my.contains(my.entitynames, fixed) || my.contains(my.pointnames, fixed))) {
+				if (my.isa(fixed, 'str') && (my.entity[fixed] || my.point[fixed])) {
 					myPivot = my.entity[fixed] || my.point[fixed];
 					if (myPivot.type === 'Point') {
 						c.set(myPivot.local);
@@ -1732,7 +1732,7 @@ if (window.scrawl && !window.scrawl.newPath) {
 			if (my.isa(items.entity, 'str') && items.entity !== this.entity && this.entity) {
 				my.removeItem(my.entity[this.entity].linkList, this.name);
 			}
-			if (my.isa(items.action, 'str') && this.entity && my.contains(my.entitynames, this.entity)) {
+			if (my.isa(items.action, 'str') && this.entity && my.entity[this.entity]) {
 				if (items.action === 'add') {
 					my.pushUnique(my.entity[this.entity].linkList, this.name);
 				}

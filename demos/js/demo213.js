@@ -141,6 +141,7 @@ var mycode = function() {
 		height: '50%',
 		position: 'absolute',
 		borderColor: 'red',
+		boxSizing: 'content-box',
 	});
 	redpara.set({
 		width: '50%',

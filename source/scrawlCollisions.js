@@ -33,7 +33,7 @@ The Collisions module adds support for detecting collisions between entitys
 
 @module scrawlCollisions
 **/
-if (window.scrawl && !window.scrawl.workcols) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'collisions')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -272,7 +272,7 @@ if (window.scrawl && !window.scrawl.workcols) {
 	**/
 		my.Group.prototype.getEntitysCollidingWith = function(entity) {
 			entity = (my.isa(entity, 'str')) ? my.entity[entity] : entity;
-			if (my.contains(my.entitynames, entity.name)) {
+			if (entity.name && my.entity[entity.name]) {
 				var hits = [],
 					myTests = entity.getCollisionPoints();
 				for (var i = 0, iz = this.entitys.length; i < iz; i++) {
@@ -356,7 +356,7 @@ if (window.scrawl && !window.scrawl.workcols) {
 				tresult;
 			if (my.xt(g)) {
 				if (my.isa(g, 'str')) {
-					if (my.contains(my.groupnames, g)) {
+					if (my.group[g]) {
 						g = my.group[g];
 					}
 					else {
@@ -514,7 +514,7 @@ if (window.scrawl && !window.scrawl.workcols) {
 		my.Entity.prototype.addEntityToCellFields = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (var i = 0, iz = cells.length; i < iz; i++) {
-				if (my.contains(my.cellnames, cells[i])) {
+				if (my.cell[cells[i]]) {
 					my.group[cells[i] + '_field'].addEntitysToGroup(this.name);
 				}
 			}
@@ -530,7 +530,7 @@ if (window.scrawl && !window.scrawl.workcols) {
 		my.Entity.prototype.addEntityToCellFences = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (var i = 0, iz = cells.length; i < iz; i++) {
-				if (my.contains(my.cellnames, cells[i])) {
+				if (my.cell[cells[i]]) {
 					my.group[cells[i] + '_fence'].addEntitysToGroup(this.name);
 				}
 			}
@@ -546,7 +546,7 @@ if (window.scrawl && !window.scrawl.workcols) {
 		my.Entity.prototype.removeEntityFromCellFields = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (var i = 0, iz = cells.length; i < iz; i++) {
-				if (my.contains(my.cellnames, cells[i])) {
+				if (my.cell[cells[i]]) {
 					my.group[cells[i] + '_field'].removeEntitysFromGroup(this.name);
 				}
 			}
@@ -562,7 +562,7 @@ if (window.scrawl && !window.scrawl.workcols) {
 		my.Entity.prototype.removeEntityFromCellFences = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (var i = 0, iz = cells.length; i < iz; i++) {
-				if (my.contains(my.cellnames, cells[i])) {
+				if (my.cell[cells[i]]) {
 					my.group[cells[i] + '_fence'].removeEntitysFromGroup(this.name);
 				}
 			}

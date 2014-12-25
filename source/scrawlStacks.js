@@ -37,7 +37,7 @@ The Stacks module adds support for CSS3 3d transformations to visible &lt;canvas
 @module scrawlStacks
 **/
 
-if (window.scrawl && !window.scrawl.newStack) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'stacks')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -119,7 +119,7 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 							my.stk[myStack.name].children[j].className += ' stack:' + myStack.name;
 						}
 					}
-					if (my.contains(my.elementnames, myStack.name)) {
+					if (my.element[myStack.name]) {
 						myStack.group = my.element[myStack.name].group;
 						delete my.element[myStack.name];
 						delete my.elm[myStack.name];
@@ -172,7 +172,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 						locked = true;
 					}
 					if (myStack) {
-						if (my.contains(my.stacknames, myStack)) {
+						if (my.stack[myStack]) {
 							my.stk[myStack].appendChild(el[i]);
 							stack = my.stack[myStack];
 						}
@@ -345,7 +345,7 @@ The argument object should include the following attributes:
 				items.parentElement.appendChild(myElement);
 				items.stackElement = myElement;
 				myStack = my.newStack(items);
-				myStack.group = (my.contains(my.stacknames, items.parentElement.id)) ? items.parentElement.id : '';
+				myStack.group = (my.stack[items.parentElement.id]) ? items.parentElement.id : '';
 				return myStack;
 			}
 			return false;
@@ -433,7 +433,7 @@ Argument can contain the following (optional) attributes:
 		my.update = function(items) {
 			items = my.safeObject(items);
 			var i, iz, s;
-			if (my.isa(items.group, 'str') && my.contains(my.groupnames, items.group) && my.group[items.group].type === 'ElementGroup') {
+			if (my.isa(items.group, 'str') && my.group[items.group] && my.group[items.group].type === 'ElementGroup') {
 				my.group[items.group].update(items);
 			}
 			else {
@@ -1309,7 +1309,7 @@ Calculate start Vector in reference to a Shape entity object's path
 		my.PageElement.prototype.setStampUsingPath = function() {
 			var here,
 				angles;
-			if (my.contains(my.entitynames, this.path) && my.entity[this.path].type === 'Path') {
+			if (my.entity[this.path] && my.entity[this.path].type === 'Path') {
 				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 				this.start.x = (!this.lockX) ? here.x : this.start.x;
 				this.start.y = (!this.lockY) ? here.y : this.start.y;
@@ -1337,7 +1337,7 @@ Calculate start Vector in reference to a entity or Point object's position
 				myPVector,
 				pEntity,
 				temp;
-			if (my.contains(my.pointnames, this.pivot)) {
+			if (my.point && my.point[this.pivot]) {
 				myP = my.point[this.pivot];
 				pEntity = my.entity[myP.entity];
 				myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.start);
@@ -1345,22 +1345,22 @@ Calculate start Vector in reference to a entity or Point object's position
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 				return this;
 			}
-			if (my.contains(my.entitynames, this.pivot)) {
+			if (my.entity[this.pivot]) {
 				myP = my.entity[this.pivot];
 				myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.get('start');
 				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
 				return this;
 			}
-			if (my.contains(my.padnames, this.pivot)) {
+			if (my.pad[this.pivot]) {
 				this.setStampUsingDomElement(my.pad[this.pivot]);
 				return this;
 			}
-			if (my.contains(my.elementnames, this.pivot)) {
+			if (my.element[this.pivot]) {
 				this.setStampUsingDomElement(my.element[this.pivot]);
 				return this;
 			}
-			if (my.contains(my.stacknames, this.pivot)) {
+			if (my.stack[this.pivot]) {
 				this.setStampUsingDomElement(my.stack[this.pivot]);
 				return this;
 			}

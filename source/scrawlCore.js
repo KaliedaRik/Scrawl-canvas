@@ -507,10 +507,7 @@ A __utility__ function that checks an array to see if it contains a given value
 	scrawl.contains(myarray, 'banana');	//false
 **/
 	my.contains = function(item, k) {
-		for (var p in item) {
-			if (item[p] === k) return true;
-		}
-		return false;
+		return (item.indexOf(k) >= 0) ? true : false;
 	};
 	/**
 A __utility__ function that adds a value to an array if the array doesn't already contain an element with that value
@@ -524,7 +521,7 @@ A __utility__ function that adds a value to an array if the array doesn't alread
 	scrawl.pushUnique(myarray, 'banana');	//returns ['apple', 'orange', 'banana']
 **/
 	my.pushUnique = function(item, o) {
-		if (!my.contains(item, o)) {
+		if (item.indexOf(o) < 0) {
 			item.push(o);
 		}
 		return item;
@@ -541,8 +538,8 @@ A __utility__ function that removes a value from an array
 	scrawl.removeItem(myarray, 'apple');	//returns ['orange']
 **/
 	my.removeItem = function(item, o) {
-		if (my.contains(item, o)) {
-			var i = item.indexOf(o);
+		var i = item.indexOf(o);
+		if (i >= 0) {
 			item.splice(i, 1);
 		}
 		return item;
@@ -1165,10 +1162,12 @@ A __general__ function which adds supplied entitynames to Group.entitys attribut
 	my.addEntitysToGroups = function(groups, entitys) {
 		if (my.xta(groups, entitys)) {
 			var myGroups = [].concat(groups),
-				myEntitys = [].concat(entitys);
+				myEntitys = [].concat(entitys),
+				g;
 			for (var i = 0, iz = myGroups.length; i < iz; i++) {
-				if (my.contains(my.groupnames, myGroups[i])) {
-					my.group[myGroups[i]].addEntitysToGroup(myEntitys);
+				g = my.group[myGroups[i]];
+				if (g) {
+					g.addEntitysToGroup(myEntitys);
 				}
 			}
 		}
@@ -1185,10 +1184,12 @@ A __general__ function which removes supplied entitynames from Group.entitys att
 	my.removeEntitysFromGroups = function(groups, entitys) {
 		if (my.xta(groups, entitys)) {
 			var myGroups = [].concat(groups),
-				myEntitys = [].concat(entitys);
+				myEntitys = [].concat(entitys),
+				g;
 			for (var i = 0, iz = myGroups.length; i < iz; i++) {
-				if (my.contains(my.groupnames, myGroups[i])) {
-					my.group[myGroups[i]].removeEntitysFromGroup(myEntitys);
+				g = my.group[myGroups[i]];
+				if (g) {
+					g.removeEntitysFromGroup(myEntitys);
 				}
 			}
 		}
@@ -1218,8 +1219,8 @@ A __general__ function to delete entity objects
 			search,
 			myEntity;
 		for (var i = 0, iz = items.length; i < iz; i++) {
-			if (my.contains(my.entitynames, items[i])) {
-				myEntity = my.entity[items[i]];
+			myEntity = my.entity[items[i]];
+			if (myEntity) {
 				my.pathDeleteEntity(myEntity);
 				myCtx = myEntity.context;
 				my.removeItem(my.ctxnames, myCtx);
@@ -2435,16 +2436,18 @@ Takes into account lock flag settings
 		var myP,
 			myPVector,
 			pEntity;
-		if (my.xt(my.pointnames) && my.contains(my.pointnames, this.pivot)) {
+		if (my.xt(my.pointnames)) {
 			myP = my.point[this.pivot];
-			pEntity = my.entity[myP.entity];
-			myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.start);
-			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
-			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
-			return this;
+			if (myP) {
+				pEntity = my.entity[myP.entity];
+				myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.start);
+				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
+				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+				return this;
+			}
 		}
-		if (my.contains(my.entitynames, this.pivot)) {
-			myP = my.entity[this.pivot];
+		myP = my.entity[this.pivot];
+		if (myP) {
 			myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.start;
 			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
 			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
@@ -2476,10 +2479,13 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 **/
 	my.Position.prototype.correctCoordinates = function(coords, cell) {
 		coords = my.safeObject(coords);
-		var v = my.v.set(coords);
+		var v = my.v.set(coords),
+			pad,
+			celltest;
 		if (scrawl.xta(coords.x, coords.y)) {
-			cell = (my.contains(my.cellnames, cell)) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
-			var pad = my.pad[cell.pad];
+			celltest = my.cell[cell];
+			cell = (celltest) ? celltest : my.cell[my.pad[my.currentPad].base];
+			pad = my.pad[cell.pad];
 			if (pad.width !== cell.actualWidth) {
 				v.x /= (pad.width / cell.actualWidth);
 			}
@@ -3290,7 +3296,7 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 			items = items[0];
 		}
 		for (var i = 0, iz = items.length; i < iz; i++) {
-			if (my.contains(my.cellnames, items[i])) {
+			if (my.cell[items[i]]) {
 				this.cells.push(items[i]);
 			}
 		}
@@ -5074,7 +5080,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 				}
 			}
 			//handle fillStyle, strokeStyle, shadowColor that use Color design objects
-			else if (my.contains(my.statArr.contextGetChanges2, my.contextKeys[i]) && my.contains(my.designnames, temp) && my.design[temp].type === 'Color') {
+			else if (my.contains(my.statArr.contextGetChanges2, my.contextKeys[i]) && my.design[temp] && my.design[temp].type === 'Color') {
 				tempCol = my.design[temp].getData();
 				if (tempCol !== ctx[my.contextKeys[i]]) {
 					r[my.contextKeys[i]] = tempCol;
@@ -5082,7 +5088,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 				}
 			}
 			//handle fillStyle, strokeStyle that use RadialGradient, Gradient design objects
-			else if (my.contains(my.statArr.contextGetChanges3, my.contextKeys[i]) && my.contains(my.designnames, temp) && my.contains(my.statArr.designTypes, my.design[temp].type) && my.design[temp].autoUpdate) {
+			else if (my.contains(my.statArr.contextGetChanges3, my.contextKeys[i]) && my.design[temp] && my.contains(my.statArr.designTypes, my.design[temp].type) && my.design[temp].autoUpdate) {
 				r[my.contextKeys[i]] = temp;
 				count++;
 			}
@@ -5733,7 +5739,7 @@ Constructor helper function - discover this entity's default group affiliation
 **/
 	my.Entity.prototype.getGroup = function(items) {
 		items = my.safeObject(items);
-		if (my.xt(items.group) && my.contains(my.groupnames, items.group)) {
+		if (my.xt(items.group) && my.group[items.group]) {
 			return items.group;
 		}
 		else {
@@ -6420,7 +6426,7 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 	my.Design.prototype.makeGradient = function(entity, cell) {
 		entity = my.entity[entity] || false;
 		if (my.xt(cell)) {
-			cell = (my.contains(my.cellnames, cell)) ? my.cell[cell] : my.cell[this.get('cell')];
+			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[this.get('cell')];
 		}
 		else if (entity) {
 			cell = my.cell[entity.group];
