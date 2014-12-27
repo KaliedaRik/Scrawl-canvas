@@ -78,13 +78,16 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Array} [items] Array of CELLNAME Strings - can also be a String
 	@return Always true
 	**/
+		scrawlVars.buildFields_cells = [];
+		scrawlVars.buildFields_i = 0;
+		scrawlVars.buildFields_iz = 0;
 		my.buildFields = function(items) {
-			var myCells = (my.xt(items)) ? [].concat(items) : [my.pad[my.currentPad].current];
+			scrawlVars.buildFields_cells = (my.xt(items)) ? [].concat(items) : [my.pad[my.currentPad].current];
 			if (items === 'all') {
-				myCells = my.cellnames;
+				scrawlVars.buildFields_cells = my.cellnames;
 			}
-			for (var i = 0, iz = myCells.length; i < iz; i++) {
-				my.cell[myCells[i]].buildField();
+			for (scrawlVars.buildFields_i = 0, scrawlVars.buildFields_iz = scrawlVars.buildFields_cells.length; scrawlVars.buildFields_i < scrawlVars.buildFields_iz; scrawlVars.buildFields_i++) {
+				my.cell[scrawlVars.buildFields_cells[scrawlVars.buildFields_i]].buildField();
 			}
 			return true;
 		};
@@ -95,9 +98,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
+		scrawlVars.Pad_buildFields_i = 0;
+		scrawlVars.Pad_buildFields_iz = 0;
 		my.Pad.prototype.buildFields = function() {
-			for (var i = 0, iz = this.cells.length; i < iz; i++) {
-				my.cell[this.cells[i]].buildField();
+			for (scrawlVars.Pad_buildFields_i = 0, scrawlVars.Pad_buildFields_iz = this.cells.length; scrawlVars.Pad_buildFields_i < scrawlVars.Pad_buildFields_iz; scrawlVars.Pad_buildFields_i++) {
+				my.cell[this.cells[scrawlVars.Pad_buildFields_i]].buildField();
 			}
 			return this;
 		};
@@ -133,42 +138,56 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
+		scrawlVars.Cell_buildFields_i = 0;
+		scrawlVars.Cell_buildFields_iz = 0;
+		scrawlVars.Cell_buildFields_j = 0;
+		scrawlVars.Cell_buildFields_jz = 0;
+		scrawlVars.Cell_buildFields_fieldEntitys = [];
+		scrawlVars.Cell_buildFields_fenceEntitys = [];
+		scrawlVars.Cell_buildFields_tempentity = '';
+		scrawlVars.Cell_buildFields_tempfill = '';
+		scrawlVars.Cell_buildFields_myfill = '';
+		scrawlVars.Cell_buildFields_tempstroke = '';
+		scrawlVars.Cell_buildFields_thisContext = null; //scrawl Context object
+		scrawlVars.Cell_buildFields_thisEngine = null; //DOM Canvas context object
+		scrawlVars.Cell_buildFields_entityContext = null; //scrawl Context object
 		my.Cell.prototype.buildField = function() {
-			var fieldEntitys = [],
-				fenceEntitys = [],
-				tempentity = '',
-				tempfill,
-				tempstroke,
-				myfill = my.ctx[this.context].get('fillStyle');
-			my.context[this.context].fillStyle = 'rgba(0,0,0,1)';
-			my.context[this.context].fillRect(0, 0, this.actualWidth, this.actualHeight);
-			my.context[this.context].fillStyle = myfill;
-			fieldEntitys = my.group[this.name + '_field'].entitys;
-			for (var i = 0, iz = fieldEntitys.length; i < iz; i++) {
-				tempentity = my.entity[fieldEntitys[i]];
-				tempfill = my.ctx[tempentity.context].fillStyle;
-				tempstroke = my.ctx[tempentity.context].strokeStyle;
-				my.ctx[tempentity.context].fillStyle = 'rgba(255,255,255,1)';
-				my.ctx[tempentity.context].strokeStyle = 'rgba(255,255,255,1)';
-				tempentity.forceStamp('fillDraw', this.name);
-				my.ctx[tempentity.context].fillStyle = tempfill;
-				my.ctx[tempentity.context].strokeStyle = tempstroke;
+			scrawlVars.Cell_buildFields_fieldEntitys = [];
+			scrawlVars.Cell_buildFields_fenceEntitys = [];
+			scrawlVars.Cell_buildFields_thisContext = my.ctx[this.context];
+			scrawlVars.Cell_buildFields_thisEngine = my.context[this.context];
+			scrawlVars.Cell_buildFields_myfill = scrawlVars.Cell_buildFields_thisContext.get('fillStyle');
+			scrawlVars.Cell_buildFields_thisEngine.fillStyle = 'rgba(0,0,0,1)';
+			scrawlVars.Cell_buildFields_thisEngine.fillRect(0, 0, this.actualWidth, this.actualHeight);
+			scrawlVars.Cell_buildFields_thisEngine.fillStyle = scrawlVars.Cell_buildFields_myfill;
+			scrawlVars.Cell_buildFields_fieldEntitys = my.group[this.name + '_field'].entitys;
+			for (scrawlVars.Cell_buildFields_i = 0, scrawlVars.Cell_buildFields_iz = scrawlVars.Cell_buildFields_fieldEntitys.length; scrawlVars.Cell_buildFields_i < scrawlVars.Cell_buildFields_iz; scrawlVars.Cell_buildFields_i++) {
+				scrawlVars.Cell_buildFields_tempentity = my.entity[scrawlVars.Cell_buildFields_fieldEntitys[scrawlVars.Cell_buildFields_i]];
+				scrawlVars.Cell_buildFields_entityContext = my.ctx[scrawlVars.Cell_buildFields_tempentity.context];
+				scrawlVars.Cell_buildFields_tempfill = scrawlVars.Cell_buildFields_entityContext.fillStyle;
+				scrawlVars.Cell_buildFields_tempstroke = scrawlVars.Cell_buildFields_entityContext.strokeStyle;
+				scrawlVars.Cell_buildFields_entityContext.fillStyle = 'rgba(255,255,255,1)';
+				scrawlVars.Cell_buildFields_entityContext.strokeStyle = 'rgba(255,255,255,1)';
+				scrawlVars.Cell_buildFields_tempentity.forceStamp('fillDraw', this.name);
+				scrawlVars.Cell_buildFields_entityContext.fillStyle = scrawlVars.Cell_buildFields_tempfill;
+				scrawlVars.Cell_buildFields_entityContext.strokeStyle = scrawlVars.Cell_buildFields_tempstroke;
 			}
-			fenceEntitys = my.group[this.name + '_fence'].entitys;
-			for (var j = 0, jz = fenceEntitys.length; j < jz; j++) {
-				tempentity = my.entity[fenceEntitys[j]];
-				tempfill = my.ctx[tempentity.context].fillStyle;
-				tempstroke = my.ctx[tempentity.context].strokeStyle;
-				my.ctx[tempentity.context].fillStyle = 'rgba(0,0,0,1)';
-				my.ctx[tempentity.context].strokeStyle = 'rgba(0,0,0,1)';
-				tempentity.forceStamp('fillDraw', this.name);
-				my.ctx[tempentity.context].fillStyle = tempfill;
-				my.ctx[tempentity.context].strokeStyle = tempstroke;
+			scrawlVars.Cell_buildFields_fenceEntitys = my.group[this.name + '_fence'].entitys;
+			for (scrawlVars.Cell_buildFields_j = 0, scrawlVars.Cell_buildFields_jz = scrawlVars.Cell_buildFields_fenceEntitys.length; scrawlVars.Cell_buildFields_j < scrawlVars.Cell_buildFields_jz; scrawlVars.Cell_buildFields_j++) {
+				scrawlVars.Cell_buildFields_tempentity = my.entity[scrawlVars.Cell_buildFields_fenceEntitys[scrawlVars.Cell_buildFields_j]];
+				scrawlVars.Cell_buildFields_entityContext = my.ctx[scrawlVars.Cell_buildFields_tempentity.context];
+				scrawlVars.Cell_buildFields_tempfill = scrawlVars.Cell_buildFields_entityContext.fillStyle;
+				scrawlVars.Cell_buildFields_tempstroke = scrawlVars.Cell_buildFields_entityContext.strokeStyle;
+				scrawlVars.Cell_buildFields_entityContext.fillStyle = 'rgba(0,0,0,1)';
+				scrawlVars.Cell_buildFields_entityContext.strokeStyle = 'rgba(0,0,0,1)';
+				scrawlVars.Cell_buildFields_tempentity.forceStamp('fillDraw', this.name);
+				scrawlVars.Cell_buildFields_entityContext.fillStyle = scrawlVars.Cell_buildFields_tempfill;
+				scrawlVars.Cell_buildFields_entityContext.strokeStyle = scrawlVars.Cell_buildFields_tempstroke;
 			}
 			this.set({
 				fieldLabel: this.getImageData({
-					name: 'field',
-				}),
+					name: 'field'
+				})
 			});
 			return this;
 		};
@@ -198,66 +217,66 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return Vector of first the first coordinates to 'pass' the test
 	@private
 	**/
+		scrawlVars.Cell_checkFieldAt_i = 0;
+		scrawlVars.Cell_checkFieldAt_iz = 0;
+		scrawlVars.Cell_checkFieldAt_myChannel = '';
+		scrawlVars.Cell_checkFieldAt_myTest = 0;
+		scrawlVars.Cell_checkFieldAt_x = 0;
+		scrawlVars.Cell_checkFieldAt_y = 0;
+		scrawlVars.Cell_checkFieldAt_coords = [];
+		scrawlVars.Cell_checkFieldAt_pos = 0;
+		scrawlVars.Cell_checkFieldAt_d = null; //ImageData data array
+		scrawlVars.Cell_checkFieldAt_fieldLabel = '';
 		my.Cell.prototype.checkFieldAt = function(items) {
 			items = my.safeObject(items);
-			var myChannel = items.channel || 'anycolor',
-				myTest = items.test || 0,
-				x,
-				y,
-				coords = (items.coordinates) ? items.coordinates : [items.x || 0, items.y || 0],
-				pos,
-				d,
-				fieldLabel = this.get('fieldLabel');
-			d = my.imageData[fieldLabel];
-			for (var i = 0, iz = coords.length; i < iz; i += 2) {
-				x = Math.round(coords[i]);
-				y = Math.round(coords[i + 1]);
-				if (!my.isBetween(x, 0, d.width, true) || !my.isBetween(y, 0, d.height, true)) {
+			scrawlVars.Cell_checkFieldAt_myChannel = items.channel || 'anycolor';
+			scrawlVars.Cell_checkFieldAt_myTest = items.test || 0;
+			scrawlVars.Cell_checkFieldAt_coords = (items.coordinates) ? items.coordinates : [items.x || 0, items.y || 0];
+			scrawlVars.Cell_checkFieldAt_fieldLabel = this.get('fieldLabel');
+			scrawlVars.Cell_checkFieldAt_d = my.imageData[scrawlVars.Cell_checkFieldAt_fieldLabel];
+			for (scrawlVars.Cell_checkFieldAt_i = 0, scrawlVars.Cell_checkFieldAt_iz = scrawlVars.Cell_checkFieldAt_coords.length; scrawlVars.Cell_checkFieldAt_i < scrawlVars.Cell_checkFieldAt_iz; scrawlVars.Cell_checkFieldAt_i += 2) {
+				scrawlVars.Cell_checkFieldAt_x = Math.round(scrawlVars.Cell_checkFieldAt_coords[scrawlVars.Cell_checkFieldAt_i]);
+				scrawlVars.Cell_checkFieldAt_y = Math.round(scrawlVars.Cell_checkFieldAt_coords[scrawlVars.Cell_checkFieldAt_i + 1]);
+				if (!my.isBetween(scrawlVars.Cell_checkFieldAt_x, 0, scrawlVars.Cell_checkFieldAt_d.width, true) || !my.isBetween(scrawlVars.Cell_checkFieldAt_y, 0, scrawlVars.Cell_checkFieldAt_d.height, true)) {
 					return false;
 				}
 				else {
-					pos = ((y * d.width) + x) * 4;
-					switch (myChannel) {
+					scrawlVars.Cell_checkFieldAt_pos = ((scrawlVars.Cell_checkFieldAt_y * scrawlVars.Cell_checkFieldAt_d.width) + scrawlVars.Cell_checkFieldAt_x) * 4;
+					switch (scrawlVars.Cell_checkFieldAt_myChannel) {
 						case 'red':
-							if (d.data[pos] <= myTest) {
-								return {
-									x: x,
-									y: y
-								};
+							if (scrawlVars.Cell_checkFieldAt_d.data[scrawlVars.Cell_checkFieldAt_pos] <= scrawlVars.Cell_checkFieldAt_myTest) {
+								items.x = scrawlVars.Cell_checkFieldAt_x;
+								items.y = scrawlVars.Cell_checkFieldAt_y;
+								return items;
 							}
 							break;
 						case 'green':
-							if (d.data[pos + 1] <= myTest) {
-								return {
-									x: x,
-									y: y
-								};
+							if (scrawlVars.Cell_checkFieldAt_d.data[scrawlVars.Cell_checkFieldAt_pos + 1] <= scrawlVars.Cell_checkFieldAt_myTest) {
+								items.x = scrawlVars.Cell_checkFieldAt_x;
+								items.y = scrawlVars.Cell_checkFieldAt_y;
+								return items;
 							}
 							break;
 						case 'blue':
-							if (d.data[pos + 2] <= myTest) {
-								return {
-									x: x,
-									y: y
-								};
+							if (scrawlVars.Cell_checkFieldAt_d.data[scrawlVars.Cell_checkFieldAt_pos + 2] <= scrawlVars.Cell_checkFieldAt_myTest) {
+								items.x = scrawlVars.Cell_checkFieldAt_x;
+								items.y = scrawlVars.Cell_checkFieldAt_y;
+								return items;
 							}
 							break;
 						case 'alpha':
-							if (d.data[pos + 3] <= myTest) {
-								return {
-									x: x,
-									y: y
-								};
+							if (scrawlVars.Cell_checkFieldAt_d.data[scrawlVars.Cell_checkFieldAt_pos + 3] <= scrawlVars.Cell_checkFieldAt_myTest) {
+								items.x = scrawlVars.Cell_checkFieldAt_x;
+								items.y = scrawlVars.Cell_checkFieldAt_y;
+								return items;
 							}
 							break;
-						case 'anycolor':
-							if (d.data[pos] <= myTest || d.data[pos + 1] <= myTest || d.data[pos + 2] <= myTest) {
-								return {
-									x: x,
-									y: y
-								};
+						default:
+							if (scrawlVars.Cell_checkFieldAt_d.data[scrawlVars.Cell_checkFieldAt_pos] <= scrawlVars.Cell_checkFieldAt_myTest || scrawlVars.Cell_checkFieldAt_d.data[scrawlVars.Cell_checkFieldAt_pos + 1] <= scrawlVars.Cell_checkFieldAt_myTest || scrawlVars.Cell_checkFieldAt_d.data[scrawlVars.Cell_checkFieldAt_pos + 2] <= scrawlVars.Cell_checkFieldAt_myTest) {
+								items.x = scrawlVars.Cell_checkFieldAt_x;
+								items.y = scrawlVars.Cell_checkFieldAt_y;
+								return items;
 							}
-							break;
 					}
 				}
 			}
@@ -270,23 +289,27 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {String} entity SPRITENAME String of the reference entity; alternatively the entity Object itself can be passed as the argument
 	@return Array of visible entity Objects currently colliding with the reference entity
 	**/
+		scrawlVars.Group_getEntitysCollidingWith_i = 0;
+		scrawlVars.Group_getEntitysCollidingWith_iz = 0;
+		scrawlVars.Group_getEntitysCollidingWith_hits = [];
+		scrawlVars.Group_getEntitysCollidingWith_myTests = [];
 		my.Group.prototype.getEntitysCollidingWith = function(entity) {
 			entity = (my.isa(entity, 'str')) ? my.entity[entity] : entity;
 			if (entity.name && my.entity[entity.name]) {
-				var hits = [],
-					myTests = entity.getCollisionPoints();
-				for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-					if (my.entity[this.entitys[i]].name !== entity.name) {
-						if (my.entity[this.entitys[i]].get('visibility')) {
-							if (my.entity[this.entitys[i]].checkHit({
-								tests: myTests
+				scrawlVars.Group_getEntitysCollidingWith_hits = [];
+				scrawlVars.Group_getEntitysCollidingWith_myTests = entity.getCollisionPoints();
+				for (scrawlVars.Group_getEntitysCollidingWith_i = 0, scrawlVars.Group_getEntitysCollidingWith_iz = this.entitys.length; scrawlVars.Group_getEntitysCollidingWith_i < scrawlVars.Group_getEntitysCollidingWith_iz; scrawlVars.Group_getEntitysCollidingWith_i++) {
+					if (my.entity[this.entitys[scrawlVars.Group_getEntitysCollidingWith_i]].name !== entity.name) {
+						if (my.entity[this.entitys[scrawlVars.Group_getEntitysCollidingWith_i]].get('visibility')) {
+							if (my.entity[this.entitys[scrawlVars.Group_getEntitysCollidingWith_i]].checkHit({
+								tests: scrawlVars.Group_getEntitysCollidingWith_myTests
 							})) {
-								hits.push(this.entitys[i]);
+								scrawlVars.Group_getEntitysCollidingWith_hits.push(this.entitys[scrawlVars.Group_getEntitysCollidingWith_i]);
 							}
 						}
 					}
 				}
-				return (hits.length > 0) ? hits : false;
+				return (scrawlVars.Group_getEntitysCollidingWith_hits.length > 0) ? scrawlVars.Group_getEntitysCollidingWith_hits : false;
 			}
 			return false;
 		};
@@ -295,50 +318,59 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@method Group.getInGroupEntityHits
 	@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
 	**/
+		scrawlVars.Group_getInGroupEntityHits_i = 0;
+		scrawlVars.Group_getInGroupEntityHits_iz = 0;
+		scrawlVars.Group_getInGroupEntityHits_j = 0;
+		scrawlVars.Group_getInGroupEntityHits_jz = 0;
+		scrawlVars.Group_getInGroupEntityHits_k = 0;
+		scrawlVars.Group_getInGroupEntityHits_kz = 0;
+		scrawlVars.Group_getInGroupEntityHits_hits = [];
+		scrawlVars.Group_getInGroupEntityHits_cPoints = null; //raw object
+		scrawlVars.Group_getInGroupEntityHits_cViz = null; //raw object
+		scrawlVars.Group_getInGroupEntityHits_temp = null; //scrawl Entity object
+		scrawlVars.Group_getInGroupEntityHits_ts1 = null; //scrawl Vector object
+		scrawlVars.Group_getInGroupEntityHits_ts2 = null; //scrawl Vector object
+		scrawlVars.Group_getInGroupEntityHits_tresult = 0;
 		my.Group.prototype.getInGroupEntityHits = function() {
-			var hits = [],
-				cPoints = {},
-				cViz = {},
-				temp,
-				ts1,
-				ts2,
-				tresult;
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				temp = my.entity[this.entitys[i]];
-				cViz[temp.name] = temp.visibility;
-				if (cViz[temp.name]) {
-					cPoints[temp.name] = temp.getCollisionPoints();
+			scrawlVars.Group_getInGroupEntityHits_hits = [];
+			scrawlVars.Group_getInGroupEntityHits_cPoints = {};
+			scrawlVars.Group_getInGroupEntityHits_cViz = {};
+			for (scrawlVars.Group_getInGroupEntityHits_i = 0, scrawlVars.Group_getInGroupEntityHits_iz = this.entitys.length; scrawlVars.Group_getInGroupEntityHits_i < scrawlVars.Group_getInGroupEntityHits_iz; scrawlVars.Group_getInGroupEntityHits_i++) {
+				scrawlVars.Group_getInGroupEntityHits_temp = my.entity[this.entitys[scrawlVars.Group_getInGroupEntityHits_i]];
+				scrawlVars.Group_getInGroupEntityHits_cViz[scrawlVars.Group_getInGroupEntityHits_temp.name] = scrawlVars.Group_getInGroupEntityHits_temp.visibility;
+				if (scrawlVars.Group_getInGroupEntityHits_cViz[scrawlVars.Group_getInGroupEntityHits_temp.name]) {
+					scrawlVars.Group_getInGroupEntityHits_cPoints[scrawlVars.Group_getInGroupEntityHits_temp.name] = scrawlVars.Group_getInGroupEntityHits_temp.getCollisionPoints();
 				}
 			}
-			for (var k = 0, kz = this.entitys.length; k < kz; k++) {
-				if (cViz[this.entitys[k]]) {
-					for (var j = k + 1, jz = this.entitys.length; j < jz; j++) {
-						if (cViz[this.entitys[j]]) {
+			for (scrawlVars.Group_getInGroupEntityHits_k = 0, scrawlVars.Group_getInGroupEntityHits_kz = this.entitys.length; scrawlVars.Group_getInGroupEntityHits_k < scrawlVars.Group_getInGroupEntityHits_kz; scrawlVars.Group_getInGroupEntityHits_k++) {
+				if (scrawlVars.Group_getInGroupEntityHits_cViz[this.entitys[scrawlVars.Group_getInGroupEntityHits_k]]) {
+					for (scrawlVars.Group_getInGroupEntityHits_j = scrawlVars.Group_getInGroupEntityHits_k + 1, scrawlVars.Group_getInGroupEntityHits_jz = this.entitys.length; scrawlVars.Group_getInGroupEntityHits_j < scrawlVars.Group_getInGroupEntityHits_jz; scrawlVars.Group_getInGroupEntityHits_j++) {
+						if (scrawlVars.Group_getInGroupEntityHits_cViz[this.entitys[scrawlVars.Group_getInGroupEntityHits_j]]) {
 							if (this.regionRadius) {
-								ts1 = my.workcols.v1.set(my.entity[this.entitys[k]].start);
-								ts2 = my.workcols.v2.set(my.entity[this.entitys[j]].start);
-								tresult = ts1.vectorSubtract(ts2).getMagnitude();
-								if (tresult > this.regionRadius) {
+								scrawlVars.Group_getInGroupEntityHits_ts1 = my.workcols.v1.set(my.entity[this.entitys[scrawlVars.Group_getInGroupEntityHits_k]].start);
+								scrawlVars.Group_getInGroupEntityHits_ts2 = my.workcols.v2.set(my.entity[this.entitys[scrawlVars.Group_getInGroupEntityHits_j]].start);
+								scrawlVars.Group_getInGroupEntityHits_tresult = scrawlVars.Group_getInGroupEntityHits_ts1.vectorSubtract(scrawlVars.Group_getInGroupEntityHits_ts2).getMagnitude();
+								if (scrawlVars.Group_getInGroupEntityHits_tresult > this.regionRadius) {
 									continue;
 								}
 							}
-							if (my.entity[this.entitys[j]].checkHit({
-								tests: cPoints[this.entitys[k]]
+							if (my.entity[this.entitys[scrawlVars.Group_getInGroupEntityHits_j]].checkHit({
+								tests: scrawlVars.Group_getInGroupEntityHits_cPoints[this.entitys[scrawlVars.Group_getInGroupEntityHits_k]]
 							})) {
-								hits.push([this.entitys[k], this.entitys[j]]);
+								scrawlVars.Group_getInGroupEntityHits_hits.push([this.entitys[scrawlVars.Group_getInGroupEntityHits_k], this.entitys[scrawlVars.Group_getInGroupEntityHits_j]]);
 								continue;
 							}
-							if (my.entity[this.entitys[k]].checkHit({
-								tests: cPoints[this.entitys[j]]
+							if (my.entity[this.entitys[scrawlVars.Group_getInGroupEntityHits_k]].checkHit({
+								tests: scrawlVars.Group_getInGroupEntityHits_cPoints[this.entitys[scrawlVars.Group_getInGroupEntityHits_j]]
 							})) {
-								hits.push([this.entitys[k], this.entitys[j]]);
+								scrawlVars.Group_getInGroupEntityHits_hits.push([this.entitys[scrawlVars.Group_getInGroupEntityHits_k], this.entitys[scrawlVars.Group_getInGroupEntityHits_j]]);
 								continue;
 							}
 						}
 					}
 				}
 			}
-			return hits;
+			return scrawlVars.Group_getInGroupEntityHits_hits;
 		};
 		/**
 	Check all entitys in this Group against all entitys in the argument Group, to see if they are in collision
@@ -346,14 +378,25 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {String} g GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument
 	@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
 	**/
+		scrawlVars.Group_getBetweenGroupEntityHits_i = 0;
+		scrawlVars.Group_getBetweenGroupEntityHits_iz = 0;
+		scrawlVars.Group_getBetweenGroupEntityHits_j = 0;
+		scrawlVars.Group_getBetweenGroupEntityHits_jz = 0;
+		scrawlVars.Group_getBetweenGroupEntityHits_k = 0;
+		scrawlVars.Group_getBetweenGroupEntityHits_kz = 0;
+		scrawlVars.Group_getBetweenGroupEntityHits_l = 0;
+		scrawlVars.Group_getBetweenGroupEntityHits_lz = 0;
+		scrawlVars.Group_getBetweenGroupEntityHits_hits = [];
+		scrawlVars.Group_getBetweenGroupEntityHits_cPoints = null; //raw object
+		scrawlVars.Group_getBetweenGroupEntityHits_cViz = null; //raw object
+		scrawlVars.Group_getBetweenGroupEntityHits_temp = null; //scrawl Entity object
+		scrawlVars.Group_getBetweenGroupEntityHits_ts1 = null; //scrawl Vector object
+		scrawlVars.Group_getBetweenGroupEntityHits_ts2 = null; //scrawl Vector object
+		scrawlVars.Group_getBetweenGroupEntityHits_tresult = 0;
 		my.Group.prototype.getBetweenGroupEntityHits = function(g) {
-			var hits = [],
-				cPoints = {},
-				cViz = {},
-				temp,
-				ts1,
-				ts2,
-				tresult;
+			scrawlVars.Group_getBetweenGroupEntityHits_hits = [];
+			scrawlVars.Group_getBetweenGroupEntityHits_cPoints = {};
+			scrawlVars.Group_getBetweenGroupEntityHits_cViz = {};
 			if (my.xt(g)) {
 				if (my.isa(g, 'str')) {
 					if (my.group[g]) {
@@ -368,49 +411,49 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						return false;
 					}
 				}
-				for (var l = 0, lz = this.entitys.length; l < lz; l++) {
-					temp = my.entity[this.entitys[l]];
-					cViz[temp.name] = temp.visibility;
-					if (cViz[temp.name]) {
-						cPoints[temp.name] = temp.getCollisionPoints();
+				for (scrawlVars.Group_getBetweenGroupEntityHits_l = 0, scrawlVars.Group_getBetweenGroupEntityHits_lz = this.entitys.length; scrawlVars.Group_getBetweenGroupEntityHits_l < scrawlVars.Group_getBetweenGroupEntityHits_lz; scrawlVars.Group_getBetweenGroupEntityHits_l++) {
+					scrawlVars.Group_getBetweenGroupEntityHits_temp = my.entity[this.entitys[scrawlVars.Group_getBetweenGroupEntityHits_l]];
+					scrawlVars.Group_getBetweenGroupEntityHits_cViz[scrawlVars.Group_getBetweenGroupEntityHits_temp.name] = scrawlVars.Group_getBetweenGroupEntityHits_temp.visibility;
+					if (scrawlVars.Group_getBetweenGroupEntityHits_cViz[scrawlVars.Group_getBetweenGroupEntityHits_temp.name]) {
+						scrawlVars.Group_getBetweenGroupEntityHits_cPoints[scrawlVars.Group_getBetweenGroupEntityHits_temp.name] = scrawlVars.Group_getBetweenGroupEntityHits_temp.getCollisionPoints();
 					}
 				}
-				for (var i = 0, iz = g.entitys.length; i < iz; i++) {
-					temp = my.entity[g.entitys[i]];
-					cViz[temp.name] = temp.visibility;
-					if (cViz[temp.name]) {
-						cPoints[temp.name] = temp.getCollisionPoints();
+				for (scrawlVars.Group_getBetweenGroupEntityHits_i = 0, scrawlVars.Group_getBetweenGroupEntityHits_iz = g.entitys.length; scrawlVars.Group_getBetweenGroupEntityHits_i < scrawlVars.Group_getBetweenGroupEntityHits_iz; scrawlVars.Group_getBetweenGroupEntityHits_i++) {
+					scrawlVars.Group_getBetweenGroupEntityHits_temp = my.entity[g.entitys[scrawlVars.Group_getBetweenGroupEntityHits_i]];
+					scrawlVars.Group_getBetweenGroupEntityHits_cViz[scrawlVars.Group_getBetweenGroupEntityHits_temp.name] = scrawlVars.Group_getBetweenGroupEntityHits_temp.visibility;
+					if (scrawlVars.Group_getBetweenGroupEntityHits_cViz[scrawlVars.Group_getBetweenGroupEntityHits_temp.name]) {
+						scrawlVars.Group_getBetweenGroupEntityHits_cPoints[scrawlVars.Group_getBetweenGroupEntityHits_temp.name] = scrawlVars.Group_getBetweenGroupEntityHits_temp.getCollisionPoints();
 					}
 				}
-				for (var k = 0, kz = this.entitys.length; k < kz; k++) {
-					if (cViz[this.entitys[k]]) {
-						for (var j = 0, jz = g.entitys.length; j < jz; j++) {
-							if (cViz[g.entitys[j]]) {
+				for (scrawlVars.Group_getBetweenGroupEntityHits_k = 0, scrawlVars.Group_getBetweenGroupEntityHits_kz = this.entitys.length; scrawlVars.Group_getBetweenGroupEntityHits_k < scrawlVars.Group_getBetweenGroupEntityHits_kz; scrawlVars.Group_getBetweenGroupEntityHits_k++) {
+					if (scrawlVars.Group_getBetweenGroupEntityHits_cViz[this.entitys[scrawlVars.Group_getBetweenGroupEntityHits_k]]) {
+						for (scrawlVars.Group_getBetweenGroupEntityHits_j = 0, scrawlVars.Group_getBetweenGroupEntityHits_jz = g.entitys.length; scrawlVars.Group_getBetweenGroupEntityHits_j < scrawlVars.Group_getBetweenGroupEntityHits_jz; scrawlVars.Group_getBetweenGroupEntityHits_j++) {
+							if (scrawlVars.Group_getBetweenGroupEntityHits_cViz[g.entitys[scrawlVars.Group_getBetweenGroupEntityHits_j]]) {
 								if (this.regionRadius) {
-									ts1 = my.workcols.v1.set(my.entity[this.entitys[k]].start);
-									ts2 = my.workcols.v2.set(my.entity[g.entitys[j]].start);
-									tresult = ts1.vectorSubtract(ts2).getMagnitude();
-									if (tresult > this.regionRadius) {
+									scrawlVars.Group_getBetweenGroupEntityHits_ts1 = my.workcols.v1.set(my.entity[this.entitys[scrawlVars.Group_getBetweenGroupEntityHits_k]].start);
+									scrawlVars.Group_getBetweenGroupEntityHits_ts2 = my.workcols.v2.set(my.entity[g.entitys[scrawlVars.Group_getBetweenGroupEntityHits_j]].start);
+									scrawlVars.Group_getBetweenGroupEntityHits_tresult = scrawlVars.Group_getBetweenGroupEntityHits_ts1.vectorSubtract(scrawlVars.Group_getBetweenGroupEntityHits_ts2).getMagnitude();
+									if (scrawlVars.Group_getBetweenGroupEntityHits_tresult > this.regionRadius) {
 										continue;
 									}
 								}
-								if (my.entity[g.entitys[j]].checkHit({
-									tests: cPoints[this.entitys[k]]
+								if (my.entity[g.entitys[scrawlVars.Group_getBetweenGroupEntityHits_j]].checkHit({
+									tests: scrawlVars.Group_getBetweenGroupEntityHits_cPoints[this.entitys[scrawlVars.Group_getBetweenGroupEntityHits_k]]
 								})) {
-									hits.push([this.entitys[k], g.entitys[j]]);
+									scrawlVars.Group_getBetweenGroupEntityHits_hits.push([this.entitys[scrawlVars.Group_getBetweenGroupEntityHits_k], g.entitys[scrawlVars.Group_getBetweenGroupEntityHits_j]]);
 									continue;
 								}
-								if (my.entity[this.entitys[k]].checkHit({
-									tests: cPoints[g.entitys[j]]
+								if (my.entity[this.entitys[scrawlVars.Group_getBetweenGroupEntityHits_k]].checkHit({
+									tests: scrawlVars.Group_getBetweenGroupEntityHits_cPoints[g.entitys[scrawlVars.Group_getBetweenGroupEntityHits_j]]
 								})) {
-									hits.push([this.entitys[k], g.entitys[j]]);
+									scrawlVars.Group_getBetweenGroupEntityHits_hits.push([this.entitys[scrawlVars.Group_getBetweenGroupEntityHits_k], g.entitys[scrawlVars.Group_getBetweenGroupEntityHits_j]]);
 									continue;
 								}
 							}
 						}
 					}
 				}
-				return hits;
+				return scrawlVars.Group_getBetweenGroupEntityHits_hits;
 			}
 			return false;
 		};
@@ -424,17 +467,20 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {String} [cell] CELLNAME of Cell whose &lt;canvas&gt; element is to be used for the check
 	@return Array of [SPRITENAME, Vector] Arrays
 	**/
+		scrawlVars.Group_getFieldEntityHits_j = 0;
+		scrawlVars.Group_getFieldEntityHits_jz = 0;
+		scrawlVars.Group_getFieldEntityHits_hits = [];
+		scrawlVars.Group_getFieldEntityHits_result = null; //raw object
 		my.Group.prototype.getFieldEntityHits = function(cell) {
 			cell = (my.xt(cell)) ? cell : this.cell;
-			var hits = [],
-				result;
-			for (var j = 0, jz = this.entitys.length; j < jz; j++) {
-				result = my.entity[this.entitys[j]].checkField(cell);
-				if (!my.isa(result, 'bool')) {
-					hits.push([this.entitys[j], result]);
+			scrawlVars.Group_getFieldEntityHits_hits = [];
+			for (scrawlVars.Group_getFieldEntityHits_j = 0, scrawlVars.Group_getFieldEntityHits_jz = this.entitys.length; scrawlVars.Group_getFieldEntityHits_j < scrawlVars.Group_getFieldEntityHits_jz; scrawlVars.Group_getFieldEntityHits_j++) {
+				scrawlVars.Group_getFieldEntityHits_result = my.entity[this.entitys[scrawlVars.Group_getFieldEntityHits_j]].checkField(cell);
+				if (!my.isa(scrawlVars.Group_getFieldEntityHits_result, 'bool')) {
+					scrawlVars.Group_getFieldEntityHits_hits.push([this.entitys[scrawlVars.Group_getFieldEntityHits_j], scrawlVars.Group_getFieldEntityHits_result]);
 				}
 			}
-			return hits;
+			return scrawlVars.Group_getFieldEntityHits_hits;
 		};
 
 		my.d.Entity.fieldChannel = 'anycolor';
@@ -511,11 +557,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
+		scrawlVars.Entity_addEntityToCellFields_i = 0;
+		scrawlVars.Entity_addEntityToCellFields_iz = 0;
 		my.Entity.prototype.addEntityToCellFields = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
-			for (var i = 0, iz = cells.length; i < iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + '_field'].addEntitysToGroup(this.name);
+			for (scrawlVars.Entity_addEntityToCellFields_i = 0, scrawlVars.Entity_addEntityToCellFields_iz = cells.length; scrawlVars.Entity_addEntityToCellFields_i < scrawlVars.Entity_addEntityToCellFields_iz; scrawlVars.Entity_addEntityToCellFields_i++) {
+				if (my.cell[cells[scrawlVars.Entity_addEntityToCellFields_i]]) {
+					my.group[cells[scrawlVars.Entity_addEntityToCellFields_i] + '_field'].addEntitysToGroup(this.name);
 				}
 			}
 			return this;
@@ -527,11 +575,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
+		scrawlVars.Entity_addEntityToCellFences_i = 0;
+		scrawlVars.Entity_addEntityToCellFences_iz = 0;
 		my.Entity.prototype.addEntityToCellFences = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
-			for (var i = 0, iz = cells.length; i < iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + '_fence'].addEntitysToGroup(this.name);
+			for (scrawlVars.Entity_addEntityToCellFences_i = 0, scrawlVars.Entity_addEntityToCellFences_iz = cells.length; scrawlVars.Entity_addEntityToCellFences_i < scrawlVars.Entity_addEntityToCellFences_iz; scrawlVars.Entity_addEntityToCellFences_i++) {
+				if (my.cell[cells[scrawlVars.Entity_addEntityToCellFences_i]]) {
+					my.group[cells[scrawlVars.Entity_addEntityToCellFences_i] + '_fence'].addEntitysToGroup(this.name);
 				}
 			}
 			return this;
@@ -543,11 +593,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
+		scrawlVars.Entity_removeEntityFromCellFields_i = 0;
+		scrawlVars.Entity_removeEntityFromCellFields_iz = 0;
 		my.Entity.prototype.removeEntityFromCellFields = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
-			for (var i = 0, iz = cells.length; i < iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + '_field'].removeEntitysFromGroup(this.name);
+			for (scrawlVars.Entity_removeEntityFromCellFields_i = 0, scrawlVars.Entity_removeEntityFromCellFields_iz = cells.length; scrawlVars.Entity_removeEntityFromCellFields_i < scrawlVars.Entity_removeEntityFromCellFields_iz; scrawlVars.Entity_removeEntityFromCellFields_i++) {
+				if (my.cell[cells[scrawlVars.Entity_removeEntityFromCellFields_i]]) {
+					my.group[cells[scrawlVars.Entity_removeEntityFromCellFields_i] + '_field'].removeEntitysFromGroup(this.name);
 				}
 			}
 			return this;
@@ -559,11 +611,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
+		scrawlVars.Entity_removeEntityFromCellFences_i = 0;
+		scrawlVars.Entity_removeEntityFromCellFences_iz = 0;
 		my.Entity.prototype.removeEntityFromCellFences = function(cells) {
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
-			for (var i = 0, iz = cells.length; i < iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + '_fence'].removeEntitysFromGroup(this.name);
+			for (scrawlVars.Entity_removeEntityFromCellFences_i = 0, scrawlVars.Entity_removeEntityFromCellFences_iz = cells.length; scrawlVars.Entity_removeEntityFromCellFences_i < scrawlVars.Entity_removeEntityFromCellFences_iz; scrawlVars.Entity_removeEntityFromCellFences_i++) {
+				if (my.cell[cells[scrawlVars.Entity_removeEntityFromCellFences_i]]) {
+					my.group[cells[scrawlVars.Entity_removeEntityFromCellFences_i] + '_fence'].removeEntitysFromGroup(this.name);
 				}
 			}
 			return this;
@@ -574,9 +628,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {String} [cell] CELLNAME String of the Cell to be checked against
 	@return First Vector coordinate to 'pass' the Cell.checkFieldAt() function's test; true if none pass; false if the test parameters are out of bounds
 	**/
+		scrawlVars.Entity_checkField_cell = null; //scrawl Cell object
 		my.Entity.prototype.checkField = function(cell) {
-			var myCell = (cell) ? my.cell[cell] : my.cell[my.group[this.group].cell];
-			return myCell.checkFieldAt({
+			scrawlVars.Entity_checkField_cell = (cell) ? my.cell[cell] : my.cell[my.group[this.group].cell];
+			return scrawlVars.Entity_checkField_cell.checkFieldAt({
 				coordinates: this.getCollisionPoints(),
 				test: this.get('fieldTest'),
 				channel: this.get('fieldChannel'),
@@ -587,32 +642,35 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@method Entity.getCollisionPoints
 	@return Array of coordinate Vectors
 	**/
+		scrawlVars.Entity_getCollisionPoints_i = 0;
+		scrawlVars.Entity_getCollisionPoints_iz = 0;
+		scrawlVars.Entity_getCollisionPoints_p = [];
+		scrawlVars.Entity_getCollisionPoints_v = null; //scrawl Vector object
+		scrawlVars.Entity_getCollisionPoints_c = [];
 		my.Entity.prototype.getCollisionPoints = function() {
-			var p = [],
-				v,
-				c;
+			scrawlVars.Entity_getCollisionPoints_p = [];
 			if (!my.xt(this.collisionVectors)) {
 				if (my.xt(this.collisionPoints)) {
 					this.buildCollisionVectors();
 				}
 			}
-			c = this.collisionVectors || false;
-			if (c) {
-				for (var i = 0, iz = c.length; i < iz; i += 2) {
-					v = my.v;
-					v.x = (this.flipReverse) ? -c[i] : c[i];
-					v.y = (this.flipUpend) ? -c[i + 1] : c[i + 1];
+			scrawlVars.Entity_getCollisionPoints_c = this.collisionVectors || false;
+			if (scrawlVars.Entity_getCollisionPoints_c) {
+				for (scrawlVars.Entity_getCollisionPoints_i = 0, scrawlVars.Entity_getCollisionPoints_iz = scrawlVars.Entity_getCollisionPoints_c.length; scrawlVars.Entity_getCollisionPoints_i < scrawlVars.Entity_getCollisionPoints_iz; scrawlVars.Entity_getCollisionPoints_i += 2) {
+					scrawlVars.Entity_getCollisionPoints_v = my.v;
+					scrawlVars.Entity_getCollisionPoints_v.x = (this.flipReverse) ? -scrawlVars.Entity_getCollisionPoints_c[scrawlVars.Entity_getCollisionPoints_i] : scrawlVars.Entity_getCollisionPoints_c[scrawlVars.Entity_getCollisionPoints_i];
+					scrawlVars.Entity_getCollisionPoints_v.y = (this.flipUpend) ? -scrawlVars.Entity_getCollisionPoints_c[scrawlVars.Entity_getCollisionPoints_i + 1] : scrawlVars.Entity_getCollisionPoints_c[scrawlVars.Entity_getCollisionPoints_i + 1];
 					if (this.roll) {
-						v.rotate(this.roll);
+						scrawlVars.Entity_getCollisionPoints_v.rotate(this.roll);
 					}
 					if (this.scale !== 1) {
-						v.scalarMultiply(this.scale);
+						scrawlVars.Entity_getCollisionPoints_v.scalarMultiply(this.scale);
 					}
-					v.vectorAdd(this.start);
-					p.push(v.x);
-					p.push(v.y);
+					scrawlVars.Entity_getCollisionPoints_v.vectorAdd(this.start);
+					scrawlVars.Entity_getCollisionPoints_p.push(scrawlVars.Entity_getCollisionPoints_v.x);
+					scrawlVars.Entity_getCollisionPoints_p.push(scrawlVars.Entity_getCollisionPoints_v.y);
 				}
-				return p;
+				return scrawlVars.Entity_getCollisionPoints_p;
 			}
 			return [];
 		};
@@ -626,63 +684,70 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	@private
 	**/
+		scrawlVars.Entity_getCollisionPoints_i = 0;
+		scrawlVars.Entity_getCollisionPoints_iz = 0;
+		scrawlVars.Entity_getCollisionPoints_p = [];
+		scrawlVars.Entity_getCollisionPoints_o = null; //scrawl Vector object
+		scrawlVars.Entity_getCollisionPoints_w = 0;
+		scrawlVars.Entity_getCollisionPoints_h = 0;
+		scrawlVars.Entity_getCollisionPoints_c = [];
 		my.Entity.prototype.buildCollisionVectors = function(items) {
-			var p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,
-				o = this.getOffsetStartVector().reverse(),
-				w = this.width,
-				h = this.height,
-				c = [];
-			for (var i = 0, iz = p.length; i < iz; i++) {
-				if (my.isa(p[i], 'str')) {
-					switch (p[i]) {
+			scrawlVars.Entity_getCollisionPoints_p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
+			scrawlVars.Entity_getCollisionPoints_o = this.getOffsetStartVector().reverse();
+			scrawlVars.Entity_getCollisionPoints_w = this.width;
+			scrawlVars.Entity_getCollisionPoints_h = this.height;
+			scrawlVars.Entity_getCollisionPoints_c = [];
+			for (scrawlVars.Entity_getCollisionPoints_i = 0, scrawlVars.Entity_getCollisionPoints_iz = scrawlVars.Entity_getCollisionPoints_p.length; scrawlVars.Entity_getCollisionPoints_i < scrawlVars.Entity_getCollisionPoints_iz; scrawlVars.Entity_getCollisionPoints_i++) {
+				if (my.isa(scrawlVars.Entity_getCollisionPoints_p[scrawlVars.Entity_getCollisionPoints_i], 'str')) {
+					switch (scrawlVars.Entity_getCollisionPoints_p[scrawlVars.Entity_getCollisionPoints_i]) {
 						case 'start':
-							c.push(0);
-							c.push(0);
+							scrawlVars.Entity_getCollisionPoints_c.push(0);
+							scrawlVars.Entity_getCollisionPoints_c.push(0);
 							break;
 						case 'N':
-							c.push((w / 2) - o.x);
-							c.push(-o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push((scrawlVars.Entity_getCollisionPoints_w / 2) - scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push(-scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 						case 'NE':
-							c.push(w - o.x);
-							c.push(-o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push(scrawlVars.Entity_getCollisionPoints_w - scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push(-scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 						case 'E':
-							c.push(w - o.x);
-							c.push((h / 2) - o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push(scrawlVars.Entity_getCollisionPoints_w - scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push((scrawlVars.Entity_getCollisionPoints_h / 2) - scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 						case 'SE':
-							c.push(w - o.x);
-							c.push(h - o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push(scrawlVars.Entity_getCollisionPoints_w - scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push(scrawlVars.Entity_getCollisionPoints_h - scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 						case 'S':
-							c.push((w / 2) - o.x);
-							c.push(h - o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push((scrawlVars.Entity_getCollisionPoints_w / 2) - scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push(scrawlVars.Entity_getCollisionPoints_h - scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 						case 'SW':
-							c.push(-o.x);
-							c.push(h - o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push(-scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push(scrawlVars.Entity_getCollisionPoints_h - scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 						case 'W':
-							c.push(-o.x);
-							c.push((h / 2) - o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push(-scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push((scrawlVars.Entity_getCollisionPoints_h / 2) - scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 						case 'NW':
-							c.push(-o.x);
-							c.push(-o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push(-scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push(-scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 						case 'center':
-							c.push((w / 2) - o.x);
-							c.push((h / 2) - o.y);
+							scrawlVars.Entity_getCollisionPoints_c.push((scrawlVars.Entity_getCollisionPoints_w / 2) - scrawlVars.Entity_getCollisionPoints_o.x);
+							scrawlVars.Entity_getCollisionPoints_c.push((scrawlVars.Entity_getCollisionPoints_h / 2) - scrawlVars.Entity_getCollisionPoints_o.y);
 							break;
 					}
 				}
-				else if (my.isa(p[i], 'vector')) {
-					c.push(p[i].x);
-					c.push(p[i].y);
+				else if (my.isa(scrawlVars.Entity_getCollisionPoints_p[scrawlVars.Entity_getCollisionPoints_i], 'vector')) {
+					scrawlVars.Entity_getCollisionPoints_c.push(scrawlVars.Entity_getCollisionPoints_p[scrawlVars.Entity_getCollisionPoints_i].x);
+					scrawlVars.Entity_getCollisionPoints_c.push(scrawlVars.Entity_getCollisionPoints_p[scrawlVars.Entity_getCollisionPoints_i].y);
 				}
 			}
-			this.collisionVectors = c;
+			this.collisionVectors = scrawlVars.Entity_getCollisionPoints_c;
 			return this;
 		};
 		/**
@@ -695,95 +760,99 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	@private
 	**/
+		scrawlVars.Entity_parseCollisionPoints_i = 0;
+		scrawlVars.Entity_parseCollisionPoints_iz = 0;
+		scrawlVars.Entity_parseCollisionPoints_p = [];
+		scrawlVars.Entity_parseCollisionPoints_myItems = [];
 		my.Entity.prototype.parseCollisionPoints = function(items) {
-			var myItems = (my.xt(items)) ? [].concat(items) : [],
-				p = [];
-			for (var i = 0, iz = myItems.length; i < iz; i++) {
-				if (my.isa(myItems[i], 'str')) {
-					switch (myItems[i].toLowerCase()) {
+			scrawlVars.Entity_parseCollisionPoints_myItems = (my.xt(items)) ? [].concat(items) : [];
+			scrawlVars.Entity_parseCollisionPoints_p = [];
+			for (scrawlVars.Entity_parseCollisionPoints_i = 0, scrawlVars.Entity_parseCollisionPoints_iz = scrawlVars.Entity_parseCollisionPoints_myItems.length; scrawlVars.Entity_parseCollisionPoints_i < scrawlVars.Entity_parseCollisionPoints_iz; scrawlVars.Entity_parseCollisionPoints_i++) {
+				if (my.isa(scrawlVars.Entity_parseCollisionPoints_myItems[scrawlVars.Entity_parseCollisionPoints_i], 'str')) {
+					switch (scrawlVars.Entity_parseCollisionPoints_myItems[scrawlVars.Entity_parseCollisionPoints_i].toLowerCase()) {
 						case 'all':
-							my.pushUnique(p, 'N');
-							my.pushUnique(p, 'NE');
-							my.pushUnique(p, 'E');
-							my.pushUnique(p, 'SE');
-							my.pushUnique(p, 'S');
-							my.pushUnique(p, 'SW');
-							my.pushUnique(p, 'W');
-							my.pushUnique(p, 'NW');
-							my.pushUnique(p, 'start');
-							my.pushUnique(p, 'center');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'N');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'NE');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'E');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'SE');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'S');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'SW');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'W');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'NW');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'start');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'center');
 							break;
 						case 'corners':
-							my.pushUnique(p, 'NE');
-							my.pushUnique(p, 'SE');
-							my.pushUnique(p, 'SW');
-							my.pushUnique(p, 'NW');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'NE');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'SE');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'SW');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'NW');
 							break;
 						case 'edges':
-							my.pushUnique(p, 'N');
-							my.pushUnique(p, 'E');
-							my.pushUnique(p, 'S');
-							my.pushUnique(p, 'W');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'N');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'E');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'S');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'W');
 							break;
 						case 'perimeter':
-							my.pushUnique(p, 'N');
-							my.pushUnique(p, 'NE');
-							my.pushUnique(p, 'E');
-							my.pushUnique(p, 'SE');
-							my.pushUnique(p, 'S');
-							my.pushUnique(p, 'SW');
-							my.pushUnique(p, 'W');
-							my.pushUnique(p, 'NW');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'N');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'NE');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'E');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'SE');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'S');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'SW');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'W');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'NW');
 							break;
 						case 'north':
 						case 'n':
-							my.pushUnique(p, 'N');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'N');
 							break;
 						case 'northeast':
 						case 'ne':
-							my.pushUnique(p, 'NE');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'NE');
 							break;
 						case 'east':
 						case 'e':
-							my.pushUnique(p, 'E');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'E');
 							break;
 						case 'southeast':
 						case 'se':
-							my.pushUnique(p, 'SE');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'SE');
 							break;
 						case 'south':
 						case 's':
-							my.pushUnique(p, 'S');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'S');
 							break;
 						case 'southwest':
 						case 'sw':
-							my.pushUnique(p, 'SW');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'SW');
 							break;
 						case 'west':
 						case 'w':
-							my.pushUnique(p, 'W');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'W');
 							break;
 						case 'northwest':
 						case 'nw':
-							my.pushUnique(p, 'NW');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'NW');
 							break;
 						case 'start':
-							my.pushUnique(p, 'start');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'start');
 							break;
 						case 'center':
-							my.pushUnique(p, 'center');
+							my.pushUnique(scrawlVars.Entity_parseCollisionPoints_p, 'center');
 							break;
 					}
 				}
-				else if (my.isa(myItems[i], 'num')) {
-					p.push(myItems[i]);
+				else if (my.isa(scrawlVars.Entity_parseCollisionPoints_myItems[scrawlVars.Entity_parseCollisionPoints_i], 'num')) {
+					scrawlVars.Entity_parseCollisionPoints_p.push(scrawlVars.Entity_parseCollisionPoints_myItems[scrawlVars.Entity_parseCollisionPoints_i]);
 				}
-				else if (my.isa(myItems[i], 'vector')) {
-					p.push(myItems[i]);
+				else if (my.isa(scrawlVars.Entity_parseCollisionPoints_myItems[scrawlVars.Entity_parseCollisionPoints_i], 'vector')) {
+					scrawlVars.Entity_parseCollisionPoints_p.push(scrawlVars.Entity_parseCollisionPoints_myItems[scrawlVars.Entity_parseCollisionPoints_i]);
 				}
 			}
-			this.collisionPoints = p;
-			return p;
+			this.collisionPoints = scrawlVars.Entity_parseCollisionPoints_p;
+			return scrawlVars.Entity_parseCollisionPoints_p;
 		};
 
 		return my;
