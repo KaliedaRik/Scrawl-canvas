@@ -70,7 +70,7 @@ The core module is the only essential module in Scrawl. It must always be direct
 
 var scrawlVars = window.scrawlVars || {};
 
-var scrawl = window.scrawl || (function() {
+var scrawl = window.scrawl || (function(S) {
 	'use strict';
 	var my = {};
 
@@ -144,13 +144,6 @@ An Object containing OBJECTTYPE:Object pairs which in turn contain default attri
 **/
 	my.d = {};
 	/**
-Object for function variables - to prevent unnecessary generation of local variables
-@property vars
-@type {Object}
-@private
-**/
-	my.vars = {};
-	/**
 Work vector, for calculations
 @property v
 @type {Vector}
@@ -164,13 +157,6 @@ Default empty object - passed to various functions, to prevent them generating s
 @private
 **/
 	my.o = {};
-	/**
-Object containing static arrays
-@property statArr
-@type {Object}
-@private
-**/
-	my.statArr = {};
 	/**
 Work quaternions, for calculations
 @property workquat
@@ -546,11 +532,11 @@ A __utility__ function that removes a value from an array
 	scrawl.removeItem(myarray, 'banana');	//returns ['apple', 'orange']
 	scrawl.removeItem(myarray, 'apple');	//returns ['orange']
 **/
-	scrawlVars.removeItem_index = 0;
+	S.removeItem_index = 0;
 	my.removeItem = function(item, o) {
-		scrawlVars.removeItem_index = item.indexOf(o);
-		if (scrawlVars.removeItem_index >= 0) {
-			item.splice(scrawlVars.removeItem_index, 1);
+		S.removeItem_index = item.indexOf(o);
+		if (S.removeItem_index >= 0) {
+			item.splice(S.removeItem_index, 1);
 		}
 		return item;
 	};
@@ -567,12 +553,12 @@ A __utility__ function that checks to see if a number is between two other numbe
 	scrawl.isBetween(3, 3, 5);			//returns false
 	scrawl.isBetween(3, 3, 5, true);	//returns true
 **/
-	scrawlVars.isBetween_value = 0;
+	S.isBetween_value = 0;
 	my.isBetween = function(no, a, b, e) {
 		if (a > b) {
-			scrawlVars.isBetween_value = a;
+			S.isBetween_value = a;
 			a = b;
-			b = scrawlVars.isBetween_value;
+			b = S.isBetween_value;
 		}
 		if (e) {
 			if (no >= a && no <= b) {
@@ -609,62 +595,62 @@ The action attribute refers to the action taken when the result of the operation
 @param {Object} object consisting of key:value pairs
 @return result of calculation
 **/
-	scrawlVars.addWithinBounds_min = 0;
-	scrawlVars.addWithinBounds_max = 0;
-	scrawlVars.addWithinBounds_count = 0;
-	scrawlVars.addWithinBounds_action = '';
-	scrawlVars.addWithinBounds_operation = '';
-	scrawlVars.addWithinBounds_result = 0;
-	scrawlVars.addWithinBounds_check = false;
+	S.addWithinBounds_min = 0;
+	S.addWithinBounds_max = 0;
+	S.addWithinBounds_count = 0;
+	S.addWithinBounds_action = '';
+	S.addWithinBounds_operation = '';
+	S.addWithinBounds_result = 0;
+	S.addWithinBounds_check = false;
 	my.addWithinBounds = function(a, b, items) {
 		items = my.safeObject(items);
 		a = my.xtGet(a, 0);
 		b = my.xtGet(b, 0);
-		scrawlVars.addWithinBounds_min = my.xtGet(items.min, 0);
-		scrawlVars.addWithinBounds_max = my.xtGet(items.max, 1);
-		scrawlVars.addWithinBounds_action = my.xtGet(items.action, 'stick');
-		scrawlVars.addWithinBounds_operation = my.xtGet(items.operation, 'add');
-		scrawlVars.addWithinBounds_count = 20;
-		scrawlVars.addWithinBounds_result = 0;
-		scrawlVars.addWithinBounds_check = false;
+		S.addWithinBounds_min = my.xtGet(items.min, 0);
+		S.addWithinBounds_max = my.xtGet(items.max, 1);
+		S.addWithinBounds_action = my.xtGet(items.action, 'stick');
+		S.addWithinBounds_operation = my.xtGet(items.operation, 'add');
+		S.addWithinBounds_count = 20;
+		S.addWithinBounds_result = 0;
+		S.addWithinBounds_check = false;
 
-		if (b === 0 && (scrawlVars.addWithinBounds_operation === 'divide' || scrawlVars.addWithinBounds_operation === '/')) {
+		if (b === 0 && (S.addWithinBounds_operation === 'divide' || S.addWithinBounds_operation === '/')) {
 			return false;
 		}
 
-		switch (scrawlVars.addWithinBounds_operation) {
+		switch (S.addWithinBounds_operation) {
 			case 'subtract':
 			case '-':
-				scrawlVars.addWithinBounds_result = a - b;
+				S.addWithinBounds_result = a - b;
 				break;
 			case 'multiply':
 			case '*':
-				scrawlVars.addWithinBounds_result = a * b;
+				S.addWithinBounds_result = a * b;
 				break;
 			case 'divide':
 			case '/':
-				scrawlVars.addWithinBounds_result = a / b;
+				S.addWithinBounds_result = a / b;
 				break;
 			default:
-				scrawlVars.addWithinBounds_result = a + b;
+				S.addWithinBounds_result = a + b;
 		}
 
-		while (!my.isBetween(scrawlVars.addWithinBounds_result, scrawlVars.addWithinBounds_min, scrawlVars.addWithinBounds_max, true) && scrawlVars.addWithinBounds_count > 0) {
-			scrawlVars.addWithinBounds_check = (scrawlVars.addWithinBounds_result < (scrawlVars.addWithinBounds_min + scrawlVars.addWithinBounds_max) / 2) ? true : false;
-			switch (scrawlVars.addWithinBounds_action) {
+		while (!my.isBetween(S.addWithinBounds_result, S.addWithinBounds_min, S.addWithinBounds_max, true) && S.addWithinBounds_count > 0) {
+			S.addWithinBounds_check = (S.addWithinBounds_result < (S.addWithinBounds_min + S.addWithinBounds_max) / 2) ? true : false;
+			switch (S.addWithinBounds_action) {
 				case 'bounce':
-					scrawlVars.addWithinBounds_result = (scrawlVars.addWithinBounds_check) ? scrawlVars.addWithinBounds_min + (-scrawlVars.addWithinBounds_result + scrawlVars.addWithinBounds_min) : scrawlVars.addWithinBounds_max + (-scrawlVars.addWithinBounds_result + scrawlVars.addWithinBounds_max);
+					S.addWithinBounds_result = (S.addWithinBounds_check) ? S.addWithinBounds_min + (-S.addWithinBounds_result + S.addWithinBounds_min) : S.addWithinBounds_max + (-S.addWithinBounds_result + S.addWithinBounds_max);
 					break;
 				case 'loop':
-					scrawlVars.addWithinBounds_result = (scrawlVars.addWithinBounds_check) ? (scrawlVars.addWithinBounds_max - scrawlVars.addWithinBounds_min) + scrawlVars.addWithinBounds_result : (scrawlVars.addWithinBounds_min - scrawlVars.addWithinBounds_max) + scrawlVars.addWithinBounds_result;
+					S.addWithinBounds_result = (S.addWithinBounds_check) ? (S.addWithinBounds_max - S.addWithinBounds_min) + S.addWithinBounds_result : (S.addWithinBounds_min - S.addWithinBounds_max) + S.addWithinBounds_result;
 					break;
 				default:
-					scrawlVars.addWithinBounds_result = (scrawlVars.addWithinBounds_check) ? scrawlVars.addWithinBounds_min : scrawlVars.addWithinBounds_max;
+					S.addWithinBounds_result = (S.addWithinBounds_check) ? S.addWithinBounds_min : S.addWithinBounds_max;
 			}
-			scrawlVars.addWithinBounds_count--;
+			S.addWithinBounds_count--;
 		}
 
-		return (scrawlVars.addWithinBounds_count > 0) ? scrawlVars.addWithinBounds_result : false;
+		return (S.addWithinBounds_count > 0) ? S.addWithinBounds_result : false;
 	};
 	/**
 A __utility__ function for variable type checking
@@ -692,63 +678,63 @@ Valid identifier Strings include:
 	scrawl.isa(myboolean, 'bool');	//returns true
 	scrawl.isa(myboolean, 'str');	//returns false
 **/
-	scrawlVars.isa_slice = [];
+	S.isa_slice = [];
 	my.isa = function() {
 		// var args = Array.prototype.slice.call(arguments);
-		scrawlVars.isa_slice = Array.prototype.slice.call(arguments);
-		if (scrawlVars.isa_slice.length == 2 && my.xt(scrawlVars.isa_slice[0])) {
+		S.isa_slice = Array.prototype.slice.call(arguments);
+		if (S.isa_slice.length == 2 && my.xt(S.isa_slice[0])) {
 			//because we mostly test for str or fn
-			if (scrawlVars.isa_slice[1] == 'str') {
-				return (scrawlVars.isa_slice[0].substring) ? true : false;
+			if (S.isa_slice[1] == 'str') {
+				return (S.isa_slice[0].substring) ? true : false;
 			}
-			if (scrawlVars.isa_slice[1] == 'fn') {
-				return (typeof scrawlVars.isa_slice[0] === 'function') ? true : false;
+			if (S.isa_slice[1] == 'fn') {
+				return (typeof S.isa_slice[0] === 'function') ? true : false;
 			}
 			//divide and conquer the rest
-			scrawlVars.isa_slice.push(scrawlVars.isa_slice[1][0]);
-			if (scrawlVars.isa_slice[2] < 'm') {
-				if (scrawlVars.isa_slice[2] < 'd') {
-					switch (scrawlVars.isa_slice[1]) {
+			S.isa_slice.push(S.isa_slice[1][0]);
+			if (S.isa_slice[2] < 'm') {
+				if (S.isa_slice[2] < 'd') {
+					switch (S.isa_slice[1]) {
 						case 'arr':
-							return (Array.isArray(scrawlVars.isa_slice[0])) ? true : false;
+							return (Array.isArray(S.isa_slice[0])) ? true : false;
 						case 'bool':
-							return (typeof scrawlVars.isa_slice[0] === 'boolean') ? true : false;
+							return (typeof S.isa_slice[0] === 'boolean') ? true : false;
 						case 'canvas':
-							return (Object.prototype.toString.call(scrawlVars.isa_slice[0]) === '[object HTMLCanvasElement]') ? true : false;
+							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object HTMLCanvasElement]') ? true : false;
 						default:
 							return false;
 					}
 				}
 				else {
-					switch (scrawlVars.isa_slice[1]) {
+					switch (S.isa_slice[1]) {
 						case 'date':
-							return (Object.prototype.toString.call(scrawlVars.isa_slice[0]) === '[object Date]') ? true : false;
+							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object Date]') ? true : false;
 						case 'img':
-							return (Object.prototype.toString.call(scrawlVars.isa_slice[0]) === '[object HTMLImageElement]') ? true : false;
+							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object HTMLImageElement]') ? true : false;
 						default:
 							return false;
 					}
 				}
 			}
 			else {
-				if (scrawlVars.isa_slice[2] < 's') {
-					switch (scrawlVars.isa_slice[1]) {
+				if (S.isa_slice[2] < 's') {
+					switch (S.isa_slice[1]) {
 						case 'num':
-							return (scrawlVars.isa_slice[0].toFixed) ? true : false;
+							return (S.isa_slice[0].toFixed) ? true : false;
 						case 'obj':
-							return (Object.prototype.toString.call(scrawlVars.isa_slice[0]) === '[object Object]') ? true : false;
+							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object Object]') ? true : false;
 						case 'quaternion':
-							return (scrawlVars.isa_slice[0].type && scrawlVars.isa_slice[0].type === 'Quaternion') ? true : false;
+							return (S.isa_slice[0].type && S.isa_slice[0].type === 'Quaternion') ? true : false;
 						default:
 							return false;
 					}
 				}
 				else {
-					switch (scrawlVars.isa_slice[1]) {
+					switch (S.isa_slice[1]) {
 						case 'vector':
-							return (scrawlVars.isa_slice[0].type && scrawlVars.isa_slice[0].type === 'Vector') ? true : false;
+							return (S.isa_slice[0].type && S.isa_slice[0].type === 'Vector') ? true : false;
 						case 'video':
-							return (Object.prototype.toString.call(scrawlVars.isa_slice[0]) === '[object HTMLVideoElement]') ? true : false;
+							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object HTMLVideoElement]') ? true : false;
 						default:
 							return false;
 					}
@@ -786,19 +772,19 @@ A __utility__ function that checks an argument list of values and returns the fi
 @method xtGet
 @return first defined variable; null if all values are undefined
 **/
-	scrawlVars.xtGet_slice = [];
-	scrawlVars.xtGet_i = 0;
-	scrawlVars.xtGet_iz = 0;
+	S.xtGet_slice = [];
+	S.xtGet_i = 0;
+	S.xtGet_iz = 0;
 	my.xtGet = function() {
-		scrawlVars.xtGet_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.xtGet_slice[0])) {
-			console.log('xtGet - needs updating: ', scrawlVars.xtGet_slice);
-			scrawlVars.xtGet_slice = scrawlVars.xtGet_slice[0];
+		S.xtGet_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.xtGet_slice[0])) {
+			console.log('xtGet - needs updating: ', S.xtGet_slice);
+			S.xtGet_slice = S.xtGet_slice[0];
 		}
-		if (scrawlVars.xtGet_slice.length > 0) {
-			for (scrawlVars.xtGet_i = 0, scrawlVars.xtGet_iz = scrawlVars.xtGet_slice.length; scrawlVars.xtGet_i < scrawlVars.xtGet_iz; scrawlVars.xtGet_i++) {
-				if (typeof scrawlVars.xtGet_slice[scrawlVars.xtGet_i] !== 'undefined') {
-					return scrawlVars.xtGet_slice[scrawlVars.xtGet_i];
+		if (S.xtGet_slice.length > 0) {
+			for (S.xtGet_i = 0, S.xtGet_iz = S.xtGet_slice.length; S.xtGet_i < S.xtGet_iz; S.xtGet_i++) {
+				if (typeof S.xtGet_slice[S.xtGet_i] !== 'undefined') {
+					return S.xtGet_slice[S.xtGet_i];
 				}
 			}
 		}
@@ -812,19 +798,19 @@ False: 0, -0, '', undefined, null, false, NaN
 @method xtGetTrue
 @return first true variable; null if all values are false
 **/
-	scrawlVars.xtGetTrue_slice = [];
-	scrawlVars.xtGetTrue_i = 0;
-	scrawlVars.xtGetTrue_iz = 0;
+	S.xtGetTrue_slice = [];
+	S.xtGetTrue_i = 0;
+	S.xtGetTrue_iz = 0;
 	my.xtGetTrue = function() {
-		scrawlVars.xtGetTrue_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.xtGetTrue_slice[0])) {
-			console.log('xtGetTrue - needs updating: ', scrawlVars.xtGetTrue_slice);
-			scrawlVars.xtGetTrue_slice = scrawlVars.xtGetTrue_slice[0];
+		S.xtGetTrue_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.xtGetTrue_slice[0])) {
+			console.log('xtGetTrue - needs updating: ', S.xtGetTrue_slice);
+			S.xtGetTrue_slice = S.xtGetTrue_slice[0];
 		}
-		if (scrawlVars.xtGetTrue_slice.length > 0) {
-			for (scrawlVars.xtGetTrue_i = 0, scrawlVars.xtGetTrue_iz = scrawlVars.xtGetTrue_slice.length; scrawlVars.xtGetTrue_i < scrawlVars.xtGetTrue_iz; scrawlVars.xtGetTrue_i++) {
-				if (scrawlVars.xtGetTrue_slice[scrawlVars.xtGetTrue_i]) {
-					return scrawlVars.xtGetTrue_slice[scrawlVars.xtGetTrue_i];
+		if (S.xtGetTrue_slice.length > 0) {
+			for (S.xtGetTrue_i = 0, S.xtGetTrue_iz = S.xtGetTrue_slice.length; S.xtGetTrue_i < S.xtGetTrue_iz; S.xtGetTrue_i++) {
+				if (S.xtGetTrue_slice[S.xtGetTrue_i]) {
+					return S.xtGetTrue_slice[S.xtGetTrue_i];
 				}
 			}
 		}
@@ -843,18 +829,18 @@ A __utility__ function for variable type checking
 	scrawl.xta([mystring, mynumber]);	//returns true
 	scrawl.xta([mystring, myboolean]);	//returns false
 **/
-	scrawlVars.xta_slice = [];
-	scrawlVars.xta_i = 0;
-	scrawlVars.xta_iz = 0;
+	S.xta_slice = [];
+	S.xta_i = 0;
+	S.xta_iz = 0;
 	my.xta = function() {
-		scrawlVars.xta_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.xta_slice[0])) {
-			console.log('xta - needs updating: ', scrawlVars.xta_slice);
-			scrawlVars.xta_slice = scrawlVars.xta_slice[0];
+		S.xta_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.xta_slice[0])) {
+			console.log('xta - needs updating: ', S.xta_slice);
+			S.xta_slice = S.xta_slice[0];
 		}
-		if (scrawlVars.xta_slice.length > 0) {
-			for (scrawlVars.xta_i = 0, scrawlVars.xta_iz = scrawlVars.xta_slice.length; scrawlVars.xta_i < scrawlVars.xta_iz; scrawlVars.xta_i++) {
-				if (typeof scrawlVars.xta_slice[scrawlVars.xta_i] === 'undefined') {
+		if (S.xta_slice.length > 0) {
+			for (S.xta_i = 0, S.xta_iz = S.xta_slice.length; S.xta_i < S.xta_iz; S.xta_i++) {
+				if (typeof S.xta_slice[S.xta_i] === 'undefined') {
 					return false;
 				}
 			}
@@ -873,18 +859,18 @@ A __utility__ function for variable type checking
 	scrawl.xto(mystring, mynumber);	//returns true
 	scrawl.xto(mystring, myboolean);	//returns true
 **/
-	scrawlVars.xto_slice = [];
-	scrawlVars.xto_i = 0;
-	scrawlVars.xto_iz = 0;
+	S.xto_slice = [];
+	S.xto_i = 0;
+	S.xto_iz = 0;
 	my.xto = function() {
-		scrawlVars.xto_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.xto_slice[0])) {
-			console.log('xto - needs updating: ', scrawlVars.xto_slice);
-			scrawlVars.xto_slice = scrawlVars.xto_slice[0];
+		S.xto_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.xto_slice[0])) {
+			console.log('xto - needs updating: ', S.xto_slice);
+			S.xto_slice = S.xto_slice[0];
 		}
-		if (scrawlVars.xto_slice.length > 0) {
-			for (scrawlVars.xto_i = 0, scrawlVars.xto_iz = scrawlVars.xto_slice.length; scrawlVars.xto_i < scrawlVars.xto_iz; scrawlVars.xto_i++) {
-				if (typeof scrawlVars.xto_slice[scrawlVars.xto_i] !== 'undefined') {
+		if (S.xto_slice.length > 0) {
+			for (S.xto_i = 0, S.xto_iz = S.xto_slice.length; S.xto_i < S.xto_iz; S.xto_i++) {
+				if (typeof S.xto_slice[S.xto_i] !== 'undefined') {
 					return true;
 				}
 			}
@@ -898,14 +884,14 @@ Generate unique names for new Scrawl objects
 @return Unique generated name
 @private
 **/
-	scrawlVars.makeName_name = '';
-	scrawlVars.makeName_nameArray = [];
+	S.makeName_name = '';
+	S.makeName_nameArray = [];
 	my.makeName = function(item) {
 		item = my.safeObject(item);
 		if (my.contains(my.nameslist, item.target)) {
-			scrawlVars.makeName_name = my.xtGetTrue(item.name, item.type, 'default');
-			scrawlVars.makeName_nameArray = scrawlVars.makeName_name.split('~~~');
-			return (my.contains(my[item.target], scrawlVars.makeName_nameArray[0])) ? scrawlVars.makeName_nameArray[0] + '~~~' + Math.floor(Math.random() * 100000000) : scrawlVars.makeName_nameArray[0];
+			S.makeName_name = my.xtGetTrue(item.name, item.type, 'default');
+			S.makeName_nameArray = S.makeName_name.split('~~~');
+			return (my.contains(my[item.target], S.makeName_nameArray[0])) ? S.makeName_nameArray[0] + '~~~' + Math.floor(Math.random() * 100000000) : S.makeName_nameArray[0];
 		}
 		console.log('scrawl.makeName() error: insufficient or incorrect argument attributes', item);
 		return false;
@@ -923,11 +909,11 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 @example
 	scrawl.setDisplayOffsets();
 **/
-	scrawlVars.setDisplayOffsets_i = 0;
-	scrawlVars.setDisplayOffsets_iz = 0;
+	S.setDisplayOffsets_i = 0;
+	S.setDisplayOffsets_iz = 0;
 	my.setDisplayOffsets = function() {
-		for (scrawlVars.setDisplayOffsets_i = 0, scrawlVars.setDisplayOffsets_iz = my.padnames.length; scrawlVars.setDisplayOffsets_i < scrawlVars.setDisplayOffsets_iz; scrawlVars.setDisplayOffsets_i++) {
-			my.pad[my.padnames[scrawlVars.setDisplayOffsets_i]].setDisplayOffsets();
+		for (S.setDisplayOffsets_i = 0, S.setDisplayOffsets_iz = my.padnames.length; S.setDisplayOffsets_i < S.setDisplayOffsets_iz; S.setDisplayOffsets_i++) {
+			my.pad[my.padnames[S.setDisplayOffsets_i]].setDisplayOffsets();
 		}
 		return my;
 	};
@@ -939,19 +925,19 @@ A __private__ function that searches the DOM for canvas elements and generates P
 @return True on success; false otherwise
 @private
 **/
-	scrawlVars.getCanvases_elements = null; //list of DOM elements
-	scrawlVars.getCanvases_pad = null; //scrawl Pad object
-	scrawlVars.getCanvases_i = 0;
-	scrawlVars.getCanvases_iz = 0;
+	S.getCanvases_elements = null; //list of DOM elements
+	S.getCanvases_pad = null; //scrawl Pad object
+	S.getCanvases_i = 0;
+	S.getCanvases_iz = 0;
 	my.getCanvases = function() {
-		scrawlVars.getCanvases_elements = document.getElementsByTagName("canvas");
-		if (scrawlVars.getCanvases_elements.length > 0) {
-			for (scrawlVars.getCanvases_i = 0, scrawlVars.getCanvases_iz = scrawlVars.getCanvases_elements.length; scrawlVars.getCanvases_i < scrawlVars.getCanvases_iz; scrawlVars.getCanvases_i++) {
-				scrawlVars.getCanvases_pad = my.newPad({
-					canvasElement: scrawlVars.getCanvases_elements[scrawlVars.getCanvases_i]
+		S.getCanvases_elements = document.getElementsByTagName("canvas");
+		if (S.getCanvases_elements.length > 0) {
+			for (S.getCanvases_i = 0, S.getCanvases_iz = S.getCanvases_elements.length; S.getCanvases_i < S.getCanvases_iz; S.getCanvases_i++) {
+				S.getCanvases_pad = my.newPad({
+					canvasElement: S.getCanvases_elements[S.getCanvases_i]
 				});
-				if (scrawlVars.getCanvases_i === 0) {
-					my.currentPad = scrawlVars.getCanvases_pad.name;
+				if (S.getCanvases_i === 0) {
+					my.currentPad = S.getCanvases_pad.name;
 				}
 			}
 			return true;
@@ -985,20 +971,20 @@ The argument object should include the following attributes:
 		</script>
     </body>
 **/
-	scrawlVars.addCanvasToPage_parent = null; //DOM elements
-	scrawlVars.addCanvasToPage_canvas = null; //DOM canvas element
-	scrawlVars.addCanvasToPage_pad = null; //scrawl Pad object
+	S.addCanvasToPage_parent = null; //DOM elements
+	S.addCanvasToPage_canvas = null; //DOM canvas element
+	S.addCanvasToPage_pad = null; //scrawl Pad object
 	my.addCanvasToPage = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.addCanvasToPage_parent = document.getElementById(items.parentElement) || document.body;
-		scrawlVars.addCanvasToPage_canvas = document.createElement('canvas');
-		scrawlVars.addCanvasToPage_parent.appendChild(scrawlVars.addCanvasToPage_canvas);
+		S.addCanvasToPage_parent = document.getElementById(items.parentElement) || document.body;
+		S.addCanvasToPage_canvas = document.createElement('canvas');
+		S.addCanvasToPage_parent.appendChild(S.addCanvasToPage_canvas);
 		items.width = my.xtGet(items.width, 300);
 		items.height = my.xtGet(items.height, 150);
-		items.canvasElement = scrawlVars.addCanvasToPage_canvas;
-		scrawlVars.addCanvasToPage_pad = new my.Pad(items);
+		items.canvasElement = S.addCanvasToPage_canvas;
+		S.addCanvasToPage_pad = new my.Pad(items);
 		my.setDisplayOffsets();
-		return scrawlVars.addCanvasToPage_pad;
+		return S.addCanvasToPage_pad;
 	};
 	/**
 A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&gt; elements
@@ -1007,13 +993,13 @@ A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	scrawlVars.clear_padnames = [];
-	scrawlVars.clear_i = 0;
-	scrawlVars.clear_iz = 0;
+	S.clear_padnames = [];
+	S.clear_i = 0;
+	S.clear_iz = 0;
 	my.clear = function(pads) {
-		scrawlVars.clear_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		for (scrawlVars.clear_i = 0, scrawlVars.clear_iz = scrawlVars.clear_padnames.length; scrawlVars.clear_i < scrawlVars.clear_iz; scrawlVars.clear_i++) {
-			my.pad[scrawlVars.clear_padnames[scrawlVars.clear_i]].clear();
+		S.clear_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		for (S.clear_i = 0, S.clear_iz = S.clear_padnames.length; S.clear_i < S.clear_iz; S.clear_i++) {
+			my.pad[S.clear_padnames[S.clear_i]].clear();
 		}
 		return my;
 	};
@@ -1024,13 +1010,13 @@ A __display__ function to ask Pads to get their Cells to compile their scenes
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	scrawlVars.compile_padnames = [];
-	scrawlVars.compile_i = 0;
-	scrawlVars.compile_iz = 0;
+	S.compile_padnames = [];
+	S.compile_i = 0;
+	S.compile_iz = 0;
 	my.compile = function(pads) {
-		scrawlVars.compile_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		for (scrawlVars.compile_i = 0, scrawlVars.compile_iz = scrawlVars.compile_padnames.length; scrawlVars.compile_i < scrawlVars.compile_iz; scrawlVars.compile_i++) {
-			my.pad[scrawlVars.compile_padnames[scrawlVars.compile_i]].compile();
+		S.compile_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		for (S.compile_i = 0, S.compile_iz = S.compile_padnames.length; S.compile_i < S.compile_iz; S.compile_i++) {
+			my.pad[S.compile_padnames[S.compile_i]].compile();
 		}
 		return my;
 	};
@@ -1041,13 +1027,13 @@ A __display__ function to ask Pads to show the results of their latest display c
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	scrawlVars.show_padnames = [];
-	scrawlVars.show_i = 0;
-	scrawlVars.show_iz = 0;
+	S.show_padnames = [];
+	S.show_i = 0;
+	S.show_iz = 0;
 	my.show = function(pads) {
-		scrawlVars.show_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		for (scrawlVars.show_i = 0, scrawlVars.show_iz = scrawlVars.show_padnames.length; scrawlVars.show_i < scrawlVars.show_iz; scrawlVars.show_i++) {
-			my.pad[scrawlVars.show_padnames[scrawlVars.show_i]].show();
+		S.show_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		for (S.show_i = 0, S.show_iz = S.show_padnames.length; S.show_i < S.show_iz; S.show_i++) {
+			my.pad[S.show_padnames[S.show_i]].show();
 		}
 		return my;
 	};
@@ -1058,13 +1044,13 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	scrawlVars.render_padnames = [];
-	scrawlVars.render_i = 0;
-	scrawlVars.render_iz = 0;
+	S.render_padnames = [];
+	S.render_i = 0;
+	S.render_iz = 0;
 	my.render = function(pads) {
-		scrawlVars.render_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		for (scrawlVars.render_i = 0, scrawlVars.render_iz = scrawlVars.render_padnames.length; scrawlVars.render_i < scrawlVars.render_iz; scrawlVars.render_i++) {
-			my.pad[scrawlVars.render_padnames[scrawlVars.render_i]].render();
+		S.render_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		for (S.render_i = 0, S.render_iz = S.render_padnames.length; S.render_i < S.render_iz; S.render_i++) {
+			my.pad[S.render_padnames[S.render_i]].render();
 		}
 		return my;
 	};
@@ -1075,12 +1061,12 @@ A __utility__ function to add two percent strings together
 @param {String} b - second value
 @return String result
 **/
-	scrawlVars.addPercentages_a = 0;
-	scrawlVars.addPercentages_b = 0;
+	S.addPercentages_a = 0;
+	S.addPercentages_b = 0;
 	my.addPercentages = function(a, b) {
-		scrawlVars.addPercentages_a = parseFloat(a);
-		scrawlVars.addPercentages_b = parseFloat(b);
-		return (scrawlVars.addPercentages_a + scrawlVars.addPercentages_b) + '%';
+		S.addPercentages_a = parseFloat(a);
+		S.addPercentages_b = parseFloat(b);
+		return (S.addPercentages_a + S.addPercentages_b) + '%';
 	};
 	/**
 A __utility__ function to reverse the value of a percentage string
@@ -1088,11 +1074,11 @@ A __utility__ function to reverse the value of a percentage string
 @param {String} a - value
 @return String result
 **/
-	scrawlVars.reversePercentage_a = 0;
+	S.reversePercentage_a = 0;
 	my.reversePercentage = function(a) {
-		scrawlVars.reversePercentage_a = parseFloat(a);
-		scrawlVars.reversePercentage_a = -scrawlVars.reversePercentage_a;
-		return scrawlVars.reversePercentage_a + '%';
+		S.reversePercentage_a = parseFloat(a);
+		S.reversePercentage_a = -S.reversePercentage_a;
+		return S.reversePercentage_a + '%';
 	};
 	/**
 A __utility__ function to subtract a percent string from another
@@ -1101,12 +1087,12 @@ A __utility__ function to subtract a percent string from another
 @param {String} b - value to be subtracted from initial value
 @return String result
 **/
-	scrawlVars.subtractPercentages_a = 0;
-	scrawlVars.subtractPercentages_b = 0;
+	S.subtractPercentages_a = 0;
+	S.subtractPercentages_b = 0;
 	my.subtractPercentages = function(a, b) {
-		scrawlVars.subtractPercentages_a = parseFloat(a);
-		scrawlVars.subtractPercentages_b = parseFloat(b);
-		return (scrawlVars.subtractPercentages_a - scrawlVars.subtractPercentages_b) + '%';
+		S.subtractPercentages_a = parseFloat(a);
+		S.subtractPercentages_b = parseFloat(b);
+		return (S.subtractPercentages_a - S.subtractPercentages_b) + '%';
 	};
 	/**
 A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects - see Pad.addNewCell() for more details
@@ -1115,10 +1101,10 @@ A __general__ function which passes on requests to Pads to generate new &lt;canv
 @param {String} pad PADNAME
 @return New Cell object
 **/
-	scrawlVars.addNewCell_pad = '';
+	S.addNewCell_pad = '';
 	my.addNewCell = function(data, pad) {
-		scrawlVars.addNewCell_pad = (my.isa(pad, 'str')) ? pad : my.currentPad;
-		return my.pad[scrawlVars.addNewCell_pad].addNewCell(data);
+		S.addNewCell_pad = (my.isa(pad, 'str')) ? pad : my.currentPad;
+		return my.pad[S.addNewCell_pad].addNewCell(data);
 	};
 	/**
 A __general__ function which deletes Cell objects and their associated paraphinalia - see Pad.deleteCells() for more details
@@ -1127,33 +1113,33 @@ A __general__ function which deletes Cell objects and their associated paraphina
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	scrawlVars.deleteCells_slice = [];
-	scrawlVars.deleteCells_i = 0;
-	scrawlVars.deleteCells_iz = 0;
-	scrawlVars.deleteCells_j = 0;
-	scrawlVars.deleteCells_jz = 0;
+	S.deleteCells_slice = [];
+	S.deleteCells_i = 0;
+	S.deleteCells_iz = 0;
+	S.deleteCells_j = 0;
+	S.deleteCells_jz = 0;
 	my.deleteCells = function() {
-		scrawlVars.deleteCells_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.deleteCells_slice[0])) {
-			console.log('deleteCells - needs updating: ', scrawlVars.deleteCells_slice);
-			scrawlVars.deleteCells_slice = scrawlVars.deleteCells_slice[0];
+		S.deleteCells_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.deleteCells_slice[0])) {
+			console.log('deleteCells - needs updating: ', S.deleteCells_slice);
+			S.deleteCells_slice = S.deleteCells_slice[0];
 		}
-		for (scrawlVars.deleteCells_i = 0, scrawlVars.deleteCells_iz = scrawlVars.deleteCells_slice.length; scrawlVars.deleteCells_i < scrawlVars.deleteCells_iz; scrawlVars.deleteCells_i++) {
-			for (scrawlVars.deleteCells_j = 0, scrawlVars.deleteCells_jz = my.padnames.length; scrawlVars.deleteCells_j < scrawlVars.deleteCells_jz; scrawlVars.deleteCells_j++) {
-				my.pad[my.padnames[scrawlVars.deleteCells_j]].deleteCell(c[scrawlVars.deleteCells_i]);
+		for (S.deleteCells_i = 0, S.deleteCells_iz = S.deleteCells_slice.length; S.deleteCells_i < S.deleteCells_iz; S.deleteCells_i++) {
+			for (S.deleteCells_j = 0, S.deleteCells_jz = my.padnames.length; S.deleteCells_j < S.deleteCells_jz; S.deleteCells_j++) {
+				my.pad[my.padnames[S.deleteCells_j]].deleteCell(c[S.deleteCells_i]);
 			}
-			delete my.group[scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i]];
-			delete my.group[scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i] + '_field'];
-			delete my.group[scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i] + '_fence'];
-			my.removeItem(my.groupnames, scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i]);
-			my.removeItem(my.groupnames, scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i] + '_field');
-			my.removeItem(my.groupnames, scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i] + '_fence');
-			delete my.context[scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i]];
-			delete my.canvas[scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i]];
-			delete my.ctx[my.cell[scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i]].context];
-			my.removeItem(my.ctxnames, my.cell[scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i]].context);
-			delete my.cell[scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i]];
-			my.removeItem(my.cellnames, scrawlVars.deleteCells_slice[scrawlVars.deleteCells_i]);
+			delete my.group[S.deleteCells_slice[S.deleteCells_i]];
+			delete my.group[S.deleteCells_slice[S.deleteCells_i] + '_field'];
+			delete my.group[S.deleteCells_slice[S.deleteCells_i] + '_fence'];
+			my.removeItem(my.groupnames, S.deleteCells_slice[S.deleteCells_i]);
+			my.removeItem(my.groupnames, S.deleteCells_slice[S.deleteCells_i] + '_field');
+			my.removeItem(my.groupnames, S.deleteCells_slice[S.deleteCells_i] + '_fence');
+			delete my.context[S.deleteCells_slice[S.deleteCells_i]];
+			delete my.canvas[S.deleteCells_slice[S.deleteCells_i]];
+			delete my.ctx[my.cell[S.deleteCells_slice[S.deleteCells_i]].context];
+			my.removeItem(my.ctxnames, my.cell[S.deleteCells_slice[S.deleteCells_i]].context);
+			delete my.cell[S.deleteCells_slice[S.deleteCells_i]];
+			my.removeItem(my.cellnames, S.deleteCells_slice[S.deleteCells_i]);
 		}
 		return my;
 	};
@@ -1165,19 +1151,19 @@ A __general__ function which adds supplied entitynames to Group.entitys attribut
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	scrawlVars.addEntitysToGroups_groupArray = [];
-	scrawlVars.addEntitysToGroups_entityArray = [];
-	scrawlVars.addEntitysToGroups_group = null; //scrawl Group object
-	scrawlVars.addEntitysToGroups_i = 0;
-	scrawlVars.addEntitysToGroups_iz = 0;
+	S.addEntitysToGroups_groupArray = [];
+	S.addEntitysToGroups_entityArray = [];
+	S.addEntitysToGroups_group = null; //scrawl Group object
+	S.addEntitysToGroups_i = 0;
+	S.addEntitysToGroups_iz = 0;
 	my.addEntitysToGroups = function(groups, entitys) {
 		if (my.xta(groups, entitys)) {
-			scrawlVars.addEntitysToGroups_groupArray = [].concat(groups);
-			scrawlVars.addEntitysToGroups_entityArray = [].concat(entitys);
-			for (scrawlVars.addEntitysToGroups_i = 0, scrawlVars.addEntitysToGroups_iz = scrawlVars.addEntitysToGroups_groupArray.length; scrawlVars.addEntitysToGroups_i < scrawlVars.addEntitysToGroups_iz; scrawlVars.addEntitysToGroups_i++) {
-				scrawlVars.addEntitysToGroups_group = my.group[scrawlVars.addEntitysToGroups_groupArray[scrawlVars.addEntitysToGroups_i]];
-				if (scrawlVars.addEntitysToGroups_group) {
-					scrawlVars.addEntitysToGroups_group.addEntitysToGroup(scrawlVars.addEntitysToGroups_entityArray);
+			S.addEntitysToGroups_groupArray = [].concat(groups);
+			S.addEntitysToGroups_entityArray = [].concat(entitys);
+			for (S.addEntitysToGroups_i = 0, S.addEntitysToGroups_iz = S.addEntitysToGroups_groupArray.length; S.addEntitysToGroups_i < S.addEntitysToGroups_iz; S.addEntitysToGroups_i++) {
+				S.addEntitysToGroups_group = my.group[S.addEntitysToGroups_groupArray[S.addEntitysToGroups_i]];
+				if (S.addEntitysToGroups_group) {
+					S.addEntitysToGroups_group.addEntitysToGroup(S.addEntitysToGroups_entityArray);
 				}
 			}
 		}
@@ -1191,19 +1177,19 @@ A __general__ function which removes supplied entitynames from Group.entitys att
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	scrawlVars.removeEntitysFromGroups_groupArray = [];
-	scrawlVars.removeEntitysFromGroups_entityArray = [];
-	scrawlVars.removeEntitysFromGroups_group = null; //scrawl Group object
-	scrawlVars.removeEntitysFromGroups_i = 0;
-	scrawlVars.removeEntitysFromGroups_iz = 0;
+	S.removeEntitysFromGroups_groupArray = [];
+	S.removeEntitysFromGroups_entityArray = [];
+	S.removeEntitysFromGroups_group = null; //scrawl Group object
+	S.removeEntitysFromGroups_i = 0;
+	S.removeEntitysFromGroups_iz = 0;
 	my.removeEntitysFromGroups = function(groups, entitys) {
 		if (my.xta(groups, entitys)) {
-			scrawlVars.removeEntitysFromGroups_groupArray = [].concat(groups);
-			scrawlVars.removeEntitysFromGroups_entityArray = [].concat(entitys);
-			for (scrawlVars.removeEntitysFromGroups_i = 0, scrawlVars.removeEntitysFromGroups_iz = scrawlVars.removeEntitysFromGroups_groupArray.length; scrawlVars.removeEntitysFromGroups_i < scrawlVars.removeEntitysFromGroups_iz; scrawlVars.removeEntitysFromGroups_i++) {
-				scrawlVars.removeEntitysFromGroups_group = my.group[scrawlVars.removeEntitysFromGroups_groupArray[scrawlVars.removeEntitysFromGroups_i]];
-				if (scrawlVars.removeEntitysFromGroups_group) {
-					scrawlVars.removeEntitysFromGroups_group.removeEntitysFromGroup(scrawlVars.removeEntitysFromGroups_entityArray);
+			S.removeEntitysFromGroups_groupArray = [].concat(groups);
+			S.removeEntitysFromGroups_entityArray = [].concat(entitys);
+			for (S.removeEntitysFromGroups_i = 0, S.removeEntitysFromGroups_iz = S.removeEntitysFromGroups_groupArray.length; S.removeEntitysFromGroups_i < S.removeEntitysFromGroups_iz; S.removeEntitysFromGroups_i++) {
+				S.removeEntitysFromGroups_group = my.group[S.removeEntitysFromGroups_groupArray[S.removeEntitysFromGroups_i]];
+				if (S.removeEntitysFromGroups_group) {
+					S.removeEntitysFromGroups_group.removeEntitysFromGroup(S.removeEntitysFromGroups_entityArray);
 				}
 			}
 		}
@@ -1221,30 +1207,30 @@ A __general__ function to delete entity objects
 		});
 	scrawl.deleteEntity(['myblock']);
 **/
-	scrawlVars.deleteEntity_slice = [];
-	scrawlVars.deleteEntity_i = 0;
-	scrawlVars.deleteEntity_iz = 0;
-	scrawlVars.deleteEntity_j = 0;
-	scrawlVars.deleteEntity_jz = 0;
-	scrawlVars.deleteEntity_entityName = '';
-	scrawlVars.deleteEntity_contextName = '';
+	S.deleteEntity_slice = [];
+	S.deleteEntity_i = 0;
+	S.deleteEntity_iz = 0;
+	S.deleteEntity_j = 0;
+	S.deleteEntity_jz = 0;
+	S.deleteEntity_entityName = '';
+	S.deleteEntity_contextName = '';
 	my.deleteEntity = function() {
-		scrawlVars.deleteEntity_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.deleteEntity_slice[0])) {
-			console.log('deleteEntity - needs updating: ', scrawlVars.deleteEntity_slice);
-			scrawlVars.deleteEntity_slice = scrawlVars.deleteEntity_slice[0];
+		S.deleteEntity_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.deleteEntity_slice[0])) {
+			console.log('deleteEntity - needs updating: ', S.deleteEntity_slice);
+			S.deleteEntity_slice = S.deleteEntity_slice[0];
 		}
-		for (scrawlVars.deleteEntity_i = 0, scrawlVars.deleteEntity_iz = scrawlVars.deleteEntity_slice.length; scrawlVars.deleteEntity_i < scrawlVars.deleteEntity_iz; scrawlVars.deleteEntity_i++) {
-			scrawlVars.deleteEntity_entityName = my.entity[scrawlVars.deleteEntity_slice[scrawlVars.deleteEntity_i]];
-			if (scrawlVars.deleteEntity_entityName) {
-				my.pathDeleteEntity(scrawlVars.deleteEntity_entityName);
-				scrawlVars.deleteEntity_contextName = scrawlVars.deleteEntity_entityName.context;
-				my.removeItem(my.ctxnames, scrawlVars.deleteEntity_contextName);
-				delete my.ctx[scrawlVars.deleteEntity_contextName];
-				my.removeItem(my.entitynames, scrawlVars.deleteEntity_slice[scrawlVars.deleteEntity_i]);
-				delete my.entity[items[scrawlVars.deleteEntity_i]];
-				for (scrawlVars.deleteEntity_j = 0, scrawlVars.deleteEntity_jz = my.groupnames.length; scrawlVars.deleteEntity_j < scrawlVars.deleteEntity_jz; scrawlVars.deleteEntity_j++) {
-					my.removeItem(my.group[my.groupnames[scrawlVars.deleteEntity_j]].entitys, scrawlVars.deleteEntity_slice[scrawlVars.deleteEntity_i]);
+		for (S.deleteEntity_i = 0, S.deleteEntity_iz = S.deleteEntity_slice.length; S.deleteEntity_i < S.deleteEntity_iz; S.deleteEntity_i++) {
+			S.deleteEntity_entityName = my.entity[S.deleteEntity_slice[S.deleteEntity_i]];
+			if (S.deleteEntity_entityName) {
+				my.pathDeleteEntity(S.deleteEntity_entityName);
+				S.deleteEntity_contextName = S.deleteEntity_entityName.context;
+				my.removeItem(my.ctxnames, S.deleteEntity_contextName);
+				delete my.ctx[S.deleteEntity_contextName];
+				my.removeItem(my.entitynames, S.deleteEntity_slice[S.deleteEntity_i]);
+				delete my.entity[S.deleteEntity_slice[S.deleteEntity_i]];
+				for (S.deleteEntity_j = 0, S.deleteEntity_jz = my.groupnames.length; S.deleteEntity_j < S.deleteEntity_jz; S.deleteEntity_j++) {
+					my.removeItem(my.group[my.groupnames[S.deleteEntity_j]].entitys, S.deleteEntity_slice[S.deleteEntity_i]);
 				}
 			}
 		}
@@ -1414,13 +1400,13 @@ Normalize the Vector to a unit vector
 @return This
 @chainable
 **/
-	scrawlVars.Vector_normalize_val = 0;
+	S.Vector_normalize_val = 0;
 	my.Vector.prototype.normalize = function() {
-		scrawlVars.Vector_normalize_val = this.getMagnitude();
-		if (scrawlVars.Vector_normalize_val > 0) {
-			this.x /= scrawlVars.Vector_normalize_val;
-			this.y /= scrawlVars.Vector_normalize_val;
-			this.z /= scrawlVars.Vector_normalize_val;
+		S.Vector_normalize_val = this.getMagnitude();
+		if (S.Vector_normalize_val > 0) {
+			this.x /= S.Vector_normalize_val;
+			this.y /= S.Vector_normalize_val;
+			this.z /= S.Vector_normalize_val;
 		}
 		return this;
 	};
@@ -1630,26 +1616,26 @@ Arithmetic is v(crossProduct)u, not u(crossProduct)v
 @return New cross product Vector; this on failure
 @chainable
 **/
-	scrawlVars.Vector_getCrossProduct_v1x = 0;
-	scrawlVars.Vector_getCrossProduct_v1y = 0;
-	scrawlVars.Vector_getCrossProduct_v1z = 0;
-	scrawlVars.Vector_getCrossProduct_v2x = 0;
-	scrawlVars.Vector_getCrossProduct_v2y = 0;
-	scrawlVars.Vector_getCrossProduct_v2z = 0;
+	S.Vector_getCrossProduct_v1x = 0;
+	S.Vector_getCrossProduct_v1y = 0;
+	S.Vector_getCrossProduct_v1z = 0;
+	S.Vector_getCrossProduct_v2x = 0;
+	S.Vector_getCrossProduct_v2y = 0;
+	S.Vector_getCrossProduct_v2z = 0;
 	my.Vector.prototype.getCrossProduct = function(u, v) {
 		console.log('Vector.getCrossProduct');
 		if (my.isa(u, 'vector')) {
 			v = (my.isa(v, 'vector')) ? v : this;
-			scrawlVars.Vector_getCrossProduct_v1x = v.x || 0;
-			scrawlVars.Vector_getCrossProduct_v1y = v.y || 0;
-			scrawlVars.Vector_getCrossProduct_v1z = v.z || 0;
-			scrawlVars.Vector_getCrossProduct_v2x = u.x || 0;
-			scrawlVars.Vector_getCrossProduct_v2y = u.y || 0;
-			scrawlVars.Vector_getCrossProduct_v2z = u.z || 0;
+			S.Vector_getCrossProduct_v1x = v.x || 0;
+			S.Vector_getCrossProduct_v1y = v.y || 0;
+			S.Vector_getCrossProduct_v1z = v.z || 0;
+			S.Vector_getCrossProduct_v2x = u.x || 0;
+			S.Vector_getCrossProduct_v2y = u.y || 0;
+			S.Vector_getCrossProduct_v2z = u.z || 0;
 			return my.newVector({
-				x: (scrawlVars.Vector_getCrossProduct_v1y * scrawlVars.Vector_getCrossProduct_v2z) - (scrawlVars.Vector_getCrossProduct_v1z * scrawlVars.Vector_getCrossProduct_v2y),
-				y: -(scrawlVars.Vector_getCrossProduct_v1x * scrawlVars.Vector_getCrossProduct_v2z) + (scrawlVars.Vector_getCrossProduct_v1z * scrawlVars.Vector_getCrossProduct_v2x),
-				z: (scrawlVars.Vector_getCrossProduct_v1x * scrawlVars.Vector_getCrossProduct_v2y) + (scrawlVars.Vector_getCrossProduct_v1y * scrawlVars.Vector_getCrossProduct_v2x)
+				x: (S.Vector_getCrossProduct_v1y * S.Vector_getCrossProduct_v2z) - (S.Vector_getCrossProduct_v1z * S.Vector_getCrossProduct_v2y),
+				y: -(S.Vector_getCrossProduct_v1x * S.Vector_getCrossProduct_v2z) + (S.Vector_getCrossProduct_v1z * S.Vector_getCrossProduct_v2x),
+				z: (S.Vector_getCrossProduct_v1x * S.Vector_getCrossProduct_v2y) + (S.Vector_getCrossProduct_v1y * S.Vector_getCrossProduct_v2x)
 			});
 		}
 		console.log('Vector.getCrossProduct() error: argument is not a Vector');
@@ -1681,28 +1667,28 @@ Obtain the triple scalar product of two Vectors and this, or a third, Vector
 @param {Vector} [w] Third vector to be used to calculate triple scalar product (by default: this)
 @return Triple scalar product result; false on failure
 **/
-	scrawlVars.Vector_getTripleScalarProduct_ux = 0;
-	scrawlVars.Vector_getTripleScalarProduct_uy = 0;
-	scrawlVars.Vector_getTripleScalarProduct_uz = 0;
-	scrawlVars.Vector_getTripleScalarProduct_vx = 0;
-	scrawlVars.Vector_getTripleScalarProduct_vy = 0;
-	scrawlVars.Vector_getTripleScalarProduct_vz = 0;
-	scrawlVars.Vector_getTripleScalarProduct_wx = 0;
-	scrawlVars.Vector_getTripleScalarProduct_wy = 0;
-	scrawlVars.Vector_getTripleScalarProduct_wz = 0;
+	S.Vector_getTripleScalarProduct_ux = 0;
+	S.Vector_getTripleScalarProduct_uy = 0;
+	S.Vector_getTripleScalarProduct_uz = 0;
+	S.Vector_getTripleScalarProduct_vx = 0;
+	S.Vector_getTripleScalarProduct_vy = 0;
+	S.Vector_getTripleScalarProduct_vz = 0;
+	S.Vector_getTripleScalarProduct_wx = 0;
+	S.Vector_getTripleScalarProduct_wy = 0;
+	S.Vector_getTripleScalarProduct_wz = 0;
 	my.Vector.prototype.getTripleScalarProduct = function(u, v, w) {
 		if (my.isa(u, 'vector') && my.isa(v, 'vector')) {
 			w = (my.safeObject(w)) ? w : this;
-			scrawlVars.Vector_getTripleScalarProduct_ux = u.x || 0;
-			scrawlVars.Vector_getTripleScalarProduct_uy = u.y || 0;
-			scrawlVars.Vector_getTripleScalarProduct_uz = u.z || 0;
-			scrawlVars.Vector_getTripleScalarProduct_vx = v.x || 0;
-			scrawlVars.Vector_getTripleScalarProduct_vy = v.y || 0;
-			scrawlVars.Vector_getTripleScalarProduct_vz = v.z || 0;
-			scrawlVars.Vector_getTripleScalarProduct_wx = w.x || 0;
-			scrawlVars.Vector_getTripleScalarProduct_wy = w.y || 0;
-			scrawlVars.Vector_getTripleScalarProduct_wz = w.z || 0;
-			return (scrawlVars.Vector_getTripleScalarProduct_ux * ((scrawlVars.Vector_getTripleScalarProduct_vy * scrawlVars.Vector_getTripleScalarProduct_wz) - (scrawlVars.Vector_getTripleScalarProduct_vz * scrawlVars.Vector_getTripleScalarProduct_wy))) + (scrawlVars.Vector_getTripleScalarProduct_uy * (-(scrawlVars.Vector_getTripleScalarProduct_vx * scrawlVars.Vector_getTripleScalarProduct_wz) + (scrawlVars.Vector_getTripleScalarProduct_vz * scrawlVars.Vector_getTripleScalarProduct_wx))) + (scrawlVars.Vector_getTripleScalarProduct_uz * ((scrawlVars.Vector_getTripleScalarProduct_vx * scrawlVars.Vector_getTripleScalarProduct_wy) - (scrawlVars.Vector_getTripleScalarProduct_vy * scrawlVars.Vector_getTripleScalarProduct_wx)));
+			S.Vector_getTripleScalarProduct_ux = u.x || 0;
+			S.Vector_getTripleScalarProduct_uy = u.y || 0;
+			S.Vector_getTripleScalarProduct_uz = u.z || 0;
+			S.Vector_getTripleScalarProduct_vx = v.x || 0;
+			S.Vector_getTripleScalarProduct_vy = v.y || 0;
+			S.Vector_getTripleScalarProduct_vz = v.z || 0;
+			S.Vector_getTripleScalarProduct_wx = w.x || 0;
+			S.Vector_getTripleScalarProduct_wy = w.y || 0;
+			S.Vector_getTripleScalarProduct_wz = w.z || 0;
+			return (S.Vector_getTripleScalarProduct_ux * ((S.Vector_getTripleScalarProduct_vy * S.Vector_getTripleScalarProduct_wz) - (S.Vector_getTripleScalarProduct_vz * S.Vector_getTripleScalarProduct_wy))) + (S.Vector_getTripleScalarProduct_uy * (-(S.Vector_getTripleScalarProduct_vx * S.Vector_getTripleScalarProduct_wz) + (S.Vector_getTripleScalarProduct_vz * S.Vector_getTripleScalarProduct_wx))) + (S.Vector_getTripleScalarProduct_uz * ((S.Vector_getTripleScalarProduct_vx * S.Vector_getTripleScalarProduct_wy) - (S.Vector_getTripleScalarProduct_vy * S.Vector_getTripleScalarProduct_wx)));
 		}
 		console.log('Vector.getTripleScalarProduct() error: argument is not a Vector');
 		return false;
@@ -1714,14 +1700,14 @@ Rotate the Vector by a given angle
 @return This
 @chainable
 **/
-	my.statArr.vr = [0, 0];
+	S.stat_vr = [0, 0];
 	my.Vector.prototype.rotate = function(angle) {
 		if (my.isa(angle, 'num')) {
-			my.statArr.vr[0] = Math.atan2(this.y, this.x);
-			my.statArr.vr[0] += (angle * my.radian);
-			my.statArr.vr[1] = this.getMagnitude();
-			this.x = my.statArr.vr[1] * Math.cos(my.statArr.vr[0]);
-			this.y = my.statArr.vr[1] * Math.sin(my.statArr.vr[0]);
+			S.stat_vr[0] = Math.atan2(this.y, this.x);
+			S.stat_vr[0] += (angle * my.radian);
+			S.stat_vr[1] = this.getMagnitude();
+			this.x = S.stat_vr[1] * Math.cos(S.stat_vr[0]);
+			this.y = S.stat_vr[1] * Math.sin(S.stat_vr[0]);
 			return this;
 		}
 		console.log('Vector.rotate() error: argument is not a Number');
@@ -1747,18 +1733,18 @@ Rotate a Vector object by a Quaternion rotation
 @return Amended version of Vector; this on failure
 @chainable
 **/
-	scrawlVars.Vector_rotate3d_q1 = null; //scrawl Quaternion object
-	scrawlVars.Vector_rotate3d_q2 = null; //scrawl Quaternion object
-	scrawlVars.Vector_rotate3d_q3 = null; //scrawl Quaternion object
+	S.Vector_rotate3d_q1 = null; //scrawl Quaternion object
+	S.Vector_rotate3d_q2 = null; //scrawl Quaternion object
+	S.Vector_rotate3d_q3 = null; //scrawl Quaternion object
 	my.Vector.prototype.rotate3d = function(item, mag) {
 		if (my.isa(item, 'quaternion')) {
 			mag = (scrawl.isa(mag, 'num')) ? mag : this.getMagnitude();
-			scrawlVars.Vector_rotate3d_q1 = my.workquat.q1.set(item);
-			scrawlVars.Vector_rotate3d_q2 = my.workquat.q2.set(this);
-			scrawlVars.Vector_rotate3d_q3 = my.workquat.q3.set(item).conjugate();
-			scrawlVars.Vector_rotate3d_q1.quaternionMultiply(scrawlVars.Vector_rotate3d_q2);
-			scrawlVars.Vector_rotate3d_q1.quaternionMultiply(scrawlVars.Vector_rotate3d_q3);
-			this.set(scrawlVars.Vector_rotate3d_q1.v).setMagnitudeTo(mag);
+			S.Vector_rotate3d_q1 = my.workquat.q1.set(item);
+			S.Vector_rotate3d_q2 = my.workquat.q2.set(this);
+			S.Vector_rotate3d_q3 = my.workquat.q3.set(item).conjugate();
+			S.Vector_rotate3d_q1.quaternionMultiply(S.Vector_rotate3d_q2);
+			S.Vector_rotate3d_q1.quaternionMultiply(S.Vector_rotate3d_q3);
+			this.set(S.Vector_rotate3d_q1.v).setMagnitudeTo(mag);
 			return this;
 		}
 		console.log('Vector.rotate3d() error: argument is not a Quaternion');
@@ -1903,22 +1889,22 @@ Note that any callback or fn attribute functions will be referenced by the clone
 	newBox.get('width');		//returns 50
 	newBox.get('height');		//returns 100
 **/
-	scrawlVars.Base_clone_merged = null; //raw object
-	scrawlVars.Base_clone_keys = [];
-	scrawlVars.Base_clone_that = null; //scrawl object
-	scrawlVars.Base_clone_i = 0;
-	scrawlVars.Base_clone_iz = 0;
+	S.Base_clone_merged = null; //raw object
+	S.Base_clone_keys = [];
+	S.Base_clone_that = null; //scrawl object
+	S.Base_clone_i = 0;
+	S.Base_clone_iz = 0;
 	my.Base.prototype.clone = function(items) {
-		scrawlVars.Base_clone_merged = my.mergeOver(this.parse(), my.safeObject(items));
-		delete scrawlVars.Base_clone_merged.context; //required for successful cloning of entitys
-		scrawlVars.Base_clone_keys = Object.keys(this);
-		scrawlVars.Base_clone_that = this;
-		for (scrawlVars.Base_clone_i = 0, scrawlVars.Base_clone_iz = scrawlVars.Base_clone_keys.length; scrawlVars.Base_clone_i < scrawlVars.Base_clone_iz; scrawlVars.Base_clone_i++) {
-			if (my.isa(this[scrawlVars.Base_clone_keys[scrawlVars.Base_clone_i]], 'fn')) {
-				scrawlVars.Base_clone_merged[scrawlVars.Base_clone_keys[scrawlVars.Base_clone_i]] = scrawlVars.Base_clone_that[scrawlVars.Base_clone_keys[scrawlVars.Base_clone_i]];
+		S.Base_clone_merged = my.mergeOver(this.parse(), my.safeObject(items));
+		delete S.Base_clone_merged.context; //required for successful cloning of entitys
+		S.Base_clone_keys = Object.keys(this);
+		S.Base_clone_that = this;
+		for (S.Base_clone_i = 0, S.Base_clone_iz = S.Base_clone_keys.length; S.Base_clone_i < S.Base_clone_iz; S.Base_clone_i++) {
+			if (my.isa(this[S.Base_clone_keys[S.Base_clone_i]], 'fn')) {
+				S.Base_clone_merged[S.Base_clone_keys[S.Base_clone_i]] = S.Base_clone_that[S.Base_clone_keys[S.Base_clone_i]];
 			}
 		}
-		return new my[this.type](scrawlVars.Base_clone_merged);
+		return new my[this.type](S.Base_clone_merged);
 	};
 	/**
 Turn the object into a JSON String
@@ -1934,13 +1920,13 @@ Restore workspece vector values to their current specified values
 @return always true
 @private
 **/
-	scrawlVars.Base_resetWork_keys = [];
-	scrawlVars.Base_resetWork_i = 0;
-	scrawlVars.Base_resetWork_iz = 0;
+	S.Base_resetWork_keys = [];
+	S.Base_resetWork_i = 0;
+	S.Base_resetWork_iz = 0;
 	my.Base.prototype.resetWork = function() {
-		scrawlVars.Base_resetWork_keys = Object.keys(this.work);
-		for (scrawlVars.Base_resetWork_i = 0, scrawlVars.Base_resetWork_iz = scrawlVars.Base_resetWork_keys.length; scrawlVars.Base_resetWork_i < scrawlVars.Base_resetWork_iz; scrawlVars.Base_resetWork_i++) {
-			this.work[scrawlVars.Base_resetWork_keys[scrawlVars.Base_resetWork_i]].set(this[scrawlVars.Base_resetWork_keys[scrawlVars.Base_resetWork_i]]);
+		S.Base_resetWork_keys = Object.keys(this.work);
+		for (S.Base_resetWork_i = 0, S.Base_resetWork_iz = S.Base_resetWork_keys.length; S.Base_resetWork_i < S.Base_resetWork_iz; S.Base_resetWork_i++) {
+			this.work[S.Base_resetWork_keys[S.Base_resetWork_i]].set(this[S.Base_resetWork_keys[S.Base_resetWork_i]]);
 		}
 		return true;
 	};
@@ -2106,21 +2092,21 @@ Position constructor hook function - core functionality
 @method corePositionInit
 @private
 **/
-	scrawlVars.Position_corePositionInit_temp = null; //raw object
+	S.Position_corePositionInit_temp = null; //raw object
 	my.Position.prototype.corePositionInit = function(items) {
-		scrawlVars.Position_corePositionInit_temp = my.safeObject(items.start);
+		S.Position_corePositionInit_temp = my.safeObject(items.start);
 		this.start = my.newVector({
-			x: my.xtGet(items.startX, scrawlVars.Position_corePositionInit_temp.x, 0),
-			y: my.xtGet(items.startY, scrawlVars.Position_corePositionInit_temp.y, 0),
+			x: my.xtGet(items.startX, S.Position_corePositionInit_temp.x, 0),
+			y: my.xtGet(items.startY, S.Position_corePositionInit_temp.y, 0),
 			name: this.type + '.' + this.name + '.start'
 		});
 		this.work.start = my.newVector({
 			name: this.type + '.' + this.name + '.work.start'
 		});
-		scrawlVars.Position_corePositionInit_temp = my.safeObject(items.handle);
+		S.Position_corePositionInit_temp = my.safeObject(items.handle);
 		this.handle = my.newVector({
-			x: my.xtGet(items.handleX, scrawlVars.Position_corePositionInit_temp.x, 0),
-			y: my.xtGet(items.handleY, scrawlVars.Position_corePositionInit_temp.y, 0),
+			x: my.xtGet(items.handleX, S.Position_corePositionInit_temp.x, 0),
+			y: my.xtGet(items.handleY, S.Position_corePositionInit_temp.y, 0),
 			name: this.type + '.' + this.name + '.handle'
 		});
 		this.work.handle = my.newVector({
@@ -2158,9 +2144,9 @@ For 'start' and 'handle', returns a copy of the Vector
 @param {String} get Attribute key
 @return Attribute value
 **/
-	my.statArr.positionGet = ['startX', 'startY', 'handleX', 'handleY'];
+	S.stat_positionGet = ['startX', 'startY', 'handleX', 'handleY'];
 	my.Position.prototype.get = function(item) {
-		if (my.contains(my.statArr.positionGet, item)) {
+		if (my.contains(S.stat_positionGet, item)) {
 			switch (item) {
 				case 'startX':
 					return this.start.x;
@@ -2208,15 +2194,15 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 @return This
 @chainable
 **/
-	scrawlVars.Position_setStart_temp = null; //raw object
+	S.Position_setStart_temp = null; //raw object
 	my.Position.prototype.setStart = function(items) {
 		items = my.safeObject(items);
 		if (!my.isa(this.start, 'vector')) {
 			this.start = my.newVector(items.start || this.start);
 		}
-		scrawlVars.Position_setStart_temp = my.safeObject(items.start);
-		this.start.x = my.xtGet(items.startX, scrawlVars.Position_setStart_temp.x, this.start.x);
-		this.start.y = my.xtGet(items.startY, scrawlVars.Position_setStart_temp.y, this.start.y);
+		S.Position_setStart_temp = my.safeObject(items.start);
+		this.start.x = my.xtGet(items.startX, S.Position_setStart_temp.x, this.start.x);
+		this.start.y = my.xtGet(items.startY, S.Position_setStart_temp.y, this.start.y);
 		return this;
 	};
 	/**
@@ -2226,15 +2212,15 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 @return This
 @chainable
 **/
-	scrawlVars.Position_setHandle_temp = null; //raw object
+	S.Position_setHandle_temp = null; //raw object
 	my.Position.prototype.setHandle = function(items) {
 		items = my.safeObject(items);
 		if (!my.isa(this.handle, 'vector')) {
 			this.handle = my.newVector(items.handle || this.handle);
 		}
-		scrawlVars.Position_setHandle_temp = my.safeObject(items.handle);
-		this.handle.x = my.xtGet(items.handleX, scrawlVars.Position_setHandle_temp.x, this.handle.x);
-		this.handle.y = my.xtGet(items.handleY, scrawlVars.Position_setHandle_temp.y, this.handle.y);
+		S.Position_setHandle_temp = my.safeObject(items.handle);
+		this.handle.x = my.xtGet(items.handleX, S.Position_setHandle_temp.x, this.handle.x);
+		this.handle.y = my.xtGet(items.handleY, S.Position_setHandle_temp.y, this.handle.y);
 		return this;
 	};
 	/**
@@ -2276,16 +2262,16 @@ Adds the value of each attribute supplied in the argument to existing values; Th
 @return This
 @chainable
 **/
-	scrawlVars.Position_setDeltaStart_temp = null; //raw object
-	scrawlVars.Position_setDeltaStart_x = 0;
-	scrawlVars.Position_setDeltaStart_y = 0;
+	S.Position_setDeltaStart_temp = null; //raw object
+	S.Position_setDeltaStart_x = 0;
+	S.Position_setDeltaStart_y = 0;
 	my.Position.prototype.setDeltaStart = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Position_setDeltaStart_temp = my.safeObject(items.start);
-		scrawlVars.Position_setDeltaStart_x = my.xtGet(items.startX, scrawlVars.Position_setDeltaStart_temp.x, 0);
-		scrawlVars.Position_setDeltaStart_y = my.xtGet(items.startY, scrawlVars.Position_setDeltaStart_temp.y, 0);
-		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + scrawlVars.Position_setDeltaStart_x : my.addPercentages(this.start.x, scrawlVars.Position_setDeltaStart_x);
-		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + scrawlVars.Position_setDeltaStart_y : my.addPercentages(this.start.y, scrawlVars.Position_setDeltaStart_y);
+		S.Position_setDeltaStart_temp = my.safeObject(items.start);
+		S.Position_setDeltaStart_x = my.xtGet(items.startX, S.Position_setDeltaStart_temp.x, 0);
+		S.Position_setDeltaStart_y = my.xtGet(items.startY, S.Position_setDeltaStart_temp.y, 0);
+		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + S.Position_setDeltaStart_x : my.addPercentages(this.start.x, S.Position_setDeltaStart_x);
+		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + S.Position_setDeltaStart_y : my.addPercentages(this.start.y, S.Position_setDeltaStart_y);
 	};
 	/**
 Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY
@@ -2294,16 +2280,16 @@ Adds the value of each attribute supplied in the argument to existing values. Th
 @return This
 @chainable
 **/
-	scrawlVars.Position_setDeltaHandle_temp = null; //raw object
-	scrawlVars.Position_setDeltaHandle_x = 0;
-	scrawlVars.Position_setDeltaHandle_y = 0;
+	S.Position_setDeltaHandle_temp = null; //raw object
+	S.Position_setDeltaHandle_x = 0;
+	S.Position_setDeltaHandle_y = 0;
 	my.Position.prototype.setDeltaHandle = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Position_setDeltaHandle_temp = my.safeObject(items.handle);
-		scrawlVars.Position_setDeltaHandle_x = my.xtGet(items.handleX, scrawlVars.Position_setDeltaHandle_temp.x, 0);
-		scrawlVars.Position_setDeltaHandle_y = my.xtGet(items.handleY, scrawlVars.Position_setDeltaHandle_temp.y, 0);
-		this.handle.x = (my.isa(this.handle.x, 'num')) ? this.handle.x + scrawlVars.Position_setDeltaHandle_x : my.addPercentages(this.handle.x, scrawlVars.Position_setDeltaHandle_x);
-		this.handle.y = (my.isa(this.handle.y, 'num')) ? this.handle.y + scrawlVars.Position_setDeltaHandle_y : my.addPercentages(this.handle.y, scrawlVars.Position_setDeltaHandle_y);
+		S.Position_setDeltaHandle_temp = my.safeObject(items.handle);
+		S.Position_setDeltaHandle_x = my.xtGet(items.handleX, S.Position_setDeltaHandle_temp.x, 0);
+		S.Position_setDeltaHandle_y = my.xtGet(items.handleY, S.Position_setDeltaHandle_temp.y, 0);
+		this.handle.x = (my.isa(this.handle.x, 'num')) ? this.handle.x + S.Position_setDeltaHandle_x : my.addPercentages(this.handle.x, S.Position_setDeltaHandle_x);
+		this.handle.y = (my.isa(this.handle.y, 'num')) ? this.handle.y + S.Position_setDeltaHandle_y : my.addPercentages(this.handle.y, S.Position_setDeltaHandle_y);
 		return this;
 	};
 	/**
@@ -2332,25 +2318,25 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 @return Cloned object
 @chainable
 **/
-	scrawlVars.Position_clone_temp = null; //raw object
-	scrawlVars.Position_clone_clone = null; //scrawl object
+	S.Position_clone_temp = null; //raw object
+	S.Position_clone_clone = null; //scrawl object
 	my.Position.prototype.clone = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Position_clone_clone = my.Base.prototype.clone.call(this, items);
-		scrawlVars.Position_clone_temp = my.safeObject(items.start);
-		scrawlVars.Position_clone_clone.start = my.newVector({
-			x: my.xtGet(items.startX, scrawlVars.Position_clone_temp.x, scrawlVars.Position_clone_clone.start.x),
-			y: my.xtGet(items.startY, scrawlVars.Position_clone_temp.y, scrawlVars.Position_clone_clone.start.y),
-			name: scrawlVars.Position_clone_clone.type + '.' + scrawlVars.Position_clone_clone.name + '.start'
+		S.Position_clone_clone = my.Base.prototype.clone.call(this, items);
+		S.Position_clone_temp = my.safeObject(items.start);
+		S.Position_clone_clone.start = my.newVector({
+			x: my.xtGet(items.startX, S.Position_clone_temp.x, S.Position_clone_clone.start.x),
+			y: my.xtGet(items.startY, S.Position_clone_temp.y, S.Position_clone_clone.start.y),
+			name: S.Position_clone_clone.type + '.' + S.Position_clone_clone.name + '.start'
 		});
-		scrawlVars.Position_clone_temp = my.safeObject(items.handle);
-		scrawlVars.Position_clone_clone.handle = my.newVector({
-			x: my.xtGet(items.handleX, scrawlVars.Position_clone_temp.x, scrawlVars.Position_clone_clone.handle.x),
-			y: my.xtGet(items.handleY, scrawlVars.Position_clone_temp.y, scrawlVars.Position_clone_clone.handle.y),
-			name: scrawlVars.Position_clone_clone.type + '.' + scrawlVars.Position_clone_clone.name + '.handle'
+		S.Position_clone_temp = my.safeObject(items.handle);
+		S.Position_clone_clone.handle = my.newVector({
+			x: my.xtGet(items.handleX, S.Position_clone_temp.x, S.Position_clone_clone.handle.x),
+			y: my.xtGet(items.handleY, S.Position_clone_temp.y, S.Position_clone_clone.handle.y),
+			name: S.Position_clone_clone.type + '.' + S.Position_clone_clone.name + '.handle'
 		});
-		scrawlVars.Position_clone_clone = this.animationPositionClone(scrawlVars.Position_clone_clone, items);
-		return scrawlVars.Position_clone_clone;
+		S.Position_clone_clone = this.animationPositionClone(S.Position_clone_clone, items);
+		return S.Position_clone_clone;
 	};
 	/**
 Position.setDelta hook function - modified by animation module
@@ -2370,24 +2356,24 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 @return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
 @private
 **/
-	scrawlVars.Position_getPivotOffsetVector_height = 0;
-	scrawlVars.Position_getPivotOffsetVector_width = 0;
+	S.Position_getPivotOffsetVector_height = 0;
+	S.Position_getPivotOffsetVector_width = 0;
 	my.Position.prototype.getPivotOffsetVector = function() {
 		switch (this.type) {
 			case 'Block':
-				scrawlVars.Position_getPivotOffsetVector_height = (this.localHeight / this.scale) || this.get('height');
-				scrawlVars.Position_getPivotOffsetVector_width = (this.localWidth / this.scale) || this.get('width');
+				S.Position_getPivotOffsetVector_height = (this.localHeight / this.scale) || this.get('height');
+				S.Position_getPivotOffsetVector_width = (this.localWidth / this.scale) || this.get('width');
 				break;
 			case 'Picture':
 			case 'Cell':
-				scrawlVars.Position_getPivotOffsetVector_height = (this.pasteData.h / this.scale) || this.get('height');
-				scrawlVars.Position_getPivotOffsetVector_width = (this.pasteData.w / this.scale) || this.get('width');
+				S.Position_getPivotOffsetVector_height = (this.pasteData.h / this.scale) || this.get('height');
+				S.Position_getPivotOffsetVector_width = (this.pasteData.w / this.scale) || this.get('width');
 				break;
 			default:
-				scrawlVars.Position_getPivotOffsetVector_height = this.height || this.get('height');
-				scrawlVars.Position_getPivotOffsetVector_width = this.width || this.get('width');
+				S.Position_getPivotOffsetVector_height = this.height || this.get('height');
+				S.Position_getPivotOffsetVector_width = this.width || this.get('width');
 		}
-		return my.Position.prototype.calculatePOV.call(this, this.work.handle, scrawlVars.Position_getPivotOffsetVector_width, scrawlVars.Position_getPivotOffsetVector_height, false);
+		return my.Position.prototype.calculatePOV.call(this, this.work.handle, S.Position_getPivotOffsetVector_width, S.Position_getPivotOffsetVector_height, false);
 	};
 	/**
 Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object's handle attribute, where the object's frame of reference is its center
@@ -2399,12 +2385,12 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 @return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
 @private
 **/
-	scrawlVars.Position_getCenteredPivotOffsetVector_height = 0;
-	scrawlVars.Position_getCenteredPivotOffsetVector_width = 0;
+	S.Position_getCenteredPivotOffsetVector_height = 0;
+	S.Position_getCenteredPivotOffsetVector_width = 0;
 	my.Position.prototype.getCenteredPivotOffsetVector = function() {
-		scrawlVars.Position_getCenteredPivotOffsetVector_height = this.localHeight / this.scale || this.height || this.get('height');
-		scrawlVars.Position_getCenteredPivotOffsetVector_width = this.localWidth / this.scale || this.width || this.get('width');
-		return my.Position.prototype.calculatePOV.call(this, this.work.handle, scrawlVars.Position_getCenteredPivotOffsetVector_width, scrawlVars.Position_getCenteredPivotOffsetVector_height, true);
+		S.Position_getCenteredPivotOffsetVector_height = this.localHeight / this.scale || this.height || this.get('height');
+		S.Position_getCenteredPivotOffsetVector_width = this.localWidth / this.scale || this.width || this.get('width');
+		return my.Position.prototype.calculatePOV.call(this, this.work.handle, S.Position_getCenteredPivotOffsetVector_width, S.Position_getCenteredPivotOffsetVector_height, true);
 	};
 	/**
 Position.getOffsetStartVector() helper function. Calculates the pixel values for the object's handle attribute
@@ -2417,10 +2403,10 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 @return A Vector of calculated offset values
 @private
 **/
-	my.statArr.horizontal = ['left', 'center', 'right'];
-	my.statArr.vertical = ['top', 'center', 'bottom'];
+	S.stat_horizontal = ['left', 'center', 'right'];
+	S.stat_vertical = ['top', 'center', 'bottom'];
 	my.Position.prototype.calculatePOV = function(result, width, height, centered) {
-		if ((my.isa(result.x, 'str')) && !my.contains(my.statArr.horizontal, result.x)) {
+		if ((my.isa(result.x, 'str')) && !my.contains(S.stat_horizontal, result.x)) {
 			result.x = (centered) ? ((parseFloat(result.x) / 100) * width) - (width / 2) : (parseFloat(result.x) / 100) * width;
 		}
 		else {
@@ -2436,7 +2422,7 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 					break;
 			}
 		}
-		if ((my.isa(result.y, 'str')) && !my.contains(my.statArr.vertical, result.y)) {
+		if ((my.isa(result.y, 'str')) && !my.contains(S.stat_vertical, result.y)) {
 			result.y = (centered) ? ((parseFloat(result.y) / 100) * height) - (height / 2) : (parseFloat(result.y) / 100) * height;
 		}
 		else {
@@ -2461,17 +2447,17 @@ Calculates the pixel values of the object's handle attribute
 @method getOffsetStartVector
 @return Final offset values (as a Vector) to determine where entity, cell or element drawing should start
 **/
-	scrawlVars.Position_getOffsetStartVector_scaleX = 0;
-	scrawlVars.Position_getOffsetStartVector_scaleY = 0;
-	scrawlVars.Position_getOffsetStartVector_handle = null; //scrawl Vector object
+	S.Position_getOffsetStartVector_scaleX = 0;
+	S.Position_getOffsetStartVector_scaleY = 0;
+	S.Position_getOffsetStartVector_handle = null; //scrawl Vector object
 	my.Position.prototype.getOffsetStartVector = function() {
 		this.resetWork();
-		scrawlVars.Position_getOffsetStartVector_scaleX = (my.isa(this.handle.x, 'str')) ? this.scale : 1;
-		scrawlVars.Position_getOffsetStartVector_scaleY = (my.isa(this.handle.y, 'str')) ? this.scale : 1;
-		scrawlVars.Position_getOffsetStartVector_handle = this.getPivotOffsetVector();
-		scrawlVars.Position_getOffsetStartVector_handle.x *= scrawlVars.Position_getOffsetStartVector_scaleX;
-		scrawlVars.Position_getOffsetStartVector_handle.y *= scrawlVars.Position_getOffsetStartVector_scaleY;
-		return scrawlVars.Position_getOffsetStartVector_handle.reverse();
+		S.Position_getOffsetStartVector_scaleX = (my.isa(this.handle.x, 'str')) ? this.scale : 1;
+		S.Position_getOffsetStartVector_scaleY = (my.isa(this.handle.y, 'str')) ? this.scale : 1;
+		S.Position_getOffsetStartVector_handle = this.getPivotOffsetVector();
+		S.Position_getOffsetStartVector_handle.x *= S.Position_getOffsetStartVector_scaleX;
+		S.Position_getOffsetStartVector_handle.y *= S.Position_getOffsetStartVector_scaleY;
+		return S.Position_getOffsetStartVector_handle.reverse();
 	};
 	/**
 Stamp helper function - set this entity, cell or element start values to its pivot entity/point start value, or to the current mouse coordinates
@@ -2483,42 +2469,42 @@ Takes into account lock flag settings
 @chainable
 @private
 **/
-	scrawlVars.Position_setStampUsingPivot_pivot = null; //scrawl object
-	scrawlVars.Position_setStampUsingPivot_vector = null; //scrawl Vector object
-	scrawlVars.Position_setStampUsingPivot_entity = null; //scrawl Entity object
-	scrawlVars.Position_setStampUsingPivot_cell = null; //scrawl Cell object
-	scrawlVars.Position_setStampUsingPivot_mouse = null; //scrawl Vector object
-	scrawlVars.Position_setStampUsingPivot_pad = null; //scrawl Pad object
+	S.Position_setStampUsingPivot_pivot = null; //scrawl object
+	S.Position_setStampUsingPivot_vector = null; //scrawl Vector object
+	S.Position_setStampUsingPivot_entity = null; //scrawl Entity object
+	S.Position_setStampUsingPivot_cell = null; //scrawl Cell object
+	S.Position_setStampUsingPivot_mouse = null; //scrawl Vector object
+	S.Position_setStampUsingPivot_pad = null; //scrawl Pad object
 	my.Position.prototype.setStampUsingPivot = function(cell) {
 		if (my.xt(my.pointnames)) {
-			scrawlVars.Position_setStampUsingPivot_pivot = my.point[this.pivot];
-			if (scrawlVars.Position_setStampUsingPivot_pivot) {
-				scrawlVars.Position_setStampUsingPivot_entity = my.entity[scrawlVars.Position_setStampUsingPivot_pivot.entity];
-				scrawlVars.Position_setStampUsingPivot_vector = scrawlVars.Position_setStampUsingPivot_pivot.getCurrentCoordinates().rotate(scrawlVars.Position_setStampUsingPivot_entity.roll).vectorAdd(scrawlVars.Position_setStampUsingPivot_entity.start);
-				this.start.x = (!this.lockX) ? scrawlVars.Position_setStampUsingPivot_vector.x : this.start.x;
-				this.start.y = (!this.lockY) ? scrawlVars.Position_setStampUsingPivot_vector.y : this.start.y;
+			S.Position_setStampUsingPivot_pivot = my.point[this.pivot];
+			if (S.Position_setStampUsingPivot_pivot) {
+				S.Position_setStampUsingPivot_entity = my.entity[S.Position_setStampUsingPivot_pivot.entity];
+				S.Position_setStampUsingPivot_vector = S.Position_setStampUsingPivot_pivot.getCurrentCoordinates().rotate(S.Position_setStampUsingPivot_entity.roll).vectorAdd(S.Position_setStampUsingPivot_entity.start);
+				this.start.x = (!this.lockX) ? S.Position_setStampUsingPivot_vector.x : this.start.x;
+				this.start.y = (!this.lockY) ? S.Position_setStampUsingPivot_vector.y : this.start.y;
 				return this;
 			}
 		}
-		scrawlVars.Position_setStampUsingPivot_pivot = my.entity[this.pivot];
-		if (scrawlVars.Position_setStampUsingPivot_pivot) {
-			scrawlVars.Position_setStampUsingPivot_vector = (scrawlVars.Position_setStampUsingPivot_pivot.type === 'Particle') ? scrawlVars.Position_setStampUsingPivot_pivot.get('place') : scrawlVars.Position_setStampUsingPivot_pivot.start;
-			this.start.x = (!this.lockX) ? scrawlVars.Position_setStampUsingPivot_vector.x : this.start.x;
-			this.start.y = (!this.lockY) ? scrawlVars.Position_setStampUsingPivot_vector.y : this.start.y;
+		S.Position_setStampUsingPivot_pivot = my.entity[this.pivot];
+		if (S.Position_setStampUsingPivot_pivot) {
+			S.Position_setStampUsingPivot_vector = (S.Position_setStampUsingPivot_pivot.type === 'Particle') ? S.Position_setStampUsingPivot_pivot.get('place') : S.Position_setStampUsingPivot_pivot.start;
+			this.start.x = (!this.lockX) ? S.Position_setStampUsingPivot_vector.x : this.start.x;
+			this.start.y = (!this.lockY) ? S.Position_setStampUsingPivot_vector.y : this.start.y;
 			return this;
 		}
 		if (this.pivot === 'mouse') {
-			scrawlVars.Position_setStampUsingPivot_cell = my.cell[cell];
-			scrawlVars.Position_setStampUsingPivot_pad = my.pad[scrawlVars.Position_setStampUsingPivot_cell.pad];
-			scrawlVars.Position_setStampUsingPivot_mouse = this.correctCoordinates(scrawlVars.Position_setStampUsingPivot_pad.mouse, cell);
+			S.Position_setStampUsingPivot_cell = my.cell[cell];
+			S.Position_setStampUsingPivot_pad = my.pad[S.Position_setStampUsingPivot_cell.pad];
+			S.Position_setStampUsingPivot_mouse = this.correctCoordinates(S.Position_setStampUsingPivot_pad.mouse, cell);
 			if (!my.xta(this.oldX, this.oldY)) {
 				this.oldX = this.start.x;
 				this.oldY = this.start.y;
 			}
-			this.start.x = (!this.lockX) ? this.start.x + scrawlVars.Position_setStampUsingPivot_mouse.x - this.oldX : this.start.x;
-			this.start.y = (!this.lockY) ? this.start.y + scrawlVars.Position_setStampUsingPivot_mouse.y - this.oldY : this.start.y;
-			this.oldX = scrawlVars.Position_setStampUsingPivot_mouse.x;
-			this.oldY = scrawlVars.Position_setStampUsingPivot_mouse.y;
+			this.start.x = (!this.lockX) ? this.start.x + S.Position_setStampUsingPivot_mouse.x - this.oldX : this.start.x;
+			this.start.y = (!this.lockY) ? this.start.y + S.Position_setStampUsingPivot_mouse.y - this.oldY : this.start.y;
+			this.oldX = S.Position_setStampUsingPivot_mouse.x;
+			this.oldY = S.Position_setStampUsingPivot_mouse.y;
 			return this;
 		}
 		return this.setStampUsingStacksPivot();
@@ -2531,22 +2517,22 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 @param {String} [cell] CELLNAME String
 @return Amended coordinate object
 **/
-	scrawlVars.Position_correctCoordinates_vector = null; //scrawl Vector object
-	scrawlVars.Position_correctCoordinates_cell = null; //scrawl Cell object
-	scrawlVars.Position_correctCoordinates_pad = null; //scrawl Pad object
+	S.Position_correctCoordinates_vector = null; //scrawl Vector object
+	S.Position_correctCoordinates_cell = null; //scrawl Cell object
+	S.Position_correctCoordinates_pad = null; //scrawl Pad object
 	my.Position.prototype.correctCoordinates = function(coords, cell) {
 		coords = my.safeObject(coords);
-		scrawlVars.Position_correctCoordinates_vector = my.v.set(coords);
+		S.Position_correctCoordinates_vector = my.v.set(coords);
 		if (scrawl.xta(coords.x, coords.y)) {
-			scrawlVars.Position_correctCoordinates_cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
-			scrawlVars.Position_correctCoordinates_pad = my.pad[scrawlVars.Position_correctCoordinates_cell.pad];
-			if (scrawlVars.Position_correctCoordinates_pad.width !== scrawlVars.Position_correctCoordinates_cell.actualWidth) {
-				scrawlVars.Position_correctCoordinates_vector.x /= (scrawlVars.Position_correctCoordinates_pad.width / scrawlVars.Position_correctCoordinates_cell.actualWidth);
+			S.Position_correctCoordinates_cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
+			S.Position_correctCoordinates_pad = my.pad[S.Position_correctCoordinates_cell.pad];
+			if (S.Position_correctCoordinates_pad.width !== S.Position_correctCoordinates_cell.actualWidth) {
+				S.Position_correctCoordinates_vector.x /= (S.Position_correctCoordinates_pad.width / S.Position_correctCoordinates_cell.actualWidth);
 			}
-			if (scrawlVars.Position_correctCoordinates_pad.height !== scrawlVars.Position_correctCoordinates_cell.actualHeight) {
-				scrawlVars.Position_correctCoordinates_vector.y /= (scrawlVars.Position_correctCoordinates_pad.height / scrawlVars.Position_correctCoordinates_cell.actualHeight);
+			if (S.Position_correctCoordinates_pad.height !== S.Position_correctCoordinates_cell.actualHeight) {
+				S.Position_correctCoordinates_vector.y /= (S.Position_correctCoordinates_pad.height / S.Position_correctCoordinates_cell.actualHeight);
 			}
-			return scrawlVars.Position_correctCoordinates_vector;
+			return S.Position_correctCoordinates_vector;
 		}
 		return false;
 	};
@@ -2685,18 +2671,18 @@ Augments Base.get() to retrieve DOM element width and height values
 @param {String} get Attribute key
 @return Attribute value
 **/
-	scrawlVars.PageElement_get_element = null; //DOM object
-	my.statArr.pageElementGet = ['width', 'height', 'position'];
+	S.PageElement_get_element = null; //DOM object
+	S.stat_pageElementGet = ['width', 'height', 'position'];
 	my.PageElement.prototype.get = function(item) {
-		scrawlVars.PageElement_get_element = this.getElement();
-		if (my.contains(my.statArr.pageElementGet, item)) {
+		S.PageElement_get_element = this.getElement();
+		if (my.contains(S.stat_pageElementGet, item)) {
 			switch (item) {
 				case 'width':
-					return my.xtGet(this.localWidth, parseFloat(scrawlVars.PageElement_get_element.width), my.d[this.type].width);
+					return my.xtGet(this.localWidth, parseFloat(S.PageElement_get_element.width), my.d[this.type].width);
 				case 'height':
-					return my.xtGet(this.localHeight, parseFloat(scrawlVars.PageElement_get_element.height), my.d[this.type].height);
+					return my.xtGet(this.localHeight, parseFloat(S.PageElement_get_element.height), my.d[this.type].height);
 				case 'position':
-					return my.xtGet(this.position, scrawlVars.PageElement_get_element.style.position);
+					return my.xtGet(this.position, S.PageElement_get_element.style.position);
 			}
 		}
 		return my.Base.prototype.get.call(this, item);
@@ -2746,17 +2732,17 @@ Handles the setting of DOM element title and data-comment attributes
 @return This
 @chainable
 **/
-	scrawlVars.PageElement_setAccessibility_element = null; //DOM object
+	S.PageElement_setAccessibility_element = null; //DOM object
 	my.PageElement.prototype.setAccessibility = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.PageElement_setAccessibility_element = this.getElement();
+		S.PageElement_setAccessibility_element = this.getElement();
 		if (my.xt(items.title)) {
 			this.title = items.title;
-			scrawlVars.PageElement_setAccessibility_element.title = this.title;
+			S.PageElement_setAccessibility_element.title = this.title;
 		}
 		if (my.xt(items.comment)) {
 			this.comment = items.comment;
-			scrawlVars.PageElement_setAccessibility_element.setAttribute('data-comment', this.comment);
+			S.PageElement_setAccessibility_element.setAttribute('data-comment', this.comment);
 		}
 		return this;
 	};
@@ -2766,22 +2752,22 @@ Calculate the DOM element's current display offset values
 @return This
 @chainable
 **/
-	scrawlVars.PageElement_setDisplayOffsets_element = null; //DOM object
-	scrawlVars.PageElement_setDisplayOffsets_offsetX = 0;
-	scrawlVars.PageElement_setDisplayOffsets_offsetY = 0;
+	S.PageElement_setDisplayOffsets_element = null; //DOM object
+	S.PageElement_setDisplayOffsets_offsetX = 0;
+	S.PageElement_setDisplayOffsets_offsetY = 0;
 	my.PageElement.prototype.setDisplayOffsets = function() {
-		scrawlVars.PageElement_setDisplayOffsets_offsetX = 0;
-		scrawlVars.PageElement_setDisplayOffsets_offsetY = 0;
-		scrawlVars.PageElement_setDisplayOffsets_element = this.getElement();
-		if (scrawlVars.PageElement_setDisplayOffsets_element.offsetParent) {
+		S.PageElement_setDisplayOffsets_offsetX = 0;
+		S.PageElement_setDisplayOffsets_offsetY = 0;
+		S.PageElement_setDisplayOffsets_element = this.getElement();
+		if (S.PageElement_setDisplayOffsets_element.offsetParent) {
 			do {
-				scrawlVars.PageElement_setDisplayOffsets_offsetX += scrawlVars.PageElement_setDisplayOffsets_element.offsetLeft;
-				scrawlVars.PageElement_setDisplayOffsets_offsetY += scrawlVars.PageElement_setDisplayOffsets_element.offsetTop;
-				scrawlVars.PageElement_setDisplayOffsets_element = scrawlVars.PageElement_setDisplayOffsets_element.offsetParent;
-			} while (scrawlVars.PageElement_setDisplayOffsets_element.offsetParent);
+				S.PageElement_setDisplayOffsets_offsetX += S.PageElement_setDisplayOffsets_element.offsetLeft;
+				S.PageElement_setDisplayOffsets_offsetY += S.PageElement_setDisplayOffsets_element.offsetTop;
+				S.PageElement_setDisplayOffsets_element = S.PageElement_setDisplayOffsets_element.offsetParent;
+			} while (S.PageElement_setDisplayOffsets_element.offsetParent);
 		}
-		this.displayOffsetX = scrawlVars.PageElement_setDisplayOffsets_offsetX;
-		this.displayOffsetY = scrawlVars.PageElement_setDisplayOffsets_offsetY;
+		this.displayOffsetX = S.PageElement_setDisplayOffsets_offsetX;
+		this.displayOffsetY = S.PageElement_setDisplayOffsets_offsetY;
 		return this;
 	};
 	/**
@@ -2817,11 +2803,11 @@ Helper function - set DOM element dimensions (width, height)
 @chainable
 @private
 **/
-	scrawlVars.PageElement_setDimensions_element = null; //DOM object
+	S.PageElement_setDimensions_element = null; //DOM object
 	my.PageElement.prototype.setDimensions = function() {
-		scrawlVars.PageElement_setDimensions_element = this.getElement();
-		scrawlVars.PageElement_setDimensions_element.style.width = this.localWidth + 'px';
-		scrawlVars.PageElement_setDimensions_element.style.height = this.localHeight + 'px';
+		S.PageElement_setDimensions_element = this.getElement();
+		S.PageElement_setDimensions_element.style.width = this.localWidth + 'px';
+		S.PageElement_setDimensions_element.style.height = this.localHeight + 'px';
 		return this;
 	};
 	/**
@@ -2849,51 +2835,51 @@ mousemove event listener function
 @return This
 @private
 **/
-	scrawlVars.PageElement_handleMouseMove_wrapper = null; //scrawl object
-	scrawlVars.PageElement_handleMouseMove_mouseX = 0;
-	scrawlVars.PageElement_handleMouseMove_mouseY = 0;
-	scrawlVars.PageElement_handleMouseMove_maxX = 0;
-	scrawlVars.PageElement_handleMouseMove_maxY = 0;
-	my.statArr.pageElementHandleMouseMove = ['relative', 'absolute', 'fixed', 'sticky'];
+	S.PageElement_handleMouseMove_wrapper = null; //scrawl object
+	S.PageElement_handleMouseMove_mouseX = 0;
+	S.PageElement_handleMouseMove_mouseY = 0;
+	S.PageElement_handleMouseMove_maxX = 0;
+	S.PageElement_handleMouseMove_maxY = 0;
+	S.stat_pageElementHandleMouseMove = ['relative', 'absolute', 'fixed', 'sticky'];
 	my.PageElement.prototype.handleMouseMove = function(e) {
 		e = (my.xt(e)) ? e : window.event;
-		scrawlVars.PageElement_handleMouseMove_mouseX = 0;
-		scrawlVars.PageElement_handleMouseMove_mouseY = 0;
-		scrawlVars.PageElement_handleMouseMove_wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
-		if (scrawlVars.PageElement_handleMouseMove_wrapper) {
-			scrawlVars.PageElement_handleMouseMove_wrapper.mouse.active = false;
-			scrawlVars.PageElement_handleMouseMove_wrapper.mouse.element = scrawlVars.PageElement_handleMouseMove_wrapper.name;
-			scrawlVars.PageElement_handleMouseMove_wrapper.mouse.type = scrawlVars.PageElement_handleMouseMove_wrapper.type;
-			if (scrawlVars.PageElement_handleMouseMove_wrapper.mouse.layer || my.xta(e, e.layerX) && my.contains(my.statArr.pageElementHandleMouseMove, scrawlVars.PageElement_handleMouseMove_wrapper.position)) {
-				scrawlVars.PageElement_handleMouseMove_mouseX = e.layerX;
-				scrawlVars.PageElement_handleMouseMove_mouseY = e.layerY;
-				if (scrawlVars.PageElement_handleMouseMove_mouseX >= 0 && scrawlVars.PageElement_handleMouseMove_mouseX <= (scrawlVars.PageElement_handleMouseMove_wrapper.width * scrawlVars.PageElement_handleMouseMove_wrapper.scale) && scrawlVars.PageElement_handleMouseMove_mouseY >= 0 && scrawlVars.PageElement_handleMouseMove_mouseY <= (scrawlVars.PageElement_handleMouseMove_wrapper.height * scrawlVars.PageElement_handleMouseMove_wrapper.scale)) {
-					scrawlVars.PageElement_handleMouseMove_wrapper.mouse.active = true;
+		S.PageElement_handleMouseMove_mouseX = 0;
+		S.PageElement_handleMouseMove_mouseY = 0;
+		S.PageElement_handleMouseMove_wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
+		if (S.PageElement_handleMouseMove_wrapper) {
+			S.PageElement_handleMouseMove_wrapper.mouse.active = false;
+			S.PageElement_handleMouseMove_wrapper.mouse.element = S.PageElement_handleMouseMove_wrapper.name;
+			S.PageElement_handleMouseMove_wrapper.mouse.type = S.PageElement_handleMouseMove_wrapper.type;
+			if (S.PageElement_handleMouseMove_wrapper.mouse.layer || my.xta(e, e.layerX) && my.contains(S.stat_pageElementHandleMouseMove, S.PageElement_handleMouseMove_wrapper.position)) {
+				S.PageElement_handleMouseMove_mouseX = e.layerX;
+				S.PageElement_handleMouseMove_mouseY = e.layerY;
+				if (S.PageElement_handleMouseMove_mouseX >= 0 && S.PageElement_handleMouseMove_mouseX <= (S.PageElement_handleMouseMove_wrapper.width * S.PageElement_handleMouseMove_wrapper.scale) && S.PageElement_handleMouseMove_mouseY >= 0 && S.PageElement_handleMouseMove_mouseY <= (S.PageElement_handleMouseMove_wrapper.height * S.PageElement_handleMouseMove_wrapper.scale)) {
+					S.PageElement_handleMouseMove_wrapper.mouse.active = true;
 				}
-				scrawlVars.PageElement_handleMouseMove_wrapper.mouse.x = e.layerX * (1 / scrawlVars.PageElement_handleMouseMove_wrapper.scale);
-				scrawlVars.PageElement_handleMouseMove_wrapper.mouse.y = e.layerY * (1 / scrawlVars.PageElement_handleMouseMove_wrapper.scale);
-				scrawlVars.PageElement_handleMouseMove_wrapper.mouse.layer = true;
+				S.PageElement_handleMouseMove_wrapper.mouse.x = e.layerX * (1 / S.PageElement_handleMouseMove_wrapper.scale);
+				S.PageElement_handleMouseMove_wrapper.mouse.y = e.layerY * (1 / S.PageElement_handleMouseMove_wrapper.scale);
+				S.PageElement_handleMouseMove_wrapper.mouse.layer = true;
 			}
 			else {
 				if (e.pageX || e.pageY) {
-					scrawlVars.PageElement_handleMouseMove_mouseX = e.pageX;
-					scrawlVars.PageElement_handleMouseMove_mouseY = e.pageY;
+					S.PageElement_handleMouseMove_mouseX = e.pageX;
+					S.PageElement_handleMouseMove_mouseY = e.pageY;
 				}
 				else if (e.clientX || e.clientY) {
-					scrawlVars.PageElement_handleMouseMove_mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-					scrawlVars.PageElement_handleMouseMove_mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+					S.PageElement_handleMouseMove_mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+					S.PageElement_handleMouseMove_mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 				}
-				scrawlVars.PageElement_handleMouseMove_maxX = scrawlVars.PageElement_handleMouseMove_wrapper.displayOffsetX + (scrawlVars.PageElement_handleMouseMove_wrapper.width * scrawlVars.PageElement_handleMouseMove_wrapper.scale);
-				scrawlVars.PageElement_handleMouseMove_maxY = scrawlVars.PageElement_handleMouseMove_wrapper.displayOffsetY + (scrawlVars.PageElement_handleMouseMove_wrapper.height * scrawlVars.PageElement_handleMouseMove_wrapper.scale);
-				if (scrawlVars.PageElement_handleMouseMove_mouseX >= scrawlVars.PageElement_handleMouseMove_wrapper.displayOffsetX && scrawlVars.PageElement_handleMouseMove_mouseX <= scrawlVars.PageElement_handleMouseMove_maxX && scrawlVars.PageElement_handleMouseMove_mouseY >= scrawlVars.PageElement_handleMouseMove_wrapper.displayOffsetY && scrawlVars.PageElement_handleMouseMove_mouseY <= scrawlVars.PageElement_handleMouseMove_maxY) {
-					scrawlVars.PageElement_handleMouseMove_wrapper.mouse.active = true;
+				S.PageElement_handleMouseMove_maxX = S.PageElement_handleMouseMove_wrapper.displayOffsetX + (S.PageElement_handleMouseMove_wrapper.width * S.PageElement_handleMouseMove_wrapper.scale);
+				S.PageElement_handleMouseMove_maxY = S.PageElement_handleMouseMove_wrapper.displayOffsetY + (S.PageElement_handleMouseMove_wrapper.height * S.PageElement_handleMouseMove_wrapper.scale);
+				if (S.PageElement_handleMouseMove_mouseX >= S.PageElement_handleMouseMove_wrapper.displayOffsetX && S.PageElement_handleMouseMove_mouseX <= S.PageElement_handleMouseMove_maxX && S.PageElement_handleMouseMove_mouseY >= S.PageElement_handleMouseMove_wrapper.displayOffsetY && S.PageElement_handleMouseMove_mouseY <= S.PageElement_handleMouseMove_maxY) {
+					S.PageElement_handleMouseMove_wrapper.mouse.active = true;
 				}
-				scrawlVars.PageElement_handleMouseMove_wrapper.mouse.x = (scrawlVars.PageElement_handleMouseMove_mouseX - scrawlVars.PageElement_handleMouseMove_wrapper.displayOffsetX) * (1 / scrawlVars.PageElement_handleMouseMove_wrapper.scale);
-				scrawlVars.PageElement_handleMouseMove_wrapper.mouse.y = (scrawlVars.PageElement_handleMouseMove_mouseY - scrawlVars.PageElement_handleMouseMove_wrapper.displayOffsetY) * (1 / scrawlVars.PageElement_handleMouseMove_wrapper.scale);
-				scrawlVars.PageElement_handleMouseMove_wrapper.mouse.layer = false;
+				S.PageElement_handleMouseMove_wrapper.mouse.x = (S.PageElement_handleMouseMove_mouseX - S.PageElement_handleMouseMove_wrapper.displayOffsetX) * (1 / S.PageElement_handleMouseMove_wrapper.scale);
+				S.PageElement_handleMouseMove_wrapper.mouse.y = (S.PageElement_handleMouseMove_mouseY - S.PageElement_handleMouseMove_wrapper.displayOffsetY) * (1 / S.PageElement_handleMouseMove_wrapper.scale);
+				S.PageElement_handleMouseMove_wrapper.mouse.layer = false;
 			}
 		}
-		return scrawlVars.PageElement_handleMouseMove_wrapper;
+		return S.PageElement_handleMouseMove_wrapper;
 	};
 	/**
 mouseout event listener function
@@ -2902,14 +2888,14 @@ mouseout event listener function
 @return This
 @private
 **/
-	scrawlVars.PageElement_handleMouseOut_wrapper = null; //scrawl object
+	S.PageElement_handleMouseOut_wrapper = null; //scrawl object
 	my.PageElement.prototype.handleMouseOut = function(e) {
 		e = (my.xt(e)) ? e : window.event;
-		scrawlVars.PageElement_handleMouseOut_wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
-		if (scrawlVars.PageElement_handleMouseOut_wrapper) {
-			scrawlVars.PageElement_handleMouseOut_wrapper.mouse.active = false;
+		S.PageElement_handleMouseOut_wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
+		if (S.PageElement_handleMouseOut_wrapper) {
+			S.PageElement_handleMouseOut_wrapper.mouse.active = false;
 		}
-		return scrawlVars.PageElement_handleMouseOut_wrapper;
+		return S.PageElement_handleMouseOut_wrapper;
 	};
 
 	/**
@@ -2943,22 +2929,22 @@ Adds a mousemove event listener to the element
 @chainable
 @private
 **/
-	scrawlVars.PageElement_addMouseMove_element = null; //DOM object
-	scrawlVars.PageElement_addMouseMove_test = false;
+	S.PageElement_addMouseMove_element = null; //DOM object
+	S.PageElement_addMouseMove_test = false;
 	my.PageElement.prototype.addMouseMove = function() {
-		scrawlVars.PageElement_addMouseMove_element = this.getElement();
-		scrawlVars.PageElement_addMouseMove_element.removeEventListener('mousemove', this.handleMouseMove, false);
-		scrawlVars.PageElement_addMouseMove_element.addEventListener('mousemove', this.handleMouseMove, false);
-		scrawlVars.PageElement_addMouseMove_element.removeEventListener('mouseout', this.handleMouseOut, false);
-		scrawlVars.PageElement_addMouseMove_element.removeEventListener('mouseleave', this.handleMouseOut, false);
-		scrawlVars.PageElement_addMouseMove_element.setAttribute('onmouseout', 'return;');
-		scrawlVars.PageElement_addMouseMove_test = typeof scrawlVars.PageElement_addMouseMove_element.onmouseout == 'function';
-		scrawlVars.PageElement_addMouseMove_element.setAttribute('onmouseout', null);
-		if (scrawlVars.PageElement_addMouseMove_test) {
-			scrawlVars.PageElement_addMouseMove_element.addEventListener('mouseout', this.handleMouseOut, false);
+		S.PageElement_addMouseMove_element = this.getElement();
+		S.PageElement_addMouseMove_element.removeEventListener('mousemove', this.handleMouseMove, false);
+		S.PageElement_addMouseMove_element.addEventListener('mousemove', this.handleMouseMove, false);
+		S.PageElement_addMouseMove_element.removeEventListener('mouseout', this.handleMouseOut, false);
+		S.PageElement_addMouseMove_element.removeEventListener('mouseleave', this.handleMouseOut, false);
+		S.PageElement_addMouseMove_element.setAttribute('onmouseout', 'return;');
+		S.PageElement_addMouseMove_test = typeof S.PageElement_addMouseMove_element.onmouseout == 'function';
+		S.PageElement_addMouseMove_element.setAttribute('onmouseout', null);
+		if (S.PageElement_addMouseMove_test) {
+			S.PageElement_addMouseMove_element.addEventListener('mouseout', this.handleMouseOut, false);
 		}
 		else {
-			scrawlVars.PageElement_addMouseMove_element.addEventListener('mouseleave', this.handleMouseOut, false);
+			S.PageElement_addMouseMove_element.addEventListener('mouseleave', this.handleMouseOut, false);
 		}
 		return this;
 	};
@@ -2969,12 +2955,12 @@ Remove the mousemove event listener from the element
 @chainable
 @private
 **/
-	scrawlVars.PageElement_removeMouseMove_element = null; //DOM object
+	S.PageElement_removeMouseMove_element = null; //DOM object
 	my.PageElement.prototype.removeMouseMove = function() {
-		scrawlVars.PageElement_removeMouseMove_element = this.getElement();
-		scrawlVars.PageElement_removeMouseMove_element.removeEventListener('mousemove', this.handleMouseMove, false);
-		scrawlVars.PageElement_removeMouseMove_element.removeEventListener('mouseout', this.handleMouseOut, false);
-		scrawlVars.PageElement_removeMouseMove_element.removeEventListener('mouseleave', this.handleMouseOut, false);
+		S.PageElement_removeMouseMove_element = this.getElement();
+		S.PageElement_removeMouseMove_element.removeEventListener('mousemove', this.handleMouseMove, false);
+		S.PageElement_removeMouseMove_element.removeEventListener('mouseout', this.handleMouseOut, false);
+		S.PageElement_removeMouseMove_element.removeEventListener('mouseleave', this.handleMouseOut, false);
 		return this;
 	};
 
@@ -3007,9 +2993,9 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 @extends PageElement
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-	scrawlVars.Pad_init_display = null; //scrawl Cell object
-	scrawlVars.Pad_init_base = null; //scrawl Cell object
-	scrawlVars.Pad_init_canvas = null; //DOM object
+	S.Pad_init_display = null; //scrawl Cell object
+	S.Pad_init_base = null; //scrawl Cell object
+	S.Pad_init_canvas = null; //DOM object
 	my.Pad = function(items) {
 		items = my.safeObject(items);
 
@@ -3038,7 +3024,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			this.cells = [];
 
 			// create a wrapper for the display canvas element
-			scrawlVars.Pad_init_display = my.newCell({
+			S.Pad_init_display = my.newCell({
 				name: this.name,
 				pad: this.name,
 				canvas: items.canvasElement,
@@ -3047,26 +3033,26 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				width: this.localWidth,
 				height: this.localHeight
 			});
-			my.pushUnique(this.cells, scrawlVars.Pad_init_display.name);
-			this.display = scrawlVars.Pad_init_display.name;
+			my.pushUnique(this.cells, S.Pad_init_display.name);
+			this.display = S.Pad_init_display.name;
 
 			// create a new canvas element to act as the base
-			scrawlVars.Pad_init_canvas = items.canvasElement.cloneNode(true);
-			scrawlVars.Pad_init_canvas.setAttribute('id', this.name + '_base');
+			S.Pad_init_canvas = items.canvasElement.cloneNode(true);
+			S.Pad_init_canvas.setAttribute('id', this.name + '_base');
 
 			// create a wrapper for the base canvas element
-			scrawlVars.Pad_init_base = my.newCell({
+			S.Pad_init_base = my.newCell({
 				name: this.name + '_base',
 				pad: this.name,
-				canvas: scrawlVars.Pad_init_canvas,
+				canvas: S.Pad_init_canvas,
 				compileOrder: 9999,
 				shown: false,
 				width: this.localWidth / this.scale,
 				height: this.localHeight / this.scale
 			});
-			my.pushUnique(this.cells, scrawlVars.Pad_init_base.name);
-			this.base = scrawlVars.Pad_init_base.name;
-			this.current = scrawlVars.Pad_init_base.name;
+			my.pushUnique(this.cells, S.Pad_init_base.name);
+			this.base = S.Pad_init_base.name;
+			this.current = S.Pad_init_base.name;
 
 			// finalise stuff for this Pad
 			this.setDisplayOffsets();
@@ -3159,18 +3145,18 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 @return This
 @chainable
 **/
-	scrawlVars.Pad_set_base = null; //scrawl Cell object
-	scrawlVars.Pad_set_display = null; //scrawl Cell object
+	S.Pad_set_base = null; //scrawl Cell object
+	S.Pad_set_display = null; //scrawl Cell object
 	my.Pad.prototype.set = function(items) {
 		my.PageElement.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		scrawlVars.Pad_set_display = my.cell[this.display];
-		scrawlVars.Pad_set_base = my.cell[this.base];
+		S.Pad_set_display = my.cell[this.display];
+		S.Pad_set_base = my.cell[this.base];
 		if (my.xto(items.scale, items.width, items.height)) {
-			scrawlVars.Pad_set_display.set({
-				pasteWidth: (items.width) ? this.localWidth : scrawlVars.Pad_set_display.pasteWidth,
-				pasteHeight: (items.height) ? this.localHeight : scrawlVars.Pad_set_display.pasteHeight,
-				scale: items.scale || scrawlVars.Pad_set_display.scale
+			S.Pad_set_display.set({
+				pasteWidth: (items.width) ? this.localWidth : S.Pad_set_display.pasteWidth,
+				pasteHeight: (items.height) ? this.localHeight : S.Pad_set_display.pasteHeight,
+				scale: items.scale || S.Pad_set_display.scale
 			});
 		}
 		this.padStacksSet(items);
@@ -3178,10 +3164,10 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 			this.setDisplayOffsets();
 		}
 		if (my.xto(items.backgroundColor, items.globalAlpha, items.globalCompositeOperation)) {
-			scrawlVars.Pad_set_base.set({
-				backgroundColor: items.backgroundColor || scrawlVars.Pad_set_base.backgroundColor,
-				globalAlpha: items.globalAlpha || scrawlVars.Pad_set_base.globalAlpha,
-				globalCompositeOperation: items.globalCompositeOperation || scrawlVars.Pad_set_base.globalCompositeOperation
+			S.Pad_set_base.set({
+				backgroundColor: items.backgroundColor || S.Pad_set_base.backgroundColor,
+				globalAlpha: items.globalAlpha || S.Pad_set_base.globalAlpha,
+				globalCompositeOperation: items.globalCompositeOperation || S.Pad_set_base.globalCompositeOperation
 			});
 		}
 		return this;
@@ -3231,14 +3217,14 @@ Cells with cleared = true will clear theid displays in preparation for compile/s
 @return This
 @chainable
 **/
-	scrawlVars.Pad_clear_cell = null; //scrawl Cell object
-	scrawlVars.Pad_clear_i = 0;
-	scrawlVars.Pad_clear_iz = 0;
+	S.Pad_clear_cell = null; //scrawl Cell object
+	S.Pad_clear_i = 0;
+	S.Pad_clear_iz = 0;
 	my.Pad.prototype.clear = function() {
-		for (scrawlVars.Pad_clear_i = 0, scrawlVars.Pad_clear_iz = this.cells.length; scrawlVars.Pad_clear_i < scrawlVars.Pad_clear_iz; scrawlVars.Pad_clear_i++) {
-			scrawlVars.Pad_clear_cell = my.cell[this.cells[scrawlVars.Pad_clear_i]];
-			if (scrawlVars.Pad_clear_cell.rendered && scrawlVars.Pad_clear_cell.cleared) {
-				scrawlVars.Pad_clear_cell.clear();
+		for (S.Pad_clear_i = 0, S.Pad_clear_iz = this.cells.length; S.Pad_clear_i < S.Pad_clear_iz; S.Pad_clear_i++) {
+			S.Pad_clear_cell = my.cell[this.cells[S.Pad_clear_i]];
+			if (S.Pad_clear_cell.rendered && S.Pad_clear_cell.cleared) {
+				S.Pad_clear_cell.clear();
 			}
 		}
 		return this;
@@ -3258,15 +3244,15 @@ By default:
 @return This
 @chainable
 **/
-	scrawlVars.Pad_compile_cell = null; //scrawl Cell object
-	scrawlVars.Pad_compile_i = 0;
-	scrawlVars.Pad_compile_iz = 0;
+	S.Pad_compile_cell = null; //scrawl Cell object
+	S.Pad_compile_i = 0;
+	S.Pad_compile_iz = 0;
 	my.Pad.prototype.compile = function() {
 		this.sortCellsCompile();
-		for (scrawlVars.Pad_compile_i = 0, scrawlVars.Pad_compile_iz = this.cells.length; scrawlVars.Pad_compile_i < scrawlVars.Pad_compile_iz; scrawlVars.Pad_compile_i++) {
-			scrawlVars.Pad_compile_cell = my.cell[this.cells[scrawlVars.Pad_compile_i]];
-			if (scrawlVars.Pad_compile_cell.rendered && scrawlVars.Pad_compile_cell.compiled) {
-				scrawlVars.Pad_compile_cell.compile();
+		for (S.Pad_compile_i = 0, S.Pad_compile_iz = this.cells.length; S.Pad_compile_i < S.Pad_compile_iz; S.Pad_compile_i++) {
+			S.Pad_compile_cell = my.cell[this.cells[S.Pad_compile_i]];
+			if (S.Pad_compile_cell.rendered && S.Pad_compile_cell.compiled) {
+				S.Pad_compile_cell.compile();
 			}
 		}
 		return this;
@@ -3286,22 +3272,22 @@ By default, the initial base and display canvases have shown = false:
 @return This
 @chainable
 **/
-	scrawlVars.Pad_show_display = null; //scrawl Cell object
-	scrawlVars.Pad_show_base = null; //scrawl Cell object
-	scrawlVars.Pad_show_cell = null; //scrawl Cell object
-	scrawlVars.Pad_show_i = 0;
-	scrawlVars.Pad_show_iz = 0;
+	S.Pad_show_display = null; //scrawl Cell object
+	S.Pad_show_base = null; //scrawl Cell object
+	S.Pad_show_cell = null; //scrawl Cell object
+	S.Pad_show_i = 0;
+	S.Pad_show_iz = 0;
 	my.Pad.prototype.show = function() {
-		scrawlVars.Pad_show_display = my.cell[this.display];
-		scrawlVars.Pad_show_base = my.cell[this.base];
+		S.Pad_show_display = my.cell[this.display];
+		S.Pad_show_base = my.cell[this.base];
 		this.sortCellsShow();
-		for (scrawlVars.Pad_show_i = 0, scrawlVars.Pad_show_iz = this.cells.length; scrawlVars.Pad_show_i < scrawlVars.Pad_show_iz; scrawlVars.Pad_show_i++) {
-			scrawlVars.Pad_show_cell = my.cell[this.cells[scrawlVars.Pad_show_i]];
-			if (scrawlVars.Pad_show_cell.rendered && scrawlVars.Pad_show_cell.shown) {
-				scrawlVars.Pad_show_base.copyCellToSelf(scrawlVars.Pad_show_cell);
+		for (S.Pad_show_i = 0, S.Pad_show_iz = this.cells.length; S.Pad_show_i < S.Pad_show_iz; S.Pad_show_i++) {
+			S.Pad_show_cell = my.cell[this.cells[S.Pad_show_i]];
+			if (S.Pad_show_cell.rendered && S.Pad_show_cell.shown) {
+				S.Pad_show_base.copyCellToSelf(S.Pad_show_cell);
 			}
 		}
-		scrawlVars.Pad_show_display.copyCellToSelf(scrawlVars.Pad_show_base, true);
+		S.Pad_show_display.copyCellToSelf(S.Pad_show_base, true);
 		return this;
 	};
 	/**
@@ -3333,22 +3319,22 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 		width: 400,
 		});
 **/
-	scrawlVars.Pad_addNewCell_canvas = null; //DOM Canvas object
-	scrawlVars.Pad_addNewCell_cell = null; //scrawl Cell object
+	S.Pad_addNewCell_canvas = null; //DOM Canvas object
+	S.Pad_addNewCell_cell = null; //scrawl Cell object
 	my.Pad.prototype.addNewCell = function(data) {
 		data = my.safeObject(data);
 		if (my.isa(data.name, 'str')) {
 			data.width = Math.round(data.width) || this.width;
 			data.height = Math.round(data.height) || this.height;
-			scrawlVars.Pad_addNewCell_canvas = document.createElement('canvas');
-			scrawlVars.Pad_addNewCell_canvas.setAttribute('id', data.name);
-			scrawlVars.Pad_addNewCell_canvas.setAttribute('height', data.height);
-			scrawlVars.Pad_addNewCell_canvas.setAttribute('width', data.width);
+			S.Pad_addNewCell_canvas = document.createElement('canvas');
+			S.Pad_addNewCell_canvas.setAttribute('id', data.name);
+			S.Pad_addNewCell_canvas.setAttribute('height', data.height);
+			S.Pad_addNewCell_canvas.setAttribute('width', data.width);
 			data.pad = this.name;
-			data.canvas = scrawlVars.Pad_addNewCell_canvas;
-			scrawlVars.Pad_addNewCell_cell = my.newCell(data);
-			my.pushUnique(this.cells, scrawlVars.Pad_addNewCell_cell.name);
-			return scrawlVars.Pad_addNewCell_cell;
+			data.canvas = S.Pad_addNewCell_canvas;
+			S.Pad_addNewCell_cell = my.newCell(data);
+			my.pushUnique(this.cells, S.Pad_addNewCell_cell.name);
+			return S.Pad_addNewCell_cell;
 		}
 		return false;
 	};
@@ -3359,18 +3345,18 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 @return This
 @chainable
 **/
-	scrawlVars.Pad_addCells_slice = [];
-	scrawlVars.Pad_addCells_i = 0;
-	scrawlVars.Pad_addCells_iz = 0;
+	S.Pad_addCells_slice = [];
+	S.Pad_addCells_i = 0;
+	S.Pad_addCells_iz = 0;
 	my.Pad.prototype.addCells = function() {
-		scrawlVars.Pad_addCells_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.Pad_addCells_slice[0])) {
-			console.log('addCells - needs updating: ', scrawlVars.Pad_addCells_slice);
-			scrawlVars.Pad_addCells_slice = scrawlVars.Pad_addCells_slice[0];
+		S.Pad_addCells_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.Pad_addCells_slice[0])) {
+			console.log('addCells - needs updating: ', S.Pad_addCells_slice);
+			S.Pad_addCells_slice = S.Pad_addCells_slice[0];
 		}
-		for (scrawlVars.Pad_addCells_i = 0, scrawlVars.Pad_addCells_iz = scrawlVars.Pad_addCells_slice.length; scrawlVars.Pad_addCells_i < scrawlVars.Pad_addCells_iz; scrawlVars.Pad_addCells_i++) {
-			if (my.cell[scrawlVars.Pad_addCells_slice[scrawlVars.Pad_addCells_i]]) {
-				this.cells.push(scrawlVars.Pad_addCells_slice[scrawlVars.Pad_addCells_i]);
+		for (S.Pad_addCells_i = 0, S.Pad_addCells_iz = S.Pad_addCells_slice.length; S.Pad_addCells_i < S.Pad_addCells_iz; S.Pad_addCells_i++) {
+			if (my.cell[S.Pad_addCells_slice[S.Pad_addCells_i]]) {
+				this.cells.push(S.Pad_addCells_slice[S.Pad_addCells_i]);
 			}
 		}
 		return this;
@@ -3428,18 +3414,18 @@ Augments PageElement.setAccessibility(); handles the setting of &lt;canvas&gt; e
 @return This
 @chainable
 **/
-	scrawlVars.Pad_setAccessibility_element = null; //DOM object
+	S.Pad_setAccessibility_element = null; //DOM object
 	my.Pad.prototype.setAccessibility = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Pad_setAccessibility_element = this.getElement();
+		S.Pad_setAccessibility_element = this.getElement();
 		if (my.xt(items.title)) {
 			this.title = items.title;
-			scrawlVars.Pad_setAccessibility_element.title = this.title;
+			S.Pad_setAccessibility_element.title = this.title;
 		}
 		if (my.xt(items.comment)) {
 			this.comment = items.comment;
-			scrawlVars.Pad_setAccessibility_element.setAttribute('data-comment', this.comment);
-			scrawlVars.Pad_setAccessibility_element.innerHTML = '<p>' + this.comment + '</p>';
+			S.Pad_setAccessibility_element.setAttribute('data-comment', this.comment);
+			S.Pad_setAccessibility_element.innerHTML = '<p>' + this.comment + '</p>';
 		}
 		return this;
 	};
@@ -3450,11 +3436,11 @@ Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use stylin
 @return This
 @chainable
 **/
-	scrawlVars.Pad_setDimensions_element = null; //DOM object
+	S.Pad_setDimensions_element = null; //DOM object
 	my.Pad.prototype.setDimensions = function() {
-		scrawlVars.Pad_setDimensions_element = this.getElement();
-		scrawlVars.Pad_setDimensions_element.width = this.localWidth;
-		scrawlVars.Pad_setDimensions_element.height = this.localHeight;
+		S.Pad_setDimensions_element = this.getElement();
+		S.Pad_setDimensions_element.width = this.localWidth;
+		S.Pad_setDimensions_element.height = this.localHeight;
 		return this;
 	};
 
@@ -3715,8 +3701,8 @@ Cell constructor hook function - core module
 @method coreCellInit
 @private
 **/
-	scrawlVars.Cell_coreCellInit_temp = null; //raw object
-	scrawlVars.Cell_coreCellInit_context = null; //scrawl Context object
+	S.Cell_coreCellInit_temp = null; //raw object
+	S.Cell_coreCellInit_context = null; //scrawl Context object
 	my.Cell.prototype.coreCellInit = function(items) {
 		my.Position.call(this, items); //handles items.start, items.startX, items.startY
 		my.Base.prototype.set.call(this, items);
@@ -3725,10 +3711,10 @@ Cell constructor hook function - core module
 		my.cell[this.name] = this;
 		my.pushUnique(my.cellnames, this.name);
 		this.pad = my.xtGet(items.pad, false);
-		scrawlVars.Cell_coreCellInit_temp = my.safeObject(items.copy);
+		S.Cell_coreCellInit_temp = my.safeObject(items.copy);
 		this.copy = my.newVector({
-			x: my.xtGet(items.copyX, scrawlVars.Cell_coreCellInit_temp.x, 0),
-			y: my.xtGet(items.copyY, scrawlVars.Cell_coreCellInit_temp.y, 0),
+			x: my.xtGet(items.copyX, S.Cell_coreCellInit_temp.x, 0),
+			y: my.xtGet(items.copyY, S.Cell_coreCellInit_temp.y, 0),
 			name: this.type + '.' + this.name + '.copy'
 		});
 		this.work.copy = my.newVector({
@@ -3765,11 +3751,11 @@ Cell constructor hook function - core module
 		}
 		this.setCopy();
 		this.setPaste();
-		scrawlVars.Cell_coreCellInit_context = my.newContext({
+		S.Cell_coreCellInit_context = my.newContext({
 			name: this.name,
 			cell: my.context[this.name]
 		});
-		this.context = scrawlVars.Cell_coreCellInit_context.name;
+		this.context = S.Cell_coreCellInit_context.name;
 		this.flipUpend = my.xtGet(items.flipUpend, my.d.Cell.flipUpend);
 		this.flipReverse = my.xtGet(items.flipReverse, my.d.Cell.flipReverse);
 		this.lockX = my.xtGet(items.lockX, my.d.Cell.lockX);
@@ -3812,11 +3798,11 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 @param {String} item Attribute key
 @return Attribute value
 **/
-	my.statArr.cellGet1 = ['pasteX', 'pasteY', 'copyX', 'copyY'];
-	my.statArr.cellGet2 = ['paste', 'copy'];
-	my.statArr.cellGet3 = ['width', 'height'];
+	S.stat_cellGet1 = ['pasteX', 'pasteY', 'copyX', 'copyY'];
+	S.stat_cellGet2 = ['paste', 'copy'];
+	S.stat_cellGet3 = ['width', 'height'];
 	my.Cell.prototype.get = function(item) {
-		if (my.contains(my.statArr.cellGet1, item)) {
+		if (my.contains(S.stat_cellGet1, item)) {
 			switch (item) {
 				case 'pasteX':
 					return this.start.x;
@@ -3828,7 +3814,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 					return this.copy.y;
 			}
 		}
-		if (my.contains(my.statArr.cellGet2, item)) {
+		if (my.contains(S.stat_cellGet2, item)) {
 			switch (item) {
 				case 'paste':
 					return this.start.getVector();
@@ -3836,7 +3822,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 					return this.copy.getVector();
 			}
 		}
-		if (my.contains(my.statArr.cellGet3, item)) {
+		if (my.contains(S.stat_cellGet3, item)) {
 			switch (item) {
 				case 'width':
 					return this.actualWidth;
@@ -4018,13 +4004,13 @@ Augments Cell.set()
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setPasteVector_temp = null; //raw object
+	S.Cell_setPasteVector_temp = null; //raw object
 	my.Cell.prototype.setPasteVector = function(items, recalc) {
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		scrawlVars.Cell_setPasteVector_temp = my.safeObject(items.paste);
-		this.start.x = my.xtGet(items.pasteX, scrawlVars.Cell_setPasteVector_temp.x, this.start.x);
-		this.start.y = my.xtGet(items.pasteY, scrawlVars.Cell_setPasteVector_temp.y, this.start.y);
+		S.Cell_setPasteVector_temp = my.safeObject(items.paste);
+		this.start.x = my.xtGet(items.pasteX, S.Cell_setPasteVector_temp.x, this.start.x);
+		this.start.y = my.xtGet(items.pasteY, S.Cell_setPasteVector_temp.y, this.start.y);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4038,13 +4024,13 @@ Augments Cell.set()
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setCopyVector_temp = null; //raw object
+	S.Cell_setCopyVector_temp = null; //raw object
 	my.Cell.prototype.setCopyVector = function(items, recalc) {
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		scrawlVars.Cell_setCopyVector_temp = my.safeObject(items.copy);
-		this.copy.x = my.xtGet(items.copyX, scrawlVars.Cell_setCopyVector_temp.x, this.copy.x);
-		this.copy.y = my.xtGet(items.copyY, scrawlVars.Cell_setCopyVector_temp.y, this.copy.y);
+		S.Cell_setCopyVector_temp = my.safeObject(items.copy);
+		this.copy.x = my.xtGet(items.copyX, S.Cell_setCopyVector_temp.x, this.copy.x);
+		this.copy.y = my.xtGet(items.copyY, S.Cell_setCopyVector_temp.y, this.copy.y);
 		if (recalc) {
 			this.setCopy();
 		}
@@ -4151,12 +4137,12 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setDeltaActualHeight_height = 0;
+	S.Cell_setDeltaActualHeight_height = 0;
 	my.Cell.prototype.setDeltaActualHeight = function(items, recalc) {
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		scrawlVars.Cell_setDeltaActualHeight_height = my.xtGet(items.actualHeight, items.height);
-		this.actualHeight = (my.isa(scrawlVars.Cell_setDeltaActualHeight_height, 'num')) ? this.actualHeight + scrawlVars.Cell_setDeltaActualHeight_height : this.actualHeight;
+		S.Cell_setDeltaActualHeight_height = my.xtGet(items.actualHeight, items.height);
+		this.actualHeight = (my.isa(S.Cell_setDeltaActualHeight_height, 'num')) ? this.actualHeight + S.Cell_setDeltaActualHeight_height : this.actualHeight;
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
@@ -4173,12 +4159,12 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setDeltaActualWidth_width = 0;
+	S.Cell_setDeltaActualWidth_width = 0;
 	my.Cell.prototype.setDeltaActualWidth = function(items, recalc) {
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		scrawlVars.Cell_setDeltaActualWidth_width = my.xtGet(items.actualWidth, items.width);
-		this.actualWidth = (my.isa(scrawlVars.Cell_setDeltaActualWidth_width, 'num')) ? this.actualWidth + scrawlVars.Cell_setDeltaActualWidth_width : this.actualWidth;
+		S.Cell_setDeltaActualWidth_width = my.xtGet(items.actualWidth, items.width);
+		this.actualWidth = (my.isa(S.Cell_setDeltaActualWidth_width, 'num')) ? this.actualWidth + S.Cell_setDeltaActualWidth_width : this.actualWidth;
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
@@ -4195,13 +4181,13 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setDeltaPasteHeight_height = 0;
+	S.Cell_setDeltaPasteHeight_height = 0;
 	my.Cell.prototype.setDeltaPasteHeight = function(items, recalc) {
 		var h;
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		scrawlVars.Cell_setDeltaPasteHeight_height = my.xtGet(items.pasteHeight, items.height);
-		this.pasteHeight = (my.isa(this.pasteHeight, 'num')) ? this.pasteHeight + scrawlVars.Cell_setDeltaPasteHeight_height : my.addPercentages(this.pasteHeight, scrawlVars.Cell_setDeltaPasteHeight_height);
+		S.Cell_setDeltaPasteHeight_height = my.xtGet(items.pasteHeight, items.height);
+		this.pasteHeight = (my.isa(this.pasteHeight, 'num')) ? this.pasteHeight + S.Cell_setDeltaPasteHeight_height : my.addPercentages(this.pasteHeight, S.Cell_setDeltaPasteHeight_height);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4236,12 +4222,12 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setDeltaPasteWidth_width = 0;
+	S.Cell_setDeltaPasteWidth_width = 0;
 	my.Cell.prototype.setDeltaPasteWidth = function(items, recalc) {
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		scrawlVars.Cell_setDeltaPasteWidth_width = my.xtGet(items.pasteWidth, items.width);
-		this.pasteWidth = (my.isa(this.pasteWidth, 'num')) ? this.pasteWidth + scrawlVars.Cell_setDeltaPasteWidth_width : my.addPercentages(this.pasteWidth, scrawlVars.Cell_setDeltaPasteWidth_width);
+		S.Cell_setDeltaPasteWidth_width = my.xtGet(items.pasteWidth, items.width);
+		this.pasteWidth = (my.isa(this.pasteWidth, 'num')) ? this.pasteWidth + S.Cell_setDeltaPasteWidth_width : my.addPercentages(this.pasteWidth, S.Cell_setDeltaPasteWidth_width);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4276,17 +4262,17 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setDeltaPaste_temp = null; //raw object
-	scrawlVars.Cell_setDeltaPaste_x = 0;
-	scrawlVars.Cell_setDeltaPaste_y = 0;
+	S.Cell_setDeltaPaste_temp = null; //raw object
+	S.Cell_setDeltaPaste_x = 0;
+	S.Cell_setDeltaPaste_y = 0;
 	my.Cell.prototype.setDeltaPaste = function(items, recalc) {
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		scrawlVars.Cell_setDeltaPaste_temp = my.safeObject(items.paste);
-		scrawlVars.Cell_setDeltaPaste_x = my.xtGet(items.pasteX, scrawlVars.Cell_setDeltaPaste_temp.x, 0);
-		scrawlVars.Cell_setDeltaPaste_y = my.xtGet(items.pasteY, scrawlVars.Cell_setDeltaPaste_temp.y, 0);
-		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + scrawlVars.Cell_setDeltaPaste_x : my.addPercentages(this.start.x, scrawlVars.Cell_setDeltaPaste_x);
-		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + scrawlVars.Cell_setDeltaPaste_y : my.addPercentages(this.start.y, scrawlVars.Cell_setDeltaPaste_y);
+		S.Cell_setDeltaPaste_temp = my.safeObject(items.paste);
+		S.Cell_setDeltaPaste_x = my.xtGet(items.pasteX, S.Cell_setDeltaPaste_temp.x, 0);
+		S.Cell_setDeltaPaste_y = my.xtGet(items.pasteY, S.Cell_setDeltaPaste_temp.y, 0);
+		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + S.Cell_setDeltaPaste_x : my.addPercentages(this.start.x, S.Cell_setDeltaPaste_x);
+		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + S.Cell_setDeltaPaste_y : my.addPercentages(this.start.y, S.Cell_setDeltaPaste_y);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4302,17 +4288,17 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setDeltaCopy_temp = null; //raw object
-	scrawlVars.Cell_setDeltaCopy_x = 0;
-	scrawlVars.Cell_setDeltaCopy_y = 0;
+	S.Cell_setDeltaCopy_temp = null; //raw object
+	S.Cell_setDeltaCopy_x = 0;
+	S.Cell_setDeltaCopy_y = 0;
 	my.Cell.prototype.setDeltaCopy = function(items, recalc) {
 		items = my.safeObject(items);
-		scrawlVars.Cell_setDeltaCopy_temp = my.safeObject(items.copy);
+		S.Cell_setDeltaCopy_temp = my.safeObject(items.copy);
 		recalc = my.xtGet(recalc, true);
-		scrawlVars.Cell_setDeltaCopy_x = my.xtGet(items.copyX, scrawlVars.Cell_setDeltaCopy_temp.x, 0);
-		scrawlVars.Cell_setDeltaCopy_y = my.xtGet(items.copyY, scrawlVars.Cell_setDeltaCopy_temp.y, 0);
-		this.copy.x = (my.isa(scrawlVars.Cell_setDeltaCopy_x, 'num')) ? this.copy.x + scrawlVars.Cell_setDeltaCopy_x : my.addPercentages(this.copy.x, scrawlVars.Cell_setDeltaCopy_x);
-		this.copy.y = (my.isa(scrawlVars.Cell_setDeltaCopy_y, 'num')) ? this.copy.y + scrawlVars.Cell_setDeltaCopy_y : my.addPercentages(this.copy.y, scrawlVars.Cell_setDeltaCopy_y);
+		S.Cell_setDeltaCopy_x = my.xtGet(items.copyX, S.Cell_setDeltaCopy_temp.x, 0);
+		S.Cell_setDeltaCopy_y = my.xtGet(items.copyY, S.Cell_setDeltaCopy_temp.y, 0);
+		this.copy.x = (my.isa(S.Cell_setDeltaCopy_x, 'num')) ? this.copy.x + S.Cell_setDeltaCopy_x : my.addPercentages(this.copy.x, S.Cell_setDeltaCopy_x);
+		this.copy.y = (my.isa(S.Cell_setDeltaCopy_y, 'num')) ? this.copy.y + S.Cell_setDeltaCopy_y : my.addPercentages(this.copy.y, S.Cell_setDeltaCopy_y);
 		if (recalc) {
 			this.setCopy();
 		}
@@ -4325,74 +4311,74 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 @return Entity object
 @private
 **/
-	scrawlVars.Cell_setEngine_cellContext = null; //scrawl Context object
-	scrawlVars.Cell_setEngine_entityContext = null; //scrawl Context object
-	scrawlVars.Cell_setEngine_cellEngine = null; //DOM canvas context object
-	scrawlVars.Cell_setEngine_fillStyle = '';
-	scrawlVars.Cell_setEngine_strokeStyle = '';
-	scrawlVars.Cell_setEngine_design = null; //scrawl Design object
-	scrawlVars.Cell_setEngine_changes = null; //raw object
-	my.statArr.designTypes = ['Gradient', 'RadialGradient', 'Pattern'];
+	S.Cell_setEngine_cellContext = null; //scrawl Context object
+	S.Cell_setEngine_entityContext = null; //scrawl Context object
+	S.Cell_setEngine_cellEngine = null; //DOM canvas context object
+	S.Cell_setEngine_fillStyle = '';
+	S.Cell_setEngine_strokeStyle = '';
+	S.Cell_setEngine_design = null; //scrawl Design object
+	S.Cell_setEngine_changes = null; //raw object
+	S.stat_designTypes = ['Gradient', 'RadialGradient', 'Pattern'];
 	my.Cell.prototype.setEngine = function(entity) {
 
 		if (!entity.fastStamp) {
-			scrawlVars.Cell_setEngine_cellContext = my.ctx[this.context];
-			scrawlVars.Cell_setEngine_entityContext = my.ctx[entity.context];
-			scrawlVars.Cell_setEngine_changes = scrawlVars.Cell_setEngine_entityContext.getChanges(scrawlVars.Cell_setEngine_cellContext, entity.scale, entity.scaleOutline);
-			if (scrawlVars.Cell_setEngine_changes) {
-				delete scrawlVars.Cell_setEngine_changes.count;
-				scrawlVars.Cell_setEngine_cellEngine = my.context[this.name];
-				for (var item in scrawlVars.Cell_setEngine_changes) {
-					scrawlVars.Cell_setEngine_design = false;
+			S.Cell_setEngine_cellContext = my.ctx[this.context];
+			S.Cell_setEngine_entityContext = my.ctx[entity.context];
+			S.Cell_setEngine_changes = S.Cell_setEngine_entityContext.getChanges(S.Cell_setEngine_cellContext, entity.scale, entity.scaleOutline);
+			if (S.Cell_setEngine_changes) {
+				delete S.Cell_setEngine_changes.count;
+				S.Cell_setEngine_cellEngine = my.context[this.name];
+				for (var item in S.Cell_setEngine_changes) {
+					S.Cell_setEngine_design = false;
 					if (item[0] < 'm') {
 						if (item[0] < 'l') {
 							switch (item) {
 								case 'fillStyle':
-									if (my.xt(my.design[scrawlVars.Cell_setEngine_changes[item]])) {
-										scrawlVars.Cell_setEngine_design = my.design[scrawlVars.Cell_setEngine_changes[item]];
-										if (my.contains(my.statArr.designTypes, scrawlVars.Cell_setEngine_design.type)) {
-											scrawlVars.Cell_setEngine_design.update(entity.name, this.name);
+									if (my.xt(my.design[S.Cell_setEngine_changes[item]])) {
+										S.Cell_setEngine_design = my.design[S.Cell_setEngine_changes[item]];
+										if (my.contains(S.stat_designTypes, S.Cell_setEngine_design.type)) {
+											S.Cell_setEngine_design.update(entity.name, this.name);
 										}
-										scrawlVars.Cell_setEngine_fillStyle = scrawlVars.Cell_setEngine_design.getData();
+										S.Cell_setEngine_fillStyle = S.Cell_setEngine_design.getData();
 									}
 									else {
-										scrawlVars.Cell_setEngine_fillStyle = scrawlVars.Cell_setEngine_changes[item];
+										S.Cell_setEngine_fillStyle = S.Cell_setEngine_changes[item];
 									}
-									scrawlVars.Cell_setEngine_cellEngine.fillStyle = scrawlVars.Cell_setEngine_fillStyle;
+									S.Cell_setEngine_cellEngine.fillStyle = S.Cell_setEngine_fillStyle;
 									break;
 								case 'font':
-									scrawlVars.Cell_setEngine_cellEngine.font = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.font = S.Cell_setEngine_changes[item];
 									break;
 								case 'globalAlpha':
-									scrawlVars.Cell_setEngine_cellEngine.globalAlpha = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.globalAlpha = S.Cell_setEngine_changes[item];
 									break;
 								case 'globalCompositeOperation':
-									scrawlVars.Cell_setEngine_cellEngine.globalCompositeOperation = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.globalCompositeOperation = S.Cell_setEngine_changes[item];
 									break;
 							}
 						}
 						else {
 							switch (item) {
 								case 'lineCap':
-									scrawlVars.Cell_setEngine_cellEngine.lineCap = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.lineCap = S.Cell_setEngine_changes[item];
 									break;
 								case 'lineDash':
-									scrawlVars.Cell_setEngine_cellEngine.mozDash = scrawlVars.Cell_setEngine_changes[item];
-									scrawlVars.Cell_setEngine_cellEngine.lineDash = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.mozDash = S.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.lineDash = S.Cell_setEngine_changes[item];
 									try {
-										scrawlVars.Cell_setEngine_cellEngine.setLineDash(scrawlVars.Cell_setEngine_changes[item]);
+										S.Cell_setEngine_cellEngine.setLineDash(S.Cell_setEngine_changes[item]);
 									}
 									catch (e) {}
 									break;
 								case 'lineDashOffset':
-									scrawlVars.Cell_setEngine_cellEngine.mozDashOffset = scrawlVars.Cell_setEngine_changes[item];
-									scrawlVars.Cell_setEngine_cellEngine.lineDashOffset = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.mozDashOffset = S.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.lineDashOffset = S.Cell_setEngine_changes[item];
 									break;
 								case 'lineJoin':
-									scrawlVars.Cell_setEngine_cellEngine.lineJoin = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.lineJoin = S.Cell_setEngine_changes[item];
 									break;
 								case 'lineWidth':
-									scrawlVars.Cell_setEngine_cellEngine.lineWidth = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.lineWidth = S.Cell_setEngine_changes[item];
 									break;
 							}
 						}
@@ -4401,51 +4387,51 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 						if (item[0] == 's') {
 							switch (item) {
 								case 'shadowBlur':
-									scrawlVars.Cell_setEngine_cellEngine.shadowBlur = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.shadowBlur = S.Cell_setEngine_changes[item];
 									break;
 								case 'shadowColor':
-									scrawlVars.Cell_setEngine_cellEngine.shadowColor = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.shadowColor = S.Cell_setEngine_changes[item];
 									break;
 								case 'shadowOffsetX':
-									scrawlVars.Cell_setEngine_cellEngine.shadowOffsetX = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.shadowOffsetX = S.Cell_setEngine_changes[item];
 									break;
 								case 'shadowOffsetY':
-									scrawlVars.Cell_setEngine_cellEngine.shadowOffsetY = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.shadowOffsetY = S.Cell_setEngine_changes[item];
 									break;
 								case 'strokeStyle':
-									if (my.xt(my.design[scrawlVars.Cell_setEngine_changes[item]])) {
-										scrawlVars.Cell_setEngine_design = my.design[scrawlVars.Cell_setEngine_changes[item]];
-										if (my.contains(my.statArr.designTypes, scrawlVars.Cell_setEngine_design.type)) {
-											scrawlVars.Cell_setEngine_design.update(entity.name, this.name);
+									if (my.xt(my.design[S.Cell_setEngine_changes[item]])) {
+										S.Cell_setEngine_design = my.design[S.Cell_setEngine_changes[item]];
+										if (my.contains(S.stat_designTypes, S.Cell_setEngine_design.type)) {
+											S.Cell_setEngine_design.update(entity.name, this.name);
 										}
-										scrawlVars.Cell_setEngine_strokeStyle = scrawlVars.Cell_setEngine_design.getData();
+										S.Cell_setEngine_strokeStyle = S.Cell_setEngine_design.getData();
 									}
 									else {
-										scrawlVars.Cell_setEngine_strokeStyle = scrawlVars.Cell_setEngine_changes[item];
+										S.Cell_setEngine_strokeStyle = S.Cell_setEngine_changes[item];
 									}
-									scrawlVars.Cell_setEngine_cellEngine.strokeStyle = scrawlVars.Cell_setEngine_strokeStyle;
+									S.Cell_setEngine_cellEngine.strokeStyle = S.Cell_setEngine_strokeStyle;
 									break;
 							}
 						}
 						else {
 							switch (item) {
 								case 'miterLimit':
-									scrawlVars.Cell_setEngine_cellEngine.miterLimit = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.miterLimit = S.Cell_setEngine_changes[item];
 									break;
 								case 'textAlign':
-									scrawlVars.Cell_setEngine_cellEngine.textAlign = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.textAlign = S.Cell_setEngine_changes[item];
 									break;
 								case 'textBaseline':
-									scrawlVars.Cell_setEngine_cellEngine.textBaseline = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.textBaseline = S.Cell_setEngine_changes[item];
 									break;
 								case 'winding':
-									scrawlVars.Cell_setEngine_cellEngine.mozFillRule = scrawlVars.Cell_setEngine_changes[item];
-									scrawlVars.Cell_setEngine_cellEngine.msFillRule = scrawlVars.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.mozFillRule = S.Cell_setEngine_changes[item];
+									S.Cell_setEngine_cellEngine.msFillRule = S.Cell_setEngine_changes[item];
 									break;
 							}
 						}
 					}
-					scrawlVars.Cell_setEngine_cellContext[item] = scrawlVars.Cell_setEngine_changes[item];
+					S.Cell_setEngine_cellContext[item] = S.Cell_setEngine_changes[item];
 				}
 			}
 		}
@@ -4457,17 +4443,17 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 @return This
 @chainable
 **/
-	scrawlVars.Cell_clear_cellContext = null; //scrawl Context object
-	scrawlVars.Cell_clear_cellEngine = null; //DOM canvas context object
+	S.Cell_clear_cellContext = null; //scrawl Context object
+	S.Cell_clear_cellEngine = null; //DOM canvas context object
 	my.Cell.prototype.clear = function() {
-		scrawlVars.Cell_clear_cellEngine = my.context[this.name];
-		scrawlVars.Cell_clear_cellContext = my.ctx[this.context];
-		scrawlVars.Cell_clear_cellEngine.setTransform(1, 0, 0, 1, 0, 0);
-		scrawlVars.Cell_clear_cellEngine.clearRect(0, 0, this.actualWidth, this.actualHeight);
+		S.Cell_clear_cellEngine = my.context[this.name];
+		S.Cell_clear_cellContext = my.ctx[this.context];
+		S.Cell_clear_cellEngine.setTransform(1, 0, 0, 1, 0, 0);
+		S.Cell_clear_cellEngine.clearRect(0, 0, this.actualWidth, this.actualHeight);
 		if (this.backgroundColor !== 'rgba(0,0,0,0)') {
-			scrawlVars.Cell_clear_cellEngine.fillStyle = this.backgroundColor;
-			scrawlVars.Cell_clear_cellEngine.fillRect(0, 0, this.actualWidth, this.actualHeight);
-			scrawlVars.Cell_clear_cellContext.fillStyle = this.backgroundColor;
+			S.Cell_clear_cellEngine.fillStyle = this.backgroundColor;
+			S.Cell_clear_cellEngine.fillRect(0, 0, this.actualWidth, this.actualHeight);
+			S.Cell_clear_cellContext.fillStyle = this.backgroundColor;
 		}
 		return this;
 	};
@@ -4479,17 +4465,17 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 @return This
 @chainable
 **/
-	scrawlVars.Cell_compile_group = null; //scrawl Group object
-	scrawlVars.Cell_compile_i = 0;
-	scrawlVars.Cell_compile_iz = 0;
+	S.Cell_compile_group = null; //scrawl Group object
+	S.Cell_compile_i = 0;
+	S.Cell_compile_iz = 0;
 	my.Cell.prototype.compile = function() {
 		this.groups.sort(function(a, b) {
 			return my.group[a].order - my.group[b].order;
 		});
-		for (scrawlVars.Cell_compile_i = 0, scrawlVars.Cell_compile_iz = this.groups.length; scrawlVars.Cell_compile_i < scrawlVars.Cell_compile_iz; scrawlVars.Cell_compile_i++) {
-			scrawlVars.Cell_compile_group = my.group[this.groups[scrawlVars.Cell_compile_i]];
-			if (scrawlVars.Cell_compile_group.get('visibility')) {
-				scrawlVars.Cell_compile_group.stamp(false, this.name);
+		for (S.Cell_compile_i = 0, S.Cell_compile_iz = this.groups.length; S.Cell_compile_i < S.Cell_compile_iz; S.Cell_compile_i++) {
+			S.Cell_compile_group = my.group[this.groups[S.Cell_compile_i]];
+			if (S.Cell_compile_group.get('visibility')) {
+				S.Cell_compile_group.stamp(false, this.name);
 			}
 		}
 		return this;
@@ -4502,18 +4488,18 @@ Cell copy helper function
 @chainable
 @private
 **/
-	scrawlVars.Cell_rotateDestination_reverse = 0;
-	scrawlVars.Cell_rotateDestination_upend = 0;
-	scrawlVars.Cell_rotateDestination_rotation = 0;
-	scrawlVars.Cell_rotateDestination_cos = 0;
-	scrawlVars.Cell_rotateDestination_sin = 0;
+	S.Cell_rotateDestination_reverse = 0;
+	S.Cell_rotateDestination_upend = 0;
+	S.Cell_rotateDestination_rotation = 0;
+	S.Cell_rotateDestination_cos = 0;
+	S.Cell_rotateDestination_sin = 0;
 	my.Cell.prototype.rotateDestination = function(engine) {
-		scrawlVars.Cell_rotateDestination_reverse = (this.flipReverse) ? -1 : 1;
-		scrawlVars.Cell_rotateDestination_upend = (this.flipUpend) ? -1 : 1;
-		scrawlVars.Cell_rotateDestination_rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
-		scrawlVars.Cell_rotateDestination_cos = Math.cos(scrawlVars.Cell_rotateDestination_rotation);
-		scrawlVars.Cell_rotateDestination_sin = Math.sin(scrawlVars.Cell_rotateDestination_rotation);
-		engine.setTransform((scrawlVars.Cell_rotateDestination_cos * scrawlVars.Cell_rotateDestination_reverse), (scrawlVars.Cell_rotateDestination_sin * scrawlVars.Cell_rotateDestination_reverse), (-scrawlVars.Cell_rotateDestination_sin * scrawlVars.Cell_rotateDestination_upend), (scrawlVars.Cell_rotateDestination_cos * scrawlVars.Cell_rotateDestination_upend), this.pasteData.x, this.pasteData.y);
+		S.Cell_rotateDestination_reverse = (this.flipReverse) ? -1 : 1;
+		S.Cell_rotateDestination_upend = (this.flipUpend) ? -1 : 1;
+		S.Cell_rotateDestination_rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
+		S.Cell_rotateDestination_cos = Math.cos(S.Cell_rotateDestination_rotation);
+		S.Cell_rotateDestination_sin = Math.sin(S.Cell_rotateDestination_rotation);
+		engine.setTransform((S.Cell_rotateDestination_cos * S.Cell_rotateDestination_reverse), (S.Cell_rotateDestination_sin * S.Cell_rotateDestination_reverse), (-S.Cell_rotateDestination_sin * S.Cell_rotateDestination_upend), (S.Cell_rotateDestination_cos * S.Cell_rotateDestination_upend), this.pasteData.x, this.pasteData.y);
 		return this;
 	};
 	/**
@@ -4590,29 +4576,29 @@ Cell.setPaste update pasteData object values
 @chainable
 @private
 **/
-	scrawlVars.Cell_setPaste_pad = null; //scrawl Pad object
-	scrawlVars.Cell_setPaste_width = 0;
-	scrawlVars.Cell_setPaste_height = 0;
+	S.Cell_setPaste_pad = null; //scrawl Pad object
+	S.Cell_setPaste_width = 0;
+	S.Cell_setPaste_height = 0;
 	my.Cell.prototype.setPaste = function() {
-		scrawlVars.Cell_setPaste_pad = my.pad[this.pad];
-		scrawlVars.Cell_setPaste_width = scrawlVars.Cell_setPaste_pad.localWidth;
-		scrawlVars.Cell_setPaste_height = scrawlVars.Cell_setPaste_pad.localHeight;
+		S.Cell_setPaste_pad = my.pad[this.pad];
+		S.Cell_setPaste_width = S.Cell_setPaste_pad.localWidth;
+		S.Cell_setPaste_height = S.Cell_setPaste_pad.localHeight;
 		this.pasteData.x = this.start.x;
 		if (my.isa(this.pasteData.x, 'str')) {
-			this.pasteData.x = this.convertX(this.pasteData.x, scrawlVars.Cell_setPaste_width);
+			this.pasteData.x = this.convertX(this.pasteData.x, S.Cell_setPaste_width);
 		}
 		this.pasteData.y = this.start.y;
 		if (my.isa(this.pasteData.y, 'str')) {
-			this.pasteData.y = this.convertY(this.pasteData.y, scrawlVars.Cell_setPaste_height);
+			this.pasteData.y = this.convertY(this.pasteData.y, S.Cell_setPaste_height);
 		}
 		this.pasteData.w = this.pasteWidth;
 		if (my.isa(this.pasteData.w, 'str')) {
-			this.pasteData.w = this.convertX(this.pasteData.w, scrawlVars.Cell_setPaste_width);
+			this.pasteData.w = this.convertX(this.pasteData.w, S.Cell_setPaste_width);
 		}
 		this.pasteData.w *= this.scale;
 		this.pasteData.h = this.pasteHeight;
 		if (my.isa(this.pasteData.h, 'str')) {
-			this.pasteData.h = this.convertY(this.pasteData.h, scrawlVars.Cell_setPaste_height);
+			this.pasteData.h = this.convertY(this.pasteData.h, S.Cell_setPaste_height);
 		}
 		this.pasteData.h *= this.scale;
 		if (this.pasteData.w < 1) {
@@ -4635,30 +4621,30 @@ Cell copy helper function
 @chainable
 @private
 **/
-	scrawlVars.Cell_copyCellToSelf_destinationContext = null; //scrawl Context object
-	scrawlVars.Cell_copyCellToSelf_destinationEngine = null; //DOM canvas context object
-	scrawlVars.Cell_copyCellToSelf_sourceContext = null; //scrawl Context object
-	scrawlVars.Cell_copyCellToSelf_sourceEngine = null; //DOM canvas context object
-	scrawlVars.Cell_copyCellToSelf_sourceCanvas = null; //DOM canvas object
+	S.Cell_copyCellToSelf_destinationContext = null; //scrawl Context object
+	S.Cell_copyCellToSelf_destinationEngine = null; //DOM canvas context object
+	S.Cell_copyCellToSelf_sourceContext = null; //scrawl Context object
+	S.Cell_copyCellToSelf_sourceEngine = null; //DOM canvas context object
+	S.Cell_copyCellToSelf_sourceCanvas = null; //DOM canvas object
 	my.Cell.prototype.copyCellToSelf = function(cell) {
 		cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
 		if (my.xt(cell)) {
-			scrawlVars.Cell_copyCellToSelf_destinationEngine = my.context[this.name];
-			scrawlVars.Cell_copyCellToSelf_destinationContext = my.ctx[this.name];
-			scrawlVars.Cell_copyCellToSelf_sourceEngine = my.context[cell.name];
-			scrawlVars.Cell_copyCellToSelf_sourceContext = my.ctx[cell.name];
-			scrawlVars.Cell_copyCellToSelf_sourceCanvas = my.canvas[cell.name];
-			if (scrawlVars.Cell_copyCellToSelf_sourceContext.globalAlpha !== scrawlVars.Cell_copyCellToSelf_destinationContext.globalAlpha) {
-				scrawlVars.Cell_copyCellToSelf_destinationEngine.globalAlpha = scrawlVars.Cell_copyCellToSelf_sourceContext.globalAlpha;
-				scrawlVars.Cell_copyCellToSelf_destinationContext.globalAlpha = scrawlVars.Cell_copyCellToSelf_sourceContext.globalAlpha;
+			S.Cell_copyCellToSelf_destinationEngine = my.context[this.name];
+			S.Cell_copyCellToSelf_destinationContext = my.ctx[this.name];
+			S.Cell_copyCellToSelf_sourceEngine = my.context[cell.name];
+			S.Cell_copyCellToSelf_sourceContext = my.ctx[cell.name];
+			S.Cell_copyCellToSelf_sourceCanvas = my.canvas[cell.name];
+			if (S.Cell_copyCellToSelf_sourceContext.globalAlpha !== S.Cell_copyCellToSelf_destinationContext.globalAlpha) {
+				S.Cell_copyCellToSelf_destinationEngine.globalAlpha = S.Cell_copyCellToSelf_sourceContext.globalAlpha;
+				S.Cell_copyCellToSelf_destinationContext.globalAlpha = S.Cell_copyCellToSelf_sourceContext.globalAlpha;
 			}
-			if (scrawlVars.Cell_copyCellToSelf_sourceContext.globalCompositeOperation !== scrawlVars.Cell_copyCellToSelf_destinationContext.globalCompositeOperation) {
-				scrawlVars.Cell_copyCellToSelf_destinationEngine.globalCompositeOperation = scrawlVars.Cell_copyCellToSelf_sourceContext.globalCompositeOperation;
-				scrawlVars.Cell_copyCellToSelf_destinationContext.globalCompositeOperation = scrawlVars.Cell_copyCellToSelf_sourceContext.globalCompositeOperation;
+			if (S.Cell_copyCellToSelf_sourceContext.globalCompositeOperation !== S.Cell_copyCellToSelf_destinationContext.globalCompositeOperation) {
+				S.Cell_copyCellToSelf_destinationEngine.globalCompositeOperation = S.Cell_copyCellToSelf_sourceContext.globalCompositeOperation;
+				S.Cell_copyCellToSelf_destinationContext.globalCompositeOperation = S.Cell_copyCellToSelf_sourceContext.globalCompositeOperation;
 			}
-			scrawlVars.Cell_copyCellToSelf_sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
-			cell.prepareToCopyCell(scrawlVars.Cell_copyCellToSelf_destinationEngine);
-			scrawlVars.Cell_copyCellToSelf_destinationEngine.drawImage(scrawlVars.Cell_copyCellToSelf_sourceCanvas, cell.copyData.x, cell.copyData.y, cell.copyData.w, cell.copyData.h, cell.offset.x, cell.offset.y, cell.pasteData.w, cell.pasteData.h);
+			S.Cell_copyCellToSelf_sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
+			cell.prepareToCopyCell(S.Cell_copyCellToSelf_destinationEngine);
+			S.Cell_copyCellToSelf_destinationEngine.drawImage(S.Cell_copyCellToSelf_sourceCanvas, cell.copyData.x, cell.copyData.y, cell.copyData.w, cell.copyData.h, cell.offset.x, cell.offset.y, cell.pasteData.w, cell.pasteData.h);
 		}
 		return this;
 	};
@@ -4711,17 +4697,17 @@ Entity stamp helper function
 @chainable
 @private
 **/
-	scrawlVars.Cell_clearShadow_context = null; //scrawl Context object
-	scrawlVars.Cell_clearShadow_engine = null; //DOM canvas context object
+	S.Cell_clearShadow_context = null; //scrawl Context object
+	S.Cell_clearShadow_engine = null; //DOM canvas context object
 	my.Cell.prototype.clearShadow = function() {
-		scrawlVars.Cell_clearShadow_engine = my.context[this.name];
-		scrawlVars.Cell_clearShadow_context = my.ctx[this.context];
-		scrawlVars.Cell_clearShadow_engine.shadowOffsetX = 0.0;
-		scrawlVars.Cell_clearShadow_engine.shadowOffsetY = 0.0;
-		scrawlVars.Cell_clearShadow_engine.shadowBlur = 0.0;
-		scrawlVars.Cell_clearShadow_context.shadowOffsetX = 0.0;
-		scrawlVars.Cell_clearShadow_context.shadowOffsetY = 0.0;
-		scrawlVars.Cell_clearShadow_context.shadowBlur = 0.0;
+		S.Cell_clearShadow_engine = my.context[this.name];
+		S.Cell_clearShadow_context = my.ctx[this.context];
+		S.Cell_clearShadow_engine.shadowOffsetX = 0.0;
+		S.Cell_clearShadow_engine.shadowOffsetY = 0.0;
+		S.Cell_clearShadow_engine.shadowBlur = 0.0;
+		S.Cell_clearShadow_context.shadowOffsetX = 0.0;
+		S.Cell_clearShadow_context.shadowOffsetY = 0.0;
+		S.Cell_clearShadow_context.shadowBlur = 0.0;
 		return this;
 	};
 	/**
@@ -4731,19 +4717,19 @@ Entity stamp helper function
 @chainable
 @private
 **/
-	scrawlVars.Cell_restoreShadow_cellContext = null; //scrawl Context object
-	scrawlVars.Cell_restoreShadow_entityContext = null; //scrawl Context object
-	scrawlVars.Cell_restoreShadow_engine = null; //DOM canvas context object
+	S.Cell_restoreShadow_cellContext = null; //scrawl Context object
+	S.Cell_restoreShadow_entityContext = null; //scrawl Context object
+	S.Cell_restoreShadow_engine = null; //DOM canvas context object
 	my.Cell.prototype.restoreShadow = function(entitycontext) {
-		scrawlVars.Cell_restoreShadow_engine = my.context[this.name];
-		scrawlVars.Cell_restoreShadow_cellContext = my.ctx[this.context];
-		scrawlVars.Cell_restoreShadow_entityContext = my.ctx[entitycontext];
-		scrawlVars.Cell_restoreShadow_engine.shadowOffsetX = scrawlVars.Cell_restoreShadow_entityContext.shadowOffsetX;
-		scrawlVars.Cell_restoreShadow_engine.shadowOffsetY = scrawlVars.Cell_restoreShadow_entityContext.shadowOffsetY;
-		scrawlVars.Cell_restoreShadow_engine.shadowBlur = scrawlVars.Cell_restoreShadow_entityContext.shadowBlur;
-		scrawlVars.Cell_restoreShadow_cellContext.shadowOffsetX = scrawlVars.Cell_restoreShadow_entityContext.shadowOffsetX;
-		scrawlVars.Cell_restoreShadow_cellContext.shadowOffsetY = scrawlVars.Cell_restoreShadow_entityContext.shadowOffsetY;
-		scrawlVars.Cell_restoreShadow_cellContext.shadowBlur = scrawlVars.Cell_restoreShadow_entityContext.shadowBlur;
+		S.Cell_restoreShadow_engine = my.context[this.name];
+		S.Cell_restoreShadow_cellContext = my.ctx[this.context];
+		S.Cell_restoreShadow_entityContext = my.ctx[entitycontext];
+		S.Cell_restoreShadow_engine.shadowOffsetX = S.Cell_restoreShadow_entityContext.shadowOffsetX;
+		S.Cell_restoreShadow_engine.shadowOffsetY = S.Cell_restoreShadow_entityContext.shadowOffsetY;
+		S.Cell_restoreShadow_engine.shadowBlur = S.Cell_restoreShadow_entityContext.shadowBlur;
+		S.Cell_restoreShadow_cellContext.shadowOffsetX = S.Cell_restoreShadow_entityContext.shadowOffsetX;
+		S.Cell_restoreShadow_cellContext.shadowOffsetY = S.Cell_restoreShadow_entityContext.shadowOffsetY;
+		S.Cell_restoreShadow_cellContext.shadowBlur = S.Cell_restoreShadow_entityContext.shadowBlur;
 		return this;
 	};
 	/**
@@ -4753,17 +4739,17 @@ Entity stamp helper function
 @chainable
 @private
 **/
-	scrawlVars.Cell_setToClearShape_context = null; //scrawl Context object
-	scrawlVars.Cell_setToClearShape_engine = null; //DOM canvas context object
+	S.Cell_setToClearShape_context = null; //scrawl Context object
+	S.Cell_setToClearShape_engine = null; //DOM canvas context object
 	my.Cell.prototype.setToClearShape = function() {
-		scrawlVars.Cell_setToClearShape_engine = my.context[this.name];
-		scrawlVars.Cell_setToClearShape_context = my.ctx[this.context];
-		scrawlVars.Cell_setToClearShape_engine.fillStyle = 'rgba(0, 0, 0, 0)';
-		scrawlVars.Cell_setToClearShape_engine.strokeStyle = 'rgba(0, 0, 0, 0)';
-		scrawlVars.Cell_setToClearShape_engine.shadowColor = 'rgba(0, 0, 0, 0)';
-		scrawlVars.Cell_setToClearShape_context.fillStyle = 'rgba(0, 0, 0, 0)';
-		scrawlVars.Cell_setToClearShape_context.strokeStyle = 'rgba(0, 0, 0, 0)';
-		scrawlVars.Cell_setToClearShape_context.shadowColor = 'rgba(0, 0, 0, 0)';
+		S.Cell_setToClearShape_engine = my.context[this.name];
+		S.Cell_setToClearShape_context = my.ctx[this.context];
+		S.Cell_setToClearShape_engine.fillStyle = 'rgba(0, 0, 0, 0)';
+		S.Cell_setToClearShape_engine.strokeStyle = 'rgba(0, 0, 0, 0)';
+		S.Cell_setToClearShape_engine.shadowColor = 'rgba(0, 0, 0, 0)';
+		S.Cell_setToClearShape_context.fillStyle = 'rgba(0, 0, 0, 0)';
+		S.Cell_setToClearShape_context.strokeStyle = 'rgba(0, 0, 0, 0)';
+		S.Cell_setToClearShape_context.shadowColor = 'rgba(0, 0, 0, 0)';
 		return this;
 	};
 	/**
@@ -4775,27 +4761,27 @@ Omitting the argument will force the &lt;canvas&gt; to set itself to its Pad obj
 @return This
 @chainable
 **/
-	scrawlVars.Cell_setDimensions_pad = null; //scrawl Pad object
-	scrawlVars.Cell_setDimensions_canvas = null; //DOM canvas object
-	scrawlVars.Cell_setDimensions_width = 0;
-	scrawlVars.Cell_setDimensions_height = 0;
+	S.Cell_setDimensions_pad = null; //scrawl Pad object
+	S.Cell_setDimensions_canvas = null; //DOM canvas object
+	S.Cell_setDimensions_width = 0;
+	S.Cell_setDimensions_height = 0;
 	my.Cell.prototype.setDimensions = function(items) {
-		scrawlVars.Cell_setDimensions_pad = my.pad[this.pad];
-		scrawlVars.Cell_setDimensions_canvas = my.canvas[this.name];
-		scrawlVars.Cell_setDimensions_width = my.xtGet(items.width, items.actualWidth, this.actualWidth);
-		scrawlVars.Cell_setDimensions_height = my.xtGet(items.height, items.actualHeight, this.actualHeight);
-		if (scrawlVars.Cell_setDimensions_pad) {
-			if (my.isa(scrawlVars.Cell_setDimensions_width, 'str')) {
-				scrawlVars.Cell_setDimensions_width = (parseFloat(scrawlVars.Cell_setDimensions_width) / 100) * (scrawlVars.Cell_setDimensions_pad.localWidth / scrawlVars.Cell_setDimensions_pad.scale);
+		S.Cell_setDimensions_pad = my.pad[this.pad];
+		S.Cell_setDimensions_canvas = my.canvas[this.name];
+		S.Cell_setDimensions_width = my.xtGet(items.width, items.actualWidth, this.actualWidth);
+		S.Cell_setDimensions_height = my.xtGet(items.height, items.actualHeight, this.actualHeight);
+		if (S.Cell_setDimensions_pad) {
+			if (my.isa(S.Cell_setDimensions_width, 'str')) {
+				S.Cell_setDimensions_width = (parseFloat(S.Cell_setDimensions_width) / 100) * (S.Cell_setDimensions_pad.localWidth / S.Cell_setDimensions_pad.scale);
 			}
-			if (my.isa(scrawlVars.Cell_setDimensions_height, 'str')) {
-				scrawlVars.Cell_setDimensions_height = (parseFloat(scrawlVars.Cell_setDimensions_height) / 100) * (scrawlVars.Cell_setDimensions_pad.localHeight / scrawlVars.Cell_setDimensions_pad.scale);
+			if (my.isa(S.Cell_setDimensions_height, 'str')) {
+				S.Cell_setDimensions_height = (parseFloat(S.Cell_setDimensions_height) / 100) * (S.Cell_setDimensions_pad.localHeight / S.Cell_setDimensions_pad.scale);
 			}
 		}
-		scrawlVars.Cell_setDimensions_canvas.width = scrawlVars.Cell_setDimensions_width;
-		scrawlVars.Cell_setDimensions_canvas.height = scrawlVars.Cell_setDimensions_height;
-		this.actualWidth = scrawlVars.Cell_setDimensions_width;
-		this.actualHeight = scrawlVars.Cell_setDimensions_height;
+		S.Cell_setDimensions_canvas.width = S.Cell_setDimensions_width;
+		S.Cell_setDimensions_canvas.height = S.Cell_setDimensions_height;
+		this.actualWidth = S.Cell_setDimensions_width;
+		this.actualHeight = S.Cell_setDimensions_height;
 		return this;
 	};
 	/**
@@ -4833,20 +4819,20 @@ Default values are:
 @param {Object} dimensions Details of the &lt;canvas&gt; area to be saved
 @return String label pointing to where the image has been saved in the scrawl library - scrawl.imageData[STRING]
 **/
-	scrawlVars.Cell_getImageData_x = 0;
-	scrawlVars.Cell_getImageData_y = 0;
-	scrawlVars.Cell_getImageData_width = 0;
-	scrawlVars.Cell_getImageData_height = 0;
-	scrawlVars.Cell_getImageData_label = '';
+	S.Cell_getImageData_x = 0;
+	S.Cell_getImageData_y = 0;
+	S.Cell_getImageData_width = 0;
+	S.Cell_getImageData_height = 0;
+	S.Cell_getImageData_label = '';
 	my.Cell.prototype.getImageData = function(dimensions) {
 		dimensions = my.safeObject(dimensions);
-		scrawlVars.Cell_getImageData_label = (my.isa(dimensions.name, 'str')) ? this.name + '_' + dimensions.name : this.name + '_imageData';
-		scrawlVars.Cell_getImageData_x = my.xtGet(dimensions.x, 0);
-		scrawlVars.Cell_getImageData_y = my.xtGet(dimensions.y, 0);
-		scrawlVars.Cell_getImageData_width = my.xtGet(dimensions.width, this.actualWidth);
-		scrawlVars.Cell_getImageData_height = my.xtGet(dimensions.height, this.actualHeight);
-		my.imageData[scrawlVars.Cell_getImageData_label] = my.context[this.name].getImageData(scrawlVars.Cell_getImageData_x, scrawlVars.Cell_getImageData_y, scrawlVars.Cell_getImageData_width, scrawlVars.Cell_getImageData_height);
-		return scrawlVars.Cell_getImageData_label;
+		S.Cell_getImageData_label = (my.isa(dimensions.name, 'str')) ? this.name + '_' + dimensions.name : this.name + '_imageData';
+		S.Cell_getImageData_x = my.xtGet(dimensions.x, 0);
+		S.Cell_getImageData_y = my.xtGet(dimensions.y, 0);
+		S.Cell_getImageData_width = my.xtGet(dimensions.width, this.actualWidth);
+		S.Cell_getImageData_height = my.xtGet(dimensions.height, this.actualHeight);
+		my.imageData[S.Cell_getImageData_label] = my.context[this.name].getImageData(S.Cell_getImageData_x, S.Cell_getImageData_y, S.Cell_getImageData_width, S.Cell_getImageData_height);
+		return S.Cell_getImageData_label;
 	};
 
 	/**
@@ -5126,11 +5112,11 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @chainable
 @private
 **/
-	scrawlVars.Context_getContextFromEngine_i = 0;
-	scrawlVars.Context_getContextFromEngine_iz = 0;
+	S.Context_getContextFromEngine_i = 0;
+	S.Context_getContextFromEngine_iz = 0;
 	my.Context.prototype.getContextFromEngine = function(ctx) {
-		for (scrawlVars.Context_getContextFromEngine_i = 0, scrawlVars.Context_getContextFromEngine_iz = my.contextKeys.length; scrawlVars.Context_getContextFromEngine_i < scrawlVars.Context_getContextFromEngine_iz; scrawlVars.Context_getContextFromEngine_i++) {
-			this[my.contextKeys[scrawlVars.Context_getContextFromEngine_i]] = ctx[my.contextKeys[scrawlVars.Context_getContextFromEngine_i]];
+		for (S.Context_getContextFromEngine_i = 0, S.Context_getContextFromEngine_iz = my.contextKeys.length; S.Context_getContextFromEngine_i < S.Context_getContextFromEngine_iz; S.Context_getContextFromEngine_i++) {
+			this[my.contextKeys[S.Context_getContextFromEngine_i]] = ctx[my.contextKeys[S.Context_getContextFromEngine_i]];
 		}
 		this.winding = my.xtGet(ctx.mozFillRule, ctx.msFillRule, 'nonzero');
 		this.lineDash = (my.xt(ctx.lineDash)) ? ctx.lineDash : [];
@@ -5147,79 +5133,79 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @chainable
 @private
 **/
-	my.statArr.contextGetChanges1 = ['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
-	my.statArr.contextGetChanges2 = ['fillStyle', 'strokeStyle', 'shadowColor'];
-	my.statArr.contextGetChanges3 = ['fillStyle', 'strokeStyle'];
-	my.statArr.contextGetChanges4 = ['lineDash'];
-	my.statArr.contextGetChanges5 = ['name', 'timestamp'];
-	scrawlVars.Context_getChanges_i = 0;
-	scrawlVars.Context_getChanges_iz = 0;
-	scrawlVars.Context_getChanges_j = 0;
-	scrawlVars.Context_getChanges_jz = 0;
-	scrawlVars.Context_getChanges_count = 0;
-	scrawlVars.Context_getChanges_temp = '';
-	scrawlVars.Context_getChanges_tempColor = '';
-	scrawlVars.Context_getChanges_return = null; //raw object
+	S.stat_contextGetChanges1 = ['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
+	S.stat_contextGetChanges2 = ['fillStyle', 'strokeStyle', 'shadowColor'];
+	S.stat_contextGetChanges3 = ['fillStyle', 'strokeStyle'];
+	S.stat_contextGetChanges4 = ['lineDash'];
+	S.stat_contextGetChanges5 = ['name', 'timestamp'];
+	S.Context_getChanges_i = 0;
+	S.Context_getChanges_iz = 0;
+	S.Context_getChanges_j = 0;
+	S.Context_getChanges_jz = 0;
+	S.Context_getChanges_count = 0;
+	S.Context_getChanges_temp = '';
+	S.Context_getChanges_tempColor = '';
+	S.Context_getChanges_return = null; //raw object
 	my.Context.prototype.getChanges = function(ctx, scale, doscale) {
-		scrawlVars.Context_getChanges_return = {};
-		scrawlVars.Context_getChanges_count = 0;
-		for (scrawlVars.Context_getChanges_i = 0, scrawlVars.Context_getChanges_iz = my.contextKeys.length; scrawlVars.Context_getChanges_i < scrawlVars.Context_getChanges_iz; scrawlVars.Context_getChanges_i++) {
-			scrawlVars.Context_getChanges_temp = this.get(my.contextKeys[scrawlVars.Context_getChanges_i]);
+		S.Context_getChanges_return = {};
+		S.Context_getChanges_count = 0;
+		for (S.Context_getChanges_i = 0, S.Context_getChanges_iz = my.contextKeys.length; S.Context_getChanges_i < S.Context_getChanges_iz; S.Context_getChanges_i++) {
+			S.Context_getChanges_temp = this.get(my.contextKeys[S.Context_getChanges_i]);
 			//handle scalable items
-			if (my.contains(my.statArr.contextGetChanges1, my.contextKeys[scrawlVars.Context_getChanges_i])) {
+			if (my.contains(S.stat_contextGetChanges1, my.contextKeys[S.Context_getChanges_i])) {
 				if (doscale) {
-					if (scrawlVars.Context_getChanges_temp * scale !== ctx[my.contextKeys[scrawlVars.Context_getChanges_i]]) {
-						scrawlVars.Context_getChanges_return[my.contextKeys[scrawlVars.Context_getChanges_i]] = scrawlVars.Context_getChanges_temp * scale;
-						scrawlVars.Context_getChanges_count++;
+					if (S.Context_getChanges_temp * scale !== ctx[my.contextKeys[S.Context_getChanges_i]]) {
+						S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_temp * scale;
+						S.Context_getChanges_count++;
 					}
 				}
 				else {
-					if (scrawlVars.Context_getChanges_temp !== ctx[my.contextKeys[scrawlVars.Context_getChanges_i]]) {
-						scrawlVars.Context_getChanges_return[my.contextKeys[scrawlVars.Context_getChanges_i]] = scrawlVars.Context_getChanges_temp;
-						scrawlVars.Context_getChanges_count++;
+					if (S.Context_getChanges_temp !== ctx[my.contextKeys[S.Context_getChanges_i]]) {
+						S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_temp;
+						S.Context_getChanges_count++;
 					}
 				}
 			}
 			//handle fillStyle, strokeStyle, shadowColor that use Color design objects
-			else if (my.contains(my.statArr.contextGetChanges2, my.contextKeys[scrawlVars.Context_getChanges_i]) && my.design[scrawlVars.Context_getChanges_temp] && my.design[scrawlVars.Context_getChanges_temp].type === 'Color') {
-				scrawlVars.Context_getChanges_tempColor = my.design[scrawlVars.Context_getChanges_temp].getData();
-				if (scrawlVars.Context_getChanges_tempColor !== ctx[my.contextKeys[scrawlVars.Context_getChanges_i]]) {
-					scrawlVars.Context_getChanges_return[my.contextKeys[scrawlVars.Context_getChanges_i]] = scrawlVars.Context_getChanges_tempColor;
-					scrawlVars.Context_getChanges_count++;
+			else if (my.contains(S.stat_contextGetChanges2, my.contextKeys[S.Context_getChanges_i]) && my.design[S.Context_getChanges_temp] && my.design[S.Context_getChanges_temp].type === 'Color') {
+				S.Context_getChanges_tempColor = my.design[S.Context_getChanges_temp].getData();
+				if (S.Context_getChanges_tempColor !== ctx[my.contextKeys[S.Context_getChanges_i]]) {
+					S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_tempColor;
+					S.Context_getChanges_count++;
 				}
 			}
 			//handle fillStyle, strokeStyle that use RadialGradient, Gradient design objects
-			else if (my.contains(my.statArr.contextGetChanges3, my.contextKeys[scrawlVars.Context_getChanges_i]) && my.design[scrawlVars.Context_getChanges_temp] && my.contains(my.statArr.designTypes, my.design[scrawlVars.Context_getChanges_temp].type) && my.design[scrawlVars.Context_getChanges_temp].autoUpdate) {
-				scrawlVars.Context_getChanges_return[my.contextKeys[scrawlVars.Context_getChanges_i]] = scrawlVars.Context_getChanges_temp;
-				scrawlVars.Context_getChanges_count++;
+			else if (my.contains(S.stat_contextGetChanges3, my.contextKeys[S.Context_getChanges_i]) && my.design[S.Context_getChanges_temp] && my.contains(S.stat_designTypes, my.design[S.Context_getChanges_temp].type) && my.design[S.Context_getChanges_temp].autoUpdate) {
+				S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_temp;
+				S.Context_getChanges_count++;
 			}
 			//handle linedash - an array that needs deep inspection to check for difference
-			else if (my.contains(my.statArr.contextGetChanges4, my.contextKeys[scrawlVars.Context_getChanges_i]) && my.xt(ctx.lineDash)) {
-				if (scrawlVars.Context_getChanges_temp.length !== ctx.lineDash.length) {
-					scrawlVars.Context_getChanges_return.lineDash = scrawlVars.Context_getChanges_temp;
-					scrawlVars.Context_getChanges_count++;
+			else if (my.contains(S.stat_contextGetChanges4, my.contextKeys[S.Context_getChanges_i]) && my.xt(ctx.lineDash)) {
+				if (S.Context_getChanges_temp.length !== ctx.lineDash.length) {
+					S.Context_getChanges_return.lineDash = S.Context_getChanges_temp;
+					S.Context_getChanges_count++;
 				}
 				else {
-					for (scrawlVars.Context_getChanges_j = 0, scrawlVars.Context_getChanges_jz = scrawlVars.Context_getChanges_temp.length; scrawlVars.Context_getChanges_j < scrawlVars.Context_getChanges_jz; scrawlVars.Context_getChanges_j++) {
-						if (scrawlVars.Context_getChanges_temp[scrawlVars.Context_getChanges_j] !== ctx.lineDash[scrawlVars.Context_getChanges_j]) {
-							scrawlVars.Context_getChanges_return.lineDash = scrawlVars.Context_getChanges_temp;
-							scrawlVars.Context_getChanges_count++;
+					for (S.Context_getChanges_j = 0, S.Context_getChanges_jz = S.Context_getChanges_temp.length; S.Context_getChanges_j < S.Context_getChanges_jz; S.Context_getChanges_j++) {
+						if (S.Context_getChanges_temp[S.Context_getChanges_j] !== ctx.lineDash[S.Context_getChanges_j]) {
+							S.Context_getChanges_return.lineDash = S.Context_getChanges_temp;
+							S.Context_getChanges_count++;
 							break;
 						}
 					}
 				}
 			}
 			//exclude items that have no equivalent in the context engine
-			else if (my.contains(my.statArr.contextGetChanges5, my.contextKeys[scrawlVars.Context_getChanges_i])) {}
+			else if (my.contains(S.stat_contextGetChanges5, my.contextKeys[S.Context_getChanges_i])) {}
 			//capture all other changes
 			else {
-				if (scrawlVars.Context_getChanges_temp !== ctx[my.contextKeys[scrawlVars.Context_getChanges_i]]) {
-					scrawlVars.Context_getChanges_return[my.contextKeys[scrawlVars.Context_getChanges_i]] = scrawlVars.Context_getChanges_temp;
-					scrawlVars.Context_getChanges_count++;
+				if (S.Context_getChanges_temp !== ctx[my.contextKeys[S.Context_getChanges_i]]) {
+					S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_temp;
+					S.Context_getChanges_count++;
 				}
 			}
 		}
-		return (scrawlVars.Context_getChanges_count > 0) ? scrawlVars.Context_getChanges_return : false;
+		return (S.Context_getChanges_count > 0) ? S.Context_getChanges_return : false;
 	};
 
 	/**
@@ -5335,17 +5321,17 @@ Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &
 @return This
 @chainable
 **/
-	scrawlVars.Group_forceStamp_visibility = false;
+	S.Group_forceStamp_visibility = false;
 	my.Group.prototype.forceStamp = function(method, cell) {
-		scrawlVars.Group_forceStamp_visibility = this.visibility;
-		if (!scrawlVars.Group_forceStamp_visibility) {
+		S.Group_forceStamp_visibility = this.visibility;
+		if (!S.Group_forceStamp_visibility) {
 			this.set({
 				visibility: true
 			});
 		}
 		this.stamp(method, cell);
 		this.set({
-			visibility: scrawlVars.Group_forceStamp_visibility
+			visibility: S.Group_forceStamp_visibility
 		});
 		return this;
 	};
@@ -5357,16 +5343,16 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 @return This
 @chainable
 **/
-	scrawlVars.Group_stamp_entity = null; //scrawl Entity object
-	scrawlVars.Group_stamp_i = 0;
-	scrawlVars.Group_stamp_iz = 0;
+	S.Group_stamp_entity = null; //scrawl Entity object
+	S.Group_stamp_i = 0;
+	S.Group_stamp_iz = 0;
 	my.Group.prototype.stamp = function(method, cell) {
 		if (this.visibility) {
 			this.sortEntitys();
-			for (scrawlVars.Group_stamp_i = 0, scrawlVars.Group_stamp_iz = this.entitys.length; scrawlVars.Group_stamp_i < scrawlVars.Group_stamp_iz; scrawlVars.Group_stamp_i++) {
-				scrawlVars.Group_stamp_entity = my.entity[this.entitys[scrawlVars.Group_stamp_i]];
-				scrawlVars.Group_stamp_entity.group = this.name;
-				scrawlVars.Group_stamp_entity.stamp(method, cell);
+			for (S.Group_stamp_i = 0, S.Group_stamp_iz = this.entitys.length; S.Group_stamp_i < S.Group_stamp_iz; S.Group_stamp_i++) {
+				S.Group_stamp_entity = my.entity[this.entitys[S.Group_stamp_i]];
+				S.Group_stamp_entity.group = this.name;
+				S.Group_stamp_entity.stamp(method, cell);
 			}
 			this.stampFilter(my.context[this.cell], this.cell);
 		}
@@ -5395,17 +5381,17 @@ Add entitys to the Group
 @return This
 @chainable
 **/
-	scrawlVars.Group_addEntitysToGroup_slice = [];
-	scrawlVars.Group_addEntitysToGroup_i = 0;
-	scrawlVars.Group_addEntitysToGroup_iz = 0;
+	S.Group_addEntitysToGroup_slice = [];
+	S.Group_addEntitysToGroup_i = 0;
+	S.Group_addEntitysToGroup_iz = 0;
 	my.Group.prototype.addEntitysToGroup = function() {
-		scrawlVars.Group_addEntitysToGroup_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.Group_addEntitysToGroup_slice[0])) {
-			console.log('my.Group.prototype.addEntitysToGroup - needs updating: ', scrawlVars.Group_addEntitysToGroup_slice);
-			scrawlVars.Group_addEntitysToGroup_slice = scrawlVars.Group_addEntitysToGroup_slice[0];
+		S.Group_addEntitysToGroup_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.Group_addEntitysToGroup_slice[0])) {
+			console.log('my.Group.prototype.addEntitysToGroup - needs updating: ', S.Group_addEntitysToGroup_slice);
+			S.Group_addEntitysToGroup_slice = S.Group_addEntitysToGroup_slice[0];
 		}
-		for (scrawlVars.Group_addEntitysToGroup_i = 0, scrawlVars.Group_addEntitysToGroup_iz = scrawlVars.Group_addEntitysToGroup_slice.length; scrawlVars.Group_addEntitysToGroup_i < scrawlVars.Group_addEntitysToGroup_iz; scrawlVars.Group_addEntitysToGroup_i++) {
-			my.pushUnique(this.entitys, scrawlVars.Group_addEntitysToGroup_slice[scrawlVars.Group_addEntitysToGroup_i]);
+		for (S.Group_addEntitysToGroup_i = 0, S.Group_addEntitysToGroup_iz = S.Group_addEntitysToGroup_slice.length; S.Group_addEntitysToGroup_i < S.Group_addEntitysToGroup_iz; S.Group_addEntitysToGroup_i++) {
+			my.pushUnique(this.entitys, S.Group_addEntitysToGroup_slice[S.Group_addEntitysToGroup_i]);
 		}
 		return this;
 	};
@@ -5416,17 +5402,17 @@ Remove entitys from the Group
 @return This
 @chainable
 **/
-	scrawlVars.Group_removeEntitysFromGroup_slice = [];
-	scrawlVars.Group_removeEntitysFromGroup_i = 0;
-	scrawlVars.Group_removeEntitysFromGroup_iz = 0;
+	S.Group_removeEntitysFromGroup_slice = [];
+	S.Group_removeEntitysFromGroup_i = 0;
+	S.Group_removeEntitysFromGroup_iz = 0;
 	my.Group.prototype.removeEntitysFromGroup = function() {
-		scrawlVars.Group_removeEntitysFromGroup_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(scrawlVars.Group_removeEntitysFromGroup_slice[0])) {
-			console.log('my.Group.prototype.removeEntitysFromGroup - needs updating: ', scrawlVars.Group_removeEntitysFromGroup_slice);
-			scrawlVars.Group_removeEntitysFromGroup_slice = scrawlVars.Group_removeEntitysFromGroup_slice[0];
+		S.Group_removeEntitysFromGroup_slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(S.Group_removeEntitysFromGroup_slice[0])) {
+			console.log('my.Group.prototype.removeEntitysFromGroup - needs updating: ', S.Group_removeEntitysFromGroup_slice);
+			S.Group_removeEntitysFromGroup_slice = S.Group_removeEntitysFromGroup_slice[0];
 		}
-		for (scrawlVars.Group_removeEntitysFromGroup_i = 0, scrawlVars.Group_removeEntitysFromGroup_iz = scrawlVars.Group_removeEntitysFromGroup_slice.length; scrawlVars.Group_removeEntitysFromGroup_i < scrawlVars.Group_removeEntitysFromGroup_iz; scrawlVars.Group_removeEntitysFromGroup_i++) {
-			my.removeItem(this.entitys, scrawlVars.Group_removeEntitysFromGroup_slice[scrawlVars.Group_removeEntitysFromGroup_i]);
+		for (S.Group_removeEntitysFromGroup_i = 0, S.Group_removeEntitysFromGroup_iz = S.Group_removeEntitysFromGroup_slice.length; S.Group_removeEntitysFromGroup_i < S.Group_removeEntitysFromGroup_iz; S.Group_removeEntitysFromGroup_i++) {
+			my.removeItem(this.entitys, S.Group_removeEntitysFromGroup_slice[S.Group_removeEntitysFromGroup_i]);
 		}
 		return this;
 	};
@@ -5439,12 +5425,12 @@ The following entity attributes can be amended by this function: startX, startY,
 @return This
 @chainable
 **/
-	scrawlVars.Group_updateEntitysBy_i = 0;
-	scrawlVars.Group_updateEntitysBy_iz = 0;
+	S.Group_updateEntitysBy_i = 0;
+	S.Group_updateEntitysBy_iz = 0;
 	my.Group.prototype.updateEntitysBy = function(items) {
 		items = my.safeObject(items);
-		for (scrawlVars.Group_updateEntitysBy_i = 0, scrawlVars.Group_updateEntitysBy_iz = this.entitys.length; scrawlVars.Group_updateEntitysBy_i < scrawlVars.Group_updateEntitysBy_iz; scrawlVars.Group_updateEntitysBy_i++) {
-			my.entity[this.entitys[scrawlVars.Group_updateEntitysBy_i]].setDelta({
+		for (S.Group_updateEntitysBy_i = 0, S.Group_updateEntitysBy_iz = this.entitys.length; S.Group_updateEntitysBy_i < S.Group_updateEntitysBy_iz; S.Group_updateEntitysBy_i++) {
+			my.entity[this.entitys[S.Group_updateEntitysBy_i]].setDelta({
 				startX: my.xtGet(items.x, items.startX, 0),
 				startY: my.xtGet(items.y, items.startY, 0),
 				scale: my.xtGet(items.scale, 0),
@@ -5460,11 +5446,11 @@ Ask all entitys in the Group to perform a set() operation
 @return This
 @chainable
 **/
-	scrawlVars.Group_setEntitysTo_i = 0;
-	scrawlVars.Group_setEntitysTo_iz = 0;
+	S.Group_setEntitysTo_i = 0;
+	S.Group_setEntitysTo_iz = 0;
 	my.Group.prototype.setEntitysTo = function(items) {
-		for (scrawlVars.Group_setEntitysTo_i = 0, scrawlVars.Group_setEntitysTo_iz = this.entitys.length; scrawlVars.Group_setEntitysTo_ < scrawlVars.Group_setEntitysTo_iz; scrawlVars.Group_setEntitysTo_i++) {
-			my.entity[this.entitys[scrawlVars.Group_setEntitysTo_i]].set(items);
+		for (S.Group_setEntitysTo_i = 0, S.Group_setEntitysTo_iz = this.entitys.length; S.Group_setEntitysTo_ < S.Group_setEntitysTo_iz; S.Group_setEntitysTo_i++) {
+			my.entity[this.entitys[S.Group_setEntitysTo_i]].set(items);
 		}
 		return this;
 	};
@@ -5477,26 +5463,26 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 @return This
 @chainable
 **/
-	scrawlVars.Group_pivotEntitysTo_pivot = null; //scrawl object
-	scrawlVars.Group_pivotEntitysTo_pivotVector = null; //scrawl Vector object
-	scrawlVars.Group_pivotEntitysTo_entity = null; //scrawl Entity object
-	scrawlVars.Group_pivotEntitysTo_entityVector = null; //scrawl Vector object
-	scrawlVars.Group_pivotEntitysTo_i = 0;
-	scrawlVars.Group_pivotEntitysTo_iz = 0;
+	S.Group_pivotEntitysTo_pivot = null; //scrawl object
+	S.Group_pivotEntitysTo_pivotVector = null; //scrawl Vector object
+	S.Group_pivotEntitysTo_entity = null; //scrawl Entity object
+	S.Group_pivotEntitysTo_entityVector = null; //scrawl Vector object
+	S.Group_pivotEntitysTo_i = 0;
+	S.Group_pivotEntitysTo_iz = 0;
 	my.Group.prototype.pivotEntitysTo = function(item) {
 		item = (my.isa(item, 'str')) ? item : false;
 		if (item) {
-			scrawlVars.Group_pivotEntitysTo_pivot = my.entity[item] || my.point[item] || false;
-			if (scrawlVars.Group_pivotEntitysTo_pivot) {
-				scrawlVars.Group_pivotEntitysTo_pivotVector = (scrawlVars.Group_pivotEntitysTo_pivot.type === 'Point') ? scrawlVars.Group_pivotEntitysTo_pivot.local : scrawlVars.Group_pivotEntitysTo_pivot.start;
-				for (scrawlVars.Group_pivotEntitysTo_i = 0, scrawlVars.Group_pivotEntitysTo_iz = this.entitys.length; scrawlVars.Group_pivotEntitysTo_i < scrawlVars.Group_pivotEntitysTo_iz; scrawlVars.Group_pivotEntitysTo_i++) {
-					scrawlVars.Group_pivotEntitysTo_entity = my.entity[this.entitys[scrawlVars.Group_pivotEntitysTo_i]];
-					scrawlVars.Group_pivotEntitysTo_entityVector = my.v.set(entity.start);
-					scrawlVars.Group_pivotEntitysTo_entityVector.vectorSubtract(scrawlVars.Group_pivotEntitysTo_pivotVector);
-					scrawlVars.Group_pivotEntitysTo_entity.set({
+			S.Group_pivotEntitysTo_pivot = my.entity[item] || my.point[item] || false;
+			if (S.Group_pivotEntitysTo_pivot) {
+				S.Group_pivotEntitysTo_pivotVector = (S.Group_pivotEntitysTo_pivot.type === 'Point') ? S.Group_pivotEntitysTo_pivot.local : S.Group_pivotEntitysTo_pivot.start;
+				for (S.Group_pivotEntitysTo_i = 0, S.Group_pivotEntitysTo_iz = this.entitys.length; S.Group_pivotEntitysTo_i < S.Group_pivotEntitysTo_iz; S.Group_pivotEntitysTo_i++) {
+					S.Group_pivotEntitysTo_entity = my.entity[this.entitys[S.Group_pivotEntitysTo_i]];
+					S.Group_pivotEntitysTo_entityVector = my.v.set(entity.start);
+					S.Group_pivotEntitysTo_entityVector.vectorSubtract(S.Group_pivotEntitysTo_pivotVector);
+					S.Group_pivotEntitysTo_entity.set({
 						pivot: item,
-						handleX: -scrawlVars.Group_pivotEntitysTo_entityVector.x,
-						handleY: -scrawlVars.Group_pivotEntitysTo_entityVector.y
+						handleX: -S.Group_pivotEntitysTo_entityVector.x,
+						handleY: -S.Group_pivotEntitysTo_entityVector.y
 					});
 				}
 			}
@@ -5509,26 +5495,26 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
 @return Entity object, or false if no entitys are colliding with the coordinate
 **/
-	scrawlVars.Group_getEntityAt_entity = null; //scrawl Entity object
-	scrawlVars.Group_getEntityAt_vector = null; //scrawl Vector object
-	scrawlVars.Group_getEntityAt_coordinate = null; //scrawl Vector object
-	scrawlVars.Group_getEntityAt_i = 0;
+	S.Group_getEntityAt_entity = null; //scrawl Entity object
+	S.Group_getEntityAt_vector = null; //scrawl Vector object
+	S.Group_getEntityAt_coordinate = null; //scrawl Vector object
+	S.Group_getEntityAt_i = 0;
 	my.Group.prototype.getEntityAt = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Group_getEntityAt_coordinate = my.v.set(items);
-		scrawlVars.Group_getEntityAt_coordinate = my.Position.prototype.correctCoordinates(scrawlVars.Group_getEntityAt_coordinate, this.cell);
+		S.Group_getEntityAt_coordinate = my.v.set(items);
+		S.Group_getEntityAt_coordinate = my.Position.prototype.correctCoordinates(S.Group_getEntityAt_coordinate, this.cell);
 		this.sortEntitys();
-		for (scrawlVars.Group_getEntityAt_i = this.entitys.length - 1; scrawlVars.Group_getEntityAt_i >= 0; scrawlVars.Group_getEntityAt_i--) {
-			scrawlVars.Group_getEntityAt_entity = my.entity[this.entitys[scrawlVars.Group_getEntityAt_i]];
+		for (S.Group_getEntityAt_i = this.entitys.length - 1; S.Group_getEntityAt_i >= 0; S.Group_getEntityAt_i--) {
+			S.Group_getEntityAt_entity = my.entity[this.entitys[S.Group_getEntityAt_i]];
 			if (this.regionRadius) {
-				scrawlVars.Group_getEntityAt_entity.resetWork();
-				scrawlVars.Group_getEntityAt_vector = scrawlVars.Group_getEntityAt_entity.work.start.vectorSubtract(scrawlVars.Group_getEntityAt_coordinate);
-				if (scrawlVars.Group_getEntityAt_vector.getMagnitude() > this.regionRadius) {
+				S.Group_getEntityAt_entity.resetWork();
+				S.Group_getEntityAt_vector = S.Group_getEntityAt_entity.work.start.vectorSubtract(S.Group_getEntityAt_coordinate);
+				if (S.Group_getEntityAt_vector.getMagnitude() > this.regionRadius) {
 					continue;
 				}
 			}
-			if (scrawlVars.Group_getEntityAt_entity.checkHit(scrawlVars.Group_getEntityAt_coordinate)) {
-				return scrawlVars.Group_getEntityAt_entity;
+			if (S.Group_getEntityAt_entity.checkHit(S.Group_getEntityAt_coordinate)) {
+				return S.Group_getEntityAt_entity;
 			}
 		}
 		return false;
@@ -5539,31 +5525,31 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
 @return Entity object, or false if no entitys are colliding with the coordinate
 **/
-	scrawlVars.Group_getAllEntitysAt_entity = null; //scrawl Entity object
-	scrawlVars.Group_getAllEntitysAt_vector = null; //scrawl Vector object
-	scrawlVars.Group_getAllEntitysAt_coordinate = null; //scrawl Vector object
-	scrawlVars.Group_getAllEntitysAt_results = [];
-	scrawlVars.Group_getAllEntitysAt_i = 0;
+	S.Group_getAllEntitysAt_entity = null; //scrawl Entity object
+	S.Group_getAllEntitysAt_vector = null; //scrawl Vector object
+	S.Group_getAllEntitysAt_coordinate = null; //scrawl Vector object
+	S.Group_getAllEntitysAt_results = [];
+	S.Group_getAllEntitysAt_i = 0;
 	my.Group.prototype.getAllEntitysAt = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Group_getAllEntitysAt_coordinate = my.v.set(items);
-		scrawlVars.Group_getAllEntitysAt_results = [];
-		scrawlVars.Group_getAllEntitysAt_coordinate = my.Position.prototype.correctCoordinates(scrawlVars.Group_getAllEntitysAt_coordinate, this.cell);
+		S.Group_getAllEntitysAt_coordinate = my.v.set(items);
+		S.Group_getAllEntitysAt_results = [];
+		S.Group_getAllEntitysAt_coordinate = my.Position.prototype.correctCoordinates(S.Group_getAllEntitysAt_coordinate, this.cell);
 		this.sortEntitys();
-		for (scrawlVars.Group_getAllEntitysAt_i = this.entitys.length - 1; scrawlVars.Group_getAllEntitysAt_i >= 0; scrawlVars.Group_getAllEntitysAt_i--) {
-			scrawlVars.Group_getAllEntitysAt_entity = my.entity[this.entitys[scrawlVars.Group_getAllEntitysAt_i]];
+		for (S.Group_getAllEntitysAt_i = this.entitys.length - 1; S.Group_getAllEntitysAt_i >= 0; S.Group_getAllEntitysAt_i--) {
+			S.Group_getAllEntitysAt_entity = my.entity[this.entitys[S.Group_getAllEntitysAt_i]];
 			if (this.regionRadius) {
-				scrawlVars.Group_getAllEntitysAt_entity.resetWork();
-				scrawlVars.Group_getAllEntitysAt_vector = scrawlVars.Group_getAllEntitysAt_entity.work.start.vectorSubtract(scrawlVars.Group_getAllEntitysAt_coordinate);
-				if (scrawlVars.Group_getAllEntitysAt_vector.getMagnitude() > this.regionRadius) {
+				S.Group_getAllEntitysAt_entity.resetWork();
+				S.Group_getAllEntitysAt_vector = S.Group_getAllEntitysAt_entity.work.start.vectorSubtract(S.Group_getAllEntitysAt_coordinate);
+				if (S.Group_getAllEntitysAt_vector.getMagnitude() > this.regionRadius) {
 					continue;
 				}
 			}
-			if (scrawlVars.Group_getAllEntitysAt_entity.checkHit(scrawlVars.Group_getAllEntitysAt_coordinate)) {
-				scrawlVars.Group_getAllEntitysAt_results.push(scrawlVars.Group_getAllEntitysAt_entity);
+			if (S.Group_getAllEntitysAt_entity.checkHit(S.Group_getAllEntitysAt_coordinate)) {
+				S.Group_getAllEntitysAt_results.push(S.Group_getAllEntitysAt_entity);
 			}
 		}
-		return (scrawlVars.Group_getAllEntitysAt_results.length > 0) ? scrawlVars.Group_getAllEntitysAt_results : false;
+		return (S.Group_getAllEntitysAt_results.length > 0) ? S.Group_getAllEntitysAt_results : false;
 	};
 
 	/**
@@ -5823,22 +5809,22 @@ Augments Position.clone()
 @return Cloned object
 @chainable
 **/
-	scrawlVars.Entity_clone_context = null; //raw object
-	scrawlVars.Entity_clone_enhancedItems = null; //raw object
-	scrawlVars.Entity_clone_clone = null; //scrawl Entity object
+	S.Entity_clone_context = null; //raw object
+	S.Entity_clone_enhancedItems = null; //raw object
+	S.Entity_clone_clone = null; //scrawl Entity object
 	my.Entity.prototype.clone = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Entity_clone_context = JSON.parse(JSON.stringify(my.ctx[this.context]));
-		delete scrawlVars.Entity_clone_context.name;
-		scrawlVars.Entity_clone_enhancedItems = my.mergeInto(items, scrawlVars.Entity_clone_context);
-		delete scrawlVars.Entity_clone_enhancedItems.context;
-		scrawlVars.Entity_clone_clone = my.Position.prototype.clone.call(this, scrawlVars.Entity_clone_enhancedItems);
+		S.Entity_clone_context = JSON.parse(JSON.stringify(my.ctx[this.context]));
+		delete S.Entity_clone_context.name;
+		S.Entity_clone_enhancedItems = my.mergeInto(items, S.Entity_clone_context);
+		delete S.Entity_clone_enhancedItems.context;
+		S.Entity_clone_clone = my.Position.prototype.clone.call(this, S.Entity_clone_enhancedItems);
 		if (my.xt(items.createNewContext) && !items.createNewContext) {
-			delete my.ctx[scrawlVars.Entity_clone_clone.context];
-			my.removeItem(my.ctxnames, scrawlVars.Entity_clone_clone.context);
-			scrawlVars.Entity_clone_clone.context = this.context;
+			delete my.ctx[S.Entity_clone_clone.context];
+			my.removeItem(my.ctxnames, S.Entity_clone_clone.context);
+			S.Entity_clone_clone.context = this.context;
 		}
-		return scrawlVars.Entity_clone_clone;
+		return S.Entity_clone_clone;
 	};
 	/**
 Constructor helper function - discover this entity's default group affiliation
@@ -5886,12 +5872,12 @@ Permitted methods include:
 @return This
 @chainable
 **/
-	scrawlVars.Entity_forceStamp_visibility = false;
+	S.Entity_forceStamp_visibility = false;
 	my.Entity.prototype.forceStamp = function(method, cell) {
-		scrawlVars.Entity_forceStamp_visibility = this.visibility;
+		S.Entity_forceStamp_visibility = this.visibility;
 		this.visibility = true;
 		this.stamp(method, cell);
-		this.visibility = scrawlVars.Entity_forceStamp_visibility;
+		this.visibility = S.Entity_forceStamp_visibility;
 		return this;
 	};
 	/**
@@ -5929,23 +5915,23 @@ Permitted methods include:
 @return This
 @chainable
 **/
-	scrawlVars.Entity_stamp_cell = null; //scrawl Cell object
-	scrawlVars.Entity_stamp_engine = null; //DOM canvas context object
-	scrawlVars.Entity_stamp_method = '';
+	S.Entity_stamp_cell = null; //scrawl Cell object
+	S.Entity_stamp_engine = null; //DOM canvas context object
+	S.Entity_stamp_method = '';
 	my.Entity.prototype.stamp = function(method, cell) {
 		if (this.visibility) {
-			scrawlVars.Entity_stamp_cell = my.cell[cell] || my.cell[my.group[this.group].cell];
-			scrawlVars.Entity_stamp_cell = scrawlVars.Entity_stamp_cell.name;
-			scrawlVars.Entity_stamp_engine = my.context[scrawlVars.Entity_stamp_cell];
-			scrawlVars.Entity_stamp_method = method || this.method;
+			S.Entity_stamp_cell = my.cell[cell] || my.cell[my.group[this.group].cell];
+			S.Entity_stamp_cell = S.Entity_stamp_cell.name;
+			S.Entity_stamp_engine = my.context[S.Entity_stamp_cell];
+			S.Entity_stamp_method = method || this.method;
 			if (this.pivot) {
-				this.setStampUsingPivot(scrawlVars.Entity_stamp_cell);
+				this.setStampUsingPivot(S.Entity_stamp_cell);
 			}
 			else {
 				this.pathStamp();
 			}
-			this.callMethod(scrawlVars.Entity_stamp_engine, scrawlVars.Entity_stamp_cell, scrawlVars.Entity_stamp_method);
-			this.stampFilter(scrawlVars.Entity_stamp_engine, scrawlVars.Entity_stamp_cell);
+			this.callMethod(S.Entity_stamp_engine, S.Entity_stamp_cell, S.Entity_stamp_method);
+			this.stampFilter(S.Entity_stamp_engine, S.Entity_stamp_cell);
 		}
 		return this;
 	};
@@ -5971,11 +5957,11 @@ Stamp helper function - direct entity to the required drawing method function
 @chainable
 @private
 **/
-	scrawlVars.Entity_callMethod_test = '';
+	S.Entity_callMethod_test = '';
 	my.Entity.prototype.callMethod = function(engine, cell, method) {
-		scrawlVars.Entity_callMethod_test = method[0];
-		if (scrawlVars.Entity_callMethod_test < 'f') {
-			if (scrawlVars.Entity_callMethod_test === 'c') {
+		S.Entity_callMethod_test = method[0];
+		if (S.Entity_callMethod_test < 'f') {
+			if (S.Entity_callMethod_test === 'c') {
 				switch (method) {
 					case 'clear':
 						this.clear(engine, cell);
@@ -6000,7 +5986,7 @@ Stamp helper function - direct entity to the required drawing method function
 			}
 		}
 		else {
-			if (scrawlVars.Entity_callMethod_test === 'f') {
+			if (S.Entity_callMethod_test === 'f') {
 				switch (method) {
 					case 'fill':
 						this.fill(engine, cell);
@@ -6035,28 +6021,28 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 @chainable
 @private
 **/
-	scrawlVars.Entity_rotateCell_reverse = 0;
-	scrawlVars.Entity_rotateCell_upend = 0;
-	scrawlVars.Entity_rotateCell_rotation = 0;
-	scrawlVars.Entity_rotateCell_cos = 0;
-	scrawlVars.Entity_rotateCell_sin = 0;
-	scrawlVars.Entity_rotateCell_x = 0;
-	scrawlVars.Entity_rotateCell_y = 0;
+	S.Entity_rotateCell_reverse = 0;
+	S.Entity_rotateCell_upend = 0;
+	S.Entity_rotateCell_rotation = 0;
+	S.Entity_rotateCell_cos = 0;
+	S.Entity_rotateCell_sin = 0;
+	S.Entity_rotateCell_x = 0;
+	S.Entity_rotateCell_y = 0;
 	my.Entity.prototype.rotateCell = function(ctx, cell) {
-		scrawlVars.Entity_rotateCell_reverse = (this.flipReverse) ? -1 : 1;
-		scrawlVars.Entity_rotateCell_upend = (this.flipUpend) ? -1 : 1;
-		scrawlVars.Entity_rotateCell_rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
-		scrawlVars.Entity_rotateCell_cos = Math.cos(scrawlVars.Entity_rotateCell_rotation);
-		scrawlVars.Entity_rotateCell_sin = Math.sin(scrawlVars.Entity_rotateCell_rotation);
-		scrawlVars.Entity_rotateCell_x = this.start.x;
-		scrawlVars.Entity_rotateCell_y = this.start.y;
-		if (typeof scrawlVars.Entity_rotateCell_x === 'string') {
-			scrawlVars.Entity_rotateCell_x = this.convertX(scrawlVars.Entity_rotateCell_x, cell);
+		S.Entity_rotateCell_reverse = (this.flipReverse) ? -1 : 1;
+		S.Entity_rotateCell_upend = (this.flipUpend) ? -1 : 1;
+		S.Entity_rotateCell_rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
+		S.Entity_rotateCell_cos = Math.cos(S.Entity_rotateCell_rotation);
+		S.Entity_rotateCell_sin = Math.sin(S.Entity_rotateCell_rotation);
+		S.Entity_rotateCell_x = this.start.x;
+		S.Entity_rotateCell_y = this.start.y;
+		if (typeof S.Entity_rotateCell_x === 'string') {
+			S.Entity_rotateCell_x = this.convertX(S.Entity_rotateCell_x, cell);
 		}
-		if (typeof scrawlVars.Entity_rotateCell_y === 'string') {
-			scrawlVars.Entity_rotateCell_y = this.convertY(scrawlVars.Entity_rotateCell_y, cell);
+		if (typeof S.Entity_rotateCell_y === 'string') {
+			S.Entity_rotateCell_y = this.convertY(S.Entity_rotateCell_y, cell);
 		}
-		ctx.setTransform((scrawlVars.Entity_rotateCell_cos * scrawlVars.Entity_rotateCell_reverse), (scrawlVars.Entity_rotateCell_sin * scrawlVars.Entity_rotateCell_reverse), (-scrawlVars.Entity_rotateCell_sin * scrawlVars.Entity_rotateCell_upend), (scrawlVars.Entity_rotateCell_cos * scrawlVars.Entity_rotateCell_upend), scrawlVars.Entity_rotateCell_x, scrawlVars.Entity_rotateCell_y);
+		ctx.setTransform((S.Entity_rotateCell_cos * S.Entity_rotateCell_reverse), (S.Entity_rotateCell_sin * S.Entity_rotateCell_reverse), (-S.Entity_rotateCell_sin * S.Entity_rotateCell_upend), (S.Entity_rotateCell_cos * S.Entity_rotateCell_upend), S.Entity_rotateCell_x, S.Entity_rotateCell_y);
 		return this;
 	};
 	/**
@@ -6067,28 +6053,28 @@ Stamp helper function - convert string start.x values to numerical values
 @return Number - x value
 @private
 **/
-	scrawlVars.Entity_convertX_width = 0;
+	S.Entity_convertX_width = 0;
 	my.Entity.prototype.convertX = function(x, cell) {
 		switch (typeof cell) {
 			case 'string':
-				scrawlVars.Entity_convertX_width = scrawl.cell[cell].actualWidth;
+				S.Entity_convertX_width = scrawl.cell[cell].actualWidth;
 				break;
 			case 'number':
-				scrawlVars.Entity_convertX_width = cell;
+				S.Entity_convertX_width = cell;
 				break;
 			default:
-				scrawlVars.Entity_convertX_width = cell.width;
+				S.Entity_convertX_width = cell.width;
 		}
 		switch (x) {
 			case 'left':
 				return 0;
 			case 'right':
-				return scrawlVars.Entity_convertX_width;
+				return S.Entity_convertX_width;
 			case 'center':
-				return scrawlVars.Entity_convertX_width / 2;
+				return S.Entity_convertX_width / 2;
 			default:
 				x = parseFloat(x) / 100;
-				return (isNaN(x)) ? 0 : x * scrawlVars.Entity_convertX_width;
+				return (isNaN(x)) ? 0 : x * S.Entity_convertX_width;
 		}
 	};
 	/**
@@ -6099,28 +6085,28 @@ Stamp helper function - convert string start.y values to numerical values
 @return Number - y value
 @private
 **/
-	scrawlVars.Entity_convertY_height = 0;
+	S.Entity_convertY_height = 0;
 	my.Entity.prototype.convertY = function(y, cell) {
 		switch (typeof cell) {
 			case 'string':
-				scrawlVars.Entity_convertY_height = scrawl.cell[cell].actualHeight;
+				S.Entity_convertY_height = scrawl.cell[cell].actualHeight;
 				break;
 			case 'number':
-				scrawlVars.Entity_convertY_height = cell;
+				S.Entity_convertY_height = cell;
 				break;
 			default:
-				scrawlVars.Entity_convertY_height = cell.height;
+				S.Entity_convertY_height = cell.height;
 		}
 		switch (y) {
 			case 'top':
 				return 0;
 			case 'bottom':
-				return scrawlVars.Entity_convertY_height;
+				return S.Entity_convertY_height;
 			case 'center':
-				return scrawlVars.Entity_convertY_height / 2;
+				return S.Entity_convertY_height / 2;
 			default:
 				y = parseFloat(y) / 100;
-				return (isNaN(y)) ? 0 : y * scrawlVars.Entity_convertY_height;
+				return (isNaN(y)) ? 0 : y * S.Entity_convertY_height;
 		}
 	};
 	/**
@@ -6271,10 +6257,10 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @chainable
 @private
 **/
-	scrawlVars.Entity_clearShadow_context = null; //scrawl Context object
+	S.Entity_clearShadow_context = null; //scrawl Context object
 	my.Entity.prototype.clearShadow = function(ctx, cell) {
-		scrawlVars.Entity_clearShadow_context = my.ctx[this.context];
-		if (scrawlVars.Entity_clearShadow_context.shadowOffsetX || scrawlVars.Entity_clearShadow_context.shadowOffsetY || scrawlVars.Entity_clearShadow_context.shadowBlur) {
+		S.Entity_clearShadow_context = my.ctx[this.context];
+		if (S.Entity_clearShadow_context.shadowOffsetX || S.Entity_clearShadow_context.shadowOffsetY || S.Entity_clearShadow_context.shadowBlur) {
 			my.cell[cell].clearShadow();
 		}
 		return this;
@@ -6288,10 +6274,10 @@ Stamp helper function - clear shadow parameters during a multi draw operation (P
 @chainable
 @private
 **/
-	scrawlVars.Entity_restoreShadow_context = null; //scrawl Context object
+	S.Entity_restoreShadow_context = null; //scrawl Context object
 	my.Entity.prototype.restoreShadow = function(ctx, cell) {
-		scrawlVars.Entity_restoreShadow_context = my.ctx[this.context];
-		if (scrawlVars.Entity_restoreShadow_context.shadowOffsetX || scrawlVars.Entity_restoreShadow_context.shadowOffsetY || scrawlVars.Entity_restoreShadow_context.shadowBlur) {
+		S.Entity_restoreShadow_context = my.ctx[this.context];
+		if (S.Entity_restoreShadow_context.shadowOffsetX || S.Entity_restoreShadow_context.shadowOffsetY || S.Entity_restoreShadow_context.shadowBlur) {
 			my.cell[cell].restoreShadow(this.context);
 		}
 		return this;
@@ -6303,15 +6289,15 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 @return This
 @chainable
 **/
-	scrawlVars.Entity_pickupEntity_cell = null; //scrawl Cell object
-	scrawlVars.Entity_pickupEntity_coordinate = null; //scrawl Vector object
+	S.Entity_pickupEntity_cell = null; //scrawl Cell object
+	S.Entity_pickupEntity_coordinate = null; //scrawl Vector object
 	my.Entity.prototype.pickupEntity = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Entity_pickupEntity_coordinate = my.v.set(items);
-		scrawlVars.Entity_pickupEntity_cell = my.cell[my.group[this.group].cell];
-		scrawlVars.Entity_pickupEntity_coordinate = this.correctCoordinates(scrawlVars.Entity_pickupEntity_coordinate, scrawlVars.Entity_pickupEntity_cell);
-		this.oldX = scrawlVars.Entity_pickupEntity_coordinate.x || 0;
-		this.oldY = scrawlVars.Entity_pickupEntity_coordinate.y || 0;
+		S.Entity_pickupEntity_coordinate = my.v.set(items);
+		S.Entity_pickupEntity_cell = my.cell[my.group[this.group].cell];
+		S.Entity_pickupEntity_coordinate = this.correctCoordinates(S.Entity_pickupEntity_coordinate, S.Entity_pickupEntity_cell);
+		this.oldX = S.Entity_pickupEntity_coordinate.x || 0;
+		this.oldY = S.Entity_pickupEntity_coordinate.y || 0;
 		this.realPivot = this.pivot;
 		this.pivot = 'mouse';
 		this.order += this.order + 9999;
@@ -6324,12 +6310,12 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 @return This
 @chainable
 **/
-	scrawlVars.Entity_dropEntity_order = 0;
+	S.Entity_dropEntity_order = 0;
 	my.Entity.prototype.dropEntity = function(item) {
-		scrawlVars.Entity_dropEntity_order = this.order;
+		S.Entity_dropEntity_order = this.order;
 		this.set({
 			pivot: my.xtGet(item, this.realPivot, false),
-			order: (scrawlVars.Entity_dropEntity_order >= 9999) ? scrawlVars.Entity_dropEntity_order - 9999 : 0
+			order: (S.Entity_dropEntity_order >= 9999) ? S.Entity_dropEntity_order - 9999 : 0
 		});
 		delete this.realPivot;
 		delete this.oldX;
@@ -6350,27 +6336,27 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 @param {Object} items Argument object
 @return The first coordinate to fall within the entity's path; false if none fall within the path
 **/
-	scrawlVars.Entity_checkHit_tests = [];
-	scrawlVars.Entity_checkHit_here = null; //scrawl Vector object
-	scrawlVars.Entity_checkHit_result = false;
-	scrawlVars.Entity_checkHit_i = 0;
-	scrawlVars.Entity_checkHit_iz = 0;
+	S.Entity_checkHit_tests = [];
+	S.Entity_checkHit_here = null; //scrawl Vector object
+	S.Entity_checkHit_result = false;
+	S.Entity_checkHit_i = 0;
+	S.Entity_checkHit_iz = 0;
 	my.Entity.prototype.checkHit = function(items) {
 		items = my.safeObject(items);
-		scrawlVars.Entity_checkHit_tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
+		S.Entity_checkHit_tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
 		this.rotateCell(my.cvx, this.getEntityCell().name);
-		scrawlVars.Entity_checkHit_here = this.prepareStamp();
+		S.Entity_checkHit_here = this.prepareStamp();
 		my.cvx.beginPath();
-		my.cvx.rect(scrawlVars.Entity_checkHit_here.x, scrawlVars.Entity_checkHit_here.y, (this.width * this.scale), (this.height * this.scale));
-		for (scrawlVars.Entity_checkHit_i = 0, scrawlVars.Entity_checkHit_iz = scrawlVars.Entity_checkHit_tests.length; scrawlVars.Entity_checkHit_i < scrawlVars.Entity_checkHit_iz; scrawlVars.Entity_checkHit_i += 2) {
-			scrawlVars.Entity_checkHit_result = my.cvx.isPointInPath(scrawlVars.Entity_checkHit_tests[scrawlVars.Entity_checkHit_i], scrawlVars.Entity_checkHit_tests[scrawlVars.Entity_checkHit_i + 1]);
-			if (scrawlVars.Entity_checkHit_result) {
+		my.cvx.rect(S.Entity_checkHit_here.x, S.Entity_checkHit_here.y, (this.width * this.scale), (this.height * this.scale));
+		for (S.Entity_checkHit_i = 0, S.Entity_checkHit_iz = S.Entity_checkHit_tests.length; S.Entity_checkHit_i < S.Entity_checkHit_iz; S.Entity_checkHit_i += 2) {
+			S.Entity_checkHit_result = my.cvx.isPointInPath(S.Entity_checkHit_tests[S.Entity_checkHit_i], S.Entity_checkHit_tests[S.Entity_checkHit_i + 1]);
+			if (S.Entity_checkHit_result) {
 				break;
 			}
 		}
-		if (scrawlVars.Entity_checkHit_result) {
-			items.x = scrawlVars.Entity_checkHit_tests[scrawlVars.Entity_checkHit_i];
-			items.y = scrawlVars.Entity_checkHit_tests[scrawlVars.Entity_checkHit_i + 1];
+		if (S.Entity_checkHit_result) {
+			items.x = S.Entity_checkHit_tests[S.Entity_checkHit_i];
+			items.y = S.Entity_checkHit_tests[S.Entity_checkHit_i + 1];
 			return items;
 		}
 		return false;
@@ -6483,36 +6469,36 @@ Add values to Number attributes
 @return This
 @chainable
 **/
-	scrawlVars.Design_setDelta_temp = 0;
+	S.Design_setDelta_temp = 0;
 	my.Design.prototype.setDelta = function(items) {
 		items = my.safeObject(items);
 		if (items.startX) {
-			scrawlVars.Design_setDelta_temp = this.get('startX');
-			this.startX = (my.isa(items.startX, 'str')) ? my.addPercentages(scrawlVars.Design_setDelta_temp, items.startX) : scrawlVars.Design_setDelta_temp + items.startX;
+			S.Design_setDelta_temp = this.get('startX');
+			this.startX = (my.isa(items.startX, 'str')) ? my.addPercentages(S.Design_setDelta_temp, items.startX) : S.Design_setDelta_temp + items.startX;
 		}
 		if (items.startY) {
-			scrawlVars.Design_setDelta_temp = this.get('startY');
-			this.startY = (my.isa(items.startY, 'str')) ? my.addPercentages(scrawlVars.Design_setDelta_temp, items.startY) : scrawlVars.Design_setDelta_temp + items.startY;
+			S.Design_setDelta_temp = this.get('startY');
+			this.startY = (my.isa(items.startY, 'str')) ? my.addPercentages(S.Design_setDelta_temp, items.startY) : S.Design_setDelta_temp + items.startY;
 		}
 		if (items.startRadius) {
-			scrawlVars.Design_setDelta_temp = this.get('startRadius');
-			this.startRadius = scrawlVars.Design_setDelta_temp + items.startRadius;
+			S.Design_setDelta_temp = this.get('startRadius');
+			this.startRadius = S.Design_setDelta_temp + items.startRadius;
 		}
 		if (items.endX) {
-			scrawlVars.Design_setDelta_temp = this.get('endX');
-			this.endX = (my.isa(items.endX, 'str')) ? my.addPercentages(scrawlVars.Design_setDelta_temp, items.endX) : scrawlVars.Design_setDelta_temp + items.endX;
+			S.Design_setDelta_temp = this.get('endX');
+			this.endX = (my.isa(items.endX, 'str')) ? my.addPercentages(S.Design_setDelta_temp, items.endX) : S.Design_setDelta_temp + items.endX;
 		}
 		if (items.endY) {
-			scrawlVars.Design_setDelta_temp = this.get('endY');
-			this.endY = (my.isa(items.endY, 'str')) ? my.addPercentages(scrawlVars.Design_setDelta_temp, items.endY) : scrawlVars.Design_setDelta_temp + items.endY;
+			S.Design_setDelta_temp = this.get('endY');
+			this.endY = (my.isa(items.endY, 'str')) ? my.addPercentages(S.Design_setDelta_temp, items.endY) : S.Design_setDelta_temp + items.endY;
 		}
 		if (items.endRadius) {
-			scrawlVars.Design_setDelta_temp = this.get('endRadius');
-			this.endRadius = scrawlVars.Design_setDelta_temp + items.endRadius;
+			S.Design_setDelta_temp = this.get('endRadius');
+			this.endRadius = S.Design_setDelta_temp + items.endRadius;
 		}
 		if (items.shift && my.xt(my.d.Design.shift)) {
-			scrawlVars.Design_setDelta_temp = this.get('shift');
-			this.shift = scrawlVars.Design_setDelta_temp + items.shift;
+			S.Design_setDelta_temp = this.get('shift');
+			this.shift = S.Design_setDelta_temp + items.shift;
 		}
 		return this;
 	};
@@ -6549,24 +6535,24 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 @chainable
 @private
 **/
-	scrawlVars.Design_makeGradient_ctx = null; //DOM canvas context object
-	scrawlVars.Design_makeGradient_g = 0;
-	scrawlVars.Design_makeGradient_x = 0;
-	scrawlVars.Design_makeGradient_y = 0;
-	scrawlVars.Design_makeGradient_sx = 0;
-	scrawlVars.Design_makeGradient_sy = 0;
-	scrawlVars.Design_makeGradient_sr = 0;
-	scrawlVars.Design_makeGradient_ex = 0;
-	scrawlVars.Design_makeGradient_ey = 0;
-	scrawlVars.Design_makeGradient_er = 0;
-	scrawlVars.Design_makeGradient_fsx = 0;
-	scrawlVars.Design_makeGradient_fsy = 0;
-	scrawlVars.Design_makeGradient_fex = 0;
-	scrawlVars.Design_makeGradient_fey = 0;
-	scrawlVars.Design_makeGradient_temp = 0;
-	scrawlVars.Design_makeGradient_w = 0;
-	scrawlVars.Design_makeGradient_h = 0;
-	scrawlVars.Design_makeGradient_r = 0;
+	S.Design_makeGradient_ctx = null; //DOM canvas context object
+	S.Design_makeGradient_g = 0;
+	S.Design_makeGradient_x = 0;
+	S.Design_makeGradient_y = 0;
+	S.Design_makeGradient_sx = 0;
+	S.Design_makeGradient_sy = 0;
+	S.Design_makeGradient_sr = 0;
+	S.Design_makeGradient_ex = 0;
+	S.Design_makeGradient_ey = 0;
+	S.Design_makeGradient_er = 0;
+	S.Design_makeGradient_fsx = 0;
+	S.Design_makeGradient_fsy = 0;
+	S.Design_makeGradient_fex = 0;
+	S.Design_makeGradient_fey = 0;
+	S.Design_makeGradient_temp = 0;
+	S.Design_makeGradient_w = 0;
+	S.Design_makeGradient_h = 0;
+	S.Design_makeGradient_r = 0;
 	my.Design.prototype.makeGradient = function(entity, cell) {
 		entity = my.entity[entity] || false;
 		if (my.xt(cell)) {
@@ -6578,134 +6564,134 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 		else {
 			cell = my.cell[this.get('cell')];
 		}
-		scrawlVars.Design_makeGradient_ctx = my.context[cell.name];
+		S.Design_makeGradient_ctx = my.context[cell.name];
 		//in all cases, the canvas origin will have been translated to the current entity's start
 		if (this.lockTo && this.lockTo !== 'cell') {
-			scrawlVars.Design_makeGradient_temp = entity.getOffsetStartVector();
+			S.Design_makeGradient_temp = entity.getOffsetStartVector();
 			switch (entity.type) {
 				case 'Wheel':
-					scrawlVars.Design_makeGradient_x = -scrawlVars.Design_makeGradient_temp.x + (entity.radius * entity.scale);
-					scrawlVars.Design_makeGradient_y = -scrawlVars.Design_makeGradient_temp.y + (entity.radius * entity.scale);
+					S.Design_makeGradient_x = -S.Design_makeGradient_temp.x + (entity.radius * entity.scale);
+					S.Design_makeGradient_y = -S.Design_makeGradient_temp.y + (entity.radius * entity.scale);
 					break;
 				case 'Shape':
 				case 'Path':
 					if (entity.isLine) {
-						scrawlVars.Design_makeGradient_x = -scrawlVars.Design_makeGradient_temp.x;
-						scrawlVars.Design_makeGradient_y = -scrawlVars.Design_makeGradient_temp.y;
+						S.Design_makeGradient_x = -S.Design_makeGradient_temp.x;
+						S.Design_makeGradient_y = -S.Design_makeGradient_temp.y;
 					}
 					else {
-						scrawlVars.Design_makeGradient_x = -scrawlVars.Design_makeGradient_temp.x + ((entity.width / 2) * entity.scale);
-						scrawlVars.Design_makeGradient_y = -scrawlVars.Design_makeGradient_temp.y + ((entity.height / 2) * entity.scale);
+						S.Design_makeGradient_x = -S.Design_makeGradient_temp.x + ((entity.width / 2) * entity.scale);
+						S.Design_makeGradient_y = -S.Design_makeGradient_temp.y + ((entity.height / 2) * entity.scale);
 					}
 					break;
 				default:
-					scrawlVars.Design_makeGradient_x = -scrawlVars.Design_makeGradient_temp.x;
-					scrawlVars.Design_makeGradient_y = -scrawlVars.Design_makeGradient_temp.y;
+					S.Design_makeGradient_x = -S.Design_makeGradient_temp.x;
+					S.Design_makeGradient_y = -S.Design_makeGradient_temp.y;
 			}
-			scrawlVars.Design_makeGradient_w = (my.xt(entity.localWidth)) ? entity.localWidth : entity.width * entity.scale;
-			scrawlVars.Design_makeGradient_h = (my.xt(entity.localHeight)) ? entity.localHeight : entity.height * entity.scale;
-			scrawlVars.Design_makeGradient_sx = (my.xt(this.startX)) ? this.startX : 0;
-			if (typeof scrawlVars.Design_makeGradient_sx === 'string') {
-				scrawlVars.Design_makeGradient_sx = (parseFloat(scrawlVars.Design_makeGradient_sx) / 100) * scrawlVars.Design_makeGradient_w;
+			S.Design_makeGradient_w = (my.xt(entity.localWidth)) ? entity.localWidth : entity.width * entity.scale;
+			S.Design_makeGradient_h = (my.xt(entity.localHeight)) ? entity.localHeight : entity.height * entity.scale;
+			S.Design_makeGradient_sx = (my.xt(this.startX)) ? this.startX : 0;
+			if (typeof S.Design_makeGradient_sx === 'string') {
+				S.Design_makeGradient_sx = (parseFloat(S.Design_makeGradient_sx) / 100) * S.Design_makeGradient_w;
 			}
-			scrawlVars.Design_makeGradient_sy = (my.xt(this.startY)) ? this.startY : 0;
-			if (typeof scrawlVars.Design_makeGradient_sy === 'string') {
-				scrawlVars.Design_makeGradient_sy = (parseFloat(scrawlVars.Design_makeGradient_sy) / 100) * scrawlVars.Design_makeGradient_h;
+			S.Design_makeGradient_sy = (my.xt(this.startY)) ? this.startY : 0;
+			if (typeof S.Design_makeGradient_sy === 'string') {
+				S.Design_makeGradient_sy = (parseFloat(S.Design_makeGradient_sy) / 100) * S.Design_makeGradient_h;
 			}
-			scrawlVars.Design_makeGradient_ex = (my.xt(this.endX)) ? this.endX : scrawlVars.Design_makeGradient_w;
-			if (typeof scrawlVars.Design_makeGradient_ex === 'string') {
-				scrawlVars.Design_makeGradient_ex = (parseFloat(scrawlVars.Design_makeGradient_ex) / 100) * scrawlVars.Design_makeGradient_w;
+			S.Design_makeGradient_ex = (my.xt(this.endX)) ? this.endX : S.Design_makeGradient_w;
+			if (typeof S.Design_makeGradient_ex === 'string') {
+				S.Design_makeGradient_ex = (parseFloat(S.Design_makeGradient_ex) / 100) * S.Design_makeGradient_w;
 			}
-			scrawlVars.Design_makeGradient_ey = (my.xt(this.endY)) ? this.endY : scrawlVars.Design_makeGradient_h;
-			if (typeof scrawlVars.Design_makeGradient_ey === 'string') {
-				scrawlVars.Design_makeGradient_ey = (parseFloat(scrawlVars.Design_makeGradient_ey) / 100) * scrawlVars.Design_makeGradient_h;
+			S.Design_makeGradient_ey = (my.xt(this.endY)) ? this.endY : S.Design_makeGradient_h;
+			if (typeof S.Design_makeGradient_ey === 'string') {
+				S.Design_makeGradient_ey = (parseFloat(S.Design_makeGradient_ey) / 100) * S.Design_makeGradient_h;
 			}
 			if (this.type === 'Gradient') {
-				scrawlVars.Design_makeGradient_g = scrawlVars.Design_makeGradient_ctx.createLinearGradient(scrawlVars.Design_makeGradient_sx - scrawlVars.Design_makeGradient_x, scrawlVars.Design_makeGradient_sy - scrawlVars.Design_makeGradient_y, scrawlVars.Design_makeGradient_ex - scrawlVars.Design_makeGradient_x, scrawlVars.Design_makeGradient_ey - scrawlVars.Design_makeGradient_y);
+				S.Design_makeGradient_g = S.Design_makeGradient_ctx.createLinearGradient(S.Design_makeGradient_sx - S.Design_makeGradient_x, S.Design_makeGradient_sy - S.Design_makeGradient_y, S.Design_makeGradient_ex - S.Design_makeGradient_x, S.Design_makeGradient_ey - S.Design_makeGradient_y);
 			}
 			else {
-				scrawlVars.Design_makeGradient_sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
-				if (typeof scrawlVars.Design_makeGradient_sr === 'string') {
-					scrawlVars.Design_makeGradient_sr = (parseFloat(scrawlVars.Design_makeGradient_sr) / 100) * scrawlVars.Design_makeGradient_w;
+				S.Design_makeGradient_sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
+				if (typeof S.Design_makeGradient_sr === 'string') {
+					S.Design_makeGradient_sr = (parseFloat(S.Design_makeGradient_sr) / 100) * S.Design_makeGradient_w;
 				}
-				scrawlVars.Design_makeGradient_er = (my.xt(this.endRadius)) ? this.endRadius : scrawlVars.Design_makeGradient_w;
-				if (typeof scrawlVars.Design_makeGradient_er === 'string') {
-					scrawlVars.Design_makeGradient_er = (parseFloat(scrawlVars.Design_makeGradient_er) / 100) * scrawlVars.Design_makeGradient_w;
+				S.Design_makeGradient_er = (my.xt(this.endRadius)) ? this.endRadius : S.Design_makeGradient_w;
+				if (typeof S.Design_makeGradient_er === 'string') {
+					S.Design_makeGradient_er = (parseFloat(S.Design_makeGradient_er) / 100) * S.Design_makeGradient_w;
 				}
-				scrawlVars.Design_makeGradient_g = scrawlVars.Design_makeGradient_ctx.createRadialGradient(scrawlVars.Design_makeGradient_sx - scrawlVars.Design_makeGradient_x, scrawlVars.Design_makeGradient_sy - scrawlVars.Design_makeGradient_y, scrawlVars.Design_makeGradient_sr, scrawlVars.Design_makeGradient_ex - scrawlVars.Design_makeGradient_x, scrawlVars.Design_makeGradient_ey - scrawlVars.Design_makeGradient_y, scrawlVars.Design_makeGradient_er);
+				S.Design_makeGradient_g = S.Design_makeGradient_ctx.createRadialGradient(S.Design_makeGradient_sx - S.Design_makeGradient_x, S.Design_makeGradient_sy - S.Design_makeGradient_y, S.Design_makeGradient_sr, S.Design_makeGradient_ex - S.Design_makeGradient_x, S.Design_makeGradient_ey - S.Design_makeGradient_y, S.Design_makeGradient_er);
 			}
 		}
 		else {
-			scrawlVars.Design_makeGradient_x = entity.start.x;
-			if (typeof scrawlVars.Design_makeGradient_x === 'string') {
-				scrawlVars.Design_makeGradient_x = entity.convertX(scrawlVars.Design_makeGradient_x, cell.name);
+			S.Design_makeGradient_x = entity.start.x;
+			if (typeof S.Design_makeGradient_x === 'string') {
+				S.Design_makeGradient_x = entity.convertX(S.Design_makeGradient_x, cell.name);
 			}
-			scrawlVars.Design_makeGradient_y = entity.start.y;
-			if (typeof scrawlVars.Design_makeGradient_y === 'string') {
-				scrawlVars.Design_makeGradient_y = entity.convertY(scrawlVars.Design_makeGradient_y, cell.name);
+			S.Design_makeGradient_y = entity.start.y;
+			if (typeof S.Design_makeGradient_y === 'string') {
+				S.Design_makeGradient_y = entity.convertY(S.Design_makeGradient_y, cell.name);
 			}
-			scrawlVars.Design_makeGradient_sx = (my.xt(this.startX)) ? this.startX : 0;
-			if (typeof scrawlVars.Design_makeGradient_sx === 'string') {
-				scrawlVars.Design_makeGradient_sx = entity.convertX(scrawlVars.Design_makeGradient_sx, cell.name);
+			S.Design_makeGradient_sx = (my.xt(this.startX)) ? this.startX : 0;
+			if (typeof S.Design_makeGradient_sx === 'string') {
+				S.Design_makeGradient_sx = entity.convertX(S.Design_makeGradient_sx, cell.name);
 			}
-			scrawlVars.Design_makeGradient_sy = (my.xt(this.startY)) ? this.startY : 0;
-			if (typeof scrawlVars.Design_makeGradient_sy === 'string') {
-				scrawlVars.Design_makeGradient_sy = entity.convertY(scrawlVars.Design_makeGradient_sy, cell.name);
+			S.Design_makeGradient_sy = (my.xt(this.startY)) ? this.startY : 0;
+			if (typeof S.Design_makeGradient_sy === 'string') {
+				S.Design_makeGradient_sy = entity.convertY(S.Design_makeGradient_sy, cell.name);
 			}
-			scrawlVars.Design_makeGradient_ex = (my.xt(this.endX)) ? this.endX : cell.actualWidth;
-			if (typeof scrawlVars.Design_makeGradient_ex === 'string') {
-				scrawlVars.Design_makeGradient_ex = entity.convertX(scrawlVars.Design_makeGradient_ex, cell.name);
+			S.Design_makeGradient_ex = (my.xt(this.endX)) ? this.endX : cell.actualWidth;
+			if (typeof S.Design_makeGradient_ex === 'string') {
+				S.Design_makeGradient_ex = entity.convertX(S.Design_makeGradient_ex, cell.name);
 			}
-			scrawlVars.Design_makeGradient_ey = (my.xt(this.endY)) ? this.endY : cell.actualWidth;
-			if (typeof scrawlVars.Design_makeGradient_ey === 'string') {
-				scrawlVars.Design_makeGradient_ey = entity.convertY(scrawlVars.Design_makeGradient_ey, cell.name);
+			S.Design_makeGradient_ey = (my.xt(this.endY)) ? this.endY : cell.actualWidth;
+			if (typeof S.Design_makeGradient_ey === 'string') {
+				S.Design_makeGradient_ey = entity.convertY(S.Design_makeGradient_ey, cell.name);
 			}
-			scrawlVars.Design_makeGradient_x = (entity.flipReverse) ? cell.actualWidth - scrawlVars.Design_makeGradient_x : scrawlVars.Design_makeGradient_x;
-			scrawlVars.Design_makeGradient_y = (entity.flipUpend) ? cell.actualHeight - scrawlVars.Design_makeGradient_y : scrawlVars.Design_makeGradient_y;
-			scrawlVars.Design_makeGradient_sx = (entity.flipReverse) ? cell.actualWidth - scrawlVars.Design_makeGradient_sx : scrawlVars.Design_makeGradient_sx;
-			scrawlVars.Design_makeGradient_sy = (entity.flipUpend) ? cell.actualHeight - scrawlVars.Design_makeGradient_sy : scrawlVars.Design_makeGradient_sy;
-			scrawlVars.Design_makeGradient_ex = (entity.flipReverse) ? cell.actualWidth - scrawlVars.Design_makeGradient_ex : scrawlVars.Design_makeGradient_ex;
-			scrawlVars.Design_makeGradient_ey = (entity.flipUpend) ? cell.actualHeight - scrawlVars.Design_makeGradient_ey : scrawlVars.Design_makeGradient_ey;
-			scrawlVars.Design_makeGradient_fsx = scrawlVars.Design_makeGradient_sx - scrawlVars.Design_makeGradient_x;
-			scrawlVars.Design_makeGradient_fsy = scrawlVars.Design_makeGradient_sy - scrawlVars.Design_makeGradient_y;
-			scrawlVars.Design_makeGradient_fex = scrawlVars.Design_makeGradient_ex - scrawlVars.Design_makeGradient_x;
-			scrawlVars.Design_makeGradient_fey = scrawlVars.Design_makeGradient_ey - scrawlVars.Design_makeGradient_y;
-			scrawlVars.Design_makeGradient_r = entity.roll;
+			S.Design_makeGradient_x = (entity.flipReverse) ? cell.actualWidth - S.Design_makeGradient_x : S.Design_makeGradient_x;
+			S.Design_makeGradient_y = (entity.flipUpend) ? cell.actualHeight - S.Design_makeGradient_y : S.Design_makeGradient_y;
+			S.Design_makeGradient_sx = (entity.flipReverse) ? cell.actualWidth - S.Design_makeGradient_sx : S.Design_makeGradient_sx;
+			S.Design_makeGradient_sy = (entity.flipUpend) ? cell.actualHeight - S.Design_makeGradient_sy : S.Design_makeGradient_sy;
+			S.Design_makeGradient_ex = (entity.flipReverse) ? cell.actualWidth - S.Design_makeGradient_ex : S.Design_makeGradient_ex;
+			S.Design_makeGradient_ey = (entity.flipUpend) ? cell.actualHeight - S.Design_makeGradient_ey : S.Design_makeGradient_ey;
+			S.Design_makeGradient_fsx = S.Design_makeGradient_sx - S.Design_makeGradient_x;
+			S.Design_makeGradient_fsy = S.Design_makeGradient_sy - S.Design_makeGradient_y;
+			S.Design_makeGradient_fex = S.Design_makeGradient_ex - S.Design_makeGradient_x;
+			S.Design_makeGradient_fey = S.Design_makeGradient_ey - S.Design_makeGradient_y;
+			S.Design_makeGradient_r = entity.roll;
 			if ((entity.flipReverse && entity.flipUpend) || (!entity.flipReverse && !entity.flipUpend)) {
-				scrawlVars.Design_makeGradient_r = -entity.roll;
+				S.Design_makeGradient_r = -entity.roll;
 			}
 			if (entity.roll) {
 				my.v.set({
-					x: scrawlVars.Design_makeGradient_fsx,
-					y: scrawlVars.Design_makeGradient_fsy,
+					x: S.Design_makeGradient_fsx,
+					y: S.Design_makeGradient_fsy,
 					z: 0
-				}).rotate(scrawlVars.Design_makeGradient_r);
-				scrawlVars.Design_makeGradient_fsx = my.v.x;
-				scrawlVars.Design_makeGradient_fsy = my.v.y;
+				}).rotate(S.Design_makeGradient_r);
+				S.Design_makeGradient_fsx = my.v.x;
+				S.Design_makeGradient_fsy = my.v.y;
 				my.v.set({
-					x: scrawlVars.Design_makeGradient_fex,
-					y: scrawlVars.Design_makeGradient_fey,
+					x: S.Design_makeGradient_fex,
+					y: S.Design_makeGradient_fey,
 					z: 0
-				}).rotate(scrawlVars.Design_makeGradient_r);
-				scrawlVars.Design_makeGradient_fex = my.v.x;
-				scrawlVars.Design_makeGradient_fey = my.v.y;
+				}).rotate(S.Design_makeGradient_r);
+				S.Design_makeGradient_fex = my.v.x;
+				S.Design_makeGradient_fey = my.v.y;
 			}
 			if (this.type === 'Gradient') {
-				scrawlVars.Design_makeGradient_g = scrawlVars.Design_makeGradient_ctx.createLinearGradient(scrawlVars.Design_makeGradient_fsx, scrawlVars.Design_makeGradient_fsy, scrawlVars.Design_makeGradient_fex, scrawlVars.Design_makeGradient_fey);
+				S.Design_makeGradient_g = S.Design_makeGradient_ctx.createLinearGradient(S.Design_makeGradient_fsx, S.Design_makeGradient_fsy, S.Design_makeGradient_fex, S.Design_makeGradient_fey);
 			}
 			else {
-				scrawlVars.Design_makeGradient_sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
-				if (typeof scrawlVars.Design_makeGradient_sr === 'string') {
-					scrawlVars.Design_makeGradient_sr = (parseFloat(scrawlVars.Design_makeGradient_sr) / 100) * cell.actualWidth;
+				S.Design_makeGradient_sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
+				if (typeof S.Design_makeGradient_sr === 'string') {
+					S.Design_makeGradient_sr = (parseFloat(S.Design_makeGradient_sr) / 100) * cell.actualWidth;
 				}
-				scrawlVars.Design_makeGradient_er = (my.xt(this.endRadius)) ? this.endRadius : cell.actualWidth;
-				if (typeof scrawlVars.Design_makeGradient_er === 'string') {
-					scrawlVars.Design_makeGradient_er = (parseFloat(scrawlVars.Design_makeGradient_er) / 100) * cell.actualWidth;
+				S.Design_makeGradient_er = (my.xt(this.endRadius)) ? this.endRadius : cell.actualWidth;
+				if (typeof S.Design_makeGradient_er === 'string') {
+					S.Design_makeGradient_er = (parseFloat(S.Design_makeGradient_er) / 100) * cell.actualWidth;
 				}
-				scrawlVars.Design_makeGradient_g = scrawlVars.Design_makeGradient_ctx.createRadialGradient(scrawlVars.Design_makeGradient_fsx, scrawlVars.Design_makeGradient_fsy, scrawlVars.Design_makeGradient_sr, scrawlVars.Design_makeGradient_fex, scrawlVars.Design_makeGradient_fey, scrawlVars.Design_makeGradient_er);
+				S.Design_makeGradient_g = S.Design_makeGradient_ctx.createRadialGradient(S.Design_makeGradient_fsx, S.Design_makeGradient_fsy, S.Design_makeGradient_sr, S.Design_makeGradient_fex, S.Design_makeGradient_fey, S.Design_makeGradient_er);
 			}
 		}
-		my.dsn[this.name] = scrawlVars.Design_makeGradient_g;
+		my.dsn[this.name] = S.Design_makeGradient_g;
 		return this;
 	};
 	/**
@@ -6715,14 +6701,14 @@ Design.update() helper function - applies color attribute objects to the gradien
 @private
 @chainable
 **/
-	scrawlVars.Design_applyStops_color = null; //raw object
-	scrawlVars.Design_applyStops_i = 0;
-	scrawlVars.Design_applyStops_iz = 0;
+	S.Design_applyStops_color = null; //raw object
+	S.Design_applyStops_i = 0;
+	S.Design_applyStops_iz = 0;
 	my.Design.prototype.applyStops = function() {
-		scrawlVars.Design_applyStops_color = this.get('color');
+		S.Design_applyStops_color = this.get('color');
 		if (my.dsn[this.name]) {
-			for (scrawlVars.Design_applyStops_i = 0, scrawlVars.Design_applyStops_iz = scrawlVars.Design_applyStops_color.length; scrawlVars.Design_applyStops_i < scrawlVars.Design_applyStops_iz; scrawlVars.Design_applyStops_i++) {
-				my.dsn[this.name].addColorStop(scrawlVars.Design_applyStops_color[scrawlVars.Design_applyStops_i].stop, scrawlVars.Design_applyStops_color[scrawlVars.Design_applyStops_i].color);
+			for (S.Design_applyStops_i = 0, S.Design_applyStops_iz = S.Design_applyStops_color.length; S.Design_applyStops_i < S.Design_applyStops_iz; S.Design_applyStops_i++) {
+				my.dsn[this.name].addColorStop(S.Design_applyStops_color[S.Design_applyStops_i].stop, S.Design_applyStops_color[S.Design_applyStops_i].color);
 			}
 		}
 		return this;
@@ -6841,4 +6827,4 @@ End circle radius, in pixels or percentage of entity/cell width
 	});
 
 	return my;
-}());
+}(scrawlVars));

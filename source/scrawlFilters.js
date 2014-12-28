@@ -34,7 +34,7 @@ The Filters module adds a set of filter algorithms to the Scrawl library
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'filters')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 		/**
 # window.scrawl
@@ -359,14 +359,16 @@ By default:
 @return This
 @chainable
 **/
+		S.Pad_filtersCompile_c = null; //scrawl Cell object
+		S.Pad_filtersCompile_i = 0;
+		S.Pad_filtersCompile_iz = 0;
 		my.Pad.prototype.compile = function() {
-			var c, i, iz;
 			this.filters.length = 0;
 			this.sortCellsCompile();
-			for (i = 0, iz = this.cells.length; i < iz; i++) {
-				c = my.cell[this.cells[i]];
-				if (c.rendered && c.compiled) {
-					c.compile();
+			for (S.Pad_filtersCompile_i = 0, S.Pad_filtersCompile_iz = this.cells.length; S.Pad_filtersCompile_i < S.Pad_filtersCompile_iz; S.Pad_filtersCompile_i++) {
+				S.Pad_filtersCompile_c = my.cell[this.cells[S.Pad_filtersCompile_i]];
+				if (S.Pad_filtersCompile_c.rendered && S.Pad_filtersCompile_c.compiled) {
+					S.Pad_filtersCompile_c.compile();
 				}
 			}
 			return this;
@@ -386,26 +388,30 @@ By default, the initial base and display canvases have shown = false:
 @return This
 @chainable
 **/
+		S.Pad_filtersShow_d = null; //scrawl Cell object
+		S.Pad_filtersShow_b = null; //scrawl Cell object
+		S.Pad_filtersShow_c = null; //scrawl Cell object
+		S.Pad_filtersShow_i = 0;
+		S.Pad_filtersShow_iz = 0;
 		my.Pad.prototype.show = function(command) {
-			var d = my.cell[this.display],
-				b = my.cell[this.base],
-				i, iz, c;
+			S.Pad_filtersShow_d = my.cell[this.display];
+			S.Pad_filtersShow_b = my.cell[this.base];
 			this.sortCellsShow();
-			for (i = 0, iz = this.cells.length; i < iz; i++) {
-				c = my.cell[this.cells[i]];
-				if (c.rendered && c.shown) {
-					b.copyCellToSelf(c);
+			for (S.Pad_filtersShow_i = 0, S.Pad_filtersShow_iz = this.cells.length; S.Pad_filtersShow_i < S.Pad_filtersShow_iz; S.Pad_filtersShow_i++) {
+				S.Pad_filtersShow_c = my.cell[this.cells[S.Pad_filtersShow_i]];
+				if (S.Pad_filtersShow_c.rendered && S.Pad_filtersShow_c.shown) {
+					S.Pad_filtersShow_b.copyCellToSelf(S.Pad_filtersShow_c);
 				}
 			}
-			for (i = 0, iz = this.filters.length; i < iz; i++) {
-				if (my.xt(my.entity[this.filters[i]])) {
-					my.entity[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
+			for (S.Pad_filtersShow_i = 0, S.Pad_filtersShow_iz = this.filters.length; S.Pad_filtersShow_i < S.Pad_filtersShow_iz; S.Pad_filtersShow_i++) {
+				if (my.xt(my.entity[this.filters[S.Pad_filtersShow_i]])) {
+					my.entity[this.filters[S.Pad_filtersShow_i]].stampFilter(my.context[S.Pad_filtersShow_b.name], S.Pad_filtersShow_b.name, true);
 				}
-				if (my.xt(my.group[this.filters[i]])) {
-					my.group[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
+				if (my.xt(my.group[this.filters[S.Pad_filtersShow_i]])) {
+					my.group[this.filters[S.Pad_filtersShow_i]].stampFilter(my.context[S.Pad_filtersShow_b.name], S.Pad_filtersShow_b.name, true);
 				}
 			}
-			d.copyCellToSelf(b, true);
+			S.Pad_filtersShow_d.copyCellToSelf(S.Pad_filtersShow_b, true);
 			return this;
 		};
 		/**
@@ -416,24 +422,26 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 @return always true
 @chainable
 **/
+		S.Cell_filtersCompile_g = null; //scrawl Group object
+		S.Cell_filtersCompile_i = 0;
+		S.Cell_filtersCompile_iz = 0;
 		my.Cell.prototype.compile = function() {
-			var i, iz, g;
 			this.filters.length = 0;
 			this.groups.sort(function(a, b) {
 				return my.group[a].order - my.group[b].order;
 			});
-			for (i = 0, iz = this.groups.length; i < iz; i++) {
-				g = my.group[this.groups[i]];
-				if (g.get('visibility')) {
-					g.stamp(false, this.name);
+			for (S.Cell_filtersCompile_i = 0, S.Cell_filtersCompile_iz = this.groups.length; S.Cell_filtersCompile_i < S.Cell_filtersCompile_iz; S.Cell_filtersCompile_i++) {
+				S.Cell_filtersCompile_g = my.group[this.groups[S.Cell_filtersCompile_i]];
+				if (S.Cell_filtersCompile_g.get('visibility')) {
+					S.Cell_filtersCompile_g.stamp(false, this.name);
 				}
 			}
-			for (i = 0, iz = this.filters.length; i < iz; i++) {
-				if (my.xt(my.entity[this.filters[i]])) {
-					my.entity[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
+			for (S.Cell_filtersCompile_i = 0, S.Cell_filtersCompile_iz = this.filters.length; S.Cell_filtersCompile_i < S.Cell_filtersCompile_iz; S.Cell_filtersCompile_i++) {
+				if (my.xt(my.entity[this.filters[S.Cell_filtersCompile_i]])) {
+					my.entity[this.filters[S.Cell_filtersCompile_i]].stampFilter(my.context[this.name], this.name, true);
 				}
-				else if (my.xt(my.group[this.filters[i]])) {
-					my.group[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
+				else if (my.xt(my.group[this.filters[S.Cell_filtersCompile_i]])) {
+					my.group[this.filters[S.Cell_filtersCompile_i]].stampFilter(my.context[this.name], this.name, true);
 				}
 			}
 			return true;
@@ -443,58 +451,64 @@ Group.stamp hook function - add a filter to a group of Entitys, and any backgrou
 @method stampFilter
 @private
 **/
+		S.Group_filtersStampFilters_imageData = null; //ImageData array/object
+		S.Group_filtersStampFilters_canvas = null; //DOM Canvas object
+		S.Group_filtersStampFilters_composite = '';
+		S.Group_filtersStampFilters_e = null; //scrawl Entity object
+		S.Group_filtersStampFilters_eStroke = false;
+		S.Group_filtersStampFilters_i = 0;
+		S.Group_filtersStampFilters_iz = 0;
 		my.Group.prototype.stampFilter = function(engine, cell, force) {
-			var imageData, i, iz, canvas, composite, e, eStroke;
 			force = my.xtGet(force, false);
 			if (this.filters.length > 0) {
-				canvas = my.canvas[cell];
-				my.cv.width = canvas.width;
-				my.cv.height = canvas.height;
-				my.filterCanvas.width = canvas.width;
-				my.filterCanvas.height = canvas.height;
-				my.filterCvx.clearRect(0, 0, canvas.width, canvas.height);
-				for (i = 0, iz = this.entitys.length; i < iz; i++) {
-					e = my.entity[this.entitys[i]];
-					eStroke = e.filterOnStroke;
-					e.filterOnStroke = this.filterOnStroke;
+				S.Group_filtersStampFilters_canvas = my.canvas[cell];
+				my.cv.width = S.Group_filtersStampFilters_canvas.width;
+				my.cv.height = S.Group_filtersStampFilters_canvas.height;
+				my.filterCanvas.width = S.Group_filtersStampFilters_canvas.width;
+				my.filterCanvas.height = S.Group_filtersStampFilters_canvas.height;
+				my.filterCvx.clearRect(0, 0, S.Group_filtersStampFilters_canvas.width, S.Group_filtersStampFilters_canvas.height);
+				for (S.Group_filtersStampFilters_i = 0, S.Group_filtersStampFilters_iz = this.entitys.length; S.Group_filtersStampFilters_i < S.Group_filtersStampFilters_iz; S.Group_filtersStampFilters_i++) {
+					S.Group_filtersStampFilters_e = my.entity[this.entitys[S.Group_filtersStampFilters_i]];
+					S.Group_filtersStampFilters_eStroke = S.Group_filtersStampFilters_e.filterOnStroke;
+					S.Group_filtersStampFilters_e.filterOnStroke = this.filterOnStroke;
 					my.cvx.save();
 					switch (e.type) {
 						case 'Phrase':
-							imageData = e.stampFilterPhrase(engine, cell, force);
+							S.Group_filtersStampFilters_imageData = S.Group_filtersStampFilters_e.stampFilterPhrase(engine, cell, force);
 							break;
 						case 'Picture':
-							imageData = e.stampFilterPicture(engine, cell, force);
+							S.Group_filtersStampFilters_imageData = S.Group_filtersStampFilters_e.stampFilterPicture(engine, cell, force);
 							break;
 						case 'Wheel':
-							imageData = e.stampFilterWheel(engine, cell, force);
+							S.Group_filtersStampFilters_imageData = S.Group_filtersStampFilters_e.stampFilterWheel(engine, cell, force);
 							break;
 						default:
-							imageData = e.stampFilterDefault(engine, cell, force);
+							S.Group_filtersStampFilters_imageData = S.Group_filtersStampFilters_e.stampFilterDefault(engine, cell, force);
 					}
-					e.filterOnStroke = eStroke;
-					my.filterCvx.putImageData(imageData, 0, 0);
+					e.filterOnStroke = S.Group_filtersStampFilters_eStroke;
+					my.filterCvx.putImageData(S.Group_filtersStampFilters_imageData, 0, 0);
 					my.cvx.restore();
 				}
-				imageData = my.filterCvx.getImageData(0, 0, canvas.width, canvas.height);
-				if (imageData) {
-					for (i = 0, iz = this.filters.length; i < iz; i++) {
+				S.Group_filtersStampFilters_imageData = my.filterCvx.getImageData(0, 0, S.Group_filtersStampFilters_canvas.width, S.Group_filtersStampFilters_canvas.height);
+				if (S.Group_filtersStampFilters_imageData) {
+					for (S.Group_filtersStampFilters_i = 0, S.Group_filtersStampFilters_iz = this.filters.length; S.Group_filtersStampFilters_i < S.Group_filtersStampFilters_iz; S.Group_filtersStampFilters_i++) {
 						if (this.filterLevel === 'pad' && !force) {
 							my.pad[my.cell[this.cell].pad].filters.push(this.name);
 						}
 						else if (this.filterLevel === 'cell' && !force) {
 							my.cell[this.cell].filters.push(this.name);
 						}
-						else if (my.filter[this.filters[i]]) {
-							imageData = my.filter[this.filters[i]].add(imageData);
+						else if (my.filter[this.filters[S.Group_filtersStampFilters_i]]) {
+							S.Group_filtersStampFilters_imageData = my.filter[this.filters[S.Group_filtersStampFilters_i]].add(S.Group_filtersStampFilters_imageData);
 						}
 					}
 				}
-				my.cvx.putImageData(imageData, 0, 0);
-				composite = engine.globalCompositeOperation;
+				my.cvx.putImageData(S.Group_filtersStampFilters_imageData, 0, 0);
+				S.Group_filtersStampFilters_composite = engine.globalCompositeOperation;
 				engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
 				engine.setTransform(1, 0, 0, 1, 0, 0);
-				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-				engine.globalCompositeOperation = composite;
+				engine.drawImage(my.cv, 0, 0, S.Group_filtersStampFilters_canvas.width, S.Group_filtersStampFilters_canvas.height);
+				engine.globalCompositeOperation = S.Group_filtersStampFilters_composite;
 			}
 		};
 		/**
@@ -502,45 +516,49 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 @method stampFilter
 @private
 **/
+		S.Entity_stampFilter_imageData = null; //ImageData array/object
+		S.Entity_stampFilter_canvas = null; //DOM Canvas object
+		S.Entity_stampFilter_composite = '';
+		S.Entity_stampFilter_i = 0;
+		S.Entity_stampFilter_iz = 0;
 		my.Entity.prototype.stampFilter = function(engine, cell, force) {
-			var imageData, i, iz, canvas, composite;
 			force = my.xtGet(force, false);
 			if (this.filters.length > 0) {
-				canvas = my.canvas[cell];
-				my.cv.width = canvas.width;
-				my.cv.height = canvas.height;
+				S.Entity_stampFilter_canvas = my.canvas[cell];
+				my.cv.width = S.Entity_stampFilter_canvas.width;
+				my.cv.height = S.Entity_stampFilter_canvas.height;
 				my.cvx.save();
 				switch (this.type) {
 					case 'Phrase':
-						imageData = this.stampFilterPhrase(engine, cell, force);
+						S.Entity_stampFilter_imageData = this.stampFilterPhrase(engine, cell, force);
 						break;
 					case 'Picture':
-						imageData = this.stampFilterPicture(engine, cell, force);
+						S.Entity_stampFilter_imageData = this.stampFilterPicture(engine, cell, force);
 						break;
 					case 'Wheel':
-						imageData = this.stampFilterWheel(engine, cell, force);
+						S.Entity_stampFilter_imageData = this.stampFilterWheel(engine, cell, force);
 						break;
 					default:
-						imageData = this.stampFilterDefault(engine, cell, force);
+						S.Entity_stampFilter_imageData = this.stampFilterDefault(engine, cell, force);
 				}
-				if (imageData) {
-					for (i = 0, iz = this.filters.length; i < iz; i++) {
+				if (S.Entity_stampFilter_imageData) {
+					for (S.Entity_stampFilter_i = 0, S.Entity_stampFilter_iz = this.filters.length; S.Entity_stampFilter_i < S.Entity_stampFilter_iz; S.Entity_stampFilter_i++) {
 						if (this.filterLevel === 'pad' && !force) {
 							my.pad[my.cell[my.group[this.group].cell].pad].filters.push(this.name);
 						}
 						else if (this.filterLevel === 'cell' && !force) {
 							my.cell[my.group[this.group].cell].filters.push(this.name);
 						}
-						else if (my.filter[this.filters[i]]) {
-							imageData = my.filter[this.filters[i]].add(imageData);
+						else if (my.filter[this.filters[S.Entity_stampFilter_i]]) {
+							S.Entity_stampFilter_imageData = my.filter[this.filters[S.Entity_stampFilter_i]].add(S.Entity_stampFilter_imageData);
 						}
 					}
-					my.cvx.putImageData(imageData, 0, 0);
-					composite = engine.globalCompositeOperation;
+					my.cvx.putImageData(S.Entity_stampFilter_imageData, 0, 0);
+					S.Entity_stampFilter_composite = engine.globalCompositeOperation;
 					engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
 					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-					engine.globalCompositeOperation = composite;
+					engine.drawImage(my.cv, 0, 0, S.Entity_stampFilter_canvas.width, S.Entity_stampFilter_canvas.height);
+					engine.globalCompositeOperation = S.Entity_stampFilter_composite;
 				}
 				my.cvx.restore();
 			}
@@ -550,24 +568,34 @@ Entity.stamp hook helper function
 @method stampFilterPhrase
 @private
 **/
+		S.Entity_stampFilterPhrase_context = null; //DOM Canvas context object
+		S.Entity_stampFilterPhrase_canvas = null; //DOM Canvas object
+		S.Entity_stampFilterPhrase_test = null; //argument
+		S.Entity_stampFilterPhrase_i = 0;
+		S.Entity_stampFilterPhrase_iz = 0;
+		S.Entity_stampFilterPhrase_o = null; //scrawl Vector object
+		S.Entity_stampFilterPhrase_here = null; //scrawl Vector object
+		S.Entity_stampFilterPhrase_textY = 0;
+		S.Entity_stampFilterPhrase_tX = 0;
+		S.Entity_stampFilterPhrase_tY = 0;
 		my.Entity.prototype.stampFilterPhrase = function(engine, cell, force) {
-			var canvas = my.canvas[cell],
-				ctx = my.ctx[this.context],
-				test;
-			my.cvx.font = ctx.font;
+			S.Entity_stampFilterPhrase_canvas = my.canvas[cell];
+			S.Entity_stampFilterPhrase_context = my.ctx[this.context];
+			//test;
+			my.cvx.font = S.Entity_stampFilterPhrase_context.font;
 			my.cvx.fillStyle = 'rgb(0, 0, 0)';
-			my.cvx.textAlign = ctx.textAlign;
-			my.cvx.textBaseline = ctx.textBaseline;
-			test = (my.entity[this.path] && my.entity[this.path].type === 'Path');
-			if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
-				o = this.getOffset();
-				here = this.prepareStamp();
-				textY = this.size * this.lineHeight * this.scale;
+			my.cvx.textAlign = S.Entity_stampFilterPhrase_context.textAlign;
+			my.cvx.textBaseline = S.Entity_stampFilterPhrase_context.textBaseline;
+			S.Entity_stampFilterPhrase_test = (my.entity[this.path] && my.entity[this.path].type === 'Path');
+			if (this.pivot || !S.Entity_stampFilterPhrase_test || this.get('textAlongPath') === 'phrase') {
+				S.Entity_stampFilterPhrase_o = this.getOffset();
+				S.Entity_stampFilterPhrase_here = this.prepareStamp();
+				S.Entity_stampFilterPhrase_textY = this.size * this.lineHeight * this.scale;
 				this.rotateCell(my.cvx, my.cv);
-				tX = here.x + o.x;
-				for (i = 0, iz = this.texts.length; i < iz; i++) {
-					tY = here.y + (textY * i) + o.y;
-					my.text[this.texts[i]].fill(my.cvx, cell, tX, tY);
+				S.Entity_stampFilterPhrase_tX = S.Entity_stampFilterPhrase_here.x + S.Entity_stampFilterPhrase_o.x;
+				for (S.Entity_stampFilterPhrase_i = 0, S.Entity_stampFilterPhrase_iz = this.texts.length; S.Entity_stampFilterPhrase_i < S.Entity_stampFilterPhrase_iz; S.Entity_stampFilterPhrase_i++) {
+					S.Entity_stampFilterPhrase_tY = S.Entity_stampFilterPhrase_here.y + (S.Entity_stampFilterPhrase_textY * S.Entity_stampFilterPhrase_i) + S.Entity_stampFilterPhrase_o.y;
+					my.text[this.texts[S.Entity_stampFilterPhrase_i]].fill(my.cvx, cell, S.Entity_stampFilterPhrase_tX, S.Entity_stampFilterPhrase_tY);
 				}
 			}
 			else {
@@ -575,61 +603,65 @@ Entity.stamp hook helper function
 			}
 			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
 			my.cvx.globalCompositeOperation = 'source-in';
-			my.cvx.drawImage(canvas, 0, 0);
+			my.cvx.drawImage(S.Entity_stampFilterPhrase_canvas, 0, 0);
 			my.cvx.globalCompositeOperation = 'source-over';
-			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+			return my.cvx.getImageData(0, 0, S.Entity_stampFilterPhrase_canvas.width, S.Entity_stampFilterPhrase_canvas.height);
 		};
 		/**
 Entity.stamp hook helper function
 @method stampFilterWheel
 @private
 **/
+		S.Entity_stampFilterWheel_context = null; //DOM Canvas context object
+		S.Entity_stampFilterWheel_canvas = null; //DOM Canvas object
 		my.Entity.prototype.stampFilterWheel = function(engine, cell, force) {
-			var canvas = my.canvas[cell],
-				context = my.ctx[this.context];
+			S.Entity_stampFilterWheel_canvas = my.canvas[cell];
+			S.Entity_stampFilterWheel_context = my.ctx[this.context];
 			if (this.filterOnStroke) {
-				my.cvx.lineWidth = context.lineWidth;
-				my.cvx.shadowOffsetX = context.shadowOffsetX;
-				my.cvx.shadowOffsetY = context.shadowOffsetY;
-				my.cvx.shadowBlur = context.shadowBlur;
-				my.cvx.lineJoin = context.lineJoin;
-				my.cvx.lineCap = context.lineCap;
-				my.cvx.miterLimit = context.miterLimit;
-				my.cvx.lineDash = context.lineDash;
-				my.cvx.lineDashOffset = context.lineDashOffset;
-				my.cvx.globalAlpha = context.globalAlpha;
+				my.cvx.lineWidth = S.Entity_stampFilterWheel_context.lineWidth;
+				my.cvx.shadowOffsetX = S.Entity_stampFilterWheel_context.shadowOffsetX;
+				my.cvx.shadowOffsetY = S.Entity_stampFilterWheel_context.shadowOffsetY;
+				my.cvx.shadowBlur = S.Entity_stampFilterWheel_context.shadowBlur;
+				my.cvx.lineJoin = S.Entity_stampFilterWheel_context.lineJoin;
+				my.cvx.lineCap = S.Entity_stampFilterWheel_context.lineCap;
+				my.cvx.miterLimit = S.Entity_stampFilterWheel_context.miterLimit;
+				my.cvx.lineDash = S.Entity_stampFilterWheel_context.lineDash;
+				my.cvx.lineDashOffset = S.Entity_stampFilterWheel_context.lineDashOffset;
+				my.cvx.globalAlpha = S.Entity_stampFilterWheel_context.globalAlpha;
 				this.buildPath(my.cvx, my.cv);
 				my.cvx.stroke();
 				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
 				my.cvx.globalCompositeOperation = 'source-in';
-				my.cvx.drawImage(canvas, 0, 0);
+				my.cvx.drawImage(S.Entity_stampFilterWheel_canvas, 0, 0);
 				my.cvx.globalCompositeOperation = 'source-over';
 			}
 			else {
 				this.clip(my.cvx, cell);
 				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-				my.cvx.drawImage(canvas, 0, 0);
+				my.cvx.drawImage(S.Entity_stampFilterWheel_canvas, 0, 0);
 			}
-			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+			return my.cvx.getImageData(0, 0, S.Entity_stampFilterWheel_canvas.width, S.Entity_stampFilterWheel_canvas.height);
 		};
 		/**
 Entity.stamp hook helper function
 @method stampFilterPicture
 @private
 **/
+		S.Entity_stampFilterPicture_canvas = null; //DOM Canvas object
+		S.Entity_stampFilterPicture_data = null; //Image data array/object
+		S.Entity_stampFilterPicture_here = null; //scrawl Vector object
 		my.Entity.prototype.stampFilterPicture = function(engine, cell, force) {
-			var canvas, here, data;
-			canvas = my.canvas[cell];
-			data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+			S.Entity_stampFilterPicture_canvas = my.canvas[cell];
+			S.Entity_stampFilterPicture_data = this.getImage();
+			if (S.Entity_stampFilterPicture_data) {
+				S.Entity_stampFilterPicture_here = this.prepareStamp();
 				this.rotateCell(my.cvx, my.cv);
-				my.cvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				my.cvx.drawImage(S.Entity_stampFilterPicture_data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, S.Entity_stampFilterPicture_here.x, S.Entity_stampFilterPicture_here.y, this.pasteData.w, this.pasteData.h);
 				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
 				my.cvx.globalCompositeOperation = 'source-in';
-				my.cvx.drawImage(canvas, 0, 0);
+				my.cvx.drawImage(S.Entity_stampFilterPicture_canvas, 0, 0);
 				my.cvx.globalCompositeOperation = 'source-over';
-				return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+				return my.cvx.getImageData(0, 0, S.Entity_stampFilterPicture_canvas.width, S.Entity_stampFilterPicture_canvas.height);
 			}
 			return false;
 		};
@@ -638,12 +670,13 @@ Entity.stamp hook helper function
 @method stampFilterDefault
 @private
 **/
+		S.Entity_stampFilterDefault_canvas = null; //DOM Canvas object
 		my.Entity.prototype.stampFilterDefault = function(engine, cell, force) {
-			var canvas = my.canvas[cell];
+			S.Entity_stampFilterDefault_canvas = my.canvas[cell];
 			this.clip(my.cvx, cell);
 			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-			my.cvx.drawImage(canvas, 0, 0);
-			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+			my.cvx.drawImage(S.Entity_stampFilterDefault_canvas, 0, 0);
+			return my.cvx.getImageData(0, 0, S.Entity_stampFilterDefault_canvas.width, S.Entity_stampFilterDefault_canvas.height);
 		};
 
 		/**
@@ -720,16 +753,17 @@ cloneImageData function
 @param {Object} original - canvas getImageData object
 @return cloned image data object; false on error
 **/
+		S.Filter_cloneImageData_w = 0;
+		S.Filter_cloneImageData_h = 0;
 		my.Filter.prototype.cloneImageData = function(original) {
-			var w, h;
 			if (my.xt(original)) {
 				if (my.xta(original.width, original.height)) {
-					w = original.width;
-					h = original.height;
-					my.filterCanvas.width = w;
-					my.filterCanvas.height = h;
+					S.Filter_cloneImageData_w = original.width;
+					S.Filter_cloneImageData_h = original.height;
+					my.filterCanvas.width = S.Filter_cloneImageData_w;
+					my.filterCanvas.height = S.Filter_cloneImageData_h;
 					my.filterCvx.putImageData(original, 0, 0);
-					return my.filterCvx.getImageData(0, 0, w, h);
+					return my.filterCvx.getImageData(0, 0, S.Filter_cloneImageData_w, S.Filter_cloneImageData_h);
 				}
 			}
 			return false;
@@ -741,13 +775,14 @@ getAlpha function
 @return numerical strength value, between 0 and 1
 @private
 **/
+		S.Filter_getAlpha_a = 0;
 		my.Filter.prototype.getAlpha = function() {
-			var a = (my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) / 100 : this.alpha;
-			if (a >= 0 && a <= 1) {
-				return a;
+			S.Filter_getAlpha_a = (my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) / 100 : this.alpha;
+			if (S.Filter_getAlpha_a >= 0 && S.Filter_getAlpha_a <= 1) {
+				return S.Filter_getAlpha_a;
 			}
 			else {
-				return (a > 0.5) ? 1 : 0;
+				return (S.Filter_getAlpha_a > 0.5) ? 1 : 0;
 			}
 		};
 		/**
@@ -795,19 +830,24 @@ Add function - takes data, calculates its greyscale and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.GreyscaleFilter_add_alpha = 0;
+		S.GreyscaleFilter_add_d = [];
+		S.GreyscaleFilter_add_here = 0;
+		S.GreyscaleFilter_add_grey = 0;
+		S.GreyscaleFilter_add_i = 0;
+		S.GreyscaleFilter_add_iz = 0;
 		my.GreyscaleFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				d = data.data,
-				here, i, iz, grey;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
-					here = i;
-					d[here] = grey;
-					d[++here] = grey;
-					d[++here] = grey;
-					d[++here] *= alpha;
+			S.GreyscaleFilter_add_alpha = this.getAlpha();
+			S.GreyscaleFilter_add_d = data.data;
+			for (S.GreyscaleFilter_add_i = 0, S.GreyscaleFilter_add_iz = S.GreyscaleFilter_add_d.length; S.GreyscaleFilter_add_i < S.GreyscaleFilter_add_iz; S.GreyscaleFilter_add_i += 4) {
+				if (S.GreyscaleFilter_add_d[S.GreyscaleFilter_add_i + 3] !== 0) {
+					S.GreyscaleFilter_add_here = S.GreyscaleFilter_add_i;
+					S.GreyscaleFilter_add_grey = Math.floor((0.2126 * S.GreyscaleFilter_add_d[S.GreyscaleFilter_add_here]) + (0.7152 * S.GreyscaleFilter_add_d[++S.GreyscaleFilter_add_here]) + (0.0722 * S.GreyscaleFilter_add_d[++S.GreyscaleFilter_add_here]));
+					S.GreyscaleFilter_add_here = S.GreyscaleFilter_add_i;
+					S.GreyscaleFilter_add_d[S.GreyscaleFilter_add_here] = S.GreyscaleFilter_add_grey;
+					S.GreyscaleFilter_add_d[++S.GreyscaleFilter_add_here] = S.GreyscaleFilter_add_grey;
+					S.GreyscaleFilter_add_d[++S.GreyscaleFilter_add_here] = S.GreyscaleFilter_add_grey;
+					S.GreyscaleFilter_add_d[++S.GreyscaleFilter_add_here] *= S.GreyscaleFilter_add_alpha;
 				}
 			}
 			return data;
@@ -857,17 +897,21 @@ Add function - takes data, calculates its invert and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.InvertFilter_add_alpha = 0;
+		S.InvertFilter_add_d = [];
+		S.InvertFilter_add_here = 0;
+		S.InvertFilter_add_i = 0;
+		S.InvertFilter_add_iz = 0;
 		my.InvertFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				d = data.data,
-				here, i, iz;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] = 255 - d[here];
-					d[++here] = 255 - d[here];
-					d[++here] = 255 - d[here];
-					d[++here] *= alpha;
+			S.InvertFilter_add_alpha = this.getAlpha();
+			S.InvertFilter_add_d = data.data;
+			for (S.InvertFilter_add_i = 0, S.InvertFilter_add_iz = S.InvertFilter_add_d.length; S.InvertFilter_add_i < S.InvertFilter_add_iz; S.InvertFilter_add_i += 4) {
+				if (S.InvertFilter_add_d[S.InvertFilter_add_i + 3] !== 0) {
+					S.InvertFilter_add_here = S.InvertFilter_add_i;
+					S.InvertFilter_add_d[S.InvertFilter_add_here] = 255 - S.InvertFilter_add_d[S.InvertFilter_add_here];
+					S.InvertFilter_add_d[++S.InvertFilter_add_here] = 255 - S.InvertFilter_add_d[S.InvertFilter_add_here];
+					S.InvertFilter_add_d[++S.InvertFilter_add_here] = 255 - S.InvertFilter_add_d[S.InvertFilter_add_here];
+					S.InvertFilter_add_d[++S.InvertFilter_add_here] *= S.InvertFilter_add_alpha;
 				}
 			}
 			return data;
@@ -927,19 +971,24 @@ Add function - takes data, calculates its brightness and replaces the old color 
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.BrightnessFilter_add_alpha = 0;
+		S.BrightnessFilter_add_d = [];
+		S.BrightnessFilter_add_here = 0;
+		S.BrightnessFilter_add_brightness = 0;
+		S.BrightnessFilter_add_i = 0;
+		S.BrightnessFilter_add_iz = 0;
 		my.BrightnessFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				brightness = (my.isa(this.brightness, 'str')) ? parseFloat(this.brightness) / 100 : this.brightness,
-				d = data.data,
-				here, i, iz;
-			brightness = (brightness < 0) ? 0 : brightness;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] *= brightness;
-					d[++here] *= brightness;
-					d[++here] *= brightness;
-					d[++here] *= alpha;
+			S.BrightnessFilter_add_alpha = this.getAlpha();
+			S.BrightnessFilter_add_brightness = (my.isa(this.brightness, 'str')) ? parseFloat(this.brightness) / 100 : this.brightness;
+			S.BrightnessFilter_add_d = data.data;
+			S.BrightnessFilter_add_brightness = (S.BrightnessFilter_add_brightness < 0) ? 0 : S.BrightnessFilter_add_brightness;
+			for (S.BrightnessFilter_add_i = 0, S.BrightnessFilter_add_iz = S.BrightnessFilter_add_d.length; S.BrightnessFilter_add_i < S.BrightnessFilter_add_iz; S.BrightnessFilter_add_i += 4) {
+				if (S.BrightnessFilter_add_d[S.BrightnessFilter_add_i + 3] !== 0) {
+					S.BrightnessFilter_add_here = S.BrightnessFilter_add_i;
+					S.BrightnessFilter_add_d[S.BrightnessFilter_add_here] *= S.BrightnessFilter_add_brightness;
+					S.BrightnessFilter_add_d[++S.BrightnessFilter_add_here] *= S.BrightnessFilter_add_brightness;
+					S.BrightnessFilter_add_d[++S.BrightnessFilter_add_here] *= S.BrightnessFilter_add_brightness;
+					S.BrightnessFilter_add_d[++S.BrightnessFilter_add_here] *= S.BrightnessFilter_add_alpha;
 				}
 			}
 			return data;
@@ -999,19 +1048,24 @@ Add function - takes data, calculates its saturation and replaces the old color 
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.SaturationFilter_add_alpha = 0;
+		S.SaturationFilter_add_d = [];
+		S.SaturationFilter_add_here = 0;
+		S.SaturationFilter_add_saturation = 0;
+		S.SaturationFilter_add_i = 0;
+		S.SaturationFilter_add_iz = 0;
 		my.SaturationFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				saturation = (my.isa(this.saturation, 'str')) ? parseFloat(this.saturation) / 100 : this.saturation,
-				d = data.data,
-				here, i, iz;
-			saturation = (saturation < 0) ? 0 : saturation;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] *= alpha;
+			S.SaturationFilter_add_alpha = this.getAlpha();
+			S.SaturationFilter_add_saturation = (my.isa(this.saturation, 'str')) ? parseFloat(this.saturation) / 100 : this.saturation;
+			S.SaturationFilter_add_d = data.data;
+			S.SaturationFilter_add_saturation = (S.SaturationFilter_add_saturation < 0) ? 0 : S.SaturationFilter_add_saturation;
+			for (S.SaturationFilter_add_i = 0, S.SaturationFilter_add_iz = S.SaturationFilter_add_d.length; S.SaturationFilter_add_i < S.SaturationFilter_add_iz; S.SaturationFilter_add_i += 4) {
+				if (S.SaturationFilter_add_d[S.SaturationFilter_add_i + 3] !== 0) {
+					S.SaturationFilter_add_here = S.SaturationFilter_add_i;
+					S.SaturationFilter_add_d[S.SaturationFilter_add_here] = 127 + ((S.SaturationFilter_add_d[S.SaturationFilter_add_here] - 127) * S.SaturationFilter_add_saturation);
+					S.SaturationFilter_add_d[++S.SaturationFilter_add_here] = 127 + ((S.SaturationFilter_add_d[S.SaturationFilter_add_here] - 127) * S.SaturationFilter_add_saturation);
+					S.SaturationFilter_add_d[++S.SaturationFilter_add_here] = 127 + ((S.SaturationFilter_add_d[S.SaturationFilter_add_here] - 127) * S.SaturationFilter_add_saturation);
+					S.SaturationFilter_add_d[++S.SaturationFilter_add_here] *= S.SaturationFilter_add_alpha;
 				}
 			}
 			return data;
@@ -1071,21 +1125,26 @@ Add function - takes data, calculates its threshold and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.ThresholdFilter_add_alpha = 0;
+		S.ThresholdFilter_add_d = [];
+		S.ThresholdFilter_add_here = 0;
+		S.ThresholdFilter_add_threshold = 0;
+		S.ThresholdFilter_add_i = 0;
+		S.ThresholdFilter_add_iz = 0;
 		my.ThresholdFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				threshold = (my.isa(this.threshold, 'str')) ? parseFloat(this.threshold) / 100 : this.threshold,
-				d, here, i, iz;
-			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold > 0.5) ? 1 : 0);
-			threshold *= 255;
+			S.ThresholdFilter_add_alpha = this.getAlpha();
+			S.ThresholdFilter_add_threshold = (my.isa(this.threshold, 'str')) ? parseFloat(this.threshold) / 100 : this.threshold;
+			S.ThresholdFilter_add_threshold = (my.isBetween(S.ThresholdFilter_add_threshold, 0, 1, true)) ? S.ThresholdFilter_add_threshold : ((S.ThresholdFilter_add_threshold > 0.5) ? 1 : 0);
+			S.ThresholdFilter_add_threshold *= 255;
 			data = my.GreyscaleFilter.prototype.add.call(this, data);
-			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] = (d[here] > threshold) ? 255 : 0;
-					d[++here] = (d[here] > threshold) ? 255 : 0;
-					d[++here] = (d[here] > threshold) ? 255 : 0;
-					d[++here] *= alpha;
+			S.ThresholdFilter_add_d = data.data;
+			for (S.ThresholdFilter_add_i = 0, S.ThresholdFilter_add_iz = S.ThresholdFilter_add_d.length; S.ThresholdFilter_add_i < S.ThresholdFilter_add_iz; S.ThresholdFilter_add_i += 4) {
+				if (S.ThresholdFilter_add_d[S.ThresholdFilter_add_i + 3] !== 0) {
+					S.ThresholdFilter_add_here = S.ThresholdFilter_add_i;
+					S.ThresholdFilter_add_d[S.ThresholdFilter_add_here] = (S.ThresholdFilter_add_d[S.ThresholdFilter_add_here] > S.ThresholdFilter_add_threshold) ? 255 : 0;
+					S.ThresholdFilter_add_d[++S.ThresholdFilter_add_here] = (S.ThresholdFilter_add_d[S.ThresholdFilter_add_here] > S.ThresholdFilter_add_threshold) ? 255 : 0;
+					S.ThresholdFilter_add_d[++S.ThresholdFilter_add_here] = (S.ThresholdFilter_add_d[S.ThresholdFilter_add_here] > S.ThresholdFilter_add_threshold) ? 255 : 0;
+					S.ThresholdFilter_add_d[++S.ThresholdFilter_add_here] *= S.ThresholdFilter_add_alpha;
 				}
 			}
 			return data;
@@ -1163,23 +1222,30 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.ChannelsFilter_add_alpha = 0;
+		S.ChannelsFilter_add_d = [];
+		S.ChannelsFilter_add_here = 0;
+		S.ChannelsFilter_add_red = 0;
+		S.ChannelsFilter_add_green = 0;
+		S.ChannelsFilter_add_blue = 0;
+		S.ChannelsFilter_add_i = 0;
+		S.ChannelsFilter_add_iz = 0;
 		my.ChannelsFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				red = (my.isa(this.red, 'str')) ? parseFloat(this.red) / 100 : this.red,
-				green = (my.isa(this.green, 'str')) ? parseFloat(this.green) / 100 : this.green,
-				blue = (my.isa(this.blue, 'str')) ? parseFloat(this.blue) / 100 : this.blue,
-				d = data.data,
-				i, iz, here;
-			red = (red < 0) ? 0 : red;
-			green = (green < 0) ? 0 : green;
-			blue = (blue < 0) ? 0 : blue;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] *= red;
-					d[++here] *= green;
-					d[++here] *= blue;
-					d[++here] *= alpha;
+			S.ChannelsFilter_add_alpha = this.getAlpha();
+			S.ChannelsFilter_add_red = (my.isa(this.red, 'str')) ? parseFloat(this.red) / 100 : this.red;
+			S.ChannelsFilter_add_green = (my.isa(this.green, 'str')) ? parseFloat(this.green) / 100 : this.green;
+			S.ChannelsFilter_add_blue = (my.isa(this.blue, 'str')) ? parseFloat(this.blue) / 100 : this.blue;
+			S.ChannelsFilter_add_d = data.data;
+			S.ChannelsFilter_add_red = (S.ChannelsFilter_add_red < 0) ? 0 : S.ChannelsFilter_add_red;
+			S.ChannelsFilter_add_green = (S.ChannelsFilter_add_green < 0) ? 0 : S.ChannelsFilter_add_green;
+			S.ChannelsFilter_add_blue = (S.ChannelsFilter_add_blue < 0) ? 0 : S.ChannelsFilter_add_blue;
+			for (S.ChannelsFilter_add_i = 0, S.ChannelsFilter_add_iz = S.ChannelsFilter_add_d.length; S.ChannelsFilter_add_i < S.ChannelsFilter_add_iz; S.ChannelsFilter_add_i += 4) {
+				if (S.ChannelsFilter_add_d[S.ChannelsFilter_add_i + 3] !== 0) {
+					S.ChannelsFilter_add_here = S.ChannelsFilter_add_i;
+					S.ChannelsFilter_add_d[S.ChannelsFilter_add_here] *= S.ChannelsFilter_add_red;
+					S.ChannelsFilter_add_d[++S.ChannelsFilter_add_here] *= S.ChannelsFilter_add_green;
+					S.ChannelsFilter_add_d[++S.ChannelsFilter_add_here] *= S.ChannelsFilter_add_blue;
+					S.ChannelsFilter_add_d[++S.ChannelsFilter_add_here] *= S.ChannelsFilter_add_alpha;
 				}
 			}
 			return data;
@@ -1257,27 +1323,37 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.ChannelStepFilter_add_alpha = 0;
+		S.ChannelStepFilter_add_d = [];
+		S.ChannelStepFilter_add_here = 0;
+		S.ChannelStepFilter_add_red = 0;
+		S.ChannelStepFilter_add_green = 0;
+		S.ChannelStepFilter_add_blue = 0;
+		S.ChannelStepFilter_add_r = 0;
+		S.ChannelStepFilter_add_g = 0;
+		S.ChannelStepFilter_add_b = 0;
+		S.ChannelStepFilter_add_i = 0;
+		S.ChannelStepFilter_add_iz = 0;
 		my.ChannelStepFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				red = this.red,
-				green = this.green,
-				blue = this.blue,
-				d = data.data,
-				here, i, iz, r, g, b;
-			red = (red < 1) ? 1 : red;
-			green = (green < 1) ? 1 : green;
-			blue = (blue < 1) ? 1 : blue;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					r = d[here];
-					g = d[++here];
-					b = d[++here];
-					here = i;
-					d[here] = Math.floor(r / red) * red;
-					d[++here] = Math.floor(g / green) * green;
-					d[++here] = Math.floor(b / blue) * blue;
-					d[++here] *= alpha;
+			S.ChannelStepFilter_add_alpha = this.getAlpha();
+			S.ChannelStepFilter_add_red = this.red;
+			S.ChannelStepFilter_add_green = this.green;
+			S.ChannelStepFilter_add_blue = this.blue;
+			S.ChannelStepFilter_add_d = data.data;
+			S.ChannelStepFilter_add_red = (S.ChannelStepFilter_add_red < 1) ? 1 : S.ChannelStepFilter_add_red;
+			S.ChannelStepFilter_add_green = (S.ChannelStepFilter_add_green < 1) ? 1 : S.ChannelStepFilter_add_green;
+			S.ChannelStepFilter_add_blue = (S.ChannelStepFilter_add_blue < 1) ? 1 : S.ChannelStepFilter_add_blue;
+			for (S.ChannelStepFilter_add_i = 0, S.ChannelStepFilter_add_iz = S.ChannelStepFilter_add_d.length; S.ChannelStepFilter_add_i < S.ChannelStepFilter_add_iz; S.ChannelStepFilter_add_i += 4) {
+				if (S.ChannelStepFilter_add_d[S.ChannelStepFilter_add_i + 3] !== 0) {
+					S.ChannelStepFilter_add_here = S.ChannelStepFilter_add_i;
+					S.ChannelStepFilter_add_r = S.ChannelStepFilter_add_d[S.ChannelStepFilter_add_here];
+					S.ChannelStepFilter_add_g = S.ChannelStepFilter_add_d[++S.ChannelStepFilter_add_here];
+					S.ChannelStepFilter_add_b = S.ChannelStepFilter_add_d[++S.ChannelStepFilter_add_here];
+					S.ChannelStepFilter_add_here = S.ChannelStepFilter_add_i;
+					S.ChannelStepFilter_add_d[S.ChannelStepFilter_add_here] = Math.floor(S.ChannelStepFilter_add_r / S.ChannelStepFilter_add_red) * S.ChannelStepFilter_add_red;
+					S.ChannelStepFilter_add_d[++S.ChannelStepFilter_add_here] = Math.floor(S.ChannelStepFilter_add_g / S.ChannelStepFilter_add_green) * S.ChannelStepFilter_add_green;
+					S.ChannelStepFilter_add_d[++S.ChannelStepFilter_add_here] = Math.floor(S.ChannelStepFilter_add_b / S.ChannelStepFilter_add_blue) * S.ChannelStepFilter_add_blue;
+					S.ChannelStepFilter_add_d[++S.ChannelStepFilter_add_here] *= S.ChannelStepFilter_add_alpha;
 				}
 			}
 			return data;
@@ -1391,30 +1467,46 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.TintFilter_add_alpha = 0;
+		S.TintFilter_add_d = [];
+		S.TintFilter_add_here = 0;
+		S.TintFilter_add_r = 0;
+		S.TintFilter_add_g = 0;
+		S.TintFilter_add_b = 0;
+		S.TintFilter_add_rr = 0;
+		S.TintFilter_add_rg = 0;
+		S.TintFilter_add_rb = 0;
+		S.TintFilter_add_gr = 0;
+		S.TintFilter_add_gg = 0;
+		S.TintFilter_add_gb = 0;
+		S.TintFilter_add_br = 0;
+		S.TintFilter_add_bg = 0;
+		S.TintFilter_add_bb = 0;
+		S.TintFilter_add_i = 0;
+		S.TintFilter_add_iz = 0;
 		my.TintFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				rr = (my.isa(this.redInRed, 'str')) ? parseFloat(this.redInRed) / 100 : this.redInRed,
-				rg = (my.isa(this.redInGreen, 'str')) ? parseFloat(this.redInGreen) / 100 : this.redInGreen,
-				rb = (my.isa(this.redInBlue, 'str')) ? parseFloat(this.redInBlue) / 100 : this.redInBlue,
-				gr = (my.isa(this.greenInRed, 'str')) ? parseFloat(this.greenInRed) / 100 : this.greenInRed,
-				gg = (my.isa(this.greenInGreen, 'str')) ? parseFloat(this.greenInGreen) / 100 : this.greenInGreen,
-				gb = (my.isa(this.greenInBlue, 'str')) ? parseFloat(this.greenInBlue) / 100 : this.greenInBlue,
-				br = (my.isa(this.blueInRed, 'str')) ? parseFloat(this.blueInRed) / 100 : this.blueInRed,
-				bg = (my.isa(this.blueInGreen, 'str')) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen,
-				bb = (my.isa(this.blueInBlue, 'str')) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue,
-				d = data.data,
-				here, i, iz, r, g, b;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					r = d[here];
-					g = d[++here];
-					b = d[++here];
-					here = i;
-					d[here] = (r * rr) + (g * gr) + (b * br);
-					d[++here] = (r * rg) + (g * gg) + (b * bg);
-					d[++here] = (r * rb) + (g * gb) + (b * bb);
-					d[++here] *= alpha;
+			S.TintFilter_add_alpha = this.getAlpha();
+			S.TintFilter_add_rr = (my.isa(this.redInRed, 'str')) ? parseFloat(this.redInRed) / 100 : this.redInRed;
+			S.TintFilter_add_rg = (my.isa(this.redInGreen, 'str')) ? parseFloat(this.redInGreen) / 100 : this.redInGreen;
+			S.TintFilter_add_rb = (my.isa(this.redInBlue, 'str')) ? parseFloat(this.redInBlue) / 100 : this.redInBlue;
+			S.TintFilter_add_gr = (my.isa(this.greenInRed, 'str')) ? parseFloat(this.greenInRed) / 100 : this.greenInRed;
+			S.TintFilter_add_gg = (my.isa(this.greenInGreen, 'str')) ? parseFloat(this.greenInGreen) / 100 : this.greenInGreen;
+			S.TintFilter_add_gb = (my.isa(this.greenInBlue, 'str')) ? parseFloat(this.greenInBlue) / 100 : this.greenInBlue;
+			S.TintFilter_add_br = (my.isa(this.blueInRed, 'str')) ? parseFloat(this.blueInRed) / 100 : this.blueInRed;
+			S.TintFilter_add_bg = (my.isa(this.blueInGreen, 'str')) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen;
+			S.TintFilter_add_bb = (my.isa(this.blueInBlue, 'str')) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue;
+			S.TintFilter_add_d = data.data;
+			for (S.TintFilter_add_i = 0, S.TintFilter_add_iz = S.TintFilter_add_d.length; S.TintFilter_add_i < S.TintFilter_add_iz; S.TintFilter_add_i += 4) {
+				if (S.TintFilter_add_d[S.TintFilter_add_i + 3] !== 0) {
+					S.TintFilter_add_here = S.TintFilter_add_i;
+					S.TintFilter_add_r = S.TintFilter_add_d[S.TintFilter_add_here];
+					S.TintFilter_add_g = S.TintFilter_add_d[++S.TintFilter_add_here];
+					S.TintFilter_add_b = S.TintFilter_add_d[++S.TintFilter_add_here];
+					S.TintFilter_add_here = S.TintFilter_add_i;
+					S.TintFilter_add_d[S.TintFilter_add_here] = (S.TintFilter_add_r * S.TintFilter_add_rr) + (S.TintFilter_add_g * S.TintFilter_add_gr) + (S.TintFilter_add_b * S.TintFilter_add_br);
+					S.TintFilter_add_d[++S.TintFilter_add_here] = (S.TintFilter_add_r * S.TintFilter_add_rg) + (S.TintFilter_add_g * S.TintFilter_add_gg) + (S.TintFilter_add_b * S.TintFilter_add_bg);
+					S.TintFilter_add_d[++S.TintFilter_add_here] = (S.TintFilter_add_r * S.TintFilter_add_rb) + (S.TintFilter_add_g * S.TintFilter_add_gb) + (S.TintFilter_add_b * S.TintFilter_add_bb);
+					S.TintFilter_add_d[++S.TintFilter_add_here] *= S.TintFilter_add_alpha;
 				}
 			}
 			return data;
@@ -1527,44 +1619,49 @@ SetFilter builds the matrix from width, height and data attributes already suppl
 @chainable
 @private
 **/
+		S.MatrixFilter_setFilter_i = 0;
+		S.MatrixFilter_setFilter_j = 0;
+		S.MatrixFilter_setFilter_k = 0;
+		S.MatrixFilter_setFilter_reqLen = 0;
+		S.MatrixFilter_setFilter_counter = 0;
 		my.MatrixFilter.prototype.setFilter = function() {
-			var reqLen,
-				i, j, k,
-				counter = 0;
+			//var reqLen,
+			//i, j, k,
+			S.MatrixFilter_setFilter_counter = 0;
 			if (!this.height && this.width && my.isa(this.width, 'num') && this.width >= 1) {
 				this.width = Math.floor(this.width);
-				reqLen = Math.ceil(this.data.length / this.width);
-				this.height = reqLen;
-				reqLen = this.width * this.height;
+				S.MatrixFilter_setFilter_reqLen = Math.ceil(this.data.length / this.width);
+				this.height = S.MatrixFilter_setFilter_reqLen;
+				S.MatrixFilter_setFilter_reqLen = this.width * this.height;
 			}
 			else if (!this.width && this.height && my.isa(this.height, 'num') && this.height >= 1) {
 				this.height = Math.floor(this.height);
-				reqLen = Math.ceil(this.data.length / this.height);
-				this.width = reqLen;
-				reqLen = this.width * this.height;
+				S.MatrixFilter_setFilter_reqLen = Math.ceil(this.data.length / this.height);
+				this.width = S.MatrixFilter_setFilter_reqLen;
+				S.MatrixFilter_setFilter_reqLen = this.width * this.height;
 			}
 			else if (this.width && my.isa(this.width, 'num') && this.width >= 1 && this.height && my.isa(this.height, 'num') && this.height >= 1) {
 				this.width = Math.round(this.width);
 				this.height = Math.round(this.height);
-				reqLen = this.width * this.height;
+				S.MatrixFilter_setFilter_reqLen = this.width * this.height;
 			}
 			else {
-				reqLen = Math.ceil(Math.sqrt(this.data.length));
-				reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
-				this.width = Math.round(Math.sqrt(reqLen));
+				S.MatrixFilter_setFilter_reqLen = Math.ceil(Math.sqrt(this.data.length));
+				S.MatrixFilter_setFilter_reqLen = (S.MatrixFilter_setFilter_reqLen % 2 === 1) ? Math.pow(S.MatrixFilter_setFilter_reqLen, 2) : Math.pow(S.MatrixFilter_setFilter_reqLen + 1, 2);
+				this.width = Math.round(Math.sqrt(S.MatrixFilter_setFilter_reqLen));
 				this.height = this.width;
 			}
-			for (k = 0; k < reqLen; k++) {
-				this.data[k] = (my.xt(this.data[k])) ? parseFloat(this.data[k]) : 0;
-				this.data[k] = (isNaN(this.data[k])) ? 0 : this.data[k];
+			for (S.MatrixFilter_setFilter_k = 0; S.MatrixFilter_setFilter_k < S.MatrixFilter_setFilter_reqLen; S.MatrixFilter_setFilter_k++) {
+				this.data[S.MatrixFilter_setFilter_k] = (my.xt(this.data[S.MatrixFilter_setFilter_k])) ? parseFloat(this.data[S.MatrixFilter_setFilter_k]) : 0;
+				this.data[S.MatrixFilter_setFilter_k] = (isNaN(this.data[S.MatrixFilter_setFilter_k])) ? 0 : this.data[S.MatrixFilter_setFilter_k];
 			}
 			this.cells = [];
-			for (i = 0; i < this.height; i++) { //col (y)
-				for (j = 0; j < this.width; j++) { //row (x)
-					if (this.data[counter] !== 0) {
-						this.cells.push([j - this.x, i - this.y, this.data[counter]]);
+			for (S.MatrixFilter_setFilter_i = 0; S.MatrixFilter_setFilter_i < this.height; S.MatrixFilter_setFilter_i++) { //col (y)
+				for (S.MatrixFilter_setFilter_j = 0; S.MatrixFilter_setFilter_j < this.width; S.MatrixFilter_setFilter_j++) { //row (x)
+					if (this.data[S.MatrixFilter_setFilter_counter] !== 0) {
+						this.cells.push([S.MatrixFilter_setFilter_j - this.x, S.MatrixFilter_setFilter_i - this.y, this.data[S.MatrixFilter_setFilter_counter]]);
 					}
-					counter++;
+					S.MatrixFilter_setFilter_counter++;
 				}
 			}
 			return this;
@@ -1576,93 +1673,111 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.MatrixFilter_add_alpha = 0;
+		S.MatrixFilter_add_d0 = [];
+		S.MatrixFilter_add_dR = [];
+		S.MatrixFilter_add_result = null; // ImageData object
+		S.MatrixFilter_add_r = 0;
+		S.MatrixFilter_add_g = 0;
+		S.MatrixFilter_add_b = 0;
+		S.MatrixFilter_add_i = 0;
+		S.MatrixFilter_add_iz = 0;
+		S.MatrixFilter_add_j = 0;
+		S.MatrixFilter_add_jz = 0;
+		S.MatrixFilter_add_k = 0;
+		S.MatrixFilter_add_kz = 0;
+		S.MatrixFilter_add_w = 0;
+		S.MatrixFilter_add_c = 0;
+		S.MatrixFilter_add_e = 0;
+		S.MatrixFilter_add_e0 = 0;
+		S.MatrixFilter_add_x = 0;
+		S.MatrixFilter_add_y = 0;
 		my.MatrixFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				d0 = data.data,
-				result = my.cvx.createImageData(data.width, data.height),
-				dR = result.data,
-				i, iz, j, jz, k, kz, r, g, b, w, c, e, e0, x, y;
+			S.MatrixFilter_add_alpha = this.getAlpha();
+			S.MatrixFilter_add_d0 = data.data;
+			S.MatrixFilter_add_result = my.cvx.createImageData(data.width, data.height);
+			S.MatrixFilter_add_dR = S.MatrixFilter_add_result.data;
 			if (this.includeInvisiblePoints) {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
-						if (d0[e0 + 3] > 0) {
-							r = 0;
-							g = 0;
-							b = 0;
-							c = 0;
-							for (k = 0, kz = this.cells.length; k < kz; k++) {
-								x = j + this.cells[k][0];
-								y = i + this.cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									w = this.cells[k][2];
-									e = ((y * jz) + x) * 4;
-									c += w;
-									r += (d0[e] * w);
-									e++;
-									g += (d0[e] * w);
-									e++;
-									b += (d0[e] * w);
+				for (S.MatrixFilter_add_i = 0, S.MatrixFilter_add_iz = data.height; S.MatrixFilter_add_i < S.MatrixFilter_add_iz; S.MatrixFilter_add_i++) {
+					for (S.MatrixFilter_add_j = 0, S.MatrixFilter_add_jz = data.width; S.MatrixFilter_add_j < S.MatrixFilter_add_jz; S.MatrixFilter_add_j++) {
+						S.MatrixFilter_add_e0 = ((S.MatrixFilter_add_i * S.MatrixFilter_add_jz) + S.MatrixFilter_add_j) * 4;
+						if (S.MatrixFilter_add_d0[S.MatrixFilter_add_e0 + 3] > 0) {
+							S.MatrixFilter_add_r = 0;
+							S.MatrixFilter_add_g = 0;
+							S.MatrixFilter_add_b = 0;
+							S.MatrixFilter_add_c = 0;
+							for (S.MatrixFilter_add_k = 0, S.MatrixFilter_add_kz = this.cells.length; S.MatrixFilter_add_k < S.MatrixFilter_add_kz; S.MatrixFilter_add_k++) {
+								S.MatrixFilter_add_x = S.MatrixFilter_add_j + this.cells[S.MatrixFilter_add_k][0];
+								S.MatrixFilter_add_y = S.MatrixFilter_add_i + this.cells[S.MatrixFilter_add_k][1];
+								if (S.MatrixFilter_add_x >= 0 && S.MatrixFilter_add_x < S.MatrixFilter_add_jz && S.MatrixFilter_add_y >= 0 && S.MatrixFilter_add_y < S.MatrixFilter_add_iz) {
+									S.MatrixFilter_add_w = this.cells[S.MatrixFilter_add_k][2];
+									S.MatrixFilter_add_e = ((S.MatrixFilter_add_y * S.MatrixFilter_add_jz) + S.MatrixFilter_add_x) * 4;
+									S.MatrixFilter_add_c += S.MatrixFilter_add_w;
+									S.MatrixFilter_add_r += (S.MatrixFilter_add_d0[S.MatrixFilter_add_e] * S.MatrixFilter_add_w);
+									S.MatrixFilter_add_e++;
+									S.MatrixFilter_add_g += (S.MatrixFilter_add_d0[S.MatrixFilter_add_e] * S.MatrixFilter_add_w);
+									S.MatrixFilter_add_e++;
+									S.MatrixFilter_add_b += (S.MatrixFilter_add_d0[S.MatrixFilter_add_e] * S.MatrixFilter_add_w);
 								}
 							}
-							if (c !== 0) {
-								r /= c;
-								g /= c;
-								b /= c;
+							if (S.MatrixFilter_add_c !== 0) {
+								S.MatrixFilter_add_r /= S.MatrixFilter_add_c;
+								S.MatrixFilter_add_g /= S.MatrixFilter_add_c;
+								S.MatrixFilter_add_b /= S.MatrixFilter_add_c;
 							}
-							dR[e0] = r;
-							e0++;
-							dR[e0] = g;
-							e0++;
-							dR[e0] = b;
-							e0++;
-							dR[e0] = d0[e0] * alpha;
+							S.MatrixFilter_add_dR[S.MatrixFilter_add_e0] = S.MatrixFilter_add_r;
+							S.MatrixFilter_add_e0++;
+							S.MatrixFilter_add_dR[S.MatrixFilter_add_e0] = S.MatrixFilter_add_g;
+							S.MatrixFilter_add_e0++;
+							S.MatrixFilter_add_dR[S.MatrixFilter_add_e0] = S.MatrixFilter_add_b;
+							S.MatrixFilter_add_e0++;
+							S.MatrixFilter_add_dR[S.MatrixFilter_add_e0] = S.MatrixFilter_add_d0[S.MatrixFilter_add_e0] * S.MatrixFilter_add_alpha;
 						}
 					}
 				}
 			}
 			else {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
-						if (d0[e0 + 3] > 0) {
-							r = 0;
-							g = 0;
-							b = 0;
-							c = 0;
-							for (k = 0, kz = this.cells.length; k < kz; k++) {
-								x = j + this.cells[k][0];
-								y = i + this.cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									w = this.cells[k][2];
-									e = ((y * jz) + x) * 4;
-									if (d0[e + 3] > 0) {
-										c += w;
-										r += (d0[e] * w);
-										e++;
-										g += (d0[e] * w);
-										e++;
-										b += (d0[e] * w);
+				for (S.MatrixFilter_add_i = 0, S.MatrixFilter_add_iz = data.height; S.MatrixFilter_add_i < S.MatrixFilter_add_iz; S.MatrixFilter_add_i++) {
+					for (S.MatrixFilter_add_j = 0, S.MatrixFilter_add_jz = data.width; S.MatrixFilter_add_j < S.MatrixFilter_add_jz; S.MatrixFilter_add_j++) {
+						S.MatrixFilter_add_e0 = ((S.MatrixFilter_add_i * S.MatrixFilter_add_jz) + S.MatrixFilter_add_j) * 4;
+						if (S.MatrixFilter_add_d0[S.MatrixFilter_add_e0 + 3] > 0) {
+							S.MatrixFilter_add_r = 0;
+							S.MatrixFilter_add_g = 0;
+							S.MatrixFilter_add_b = 0;
+							S.MatrixFilter_add_c = 0;
+							for (S.MatrixFilter_add_k = 0, S.MatrixFilter_add_kz = this.cells.length; S.MatrixFilter_add_k < S.MatrixFilter_add_kz; S.MatrixFilter_add_k++) {
+								S.MatrixFilter_add_x = S.MatrixFilter_add_j + this.cells[S.MatrixFilter_add_k][0];
+								S.MatrixFilter_add_y = S.MatrixFilter_add_i + this.cells[S.MatrixFilter_add_k][1];
+								if (S.MatrixFilter_add_x >= 0 && S.MatrixFilter_add_x < S.MatrixFilter_add_jz && S.MatrixFilter_add_y >= 0 && S.MatrixFilter_add_y < S.MatrixFilter_add_iz) {
+									S.MatrixFilter_add_w = this.cells[S.MatrixFilter_add_k][2];
+									S.MatrixFilter_add_e = ((S.MatrixFilter_add_y * S.MatrixFilter_add_jz) + S.MatrixFilter_add_x) * 4;
+									if (S.MatrixFilter_add_d0[S.MatrixFilter_add_e + 3] > 0) {
+										S.MatrixFilter_add_c += S.MatrixFilter_add_w;
+										S.MatrixFilter_add_r += (S.MatrixFilter_add_d0[S.MatrixFilter_add_e] * S.MatrixFilter_add_w);
+										S.MatrixFilter_add_e++;
+										S.MatrixFilter_add_g += (S.MatrixFilter_add_d0[S.MatrixFilter_add_e] * S.MatrixFilter_add_w);
+										S.MatrixFilter_add_e++;
+										S.MatrixFilter_add_b += (S.MatrixFilter_add_d0[S.MatrixFilter_add_e] * S.MatrixFilter_add_w);
 									}
 								}
 							}
-							if (c !== 0) {
-								r /= c;
-								g /= c;
-								b /= c;
+							if (S.MatrixFilter_add_c !== 0) {
+								S.MatrixFilter_add_r /= S.MatrixFilter_add_c;
+								S.MatrixFilter_add_g /= S.MatrixFilter_add_c;
+								S.MatrixFilter_add_b /= S.MatrixFilter_add_c;
 							}
-							dR[e0] = r;
-							e0++;
-							dR[e0] = g;
-							e0++;
-							dR[e0] = b;
-							e0++;
-							dR[e0] = d0[e0] * alpha;
+							S.MatrixFilter_add_dR[S.MatrixFilter_add_e0] = S.MatrixFilter_add_r;
+							S.MatrixFilter_add_e0++;
+							S.MatrixFilter_add_dR[S.MatrixFilter_add_e0] = S.MatrixFilter_add_g;
+							S.MatrixFilter_add_e0++;
+							S.MatrixFilter_add_dR[S.MatrixFilter_add_e0] = S.MatrixFilter_add_b;
+							S.MatrixFilter_add_e0++;
+							S.MatrixFilter_add_dR[S.MatrixFilter_add_e0] = S.MatrixFilter_add_d0[S.MatrixFilter_add_e0] * S.MatrixFilter_add_alpha;
 						}
 					}
 				}
 			}
-			return result;
+			return S.MatrixFilter_add_result;
 		};
 		/**
 # PixelateFilter
@@ -1738,58 +1853,82 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.PixelateFilter_add_alpha = 0;
+		S.PixelateFilter_add_d0 = [];
+		S.PixelateFilter_add_dR = [];
+		S.PixelateFilter_add_result = null; // ImageData object
+		S.PixelateFilter_add_r = 0;
+		S.PixelateFilter_add_g = 0;
+		S.PixelateFilter_add_b = 0;
+		S.PixelateFilter_add_a = 0;
+		S.PixelateFilter_add_i = 0;
+		S.PixelateFilter_add_iz = 0;
+		S.PixelateFilter_add_j = 0;
+		S.PixelateFilter_add_jz = 0;
+		S.PixelateFilter_add_x = 0;
+		S.PixelateFilter_add_y = 0;
+		S.PixelateFilter_add_w = 0;
+		S.PixelateFilter_add_h = 0;
+		S.PixelateFilter_add_xj = 0;
+		S.PixelateFilter_add_yi = 0;
+		S.PixelateFilter_add_dW = 0;
+		S.PixelateFilter_add_dH = 0;
+		S.PixelateFilter_add_tW = 0;
+		S.PixelateFilter_add_tH = 0;
+		S.PixelateFilter_add_count = 0;
+		S.PixelateFilter_add_pos = 0;
+		S.PixelateFilter_add_test = false;
 		my.PixelateFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				d0 = data.data,
-				result = my.cvx.createImageData(data.width, data.height),
-				dR = result.data,
-				i, j, iz, jz, r, g, b, a, x, y, w, h, xj, yi, dW, dH, tW, tH, count, pos, test;
-			dW = data.width;
-			dH = data.height;
-			tW = dW - 1;
-			tH = dH - 1;
-			w = this.width;
-			h = this.height;
-			for (x = this.offsetX - w; x < dW; x += w) {
-				for (y = this.offsetY - h; y < dH; y += h) {
-					r = 0;
-					g = 0;
-					b = 0;
-					a = 0;
-					count = 0;
-					for (i = y, iz = y + h; i < iz; i++) {
-						for (j = x, jz = x + w; j < jz; j++) {
-							test = (j < 0 || j > tW || i < 0 || i > tH) ? true : false;
-							if (!test) {
-								pos = ((i * dW) + j) * 4;
-								if (d0[pos + 3] > 0) {
-									r += d0[pos];
-									g += d0[++pos];
-									b += d0[++pos];
-									a += d0[++pos];
-									count++;
+			S.PixelateFilter_add_alpha = this.getAlpha();
+			S.PixelateFilter_add_d0 = data.data;
+			S.PixelateFilter_add_result = my.cvx.createImageData(data.width, data.height);
+			S.PixelateFilter_add_dR = S.PixelateFilter_add_result.data;
+			S.PixelateFilter_add_dW = data.width;
+			S.PixelateFilter_add_dH = data.height;
+			S.PixelateFilter_add_tW = S.PixelateFilter_add_dW - 1;
+			S.PixelateFilter_add_tH = S.PixelateFilter_add_dH - 1;
+			S.PixelateFilter_add_w = this.width;
+			S.PixelateFilter_add_h = this.height;
+			for (S.PixelateFilter_add_x = this.offsetX - S.PixelateFilter_add_w; S.PixelateFilter_add_x < S.PixelateFilter_add_dW; S.PixelateFilter_add_x += S.PixelateFilter_add_w) {
+				for (S.PixelateFilter_add_y = this.offsetY - S.PixelateFilter_add_h; S.PixelateFilter_add_y < S.PixelateFilter_add_dH; S.PixelateFilter_add_y += S.PixelateFilter_add_h) {
+					S.PixelateFilter_add_r = 0;
+					S.PixelateFilter_add_g = 0;
+					S.PixelateFilter_add_b = 0;
+					S.PixelateFilter_add_a = 0;
+					S.PixelateFilter_add_count = 0;
+					for (S.PixelateFilter_add_i = S.PixelateFilter_add_y, S.PixelateFilter_add_iz = S.PixelateFilter_add_y + S.PixelateFilter_add_h; S.PixelateFilter_add_i < S.PixelateFilter_add_iz; S.PixelateFilter_add_i++) {
+						for (S.PixelateFilter_add_j = S.PixelateFilter_add_x, S.PixelateFilter_add_jz = S.PixelateFilter_add_x + S.PixelateFilter_add_w; S.PixelateFilter_add_j < S.PixelateFilter_add_jz; S.PixelateFilter_add_j++) {
+							S.PixelateFilter_add_test = (S.PixelateFilter_add_j < 0 || S.PixelateFilter_add_j > S.PixelateFilter_add_tW || S.PixelateFilter_add_i < 0 || S.PixelateFilter_add_i > S.PixelateFilter_add_tH) ? true : false;
+							if (!S.PixelateFilter_add_test) {
+								S.PixelateFilter_add_pos = ((S.PixelateFilter_add_i * S.PixelateFilter_add_dW) + S.PixelateFilter_add_j) * 4;
+								if (S.PixelateFilter_add_d0[S.PixelateFilter_add_pos + 3] > 0) {
+									S.PixelateFilter_add_r += S.PixelateFilter_add_d0[S.PixelateFilter_add_pos];
+									S.PixelateFilter_add_g += S.PixelateFilter_add_d0[++S.PixelateFilter_add_pos];
+									S.PixelateFilter_add_b += S.PixelateFilter_add_d0[++S.PixelateFilter_add_pos];
+									S.PixelateFilter_add_a += S.PixelateFilter_add_d0[++S.PixelateFilter_add_pos];
+									S.PixelateFilter_add_count++;
 								}
 							}
 						}
 					}
-					if (count > 0 && a > 0) {
-						r = Math.round(r / count);
-						g = Math.round(g / count);
-						b = Math.round(b / count);
-						pos = ((y * dW) + x) * 4;
-						for (i = y, iz = y + h; i < iz; i++) {
-							for (j = x, jz = x + w; j < jz; j++) {
-								pos = ((i * dW) + j) * 4;
-								dR[pos] = r;
-								dR[++pos] = g;
-								dR[++pos] = b;
-								dR[++pos] = d0[pos] * alpha;
+					if (S.PixelateFilter_add_count > 0 && S.PixelateFilter_add_a > 0) {
+						S.PixelateFilter_add_r = Math.round(S.PixelateFilter_add_r / S.PixelateFilter_add_count);
+						S.PixelateFilter_add_g = Math.round(S.PixelateFilter_add_g / S.PixelateFilter_add_count);
+						S.PixelateFilter_add_b = Math.round(S.PixelateFilter_add_b / S.PixelateFilter_add_count);
+						S.PixelateFilter_add_pos = ((S.PixelateFilter_add_y * S.PixelateFilter_add_dW) + S.PixelateFilter_add_x) * 4;
+						for (S.PixelateFilter_add_i = S.PixelateFilter_add_y, S.PixelateFilter_add_iz = S.PixelateFilter_add_y + S.PixelateFilter_add_h; S.PixelateFilter_add_i < S.PixelateFilter_add_iz; S.PixelateFilter_add_i++) {
+							for (S.PixelateFilter_add_j = S.PixelateFilter_add_x, S.PixelateFilter_add_jz = S.PixelateFilter_add_x + S.PixelateFilter_add_w; S.PixelateFilter_add_j < S.PixelateFilter_add_jz; S.PixelateFilter_add_j++) {
+								S.PixelateFilter_add_pos = ((S.PixelateFilter_add_i * S.PixelateFilter_add_dW) + S.PixelateFilter_add_j) * 4;
+								S.PixelateFilter_add_dR[S.PixelateFilter_add_pos] = S.PixelateFilter_add_r;
+								S.PixelateFilter_add_dR[++S.PixelateFilter_add_pos] = S.PixelateFilter_add_g;
+								S.PixelateFilter_add_dR[++S.PixelateFilter_add_pos] = S.PixelateFilter_add_b;
+								S.PixelateFilter_add_dR[++S.PixelateFilter_add_pos] = S.PixelateFilter_add_d0[S.PixelateFilter_add_pos] * S.PixelateFilter_add_alpha;
 							}
 						}
 					}
 				}
 			}
-			return result;
+			return S.PixelateFilter_add_result;
 		};
 		/**
 # BlurFilter
@@ -1890,92 +2029,110 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.BlurFilter_add_alpha = 0;
+		S.BlurFilter_add_d0 = [];
+		S.BlurFilter_add_result = null; // ImageData object
+		S.BlurFilter_add_dR = [];
+		S.BlurFilter_add_c = 0;
+		S.BlurFilter_add_s = 0;
+		S.BlurFilter_add_count = 0;
+		S.BlurFilter_add_i = 0;
+		S.BlurFilter_add_iz = 0;
+		S.BlurFilter_add_j = 0;
+		S.BlurFilter_add_jz = 0;
+		S.BlurFilter_add_k = 0;
+		S.BlurFilter_add_kz = 0;
+		S.BlurFilter_add_r = 0;
+		S.BlurFilter_add_g = 0;
+		S.BlurFilter_add_b = 0;
+		S.BlurFilter_add_e = 0;
+		S.BlurFilter_add_e0 = 0;
+		S.BlurFilter_add_x = 0;
+		S.BlurFilter_add_y = 0;
 		my.BlurFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				d0 = data.data,
-				result = my.cvx.createImageData(data.width, data.height),
-				dR = result.data,
-				c = this.cells.length,
-				s = Math.floor(c / this.skip),
-				count,
-				i, iz, j, jz, k, kz, r, g, b, e, e0, x, y;
+			S.BlurFilter_add_alpha = this.getAlpha();
+			S.BlurFilter_add_d0 = data.data;
+			S.BlurFilter_add_result = my.cvx.createImageData(data.width, data.height);
+			S.BlurFilter_add_dR = S.BlurFilter_add_result.data;
+			S.BlurFilter_add_c = this.cells.length;
+			S.BlurFilter_add_s = Math.floor(S.BlurFilter_add_c / this.skip);
 			if (this.includeInvisiblePoints) {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
-						if (d0[e0 + 3] > 0) {
-							r = 0;
-							g = 0;
-							b = 0;
-							for (k = 0, kz = c; k < kz; k += this.skip) {
-								x = j + this.cells[k][0];
-								y = i + this.cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									e = ((y * jz) + x) * 4;
-									r += d0[e];
-									e++;
-									g += d0[e];
-									e++;
-									b += d0[e];
+				for (S.BlurFilter_add_i = 0, S.BlurFilter_add_iz = data.height; S.BlurFilter_add_i < S.BlurFilter_add_iz; S.BlurFilter_add_i++) {
+					for (S.BlurFilter_add_j = 0, S.BlurFilter_add_jz = data.width; S.BlurFilter_add_j < S.BlurFilter_add_jz; S.BlurFilter_add_j++) {
+						S.BlurFilter_add_e0 = ((S.BlurFilter_add_i * S.BlurFilter_add_jz) + S.BlurFilter_add_j) * 4;
+						if (S.BlurFilter_add_d0[S.BlurFilter_add_e0 + 3] > 0) {
+							S.BlurFilter_add_r = 0;
+							S.BlurFilter_add_g = 0;
+							S.BlurFilter_add_b = 0;
+							for (S.BlurFilter_add_k = 0, S.BlurFilter_add_kz = S.BlurFilter_add_c; S.BlurFilter_add_k < S.BlurFilter_add_kz; S.BlurFilter_add_k += this.skip) {
+								S.BlurFilter_add_x = S.BlurFilter_add_j + this.cells[S.BlurFilter_add_k][0];
+								S.BlurFilter_add_y = S.BlurFilter_add_i + this.cells[S.BlurFilter_add_k][1];
+								if (S.BlurFilter_add_x >= 0 && S.BlurFilter_add_x < S.BlurFilter_add_jz && S.BlurFilter_add_y >= 0 && S.BlurFilter_add_y < S.BlurFilter_add_iz) {
+									S.BlurFilter_add_e = ((S.BlurFilter_add_y * S.BlurFilter_add_jz) + S.BlurFilter_add_x) * 4;
+									S.BlurFilter_add_r += S.BlurFilter_add_d0[S.BlurFilter_add_e];
+									S.BlurFilter_add_e++;
+									S.BlurFilter_add_g += S.BlurFilter_add_d0[S.BlurFilter_add_e];
+									S.BlurFilter_add_e++;
+									S.BlurFilter_add_b += S.BlurFilter_add_d0[S.BlurFilter_add_e];
 								}
 							}
-							if (s !== 0) {
-								r /= s;
-								g /= s;
-								b /= s;
+							if (S.BlurFilter_add_s !== 0) {
+								S.BlurFilter_add_r /= S.BlurFilter_add_s;
+								S.BlurFilter_add_g /= S.BlurFilter_add_s;
+								S.BlurFilter_add_b /= S.BlurFilter_add_s;
 							}
-							dR[e0] = r;
-							e0++;
-							dR[e0] = g;
-							e0++;
-							dR[e0] = b;
-							e0++;
-							dR[e0] = d0[e0] * alpha;
+							S.BlurFilter_add_dR[S.BlurFilter_add_e0] = S.BlurFilter_add_r;
+							S.BlurFilter_add_e0++;
+							S.BlurFilter_add_dR[S.BlurFilter_add_e0] = S.BlurFilter_add_g;
+							S.BlurFilter_add_e0++;
+							S.BlurFilter_add_dR[S.BlurFilter_add_e0] = S.BlurFilter_add_b;
+							S.BlurFilter_add_e0++;
+							S.BlurFilter_add_dR[S.BlurFilter_add_e0] = S.BlurFilter_add_d0[S.BlurFilter_add_e0] * S.BlurFilter_add_alpha;
 						}
 					}
 				}
 			}
 			else {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
+				for (S.BlurFilter_add_i = 0, S.BlurFilter_add_iz = data.height; S.BlurFilter_add_i < S.BlurFilter_add_iz; S.BlurFilter_add_i++) {
+					for (S.BlurFilter_add_j = 0, S.BlurFilter_add_jz = data.width; S.BlurFilter_add_j < S.BlurFilter_add_jz; S.BlurFilter_add_j++) {
 						e0 = ((i * jz) + j) * 4;
-						if (d0[e0 + 3] > 0) {
-							r = 0;
-							g = 0;
-							b = 0;
-							count = 0;
-							for (k = 0, kz = c; k < kz; k += this.skip) {
-								x = j + this.cells[k][0];
-								y = i + this.cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									e = ((y * jz) + x) * 4;
-									if (d0[e + 3] > 0) {
-										count++;
-										r += d0[e];
-										e++;
-										g += d0[e];
-										e++;
-										b += d0[e];
+						if (S.BlurFilter_add_d0[S.BlurFilter_add_e0 + 3] > 0) {
+							S.BlurFilter_add_r = 0;
+							S.BlurFilter_add_g = 0;
+							S.BlurFilter_add_b = 0;
+							S.BlurFilter_add_count = 0;
+							for (S.BlurFilter_add_k = 0, S.BlurFilter_add_kz = S.BlurFilter_add_c; S.BlurFilter_add_k < S.BlurFilter_add_kz; S.BlurFilter_add_k += this.skip) {
+								S.BlurFilter_add_x = S.BlurFilter_add_j + this.cells[S.BlurFilter_add_k][0];
+								S.BlurFilter_add_y = S.BlurFilter_add_i + this.cells[S.BlurFilter_add_k][1];
+								if (S.BlurFilter_add_x >= 0 && S.BlurFilter_add_x < S.BlurFilter_add_jz && S.BlurFilter_add_y >= 0 && S.BlurFilter_add_y < S.BlurFilter_add_iz) {
+									S.BlurFilter_add_e = ((S.BlurFilter_add_y * S.BlurFilter_add_jz) + S.BlurFilter_add_x) * 4;
+									if (S.BlurFilter_add_d0[S.BlurFilter_add_e + 3] > 0) {
+										S.BlurFilter_add_count++;
+										S.BlurFilter_add_r += S.BlurFilter_add_d0[S.BlurFilter_add_e];
+										S.BlurFilter_add_e++;
+										S.BlurFilter_add_g += S.BlurFilter_add_d0[S.BlurFilter_add_e];
+										S.BlurFilter_add_e++;
+										S.BlurFilter_add_b += S.BlurFilter_add_d0[S.BlurFilter_add_e];
 									}
 								}
 							}
-							if (count !== 0) {
-								r /= count;
-								g /= count;
-								b /= count;
+							if (S.BlurFilter_add_count !== 0) {
+								S.BlurFilter_add_r /= S.BlurFilter_add_count;
+								S.BlurFilter_add_g /= S.BlurFilter_add_count;
+								S.BlurFilter_add_b /= S.BlurFilter_add_count;
 							}
-							dR[e0] = r;
-							e0++;
-							dR[e0] = g;
-							e0++;
-							dR[e0] = b;
-							e0++;
-							dR[e0] = d0[e0] * alpha;
+							S.BlurFilter_add_dR[S.BlurFilter_add_e0] = S.BlurFilter_add_r;
+							S.BlurFilter_add_e0++;
+							S.BlurFilter_add_dR[S.BlurFilter_add_e0] = S.BlurFilter_add_g;
+							S.BlurFilter_add_e0++;
+							S.BlurFilter_add_dR[S.BlurFilter_add_e0] = S.BlurFilter_add_b;
+							S.BlurFilter_add_e0++;
+							S.BlurFilter_add_dR[S.BlurFilter_add_e0] = S.BlurFilter_add_d0[S.BlurFilter_add_e0] * S.BlurFilter_add_alpha;
 						}
 					}
 				}
 			}
-			return result;
+			return S.BlurFilter_add_result;
 		};
 		/**
 Blur helper function
@@ -1986,40 +2143,52 @@ Blur helper function
 @param r {Number} brush roll (in degrees)
 @return Array of objects used for the blur brush
 **/
+		S.BlurFilter_getBrush_x = 0;
+		S.BlurFilter_getBrush_y = 0;
+		S.BlurFilter_getBrush_r = 0;
+		S.BlurFilter_getBrush_dim = 0;
+		S.BlurFilter_getBrush_hDim = 0;
+		S.BlurFilter_getBrush_cos = 0;
+		S.BlurFilter_getBrush_sin = 0;
+		S.BlurFilter_getBrush_brush = [];
+		S.BlurFilter_getBrush_cv = null; //DOM Canvas object
+		S.BlurFilter_getBrush_cvx = null; //DOM Canvas context object
+		S.BlurFilter_getBrush_i = 0;
+		S.BlurFilter_getBrush_j = 0;
 		my.BlurFilter.prototype.getBrush = function() {
-			var x = this.radiusX,
-				y = this.radiusY,
-				r = this.roll,
-				dim = (x > y) ? x + 2 : y + 2,
-				hDim = Math.floor(dim / 2),
-				cos = Math.cos(r * my.radian),
-				sin = Math.sin(r * my.radian),
-				brush = [],
-				cv = my.filterCanvas,
-				cvx = my.filterCvx;
-			cv.width = dim;
-			cv.height = dim;
-			cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
-			cvx.beginPath();
-			cvx.moveTo(-x, 0);
-			cvx.lineTo(-1, -1);
-			cvx.lineTo(0, -y);
-			cvx.lineTo(1, -1);
-			cvx.lineTo(x, 0);
-			cvx.lineTo(1, 1);
-			cvx.lineTo(0, y);
-			cvx.lineTo(-1, 1);
-			cvx.lineTo(-x, 0);
-			cvx.closePath();
-			for (var i = 0; i < dim; i++) { //rows (y)
-				for (var j = 0; j < dim; j++) { //cols (x)
-					if (cvx.isPointInPath(j, i)) {
-						brush.push([j - hDim, i - hDim, 1]);
+			S.BlurFilter_getBrush_x = this.radiusX;
+			S.BlurFilter_getBrush_y = this.radiusY;
+			S.BlurFilter_getBrush_r = this.roll;
+			S.BlurFilter_getBrush_dim = (S.BlurFilter_getBrush_x > S.BlurFilter_getBrush_y) ? S.BlurFilter_getBrush_x + 2 : S.BlurFilter_getBrush_y + 2;
+			S.BlurFilter_getBrush_hDim = Math.floor(S.BlurFilter_getBrush_dim / 2);
+			S.BlurFilter_getBrush_cos = Math.cos(S.BlurFilter_getBrush_r * my.radian);
+			S.BlurFilter_getBrush_sin = Math.sin(S.BlurFilter_getBrush_r * my.radian);
+			S.BlurFilter_getBrush_brush = [];
+			S.BlurFilter_getBrush_cv = my.filterCanvas;
+			S.BlurFilter_getBrush_cvx = my.filterCvx;
+			S.BlurFilter_getBrush_cv.width = S.BlurFilter_getBrush_dim;
+			S.BlurFilter_getBrush_cv.height = S.BlurFilter_getBrush_dim;
+			S.BlurFilter_getBrush_cvx.setTransform(S.BlurFilter_getBrush_cos, S.BlurFilter_getBrush_sin, -S.BlurFilter_getBrush_sin, S.BlurFilter_getBrush_cos, S.BlurFilter_getBrush_hDim, S.BlurFilter_getBrush_hDim);
+			S.BlurFilter_getBrush_cvx.beginPath();
+			S.BlurFilter_getBrush_cvx.moveTo(-S.BlurFilter_getBrush_x, 0);
+			S.BlurFilter_getBrush_cvx.lineTo(-1, -1);
+			S.BlurFilter_getBrush_cvx.lineTo(0, -S.BlurFilter_getBrush_y);
+			S.BlurFilter_getBrush_cvx.lineTo(1, -1);
+			S.BlurFilter_getBrush_cvx.lineTo(S.BlurFilter_getBrush_x, 0);
+			S.BlurFilter_getBrush_cvx.lineTo(1, 1);
+			S.BlurFilter_getBrush_cvx.lineTo(0, S.BlurFilter_getBrush_y);
+			S.BlurFilter_getBrush_cvx.lineTo(-1, 1);
+			S.BlurFilter_getBrush_cvx.lineTo(-S.BlurFilter_getBrush_x, 0);
+			S.BlurFilter_getBrush_cvx.closePath();
+			for (S.BlurFilter_getBrush_i = 0; S.BlurFilter_getBrush_i < S.BlurFilter_getBrush_dim; S.BlurFilter_getBrush_i++) { //rows (y)
+				for (S.BlurFilter_getBrush_j = 0; S.BlurFilter_getBrush_j < S.BlurFilter_getBrush_dim; S.BlurFilter_getBrush_j++) { //cols (x)
+					if (S.BlurFilter_getBrush_cvx.isPointInPath(S.BlurFilter_getBrush_j, S.BlurFilter_getBrush_i)) {
+						S.BlurFilter_getBrush_brush.push([S.BlurFilter_getBrush_j - S.BlurFilter_getBrush_hDim, S.BlurFilter_getBrush_i - S.BlurFilter_getBrush_hDim, 1]);
 					}
 				}
 			}
-			cvx.setTransform(1, 0, 0, 1, 0, 0);
-			return brush;
+			S.BlurFilter_getBrush_cvx.setTransform(1, 0, 0, 1, 0, 0);
+			return S.BlurFilter_getBrush_brush;
 		};
 		/**
 # LeachFilter
@@ -2132,29 +2301,39 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.LeachFilter_add_alpha = 0;
+		S.LeachFilter_add_rMax = 0;
+		S.LeachFilter_add_gMax = 0;
+		S.LeachFilter_add_bMax = 0;
+		S.LeachFilter_add_rMin = 0;
+		S.LeachFilter_add_gMin = 0;
+		S.LeachFilter_add_bMin = 0;
+		S.LeachFilter_add_d = [];
+		S.LeachFilter_add_i = 0;
+		S.LeachFilter_add_iz = 0;
+		S.LeachFilter_add_flag = false;
 		my.LeachFilter.prototype.add = function(data) {
-			var alpha = Math.floor(this.getAlpha() * 255),
-				rMax = this.maxRed,
-				gMax = this.maxGreen,
-				bMax = this.maxBlue,
-				rMin = this.minRed,
-				gMin = this.minGreen,
-				bMin = this.minBlue,
-				d = data.data,
-				i, iz, flag;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] > 0) {
-					flag = false;
-					if (my.isBetween(d[i], rMin, rMax, true)) {
-						if (my.isBetween(d[i + 1], gMin, gMax, true)) {
-							if (my.isBetween(d[i + 2], bMin, bMax, true)) {
-								d[i + 3] = alpha;
-								flag = true;
+			S.LeachFilter_add_alpha = Math.floor(this.getAlpha() * 255);
+			S.LeachFilter_add_rMax = this.maxRed;
+			S.LeachFilter_add_gMax = this.maxGreen;
+			S.LeachFilter_add_bMax = this.maxBlue;
+			S.LeachFilter_add_rMin = this.minRed;
+			S.LeachFilter_add_gMin = this.minGreen;
+			S.LeachFilter_add_bMin = this.minBlue;
+			S.LeachFilter_add_d = data.data;
+			for (S.LeachFilter_add_i = 0, S.LeachFilter_add_iz = S.LeachFilter_add_d.length; S.LeachFilter_add_i < S.LeachFilter_add_iz; S.LeachFilter_add_i += 4) {
+				if (S.LeachFilter_add_d[S.LeachFilter_add_i + 3] > 0) {
+					S.LeachFilter_add_flag = false;
+					if (my.isBetween(S.LeachFilter_add_d[S.LeachFilter_add_i], S.LeachFilter_add_rMin, S.LeachFilter_add_rMax, true)) {
+						if (my.isBetween(S.LeachFilter_add_d[S.LeachFilter_add_i + 1], S.LeachFilter_add_gMin, S.LeachFilter_add_gMax, true)) {
+							if (my.isBetween(S.LeachFilter_add_d[S.LeachFilter_add_i + 2], S.LeachFilter_add_bMin, S.LeachFilter_add_bMax, true)) {
+								S.LeachFilter_add_d[S.LeachFilter_add_i + 3] = S.LeachFilter_add_alpha;
+								S.LeachFilter_add_flag = true;
 							}
 						}
 					}
-					if (!flag) {
-						d[i + 3] = 0;
+					if (!S.LeachFilter_add_flag) {
+						S.LeachFilter_add_d[S.LeachFilter_add_i + 3] = 0;
 					}
 				}
 			}
@@ -2216,49 +2395,54 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.SeparateFilter_add_alpha = 0;
+		S.SeparateFilter_add_channel = '';
+		S.SeparateFilter_add_d = [];
+		S.SeparateFilter_add_i = 0;
+		S.SeparateFilter_add_iz = 0;
+		S.SeparateFilter_add_col = 0;
 		my.SeparateFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				channel = this.channel,
-				d = data.data,
-				i, iz, col;
-			console.log(channel);
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] > 0) {
-					switch (channel) {
+			S.SeparateFilter_add_alpha = this.getAlpha();
+			S.SeparateFilter_add_channel = this.channel;
+			S.SeparateFilter_add_d = data.data;
+			//i, iz, col;
+			for (S.SeparateFilter_add_i = 0, S.SeparateFilter_add_iz = S.SeparateFilter_add_d.length; S.SeparateFilter_add_i < S.SeparateFilter_add_iz; S.SeparateFilter_add_i += 4) {
+				if (S.SeparateFilter_add_d[S.SeparateFilter_add_i + 3] > 0) {
+					switch (S.SeparateFilter_add_channel) {
 						case 'red':
-							d[i + 1] = 0;
-							d[i + 2] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 1] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 2] = 0;
 							break;
 						case 'green':
-							d[i] = 0;
-							d[i + 2] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 2] = 0;
 							break;
 						case 'blue':
-							d[i] = 0;
-							d[i + 1] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 1] = 0;
 							break;
 						case 'cyan':
-							col = (d[i + 1] + d[i + 2]) / 2;
-							d[i] = 0;
-							d[i + 1] = col;
-							d[i + 2] = col;
+							S.SeparateFilter_add_col = (S.SeparateFilter_add_d[S.SeparateFilter_add_i + 1] + S.SeparateFilter_add_d[S.SeparateFilter_add_i + 2]) / 2;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 1] = S.SeparateFilter_add_col;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 2] = S.SeparateFilter_add_col;
 							break;
 						case 'magenta':
-							col = (d[i] + d[i + 2]) / 2;
-							d[i + 1] = 0;
-							d[i] = col;
-							d[i + 2] = col;
+							S.SeparateFilter_add_col = (S.SeparateFilter_add_d[S.SeparateFilter_add_i] + S.SeparateFilter_add_d[S.SeparateFilter_add_i + 2]) / 2;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 1] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i] = S.SeparateFilter_add_col;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 2] = S.SeparateFilter_add_col;
 							break;
 						case 'yellow':
-							col = (d[i] + d[i + 1]) / 2;
-							d[i + 2] = 0;
-							d[i + 1] = col;
-							d[i] = col;
+							S.SeparateFilter_add_col = (S.SeparateFilter_add_d[S.SeparateFilter_add_i] + S.SeparateFilter_add_d[S.SeparateFilter_add_i + 1]) / 2;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 2] = 0;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i + 1] = S.SeparateFilter_add_col;
+							S.SeparateFilter_add_d[S.SeparateFilter_add_i] = S.SeparateFilter_add_col;
 							break;
 						default:
 							// case 'all' - do nothing
 					}
-					d[i + 3] *= alpha;
+					S.SeparateFilter_add_d[S.SeparateFilter_add_i + 3] *= S.SeparateFilter_add_alpha;
 				}
 			}
 			return data;
@@ -2363,42 +2547,59 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
+		S.NoiseFilter_add_alpha = 0;
+		S.NoiseFilter_add_d0 = [];
+		S.NoiseFilter_add_dR = [];
+		S.NoiseFilter_add_result = null; // ImageData object
+		S.NoiseFilter_add_strength = 0;
+		S.NoiseFilter_add_i = 0;
+		S.NoiseFilter_add_iz = 0;
+		S.NoiseFilter_add_j = 0;
+		S.NoiseFilter_add_jz = 0;
+		S.NoiseFilter_add_k = 0;
+		S.NoiseFilter_add_kz = 0;
+		S.NoiseFilter_add_e = 0;
+		S.NoiseFilter_add_e0 = 0;
+		S.NoiseFilter_add_x = 0;
+		S.NoiseFilter_add_y = 0;
+		S.NoiseFilter_add_cell = [];
+		S.NoiseFilter_add_cellLen = 0;
 		my.NoiseFilter.prototype.add = function(data) {
-			var alpha = this.getAlpha(),
-				d0 = data.data,
-				result = my.cvx.createImageData(data.width, data.height),
-				dR = result.data,
-				strength = this.strength,
-				i, iz, j, jz, k, kz, e, e0, x, y, cell,
-				cellLen = this.cells.length;
-			for (i = 0, iz = data.height; i < iz; i++) {
-				for (j = 0, jz = data.width; j < jz; j++) {
-					e0 = ((i * jz) + j) * 4;
-					if (d0[e0 + 3] > 0) {
-						if (Math.random() < strength) {
-							cell = this.cells[Math.floor(Math.random() * cellLen)];
-							x = j + cell[0];
-							y = i + cell[1];
-							if (x >= 0 && x < jz && y >= 0 && y < iz) {
-								e = ((y * jz) + x) * 4;
-								dR[e0] = d0[e];
-								dR[e0 + 1] = d0[e + 1];
-								dR[e0 + 2] = d0[e + 2];
-								dR[e0 + 3] = d0[e0 + 3] * alpha;
+			S.NoiseFilter_add_alpha = this.getAlpha();
+			S.NoiseFilter_add_d0 = data.data;
+			S.NoiseFilter_add_result = my.cvx.createImageData(data.width, data.height);
+			S.NoiseFilter_add_dR = S.NoiseFilter_add_result.data;
+			S.NoiseFilter_add_strength = this.strength;
+			//i, iz, j, jz, k, kz, e, e0, x, y, cell,
+			S.NoiseFilter_add_cellLen = this.cells.length;
+			for (S.NoiseFilter_add_i = 0, S.NoiseFilter_add_iz = data.height; S.NoiseFilter_add_i < S.NoiseFilter_add_iz; S.NoiseFilter_add_i++) {
+				for (S.NoiseFilter_add_j = 0, S.NoiseFilter_add_jz = data.width; S.NoiseFilter_add_j < S.NoiseFilter_add_jz; S.NoiseFilter_add_j++) {
+					S.NoiseFilter_add_e0 = ((S.NoiseFilter_add_i * S.NoiseFilter_add_jz) + S.NoiseFilter_add_j) * 4;
+					if (S.NoiseFilter_add_d0[S.NoiseFilter_add_e0 + 3] > 0) {
+						if (Math.random() < S.NoiseFilter_add_strength) {
+							S.NoiseFilter_add_cell = this.cells[Math.floor(Math.random() * S.NoiseFilter_add_cellLen)];
+							S.NoiseFilter_add_x = S.NoiseFilter_add_j + S.NoiseFilter_add_cell[0];
+							S.NoiseFilter_add_y = S.NoiseFilter_add_i + S.NoiseFilter_add_cell[1];
+							if (S.NoiseFilter_add_x >= 0 && S.NoiseFilter_add_x < S.NoiseFilter_add_jz && S.NoiseFilter_add_y >= 0 && S.NoiseFilter_add_y < S.NoiseFilter_add_iz) {
+								S.NoiseFilter_add_e = ((S.NoiseFilter_add_y * S.NoiseFilter_add_jz) + S.NoiseFilter_add_x) * 4;
+								S.NoiseFilter_add_dR[S.NoiseFilter_add_e0] = S.NoiseFilter_add_d0[S.NoiseFilter_add_e];
+								S.NoiseFilter_add_dR[S.NoiseFilter_add_e0 + 1] = S.NoiseFilter_add_d0[S.NoiseFilter_add_e + 1];
+								S.NoiseFilter_add_dR[S.NoiseFilter_add_e0 + 2] = S.NoiseFilter_add_d0[S.NoiseFilter_add_e + 2];
+								S.NoiseFilter_add_dR[S.NoiseFilter_add_e0 + 3] = S.NoiseFilter_add_d0[S.NoiseFilter_add_e0 + 3] * S.NoiseFilter_add_alpha;
 							}
 						}
 						else {
-							dR[e0] = d0[e0];
-							dR[e0 + 1] = d0[e0 + 1];
-							dR[e0 + 2] = d0[e0 + 2];
-							dR[e0 + 3] = d0[e0 + 3] * alpha;
+							S.NoiseFilter_add_dR[S.NoiseFilter_add_e0] = S.NoiseFilter_add_d0[S.NoiseFilter_add_e0];
+							S.NoiseFilter_add_dR[S.NoiseFilter_add_e0 + 1] = S.NoiseFilter_add_d0[S.NoiseFilter_add_e0 + 1];
+							S.NoiseFilter_add_dR[S.NoiseFilter_add_e0 + 2] = S.NoiseFilter_add_d0[S.NoiseFilter_add_e0 + 2];
+							S.NoiseFilter_add_dR[S.NoiseFilter_add_e0 + 3] = S.NoiseFilter_add_d0[S.NoiseFilter_add_e0 + 3] * S.NoiseFilter_add_alpha;
 						}
 					}
 				}
 			}
-			return result;
+			return S.NoiseFilter_add_result;
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

@@ -36,7 +36,7 @@ Adds an (experimental) physics engine to the core
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'physics')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -874,5 +874,5 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

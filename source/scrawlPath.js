@@ -37,7 +37,7 @@ The Path module adds Path entitys - path-based objects - to the core module
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'path')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -221,8 +221,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			data: 'M0,0 50,0 60,20, 10,20 0,0z',
 			});
 	**/
-		my.statArr.makePath1 = ['C', 'c', 'S', 's'];
-		my.statArr.makePath2 = ['Q', 'q', 'T', 't'];
+		S.stat_makePath1 = ['C', 'c', 'S', 's'];
+		S.stat_makePath2 = ['Q', 'q', 'T', 't'];
 		my.makePath = function(items) {
 			items = (my.isa(items, 'obj')) ? items : {};
 			var minX = 999999,
@@ -451,7 +451,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 								break;
 							case 'S':
 								for (k = 0, v = data.length; k < v; k += 4) {
-									if (i > 0 && my.contains(my.statArr.makePath1, set [i - 1][0])) {
+									if (i > 0 && my.contains(S.stat_makePath1, set [i - 1][0])) {
 										lib[tn + '_p' + (pc - 2)].clone({
 											name: tn + '_p' + pc,
 											currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
@@ -477,7 +477,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 								break;
 							case 's':
 								for (k = 0, v = data.length; k < v; k += 4) {
-									if (i > 0 && my.contains(my.statArr.makePath1, set [i - 1][0])) {
+									if (i > 0 && my.contains(S.stat_makePath1, set [i - 1][0])) {
 										lib[tn + '_p' + (pc - 2)].clone({
 											name: tn + '_p' + pc,
 											currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
@@ -529,7 +529,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 								break;
 							case 'T':
 								for (k = 0, v = data.length; k < v; k += 2) {
-									if (i > 0 && my.contains(my.statArr.makePath2, set [i - 1][0])) {
+									if (i > 0 && my.contains(S.stat_makePath2, set [i - 1][0])) {
 										lib[tn + '_p' + (pc - 2)].clone({
 											name: tn + '_p' + pc,
 											currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
@@ -553,7 +553,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 								break;
 							case 't':
 								for (k = 0, v = data.length; k < v; k += 2) {
-									if (i > 0 && my.contains(my.statArr.makePath2, set [i - 1][0])) {
+									if (i > 0 && my.contains(S.stat_makePath2, set [i - 1][0])) {
 										lib[tn + '_p' + (pc - 2)].clone({
 											name: tn + '_p' + pc,
 											currentX: cx + (cx - lib[tn + '_p' + (pc - 2)].local.x),
@@ -2042,5 +2042,5 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return true;
 		};
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

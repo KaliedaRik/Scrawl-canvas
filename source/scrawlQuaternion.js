@@ -23,7 +23,7 @@
 //---------------------------------------------------------------------------------
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'quaternion')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -585,5 +585,5 @@ Retrieve rotations (Euler angles) from a quaternion
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

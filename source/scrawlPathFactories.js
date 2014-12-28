@@ -33,7 +33,7 @@ The Factories module adds a set of factory functions to the Scrawl library, whic
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'factories')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -472,10 +472,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} items Object containing attributes
 	@return Shape or Path entity object
 	**/
-		my.statArr.makeRegularShape1 = ['c', 's', 'q', 't', 'l'];
-		my.statArr.makeRegularShape2 = ['s', 't'];
-		my.statArr.makeRegularShape3 = ['c', 's', 'q', 't'];
-		my.statArr.makeRegularShape4 = ['c', 'q'];
+		S.stat_makeRegularShape1 = ['c', 's', 'q', 't', 'l'];
+		S.stat_makeRegularShape2 = ['s', 't'];
+		S.stat_makeRegularShape3 = ['c', 's', 'q', 't'];
+		S.stat_makeRegularShape4 = ['c', 'q'];
 		my.makeRegularShape = function(items) {
 			items = my.safeObject(items);
 			var cell = my.Entity.prototype.getEntityCell(items),
@@ -494,7 +494,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				c1y = (my.isa(c1y, 'str')) ? my.convertPercentage(c1y, cell, false) : c1y;
 				c2x = (my.isa(c2x, 'str')) ? my.convertPercentage(c2x, cell, true) : c2x;
 				c2y = (my.isa(c2y, 'str')) ? my.convertPercentage(c2y, cell, false) : c2y;
-				species = (my.contains(my.statArr.makeRegularShape1, items.lineType)) ? items.lineType : 'l';
+				species = (my.contains(S.stat_makeRegularShape1, items.lineType)) ? items.lineType : 'l';
 				radius = items.radius || 20;
 				// - known bug: items.sides has difficulty exiting the loop, hence the count<1000 limit
 				turn = (my.isa(items.sides, 'num') && items.sides > 1) ? 360 / items.sides : ((my.isa(items.angle, 'num') && items.angle > 0) ? items.angle : 4);
@@ -517,7 +517,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					z: 0
 				});
 				data = 'm' + point.x.toFixed(4) + ',' + point.y.toFixed(4);
-				if (my.contains(my.statArr.makeRegularShape2, species)) {
+				if (my.contains(S.stat_makeRegularShape2, species)) {
 					data += ('s' === species) ? 'c' : 'q';
 				}
 				else {
@@ -531,8 +531,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					point.rotate(turn);
 					c1.rotate(turn);
 					c2.rotate(turn);
-					if (my.contains(my.statArr.makeRegularShape3, species)) {
-						if (1 === count && my.contains(my.statArr.makeRegularShape2, species)) {
+					if (my.contains(S.stat_makeRegularShape3, species)) {
+						if (1 === count && my.contains(S.stat_makeRegularShape2, species)) {
 							if ('s' === species) {
 								data += c1.x.toFixed(4) + ',' + c1.y.toFixed(4) + ' ' + c2.x.toFixed(4) + ',' + c2.y.toFixed(4) + ' ';
 							}
@@ -544,7 +544,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 							if ('s' === species) {
 								data += c2.x.toFixed(4) + ',' + c2.y.toFixed(4) + ' ';
 							}
-							else if (my.contains(my.statArr.makeRegularShape4, species)) {
+							else if (my.contains(S.stat_makeRegularShape4, species)) {
 								data += c1.x.toFixed(4) + ',' + c1.y.toFixed(4) + ' ';
 							}
 						}
@@ -554,7 +554,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					}
 					data += (point.x - oPoint.x).toFixed(4) + ',' + (point.y - oPoint.y).toFixed(4) + ' ';
 					if (1 === count) {
-						if (my.contains(my.statArr.makeRegularShape2, species)) {
+						if (my.contains(S.stat_makeRegularShape2, species)) {
 							data += ('s' === species) ? 's' : 't';
 						}
 					}
@@ -606,5 +606,5 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

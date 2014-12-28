@@ -83,7 +83,7 @@ var mycode = function() {
 
 	//define entitys
 	buildEntitys = function() {
-		scrawl.deleteEntity(['myshape', 'mypath']);
+		scrawl.deleteEntity('myshape', 'mypath');
 		shape = scrawl.makeRegularShape({
 			name: 'myshape',
 			startX: 200,

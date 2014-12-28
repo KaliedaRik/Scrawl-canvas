@@ -24,7 +24,7 @@
 
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'imageload')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -791,5 +791,5 @@ Import a video using the supplied url string
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

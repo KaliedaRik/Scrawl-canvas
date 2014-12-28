@@ -36,7 +36,7 @@ The Block module adds Block entitys - squares and rectangles - to the core modul
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'block')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 		/**
 	# window.scrawl
@@ -145,17 +145,17 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
-		scrawlVars.Block_setLocalDimensions_cell = null; //scrawl Cell object
+		S.Block_setLocalDimensions_cell = null; //scrawl Cell object
 		my.Block.prototype.setLocalDimensions = function() {
-			scrawlVars.Block_setLocalDimensions_cell = my.cell[my.group[this.group].cell];
+			S.Block_setLocalDimensions_cell = my.cell[my.group[this.group].cell];
 			if (my.isa(this.width, 'str')) {
-				this.localWidth = (parseFloat(this.width) / 100) * scrawlVars.Block_setLocalDimensions_cell.actualWidth * this.scale;
+				this.localWidth = (parseFloat(this.width) / 100) * S.Block_setLocalDimensions_cell.actualWidth * this.scale;
 			}
 			else {
 				this.localWidth = this.width * this.scale || 0;
 			}
 			if (my.isa(this.height, 'str')) {
-				this.localHeight = (parseFloat(this.height) / 100) * scrawlVars.Block_setLocalDimensions_cell.actualHeight * this.scale;
+				this.localHeight = (parseFloat(this.height) / 100) * S.Block_setLocalDimensions_cell.actualHeight * this.scale;
 			}
 			else {
 				this.localHeight = this.height * this.scale || 0;
@@ -171,12 +171,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	@private
 	**/
-		scrawlVars.Block_stamp_here = null; //scrawl Vector object
+		S.Block_stamp_here = null; //scrawl Vector object
 		my.Block.prototype.clip = function(ctx, cell) {
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_stamp_here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
-			ctx.rect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.rect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			ctx.clip();
 			return this;
 		};
@@ -190,10 +190,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Block.prototype.clear = function(ctx, cell) {
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_stamp_here = this.prepareStamp();
 			my.cell[cell].setToClearShape();
 			this.rotateCell(ctx, cell);
-			ctx.clearRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.clearRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			return this;
 		};
 		/**
@@ -205,29 +205,29 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	@private
 	**/
-		scrawlVars.Block_clearWithBackground_myCell = null; //scrawl Cell object
-		scrawlVars.Block_clearWithBackground_bg = '';
-		scrawlVars.Block_clearWithBackground_myCellCtx = null; //scrawl Context object
-		scrawlVars.Block_clearWithBackground_fillStyle = '';
-		scrawlVars.Block_clearWithBackground_strokeStyle = '';
-		scrawlVars.Block_clearWithBackground_globalAlpha = '';
+		S.Block_clearWithBackground_myCell = null; //scrawl Cell object
+		S.Block_clearWithBackground_bg = '';
+		S.Block_clearWithBackground_myCellCtx = null; //scrawl Context object
+		S.Block_clearWithBackground_fillStyle = '';
+		S.Block_clearWithBackground_strokeStyle = '';
+		S.Block_clearWithBackground_globalAlpha = '';
 		my.Block.prototype.clearWithBackground = function(ctx, cell) {
-			scrawlVars.Block_clearWithBackground_myCell = my.cell[cell];
-			scrawlVars.Block_clearWithBackground_bg = scrawlVars.Block_clearWithBackground_myCell.get('backgroundColor');
-			scrawlVars.Block_clearWithBackground_myCellCtx = my.ctx[cell];
-			scrawlVars.Block_clearWithBackground_fillStyle = scrawlVars.Block_clearWithBackground_myCellCtx.get('fillStyle');
-			scrawlVars.Block_clearWithBackground_strokeStyle = scrawlVars.Block_clearWithBackground_myCellCtx.get('strokeStyle');
-			scrawlVars.Block_clearWithBackground_globalAlpha = scrawlVars.Block_clearWithBackground_myCellCtx.get('globalAlpha');
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_clearWithBackground_myCell = my.cell[cell];
+			S.Block_clearWithBackground_bg = S.Block_clearWithBackground_myCell.get('backgroundColor');
+			S.Block_clearWithBackground_myCellCtx = my.ctx[cell];
+			S.Block_clearWithBackground_fillStyle = S.Block_clearWithBackground_myCellCtx.get('fillStyle');
+			S.Block_clearWithBackground_strokeStyle = S.Block_clearWithBackground_myCellCtx.get('strokeStyle');
+			S.Block_clearWithBackground_globalAlpha = S.Block_clearWithBackground_myCellCtx.get('globalAlpha');
+			S.Block_stamp_here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
-			ctx.fillStyle = scrawlVars.Block_clearWithBackground_bg;
-			ctx.strokeStyle = scrawlVars.Block_clearWithBackground_bg;
+			ctx.fillStyle = S.Block_clearWithBackground_bg;
+			ctx.strokeStyle = S.Block_clearWithBackground_bg;
 			ctx.globalAlpha = 1;
-			ctx.strokeRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
-			ctx.fillRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
-			ctx.fillStyle = scrawlVars.Block_clearWithBackground_fillStyle;
-			ctx.strokeStyle = scrawlVars.Block_clearWithBackground_strokeStyle;
-			ctx.globalAlpha = scrawlVars.Block_clearWithBackground_globalAlpha;
+			ctx.strokeRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.fillRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.fillStyle = S.Block_clearWithBackground_fillStyle;
+			ctx.strokeStyle = S.Block_clearWithBackground_strokeStyle;
+			ctx.globalAlpha = S.Block_clearWithBackground_globalAlpha;
 			return this;
 		};
 		/**
@@ -240,10 +240,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Block.prototype.draw = function(ctx, cell) {
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_stamp_here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
 			this.rotateCell(ctx, cell);
-			ctx.strokeRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.strokeRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			return this;
 		};
 		/**
@@ -256,10 +256,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Block.prototype.fill = function(ctx, cell) {
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_stamp_here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
 			this.rotateCell(ctx, cell);
-			ctx.fillRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.fillRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			return this;
 		};
 		/**
@@ -272,12 +272,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Block.prototype.drawFill = function(ctx, cell) {
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_stamp_here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
 			this.rotateCell(ctx, cell);
-			ctx.strokeRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.strokeRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			this.clearShadow(ctx, cell);
-			ctx.fillRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.fillRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			return this;
 		};
 		/**
@@ -290,12 +290,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Block.prototype.fillDraw = function(ctx, cell) {
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_stamp_here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
 			this.rotateCell(ctx, cell);
-			ctx.fillRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.fillRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			this.clearShadow(ctx, cell);
-			ctx.strokeRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.strokeRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			return this;
 		};
 		/**
@@ -308,11 +308,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Block.prototype.sinkInto = function(ctx, cell) {
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_stamp_here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
 			this.rotateCell(ctx, cell);
-			ctx.fillRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
-			ctx.strokeRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.fillRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.strokeRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			return this;
 		};
 		/**
@@ -325,11 +325,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Block.prototype.floatOver = function(ctx, cell) {
-			scrawlVars.Block_stamp_here = this.prepareStamp();
+			S.Block_stamp_here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
 			this.rotateCell(ctx, cell);
-			ctx.strokeRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
-			ctx.fillRect(scrawlVars.Block_stamp_here.x, scrawlVars.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.strokeRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
+			ctx.fillRect(S.Block_stamp_here.x, S.Block_stamp_here.y, this.localWidth, this.localHeight);
 			return this;
 		};
 		/**
@@ -347,5 +347,5 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

@@ -38,7 +38,7 @@ The Stacks module adds support for CSS3 3d transformations to visible &lt;canvas
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'stacks')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -752,11 +752,11 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 @param {String} get Attribute key
 @return Attribute value
 **/
-		my.statArr.pageElementGet1 = ['width', 'height'];
-		my.statArr.pageElementGet2 = ['startX', 'startY', 'handleX', 'handleY', 'deltaX', 'deltaY', 'translateX', 'translateY', 'translateZ'];
+		S.stat_pageElementGet1 = ['width', 'height'];
+		S.stat_pageElementGet2 = ['startX', 'startY', 'handleX', 'handleY', 'deltaX', 'deltaY', 'translateX', 'translateY', 'translateZ'];
 		my.PageElement.prototype.get = function(item) {
 			var el = this.getElement();
-			if (my.contains(my.statArr.pageElementGet1, item)) {
+			if (my.contains(S.stat_pageElementGet1, item)) {
 				switch (this.type) {
 					case 'Pad':
 						if ('width' === item) {
@@ -775,7 +775,7 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 						}
 				}
 			}
-			if (my.contains(my.statArr.pageElementGet2, item)) {
+			if (my.contains(S.stat_pageElementGet2, item)) {
 				switch (item) {
 					case 'startX':
 						return this.start.x;
@@ -982,10 +982,10 @@ Constructor / set helper function
 @chainable
 @private
 **/
-		my.statArr.pageElementCorrectStart1 = ['left', 'center', 'right'];
-		my.statArr.pageElementCorrectStart2 = ['top', 'center', 'bottom'];
+		S.stat_pageElementCorrectStart1 = ['left', 'center', 'right'];
+		S.stat_pageElementCorrectStart2 = ['top', 'center', 'bottom'];
 		my.PageElement.prototype.correctStart = function() {
-			if (my.contains(my.statArr.pageElementCorrectStart1, this.start.x)) {
+			if (my.contains(S.stat_pageElementCorrectStart1, this.start.x)) {
 				switch (this.start.x) {
 					case 'left':
 						this.start.x = '0%';
@@ -998,7 +998,7 @@ Constructor / set helper function
 						break;
 				}
 			}
-			if (my.contains(my.statArr.pageElementCorrectStart2, this.start.y)) {
+			if (my.contains(S.stat_pageElementCorrectStart2, this.start.y)) {
 				switch (this.start.y) {
 					case 'top':
 						this.start.y = '0%';
@@ -1020,8 +1020,8 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 @return This
 @chainable
 **/
-		my.statArr.pageElementSetStyles1 = ['hidden', 'none'];
-		my.statArr.pageElementSetStyles2 = ['backfaceVisibility', 'opacity', 'display', 'width', 'height', 'transform', 'translate', 'translateX', 'translateY', 'translateZ', 'top', 'left', 'bottom', 'right', 'zIndex', 'title', 'comment'];
+		S.stat_pageElementSetStyles1 = ['hidden', 'none'];
+		S.stat_pageElementSetStyles2 = ['backfaceVisibility', 'opacity', 'display', 'width', 'height', 'transform', 'translate', 'translateX', 'translateY', 'translateZ', 'top', 'left', 'bottom', 'right', 'zIndex', 'title', 'comment'];
 		my.PageElement.prototype.setStyles = function(items) {
 			items = my.safeObject(items);
 			var el = this.getElement(),
@@ -1034,7 +1034,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 				}
 				else if (k[i] === 'visibility') {
 					if (my.isa(items.visibility, 'str')) {
-						this.visibility = (!my.contains(my.statArr.pageElementSetStyles1, items.visibility)) ? true : false;
+						this.visibility = (!my.contains(S.stat_pageElementSetStyles1, items.visibility)) ? true : false;
 					}
 					else {
 						this.visibility = (items.visibility) ? true : false;
@@ -1047,7 +1047,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 					}
 				}
 				else {
-					if (!my.contains(my.statArr.pageElementSetStyles2, k[i])) {
+					if (!my.contains(S.stat_pageElementSetStyles2, k[i])) {
 						if (my.xt(el.style[k[i]])) {
 							el.style[k[i]] = items[k[i]];
 						}
@@ -1244,59 +1244,59 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 @return This left
 @chainable
 **/
-		my.statArr.pere = [0, 0, 0, 0, 0, 0, 0];
-		my.statArr.pere2 = [0, 0, 0, 0, 0];
+		S.stat_pere = [0, 0, 0, 0, 0, 0, 0];
+		S.stat_pere2 = [0, 0, 0, 0, 0];
 		my.PageElement.prototype.renderElement = function() {
 			var g = my.group[this.group];
-			my.statArr.pere2[0] = this.getElement();
+			S.stat_pere2[0] = this.getElement();
 			if (!my.xt(this.offset)) {
 				this.offset = this.getOffsetStartVector();
 			}
 			if (this.path) {
 				this.setStampUsingPath();
-				my.statArr.pere2[1] = this.start;
+				S.stat_pere2[1] = this.start;
 			}
 			else if (this.pivot) {
 				this.setStampUsingPivot();
-				my.statArr.pere2[1] = this.start;
+				S.stat_pere2[1] = this.start;
 			}
 			else {
-				my.statArr.pere2[1] = this.getStartValues();
+				S.stat_pere2[1] = this.getStartValues();
 			}
 
 			if (g && (g.equalWidth || g.equalHeight)) {
 				this.setDimensions();
 			}
 			this.updateStart();
-			my.statArr.pere2[2] = (my.isa(this.start.x, 'str')) ? true : false;
-			my.statArr.pere2[3] = (my.isa(this.start.y, 'str')) ? true : false;
+			S.stat_pere2[2] = (my.isa(this.start.x, 'str')) ? true : false;
+			S.stat_pere2[3] = (my.isa(this.start.y, 'str')) ? true : false;
 
 			if (this.rotation.getMagnitude() !== 1) {
 				this.rotation.normalize();
 			}
 
-			my.statArr.pere[0] = Math.round(this.translate.x * this.scale);
-			my.statArr.pere[1] = Math.round(this.translate.y * this.scale);
-			my.statArr.pere[2] = Math.round(this.translate.z * this.scale);
-			my.statArr.pere[3] = this.rotation.v.x;
-			my.statArr.pere[4] = this.rotation.v.y;
-			my.statArr.pere[5] = this.rotation.v.z;
-			my.statArr.pere[6] = this.rotation.getAngle(false);
+			S.stat_pere[0] = Math.round(this.translate.x * this.scale);
+			S.stat_pere[1] = Math.round(this.translate.y * this.scale);
+			S.stat_pere[2] = Math.round(this.translate.z * this.scale);
+			S.stat_pere[3] = this.rotation.v.x;
+			S.stat_pere[4] = this.rotation.v.y;
+			S.stat_pere[5] = this.rotation.v.z;
+			S.stat_pere[6] = this.rotation.getAngle(false);
 
 			for (var i = 0; i < 7; i++) {
-				if (my.statArr.pere[i] < 0.000001 && my.statArr.pere[i] > -0.000001) {
-					my.statArr.pere[i] = 0;
+				if (S.stat_pere[i] < 0.000001 && S.stat_pere[i] > -0.000001) {
+					S.stat_pere[i] = 0;
 				}
 			}
 
-			my.statArr.pere2[4] = 'translate3d(' + my.statArr.pere[0] + 'px,' + my.statArr.pere[1] + 'px,' + my.statArr.pere[2] + 'px) rotate3d(' + my.statArr.pere[3] + ',' + my.statArr.pere[4] + ',' + my.statArr.pere[5] + ',' + my.statArr.pere[6] + 'rad)';
-			my.statArr.pere2[0].style.webkitTransform = my.statArr.pere2[4];
-			my.statArr.pere2[0].style.transform = my.statArr.pere2[4];
+			S.stat_pere2[4] = 'translate3d(' + S.stat_pere[0] + 'px,' + S.stat_pere[1] + 'px,' + S.stat_pere[2] + 'px) rotate3d(' + S.stat_pere[3] + ',' + S.stat_pere[4] + ',' + S.stat_pere[5] + ',' + S.stat_pere[6] + 'rad)';
+			S.stat_pere2[0].style.webkitTransform = S.stat_pere2[4];
+			S.stat_pere2[0].style.transform = S.stat_pere2[4];
 
-			my.statArr.pere2[0].style.zIndex = my.statArr.pere[2];
+			S.stat_pere2[0].style.zIndex = S.stat_pere[2];
 
-			my.statArr.pere2[0].style.left = (my.statArr.pere2[2]) ? ((my.statArr.pere2[1].x * this.scale) + this.offset.x) + 'px' : (my.statArr.pere2[1].x + this.offset.x) + 'px';
-			my.statArr.pere2[0].style.top = (my.statArr.pere2[3]) ? ((my.statArr.pere2[1].y * this.scale) + this.offset.y) + 'px' : (my.statArr.pere2[1].y + this.offset.y) + 'px';
+			S.stat_pere2[0].style.left = (S.stat_pere2[2]) ? ((S.stat_pere2[1].x * this.scale) + this.offset.x) + 'px' : (S.stat_pere2[1].x + this.offset.x) + 'px';
+			S.stat_pere2[0].style.top = (S.stat_pere2[3]) ? ((S.stat_pere2[1].y * this.scale) + this.offset.y) + 'px' : (S.stat_pere2[1].y + this.offset.y) + 'px';
 			return this;
 		};
 		/**
@@ -2468,5 +2468,5 @@ This has the effect of turning a set of disparate eelements into a single, coord
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

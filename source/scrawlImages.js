@@ -40,7 +40,7 @@ The Images module adds support for displaying images on canvas elements
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'images')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -1166,5 +1166,5 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

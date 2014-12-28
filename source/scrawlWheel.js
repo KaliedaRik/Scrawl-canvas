@@ -34,7 +34,7 @@ The Wheel module adds Wheel entitys - circles, segments and filled arcs - to the
 @module scrawlWheel
 **/
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'wheel')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -554,5 +554,5 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }

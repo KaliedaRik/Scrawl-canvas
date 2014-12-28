@@ -37,7 +37,7 @@ The Phrase module adds Phrase entitys - single and multi-line text objects - to 
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'phrase')) {
-	var scrawl = (function(my) {
+	var scrawl = (function(my, S) {
 		'use strict';
 
 		/**
@@ -1261,5 +1261,5 @@ Calculate metrics for each phrase, word or glyph in the glyphs array
 		};
 
 		return my;
-	}(scrawl));
+	}(scrawl, scrawlVars));
 }
