@@ -88,21 +88,20 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @param {Object} items Key:value Object argument for setting attributes
     @return Picture entity object
     **/
+		S.Entity_convertToPicture_image = null; //ImageData object
+		S.Entity_convertToPicture_cell = null; //scrawl Cell object
+		S.Entity_convertToPicture_engine = null; //DOM Canvas context object
 		my.Entity.prototype.convertToPicture = function(items) {
-			console.log(this.name, 'cTP');
 			items = my.safeObject(items);
-			var image,
-				cell,
-				ctx;
-			cell = my.cell[my.group[this.group].cell];
-			ctx = my.context[my.group[this.group].cell];
-			image = my.prepareConvert(cell, ctx, this);
+			S.Entity_convertToPicture_cell = my.cell[my.group[this.group].cell];
+			S.Entity_convertToPicture_engine = my.context[my.group[this.group].cell];
+			S.Entity_convertToPicture_image = my.prepareConvert(S.Entity_convertToPicture_cell, S.Entity_convertToPicture_engine, this);
 			items.name = items.name || this.name + '_picture';
 			items.group = items.group || this.group;
 			if (items.convert) {
 				my.deleteEntity([this.name]);
 			}
-			return my.doConvert(image, items);
+			return my.doConvert(S.Entity_convertToPicture_image, items);
 		};
 		/**
     A __factory__ function to convert a group of entitys into a single Picture entity
@@ -116,22 +115,21 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @param {Object} items Key:value Object argument for setting attributes
     @return Picture entity object; false if no entitys contained in group
     **/
+		S.Group_convertGroupToPicture_image = null; //ImageData object
+		S.Group_convertGroupToPicture_cell = null; //scrawl Cell object
+		S.Group_convertGroupToPicture_engine = null; //DOM Canvas context object
 		my.Group.prototype.convertGroupToPicture = function(items) {
-			console.log(this.name, 'cGTP');
 			items = my.safeObject(items);
-			var image,
-				cell,
-				ctx;
 			if (this.entitys.length > 0) {
-				cell = my.cell[this.cell];
-				ctx = my.context[this.cell];
-				image = my.prepareConvert(cell, ctx, this);
+				S.Group_convertGroupToPicture_cell = my.cell[this.cell];
+				S.Group_convertGroupToPicture_engine = my.context[this.cell];
+				S.Group_convertGroupToPicture_image = my.prepareConvert(S.Group_convertGroupToPicture_cell, S.Group_convertGroupToPicture_engine, this);
 				items.name = items.name || this.name + '_entity';
 				items.group = items.group || this.name;
 				if (items.convert) {
 					my.deleteEntity(this.entitys);
 				}
-				return my.doConvert(image, items);
+				return my.doConvert(S.Group_convertGroupToPicture_image, items);
 			}
 			return false;
 		};
@@ -141,33 +139,40 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @return ImageData object
     @private
     **/
+		S.prepareConvert_image = null; //ImageData object
+		S.prepareConvert_data = null; //ImageData data array
+		S.prepareConvert_left = 0;
+		S.prepareConvert_right = 0;
+		S.prepareConvert_top = 0;
+		S.prepareConvert_bottom = 0;
+		S.prepareConvert_pos = 0;
+		S.prepareConvert_i = 0;
+		S.prepareConvert_iz = 0;
+		S.prepareConvert_j = 0;
+		S.prepareConvert_jz = 0;
 		my.prepareConvert = function(cell, ctx, obj) {
-			console.log(obj.name, 'pC');
-			var left = cell.actualWidth,
-				right = 0,
-				top = cell.actualHeight,
-				bottom = 0,
-				image,
-				data,
-				pos;
+			S.prepareConvert_left = cell.actualWidth;
+			S.prepareConvert_right = 0;
+			S.prepareConvert_top = cell.actualHeight;
+			S.prepareConvert_bottom = 0;
 			cell.clear();
 			obj.stamp(null, cell.name);
-			image = ctx.getImageData(0, 0, cell.actualWidth, cell.actualHeight);
-			data = image.data;
-			for (var i = 0, iz = cell.actualHeight; i < iz; i++) {
-				for (var j = 0, jz = cell.actualWidth; j < jz; j++) {
-					pos = (((i * cell.actualWidth) + j) * 4) + 3;
-					if (data[pos] > 0) {
-						top = (top > i) ? i : top;
-						bottom = (bottom < i) ? i : bottom;
-						left = (left > j) ? j : left;
-						right = (right < j) ? j : right;
+			S.prepareConvert_image = ctx.getImageData(0, 0, cell.actualWidth, cell.actualHeight);
+			S.prepareConvert_data = S.prepareConvert_image.data;
+			for (S.prepareConvert_i = 0, S.prepareConvert_iz = cell.actualHeight; S.prepareConvert_i < S.prepareConvert_iz; S.prepareConvert_i++) {
+				for (S.prepareConvert_j = 0, S.prepareConvert_jz = cell.actualWidth; S.prepareConvert_j < S.prepareConvert_jz; S.prepareConvert_j++) {
+					S.prepareConvert_pos = (((S.prepareConvert_i * cell.actualWidth) + S.prepareConvert_j) * 4) + 3;
+					if (S.prepareConvert_data[S.prepareConvert_pos] > 0) {
+						S.prepareConvert_top = (S.prepareConvert_top > S.prepareConvert_i) ? S.prepareConvert_i : S.prepareConvert_top;
+						S.prepareConvert_bottom = (S.prepareConvert_bottom < S.prepareConvert_i) ? S.prepareConvert_i : S.prepareConvert_bottom;
+						S.prepareConvert_left = (S.prepareConvert_left > S.prepareConvert_j) ? S.prepareConvert_j : S.prepareConvert_left;
+						S.prepareConvert_right = (S.prepareConvert_right < S.prepareConvert_j) ? S.prepareConvert_j : S.prepareConvert_right;
 					}
 				}
 			}
-			image = ctx.getImageData(left, top, (right - left + 1), (bottom - top + 1));
+			S.prepareConvert_image = ctx.getImageData(S.prepareConvert_left, S.prepareConvert_top, (S.prepareConvert_right - S.prepareConvert_left + 1), (S.prepareConvert_bottom - S.prepareConvert_top + 1));
 			cell.clear();
-			return image;
+			return S.prepareConvert_image;
 		};
 		/**
     Helper function for convert functions
@@ -176,7 +181,6 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @private
     **/
 		my.doConvert = function(image, items) {
-			console.log('dC');
 			my.imageCanvas.width = image.width;
 			my.imageCanvas.height = image.height;
 			my.imageCvx.putImageData(image, 0, 0);
@@ -211,12 +215,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @extends Base
     @param {Object} [items] Key:value Object argument for setting attributes
     **/
+		S.Pattern_constructor_temp = '';
 		my.Pattern = function(items) {
-			var temp;
 			if (my.isa(items, 'obj') && my.xt(items.url) && !my.xt(items.dynamic)) {
 				items.dynamic = true;
-				temp = my.newImage(items);
-				items.source = temp.name;
+				S.Pattern_constructor_temp = my.newImage(items);
+				items.source = S.Pattern_constructor_temp.name;
 				return my.newPattern(items);
 			}
 			else {
@@ -331,17 +335,18 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @chainable
     @private
     **/
+		S.Pattern_makeDesign_temp = null; //scrawl Video object
+		S.Pattern_makeDesign_engine = null; //DOM Canvas context object
 		my.Pattern.prototype.makeDesign = function(entity, cell) {
 			cell = my.xtGet(cell, this.cell);
-			var ctx = my.context[cell],
-				temp;
-			if (my.xt(ctx)) {
+			S.Pattern_makeDesign_engine = my.context[cell];
+			if (my.xt(S.Pattern_makeDesign_engine)) {
 				switch (this.sourceType) {
 					case 'video':
 						if (scrawl.xt(my.asset[this.source])) {
-							temp = my.video[this.source].api;
-							if (temp.readyState > 1) {
-								my.dsn[this.name] = ctx.createPattern(my.asset[this.source], this.repeat);
+							S.Pattern_makeDesign_temp = my.video[this.source].api;
+							if (S.Pattern_makeDesign_temp.readyState > 1) {
+								my.dsn[this.name] = S.Pattern_makeDesign_engine.createPattern(my.asset[this.source], this.repeat);
 							}
 							else {
 								my.dsn[this.name] = undefined;
@@ -350,12 +355,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						break;
 					case 'cell':
 						if (scrawl.xt(my.canvas[this.source])) {
-							my.dsn[this.name] = ctx.createPattern(my.canvas[this.source], this.repeat);
+							my.dsn[this.name] = S.Pattern_makeDesign_engine.createPattern(my.canvas[this.source], this.repeat);
 						}
 						break;
 					case 'image':
 						if (scrawl.xt(my.asset[this.source])) {
-							my.dsn[this.name] = ctx.createPattern(my.asset[this.source], this.repeat);
+							my.dsn[this.name] = S.Pattern_makeDesign_engine.createPattern(my.asset[this.source], this.repeat);
 						}
 						break;
 				}
@@ -408,34 +413,37 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @uses AnimSheet
     @param {Object} [items] Key:value Object argument for setting attributes
     **/
+		S.Picture_constructor_temp = null; //scrawl Image object
+		S.Picture_constructor_tempV = null; //scrawl Vector object
+		S.Picture_constructor_src = null; //DOM element object
 		my.Picture = function(items) {
-			var temp, src;
+			//var temp, src;
 			if (my.isa(items, 'obj') && my.xt(items.url) && !my.xt(items.dynamic)) {
 				items.dynamic = true;
-				temp = my.newImage(items);
-				items.source = temp.name;
+				S.Picture_constructor_temp = my.newImage(items);
+				items.source = S.Picture_constructor_temp.name;
 				return my.newPicture(items);
 			}
 			else {
 				items = my.safeObject(items);
 				if (my.xt(items.source)) {
-					src = my.xtGet(my.image[items.source], my.video[items.source], my.cell[items.source], false);
-					if (src) {
+					S.Picture_constructor_src = my.xtGet(my.image[items.source], my.video[items.source], my.cell[items.source], false);
+					if (S.Picture_constructor_src) {
 						my.Entity.call(this, items);
-						temp = my.safeObject(items.paste);
-						this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
-						this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
-						this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');
-						this.copyHeight = my.xtGetTrue(items.copyHeight, src.actualHeight, src.height, '100%');
+						S.Picture_constructor_tempV = my.safeObject(items.paste);
+						this.start.x = my.xtGet(items.pasteX, S.Picture_constructor_tempV.x, this.start.x);
+						this.start.y = my.xtGet(items.pasteY, S.Picture_constructor_tempV.y, this.start.y);
+						this.copyWidth = my.xtGetTrue(items.copyWidth, S.Picture_constructor_src.actualWidth, S.Picture_constructor_src.width, '100%');
+						this.copyHeight = my.xtGetTrue(items.copyHeight, S.Picture_constructor_src.actualHeight, S.Picture_constructor_src.height, '100%');
 						this.width = my.xtGet(items.pasteWidth, items.width, this.copyWidth);
 						this.height = my.xtGet(items.pasteHeight, items.height, this.copyHeight);
 						my.Position.prototype.set.call(this, items);
 						this.source = items.source;
 						this.imageType = this.sourceImage();
-						temp = my.safeObject(items.copy);
+						S.Picture_constructor_tempV = my.safeObject(items.copy);
 						this.copy = my.newVector({
-							x: my.xtGet(items.copyX, temp.x, 0),
-							y: my.xtGet(items.copyY, temp.y, 0),
+							x: my.xtGet(items.copyX, S.Picture_constructor_tempV.x, 0),
+							y: my.xtGet(items.copyY, S.Picture_constructor_tempV.y, 0),
 							name: this.type + '.' + this.name + '.copy'
 						});
 						this.work.copy = my.newVector({
@@ -593,13 +601,13 @@ Local target data
     @return This
     @chainable
     **/
+		S.Picture_set_temp = null; //scrawl Vector object
 		my.Picture.prototype.set = function(items) {
-			var temp;
 			my.Entity.prototype.set.call(this, items);
 			if (my.xto(items.paste, items.pasteX, items.pasteY)) {
-				temp = my.safeObject(items.paste);
-				this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
-				this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
+				S.Picture_set_temp = my.safeObject(items.paste);
+				this.start.x = my.xtGet(items.pasteX, S.Picture_set_temp.x, this.start.x);
+				this.start.y = my.xtGet(items.pasteY, S.Picture_set_temp.y, this.start.y);
 			}
 			if (my.xt(items.pasteWidth)) {
 				this.width = my.xtGet(items.pasteWidth, this.width);
@@ -608,9 +616,9 @@ Local target data
 				this.height = my.xtGet(items.pasteHeight, this.height);
 			}
 			if (my.xto(items.copy, items.copyX, items.copyY)) {
-				temp = my.safeObject(items.copy);
-				this.copy.x = my.xtGet(items.copyX, temp.x, this.copy.x);
-				this.copy.y = my.xtGet(items.copyY, temp.y, this.copy.y);
+				S.Picture_set_temp = my.safeObject(items.copy);
+				this.copy.x = my.xtGet(items.copyX, S.Picture_set_temp.x, this.copy.x);
+				this.copy.y = my.xtGet(items.copyY, S.Picture_set_temp.y, this.copy.y);
 			}
 			if (my.xt(items.copyWidth)) {
 				this.copyWidth = my.xtGet(items.copyWidth, this.copyWidth);
@@ -636,39 +644,43 @@ Local target data
     @return This
     @chainable
     **/
+		S.Picture_setDelta_temp = null; //scrawl Vector object
+		S.Picture_setDelta_x = 0;
+		S.Picture_setDelta_y = 0;
+		S.Picture_setDelta_w = 0;
+		S.Picture_setDelta_h = 0;
 		my.Picture.prototype.setDelta = function(items) {
-			var temp, x, y, w, h;
 			my.Entity.prototype.setDelta.call(this, items);
 			items = my.safeObject(items);
 			if (my.xto(items.paste, items.pasteX, items.pasteY)) {
-				temp = my.safeObject(items.paste);
-				x = my.xtGet(items.pasteX, temp.x, 0);
-				y = my.xtGet(items.pasteY, temp.y, 0);
-				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
-				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
+				S.Picture_setDelta_temp = my.safeObject(items.paste);
+				S.Picture_setDelta_x = my.xtGet(items.pasteX, S.Picture_setDelta_temp.x, 0);
+				S.Picture_setDelta_y = my.xtGet(items.pasteY, S.Picture_setDelta_temp.y, 0);
+				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + S.Picture_setDelta_x : my.addPercentages(this.start.x, S.Picture_setDelta_x);
+				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + S.Picture_setDelta_y : my.addPercentages(this.start.y, S.Picture_setDelta_y);
 			}
 			if (my.xto(items.pasteWidth, items.width)) {
-				w = my.xtGet(items.pasteWidth, items.width);
-				this.width = (my.isa(this.width, 'num')) ? this.width + w : my.addPercentages(this.width, w);
+				S.Picture_setDelta_w = my.xtGet(items.pasteWidth, items.width);
+				this.width = (my.isa(this.width, 'num')) ? this.width + S.Picture_setDelta_w : my.addPercentages(this.width, S.Picture_setDelta_w);
 			}
 			if (my.xto(items.pasteHeight, items.height)) {
-				h = my.xtGet(items.pasteHeight, items.height);
-				this.height = (my.isa(this.height, 'num')) ? this.height + h : my.addPercentages(this.height, h);
+				S.Picture_setDelta_h = my.xtGet(items.pasteHeight, items.height);
+				this.height = (my.isa(this.height, 'num')) ? this.height + S.Picture_setDelta_h : my.addPercentages(this.height, S.Picture_setDelta_h);
 			}
 			if (my.xto(items.copy, items.copyX, items.copyY)) {
-				temp = my.safeObject(items.copy);
-				x = my.xtGet(items.copyX, temp.x, 0);
-				y = my.xtGet(items.copyY, temp.y, 0);
-				this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
-				this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
+				S.Picture_setDelta_temp = my.safeObject(items.copy);
+				S.Picture_setDelta_x = my.xtGet(items.copyX, S.Picture_setDelta_temp.x, 0);
+				S.Picture_setDelta_y = my.xtGet(items.copyY, S.Picture_setDelta_temp.y, 0);
+				this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + S.Picture_setDelta_x : my.addPercentages(this.copy.x, S.Picture_setDelta_x);
+				this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + S.Picture_setDelta_y : my.addPercentages(this.copy.y, S.Picture_setDelta_y);
 			}
 			if (my.xto(items.copyWidth, items.width)) {
-				w = my.xtGet(items.copyWidth, items.width);
-				this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + w : my.addPercentages(this.copyWidth, w);
+				S.Picture_setDelta_w = my.xtGet(items.copyWidth, items.width);
+				this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + S.Picture_setDelta_w : my.addPercentages(this.copyWidth, S.Picture_setDelta_w);
 			}
 			if (my.xto(items.copyHeight, items.height)) {
-				h = my.xtGet(items.copyHeight, items.height);
-				this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + h : my.addPercentages(this.copyHeight, h);
+				S.Picture_setDelta_h = my.xtGet(items.copyHeight, items.height);
+				this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + S.Picture_setDelta_h : my.addPercentages(this.copyHeight, S.Picture_setDelta_h);
 			}
 			if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
@@ -684,46 +696,47 @@ Picture.setCopy update copyData object values
 @chainable
 @private
 **/
+		S.Picture_setCopy_w = 0;
+		S.Picture_setCopy_h = 0;
 		my.Picture.prototype.setCopy = function() {
-			var w, h;
 			switch (this.imageType) {
 				case 'canvas':
-					w = my.cell[this.source].actualWidth;
-					h = my.cell[this.source].actualHeight;
+					S.Picture_setCopy_w = my.cell[this.source].actualWidth;
+					S.Picture_setCopy_h = my.cell[this.source].actualHeight;
 					break;
 				case 'video':
-					w = my.video[this.source].width;
-					h = my.video[this.source].height;
+					S.Picture_setCopy_w = my.video[this.source].width;
+					S.Picture_setCopy_h = my.video[this.source].height;
 					break;
 				case 'img':
-					w = my.image[this.source].width;
-					h = my.image[this.source].height;
+					S.Picture_setCopy_w = my.image[this.source].width;
+					S.Picture_setCopy_h = my.image[this.source].height;
 					break;
 				default:
 					//do nothing for animations
 			}
 			if (this.imageType !== 'animation') {
-				this.copyData.x = (my.isa(this.copy.x, 'str')) ? this.convertX(this.copy.x, w) : this.copy.x;
-				this.copyData.y = (my.isa(this.copy.y, 'str')) ? this.convertY(this.copy.y, h) : this.copy.y;
-				if (!my.isBetween(this.copyData.x, 0, w - 1, true)) {
-					this.copyData.x = (this.copyData.x < 0) ? 0 : w - 1;
+				this.copyData.x = (my.isa(this.copy.x, 'str')) ? this.convertX(this.copy.x, S.Picture_setCopy_w) : this.copy.x;
+				this.copyData.y = (my.isa(this.copy.y, 'str')) ? this.convertY(this.copy.y, S.Picture_setCopy_h) : this.copy.y;
+				if (!my.isBetween(this.copyData.x, 0, S.Picture_setCopy_w - 1, true)) {
+					this.copyData.x = (this.copyData.x < 0) ? 0 : S.Picture_setCopy_w - 1;
 				}
-				if (!my.isBetween(this.copyData.y, 0, h - 1, true)) {
-					this.copyData.y = (this.copyData.y < 0) ? 0 : h - 1;
+				if (!my.isBetween(this.copyData.y, 0, S.Picture_setCopy_h - 1, true)) {
+					this.copyData.y = (this.copyData.y < 0) ? 0 : S.Picture_setCopy_h - 1;
 				}
-				this.copyData.w = (my.isa(this.copyWidth, 'str')) ? this.convertX(this.copyWidth, w) : this.copyWidth;
-				this.copyData.h = (my.isa(this.copyHeight, 'str')) ? this.convertY(this.copyHeight, h) : this.copyHeight;
-				if (!my.isBetween(this.copyData.w, 1, w, true)) {
-					this.copyData.w = (this.copyData.w < 1) ? 1 : w;
+				this.copyData.w = (my.isa(this.copyWidth, 'str')) ? this.convertX(this.copyWidth, S.Picture_setCopy_w) : this.copyWidth;
+				this.copyData.h = (my.isa(this.copyHeight, 'str')) ? this.convertY(this.copyHeight, S.Picture_setCopy_h) : this.copyHeight;
+				if (!my.isBetween(this.copyData.w, 1, S.Picture_setCopy_w, true)) {
+					this.copyData.w = (this.copyData.w < 1) ? 1 : S.Picture_setCopy_w;
 				}
-				if (!my.isBetween(this.copyData.h, 1, h, true)) {
-					this.copyData.h = (this.copyData.h < 1) ? 1 : h;
+				if (!my.isBetween(this.copyData.h, 1, S.Picture_setCopy_h, true)) {
+					this.copyData.h = (this.copyData.h < 1) ? 1 : S.Picture_setCopy_h;
 				}
-				if (this.copyData.x + this.copyData.w > w) {
-					this.copyData.x = w - this.copyData.w;
+				if (this.copyData.x + this.copyData.w > S.Picture_setCopy_w) {
+					this.copyData.x = S.Picture_setCopy_w - this.copyData.w;
 				}
-				if (this.copyData.y + this.copyData.h > h) {
-					this.copyData.y = h - this.copyData.h;
+				if (this.copyData.y + this.copyData.h > S.Picture_setCopy_h) {
+					this.copyData.y = S.Picture_setCopy_h - this.copyData.h;
 				}
 			}
 			this.imageData = false;
@@ -735,14 +748,13 @@ Picture.setPaste update pasteData object values
 @chainable
 @private
 **/
+		S.Picture_setPaste_cell = null; //scrawl Cell object
 		my.Picture.prototype.setPaste = function() {
-			var w,
-				h,
-				cell = my.cell[my.group[this.group].cell];
-			this.pasteData.x = (my.isa(this.start.x, 'str')) ? this.convertX(this.start.x, cell.actualWidth) : this.start.x;
-			this.pasteData.y = (my.isa(this.start.y, 'str')) ? this.convertY(this.start.y, cell.actualHeight) : this.start.y;
-			this.pasteData.w = (my.isa(this.width, 'str')) ? this.convertX(this.width, cell.actualWidth) : this.width;
-			this.pasteData.h = (my.isa(this.height, 'str')) ? this.convertY(this.height, cell.actualHeight) : this.height;
+			S.Picture_setPaste_cell = my.cell[my.group[this.group].cell];
+			this.pasteData.x = (my.isa(this.start.x, 'str')) ? this.convertX(this.start.x, S.Picture_setPaste_cell.actualWidth) : this.start.x;
+			this.pasteData.y = (my.isa(this.start.y, 'str')) ? this.convertY(this.start.y, S.Picture_setPaste_cell.actualHeight) : this.start.y;
+			this.pasteData.w = (my.isa(this.width, 'str')) ? this.convertX(this.width, S.Picture_setPaste_cell.actualWidth) : this.width;
+			this.pasteData.h = (my.isa(this.height, 'str')) ? this.convertY(this.height, S.Picture_setPaste_cell.actualHeight) : this.height;
 			this.pasteData.w *= this.scale;
 			this.pasteData.h *= this.scale;
 			if (this.pasteData.w < 1) {
@@ -760,13 +772,14 @@ Picture.setPaste update pasteData object values
     @return Cloned object
     @chainable
     **/
+		S.Picture_clone_a = null; //raw object
 		my.Picture.prototype.clone = function(items) {
-			var a = my.Entity.prototype.clone.call(this, items);
+			S.Picture_clone_a = my.Entity.prototype.clone.call(this, items);
 			items = my.safeObject(items);
 			if (!items.keepCopyDimensions) {
-				a.fitToImageSize();
+				S.Picture_clone_a.fitToImageSize();
 			}
-			return a;
+			return S.Picture_clone_a;
 		};
 		/**
     Clone helper function
@@ -775,12 +788,13 @@ Picture.setPaste update pasteData object values
     @chainable
     @private
     **/
+		S.Picture_fitToImageSize_img = null; //scrawl Image object
 		my.Picture.prototype.fitToImageSize = function() {
 			if (this.imageType === 'img') {
-				var img = my.image[this.source];
+				S.Picture_fitToImageSize_img = my.image[this.source];
 				this.set({
-					copyWidth: img.get('width'),
-					copyHeight: img.get('height'),
+					copyWidth: S.Picture_fitToImageSize_img.get('width'),
+					copyHeight: S.Picture_fitToImageSize_img.get('height'),
 					copyX: 0,
 					copyY: 0,
 				});
@@ -794,7 +808,6 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.sourceImage = function() {
-			var home;
 			if (my.contains(my.videonames, this.source)) {
 				return 'video';
 			}
@@ -819,11 +832,13 @@ Picture.setPaste update pasteData object values
     @chainable
     @private
     **/
+		S.Picture_stamp_here = null; //scrawl Vector object
+		S.Picture_stamp_data = null; //ImageData object
 		my.Picture.prototype.clip = function(ctx, cell) {
-			var here = this.prepareStamp();
+			S.Picture_stamp_here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
-			ctx.rect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+			ctx.rect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 			ctx.clip();
 			return this;
 		};
@@ -850,9 +865,9 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.clear = function(ctx, cell) {
-			var here = this.prepareStamp();
+			S.Picture_stamp_here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
-			ctx.clearRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+			ctx.clearRect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 			return this;
 		};
 		/**
@@ -865,13 +880,13 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.clearWithBackground = function(ctx, cell) {
-			var here = this.prepareStamp();
+			S.Picture_stamp_here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
 			ctx.fillStyle = my.cell[cell].backgroundColor;
 			ctx.strokeStyle = my.cell[cell].backgroundColor;
 			ctx.globalAlpha = 1;
-			ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
-			ctx.fillRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+			ctx.strokeRect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
+			ctx.fillRect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 			ctx.fillStyle = my.ctx[cell].fillStyle;
 			ctx.strokeStyle = my.ctx[cell].strokeStyle;
 			ctx.globalAlpha = my.ctx[cell].globalAlpha;
@@ -887,10 +902,10 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.draw = function(ctx, cell) {
-			var here = this.prepareStamp();
+			S.Picture_stamp_here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
 			my.cell[cell].setEngine(this);
-			ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+			ctx.strokeRect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 			return this;
 		};
 		/**
@@ -903,14 +918,13 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.fill = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+			S.Picture_stamp_data = this.getImage();
+			if (S.Picture_stamp_data) {
+				S.Picture_stamp_here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
 				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+					ctx.drawImage(S.Picture_stamp_data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 				}
 			}
 			return this;
@@ -925,16 +939,15 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.drawFill = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+			S.Picture_stamp_data = this.getImage();
+			if (S.Picture_stamp_data) {
+				S.Picture_stamp_here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+				ctx.strokeRect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 				this.clearShadow(ctx, cell);
 				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+					ctx.drawImage(S.Picture_stamp_data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 				}
 			}
 			return this;
@@ -949,17 +962,16 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.fillDraw = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+			S.Picture_stamp_data = this.getImage();
+			if (S.Picture_stamp_data) {
+				S.Picture_stamp_here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
 				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+					ctx.drawImage(S.Picture_stamp_data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 				}
 				this.clearShadow(ctx, cell);
-				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+				ctx.strokeRect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -973,16 +985,15 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.sinkInto = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+			S.Picture_stamp_data = this.getImage();
+			if (S.Picture_stamp_data) {
+				S.Picture_stamp_here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
 				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+					ctx.drawImage(S.Picture_stamp_data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 				}
-				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+				ctx.strokeRect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -996,15 +1007,14 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.floatOver = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+			S.Picture_stamp_data = this.getImage();
+			if (S.Picture_stamp_data) {
+				S.Picture_stamp_here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+				ctx.strokeRect(S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+					ctx.drawImage(S.Picture_stamp_data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, S.Picture_stamp_here.x, S.Picture_stamp_here.y, this.pasteData.w, this.pasteData.h);
 				}
 			}
 			return this;
@@ -1018,30 +1028,31 @@ Picture.setPaste update pasteData object values
     @return Image Object
     @private
     **/
+		S.Picture_getImage_anim = null; //raw object
+		S.Picture_getImage_result = null; //DOM element object
 		my.Picture.prototype.getImage = function() {
-			var result;
 			switch (this.imageType) {
 				case 'animation':
-					result = my.spriteanimation[this.animation].getData();
-					this.copyData.x = result.x;
-					this.copyData.y = result.y;
-					this.copyData.w = result.w;
-					this.copyData.h = result.h;
-					result = my.asset[this.source];
+					S.Picture_getImage_anim = my.spriteanimation[this.animation].getData();
+					this.copyData.x = S.Picture_getImage_anim.x;
+					this.copyData.y = S.Picture_getImage_anim.y;
+					this.copyData.w = S.Picture_getImage_anim.w;
+					this.copyData.h = S.Picture_getImage_anim.h;
+					S.Picture_getImage_result = my.asset[this.source];
 					break;
 				case 'canvas':
-					result = my.canvas[this.source];
+					S.Picture_getImage_result = my.canvas[this.source];
 					break;
 				case 'video':
-					result = my.asset[this.source];
+					S.Picture_getImage_result = my.asset[this.source];
 					break;
 				case 'img':
-					result = my.asset[this.source];
+					S.Picture_getImage_result = my.asset[this.source];
 					break;
 				default:
-					result = false;
+					S.Picture_getImage_result = false;
 			}
-			return result;
+			return S.Picture_getImage_result;
 		};
 		/**
     Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library
@@ -1050,13 +1061,14 @@ Picture.setPaste update pasteData object values
     @return This
     @chainable
     **/
+		S.Picture_getImageData_data = null; //DOM element object
 		my.Picture.prototype.getImageData = function(label) {
 			label = (my.xt(label)) ? label : 'data';
-			var data = this.getImage();
-			if (data) {
+			S.Picture_getImageData_data = this.getImage();
+			if (S.Picture_getImageData_data) {
 				my.imageCanvas.width = this.copyData.w;
 				my.imageCanvas.height = this.copyData.h;
-				my.imageCvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, 0, 0, this.copyData.w, this.copyData.h);
+				my.imageCvx.drawImage(S.Picture_getImageData_data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, 0, 0, this.copyData.w, this.copyData.h);
 				this.imageData = this.name + '_' + label;
 				my.imageData[this.imageData] = my.imageCvx.getImageData(0, 0, this.copyData.w, this.copyData.h);
 			}

@@ -2095,7 +2095,7 @@ Add function - takes data, calculates its channels and combines it with data
 			else {
 				for (S.BlurFilter_add_i = 0, S.BlurFilter_add_iz = data.height; S.BlurFilter_add_i < S.BlurFilter_add_iz; S.BlurFilter_add_i++) {
 					for (S.BlurFilter_add_j = 0, S.BlurFilter_add_jz = data.width; S.BlurFilter_add_j < S.BlurFilter_add_jz; S.BlurFilter_add_j++) {
-						e0 = ((i * jz) + j) * 4;
+						S.BlurFilter_add_e0 = ((S.BlurFilter_add_i * S.BlurFilter_add_jz) + S.BlurFilter_add_j) * 4;
 						if (S.BlurFilter_add_d0[S.BlurFilter_add_e0 + 3] > 0) {
 							S.BlurFilter_add_r = 0;
 							S.BlurFilter_add_g = 0;

@@ -111,20 +111,23 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 @param {Boolean} [kill] when set to true, the &lt;img&gt; elements will be removed from the DOM when imported into the library
 @return Array of String names; false on failure
 **/
+		S.getImagesByClass_names = [];
+		S.getImagesByClass_s = null; //array of DOM img objects
+		S.getImagesByClass_myImg = null; //scrawl Image object
+		S.getImagesByClass_i = 0;
 		my.getImagesByClass = function(classtag, kill) {
 			if (classtag) {
-				var names = [],
-					s = document.getElementsByClassName(classtag),
-					myImg;
-				if (s.length > 0) {
-					for (var i = s.length; i > 0; i--) {
-						myImg = my.newImage({
-							element: s[i - 1],
-							removeImageFromDOM: my.xtGet(kill, true),
+				S.getImagesByClass_names = [];
+				S.getImagesByClass_s = document.getElementsByClassName(classtag);
+				if (S.getImagesByClass_s.length > 0) {
+					for (S.getImagesByClass_i = S.getImagesByClass_s.length; S.getImagesByClass_i > 0; S.getImagesByClass_i--) {
+						S.getImagesByClass_myImg = my.newImage({
+							element: S.getImagesByClass_s[S.getImagesByClass_i - 1],
+							removeImageFromDOM: my.xtGet(kill, true)
 						});
-						names.push(myImg.name);
+						S.getImagesByClass_names.push(S.getImagesByClass_myImg.name);
 					}
-					return names;
+					return S.getImagesByClass_names;
 				}
 			}
 			console.log('my.getImageById() failed to find any <img> elements of class="' + classtag + '" on the page');
@@ -137,13 +140,14 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 @param {Boolean} [kill] when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library
 @return String name; false on failure
 **/
+		S.getImageById_myImg = null; //scrawl Image object
 		my.getImageById = function(idtag, kill) {
 			if (idtag) {
-				var myImg = my.newImage({
+				S.getImageById_myImg = my.newImage({
 					element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-					removeImageFromDOM: my.xtGet(kill, true),
+					removeImageFromDOM: my.xtGet(kill, true)
 				});
-				return myImg.name;
+				return S.getImageById_myImg.name;
 			}
 			console.log('my.getImagesByClass() failed to find any <img> elements with id="' + classtag + '" on the page');
 			return false;
@@ -155,13 +159,14 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 @param {Boolean} [kill] when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library
 @return String name; false on failure
 **/
+		S.getVideoById_myVideo = null; //scrawl Image object
 		my.getVideoById = function(idtag, stream) {
 			if (idtag) {
-				var myVideo = my.newVideo({
+				S.getVideoById_myVideo = my.newVideo({
 					element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-					stream: my.xtGet(stream, 'raw'),
+					stream: my.xtGet(stream, 'raw')
 				});
-				return myVideo.name;
+				return S.getVideoById_myVideo.name;
 			}
 			console.log('my.getVideoById() failed to find any <video> elements with id="' + idtag + '" on the page');
 			return false;
@@ -189,9 +194,9 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
+		S.Image_constructor_tempname = '';
 		my.Image = function(items) {
 			items = my.safeObject(items);
-			var tempname;
 			this.width = 0;
 			this.height = 0;
 			if (my.xto(items.element, items.data, items.url)) {
@@ -202,8 +207,8 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 					items.name = my.xtGet(items.name, '');
 				}
 				else if (my.xt(items.url)) {
-					tempname = items.url.substr(0, 128);
-					items.name = my.xtGet(items.name, tempname, '');
+					S.Image_constructor_tempname = items.url.substr(0, 128);
+					items.name = my.xtGet(items.name, S.Image_constructor_tempname, '');
 				}
 				my.Base.call(this, items);
 				my.image[this.name] = this;
@@ -297,20 +302,21 @@ Adds a DOM &lt;img&gt; element to the library
 @return always true
 @private
 **/
+		S.Image_addImageByElement_el = null; //DOM Img object
+		S.Image_addImageByElement_kill = false;
 		my.Image.prototype.addImageByElement = function(items) {
-			var el,
-				kill = my.xtGet(items.removeImageFromDOM, true);
-			if (kill) {
-				el = items.element;
+			S.Image_addImageByElement_kill = my.xtGet(items.removeImageFromDOM, true);
+			if (S.Image_addImageByElement_kill) {
+				S.Image_addImageByElement_el = items.element;
 			}
 			else {
-				el = items.element.cloneNode();
+				S.Image_addImageByElement_el = items.element.cloneNode();
 			}
-			el.id = this.name;
-			this.width = parseFloat(my.xtGetTrue(el.offsetWidth, el.width, el.style.width, 1));
-			this.height = parseFloat(my.xtGetTrue(el.offsetHeight, el.height, el.style.height, 1));
-			my.imageFragment.appendChild(el);
-			my.asset[this.name] = el;
+			S.Image_addImageByElement_el.id = this.name;
+			this.width = parseFloat(my.xtGetTrue(S.Image_addImageByElement_el.offsetWidth, S.Image_addImageByElement_el.width, S.Image_addImageByElement_el.style.width, 1));
+			this.height = parseFloat(my.xtGetTrue(S.Image_addImageByElement_el.offsetHeight, S.Image_addImageByElement_el.height, S.Image_addImageByElement_el.style.height, 1));
+			my.imageFragment.appendChild(S.Image_addImageByElement_el);
+			my.asset[this.name] = S.Image_addImageByElement_el;
 			my.pushUnique(my.assetnames, this.name);
 			if (my.isa(items.callback, 'fn')) {
 				items.callback();
@@ -325,6 +331,7 @@ Import an image using the supplied url string
 @return true; false on failure
 @private
 **/
+		//not given S variables - includes asynchronous function
 		my.Image.prototype.addImageByUrl = function(items) {
 			var el,
 				that = this;
@@ -375,13 +382,13 @@ Creates a new &lt;img&gt; element from a canvas ImageData object - uses Image.ad
 @return ImageDataUrl on success, false otherwise
 @private
 **/
+		S.Image_addImageByData_data = null; //ImageData object
 		my.Image.prototype.addImageByData = function(items) {
-			var data;
 			if (my.xt(items.data)) {
-				data = items.data;
-				my.imageCanvas.width = data.width;
-				my.imageCanvas.height = data.height;
-				my.imageCvx.putImageData(data, 0, 0);
+				S.Image_addImageByData_data = items.data;
+				my.imageCanvas.width = S.Image_addImageByData_data.width;
+				my.imageCanvas.height = S.Image_addImageByData_data.height;
+				my.imageCvx.putImageData(S.Image_addImageByData_data, 0, 0);
 				items.url = my.imageCanvas.toDataURL('image/png');
 				delete items.data;
 				return this.addImageByUrl(items);
@@ -396,19 +403,20 @@ Creates a new &lt;img&gt; element from an existing cell's current display - uses
 @param {String} [name] - id attribute for the new Image
 @return ImageDataUrl on success, false otherwise
 **/
+		S.Image_createImageFromCell_data = null; //ImageData object
+		S.Image_createImageFromCell_canvas = null; //DOM canvas object
 		my.Image.prototype.createImageFromCell = function(cell, name) {
-			var canvas, data;
 			if (my.isa(cell, 'str')) {
-				canvas = my.canvas[cell];
+				S.Image_createImageFromCell_canvas = my.canvas[cell];
 				cell = my.cell[cell];
-				if (my.xt(canvas)) {
-					data = canvas.toDataURL('image/png');
-					if (my.xt(data)) {
+				if (my.xt(S.Image_createImageFromCell_canvas)) {
+					S.Image_createImageFromCell_data = canvas.toDataURL('image/png');
+					if (my.xt(S.Image_createImageFromCell_data)) {
 						return this.addImageByUrl({
-							url: data,
+							url: S.Image_createImageFromCell_data,
 							name: my.xtGet(name, cell.name, 'cell-image'),
 							width: cell.actualWidth,
-							height: cell.actualHeight,
+							height: cell.actualHeight
 						});
 					}
 				}
@@ -551,21 +559,22 @@ Set attribute values - will also set the __currentFrame__ attribute to the appro
 @chainable
 @private
 **/
+		S.SpriteAnimation_set_paused = false;
 		my.SpriteAnimation.prototype.set = function(items) {
 			items = my.safeObject(items);
-			var paused = (this.loop === 'pause') ? true : false;
+			S.SpriteAnimation_set_paused = (this.loop === 'pause') ? true : false;
 			my.Base.prototype.set.call(this, items);
 			if (my.xt(items.running)) {
 				switch (items.running) {
 					case 'forward':
 						this.running = 'forward';
-						if (!paused) {
+						if (!S.SpriteAnimation_set_paused) {
 							this.currentFrame = 0;
 						}
 						break;
 					case 'backward':
 						this.running = 'backward';
-						if (!paused) {
+						if (!S.SpriteAnimation_set_paused) {
 							this.currentFrame = this.frames.length - 1;
 						}
 						break;
@@ -585,16 +594,18 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 @return Data object
 @private
 **/
+		S.SpriteAnimation_getData_interval = 0;
+		S.SpriteAnimation_getData_changeFrame = false;
 		my.SpriteAnimation.prototype.getData = function() {
 			if (this.speed > 0) {
-				var interval = this.frames[this.currentFrame].d / this.speed;
-				var changeFrame = (this.lastCalled + interval < Date.now()) ? true : false;
+				S.SpriteAnimation_getData_interval = this.frames[this.currentFrame].d / this.speed;
+				S.SpriteAnimation_getData_changeFrame = (this.lastCalled + S.SpriteAnimation_getData_interval < Date.now()) ? true : false;
 				switch (this.running) {
 					case 'complete':
 						this.lastCalled = Date.now();
 						break;
 					case 'forward':
-						if (changeFrame) {
+						if (S.SpriteAnimation_getData_changeFrame) {
 							switch (this.loop) {
 								case 'pause':
 									break;
@@ -614,7 +625,7 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 						}
 						break;
 					case 'backward':
-						if (changeFrame) {
+						if (S.SpriteAnimation_getData_changeFrame) {
 							switch (this.loop) {
 								case 'pause':
 									break;
@@ -661,9 +672,9 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
+		S.Video_constructor_tempname = '';
 		my.Video = function(items) {
 			items = my.safeObject(items);
-			var tempname;
 			this.width = 0;
 			this.height = 0;
 			if (my.xt(items.element)) {
@@ -671,8 +682,8 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 					items.name = my.xtGet(items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '');
 				}
 				else if (my.xt(items.url)) {
-					tempname = items.url.substr(0, 128);
-					items.name = my.xtGet(items.name, tempname, '');
+					S.Video_constructor_tempname = items.url.substr(0, 128);
+					items.name = my.xtGet(items.name, S.Video_constructor_tempname, '');
 				}
 				my.Base.call(this, items);
 				my.video[this.name] = this;
@@ -734,15 +745,14 @@ Adds a DOM &lt;video&gt; element to the library
 @return always true
 @private
 **/
+		S.Video_addVideoByElement_el = null; //DOM Video object
 		my.Video.prototype.addVideoByElement = function(items) {
-			var el = items.element,
-				stream = my.xtGet(items.stream, 'raw'),
-				that = this;
-			if (my.xt(el)) {
-				el.id = this.name;
+			S.Video_addVideoByElement_el = items.element;
+			if (my.xt(S.Video_addVideoByElement_el)) {
+				S.Video_addVideoByElement_el.id = this.name;
 				this.width = 0;
 				this.height = 0;
-				my.imageFragment.appendChild(el);
+				my.imageFragment.appendChild(S.Video_addVideoByElement_el);
 				my.asset[this.name] = my.imageFragment.querySelector('#' + this.name);
 				my.pushUnique(my.assetnames, this.name);
 				this.api = my.asset[this.name];
@@ -763,17 +773,19 @@ Adds a DOM &lt;video&gt; element to the library
 Video constructor helper function
 
 @method setIntrinsicDimensions
-@return true; false on failure
+@return always true
 @private
 **/
+		S.Video_setIntrinsicDimensions_ent = null; //scrawl Entity object
+		S.Video_setIntrinsicDimensions_i = 0;
+		S.Video_setIntrinsicDimensions_iz = 0;
 		my.Video.prototype.setIntrinsicDimensions = function() {
-			var i, iz, ent;
 			this.width = this.api.videoWidth;
 			this.height = this.api.videoHeight;
-			for (i = 0, iz = my.entitynames.length; i < iz; i++) {
-				ent = my.entity[my.entitynames[i]];
-				if (ent.type === 'Picture') {
-					ent.setCopy();
+			for (S.Video_setIntrinsicDimensions_i = 0, S.Video_setIntrinsicDimensions_iz = my.entitynames.length; S.Video_setIntrinsicDimensions_i < S.Video_setIntrinsicDimensions_iz; S.Video_setIntrinsicDimensions_i++) {
+				S.Video_setIntrinsicDimensions_ent = my.entity[my.entitynames[i]];
+				if (S.Video_setIntrinsicDimensions_ent.type === 'Picture') {
+					S.Video_setIntrinsicDimensions_ent.setCopy();
 				}
 			}
 			return true;
