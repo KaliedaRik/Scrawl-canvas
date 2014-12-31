@@ -2135,7 +2135,9 @@ Position constructor hook function - modified by path module
 @method pathPositionInit
 @private
 **/
-	my.Position.prototype.pathPositionInit = function(items) {};
+	my.Position.prototype.pathPositionInit = function(items) {
+		console.log('core', items);
+	};
 	/**
 Augments Base.get(), to allow users to get values for start, startX, startY, handle, handleX, handleY
 
@@ -5384,14 +5386,24 @@ Add entitys to the Group
 	S.Group_addEntitysToGroup_slice = [];
 	S.Group_addEntitysToGroup_i = 0;
 	S.Group_addEntitysToGroup_iz = 0;
+	S.Group_addEntitysToGroup_e = null; //mixed
 	my.Group.prototype.addEntitysToGroup = function() {
 		S.Group_addEntitysToGroup_slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(S.Group_addEntitysToGroup_slice[0])) {
-			console.log('my.Group.prototype.addEntitysToGroup - needs updating: ', S.Group_addEntitysToGroup_slice);
 			S.Group_addEntitysToGroup_slice = S.Group_addEntitysToGroup_slice[0];
 		}
 		for (S.Group_addEntitysToGroup_i = 0, S.Group_addEntitysToGroup_iz = S.Group_addEntitysToGroup_slice.length; S.Group_addEntitysToGroup_i < S.Group_addEntitysToGroup_iz; S.Group_addEntitysToGroup_i++) {
-			my.pushUnique(this.entitys, S.Group_addEntitysToGroup_slice[S.Group_addEntitysToGroup_i]);
+			S.Group_addEntitysToGroup_e = S.Group_addEntitysToGroup_slice[S.Group_addEntitysToGroup_i];
+			if (my.xt(S.Group_addEntitysToGroup_e)) {
+				if (my.isa(S.Group_addEntitysToGroup_e, 'str')) {
+					my.pushUnique(this.entitys, S.Group_addEntitysToGroup_e);
+				}
+				else {
+					if (my.xt(S.Group_addEntitysToGroup_e.name)) {
+						my.pushUnique(this.entitys, S.Group_addEntitysToGroup_e.name);
+					}
+				}
+			}
 		}
 		return this;
 	};
@@ -5405,14 +5417,24 @@ Remove entitys from the Group
 	S.Group_removeEntitysFromGroup_slice = [];
 	S.Group_removeEntitysFromGroup_i = 0;
 	S.Group_removeEntitysFromGroup_iz = 0;
+	S.Group_removeEntitysFromGroup_e = null; //mixed
 	my.Group.prototype.removeEntitysFromGroup = function() {
 		S.Group_removeEntitysFromGroup_slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(S.Group_removeEntitysFromGroup_slice[0])) {
-			console.log('my.Group.prototype.removeEntitysFromGroup - needs updating: ', S.Group_removeEntitysFromGroup_slice);
 			S.Group_removeEntitysFromGroup_slice = S.Group_removeEntitysFromGroup_slice[0];
 		}
-		for (S.Group_removeEntitysFromGroup_i = 0, S.Group_removeEntitysFromGroup_iz = S.Group_removeEntitysFromGroup_slice.length; S.Group_removeEntitysFromGroup_i < S.Group_removeEntitysFromGroup_iz; S.Group_removeEntitysFromGroup_i++) {
-			my.removeItem(this.entitys, S.Group_removeEntitysFromGroup_slice[S.Group_removeEntitysFromGroup_i]);
+		for (S.Group_removeEntitysFromGroup_i = 0, S.Group_removeEntitysFromGroup_iz = S.Group_addEntitysToGroup_slice.length; S.Group_removeEntitysFromGroup_i < S.Group_removeEntitysFromGroup_iz; S.Group_removeEntitysFromGroup_i++) {
+			S.Group_removeEntitysFromGroup_e = S.Group_addEntitysToGroup_slice[S.Group_removeEntitysFromGroup_i];
+			if (my.xt(S.Group_removeEntitysFromGroup_e)) {
+				if (my.isa(S.Group_removeEntitysFromGroup_e, 'str')) {
+					my.removeItem(this.entitys, S.Group_removeEntitysFromGroup_e);
+				}
+				else {
+					if (my.xt(S.Group_removeEntitysFromGroup_e.name)) {
+						my.removeItem(this.entitys, S.Group_removeEntitysFromGroup_e.name);
+					}
+				}
+			}
 		}
 		return this;
 	};
@@ -5449,7 +5471,7 @@ Ask all entitys in the Group to perform a set() operation
 	S.Group_setEntitysTo_i = 0;
 	S.Group_setEntitysTo_iz = 0;
 	my.Group.prototype.setEntitysTo = function(items) {
-		for (S.Group_setEntitysTo_i = 0, S.Group_setEntitysTo_iz = this.entitys.length; S.Group_setEntitysTo_ < S.Group_setEntitysTo_iz; S.Group_setEntitysTo_i++) {
+		for (S.Group_setEntitysTo_i = 0, S.Group_setEntitysTo_iz = this.entitys.length; S.Group_setEntitysTo_i < S.Group_setEntitysTo_iz; S.Group_setEntitysTo_i++) {
 			my.entity[this.entitys[S.Group_setEntitysTo_i]].set(items);
 		}
 		return this;
@@ -5708,11 +5730,11 @@ Constructor helper function - register entity object in the scrawl library
 @chainable
 @private
 **/
-	my.Entity.prototype.registerInLibrary = function() {
+	my.Entity.prototype.registerInLibrary = function(items) {
 		my.entity[this.name] = this;
 		my.pushUnique(my.entitynames, this.name);
 		my.group[this.group].addEntitysToGroup(this.name);
-		this.collisionsEntityRegisterInLibrary();
+		this.collisionsEntityRegisterInLibrary(items);
 		return this;
 	};
 	/**
@@ -5772,7 +5794,7 @@ Entity.set hook function - modified by collisions module
 @method collisionsEntitySet
 @private
 **/
-	my.Entity.prototype.collisionsEntitySet = function(items) {};
+	my.Entity.prototype.collisionsEntitySet = function() {};
 	/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
 
@@ -5800,8 +5822,15 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.pasteWidth, items.pasteHeight, items.radius, items.scale)) {
 			this.offset.flag = false;
 		}
+		this.collisionsEntitySetDelta(items);
 		return this;
 	};
+	/**
+Entity.setDelta hook function - modified by collisions module
+@method collisionsEntitySetDelta
+@private
+**/
+	my.Entity.prototype.collisionsEntitySetDelta = function() {};
 	/**
 Augments Position.clone()
 @method clone
@@ -6341,13 +6370,24 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 	S.Entity_checkHit_result = false;
 	S.Entity_checkHit_i = 0;
 	S.Entity_checkHit_iz = 0;
+	S.Entity_checkHit_width = 0;
+	S.Entity_checkHit_height = 0;
 	my.Entity.prototype.checkHit = function(items) {
 		items = my.safeObject(items);
-		S.Entity_checkHit_tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
+		if (my.xt(items.tests)) {
+			S.Entity_checkHit_tests = items.tests;
+		}
+		else {
+			S.Entity_checkHit_tests.length = 0;
+			S.Entity_checkHit_tests.push(items.x || 0);
+			S.Entity_checkHit_tests.push(items.y || 0);
+		}
 		this.rotateCell(my.cvx, this.getEntityCell().name);
 		S.Entity_checkHit_here = this.prepareStamp();
+		S.Entity_checkHit_width = (this.localWidth) ? this.localWidth : this.width * this.scale;
+		S.Entity_checkHit_height = (this.localHeight) ? this.localHeight : this.height * this.scale;
 		my.cvx.beginPath();
-		my.cvx.rect(S.Entity_checkHit_here.x, S.Entity_checkHit_here.y, (this.width * this.scale), (this.height * this.scale));
+		my.cvx.rect(S.Entity_checkHit_here.x, S.Entity_checkHit_here.y, S.Entity_checkHit_width, S.Entity_checkHit_height);
 		for (S.Entity_checkHit_i = 0, S.Entity_checkHit_iz = S.Entity_checkHit_tests.length; S.Entity_checkHit_i < S.Entity_checkHit_iz; S.Entity_checkHit_i += 2) {
 			S.Entity_checkHit_result = my.cvx.isPointInPath(S.Entity_checkHit_tests[S.Entity_checkHit_i], S.Entity_checkHit_tests[S.Entity_checkHit_i + 1]);
 			if (S.Entity_checkHit_result) {

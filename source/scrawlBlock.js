@@ -140,6 +140,20 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
+	Augments Entity.set()
+	@method setDelta
+	@param {Object} items Object consisting of key:value attributes
+	@return This
+	@chainable
+	**/
+		my.Block.prototype.setDelta = function(items) {
+			my.Entity.prototype.setDelta.call(this, items);
+			if (my.xto(items.width, items.height, items.scale)) {
+				this.setLocalDimensions();
+			}
+			return this;
+		};
+		/**
 	Augments Entity.set() - sets the local dimensions
 	@method setLocalDimensions
 	@return This

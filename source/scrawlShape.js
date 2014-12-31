@@ -730,6 +730,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @chainable
 @private
 **/
+		//CHANGE - push generated values directly into this.collisionVectors
 		my.Shape.prototype.buildCollisionVectors = function(items) {
 			if (this.isLine) {
 				my.Entity.prototype.buildCollisionVectors.call(this, items);

@@ -471,6 +471,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @chainable
 @private
 **/
+		//CHANGE - push generated values directly into this.collisionVectors
 		my.Wheel.prototype.buildCollisionVectors = function(items) {
 			var p, c = [],
 				v, w, r,

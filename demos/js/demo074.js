@@ -56,8 +56,8 @@ var mycode = function() {
 			name: 'text' + i,
 			startX: (100 * i) + 100,
 			startY: 300,
-			deltaX: (Math.random() * 8) - 4,
-			deltaY: (Math.random() * 4) - 2,
+			deltaX: (Math.random() * 4) - 2,
+			deltaY: (Math.random() * 2) - 1,
 			roll: 15 * i,
 			fillStyle: myColors[i],
 			handleX: 'center',
@@ -78,8 +78,8 @@ var mycode = function() {
 			startX: (100 * i) + 100,
 			startY: 60,
 			roll: 15 * i,
-			deltaX: (Math.random() * 8) - 4,
-			deltaY: (Math.random() * 4) - 2,
+			deltaX: (Math.random() * 4) - 2,
+			deltaY: (Math.random() * 2) - 1,
 			width: 80,
 			height: 50,
 			handleX: 'center',
@@ -91,14 +91,17 @@ var mycode = function() {
 			collisionPoints: 'corners',
 		});
 	}
-	allEntitys.entitys = groupA.entitys.concat(groupB.entitys);
+	allEntitys.addEntitysToGroup(groupA.entitys);
+	allEntitys.addEntitysToGroup(groupB.entitys);
 
 	//animation functions
 	moveEntitys = function() {
-		for (var i = 0, z = allEntitys.entitys.length; i < z; i++) {
+		for (var i = 0, iz = allEntitys.entitys.length; i < iz; i++) {
 			myEntity = scrawl.entity[allEntitys.entitys[i]];
 			if (myEntity.scale < 0.2) {
-				myEntity.scale = 0.2;
+				myEntity.set({
+					scale: 0.2,
+				});
 			}
 			myEntity.setDelta({
 				scale: (myEntity.scale < 1) ? 0.005 : 0,

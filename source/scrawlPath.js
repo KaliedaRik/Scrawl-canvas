@@ -1242,6 +1242,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	@private
 	**/
+		//CHANGE - push generated values directly into this.collisionVectors
 		my.Path.prototype.buildCollisionVectors = function(items) {
 			if (my.xt(my.d.Path.fieldChannel)) {
 				var p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,

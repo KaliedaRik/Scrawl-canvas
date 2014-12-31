@@ -462,62 +462,62 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Picture.prototype = Object.create(my.Entity.prototype);
 		/**
-    @property type
-    @type String
-    @default 'Picture'
-    @final
-    **/
+@property type
+@type String
+@default 'Picture'
+@final
+**/
 		my.Picture.prototype.type = 'Picture';
 		my.Picture.prototype.classname = 'entitynames';
 		my.d.Picture = {
 			/**
-    SCRAWLIMAGE String - source image for this entity
-    @property source
-    @type String
-    @default ''
-    **/
+SCRAWLIMAGE String - source image for this entity
+@property source
+@type String
+@default ''
+**/
 			source: '',
 			/**
-    IMAGEDATANAME String - name of the Image Data object
+IMAGEDATANAME String - name of the Image Data object
 
-    Calculated automatically by Scrawl following a .getImageData() call
-    @property imageData
-    @type String
-    @default ''
-    **/
+Calculated automatically by Scrawl following a .getImageData() call
+@property imageData
+@type String
+@default ''
+**/
 			imageData: '',
 			/**
-    Collision attribute - name of channel to be checked against during collision detection
+Collision attribute - name of channel to be checked against during collision detection
 
-    Permitted values: 'red', 'blue', 'green', 'alpha'
-    @property imageDataChannel
-    @type String
-    @default 'alpha'
-    **/
+Permitted values: 'red', 'blue', 'green', 'alpha'
+@property imageDataChannel
+@type String
+@default 'alpha'
+**/
 			imageDataChannel: 'alpha',
 			/**
-    SPRITEANIMATIONNAME String - Entity sheet image linked to this entity
-    @property animSheet
-    @type String
-    @default ;;
-    **/
+SPRITEANIMATIONNAME String - Entity sheet image linked to this entity
+@property animSheet
+@type String
+@default ;;
+**/
 			animation: '',
 			/**
-    Identifier String - permitted values include: 'animation', 'canvas', 'img'
+Identifier String - permitted values include: 'animation', 'canvas', 'img'
 
-    Detected automatically by scrawl during entity construction
-    @property imageType
-    @type String
-    @default ''
-    @private
-    **/
+Detected automatically by scrawl during entity construction
+@property imageType
+@type String
+@default ''
+@private
+**/
 			imageType: '',
 			/**
-    Collision flag - when true, Picture entity will use imageData to determine whether a collision has occured; when false, a simpler box collision system is used
-    @property checkHitUsingImageData
-    @type Boolean
-    @default false
-    **/
+Collision flag - when true, Picture entity will use imageData to determine whether a collision has occured; when false, a simpler box collision system is used
+@property checkHitUsingImageData
+@type Boolean
+@default false
+**/
 			checkHitUsingImageData: false,
 			/**
 The coordinate Vector representing the Picture's copy source position on its source;
@@ -562,30 +562,30 @@ Local target data
 **/
 			pasteData: false,
 			/**
-    Asynchronous loading of image file from the server - path/to/image file
+Asynchronous loading of image file from the server - path/to/image file
 
-    Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
-    @property url
-    @type String
-    @default ''
-    **/
+Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
+@property url
+@type String
+@default ''
+**/
 			/**
-    Asynchronous loading of image file from the server - function to run once image has successfully loaded
+Asynchronous loading of image file from the server - function to run once image has successfully loaded
 
-    Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
-    @property callback
-    @type Function
-    @default undefined
-    **/
+Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
+@property callback
+@type Function
+@default undefined
+**/
 			callback: false,
 		};
 		my.mergeInto(my.d.Picture, my.d.Entity);
 		/**
-    Augments Entity.get()
-    @method get
-    @param {String} item Attribute to be retrieved
-    @return Attribute value
-    **/
+Augments Entity.get()
+@method get
+@param {String} item Attribute to be retrieved
+@return Attribute value
+**/
 		my.Picture.prototype.get = function(item) {
 			if (my.contains(my.animKeys, item)) {
 				return my.spriteanimation[this.animation].get(item);
@@ -595,12 +595,12 @@ Local target data
 			}
 		};
 		/**
-    Augments Entity.set()
-    @method set
-    @param {Object} items Object consisting of key:value attributes
-    @return This
-    @chainable
-    **/
+Augments Entity.set()
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		S.Picture_set_temp = null; //scrawl Vector object
 		my.Picture.prototype.set = function(items) {
 			my.Entity.prototype.set.call(this, items);
@@ -638,12 +638,12 @@ Local target data
 			return this;
 		};
 		/**
-    Augments Entity.setDelta()
-    @method setDelta
-    @param {Object} items Object consisting of key:value attributes
-    @return This
-    @chainable
-    **/
+Augments Entity.setDelta()
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		S.Picture_setDelta_temp = null; //scrawl Vector object
 		S.Picture_setDelta_x = 0;
 		S.Picture_setDelta_y = 0;
@@ -1082,37 +1082,37 @@ Picture.setPaste update pasteData object values
     @param {Object} items Coordinate Vector or Object
     @return Color value at coordinate; false if no color found
     **/
+		S.Picture_getImageDataValue_data = null; //ImageData object
+		S.Picture_getImageDataValue_array = null; //ImageData data array
+		S.Picture_getImageDataValue_index = 0;
 		my.Picture.prototype.getImageDataValue = function(items) {
 			items = my.safeObject(items);
-			var coords = my.workimg.v1.set({
-					x: (items.x || 0),
-					y: (items.y || 0)
-				}),
-				myEl,
-				d;
-			coords.vectorSubtract(this.pasteData).rotate(-this.roll);
-			coords.x = (this.flipReverse) ? -coords.x : coords.x;
-			coords.y = (this.flipUpend) ? -coords.y : coords.y;
-			coords.vectorSubtract(this.getPivotOffsetVector(this.handle));
-			coords.x = Math.round(coords.x * (this.copyData.w / this.pasteData.w));
-			coords.y = Math.round(coords.y * (this.copyData.h / this.pasteData.h));
+			my.workimg.v1.x = items.x || 0;
+			my.workimg.v1.y = items.y || 0;
+			my.workimg.v1.vectorSubtract(this.pasteData).rotate(-this.roll);
+			my.workimg.v1.x = (this.flipReverse) ? -my.workimg.v1.x : my.workimg.v1.x;
+			my.workimg.v1.y = (this.flipUpend) ? -my.workimg.v1.y : my.workimg.v1.y;
+			my.workimg.v1.vectorSubtract(this.getPivotOffsetVector(this.handle));
+			my.workimg.v1.x = Math.round(my.workimg.v1.x * (this.copyData.w / this.pasteData.w));
+			my.workimg.v1.y = Math.round(my.workimg.v1.y * (this.copyData.h / this.pasteData.h));
 			if (!this.imageData) {
 				this.getImageData();
 			}
-			d = my.imageData[this.imageData];
-			myEl = ((coords.y * d.width) + coords.x) * 4;
-			if (my.isBetween(coords.x, 0, d.width - 1, true) && my.isBetween(coords.y, 0, d.height - 1, true)) {
+			S.Picture_getImageDataValue_data = my.imageData[this.imageData];
+			S.Picture_getImageDataValue_index = ((my.workimg.v1.y * S.Picture_getImageDataValue_data.width) + my.workimg.v1.x) * 4;
+			if (my.isBetween(my.workimg.v1.x, 0, S.Picture_getImageDataValue_data.width - 1, true) && my.isBetween(my.workimg.v1.y, 0, S.Picture_getImageDataValue_data.height - 1, true)) {
+				S.Picture_getImageDataValue_array = S.Picture_getImageDataValue_data.data;
 				switch (items.channel || this.get('imageDataChannel')) {
 					case 'red':
-						return (my.xt(d.data[myEl])) ? d.data[myEl] : false;
+						return (my.xt(S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index])) ? S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index] : false;
 					case 'green':
-						return (my.xt(d.data[myEl + 1])) ? d.data[myEl + 1] : false;
+						return (my.xt(S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 1])) ? S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 1] : false;
 					case 'blue':
-						return (my.xt(d.data[myEl + 2])) ? d.data[myEl + 2] : false;
+						return (my.xt(S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 2])) ? S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 2] : false;
 					case 'color':
-						return (my.xta([d.data[myEl], d.data[myEl + 1], d.data[myEl + 2], d.data[myEl + 3]])) ? 'rgba(' + d.data[myEl] + ',' + d.data[myEl + 1] + ',' + d.data[myEl + 2] + ',' + d.data[myEl + 3] + ')' : false;
+						return (my.xta([S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index], S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 1], S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 2], S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 3]])) ? 'rgba(' + S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index] + ',' + S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 1] + ',' + S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 2] + ',' + S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 3] + ')' : false;
 					default: // alpha
-						return (my.xt(d.data[myEl + 3])) ? d.data[myEl + 3] : false;
+						return (my.xt(S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 3])) ? S.Picture_getImageDataValue_array[S.Picture_getImageDataValue_index + 3] : false;
 				}
 			}
 			return false;
@@ -1131,37 +1131,57 @@ Picture.setPaste update pasteData object values
     @param {Object} items Argument object
     @return The first coordinate to fall within the entity's path; false if none fall within the path
     **/
+		S.Picture_checkHit_tests = [];
+		S.Picture_checkHit_hit = [];
+		S.Picture_checkHit_testBar = 0;
+		S.Picture_checkHit_colorResult = '';
+		S.Picture_checkHit_result = null; //mixed
+		S.Picture_checkHit_i = 0;
+		S.Picture_checkHit_iz = 0;
+		S.Picture_checkHit_arg = {
+			tests: []
+		};
 		my.Picture.prototype.checkHit = function(items) {
 			items = my.safeObject(items);
-			var mytests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
-				c,
-				hit,
-				test = (my.isa(items.test, 'num')) ? items.test : 0;
-			for (var i = 0, iz = mytests.length; i < iz; i += 2) {
-				hit = my.Entity.prototype.checkHit.call(this, {
-					tests: [mytests[i], mytests[i + 1]]
-				});
+			if (my.xt(items.tests)) {
+				S.Picture_checkHit_tests = items.tests;
+			}
+			else {
+				S.Picture_checkHit_tests.length = 0;
+				S.Picture_checkHit_tests.push(items.x || 0);
+				S.Picture_checkHit_tests.push(items.y || 0);
+			}
+			S.Picture_checkHit_testBar = (my.isa(items.test, 'num')) ? items.test : 0;
+			for (S.Picture_checkHit_i = 0, S.Picture_checkHit_iz = S.Picture_checkHit_tests.length; S.Picture_checkHit_i < S.Picture_checkHit_iz; S.Picture_checkHit_i += 2) {
+				S.Picture_checkHit_result = null;
+				S.Picture_checkHit_arg.tests.length = 0;
+				S.Picture_checkHit_arg.tests.push(S.Picture_checkHit_tests[S.Picture_checkHit_i]);
+				S.Picture_checkHit_arg.tests.push(S.Picture_checkHit_tests[S.Picture_checkHit_i + 1]);
+				S.Picture_checkHit_hit = my.Entity.prototype.checkHit.call(this, S.Picture_checkHit_arg);
 				if (this.checkHitUsingImageData) {
-					if (hit) {
-						hit.x = Math.floor(hit.x);
-						hit.y = Math.floor(hit.y);
+					if (S.Picture_checkHit_hit) {
+						S.Picture_checkHit_hit.x = Math.floor(S.Picture_checkHit_hit.x);
+						S.Picture_checkHit_hit.y = Math.floor(S.Picture_checkHit_hit.y);
 						if (this.animation) {
 							this.imageData = false;
 						}
-						c = this.getImageDataValue(hit);
+						S.Picture_checkHit_colorResult = this.getImageDataValue(S.Picture_checkHit_hit);
 						if (this.get('imageDataChannel') === 'color') {
-							hit = (c === 'rgba(0,0,0,0)') ? false : hit;
+							S.Picture_checkHit_result = (S.Picture_checkHit_colorResult === 'rgba(0,0,0,0)') ? false : S.Picture_checkHit_hit;
 						}
 						else {
-							hit = (c > test) ? hit : false;
+							S.Picture_checkHit_result = (S.Picture_checkHit_colorResult > S.Picture_checkHit_testBar) ? S.Picture_checkHit_hit : false;
 						}
 					}
 				}
-				if (hit) {
+				else {
+					S.Picture_checkHit_result = S.Picture_checkHit_hit;
+				}
+				if (S.Picture_checkHit_result) {
 					break;
 				}
 			}
-			return (hit) ? hit : false;
+			return (S.Picture_checkHit_result) ? S.Picture_checkHit_result : false;
 		};
 		/**
 Revert pickupEntity() actions, ensuring entity is left where the user drops it

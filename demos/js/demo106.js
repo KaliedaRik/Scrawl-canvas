@@ -13,7 +13,8 @@ var mycode = function() {
 		bar,
 		hits,
 		hitbubbles,
-		color;
+		color,
+		i, iz;
 
 	//define bar entity
 	scrawl.newGroup({
@@ -25,7 +26,7 @@ var mycode = function() {
 		endX: 150,
 		startY: 200,
 		endY: 200,
-		collisionPoints: 25,
+		collisionPoints: 10,
 		lineWidth: 4,
 		group: 'bargroup',
 	});
@@ -44,7 +45,7 @@ var mycode = function() {
 		aMax: 1,
 		aMin: 1,
 	});
-	for (var i = 0; i < 40; i++) {
+	for (i = 0; i < 40; i++) {
 		scrawl.newWheel({
 			radius: Math.ceil(Math.random() * 40) + 5,
 			startX: Math.ceil((Math.random() * 100) + 150),
@@ -63,15 +64,11 @@ var mycode = function() {
 			hitbubbles.setEntitysTo({
 				globalAlpha: 0.4,
 			});
-			//getEntitysCollidingWith() returns an array of SPRITENAME Strings, or false when no hits are detected
-			hitbubbles.entitys = bubbles.getEntitysCollidingWith(bar) || [];
-			//getAllEntitysAt() returns an array of entity objects
+			hitbubbles.entitys.length = 0;
+			hits = bubbles.getEntitysCollidingWith(bar);
+			hitbubbles.addEntitysToGroup(hits);
 			hits = bubbles.getAllEntitysAt(pad.getMouse());
-			if (hits.length > 0) {
-				for (var i = 0, iz = hits.length; i < iz; i++) {
-					hitbubbles.addEntitysToGroup(hits[i].name);
-				}
-			}
+			hitbubbles.addEntitysToGroup(hits);
 			hitbubbles.setEntitysTo({
 				globalAlpha: 0.9,
 			});
