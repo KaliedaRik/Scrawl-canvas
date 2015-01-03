@@ -37,7 +37,7 @@ The Phrase module adds Phrase entitys - single and multi-line text objects - to 
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'phrase')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -100,6 +100,7 @@ A __factory__ function to generate new Phrase entitys
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
 			this.registerInLibrary();
+			this.texts = [];
 			this.lineHeight = my.xtGet(items.lineHeight, my.d.Phrase.lineHeight);
 			if (items.font) {
 				this.checkFont(items.font);
@@ -290,18 +291,24 @@ Helper function - creates Text objects for each line of text in a multiline Phra
 @private
 **/
 		my.Phrase.prototype.multiline = function(items) {
+			var text,
+				textArray,
+				i,
+				iz,
+				j,
+				jz;
 			items = JSON.parse(JSON.stringify(items));
-			var text = '' + (items.text || this.get('text')),
-				textArray = text.split('\n');
+			text = '' + (items.text || this.get('text'));
+			textArray = text.split('\n');
 			if (my.xt(this.texts)) {
-				for (var i = 0, iz = this.texts.length; i < iz; i++) {
+				for (i = 0, iz = this.texts.length; i < iz; i++) {
 					delete my.text[this.texts[i]];
 					my.removeItem(my.textnames, this.texts[i]);
 				}
 			}
-			this.texts = [];
+			this.texts.length = 0;
 			items.phrase = this.name;
-			for (var j = 0, jz = textArray.length; j < jz; j++) {
+			for (j = 0, jz = textArray.length; j < jz; j++) {
 				items.text = textArray[j];
 				if (items.text.length > 0) {
 					new my.Text(items);
@@ -334,17 +341,34 @@ Helper function - creates font-related attributes from entity's Context object's
 @private
 **/
 		my.Phrase.prototype.deconstructFont = function() {
-			var myFont = my.ctx[this.context].font,
-				res,
+			var i,
+				iz,
+				myFont,
+				res = [],
 				exclude = [100, 200, 300, 400, 500, 600, 700, 800, 900, 'italic', 'oblique', 'small-caps', 'bold', 'bolder', 'lighter', 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'],
 				myFamily,
 				myFontArray,
-				style = this.get('style'),
-				variant = this.get('variant'),
-				weight = this.get('weight'),
-				size = this.get('size'),
-				metrics = this.get('metrics'),
-				family = this.get('family');
+				style,
+				variant,
+				weight,
+				size,
+				metrics,
+				family,
+				arg = {
+					style: '',
+					variant: '',
+					weight: '',
+					size: 0,
+					metrics: '',
+					family: ''
+				};
+			myFont = my.ctx[this.context].font;
+			style = this.get('style');
+			variant = this.get('variant');
+			weight = this.get('weight');
+			size = this.get('size');
+			metrics = this.get('metrics');
+			family = this.get('family');
 			if (/italic/i.test(myFont)) {
 				style = 'italic';
 			}
@@ -352,7 +376,7 @@ Helper function - creates font-related attributes from entity's Context object's
 				style = 'oblique';
 			}
 			else {
-				this.style = 'normal';
+				style = 'normal';
 			}
 			if (/small-caps/i.test(myFont)) {
 				variant = 'small-caps';
@@ -376,7 +400,7 @@ Helper function - creates font-related attributes from entity's Context object's
 			else {
 				weight = 'normal';
 			}
-			res = false;
+			res.length = 0;
 			if (/(\d+)(%|in|cm|mm|em|ex|pt|pc|ex)?/i.test(myFont)) {
 				res = myFont.match(/(\d+)(%|in|cm|mm|em|ex|pt|pc|ex|px)/i);
 				size = parseFloat(res[1]);
@@ -416,7 +440,7 @@ Helper function - creates font-related attributes from entity's Context object's
 			}
 			myFamily = '';
 			myFontArray = myFont.split(' ');
-			for (var i = 0, z = myFontArray.length; i < z; i++) {
+			for (i = 0, iz = myFontArray.length; i < iz; i++) {
 				if (!my.contains(exclude, myFontArray[i])) {
 					if (!myFontArray[i].match(/[^\/](\d)+(%|in|cm|mm|em|ex|pt|pc|ex)?/i)) {
 						myFamily += myFontArray[i] + ' ';
@@ -427,14 +451,13 @@ Helper function - creates font-related attributes from entity's Context object's
 				myFamily = 'Verdana, Geneva, sans-serif';
 			}
 			family = myFamily;
-			my.Base.prototype.set.call(this, {
-				style: style,
-				variant: variant,
-				weight: weight,
-				size: size,
-				metrics: metrics,
-				family: family,
-			});
+			arg.style = style;
+			arg.variant = variant;
+			arg.weight = weight;
+			arg.size = size;
+			arg.metrics = metrics;
+			arg.family = family;
+			this.set(arg);
 			return this;
 		};
 		/**
@@ -446,13 +469,20 @@ Helper function - creates entity's Context object's phrase attribute from other 
 @private
 **/
 		my.Phrase.prototype.constructFont = function() {
-			var myFont = '',
-				style = this.get('style'),
-				variant = this.get('variant'),
-				weight = this.get('weight'),
-				size = this.get('size'),
-				metrics = this.get('metrics'),
-				family = this.get('family');
+			var myFont,
+				style,
+				variant,
+				weight,
+				size,
+				metrics,
+				family;
+			myFont = '';
+			style = this.get('style');
+			variant = this.get('variant');
+			weight = this.get('weight');
+			size = this.get('size');
+			metrics = this.get('metrics');
+			family = this.get('family');
 			if (style !== 'normal') {
 				myFont += style + ' ';
 			}
@@ -499,8 +529,7 @@ Stamp helper function - perform a 'clear' method draw
 @private
 **/
 		my.Phrase.prototype.clear = function(ctx, cell) {
-			var tX,
-				tY,
+			var i, iz, tX, tY,
 				o = this.getOffset(),
 				here = this.prepareStamp(),
 				textY = this.size * this.lineHeight * this.scale;
@@ -508,7 +537,7 @@ Stamp helper function - perform a 'clear' method draw
 			ctx.globalCompositeOperation = 'destination-out';
 			this.rotateCell(ctx, cell);
 			tX = here.x + o.x;
-			for (var i = 0, z = this.texts.length; i < z; i++) {
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
 				tY = here.y + (textY * i) + o.y;
 				my.text[this.texts[i]].clear(ctx, cell, tX, tY);
 			}
@@ -525,15 +554,14 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @private
 **/
 		my.Phrase.prototype.clearWithBackground = function(ctx, cell) {
-			var tX,
-				tY,
+			var i, iz, tX, tY,
 				o = this.getOffset(),
 				here = this.prepareStamp(),
 				textY = this.size * this.lineHeight * this.scale;
 			my.cell[cell].setEngine(this);
 			this.rotateCell(ctx, cell);
 			tX = here.x + o.x;
-			for (var i = 0, z = this.texts.length; i < z; i++) {
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
 				tY = here.y + (textY * i) + o.y;
 				my.text[this.texts[i]].clearWithBackground(ctx, cell, tX, tY);
 			}
@@ -549,8 +577,7 @@ Stamp helper function - perform a 'draw' method draw
 @private
 **/
 		my.Phrase.prototype.draw = function(ctx, cell) {
-			var tX,
-				tY,
+			var i, iz, tX, tY,
 				o = this.getOffset(),
 				here = this.prepareStamp(),
 				textY = this.size * this.lineHeight * this.scale;
@@ -560,7 +587,7 @@ Stamp helper function - perform a 'draw' method draw
 				this.addBackgroundColor(ctx, here);
 			}
 			tX = here.x + o.x;
-			for (var i = 0, z = this.texts.length; i < z; i++) {
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
 				tY = here.y + (textY * i) + o.y;
 				my.text[this.texts[i]].draw(ctx, cell, tX, tY);
 			}
@@ -576,8 +603,7 @@ Stamp helper function - perform a 'fill' method draw
 @private
 **/
 		my.Phrase.prototype.fill = function(ctx, cell) {
-			var tX,
-				tY,
+			var i, iz, tX, tY,
 				o = this.getOffset(),
 				here = this.prepareStamp(),
 				textY = this.size * this.lineHeight * this.scale;
@@ -587,7 +613,7 @@ Stamp helper function - perform a 'fill' method draw
 				this.addBackgroundColor(ctx, here);
 			}
 			tX = here.x + o.x;
-			for (var i = 0, z = this.texts.length; i < z; i++) {
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
 				tY = here.y + (textY * i) + o.y;
 				my.text[this.texts[i]].fill(ctx, cell, tX, tY);
 			}
@@ -603,8 +629,7 @@ Stamp helper function - perform a 'drawFill' method draw
 @private
 **/
 		my.Phrase.prototype.drawFill = function(ctx, cell) {
-			var tX,
-				tY,
+			var i, iz, tX, tY,
 				o = this.getOffset(),
 				here = this.prepareStamp(),
 				textY = this.size * this.lineHeight * this.scale;
@@ -614,7 +639,7 @@ Stamp helper function - perform a 'drawFill' method draw
 				this.addBackgroundColor(ctx, here);
 			}
 			tX = here.x + o.x;
-			for (var i = 0, z = this.texts.length; i < z; i++) {
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
 				tY = here.y + (textY * i) + o.y;
 				my.text[this.texts[i]].drawFill(ctx, cell, tX, tY, this);
 			}
@@ -630,8 +655,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 @private
 **/
 		my.Phrase.prototype.fillDraw = function(ctx, cell) {
-			var tX,
-				tY,
+			var i, iz, tX, tY,
 				o = this.getOffset(),
 				here = this.prepareStamp(),
 				textY = this.size * this.lineHeight * this.scale;
@@ -641,9 +665,9 @@ Stamp helper function - perform a 'fillDraw' method draw
 				this.addBackgroundColor(ctx, here);
 			}
 			tX = here.x + o.x;
-			for (var i = 0, z = this.texts.length; i < z; i++) {
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
 				tY = here.y + (textY * i) + o.y;
-				my.text[this.texts[i]].fillDraw(ctx, cell, here.x + o.x, tY, this);
+				my.text[this.texts[i]].fillDraw(ctx, cell, tX, tY, this);
 			}
 			return this;
 		};
@@ -657,8 +681,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 @private
 **/
 		my.Phrase.prototype.sinkInto = function(ctx, cell) {
-			var tX,
-				tY,
+			var i, iz, tX, tY,
 				o = this.getOffset(),
 				here = this.prepareStamp(),
 				textY = this.size * this.lineHeight * this.scale;
@@ -668,9 +691,9 @@ Stamp helper function - perform a 'sinkInto' method draw
 				this.addBackgroundColor(ctx, here);
 			}
 			tX = here.x + o.x;
-			for (var i = 0, z = this.texts.length; i < z; i++) {
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
 				tY = here.y + (textY * i) + o.y;
-				my.text[this.texts[i]].sinkInto(ctx, cell, here.x + o.x, tY);
+				my.text[this.texts[i]].sinkInto(ctx, cell, tX, tY);
 			}
 			return this;
 		};
@@ -684,8 +707,7 @@ Stamp helper function - perform a 'floatOver' method draw
 @private
 **/
 		my.Phrase.prototype.floatOver = function(ctx, cell) {
-			var tX,
-				tY,
+			var i, iz, tX, tY,
 				o = this.getOffset(),
 				here = this.prepareStamp(),
 				textY = this.size * this.lineHeight * this.scale;
@@ -695,9 +717,9 @@ Stamp helper function - perform a 'floatOver' method draw
 				addBackgroundColor(ctx, here);
 			}
 			tX = here.x + o.x;
-			for (var i = 0, z = this.texts.length; i < z; i++) {
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
 				tY = here.y + (textY * i) + o.y;
-				my.text[this.texts[i]].floatOver(ctx, cell, here.x + o.x, tY);
+				my.text[this.texts[i]].floatOver(ctx, cell, tX, tY);
 			}
 			return this;
 		};
@@ -723,12 +745,15 @@ Helper function - calculate entity's width and height attributes, taking into ac
 @private
 **/
 		my.Phrase.prototype.getMetrics = function(cellname) {
-			var h = 0,
-				w = 0,
-				texts = this.texts;
-			for (var i = 0, z = texts.length; i < z; i++) {
-				w = (my.text[texts[i]].get('width') > w) ? my.text[texts[i]].width : w;
-				h += my.text[texts[i]].get('height');
+			var i,
+				iz,
+				h,
+				w;
+			h = 0;
+			w = 0;
+			for (i = 0, iz = this.texts.length; i < iz; i++) {
+				w = (my.text[this.texts[i]].get('width') > w) ? my.text[this.texts[i]].width : w;
+				h += my.text[this.texts[i]].get('height');
 			}
 			this.width = w;
 			this.height = h;
@@ -744,11 +769,16 @@ Drawing function - stamps a background block onto the &lt;canvas&gt; element
 @private
 **/
 		my.Phrase.prototype.addBackgroundColor = function(ctx, here) {
-			var margin = this.get('backgroundMargin'),
-				topX = here.x - margin,
-				topY = here.y - margin,
-				w = (this.width * this.scale) + (margin * 2),
-				h = (this.height * this.scale) + (margin * 2);
+			var h,
+				w,
+				margin,
+				topX,
+				topY;
+			margin = this.get('backgroundMargin');
+			topX = here.x - margin;
+			topY = here.y - margin;
+			w = (this.width * this.scale) + (margin * 2);
+			h = (this.height * this.scale) + (margin * 2);
 			ctx.fillStyle = this.backgroundColor;
 			ctx.fillRect(topX, topY, w, h);
 			ctx.fillStyle = my.ctx[this.context].get('fillStyle');
@@ -763,9 +793,16 @@ Returns an object with coordinates __x__ and __y__
 @private
 **/
 		my.Phrase.prototype.getOffset = function() {
-			var myContext = my.ctx[this.context],
-				oX = 0,
-				oY = 0;
+			var oX,
+				oY,
+				myContext,
+				result = {
+					x: 0,
+					y: 0
+				};
+			myContext = my.ctx[this.context];
+			oX = 0;
+			oY = 0;
 			switch (myContext.get('textAlign')) {
 				case 'start':
 				case 'left':
@@ -795,10 +832,9 @@ Returns an object with coordinates __x__ and __y__
 				default:
 					oY = this.size * this.lineHeight * this.scale * 0.85;
 			}
-			return {
-				x: oX,
-				y: oY
-			};
+			result.x = oX;
+			result.y = oY;
+			return result;
 		};
 
 		/**
@@ -828,6 +864,8 @@ Returns an object with coordinates __x__ and __y__
 			this.context = my.entity[this.phrase].context;
 			this.fixedWidth = my.xtGet(items.fixedWidth, my.d.Text.fixedWidth);
 			this.textAlongPath = my.xtGet(items.textAlongPath, my.d.Text.textAlongPath);
+			this.glyphs = [];
+			this.glyphWidths = [];
 			my.text[this.name] = this;
 			my.pushUnique(my.textnames, this.name);
 			my.pushUnique(my.entity[this.phrase].texts, this.name);
@@ -941,29 +979,38 @@ Permitted methods include:
 @private
 **/
 		my.Text.prototype.stampAlongPath = function(method, cell) {
-			var p = my.entity[this.phrase];
-			method = (my.isa(method, 'str')) ? method : p.method;
-			cell = (my.isa(cell, 'str') && my.cell[cell]) ? cell : my.cell[my.group[p.group].cell];
-			var engine = my.context[cell],
-				myCell = my.cell[cell],
+			var p,
+				engine,
 				here,
-				pathLength = my.entity[p.path].getPerimeterLength(),
-				width = this.width * p.scale,
-				ratio = width / pathLength,
-				pos = p.pathPlace,
+				pathLength,
+				width,
+				ratio,
+				pos,
 				nowPos,
-				oldText = this.text,
+				oldText,
 				x,
 				y,
-				r;
-			if (!my.xt(this.glyphs)) {
+				r,
+				i,
+				iz;
+			p = my.entity[this.phrase];
+			method = (my.isa(method, 'str')) ? method : p.method;
+			cell = (my.isa(cell, 'str') && my.cell[cell]) ? cell : my.cell[my.group[p.group].cell];
+			engine = my.context[cell];
+			cell = my.cell[cell];
+			pathLength = my.entity[p.path].getPerimeterLength();
+			width = this.width * p.scale;
+			ratio = width / pathLength;
+			pos = p.pathPlace;
+			oldText = this.text;
+			if (this.glyphs.length === 0) {
 				this.getMetrics();
 			}
-			myCell.setEngine(p);
-			for (var j = 0, w = this.glyphs.length; j < w; j++) {
-				if (my.xt(this.glyphs[j])) {
-					this.text = this.glyphs[j];
-					nowPos = pos + (((this.glyphWidths[j] / 2) / width) * ratio);
+			cell.setEngine(p);
+			for (i = 0, iz = this.glyphs.length; i < iz; i++) {
+				if (my.xt(this.glyphs[i])) {
+					this.text = this.glyphs[i];
+					nowPos = pos + (((this.glyphWidths[i] / 2) / width) * ratio);
 					if (!my.isBetween(nowPos, 0, 1, true)) {
 						nowPos += (nowPos > 0.5) ? -1 : 1;
 					}
@@ -997,7 +1044,7 @@ Permitted methods include:
 						default:
 							//do nothing
 					}
-					pos += (this.glyphWidths[j] / width) * ratio;
+					pos += (this.glyphWidths[i] / width) * ratio;
 					if (!my.isBetween(pos, 0, 1, true)) {
 						pos += (pos > 0.5) ? -1 : 1;
 					}
@@ -1014,17 +1061,26 @@ Filter function - prepare the clip for the filter
 @private
 **/
 		my.Text.prototype.clipAlongPath = function() {
-			var p = my.entity[this.phrase],
-				engine = my.cvx,
+			var p,
 				here,
-				pathLength = my.entity[p.path].getPerimeterLength(),
-				width = this.width * p.scale,
-				ratio = width / pathLength,
-				pos = p.pathPlace,
+				pathLength,
+				width,
+				ratio,
+				pos,
 				nowPos,
-				oldText = this.text,
-				x, y, r, i, iz;
-			if (!my.xt(this.glyphs)) {
+				oldText,
+				x,
+				y,
+				r,
+				i,
+				iz;
+			p = my.entity[this.phrase];
+			pathLength = my.entity[p.path].getPerimeterLength();
+			width = this.width * p.scale;
+			ratio = width / pathLength;
+			pos = p.pathPlace;
+			oldText = this.text;
+			if (this.glyphs.length === 0) {
 				this.getMetrics();
 			}
 			for (i = 0, iz = this.glyphs.length; i < iz; i++) {
@@ -1038,11 +1094,11 @@ Filter function - prepare the clip for the filter
 					x = here.x;
 					y = here.y;
 					r = here.r * my.radian;
-					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.translate(x, y);
-					engine.rotate(r);
-					engine.translate(-x, -y);
-					engine.fillText(this.text, x, y);
+					my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+					my.cvx.translate(x, y);
+					my.cvx.rotate(r);
+					my.cvx.translate(-x, -y);
+					my.cvx.fillText(this.text, x, y);
 					pos += (this.glyphWidths[i] / width) * ratio;
 					if (!my.isBetween(pos, 0, 1, true)) {
 						pos += (pos > 0.5) ? -1 : 1;
@@ -1208,27 +1264,39 @@ Calculate metrics for each phrase, word or glyph in the glyphs array
 @private
 **/
 		my.Text.prototype.getMetrics = function() {
-			var p = my.entity[this.phrase],
-				myContext = my.context[my.pad[my.currentPad].current],
-				myEngine = my.ctx[this.context],
-				tempFont = myContext.font,
-				tempBaseline = myContext.textBaseline,
-				tempAlign = myContext.textAlign,
+			var p,
+				myContext,
+				myEngine,
+				tempFont,
+				tempBaseline,
+				tempAlign,
 				myText,
 				myTextWidth,
-				tempText;
+				tempText,
+				i,
+				iz,
+				j,
+				jz,
+				k,
+				kz;
+			p = my.entity[this.phrase];
+			myContext = my.context[my.pad[my.currentPad].current];
+			myEngine = my.ctx[this.context];
+			tempFont = myContext.font;
+			tempBaseline = myContext.textBaseline;
+			tempAlign = myContext.textAlign;
 			myContext.font = myEngine.get('font');
 			myContext.textBaseline = myEngine.get('textBaseline');
 			myContext.textAlign = myEngine.get('textAlign');
 			this.width = myContext.measureText(this.text).width / p.scale;
 			this.height = p.size * p.lineHeight;
 			if (p.path) {
-				this.glyphs = [];
-				this.glyphWidths = [];
+				this.glyphs.length = 0;
+				this.glyphWidths.length = 0;
 				myText = this.text;
 				if (this.textAlongPath === 'word') {
 					tempText = this.text.split(' ');
-					for (var i = 0, iz = tempText.length; i < iz; i++) {
+					for (i = 0, iz = tempText.length; i < iz; i++) {
 						this.glyphs.push(tempText[i]);
 						this.glyphWidths.push(myContext.measureText(tempText[i]).width);
 						if (my.xt(tempText[i + 1])) {
@@ -1240,13 +1308,13 @@ Calculate metrics for each phrase, word or glyph in the glyphs array
 				else {
 					myTextWidth = myContext.measureText(myText).width;
 					if (this.fixedWidth) {
-						for (var j = 0, jz = myText.length; j < jz; j++) {
+						for (j = 0, jz = myText.length; j < jz; j++) {
 							this.glyphs.push(myText[j]);
 							this.glyphWidths.push(myTextWidth / jz);
 						}
 					}
 					else {
-						for (var k = 1, kz = myText.length; k <= kz; k++) {
+						for (k = 1, kz = myText.length; k <= kz; k++) {
 							this.glyphs.push(myText[k - 1]);
 							tempText = myText.substr(0, k - 1) + myText.substr(k);
 							this.glyphWidths.push((myTextWidth - myContext.measureText(tempText).width));
@@ -1261,5 +1329,5 @@ Calculate metrics for each phrase, word or glyph in the glyphs array
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

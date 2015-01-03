@@ -23,7 +23,7 @@
 //---------------------------------------------------------------------------------
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'quaternion')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -69,8 +69,9 @@ Argument object can be in the following form, where all values (which default to
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Quaternion = function(items) {
+			var vector;
 			items = my.safeObject(items);
-			var vector = my.safeObject(items.v);
+			vector = my.safeObject(items.v);
 			this.name = items.name || 'generic';
 			this.n = items.n || 1;
 			this.v = my.newVector({
@@ -159,8 +160,9 @@ Check to see if quaternion is a unit quaternion, within permitted tolerance
 @return True if quaternion is a normalized quaternion; false otherwise
 **/
 		my.Quaternion.prototype.checkNormal = function(tolerance) {
+			var check;
 			tolerance = (my.xt(tolerance)) ? tolerance : 0;
-			var check = this.getMagnitude();
+			check = this.getMagnitude();
 			if (check >= 1 - tolerance && check <= 1 + tolerance) {
 				return true;
 			}
@@ -283,8 +285,13 @@ Argument can also be either an existing Quaternion object, or an existing Vector
 @return Amended quaternion
 **/
 		my.Quaternion.prototype.set = function(items) {
+			var x,
+				y,
+				z,
+				n,
+				v;
 			items = my.safeObject(items);
-			var x, y, z, n, v;
+			//var x, y, z, n, v;
 			if (my.isa(items, 'quaternion')) {
 				return this.setFromQuaternion(items);
 			}
@@ -351,15 +358,23 @@ _Quaternion multiplication is not comutative - arithmetic is this*item, not item
 @chainable
 **/
 		my.Quaternion.prototype.quaternionMultiply = function(item) {
+			var x1,
+				y1,
+				z1,
+				n1,
+				x2,
+				y2,
+				z2,
+				n2;
 			if (my.isa(item, 'quaternion')) {
-				var n1 = this.n,
-					x1 = this.v.x,
-					y1 = this.v.y,
-					z1 = this.v.z,
-					n2 = item.n,
-					x2 = item.v.x,
-					y2 = item.v.y,
-					z2 = item.v.z;
+				n1 = this.n;
+				x1 = this.v.x;
+				y1 = this.v.y;
+				z1 = this.v.z;
+				n2 = item.n;
+				x2 = item.v.x;
+				y2 = item.v.y;
+				z2 = item.v.z;
 				this.n = (n1 * n2) - (x1 * x2) - (y1 * y2) - (z1 * z2);
 				this.v.x = (n1 * x2) + (x1 * n2) + (y1 * z2) - (z1 * y2);
 				this.v.y = (n1 * y2) + (y1 * n2) + (z1 * x2) - (x1 * z2);
@@ -379,14 +394,21 @@ _Quaternion multiplication is not comutative - arithmetic is this*item, not item
 @chainable
 **/
 		my.Quaternion.prototype.vectorMultiply = function(item) {
+			var x1,
+				y1,
+				z1,
+				n1,
+				x2,
+				y2,
+				z2;
 			if (my.isa(item, 'vector')) {
-				var n1 = this.n,
-					x1 = this.v.x,
-					y1 = this.v.y,
-					z1 = this.v.z,
-					x2 = item.x,
-					y2 = item.y,
-					z2 = item.z;
+				n1 = this.n;
+				x1 = this.v.x;
+				y1 = this.v.y;
+				z1 = this.v.z;
+				x2 = item.x;
+				y2 = item.y;
+				z2 = item.z;
 				this.n = -((x1 * x2) + (y1 * y2) + (z1 * z2));
 				this.v.x = (n1 * x2) + (y1 * z2) - (z1 * y2);
 				this.v.y = (n1 * y2) + (z1 * x2) - (x1 * z2);
@@ -403,8 +425,9 @@ Retrieve rotational component of this quaternion
 @return Rotation angle
 **/
 		my.Quaternion.prototype.getAngle = function(degree) {
+			var result;
 			degree = (my.xt(degree)) ? degree : false;
-			var result = 2 * Math.acos(this.n);
+			result = 2 * Math.acos(this.n);
 			return (degree) ? result * (1 / my.radian) : result;
 		};
 		/**
@@ -413,9 +436,10 @@ Retrieve axis component of this quaternion
 @return Normalized Vector (scrawl.v Vector)
 **/
 		my.Quaternion.prototype.getAxis = function() {
-			var vector = my.v.set(this.v),
-				magnitude = this.getMagnitude();
-			return (magnitude !== 0) ? vector.scalarDivide(magnitude) : vector;
+			var magnitude;
+			my.v.set(this.v);
+			magnitude = this.getMagnitude();
+			return (magnitude !== 0) ? my.v.scalarDivide(magnitude) : my.v;
 		};
 		/**
 Rotate this quaternion by another quaternion
@@ -428,9 +452,9 @@ _Quaternion multiplication is not comutative - arithmetic is item (representing 
 **/
 		my.Quaternion.prototype.quaternionRotate = function(item) {
 			if (my.isa(item, 'quaternion')) {
-				var q4 = my.workquat.q4.set(item),
-					q5 = my.workquat.q5.set(this);
-				return this.set(q4.quaternionMultiply(q5));
+				my.workquat.q4.set(item);
+				my.workquat.q5.set(this);
+				return this.set(my.workquat.q4.quaternionMultiply(my.workquat.q5));
 			}
 			console.log('Quaternion.quaternionRotate() error: argument is not a Quaternion object');
 			return this;
@@ -466,21 +490,33 @@ Argument object can be in the form, where all values (which default to 0) are in
 		});
 **/
 		my.Quaternion.prototype.makeFromEuler = function(items) {
-			console.log('makeFromEuler');
+			var pitch,
+				yaw,
+				roll,
+				c1,
+				c2,
+				c3,
+				s1,
+				s2,
+				s3,
+				w,
+				x,
+				y,
+				z;
 			items = my.safeObject(items);
-			var pitch = (items.pitch || items.x || 0) * my.radian,
-				yaw = (items.yaw || items.y || 0) * my.radian,
-				roll = (items.roll || items.z || 0) * my.radian,
-				c1 = Math.cos(yaw / 2),
-				c2 = Math.cos(roll / 2),
-				c3 = Math.cos(pitch / 2),
-				s1 = Math.sin(yaw / 2),
-				s2 = Math.sin(roll / 2),
-				s3 = Math.sin(pitch / 2),
-				w = (c1 * c2 * c3) - (s1 * s2 * s3),
-				x = (s1 * s2 * c3) + (c1 * c2 * s3),
-				y = (s1 * c2 * c3) + (c1 * s2 * s3),
-				z = (c1 * s2 * c3) - (s1 * c2 * s3);
+			pitch = (items.pitch || items.x || 0) * my.radian;
+			yaw = (items.yaw || items.y || 0) * my.radian;
+			roll = (items.roll || items.z || 0) * my.radian;
+			c1 = Math.cos(yaw / 2);
+			c2 = Math.cos(roll / 2);
+			c3 = Math.cos(pitch / 2);
+			s1 = Math.sin(yaw / 2);
+			s2 = Math.sin(roll / 2);
+			s3 = Math.sin(pitch / 2);
+			w = (c1 * c2 * c3) - (s1 * s2 * s3);
+			x = (s1 * s2 * c3) + (c1 * c2 * s3);
+			y = (s1 * c2 * c3) + (c1 * s2 * s3);
+			z = (c1 * s2 * c3) - (s1 * c2 * s3);
 			return my.newQuaternion({
 				n: w,
 				x: x,
@@ -506,26 +542,30 @@ Argument object can be in the form, where all values (which default to 0) are in
 		});
 **/
 		my.Quaternion.prototype.setFromEuler = function(items) {
+			var pitch,
+				yaw,
+				roll,
+				c1,
+				c2,
+				c3,
+				s1,
+				s2,
+				s3;
 			items = my.safeObject(items);
-			var pitch = (items.pitch || items.x || 0) * my.radian,
-				yaw = (items.yaw || items.y || 0) * my.radian,
-				roll = (items.roll || items.z || 0) * my.radian,
-				c1 = Math.cos(yaw / 2),
-				c2 = Math.cos(roll / 2),
-				c3 = Math.cos(pitch / 2),
-				s1 = Math.sin(yaw / 2),
-				s2 = Math.sin(roll / 2),
-				s3 = Math.sin(pitch / 2),
-				w = (c1 * c2 * c3) - (s1 * s2 * s3),
-				x = (s1 * s2 * c3) + (c1 * c2 * s3),
-				y = (s1 * c2 * c3) + (c1 * s2 * s3),
-				z = (c1 * s2 * c3) - (s1 * c2 * s3);
-			return this.set({
-				n: w,
-				x: x,
-				y: y,
-				z: z
-			});
+			pitch = (items.pitch || items.x || 0) * my.radian;
+			yaw = (items.yaw || items.y || 0) * my.radian;
+			roll = (items.roll || items.z || 0) * my.radian;
+			c1 = Math.cos(yaw / 2);
+			c2 = Math.cos(roll / 2);
+			c3 = Math.cos(pitch / 2);
+			s1 = Math.sin(yaw / 2);
+			s2 = Math.sin(roll / 2);
+			s3 = Math.sin(pitch / 2);
+			this.n = (c1 * c2 * c3) - (s1 * s2 * s3);
+			this.v.x = (s1 * s2 * c3) + (c1 * c2 * s3);
+			this.v.y = (s1 * c2 * c3) + (c1 * s2 * s3);
+			this.v.z = (c1 * s2 * c3) - (s1 * c2 * s3);
+			return this;
 		};
 		/**
 Retrieve rotations (Euler angles) from a quaternion
@@ -533,18 +573,25 @@ Retrieve rotations (Euler angles) from a quaternion
 @return Object in the form {pitch:Number, yaw:Number, roll:Number}
 **/
 		my.Quaternion.prototype.getEulerAngles = function() {
-			var sqw = this.n * this.n,
-				sqx = this.v.x * this.v.x,
-				sqy = this.v.y * this.v.y,
-				sqz = this.v.z * this.v.z,
-				unit = sqw + sqx + sqy + sqz,
-				test = (this.v.x * this.v.y) + (this.v.z * this.n),
+			var sqw,
+				sqx,
+				sqy,
+				sqz,
+				unit,
+				test,
 				result = {
 					pitch: 0,
 					yaw: 0,
 					roll: 0
 				},
-				t0, t1;
+				t0,
+				t1;
+			sqw = this.n * this.n;
+			sqx = this.v.x * this.v.x;
+			sqy = this.v.y * this.v.y;
+			sqz = this.v.z * this.v.z;
+			unit = sqw + sqx + sqy + sqz;
+			test = (this.v.x * this.v.y) + (this.v.z * this.n);
 			if (test > 0.499999 * unit) {
 				result.yaw = (2 * Math.atan2(this.v.x, this.n)) / my.radian;
 				result.roll = (Math.PI / 2) / my.radian;
@@ -585,5 +632,5 @@ Retrieve rotations (Euler angles) from a quaternion
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

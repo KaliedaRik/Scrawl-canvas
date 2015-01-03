@@ -33,7 +33,7 @@ The Color module adds a controllable color object that can be used with entity f
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'color')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -284,22 +284,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} items Object consisting of key:value attributes
 	@return Cloned Color object
 	**/
-		S.Color_clone_a = null; //raw object
-		S.Color_clone_b = null; //raw object
-		S.Color_clone_c = null; //scrawl Color object
 		my.Color.prototype.clone = function(items) {
-			S.Color_clone_a = this.parse();
-			S.Color_clone_b = my.mergeOver(S.Color_clone_a, ((my.isa(items, 'obj')) ? items : {}));
-			S.Color_clone_c = my.newColor(S.Color_clone_b);
+			var a = this.parse(),
+				b = my.mergeOver(a, ((my.isa(items, 'obj')) ? items : {})),
+				c = my.newColor(b);
 			items = my.safeObject(items);
 			if (my.xt(items.random) && items.random) {
-				delete S.Color_clone_c.r;
-				delete S.Color_clone_c.g;
-				delete S.Color_clone_c.b;
-				delete S.Color_clone_c.a;
-				S.Color_clone_c.generateRandomColor(items);
+				delete c.r;
+				delete c.g;
+				delete c.b;
+				delete c.a;
+				c.generateRandomColor(items);
 			}
-			return S.Color_clone_c;
+			return c;
 		};
 		/**
 	Returns current color, or next color value in sequence if .autoUpdate is true
@@ -324,28 +321,20 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	@private
 	**/
-		S.Color_generateRandomColor_rMax = 0;
-		S.Color_generateRandomColor_gMax = 0;
-		S.Color_generateRandomColor_bMax = 0;
-		S.Color_generateRandomColor_aMax = 0;
-		S.Color_generateRandomColor_rMin = 0;
-		S.Color_generateRandomColor_gMin = 0;
-		S.Color_generateRandomColor_bMin = 0;
-		S.Color_generateRandomColor_aMin = 0;
 		my.Color.prototype.generateRandomColor = function(items) {
-			S.Color_generateRandomColor_rMax = this.get('rMax');
-			S.Color_generateRandomColor_gMax = this.get('gMax');
-			S.Color_generateRandomColor_bMax = this.get('bMax');
-			S.Color_generateRandomColor_aMax = this.get('aMax');
-			S.Color_generateRandomColor_rMin = this.get('rMin');
-			S.Color_generateRandomColor_gMin = this.get('gMin');
-			S.Color_generateRandomColor_bMin = this.get('bMin');
-			S.Color_generateRandomColor_aMin = this.get('aMin');
+			var rMax = this.get('rMax'),
+				gMax = this.get('gMax'),
+				bMax = this.get('bMax'),
+				aMax = this.get('aMax'),
+				rMin = this.get('rMin'),
+				gMin = this.get('gMin'),
+				bMin = this.get('bMin'),
+				aMin = this.get('aMin');
 			items = my.safeObject(items);
-			this.r = items.r || Math.round((Math.random() * (S.Color_generateRandomColor_rMax - S.Color_generateRandomColor_rMin)) + S.Color_generateRandomColor_rMin);
-			this.g = items.g || Math.round((Math.random() * (S.Color_generateRandomColor_gMax - S.Color_generateRandomColor_gMin)) + S.Color_generateRandomColor_gMin);
-			this.b = items.b || Math.round((Math.random() * (S.Color_generateRandomColor_bMax - S.Color_generateRandomColor_bMin)) + S.Color_generateRandomColor_bMin);
-			this.a = items.a || (Math.random() * (S.Color_generateRandomColor_aMax - S.Color_generateRandomColor_aMin)) + S.Color_generateRandomColor_aMin;
+			this.r = items.r || Math.round((Math.random() * (rMax - rMin)) + rMin);
+			this.g = items.g || Math.round((Math.random() * (gMax - gMin)) + gMin);
+			this.b = items.b || Math.round((Math.random() * (bMax - bMin)) + bMin);
+			this.a = items.a || (Math.random() * (aMax - aMin)) + aMin;
 			this.checkValues();
 			return this;
 		};
@@ -356,23 +345,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	@private
 	**/
-		S.Color_checkValues_r = 0;
-		S.Color_checkValues_g = 0;
-		S.Color_checkValues_b = 0;
-		S.Color_checkValues_a = 0;
 		my.Color.prototype.checkValues = function() {
-			S.Color_checkValues_r = Math.floor(this.r) || 0;
-			S.Color_checkValues_g = Math.floor(this.g) || 0;
-			S.Color_checkValues_b = Math.floor(this.b) || 0;
-			S.Color_checkValues_a = this.a || 1;
-			S.Color_checkValues_r = (S.Color_checkValues_r > 255) ? 255 : ((S.Color_checkValues_r < 0) ? 0 : S.Color_checkValues_r);
-			S.Color_checkValues_g = (S.Color_checkValues_g > 255) ? 255 : ((S.Color_checkValues_g < 0) ? 0 : S.Color_checkValues_g);
-			S.Color_checkValues_b = (S.Color_checkValues_b > 255) ? 255 : ((S.Color_checkValues_b < 0) ? 0 : S.Color_checkValues_b);
-			S.Color_checkValues_a = (S.Color_checkValues_a > 1) ? 1 : ((S.Color_checkValues_a < 0) ? 0 : S.Color_checkValues_a);
-			this.r = S.Color_checkValues_r;
-			this.g = S.Color_checkValues_g;
-			this.b = S.Color_checkValues_b;
-			this.a = S.Color_checkValues_a;
+			var r = Math.floor(this.r) || 0,
+				g = Math.floor(this.g) || 0,
+				b = Math.floor(this.b) || 0,
+				a = this.a || 1;
+			r = (r > 255) ? 255 : ((r < 0) ? 0 : r);
+			g = (g > 255) ? 255 : ((g < 0) ? 0 : g);
+			b = (b > 255) ? 255 : ((b < 0) ? 0 : b);
+			a = (a > 1) ? 1 : ((a < 0) ? 0 : a);
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.a = a;
 			return this;
 		};
 		/**
@@ -397,45 +382,45 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
-		S.Color_update_i = 0;
-		S.Color_update_iz = 0;
-		S.Color_update_list = ['r', 'g', 'b', 'a'];
-		S.Color_update_col = '';
-		S.Color_update_res = [];
-		S.Color_update_sft = [];
-		S.Color_update_shift = '';
-		S.Color_update_min = 0;
-		S.Color_update_max = 0;
-		S.Color_update_bounce = false;
 		my.Color.prototype.update = function() {
-			S.Color_update_res = [];
-			S.Color_update_sft = [];
-			for (S.Color_update_i = 0, S.Color_update_iz = S.Color_update_list.length; S.Color_update_i < S.Color_update_iz; S.Color_update_i++) {
-				S.Color_update_col = this.get(S.Color_update_list[S.Color_update_i]);
-				S.Color_update_shift = this.get(S.Color_update_list[S.Color_update_i] + 'Shift');
-				S.Color_update_min = this.get(S.Color_update_list[S.Color_update_i] + 'Min');
-				S.Color_update_max = this.get(S.Color_update_list[S.Color_update_i] + 'Max');
-				S.Color_update_bounce = this.get(S.Color_update_list[S.Color_update_i] + 'Bounce');
-				if (!my.isBetween((S.Color_update_col + S.Color_update_shift), S.Color_update_max, S.Color_update_min, true)) {
-					if (S.Color_update_bounce) {
-						S.Color_update_shift = -S.Color_update_shift;
+			var i,
+				iz,
+				list = ['r', 'g', 'b', 'a'],
+				col,
+				res,
+				sft,
+				shift,
+				min,
+				max,
+				bounce;
+			res = [];
+			sft = [];
+			for (i = 0, iz = list.length; i < iz; i++) {
+				col = this.get(list[i]);
+				shift = this.get(list[i] + 'Shift');
+				min = this.get(list[i] + 'Min');
+				max = this.get(list[i] + 'Max');
+				bounce = this.get(list[i] + 'Bounce');
+				if (!my.isBetween((col + shift), max, min, true)) {
+					if (bounce) {
+						shift = -shift;
 					}
 					else {
-						S.Color_update_col = (S.Color_update_col > (S.Color_update_max + S.Color_update_min) / 2) ? S.Color_update_max : S.Color_update_min;
-						S.Color_update_shift = 0;
+						col = (col > (max + min) / 2) ? max : min;
+						shift = 0;
 					}
 				}
-				S.Color_update_res[S.Color_update_i] = S.Color_update_col + S.Color_update_shift;
-				S.Color_update_sft[S.Color_update_i] = S.Color_update_shift;
+				res[i] = col + shift;
+				sft[i] = shift;
 			}
-			this.r = S.Color_update_res[0];
-			this.g = S.Color_update_res[1];
-			this.b = S.Color_update_res[2];
-			this.a = S.Color_update_res[3];
-			this.rShift = S.Color_update_sft[0];
-			this.gShift = S.Color_update_sft[1];
-			this.bShift = S.Color_update_sft[2];
-			this.aShift = S.Color_update_sft[3];
+			this.r = res[0];
+			this.g = res[1];
+			this.b = res[2];
+			this.a = res[3];
+			this.rShift = sft[0];
+			this.gShift = sft[1];
+			this.bShift = sft[2];
+			this.aShift = sft[3];
 			return this;
 		};
 		/**
@@ -467,143 +452,143 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return This
 	@chainable
 	**/
-		S.Color_convert_r = 0;
-		S.Color_convert_g = 0;
-		S.Color_convert_b = 0;
-		S.Color_convert_a = 0;
-		S.Color_convert_temp = [];
 		my.Color.prototype.convert = function(items) {
+			var r,
+				g,
+				b,
+				a,
+				temp;
 			items = (my.isa(items, 'str')) ? items : '';
 			if (items.length > 0) {
 				items.toLowerCase();
-				S.Color_convert_r = 0;
-				S.Color_convert_g = 0;
-				S.Color_convert_b = 0;
-				S.Color_convert_a = 1;
+				r = 0;
+				g = 0;
+				b = 0;
+				a = 1;
 				if (items[0] === '#') {
 					if (items.length < 5) {
-						S.Color_convert_r = this.toDecimal(items[1] + items[1]);
-						S.Color_convert_g = this.toDecimal(items[2] + items[2]);
-						S.Color_convert_b = this.toDecimal(items[3] + items[3]);
+						r = this.toDecimal(items[1] + items[1]);
+						g = this.toDecimal(items[2] + items[2]);
+						b = this.toDecimal(items[3] + items[3]);
 					}
 					else if (items.length < 8) {
-						S.Color_convert_r = this.toDecimal(items[1] + items[2]);
-						S.Color_convert_g = this.toDecimal(items[3] + items[4]);
-						S.Color_convert_b = this.toDecimal(items[5] + items[6]);
+						r = this.toDecimal(items[1] + items[2]);
+						g = this.toDecimal(items[3] + items[4]);
+						b = this.toDecimal(items[5] + items[6]);
 					}
 				}
 				else if (/rgb\(/.test(items)) {
-					S.Color_convert_temp = items.match(/([0-9.]+\b)/g);
+					temp = items.match(/([0-9.]+\b)/g);
 					if (/%/.test(items)) {
-						S.Color_convert_r = Math.round((S.Color_convert_temp[0] / 100) * 255);
-						S.Color_convert_g = Math.round((S.Color_convert_temp[1] / 100) * 255);
-						S.Color_convert_b = Math.round((S.Color_convert_temp[2] / 100) * 255);
+						r = Math.round((temp[0] / 100) * 255);
+						g = Math.round((temp[1] / 100) * 255);
+						b = Math.round((temp[2] / 100) * 255);
 					}
 					else {
-						S.Color_convert_r = Math.round(S.Color_convert_temp[0]);
-						S.Color_convert_g = Math.round(S.Color_convert_temp[1]);
-						S.Color_convert_b = Math.round(S.Color_convert_temp[2]);
+						r = Math.round(temp[0]);
+						g = Math.round(temp[1]);
+						b = Math.round(temp[2]);
 					}
 				}
 				else if (/rgba\(/.test(items)) {
-					S.Color_convert_temp = items.match(/([0-9.]+\b)/g);
-					S.Color_convert_r = S.Color_convert_temp[0];
-					S.Color_convert_g = S.Color_convert_temp[1];
-					S.Color_convert_b = S.Color_convert_temp[2];
-					S.Color_convert_a = S.Color_convert_temp[3];
+					temp = items.match(/([0-9.]+\b)/g);
+					r = temp[0];
+					g = temp[1];
+					b = temp[2];
+					a = temp[3];
 				}
 				else {
 					switch (items) {
 						case 'green':
-							S.Color_convert_r = 0;
-							S.Color_convert_g = 128;
-							S.Color_convert_b = 0;
+							r = 0;
+							g = 128;
+							b = 0;
 							break;
 						case 'silver':
-							S.Color_convert_r = 192;
-							S.Color_convert_g = 192;
-							S.Color_convert_b = 192;
+							r = 192;
+							g = 192;
+							b = 192;
 							break;
 						case 'lime':
-							S.Color_convert_r = 0;
-							S.Color_convert_g = 255;
-							S.Color_convert_b = 0;
+							r = 0;
+							g = 255;
+							b = 0;
 							break;
 						case 'gray':
-							S.Color_convert_r = 128;
-							S.Color_convert_g = 128;
-							S.Color_convert_b = 128;
+							r = 128;
+							g = 128;
+							b = 128;
 							break;
 						case 'grey':
-							S.Color_convert_r = 128;
-							S.Color_convert_g = 128;
-							S.Color_convert_b = 128;
+							r = 128;
+							g = 128;
+							b = 128;
 							break;
 						case 'olive':
-							S.Color_convert_r = 128;
-							S.Color_convert_g = 128;
-							S.Color_convert_b = 0;
+							r = 128;
+							g = 128;
+							b = 0;
 							break;
 						case 'white':
-							S.Color_convert_r = 255;
-							S.Color_convert_g = 255;
-							S.Color_convert_b = 255;
+							r = 255;
+							g = 255;
+							b = 255;
 							break;
 						case 'yellow':
-							S.Color_convert_r = 255;
-							S.Color_convert_g = 255;
-							S.Color_convert_b = 0;
+							r = 255;
+							g = 255;
+							b = 0;
 							break;
 						case 'maroon':
-							S.Color_convert_r = 128;
-							S.Color_convert_g = 0;
-							S.Color_convert_b = 0;
+							r = 128;
+							g = 0;
+							b = 0;
 							break;
 						case 'navy':
-							S.Color_convert_r = 0;
-							S.Color_convert_g = 0;
-							S.Color_convert_b = 128;
+							r = 0;
+							g = 0;
+							b = 128;
 							break;
 						case 'red':
-							S.Color_convert_r = 255;
-							S.Color_convert_g = 0;
-							S.Color_convert_b = 0;
+							r = 255;
+							g = 0;
+							b = 0;
 							break;
 						case 'blue':
-							S.Color_convert_r = 0;
-							S.Color_convert_g = 0;
-							S.Color_convert_b = 255;
+							r = 0;
+							g = 0;
+							b = 255;
 							break;
 						case 'purple':
-							S.Color_convert_r = 128;
-							S.Color_convert_g = 0;
-							S.Color_convert_b = 128;
+							r = 128;
+							g = 0;
+							b = 128;
 							break;
 						case 'teal':
-							S.Color_convert_r = 0;
-							S.Color_convert_g = 128;
-							S.Color_convert_b = 128;
+							r = 0;
+							g = 128;
+							b = 128;
 							break;
 						case 'fuchsia':
-							S.Color_convert_r = 255;
-							S.Color_convert_g = 0;
-							S.Color_convert_b = 255;
+							r = 255;
+							g = 0;
+							b = 255;
 							break;
 						case 'aqua':
-							S.Color_convert_r = 0;
-							S.Color_convert_g = 255;
-							S.Color_convert_b = 255;
+							r = 0;
+							g = 255;
+							b = 255;
 							break;
 						default:
-							S.Color_convert_r = 0;
-							S.Color_convert_g = 0;
-							S.Color_convert_b = 0;
+							r = 0;
+							g = 0;
+							b = 0;
 					}
 				}
-				this.r = S.Color_convert_r;
-				this.g = S.Color_convert_g;
-				this.b = S.Color_convert_b;
-				this.a = S.Color_convert_a;
+				this.r = r;
+				this.g = g;
+				this.b = b;
+				this.a = a;
 				this.checkValues();
 			}
 			return this;
@@ -639,5 +624,5 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

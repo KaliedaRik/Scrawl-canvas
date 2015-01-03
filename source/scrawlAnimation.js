@@ -43,7 +43,7 @@ The Animation module adds support for animation and tweening to the core
 @module scrawlAnimation
 **/
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'animation')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -121,12 +121,11 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 @method animationPositionInit
 @private
 **/
-		S.Position_animationPositionInit_temp = null; //raw object
 		my.Position.prototype.animationPositionInit = function(items) {
-			S.Position_animationPositionInit_temp = my.safeObject(items.delta);
+			var temp = my.safeObject(items.delta);
 			this.delta = my.newVector({
-				x: my.xtGet(items.deltaX, S.Position_animationPositionInit_temp.x, 0),
-				y: my.xtGet(items.deltaY, S.Position_animationPositionInit_temp.y, 0),
+				x: my.xtGet(items.deltaX, temp.x, 0),
+				y: my.xtGet(items.deltaY, temp.y, 0),
 			});
 			this.work.delta = my.newVector({
 				name: this.type + '.' + this.name + '.work.delta'
@@ -139,9 +138,9 @@ Position.get hook function - modified by animation module
 @method animationPositionGet
 @private
 **/
-		S.stat_positionAnimationPositionGet = ['deltaX', 'deltaY'];
 		my.Position.prototype.animationPositionGet = function(item) {
-			if (my.contains(S.stat_positionAnimationPositionGet, item)) {
+			var stat = ['deltaX', 'deltaY'];
+			if (my.contains(stat, item)) {
 				switch (item) {
 					case 'deltaX':
 						return this.delta.x;
@@ -177,15 +176,15 @@ Be aware that this is different to the Position.setDelta() function inherited by
 @return This
 @chainable
 **/
-		S.Position_setDeltaAttribute_temp = null; //raw object
 		my.Position.prototype.setDeltaAttribute = function(items) {
+			var temp;
 			items = my.safeObject(items);
 			if (!my.isa(this.delta, 'vector')) {
 				this.delta = my.newVector(items.delta || this.delta);
 			}
-			S.Position_setDeltaAttribute_temp = my.safeObject(items.delta);
-			this.delta.x = my.xtGet(items.deltaX, S.Position_setDeltaAttribute_temp.x, this.delta.x);
-			this.delta.y = my.xtGet(items.deltaY, S.Position_setDeltaAttribute_temp.y, this.delta.y);
+			temp = my.safeObject(items.delta);
+			this.delta.x = my.xtGet(items.deltaX, temp.x, this.delta.x);
+			this.delta.y = my.xtGet(items.deltaY, temp.y, this.delta.y);
 			return this;
 		};
 		/**
@@ -193,12 +192,11 @@ Position.clone hook function - modified by animation module
 @method animationPositionClone
 @private
 **/
-		S.Position_animationPositionClone_temp = null; //raw object
 		my.Position.prototype.animationPositionClone = function(a, items) {
-			S.Position_animationPositionClone_temp = my.safeObject(items.delta);
+			var temp = my.safeObject(items.delta);
 			a.delta = my.newVector({
-				x: my.xtGet(items.deltaX, S.Position_animationPositionClone_temp.x, a.delta.x),
-				y: my.xtGet(items.deltaY, S.Position_animationPositionClone_temp.y, a.delta.y),
+				x: my.xtGet(items.deltaX, temp.x, a.delta.x),
+				y: my.xtGet(items.deltaY, temp.y, a.delta.y),
 			});
 			return a;
 		};
@@ -234,6 +232,9 @@ Permitted argument values include
 					});
 					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
 					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+			}
+			if (my.xt(this.collisionArray)) {
+				this.collisionArray.length = 0;
 			}
 			return this;
 		};
@@ -272,6 +273,9 @@ Permitted argument values include
 					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
 					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
 			}
+			if (my.xt(this.collisionArray)) {
+				this.collisionArray.length = 0;
+			}
 			return this;
 		};
 		/**
@@ -282,12 +286,12 @@ Swaps the values of an attribute between two objects
 @return This
 @chainable
 **/
-		S.Position_exchange_temp = '';
 		my.Position.prototype.exchange = function(obj, item) {
+			var temp;
 			if (my.isa(obj, 'obj')) {
-				S.Position_exchange_temp = this[item] || this.get(item);
+				temp = this[item] || this.get(item);
 				this[item] = obj[item] || obj.get(item);
-				obj[item] = S.Position_exchange_temp;
+				obj[item] = temp;
 			}
 			return this;
 		};
@@ -337,12 +341,11 @@ Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to 
 @method animationCellInit
 @private
 **/
-		S.Cell_animationCellInit_temp = null; //raw object
 		my.Cell.prototype.animationCellInit = function(items) {
-			S.Cell_animationCellInit_temp = my.safeObject(items.copyDelta);
+			var temp = my.safeObject(items.copyDelta);
 			this.copyDelta = my.newVector({
-				x: my.xtGet(items.copyDeltaX, S.Cell_animationCellInit_temp.x, 0),
-				y: my.xtGet(items.copyDeltaY, S.Cell_animationCellInit_temp.y, 0),
+				x: my.xtGet(items.copyDeltaX, temp.x, 0),
+				y: my.xtGet(items.copyDeltaY, temp.y, 0),
 			});
 			this.work.copyDelta = my.newVector();
 		};
@@ -351,9 +354,9 @@ Cell.get hook function - modified by animation module
 @method animationCellGet
 @private
 **/
-		S.stat_cellAnimationCellGet = ['copyDeltaX', 'copyDeltaY'];
 		my.Cell.prototype.animationCellGet = function(item) {
-			if (my.contains(S.stat_cellAnimationCellGet, item)) {
+			var stat = ['copyDeltaX', 'copyDeltaY'];
+			if (my.contains(stat, item)) {
 				switch (item) {
 					case 'copyDeltaX':
 						return this.copyDelta.x;
@@ -368,12 +371,12 @@ Cell.set hook function - modified by animation module
 @method animationCellSet
 @private
 **/
-		S.Cell_animationCellSet_temp = null; //raw object
 		my.Cell.prototype.animationCellSet = function(items) {
+			var temp;
 			if (my.xto(items.copyDelta, items.copyDeltaX, items.copyDeltaY)) {
-				S.Cell_animationCellSet_temp = my.safeObject(items.copyDelta);
-				this.copyDelta.x = my.xtGet(items.copyDeltaX, S.Cell_animationCellSet_temp.x, this.copyDelta.x);
-				this.copyDelta.y = my.xtGet(items.copyDeltaY, S.Cell_animationCellSet_temp.y, this.copyDelta.y);
+				temp = my.safeObject(items.copyDelta);
+				this.copyDelta.x = my.xtGet(items.copyDeltaX, temp.x, this.copyDelta.x);
+				this.copyDelta.y = my.xtGet(items.copyDeltaY, temp.y, this.copyDelta.y);
 			}
 		};
 		/**
@@ -493,61 +496,61 @@ Zooms one cell in relation to another cell
 @return This
 @chainable
 **/
-		S.Cell_zoom_sWidth = 0;
-		S.Cell_zoom_sHeight = 0;
-		S.Cell_zoom_aWidth = 0;
-		S.Cell_zoom_aHeight = 0;
-		S.Cell_zoom_minWidth = 0;
-		S.Cell_zoom_minHeight = 0;
-		S.Cell_zoom_maxWidth = 0;
-		S.Cell_zoom_maxHeight = 0;
-		S.Cell_zoom_sx = 0;
-		S.Cell_zoom_sy = 0;
-		S.Cell_zoom_myW = 0;
-		S.Cell_zoom_myH = 0;
-		S.Cell_zoom_myX = 0;
-		S.Cell_zoom_myY = 0;
 		my.Cell.prototype.zoom = function(item) {
+			var sWidth,
+				sHeight,
+				aWidth,
+				aHeight,
+				minWidth,
+				minHeight,
+				maxWidth,
+				maxHeight,
+				sx,
+				sy,
+				myW,
+				myH,
+				myX,
+				myY;
 			if (my.isa(item, 'num')) {
-				S.Cell_zoom_sWidth = this.copyWidth;
-				S.Cell_zoom_sHeight = this.copyHeight;
-				S.Cell_zoom_aWidth = this.actualWidth;
-				S.Cell_zoom_aHeight = this.actualHeight;
-				S.Cell_zoom_minWidth = my.xtGet(this.copyMinWidth, this.copyWidth);
-				S.Cell_zoom_minHeight = my.xtGet(this.copyMinHeight, this.copyHeight);
-				S.Cell_zoom_maxWidth = my.xtGet(this.copyMaxWidth, this.copyWidth);
-				S.Cell_zoom_maxHeight = my.xtGet(this.copyMaxHeight, this.copyHeight);
-				S.Cell_zoom_sx = this.copy.x;
-				S.Cell_zoom_sy = this.copy.y;
-				S.Cell_zoom_myW = sWidth + item;
-				S.Cell_zoom_myH = sHeight + item;
-				if (my.isBetween(S.Cell_zoom_myW, S.Cell_zoom_minWidth, S.Cell_zoom_maxWidth, true) && my.isBetween(S.Cell_zoom_myH, S.Cell_zoom_minHeight, S.Cell_zoom_maxHeight, true)) {
-					S.Cell_zoom_sWidth = S.Cell_zoom_myW;
-					S.Cell_zoom_myX = S.Cell_zoom_sx - (item / 2);
-					if (S.Cell_zoom_myX < 0) {
-						S.Cell_zoom_sx = 0;
+				sWidth = this.copyWidth;
+				sHeight = this.copyHeight;
+				aWidth = this.actualWidth;
+				aHeight = this.actualHeight;
+				minWidth = my.xtGet(this.copyMinWidth, this.copyWidth);
+				minHeight = my.xtGet(this.copyMinHeight, this.copyHeight);
+				maxWidth = my.xtGet(this.copyMaxWidth, this.copyWidth);
+				maxHeight = my.xtGet(this.copyMaxHeight, this.copyHeight);
+				sx = this.copy.x;
+				sy = this.copy.y;
+				myW = sWidth + item;
+				myH = sHeight + item;
+				if (my.isBetween(myW, minWidth, maxWidth, true) && my.isBetween(myH, minHeight, maxHeight, true)) {
+					sWidth = myW;
+					myX = sx - (item / 2);
+					if (myX < 0) {
+						sx = 0;
 					}
-					else if (S.Cell_zoom_myX > (S.Cell_zoom_aWidth - S.Cell_zoom_sWidth)) {
-						sx = S.Cell_zoom_aWidth - S.Cell_zoom_sWidth;
-					}
-					else {
-						S.Cell_zoom_sx = S.Cell_zoom_myX;
-					}
-					S.Cell_zoom_sHeight = S.Cell_zoom_myH;
-					S.Cell_zoom_myY = S.Cell_zoom_sy - (item / 2);
-					if (S.Cell_zoom_myY < 0) {
-						S.Cell_zoom_sy = 0;
-					}
-					else if (S.Cell_zoom_myY > (S.Cell_zoom_aHeight - S.Cell_zoom_sHeight)) {
-						S.Cell_zoom_sy = S.Cell_zoom_aHeight - S.Cell_zoom_sHeight;
+					else if (myX > (aWidth - sWidth)) {
+						sx = aWidth - sWidth;
 					}
 					else {
-						S.Cell_zoom_sy = S.Cell_zoom_myY;
+						sx = myX;
 					}
-					this.copy.x = S.Cell_zoom_sx;
-					this.copy.y = S.Cell_zoom_sy;
-					this.copyWidth = S.Cell_zoom_sWidth;
-					this.copyHeight = S.Cell_zoom_sHeight;
+					sHeight = myH;
+					myY = sy - (item / 2);
+					if (myY < 0) {
+						sy = 0;
+					}
+					else if (myY > (aHeight - sHeight)) {
+						sy = aHeight - sHeight;
+					}
+					else {
+						sy = myY;
+					}
+					this.copy.x = sx;
+					this.copy.y = sy;
+					this.copyWidth = sWidth;
+					this.copyHeight = sHeight;
 				}
 			}
 			return this;
@@ -572,75 +575,75 @@ _Note that this function is only effective in achieving a parallax effect if the
 @return This
 @chainable
 **/
-		S.stat_cellSpliceCell = ['horizontal', 'vertical', 'top', 'bottom', 'left', 'right'];
-		S.Cell_spliceCell_myStrip = 0;
-		S.Cell_spliceCell_myRemains = 0;
-		S.Cell_spliceCell_myEdge = '';
-		S.Cell_spliceCell_myShift = false;
-		S.Cell_spliceCell_height = 0;
-		S.Cell_spliceCell_width = 0;
-		S.Cell_spliceCell_ctx = null; //DOM canvas cojntext object
-		S.Cell_spliceCell_c = null; //DOM canvas object
 		my.Cell.prototype.spliceCell = function(items) {
+			var stat = ['horizontal', 'vertical', 'top', 'bottom', 'left', 'right'],
+				myStrip,
+				myRemains,
+				myEdge,
+				myShift,
+				height,
+				width,
+				ctx,
+				c;
 			items = my.safeObject(items);
-			if (my.contains(S.stat_cellSpliceCell, items.edge)) {
-				S.Cell_spliceCell_myShift = my.xtGet(items.shiftCopy, false);
-				S.Cell_spliceCell_height = this.actualHeight;
-				S.Cell_spliceCell_width = this.actualWidth;
-				S.Cell_spliceCell_ctx = my.context[this.name];
-				S.Cell_spliceCell_c = my.canvas[this.name];
-				my.cv.width = S.Cell_spliceCell_width;
-				my.cv.height = S.Cell_spliceCell_height;
-				S.Cell_spliceCell_ctx.setTransform(1, 0, 0, 1, 0, 0);
+			if (my.contains(stat, items.edge)) {
+				myShift = my.xtGet(items.shiftCopy, false);
+				height = this.actualHeight;
+				width = this.actualWidth;
+				ctx = my.context[this.name];
+				c = my.canvas[this.name];
+				my.cv.width = width;
+				my.cv.height = height;
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				switch (items.edge) {
 					case 'horizontal':
-						S.Cell_spliceCell_myRemains = S.Cell_spliceCell_width / 2;
-						S.Cell_spliceCell_myStrip = S.Cell_spliceCell_myRemains;
-						S.Cell_spliceCell_myEdge = 'left';
+						myRemains = width / 2;
+						myStrip = myRemains;
+						myEdge = 'left';
 						break;
 					case 'vertical':
-						S.Cell_spliceCell_myRemains = S.Cell_spliceCell_height / 2;
-						S.Cell_spliceCell_myStrip = S.Cell_spliceCell_myRemains;
-						S.Cell_spliceCell_myEdge = 'top';
+						myRemains = height / 2;
+						myStrip = myRemains;
+						myEdge = 'top';
 						break;
 					case 'top':
 					case 'bottom':
-						S.Cell_spliceCell_myStrip = my.xtGet(items.strip, 20);
-						S.Cell_spliceCell_myRemains = S.Cell_spliceCell_height - S.Cell_spliceCell_myStrip;
-						S.Cell_spliceCell_myEdge = items.edge;
+						myStrip = my.xtGet(items.strip, 20);
+						myRemains = height - myStrip;
+						myEdge = items.edge;
 						break;
 					case 'left':
 					case 'right':
-						S.Cell_spliceCell_myStrip = my.xtGet(items.strip, 20);
-						S.Cell_spliceCell_myRemains = S.Cell_spliceCell_width - S.Cell_spliceCell_myStrip;
-						S.Cell_spliceCell_myEdge = items.edge;
+						myStrip = my.xtGet(items.strip, 20);
+						myRemains = width - myStrip;
+						myEdge = items.edge;
 						break;
 				}
-				switch (S.Cell_spliceCell_myEdge) {
+				switch (myEdge) {
 					case 'top':
-						my.cvx.drawImage(S.Cell_spliceCell_c, 0, 0, S.Cell_spliceCell_width, S.Cell_spliceCell_myStrip, 0, S.Cell_spliceCell_myRemains, S.Cell_spliceCell_width, S.Cell_spliceCell_myStrip);
-						my.cvx.drawImage(S.Cell_spliceCell_c, 0, S.Cell_spliceCell_myStrip, S.Cell_spliceCell_width, S.Cell_spliceCell_myRemains, 0, 0, S.Cell_spliceCell_width, S.Cell_spliceCell_myRemains);
-						this.copy.y -= (S.Cell_spliceCell_myShift) ? S.Cell_spliceCell_myStrip : 0;
+						my.cvx.drawImage(c, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
+						my.cvx.drawImage(c, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
+						this.copy.y -= (myShift) ? myStrip : 0;
 						break;
 					case 'bottom':
-						my.cvx.drawImage(S.Cell_spliceCell_c, 0, 0, S.Cell_spliceCell_width, S.Cell_spliceCell_myRemains, 0, S.Cell_spliceCell_myStrip, S.Cell_spliceCell_width, S.Cell_spliceCell_myRemains);
-						my.cvx.drawImage(S.Cell_spliceCell_c, 0, S.Cell_spliceCell_myRemains, S.Cell_spliceCell_width, S.Cell_spliceCell_myStrip, 0, 0, S.Cell_spliceCell_width, S.Cell_spliceCell_myStrip);
-						this.copy.y += (S.Cell_spliceCell_myShift) ? S.Cell_spliceCell_myStrip : 0;
+						my.cvx.drawImage(c, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
+						my.cvx.drawImage(c, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
+						this.copy.y += (myShift) ? myStrip : 0;
 						break;
 					case 'left':
-						my.cvx.drawImage(S.Cell_spliceCell_c, 0, 0, S.Cell_spliceCell_myStrip, S.Cell_spliceCell_height, S.Cell_spliceCell_myRemains, 0, S.Cell_spliceCell_myStrip, S.Cell_spliceCell_height);
-						my.cvx.drawImage(S.Cell_spliceCell_c, S.Cell_spliceCell_myStrip, 0, S.Cell_spliceCell_myRemains, S.Cell_spliceCell_height, 0, 0, S.Cell_spliceCell_myRemains, S.Cell_spliceCell_height);
-						this.copy.x -= (S.Cell_spliceCell_myShift) ? S.Cell_spliceCell_myStrip : 0;
+						my.cvx.drawImage(c, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
+						my.cvx.drawImage(c, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
+						this.copy.x -= (myShift) ? myStrip : 0;
 						break;
 					case 'right':
-						my.cvx.drawImage(S.Cell_spliceCell_c, 0, 0, S.Cell_spliceCell_myRemains, S.Cell_spliceCell_height, S.Cell_spliceCell_myStrip, 0, S.Cell_spliceCell_myRemains, S.Cell_spliceCell_height);
-						my.cvx.drawImage(S.Cell_spliceCell_c, S.Cell_spliceCell_myRemains, 0, S.Cell_spliceCell_myStrip, S.Cell_spliceCell_height, 0, 0, S.Cell_spliceCell_myStrip, S.Cell_spliceCell_height);
-						this.copy.x += (S.Cell_spliceCell_myShift) ? S.Cell_spliceCell_myStrip : 0;
+						my.cvx.drawImage(c, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
+						my.cvx.drawImage(c, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
+						this.copy.x += (myShift) ? myStrip : 0;
 						break;
 				}
-				S.Cell_spliceCell_ctx.clearRect(0, 0, S.Cell_spliceCell_width, S.Cell_spliceCell_height);
-				S.Cell_spliceCell_ctx.drawImage(my.cv, 0, 0, S.Cell_spliceCell_width, S.Cell_spliceCell_height);
-				if (S.Cell_spliceCell_myShift) {
+				ctx.clearRect(0, 0, width, height);
+				ctx.drawImage(my.cv, 0, 0, width, height);
+				if (myShift) {
 					this.setCopy();
 				}
 			}
@@ -655,11 +658,9 @@ Each entity will add their delta values to their start Vector, and/or add deltaP
 @return This
 @chainable
 **/
-		S.Group_updateStart_i = 0;
-		S.Group_updateStart_iz = 0;
 		my.Group.prototype.updateStart = function(item) {
-			for (S.Group_updateStart_i = 0, S.Group_updateStart_iz = this.entitys.length; S.Group_updateStart_i < S.Group_updateStart_iz; S.Group_updateStart_i++) {
-				my.entity[this.entitys[S.Group_updateStart_i]].updateStart(item);
+			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+				my.entity[this.entitys[i]].updateStart(item);
 			}
 			return this;
 		};
@@ -672,11 +673,9 @@ Each entity will subtract their delta values to their start Vector, and/or subtr
 @return This
 @chainable
 **/
-		S.Group_revertStart_i = 0;
-		S.Group_revertStart_iz = 0;
 		my.Group.prototype.revertStart = function(item) {
-			for (S.Group_revertStart_i = 0, S.Group_revertStart_iz = this.entitys.length; S.Group_revertStart_i < S.Group_revertStart_iz; S.Group_revertStart_i++) {
-				my.entity[this.entitys[S.Group_revertStart_i]].revertStart(item);
+			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+				my.entity[this.entitys[i]].revertStart(item);
 			}
 			return this;
 		};
@@ -689,11 +688,9 @@ Each entity will change the sign (+/-) of specified attribute values
 @return This
 @chainable
 **/
-		S.Group_reverse_i = 0;
-		S.Group_reverse_iz = 0;
 		my.Group.prototype.reverse = function(item) {
-			for (S.Group_reverse_i = 0, S.Group_reverse_iz = this.entitys.length; S.Group_reverse_i < S.Group_reverse_iz; S.Group_reverse_i++) {
-				my.entity[this.entitys[S.Group_reverse_i]].reverse(item);
+			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+				my.entity[this.entitys[i]].reverse(item);
 			}
 			return this;
 		};
@@ -738,29 +735,29 @@ Gradient builder helper function - sorts color attribute Objects by their stop a
 @return Nothing
 @private
 **/
-		S.Design_sortStops_color = null; //raw object
-		S.Design_sortStops_shift = 0;
-		S.Design_sortStops_i = 0;
-		S.Design_sortStops_iz = 0;
 		my.Design.prototype.sortStops = function() {
-			S.Design_sortStops_color = this.get('color');
-			S.Design_sortStops_shift = this.get('shift');
-			for (S.Design_sortStops_i = 0, S.Design_sortStops_iz = S.Design_sortStops_color.length; S.Design_sortStops_i < S.Design_sortStops_iz; S.Design_sortStops_i++) {
-				S.Design_sortStops_color[S.Design_sortStops_i].stop += S.Design_sortStops_shift;
-				if (!my.isBetween(S.Design_sortStops_color[S.Design_sortStops_i].stop, 0, 1, true)) {
-					S.Design_sortStops_color[S.Design_sortStops_i].stop = (S.Design_sortStops_color[S.Design_sortStops_i].stop > 0.5) ? S.Design_sortStops_color[S.Design_sortStops_i].stop - 1 : S.Design_sortStops_color[S.Design_sortStops_i].stop + 1;
+			var color,
+				shift,
+				i,
+				iz;
+			color = this.get('color');
+			shift = this.get('shift');
+			for (i = 0, iz = color.length; i < iz; i++) {
+				color[i].stop += shift;
+				if (!my.isBetween(color[i].stop, 0, 1, true)) {
+					color[i].stop = (color[i].stop > 0.5) ? color[i].stop - 1 : color[i].stop + 1;
 				}
-				if (S.Design_sortStops_color[S.Design_sortStops_i].stop <= 0) {
-					S.Design_sortStops_color[S.Design_sortStops_i].stop = 0.000001;
+				if (color[i].stop <= 0) {
+					color[i].stop = 0.000001;
 				}
-				else if (S.Design_sortStops_color[S.Design_sortStops_i].stop >= 1) {
-					color[S.Design_sortStops_i].stop = 0.999999;
+				else if (color[i].stop >= 1) {
+					color[i].stop = 0.999999;
 				}
 			}
-			S.Design_sortStops_color.sort(function(a, b) {
+			color.sort(function(a, b) {
 				return a.stop - b.stop;
 			});
-			this.color = S.Design_sortStops_color;
+			this.color = color;
 		};
 		/**
 A __factory__ function to generate new Animation objects
@@ -810,15 +807,15 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 @method animationLoop
 @return Recursively calls itself - never returns
 **/
-		S.animationLoop_i = 0;
-		S.animationLoop_iz = 0;
 		my.animationLoop = function() {
+			var i,
+				iz;
 			if (my.orderAnimations) {
 				my.sortAnimations();
 			}
-			for (S.animationLoop_i = 0, S.animationLoop_iz = my.animate.length; S.animationLoop_i < S.animationLoop_iz; S.animationLoop_i++) {
-				if (my.animate[S.animationLoop_i]) {
-					my.animation[my.animate[S.animationLoop_i]].fn();
+			for (i = 0, iz = my.animate.length; i < iz; i++) {
+				if (my.animate[i]) {
+					my.animation[my.animate[i]].fn();
 				}
 			}
 			if (my.doAnimation) {
@@ -859,11 +856,11 @@ Animation sorting routine - animation objects are sorted according to their anim
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-		S.Animation_constructor_delay = false;
 		my.Animation = function(items) {
+			var delay;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			S.Animation_constructor_delay = (my.isa(items.delay, 'bool')) ? items.delay : false;
+			delay = (my.isa(items.delay, 'bool')) ? items.delay : false;
 			this.fn = items.fn || function() {};
 			this.order = items.order || 0;
 			my.animation[this.name] = this;
@@ -876,7 +873,7 @@ _This attribute is not retained by the Animation object_
 @type Boolean
 @default false
 **/
-			if (!S.Animation_constructor_delay) {
+			if (!delay) {
 				this.run();
 			}
 			return this;
@@ -1191,39 +1188,39 @@ Tween animation function
 @return Always true
 @private
 **/
-		S.Tween_fn_currentTime = 0;
-		S.Tween_fn_progress = 0;
-		S.Tween_fn_entity = null; //scrawl Entity object
-		S.Tween_fn_argSet = null; //raw object
-		S.Tween_fn_keys = [];
-		S.Tween_fn_temp = 0;
-		S.Tween_fn_percent = 0;
-		S.Tween_fn_t = 0;
-		S.Tween_fn_tz = 0;
-		S.Tween_fn_k = 0;
-		S.Tween_fn_kz = 0;
 		my.Tween.prototype.fn = function() {
-			S.Tween_fn_currentTime = Date.now();
-			S.Tween_fn_progress = (S.Tween_fn_currentTime - this.startTime) / this.duration;
-			S.Tween_fn_keys = Object.keys(this.end);
+			var currentTime,
+				progress,
+				entity,
+				argSet,
+				keys,
+				temp,
+				percent,
+				t,
+				tz,
+				k,
+				kz;
+			currentTime = Date.now();
+			progress = (currentTime - this.startTime) / this.duration;
+			keys = Object.keys(this.end);
 			if (this.active) {
-				if (S.Tween_fn_progress < 1) {
-					for (S.Tween_fn_t = 0, S.Tween_fn_tz = this.currentTargets.length; S.Tween_fn_t < S.Tween_fn_tz; S.Tween_fn_t++) {
-						S.Tween_fn_entity = this.currentTargets[S.Tween_fn_t];
-						if (my.xt(S.Tween_fn_entity)) {
-							S.Tween_fn_argSet = {};
-							for (S.Tween_fn_k = 0, S.Tween_fn_kz = S.Tween_fn_keys.length; S.Tween_fn_k < S.Tween_fn_kz; S.Tween_fn_k++) {
-								S.Tween_fn_temp = this.initVals[S.Tween_fn_t][S.Tween_fn_keys[S.Tween_fn_k]];
-								S.Tween_fn_percent = (my.isa(S.Tween_fn_temp.start, 'str') || my.isa(S.Tween_fn_temp.change, 'str')) ? true : false;
-								S.Tween_fn_argSet[S.Tween_fn_keys[S.Tween_fn_k]] = this.engine(
-									parseFloat(S.Tween_fn_temp.start),
-									parseFloat(S.Tween_fn_temp.change),
-									S.Tween_fn_progress,
-									this.engines[S.Tween_fn_keys[S.Tween_fn_k]],
+				if (progress < 1) {
+					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
+						entity = this.currentTargets[t];
+						if (my.xt(entity)) {
+							argSet = {};
+							for (k = 0, kz = keys.length; k < kz; k++) {
+								temp = this.initVals[t][keys[k]];
+								percent = (my.isa(temp.start, 'str') || my.isa(temp.change, 'str')) ? true : false;
+								argSet[keys[k]] = this.engine(
+									parseFloat(temp.start),
+									parseFloat(temp.change),
+									progress,
+									this.engines[keys[k]],
 									this.reverse);
-								S.Tween_fn_argSet[S.Tween_fn_keys[S.Tween_fn_k]] = (S.Tween_fn_percent) ? S.Tween_fn_argSet[S.Tween_fn_keys[S.Tween_fn_k]] + '%' : S.Tween_fn_argSet[S.Tween_fn_keys[S.Tween_fn_k]];
+								argSet[keys[k]] = (percent) ? argSet[keys[k]] + '%' : argSet[keys[k]];
 							}
-							S.Tween_fn_entity.set(S.Tween_fn_argSet);
+							entity.set(argSet);
 						}
 					}
 				}
@@ -1264,13 +1261,13 @@ Tween engines
 @param {Boolean} reverse Reverse flag - true if tween is reversed
 @private
 **/
-		S.Tween_engine_temp = 0;
 		my.Tween.prototype.engine = function(start, change, position, engine, reverse) {
+			var temp;
 			engine = my.xtGet(engine, 'x');
 			if (engine.length < 4) {
 				switch (engine) {
 					case 'out':
-						S.Tween_engine_temp = 1 - position;
+						temp = 1 - position;
 						return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
 					case 'in':
 						return start + (Math.sin((position * 90) * my.radian) * change);
@@ -1281,17 +1278,17 @@ Tween engines
 			if (engine[4] == 'I') {
 				switch (engine) {
 					case 'easeIn': //OPPOSITE of Flash easeIn - slow at end, not start
-						S.Tween_engine_temp = 1 - position;
-						return (start + change) + ((S.Tween_engine_temp * S.Tween_engine_temp) * -change);
+						temp = 1 - position;
+						return (start + change) + ((temp * temp) * -change);
 					case 'easeIn3':
-						S.Tween_engine_temp = 1 - position;
-						return (start + change) + ((S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp) * -change);
+						temp = 1 - position;
+						return (start + change) + ((temp * temp * temp) * -change);
 					case 'easeIn4':
-						S.Tween_engine_temp = 1 - position;
-						return (start + change) + ((S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp) * -change);
+						temp = 1 - position;
+						return (start + change) + ((temp * temp * temp * temp) * -change);
 					case 'easeIn5':
-						S.Tween_engine_temp = 1 - position;
-						return (start + change) + ((S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp) * -change);
+						temp = 1 - position;
+						return (start + change) + ((temp * temp * temp * temp * temp) * -change);
 					default:
 						return start + (position * change);
 				}
@@ -1299,25 +1296,25 @@ Tween engines
 			if (engine.length > 8) {
 				switch (engine) {
 					case 'easeOutIn':
-						S.Tween_engine_temp = 1 - position;
+						temp = 1 - position;
 						return (position < 0.5) ?
 							start + ((position * position) * change * 2) :
-							(start + change) + ((S.Tween_engine_temp * S.Tween_engine_temp) * -change * 2);
+							(start + change) + ((temp * temp) * -change * 2);
 					case 'easeOutIn3':
-						S.Tween_engine_temp = 1 - position;
+						temp = 1 - position;
 						return (position < 0.5) ?
 							start + ((position * position * position) * change * 4) :
-							(start + change) + ((S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp) * -change * 4);
+							(start + change) + ((temp * temp * temp) * -change * 4);
 					case 'easeOutIn4':
-						S.Tween_engine_temp = 1 - position;
+						temp = 1 - position;
 						return (position < 0.5) ?
 							start + ((position * position * position * position) * change * 8) :
-							(start + change) + ((S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp) * -change * 8);
+							(start + change) + ((temp * temp * temp * temp) * -change * 8);
 					case 'easeOutIn5':
-						S.Tween_engine_temp = 1 - position;
+						temp = 1 - position;
 						return (position < 0.5) ?
 							start + ((position * position * position * position * position) * change * 16) :
-							(start + change) + ((S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp * S.Tween_engine_temp) * -change * 16);
+							(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
 					default:
 						return start + (position * change);
 				}
@@ -1340,74 +1337,74 @@ Run a tween animation
 @method run
 @return Always true
 **/
-		S.Tween_run_test = 0;
-		S.Tween_run_activeTweens = [];
-		S.Tween_run_tw = null; //scrawl Tween object
-		S.Tween_run_keys = [];
-		S.Tween_run_start = 0;
-		S.Tween_run_end = 0;
-		S.Tween_run_percent = false;
-		S.Tween_run_temp = 0;
-		S.Tween_run_func = null; //function
-		S.Tween_run_i = 0;
-		S.Tween_run_iz = 0;
-		S.Tween_run_j = 0;
-		S.Tween_run_jz = 0;
-		S.Tween_run_k = 0;
-		S.Tween_run_kz = 0;
-		S.Tween_run_t = 0;
-		S.Tween_run_tz = 0;
-		S.Tween_run_m = 0;
-		S.Tween_run_mz = 0;
-		S.Tween_run_l = 0;
-		S.Tween_run_lz = 0;
 		my.Tween.prototype.run = function() {
-			S.Tween_run_func = my.subtractPercentages;
+			var test,
+				activeTweens,
+				tw,
+				keys,
+				start,
+				end,
+				percent,
+				temp,
+				func,
+				i,
+				iz,
+				j,
+				jz,
+				k,
+				kz,
+				t,
+				tz,
+				m,
+				mz,
+				l,
+				lz;
+			func = my.subtractPercentages;
 			if (!this.active) {
-				S.Tween_run_activeTweens = [];
-				S.Tween_run_keys = Object.keys(this.end);
+				activeTweens = [];
+				keys = Object.keys(this.end);
 				this.currentCount = this.currentCount || this.count;
 				this.currentTargets = [];
 				this.initVals = [];
-				for (S.Tween_run_l = 0, S.Tween_run_lz = my.animationnames.length; S.Tween_run_l < S.Tween_run_lz; S.Tween_run_l++) {
-					S.Tween_run_tw = my.animation[my.animationnames[S.Tween_run_l]];
-					if (S.Tween_run_tw.type === 'Tween' && S.Tween_run_tw.active && S.Tween_run_tw.name !== this.name) {
-						S.Tween_run_activeTweens.push(S.Tween_run_tw);
+				for (l = 0, lz = my.animationnames.length; l < lz; l++) {
+					tw = my.animation[my.animationnames[l]];
+					if (tw.type === 'Tween' && tw.active && tw.name !== this.name) {
+						activeTweens.push(tw);
 					}
 				}
-				for (S.Tween_run_i = 0, S.Tween_run_iz = this.targets.length; S.Tween_run_i < S.Tween_run_iz; S.Tween_run_i++) {
-					S.Tween_run_test = true;
-					for (S.Tween_run_j = 0, S.Tween_run_jz = S.Tween_run_activeTweens.length; S.Tween_run_j < S.Tween_run_jz; S.Tween_run_j++) {
-						for (S.Tween_run_k = 0, S.Tween_run_kz = S.Tween_run_activeTweens[S.Tween_run_j].currentTargets.length; S.Tween_run_k < S.Tween_run_kz; S.Tween_run_k++) {
-							if (this.targets[S.Tween_run_i].name === S.Tween_run_activeTweens[S.Tween_run_j].currentTargets[S.Tween_run_k].name) {
-								S.Tween_run_test = false;
+				for (i = 0, iz = this.targets.length; i < iz; i++) {
+					test = true;
+					for (j = 0, jz = activeTweens.length; j < jz; j++) {
+						for (k = 0, kz = activeTweens[j].currentTargets.length; k < kz; k++) {
+							if (this.targets[i].name === activeTweens[j].currentTargets[k].name) {
+								test = false;
 								break;
 							}
 						}
-						if (!S.Tween_run_test) {
+						if (!test) {
 							break;
 						}
 					}
-					if (S.Tween_run_test) {
-						this.currentTargets.push(this.targets[S.Tween_run_i]);
+					if (test) {
+						this.currentTargets.push(this.targets[i]);
 					}
 				}
 				if (this.currentTargets.length > 0) {
-					for (S.Tween_run_t = 0, S.Tween_run_tz = this.currentTargets.length; S.Tween_run_t < S.Tween_run_tz; S.Tween_run_t++) {
-						if (my.xt(this.currentTargets[S.Tween_run_t])) {
-							this.currentTargets[S.Tween_run_t].set(this.onCommence);
+					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
+						if (my.xt(this.currentTargets[t])) {
+							this.currentTargets[t].set(this.onCommence);
 							this.initVals.push({});
-							for (S.Tween_run_m = 0, S.Tween_run_mz = S.Tween_run_keys.length; S.Tween_run_m < S.Tween_run_mz; S.Tween_run_m++) {
-								S.Tween_run_start = (my.xt(this.start[S.Tween_run_keys[S.Tween_run_m]])) ? this.start[S.Tween_run_keys[S.Tween_run_m]] : this.currentTargets[S.Tween_run_t].get([S.Tween_run_keys[S.Tween_run_m]]);
-								S.Tween_run_end = this.end[S.Tween_run_keys[S.Tween_run_m]];
-								S.Tween_run_percent = (my.isa(S.Tween_run_start, 'str') || my.isa(S.Tween_run_end, 'str')) ? true : false;
-								S.Tween_run_temp = (S.Tween_run_percent) ? S.Tween_run_func(S.Tween_run_end, S.Tween_run_start) : S.Tween_run_end - S.Tween_run_start;
+							for (m = 0, mz = keys.length; m < mz; m++) {
+								start = (my.xt(this.start[keys[m]])) ? this.start[keys[m]] : this.currentTargets[t].get([keys[m]]);
+								end = this.end[keys[m]];
+								percent = (my.isa(start, 'str') || my.isa(end, 'str')) ? true : false;
+								temp = (percent) ? func(end, start) : end - start;
 								if (this.reverse) {
-									S.Tween_run_temp = (S.Tween_run_percent) ? -parseFloat(S.Tween_run_temp) + '%' : -S.Tween_run_temp;
+									temp = (percent) ? -parseFloat(temp) + '%' : -temp;
 								}
-								this.initVals[S.Tween_run_t][S.Tween_run_keys[S.Tween_run_m]] = {
-									start: (this.reverse) ? S.Tween_run_end : S.Tween_run_start,
-									change: S.Tween_run_temp,
+								this.initVals[t][keys[m]] = {
+									start: (this.reverse) ? end : start,
+									change: temp,
 								};
 							}
 						}
@@ -1426,12 +1423,12 @@ Finish running a tween
 @return Always true
 @private
 **/
-		S.Tween_runComplete_t = 0;
-		S.Tween_runComplete_tz = 0;
 		my.Tween.prototype.runComplete = function() {
-			for (S.Tween_runComplete_t = 0, S.Tween_runComplete_tz = this.currentTargets.length; S.Tween_runComplete_t < S.Tween_runComplete_tz; S.Tween_runComplete_t++) {
-				if (my.xt(this.currentTargets[S.Tween_runComplete_t])) {
-					this.currentTargets[S.Tween_runComplete_t].set(this.onComplete);
+			var t,
+				tz;
+			for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
+				if (my.xt(this.currentTargets[t])) {
+					this.currentTargets[t].set(this.onComplete);
 				}
 			}
 			if (this.nextTween) {
@@ -1462,13 +1459,13 @@ Remove this tween from the scrawl library
 @method kill
 @return Always true
 **/
-		S.Tween_kill_t = 0;
-		S.Tween_kill_tz = 0;
 		my.Tween.prototype.kill = function() {
+			var t,
+				tz;
 			if (this.active) {
-				for (S.Tween_kill_t = 0, S.Tween_kill_tz = this.currentTargets.length; S.Tween_kill_t < S.Tween_kill_tz; S.Tween_kill_t++) {
-					if (my.xt(this.currentTargets[S.Tween_kill_t])) {
-						this.currentTargets[S.Tween_kill_t].set(this.onComplete);
+				for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
+					if (my.xt(this.currentTargets[t])) {
+						this.currentTargets[t].set(this.onComplete);
 					}
 				}
 			}
@@ -1479,5 +1476,5 @@ Remove this tween from the scrawl library
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

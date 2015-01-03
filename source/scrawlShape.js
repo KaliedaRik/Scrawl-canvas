@@ -36,7 +36,7 @@ The Shape module adds Shape entitys - path-based objects - to the core module
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'shape')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -168,25 +168,37 @@ Create native path data from data attribute String
 @return Native path data
 @private
 **/
-		S.stat_shapeBuildDataSet1 = ['M', 'L', 'C', 'Q', 'S', 'T'];
 		my.Shape.prototype.buildDataSet = function(d) {
-			var myData = [],
+			var stat1 = ['M', 'L', 'C', 'Q', 'S', 'T'],
+				myData = [],
 				command,
-				points,
-				minX = 999999,
-				minY = 999999,
-				maxX = -999999,
-				maxY = -999999,
-				curX = this.start.x,
-				curY = this.start.y,
-				set = d.match(/([A-Za-z][0-9. ,\-]*)/g),
-				checkMaxMin = function(cx, cy) {
-					minX = (minX > cx) ? cx : minX;
-					minY = (minY > cy) ? cy : minY;
-					maxX = (maxX < cx) ? cx : maxX;
-					maxY = (maxY < cy) ? cy : maxY;
-				},
-				i, iz, j, jz;
+				points = [],
+				minX,
+				minY,
+				maxX,
+				maxY,
+				curX,
+				curY,
+				set,
+				i,
+				iz,
+				j,
+				jz,
+				result = [];
+			myData.length = 0;
+			minX = 999999;
+			minY = 999999;
+			maxX = -999999;
+			maxY = -999999;
+			curX = this.start.x;
+			curY = this.start.y;
+			set = d.match(/([A-Za-z][0-9. ,\-]*)/g);
+			var checkMaxMin = function(cx, cy) {
+				minX = (minX > cx) ? cx : minX;
+				minY = (minY > cy) ? cy : minY;
+				maxX = (maxX < cx) ? cx : maxX;
+				maxY = (maxY < cy) ? cy : maxY;
+			};
 			for (i = 0, iz = set.length; i < iz; i++) {
 				command = set [i][0];
 				points = set [i].match(/(-?[0-9.]+\b)/g);
@@ -281,7 +293,7 @@ Create native path data from data attribute String
 				});
 			}
 			for (i = 0, iz = myData.length; i < iz; i++) {
-				if (my.contains(S.stat_shapeBuildDataSet1, myData[i].c)) {
+				if (my.contains(stat1, myData[i].c)) {
 					for (j = 0, jz = myData[i].p.length; j < jz; j += 2) {
 						myData[i].p[j] -= minX;
 						myData[i].p[j + 1] -= minY;
@@ -300,7 +312,10 @@ Create native path data from data attribute String
 			}
 			this.width = maxX - minX;
 			this.height = maxY - minY;
-			return myData;
+			for (i = 0, iz = myData.length; i < iz; i++) {
+				result.push(myData[i]);
+			}
+			return result;
 		};
 		/**
 Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
@@ -324,24 +339,32 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 @return This
 @private
 **/
-		S.stat_shapeCompleteOutline1 = ['M'];
-		S.stat_shapeCompleteOutline2 = ['C', 'c', 'S', 's'];
-		S.stat_shapeCompleteOutline3 = ['Q', 'q', 'T', 't'];
 		my.Shape.prototype.completeOutline = function(ctx, cell) {
+			var stat1 = ['M'],
+				stat2 = ['C', 'c', 'S', 's'],
+				stat3 = ['Q', 'q', 'T', 't'],
+				i,
+				iz,
+				k,
+				kz,
+				here,
+				currentX,
+				currentY,
+				reflectX,
+				reflectY,
+				d,
+				tempX,
+				tempY;
 			if (this.dataSet) {
-				var here = this.prepareStamp(),
-					currentX = 0,
-					currentY = 0,
-					reflectX = 0,
-					reflectY = 0,
-					d,
-					tempX,
-					tempY,
-					i, iz, k, kz;
+				here = this.prepareStamp();
+				currentX = 0;
+				currentY = 0;
+				reflectX = 0;
+				reflectY = 0;
 				this.rotateCell(ctx, cell);
 				ctx.translate(here.x, here.y);
 				ctx.beginPath();
-				if (!my.contains(S.stat_shapeCompleteOutline1, this.dataSet[0].c)) {
+				if (!my.contains(stat1, this.dataSet[0].c)) {
 					ctx.moveTo(currentX, currentY);
 				}
 				for (i = 0, iz = this.dataSet.length; i < iz; i++) {
@@ -445,7 +468,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 							break;
 						case 'S':
 							for (k = 0, kz = d.p.length; k < kz; k += 4) {
-								if (i > 0 && my.contains(S.stat_shapeCompleteOutline2, this.dataSet[i - 1].c)) {
+								if (i > 0 && my.contains(stat2, this.dataSet[i - 1].c)) {
 									tempX = currentX + (currentX - reflectX);
 									tempY = currentY + (currentY - reflectY);
 								}
@@ -462,7 +485,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 							break;
 						case 's':
 							for (k = 0, kz = d.p.length; k < kz; k += 4) {
-								if (i > 0 && my.contains(S.stat_shapeCompleteOutline2, this.dataSet[i - 1].c)) {
+								if (i > 0 && my.contains(stat2, this.dataSet[i - 1].c)) {
 									tempX = currentX + (currentX - reflectX);
 									tempY = currentY + (currentY - reflectY);
 								}
@@ -497,7 +520,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 							break;
 						case 'T':
 							for (k = 0, kz = d.p.length; k < kz; k += 2) {
-								if (i > 0 && my.contains(S.stat_shapeCompleteOutline3, this.dataSet[i - 1].c)) {
+								if (i > 0 && my.contains(stat3, this.dataSet[i - 1].c)) {
 									tempX = currentX + (currentX - reflectX);
 									tempY = currentY + (currentY - reflectY);
 								}
@@ -514,7 +537,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 							break;
 						case 't':
 							for (k = 0, kz = d.p.length; k < kz; k += 2) {
-								if (i > 0 && my.contains(S.stat_shapeCompleteOutline3, this.dataSet[i - 1].c)) {
+								if (i > 0 && my.contains(stat3, this.dataSet[i - 1].c)) {
 									tempX = currentX + (currentX - reflectX);
 									tempY = currentY + (currentY - reflectY);
 								}
@@ -559,9 +582,9 @@ Stamp helper function - perform a 'clear' method draw
 @private
 **/
 		my.Shape.prototype.clear = function(ctx, cell) {
-			var c = my.cell[cell];
+			cell = my.cell[cell];
 			this.clip(ctx, cell);
-			ctx.clearRect(0, 0, c.get('actualWidth'), c.get('.actualHeight'));
+			ctx.clearRect(0, 0, cell.get('actualWidth'), cell.get('.actualHeight'));
 			ctx.restore();
 			return this;
 		};
@@ -575,10 +598,10 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @private
 **/
 		my.Shape.prototype.clearWithBackground = function(ctx, cell) {
-			var c = my.cell[cell];
+			cell = my.cell[cell];
 			this.clip(ctx, cell);
 			ctx.fillStyle = c.backgroundColor;
-			ctx.fillRect(0, 0, c.get('actualWidth'), c.get('actualHeight'));
+			ctx.fillRect(0, 0, cell.get('actualWidth'), cell.get('actualHeight'));
 			ctx.fillStyle = my.ctx[cell].get('fillStyle');
 			ctx.restore();
 			return this;
@@ -701,24 +724,27 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 @return The first coordinate to fall within the entity's path; false if none fall within the path
 **/
 		my.Shape.prototype.checkHit = function(items) {
+			var tests,
+				result,
+				winding,
+				i,
+				iz;
 			items = (my.isa(items, 'obj')) ? items : {};
-			var ctx = my.cvx,
-				tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
-				result = false,
-				winding = my.ctx[this.context].winding;
-			ctx.mozFillRule = winding;
-			ctx.msFillRule = winding;
-			this.completeOutline(ctx, my.group[this.group].cell);
-			for (var i = 0, z = tests.length; i < z; i += 2) {
-				result = ctx.isPointInPath(tests[i], tests[i + 1]);
+			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
+			result = false;
+			winding = my.ctx[this.context].winding;
+			my.cvx.mozFillRule = winding;
+			my.cvx.msFillRule = winding;
+			this.completeOutline(my.cvx, my.group[this.group].cell);
+			for (i = 0, iz = tests.length; i < iz; i += 2) {
+				result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
 				if (result) {
+					items.x = tests[i];
+					items.y = tests[i + 1];
 					break;
 				}
 			}
-			return (result) ? {
-				x: tests[i],
-				y: tests[i + 1]
-			} : false;
+			return (result) ? items : false;
 		};
 		/**
 Collision detection helper function
@@ -730,72 +756,76 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @chainable
 @private
 **/
-		//CHANGE - push generated values directly into this.collisionVectors
 		my.Shape.prototype.buildCollisionVectors = function(items) {
+			var i,
+				iz,
+				p,
+				o,
+				w,
+				h;
 			if (this.isLine) {
 				my.Entity.prototype.buildCollisionVectors.call(this, items);
 			}
 			else {
-				var p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,
-					o = this.getOffsetStartVector().reverse(),
-					w = this.width / 2,
-					h = this.height / 2,
-					c = [];
-				for (var i = 0, iz = p.length; i < iz; i++) {
+				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
+				o = this.getOffsetStartVector().reverse();
+				w = this.width / 2;
+				h = this.height / 2;
+				this.collisionVectors.length = 0;
+				for (i = 0, iz = p.length; i < iz; i++) {
 					if (my.isa(p[i], 'str')) {
 						switch (p[i]) {
 							case 'start':
-								c.push(0);
-								c.push(0);
+								this.collisionVectors.push(0);
+								this.collisionVectors.push(0);
 								break;
 							case 'N':
-								c.push(-o.x);
-								c.push(-h - o.y);
+								this.collisionVectors.push(-o.x);
+								this.collisionVectors.push(-h - o.y);
 								break;
 							case 'NE':
-								c.push(w - o.x);
-								c.push(-h - o.y);
+								this.collisionVectors.push(w - o.x);
+								this.collisionVectors.push(-h - o.y);
 								break;
 							case 'E':
-								c.push(w - o.x);
-								c.push(-o.y);
+								this.collisionVectors.push(w - o.x);
+								this.collisionVectors.push(-o.y);
 								break;
 							case 'SE':
-								c.push(w - o.x);
-								c.push(h - o.y);
+								this.collisionVectors.push(w - o.x);
+								this.collisionVectors.push(h - o.y);
 								break;
 							case 'S':
-								c.push(-o.x);
-								c.push(h - o.y);
+								this.collisionVectors.push(-o.x);
+								this.collisionVectors.push(h - o.y);
 								break;
 							case 'SW':
-								c.push(-w - o.x);
-								c.push(h - o.y);
+								this.collisionVectors.push(-w - o.x);
+								this.collisionVectors.push(h - o.y);
 								break;
 							case 'W':
-								c.push(-w - o.x);
-								c.push(-o.y);
+								this.collisionVectors.push(-w - o.x);
+								this.collisionVectors.push(-o.y);
 								break;
 							case 'NW':
-								c.push(-w - o.x);
-								c.push(-h - o.y);
+								this.collisionVectors.push(-w - o.x);
+								this.collisionVectors.push(-h - o.y);
 								break;
 							case 'center':
-								c.push(-o.x);
-								c.push(-o.y);
+								this.collisionVectors.push(-o.x);
+								this.collisionVectors.push(-o.y);
 								break;
 						}
 					}
 					else if (my.isa(p[i], 'vector')) {
-						c.push(p[i].x);
-						c.push(p[i].y);
+						this.collisionVectors.push(p[i].x);
+						this.collisionVectors.push(p[i].y);
 					}
 				}
-				this.collisionVectors = c;
 			}
 			return this;
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

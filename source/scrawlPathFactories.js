@@ -33,7 +33,7 @@ The Factories module adds a set of factory functions to the Scrawl library, whic
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'factories')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -59,77 +59,77 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} items Object containing attributes
 	@return Shape or Path entity object
 	**/
-		S.makeEllipse_cell = null; //scrawl Cell object
-		S.makeEllipse_startX = 0;
-		S.makeEllipse_startY = 0;
-		S.makeEllipse_radiusX = 0;
-		S.makeEllipse_radiusY = 0;
-		S.makeEllipse_myData = '';
-		S.makeEllipse_cx = 0;
-		S.makeEllipse_cy = 0;
-		S.makeEllipse_dx = 0;
-		S.makeEllipse_dy = 0;
 		my.makeEllipse = function(items) {
+			var cell,
+				startX,
+				startY,
+				radiusX,
+				radiusY,
+				myData,
+				cx,
+				cy,
+				dx,
+				dy;
 			items = my.safeObject(items);
 			items.closed = true;
-			S.makeEllipse_cell = my.Entity.prototype.getEntityCell(items);
-			S.makeEllipse_startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, S.makeEllipse_cell, true) : items.startX || 0;
-			S.makeEllipse_startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, S.makeEllipse_cell, false) : items.startY || 0;
-			S.makeEllipse_radiusX = (my.isa(items.radiusX, 'str')) ? my.convertPercentage(items.radiusX, S.makeEllipse_cell, true) : items.radiusX || 0;
-			S.makeEllipse_radiusY = (my.isa(items.radiusY, 'str')) ? my.convertPercentage(items.radiusY, S.makeEllipse_cell, false) : items.radiusY || 0;
-			S.makeEllipse_myData = 'm';
-			S.makeEllipse_cx = S.makeEllipse_startX;
-			S.makeEllipse_cy = S.makeEllipse_startY;
-			S.makeEllipse_dx = S.makeEllipse_startX;
-			S.makeEllipse_dy = S.makeEllipse_startY - S.makeEllipse_radiusY;
-			S.makeEllipse_myData += (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_cx = S.makeEllipse_dx;
-			S.makeEllipse_cy = S.makeEllipse_dy;
-			S.makeEllipse_dx = S.makeEllipse_startX + (S.makeEllipse_radiusX * 0.55);
-			S.makeEllipse_dy = S.makeEllipse_startY - S.makeEllipse_radiusY;
-			S.makeEllipse_myData += 'c' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_dx = S.makeEllipse_startX + S.makeEllipse_radiusX;
-			S.makeEllipse_dy = S.makeEllipse_startY - (S.makeEllipse_radiusY * 0.55);
-			S.makeEllipse_myData += ' ' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_dx = S.makeEllipse_startX + S.makeEllipse_radiusX;
-			S.makeEllipse_dy = S.makeEllipse_startY;
-			S.makeEllipse_myData += ' ' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_cx = S.makeEllipse_dx;
-			S.makeEllipse_cy = S.makeEllipse_dy;
-			S.makeEllipse_dx = S.makeEllipse_startX + S.makeEllipse_radiusX;
-			S.makeEllipse_dy = S.makeEllipse_startY + (S.makeEllipse_radiusY * 0.55);
-			S.makeEllipse_myData += 'c' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_dx = S.makeEllipse_startX + (S.makeEllipse_radiusX * 0.55);
-			S.makeEllipse_dy = S.makeEllipse_startY + S.makeEllipse_radiusY;
-			S.makeEllipse_myData += ' ' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_dx = S.makeEllipse_startX;
-			S.makeEllipse_dy = S.makeEllipse_startY + S.makeEllipse_radiusY;
-			S.makeEllipse_myData += ' ' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_cx = S.makeEllipse_dx;
-			S.makeEllipse_cy = S.makeEllipse_dy;
-			S.makeEllipse_dx = S.makeEllipse_startX - (S.makeEllipse_radiusX * 0.55);
-			S.makeEllipse_dy = S.makeEllipse_startY + S.makeEllipse_radiusY;
-			S.makeEllipse_myData += 'c' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_dx = S.makeEllipse_startX - S.makeEllipse_radiusX;
-			S.makeEllipse_dy = S.makeEllipse_startY + (S.makeEllipse_radiusY * 0.55);
-			S.makeEllipse_myData += ' ' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_dx = S.makeEllipse_startX - S.makeEllipse_radiusX;
-			S.makeEllipse_dy = S.makeEllipse_startY;
-			S.makeEllipse_myData += ' ' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_cx = S.makeEllipse_dx;
-			S.makeEllipse_cy = S.makeEllipse_dy;
-			S.makeEllipse_dx = S.makeEllipse_startX - S.makeEllipse_radiusX;
-			S.makeEllipse_dy = S.makeEllipse_startY - (S.makeEllipse_radiusY * 0.55);
-			S.makeEllipse_myData += 'c' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_dx = S.makeEllipse_startX - (S.makeEllipse_radiusX * 0.55);
-			S.makeEllipse_dy = S.makeEllipse_startY - S.makeEllipse_radiusY;
-			S.makeEllipse_myData += ' ' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_dx = S.makeEllipse_startX;
-			S.makeEllipse_dy = S.makeEllipse_startY - S.makeEllipse_radiusY;
-			S.makeEllipse_myData += ' ' + (S.makeEllipse_cx - S.makeEllipse_dx) + ',' + (S.makeEllipse_cy - S.makeEllipse_dy);
-			S.makeEllipse_myData += 'z';
+			cell = my.Entity.prototype.getEntityCell(items);
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
+			radiusX = (my.isa(items.radiusX, 'str')) ? my.convertPercentage(items.radiusX, cell, true) : items.radiusX || 0;
+			radiusY = (my.isa(items.radiusY, 'str')) ? my.convertPercentage(items.radiusY, cell, false) : items.radiusY || 0;
+			myData = 'm';
+			cx = startX;
+			cy = startY;
+			dx = startX;
+			dy = startY - radiusY;
+			myData += (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX + (radiusX * 0.55);
+			dy = startY - radiusY;
+			myData += 'c' + (cx - dx) + ',' + (cy - dy);
+			dx = startX + radiusX;
+			dy = startY - (radiusY * 0.55);
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			dx = startX + radiusX;
+			dy = startY;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX + radiusX;
+			dy = startY + (radiusY * 0.55);
+			myData += 'c' + (cx - dx) + ',' + (cy - dy);
+			dx = startX + (radiusX * 0.55);
+			dy = startY + radiusY;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			dx = startX;
+			dy = startY + radiusY;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX - (radiusX * 0.55);
+			dy = startY + radiusY;
+			myData += 'c' + (cx - dx) + ',' + (cy - dy);
+			dx = startX - radiusX;
+			dy = startY + (radiusY * 0.55);
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			dx = startX - radiusX;
+			dy = startY;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX - radiusX;
+			dy = startY - (radiusY * 0.55);
+			myData += 'c' + (cx - dx) + ',' + (cy - dy);
+			dx = startX - (radiusX * 0.55);
+			dy = startY - radiusY;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			dx = startX;
+			dy = startY - radiusY;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			myData += 'z';
 			items.isLine = false;
-			items.data = S.makeEllipse_myData;
+			items.data = myData;
 			return (items.shape) ? my.newShape(items) : my.makePath(items);
 		};
 		/**
@@ -148,117 +148,120 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} items Object containing attributes
 	@return Shape or Path entity object
 	**/
-		S.makeRectangle_cell = null; //scrawl Cell object
-		S.makeRectangle_startX = 0;
-		S.makeRectangle_startY = 0;
-		S.makeRectangle_width = 0;
-		S.makeRectangle_height = 0;
-		S.makeRectangle_halfWidth = 0;
-		S.makeRectangle_halfHeight = 0;
-		S.makeRectangle_brx = 0;
-		S.makeRectangle_bry = 0;
-		S.makeRectangle_blx = 0;
-		S.makeRectangle_bly = 0;
-		S.makeRectangle_tlx = 0;
-		S.makeRectangle_tly = 0;
-		S.makeRectangle_trx = 0;
-		S.makeRectangle_try = 0;
-		S.makeRectangle_myData = '';
-		S.makeRectangle_cx = 0;
-		S.makeRectangle_cy = 0;
-		S.makeRectangle_dx = 0;
-		S.makeRectangle_dy = 0;
 		my.makeRectangle = function(items) {
+			var cell,
+				startX,
+				startY,
+				width,
+				height,
+				halfWidth,
+				halfHeight,
+				brx,
+				bry,
+				blx,
+				bly,
+				tlx,
+				tly,
+				trx,
+				_try,
+				myData,
+				cx,
+				cy,
+				dx,
+				dy;
 			items = my.safeObject(items);
 			items.closed = true;
-			S.makeRectangle_cell = my.Entity.prototype.getEntityCell(items);
-			S.makeRectangle_startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, S.makeRectangle_cell, true) : items.startX || 0;
-			S.makeRectangle_startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, S.makeRectangle_cell, false) : items.startY || 0;
-			S.makeRectangle_width = (my.isa(items.width, 'str')) ? my.convertPercentage(items.width, S.makeRectangle_cell, true) : items.width || 0;
-			S.makeRectangle_height = (my.isa(items.height, 'str')) ? my.convertPercentage(items.height, S.makeRectangle_cell, false) : items.height || 0;
-			S.makeRectangle_brx = my.xtGet(items.radiusTopLeftX, items.radiusTopLeft, items.radiusTopX, items.radiusLeftX, items.radiusTop, items.radiusLeft, items.radiusX, items.radius, 0);
-			S.makeRectangle_bry = my.xtGet(items.radiusTopLeftY, items.radiusTopLeft, items.radiusTopY, items.radiusLeftY, items.radiusTop, items.radiusLeft, items.radiusY, items.radius, 0);
-			S.makeRectangle_blx = my.xtGet(items.radiusTopRightX, items.radiusTopRight, items.radiusTopX, items.radiusRightX, items.radiusTop, items.radiusRight, items.radiusX, items.radius, 0);
-			S.makeRectangle_bly = my.xtGet(items.radiusTopRightY, items.radiusTopRight, items.radiusTopY, items.radiusRightY, items.radiusTop, items.radiusRight, items.radiusY, items.radius, 0);
-			S.makeRectangle_tlx = my.xtGet(items.radiusBottomRightX, items.radiusBottomRight, items.radiusBottomX, items.radiusRightX, items.radiusBottom, items.radiusRight, items.radiusX, items.radius, 0);
-			S.makeRectangle_tly = my.xtGet(items.radiusBottomRightY, items.radiusBottomRight, items.radiusBottomY, items.radiusRightY, items.radiusBottom, items.radiusRight, items.radiusY, items.radius, 0);
-			S.makeRectangle_trx = my.xtGet(items.radiusBottomLeftX, items.radiusBottomLeft, items.radiusBottomX, items.radiusLeftX, items.radiusBottom, items.radiusLeft, items.radiusX, items.radius, 0);
-			S.makeRectangle_try = my.xtGet(items.radiusBottomLeftY, items.radiusBottomLeft, items.radiusBottomY, items.radiusLeftY, items.radiusBottom, items.radiusLeft, items.radiusY, items.radius, 0);
-			S.makeRectangle_halfWidth = (S.makeRectangle_width / 2);
-			S.makeRectangle_halfHeight = (S.makeRectangle_height / 2);
-			S.makeRectangle_myData = 'm';
-			S.makeRectangle_cx = S.makeRectangle_startX;
-			S.makeRectangle_cy = S.makeRectangle_startY;
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth + S.makeRectangle_tlx;
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_cx = S.makeRectangle_dx;
-			S.makeRectangle_cy = S.makeRectangle_dy;
-			S.makeRectangle_dx = S.makeRectangle_startX + S.makeRectangle_halfWidth - S.makeRectangle_trx;
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += 'l' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_cx = S.makeRectangle_dx;
-			S.makeRectangle_cy = S.makeRectangle_dy;
-			S.makeRectangle_dx = S.makeRectangle_startX + S.makeRectangle_halfWidth - S.makeRectangle_trx + (S.makeRectangle_trx * 0.55);
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += 'c' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_dx = S.makeRectangle_startX + S.makeRectangle_halfWidth;
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight + S.makeRectangle_try - (S.makeRectangle_try * 0.55);
-			S.makeRectangle_myData += ' ' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_dx = S.makeRectangle_startX + S.makeRectangle_halfWidth;
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight + S.makeRectangle_try;
-			S.makeRectangle_myData += ' ' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_cx = S.makeRectangle_dx;
-			S.makeRectangle_cy = S.makeRectangle_dy;
-			S.makeRectangle_dx = S.makeRectangle_startX + S.makeRectangle_halfWidth;
-			S.makeRectangle_dy = S.makeRectangle_startY + S.makeRectangle_halfHeight - S.makeRectangle_bry;
-			S.makeRectangle_myData += 'l' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_cx = S.makeRectangle_dx;
-			S.makeRectangle_cy = S.makeRectangle_dy;
-			S.makeRectangle_dx = S.makeRectangle_startX + S.makeRectangle_halfWidth;
-			S.makeRectangle_dy = S.makeRectangle_startY + S.makeRectangle_halfHeight - S.makeRectangle_bry + (S.makeRectangle_bry * 0.55);
-			S.makeRectangle_myData += 'c' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_dx = S.makeRectangle_startX + S.makeRectangle_halfWidth - S.makeRectangle_brx + (S.makeRectangle_brx * 0.55);
-			S.makeRectangle_dy = S.makeRectangle_startY + S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += ' ' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_dx = S.makeRectangle_startX + S.makeRectangle_halfWidth - S.makeRectangle_brx;
-			S.makeRectangle_dy = S.makeRectangle_startY + S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += ' ' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_cx = S.makeRectangle_dx;
-			S.makeRectangle_cy = S.makeRectangle_dy;
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth + S.makeRectangle_blx;
-			S.makeRectangle_dy = S.makeRectangle_startY + S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += 'l' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_cx = S.makeRectangle_dx;
-			S.makeRectangle_cy = S.makeRectangle_dy;
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth + S.makeRectangle_blx - (S.makeRectangle_blx * 0.55);
-			S.makeRectangle_dy = S.makeRectangle_startY + S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += 'c' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth;
-			S.makeRectangle_dy = S.makeRectangle_startY + S.makeRectangle_halfHeight - S.makeRectangle_bly + (S.makeRectangle_bly * 0.55);
-			S.makeRectangle_myData += ' ' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth;
-			S.makeRectangle_dy = S.makeRectangle_startY + S.makeRectangle_halfHeight - S.makeRectangle_bly;
-			S.makeRectangle_myData += ' ' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_cx = S.makeRectangle_dx;
-			S.makeRectangle_cy = S.makeRectangle_dy;
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth;
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight + S.makeRectangle_tly;
-			S.makeRectangle_myData += 'l' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_cx = S.makeRectangle_dx;
-			S.makeRectangle_cy = S.makeRectangle_dy;
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth;
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight + S.makeRectangle_tly - (S.makeRectangle_tly * 0.55);
-			S.makeRectangle_myData += 'c' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth + S.makeRectangle_tlx - (S.makeRectangle_tlx * 0.55);
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += ' ' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_dx = S.makeRectangle_startX - S.makeRectangle_halfWidth + S.makeRectangle_tlx;
-			S.makeRectangle_dy = S.makeRectangle_startY - S.makeRectangle_halfHeight;
-			S.makeRectangle_myData += ' ' + (S.makeRectangle_cx - S.makeRectangle_dx) + ',' + (S.makeRectangle_cy - S.makeRectangle_dy);
-			S.makeRectangle_myData += 'z';
+			cell = my.Entity.prototype.getEntityCell(items);
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
+			width = (my.isa(items.width, 'str')) ? my.convertPercentage(items.width, cell, true) : items.width || 0;
+			height = (my.isa(items.height, 'str')) ? my.convertPercentage(items.height, cell, false) : items.height || 0;
+			brx = my.xtGet(items.radiusTopLeftX, items.radiusTopLeft, items.radiusTopX, items.radiusLeftX, items.radiusTop, items.radiusLeft, items.radiusX, items.radius, 0);
+			bry = my.xtGet(items.radiusTopLeftY, items.radiusTopLeft, items.radiusTopY, items.radiusLeftY, items.radiusTop, items.radiusLeft, items.radiusY, items.radius, 0);
+			blx = my.xtGet(items.radiusTopRightX, items.radiusTopRight, items.radiusTopX, items.radiusRightX, items.radiusTop, items.radiusRight, items.radiusX, items.radius, 0);
+			bly = my.xtGet(items.radiusTopRightY, items.radiusTopRight, items.radiusTopY, items.radiusRightY, items.radiusTop, items.radiusRight, items.radiusY, items.radius, 0);
+			tlx = my.xtGet(items.radiusBottomRightX, items.radiusBottomRight, items.radiusBottomX, items.radiusRightX, items.radiusBottom, items.radiusRight, items.radiusX, items.radius, 0);
+			tly = my.xtGet(items.radiusBottomRightY, items.radiusBottomRight, items.radiusBottomY, items.radiusRightY, items.radiusBottom, items.radiusRight, items.radiusY, items.radius, 0);
+			trx = my.xtGet(items.radiusBottomLeftX, items.radiusBottomLeft, items.radiusBottomX, items.radiusLeftX, items.radiusBottom, items.radiusLeft, items.radiusX, items.radius, 0);
+			_try = my.xtGet(items.radiusBottomLeftY, items.radiusBottomLeft, items.radiusBottomY, items.radiusLeftY, items.radiusBottom, items.radiusLeft, items.radiusY, items.radius, 0);
+			halfWidth = (width / 2);
+			halfHeight = (height / 2);
+			myData = 'm';
+			cx = startX;
+			cy = startY;
+			dx = startX - halfWidth + tlx;
+			dy = startY - halfHeight;
+			myData += (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX + halfWidth - trx;
+			dy = startY - halfHeight;
+			myData += 'l' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX + halfWidth - trx + (trx * 0.55);
+			dy = startY - halfHeight;
+			myData += 'c' + (cx - dx) + ',' + (cy - dy);
+			dx = startX + halfWidth;
+			dy = startY - halfHeight +
+				_try - (
+					_try * 0.55);
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			dx = startX + halfWidth;
+			dy = startY - halfHeight +
+				_try;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX + halfWidth;
+			dy = startY + halfHeight - bry;
+			myData += 'l' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX + halfWidth;
+			dy = startY + halfHeight - bry + (bry * 0.55);
+			myData += 'c' + (cx - dx) + ',' + (cy - dy);
+			dx = startX + halfWidth - brx + (brx * 0.55);
+			dy = startY + halfHeight;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			dx = startX + halfWidth - brx;
+			dy = startY + halfHeight;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX - halfWidth + blx;
+			dy = startY + halfHeight;
+			myData += 'l' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX - halfWidth + blx - (blx * 0.55);
+			dy = startY + halfHeight;
+			myData += 'c' + (cx - dx) + ',' + (cy - dy);
+			dx = startX - halfWidth;
+			dy = startY + halfHeight - bly + (bly * 0.55);
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			dx = startX - halfWidth;
+			dy = startY + halfHeight - bly;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX - halfWidth;
+			dy = startY - halfHeight + tly;
+			myData += 'l' + (cx - dx) + ',' + (cy - dy);
+			cx = dx;
+			cy = dy;
+			dx = startX - halfWidth;
+			dy = startY - halfHeight + tly - (tly * 0.55);
+			myData += 'c' + (cx - dx) + ',' + (cy - dy);
+			dx = startX - halfWidth + tlx - (tlx * 0.55);
+			dy = startY - halfHeight;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			dx = startX - halfWidth + tlx;
+			dy = startY - halfHeight;
+			myData += ' ' + (cx - dx) + ',' + (cy - dy);
+			myData += 'z';
 			items.isLine = false;
-			items.data = S.makeRectangle_myData;
+			items.data = myData;
 			return (items.shape) ? my.newShape(items) : my.makePath(items);
 		};
 		/**
@@ -282,73 +285,73 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} items Object containing attributes
 	@return Shape or Path entity object
 	**/
-		S.makeBezier_cell = null; //scrawl Cell object
-		S.makeBezier_startX = 0;
-		S.makeBezier_startY = 0;
-		S.makeBezier_startControlX = 0;
-		S.makeBezier_startControlY = 0;
-		S.makeBezier_endControlX = 0;
-		S.makeBezier_endControlY = 0;
-		S.makeBezier_endX = 0;
-		S.makeBezier_endY = 0;
-		S.makeBezier_data = '';
-		S.makeBezier_myFixed = '';
-		S.makeBezier_myShape = null; //scrawl Entity object
-		S.makeBezier_tempName = '';
 		my.makeBezier = function(items) {
+			var cell,
+				startX,
+				startY,
+				startControlX,
+				startControlY,
+				endControlX,
+				endControlY,
+				endX,
+				endY,
+				data,
+				myFixed,
+				myShape,
+				tempName;
 			items = my.safeObject(items);
 			items.closed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
 			items.isLine = true;
-			S.makeBezier_cell = my.Entity.prototype.getEntityCell(items);
-			S.makeBezier_startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, S.makeBezier_cell, true) : items.startX || 0;
-			S.makeBezier_startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, S.makeBezier_cell, false) : items.startY || 0;
-			S.makeBezier_startControlX = (my.isa(items.startControlX, 'str')) ? my.convertPercentage(items.startControlX, S.makeBezier_cell, true) : items.startControlX || 0;
-			S.makeBezier_startControlY = (my.isa(items.startControlY, 'str')) ? my.convertPercentage(items.startControlY, S.makeBezier_cell, false) : items.startControlY || 0;
-			S.makeBezier_endControlX = (my.isa(items.endControlX, 'str')) ? my.convertPercentage(items.endControlX, S.makeBezier_cell, true) : items.endControlX || 0;
-			S.makeBezier_endControlY = (my.isa(items.endControlY, 'str')) ? my.convertPercentage(items.endControlY, S.makeBezier_cell, false) : items.endControlY || 0;
-			S.makeBezier_endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, S.makeBezier_cell, true) : items.endX || 0;
-			S.makeBezier_endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, S.makeBezier_cell, false) : items.endY || 0;
-			S.makeBezier_myFixed = items.fixed || 'none';
+			cell = my.Entity.prototype.getEntityCell(items);
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
+			startControlX = (my.isa(items.startControlX, 'str')) ? my.convertPercentage(items.startControlX, cell, true) : items.startControlX || 0;
+			startControlY = (my.isa(items.startControlY, 'str')) ? my.convertPercentage(items.startControlY, cell, false) : items.startControlY || 0;
+			endControlX = (my.isa(items.endControlX, 'str')) ? my.convertPercentage(items.endControlX, cell, true) : items.endControlX || 0;
+			endControlY = (my.isa(items.endControlY, 'str')) ? my.convertPercentage(items.endControlY, cell, false) : items.endControlY || 0;
+			endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0;
+			endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0;
+			myFixed = items.fixed || 'none';
 			items.fixed = false;
-			S.makeBezier_data = 'm0,0c' +
-				(S.makeBezier_startControlX - S.makeBezier_startX) + ',' + (S.makeBezier_startControlY - S.makeBezier_startY) + ' ' +
-				(S.makeBezier_endControlX - S.makeBezier_startX) + ',' + (S.makeBezier_endControlY - S.makeBezier_startY) + ' ' +
-				(S.makeBezier_endX - S.makeBezier_startX) + ',' + (S.makeBezier_endY - S.makeBezier_startY);
-			items.data = S.makeBezier_data;
+			data = 'm0,0c' +
+				(startControlX - startX) + ',' + (startControlY - startY) + ' ' +
+				(endControlX - startX) + ',' + (endControlY - startY) + ' ' +
+				(endX - startX) + ',' + (endY - startY);
+			items.data = data;
 			if (items.shape) {
-				S.makeBezier_myShape = my.newShape(items);
+				myShape = my.newShape(items);
 			}
 			else {
-				S.makeBezier_myShape = my.makePath(items);
-				S.makeBezier_tempName = S.makeBezier_myShape.name.replace('~', '_', 'g');
-				switch (S.makeBezier_myFixed) {
+				myShape = my.makePath(items);
+				tempName = myShape.name.replace('~', '_', 'g');
+				switch (myFixed) {
 					case 'all':
-						my.point[S.makeBezier_tempName + '_p1'].setToFixed(S.makeBezier_startX, S.makeBezier_startY);
-						my.point[S.makeBezier_tempName + '_p2'].setToFixed(S.makeBezier_startControlX, S.makeBezier_startControlY);
-						my.point[S.makeBezier_tempName + '_p3'].setToFixed(S.makeBezier_endControlX, S.makeBezier_endControlY);
-						my.point[S.makeBezier_tempName + '_p4'].setToFixed(S.makeBezier_endX, S.makeBezier_endY);
+						my.point[tempName + '_p1'].setToFixed(startX, startY);
+						my.point[tempName + '_p2'].setToFixed(startControlX, startControlY);
+						my.point[tempName + '_p3'].setToFixed(endControlX, endControlY);
+						my.point[tempName + '_p4'].setToFixed(endX, endY);
 						break;
 					case 'both':
-						my.point[S.makeBezier_tempName + '_p1'].setToFixed(S.makeBezier_startX, S.makeBezier_startY);
-						my.point[S.makeBezier_tempName + '_p4'].setToFixed(S.makeBezier_endX, S.makeBezier_endY);
+						my.point[tempName + '_p1'].setToFixed(startX, startY);
+						my.point[tempName + '_p4'].setToFixed(endX, endY);
 						break;
 					case 'start':
-						my.point[S.makeBezier_tempName + '_p1'].setToFixed(S.makeBezier_startX, S.makeBezier_startY);
+						my.point[tempName + '_p1'].setToFixed(startX, startY);
 						break;
 					case 'startControl':
-						my.point[S.makeBezier_tempName + '_p2'].setToFixed(S.makeBezier_startControlX, S.makeBezier_startControlY);
+						my.point[tempName + '_p2'].setToFixed(startControlX, startControlY);
 						break;
 					case 'endControl':
-						my.point[S.makeBezier_tempName + '_p3'].setToFixed(S.makeBezier_endControlX, S.makeBezier_endControlY);
+						my.point[tempName + '_p3'].setToFixed(endControlX, endControlY);
 						break;
 					case 'end':
-						my.point[S.makeBezier_tempName + '_p4'].setToFixed(S.makeBezier_endX, S.makeBezier_endY);
+						my.point[tempName + '_p4'].setToFixed(endX, endY);
 						break;
 				}
 			}
-			return S.makeBezier_myShape;
+			return myShape;
 		};
 		/**
 	A __factory__ function to generate quadratic curve Shape or Path entity objects
@@ -369,64 +372,64 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} items Object containing attributes
 	@return Shape or Path entity object
 	**/
-		S.makeQuadratic_cell = null; //scrawl Cell object
-		S.makeQuadratic_startX = 0;
-		S.makeQuadratic_startY = 0;
-		S.makeQuadratic_controlX = 0;
-		S.makeQuadratic_controlY = 0;
-		S.makeQuadratic_endX = 0;
-		S.makeQuadratic_endY = 0;
-		S.makeQuadratic_data = '';
-		S.makeQuadratic_myFixed = '';
-		S.makeQuadratic_myShape = null; //scrawl Entity object
-		S.makeQuadratic_tempName = '';
 		my.makeQuadratic = function(items) {
+			var cell,
+				startX,
+				startY,
+				controlX,
+				controlY,
+				endX,
+				endY,
+				data,
+				myFixed,
+				myShape,
+				tempName;
 			items = my.safeObject(items);
 			items.closed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
 			items.isLine = true;
-			S.makeQuadratic_cell = my.Entity.prototype.getEntityCell(items);
-			S.makeQuadratic_startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, S.makeQuadratic_cell, true) : items.startX || 0;
-			S.makeQuadratic_startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, S.makeQuadratic_cell, false) : items.startY || 0;
-			S.makeQuadratic_controlX = (my.isa(items.controlX, 'str')) ? my.convertPercentage(items.controlX, S.makeQuadratic_cell, true) : items.controlX || 0;
-			S.makeQuadratic_controlY = (my.isa(items.controlY, 'str')) ? my.convertPercentage(items.controlY, S.makeQuadratic_cell, false) : items.controlY || 0;
-			S.makeQuadratic_endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, S.makeQuadratic_cell, true) : items.endX || 0;
-			S.makeQuadratic_endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, S.makeQuadratic_cell, false) : items.endY || 0;
-			S.makeQuadratic_myFixed = items.fixed || 'none';
-			S.makeQuadratic_data = 'm0,0q' +
-				(S.makeQuadratic_controlX - S.makeQuadratic_startX) + ',' + (S.makeQuadratic_controlY - S.makeQuadratic_startY) + ' ' +
-				(S.makeQuadratic_endX - S.makeQuadratic_startX) + ',' + (S.makeQuadratic_endY - S.makeQuadratic_startY);
+			cell = my.Entity.prototype.getEntityCell(items);
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
+			controlX = (my.isa(items.controlX, 'str')) ? my.convertPercentage(items.controlX, cell, true) : items.controlX || 0;
+			controlY = (my.isa(items.controlY, 'str')) ? my.convertPercentage(items.controlY, cell, false) : items.controlY || 0;
+			endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0;
+			endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0;
+			myFixed = items.fixed || 'none';
+			data = 'm0,0q' +
+				(controlX - startX) + ',' + (controlY - startY) + ' ' +
+				(endX - startX) + ',' + (endY - startY);
 			items.fixed = false;
-			items.data = S.makeQuadratic_data;
+			items.data = data;
 			if (items.shape) {
-				S.makeQuadratic_myShape = my.newShape(items);
+				myShape = my.newShape(items);
 			}
 			else {
-				S.makeQuadratic_myShape = my.makePath(items);
-				S.makeQuadratic_tempName = S.makeQuadratic_myShape.name.replace('~', '_', 'g');
-				switch (S.makeQuadratic_myFixed) {
+				myShape = my.makePath(items);
+				tempName = myShape.name.replace('~', '_', 'g');
+				switch (myFixed) {
 					case 'all':
-						my.point[S.makeQuadratic_tempName + '_p1'].setToFixed(S.makeQuadratic_startX, S.makeQuadratic_startY);
-						my.point[S.makeQuadratic_tempName + '_p2'].setToFixed(S.makeQuadratic_controlX, S.makeQuadratic_controlY);
-						my.point[S.makeQuadratic_tempName + '_p3'].setToFixed(S.makeQuadratic_endX, S.makeQuadratic_endY);
+						my.point[tempName + '_p1'].setToFixed(startX, startY);
+						my.point[tempName + '_p2'].setToFixed(controlX, controlY);
+						my.point[tempName + '_p3'].setToFixed(endX, endY);
 						break;
 					case 'both':
-						my.point[S.makeQuadratic_tempName + '_p1'].setToFixed(S.makeQuadratic_startX, S.makeQuadratic_startY);
-						my.point[S.makeQuadratic_tempName + '_p3'].setToFixed(S.makeQuadratic_endX, S.makeQuadratic_endY);
+						my.point[tempName + '_p1'].setToFixed(startX, startY);
+						my.point[tempName + '_p3'].setToFixed(endX, endY);
 						break;
 					case 'start':
-						my.point[S.makeQuadratic_tempName + '_p1'].setToFixed(S.makeQuadratic_startX, S.makeQuadratic_startY);
+						my.point[tempName + '_p1'].setToFixed(startX, startY);
 						break;
 					case 'control':
-						my.point[S.makeQuadratic_tempName + '_p2'].setToFixed(S.makeQuadratic_controlX, S.makeQuadratic_controlY);
+						my.point[tempName + '_p2'].setToFixed(controlX, controlY);
 						break;
 					case 'end':
-						my.point[S.makeQuadratic_tempName + '_p3'].setToFixed(S.makeQuadratic_endX, S.makeQuadratic_endY);
+						my.point[tempName + '_p3'].setToFixed(endX, endY);
 						break;
 				}
 			}
-			return S.makeQuadratic_myShape;
+			return myShape;
 		};
 		/**
 	A __factory__ function to generate straight line Shape or Path entity objects
@@ -445,50 +448,50 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} items Object containing attributes
 	@return Shape or Path entity object
 	**/
-		S.makeLine_cell = null; //scrawl Cell object
-		S.makeLine_startX = 0;
-		S.makeLine_startY = 0;
-		S.makeLine_endX = 0;
-		S.makeLine_endY = 0;
-		S.makeLine_data = '';
-		S.makeLine_myFixed = '';
-		S.makeLine_myShape = null; //scrawl Entity object
-		S.makeLine_tempName = '';
 		my.makeLine = function(items) {
+			var cell,
+				startX,
+				startY,
+				endX,
+				endY,
+				data,
+				myFixed,
+				myShape,
+				tempName;
 			items = my.safeObject(items);
 			items.isLine = true;
 			items.closed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
-			S.makeLine_cell = my.Entity.prototype.getEntityCell(items);
-			S.makeLine_startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, S.makeLine_cell, true) : items.startX || 0;
-			S.makeLine_startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, S.makeLine_cell, false) : items.startY || 0;
-			S.makeLine_endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, S.makeLine_cell, true) : items.endX || 0;
-			S.makeLine_endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, S.makeLine_cell, false) : items.endY || 0;
-			S.makeLine_myFixed = items.fixed || 'none';
-			S.makeLine_data = 'm0,0 ' + (S.makeLine_endX - S.makeLine_startX) + ',' + (S.makeLine_endY - S.makeLine_startY);
+			cell = my.Entity.prototype.getEntityCell(items);
+			startX = (my.isa(items.startX, 'str')) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
+			startY = (my.isa(items.startY, 'str')) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
+			endX = (my.isa(items.endX, 'str')) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0;
+			endY = (my.isa(items.endY, 'str')) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0;
+			myFixed = items.fixed || 'none';
+			data = 'm0,0 ' + (endX - startX) + ',' + (endY - startY);
 			items.fixed = false;
-			items.data = S.makeLine_data;
+			items.data = data;
 			if (items.shape) {
-				S.makeLine_myShape = my.newShape(items);
+				myShape = my.newShape(items);
 			}
 			else {
-				S.makeLine_myShape = my.makePath(items);
-				S.makeLine_tempName = S.makeLine_myShape.name.replace('~', '_', 'g');
-				switch (S.makeLine_myFixed) {
+				myShape = my.makePath(items);
+				tempName = myShape.name.replace('~', '_', 'g');
+				switch (myFixed) {
 					case 'both':
-						my.point[S.makeLine_tempName + '_p1'].setToFixed(S.makeLine_startX, S.makeLine_startY);
-						my.point[S.makeLine_tempName + '_p2'].setToFixed(S.makeLine_endX, S.makeLine_endY);
+						my.point[tempName + '_p1'].setToFixed(startX, startY);
+						my.point[tempName + '_p2'].setToFixed(endX, endY);
 						break;
 					case 'start':
-						my.point[S.makeLine_tempName + '_p1'].setToFixed(S.makeLine_startX, S.makeLine_startY);
+						my.point[tempName + '_p1'].setToFixed(startX, startY);
 						break;
 					case 'end':
-						my.point[S.makeLine_tempName + '_p2'].setToFixed(S.makeLine_endX, S.makeLine_endY);
+						my.point[tempName + '_p2'].setToFixed(endX, endY);
 						break;
 				}
 			}
-			return S.makeLine_myShape;
+			return myShape;
 		};
 		/**
 	A __factory__ function to generate regular entitys such as triangles, stars, hexagons, etc
@@ -523,100 +526,100 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} items Object containing attributes
 	@return Shape or Path entity object
 	**/
-		S.stat_makeRegularShape1 = ['c', 's', 'q', 't', 'l'];
-		S.stat_makeRegularShape2 = ['s', 't'];
-		S.stat_makeRegularShape3 = ['c', 's', 'q', 't'];
-		S.stat_makeRegularShape4 = ['c', 'q'];
-		S.makeRegularShape_cell = null; //scrawl Cell object
-		S.makeRegularShape_startX = 0;
-		S.makeRegularShape_startY = 0;
-		S.makeRegularShape_radius = 0;
-		S.makeRegularShape_turn = 0;
-		S.makeRegularShape_currentAngle = 0;
-		S.makeRegularShape_count = 0;
-		S.makeRegularShape_test = 0;
-		S.makeRegularShape_species = '';
-		S.makeRegularShape_c1x = 0;
-		S.makeRegularShape_c1y = 0;
-		S.makeRegularShape_c2x = 0;
-		S.makeRegularShape_c2y = 0;
-		S.makeRegularShape_data = '';
 		my.makeRegularShape = function(items) {
+			var stat1 = ['c', 's', 'q', 't', 'l'],
+				stat2 = ['s', 't'],
+				stat3 = ['c', 's', 'q', 't'],
+				stat4 = ['c', 'q'],
+				cell,
+				startX,
+				startY,
+				radius,
+				turn,
+				currentAngle,
+				count,
+				test,
+				species,
+				c1x,
+				c1y,
+				c2x,
+				c2y,
+				data;
 			items = my.safeObject(items);
-			S.makeRegularShape_cell = my.Entity.prototype.getEntityCell(items);
+			cell = my.Entity.prototype.getEntityCell(items);
 			if (my.xto(items.sides, items.angle)) {
 				items.closed = true;
 				items.isLine = false;
-				S.makeRegularShape_c1x = my.xtGet(items.startControlX, items.controlX, 0);
-				S.makeRegularShape_c1y = my.xtGet(items.startControlY, items.controlY, 0);
-				S.makeRegularShape_c2x = items.endControlX || 0;
-				S.makeRegularShape_c2y = items.endControlY || 0;
-				S.makeRegularShape_c1x = (my.isa(S.makeRegularShape_c1x, 'str')) ? my.convertPercentage(S.makeRegularShape_c1x, S.makeRegularShape_cell, true) : S.makeRegularShape_c1x;
-				S.makeRegularShape_c1y = (my.isa(S.makeRegularShape_c1y, 'str')) ? my.convertPercentage(S.makeRegularShape_c1y, S.makeRegularShape_cell, false) : S.makeRegularShape_c1y;
-				S.makeRegularShape_c2x = (my.isa(S.makeRegularShape_c2x, 'str')) ? my.convertPercentage(S.makeRegularShape_c2x, S.makeRegularShape_cell, true) : S.makeRegularShape_c2x;
-				S.makeRegularShape_c2y = (my.isa(S.makeRegularShape_c2y, 'str')) ? my.convertPercentage(S.makeRegularShape_c2y, S.makeRegularShape_cell, false) : S.makeRegularShape_c2y;
-				S.makeRegularShape_species = (my.contains(S.stat_makeRegularShape1, items.lineType)) ? items.lineType : 'l';
-				S.makeRegularShape_radius = items.radius || 20;
+				c1x = my.xtGet(items.startControlX, items.controlX, 0);
+				c1y = my.xtGet(items.startControlY, items.controlY, 0);
+				c2x = items.endControlX || 0;
+				c2y = items.endControlY || 0;
+				c1x = (my.isa(c1x, 'str')) ? my.convertPercentage(c1x, cell, true) : c1x;
+				c1y = (my.isa(c1y, 'str')) ? my.convertPercentage(c1y, cell, false) : c1y;
+				c2x = (my.isa(c2x, 'str')) ? my.convertPercentage(c2x, cell, true) : c2x;
+				c2y = (my.isa(c2y, 'str')) ? my.convertPercentage(c2y, cell, false) : c2y;
+				species = (my.contains(stat1, items.lineType)) ? items.lineType : 'l';
+				radius = items.radius || 20;
 				// - known bug: items.sides has difficulty exiting the loop, hence the count<1000 limit
-				S.makeRegularShape_turn = (my.isa(items.sides, 'num') && items.sides > 1) ? 360 / items.sides : ((my.isa(items.angle, 'num') && items.angle > 0) ? items.angle : 4);
-				S.makeRegularShape_currentAngle = 0;
-				S.makeRegularShape_count = 0;
-				my.worklink.v1.x = S.makeRegularShape_radius;
+				turn = (my.isa(items.sides, 'num') && items.sides > 1) ? 360 / items.sides : ((my.isa(items.angle, 'num') && items.angle > 0) ? items.angle : 4);
+				currentAngle = 0;
+				count = 0;
+				my.worklink.v1.x = radius;
 				my.worklink.v1.y = 0;
 				my.worklink.v1.z = 0;
 				my.worklink.v2.set(my.worklink.v1);
-				my.worklink.control1.x = S.makeRegularShape_c1x;
-				my.worklink.control1.y = S.makeRegularShape_c1y;
+				my.worklink.control1.x = c1x;
+				my.worklink.control1.y = c1y;
 				my.worklink.control1.z = 0;
-				my.worklink.control2.x = S.makeRegularShape_c2x;
-				my.worklink.control2.y = S.makeRegularShape_c2y;
+				my.worklink.control2.x = c2x;
+				my.worklink.control2.y = c2y;
 				my.worklink.control2.z = 0;
-				S.makeRegularShape_data = 'm' + my.worklink.v1.x.toFixed(4) + ',' + my.worklink.v1.y.toFixed(4);
-				if (my.contains(S.stat_makeRegularShape2, S.makeRegularShape_species)) {
-					S.makeRegularShape_data += ('s' === S.makeRegularShape_species) ? 'c' : 'q';
+				data = 'm' + my.worklink.v1.x.toFixed(4) + ',' + my.worklink.v1.y.toFixed(4);
+				if (my.contains(stat2, species)) {
+					data += ('s' === species) ? 'c' : 'q';
 				}
 				else {
-					S.makeRegularShape_data += S.makeRegularShape_species;
+					data += species;
 				}
 				do {
-					S.makeRegularShape_count++;
-					S.makeRegularShape_currentAngle += S.makeRegularShape_turn;
-					S.makeRegularShape_currentAngle = S.makeRegularShape_currentAngle % 360;
-					S.makeRegularShape_test = S.makeRegularShape_currentAngle.toFixed(0);
-					my.worklink.v1.rotate(S.makeRegularShape_turn);
-					my.worklink.control1.rotate(S.makeRegularShape_turn);
-					my.worklink.control2.rotate(S.makeRegularShape_turn);
-					if (my.contains(S.stat_makeRegularShape3, S.makeRegularShape_species)) {
-						if (1 === S.makeRegularShape_count && my.contains(S.stat_makeRegularShape2, S.makeRegularShape_species)) {
-							if ('s' === S.makeRegularShape_species) {
-								S.makeRegularShape_data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ' + my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
+					count++;
+					currentAngle += turn;
+					currentAngle = currentAngle % 360;
+					test = currentAngle.toFixed(0);
+					my.worklink.v1.rotate(turn);
+					my.worklink.control1.rotate(turn);
+					my.worklink.control2.rotate(turn);
+					if (my.contains(stat3, species)) {
+						if (1 === count && my.contains(stat2, species)) {
+							if ('s' === species) {
+								data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ' + my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
 							}
 							else {
-								S.makeRegularShape_data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ';
+								data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ';
 							}
 						}
 						else {
-							if ('s' === S.makeRegularShape_species) {
-								S.makeRegularShape_data += my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
+							if ('s' === species) {
+								data += my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
 							}
-							else if (my.contains(S.stat_makeRegularShape4, S.makeRegularShape_species)) {
-								S.makeRegularShape_data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ';
+							else if (my.contains(stat4, species)) {
+								data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ';
 							}
 						}
 					}
-					if ('c' === S.makeRegularShape_species) {
-						S.makeRegularShape_data += my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
+					if ('c' === species) {
+						data += my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
 					}
-					S.makeRegularShape_data += (my.worklink.v1.x - my.worklink.v2.x).toFixed(4) + ',' + (my.worklink.v1.y - my.worklink.v2.y).toFixed(4) + ' ';
-					if (1 === S.makeRegularShape_count) {
-						if (my.contains(S.stat_makeRegularShape2, S.makeRegularShape_species)) {
-							S.makeRegularShape_data += ('s' === S.makeRegularShape_species) ? 's' : 't';
+					data += (my.worklink.v1.x - my.worklink.v2.x).toFixed(4) + ',' + (my.worklink.v1.y - my.worklink.v2.y).toFixed(4) + ' ';
+					if (1 === count) {
+						if (my.contains(stat2, species)) {
+							data += ('s' === species) ? 's' : 't';
 						}
 					}
 					my.worklink.v2.set(my.worklink.v1);
-				} while (S.makeRegularShape_test !== '0' && S.makeRegularShape_count < 1000);
-				S.makeRegularShape_data += 'z';
-				items.data = S.makeRegularShape_data;
+				} while (test !== '0' && count < 1000);
+				data += 'z';
+				items.data = data;
 				return (items.shape) ? my.newShape(items) : my.makePath(items);
 			}
 			return false;
@@ -661,5 +664,5 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

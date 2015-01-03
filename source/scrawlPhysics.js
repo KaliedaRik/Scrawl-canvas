@@ -36,7 +36,7 @@ Adds an (experimental) physics engine to the core
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'physics')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -97,13 +97,17 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@return True on success; false otherwise
 	**/
 		my.updateSprings = function(items) {
+			var i,
+				iz,
+				j,
+				jz,
+				s = [];
 			if (my.springnames.length > 0) {
-				var s = [];
 				items = (my.isa(items, 'arr')) ? items : my.springnames;
-				for (var i = 0, iz = items.length; i < iz; i++) {
+				for (i = 0, iz = items.length; i < iz; i++) {
 					s.push((my.isa(items[i], 'obj')) ? items[i] : ((my.isa(items[i], 'str')) ? my.spring[items[i]] : false));
 				}
-				for (var j = 0, jz = s.length; j < jz; j++) {
+				for (j = 0, jz = s.length; j < jz; j++) {
 					if (s[j]) {
 						s[j].update();
 					}
@@ -361,8 +365,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	**/
 		my.Particle.prototype.set = function(items) {
-			items = my.safeObject(items);
 			var temp;
+			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
 			if (!this.place.type || this.place.type !== 'Vector') {
 				this.place = my.newVector(items.place || this.place);
@@ -390,11 +394,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	**/
 		my.Particle.prototype.clone = function(items) {
-			var a = my.Base.prototype.clone.call(this, items);
+			var a,
+				i,
+				iz;
+			a = my.Base.prototype.clone.call(this, items);
 			a.place = my.newVector(a.place);
 			a.velocity = my.newVector(a.velocity);
 			a.forces = [];
-			for (var i = 0, z = this.forces.length; i < z; i++) {
+			for (i = 0, iz = this.forces.length; i < iz; i++) {
 				a.forces.push(this.forces[i]);
 			}
 			return a;
@@ -464,8 +471,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Particle.prototype.calculateLoads = function() {
-			var i = 0,
-				iz = 0;
+			var i,
+				iz;
 			this.load.zero();
 			for (i = 0, iz = this.forces.length; i < iz; i++) {
 				if (my.isa(this.forces[i], 'str') && my.force[this.forces[i]]) {
@@ -494,8 +501,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	**/
 		my.Particle.prototype.updateEuler = function() {
 			this.resetWork();
-			var v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-			this.work.velocity.vectorAdd(v1);
+			my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
+			this.work.velocity.vectorAdd(my.workphys.v1);
 			this.velocity.set(this.work.velocity);
 			this.priorPlace.set(this.place);
 			this.place.vectorAdd(this.work.velocity.scalarMultiply(my.physics.deltaTime));
@@ -509,10 +516,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Particle.prototype.updateImprovedEuler = function() {
+			var v1,
+				v2,
+				v3;
 			this.resetWork();
-			var v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime),
-				v2 = my.workphys.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime),
-				v3 = v1.vectorAdd(v2).scalarDivide(2);
+			v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
+			v2 = my.workphys.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
+			v3 = v1.vectorAdd(v2).scalarDivide(2);
 			this.work.velocity.vectorAdd(v3);
 			this.velocity.set(this.work.velocity);
 			this.priorPlace.set(this.place);
@@ -527,12 +537,17 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Particle.prototype.updateRungeKutter = function() {
+			var v1,
+				v2,
+				v3,
+				v4,
+				v5;
 			this.resetWork();
-			var v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2),
-				v2 = my.workphys.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2),
-				v3 = my.workphys.v3.set(this.load).vectorAdd(v2).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime),
-				v4 = my.workphys.v4.set(this.load).vectorAdd(v3).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime),
-				v5 = my.workphys.v5;
+			v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2);
+			v2 = my.workphys.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2);
+			v3 = my.workphys.v3.set(this.load).vectorAdd(v2).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
+			v4 = my.workphys.v4.set(this.load).vectorAdd(v3).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
+			v5 = my.workphys.v5;
 			v2.scalarMultiply(2);
 			v3.scalarMultiply(2);
 			v5.set(v1).vectorAdd(v2).vectorAdd(v3).vectorAdd(v4).scalarDivide(6);
@@ -550,11 +565,15 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Particle.prototype.linearCollide = function(b) {
+			var normal,
+				relVelocity,
+				impactScalar,
+				impact;
 			this.resetWork();
-			var normal = my.workphys.v1.set(this.place).vectorSubtract(b.place).normalize(),
-				relVelocity = my.workphys.v2.set(this.velocity).vectorSubtract(b.velocity),
-				impactScalar = relVelocity.getDotProduct(normal),
-				impact = my.workphys.v3;
+			normal = my.workphys.v1.set(this.place).vectorSubtract(b.place).normalize();
+			relVelocity = my.workphys.v2.set(this.velocity).vectorSubtract(b.velocity);
+			impactScalar = relVelocity.getDotProduct(normal);
+			impact = my.workphys.v3;
 			impactScalar = -impactScalar * (1 + ((this.elasticity + b.elasticity) / 2));
 			impactScalar /= ((1 / this.mass) + (1 / b.mass));
 			impact.set(normal).scalarMultiply(impactScalar);
@@ -572,17 +591,20 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	**/
 		my.Particle.prototype.addSpring = function(items) {
-			var mySpring = false,
-				end = false;
+			var mySpring,
+				end,
+				arg = {
+					start: null,
+					end: null
+				};
 			if (my.isa(items, 'str') && my.entity[items]) {
 				end = items;
-				var myItems = {};
-				myItems.start = this.name;
-				myItems.end = items;
-				mySpring = my.newSpring(myItems);
+				arg.start = this.name;
+				arg.end = items;
+				mySpring = my.newSpring(arg);
 			}
 			else {
-				items = (my.isa(items, 'obj')) ? items : {};
+				items = my.safeObject(items);
 				end = items.end || false;
 				if (end && my.entity[end]) {
 					items.start = this.name;
@@ -602,8 +624,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	**/
 		my.Particle.prototype.removeSprings = function() {
-			var temp = this.springs.slice(0);
-			for (var i = 0, iz = temp.length; i < iz; i++) {
+			var i,
+				iz,
+				temp;
+			temp = this.springs.slice(0);
+			for (i = 0, iz = temp.length; i < iz; i++) {
 				my.spring[temp[i]].kill();
 			}
 			return this;
@@ -616,9 +641,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@chainable
 	**/
 		my.Particle.prototype.removeSpringsTo = function(item) {
+			var i,
+				iz,
+				temp = [],
+				s;
 			if (my.xt(item) && my.entity[item]) {
-				var temp = [],
-					s, i, iz;
 				for (i = 0, iz = this.springs.length; i < iz; i++) {
 					s = my.spring[this.springs[i]];
 					if (s.start === this.name || s.end === this.name) {
@@ -666,10 +693,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@param {Object} [items] Key:value Object argument for setting attributes
 	**/
 		my.Spring = function Spring(items) {
+			var b1,
+				b2,
+				r;
 			items = my.safeObject(items);
 			if (my.xta(items.start, items.end)) {
-				var b1 = my.entity[items.start];
-				var b2 = my.entity[items.end];
+				b1 = my.entity[items.start];
+				b2 = my.entity[items.end];
 				my.Base.call(this, items);
 				this.start = items.start;
 				this.end = items.end;
@@ -679,7 +709,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					this.restLength = items.restLength;
 				}
 				else {
-					var r = my.workphys.v1.set(b2.place);
+					r = my.workphys.v1.set(b2.place);
 					r.vectorSubtract(b1.place);
 					this.restLength = r.getMagnitude();
 				}
@@ -771,10 +801,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@private
 	**/
 		my.Spring.prototype.update = function() {
-			var vr = my.workphys.v1.set(my.entity[this.end].velocity).vectorSubtract(my.entity[this.start].velocity),
-				r = my.workphys.v2.set(my.entity[this.end].place).vectorSubtract(my.entity[this.start].place),
-				r_norm = my.workphys.v3.set(r).normalize(),
-				r_norm2 = my.workphys.v4.set(r_norm);
+			var vr,
+				r,
+				r_norm,
+				r_norm2;
+			vr = my.workphys.v1.set(my.entity[this.end].velocity).vectorSubtract(my.entity[this.start].velocity);
+			r = my.workphys.v2.set(my.entity[this.end].place).vectorSubtract(my.entity[this.start].place);
+			r_norm = my.workphys.v3.set(r).normalize();
+			r_norm2 = my.workphys.v4.set(r_norm);
 			this.force.set(r_norm.scalarMultiply(this.springConstant * (r.getMagnitude() - this.restLength)).vectorAdd(vr.vectorMultiply(r_norm2).scalarMultiply(this.damperConstant).vectorMultiply(r_norm2)));
 			return this;
 		};
@@ -874,5 +908,5 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

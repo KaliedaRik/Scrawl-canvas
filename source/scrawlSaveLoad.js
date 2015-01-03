@@ -35,7 +35,7 @@ _This module is experimental and thus likely to change significantly as Scrawl e
 **/
 
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'saveload')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -531,5 +531,5 @@ Turn the object into a JSON String
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

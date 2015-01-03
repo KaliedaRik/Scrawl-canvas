@@ -21,10 +21,10 @@ var mycode = function() {
 	//define variables
 	var canvas = scrawl.canvas.mycanvas,
 		pad = scrawl.pad.mycanvas,
-		minX = 5,
-		minY = 5,
-		maxX = 595,
-		maxY = 595,
+		minX = 10,
+		minY = 10,
+		maxX = 590,
+		maxY = 590,
 		totalBunnies = 0,
 		group,
 		bunny,
@@ -46,10 +46,10 @@ var mycode = function() {
 
 	//define entitys
 	scrawl.newBlock({ //cell collision zone
-		startX: 5,
-		startY: 5,
-		width: 590,
-		height: 590,
+		startX: 10,
+		startY: 10,
+		width: 580,
+		height: 580,
 		field: true,
 		visibility: false,
 	});
@@ -124,10 +124,10 @@ var mycode = function() {
 	addBunnies = function() {
 		for (var i = 0; i < 10; i++) {
 			bunny.clone({
-				startX: Math.floor((Math.random() * 580) + 10),
-				startY: Math.floor((Math.random() * 580) + 10),
-				deltaX: Math.floor((Math.random() * 4) + 1),
-				deltaY: Math.floor((Math.random() * 4) + 1),
+				startX: Math.floor((Math.random() * 560) + 20),
+				startY: Math.floor((Math.random() * 560) + 20),
+				deltaX: Math.floor((Math.random() * 2) + 1),
+				deltaY: Math.floor((Math.random() * 2) + 1),
 				visibility: true,
 				group: 'mygroup',
 			});

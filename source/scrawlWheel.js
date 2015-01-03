@@ -34,7 +34,7 @@ The Wheel module adds Wheel entitys - circles, segments and filled arcs - to the
 @module scrawlWheel
 **/
 if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'wheel')) {
-	var scrawl = (function(my, S) {
+	var scrawl = (function(my) {
 		'use strict';
 
 		/**
@@ -188,19 +188,17 @@ Augments Entity.setDelta()
 		my.Wheel.prototype.setDelta = function(items) {
 			my.Entity.prototype.setDelta.call(this, items);
 			items = (my.isa(items, 'obj')) ? items : {};
-			var f = {};
 			if (my.xt(items.radius)) {
 				this.radius += items.radius;
 				this.width = this.radius * 2;
 				this.height = this.width;
 			}
 			if (my.xt(items.startAngle)) {
-				f.startAngle = this.get('startAngle') + items.startAngle;
+				this.startAngle = this.get('startAngle') + items.startAngle;
 			}
 			if (my.xt(items.endAngle)) {
-				f.endAngle = this.get('endAngle') + items.endAngle;
+				this.endAngle = this.get('endAngle') + items.endAngle;
 			}
-			this.set(f);
 			return this;
 		};
 		/**
@@ -221,45 +219,44 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 @return The first coordinate to fall within the entity's path; false if none fall within the path
 **/
 		my.Wheel.prototype.checkHit = function(items) {
+			var i,
+				iz,
+				tests,
+				result,
+				testRadius;
 			items = my.safeObject(items);
-			var tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
-				result = false,
-				coords,
-				testRadius,
-				ctx,
-				i, iz;
+			tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)];
+			result = false;
 			if (this.checkHitUsingRadius) {
 				testRadius = (this.checkHitRadius) ? this.checkHitRadius : this.radius * this.scale;
 				for (i = 0, iz = tests.length; i < iz; i += 2) {
 					this.resetWork();
-					coords = my.workwheel.v1.set({
-						x: tests[i],
-						y: tests[i + 1]
-					});
-					coords.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
-					coords.x = (this.flipReverse) ? -coords.x : coords.x;
-					coords.y = (this.flipUpend) ? -coords.y : coords.y;
-					coords.vectorAdd(this.getPivotOffsetVector(this.handle));
-					result = (coords.getMagnitude() <= testRadius) ? true : false;
+					my.workwheel.v1.x = tests[i];
+					my.workwheel.v1.y = tests[i + 1];
+					my.workwheel.v1.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
+					my.workwheel.v1.x = (this.flipReverse) ? -my.workwheel.v1.x : my.workwheel.v1.x;
+					my.workwheel.v1.y = (this.flipUpend) ? -my.workwheel.v1.y : my.workwheel.v1.y;
+					my.workwheel.v1.vectorAdd(this.getPivotOffsetVector(this.handle));
+					result = (my.workwheel.v1.getMagnitude() <= testRadius) ? true : false;
 					if (result) {
+						items.x = tests[i];
+						items.y = tests[i + 1];
 						break;
 					}
 				}
 			}
 			else {
-				ctx = my.cvx;
-				this.buildPath(ctx);
+				this.buildPath(my.cvx);
 				for (i = 0, iz = tests.length; i < iz; i += 2) {
-					result = ctx.isPointInPath(tests[i], tests[i + 1]);
+					result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
 					if (result) {
+						items.x = tests[i];
+						items.y = tests[i + 1];
 						break;
 					}
 				}
 			}
-			return (result) ? {
-				x: tests[i],
-				y: tests[i + 1]
-			} : false;
+			return (result) ? items : false;
 		};
 		/**
 Position.getOffsetStartVector() helper function
@@ -280,9 +277,12 @@ Stamp helper function - define the entity's path on the &lt;canvas&gt; element's
 @private
 **/
 		my.Wheel.prototype.buildPath = function(ctx, cell) {
-			var here = this.prepareStamp(),
-				startAngle = this.get('startAngle'),
-				endAngle = this.get('endAngle');
+			var here,
+				startAngle,
+				endAngle;
+			here = this.prepareStamp();
+			startAngle = this.startAngle || 0;
+			endAngle = this.endAngle || 360;
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
 			ctx.arc(here.x, here.y, (this.radius * this.scale), (startAngle * my.radian), (endAngle * my.radian), this.clockwise);
@@ -335,12 +335,18 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @private
 **/
 		my.Wheel.prototype.clearWithBackground = function(ctx, cell) {
-			var myCell = my.cell[cell],
-				bc = myCell.get('backgroundColor'),
-				myCellCtx = my.ctx[cell],
-				fillStyle = myCellCtx.get('fillStyle'),
-				strokeStyle = myCellCtx.get('strokeStyle'),
-				globalAlpha = myCellCtx.get('globalAlpha');
+			var myCell,
+				bc,
+				myCellCtx,
+				fillStyle,
+				strokeStyle,
+				globalAlpha;
+			myCell = my.cell[cell];
+			bc = myCell.get('backgroundColor');
+			myCellCtx = my.ctx[cell];
+			fillStyle = myCellCtx.get('fillStyle');
+			strokeStyle = myCellCtx.get('strokeStyle');
+			globalAlpha = myCellCtx.get('globalAlpha');
 			ctx.fillStyle = bc;
 			ctx.strokeStyle = bc;
 			ctx.globalAlpha = 1;
@@ -471,89 +477,88 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 @chainable
 @private
 **/
-		//CHANGE - push generated values directly into this.collisionVectors
 		my.Wheel.prototype.buildCollisionVectors = function(items) {
-			var p, c = [],
-				v, w, r,
-				res;
+			var p,
+				r,
+				i,
+				iz,
+				j;
 			if (my.xt(my.workcols)) {
-				v = my.workcols.v1.set({
-					x: this.radius,
-					y: 0
-				});
+				this.collisionVectors.length = 0;
+				my.workcols.v1.x = this.radius;
+				my.workcols.v1.y = 0;
 				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
-				for (var i = 0, iz = p.length; i < iz; i++) {
+				for (i = 0, iz = p.length; i < iz; i++) {
 					if (my.isa(p[i], 'num') && p[i] > 1) {
-						w = my.workcols.v2.set(v);
+						my.workcols.v2.set(my.workcols.v1);
 						r = 360 / Math.floor(p[i]);
-						for (var j = 0; j < p[i]; j++) {
-							w.rotate(r);
-							c.push(w.x);
-							c.push(w.y);
+						for (j = 0; j < p[i]; j++) {
+							my.workcols.v2.rotate(r);
+							this.collisionVectors.push(my.workcols.v2.x);
+							this.collisionVectors.push(my.workcols.v2.y);
 						}
 					}
 					else if (my.isa(p[i], 'str')) {
-						w = my.workcols.v2.set(v);
+						my.workcols.v2.set(my.workcols.v1);
 						switch (p[i]) {
 							case 'start':
-								c.push(0);
-								c.push(0);
+								this.collisionVectors.push(0);
+								this.collisionVectors.push(0);
 								break;
 							case 'N':
-								w.rotate(-90);
-								c.push(w.x);
-								c.push(w.y);
+								my.workcols.v2.rotate(-90);
+								this.collisionVectors.push(my.workcols.v2.x);
+								this.collisionVectors.push(my.workcols.v2.y);
 								break;
 							case 'NE':
-								w.rotate(-45);
-								c.push(w.x);
-								c.push(w.y);
+								my.workcols.v2.rotate(-45);
+								this.collisionVectors.push(my.workcols.v2.x);
+								this.collisionVectors.push(my.workcols.v2.y);
 								break;
 							case 'E':
-								c.push(w.x);
-								c.push(w.y);
+								this.collisionVectors.push(my.workcols.v2.x);
+								this.collisionVectors.push(my.workcols.v2.y);
 								break;
 							case 'SE':
-								w.rotate(45);
-								c.push(w.x);
-								c.push(w.y);
+								my.workcols.v2.rotate(45);
+								this.collisionVectors.push(my.workcols.v2.x);
+								this.collisionVectors.push(my.workcols.v2.y);
 								break;
 							case 'S':
-								w.rotate(90);
-								c.push(w.x);
-								c.push(w.y);
+								my.workcols.v2.rotate(90);
+								this.collisionVectors.push(my.workcols.v2.x);
+								this.collisionVectors.push(my.workcols.v2.y);
 								break;
 							case 'SW':
-								w.rotate(135);
-								c.push(w.x);
-								c.push(w.y);
+								my.workcols.v2.rotate(135);
+								this.collisionVectors.push(my.workcols.v2.x);
+								this.collisionVectors.push(my.workcols.v2.y);
 								break;
 							case 'W':
-								w.rotate(180);
-								c.push(w.x);
-								c.push(w.y);
+								my.workcols.v2.rotate(180);
+								this.collisionVectors.push(my.workcols.v2.x);
+								this.collisionVectors.push(my.workcols.v2.y);
 								break;
 							case 'NW':
-								w.rotate(-135);
-								c.push(w.x);
-								c.push(w.y);
+								my.workcols.v2.rotate(-135);
+								this.collisionVectors.push(my.workcols.v2.x);
+								this.collisionVectors.push(my.workcols.v2.y);
 								break;
 							case 'center':
-								c.push(0);
-								c.push(0);
+								this.collisionVectors.push(0);
+								this.collisionVectors.push(0);
 								break;
 						}
 					}
 					else if (my.isa(p[i], 'vector')) {
-						c.push(p[i].x);
-						c.push(p[i].y);
+						this.collisionVectors.push(p[i].x);
+						this.collisionVectors.push(p[i].y);
 					}
 				}
 			}
-			this.collisionVectors = c;
 			return this;
 		};
 
 		return my;
-	}(scrawl, scrawlVars));
+	}(scrawl));
 }

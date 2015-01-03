@@ -68,9 +68,7 @@ The core module is the only essential module in Scrawl. It must always be direct
 @module scrawlCore
 **/
 
-var scrawlVars = window.scrawlVars || {};
-
-var scrawl = window.scrawl || (function(S) {
+var scrawl = window.scrawl || (function() {
 	'use strict';
 	var my = {};
 
@@ -532,11 +530,11 @@ A __utility__ function that removes a value from an array
 	scrawl.removeItem(myarray, 'banana');	//returns ['apple', 'orange']
 	scrawl.removeItem(myarray, 'apple');	//returns ['orange']
 **/
-	S.removeItem_index = 0;
 	my.removeItem = function(item, o) {
-		S.removeItem_index = item.indexOf(o);
-		if (S.removeItem_index >= 0) {
-			item.splice(S.removeItem_index, 1);
+		var index;
+		index = item.indexOf(o);
+		if (index >= 0) {
+			item.splice(index, 1);
 		}
 		return item;
 	};
@@ -553,12 +551,12 @@ A __utility__ function that checks to see if a number is between two other numbe
 	scrawl.isBetween(3, 3, 5);			//returns false
 	scrawl.isBetween(3, 3, 5, true);	//returns true
 **/
-	S.isBetween_value = 0;
 	my.isBetween = function(no, a, b, e) {
+		var value;
 		if (a > b) {
-			S.isBetween_value = a;
+			value = a;
 			a = b;
-			b = S.isBetween_value;
+			b = value;
 		}
 		if (e) {
 			if (no >= a && no <= b) {
@@ -595,62 +593,62 @@ The action attribute refers to the action taken when the result of the operation
 @param {Object} object consisting of key:value pairs
 @return result of calculation
 **/
-	S.addWithinBounds_min = 0;
-	S.addWithinBounds_max = 0;
-	S.addWithinBounds_count = 0;
-	S.addWithinBounds_action = '';
-	S.addWithinBounds_operation = '';
-	S.addWithinBounds_result = 0;
-	S.addWithinBounds_check = false;
 	my.addWithinBounds = function(a, b, items) {
+		var min,
+			max,
+			count,
+			action,
+			operation,
+			result,
+			check;
 		items = my.safeObject(items);
 		a = my.xtGet(a, 0);
 		b = my.xtGet(b, 0);
-		S.addWithinBounds_min = my.xtGet(items.min, 0);
-		S.addWithinBounds_max = my.xtGet(items.max, 1);
-		S.addWithinBounds_action = my.xtGet(items.action, 'stick');
-		S.addWithinBounds_operation = my.xtGet(items.operation, 'add');
-		S.addWithinBounds_count = 20;
-		S.addWithinBounds_result = 0;
-		S.addWithinBounds_check = false;
+		min = my.xtGet(items.min, 0);
+		max = my.xtGet(items.max, 1);
+		action = my.xtGet(items.action, 'stick');
+		operation = my.xtGet(items.operation, 'add');
+		count = 20;
+		result = 0;
+		check = false;
 
-		if (b === 0 && (S.addWithinBounds_operation === 'divide' || S.addWithinBounds_operation === '/')) {
+		if (b === 0 && (operation === 'divide' || operation === '/')) {
 			return false;
 		}
 
-		switch (S.addWithinBounds_operation) {
+		switch (operation) {
 			case 'subtract':
 			case '-':
-				S.addWithinBounds_result = a - b;
+				result = a - b;
 				break;
 			case 'multiply':
 			case '*':
-				S.addWithinBounds_result = a * b;
+				result = a * b;
 				break;
 			case 'divide':
 			case '/':
-				S.addWithinBounds_result = a / b;
+				result = a / b;
 				break;
 			default:
-				S.addWithinBounds_result = a + b;
+				result = a + b;
 		}
 
-		while (!my.isBetween(S.addWithinBounds_result, S.addWithinBounds_min, S.addWithinBounds_max, true) && S.addWithinBounds_count > 0) {
-			S.addWithinBounds_check = (S.addWithinBounds_result < (S.addWithinBounds_min + S.addWithinBounds_max) / 2) ? true : false;
-			switch (S.addWithinBounds_action) {
+		while (!my.isBetween(result, min, max, true) && count > 0) {
+			check = (result < (min + max) / 2) ? true : false;
+			switch (action) {
 				case 'bounce':
-					S.addWithinBounds_result = (S.addWithinBounds_check) ? S.addWithinBounds_min + (-S.addWithinBounds_result + S.addWithinBounds_min) : S.addWithinBounds_max + (-S.addWithinBounds_result + S.addWithinBounds_max);
+					result = (check) ? min + (-result + min) : max + (-result + max);
 					break;
 				case 'loop':
-					S.addWithinBounds_result = (S.addWithinBounds_check) ? (S.addWithinBounds_max - S.addWithinBounds_min) + S.addWithinBounds_result : (S.addWithinBounds_min - S.addWithinBounds_max) + S.addWithinBounds_result;
+					result = (check) ? (max - min) + result : (min - max) + result;
 					break;
 				default:
-					S.addWithinBounds_result = (S.addWithinBounds_check) ? S.addWithinBounds_min : S.addWithinBounds_max;
+					result = (check) ? min : max;
 			}
-			S.addWithinBounds_count--;
+			count--;
 		}
 
-		return (S.addWithinBounds_count > 0) ? S.addWithinBounds_result : false;
+		return (count > 0) ? result : false;
 	};
 	/**
 A __utility__ function for variable type checking
@@ -678,63 +676,62 @@ Valid identifier Strings include:
 	scrawl.isa(myboolean, 'bool');	//returns true
 	scrawl.isa(myboolean, 'str');	//returns false
 **/
-	S.isa_slice = [];
 	my.isa = function() {
-		// var args = Array.prototype.slice.call(arguments);
-		S.isa_slice = Array.prototype.slice.call(arguments);
-		if (S.isa_slice.length == 2 && my.xt(S.isa_slice[0])) {
+		var slice;
+		slice = Array.prototype.slice.call(arguments);
+		if (slice.length == 2 && my.xt(slice[0])) {
 			//because we mostly test for str or fn
-			if (S.isa_slice[1] == 'str') {
-				return (S.isa_slice[0].substring) ? true : false;
+			if (slice[1] == 'str') {
+				return (slice[0].substring) ? true : false;
 			}
-			if (S.isa_slice[1] == 'fn') {
-				return (typeof S.isa_slice[0] === 'function') ? true : false;
+			if (slice[1] == 'fn') {
+				return (typeof slice[0] === 'function') ? true : false;
 			}
 			//divide and conquer the rest
-			S.isa_slice.push(S.isa_slice[1][0]);
-			if (S.isa_slice[2] < 'm') {
-				if (S.isa_slice[2] < 'd') {
-					switch (S.isa_slice[1]) {
+			slice.push(slice[1][0]);
+			if (slice[2] < 'm') {
+				if (slice[2] < 'd') {
+					switch (slice[1]) {
 						case 'arr':
-							return (Array.isArray(S.isa_slice[0])) ? true : false;
+							return (Array.isArray(slice[0])) ? true : false;
 						case 'bool':
-							return (typeof S.isa_slice[0] === 'boolean') ? true : false;
+							return (typeof slice[0] === 'boolean') ? true : false;
 						case 'canvas':
-							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object HTMLCanvasElement]') ? true : false;
+							return (Object.prototype.toString.call(slice[0]) === '[object HTMLCanvasElement]') ? true : false;
 						default:
 							return false;
 					}
 				}
 				else {
-					switch (S.isa_slice[1]) {
+					switch (slice[1]) {
 						case 'date':
-							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object Date]') ? true : false;
+							return (Object.prototype.toString.call(slice[0]) === '[object Date]') ? true : false;
 						case 'img':
-							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object HTMLImageElement]') ? true : false;
+							return (Object.prototype.toString.call(slice[0]) === '[object HTMLImageElement]') ? true : false;
 						default:
 							return false;
 					}
 				}
 			}
 			else {
-				if (S.isa_slice[2] < 's') {
-					switch (S.isa_slice[1]) {
+				if (slice[2] < 's') {
+					switch (slice[1]) {
 						case 'num':
-							return (S.isa_slice[0].toFixed) ? true : false;
+							return (slice[0].toFixed) ? true : false;
 						case 'obj':
-							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object Object]') ? true : false;
+							return (Object.prototype.toString.call(slice[0]) === '[object Object]') ? true : false;
 						case 'quaternion':
-							return (S.isa_slice[0].type && S.isa_slice[0].type === 'Quaternion') ? true : false;
+							return (slice[0].type && slice[0].type === 'Quaternion') ? true : false;
 						default:
 							return false;
 					}
 				}
 				else {
-					switch (S.isa_slice[1]) {
+					switch (slice[1]) {
 						case 'vector':
-							return (S.isa_slice[0].type && S.isa_slice[0].type === 'Vector') ? true : false;
+							return (slice[0].type && slice[0].type === 'Vector') ? true : false;
 						case 'video':
-							return (Object.prototype.toString.call(S.isa_slice[0]) === '[object HTMLVideoElement]') ? true : false;
+							return (Object.prototype.toString.call(slice[0]) === '[object HTMLVideoElement]') ? true : false;
 						default:
 							return false;
 					}
@@ -772,19 +769,19 @@ A __utility__ function that checks an argument list of values and returns the fi
 @method xtGet
 @return first defined variable; null if all values are undefined
 **/
-	S.xtGet_slice = [];
-	S.xtGet_i = 0;
-	S.xtGet_iz = 0;
 	my.xtGet = function() {
-		S.xtGet_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.xtGet_slice[0])) {
-			console.log('xtGet - needs updating: ', S.xtGet_slice);
-			S.xtGet_slice = S.xtGet_slice[0];
+		var slice,
+			i,
+			iz;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			console.log('xtGet - needs updating: ', slice);
+			slice = slice[0];
 		}
-		if (S.xtGet_slice.length > 0) {
-			for (S.xtGet_i = 0, S.xtGet_iz = S.xtGet_slice.length; S.xtGet_i < S.xtGet_iz; S.xtGet_i++) {
-				if (typeof S.xtGet_slice[S.xtGet_i] !== 'undefined') {
-					return S.xtGet_slice[S.xtGet_i];
+		if (slice.length > 0) {
+			for (i = 0, iz = slice.length; i < iz; i++) {
+				if (typeof slice[i] !== 'undefined') {
+					return slice[i];
 				}
 			}
 		}
@@ -798,24 +795,23 @@ False: 0, -0, '', undefined, null, false, NaN
 @method xtGetTrue
 @return first true variable; null if all values are false
 **/
-	S.xtGetTrue_slice = [];
-	S.xtGetTrue_i = 0;
-	S.xtGetTrue_iz = 0;
 	my.xtGetTrue = function() {
-		S.xtGetTrue_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.xtGetTrue_slice[0])) {
-			console.log('xtGetTrue - needs updating: ', S.xtGetTrue_slice);
-			S.xtGetTrue_slice = S.xtGetTrue_slice[0];
+		var slice,
+			i,
+			iz;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			console.log('xtGetTrue - needs updating: ', slice);
+			slice = slice[0];
 		}
-		if (S.xtGetTrue_slice.length > 0) {
-			for (S.xtGetTrue_i = 0, S.xtGetTrue_iz = S.xtGetTrue_slice.length; S.xtGetTrue_i < S.xtGetTrue_iz; S.xtGetTrue_i++) {
-				if (S.xtGetTrue_slice[S.xtGetTrue_i]) {
-					return S.xtGetTrue_slice[S.xtGetTrue_i];
+		if (slice.length > 0) {
+			for (i = 0, iz = slice.length; i < iz; i++) {
+				if (slice[i]) {
+					return slice[i];
 				}
 			}
 		}
 		return null;
-
 	};
 	/**
 A __utility__ function for variable type checking
@@ -829,18 +825,18 @@ A __utility__ function for variable type checking
 	scrawl.xta([mystring, mynumber]);	//returns true
 	scrawl.xta([mystring, myboolean]);	//returns false
 **/
-	S.xta_slice = [];
-	S.xta_i = 0;
-	S.xta_iz = 0;
 	my.xta = function() {
-		S.xta_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.xta_slice[0])) {
-			console.log('xta - needs updating: ', S.xta_slice);
-			S.xta_slice = S.xta_slice[0];
+		var slice,
+			i,
+			iz;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			console.log('xta - needs updating: ', slice);
+			slice = slice[0];
 		}
-		if (S.xta_slice.length > 0) {
-			for (S.xta_i = 0, S.xta_iz = S.xta_slice.length; S.xta_i < S.xta_iz; S.xta_i++) {
-				if (typeof S.xta_slice[S.xta_i] === 'undefined') {
+		if (slice.length > 0) {
+			for (i = 0, iz = slice.length; i < iz; i++) {
+				if (typeof slice[i] === 'undefined') {
 					return false;
 				}
 			}
@@ -859,18 +855,18 @@ A __utility__ function for variable type checking
 	scrawl.xto(mystring, mynumber);	//returns true
 	scrawl.xto(mystring, myboolean);	//returns true
 **/
-	S.xto_slice = [];
-	S.xto_i = 0;
-	S.xto_iz = 0;
 	my.xto = function() {
-		S.xto_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.xto_slice[0])) {
-			console.log('xto - needs updating: ', S.xto_slice);
-			S.xto_slice = S.xto_slice[0];
+		var slice,
+			i,
+			iz;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			console.log('xto - needs updating: ', slice);
+			slice = slice[0];
 		}
-		if (S.xto_slice.length > 0) {
-			for (S.xto_i = 0, S.xto_iz = S.xto_slice.length; S.xto_i < S.xto_iz; S.xto_i++) {
-				if (typeof S.xto_slice[S.xto_i] !== 'undefined') {
+		if (slice.length > 0) {
+			for (i = 0, iz = slice.length; i < iz; i++) {
+				if (typeof slice[i] !== 'undefined') {
 					return true;
 				}
 			}
@@ -884,14 +880,14 @@ Generate unique names for new Scrawl objects
 @return Unique generated name
 @private
 **/
-	S.makeName_name = '';
-	S.makeName_nameArray = [];
 	my.makeName = function(item) {
+		var name,
+			nameArray;
 		item = my.safeObject(item);
 		if (my.contains(my.nameslist, item.target)) {
-			S.makeName_name = my.xtGetTrue(item.name, item.type, 'default');
-			S.makeName_nameArray = S.makeName_name.split('~~~');
-			return (my.contains(my[item.target], S.makeName_nameArray[0])) ? S.makeName_nameArray[0] + '~~~' + Math.floor(Math.random() * 100000000) : S.makeName_nameArray[0];
+			name = my.xtGetTrue(item.name, item.type, 'default');
+			nameArray = name.split('~~~');
+			return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '~~~' + Math.floor(Math.random() * 100000000) : nameArray[0];
 		}
 		console.log('scrawl.makeName() error: insufficient or incorrect argument attributes', item);
 		return false;
@@ -909,11 +905,11 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 @example
 	scrawl.setDisplayOffsets();
 **/
-	S.setDisplayOffsets_i = 0;
-	S.setDisplayOffsets_iz = 0;
 	my.setDisplayOffsets = function() {
-		for (S.setDisplayOffsets_i = 0, S.setDisplayOffsets_iz = my.padnames.length; S.setDisplayOffsets_i < S.setDisplayOffsets_iz; S.setDisplayOffsets_i++) {
-			my.pad[my.padnames[S.setDisplayOffsets_i]].setDisplayOffsets();
+		var i,
+			iz;
+		for (i = 0, iz = my.padnames.length; i < iz; i++) {
+			my.pad[my.padnames[i]].setDisplayOffsets();
 		}
 		return my;
 	};
@@ -925,19 +921,19 @@ A __private__ function that searches the DOM for canvas elements and generates P
 @return True on success; false otherwise
 @private
 **/
-	S.getCanvases_elements = null; //list of DOM elements
-	S.getCanvases_pad = null; //scrawl Pad object
-	S.getCanvases_i = 0;
-	S.getCanvases_iz = 0;
 	my.getCanvases = function() {
-		S.getCanvases_elements = document.getElementsByTagName("canvas");
-		if (S.getCanvases_elements.length > 0) {
-			for (S.getCanvases_i = 0, S.getCanvases_iz = S.getCanvases_elements.length; S.getCanvases_i < S.getCanvases_iz; S.getCanvases_i++) {
-				S.getCanvases_pad = my.newPad({
-					canvasElement: S.getCanvases_elements[S.getCanvases_i]
+		var elements,
+			pad,
+			i,
+			iz;
+		elements = document.getElementsByTagName("canvas");
+		if (elements.length > 0) {
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				pad = my.newPad({
+					canvasElement: elements[i]
 				});
-				if (S.getCanvases_i === 0) {
-					my.currentPad = S.getCanvases_pad.name;
+				if (i === 0) {
+					my.currentPad = pad.name;
 				}
 			}
 			return true;
@@ -971,20 +967,20 @@ The argument object should include the following attributes:
 		</script>
     </body>
 **/
-	S.addCanvasToPage_parent = null; //DOM elements
-	S.addCanvasToPage_canvas = null; //DOM canvas element
-	S.addCanvasToPage_pad = null; //scrawl Pad object
 	my.addCanvasToPage = function(items) {
+		var parent,
+			canvas,
+			pad;
 		items = my.safeObject(items);
-		S.addCanvasToPage_parent = document.getElementById(items.parentElement) || document.body;
-		S.addCanvasToPage_canvas = document.createElement('canvas');
-		S.addCanvasToPage_parent.appendChild(S.addCanvasToPage_canvas);
+		parent = document.getElementById(items.parentElement) || document.body;
+		canvas = document.createElement('canvas');
+		parent.appendChild(canvas);
 		items.width = my.xtGet(items.width, 300);
 		items.height = my.xtGet(items.height, 150);
-		items.canvasElement = S.addCanvasToPage_canvas;
-		S.addCanvasToPage_pad = new my.Pad(items);
+		items.canvasElement = canvas;
+		pad = new my.Pad(items);
 		my.setDisplayOffsets();
-		return S.addCanvasToPage_pad;
+		return pad;
 	};
 	/**
 A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&gt; elements
@@ -993,13 +989,13 @@ A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	S.clear_padnames = [];
-	S.clear_i = 0;
-	S.clear_iz = 0;
 	my.clear = function(pads) {
-		S.clear_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		for (S.clear_i = 0, S.clear_iz = S.clear_padnames.length; S.clear_i < S.clear_iz; S.clear_i++) {
-			my.pad[S.clear_padnames[S.clear_i]].clear();
+		var padnames,
+			i,
+			iz;
+		padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		for (i = 0, iz = padnames.length; i < iz; i++) {
+			my.pad[padnames[i]].clear();
 		}
 		return my;
 	};
@@ -1010,13 +1006,13 @@ A __display__ function to ask Pads to get their Cells to compile their scenes
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	S.compile_padnames = [];
-	S.compile_i = 0;
-	S.compile_iz = 0;
 	my.compile = function(pads) {
-		S.compile_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		for (S.compile_i = 0, S.compile_iz = S.compile_padnames.length; S.compile_i < S.compile_iz; S.compile_i++) {
-			my.pad[S.compile_padnames[S.compile_i]].compile();
+		var padnames,
+			i,
+			iz;
+		padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		for (i = 0, iz = padnames.length; i < iz; i++) {
+			my.pad[padnames[i]].compile();
 		}
 		return my;
 	};
@@ -1027,13 +1023,13 @@ A __display__ function to ask Pads to show the results of their latest display c
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	S.show_padnames = [];
-	S.show_i = 0;
-	S.show_iz = 0;
 	my.show = function(pads) {
-		S.show_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		for (S.show_i = 0, S.show_iz = S.show_padnames.length; S.show_i < S.show_iz; S.show_i++) {
-			my.pad[S.show_padnames[S.show_i]].show();
+		var padnames,
+			i,
+			iz;
+		padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		for (i = 0, iz = padnames.length; i < iz; i++) {
+			my.pad[padnames[i]].show();
 		}
 		return my;
 	};
@@ -1044,13 +1040,13 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	S.render_padnames = [];
-	S.render_i = 0;
-	S.render_iz = 0;
 	my.render = function(pads) {
-		S.render_padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-		for (S.render_i = 0, S.render_iz = S.render_padnames.length; S.render_i < S.render_iz; S.render_i++) {
-			my.pad[S.render_padnames[S.render_i]].render();
+		var padnames,
+			i,
+			iz;
+		padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		for (i = 0, iz = padnames.length; i < iz; i++) {
+			my.pad[padnames[i]].render();
 		}
 		return my;
 	};
@@ -1061,12 +1057,10 @@ A __utility__ function to add two percent strings together
 @param {String} b - second value
 @return String result
 **/
-	S.addPercentages_a = 0;
-	S.addPercentages_b = 0;
 	my.addPercentages = function(a, b) {
-		S.addPercentages_a = parseFloat(a);
-		S.addPercentages_b = parseFloat(b);
-		return (S.addPercentages_a + S.addPercentages_b) + '%';
+		a = parseFloat(a);
+		b = parseFloat(b);
+		return (a + b) + '%';
 	};
 	/**
 A __utility__ function to reverse the value of a percentage string
@@ -1074,11 +1068,10 @@ A __utility__ function to reverse the value of a percentage string
 @param {String} a - value
 @return String result
 **/
-	S.reversePercentage_a = 0;
 	my.reversePercentage = function(a) {
-		S.reversePercentage_a = parseFloat(a);
-		S.reversePercentage_a = -S.reversePercentage_a;
-		return S.reversePercentage_a + '%';
+		a = parseFloat(a);
+		a = -a;
+		return a + '%';
 	};
 	/**
 A __utility__ function to subtract a percent string from another
@@ -1087,12 +1080,10 @@ A __utility__ function to subtract a percent string from another
 @param {String} b - value to be subtracted from initial value
 @return String result
 **/
-	S.subtractPercentages_a = 0;
-	S.subtractPercentages_b = 0;
 	my.subtractPercentages = function(a, b) {
-		S.subtractPercentages_a = parseFloat(a);
-		S.subtractPercentages_b = parseFloat(b);
-		return (S.subtractPercentages_a - S.subtractPercentages_b) + '%';
+		a = parseFloat(a);
+		b = parseFloat(b);
+		return (a - b) + '%';
 	};
 	/**
 A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects - see Pad.addNewCell() for more details
@@ -1101,10 +1092,9 @@ A __general__ function which passes on requests to Pads to generate new &lt;canv
 @param {String} pad PADNAME
 @return New Cell object
 **/
-	S.addNewCell_pad = '';
 	my.addNewCell = function(data, pad) {
-		S.addNewCell_pad = (my.isa(pad, 'str')) ? pad : my.currentPad;
-		return my.pad[S.addNewCell_pad].addNewCell(data);
+		pad = (my.isa(pad, 'str')) ? pad : my.currentPad;
+		return my.pad[pad].addNewCell(data);
 	};
 	/**
 A __general__ function which deletes Cell objects and their associated paraphinalia - see Pad.deleteCells() for more details
@@ -1113,33 +1103,33 @@ A __general__ function which deletes Cell objects and their associated paraphina
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	S.deleteCells_slice = [];
-	S.deleteCells_i = 0;
-	S.deleteCells_iz = 0;
-	S.deleteCells_j = 0;
-	S.deleteCells_jz = 0;
 	my.deleteCells = function() {
-		S.deleteCells_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.deleteCells_slice[0])) {
-			console.log('deleteCells - needs updating: ', S.deleteCells_slice);
-			S.deleteCells_slice = S.deleteCells_slice[0];
+		var slice,
+			i,
+			iz,
+			j,
+			jz;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			console.log('deleteCells - needs updating: ', slice);
+			slice = slice[0];
 		}
-		for (S.deleteCells_i = 0, S.deleteCells_iz = S.deleteCells_slice.length; S.deleteCells_i < S.deleteCells_iz; S.deleteCells_i++) {
-			for (S.deleteCells_j = 0, S.deleteCells_jz = my.padnames.length; S.deleteCells_j < S.deleteCells_jz; S.deleteCells_j++) {
-				my.pad[my.padnames[S.deleteCells_j]].deleteCell(c[S.deleteCells_i]);
+		for (i = 0, iz = slice.length; i < iz; i++) {
+			for (j = 0, jz = my.padnames.length; j < jz; j++) {
+				my.pad[my.padnames[j]].deleteCell(c[i]);
 			}
-			delete my.group[S.deleteCells_slice[S.deleteCells_i]];
-			delete my.group[S.deleteCells_slice[S.deleteCells_i] + '_field'];
-			delete my.group[S.deleteCells_slice[S.deleteCells_i] + '_fence'];
-			my.removeItem(my.groupnames, S.deleteCells_slice[S.deleteCells_i]);
-			my.removeItem(my.groupnames, S.deleteCells_slice[S.deleteCells_i] + '_field');
-			my.removeItem(my.groupnames, S.deleteCells_slice[S.deleteCells_i] + '_fence');
-			delete my.context[S.deleteCells_slice[S.deleteCells_i]];
-			delete my.canvas[S.deleteCells_slice[S.deleteCells_i]];
-			delete my.ctx[my.cell[S.deleteCells_slice[S.deleteCells_i]].context];
-			my.removeItem(my.ctxnames, my.cell[S.deleteCells_slice[S.deleteCells_i]].context);
-			delete my.cell[S.deleteCells_slice[S.deleteCells_i]];
-			my.removeItem(my.cellnames, S.deleteCells_slice[S.deleteCells_i]);
+			delete my.group[slice[i]];
+			delete my.group[slice[i] + '_field'];
+			delete my.group[slice[i] + '_fence'];
+			my.removeItem(my.groupnames, slice[i]);
+			my.removeItem(my.groupnames, slice[i] + '_field');
+			my.removeItem(my.groupnames, slice[i] + '_fence');
+			delete my.context[slice[i]];
+			delete my.canvas[slice[i]];
+			delete my.ctx[my.cell[slice[i]].context];
+			my.removeItem(my.ctxnames, my.cell[slice[i]].context);
+			delete my.cell[slice[i]];
+			my.removeItem(my.cellnames, slice[i]);
 		}
 		return my;
 	};
@@ -1151,19 +1141,19 @@ A __general__ function which adds supplied entitynames to Group.entitys attribut
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	S.addEntitysToGroups_groupArray = [];
-	S.addEntitysToGroups_entityArray = [];
-	S.addEntitysToGroups_group = null; //scrawl Group object
-	S.addEntitysToGroups_i = 0;
-	S.addEntitysToGroups_iz = 0;
 	my.addEntitysToGroups = function(groups, entitys) {
+		var groupArray,
+			entityArray,
+			group,
+			i,
+			iz;
 		if (my.xta(groups, entitys)) {
-			S.addEntitysToGroups_groupArray = [].concat(groups);
-			S.addEntitysToGroups_entityArray = [].concat(entitys);
-			for (S.addEntitysToGroups_i = 0, S.addEntitysToGroups_iz = S.addEntitysToGroups_groupArray.length; S.addEntitysToGroups_i < S.addEntitysToGroups_iz; S.addEntitysToGroups_i++) {
-				S.addEntitysToGroups_group = my.group[S.addEntitysToGroups_groupArray[S.addEntitysToGroups_i]];
-				if (S.addEntitysToGroups_group) {
-					S.addEntitysToGroups_group.addEntitysToGroup(S.addEntitysToGroups_entityArray);
+			groupArray = [].concat(groups);
+			entityArray = [].concat(entitys);
+			for (i = 0, iz = groupArray.length; i < iz; i++) {
+				group = my.group[groupArray[i]];
+				if (group) {
+					group.addEntitysToGroup(entityArray);
 				}
 			}
 		}
@@ -1177,19 +1167,19 @@ A __general__ function which removes supplied entitynames from Group.entitys att
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	S.removeEntitysFromGroups_groupArray = [];
-	S.removeEntitysFromGroups_entityArray = [];
-	S.removeEntitysFromGroups_group = null; //scrawl Group object
-	S.removeEntitysFromGroups_i = 0;
-	S.removeEntitysFromGroups_iz = 0;
 	my.removeEntitysFromGroups = function(groups, entitys) {
+		var groupArray,
+			entityArray,
+			group,
+			i,
+			iz;
 		if (my.xta(groups, entitys)) {
-			S.removeEntitysFromGroups_groupArray = [].concat(groups);
-			S.removeEntitysFromGroups_entityArray = [].concat(entitys);
-			for (S.removeEntitysFromGroups_i = 0, S.removeEntitysFromGroups_iz = S.removeEntitysFromGroups_groupArray.length; S.removeEntitysFromGroups_i < S.removeEntitysFromGroups_iz; S.removeEntitysFromGroups_i++) {
-				S.removeEntitysFromGroups_group = my.group[S.removeEntitysFromGroups_groupArray[S.removeEntitysFromGroups_i]];
-				if (S.removeEntitysFromGroups_group) {
-					S.removeEntitysFromGroups_group.removeEntitysFromGroup(S.removeEntitysFromGroups_entityArray);
+			groupArray = [].concat(groups);
+			entityArray = [].concat(entitys);
+			for (i = 0, iz = groupArray.length; i < iz; i++) {
+				group = my.group[groupArray[i]];
+				if (group) {
+					group.removeEntitysFromGroup(entityArray);
 				}
 			}
 		}
@@ -1207,30 +1197,30 @@ A __general__ function to delete entity objects
 		});
 	scrawl.deleteEntity(['myblock']);
 **/
-	S.deleteEntity_slice = [];
-	S.deleteEntity_i = 0;
-	S.deleteEntity_iz = 0;
-	S.deleteEntity_j = 0;
-	S.deleteEntity_jz = 0;
-	S.deleteEntity_entityName = '';
-	S.deleteEntity_contextName = '';
 	my.deleteEntity = function() {
-		S.deleteEntity_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.deleteEntity_slice[0])) {
-			console.log('deleteEntity - needs updating: ', S.deleteEntity_slice);
-			S.deleteEntity_slice = S.deleteEntity_slice[0];
+		var slice,
+			i,
+			iz,
+			j,
+			jz,
+			entityName,
+			contextName;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			console.log('deleteEntity - needs updating: ', slice);
+			slice = slice[0];
 		}
-		for (S.deleteEntity_i = 0, S.deleteEntity_iz = S.deleteEntity_slice.length; S.deleteEntity_i < S.deleteEntity_iz; S.deleteEntity_i++) {
-			S.deleteEntity_entityName = my.entity[S.deleteEntity_slice[S.deleteEntity_i]];
-			if (S.deleteEntity_entityName) {
-				my.pathDeleteEntity(S.deleteEntity_entityName);
-				S.deleteEntity_contextName = S.deleteEntity_entityName.context;
-				my.removeItem(my.ctxnames, S.deleteEntity_contextName);
-				delete my.ctx[S.deleteEntity_contextName];
-				my.removeItem(my.entitynames, S.deleteEntity_slice[S.deleteEntity_i]);
-				delete my.entity[S.deleteEntity_slice[S.deleteEntity_i]];
-				for (S.deleteEntity_j = 0, S.deleteEntity_jz = my.groupnames.length; S.deleteEntity_j < S.deleteEntity_jz; S.deleteEntity_j++) {
-					my.removeItem(my.group[my.groupnames[S.deleteEntity_j]].entitys, S.deleteEntity_slice[S.deleteEntity_i]);
+		for (i = 0, iz = slice.length; i < iz; i++) {
+			entityName = my.entity[slice[i]];
+			if (entityName) {
+				my.pathDeleteEntity(entityName);
+				contextName = entityName.context;
+				my.removeItem(my.ctxnames, contextName);
+				delete my.ctx[contextName];
+				my.removeItem(my.entitynames, slice[i]);
+				delete my.entity[slice[i]];
+				for (j = 0, jz = my.groupnames.length; j < jz; j++) {
+					my.removeItem(my.group[my.groupnames[j]].entitys, slice[i]);
 				}
 			}
 		}
@@ -1400,13 +1390,12 @@ Normalize the Vector to a unit vector
 @return This
 @chainable
 **/
-	S.Vector_normalize_val = 0;
 	my.Vector.prototype.normalize = function() {
-		S.Vector_normalize_val = this.getMagnitude();
-		if (S.Vector_normalize_val > 0) {
-			this.x /= S.Vector_normalize_val;
-			this.y /= S.Vector_normalize_val;
-			this.z /= S.Vector_normalize_val;
+		var val = this.getMagnitude();
+		if (val > 0) {
+			this.x /= val;
+			this.y /= val;
+			this.z /= val;
 		}
 		return this;
 	};
@@ -1616,26 +1605,25 @@ Arithmetic is v(crossProduct)u, not u(crossProduct)v
 @return New cross product Vector; this on failure
 @chainable
 **/
-	S.Vector_getCrossProduct_v1x = 0;
-	S.Vector_getCrossProduct_v1y = 0;
-	S.Vector_getCrossProduct_v1z = 0;
-	S.Vector_getCrossProduct_v2x = 0;
-	S.Vector_getCrossProduct_v2y = 0;
-	S.Vector_getCrossProduct_v2z = 0;
 	my.Vector.prototype.getCrossProduct = function(u, v) {
-		console.log('Vector.getCrossProduct');
+		var v1x,
+			v1y,
+			v1z,
+			v2x,
+			v2y,
+			v2z;
 		if (my.isa(u, 'vector')) {
 			v = (my.isa(v, 'vector')) ? v : this;
-			S.Vector_getCrossProduct_v1x = v.x || 0;
-			S.Vector_getCrossProduct_v1y = v.y || 0;
-			S.Vector_getCrossProduct_v1z = v.z || 0;
-			S.Vector_getCrossProduct_v2x = u.x || 0;
-			S.Vector_getCrossProduct_v2y = u.y || 0;
-			S.Vector_getCrossProduct_v2z = u.z || 0;
+			v1x = v.x || 0;
+			v1y = v.y || 0;
+			v1z = v.z || 0;
+			v2x = u.x || 0;
+			v2y = u.y || 0;
+			v2z = u.z || 0;
 			return my.newVector({
-				x: (S.Vector_getCrossProduct_v1y * S.Vector_getCrossProduct_v2z) - (S.Vector_getCrossProduct_v1z * S.Vector_getCrossProduct_v2y),
-				y: -(S.Vector_getCrossProduct_v1x * S.Vector_getCrossProduct_v2z) + (S.Vector_getCrossProduct_v1z * S.Vector_getCrossProduct_v2x),
-				z: (S.Vector_getCrossProduct_v1x * S.Vector_getCrossProduct_v2y) + (S.Vector_getCrossProduct_v1y * S.Vector_getCrossProduct_v2x)
+				x: (v1y * v2z) - (v1z * v2y),
+				y: -(v1x * v2z) + (v1z * v2x),
+				z: (v1x * v2y) + (v1y * v2x)
 			});
 		}
 		console.log('Vector.getCrossProduct() error: argument is not a Vector');
@@ -1667,28 +1655,28 @@ Obtain the triple scalar product of two Vectors and this, or a third, Vector
 @param {Vector} [w] Third vector to be used to calculate triple scalar product (by default: this)
 @return Triple scalar product result; false on failure
 **/
-	S.Vector_getTripleScalarProduct_ux = 0;
-	S.Vector_getTripleScalarProduct_uy = 0;
-	S.Vector_getTripleScalarProduct_uz = 0;
-	S.Vector_getTripleScalarProduct_vx = 0;
-	S.Vector_getTripleScalarProduct_vy = 0;
-	S.Vector_getTripleScalarProduct_vz = 0;
-	S.Vector_getTripleScalarProduct_wx = 0;
-	S.Vector_getTripleScalarProduct_wy = 0;
-	S.Vector_getTripleScalarProduct_wz = 0;
 	my.Vector.prototype.getTripleScalarProduct = function(u, v, w) {
+		var ux,
+			uy,
+			uz,
+			vx,
+			vy,
+			vz,
+			wx,
+			wy,
+			wz;
 		if (my.isa(u, 'vector') && my.isa(v, 'vector')) {
 			w = (my.safeObject(w)) ? w : this;
-			S.Vector_getTripleScalarProduct_ux = u.x || 0;
-			S.Vector_getTripleScalarProduct_uy = u.y || 0;
-			S.Vector_getTripleScalarProduct_uz = u.z || 0;
-			S.Vector_getTripleScalarProduct_vx = v.x || 0;
-			S.Vector_getTripleScalarProduct_vy = v.y || 0;
-			S.Vector_getTripleScalarProduct_vz = v.z || 0;
-			S.Vector_getTripleScalarProduct_wx = w.x || 0;
-			S.Vector_getTripleScalarProduct_wy = w.y || 0;
-			S.Vector_getTripleScalarProduct_wz = w.z || 0;
-			return (S.Vector_getTripleScalarProduct_ux * ((S.Vector_getTripleScalarProduct_vy * S.Vector_getTripleScalarProduct_wz) - (S.Vector_getTripleScalarProduct_vz * S.Vector_getTripleScalarProduct_wy))) + (S.Vector_getTripleScalarProduct_uy * (-(S.Vector_getTripleScalarProduct_vx * S.Vector_getTripleScalarProduct_wz) + (S.Vector_getTripleScalarProduct_vz * S.Vector_getTripleScalarProduct_wx))) + (S.Vector_getTripleScalarProduct_uz * ((S.Vector_getTripleScalarProduct_vx * S.Vector_getTripleScalarProduct_wy) - (S.Vector_getTripleScalarProduct_vy * S.Vector_getTripleScalarProduct_wx)));
+			ux = u.x || 0;
+			uy = u.y || 0;
+			uz = u.z || 0;
+			vx = v.x || 0;
+			vy = v.y || 0;
+			vz = v.z || 0;
+			wx = w.x || 0;
+			wy = w.y || 0;
+			wz = w.z || 0;
+			return (ux * ((vy * wz) - (vz * wy))) + (uy * (-(vx * wz) + (vz * wx))) + (uz * ((vx * wy) - (vy * wx)));
 		}
 		console.log('Vector.getTripleScalarProduct() error: argument is not a Vector');
 		return false;
@@ -1700,14 +1688,14 @@ Rotate the Vector by a given angle
 @return This
 @chainable
 **/
-	S.stat_vr = [0, 0];
 	my.Vector.prototype.rotate = function(angle) {
+		var stat_vr = [0, 0];
 		if (my.isa(angle, 'num')) {
-			S.stat_vr[0] = Math.atan2(this.y, this.x);
-			S.stat_vr[0] += (angle * my.radian);
-			S.stat_vr[1] = this.getMagnitude();
-			this.x = S.stat_vr[1] * Math.cos(S.stat_vr[0]);
-			this.y = S.stat_vr[1] * Math.sin(S.stat_vr[0]);
+			stat_vr[0] = Math.atan2(this.y, this.x);
+			stat_vr[0] += (angle * my.radian);
+			stat_vr[1] = this.getMagnitude();
+			this.x = stat_vr[1] * Math.cos(stat_vr[0]);
+			this.y = stat_vr[1] * Math.sin(stat_vr[0]);
 			return this;
 		}
 		console.log('Vector.rotate() error: argument is not a Number');
@@ -1733,18 +1721,18 @@ Rotate a Vector object by a Quaternion rotation
 @return Amended version of Vector; this on failure
 @chainable
 **/
-	S.Vector_rotate3d_q1 = null; //scrawl Quaternion object
-	S.Vector_rotate3d_q2 = null; //scrawl Quaternion object
-	S.Vector_rotate3d_q3 = null; //scrawl Quaternion object
 	my.Vector.prototype.rotate3d = function(item, mag) {
+		var q1,
+			q2,
+			q3;
 		if (my.isa(item, 'quaternion')) {
 			mag = (scrawl.isa(mag, 'num')) ? mag : this.getMagnitude();
-			S.Vector_rotate3d_q1 = my.workquat.q1.set(item);
-			S.Vector_rotate3d_q2 = my.workquat.q2.set(this);
-			S.Vector_rotate3d_q3 = my.workquat.q3.set(item).conjugate();
-			S.Vector_rotate3d_q1.quaternionMultiply(S.Vector_rotate3d_q2);
-			S.Vector_rotate3d_q1.quaternionMultiply(S.Vector_rotate3d_q3);
-			this.set(S.Vector_rotate3d_q1.v).setMagnitudeTo(mag);
+			q1 = my.workquat.q1.set(item);
+			q2 = my.workquat.q2.set(this);
+			q3 = my.workquat.q3.set(item).conjugate();
+			q1.quaternionMultiply(q2);
+			q1.quaternionMultiply(q3);
+			this.set(q1.v).setMagnitudeTo(mag);
 			return this;
 		}
 		console.log('Vector.rotate3d() error: argument is not a Quaternion');
@@ -1889,22 +1877,22 @@ Note that any callback or fn attribute functions will be referenced by the clone
 	newBox.get('width');		//returns 50
 	newBox.get('height');		//returns 100
 **/
-	S.Base_clone_merged = null; //raw object
-	S.Base_clone_keys = [];
-	S.Base_clone_that = null; //scrawl object
-	S.Base_clone_i = 0;
-	S.Base_clone_iz = 0;
 	my.Base.prototype.clone = function(items) {
-		S.Base_clone_merged = my.mergeOver(this.parse(), my.safeObject(items));
-		delete S.Base_clone_merged.context; //required for successful cloning of entitys
-		S.Base_clone_keys = Object.keys(this);
-		S.Base_clone_that = this;
-		for (S.Base_clone_i = 0, S.Base_clone_iz = S.Base_clone_keys.length; S.Base_clone_i < S.Base_clone_iz; S.Base_clone_i++) {
-			if (my.isa(this[S.Base_clone_keys[S.Base_clone_i]], 'fn')) {
-				S.Base_clone_merged[S.Base_clone_keys[S.Base_clone_i]] = S.Base_clone_that[S.Base_clone_keys[S.Base_clone_i]];
+		var merged,
+			keys,
+			that,
+			i,
+			iz;
+		merged = my.mergeOver(this.parse(), my.safeObject(items));
+		delete merged.context; //required for successful cloning of entitys
+		keys = Object.keys(this);
+		that = this;
+		for (i = 0, iz = keys.length; i < iz; i++) {
+			if (my.isa(this[keys[i]], 'fn')) {
+				merged[keys[i]] = that[keys[i]];
 			}
 		}
-		return new my[this.type](S.Base_clone_merged);
+		return new my[this.type](merged);
 	};
 	/**
 Turn the object into a JSON String
@@ -1920,13 +1908,13 @@ Restore workspece vector values to their current specified values
 @return always true
 @private
 **/
-	S.Base_resetWork_keys = [];
-	S.Base_resetWork_i = 0;
-	S.Base_resetWork_iz = 0;
 	my.Base.prototype.resetWork = function() {
-		S.Base_resetWork_keys = Object.keys(this.work);
-		for (S.Base_resetWork_i = 0, S.Base_resetWork_iz = S.Base_resetWork_keys.length; S.Base_resetWork_i < S.Base_resetWork_iz; S.Base_resetWork_i++) {
-			this.work[S.Base_resetWork_keys[S.Base_resetWork_i]].set(this[S.Base_resetWork_keys[S.Base_resetWork_i]]);
+		var keys,
+			i,
+			iz;
+		keys = Object.keys(this.work);
+		for (i = 0, iz = keys.length; i < iz; i++) {
+			this.work[keys[i]].set(this[keys[i]]);
 		}
 		return true;
 	};
@@ -2092,21 +2080,20 @@ Position constructor hook function - core functionality
 @method corePositionInit
 @private
 **/
-	S.Position_corePositionInit_temp = null; //raw object
 	my.Position.prototype.corePositionInit = function(items) {
-		S.Position_corePositionInit_temp = my.safeObject(items.start);
+		var temp = my.safeObject(items.start);
 		this.start = my.newVector({
-			x: my.xtGet(items.startX, S.Position_corePositionInit_temp.x, 0),
-			y: my.xtGet(items.startY, S.Position_corePositionInit_temp.y, 0),
+			x: my.xtGet(items.startX, temp.x, 0),
+			y: my.xtGet(items.startY, temp.y, 0),
 			name: this.type + '.' + this.name + '.start'
 		});
 		this.work.start = my.newVector({
 			name: this.type + '.' + this.name + '.work.start'
 		});
-		S.Position_corePositionInit_temp = my.safeObject(items.handle);
+		temp = my.safeObject(items.handle);
 		this.handle = my.newVector({
-			x: my.xtGet(items.handleX, S.Position_corePositionInit_temp.x, 0),
-			y: my.xtGet(items.handleY, S.Position_corePositionInit_temp.y, 0),
+			x: my.xtGet(items.handleX, temp.x, 0),
+			y: my.xtGet(items.handleY, temp.y, 0),
 			name: this.type + '.' + this.name + '.handle'
 		});
 		this.work.handle = my.newVector({
@@ -2135,9 +2122,7 @@ Position constructor hook function - modified by path module
 @method pathPositionInit
 @private
 **/
-	my.Position.prototype.pathPositionInit = function(items) {
-		console.log('core', items);
-	};
+	my.Position.prototype.pathPositionInit = function(items) {};
 	/**
 Augments Base.get(), to allow users to get values for start, startX, startY, handle, handleX, handleY
 
@@ -2146,9 +2131,9 @@ For 'start' and 'handle', returns a copy of the Vector
 @param {String} get Attribute key
 @return Attribute value
 **/
-	S.stat_positionGet = ['startX', 'startY', 'handleX', 'handleY'];
 	my.Position.prototype.get = function(item) {
-		if (my.contains(S.stat_positionGet, item)) {
+		var stat_positionGet = ['startX', 'startY', 'handleX', 'handleY'];
+		if (my.contains(stat_positionGet, item)) {
 			switch (item) {
 				case 'startX':
 					return this.start.x;
@@ -2196,15 +2181,15 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 @return This
 @chainable
 **/
-	S.Position_setStart_temp = null; //raw object
 	my.Position.prototype.setStart = function(items) {
+		var temp;
 		items = my.safeObject(items);
 		if (!my.isa(this.start, 'vector')) {
 			this.start = my.newVector(items.start || this.start);
 		}
-		S.Position_setStart_temp = my.safeObject(items.start);
-		this.start.x = my.xtGet(items.startX, S.Position_setStart_temp.x, this.start.x);
-		this.start.y = my.xtGet(items.startY, S.Position_setStart_temp.y, this.start.y);
+		temp = my.safeObject(items.start);
+		this.start.x = my.xtGet(items.startX, temp.x, this.start.x);
+		this.start.y = my.xtGet(items.startY, temp.y, this.start.y);
 		return this;
 	};
 	/**
@@ -2214,15 +2199,15 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 @return This
 @chainable
 **/
-	S.Position_setHandle_temp = null; //raw object
 	my.Position.prototype.setHandle = function(items) {
+		var temp;
 		items = my.safeObject(items);
 		if (!my.isa(this.handle, 'vector')) {
 			this.handle = my.newVector(items.handle || this.handle);
 		}
-		S.Position_setHandle_temp = my.safeObject(items.handle);
-		this.handle.x = my.xtGet(items.handleX, S.Position_setHandle_temp.x, this.handle.x);
-		this.handle.y = my.xtGet(items.handleY, S.Position_setHandle_temp.y, this.handle.y);
+		temp = my.safeObject(items.handle);
+		this.handle.x = my.xtGet(items.handleX, temp.x, this.handle.x);
+		this.handle.y = my.xtGet(items.handleY, temp.y, this.handle.y);
 		return this;
 	};
 	/**
@@ -2264,16 +2249,16 @@ Adds the value of each attribute supplied in the argument to existing values; Th
 @return This
 @chainable
 **/
-	S.Position_setDeltaStart_temp = null; //raw object
-	S.Position_setDeltaStart_x = 0;
-	S.Position_setDeltaStart_y = 0;
 	my.Position.prototype.setDeltaStart = function(items) {
+		var temp,
+			x,
+			y;
 		items = my.safeObject(items);
-		S.Position_setDeltaStart_temp = my.safeObject(items.start);
-		S.Position_setDeltaStart_x = my.xtGet(items.startX, S.Position_setDeltaStart_temp.x, 0);
-		S.Position_setDeltaStart_y = my.xtGet(items.startY, S.Position_setDeltaStart_temp.y, 0);
-		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + S.Position_setDeltaStart_x : my.addPercentages(this.start.x, S.Position_setDeltaStart_x);
-		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + S.Position_setDeltaStart_y : my.addPercentages(this.start.y, S.Position_setDeltaStart_y);
+		temp = my.safeObject(items.start);
+		x = my.xtGet(items.startX, temp.x, 0);
+		y = my.xtGet(items.startY, temp.y, 0);
+		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
+		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
 	};
 	/**
 Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY
@@ -2282,16 +2267,16 @@ Adds the value of each attribute supplied in the argument to existing values. Th
 @return This
 @chainable
 **/
-	S.Position_setDeltaHandle_temp = null; //raw object
-	S.Position_setDeltaHandle_x = 0;
-	S.Position_setDeltaHandle_y = 0;
 	my.Position.prototype.setDeltaHandle = function(items) {
+		var temp,
+			x,
+			y;
 		items = my.safeObject(items);
-		S.Position_setDeltaHandle_temp = my.safeObject(items.handle);
-		S.Position_setDeltaHandle_x = my.xtGet(items.handleX, S.Position_setDeltaHandle_temp.x, 0);
-		S.Position_setDeltaHandle_y = my.xtGet(items.handleY, S.Position_setDeltaHandle_temp.y, 0);
-		this.handle.x = (my.isa(this.handle.x, 'num')) ? this.handle.x + S.Position_setDeltaHandle_x : my.addPercentages(this.handle.x, S.Position_setDeltaHandle_x);
-		this.handle.y = (my.isa(this.handle.y, 'num')) ? this.handle.y + S.Position_setDeltaHandle_y : my.addPercentages(this.handle.y, S.Position_setDeltaHandle_y);
+		temp = my.safeObject(items.handle);
+		x = my.xtGet(items.handleX, temp.x, 0);
+		y = my.xtGet(items.handleY, temp.y, 0);
+		this.handle.x = (my.isa(this.handle.x, 'num')) ? this.handle.x + x : my.addPercentages(this.handle.x, x);
+		this.handle.y = (my.isa(this.handle.y, 'num')) ? this.handle.y + y : my.addPercentages(this.handle.y, y);
 		return this;
 	};
 	/**
@@ -2320,25 +2305,25 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 @return Cloned object
 @chainable
 **/
-	S.Position_clone_temp = null; //raw object
-	S.Position_clone_clone = null; //scrawl object
 	my.Position.prototype.clone = function(items) {
+		var temp,
+			clone;
 		items = my.safeObject(items);
-		S.Position_clone_clone = my.Base.prototype.clone.call(this, items);
-		S.Position_clone_temp = my.safeObject(items.start);
-		S.Position_clone_clone.start = my.newVector({
-			x: my.xtGet(items.startX, S.Position_clone_temp.x, S.Position_clone_clone.start.x),
-			y: my.xtGet(items.startY, S.Position_clone_temp.y, S.Position_clone_clone.start.y),
-			name: S.Position_clone_clone.type + '.' + S.Position_clone_clone.name + '.start'
+		clone = my.Base.prototype.clone.call(this, items);
+		temp = my.safeObject(items.start);
+		clone.start = my.newVector({
+			x: my.xtGet(items.startX, temp.x, clone.start.x),
+			y: my.xtGet(items.startY, temp.y, clone.start.y),
+			name: clone.type + '.' + clone.name + '.start'
 		});
-		S.Position_clone_temp = my.safeObject(items.handle);
-		S.Position_clone_clone.handle = my.newVector({
-			x: my.xtGet(items.handleX, S.Position_clone_temp.x, S.Position_clone_clone.handle.x),
-			y: my.xtGet(items.handleY, S.Position_clone_temp.y, S.Position_clone_clone.handle.y),
-			name: S.Position_clone_clone.type + '.' + S.Position_clone_clone.name + '.handle'
+		temp = my.safeObject(items.handle);
+		clone.handle = my.newVector({
+			x: my.xtGet(items.handleX, temp.x, clone.handle.x),
+			y: my.xtGet(items.handleY, temp.y, clone.handle.y),
+			name: clone.type + '.' + clone.name + '.handle'
 		});
-		S.Position_clone_clone = this.animationPositionClone(S.Position_clone_clone, items);
-		return S.Position_clone_clone;
+		clone = this.animationPositionClone(clone, items);
+		return clone;
 	};
 	/**
 Position.setDelta hook function - modified by animation module
@@ -2358,24 +2343,24 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 @return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
 @private
 **/
-	S.Position_getPivotOffsetVector_height = 0;
-	S.Position_getPivotOffsetVector_width = 0;
 	my.Position.prototype.getPivotOffsetVector = function() {
+		var height,
+			width;
 		switch (this.type) {
 			case 'Block':
-				S.Position_getPivotOffsetVector_height = (this.localHeight / this.scale) || this.get('height');
-				S.Position_getPivotOffsetVector_width = (this.localWidth / this.scale) || this.get('width');
+				height = (this.localHeight / this.scale) || this.get('height');
+				width = (this.localWidth / this.scale) || this.get('width');
 				break;
 			case 'Picture':
 			case 'Cell':
-				S.Position_getPivotOffsetVector_height = (this.pasteData.h / this.scale) || this.get('height');
-				S.Position_getPivotOffsetVector_width = (this.pasteData.w / this.scale) || this.get('width');
+				height = (this.pasteData.h / this.scale) || this.get('height');
+				width = (this.pasteData.w / this.scale) || this.get('width');
 				break;
 			default:
-				S.Position_getPivotOffsetVector_height = this.height || this.get('height');
-				S.Position_getPivotOffsetVector_width = this.width || this.get('width');
+				height = this.height || this.get('height');
+				width = this.width || this.get('width');
 		}
-		return my.Position.prototype.calculatePOV.call(this, this.work.handle, S.Position_getPivotOffsetVector_width, S.Position_getPivotOffsetVector_height, false);
+		return my.Position.prototype.calculatePOV.call(this, this.work.handle, width, height, false);
 	};
 	/**
 Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object's handle attribute, where the object's frame of reference is its center
@@ -2387,12 +2372,12 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 @return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
 @private
 **/
-	S.Position_getCenteredPivotOffsetVector_height = 0;
-	S.Position_getCenteredPivotOffsetVector_width = 0;
 	my.Position.prototype.getCenteredPivotOffsetVector = function() {
-		S.Position_getCenteredPivotOffsetVector_height = this.localHeight / this.scale || this.height || this.get('height');
-		S.Position_getCenteredPivotOffsetVector_width = this.localWidth / this.scale || this.width || this.get('width');
-		return my.Position.prototype.calculatePOV.call(this, this.work.handle, S.Position_getCenteredPivotOffsetVector_width, S.Position_getCenteredPivotOffsetVector_height, true);
+		var height,
+			width;
+		height = this.localHeight / this.scale || this.height || this.get('height');
+		width = this.localWidth / this.scale || this.width || this.get('width');
+		return my.Position.prototype.calculatePOV.call(this, this.work.handle, width, height, true);
 	};
 	/**
 Position.getOffsetStartVector() helper function. Calculates the pixel values for the object's handle attribute
@@ -2405,10 +2390,10 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 @return A Vector of calculated offset values
 @private
 **/
-	S.stat_horizontal = ['left', 'center', 'right'];
-	S.stat_vertical = ['top', 'center', 'bottom'];
 	my.Position.prototype.calculatePOV = function(result, width, height, centered) {
-		if ((my.isa(result.x, 'str')) && !my.contains(S.stat_horizontal, result.x)) {
+		var stat_horizontal = ['left', 'center', 'right'],
+			stat_vertical = ['top', 'center', 'bottom'];
+		if ((my.isa(result.x, 'str')) && !my.contains(stat_horizontal, result.x)) {
 			result.x = (centered) ? ((parseFloat(result.x) / 100) * width) - (width / 2) : (parseFloat(result.x) / 100) * width;
 		}
 		else {
@@ -2424,7 +2409,7 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 					break;
 			}
 		}
-		if ((my.isa(result.y, 'str')) && !my.contains(S.stat_vertical, result.y)) {
+		if ((my.isa(result.y, 'str')) && !my.contains(stat_vertical, result.y)) {
 			result.y = (centered) ? ((parseFloat(result.y) / 100) * height) - (height / 2) : (parseFloat(result.y) / 100) * height;
 		}
 		else {
@@ -2449,17 +2434,17 @@ Calculates the pixel values of the object's handle attribute
 @method getOffsetStartVector
 @return Final offset values (as a Vector) to determine where entity, cell or element drawing should start
 **/
-	S.Position_getOffsetStartVector_scaleX = 0;
-	S.Position_getOffsetStartVector_scaleY = 0;
-	S.Position_getOffsetStartVector_handle = null; //scrawl Vector object
 	my.Position.prototype.getOffsetStartVector = function() {
+		var scaleX,
+			scaleY,
+			handle;
 		this.resetWork();
-		S.Position_getOffsetStartVector_scaleX = (my.isa(this.handle.x, 'str')) ? this.scale : 1;
-		S.Position_getOffsetStartVector_scaleY = (my.isa(this.handle.y, 'str')) ? this.scale : 1;
-		S.Position_getOffsetStartVector_handle = this.getPivotOffsetVector();
-		S.Position_getOffsetStartVector_handle.x *= S.Position_getOffsetStartVector_scaleX;
-		S.Position_getOffsetStartVector_handle.y *= S.Position_getOffsetStartVector_scaleY;
-		return S.Position_getOffsetStartVector_handle.reverse();
+		scaleX = (my.isa(this.handle.x, 'str')) ? this.scale : 1;
+		scaleY = (my.isa(this.handle.y, 'str')) ? this.scale : 1;
+		handle = this.getPivotOffsetVector();
+		handle.x *= scaleX;
+		handle.y *= scaleY;
+		return handle.reverse();
 	};
 	/**
 Stamp helper function - set this entity, cell or element start values to its pivot entity/point start value, or to the current mouse coordinates
@@ -2471,42 +2456,41 @@ Takes into account lock flag settings
 @chainable
 @private
 **/
-	S.Position_setStampUsingPivot_pivot = null; //scrawl object
-	S.Position_setStampUsingPivot_vector = null; //scrawl Vector object
-	S.Position_setStampUsingPivot_entity = null; //scrawl Entity object
-	S.Position_setStampUsingPivot_cell = null; //scrawl Cell object
-	S.Position_setStampUsingPivot_mouse = null; //scrawl Vector object
-	S.Position_setStampUsingPivot_pad = null; //scrawl Pad object
 	my.Position.prototype.setStampUsingPivot = function(cell) {
+		var pivot,
+			vector,
+			entity,
+			mouse,
+			pad;
 		if (my.xt(my.pointnames)) {
-			S.Position_setStampUsingPivot_pivot = my.point[this.pivot];
-			if (S.Position_setStampUsingPivot_pivot) {
-				S.Position_setStampUsingPivot_entity = my.entity[S.Position_setStampUsingPivot_pivot.entity];
-				S.Position_setStampUsingPivot_vector = S.Position_setStampUsingPivot_pivot.getCurrentCoordinates().rotate(S.Position_setStampUsingPivot_entity.roll).vectorAdd(S.Position_setStampUsingPivot_entity.start);
-				this.start.x = (!this.lockX) ? S.Position_setStampUsingPivot_vector.x : this.start.x;
-				this.start.y = (!this.lockY) ? S.Position_setStampUsingPivot_vector.y : this.start.y;
+			pivot = my.point[this.pivot];
+			if (pivot) {
+				entity = my.entity[pivot.entity];
+				vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.start);
+				this.start.x = (!this.lockX) ? vector.x : this.start.x;
+				this.start.y = (!this.lockY) ? vector.y : this.start.y;
 				return this;
 			}
 		}
-		S.Position_setStampUsingPivot_pivot = my.entity[this.pivot];
-		if (S.Position_setStampUsingPivot_pivot) {
-			S.Position_setStampUsingPivot_vector = (S.Position_setStampUsingPivot_pivot.type === 'Particle') ? S.Position_setStampUsingPivot_pivot.get('place') : S.Position_setStampUsingPivot_pivot.start;
-			this.start.x = (!this.lockX) ? S.Position_setStampUsingPivot_vector.x : this.start.x;
-			this.start.y = (!this.lockY) ? S.Position_setStampUsingPivot_vector.y : this.start.y;
+		pivot = my.entity[this.pivot];
+		if (pivot) {
+			vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.start;
+			this.start.x = (!this.lockX) ? vector.x : this.start.x;
+			this.start.y = (!this.lockY) ? vector.y : this.start.y;
 			return this;
 		}
 		if (this.pivot === 'mouse') {
-			S.Position_setStampUsingPivot_cell = my.cell[cell];
-			S.Position_setStampUsingPivot_pad = my.pad[S.Position_setStampUsingPivot_cell.pad];
-			S.Position_setStampUsingPivot_mouse = this.correctCoordinates(S.Position_setStampUsingPivot_pad.mouse, cell);
+			cell = my.cell[cell];
+			pad = my.pad[cell.pad];
+			mouse = this.correctCoordinates(pad.mouse, cell);
 			if (!my.xta(this.oldX, this.oldY)) {
 				this.oldX = this.start.x;
 				this.oldY = this.start.y;
 			}
-			this.start.x = (!this.lockX) ? this.start.x + S.Position_setStampUsingPivot_mouse.x - this.oldX : this.start.x;
-			this.start.y = (!this.lockY) ? this.start.y + S.Position_setStampUsingPivot_mouse.y - this.oldY : this.start.y;
-			this.oldX = S.Position_setStampUsingPivot_mouse.x;
-			this.oldY = S.Position_setStampUsingPivot_mouse.y;
+			this.start.x = (!this.lockX) ? this.start.x + mouse.x - this.oldX : this.start.x;
+			this.start.y = (!this.lockY) ? this.start.y + mouse.y - this.oldY : this.start.y;
+			this.oldX = mouse.x;
+			this.oldY = mouse.y;
 			return this;
 		}
 		return this.setStampUsingStacksPivot();
@@ -2519,22 +2503,21 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 @param {String} [cell] CELLNAME String
 @return Amended coordinate object
 **/
-	S.Position_correctCoordinates_vector = null; //scrawl Vector object
-	S.Position_correctCoordinates_cell = null; //scrawl Cell object
-	S.Position_correctCoordinates_pad = null; //scrawl Pad object
 	my.Position.prototype.correctCoordinates = function(coords, cell) {
+		var vector,
+			pad;
 		coords = my.safeObject(coords);
-		S.Position_correctCoordinates_vector = my.v.set(coords);
+		vector = my.v.set(coords);
 		if (scrawl.xta(coords.x, coords.y)) {
-			S.Position_correctCoordinates_cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
-			S.Position_correctCoordinates_pad = my.pad[S.Position_correctCoordinates_cell.pad];
-			if (S.Position_correctCoordinates_pad.width !== S.Position_correctCoordinates_cell.actualWidth) {
-				S.Position_correctCoordinates_vector.x /= (S.Position_correctCoordinates_pad.width / S.Position_correctCoordinates_cell.actualWidth);
+			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
+			pad = my.pad[cell.pad];
+			if (pad.width !== cell.actualWidth) {
+				vector.x /= (pad.width / cell.actualWidth);
 			}
-			if (S.Position_correctCoordinates_pad.height !== S.Position_correctCoordinates_cell.actualHeight) {
-				S.Position_correctCoordinates_vector.y /= (S.Position_correctCoordinates_pad.height / S.Position_correctCoordinates_cell.actualHeight);
+			if (pad.height !== cell.actualHeight) {
+				vector.y /= (pad.height / cell.actualHeight);
 			}
-			return S.Position_correctCoordinates_vector;
+			return vector;
 		}
 		return false;
 	};
@@ -2673,18 +2656,17 @@ Augments Base.get() to retrieve DOM element width and height values
 @param {String} get Attribute key
 @return Attribute value
 **/
-	S.PageElement_get_element = null; //DOM object
-	S.stat_pageElementGet = ['width', 'height', 'position'];
 	my.PageElement.prototype.get = function(item) {
-		S.PageElement_get_element = this.getElement();
-		if (my.contains(S.stat_pageElementGet, item)) {
+		var element = this.getElement(),
+			stat_pageElementGet = ['width', 'height', 'position'];
+		if (my.contains(stat_pageElementGet, item)) {
 			switch (item) {
 				case 'width':
-					return my.xtGet(this.localWidth, parseFloat(S.PageElement_get_element.width), my.d[this.type].width);
+					return my.xtGet(this.localWidth, parseFloat(element.width), my.d[this.type].width);
 				case 'height':
-					return my.xtGet(this.localHeight, parseFloat(S.PageElement_get_element.height), my.d[this.type].height);
+					return my.xtGet(this.localHeight, parseFloat(element.height), my.d[this.type].height);
 				case 'position':
-					return my.xtGet(this.position, S.PageElement_get_element.style.position);
+					return my.xtGet(this.position, element.style.position);
 			}
 		}
 		return my.Base.prototype.get.call(this, item);
@@ -2734,17 +2716,17 @@ Handles the setting of DOM element title and data-comment attributes
 @return This
 @chainable
 **/
-	S.PageElement_setAccessibility_element = null; //DOM object
 	my.PageElement.prototype.setAccessibility = function(items) {
+		var element;
 		items = my.safeObject(items);
-		S.PageElement_setAccessibility_element = this.getElement();
+		element = this.getElement();
 		if (my.xt(items.title)) {
 			this.title = items.title;
-			S.PageElement_setAccessibility_element.title = this.title;
+			element.title = this.title;
 		}
 		if (my.xt(items.comment)) {
 			this.comment = items.comment;
-			S.PageElement_setAccessibility_element.setAttribute('data-comment', this.comment);
+			element.setAttribute('data-comment', this.comment);
 		}
 		return this;
 	};
@@ -2754,22 +2736,19 @@ Calculate the DOM element's current display offset values
 @return This
 @chainable
 **/
-	S.PageElement_setDisplayOffsets_element = null; //DOM object
-	S.PageElement_setDisplayOffsets_offsetX = 0;
-	S.PageElement_setDisplayOffsets_offsetY = 0;
 	my.PageElement.prototype.setDisplayOffsets = function() {
-		S.PageElement_setDisplayOffsets_offsetX = 0;
-		S.PageElement_setDisplayOffsets_offsetY = 0;
-		S.PageElement_setDisplayOffsets_element = this.getElement();
-		if (S.PageElement_setDisplayOffsets_element.offsetParent) {
+		var element = this.getElement(),
+			offsetX = 0,
+			offsetY = 0;
+		if (element.offsetParent) {
 			do {
-				S.PageElement_setDisplayOffsets_offsetX += S.PageElement_setDisplayOffsets_element.offsetLeft;
-				S.PageElement_setDisplayOffsets_offsetY += S.PageElement_setDisplayOffsets_element.offsetTop;
-				S.PageElement_setDisplayOffsets_element = S.PageElement_setDisplayOffsets_element.offsetParent;
-			} while (S.PageElement_setDisplayOffsets_element.offsetParent);
+				offsetX += element.offsetLeft;
+				offsetY += element.offsetTop;
+				element = element.offsetParent;
+			} while (element.offsetParent);
 		}
-		this.displayOffsetX = S.PageElement_setDisplayOffsets_offsetX;
-		this.displayOffsetY = S.PageElement_setDisplayOffsets_offsetY;
+		this.displayOffsetX = offsetX;
+		this.displayOffsetY = offsetY;
 		return this;
 	};
 	/**
@@ -2805,11 +2784,10 @@ Helper function - set DOM element dimensions (width, height)
 @chainable
 @private
 **/
-	S.PageElement_setDimensions_element = null; //DOM object
 	my.PageElement.prototype.setDimensions = function() {
-		S.PageElement_setDimensions_element = this.getElement();
-		S.PageElement_setDimensions_element.style.width = this.localWidth + 'px';
-		S.PageElement_setDimensions_element.style.height = this.localHeight + 'px';
+		var element = this.getElement();
+		element.style.width = this.localWidth + 'px';
+		element.style.height = this.localHeight + 'px';
 		return this;
 	};
 	/**
@@ -2837,51 +2815,51 @@ mousemove event listener function
 @return This
 @private
 **/
-	S.PageElement_handleMouseMove_wrapper = null; //scrawl object
-	S.PageElement_handleMouseMove_mouseX = 0;
-	S.PageElement_handleMouseMove_mouseY = 0;
-	S.PageElement_handleMouseMove_maxX = 0;
-	S.PageElement_handleMouseMove_maxY = 0;
-	S.stat_pageElementHandleMouseMove = ['relative', 'absolute', 'fixed', 'sticky'];
 	my.PageElement.prototype.handleMouseMove = function(e) {
+		var wrapper,
+			mouseX,
+			mouseY,
+			maxX,
+			maxY,
+			stat = ['relative', 'absolute', 'fixed', 'sticky'];
 		e = (my.xt(e)) ? e : window.event;
-		S.PageElement_handleMouseMove_mouseX = 0;
-		S.PageElement_handleMouseMove_mouseY = 0;
-		S.PageElement_handleMouseMove_wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
-		if (S.PageElement_handleMouseMove_wrapper) {
-			S.PageElement_handleMouseMove_wrapper.mouse.active = false;
-			S.PageElement_handleMouseMove_wrapper.mouse.element = S.PageElement_handleMouseMove_wrapper.name;
-			S.PageElement_handleMouseMove_wrapper.mouse.type = S.PageElement_handleMouseMove_wrapper.type;
-			if (S.PageElement_handleMouseMove_wrapper.mouse.layer || my.xta(e, e.layerX) && my.contains(S.stat_pageElementHandleMouseMove, S.PageElement_handleMouseMove_wrapper.position)) {
-				S.PageElement_handleMouseMove_mouseX = e.layerX;
-				S.PageElement_handleMouseMove_mouseY = e.layerY;
-				if (S.PageElement_handleMouseMove_mouseX >= 0 && S.PageElement_handleMouseMove_mouseX <= (S.PageElement_handleMouseMove_wrapper.width * S.PageElement_handleMouseMove_wrapper.scale) && S.PageElement_handleMouseMove_mouseY >= 0 && S.PageElement_handleMouseMove_mouseY <= (S.PageElement_handleMouseMove_wrapper.height * S.PageElement_handleMouseMove_wrapper.scale)) {
-					S.PageElement_handleMouseMove_wrapper.mouse.active = true;
+		mouseX = 0;
+		mouseY = 0;
+		wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
+		if (wrapper) {
+			wrapper.mouse.active = false;
+			wrapper.mouse.element = wrapper.name;
+			wrapper.mouse.type = wrapper.type;
+			if (wrapper.mouse.layer || my.xta(e, e.layerX) && my.contains(stat, wrapper.position)) {
+				mouseX = e.layerX;
+				mouseY = e.layerY;
+				if (mouseX >= 0 && mouseX <= (wrapper.width * wrapper.scale) && mouseY >= 0 && mouseY <= (wrapper.height * wrapper.scale)) {
+					wrapper.mouse.active = true;
 				}
-				S.PageElement_handleMouseMove_wrapper.mouse.x = e.layerX * (1 / S.PageElement_handleMouseMove_wrapper.scale);
-				S.PageElement_handleMouseMove_wrapper.mouse.y = e.layerY * (1 / S.PageElement_handleMouseMove_wrapper.scale);
-				S.PageElement_handleMouseMove_wrapper.mouse.layer = true;
+				wrapper.mouse.x = e.layerX * (1 / wrapper.scale);
+				wrapper.mouse.y = e.layerY * (1 / wrapper.scale);
+				wrapper.mouse.layer = true;
 			}
 			else {
 				if (e.pageX || e.pageY) {
-					S.PageElement_handleMouseMove_mouseX = e.pageX;
-					S.PageElement_handleMouseMove_mouseY = e.pageY;
+					mouseX = e.pageX;
+					mouseY = e.pageY;
 				}
 				else if (e.clientX || e.clientY) {
-					S.PageElement_handleMouseMove_mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-					S.PageElement_handleMouseMove_mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+					mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+					mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 				}
-				S.PageElement_handleMouseMove_maxX = S.PageElement_handleMouseMove_wrapper.displayOffsetX + (S.PageElement_handleMouseMove_wrapper.width * S.PageElement_handleMouseMove_wrapper.scale);
-				S.PageElement_handleMouseMove_maxY = S.PageElement_handleMouseMove_wrapper.displayOffsetY + (S.PageElement_handleMouseMove_wrapper.height * S.PageElement_handleMouseMove_wrapper.scale);
-				if (S.PageElement_handleMouseMove_mouseX >= S.PageElement_handleMouseMove_wrapper.displayOffsetX && S.PageElement_handleMouseMove_mouseX <= S.PageElement_handleMouseMove_maxX && S.PageElement_handleMouseMove_mouseY >= S.PageElement_handleMouseMove_wrapper.displayOffsetY && S.PageElement_handleMouseMove_mouseY <= S.PageElement_handleMouseMove_maxY) {
-					S.PageElement_handleMouseMove_wrapper.mouse.active = true;
+				maxX = wrapper.displayOffsetX + (wrapper.width * wrapper.scale);
+				maxY = wrapper.displayOffsetY + (wrapper.height * wrapper.scale);
+				if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
+					wrapper.mouse.active = true;
 				}
-				S.PageElement_handleMouseMove_wrapper.mouse.x = (S.PageElement_handleMouseMove_mouseX - S.PageElement_handleMouseMove_wrapper.displayOffsetX) * (1 / S.PageElement_handleMouseMove_wrapper.scale);
-				S.PageElement_handleMouseMove_wrapper.mouse.y = (S.PageElement_handleMouseMove_mouseY - S.PageElement_handleMouseMove_wrapper.displayOffsetY) * (1 / S.PageElement_handleMouseMove_wrapper.scale);
-				S.PageElement_handleMouseMove_wrapper.mouse.layer = false;
+				wrapper.mouse.x = (mouseX - wrapper.displayOffsetX) * (1 / wrapper.scale);
+				wrapper.mouse.y = (mouseY - wrapper.displayOffsetY) * (1 / wrapper.scale);
+				wrapper.mouse.layer = false;
 			}
 		}
-		return S.PageElement_handleMouseMove_wrapper;
+		return wrapper;
 	};
 	/**
 mouseout event listener function
@@ -2890,14 +2868,14 @@ mouseout event listener function
 @return This
 @private
 **/
-	S.PageElement_handleMouseOut_wrapper = null; //scrawl object
 	my.PageElement.prototype.handleMouseOut = function(e) {
+		var wrapper;
 		e = (my.xt(e)) ? e : window.event;
-		S.PageElement_handleMouseOut_wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
-		if (S.PageElement_handleMouseOut_wrapper) {
-			S.PageElement_handleMouseOut_wrapper.mouse.active = false;
+		wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
+		if (wrapper) {
+			wrapper.mouse.active = false;
 		}
-		return S.PageElement_handleMouseOut_wrapper;
+		return wrapper;
 	};
 
 	/**
@@ -2931,22 +2909,22 @@ Adds a mousemove event listener to the element
 @chainable
 @private
 **/
-	S.PageElement_addMouseMove_element = null; //DOM object
-	S.PageElement_addMouseMove_test = false;
 	my.PageElement.prototype.addMouseMove = function() {
-		S.PageElement_addMouseMove_element = this.getElement();
-		S.PageElement_addMouseMove_element.removeEventListener('mousemove', this.handleMouseMove, false);
-		S.PageElement_addMouseMove_element.addEventListener('mousemove', this.handleMouseMove, false);
-		S.PageElement_addMouseMove_element.removeEventListener('mouseout', this.handleMouseOut, false);
-		S.PageElement_addMouseMove_element.removeEventListener('mouseleave', this.handleMouseOut, false);
-		S.PageElement_addMouseMove_element.setAttribute('onmouseout', 'return;');
-		S.PageElement_addMouseMove_test = typeof S.PageElement_addMouseMove_element.onmouseout == 'function';
-		S.PageElement_addMouseMove_element.setAttribute('onmouseout', null);
-		if (S.PageElement_addMouseMove_test) {
-			S.PageElement_addMouseMove_element.addEventListener('mouseout', this.handleMouseOut, false);
+		var element,
+			test;
+		element = this.getElement();
+		element.removeEventListener('mousemove', this.handleMouseMove, false);
+		element.addEventListener('mousemove', this.handleMouseMove, false);
+		element.removeEventListener('mouseout', this.handleMouseOut, false);
+		element.removeEventListener('mouseleave', this.handleMouseOut, false);
+		element.setAttribute('onmouseout', 'return;');
+		test = typeof element.onmouseout == 'function';
+		element.setAttribute('onmouseout', null);
+		if (test) {
+			element.addEventListener('mouseout', this.handleMouseOut, false);
 		}
 		else {
-			S.PageElement_addMouseMove_element.addEventListener('mouseleave', this.handleMouseOut, false);
+			element.addEventListener('mouseleave', this.handleMouseOut, false);
 		}
 		return this;
 	};
@@ -2957,12 +2935,11 @@ Remove the mousemove event listener from the element
 @chainable
 @private
 **/
-	S.PageElement_removeMouseMove_element = null; //DOM object
 	my.PageElement.prototype.removeMouseMove = function() {
-		S.PageElement_removeMouseMove_element = this.getElement();
-		S.PageElement_removeMouseMove_element.removeEventListener('mousemove', this.handleMouseMove, false);
-		S.PageElement_removeMouseMove_element.removeEventListener('mouseout', this.handleMouseOut, false);
-		S.PageElement_removeMouseMove_element.removeEventListener('mouseleave', this.handleMouseOut, false);
+		var element = this.getElement();
+		element.removeEventListener('mousemove', this.handleMouseMove, false);
+		element.removeEventListener('mouseout', this.handleMouseOut, false);
+		element.removeEventListener('mouseleave', this.handleMouseOut, false);
 		return this;
 	};
 
@@ -2995,10 +2972,10 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 @extends PageElement
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-	S.Pad_init_display = null; //scrawl Cell object
-	S.Pad_init_base = null; //scrawl Cell object
-	S.Pad_init_canvas = null; //DOM object
 	my.Pad = function(items) {
+		var display,
+			base,
+			canvas;
 		items = my.safeObject(items);
 
 		// only proceed if a canvas element has been supplied as the value of items.canvasElement 
@@ -3026,7 +3003,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			this.cells = [];
 
 			// create a wrapper for the display canvas element
-			S.Pad_init_display = my.newCell({
+			display = my.newCell({
 				name: this.name,
 				pad: this.name,
 				canvas: items.canvasElement,
@@ -3035,26 +3012,26 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				width: this.localWidth,
 				height: this.localHeight
 			});
-			my.pushUnique(this.cells, S.Pad_init_display.name);
-			this.display = S.Pad_init_display.name;
+			my.pushUnique(this.cells, display.name);
+			this.display = display.name;
 
 			// create a new canvas element to act as the base
-			S.Pad_init_canvas = items.canvasElement.cloneNode(true);
-			S.Pad_init_canvas.setAttribute('id', this.name + '_base');
+			canvas = items.canvasElement.cloneNode(true);
+			canvas.setAttribute('id', this.name + '_base');
 
 			// create a wrapper for the base canvas element
-			S.Pad_init_base = my.newCell({
+			base = my.newCell({
 				name: this.name + '_base',
 				pad: this.name,
-				canvas: S.Pad_init_canvas,
+				canvas: canvas,
 				compileOrder: 9999,
 				shown: false,
 				width: this.localWidth / this.scale,
 				height: this.localHeight / this.scale
 			});
-			my.pushUnique(this.cells, S.Pad_init_base.name);
-			this.base = S.Pad_init_base.name;
-			this.current = S.Pad_init_base.name;
+			my.pushUnique(this.cells, base.name);
+			this.base = base.name;
+			this.current = base.name;
 
 			// finalise stuff for this Pad
 			this.setDisplayOffsets();
@@ -3147,18 +3124,18 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 @return This
 @chainable
 **/
-	S.Pad_set_base = null; //scrawl Cell object
-	S.Pad_set_display = null; //scrawl Cell object
 	my.Pad.prototype.set = function(items) {
+		var base,
+			display;
 		my.PageElement.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		S.Pad_set_display = my.cell[this.display];
-		S.Pad_set_base = my.cell[this.base];
+		display = my.cell[this.display];
+		base = my.cell[this.base];
 		if (my.xto(items.scale, items.width, items.height)) {
-			S.Pad_set_display.set({
-				pasteWidth: (items.width) ? this.localWidth : S.Pad_set_display.pasteWidth,
-				pasteHeight: (items.height) ? this.localHeight : S.Pad_set_display.pasteHeight,
-				scale: items.scale || S.Pad_set_display.scale
+			display.set({
+				pasteWidth: (items.width) ? this.localWidth : display.pasteWidth,
+				pasteHeight: (items.height) ? this.localHeight : display.pasteHeight,
+				scale: items.scale || display.scale
 			});
 		}
 		this.padStacksSet(items);
@@ -3166,10 +3143,10 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 			this.setDisplayOffsets();
 		}
 		if (my.xto(items.backgroundColor, items.globalAlpha, items.globalCompositeOperation)) {
-			S.Pad_set_base.set({
-				backgroundColor: items.backgroundColor || S.Pad_set_base.backgroundColor,
-				globalAlpha: items.globalAlpha || S.Pad_set_base.globalAlpha,
-				globalCompositeOperation: items.globalCompositeOperation || S.Pad_set_base.globalCompositeOperation
+			base.set({
+				backgroundColor: items.backgroundColor || base.backgroundColor,
+				globalAlpha: items.globalAlpha || base.globalAlpha,
+				globalCompositeOperation: items.globalCompositeOperation || base.globalCompositeOperation
 			});
 		}
 		return this;
@@ -3219,14 +3196,14 @@ Cells with cleared = true will clear theid displays in preparation for compile/s
 @return This
 @chainable
 **/
-	S.Pad_clear_cell = null; //scrawl Cell object
-	S.Pad_clear_i = 0;
-	S.Pad_clear_iz = 0;
 	my.Pad.prototype.clear = function() {
-		for (S.Pad_clear_i = 0, S.Pad_clear_iz = this.cells.length; S.Pad_clear_i < S.Pad_clear_iz; S.Pad_clear_i++) {
-			S.Pad_clear_cell = my.cell[this.cells[S.Pad_clear_i]];
-			if (S.Pad_clear_cell.rendered && S.Pad_clear_cell.cleared) {
-				S.Pad_clear_cell.clear();
+		var cell,
+			i,
+			iz;
+		for (i = 0, iz = this.cells.length; i < iz; i++) {
+			cell = my.cell[this.cells[i]];
+			if (cell.rendered && cell.cleared) {
+				cell.clear();
 			}
 		}
 		return this;
@@ -3246,15 +3223,15 @@ By default:
 @return This
 @chainable
 **/
-	S.Pad_compile_cell = null; //scrawl Cell object
-	S.Pad_compile_i = 0;
-	S.Pad_compile_iz = 0;
 	my.Pad.prototype.compile = function() {
+		var cell,
+			i,
+			iz;
 		this.sortCellsCompile();
-		for (S.Pad_compile_i = 0, S.Pad_compile_iz = this.cells.length; S.Pad_compile_i < S.Pad_compile_iz; S.Pad_compile_i++) {
-			S.Pad_compile_cell = my.cell[this.cells[S.Pad_compile_i]];
-			if (S.Pad_compile_cell.rendered && S.Pad_compile_cell.compiled) {
-				S.Pad_compile_cell.compile();
+		for (i = 0, iz = this.cells.length; i < iz; i++) {
+			cell = my.cell[this.cells[i]];
+			if (cell.rendered && cell.compiled) {
+				cell.compile();
 			}
 		}
 		return this;
@@ -3274,22 +3251,22 @@ By default, the initial base and display canvases have shown = false:
 @return This
 @chainable
 **/
-	S.Pad_show_display = null; //scrawl Cell object
-	S.Pad_show_base = null; //scrawl Cell object
-	S.Pad_show_cell = null; //scrawl Cell object
-	S.Pad_show_i = 0;
-	S.Pad_show_iz = 0;
 	my.Pad.prototype.show = function() {
-		S.Pad_show_display = my.cell[this.display];
-		S.Pad_show_base = my.cell[this.base];
+		var display,
+			base,
+			cell,
+			i,
+			iz;
+		display = my.cell[this.display];
+		base = my.cell[this.base];
 		this.sortCellsShow();
-		for (S.Pad_show_i = 0, S.Pad_show_iz = this.cells.length; S.Pad_show_i < S.Pad_show_iz; S.Pad_show_i++) {
-			S.Pad_show_cell = my.cell[this.cells[S.Pad_show_i]];
-			if (S.Pad_show_cell.rendered && S.Pad_show_cell.shown) {
-				S.Pad_show_base.copyCellToSelf(S.Pad_show_cell);
+		for (i = 0, iz = this.cells.length; i < iz; i++) {
+			cell = my.cell[this.cells[i]];
+			if (cell.rendered && cell.shown) {
+				base.copyCellToSelf(cell);
 			}
 		}
-		S.Pad_show_display.copyCellToSelf(S.Pad_show_base, true);
+		display.copyCellToSelf(base, true);
 		return this;
 	};
 	/**
@@ -3321,22 +3298,22 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 		width: 400,
 		});
 **/
-	S.Pad_addNewCell_canvas = null; //DOM Canvas object
-	S.Pad_addNewCell_cell = null; //scrawl Cell object
 	my.Pad.prototype.addNewCell = function(data) {
+		var canvas,
+			cell;
 		data = my.safeObject(data);
 		if (my.isa(data.name, 'str')) {
 			data.width = Math.round(data.width) || this.width;
 			data.height = Math.round(data.height) || this.height;
-			S.Pad_addNewCell_canvas = document.createElement('canvas');
-			S.Pad_addNewCell_canvas.setAttribute('id', data.name);
-			S.Pad_addNewCell_canvas.setAttribute('height', data.height);
-			S.Pad_addNewCell_canvas.setAttribute('width', data.width);
+			canvas = document.createElement('canvas');
+			canvas.setAttribute('id', data.name);
+			canvas.setAttribute('height', data.height);
+			canvas.setAttribute('width', data.width);
 			data.pad = this.name;
-			data.canvas = S.Pad_addNewCell_canvas;
-			S.Pad_addNewCell_cell = my.newCell(data);
-			my.pushUnique(this.cells, S.Pad_addNewCell_cell.name);
-			return S.Pad_addNewCell_cell;
+			data.canvas = canvas;
+			cell = my.newCell(data);
+			my.pushUnique(this.cells, cell.name);
+			return cell;
 		}
 		return false;
 	};
@@ -3347,18 +3324,18 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 @return This
 @chainable
 **/
-	S.Pad_addCells_slice = [];
-	S.Pad_addCells_i = 0;
-	S.Pad_addCells_iz = 0;
 	my.Pad.prototype.addCells = function() {
-		S.Pad_addCells_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.Pad_addCells_slice[0])) {
-			console.log('addCells - needs updating: ', S.Pad_addCells_slice);
-			S.Pad_addCells_slice = S.Pad_addCells_slice[0];
+		var slice,
+			i,
+			iz;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			console.log('addCells - needs updating: ', slice);
+			slice = slice[0];
 		}
-		for (S.Pad_addCells_i = 0, S.Pad_addCells_iz = S.Pad_addCells_slice.length; S.Pad_addCells_i < S.Pad_addCells_iz; S.Pad_addCells_i++) {
-			if (my.cell[S.Pad_addCells_slice[S.Pad_addCells_i]]) {
-				this.cells.push(S.Pad_addCells_slice[S.Pad_addCells_i]);
+		for (i = 0, iz = slice.length; i < iz; i++) {
+			if (my.cell[slice[i]]) {
+				this.cells.push(slice[i]);
 			}
 		}
 		return this;
@@ -3416,18 +3393,18 @@ Augments PageElement.setAccessibility(); handles the setting of &lt;canvas&gt; e
 @return This
 @chainable
 **/
-	S.Pad_setAccessibility_element = null; //DOM object
 	my.Pad.prototype.setAccessibility = function(items) {
+		var element;
 		items = my.safeObject(items);
-		S.Pad_setAccessibility_element = this.getElement();
+		element = this.getElement();
 		if (my.xt(items.title)) {
 			this.title = items.title;
-			S.Pad_setAccessibility_element.title = this.title;
+			element.title = this.title;
 		}
 		if (my.xt(items.comment)) {
 			this.comment = items.comment;
-			S.Pad_setAccessibility_element.setAttribute('data-comment', this.comment);
-			S.Pad_setAccessibility_element.innerHTML = '<p>' + this.comment + '</p>';
+			element.setAttribute('data-comment', this.comment);
+			element.innerHTML = '<p>' + this.comment + '</p>';
 		}
 		return this;
 	};
@@ -3438,11 +3415,10 @@ Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use stylin
 @return This
 @chainable
 **/
-	S.Pad_setDimensions_element = null; //DOM object
 	my.Pad.prototype.setDimensions = function() {
-		S.Pad_setDimensions_element = this.getElement();
-		S.Pad_setDimensions_element.width = this.localWidth;
-		S.Pad_setDimensions_element.height = this.localHeight;
+		var element = this.getElement();
+		element.width = this.localWidth;
+		element.height = this.localHeight;
 		return this;
 	};
 
@@ -3703,9 +3679,9 @@ Cell constructor hook function - core module
 @method coreCellInit
 @private
 **/
-	S.Cell_coreCellInit_temp = null; //raw object
-	S.Cell_coreCellInit_context = null; //scrawl Context object
 	my.Cell.prototype.coreCellInit = function(items) {
+		var temp,
+			context;
 		my.Position.call(this, items); //handles items.start, items.startX, items.startY
 		my.Base.prototype.set.call(this, items);
 		my.canvas[this.name] = items.canvas;
@@ -3713,10 +3689,10 @@ Cell constructor hook function - core module
 		my.cell[this.name] = this;
 		my.pushUnique(my.cellnames, this.name);
 		this.pad = my.xtGet(items.pad, false);
-		S.Cell_coreCellInit_temp = my.safeObject(items.copy);
+		temp = my.safeObject(items.copy);
 		this.copy = my.newVector({
-			x: my.xtGet(items.copyX, S.Cell_coreCellInit_temp.x, 0),
-			y: my.xtGet(items.copyY, S.Cell_coreCellInit_temp.y, 0),
+			x: my.xtGet(items.copyX, temp.x, 0),
+			y: my.xtGet(items.copyY, temp.y, 0),
 			name: this.type + '.' + this.name + '.copy'
 		});
 		this.work.copy = my.newVector({
@@ -3753,11 +3729,11 @@ Cell constructor hook function - core module
 		}
 		this.setCopy();
 		this.setPaste();
-		S.Cell_coreCellInit_context = my.newContext({
+		context = my.newContext({
 			name: this.name,
 			cell: my.context[this.name]
 		});
-		this.context = S.Cell_coreCellInit_context.name;
+		this.context = context.name;
 		this.flipUpend = my.xtGet(items.flipUpend, my.d.Cell.flipUpend);
 		this.flipReverse = my.xtGet(items.flipReverse, my.d.Cell.flipReverse);
 		this.lockX = my.xtGet(items.lockX, my.d.Cell.lockX);
@@ -3800,11 +3776,11 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 @param {String} item Attribute key
 @return Attribute value
 **/
-	S.stat_cellGet1 = ['pasteX', 'pasteY', 'copyX', 'copyY'];
-	S.stat_cellGet2 = ['paste', 'copy'];
-	S.stat_cellGet3 = ['width', 'height'];
 	my.Cell.prototype.get = function(item) {
-		if (my.contains(S.stat_cellGet1, item)) {
+		var stat1 = ['pasteX', 'pasteY', 'copyX', 'copyY'],
+			stat2 = ['paste', 'copy'],
+			stat3 = ['width', 'height'];
+		if (my.contains(stat1, item)) {
 			switch (item) {
 				case 'pasteX':
 					return this.start.x;
@@ -3816,7 +3792,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 					return this.copy.y;
 			}
 		}
-		if (my.contains(S.stat_cellGet2, item)) {
+		if (my.contains(stat2, item)) {
 			switch (item) {
 				case 'paste':
 					return this.start.getVector();
@@ -3824,7 +3800,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 					return this.copy.getVector();
 			}
 		}
-		if (my.contains(S.stat_cellGet3, item)) {
+		if (my.contains(stat3, item)) {
 			switch (item) {
 				case 'width':
 					return this.actualWidth;
@@ -4006,13 +3982,13 @@ Augments Cell.set()
 @return This
 @chainable
 **/
-	S.Cell_setPasteVector_temp = null; //raw object
 	my.Cell.prototype.setPasteVector = function(items, recalc) {
+		var temp;
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		S.Cell_setPasteVector_temp = my.safeObject(items.paste);
-		this.start.x = my.xtGet(items.pasteX, S.Cell_setPasteVector_temp.x, this.start.x);
-		this.start.y = my.xtGet(items.pasteY, S.Cell_setPasteVector_temp.y, this.start.y);
+		temp = my.safeObject(items.paste);
+		this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
+		this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4026,13 +4002,13 @@ Augments Cell.set()
 @return This
 @chainable
 **/
-	S.Cell_setCopyVector_temp = null; //raw object
 	my.Cell.prototype.setCopyVector = function(items, recalc) {
+		var temp;
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		S.Cell_setCopyVector_temp = my.safeObject(items.copy);
-		this.copy.x = my.xtGet(items.copyX, S.Cell_setCopyVector_temp.x, this.copy.x);
-		this.copy.y = my.xtGet(items.copyY, S.Cell_setCopyVector_temp.y, this.copy.y);
+		temp = my.safeObject(items.copy);
+		this.copy.x = my.xtGet(items.copyX, temp.x, this.copy.x);
+		this.copy.y = my.xtGet(items.copyY, temp.y, this.copy.y);
 		if (recalc) {
 			this.setCopy();
 		}
@@ -4139,12 +4115,12 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	S.Cell_setDeltaActualHeight_height = 0;
 	my.Cell.prototype.setDeltaActualHeight = function(items, recalc) {
+		var height;
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		S.Cell_setDeltaActualHeight_height = my.xtGet(items.actualHeight, items.height);
-		this.actualHeight = (my.isa(S.Cell_setDeltaActualHeight_height, 'num')) ? this.actualHeight + S.Cell_setDeltaActualHeight_height : this.actualHeight;
+		height = my.xtGet(items.actualHeight, items.height);
+		this.actualHeight = (my.isa(height, 'num')) ? this.actualHeight + height : this.actualHeight;
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
@@ -4161,12 +4137,12 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	S.Cell_setDeltaActualWidth_width = 0;
 	my.Cell.prototype.setDeltaActualWidth = function(items, recalc) {
+		var width;
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		S.Cell_setDeltaActualWidth_width = my.xtGet(items.actualWidth, items.width);
-		this.actualWidth = (my.isa(S.Cell_setDeltaActualWidth_width, 'num')) ? this.actualWidth + S.Cell_setDeltaActualWidth_width : this.actualWidth;
+		width = my.xtGet(items.actualWidth, items.width);
+		this.actualWidth = (my.isa(width, 'num')) ? this.actualWidth + width : this.actualWidth;
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
@@ -4183,13 +4159,12 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	S.Cell_setDeltaPasteHeight_height = 0;
 	my.Cell.prototype.setDeltaPasteHeight = function(items, recalc) {
-		var h;
+		var height;
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		S.Cell_setDeltaPasteHeight_height = my.xtGet(items.pasteHeight, items.height);
-		this.pasteHeight = (my.isa(this.pasteHeight, 'num')) ? this.pasteHeight + S.Cell_setDeltaPasteHeight_height : my.addPercentages(this.pasteHeight, S.Cell_setDeltaPasteHeight_height);
+		height = my.xtGet(items.pasteHeight, items.height);
+		this.pasteHeight = (my.isa(this.pasteHeight, 'num')) ? this.pasteHeight + height : my.addPercentages(this.pasteHeight, height);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4224,12 +4199,12 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	S.Cell_setDeltaPasteWidth_width = 0;
 	my.Cell.prototype.setDeltaPasteWidth = function(items, recalc) {
+		var width;
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		S.Cell_setDeltaPasteWidth_width = my.xtGet(items.pasteWidth, items.width);
-		this.pasteWidth = (my.isa(this.pasteWidth, 'num')) ? this.pasteWidth + S.Cell_setDeltaPasteWidth_width : my.addPercentages(this.pasteWidth, S.Cell_setDeltaPasteWidth_width);
+		width = my.xtGet(items.pasteWidth, items.width);
+		this.pasteWidth = (my.isa(this.pasteWidth, 'num')) ? this.pasteWidth + width : my.addPercentages(this.pasteWidth, width);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4264,17 +4239,17 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	S.Cell_setDeltaPaste_temp = null; //raw object
-	S.Cell_setDeltaPaste_x = 0;
-	S.Cell_setDeltaPaste_y = 0;
 	my.Cell.prototype.setDeltaPaste = function(items, recalc) {
+		var temp,
+			x,
+			y;
 		items = my.safeObject(items);
 		recalc = my.xtGet(recalc, true);
-		S.Cell_setDeltaPaste_temp = my.safeObject(items.paste);
-		S.Cell_setDeltaPaste_x = my.xtGet(items.pasteX, S.Cell_setDeltaPaste_temp.x, 0);
-		S.Cell_setDeltaPaste_y = my.xtGet(items.pasteY, S.Cell_setDeltaPaste_temp.y, 0);
-		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + S.Cell_setDeltaPaste_x : my.addPercentages(this.start.x, S.Cell_setDeltaPaste_x);
-		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + S.Cell_setDeltaPaste_y : my.addPercentages(this.start.y, S.Cell_setDeltaPaste_y);
+		temp = my.safeObject(items.paste);
+		x = my.xtGet(items.pasteX, temp.x, 0);
+		y = my.xtGet(items.pasteY, temp.y, 0);
+		this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
+		this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4290,17 +4265,17 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	S.Cell_setDeltaCopy_temp = null; //raw object
-	S.Cell_setDeltaCopy_x = 0;
-	S.Cell_setDeltaCopy_y = 0;
 	my.Cell.prototype.setDeltaCopy = function(items, recalc) {
+		var temp,
+			x,
+			y;
 		items = my.safeObject(items);
-		S.Cell_setDeltaCopy_temp = my.safeObject(items.copy);
+		temp = my.safeObject(items.copy);
 		recalc = my.xtGet(recalc, true);
-		S.Cell_setDeltaCopy_x = my.xtGet(items.copyX, S.Cell_setDeltaCopy_temp.x, 0);
-		S.Cell_setDeltaCopy_y = my.xtGet(items.copyY, S.Cell_setDeltaCopy_temp.y, 0);
-		this.copy.x = (my.isa(S.Cell_setDeltaCopy_x, 'num')) ? this.copy.x + S.Cell_setDeltaCopy_x : my.addPercentages(this.copy.x, S.Cell_setDeltaCopy_x);
-		this.copy.y = (my.isa(S.Cell_setDeltaCopy_y, 'num')) ? this.copy.y + S.Cell_setDeltaCopy_y : my.addPercentages(this.copy.y, S.Cell_setDeltaCopy_y);
+		x = my.xtGet(items.copyX, temp.x, 0);
+		y = my.xtGet(items.copyY, temp.y, 0);
+		this.copy.x = (my.isa(x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
+		this.copy.y = (my.isa(y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
 		if (recalc) {
 			this.setCopy();
 		}
@@ -4313,74 +4288,74 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 @return Entity object
 @private
 **/
-	S.Cell_setEngine_cellContext = null; //scrawl Context object
-	S.Cell_setEngine_entityContext = null; //scrawl Context object
-	S.Cell_setEngine_cellEngine = null; //DOM canvas context object
-	S.Cell_setEngine_fillStyle = '';
-	S.Cell_setEngine_strokeStyle = '';
-	S.Cell_setEngine_design = null; //scrawl Design object
-	S.Cell_setEngine_changes = null; //raw object
-	S.stat_designTypes = ['Gradient', 'RadialGradient', 'Pattern'];
 	my.Cell.prototype.setEngine = function(entity) {
+		var cellContext,
+			entityContext,
+			cellEngine,
+			fillStyle,
+			strokeStyle,
+			design,
+			changes,
+			stat = ['Gradient', 'RadialGradient', 'Pattern'];
 
 		if (!entity.fastStamp) {
-			S.Cell_setEngine_cellContext = my.ctx[this.context];
-			S.Cell_setEngine_entityContext = my.ctx[entity.context];
-			S.Cell_setEngine_changes = S.Cell_setEngine_entityContext.getChanges(S.Cell_setEngine_cellContext, entity.scale, entity.scaleOutline);
-			if (S.Cell_setEngine_changes) {
-				delete S.Cell_setEngine_changes.count;
-				S.Cell_setEngine_cellEngine = my.context[this.name];
-				for (var item in S.Cell_setEngine_changes) {
-					S.Cell_setEngine_design = false;
+			cellContext = my.ctx[this.context];
+			entityContext = my.ctx[entity.context];
+			changes = entityContext.getChanges(cellContext, entity.scale, entity.scaleOutline);
+			if (changes) {
+				delete changes.count;
+				cellEngine = my.context[this.name];
+				for (var item in changes) {
+					design = false;
 					if (item[0] < 'm') {
 						if (item[0] < 'l') {
 							switch (item) {
 								case 'fillStyle':
-									if (my.xt(my.design[S.Cell_setEngine_changes[item]])) {
-										S.Cell_setEngine_design = my.design[S.Cell_setEngine_changes[item]];
-										if (my.contains(S.stat_designTypes, S.Cell_setEngine_design.type)) {
-											S.Cell_setEngine_design.update(entity.name, this.name);
+									if (my.xt(my.design[changes[item]])) {
+										design = my.design[changes[item]];
+										if (my.contains(stat, design.type)) {
+											design.update(entity.name, this.name);
 										}
-										S.Cell_setEngine_fillStyle = S.Cell_setEngine_design.getData();
+										fillStyle = design.getData();
 									}
 									else {
-										S.Cell_setEngine_fillStyle = S.Cell_setEngine_changes[item];
+										fillStyle = changes[item];
 									}
-									S.Cell_setEngine_cellEngine.fillStyle = S.Cell_setEngine_fillStyle;
+									cellEngine.fillStyle = fillStyle;
 									break;
 								case 'font':
-									S.Cell_setEngine_cellEngine.font = S.Cell_setEngine_changes[item];
+									cellEngine.font = changes[item];
 									break;
 								case 'globalAlpha':
-									S.Cell_setEngine_cellEngine.globalAlpha = S.Cell_setEngine_changes[item];
+									cellEngine.globalAlpha = changes[item];
 									break;
 								case 'globalCompositeOperation':
-									S.Cell_setEngine_cellEngine.globalCompositeOperation = S.Cell_setEngine_changes[item];
+									cellEngine.globalCompositeOperation = changes[item];
 									break;
 							}
 						}
 						else {
 							switch (item) {
 								case 'lineCap':
-									S.Cell_setEngine_cellEngine.lineCap = S.Cell_setEngine_changes[item];
+									cellEngine.lineCap = changes[item];
 									break;
 								case 'lineDash':
-									S.Cell_setEngine_cellEngine.mozDash = S.Cell_setEngine_changes[item];
-									S.Cell_setEngine_cellEngine.lineDash = S.Cell_setEngine_changes[item];
+									cellEngine.mozDash = changes[item];
+									cellEngine.lineDash = changes[item];
 									try {
-										S.Cell_setEngine_cellEngine.setLineDash(S.Cell_setEngine_changes[item]);
+										cellEngine.setLineDash(changes[item]);
 									}
 									catch (e) {}
 									break;
 								case 'lineDashOffset':
-									S.Cell_setEngine_cellEngine.mozDashOffset = S.Cell_setEngine_changes[item];
-									S.Cell_setEngine_cellEngine.lineDashOffset = S.Cell_setEngine_changes[item];
+									cellEngine.mozDashOffset = changes[item];
+									cellEngine.lineDashOffset = changes[item];
 									break;
 								case 'lineJoin':
-									S.Cell_setEngine_cellEngine.lineJoin = S.Cell_setEngine_changes[item];
+									cellEngine.lineJoin = changes[item];
 									break;
 								case 'lineWidth':
-									S.Cell_setEngine_cellEngine.lineWidth = S.Cell_setEngine_changes[item];
+									cellEngine.lineWidth = changes[item];
 									break;
 							}
 						}
@@ -4389,51 +4364,51 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 						if (item[0] == 's') {
 							switch (item) {
 								case 'shadowBlur':
-									S.Cell_setEngine_cellEngine.shadowBlur = S.Cell_setEngine_changes[item];
+									cellEngine.shadowBlur = changes[item];
 									break;
 								case 'shadowColor':
-									S.Cell_setEngine_cellEngine.shadowColor = S.Cell_setEngine_changes[item];
+									cellEngine.shadowColor = changes[item];
 									break;
 								case 'shadowOffsetX':
-									S.Cell_setEngine_cellEngine.shadowOffsetX = S.Cell_setEngine_changes[item];
+									cellEngine.shadowOffsetX = changes[item];
 									break;
 								case 'shadowOffsetY':
-									S.Cell_setEngine_cellEngine.shadowOffsetY = S.Cell_setEngine_changes[item];
+									cellEngine.shadowOffsetY = changes[item];
 									break;
 								case 'strokeStyle':
-									if (my.xt(my.design[S.Cell_setEngine_changes[item]])) {
-										S.Cell_setEngine_design = my.design[S.Cell_setEngine_changes[item]];
-										if (my.contains(S.stat_designTypes, S.Cell_setEngine_design.type)) {
-											S.Cell_setEngine_design.update(entity.name, this.name);
+									if (my.xt(my.design[changes[item]])) {
+										design = my.design[changes[item]];
+										if (my.contains(stat, design.type)) {
+											design.update(entity.name, this.name);
 										}
-										S.Cell_setEngine_strokeStyle = S.Cell_setEngine_design.getData();
+										strokeStyle = design.getData();
 									}
 									else {
-										S.Cell_setEngine_strokeStyle = S.Cell_setEngine_changes[item];
+										strokeStyle = changes[item];
 									}
-									S.Cell_setEngine_cellEngine.strokeStyle = S.Cell_setEngine_strokeStyle;
+									cellEngine.strokeStyle = strokeStyle;
 									break;
 							}
 						}
 						else {
 							switch (item) {
 								case 'miterLimit':
-									S.Cell_setEngine_cellEngine.miterLimit = S.Cell_setEngine_changes[item];
+									cellEngine.miterLimit = changes[item];
 									break;
 								case 'textAlign':
-									S.Cell_setEngine_cellEngine.textAlign = S.Cell_setEngine_changes[item];
+									cellEngine.textAlign = changes[item];
 									break;
 								case 'textBaseline':
-									S.Cell_setEngine_cellEngine.textBaseline = S.Cell_setEngine_changes[item];
+									cellEngine.textBaseline = changes[item];
 									break;
 								case 'winding':
-									S.Cell_setEngine_cellEngine.mozFillRule = S.Cell_setEngine_changes[item];
-									S.Cell_setEngine_cellEngine.msFillRule = S.Cell_setEngine_changes[item];
+									cellEngine.mozFillRule = changes[item];
+									cellEngine.msFillRule = changes[item];
 									break;
 							}
 						}
 					}
-					S.Cell_setEngine_cellContext[item] = S.Cell_setEngine_changes[item];
+					cellContext[item] = changes[item];
 				}
 			}
 		}
@@ -4445,17 +4420,17 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 @return This
 @chainable
 **/
-	S.Cell_clear_cellContext = null; //scrawl Context object
-	S.Cell_clear_cellEngine = null; //DOM canvas context object
 	my.Cell.prototype.clear = function() {
-		S.Cell_clear_cellEngine = my.context[this.name];
-		S.Cell_clear_cellContext = my.ctx[this.context];
-		S.Cell_clear_cellEngine.setTransform(1, 0, 0, 1, 0, 0);
-		S.Cell_clear_cellEngine.clearRect(0, 0, this.actualWidth, this.actualHeight);
+		var cellContext,
+			cellEngine;
+		cellEngine = my.context[this.name];
+		cellContext = my.ctx[this.context];
+		cellEngine.setTransform(1, 0, 0, 1, 0, 0);
+		cellEngine.clearRect(0, 0, this.actualWidth, this.actualHeight);
 		if (this.backgroundColor !== 'rgba(0,0,0,0)') {
-			S.Cell_clear_cellEngine.fillStyle = this.backgroundColor;
-			S.Cell_clear_cellEngine.fillRect(0, 0, this.actualWidth, this.actualHeight);
-			S.Cell_clear_cellContext.fillStyle = this.backgroundColor;
+			cellEngine.fillStyle = this.backgroundColor;
+			cellEngine.fillRect(0, 0, this.actualWidth, this.actualHeight);
+			cellContext.fillStyle = this.backgroundColor;
 		}
 		return this;
 	};
@@ -4467,17 +4442,17 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 @return This
 @chainable
 **/
-	S.Cell_compile_group = null; //scrawl Group object
-	S.Cell_compile_i = 0;
-	S.Cell_compile_iz = 0;
 	my.Cell.prototype.compile = function() {
+		var group,
+			i,
+			iz;
 		this.groups.sort(function(a, b) {
 			return my.group[a].order - my.group[b].order;
 		});
-		for (S.Cell_compile_i = 0, S.Cell_compile_iz = this.groups.length; S.Cell_compile_i < S.Cell_compile_iz; S.Cell_compile_i++) {
-			S.Cell_compile_group = my.group[this.groups[S.Cell_compile_i]];
-			if (S.Cell_compile_group.get('visibility')) {
-				S.Cell_compile_group.stamp(false, this.name);
+		for (i = 0, iz = this.groups.length; i < iz; i++) {
+			group = my.group[this.groups[i]];
+			if (group.get('visibility')) {
+				group.stamp(false, this.name);
 			}
 		}
 		return this;
@@ -4490,18 +4465,18 @@ Cell copy helper function
 @chainable
 @private
 **/
-	S.Cell_rotateDestination_reverse = 0;
-	S.Cell_rotateDestination_upend = 0;
-	S.Cell_rotateDestination_rotation = 0;
-	S.Cell_rotateDestination_cos = 0;
-	S.Cell_rotateDestination_sin = 0;
 	my.Cell.prototype.rotateDestination = function(engine) {
-		S.Cell_rotateDestination_reverse = (this.flipReverse) ? -1 : 1;
-		S.Cell_rotateDestination_upend = (this.flipUpend) ? -1 : 1;
-		S.Cell_rotateDestination_rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
-		S.Cell_rotateDestination_cos = Math.cos(S.Cell_rotateDestination_rotation);
-		S.Cell_rotateDestination_sin = Math.sin(S.Cell_rotateDestination_rotation);
-		engine.setTransform((S.Cell_rotateDestination_cos * S.Cell_rotateDestination_reverse), (S.Cell_rotateDestination_sin * S.Cell_rotateDestination_reverse), (-S.Cell_rotateDestination_sin * S.Cell_rotateDestination_upend), (S.Cell_rotateDestination_cos * S.Cell_rotateDestination_upend), this.pasteData.x, this.pasteData.y);
+		var reverse,
+			upend,
+			rotation,
+			cos,
+			sin;
+		reverse = (this.flipReverse) ? -1 : 1;
+		upend = (this.flipUpend) ? -1 : 1;
+		rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
+		cos = Math.cos(rotation);
+		sin = Math.sin(rotation);
+		engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), this.pasteData.x, this.pasteData.y);
 		return this;
 	};
 	/**
@@ -4578,29 +4553,26 @@ Cell.setPaste update pasteData object values
 @chainable
 @private
 **/
-	S.Cell_setPaste_pad = null; //scrawl Pad object
-	S.Cell_setPaste_width = 0;
-	S.Cell_setPaste_height = 0;
 	my.Cell.prototype.setPaste = function() {
-		S.Cell_setPaste_pad = my.pad[this.pad];
-		S.Cell_setPaste_width = S.Cell_setPaste_pad.localWidth;
-		S.Cell_setPaste_height = S.Cell_setPaste_pad.localHeight;
+		var pad = my.pad[this.pad],
+			width = pad.localWidth,
+			height = pad.localHeight;
 		this.pasteData.x = this.start.x;
 		if (my.isa(this.pasteData.x, 'str')) {
-			this.pasteData.x = this.convertX(this.pasteData.x, S.Cell_setPaste_width);
+			this.pasteData.x = this.convertX(this.pasteData.x, width);
 		}
 		this.pasteData.y = this.start.y;
 		if (my.isa(this.pasteData.y, 'str')) {
-			this.pasteData.y = this.convertY(this.pasteData.y, S.Cell_setPaste_height);
+			this.pasteData.y = this.convertY(this.pasteData.y, height);
 		}
 		this.pasteData.w = this.pasteWidth;
 		if (my.isa(this.pasteData.w, 'str')) {
-			this.pasteData.w = this.convertX(this.pasteData.w, S.Cell_setPaste_width);
+			this.pasteData.w = this.convertX(this.pasteData.w, width);
 		}
 		this.pasteData.w *= this.scale;
 		this.pasteData.h = this.pasteHeight;
 		if (my.isa(this.pasteData.h, 'str')) {
-			this.pasteData.h = this.convertY(this.pasteData.h, S.Cell_setPaste_height);
+			this.pasteData.h = this.convertY(this.pasteData.h, height);
 		}
 		this.pasteData.h *= this.scale;
 		if (this.pasteData.w < 1) {
@@ -4623,30 +4595,30 @@ Cell copy helper function
 @chainable
 @private
 **/
-	S.Cell_copyCellToSelf_destinationContext = null; //scrawl Context object
-	S.Cell_copyCellToSelf_destinationEngine = null; //DOM canvas context object
-	S.Cell_copyCellToSelf_sourceContext = null; //scrawl Context object
-	S.Cell_copyCellToSelf_sourceEngine = null; //DOM canvas context object
-	S.Cell_copyCellToSelf_sourceCanvas = null; //DOM canvas object
 	my.Cell.prototype.copyCellToSelf = function(cell) {
+		var destinationContext,
+			destinationEngine,
+			sourceContext,
+			sourceEngine,
+			sourceCanvas;
 		cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
 		if (my.xt(cell)) {
-			S.Cell_copyCellToSelf_destinationEngine = my.context[this.name];
-			S.Cell_copyCellToSelf_destinationContext = my.ctx[this.name];
-			S.Cell_copyCellToSelf_sourceEngine = my.context[cell.name];
-			S.Cell_copyCellToSelf_sourceContext = my.ctx[cell.name];
-			S.Cell_copyCellToSelf_sourceCanvas = my.canvas[cell.name];
-			if (S.Cell_copyCellToSelf_sourceContext.globalAlpha !== S.Cell_copyCellToSelf_destinationContext.globalAlpha) {
-				S.Cell_copyCellToSelf_destinationEngine.globalAlpha = S.Cell_copyCellToSelf_sourceContext.globalAlpha;
-				S.Cell_copyCellToSelf_destinationContext.globalAlpha = S.Cell_copyCellToSelf_sourceContext.globalAlpha;
+			destinationEngine = my.context[this.name];
+			destinationContext = my.ctx[this.name];
+			sourceEngine = my.context[cell.name];
+			sourceContext = my.ctx[cell.name];
+			sourceCanvas = my.canvas[cell.name];
+			if (sourceContext.globalAlpha !== destinationContext.globalAlpha) {
+				destinationEngine.globalAlpha = sourceContext.globalAlpha;
+				destinationContext.globalAlpha = sourceContext.globalAlpha;
 			}
-			if (S.Cell_copyCellToSelf_sourceContext.globalCompositeOperation !== S.Cell_copyCellToSelf_destinationContext.globalCompositeOperation) {
-				S.Cell_copyCellToSelf_destinationEngine.globalCompositeOperation = S.Cell_copyCellToSelf_sourceContext.globalCompositeOperation;
-				S.Cell_copyCellToSelf_destinationContext.globalCompositeOperation = S.Cell_copyCellToSelf_sourceContext.globalCompositeOperation;
+			if (sourceContext.globalCompositeOperation !== destinationContext.globalCompositeOperation) {
+				destinationEngine.globalCompositeOperation = sourceContext.globalCompositeOperation;
+				destinationContext.globalCompositeOperation = sourceContext.globalCompositeOperation;
 			}
-			S.Cell_copyCellToSelf_sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
-			cell.prepareToCopyCell(S.Cell_copyCellToSelf_destinationEngine);
-			S.Cell_copyCellToSelf_destinationEngine.drawImage(S.Cell_copyCellToSelf_sourceCanvas, cell.copyData.x, cell.copyData.y, cell.copyData.w, cell.copyData.h, cell.offset.x, cell.offset.y, cell.pasteData.w, cell.pasteData.h);
+			sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
+			cell.prepareToCopyCell(destinationEngine);
+			destinationEngine.drawImage(sourceCanvas, cell.copyData.x, cell.copyData.y, cell.copyData.w, cell.copyData.h, cell.offset.x, cell.offset.y, cell.pasteData.w, cell.pasteData.h);
 		}
 		return this;
 	};
@@ -4699,17 +4671,17 @@ Entity stamp helper function
 @chainable
 @private
 **/
-	S.Cell_clearShadow_context = null; //scrawl Context object
-	S.Cell_clearShadow_engine = null; //DOM canvas context object
 	my.Cell.prototype.clearShadow = function() {
-		S.Cell_clearShadow_engine = my.context[this.name];
-		S.Cell_clearShadow_context = my.ctx[this.context];
-		S.Cell_clearShadow_engine.shadowOffsetX = 0.0;
-		S.Cell_clearShadow_engine.shadowOffsetY = 0.0;
-		S.Cell_clearShadow_engine.shadowBlur = 0.0;
-		S.Cell_clearShadow_context.shadowOffsetX = 0.0;
-		S.Cell_clearShadow_context.shadowOffsetY = 0.0;
-		S.Cell_clearShadow_context.shadowBlur = 0.0;
+		var context,
+			engine;
+		engine = my.context[this.name];
+		context = my.ctx[this.context];
+		engine.shadowOffsetX = 0.0;
+		engine.shadowOffsetY = 0.0;
+		engine.shadowBlur = 0.0;
+		context.shadowOffsetX = 0.0;
+		context.shadowOffsetY = 0.0;
+		context.shadowBlur = 0.0;
 		return this;
 	};
 	/**
@@ -4719,19 +4691,19 @@ Entity stamp helper function
 @chainable
 @private
 **/
-	S.Cell_restoreShadow_cellContext = null; //scrawl Context object
-	S.Cell_restoreShadow_entityContext = null; //scrawl Context object
-	S.Cell_restoreShadow_engine = null; //DOM canvas context object
 	my.Cell.prototype.restoreShadow = function(entitycontext) {
-		S.Cell_restoreShadow_engine = my.context[this.name];
-		S.Cell_restoreShadow_cellContext = my.ctx[this.context];
-		S.Cell_restoreShadow_entityContext = my.ctx[entitycontext];
-		S.Cell_restoreShadow_engine.shadowOffsetX = S.Cell_restoreShadow_entityContext.shadowOffsetX;
-		S.Cell_restoreShadow_engine.shadowOffsetY = S.Cell_restoreShadow_entityContext.shadowOffsetY;
-		S.Cell_restoreShadow_engine.shadowBlur = S.Cell_restoreShadow_entityContext.shadowBlur;
-		S.Cell_restoreShadow_cellContext.shadowOffsetX = S.Cell_restoreShadow_entityContext.shadowOffsetX;
-		S.Cell_restoreShadow_cellContext.shadowOffsetY = S.Cell_restoreShadow_entityContext.shadowOffsetY;
-		S.Cell_restoreShadow_cellContext.shadowBlur = S.Cell_restoreShadow_entityContext.shadowBlur;
+		var cellContext,
+			entityContext,
+			engine;
+		engine = my.context[this.name];
+		cellContext = my.ctx[this.context];
+		entityContext = my.ctx[entitycontext];
+		engine.shadowOffsetX = entityContext.shadowOffsetX;
+		engine.shadowOffsetY = entityContext.shadowOffsetY;
+		engine.shadowBlur = entityContext.shadowBlur;
+		cellContext.shadowOffsetX = entityContext.shadowOffsetX;
+		cellContext.shadowOffsetY = entityContext.shadowOffsetY;
+		cellContext.shadowBlur = entityContext.shadowBlur;
 		return this;
 	};
 	/**
@@ -4741,17 +4713,17 @@ Entity stamp helper function
 @chainable
 @private
 **/
-	S.Cell_setToClearShape_context = null; //scrawl Context object
-	S.Cell_setToClearShape_engine = null; //DOM canvas context object
 	my.Cell.prototype.setToClearShape = function() {
-		S.Cell_setToClearShape_engine = my.context[this.name];
-		S.Cell_setToClearShape_context = my.ctx[this.context];
-		S.Cell_setToClearShape_engine.fillStyle = 'rgba(0, 0, 0, 0)';
-		S.Cell_setToClearShape_engine.strokeStyle = 'rgba(0, 0, 0, 0)';
-		S.Cell_setToClearShape_engine.shadowColor = 'rgba(0, 0, 0, 0)';
-		S.Cell_setToClearShape_context.fillStyle = 'rgba(0, 0, 0, 0)';
-		S.Cell_setToClearShape_context.strokeStyle = 'rgba(0, 0, 0, 0)';
-		S.Cell_setToClearShape_context.shadowColor = 'rgba(0, 0, 0, 0)';
+		var context,
+			engine;
+		engine = my.context[this.name];
+		context = my.ctx[this.context];
+		engine.fillStyle = 'rgba(0, 0, 0, 0)';
+		engine.strokeStyle = 'rgba(0, 0, 0, 0)';
+		engine.shadowColor = 'rgba(0, 0, 0, 0)';
+		context.fillStyle = 'rgba(0, 0, 0, 0)';
+		context.strokeStyle = 'rgba(0, 0, 0, 0)';
+		context.shadowColor = 'rgba(0, 0, 0, 0)';
 		return this;
 	};
 	/**
@@ -4763,27 +4735,23 @@ Omitting the argument will force the &lt;canvas&gt; to set itself to its Pad obj
 @return This
 @chainable
 **/
-	S.Cell_setDimensions_pad = null; //scrawl Pad object
-	S.Cell_setDimensions_canvas = null; //DOM canvas object
-	S.Cell_setDimensions_width = 0;
-	S.Cell_setDimensions_height = 0;
 	my.Cell.prototype.setDimensions = function(items) {
-		S.Cell_setDimensions_pad = my.pad[this.pad];
-		S.Cell_setDimensions_canvas = my.canvas[this.name];
-		S.Cell_setDimensions_width = my.xtGet(items.width, items.actualWidth, this.actualWidth);
-		S.Cell_setDimensions_height = my.xtGet(items.height, items.actualHeight, this.actualHeight);
-		if (S.Cell_setDimensions_pad) {
-			if (my.isa(S.Cell_setDimensions_width, 'str')) {
-				S.Cell_setDimensions_width = (parseFloat(S.Cell_setDimensions_width) / 100) * (S.Cell_setDimensions_pad.localWidth / S.Cell_setDimensions_pad.scale);
+		var pad = my.pad[this.pad],
+			canvas = my.canvas[this.name],
+			width = my.xtGet(items.width, items.actualWidth, this.actualWidth),
+			height = my.xtGet(items.height, items.actualHeight, this.actualHeight);
+		if (pad) {
+			if (my.isa(width, 'str')) {
+				width = (parseFloat(width) / 100) * (pad.localWidth / pad.scale);
 			}
-			if (my.isa(S.Cell_setDimensions_height, 'str')) {
-				S.Cell_setDimensions_height = (parseFloat(S.Cell_setDimensions_height) / 100) * (S.Cell_setDimensions_pad.localHeight / S.Cell_setDimensions_pad.scale);
+			if (my.isa(height, 'str')) {
+				height = (parseFloat(height) / 100) * (pad.localHeight / pad.scale);
 			}
 		}
-		S.Cell_setDimensions_canvas.width = S.Cell_setDimensions_width;
-		S.Cell_setDimensions_canvas.height = S.Cell_setDimensions_height;
-		this.actualWidth = S.Cell_setDimensions_width;
-		this.actualHeight = S.Cell_setDimensions_height;
+		canvas.width = width;
+		canvas.height = height;
+		this.actualWidth = width;
+		this.actualHeight = height;
 		return this;
 	};
 	/**
@@ -4821,20 +4789,20 @@ Default values are:
 @param {Object} dimensions Details of the &lt;canvas&gt; area to be saved
 @return String label pointing to where the image has been saved in the scrawl library - scrawl.imageData[STRING]
 **/
-	S.Cell_getImageData_x = 0;
-	S.Cell_getImageData_y = 0;
-	S.Cell_getImageData_width = 0;
-	S.Cell_getImageData_height = 0;
-	S.Cell_getImageData_label = '';
 	my.Cell.prototype.getImageData = function(dimensions) {
+		var x,
+			y,
+			width,
+			height,
+			label;
 		dimensions = my.safeObject(dimensions);
-		S.Cell_getImageData_label = (my.isa(dimensions.name, 'str')) ? this.name + '_' + dimensions.name : this.name + '_imageData';
-		S.Cell_getImageData_x = my.xtGet(dimensions.x, 0);
-		S.Cell_getImageData_y = my.xtGet(dimensions.y, 0);
-		S.Cell_getImageData_width = my.xtGet(dimensions.width, this.actualWidth);
-		S.Cell_getImageData_height = my.xtGet(dimensions.height, this.actualHeight);
-		my.imageData[S.Cell_getImageData_label] = my.context[this.name].getImageData(S.Cell_getImageData_x, S.Cell_getImageData_y, S.Cell_getImageData_width, S.Cell_getImageData_height);
-		return S.Cell_getImageData_label;
+		label = (my.isa(dimensions.name, 'str')) ? this.name + '_' + dimensions.name : this.name + '_imageData';
+		x = my.xtGet(dimensions.x, 0);
+		y = my.xtGet(dimensions.y, 0);
+		width = my.xtGet(dimensions.width, this.actualWidth);
+		height = my.xtGet(dimensions.height, this.actualHeight);
+		my.imageData[label] = my.context[this.name].getImageData(x, y, width, height);
+		return label;
 	};
 
 	/**
@@ -5114,11 +5082,9 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @chainable
 @private
 **/
-	S.Context_getContextFromEngine_i = 0;
-	S.Context_getContextFromEngine_iz = 0;
 	my.Context.prototype.getContextFromEngine = function(ctx) {
-		for (S.Context_getContextFromEngine_i = 0, S.Context_getContextFromEngine_iz = my.contextKeys.length; S.Context_getContextFromEngine_i < S.Context_getContextFromEngine_iz; S.Context_getContextFromEngine_i++) {
-			this[my.contextKeys[S.Context_getContextFromEngine_i]] = ctx[my.contextKeys[S.Context_getContextFromEngine_i]];
+		for (var i = 0, iz = my.contextKeys.length; i < iz; i++) {
+			this[my.contextKeys[i]] = ctx[my.contextKeys[i]];
 		}
 		this.winding = my.xtGet(ctx.mozFillRule, ctx.msFillRule, 'nonzero');
 		this.lineDash = (my.xt(ctx.lineDash)) ? ctx.lineDash : [];
@@ -5135,79 +5101,79 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @chainable
 @private
 **/
-	S.stat_contextGetChanges1 = ['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
-	S.stat_contextGetChanges2 = ['fillStyle', 'strokeStyle', 'shadowColor'];
-	S.stat_contextGetChanges3 = ['fillStyle', 'strokeStyle'];
-	S.stat_contextGetChanges4 = ['lineDash'];
-	S.stat_contextGetChanges5 = ['name', 'timestamp'];
-	S.Context_getChanges_i = 0;
-	S.Context_getChanges_iz = 0;
-	S.Context_getChanges_j = 0;
-	S.Context_getChanges_jz = 0;
-	S.Context_getChanges_count = 0;
-	S.Context_getChanges_temp = '';
-	S.Context_getChanges_tempColor = '';
-	S.Context_getChanges_return = null; //raw object
 	my.Context.prototype.getChanges = function(ctx, scale, doscale) {
-		S.Context_getChanges_return = {};
-		S.Context_getChanges_count = 0;
-		for (S.Context_getChanges_i = 0, S.Context_getChanges_iz = my.contextKeys.length; S.Context_getChanges_i < S.Context_getChanges_iz; S.Context_getChanges_i++) {
-			S.Context_getChanges_temp = this.get(my.contextKeys[S.Context_getChanges_i]);
+		var stat1 = ['lineWidth', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'],
+			stat2 = ['fillStyle', 'strokeStyle', 'shadowColor'],
+			stat3 = ['fillStyle', 'strokeStyle'],
+			stat4 = ['lineDash'],
+			stat5 = ['name', 'timestamp'],
+			stat6 = ['Gradient', 'RadialGradient', 'Pattern'],
+			i,
+			iz,
+			j,
+			jz,
+			count,
+			temp,
+			tempColor,
+			myReturn = {};
+		count = 0;
+		for (i = 0, iz = my.contextKeys.length; i < iz; i++) {
+			temp = this.get(my.contextKeys[i]);
 			//handle scalable items
-			if (my.contains(S.stat_contextGetChanges1, my.contextKeys[S.Context_getChanges_i])) {
+			if (my.contains(stat1, my.contextKeys[i])) {
 				if (doscale) {
-					if (S.Context_getChanges_temp * scale !== ctx[my.contextKeys[S.Context_getChanges_i]]) {
-						S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_temp * scale;
-						S.Context_getChanges_count++;
+					if (temp * scale !== ctx[my.contextKeys[i]]) {
+						myReturn[my.contextKeys[i]] = temp * scale;
+						count++;
 					}
 				}
 				else {
-					if (S.Context_getChanges_temp !== ctx[my.contextKeys[S.Context_getChanges_i]]) {
-						S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_temp;
-						S.Context_getChanges_count++;
+					if (temp !== ctx[my.contextKeys[i]]) {
+						myReturn[my.contextKeys[i]] = temp;
+						count++;
 					}
 				}
 			}
 			//handle fillStyle, strokeStyle, shadowColor that use Color design objects
-			else if (my.contains(S.stat_contextGetChanges2, my.contextKeys[S.Context_getChanges_i]) && my.design[S.Context_getChanges_temp] && my.design[S.Context_getChanges_temp].type === 'Color') {
-				S.Context_getChanges_tempColor = my.design[S.Context_getChanges_temp].getData();
-				if (S.Context_getChanges_tempColor !== ctx[my.contextKeys[S.Context_getChanges_i]]) {
-					S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_tempColor;
-					S.Context_getChanges_count++;
+			else if (my.contains(stat2, my.contextKeys[i]) && my.design[temp] && my.design[temp].type === 'Color') {
+				tempColor = my.design[temp].getData();
+				if (tempColor !== ctx[my.contextKeys[i]]) {
+					myReturn[my.contextKeys[i]] = tempColor;
+					count++;
 				}
 			}
 			//handle fillStyle, strokeStyle that use RadialGradient, Gradient design objects
-			else if (my.contains(S.stat_contextGetChanges3, my.contextKeys[S.Context_getChanges_i]) && my.design[S.Context_getChanges_temp] && my.contains(S.stat_designTypes, my.design[S.Context_getChanges_temp].type) && my.design[S.Context_getChanges_temp].autoUpdate) {
-				S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_temp;
-				S.Context_getChanges_count++;
+			else if (my.contains(stat3, my.contextKeys[i]) && my.design[temp] && my.contains(stat6, my.design[temp].type) && my.design[temp].autoUpdate) {
+				myReturn[my.contextKeys[i]] = temp;
+				count++;
 			}
 			//handle linedash - an array that needs deep inspection to check for difference
-			else if (my.contains(S.stat_contextGetChanges4, my.contextKeys[S.Context_getChanges_i]) && my.xt(ctx.lineDash)) {
-				if (S.Context_getChanges_temp.length !== ctx.lineDash.length) {
-					S.Context_getChanges_return.lineDash = S.Context_getChanges_temp;
-					S.Context_getChanges_count++;
+			else if (my.contains(stat4, my.contextKeys[i]) && my.xt(ctx.lineDash)) {
+				if (temp.length !== ctx.lineDash.length) {
+					myReturn.lineDash = temp;
+					count++;
 				}
 				else {
-					for (S.Context_getChanges_j = 0, S.Context_getChanges_jz = S.Context_getChanges_temp.length; S.Context_getChanges_j < S.Context_getChanges_jz; S.Context_getChanges_j++) {
-						if (S.Context_getChanges_temp[S.Context_getChanges_j] !== ctx.lineDash[S.Context_getChanges_j]) {
-							S.Context_getChanges_return.lineDash = S.Context_getChanges_temp;
-							S.Context_getChanges_count++;
+					for (j = 0, jz = temp.length; j < jz; j++) {
+						if (temp[j] !== ctx.lineDash[j]) {
+							myReturn.lineDash = temp;
+							count++;
 							break;
 						}
 					}
 				}
 			}
 			//exclude items that have no equivalent in the context engine
-			else if (my.contains(S.stat_contextGetChanges5, my.contextKeys[S.Context_getChanges_i])) {}
+			else if (my.contains(stat5, my.contextKeys[i])) {}
 			//capture all other changes
 			else {
-				if (S.Context_getChanges_temp !== ctx[my.contextKeys[S.Context_getChanges_i]]) {
-					S.Context_getChanges_return[my.contextKeys[S.Context_getChanges_i]] = S.Context_getChanges_temp;
-					S.Context_getChanges_count++;
+				if (temp !== ctx[my.contextKeys[i]]) {
+					myReturn[my.contextKeys[i]] = temp;
+					count++;
 				}
 			}
 		}
-		return (S.Context_getChanges_count > 0) ? S.Context_getChanges_return : false;
+		return (count > 0) ? myReturn : false;
 	};
 
 	/**
@@ -5323,18 +5289,11 @@ Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &
 @return This
 @chainable
 **/
-	S.Group_forceStamp_visibility = false;
 	my.Group.prototype.forceStamp = function(method, cell) {
-		S.Group_forceStamp_visibility = this.visibility;
-		if (!S.Group_forceStamp_visibility) {
-			this.set({
-				visibility: true
-			});
-		}
+		var visibility = this.visibility;
+		this.visibility = true;
 		this.stamp(method, cell);
-		this.set({
-			visibility: S.Group_forceStamp_visibility
-		});
+		this.visibility = visibility;
 		return this;
 	};
 	/**
@@ -5345,16 +5304,22 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 @return This
 @chainable
 **/
-	S.Group_stamp_entity = null; //scrawl Entity object
-	S.Group_stamp_i = 0;
-	S.Group_stamp_iz = 0;
 	my.Group.prototype.stamp = function(method, cell) {
+		var entity,
+			i,
+			iz;
 		if (this.visibility) {
 			this.sortEntitys();
-			for (S.Group_stamp_i = 0, S.Group_stamp_iz = this.entitys.length; S.Group_stamp_i < S.Group_stamp_iz; S.Group_stamp_i++) {
-				S.Group_stamp_entity = my.entity[this.entitys[S.Group_stamp_i]];
-				S.Group_stamp_entity.group = this.name;
-				S.Group_stamp_entity.stamp(method, cell);
+			for (i = 0, iz = this.entitys.length; i < iz; i++) {
+				entity = my.entity[this.entitys[i]];
+				if (entity) {
+					entity.group = this.name;
+					entity.stamp(method, cell);
+				}
+				else {
+					console.log(this.name, this.entitys);
+					console.log(i, iz, this.entitys[i], 'FAIL');
+				}
 			}
 			this.stampFilter(my.context[this.cell], this.cell);
 		}
@@ -5383,24 +5348,24 @@ Add entitys to the Group
 @return This
 @chainable
 **/
-	S.Group_addEntitysToGroup_slice = [];
-	S.Group_addEntitysToGroup_i = 0;
-	S.Group_addEntitysToGroup_iz = 0;
-	S.Group_addEntitysToGroup_e = null; //mixed
 	my.Group.prototype.addEntitysToGroup = function() {
-		S.Group_addEntitysToGroup_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.Group_addEntitysToGroup_slice[0])) {
-			S.Group_addEntitysToGroup_slice = S.Group_addEntitysToGroup_slice[0];
+		var slice,
+			i,
+			iz,
+			e;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			slice = slice[0];
 		}
-		for (S.Group_addEntitysToGroup_i = 0, S.Group_addEntitysToGroup_iz = S.Group_addEntitysToGroup_slice.length; S.Group_addEntitysToGroup_i < S.Group_addEntitysToGroup_iz; S.Group_addEntitysToGroup_i++) {
-			S.Group_addEntitysToGroup_e = S.Group_addEntitysToGroup_slice[S.Group_addEntitysToGroup_i];
-			if (my.xt(S.Group_addEntitysToGroup_e)) {
-				if (my.isa(S.Group_addEntitysToGroup_e, 'str')) {
-					my.pushUnique(this.entitys, S.Group_addEntitysToGroup_e);
+		for (i = 0, iz = slice.length; i < iz; i++) {
+			e = slice[i];
+			if (my.xt(e)) {
+				if (my.isa(e, 'str')) {
+					my.pushUnique(this.entitys, e);
 				}
 				else {
-					if (my.xt(S.Group_addEntitysToGroup_e.name)) {
-						my.pushUnique(this.entitys, S.Group_addEntitysToGroup_e.name);
+					if (my.xt(e.name)) {
+						my.pushUnique(this.entitys, e.name);
 					}
 				}
 			}
@@ -5414,24 +5379,24 @@ Remove entitys from the Group
 @return This
 @chainable
 **/
-	S.Group_removeEntitysFromGroup_slice = [];
-	S.Group_removeEntitysFromGroup_i = 0;
-	S.Group_removeEntitysFromGroup_iz = 0;
-	S.Group_removeEntitysFromGroup_e = null; //mixed
 	my.Group.prototype.removeEntitysFromGroup = function() {
-		S.Group_removeEntitysFromGroup_slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(S.Group_removeEntitysFromGroup_slice[0])) {
-			S.Group_removeEntitysFromGroup_slice = S.Group_removeEntitysFromGroup_slice[0];
+		var slice,
+			i,
+			iz,
+			e;
+		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(slice[0])) {
+			slice = slice[0];
 		}
-		for (S.Group_removeEntitysFromGroup_i = 0, S.Group_removeEntitysFromGroup_iz = S.Group_addEntitysToGroup_slice.length; S.Group_removeEntitysFromGroup_i < S.Group_removeEntitysFromGroup_iz; S.Group_removeEntitysFromGroup_i++) {
-			S.Group_removeEntitysFromGroup_e = S.Group_addEntitysToGroup_slice[S.Group_removeEntitysFromGroup_i];
-			if (my.xt(S.Group_removeEntitysFromGroup_e)) {
-				if (my.isa(S.Group_removeEntitysFromGroup_e, 'str')) {
-					my.removeItem(this.entitys, S.Group_removeEntitysFromGroup_e);
+		for (i = 0, iz = slice.length; i < iz; i++) {
+			e = slice[i];
+			if (my.xt(e)) {
+				if (my.isa(e, 'str')) {
+					my.removeItem(this.entitys, e);
 				}
 				else {
-					if (my.xt(S.Group_removeEntitysFromGroup_e.name)) {
-						my.removeItem(this.entitys, S.Group_removeEntitysFromGroup_e.name);
+					if (my.xt(e.name)) {
+						my.removeItem(this.entitys, e.name);
 					}
 				}
 			}
@@ -5447,12 +5412,12 @@ The following entity attributes can be amended by this function: startX, startY,
 @return This
 @chainable
 **/
-	S.Group_updateEntitysBy_i = 0;
-	S.Group_updateEntitysBy_iz = 0;
 	my.Group.prototype.updateEntitysBy = function(items) {
+		var i,
+			iz;
 		items = my.safeObject(items);
-		for (S.Group_updateEntitysBy_i = 0, S.Group_updateEntitysBy_iz = this.entitys.length; S.Group_updateEntitysBy_i < S.Group_updateEntitysBy_iz; S.Group_updateEntitysBy_i++) {
-			my.entity[this.entitys[S.Group_updateEntitysBy_i]].setDelta({
+		for (i = 0, iz = this.entitys.length; i < iz; i++) {
+			my.entity[this.entitys[i]].setDelta({
 				startX: my.xtGet(items.x, items.startX, 0),
 				startY: my.xtGet(items.y, items.startY, 0),
 				scale: my.xtGet(items.scale, 0),
@@ -5468,11 +5433,11 @@ Ask all entitys in the Group to perform a set() operation
 @return This
 @chainable
 **/
-	S.Group_setEntitysTo_i = 0;
-	S.Group_setEntitysTo_iz = 0;
 	my.Group.prototype.setEntitysTo = function(items) {
-		for (S.Group_setEntitysTo_i = 0, S.Group_setEntitysTo_iz = this.entitys.length; S.Group_setEntitysTo_i < S.Group_setEntitysTo_iz; S.Group_setEntitysTo_i++) {
-			my.entity[this.entitys[S.Group_setEntitysTo_i]].set(items);
+		var i,
+			iz;
+		for (i = 0, iz = this.entitys.length; i < iz; i++) {
+			my.entity[this.entitys[i]].set(items);
 		}
 		return this;
 	};
@@ -5485,27 +5450,31 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 @return This
 @chainable
 **/
-	S.Group_pivotEntitysTo_pivot = null; //scrawl object
-	S.Group_pivotEntitysTo_pivotVector = null; //scrawl Vector object
-	S.Group_pivotEntitysTo_entity = null; //scrawl Entity object
-	S.Group_pivotEntitysTo_entityVector = null; //scrawl Vector object
-	S.Group_pivotEntitysTo_i = 0;
-	S.Group_pivotEntitysTo_iz = 0;
 	my.Group.prototype.pivotEntitysTo = function(item) {
+		var pivot,
+			pivotVector,
+			entity,
+			entityVector,
+			i,
+			iz,
+			arg = {
+				pivot: 0,
+				handleX: 0,
+				handleY: 0
+			};
 		item = (my.isa(item, 'str')) ? item : false;
 		if (item) {
-			S.Group_pivotEntitysTo_pivot = my.entity[item] || my.point[item] || false;
-			if (S.Group_pivotEntitysTo_pivot) {
-				S.Group_pivotEntitysTo_pivotVector = (S.Group_pivotEntitysTo_pivot.type === 'Point') ? S.Group_pivotEntitysTo_pivot.local : S.Group_pivotEntitysTo_pivot.start;
-				for (S.Group_pivotEntitysTo_i = 0, S.Group_pivotEntitysTo_iz = this.entitys.length; S.Group_pivotEntitysTo_i < S.Group_pivotEntitysTo_iz; S.Group_pivotEntitysTo_i++) {
-					S.Group_pivotEntitysTo_entity = my.entity[this.entitys[S.Group_pivotEntitysTo_i]];
-					S.Group_pivotEntitysTo_entityVector = my.v.set(entity.start);
-					S.Group_pivotEntitysTo_entityVector.vectorSubtract(S.Group_pivotEntitysTo_pivotVector);
-					S.Group_pivotEntitysTo_entity.set({
-						pivot: item,
-						handleX: -S.Group_pivotEntitysTo_entityVector.x,
-						handleY: -S.Group_pivotEntitysTo_entityVector.y
-					});
+			pivot = my.entity[item] || my.point[item] || false;
+			if (pivot) {
+				pivotVector = (pivot.type === 'Point') ? pivot.local : pivot.start;
+				for (i = 0, iz = this.entitys.length; i < iz; i++) {
+					entity = my.entity[this.entitys[i]];
+					entityVector = my.v.set(entity.start);
+					entityVector.vectorSubtract(pivotVector);
+					arg.pivot = item;
+					arg.handleX = -entityVector.x;
+					arg.handleY = -entityVector.y;
+					entity.set(arg);
 				}
 			}
 		}
@@ -5517,26 +5486,26 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
 @return Entity object, or false if no entitys are colliding with the coordinate
 **/
-	S.Group_getEntityAt_entity = null; //scrawl Entity object
-	S.Group_getEntityAt_vector = null; //scrawl Vector object
-	S.Group_getEntityAt_coordinate = null; //scrawl Vector object
-	S.Group_getEntityAt_i = 0;
 	my.Group.prototype.getEntityAt = function(items) {
+		var entity,
+			vector,
+			coordinate,
+			i;
 		items = my.safeObject(items);
-		S.Group_getEntityAt_coordinate = my.v.set(items);
-		S.Group_getEntityAt_coordinate = my.Position.prototype.correctCoordinates(S.Group_getEntityAt_coordinate, this.cell);
+		coordinate = my.v.set(items);
+		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
 		this.sortEntitys();
-		for (S.Group_getEntityAt_i = this.entitys.length - 1; S.Group_getEntityAt_i >= 0; S.Group_getEntityAt_i--) {
-			S.Group_getEntityAt_entity = my.entity[this.entitys[S.Group_getEntityAt_i]];
+		for (i = this.entitys.length - 1; i >= 0; i--) {
+			entity = my.entity[this.entitys[i]];
 			if (this.regionRadius) {
-				S.Group_getEntityAt_entity.resetWork();
-				S.Group_getEntityAt_vector = S.Group_getEntityAt_entity.work.start.vectorSubtract(S.Group_getEntityAt_coordinate);
-				if (S.Group_getEntityAt_vector.getMagnitude() > this.regionRadius) {
+				entity.resetWork();
+				vector = entity.work.start.vectorSubtract(coordinate);
+				if (vector.getMagnitude() > this.regionRadius) {
 					continue;
 				}
 			}
-			if (S.Group_getEntityAt_entity.checkHit(S.Group_getEntityAt_coordinate)) {
-				return S.Group_getEntityAt_entity;
+			if (entity.checkHit(coordinate)) {
+				return entity;
 			}
 		}
 		return false;
@@ -5547,31 +5516,31 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
 @return Entity object, or false if no entitys are colliding with the coordinate
 **/
-	S.Group_getAllEntitysAt_entity = null; //scrawl Entity object
-	S.Group_getAllEntitysAt_vector = null; //scrawl Vector object
-	S.Group_getAllEntitysAt_coordinate = null; //scrawl Vector object
-	S.Group_getAllEntitysAt_results = [];
-	S.Group_getAllEntitysAt_i = 0;
 	my.Group.prototype.getAllEntitysAt = function(items) {
+		var entity,
+			vector,
+			coordinate,
+			results,
+			i;
 		items = my.safeObject(items);
-		S.Group_getAllEntitysAt_coordinate = my.v.set(items);
-		S.Group_getAllEntitysAt_results = [];
-		S.Group_getAllEntitysAt_coordinate = my.Position.prototype.correctCoordinates(S.Group_getAllEntitysAt_coordinate, this.cell);
+		coordinate = my.v.set(items);
+		results = [];
+		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
 		this.sortEntitys();
-		for (S.Group_getAllEntitysAt_i = this.entitys.length - 1; S.Group_getAllEntitysAt_i >= 0; S.Group_getAllEntitysAt_i--) {
-			S.Group_getAllEntitysAt_entity = my.entity[this.entitys[S.Group_getAllEntitysAt_i]];
+		for (i = this.entitys.length - 1; i >= 0; i--) {
+			entity = my.entity[this.entitys[i]];
 			if (this.regionRadius) {
-				S.Group_getAllEntitysAt_entity.resetWork();
-				S.Group_getAllEntitysAt_vector = S.Group_getAllEntitysAt_entity.work.start.vectorSubtract(S.Group_getAllEntitysAt_coordinate);
-				if (S.Group_getAllEntitysAt_vector.getMagnitude() > this.regionRadius) {
+				entity.resetWork();
+				vector = entity.work.start.vectorSubtract(coordinate);
+				if (vector.getMagnitude() > this.regionRadius) {
 					continue;
 				}
 			}
-			if (S.Group_getAllEntitysAt_entity.checkHit(S.Group_getAllEntitysAt_coordinate)) {
-				S.Group_getAllEntitysAt_results.push(S.Group_getAllEntitysAt_entity);
+			if (entity.checkHit(coordinate)) {
+				results.push(entity);
 			}
 		}
-		return (S.Group_getAllEntitysAt_results.length > 0) ? S.Group_getAllEntitysAt_results : false;
+		return (results.length > 0) ? results : false;
 	};
 
 	/**
@@ -5778,7 +5747,7 @@ Allows users to:
 		my.Position.prototype.set.call(this, items);
 		my.ctx[this.context].set(items);
 		items = my.safeObject(items);
-		if (my.xt(items.group)) {
+		if (my.xt(items.group) && items.group !== this.group) {
 			my.group[this.group].removeEntitysFromGroup(this.name);
 			this.group = this.getGroup(items.group);
 			my.group[this.group].addEntitysToGroup(this.name);
@@ -5838,22 +5807,22 @@ Augments Position.clone()
 @return Cloned object
 @chainable
 **/
-	S.Entity_clone_context = null; //raw object
-	S.Entity_clone_enhancedItems = null; //raw object
-	S.Entity_clone_clone = null; //scrawl Entity object
 	my.Entity.prototype.clone = function(items) {
+		var context,
+			enhancedItems,
+			clone;
 		items = my.safeObject(items);
-		S.Entity_clone_context = JSON.parse(JSON.stringify(my.ctx[this.context]));
-		delete S.Entity_clone_context.name;
-		S.Entity_clone_enhancedItems = my.mergeInto(items, S.Entity_clone_context);
-		delete S.Entity_clone_enhancedItems.context;
-		S.Entity_clone_clone = my.Position.prototype.clone.call(this, S.Entity_clone_enhancedItems);
+		context = JSON.parse(JSON.stringify(my.ctx[this.context]));
+		delete context.name;
+		enhancedItems = my.mergeInto(items, context);
+		delete enhancedItems.context;
+		clone = my.Position.prototype.clone.call(this, enhancedItems);
 		if (my.xt(items.createNewContext) && !items.createNewContext) {
-			delete my.ctx[S.Entity_clone_clone.context];
-			my.removeItem(my.ctxnames, S.Entity_clone_clone.context);
-			S.Entity_clone_clone.context = this.context;
+			delete my.ctx[clone.context];
+			my.removeItem(my.ctxnames, clone.context);
+			clone.context = this.context;
 		}
-		return S.Entity_clone_clone;
+		return clone;
 	};
 	/**
 Constructor helper function - discover this entity's default group affiliation
@@ -5901,12 +5870,11 @@ Permitted methods include:
 @return This
 @chainable
 **/
-	S.Entity_forceStamp_visibility = false;
 	my.Entity.prototype.forceStamp = function(method, cell) {
-		S.Entity_forceStamp_visibility = this.visibility;
+		var visibility = this.visibility;
 		this.visibility = true;
 		this.stamp(method, cell);
-		this.visibility = S.Entity_forceStamp_visibility;
+		this.visibility = visibility;
 		return this;
 	};
 	/**
@@ -5944,23 +5912,22 @@ Permitted methods include:
 @return This
 @chainable
 **/
-	S.Entity_stamp_cell = null; //scrawl Cell object
-	S.Entity_stamp_engine = null; //DOM canvas context object
-	S.Entity_stamp_method = '';
 	my.Entity.prototype.stamp = function(method, cell) {
+		var engine,
+			cellname;
 		if (this.visibility) {
-			S.Entity_stamp_cell = my.cell[cell] || my.cell[my.group[this.group].cell];
-			S.Entity_stamp_cell = S.Entity_stamp_cell.name;
-			S.Entity_stamp_engine = my.context[S.Entity_stamp_cell];
-			S.Entity_stamp_method = method || this.method;
+			cell = my.cell[cell] || my.cell[my.group[this.group].cell];
+			cellname = cell.name;
+			engine = my.context[cellname];
+			method = method || this.method;
 			if (this.pivot) {
-				this.setStampUsingPivot(S.Entity_stamp_cell);
+				this.setStampUsingPivot(cellname);
 			}
 			else {
 				this.pathStamp();
 			}
-			this.callMethod(S.Entity_stamp_engine, S.Entity_stamp_cell, S.Entity_stamp_method);
-			this.stampFilter(S.Entity_stamp_engine, S.Entity_stamp_cell);
+			this.callMethod(engine, cellname, method);
+			this.stampFilter(engine, cellname);
 		}
 		return this;
 	};
@@ -5986,11 +5953,10 @@ Stamp helper function - direct entity to the required drawing method function
 @chainable
 @private
 **/
-	S.Entity_callMethod_test = '';
 	my.Entity.prototype.callMethod = function(engine, cell, method) {
-		S.Entity_callMethod_test = method[0];
-		if (S.Entity_callMethod_test < 'f') {
-			if (S.Entity_callMethod_test === 'c') {
+		var test = method[0];
+		if (test < 'f') {
+			if (test === 'c') {
 				switch (method) {
 					case 'clear':
 						this.clear(engine, cell);
@@ -6015,7 +5981,7 @@ Stamp helper function - direct entity to the required drawing method function
 			}
 		}
 		else {
-			if (S.Entity_callMethod_test === 'f') {
+			if (test === 'f') {
 				switch (method) {
 					case 'fill':
 						this.fill(engine, cell);
@@ -6050,28 +6016,28 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 @chainable
 @private
 **/
-	S.Entity_rotateCell_reverse = 0;
-	S.Entity_rotateCell_upend = 0;
-	S.Entity_rotateCell_rotation = 0;
-	S.Entity_rotateCell_cos = 0;
-	S.Entity_rotateCell_sin = 0;
-	S.Entity_rotateCell_x = 0;
-	S.Entity_rotateCell_y = 0;
 	my.Entity.prototype.rotateCell = function(ctx, cell) {
-		S.Entity_rotateCell_reverse = (this.flipReverse) ? -1 : 1;
-		S.Entity_rotateCell_upend = (this.flipUpend) ? -1 : 1;
-		S.Entity_rotateCell_rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
-		S.Entity_rotateCell_cos = Math.cos(S.Entity_rotateCell_rotation);
-		S.Entity_rotateCell_sin = Math.sin(S.Entity_rotateCell_rotation);
-		S.Entity_rotateCell_x = this.start.x;
-		S.Entity_rotateCell_y = this.start.y;
-		if (typeof S.Entity_rotateCell_x === 'string') {
-			S.Entity_rotateCell_x = this.convertX(S.Entity_rotateCell_x, cell);
+		var reverse,
+			upend,
+			rotation,
+			cos,
+			sin,
+			x,
+			y;
+		reverse = (this.flipReverse) ? -1 : 1;
+		upend = (this.flipUpend) ? -1 : 1;
+		rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
+		cos = Math.cos(rotation);
+		sin = Math.sin(rotation);
+		x = this.start.x;
+		y = this.start.y;
+		if (typeof x === 'string') {
+			x = this.convertX(x, cell);
 		}
-		if (typeof S.Entity_rotateCell_y === 'string') {
-			S.Entity_rotateCell_y = this.convertY(S.Entity_rotateCell_y, cell);
+		if (typeof y === 'string') {
+			y = this.convertY(y, cell);
 		}
-		ctx.setTransform((S.Entity_rotateCell_cos * S.Entity_rotateCell_reverse), (S.Entity_rotateCell_sin * S.Entity_rotateCell_reverse), (-S.Entity_rotateCell_sin * S.Entity_rotateCell_upend), (S.Entity_rotateCell_cos * S.Entity_rotateCell_upend), S.Entity_rotateCell_x, S.Entity_rotateCell_y);
+		ctx.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);
 		return this;
 	};
 	/**
@@ -6082,28 +6048,28 @@ Stamp helper function - convert string start.x values to numerical values
 @return Number - x value
 @private
 **/
-	S.Entity_convertX_width = 0;
 	my.Entity.prototype.convertX = function(x, cell) {
+		var width;
 		switch (typeof cell) {
 			case 'string':
-				S.Entity_convertX_width = scrawl.cell[cell].actualWidth;
+				width = scrawl.cell[cell].actualWidth;
 				break;
 			case 'number':
-				S.Entity_convertX_width = cell;
+				width = cell;
 				break;
 			default:
-				S.Entity_convertX_width = cell.width;
+				width = cell.width;
 		}
 		switch (x) {
 			case 'left':
 				return 0;
 			case 'right':
-				return S.Entity_convertX_width;
+				return width;
 			case 'center':
-				return S.Entity_convertX_width / 2;
+				return width / 2;
 			default:
 				x = parseFloat(x) / 100;
-				return (isNaN(x)) ? 0 : x * S.Entity_convertX_width;
+				return (isNaN(x)) ? 0 : x * width;
 		}
 	};
 	/**
@@ -6114,28 +6080,28 @@ Stamp helper function - convert string start.y values to numerical values
 @return Number - y value
 @private
 **/
-	S.Entity_convertY_height = 0;
 	my.Entity.prototype.convertY = function(y, cell) {
+		var height;
 		switch (typeof cell) {
 			case 'string':
-				S.Entity_convertY_height = scrawl.cell[cell].actualHeight;
+				height = scrawl.cell[cell].actualHeight;
 				break;
 			case 'number':
-				S.Entity_convertY_height = cell;
+				height = cell;
 				break;
 			default:
-				S.Entity_convertY_height = cell.height;
+				height = cell.height;
 		}
 		switch (y) {
 			case 'top':
 				return 0;
 			case 'bottom':
-				return S.Entity_convertY_height;
+				return height;
 			case 'center':
-				return S.Entity_convertY_height / 2;
+				return height / 2;
 			default:
 				y = parseFloat(y) / 100;
-				return (isNaN(y)) ? 0 : y * S.Entity_convertY_height;
+				return (isNaN(y)) ? 0 : y * height;
 		}
 	};
 	/**
@@ -6286,10 +6252,9 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @chainable
 @private
 **/
-	S.Entity_clearShadow_context = null; //scrawl Context object
 	my.Entity.prototype.clearShadow = function(ctx, cell) {
-		S.Entity_clearShadow_context = my.ctx[this.context];
-		if (S.Entity_clearShadow_context.shadowOffsetX || S.Entity_clearShadow_context.shadowOffsetY || S.Entity_clearShadow_context.shadowBlur) {
+		var context = my.ctx[this.context];
+		if (context.shadowOffsetX || context.shadowOffsetY || context.shadowBlur) {
 			my.cell[cell].clearShadow();
 		}
 		return this;
@@ -6303,10 +6268,9 @@ Stamp helper function - clear shadow parameters during a multi draw operation (P
 @chainable
 @private
 **/
-	S.Entity_restoreShadow_context = null; //scrawl Context object
 	my.Entity.prototype.restoreShadow = function(ctx, cell) {
-		S.Entity_restoreShadow_context = my.ctx[this.context];
-		if (S.Entity_restoreShadow_context.shadowOffsetX || S.Entity_restoreShadow_context.shadowOffsetY || S.Entity_restoreShadow_context.shadowBlur) {
+		var context = my.ctx[this.context];
+		if (context.shadowOffsetX || context.shadowOffsetY || context.shadowBlur) {
 			my.cell[cell].restoreShadow(this.context);
 		}
 		return this;
@@ -6318,15 +6282,15 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 @return This
 @chainable
 **/
-	S.Entity_pickupEntity_cell = null; //scrawl Cell object
-	S.Entity_pickupEntity_coordinate = null; //scrawl Vector object
 	my.Entity.prototype.pickupEntity = function(items) {
+		var cell,
+			coordinate;
 		items = my.safeObject(items);
-		S.Entity_pickupEntity_coordinate = my.v.set(items);
-		S.Entity_pickupEntity_cell = my.cell[my.group[this.group].cell];
-		S.Entity_pickupEntity_coordinate = this.correctCoordinates(S.Entity_pickupEntity_coordinate, S.Entity_pickupEntity_cell);
-		this.oldX = S.Entity_pickupEntity_coordinate.x || 0;
-		this.oldY = S.Entity_pickupEntity_coordinate.y || 0;
+		coordinate = my.v.set(items);
+		cell = my.cell[my.group[this.group].cell];
+		coordinate = this.correctCoordinates(coordinate, cell);
+		this.oldX = coordinate.x || 0;
+		this.oldY = coordinate.y || 0;
 		this.realPivot = this.pivot;
 		this.pivot = 'mouse';
 		this.order += this.order + 9999;
@@ -6339,12 +6303,11 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 @return This
 @chainable
 **/
-	S.Entity_dropEntity_order = 0;
 	my.Entity.prototype.dropEntity = function(item) {
-		S.Entity_dropEntity_order = this.order;
+		var order = this.order;
 		this.set({
 			pivot: my.xtGet(item, this.realPivot, false),
-			order: (S.Entity_dropEntity_order >= 9999) ? S.Entity_dropEntity_order - 9999 : 0
+			order: (order >= 9999) ? order - 9999 : 0
 		});
 		delete this.realPivot;
 		delete this.oldX;
@@ -6365,38 +6328,38 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 @param {Object} items Argument object
 @return The first coordinate to fall within the entity's path; false if none fall within the path
 **/
-	S.Entity_checkHit_tests = [];
-	S.Entity_checkHit_here = null; //scrawl Vector object
-	S.Entity_checkHit_result = false;
-	S.Entity_checkHit_i = 0;
-	S.Entity_checkHit_iz = 0;
-	S.Entity_checkHit_width = 0;
-	S.Entity_checkHit_height = 0;
 	my.Entity.prototype.checkHit = function(items) {
+		var tests = [],
+			here,
+			result,
+			i,
+			iz,
+			width,
+			height;
 		items = my.safeObject(items);
 		if (my.xt(items.tests)) {
-			S.Entity_checkHit_tests = items.tests;
+			tests = items.tests;
 		}
 		else {
-			S.Entity_checkHit_tests.length = 0;
-			S.Entity_checkHit_tests.push(items.x || 0);
-			S.Entity_checkHit_tests.push(items.y || 0);
+			tests.length = 0;
+			tests.push(items.x || 0);
+			tests.push(items.y || 0);
 		}
 		this.rotateCell(my.cvx, this.getEntityCell().name);
-		S.Entity_checkHit_here = this.prepareStamp();
-		S.Entity_checkHit_width = (this.localWidth) ? this.localWidth : this.width * this.scale;
-		S.Entity_checkHit_height = (this.localHeight) ? this.localHeight : this.height * this.scale;
+		here = this.prepareStamp();
+		width = (this.localWidth) ? this.localWidth : this.width * this.scale;
+		height = (this.localHeight) ? this.localHeight : this.height * this.scale;
 		my.cvx.beginPath();
-		my.cvx.rect(S.Entity_checkHit_here.x, S.Entity_checkHit_here.y, S.Entity_checkHit_width, S.Entity_checkHit_height);
-		for (S.Entity_checkHit_i = 0, S.Entity_checkHit_iz = S.Entity_checkHit_tests.length; S.Entity_checkHit_i < S.Entity_checkHit_iz; S.Entity_checkHit_i += 2) {
-			S.Entity_checkHit_result = my.cvx.isPointInPath(S.Entity_checkHit_tests[S.Entity_checkHit_i], S.Entity_checkHit_tests[S.Entity_checkHit_i + 1]);
-			if (S.Entity_checkHit_result) {
+		my.cvx.rect(here.x, here.y, width, height);
+		for (i = 0, iz = tests.length; i < iz; i += 2) {
+			result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
+			if (result) {
 				break;
 			}
 		}
-		if (S.Entity_checkHit_result) {
-			items.x = S.Entity_checkHit_tests[S.Entity_checkHit_i];
-			items.y = S.Entity_checkHit_tests[S.Entity_checkHit_i + 1];
+		if (result) {
+			items.x = tests[i];
+			items.y = tests[i + 1];
 			return items;
 		}
 		return false;
@@ -6509,36 +6472,36 @@ Add values to Number attributes
 @return This
 @chainable
 **/
-	S.Design_setDelta_temp = 0;
 	my.Design.prototype.setDelta = function(items) {
+		var temp;
 		items = my.safeObject(items);
 		if (items.startX) {
-			S.Design_setDelta_temp = this.get('startX');
-			this.startX = (my.isa(items.startX, 'str')) ? my.addPercentages(S.Design_setDelta_temp, items.startX) : S.Design_setDelta_temp + items.startX;
+			temp = this.get('startX');
+			this.startX = (my.isa(items.startX, 'str')) ? my.addPercentages(temp, items.startX) : temp + items.startX;
 		}
 		if (items.startY) {
-			S.Design_setDelta_temp = this.get('startY');
-			this.startY = (my.isa(items.startY, 'str')) ? my.addPercentages(S.Design_setDelta_temp, items.startY) : S.Design_setDelta_temp + items.startY;
+			temp = this.get('startY');
+			this.startY = (my.isa(items.startY, 'str')) ? my.addPercentages(temp, items.startY) : temp + items.startY;
 		}
 		if (items.startRadius) {
-			S.Design_setDelta_temp = this.get('startRadius');
-			this.startRadius = S.Design_setDelta_temp + items.startRadius;
+			temp = this.get('startRadius');
+			this.startRadius = temp + items.startRadius;
 		}
 		if (items.endX) {
-			S.Design_setDelta_temp = this.get('endX');
-			this.endX = (my.isa(items.endX, 'str')) ? my.addPercentages(S.Design_setDelta_temp, items.endX) : S.Design_setDelta_temp + items.endX;
+			temp = this.get('endX');
+			this.endX = (my.isa(items.endX, 'str')) ? my.addPercentages(temp, items.endX) : temp + items.endX;
 		}
 		if (items.endY) {
-			S.Design_setDelta_temp = this.get('endY');
-			this.endY = (my.isa(items.endY, 'str')) ? my.addPercentages(S.Design_setDelta_temp, items.endY) : S.Design_setDelta_temp + items.endY;
+			temp = this.get('endY');
+			this.endY = (my.isa(items.endY, 'str')) ? my.addPercentages(temp, items.endY) : temp + items.endY;
 		}
 		if (items.endRadius) {
-			S.Design_setDelta_temp = this.get('endRadius');
-			this.endRadius = S.Design_setDelta_temp + items.endRadius;
+			temp = this.get('endRadius');
+			this.endRadius = temp + items.endRadius;
 		}
 		if (items.shift && my.xt(my.d.Design.shift)) {
-			S.Design_setDelta_temp = this.get('shift');
-			this.shift = S.Design_setDelta_temp + items.shift;
+			temp = this.get('shift');
+			this.shift = temp + items.shift;
 		}
 		return this;
 	};
@@ -6575,25 +6538,25 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 @chainable
 @private
 **/
-	S.Design_makeGradient_ctx = null; //DOM canvas context object
-	S.Design_makeGradient_g = 0;
-	S.Design_makeGradient_x = 0;
-	S.Design_makeGradient_y = 0;
-	S.Design_makeGradient_sx = 0;
-	S.Design_makeGradient_sy = 0;
-	S.Design_makeGradient_sr = 0;
-	S.Design_makeGradient_ex = 0;
-	S.Design_makeGradient_ey = 0;
-	S.Design_makeGradient_er = 0;
-	S.Design_makeGradient_fsx = 0;
-	S.Design_makeGradient_fsy = 0;
-	S.Design_makeGradient_fex = 0;
-	S.Design_makeGradient_fey = 0;
-	S.Design_makeGradient_temp = 0;
-	S.Design_makeGradient_w = 0;
-	S.Design_makeGradient_h = 0;
-	S.Design_makeGradient_r = 0;
 	my.Design.prototype.makeGradient = function(entity, cell) {
+		var ctx,
+			g,
+			x,
+			y,
+			sx,
+			sy,
+			sr,
+			ex,
+			ey,
+			er,
+			fsx,
+			fsy,
+			fex,
+			fey,
+			temp,
+			w,
+			h,
+			r;
 		entity = my.entity[entity] || false;
 		if (my.xt(cell)) {
 			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[this.get('cell')];
@@ -6604,134 +6567,134 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 		else {
 			cell = my.cell[this.get('cell')];
 		}
-		S.Design_makeGradient_ctx = my.context[cell.name];
+		ctx = my.context[cell.name];
 		//in all cases, the canvas origin will have been translated to the current entity's start
 		if (this.lockTo && this.lockTo !== 'cell') {
-			S.Design_makeGradient_temp = entity.getOffsetStartVector();
+			temp = entity.getOffsetStartVector();
 			switch (entity.type) {
 				case 'Wheel':
-					S.Design_makeGradient_x = -S.Design_makeGradient_temp.x + (entity.radius * entity.scale);
-					S.Design_makeGradient_y = -S.Design_makeGradient_temp.y + (entity.radius * entity.scale);
+					x = -temp.x + (entity.radius * entity.scale);
+					y = -temp.y + (entity.radius * entity.scale);
 					break;
 				case 'Shape':
 				case 'Path':
 					if (entity.isLine) {
-						S.Design_makeGradient_x = -S.Design_makeGradient_temp.x;
-						S.Design_makeGradient_y = -S.Design_makeGradient_temp.y;
+						x = -temp.x;
+						y = -temp.y;
 					}
 					else {
-						S.Design_makeGradient_x = -S.Design_makeGradient_temp.x + ((entity.width / 2) * entity.scale);
-						S.Design_makeGradient_y = -S.Design_makeGradient_temp.y + ((entity.height / 2) * entity.scale);
+						x = -temp.x + ((entity.width / 2) * entity.scale);
+						y = -temp.y + ((entity.height / 2) * entity.scale);
 					}
 					break;
 				default:
-					S.Design_makeGradient_x = -S.Design_makeGradient_temp.x;
-					S.Design_makeGradient_y = -S.Design_makeGradient_temp.y;
+					x = -temp.x;
+					y = -temp.y;
 			}
-			S.Design_makeGradient_w = (my.xt(entity.localWidth)) ? entity.localWidth : entity.width * entity.scale;
-			S.Design_makeGradient_h = (my.xt(entity.localHeight)) ? entity.localHeight : entity.height * entity.scale;
-			S.Design_makeGradient_sx = (my.xt(this.startX)) ? this.startX : 0;
-			if (typeof S.Design_makeGradient_sx === 'string') {
-				S.Design_makeGradient_sx = (parseFloat(S.Design_makeGradient_sx) / 100) * S.Design_makeGradient_w;
+			w = (my.xt(entity.localWidth)) ? entity.localWidth : entity.width * entity.scale;
+			h = (my.xt(entity.localHeight)) ? entity.localHeight : entity.height * entity.scale;
+			sx = (my.xt(this.startX)) ? this.startX : 0;
+			if (typeof sx === 'string') {
+				sx = (parseFloat(sx) / 100) * w;
 			}
-			S.Design_makeGradient_sy = (my.xt(this.startY)) ? this.startY : 0;
-			if (typeof S.Design_makeGradient_sy === 'string') {
-				S.Design_makeGradient_sy = (parseFloat(S.Design_makeGradient_sy) / 100) * S.Design_makeGradient_h;
+			sy = (my.xt(this.startY)) ? this.startY : 0;
+			if (typeof sy === 'string') {
+				sy = (parseFloat(sy) / 100) * h;
 			}
-			S.Design_makeGradient_ex = (my.xt(this.endX)) ? this.endX : S.Design_makeGradient_w;
-			if (typeof S.Design_makeGradient_ex === 'string') {
-				S.Design_makeGradient_ex = (parseFloat(S.Design_makeGradient_ex) / 100) * S.Design_makeGradient_w;
+			ex = (my.xt(this.endX)) ? this.endX : w;
+			if (typeof ex === 'string') {
+				ex = (parseFloat(ex) / 100) * w;
 			}
-			S.Design_makeGradient_ey = (my.xt(this.endY)) ? this.endY : S.Design_makeGradient_h;
-			if (typeof S.Design_makeGradient_ey === 'string') {
-				S.Design_makeGradient_ey = (parseFloat(S.Design_makeGradient_ey) / 100) * S.Design_makeGradient_h;
+			ey = (my.xt(this.endY)) ? this.endY : h;
+			if (typeof ey === 'string') {
+				ey = (parseFloat(ey) / 100) * h;
 			}
 			if (this.type === 'Gradient') {
-				S.Design_makeGradient_g = S.Design_makeGradient_ctx.createLinearGradient(S.Design_makeGradient_sx - S.Design_makeGradient_x, S.Design_makeGradient_sy - S.Design_makeGradient_y, S.Design_makeGradient_ex - S.Design_makeGradient_x, S.Design_makeGradient_ey - S.Design_makeGradient_y);
+				g = ctx.createLinearGradient(sx - x, sy - y, ex - x, ey - y);
 			}
 			else {
-				S.Design_makeGradient_sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
-				if (typeof S.Design_makeGradient_sr === 'string') {
-					S.Design_makeGradient_sr = (parseFloat(S.Design_makeGradient_sr) / 100) * S.Design_makeGradient_w;
+				sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
+				if (typeof sr === 'string') {
+					sr = (parseFloat(sr) / 100) * w;
 				}
-				S.Design_makeGradient_er = (my.xt(this.endRadius)) ? this.endRadius : S.Design_makeGradient_w;
-				if (typeof S.Design_makeGradient_er === 'string') {
-					S.Design_makeGradient_er = (parseFloat(S.Design_makeGradient_er) / 100) * S.Design_makeGradient_w;
+				er = (my.xt(this.endRadius)) ? this.endRadius : w;
+				if (typeof er === 'string') {
+					er = (parseFloat(er) / 100) * w;
 				}
-				S.Design_makeGradient_g = S.Design_makeGradient_ctx.createRadialGradient(S.Design_makeGradient_sx - S.Design_makeGradient_x, S.Design_makeGradient_sy - S.Design_makeGradient_y, S.Design_makeGradient_sr, S.Design_makeGradient_ex - S.Design_makeGradient_x, S.Design_makeGradient_ey - S.Design_makeGradient_y, S.Design_makeGradient_er);
+				g = ctx.createRadialGradient(sx - x, sy - y, sr, ex - x, ey - y, er);
 			}
 		}
 		else {
-			S.Design_makeGradient_x = entity.start.x;
-			if (typeof S.Design_makeGradient_x === 'string') {
-				S.Design_makeGradient_x = entity.convertX(S.Design_makeGradient_x, cell.name);
+			x = entity.start.x;
+			if (typeof x === 'string') {
+				x = entity.convertX(x, cell.name);
 			}
-			S.Design_makeGradient_y = entity.start.y;
-			if (typeof S.Design_makeGradient_y === 'string') {
-				S.Design_makeGradient_y = entity.convertY(S.Design_makeGradient_y, cell.name);
+			y = entity.start.y;
+			if (typeof y === 'string') {
+				y = entity.convertY(y, cell.name);
 			}
-			S.Design_makeGradient_sx = (my.xt(this.startX)) ? this.startX : 0;
-			if (typeof S.Design_makeGradient_sx === 'string') {
-				S.Design_makeGradient_sx = entity.convertX(S.Design_makeGradient_sx, cell.name);
+			sx = (my.xt(this.startX)) ? this.startX : 0;
+			if (typeof sx === 'string') {
+				sx = entity.convertX(sx, cell.name);
 			}
-			S.Design_makeGradient_sy = (my.xt(this.startY)) ? this.startY : 0;
-			if (typeof S.Design_makeGradient_sy === 'string') {
-				S.Design_makeGradient_sy = entity.convertY(S.Design_makeGradient_sy, cell.name);
+			sy = (my.xt(this.startY)) ? this.startY : 0;
+			if (typeof sy === 'string') {
+				sy = entity.convertY(sy, cell.name);
 			}
-			S.Design_makeGradient_ex = (my.xt(this.endX)) ? this.endX : cell.actualWidth;
-			if (typeof S.Design_makeGradient_ex === 'string') {
-				S.Design_makeGradient_ex = entity.convertX(S.Design_makeGradient_ex, cell.name);
+			ex = (my.xt(this.endX)) ? this.endX : cell.actualWidth;
+			if (typeof ex === 'string') {
+				ex = entity.convertX(ex, cell.name);
 			}
-			S.Design_makeGradient_ey = (my.xt(this.endY)) ? this.endY : cell.actualWidth;
-			if (typeof S.Design_makeGradient_ey === 'string') {
-				S.Design_makeGradient_ey = entity.convertY(S.Design_makeGradient_ey, cell.name);
+			ey = (my.xt(this.endY)) ? this.endY : cell.actualWidth;
+			if (typeof ey === 'string') {
+				ey = entity.convertY(ey, cell.name);
 			}
-			S.Design_makeGradient_x = (entity.flipReverse) ? cell.actualWidth - S.Design_makeGradient_x : S.Design_makeGradient_x;
-			S.Design_makeGradient_y = (entity.flipUpend) ? cell.actualHeight - S.Design_makeGradient_y : S.Design_makeGradient_y;
-			S.Design_makeGradient_sx = (entity.flipReverse) ? cell.actualWidth - S.Design_makeGradient_sx : S.Design_makeGradient_sx;
-			S.Design_makeGradient_sy = (entity.flipUpend) ? cell.actualHeight - S.Design_makeGradient_sy : S.Design_makeGradient_sy;
-			S.Design_makeGradient_ex = (entity.flipReverse) ? cell.actualWidth - S.Design_makeGradient_ex : S.Design_makeGradient_ex;
-			S.Design_makeGradient_ey = (entity.flipUpend) ? cell.actualHeight - S.Design_makeGradient_ey : S.Design_makeGradient_ey;
-			S.Design_makeGradient_fsx = S.Design_makeGradient_sx - S.Design_makeGradient_x;
-			S.Design_makeGradient_fsy = S.Design_makeGradient_sy - S.Design_makeGradient_y;
-			S.Design_makeGradient_fex = S.Design_makeGradient_ex - S.Design_makeGradient_x;
-			S.Design_makeGradient_fey = S.Design_makeGradient_ey - S.Design_makeGradient_y;
-			S.Design_makeGradient_r = entity.roll;
+			x = (entity.flipReverse) ? cell.actualWidth - x : x;
+			y = (entity.flipUpend) ? cell.actualHeight - y : y;
+			sx = (entity.flipReverse) ? cell.actualWidth - sx : sx;
+			sy = (entity.flipUpend) ? cell.actualHeight - sy : sy;
+			ex = (entity.flipReverse) ? cell.actualWidth - ex : ex;
+			ey = (entity.flipUpend) ? cell.actualHeight - ey : ey;
+			fsx = sx - x;
+			fsy = sy - y;
+			fex = ex - x;
+			fey = ey - y;
+			r = entity.roll;
 			if ((entity.flipReverse && entity.flipUpend) || (!entity.flipReverse && !entity.flipUpend)) {
-				S.Design_makeGradient_r = -entity.roll;
+				r = -entity.roll;
 			}
 			if (entity.roll) {
 				my.v.set({
-					x: S.Design_makeGradient_fsx,
-					y: S.Design_makeGradient_fsy,
+					x: fsx,
+					y: fsy,
 					z: 0
-				}).rotate(S.Design_makeGradient_r);
-				S.Design_makeGradient_fsx = my.v.x;
-				S.Design_makeGradient_fsy = my.v.y;
+				}).rotate(r);
+				fsx = my.v.x;
+				fsy = my.v.y;
 				my.v.set({
-					x: S.Design_makeGradient_fex,
-					y: S.Design_makeGradient_fey,
+					x: fex,
+					y: fey,
 					z: 0
-				}).rotate(S.Design_makeGradient_r);
-				S.Design_makeGradient_fex = my.v.x;
-				S.Design_makeGradient_fey = my.v.y;
+				}).rotate(r);
+				fex = my.v.x;
+				fey = my.v.y;
 			}
 			if (this.type === 'Gradient') {
-				S.Design_makeGradient_g = S.Design_makeGradient_ctx.createLinearGradient(S.Design_makeGradient_fsx, S.Design_makeGradient_fsy, S.Design_makeGradient_fex, S.Design_makeGradient_fey);
+				g = ctx.createLinearGradient(fsx, fsy, fex, fey);
 			}
 			else {
-				S.Design_makeGradient_sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
-				if (typeof S.Design_makeGradient_sr === 'string') {
-					S.Design_makeGradient_sr = (parseFloat(S.Design_makeGradient_sr) / 100) * cell.actualWidth;
+				sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
+				if (typeof sr === 'string') {
+					sr = (parseFloat(sr) / 100) * cell.actualWidth;
 				}
-				S.Design_makeGradient_er = (my.xt(this.endRadius)) ? this.endRadius : cell.actualWidth;
-				if (typeof S.Design_makeGradient_er === 'string') {
-					S.Design_makeGradient_er = (parseFloat(S.Design_makeGradient_er) / 100) * cell.actualWidth;
+				er = (my.xt(this.endRadius)) ? this.endRadius : cell.actualWidth;
+				if (typeof er === 'string') {
+					er = (parseFloat(er) / 100) * cell.actualWidth;
 				}
-				S.Design_makeGradient_g = S.Design_makeGradient_ctx.createRadialGradient(S.Design_makeGradient_fsx, S.Design_makeGradient_fsy, S.Design_makeGradient_sr, S.Design_makeGradient_fex, S.Design_makeGradient_fey, S.Design_makeGradient_er);
+				g = ctx.createRadialGradient(fsx, fsy, sr, fex, fey, er);
 			}
 		}
-		my.dsn[this.name] = S.Design_makeGradient_g;
+		my.dsn[this.name] = g;
 		return this;
 	};
 	/**
@@ -6741,14 +6704,14 @@ Design.update() helper function - applies color attribute objects to the gradien
 @private
 @chainable
 **/
-	S.Design_applyStops_color = null; //raw object
-	S.Design_applyStops_i = 0;
-	S.Design_applyStops_iz = 0;
 	my.Design.prototype.applyStops = function() {
-		S.Design_applyStops_color = this.get('color');
+		var color,
+			i,
+			iz;
+		color = this.get('color');
 		if (my.dsn[this.name]) {
-			for (S.Design_applyStops_i = 0, S.Design_applyStops_iz = S.Design_applyStops_color.length; S.Design_applyStops_i < S.Design_applyStops_iz; S.Design_applyStops_i++) {
-				my.dsn[this.name].addColorStop(S.Design_applyStops_color[S.Design_applyStops_i].stop, S.Design_applyStops_color[S.Design_applyStops_i].color);
+			for (i = 0, iz = color.length; i < iz; i++) {
+				my.dsn[this.name].addColorStop(color[i].stop, color[i].color);
 			}
 		}
 		return this;
@@ -6867,4 +6830,4 @@ End circle radius, in pixels or percentage of entity/cell width
 	});
 
 	return my;
-}(scrawlVars));
+}());
