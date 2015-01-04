@@ -355,12 +355,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 									continue;
 								}
 							}
-							arg.tests = homeTemp.collisionArray;
+							arg.tests = homeTemp.getCollisionPoints();
 							if (awayTemp.checkHit(arg)) {
 								hits.push([homeTemp.name, awayTemp.name]);
 								continue;
 							}
-							arg.tests = awayTemp.collisionArray;
+							arg.tests = awayTemp.getCollisionPoints();
 							if (homeTemp.checkHit(arg)) {
 								hits.push([homeTemp.name, awayTemp.name]);
 								continue;
@@ -420,12 +420,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 										continue;
 									}
 								}
-								arg.tests = thisTemp.collisionArray;
+								arg.tests = thisTemp.getCollisionPoints();
 								if (gTemp.checkHit(arg)) {
 									hits.push([thisTemp.name, gTemp.name]);
 									continue;
 								}
-								arg.tests = gTemp.collisionArray;
+								arg.tests = gTemp.getCollisionPoints();
 								if (thisTemp.checkHit(arg)) {
 									hits.push([thisTemp.name, gTemp.name]);
 									continue;
@@ -488,6 +488,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			my.mergeInto(my.d.Path, my.d.Entity);
 		}
 		/**
+    Recalculate the current collision point positions for all entitys in the group
+
+    @method Group.resetCollisionPoints
+    @return this
+    @chainable
+    **/
+		my.Group.prototype.resetCollisionPoints = function() {
+			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
+				my.entity[this.entitys[i]].resetCollisionPoints();
+			}
+			return this;
+		};
+		/**
     Entity constructor hook function - modified by collisions module
     @method Entity.collisionsEntityConstructor
     @private
@@ -534,6 +547,22 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					this.addEntityToCellFences();
 				}
 			}
+		};
+		/**
+    Recalculate the entity's current collision point positions
+
+    This will be triggered automatically when changing the following attributes via set ort setDelta:
+
+    * for set() - start, startX, startY, handle, handleX, handleY, scale, roll, collisionPoints, width, height, radius, pasteWidth, pasteHeight
+    * for setDelta() - start, startX, startY, handle, handleX, handleY, scale, roll, width, height, radius, pasteWidth, pasteHeight
+
+    @method Entity.resetCollisionPoints
+    @return this
+    @chainable
+    **/
+		my.Entity.prototype.resetCollisionPoints = function() {
+			this.collisionArray.length = 0;
+			return this;
 		};
 		/**
     Entity.setDelta hook function - modified by collisions module

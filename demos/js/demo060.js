@@ -64,9 +64,11 @@ var mycode = function() {
 		radius: 30,
 		fence: true,
 	});
-	scrawl.makeLine({
+	scrawl.makeQuadratic({
 		startX: 250,
 		startY: 125,
+		controlX: 375,
+		controlY: 150,
 		endX: 500,
 		endY: 125,
 		lineWidth: 15,
@@ -113,7 +115,7 @@ var mycode = function() {
 	});
 	myFender = scrawl.newWheel({
 		name: 'fender',
-		radius: 11,
+		radius: 10,
 		lineWidth: 2,
 		strokeStyle: 'gold',
 		method: 'draw',

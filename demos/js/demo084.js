@@ -74,7 +74,7 @@ var mycode = function() {
 			});
 		}
 	}
-	scrawl.deleteEntity([myTile.name, 'tile44']);
+	scrawl.deleteEntity(myTile.name, 'tile44');
 
 	scrawl.newShape({
 		strokeStyle: 'white',
@@ -108,6 +108,7 @@ var mycode = function() {
 		}
 	};
 
+	//this could probably be done better using scrawl tweens ...
 	startTileMove = function(hit) { //initialise a tile to move
 		if (scrawl.xt(hit)) {
 			myX = 0;

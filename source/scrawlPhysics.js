@@ -379,7 +379,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			if (!this.velocity.type || this.velocity.type !== 'Vector') {
 				this.velocity = my.newVector(items.velocity || this.velocity);
 			}
-			if (my.xto(items.delta, items.deltaX, items.deltaY)) {
+			if (my.xto(items.delta, items.deltaX, items.deltaY, items.velocity)) {
 				temp = my.safeObject(items.delta);
 				this.velocity.x = my.xtGet(items.deltaX, temp.x, this.velocity.x);
 				this.velocity.y = my.xtGet(items.deltaY, temp.y, this.velocity.y);

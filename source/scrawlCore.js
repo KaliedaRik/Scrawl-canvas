@@ -63,7 +63,7 @@ The core module is the only essential module in Scrawl. It must always be direct
 
 
 @example
-	<script src="path/to/scrawlCore-min.js"></script>
+    <script src="path/to/scrawlCore-min.js"></script>
 
 @module scrawlCore
 **/
@@ -247,7 +247,7 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-	scrawl.init();
+    scrawl.init();
 **/
 	my.init = function() {
 		my.reset();
@@ -290,7 +290,7 @@ A __general__ function that resets the Scrawl library to empty arrays and object
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-	scrawl.reset();
+    scrawl.reset();
 **/
 	my.reset = function() {
 		for (var i = 0, iz = my.nameslist.length; i < iz; i++) {
@@ -329,34 +329,34 @@ Where permitted, Scrawl will load modules asynchronously. Modules have no depend
 
 Any supplied callback function will only be run once all modules have been loaded.
 @example
-	<!DOCTYPE html>
-	<html>
-		<head></head>
-		<body>
-			<canvas></canvas>
-			<script src="js/scrawlCore-min.js"></script>
-			<script>
-				var mycode = function(){
-					scrawl.newWheel({
-						startX: 50,
-						startY: 50,
-						radius: 40,
-						});
-					scrawl.render();
-					};
-				scrawl.loadModules({
-					path: 'js/',
-					modules: ['wheel'],			
-					callback: function(){
-						window.addEventListener('load', function(){
-							scrawl.init();
-							mycode();
-							}, false);
-						},
-					});
-			</script>
-		</body>
-	</html>
+    <!DOCTYPE html>
+    <html>
+        <head></head>
+        <body>
+            <canvas></canvas>
+            <script src="js/scrawlCore-min.js"></script>
+            <script>
+                var mycode = function(){
+                    scrawl.newWheel({
+                        startX: 50,
+                        startY: 50,
+                        radius: 40,
+                        });
+                    scrawl.render();
+                    };
+                scrawl.loadModules({
+                    path: 'js/',
+                    modules: ['wheel'],         
+                    callback: function(){
+                        window.addEventListener('load', function(){
+                            scrawl.init();
+                            mycode();
+                            }, false);
+                        },
+                    });
+            </script>
+        </body>
+    </html>
 
 @method loadModules
 @param {String} [path] File path String to the directory where the Scrawl module scripts have been stored, relative to the web page's main file; default ('') will assume modules are in the same directory as the web page file
@@ -429,23 +429,23 @@ A __utility__ function that adds the attributes of the additive object to those 
 @param {Object} o2 additive object
 @return Merged object
 @example
-	var old = {
-			name: 'Peter',
-			age: 42,
-			job: 'lawyer'
-			},
-		new = {
-			age: 32,
-			job: 'coder',
-			pet: 'cat'
-			};
-	scrawl.mergeInto(old, new);
-	//result is {
-	//	name: 'Peter',
-	//	age: 42,
-	//	job: 'lawyer'
-	//	pet: 'cat'
-	//	}
+    var old = {
+            name: 'Peter',
+            age: 42,
+            job: 'lawyer'
+            },
+        new = {
+            age: 32,
+            job: 'coder',
+            pet: 'cat'
+            };
+    scrawl.mergeInto(old, new);
+    //result is {
+    //  name: 'Peter',
+    //  age: 42,
+    //  job: 'lawyer'
+    //  pet: 'cat'
+    //  }
 **/
 	my.mergeInto = function(o1, o2) {
 		for (var key in o2) {
@@ -462,23 +462,23 @@ A __utility__ function that adds the attributes of the additive object to those 
 @param {Object} o2 additive object
 @return Merged object
 @example
-	var old = {
-			name: 'Peter',
-			age: 42,
-			job: 'lawyer'
-			},
-		new = {
-			age: 32,
-			job: 'coder',
-			pet: 'cat'
-			};
-	scrawl.mergeOver(old, new);
-	//result is {
-	//	name: 'Peter',
-	//	age: 32,
-	//	job: 'coder'
-	//	pet: 'cat'
-	//	}
+    var old = {
+            name: 'Peter',
+            age: 42,
+            job: 'lawyer'
+            },
+        new = {
+            age: 32,
+            job: 'coder',
+            pet: 'cat'
+            };
+    scrawl.mergeOver(old, new);
+    //result is {
+    //  name: 'Peter',
+    //  age: 32,
+    //  job: 'coder'
+    //  pet: 'cat'
+    //  }
 **/
 	my.mergeOver = function(o1, o2) {
 		for (var key in o2) {
@@ -495,9 +495,9 @@ A __utility__ function that checks an array to see if it contains a given value
 @param {Mixed} k value to be checked
 @return True if value is in array; false otherwise
 @example
-	var myarray = ['apple', 'orange'];
-	scrawl.contains(myarray, 'apple');	//true
-	scrawl.contains(myarray, 'banana');	//false
+    var myarray = ['apple', 'orange'];
+    scrawl.contains(myarray, 'apple');  //true
+    scrawl.contains(myarray, 'banana'); //false
 **/
 	my.contains = function(item, k) {
 		return (item.indexOf(k) >= 0) ? true : false;
@@ -509,9 +509,9 @@ A __utility__ function that adds a value to an array if the array doesn't alread
 @param {Mixed} o value to be added to array
 @return Amended array
 @example
-	var myarray = ['apple', 'orange'];
-	scrawl.pushUnique(myarray, 'apple');	//returns ['apple', 'orange']
-	scrawl.pushUnique(myarray, 'banana');	//returns ['apple', 'orange', 'banana']
+    var myarray = ['apple', 'orange'];
+    scrawl.pushUnique(myarray, 'apple');    //returns ['apple', 'orange']
+    scrawl.pushUnique(myarray, 'banana');   //returns ['apple', 'orange', 'banana']
 **/
 	my.pushUnique = function(item, o) {
 		if (item.indexOf(o) < 0) {
@@ -526,9 +526,9 @@ A __utility__ function that removes a value from an array
 @param {Mixed} o value to be removed from array
 @return Amended array
 @example
-	var myarray = ['apple', 'orange'];
-	scrawl.removeItem(myarray, 'banana');	//returns ['apple', 'orange']
-	scrawl.removeItem(myarray, 'apple');	//returns ['orange']
+    var myarray = ['apple', 'orange'];
+    scrawl.removeItem(myarray, 'banana');   //returns ['apple', 'orange']
+    scrawl.removeItem(myarray, 'apple');    //returns ['orange']
 **/
 	my.removeItem = function(item, o) {
 		var index;
@@ -547,9 +547,9 @@ A __utility__ function that checks to see if a number is between two other numbe
 @param {Boolean} [e] If true, reference number can equal maximum/minimum number; on false, number must lie between the maximum and minimum (default: false)
 @return True if value is between maximum and minimum; false otherwise
 @example
-	scrawl.isBetween(3, 1, 5);			//returns true
-	scrawl.isBetween(3, 3, 5);			//returns false
-	scrawl.isBetween(3, 3, 5, true);	//returns true
+    scrawl.isBetween(3, 1, 5);          //returns true
+    scrawl.isBetween(3, 3, 5);          //returns false
+    scrawl.isBetween(3, 3, 5, true);    //returns true
 **/
 	my.isBetween = function(no, a, b, e) {
 		var value;
@@ -669,12 +669,12 @@ Valid identifier Strings include:
 @param {String} identifier Identifier String
 @return True if item type matches the identifier
 @example
-	var mystring = 'string',
-		myboolean = false;
-	scrawl.isa(mystring, 'bool');	//returns false
-	scrawl.isa(mystring, 'str');	//returns true
-	scrawl.isa(myboolean, 'bool');	//returns true
-	scrawl.isa(myboolean, 'str');	//returns false
+    var mystring = 'string',
+        myboolean = false;
+    scrawl.isa(mystring, 'bool');   //returns false
+    scrawl.isa(mystring, 'str');    //returns true
+    scrawl.isa(myboolean, 'bool');  //returns true
+    scrawl.isa(myboolean, 'str');   //returns false
 **/
 	my.isa = function() {
 		var slice;
@@ -756,10 +756,10 @@ A __utility__ function for variable type checking
 @param {Mixed} item Primative or object for identification
 @return False if item is 'undefined'
 @example
-	var mystring = 'string',
-		myboolean;
-	scrawl.xt(mystring);	//returns true
-	scrawl.xt(myboolean);	//returns false
+    var mystring = 'string',
+        myboolean;
+    scrawl.xt(mystring);    //returns true
+    scrawl.xt(myboolean);   //returns false
 **/
 	my.xt = function(item) {
 		return (typeof item == 'undefined') ? false : true;
@@ -819,11 +819,11 @@ A __utility__ function for variable type checking
 @param {Array} item Array of primatives or objects for identification
 @return False if any item is 'undefined'
 @example
-	var mystring = 'string',
-		mynumber = 0,
-		myboolean;
-	scrawl.xta([mystring, mynumber]);	//returns true
-	scrawl.xta([mystring, myboolean]);	//returns false
+    var mystring = 'string',
+        mynumber = 0,
+        myboolean;
+    scrawl.xta([mystring, mynumber]);   //returns true
+    scrawl.xta([mystring, myboolean]);  //returns false
 **/
 	my.xta = function() {
 		var slice,
@@ -849,11 +849,11 @@ A __utility__ function for variable type checking
 @method xto
 @return True if any item is not 'undefined'
 @example
-	var mystring = 'string',
-		mynumber = 0,
-		myboolean;
-	scrawl.xto(mystring, mynumber);	//returns true
-	scrawl.xto(mystring, myboolean);	//returns true
+    var mystring = 'string',
+        mynumber = 0,
+        myboolean;
+    scrawl.xto(mystring, mynumber); //returns true
+    scrawl.xto(mystring, myboolean);    //returns true
 **/
 	my.xto = function() {
 		var slice,
@@ -903,7 +903,7 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-	scrawl.setDisplayOffsets();
+    scrawl.setDisplayOffsets();
 **/
 	my.setDisplayOffsets = function() {
 		var i,
@@ -955,16 +955,16 @@ The argument object should include the following attributes:
 @return The new Pad object
 @example
     <body>
-		<div id="canvasholder"></div>
-		<script src="js/scrawlCore-min.js"></script>
-		<script>
-			scrawl.addCanvasToPage({
-				name:	'mycanvas',
-				parentElement: 'canvasholder',
-				width: 400,
-				height: 200,
-				}).makeCurrent();
-		</script>
+        <div id="canvasholder"></div>
+        <script src="js/scrawlCore-min.js"></script>
+        <script>
+            scrawl.addCanvasToPage({
+                name:   'mycanvas',
+                parentElement: 'canvasholder',
+                width: 400,
+                height: 200,
+                }).makeCurrent();
+        </script>
     </body>
 **/
 	my.addCanvasToPage = function(items) {
@@ -1192,10 +1192,10 @@ A __general__ function to delete entity objects
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-	scrawl.newBlock({
-		name: 'myblock',
-		});
-	scrawl.deleteEntity(['myblock']);
+    scrawl.newBlock({
+        name: 'myblock',
+        });
+    scrawl.deleteEntity(['myblock']);
 **/
 	my.deleteEntity = function() {
 		var slice,
@@ -1238,10 +1238,10 @@ A __factory__ function to generate new Vector objects
 @param {Object} items Key:value Object argument for setting attributes
 @return Vector object
 @example
-	var myVector = scrawl.newVector({
-		x: 100,
-		y: 200,
-		});
+    var myVector = scrawl.newVector({
+        x: 100,
+        y: 200,
+        });
 **/
 	my.newVector = function(items) {
 		return new my.Vector(items);
@@ -1692,7 +1692,7 @@ Rotate the Vector by a given angle
 		var stat_vr = [0, 0];
 		if (my.isa(angle, 'num')) {
 			stat_vr[0] = Math.atan2(this.y, this.x);
-			stat_vr[0] += (angle * my.radian);
+			stat_vr[0] += (angle * 0.01745329251);
 			stat_vr[1] = this.getMagnitude();
 			this.x = stat_vr[1] * Math.cos(stat_vr[0]);
 			this.y = stat_vr[1] * Math.sin(stat_vr[0]);
@@ -1816,12 +1816,12 @@ Retrieve an attribute value. If the attribute value has not been set, then the d
 @param {String} item Attribute key
 @return Attribute value
 @example
-	var box = scrawl.newBlock({
-		width: 50,
-		});
-	box.get('width');				//returns 50
-	box.get('height');				//returns 0
-	box.get('favouriteAnimal');		//returns undefined
+    var box = scrawl.newBlock({
+        width: 50,
+        });
+    box.get('width');               //returns 50
+    box.get('height');              //returns 0
+    box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.get = function(item) {
 		return (my.xt(this[item])) ? this[item] : my.d[this.type][item];
@@ -1835,17 +1835,17 @@ An attribute value will only be set if the object already has a default value fo
 @return This
 @chainable
 @example
-	var box = scrawl.newBlock({
-		width: 50,
-		height: 50
-		});
-	box.set({
-		height: 100,
-		favouriteAnimal: 'cat'
-		});
-	box.get('width');				//returns 50
-	box.get('height');				//returns 100
-	box.get('favouriteAnimal');		//returns undefined
+    var box = scrawl.newBlock({
+        width: 50,
+        height: 50
+        });
+    box.set({
+        height: 100,
+        favouriteAnimal: 'cat'
+        });
+    box.get('width');               //returns 50
+    box.get('height');              //returns 100
+    box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.set = function(items) {
 		for (var i in items) {
@@ -1867,15 +1867,15 @@ Note that any callback or fn attribute functions will be referenced by the clone
 @return Cloned object
 @chainable
 @example
-	var box = scrawl.newBlock({
-		width: 50,
-		height: 50
-		});
-	var newBox = box.clone({
-		height: 100
-		});
-	newBox.get('width');		//returns 50
-	newBox.get('height');		//returns 100
+    var box = scrawl.newBlock({
+        width: 50,
+        height: 50
+        });
+    var newBox = box.clone({
+        height: 100
+        });
+    newBox.get('width');        //returns 50
+    newBox.get('height');       //returns 100
 **/
 	my.Base.prototype.clone = function(items) {
 		var merged,
@@ -3118,7 +3118,7 @@ Pad constructor hook function - modified by stacks module
 	my.Pad.prototype.stacksPadInit = function(items) {};
 	/**
 Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and globalCompositeOperation changes to associated Cell objects
-				
+                
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -3288,15 +3288,15 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 @param {Object} data Object containing attribute data for the new canvas
 @return New Cell object; false on failure
 @example
-	scrawl.addCanvasToPage({
-		name: 'mycanvas',
-		width: 200,
-		height: 200,
-		});
-	scrawl.pad.mycanvas.addNewCell({
-		name: 'background',
-		width: 400,
-		});
+    scrawl.addCanvasToPage({
+        name: 'mycanvas',
+        width: 200,
+        height: 200,
+        });
+    scrawl.pad.mycanvas.addNewCell({
+        name: 'background',
+        width: 400,
+        });
 **/
 	my.Pad.prototype.addNewCell = function(data) {
 		var canvas,
@@ -3372,11 +3372,11 @@ Set scrawl.currentPad attribute to this Pad's PADNAME String
 @return This
 @chainable
 @example
-	scrawl.addCanvasToPage({
-		name: 'mycanvas',
-		width: 200,
-		height: 200
-		}).makeCurrent();
+    scrawl.addCanvasToPage({
+        name: 'mycanvas',
+        width: 200,
+        height: 200
+        }).makeCurrent();
 **/
 	my.Pad.prototype.makeCurrent = function() {
 		my.currentPad = this.name;
@@ -3746,6 +3746,8 @@ Cell constructor hook function - core module
 		this.compileOrder = my.xtGet(items.compileOrder, 0);
 		this.showOrder = my.xtGet(items.showOrder, 0);
 		this.backgroundColor = my.xtGet(items.backgroundColor, 'rgba(0,0,0,0)');
+		this.globalCompositeOperation = my.xtGet(items.globalCompositeOperation, 'source-over');
+		this.globalAlpha = my.xtGet(items.globalAlpha, 1);
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
 		my.newGroup({
 			name: this.name,
@@ -4296,14 +4298,12 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 			strokeStyle,
 			design,
 			changes,
-			stat = ['Gradient', 'RadialGradient', 'Pattern'];
-
+			stat1 = ['Gradient', 'RadialGradient', 'Pattern'];
 		if (!entity.fastStamp) {
 			cellContext = my.ctx[this.context];
 			entityContext = my.ctx[entity.context];
 			changes = entityContext.getChanges(cellContext, entity.scale, entity.scaleOutline);
 			if (changes) {
-				delete changes.count;
 				cellEngine = my.context[this.name];
 				for (var item in changes) {
 					design = false;
@@ -4313,7 +4313,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 								case 'fillStyle':
 									if (my.xt(my.design[changes[item]])) {
 										design = my.design[changes[item]];
-										if (my.contains(stat, design.type)) {
+										if (my.contains(stat1, design.type)) {
 											design.update(entity.name, this.name);
 										}
 										fillStyle = design.getData();
@@ -4378,7 +4378,7 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 								case 'strokeStyle':
 									if (my.xt(my.design[changes[item]])) {
 										design = my.design[changes[item]];
-										if (my.contains(stat, design.type)) {
+										if (my.contains(stat1, design.type)) {
 											design.update(entity.name, this.name);
 										}
 										strokeStyle = design.getData();
@@ -4466,14 +4466,12 @@ Cell copy helper function
 @private
 **/
 	my.Cell.prototype.rotateDestination = function(engine) {
-		var reverse,
-			upend,
-			rotation,
+		var reverse = (this.flipReverse) ? -1 : 1,
+			upend = (this.flipUpend) ? -1 : 1,
+			rotation = (this.addPathRoll) ? this.roll + this.pathRoll : this.roll,
 			cos,
 			sin;
-		reverse = (this.flipReverse) ? -1 : 1;
-		upend = (this.flipUpend) ? -1 : 1;
-		rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
+		rotation *= 0.01745329251;
 		cos = Math.cos(rotation);
 		sin = Math.sin(rotation);
 		engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), this.pasteData.x, this.pasteData.y);
@@ -4598,7 +4596,6 @@ Cell copy helper function
 	my.Cell.prototype.copyCellToSelf = function(cell) {
 		var destinationContext,
 			destinationEngine,
-			sourceContext,
 			sourceEngine,
 			sourceCanvas;
 		cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
@@ -4606,15 +4603,14 @@ Cell copy helper function
 			destinationEngine = my.context[this.name];
 			destinationContext = my.ctx[this.name];
 			sourceEngine = my.context[cell.name];
-			sourceContext = my.ctx[cell.name];
 			sourceCanvas = my.canvas[cell.name];
-			if (sourceContext.globalAlpha !== destinationContext.globalAlpha) {
-				destinationEngine.globalAlpha = sourceContext.globalAlpha;
-				destinationContext.globalAlpha = sourceContext.globalAlpha;
+			if (cell.globalAlpha !== destinationContext.globalAlpha) {
+				destinationEngine.globalAlpha = cell.globalAlpha;
+				destinationContext.globalAlpha = cell.globalAlpha;
 			}
-			if (sourceContext.globalCompositeOperation !== destinationContext.globalCompositeOperation) {
-				destinationEngine.globalCompositeOperation = sourceContext.globalCompositeOperation;
-				destinationContext.globalCompositeOperation = sourceContext.globalCompositeOperation;
+			if (cell.globalCompositeOperation !== destinationContext.globalCompositeOperation) {
+				destinationEngine.globalCompositeOperation = cell.globalCompositeOperation;
+				destinationContext.globalCompositeOperation = cell.globalCompositeOperation;
 			}
 			sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
 			cell.prepareToCopyCell(destinationEngine);
@@ -6017,24 +6013,20 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 @private
 **/
 	my.Entity.prototype.rotateCell = function(ctx, cell) {
-		var reverse,
-			upend,
-			rotation,
+		var reverse = (this.flipReverse) ? -1 : 1,
+			upend = (this.flipUpend) ? -1 : 1,
+			rotation = (this.addPathRoll) ? this.roll + this.pathRoll : this.roll,
 			cos,
 			sin,
-			x,
-			y;
-		reverse = (this.flipReverse) ? -1 : 1;
-		upend = (this.flipUpend) ? -1 : 1;
-		rotation = (this.addPathRoll) ? (this.roll + this.pathRoll) * my.radian : this.roll * my.radian;
+			x = this.start.x,
+			y = this.start.y;
+		rotation *= 0.01745329251;
 		cos = Math.cos(rotation);
 		sin = Math.sin(rotation);
-		x = this.start.x;
-		y = this.start.y;
-		if (typeof x === 'string') {
+		if (x.substring) {
 			x = this.convertX(x, cell);
 		}
-		if (typeof y === 'string') {
+		if (y.substring) {
 			y = this.convertY(y, cell);
 		}
 		ctx.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);
@@ -6049,7 +6041,8 @@ Stamp helper function - convert string start.x values to numerical values
 @private
 **/
 	my.Entity.prototype.convertX = function(x, cell) {
-		var width;
+		var width,
+			result;
 		switch (typeof cell) {
 			case 'string':
 				width = scrawl.cell[cell].actualWidth;
@@ -6060,17 +6053,19 @@ Stamp helper function - convert string start.x values to numerical values
 			default:
 				width = cell.width;
 		}
-		switch (x) {
-			case 'left':
-				return 0;
-			case 'right':
-				return width;
-			case 'center':
-				return width / 2;
-			default:
-				x = parseFloat(x) / 100;
-				return (isNaN(x)) ? 0 : x * width;
+
+		result = parseFloat(x) / 100;
+		if (isNaN(result)) {
+			switch (x) {
+				case 'right':
+					return width;
+				case 'center':
+					return width / 2;
+				default:
+					return 0;
+			}
 		}
+		return result * width;
 	};
 	/**
 Stamp helper function - convert string start.y values to numerical values
@@ -6081,7 +6076,8 @@ Stamp helper function - convert string start.y values to numerical values
 @private
 **/
 	my.Entity.prototype.convertY = function(y, cell) {
-		var height;
+		var height,
+			result;
 		switch (typeof cell) {
 			case 'string':
 				height = scrawl.cell[cell].actualHeight;
@@ -6092,17 +6088,18 @@ Stamp helper function - convert string start.y values to numerical values
 			default:
 				height = cell.height;
 		}
-		switch (y) {
-			case 'top':
-				return 0;
-			case 'bottom':
-				return height;
-			case 'center':
-				return height / 2;
-			default:
-				y = parseFloat(y) / 100;
-				return (isNaN(y)) ? 0 : y * height;
+		result = parseFloat(y) / 100;
+		if (isNaN(result)) {
+			switch (y) {
+				case 'bottom':
+					return height;
+				case 'center':
+					return height / 2;
+				default:
+					return 0;
+			}
 		}
+		return result * height;
 	};
 	/**
 Stamp helper function - perform a 'clear' method draw
@@ -6255,7 +6252,8 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 	my.Entity.prototype.clearShadow = function(ctx, cell) {
 		var context = my.ctx[this.context];
 		if (context.shadowOffsetX || context.shadowOffsetY || context.shadowBlur) {
-			my.cell[cell].clearShadow();
+			cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
+			cell.clearShadow();
 		}
 		return this;
 	};
@@ -6271,7 +6269,8 @@ Stamp helper function - clear shadow parameters during a multi draw operation (P
 	my.Entity.prototype.restoreShadow = function(ctx, cell) {
 		var context = my.ctx[this.context];
 		if (context.shadowOffsetX || context.shadowOffsetY || context.shadowBlur) {
-			my.cell[cell].restoreShadow(this.context);
+			cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
+			cell.restoreShadow(this.context);
 		}
 		return this;
 	};
@@ -6410,10 +6409,10 @@ Objects take the form {color:String, stop:Number} where:
 		color: [{
 			color: 'black',
 			stop: 0
-		}, {
+        }, {
 			color: 'white',
 			stop: 0.999999
-		}],
+        }],
 		/**
 Drawing flag - when set to 'entity' (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to 'cell' (or false - default), will use Cell-based coordinates
 @property lockTo

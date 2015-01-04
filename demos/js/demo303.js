@@ -24,6 +24,7 @@ var mycode = function() {
 	//define groups
 	group = scrawl.newGroup({
 		name: 'colsGroup',
+		regionRadius: 25,
 	});
 
 	//define cell collision zone
@@ -148,6 +149,7 @@ var mycode = function() {
 			fillStyle: getColor(scrawl.entity['pBall_' + i].get('mass')),
 		});
 	}
+	group.resetCollisionPoints();
 
 	//physics update function
 	updateTimer = function() {
@@ -159,7 +161,7 @@ var mycode = function() {
 
 	inflateBalls = function() {
 		var w;
-		for (var i = 0, z = group.entitys.length; i < z; i++) {
+		for (var i = 0, iz = group.entitys.length; i < iz; i++) {
 			w = scrawl.entity[group.entitys[i]];
 			w.setDelta({
 				scale: (w.scale + 0.01 <= 1) ? 0.01 : 0,
@@ -172,7 +174,7 @@ var mycode = function() {
 		var hits = group.getFieldEntityHits(),
 			b1,
 			w1;
-		for (var i = 0, z = hits.length; i < z; i++) {
+		for (var i = 0, iz = hits.length; i < iz; i++) {
 			w1 = scrawl.entity[hits[i][0]];
 			w1.setDelta({
 				scale: (w1.scale > 0.8) ? -0.03 : 0,

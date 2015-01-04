@@ -19,6 +19,7 @@ var mycode = function() {
 		maxX = 590.5,
 		maxY = 590.5,
 		pBall,
+		fieldBall,
 		dWheel,
 		getColor,
 		checkBounds,
@@ -75,6 +76,11 @@ var mycode = function() {
 		radius: 0.05,
 	});
 	pBall.addForce('gravity').addForce('drag').addForce('wind').addForce('jet');
+
+	fieldBall = scrawl.newParticle({
+		mass: 1000000,
+		elasticity: 1,
+	});
 
 	//define entitys
 	scrawl.newBlock({ //cell collision zone
@@ -141,14 +147,17 @@ var mycode = function() {
 
 	//bounce function
 	checkBounds = function() {
+		var hits,
+			b1;
+		group.resetCollisionPoints();
 		hits = group.getFieldEntityHits();
-		for (var i = 0, z = hits.length; i < z; i++) {
-			myBall = scrawl.entity[scrawl.entity[hits[i][0]].pivot];
-			myBall.revert();
-			myBall.velocity.set({
-				x: (scrawl.isBetween(hits[i][1].x, minX, maxX)) ? myBall.velocity.x : -myBall.velocity.x,
-				y: (scrawl.isBetween(hits[i][1].y, minY, maxY)) ? myBall.velocity.y : -myBall.velocity.y,
-			});
+		for (var i = 0, iz = hits.length; i < iz; i++) {
+			b1 = scrawl.entity[scrawl.entity[hits[i][0]].pivot];
+			b1.revert();
+			b1.linearCollide(fieldBall.set({
+				startX: hits[i][1].x,
+				startY: hits[i][1].y,
+			}));
 		}
 	};
 

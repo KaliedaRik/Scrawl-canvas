@@ -919,9 +919,7 @@ Picture.setPaste update pasteData object values
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-				}
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -943,9 +941,7 @@ Picture.setPaste update pasteData object values
 				my.cell[cell].setEngine(this);
 				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 				this.clearShadow(ctx, cell);
-				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-				}
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -965,9 +961,7 @@ Picture.setPaste update pasteData object values
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-				}
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 				this.clearShadow(ctx, cell);
 				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
@@ -989,9 +983,7 @@ Picture.setPaste update pasteData object values
 				here = this.prepareStamp();
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
-				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-				}
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
@@ -1013,9 +1005,7 @@ Picture.setPaste update pasteData object values
 				this.rotateCell(ctx, cell);
 				my.cell[cell].setEngine(this);
 				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
-				if (this.copyData.w > 0 && this.copyData.h > 0) {
-					ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-				}
+				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
 			}
 			return this;
 		};
@@ -1029,30 +1019,24 @@ Picture.setPaste update pasteData object values
     @private
     **/
 		my.Picture.prototype.getImage = function() {
-			var anim,
-				result;
+			var anim;
 			switch (this.imageType) {
+				case 'img':
+					return my.asset[this.source];
 				case 'animation':
 					anim = my.spriteanimation[this.animation].getData();
 					this.copyData.x = anim.x;
 					this.copyData.y = anim.y;
 					this.copyData.w = anim.w;
 					this.copyData.h = anim.h;
-					result = my.asset[this.source];
-					break;
+					return my.asset[this.source];
 				case 'canvas':
-					result = my.canvas[this.source];
-					break;
+					return my.canvas[this.source];
 				case 'video':
-					result = my.asset[this.source];
-					break;
-				case 'img':
-					result = my.asset[this.source];
-					break;
+					return my.asset[this.source];
 				default:
-					result = false;
+					return false;
 			}
-			return result;
 		};
 		/**
     Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library

@@ -26,6 +26,10 @@ var mycode = function() {
 		input_radiusY = document.getElementById('radiusY'),
 		event_radiusY,
 
+		current_skip = 1,
+		input_skip = document.getElementById('skip'),
+		event_skip,
+
 		stopE;
 
 	//set the initial imput values
@@ -33,6 +37,7 @@ var mycode = function() {
 	input_roll.value = '0';
 	input_radiusX.value = '3';
 	input_radiusY.value = '3';
+	input_skip.value = '1';
 
 	//define filter
 	filter = scrawl.newBlurFilter({
@@ -104,6 +109,16 @@ var mycode = function() {
 	};
 	input_radiusY.addEventListener('input', event_radiusY, false);
 	input_radiusY.addEventListener('change', event_radiusY, false);
+
+	event_skip = function(e) {
+		stopE(e);
+		current_skip = parseInt(input_skip.value, 10);
+		filter.set({
+			skip: current_skip,
+		});
+	};
+	input_skip.addEventListener('input', event_skip, false);
+	input_skip.addEventListener('change', event_skip, false);
 
 	//animation object
 	scrawl.newAnimation({

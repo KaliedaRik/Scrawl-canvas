@@ -248,6 +248,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				k,
 				v,
 				myPivot,
+				temp,
 				i,
 				iz;
 			items = (my.isa(items, 'obj')) ? items : {};
@@ -262,11 +263,20 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			k = 0;
 			v = 0;
 			myPivot = my.xtGet(my.point[items.pivot], my.entity[items.pivot], false);
+			if (myPivot) {
+				temp = my.xtGet(myPivot.local, myPivot.place, myPivot.start, false);
+				temp = my.safeObject(temp);
+				items.startX = my.xtGet(temp.x, 0);
+				items.startY = my.xtGet(temp.y, 0);
+			}
+			else {
+				temp = my.safeObject(items.start);
+				items.startX = my.xtGet(items.startX, temp.x, 0);
+				items.startY = my.xtGet(items.startY, temp.y, 0);
+			}
 			items.start = (my.xt(items.start)) ? items.start : {};
 			items.scaleX = items.scaleX || 1;
 			items.scaleY = items.scaleY || 1;
-			items.startX = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.x : myPivot.start.x) : my.xtGet(items.startX, items.start.x, 0);
-			items.startY = (myPivot) ? ((myPivot.type === 'Point') ? myPivot.local.y : myPivot.start.y) : my.xtGet(items.startY, items.start.y, 0);
 			items.isLine = my.xtGet(items.isLine, true);
 			var checkMinMax = function(_cx, _cy) {
 				minX = (minX > _cx) ? _cx : minX;

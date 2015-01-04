@@ -9,10 +9,16 @@ var mycode = function() {
 		sTime = 0,
 		maxTime = 20,
 		now,
-		rows = 20,
-		cols = 20,
-		holeW = 10,
-		holeH = 10,
+		// rows = 20,
+		// cols = 20,
+		// holeW = 10,
+		// holeH = 10,
+		rows = 15,
+		cols = 15,
+		holeW = 15,
+		holeH = 15,
+		spring = 1000,
+		damper = 10,
 		windXMax = 12,
 		windXMin = -1,
 		windXDelta = 0.01,
@@ -72,16 +78,16 @@ var mycode = function() {
 				scrawl.entity['b_' + i + '_' + j].addSpring({
 					name: 's_' + i + '_' + j + '_across',
 					end: 'b_' + (i + 1) + '_' + j,
-					springConstant: 1000,
-					damperConstant: 10,
+					springConstant: spring,
+					damperConstant: damper,
 				});
 			}
 			if (j < (cols - 1)) {
 				scrawl.entity['b_' + i + '_' + j].addSpring({
 					name: 's_' + i + '_' + j + '_down',
 					end: 'b_' + i + '_' + (j + 1),
-					springConstant: 1000,
-					damperConstant: 10,
+					springConstant: spring,
+					damperConstant: damper,
 				});
 			}
 		}
