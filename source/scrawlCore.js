@@ -2836,8 +2836,10 @@ mousemove event listener function
 				if (mouseX >= 0 && mouseX <= (wrapper.width * wrapper.scale) && mouseY >= 0 && mouseY <= (wrapper.height * wrapper.scale)) {
 					wrapper.mouse.active = true;
 				}
-				wrapper.mouse.x = e.layerX * (1 / wrapper.scale);
-				wrapper.mouse.y = e.layerY * (1 / wrapper.scale);
+				// wrapper.mouse.x = e.layerX * (1 / wrapper.scale);
+				// wrapper.mouse.y = e.layerY * (1 / wrapper.scale);
+				wrapper.mouse.x = e.layerX;
+				wrapper.mouse.y = e.layerY;
 				wrapper.mouse.layer = true;
 			}
 			else {
@@ -2854,8 +2856,10 @@ mousemove event listener function
 				if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
 					wrapper.mouse.active = true;
 				}
-				wrapper.mouse.x = (mouseX - wrapper.displayOffsetX) * (1 / wrapper.scale);
-				wrapper.mouse.y = (mouseY - wrapper.displayOffsetY) * (1 / wrapper.scale);
+				// wrapper.mouse.x = (mouseX - wrapper.displayOffsetX) * (1 / wrapper.scale);
+				// wrapper.mouse.y = (mouseY - wrapper.displayOffsetY) * (1 / wrapper.scale);
+				wrapper.mouse.x = (mouseX - wrapper.displayOffsetX);
+				wrapper.mouse.y = (mouseY - wrapper.displayOffsetY);
 				wrapper.mouse.layer = false;
 			}
 		}

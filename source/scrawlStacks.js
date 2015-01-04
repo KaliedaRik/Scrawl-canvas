@@ -1043,7 +1043,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 **/
 		my.PageElement.prototype.setStyles = function(items) {
 			var stat1 = ['hidden', 'none'],
-				stat2 = ['backfaceVisibility', 'opacity', 'display', 'width', 'height', 'transform', 'translate', 'translateX', 'translateY', 'translateZ', 'top', 'left', 'bottom', 'right', 'zIndex', 'title', 'comment'],
+				stat2 = ['backfaceVisibility', 'display', 'width', 'height', 'transform', 'translate', 'translateX', 'translateY', 'translateZ', 'top', 'left', 'bottom', 'right', 'zIndex', 'title', 'comment'],
 				el,
 				k,
 				i,
@@ -1694,14 +1694,22 @@ Pad lockTo helper
 			var i,
 				iz,
 				cell;
-			//var i, iz, cell;
-			if (this.lockTo && my.xt(this.cells)) {
+			console.log(this.name, 'sCLD', this.localWidth, this.localHeight);
+			if (my.xt(this.cells)) {
 				for (i = 0, iz = this.cells.length; i < iz; i++) {
 					cell = my.cell[this.cells[i]];
-					cell.set({
-						width: this.localWidth,
-						height: this.localHeight
-					});
+					if (this.lockTo && cell.name === this.base) {
+						cell.set({
+							width: this.localWidth,
+							height: this.localHeight
+						});
+					}
+					if (cell.name === this.display) {
+						cell.set({
+							width: this.localWidth,
+							height: this.localHeight
+						});
+					}
 				}
 			}
 		};

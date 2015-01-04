@@ -1,9 +1,9 @@
 var mycode = function() {
 	'use strict';
 	//define variables
-	var pad = scrawl.pad.mycanvas,
-		cell = scrawl.cell[pad.base],
-		stack = scrawl.stack.mystack,
+	var stack = scrawl.stack.mystack,
+		group = scrawl.group.mystack,
+		pad = scrawl.pad.mycanvas,
 		page1 = scrawl.element.page1,
 		page2 = scrawl.element.page2,
 		browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
@@ -11,7 +11,8 @@ var mycode = function() {
 		startButton = document.getElementById('startButton'),
 		returnButton = document.getElementById('returnButton'),
 		effectSelector = document.getElementById('effect'),
-		getEffect, currentEffect,
+		getEffect,
+		currentEffect,
 		frame = document.getElementById('myframe'),
 		frameSources = [
           'http://en.wikipedia.org/wiki/Cat',
@@ -31,6 +32,7 @@ var mycode = function() {
 		doButtons,
 		resize,
 		checkE,
+		//variables specific to each page load effect
 		myBlock, myStar, myCircles, myCirclesGroup,
 		fogIn, fogOut, doFog, buildFog,
 		clearFromCenterIn, clearFromCenterOut, doClearFromCenter, buildClearFromCenter,
@@ -41,11 +43,15 @@ var mycode = function() {
 
 	//initial setup of DOM elements in stack
 	stack.set({
-		startX: 15,
-		startY: 15
+		margin: '15px'
+	});
+	group.setElementsTo({
+		width: '100%',
+		height: '100%'
 	});
 	pad.set({
-		translateZ: 0
+		translateZ: 0,
+		lockTo: 'mystack'
 	});
 	page1.set({
 		translateZ: 1,
@@ -55,6 +61,7 @@ var mycode = function() {
 		translateZ: -1,
 		visibility: false
 	});
+	scrawl.renderElements();
 
 	//functions for manipulating the display of various page sections (page1, page2, pad)
 	showPad = function() {
@@ -137,6 +144,7 @@ var mycode = function() {
 		}
 	};
 	resize = function(e) { //listen and respond to browser resizing
+		checkE(e);
 		browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 		browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		browserWidth -= 45;
@@ -144,30 +152,15 @@ var mycode = function() {
 			width: browserWidth,
 			height: browserHeight
 		});
-		pad.set({
-			width: browserWidth,
-			height: browserHeight
-		});
-		cell.set({
-			width: browserWidth,
-			height: browserHeight
-		});
-		page1.set({
-			width: browserWidth
-		});
-		page2.set({
-			width: browserWidth
-		});
 		frame.width = browserWidth - 10;
 		frame.height = browserHeight - 50;
-		checkE(e);
 	};
 	window.addEventListener('resize', resize, false);
 
 	//event listener
 	getEffect = function(e) {
-		currentEffect = e.currentTarget.value;
 		checkE(e);
+		currentEffect = e.currentTarget.value;
 	};
 	effectSelector.options.selectedIndex = 0;
 	currentEffect = 'fog';

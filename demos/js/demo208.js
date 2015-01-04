@@ -19,25 +19,25 @@ var mycode = function() {
 			back: scrawl.cell[pads.back.base],
 		},
 		mystack = scrawl.stack.mystack,
-		labels,
-		instructions = scrawl.element.instructions,
-		widthReduction = 35,
-		heightReduction = 120,
-		myWidth = window.innerWidth - widthReduction,
-		myHeight = window.innerHeight - heightReduction,
-		setSize,
-		resize,
+		group = scrawl.group.mystack,
 		cube = scrawl.makeQuaternion(),
 		deltaCube = scrawl.makeQuaternion({
 			pitch: 1,
 			yaw: -0.8,
 			roll: 0.3,
 		}),
-		here,
+		header = scrawl.element.stackHeader,
+		subheader = scrawl.element.stackSubHeader,
 		words,
+		widthReduction = 35,
+		heightReduction = 150,
+		myWidth = window.innerWidth - widthReduction,
+		myHeight = window.innerHeight - heightReduction,
+		setSize,
+		resize,
+		here,
 		i, iz;
 	scrawl.getImagesByClass('demo208');
-	//initialize DOM 3d effects - stack
 	myWidth = (myWidth > 100) ? myWidth : 100;
 	myHeight = (myHeight > 100) ? myHeight : 100;
 	mystack.set({
@@ -46,24 +46,44 @@ var mycode = function() {
 		perspectiveZ: 800,
 		overflow: 'hidden',
 	});
-	instructions.set({
+	scrawl.newElementGroup({
+		name: 'instructions',
+		stack: 'mystack'
+	});
+	header.set({
 		startX: '50%',
 		startY: '20%',
 		handleX: 'center',
 		handleY: 'center',
-		width: instructions.width * 1.5,
+		width: '50%',
+		pointerEvents: 'none',
+		group: 'instructions',
+		border: '1px solid black',
+		color: 'blue',
+		textAlign: 'center',
+		fontSize: '200%',
+	});
+	subheader.set({
+		startX: '50%',
+		startY: '75%',
+		handleX: 'center',
+		handleY: 'center',
+		width: '40%',
+		pointerEvents: 'none',
+		group: 'instructions',
+		border: '1px solid red',
+		color: 'red',
+		textAlign: 'center',
+		fontSize: '120%',
+	});
+	group.setElementsTo({
+		startX: 'center',
+		startY: 'center',
+		handleX: 'center',
+		handleY: 'center',
+		mouse: false,
 		pointerEvents: 'none',
 	});
-	for (i = 0, iz = sides.length; i < iz; i++) {
-		pads[sides[i]].set({
-			startX: myWidth / 2,
-			startY: myHeight / 2,
-			handleX: 'center',
-			handleY: 'center',
-			mouse: false,
-			pointerEvents: 'none',
-		});
-	}
 	pads.top.set({
 		deltaPitch: 90,
 		deltaTranslateY: -100
@@ -91,11 +111,12 @@ var mycode = function() {
 	words = scrawl.newGroup({
 		name: 'words',
 		visibility: false,
+		entitys: sides,
 	});
 	for (i = 0, iz = sides.length; i < iz; i++) {
 		scrawl.newPicture({
 			name: pics[i],
-			pivot: sides[i] + 'Text',
+			pivot: sides[i],
 			handleX: 'center',
 			handleY: 'center',
 			width: 200,
@@ -105,7 +126,7 @@ var mycode = function() {
 			group: pads[sides[i]].base,
 		});
 		scrawl.newPhrase({
-			name: sides[i] + 'Text',
+			name: sides[i],
 			startX: 100,
 			startY: 100,
 			handleX: 'center',
@@ -115,55 +136,55 @@ var mycode = function() {
 			order: 1,
 			group: pads[sides[i]].base,
 		});
-		words.entitys.push(sides[i] + 'Text');
+		cells[sides[i]].set({
+			width: '100%',
+			height: '100%',
+		});
 	}
+
 	setSize = function() {
 		var widthRatio = (window.innerWidth - widthReduction) / myWidth,
 			heightRatio = (window.innerHeight - heightReduction) / myHeight,
 			ratio = (widthRatio < heightRatio) ? widthRatio : heightRatio;
 		document.body.style.fontSize = Math.ceil(ratio * 100) + '%';
-		mystack.scaleStack(ratio);
+		mystack.set({
+			scale: ratio,
+		});
+		group.setElementsTo({
+			scale: ratio,
+		});
 	};
 	resize = function(e) {
 		setSize();
 	};
 	window.addEventListener('resize', resize);
+
+	setSize();
+
 	scrawl.newAnimation({
 		fn: function() {
-			var j, jz;
-			//rotate the cube
 			cube.quaternionMultiply(deltaCube);
-			scrawl.update3d({
+			group.update({
 				action: 'pads',
 				quaternion: cube,
-				distance: 100,
 			});
-			scrawl.renderElements();
-			//animate the canvas entitys
 			words.updateEntitysBy({
 				roll: 0.5,
 			});
-			scrawl.render();
-			//cube and mouse stuff
 			here = mystack.getMouse();
-			for (j = 0, jz = sides.length; j < jz; j++) {
-				if (here.active) {
-					pads[sides[j]].set({
-						pivot: 'mouse',
-					});
-				}
-				else {
-					pads[sides[j]].set({
-						pivot: false,
-						startX: myWidth / 2,
-						startY: myHeight / 2,
-						handleX: 'center',
-						handleY: 'center',
-					});
-				}
+			if (here.active) {
+				group.setElementsTo({
+					pivot: 'mouse',
+				});
+			}
+			else {
+				group.setElementsTo({
+					pivot: '',
+					startX: 'center',
+					startY: 'center',
+				});
 			}
 			scrawl.render();
-			scrawl.renderElements();
 		},
 	});
 };

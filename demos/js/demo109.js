@@ -152,6 +152,9 @@ var mycode = function() {
 		pivot: 'myImage',
 	});
 
+	//flicker on Chrome is particularly bad for this demo - turn entity sorting off
+	scrawl.group.mycanvas_base.entitySort = false;
+
 	input_block_x.value = 15;
 	input_block_y.value = 20;
 	input_block_width.value = 10;

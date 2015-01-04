@@ -29,16 +29,16 @@ var mycode = function() {
 		height: 200,
 		border: '1px solid red',
 		backgroundColor: 'navy',
-		scaleText: true,
 	});
 	penguin.set({
-		width: 200,
-		height: 200,
+		width: '99%',
+		height: '99%',
 		startX: 'center',
 		startY: 'center',
 		handleX: 'center',
 		handleY: 'center',
 		pointerEvents: 'none',
+		visibility: true,
 	});
 
 	// ... save on some typing by using scrawl.mergeInto()
@@ -49,26 +49,27 @@ var mycode = function() {
 		opacity: 0,
 		pointerEvents: 'none',
 		startX: 'center',
-		width: 180,
+		width: '90%',
 	};
 
 	myrule.set(scrawl.mergeInto({
-		width: 30,
+		width: '60%',
+		height: 0,
 		borderWidth: '3px',
-		height: 1,
-		startY: 70,
+		startY: '48%',
 		borderColor: 'white',
 	}, coreItems));
 
 	mytitle.set(scrawl.mergeInto({
-		startY: 20,
+		startY: '10%',
 		pitch: 90,
+		fontSize: '100%',
 	}, coreItems));
 
 	mycopytext.set(scrawl.mergeInto({
 		textAlign: 'center',
-		startY: 160,
-		fontSize: '0.75em',
+		startY: '80%',
+		fontSize: '75%',
 	}, coreItems));
 
 	//initial render to position elements
@@ -88,13 +89,13 @@ var mycode = function() {
 	tweenFadeOutImg = scrawl.newTween({
 		start: {
 			opacity: 1,
-			width: 200,
-			height: 200
+			width: '99%',
+			height: '99%'
 		},
 		end: {
 			opacity: 0.6,
-			width: 180,
-			height: 180
+			width: '94%',
+			height: '94%'
 		},
 		engines: {
 			opacity: 'easeOutIn',
@@ -108,11 +109,13 @@ var mycode = function() {
 	tweenText = scrawl.newTween({
 		start: {
 			opacity: 0,
-			startY: 160
+			startY: '70%',
+			fontSize: '75%'
 		},
 		end: {
 			opacity: 1,
-			startY: 100
+			startY: '55%',
+			fontSize: '105%'
 		},
 		engines: {
 			opacity: 'easeOutIn',
@@ -126,12 +129,14 @@ var mycode = function() {
 		start: {
 			opacity: 0,
 			pitch: 90,
-			startY: 20
+			startY: '10%',
+			fontSize: '100%'
 		},
 		end: {
 			opacity: 1,
 			pitch: 0,
-			startY: 50
+			startY: '25%',
+			fontSize: '250%'
 		},
 		engines: {
 			opacity: 'easeIn4',
@@ -159,11 +164,11 @@ var mycode = function() {
 	tweenGrowRule = scrawl.newTween({
 		start: {
 			opacity: 0,
-			width: 30
+			width: '60%'
 		},
 		end: {
 			opacity: 1,
-			width: 150
+			width: '75%'
 		},
 		engines: {
 			opacity: 'easeOutIn',
