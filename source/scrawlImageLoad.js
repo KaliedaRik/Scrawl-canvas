@@ -337,11 +337,12 @@ Import an image using the supplied url string
 				el = document.createElement('img');
 				el.id = this.name;
 				el.onload = function() {
-					var entity, design, i, iz;
+					var entity, design, i, iz, temp;
 					that.width = el.width;
 					that.height = el.height;
 					my.imageFragment.appendChild(el);
-					my.asset[that.name] = my.imageFragment.getElementById(that.name);
+					temp = '#' + that.name;
+					my.asset[that.name] = my.imageFragment.querySelector(temp);
 					my.pushUnique(my.assetnames, that.name);
 					for (i = 0, iz = my.entitynames.length; i < iz; i++) {
 						entity = my.entity[my.entitynames[i]];

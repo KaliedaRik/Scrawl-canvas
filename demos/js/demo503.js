@@ -9,25 +9,22 @@ var mycode = function() {
 
 	//define variables
 	var objects = [
-        '{"type":"Pad","classname":"padnames","name":"mycanvas","parentElement":"canvasholder","drawOrder":[],"cells":["mycanvas","mycanvas_base"],"display":"mycanvas","base":"mycanvas_base","current":"mycanvas_base","stack":false,"width":750,"height":375}',
-        '{"type":"Cell","classname":"cellnames","name":"mycanvas","pad":"mycanvas","actualWidth":750,"actualHeight":375,"context":"mycanvas","groups":["mycanvas","mycanvas_field","mycanvas_fence"],"usePadDimensions":true}',
-        '{"type":"Cell","classname":"cellnames","name":"mycanvas_base","pad":"mycanvas","actualWidth":750,"actualHeight":375,"context":"mycanvas_base","groups":["mycanvas_base","mycanvas_base_field","mycanvas_base_fence"],"usePadDimensions":true}',
+        '{"type":"Pad","classname":"padnames","name":"mycanvas","parentElement":"canvasholder","cells":["mycanvas","mycanvas_base"],"display":"mycanvas","base":"mycanvas_base","current":"mycanvas_base","width":750,"height":375,"position":""}',
+        '{"type":"Cell","classname":"cellnames","name":"mycanvas","pad":"mycanvas","copy":{"x":0,"y":0},"copyWidth":750,"copyHeight":375,"pasteWidth":750,"pasteHeight":375,"context":"mycanvas","groups":["mycanvas"],"compiled":false,"shown":false,"start":{"x":0,"y":0},"handle":{"x":0,"y":0},"width":750,"height":375}',
+        '{"type":"Cell","classname":"cellnames","name":"mycanvas_base","pad":"mycanvas","copy":{"x":0,"y":0},"copyWidth":750,"copyHeight":375,"pasteWidth":750,"pasteHeight":375,"context":"mycanvas_base","groups":["mycanvas_base"],"shown":false,"compileOrder":9999,"start":{"x":0,"y":0},"handle":{"x":0,"y":0},"width":750,"height":375}',
         '{"type":"Group","classname":"groupnames","name":"mycanvas","cell":"mycanvas"}',
-        '{"type":"Group","classname":"groupnames","name":"mycanvas_field","cell":"mycanvas","visibility":false}',
-        '{"type":"Group","classname":"groupnames","name":"mycanvas_fence","cell":"mycanvas","visibility":false}',
         '{"type":"Group","classname":"groupnames","name":"mycanvas_base","cell":"mycanvas_base"}',
-        '{"type":"Group","classname":"groupnames","name":"mycanvas_base_field","cell":"mycanvas_base","visibility":false}',
-        '{"type":"Group","classname":"groupnames","name":"mycanvas_base_fence","cell":"mycanvas_base","visibility":false}',
-        '{"type":"Pattern","classname":"designnames","name":"leaves","cell":"mycanvas_base","image":"leaves","source":"img/leaves.png"}',
-        '{"type":"Pattern","classname":"designnames","name":"marble","cell":"mycanvas_base","image":"marble","source":"img/marble.png"}',
-        '{"type":"Pattern","classname":"designnames","name":"water","cell":"mycanvas_base","image":"water","source":"img/water.png"}',
-        '{"type":"Pattern","classname":"designnames","name":"parque","cell":"mycanvas_base","image":"parque","source":"img/parque.png"}',
-        '{"type":"Block","classname":"entitynames","name":"b1","width":300,"height":150,"method":"sinkInto","fillStyle":"leaves","strokeStyle":"marble","lineWidth":12,"lineJoin":"round","shadowOffsetX":8,"shadowOffsetY":8,"shadowBlur":5,"shadowColor":"Black","group":"mycanvas_base","start":{"x":35,"y":10,"z":0}}',
-        '{"type":"Block","classname":"entitynames","name":"b2","width":300,"height":150,"method":"sinkInto","fillStyle":"marble","strokeStyle":"water","lineWidth":12,"lineJoin":"round","shadowOffsetX":8,"shadowOffsetY":8,"shadowBlur":5,"shadowColor":"Black","group":"mycanvas_base","start":{"x":375,"y":10,"z":0}}',
-        '{"type":"Block","classname":"entitynames","name":"b3","width":300,"height":150,"method":"sinkInto","fillStyle":"water","strokeStyle":"parque","lineWidth":12,"lineJoin":"round","shadowOffsetX":8,"shadowOffsetY":8,"shadowBlur":5,"shadowColor":"Black","group":"mycanvas_base","start":{"x":375,"y":200,"z":0}}',
-        '{"type":"Block","classname":"entitynames","name":"b4","width":300,"height":150,"method":"sinkInto","fillStyle":"parque","strokeStyle":"leaves","lineWidth":12,"lineJoin":"round","shadowOffsetX":8,"shadowOffsetY":8,"shadowBlur":5,"shadowColor":"Black","group":"mycanvas_base","start":{"x":35,"y":200,"z":0}}'
+        '{"type":"Pattern","classname":"designnames","name":"leaves","source":"leaves"}',
+        '{"type":"Pattern","classname":"designnames","name":"marble","source":"marble"}',
+        '{"type":"Pattern","classname":"designnames","name":"water","source":"water"}',
+        '{"type":"Pattern","classname":"designnames","name":"parque","source":"parque"}',
+        '{"type":"Block","classname":"entitynames","name":"b1","method":"sinkInto","fillStyle":"leaves","strokeStyle":"marble","lineWidth":12,"lineJoin":"round","shadowOffsetX":8,"shadowOffsetY":8,"shadowBlur":5,"shadowColor":"Black","group":"mycanvas_base","start":{"x":35,"y":10},"handle":{"x":0,"y":0},"width":300,"height":150}',
+        '{"type":"Block","classname":"entitynames","name":"b2","method":"sinkInto","fillStyle":"marble","strokeStyle":"water","lineWidth":12,"lineJoin":"round","shadowOffsetX":8,"shadowOffsetY":8,"shadowBlur":5,"shadowColor":"Black","group":"mycanvas_base","start":{"x":375,"y":10},"handle":{"x":0,"y":0},"width":300,"height":150}',
+        '{"type":"Block","classname":"entitynames","name":"b3","method":"sinkInto","fillStyle":"water","strokeStyle":"parque","lineWidth":12,"lineJoin":"round","shadowOffsetX":8,"shadowOffsetY":8,"shadowBlur":5,"shadowColor":"Black","group":"mycanvas_base","start":{"x":375,"y":200},"handle":{"x":0,"y":0},"width":300,"height":150}',
+        '{"type":"Block","classname":"entitynames","name":"b4","method":"sinkInto","fillStyle":"parque","strokeStyle":"leaves","lineWidth":12,"lineJoin":"round","shadowOffsetX":8,"shadowOffsetY":8,"shadowBlur":5,"shadowColor":"Black","group":"mycanvas_base","start":{"x":35,"y":200},"handle":{"x":0,"y":0},"width":300,"height":150}'
       ];
 
+	scrawl.getImagesByClass('demo503');
 	scrawl.load(objects);
 
 	//animation object

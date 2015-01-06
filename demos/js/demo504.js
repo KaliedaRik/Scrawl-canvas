@@ -37,7 +37,7 @@ var mycode = function() {
 	scrawl.newGradient({
 		name: 'gradient',
 		shift: 0.002,
-		setToEntity: true,
+		lockTo: true,
 		color: [{
 			color: '#333333',
 			stop: 0
@@ -60,9 +60,8 @@ var mycode = function() {
 	});
 
 	//define animation sheets
-	scrawl.newAnimSheet({
+	scrawl.newSpriteAnimation({
 		name: 'mytiger',
-		sheet: 'tiger',
 		running: 'forward',
 		loop: 'loop',
 		frames: [{
@@ -115,13 +114,13 @@ var mycode = function() {
 		strokeStyle: 'Gold',
 		lineWidth: 3,
 		method: 'fillDraw',
-		width: 150,
-		height: 100,
 		order: myGroup.entitys.length,
 		shadowBlur: 4,
 		shadowColor: 'Black',
 		startX: 80,
 		startY: 50,
+		scale: 0.3,
+		scaleOutline: false,
 	});
 
 	scrawl.newBlock({
@@ -153,16 +152,18 @@ var mycode = function() {
 		name: 'cat',
 		startX: 100,
 		startY: 300,
+		pasteWidth: 120,
+		pasteHeight: 66,
 		method: 'fill',
 		source: 'tiger',
-		animSheet: 'mytiger',
+		animation: 'mytiger',
 		order: myGroup.entitys.length,
 		checkHitUsingImageData: true,
 		handleX: 'center',
 		handleY: 'center',
 		flipReverse: true,
 		roll: 10,
-	}).getImageData();
+	});
 
 	scrawl.newPhrase({
 		method: 'fill',
@@ -184,13 +185,13 @@ var mycode = function() {
 		if (clickedObject) {
 			if (clickedObject.name === 'cat') {
 				a = clickedObject.toString();
-				b = scrawl.save('animsheets');
+				b = scrawl.save('spriteanimations');
 				r = '';
 				for (i = 0, iz = a.length; i < iz; i++) {
 					r += a[i].replace(',', ', ', 'g');
 					r += '<br />';
 				}
-				r += '&nbsp;<br />(AnimSheet data has to be saved separately, using <b>scrawl.save(\'animsheets\')</b>)<br />';
+				r += '&nbsp;<br />(SpriteAnimation data has to be saved separately, using <b>scrawl.save(\'spriteanimations\')</b>)<br />';
 				for (i = 0, iz = b.length; i < iz; i++) {
 					r += b[i].replace(',', ', ', 'g');
 					r += '<br />';

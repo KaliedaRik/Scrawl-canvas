@@ -37,7 +37,7 @@ var mycode = function() {
 		status = document.getElementById('status');
 
 	//import image into scrawl library
-	scrawl.getImagesByClass('demo035');
+	//scrawl.getImagesByClass('demo035');
 
 	//setup DOM controls
 	scaleInput.value = 1;
@@ -271,7 +271,8 @@ var mycode = function() {
 
 	scrawl.newPicture({
 		name: 'mypicture',
-		source: 'angelfish',
+		//source: 'angelfish',
+		url: 'img/carousel/angelfish.png',
 		strokeStyle: 'Gold',
 		lineWidth: 3,
 		method: 'fillDraw',

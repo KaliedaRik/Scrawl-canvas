@@ -116,11 +116,11 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 		/**
 A __save__ function
 
-Argument should be a String literal: 'pads', 'groups', 'entitys', 'designs', 'animsheets'
+Argument should be a String literal: 'pads', 'cells', 'groups', 'entitys', 'designs', 'spriteanimations', 'springs'
 
 _Note: this function does not check for duplicate objects_
 @method save
-@param {string} item A String literal: 'pads', 'cells', 'groups', 'entitys', 'designs', 'animsheets', 'springs'
+@param {string} item A String literal
 @return Array of saved data
 **/
 		my.save = function(item) {
@@ -152,10 +152,10 @@ _Note: this function does not check for duplicate objects_
 						results = results.concat(my.design[my.designnames[i]].toString());
 					}
 					break;
-				case 'animsheets':
-					if (my.xt(my.animnames)) {
-						for (i = 0, iz = my.animnames.length; i < iz; i++) {
-							results = results.concat(my.anim[my.animnames[i]].toString());
+				case 'spriteanimations':
+					if (my.xt(my.spriteanimationnames)) {
+						for (i = 0, iz = my.spriteanimationnames.length; i < iz; i++) {
+							results = results.concat(my.spriteanimation[my.spriteanimationnames[i]].toString());
 						}
 					}
 					break;
@@ -196,7 +196,8 @@ Turn the object into a JSON String
 **/
 		my.Position.prototype.toString = function() {
 			var keys = Object.keys(my.d[this.type]),
-				result = {};
+				result = {},
+				blacklist = [];
 			result.type = this.type;
 			result.classname = this.classname;
 			result.name = this.name;
@@ -276,6 +277,7 @@ Turn the object into a JSON String
 				entitys = [],
 				ctx,
 				designs = [],
+				blacklist = ['localWidth', 'localHeight', 'mouse', 'displayOffsetX', 'displayOffsetY'],
 				i, iz, j, jz;
 			result.type = this.type;
 			result.classname = this.classname;
@@ -287,12 +289,13 @@ Turn the object into a JSON String
 						result[keys[i]] = this[keys[i]];
 					}
 				}
+				else if (my.contains(blacklist, keys[i])) {
+					//do nothing
+				}
 				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
-			delete result.displayOffsetX;
-			delete result.displayOffsetY;
 			resarray.push(JSON.stringify(result));
 			if (!noexternalobjects) {
 				for (i = 0, iz = this.cells.length; i < iz; i++) {
@@ -342,15 +345,22 @@ Turn the object into a JSON String
 				entitys = [],
 				ctx,
 				designs = [],
+				blacklist = ['copyData', 'pasteData', 'actualWidth', 'actualHeight'],
 				i, iz, j, jz;
 			result.type = this.type;
 			result.classname = this.classname;
 			result.name = this.name;
 			for (i = 0, iz = keys.length; i < iz; i++) {
-				if (my.contains(['start', 'delta', 'handle', 'source', 'sourceDelta'], keys[i])) {
+				if (my.contains(['start', 'delta', 'handle', 'copy', 'copyDelta'], keys[i])) {
 					if (!this[keys[i]].isLike(my.d[this.type][keys[i]])) {
-						result[keys[i]] = this[keys[i]];
+						result[keys[i]] = {
+							x: this[keys[i]].x,
+							y: this[keys[i]].y
+						};
 					}
+				}
+				else if (my.contains(blacklist, keys[i])) {
+					//do nothing
 				}
 				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
@@ -485,7 +495,9 @@ Turn the object into a JSON String
 				ctx = my.ctx[this.context],
 				ctxArray,
 				designs = [],
-				resarray = [];
+				resarray = [],
+				vectorslist = ['start', 'delta', 'handle', 'copy'],
+				blacklist = ['collisionVectors', 'dataSet', 'pointList', 'firstPoint', 'linkList', 'linkDurations', 'perimeterLength', 'style', 'variant', 'weight', 'size', 'metrics', 'family', 'texts', 'copyData', 'pasteData', 'localHeight', 'localWidth'];
 			result.type = this.type;
 			result.classname = this.classname;
 			result.name = this.name;
@@ -504,9 +516,12 @@ Turn the object into a JSON String
 				}
 			}
 			for (var i = 0, iz = keys.length; i < iz; i++) {
-				if (my.contains(['start', 'delta', 'handle'], keys[i])) {
+				if (my.contains(vectorslist, keys[i])) {
 					if (!this[keys[i]].isLike(my.d[this.type][keys[i]])) {
-						result[keys[i]] = this[keys[i]];
+						result[keys[i]] = {
+							x: this[keys[i]].x,
+							y: this[keys[i]].y
+						};
 					}
 				}
 				else if (keys[i] === 'context' && my.xt(my.ctx[this.context])) {
@@ -516,7 +531,7 @@ Turn the object into a JSON String
 						result[ctxArray[j]] = ctx[ctxArray[j]];
 					}
 				}
-				else if (my.contains(['collisionVectors', 'dataSet', 'pointList', 'firstPoint', 'linkList', 'linkDurations', 'perimeterLength', 'style', 'variant', 'weight', 'size', 'metrics', 'family', 'texts'], keys[i])) {
+				else if (my.contains(blacklist, keys[i])) {
 					//do nothing
 				}
 				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {

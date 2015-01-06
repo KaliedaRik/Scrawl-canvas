@@ -74,7 +74,7 @@ var mycode = function() {
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'images'],
+	modules: ['block', 'images', 'saveload'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

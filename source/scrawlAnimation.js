@@ -327,7 +327,6 @@ Changes the sign (+/-) of specified attribute values
 		my.d.Cell.copyDelta = {
 			x: 0,
 			y: 0,
-			z: 0
 		};
 		my.d.Cell.copyMinWidth = 0;
 		my.d.Cell.copyMaxWidth = 0;

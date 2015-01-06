@@ -886,8 +886,24 @@ Generate unique names for new Scrawl objects
 		item = my.safeObject(item);
 		if (my.contains(my.nameslist, item.target)) {
 			name = my.xtGetTrue(item.name, item.type, 'default');
-			nameArray = name.split('~~~');
-			return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '~~~' + Math.floor(Math.random() * 100000000) : nameArray[0];
+			name = name.replace(/\./g, '_');
+			name = name.replace(/\//g, '_');
+			name = name.replace(/ /g, '_');
+			name = name.replace(/\+/g, '_');
+			name = name.replace(/\*/g, '_');
+			name = name.replace(/\[/g, '_');
+			name = name.replace(/\{/g, '_');
+			name = name.replace(/\(/g, '_');
+			name = name.replace(/\)/g, '_');
+			name = name.replace(/~/g, '_');
+			name = name.replace(/#/g, '_');
+			name = name.replace(/\\/g, '_');
+			name = name.replace(/\^/g, '_');
+			name = name.replace(/\$/g, '_');
+			name = name.replace(/\|/g, '_');
+			name = name.replace(/\?/g, '_');
+			nameArray = name.split('___');
+			return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
 		}
 		console.log('scrawl.makeName() error: insufficient or incorrect argument attributes', item);
 		return false;
@@ -1967,7 +1983,10 @@ SubScrawl, and all Objects that prototype chain to Subscrawl, supports the follo
 @property start
 @type Vector
 **/
-		start: false,
+		start: {
+			x: 0,
+			Y: 0
+		},
 		/**
 An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
 
@@ -1981,7 +2000,10 @@ Where values are Numbers, handle can be treated like any other Vector
 @property handle
 @type Object
 **/
-		handle: false,
+		handle: {
+			x: 0,
+			Y: 0
+		},
 		/**
 The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object's start point
 @property pivot
@@ -2994,8 +3016,8 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			my.PageElement.call(this, items);
 
 			//amend name if necessary, and set canvas element id
-			if (this.name.match(/~~~/)) {
-				this.name = this.name.replace(/~~~/g, '_');
+			if (this.name.match(/___/)) {
+				this.name = this.name.replace(/___/g, '_');
 			}
 			items.canvasElement.id = this.name;
 
@@ -3510,7 +3532,10 @@ Cell supports the following 'virtual' attributes for this attribute:
 @property copy
 @type Vector
 **/
-		copy: false,
+		copy: {
+			x: 0,
+			Y: 0
+		},
 		/**
 Copy width, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;
 @property copyWidth
