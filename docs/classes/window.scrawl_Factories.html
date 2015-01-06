@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -214,7 +248,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlPathFactories.js.html#l38"><code>source\scrawlPathFactories.js:38</code></a>
+            Defined in: <a href="../files/source_scrawlPathFactories.js.html#l39"><code>source\scrawlPathFactories.js:39</code></a>
         </div>
     
 
@@ -258,6 +292,13 @@
                     <h3>Methods</h3>
 
                     <ul class="index-list methods">
+                        
+                            <li class="index-item method private">
+                                <a href="#method_convertPercentage">convertPercentage</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method">
                                 <a href="#method_makeBezier">makeBezier</a>
@@ -317,6 +358,163 @@
                 <h2 class="off-left">Methods</h2>
 
                 
+                    <div id="method_convertPercentage" class="method item private">
+    <h3 class="name"><code>convertPercentage</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>val</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>useWidth</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlPathFactories.js.html#l653"><code>source\scrawlPathFactories.js:653</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>factory</strong> helper function - convert percentage values to pixel values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">val</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>the percentage to be converted</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>the reference cell</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">useWidth</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>true calculates the x point along the cell width; false calculates the y point against height</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number result (px)</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_makeBezier" class="method item">
     <h3 class="name"><code>makeBezier</code></h3>
 
@@ -363,7 +561,7 @@
             
         
         
-        <a href="../files/source_scrawlPathFactories.js.html#l228"><code>source\scrawlPathFactories.js:228</code></a>
+        <a href="../files/source_scrawlPathFactories.js.html#l267"><code>source\scrawlPathFactories.js:267</code></a>
         
         </p>
 
@@ -374,20 +572,21 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate bezier curve Shape or Path sprite objects</p>
+        <p>A <strong>factory</strong> function to generate bezier curve Shape or Path entity objects</p>
 <p>The argument can include:</p>
 <ul>
-<li><strong>startX</strong> - Number; default: 0</li>
-<li><strong>startY</strong> - Number; default: 0</li>
-<li><strong>startControlX</strong> - Number; default: 0 (not retained)</li>
-<li><strong>startControlY</strong> - Number; default: 0 (not retained)</li>
-<li><strong>endControlX</strong> - Number; default: 0 (not retained)</li>
-<li><strong>endControlY</strong> - Number; default: 0 (not retained)</li>
-<li><strong>endX</strong> - Number; default: 0 (not retained)</li>
-<li><strong>endY</strong> - Number; default: 0 (not retained)</li>
+<li><strong>startX</strong> - Number or % String; default: 0</li>
+<li><strong>startY</strong> - Number or % String; default: 0</li>
+<li><strong>startControlX</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>startControlY</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>endControlX</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>endControlY</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>endX</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>endY</strong> - Number or % String; default: 0 (not retained)</li>
 <li><strong>shape</strong> - Boolean, true to create Shape; false (default) to create Path </li>
-<li>any other legitimate Sprite, Context or Shape/Path attribute</li>
+<li>any other legitimate Entity, Context or Shape/Path attribute</li>
 </ul>
+<p>Percentage String values are relative to the entity&#39;s cell&#39;s dimensions</p>
 
     </div>
 
@@ -424,7 +623,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Shape or Path sprite object</p>
+                    <p>Shape or Path entity object</p>
 
                 
             </div>
@@ -481,7 +680,7 @@
             
         
         
-        <a href="../files/source_scrawlPathFactories.js.html#l46"><code>source\scrawlPathFactories.js:46</code></a>
+        <a href="../files/source_scrawlPathFactories.js.html#l47"><code>source\scrawlPathFactories.js:47</code></a>
         
         </p>
 
@@ -492,14 +691,15 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate elliptical Shape or Path sprite objects</p>
+        <p>A <strong>factory</strong> function to generate elliptical Shape or Path entity objects</p>
 <p>The argument can include:</p>
 <ul>
 <li><strong>radiusX</strong> - Number, horizontal radius of ellipse; default: 0 (not retained)</li>
 <li><strong>radiusY</strong> - Number, vertical radius of ellipse; default: 0 (not retained)</li>
 <li><strong>shape</strong> - Boolean, true to create Shape; false (default) to create Path (not retained)</li>
-<li>any other legitimate Sprite, Context or Shape/Path attribute</li>
+<li>any other legitimate Entity, Context or Shape/Path attribute</li>
 </ul>
+<p>Percentage String values are relative to the entity&#39;s cell&#39;s dimensions</p>
 
     </div>
 
@@ -536,7 +736,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Shape or Path sprite object</p>
+                    <p>Shape or Path entity object</p>
 
                 
             </div>
@@ -593,7 +793,7 @@
             
         
         
-        <a href="../files/source_scrawlPathFactories.js.html#l369"><code>source\scrawlPathFactories.js:369</code></a>
+        <a href="../files/source_scrawlPathFactories.js.html#l434"><code>source\scrawlPathFactories.js:434</code></a>
         
         </p>
 
@@ -604,16 +804,17 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate straight line Shape or Path sprite objects</p>
+        <p>A <strong>factory</strong> function to generate straight line Shape or Path entity objects</p>
 <p>The argument can include:</p>
 <ul>
-<li><strong>startX</strong> - Number; default: 0</li>
-<li><strong>startY</strong> - Number; default: 0</li>
-<li><strong>endX</strong> - Number; default: 0 (not retained)</li>
-<li><strong>endY</strong> - Number; default: 0 (not retained)</li>
+<li><strong>startX</strong> - Number or % String; default: 0</li>
+<li><strong>startY</strong> - Number or % String; default: 0</li>
+<li><strong>endX</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>endY</strong> - Number or % String; default: 0 (not retained)</li>
 <li><strong>shape</strong> - Boolean, true to create Shape; false (default) to create Path </li>
-<li>any other legitimate Sprite, Context or Shape/Path attribute</li>
+<li>any other legitimate Entity, Context or Shape/Path attribute</li>
 </ul>
+<p>Percentage String values are relative to the entity&#39;s cell&#39;s dimensions</p>
 
     </div>
 
@@ -650,7 +851,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Shape or Path sprite object</p>
+                    <p>Shape or Path entity object</p>
 
                 
             </div>
@@ -707,7 +908,7 @@
             
         
         
-        <a href="../files/source_scrawlPathFactories.js.html#l303"><code>source\scrawlPathFactories.js:303</code></a>
+        <a href="../files/source_scrawlPathFactories.js.html#l356"><code>source\scrawlPathFactories.js:356</code></a>
         
         </p>
 
@@ -718,18 +919,19 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate quadratic curve Shape or Path sprite objects</p>
+        <p>A <strong>factory</strong> function to generate quadratic curve Shape or Path entity objects</p>
 <p>The argument can include:</p>
 <ul>
-<li><strong>startX</strong> - Number; default: 0</li>
-<li><strong>startY</strong> - Number; default: 0</li>
-<li><strong>controlX</strong> - Number; default: 0 (not retained)</li>
-<li><strong>controlY</strong> - Number; default: 0 (not retained)</li>
-<li><strong>endX</strong> - Number; default: 0 (not retained)</li>
-<li><strong>endY</strong> - Number; default: 0 (not retained)</li>
+<li><strong>startX</strong> - Number or % String; default: 0</li>
+<li><strong>startY</strong> - Number or % String; default: 0</li>
+<li><strong>controlX</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>controlY</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>endX</strong> - Number or % String; default: 0 (not retained)</li>
+<li><strong>endY</strong> - Number or % String; default: 0 (not retained)</li>
 <li><strong>shape</strong> - Boolean, true to create Shape; false (default) to create Path </li>
-<li>any other legitimate Sprite, Context or Shape/Path attribute</li>
+<li>any other legitimate Entity, Context or Shape/Path attribute</li>
 </ul>
+<p>Percentage String values are relative to the entity&#39;s cell&#39;s dimensions</p>
 
     </div>
 
@@ -766,7 +968,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Shape or Path sprite object</p>
+                    <p>Shape or Path entity object</p>
 
                 
             </div>
@@ -823,7 +1025,7 @@
             
         
         
-        <a href="../files/source_scrawlPathFactories.js.html#l121"><code>source\scrawlPathFactories.js:121</code></a>
+        <a href="../files/source_scrawlPathFactories.js.html#l135"><code>source\scrawlPathFactories.js:135</code></a>
         
         </p>
 
@@ -834,15 +1036,16 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate rectangular Shape or Path sprite objects, with optional rounded corners</p>
+        <p>A <strong>factory</strong> function to generate rectangular Shape or Path entity objects, with optional rounded corners</p>
 <p>The argument can include:</p>
 <ul>
-<li><strong>width</strong> - Number, default: 0</li>
-<li><strong>height</strong> - Number, default: 0</li>
+<li><strong>width</strong> - Number or % String, default: 0</li>
+<li><strong>height</strong> - Number or % String, default: 0</li>
 <li>also, 0, 1 or more of the following <strong>radius</strong> attributes (all Number, default: radius=0): radiusTopLeftX, radiusTopLeftY, radiusTopRightX, radiusTopRightY, radiusBottomRightX, radiusBottomRightY, radiusBottomLeftX, radiusBottomLeftY, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft, radiusTopX, radiusTopY, radiusBottomX, radiusBottomY, radiusLeftX, radiusLeftY, radiusRightX, radiusRightY, radiusTop, radiusBottom, radiusRight, radiusLeft, radiusX, radiusY, radius (not retained)</li>
 <li><strong>shape</strong> - Boolean, true to create Shape; false (default) to create Path (not retained)</li>
-<li>any other legitimate Sprite, Context or Shape/Path attribute</li>
+<li>any other legitimate Entity, Context or Shape/Path attribute</li>
 </ul>
+<p>Percentage String values are relative to the entity&#39;s cell&#39;s dimensions</p>
 
     </div>
 
@@ -879,7 +1082,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Shape or Path sprite object</p>
+                    <p>Shape or Path entity object</p>
 
                 
             </div>
@@ -936,7 +1139,7 @@
             
         
         
-        <a href="../files/source_scrawlPathFactories.js.html#l421"><code>source\scrawlPathFactories.js:421</code></a>
+        <a href="../files/source_scrawlPathFactories.js.html#l496"><code>source\scrawlPathFactories.js:496</code></a>
         
         </p>
 
@@ -947,17 +1150,33 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate straight-edged regular sprites such as triangles, stars, hexagons, etc</p>
+        <p>A <strong>factory</strong> function to generate regular entitys such as triangles, stars, hexagons, etc</p>
 <p>The argument can include:</p>
 <ul>
 <li><strong>angle</strong> - Number; eg an angle of 72 produces a pentagon, while 144 produces a five-pointed star - default: 0</li>
-<li><strong>sides</strong> - Number; number of sides to the regular sprite - default: 0</li>
+<li><strong>sides</strong> - Number; number of sides to the regular entity - default: 0</li>
 <li><strong>outline</strong> - Number; default: 0</li>
 <li><strong>radius</strong> - Number; default: 0 (not retained)</li>
-<li><strong>shape</strong> - Boolean, true to create Shape; false (default) to create Path </li>
-<li>any other legitimate Sprite, Context or Shape/Path attribute</li>
+<li><strong>startControlX</strong> - Number or % String - x coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)</li>
+<li><strong>controlX</strong> - alias for startControlX; default: 0 (not retained)</li>
+<li><strong>startControlY</strong> - Number or % String - y coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)</li>
+<li><strong>controlY</strong> - alias for startControlY; default: 0 (not retained)</li>
+<li><strong>endControlX</strong> - Number or % String - x coordinate for endControl (bezier) curve; default: 0 (not retained)</li>
+<li><strong>endControlY</strong> - Number or % String - y coordinate for endControl (bezier) curve; default: 0 (not retained)</li>
+<li><strong>lineType</strong> - String defining type of line/curve to use for generated entity (not retained)</li>
+<li><strong>shape</strong> - Boolean, true to create Shape; false (default) to create Path (not retained)</li>
+<li>any other legitimate Entity, Context or Shape/Path attribute</li>
 </ul>
-<p><em>(Either the &#39;angle&#39; attribute or the &#39;sides&#39; attribute (but not both) must be included in the argument object)</em></p>
+<p>Entitys can be generated using lines, or quadratic or bezier curves. The species of line to use is defined in the <strong>lineType</strong> attribute which accepts the following values:</p>
+<ul>
+<li>&#39;<strong>l</strong>&#39; - straight line (default)</li>
+<li>&#39;<strong>q</strong>&#39; - quadratic curve</li>
+<li>&#39;<strong>t</strong>&#39; - reflected quadratic curve</li>
+<li>&#39;<strong>c</strong>&#39; - bezier curve</li>
+<li>&#39;<strong>s</strong>&#39; - reflected bezier curve</li>
+</ul>
+<p><em>Either the &#39;angle&#39; attribute or the &#39;sides&#39; attribute (but not both) must be included in the argument object</em></p>
+<p>Percentage String values are relative to the entity&#39;s cell&#39;s dimensions</p>
 
     </div>
 
@@ -994,7 +1213,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Shape or Path sprite object</p>
+                    <p>Shape or Path entity object</p>
 
                 
             </div>

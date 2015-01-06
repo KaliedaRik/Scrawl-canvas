@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -239,1967 +273,2068 @@
 
 ## Purpose and features
 
-The Path module adds Path sprites - path-based objects - to the core module
+The Path module adds Path entitys - path-based objects - to the core module
 
-* Defines a sprite composed of lines, quadratic and bezier curves, etc
-* Can act as a path along which other sprites can be positioned and animated
+* Defines a entity composed of lines, quadratic and bezier curves, etc
+* Can act as a path along which other entitys can be positioned and animated
 * See also Shape object, which achieves a similar thing in a different way
 
 @module scrawlPath
 **/
 
-var scrawl = (function(my) {
-	&#x27;use strict&#x27;;
+if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.contains(window.scrawl.modules, &#x27;path&#x27;)) {
+	var scrawl = (function(my) {
+		&#x27;use strict&#x27;;
 
-	/**
-# window.scrawl
+		/**
+    # window.scrawl
 
-scrawlPath module adaptions to the Scrawl library object
+    scrawlPath module adaptions to the Scrawl library object
 
-## New library sections
+    ## New library sections
 
-* scrawl.point 
-* scrawl.link 
+    * scrawl.point 
+    * scrawl.link 
 
-## New default attributes
+    ## New default attributes
 
-* Position.pathPlace - default: 0
-* Position.pathRoll - default: 0;
-* Position.addPathRoll - default: false;
-* Position.path - default: &#x27;&#x27;;
+    * Position.pathPlace - default: 0
+    * Position.pathRoll - default: 0;
+    * Position.addPathRoll - default: false;
+    * Position.path - default: &#x27;&#x27;;
 
-@class window.scrawl_Path
-**/
+    @class window.scrawl_Path
+    **/
 
-	/**
-scrawl.deleteSprite hook function - modified by path module
-@method pathDeleteSprite
-@private
-**/
-	my.pathDeleteSprite = function(mySprite) {
-		var myPointList,
-			myLinkList;
-		if (mySprite.type === &#x27;Path&#x27;) {
-			myPointList = mySprite.getFullPointList();
-			myLinkList = mySprite.getFullLinkList();
-			for (var j = 0, jz = myPointList.length; j &lt; jz; j++) {
-				my.removeItem(my.pointnames, myPointList[j]);
-				delete my.point[myPointList[j]];
-			}
-			for (var i = 0, iz = myLinkList.length; i &lt; iz; i++) {
-				my.removeItem(my.linknames, myLinkList[i]);
-				delete my.link[myLinkList[i]];
-			}
-		}
-	};
-	/**
-Clone a Scrawl.js object, optionally altering attribute values in the cloned object
-
-(This function replaces the core function)
-
-@method Base.clone
-@param {Object} items Object containing attribute key:value pairs; will overwrite existing values in the cloned, but not the source, Object
-@return Cloned object
-@chainable
-@example
-	var box = scrawl.newBlock({
-		width: 50,
-		height: 50,
-		});
-	var newBox = box.clone({
-		height: 100,
-		});
-	newBox.get(&#x27;width&#x27;);		//returns 50
-	newBox.get(&#x27;height&#x27;);		//returns 100
-**/
-	my.Base.prototype.clone = function(items) {
-		var b = my.mergeOver(this.parse(), my.safeObject(items));
-		delete b.context; //required for successful cloning of sprites
-		return (this.type === &#x27;Path&#x27;) ? my.makePath(b) : new my[this.type](b);
-	};
-	my.d.Position.pathPlace = 0;
-	my.d.Position.pathRoll = 0;
-	my.d.Position.addPathRoll = false;
-	my.d.Position.path = &#x27;&#x27;;
-	my.mergeInto(my.d.Cell, my.d.Position);
-	my.mergeInto(my.d.Sprite, my.d.Position);
-	if (my.xt(my.d.Block)) {
-		my.mergeInto(my.d.Block, my.d.Sprite);
-	}
-	if (my.xt(my.d.Shape)) {
-		my.mergeInto(my.d.Shape, my.d.Sprite);
-	}
-	if (my.xt(my.d.Wheel)) {
-		my.mergeInto(my.d.Wheel, my.d.Sprite);
-	}
-	if (my.xt(my.d.Picture)) {
-		my.mergeInto(my.d.Picture, my.d.Sprite);
-	}
-	if (my.xt(my.d.Phrase)) {
-		my.mergeInto(my.d.Phrase, my.d.Sprite);
-	}
-	/**
-Position constructor hook function - modified by path module
-@method pathPositionInit
-@private
-**/
-	my.Position.prototype.pathPositionInit = function(items) {
-		this.path = items.path || my.d[this.type].path;
-		this.pathRoll = items.pathRoll || my.d[this.type].pathRoll;
-		this.addPathRoll = items.addPathRoll || my.d[this.type].addPathRoll;
-		this.pathPlace = items.pathPlace || my.d[this.type].pathPlace;
-	};
-	/**
-Position.setDelta hook function - modified by path module
-@method pathPositionSetDelta
-@private
-**/
-	my.Position.prototype.pathPositionSetDelta = function(items) {
-		if (items.pathPlace) {
-			this.pathPlace += items.pathPlace;
-		}
-	};
-	/**
-Cell.prepareToCopyCell hook function - modified by path module
-@method pathPrepareToCopyCell
-@private
-**/
-	my.Cell.prototype.pathPrepareToCopyCell = function() {
-		var here;
-		if (my.contains(my.spritenames, this.path) &amp;&amp; my.sprite[this.path].type === &#x27;Path&#x27;) {
-			here = my.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
-			this.start.x = (!this.lockX) ? here.x : this.start.x;
-			this.start.y = (!this.lockY) ? here.y : this.start.y;
-			this.pathRoll = here.r || 0;
-		}
-	};
-	/**
-Sprite.stamp hook function - modified by path module
-@method pathStamp
-@private
-**/
-	my.Sprite.prototype.pathStamp = function(method, cell) {
-		var here;
-		if (my.contains(my.spritenames, this.path) &amp;&amp; my.sprite[this.path].type === &#x27;Path&#x27;) {
-			here = my.sprite[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
-			this.start.x = (!this.lockX) ? here.x : this.start.x;
-			this.start.y = (!this.lockY) ? here.y : this.start.y;
-			this.pathRoll = here.r || 0;
-		}
-	};
-	/**
-A __factory__ function to generate new Point objects
-@method newPoint
-@param {Object} items Key:value Object argument for setting attributes
-@return Point object
-@private
-**/
-	my.newPoint = function(items) {
-		return new my.Point(items);
-	};
-	/**
-A __factory__ function to generate new Link objects
-@method newLink
-@param {Object} items Key:value Object argument for setting attributes
-@return Link object
-@private
-**/
-	my.newLink = function(items) {
-		return new my.Link(items);
-	};
-	/**
-A __factory__ function to generate new Path objects
-
-_Note: this function does NOT produce Path sprites_ - use scrawl.makePath()
-@method newPath
-@param {Object} items Key:value Object argument for setting attributes
-@return Path object
-@private
-**/
-	my.newPath = function(items) {
-		return new my.Path(items);
-	};
-	/**
-A __factory__ function to generate new Path sprites
-@method makePath
-@param {Object} items Key:value Object argument for setting attributes
-@return Path sprite
-@example
-	scrawl.makePath({
-		startX: 50,
-		startY: 20,
-		fillStyle: &#x27;red&#x27;,
-		data: &#x27;M0,0 50,0 60,20, 10,20 0,0z&#x27;,
-		});
-**/
-	my.makePath = function(items) {
-		items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
-		var minX = 999999,
-			minY = 999999,
-			maxX = -999999,
-			maxY = -999999,
-			myShape,
-			sn,
-			tn,
-			lib,
-			sx,
-			sy,
-			set,
-			data,
-			command,
-			temppoint,
-			lc = 0,
-			pc = 0,
-			cx = 0,
-			cy = 0,
-			k = 0,
-			v = 0;
-		var myPivot = (my.xt(items.pivot)) ? my.point[myPivot] || my.sprite[myPivot] : false;
-		items.start = (my.xt(items.start)) ? items.start : {};
-		items.scaleX = items.scaleX || 1;
-		items.scaleY = items.scaleY || 1;
-		items.startX = (myPivot) ? ((myPivot.type === &#x27;Point&#x27;) ? myPivot.local.x : myPivot.start.x) : (items.startX || items.start.x || 0);
-		items.startY = (myPivot) ? ((myPivot.type === &#x27;Point&#x27;) ? myPivot.local.y : myPivot.start.y) : (items.startY || items.start.y || 0);
-		items.isLine = (my.isa(items.isLine, &#x27;bool&#x27;)) ? items.isLine : true;
-		var checkMinMax = function(cx, cy) {
-			minX = (minX &gt; cx) ? cx : minX;
-			minY = (minY &gt; cy) ? cy : minY;
-			maxX = (maxX &lt; cx) ? cx : maxX;
-			maxY = (maxY &lt; cy) ? cy : maxY;
-		};
-		var getPathSetData = function(sim) {
-			var psd = sim.match(/(-?[0-9.]+\b)/g);
-			if (psd) {
-				for (var j = 0, w = psd.length; j &lt; w; j++) {
-					psd[j] = parseFloat(psd[j]);
+		/**
+    scrawl.deleteEntity hook function - modified by path module
+    @method pathDeleteEntity
+    @private
+    **/
+		my.pathDeleteEntity = function(item) {
+			var pointList,
+				linkList,
+				i,
+				iz,
+				j,
+				jz;
+			if (item.type === &#x27;Path&#x27;) {
+				pointList = item.getFullPointList();
+				linkList = item.getFullLinkList();
+				for (j = 0, jz = pointList.length; j &lt; jz; j++) {
+					my.removeItem(my.pointnames, pointList[j]);
+					delete my.point[pointList[j]];
 				}
-				return psd;
+				for (i = 0, iz = linkList.length; i &lt; iz; i++) {
+					my.removeItem(my.linknames, linkList[i]);
+					delete my.link[linkList[i]];
+				}
+			}
+		};
+		/**
+    Clone a Scrawl.js object, optionally altering attribute values in the cloned object
+
+    (This function replaces the core function)
+
+    @method Base.clone
+    @param {Object} items Object containing attribute key:value pairs; will overwrite existing values in the cloned, but not the source, Object
+    @return Cloned object
+    @chainable
+    @example
+        var box = scrawl.newBlock({
+            width: 50,
+            height: 50,
+            });
+        var newBox = box.clone({
+            height: 100,
+            });
+        newBox.get(&#x27;width&#x27;);        //returns 50
+        newBox.get(&#x27;height&#x27;);       //returns 100
+    **/
+		my.Base.prototype.clone = function(items) {
+			var b = my.mergeOver(this.parse(), my.safeObject(items));
+			delete b.context; //required for successful cloning of entitys
+			return (this.type === &#x27;Path&#x27;) ? my.makePath(b) : new my[this.type](b);
+		};
+		my.d.Position.pathPlace = 0;
+		my.d.Position.pathRoll = 0;
+		my.d.Position.addPathRoll = false;
+		my.d.Position.path = &#x27;&#x27;;
+		my.mergeInto(my.d.Cell, my.d.Position);
+		my.mergeInto(my.d.Entity, my.d.Position);
+		if (my.xt(my.d.Block)) {
+			my.mergeInto(my.d.Block, my.d.Entity);
+		}
+		if (my.xt(my.d.Shape)) {
+			my.mergeInto(my.d.Shape, my.d.Entity);
+		}
+		if (my.xt(my.d.Wheel)) {
+			my.mergeInto(my.d.Wheel, my.d.Entity);
+		}
+		if (my.xt(my.d.Picture)) {
+			my.mergeInto(my.d.Picture, my.d.Entity);
+		}
+		if (my.xt(my.d.Phrase)) {
+			my.mergeInto(my.d.Phrase, my.d.Entity);
+		}
+		/**
+    Position constructor hook function - modified by path module
+    @method pathPositionInit
+    @private
+    **/
+		my.Position.prototype.pathPositionInit = function(items) {
+			this.path = my.xtGet(items.path, my.d[this.type].path);
+			this.pathRoll = my.xtGet(items.pathRoll, my.d[this.type].pathRoll);
+			this.addPathRoll = my.xtGet(items.addPathRoll, my.d[this.type].addPathRoll);
+			this.pathPlace = my.xtGet(items.pathPlace, my.d[this.type].pathPlace);
+		};
+		/**
+    Position.setDelta hook function - modified by path module
+    @method pathPositionSetDelta
+    @private
+    **/
+		my.Position.prototype.pathPositionSetDelta = function(items) {
+			if (items.pathPlace) {
+				this.pathPlace += items.pathPlace;
+			}
+		};
+		/**
+    Cell.prepareToCopyCell hook function - modified by path module
+    @method pathPrepareToCopyCell
+    @private
+    **/
+		my.Cell.prototype.pathPrepareToCopyCell = function() {
+			var here;
+			if (my.entity[this.path] &amp;&amp; my.entity[this.path].type === &#x27;Path&#x27;) {
+				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+				this.start.x = (!this.lockX) ? here.x : this.start.x;
+				this.start.y = (!this.lockY) ? here.y : this.start.y;
+				this.pathRoll = here.r || 0;
+			}
+		};
+		/**
+    Entity.stamp hook function - modified by path module
+    @method pathStamp
+    @private
+    **/
+		my.Entity.prototype.pathStamp = function(method, cell) {
+			var here;
+			if (my.entity[this.path] &amp;&amp; my.entity[this.path].type === &#x27;Path&#x27;) {
+				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+				this.start.x = (!this.lockX) ? here.x : this.start.x;
+				this.start.y = (!this.lockY) ? here.y : this.start.y;
+				this.pathRoll = here.r || 0;
+			}
+		};
+		/**
+    A __factory__ function to generate new Point objects
+    @method newPoint
+    @param {Object} items Key:value Object argument for setting attributes
+    @return Point object
+    @private
+    **/
+		my.newPoint = function(items) {
+			return new my.Point(items);
+		};
+		/**
+    A __factory__ function to generate new Link objects
+    @method newLink
+    @param {Object} items Key:value Object argument for setting attributes
+    @return Link object
+    @private
+    **/
+		my.newLink = function(items) {
+			return new my.Link(items);
+		};
+		/**
+    A __factory__ function to generate new Path objects
+
+    _Note: this function does NOT produce Path entitys_ - use scrawl.makePath()
+    @method newPath
+    @param {Object} items Key:value Object argument for setting attributes
+    @return Path object
+    @private
+    **/
+		my.newPath = function(items) {
+			return new my.Path(items);
+		};
+		/**
+    A __factory__ function to generate new Path entitys
+    @method makePath
+    @param {Object} items Key:value Object argument for setting attributes
+    @return Path entity
+    @example
+        scrawl.makePath({
+            startX: 50,
+            startY: 20,
+            fillStyle: &#x27;red&#x27;,
+            data: &#x27;M0,0 50,0 60,20, 10,20 0,0z&#x27;,
+            });
+    **/
+		my.makePath = function(items) {
+			var stat1 = [&#x27;C&#x27;, &#x27;c&#x27;, &#x27;S&#x27;, &#x27;s&#x27;],
+				stat2 = [&#x27;Q&#x27;, &#x27;q&#x27;, &#x27;T&#x27;, &#x27;t&#x27;],
+				minX,
+				minY,
+				maxX,
+				maxY,
+				myShape,
+				sn,
+				tn,
+				lib,
+				sx,
+				sy,
+				set,
+				data,
+				command,
+				lc,
+				pc,
+				cx,
+				cy,
+				k,
+				v,
+				myPivot,
+				temp,
+				i,
+				iz;
+			items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
+			minX = 999999;
+			minY = 999999;
+			maxX = -999999;
+			maxY = -999999;
+			lc = 0;
+			pc = 0;
+			cx = 0;
+			cy = 0;
+			k = 0;
+			v = 0;
+			myPivot = my.xtGet(my.point[items.pivot], my.entity[items.pivot], false);
+			if (myPivot) {
+				temp = my.xtGet(myPivot.local, myPivot.place, myPivot.start, false);
+				temp = my.safeObject(temp);
+				items.startX = my.xtGet(temp.x, 0);
+				items.startY = my.xtGet(temp.y, 0);
+			}
+			else {
+				temp = my.safeObject(items.start);
+				items.startX = my.xtGet(items.startX, temp.x, 0);
+				items.startY = my.xtGet(items.startY, temp.y, 0);
+			}
+			items.start = (my.xt(items.start)) ? items.start : {};
+			items.scaleX = items.scaleX || 1;
+			items.scaleY = items.scaleY || 1;
+			items.isLine = my.xtGet(items.isLine, true);
+			var checkMinMax = function(_cx, _cy) {
+				minX = (minX &gt; _cx) ? _cx : minX;
+				minY = (minY &gt; _cy) ? _cy : minY;
+				maxX = (maxX &lt; _cx) ? _cx : maxX;
+				maxY = (maxY &lt; _cy) ? _cy : maxY;
+			};
+			var getPathSetData = function(_sim) {
+				var psd = _sim.match(/(-?[0-9.]+\b)/g),
+					j, w;
+				if (psd) {
+					for (j = 0, w = psd.length; j &lt; w; j++) {
+						psd[j] = parseFloat(psd[j]);
+					}
+					return psd;
+				}
+				return false;
+			};
+			var generatePoint = function(_tempname, _pcount, _shapename, _x, _y, _lcount, _sx, _sy) {
+				my.newPoint({
+					name: _tempname + &#x27;_p&#x27; + _pcount,
+					entity: _shapename,
+					currentX: _x * _sx,
+					currentY: _y * _sy,
+					startLink: _tempname + &#x27;_l&#x27; + _lcount,
+				});
+			};
+			var generateLink = function(_tempname, _lcount, _shapename, _spec, _act, _spt, _ept, _cp1, _cp2) {
+				_ept = (my.xt(_ept)) ? _ept : {};
+				_cp1 = (my.xt(_cp1)) ? _cp1 : {};
+				_cp2 = (my.xt(_cp2)) ? _cp2 : {};
+				my.newLink({
+					name: _tempname + &#x27;_l&#x27; + _lcount,
+					entity: _shapename,
+					species: _spec,
+					startPoint: _spt.name,
+					endPoint: _ept.name || false,
+					controlPoint1: _cp1.name || false,
+					controlPoint2: _cp2.name || false,
+					precision: items.precision || false,
+					action: _act,
+				});
+			};
+			if (my.xt(items.data)) {
+				myShape = my.newPath(items);
+				sn = myShape.name;
+				tn = sn.replace(&#x27;~&#x27;, &#x27;_&#x27;, &#x27;g&#x27;);
+				lib = my.point;
+				sx = items.scaleX;
+				sy = items.scaleY;
+				if (myShape) {
+					set = items.data.match(/([A-Za-z][0-9. ,\-]*)/g);
+					generatePoint(tn, pc, sn, cx, cy, lc, sx, sy);
+					pc++;
+					for (i = 0, iz = set.length; i &lt; iz; i++) {
+						command = set [i][0];
+						data = getPathSetData(set [i]);
+						switch (command) {
+							case &#x27;M&#x27;:
+								cx = data[0];
+								cy = data[1];
+								checkMinMax(cx, cy);
+								generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, false, &#x27;move&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
+								for (k = 2, v = data.length; k &lt; v; k += 2) {
+									generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+									lc++;
+									cx = data[k];
+									cy = data[k + 1];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;m&#x27;:
+								if (i === 0) {
+									cx = data[0];
+									cy = data[1];
+								}
+								else {
+									cx += data[0];
+									cy += data[1];
+								}
+								checkMinMax(cx, cy);
+								generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, false, &#x27;move&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
+								for (k = 2, v = data.length; k &lt; v; k += 2) {
+									generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+									lc++;
+									cx += data[k];
+									cy += data[k + 1];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;Z&#x27;:
+							case &#x27;z&#x27;:
+								generatePoint(tn, pc, sn, myShape.start.x, myShape.start.y, lc + 1, sx, sy);
+								pc++;
+								generateLink(tn, lc, sn, false, &#x27;close&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+								lc++;
+								break;
+							case &#x27;L&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 2) {
+									generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+									lc++;
+									cx = data[k];
+									cy = data[k + 1];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;l&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 2) {
+									generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+									lc++;
+									cx += data[k];
+									cy += data[k + 1];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;H&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k++) {
+									generatePoint(tn, pc, sn, data[k], cy, lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+									lc++;
+									cx = data[k];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;h&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k++) {
+									generatePoint(tn, pc, sn, cx + data[k], cy, lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+									lc++;
+									cx += data[k];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;V&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k++) {
+									generatePoint(tn, pc, snsn, cx, data[k], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, snsn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+									lc++;
+									cy = data[k];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;v&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k++) {
+									generatePoint(tn, pc, snsn, cx, cy + data[k], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, snsn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
+									lc++;
+									cy += data[k];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;C&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 6) {
+									generatePoint(tn, pc, snsn, data[k], data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generatePoint(tn, pc, snsn, data[k + 2], data[k + 3], lc + 1, sx, sy);
+									pc++;
+									generatePoint(tn, pc, snsn, data[k + 4], data[k + 5], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, snsn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+									lc++;
+									cx = data[k + 4];
+									cy = data[k + 5];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;c&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 6) {
+									generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generatePoint(tn, pc, sn, cx + data[k + 2], cy + data[k + 3], lc + 1, sx, sy);
+									pc++;
+									generatePoint(tn, pc, sn, cx + data[k + 4], cy + data[k + 5], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+									lc++;
+									cx += data[k + 4];
+									cy += data[k + 5];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;S&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 4) {
+									if (i &gt; 0 &amp;&amp; my.contains(stat1, set [i - 1][0])) {
+										lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
+											name: tn + &#x27;_p&#x27; + pc,
+											currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].local.x),
+											currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].local.y),
+											startLink: tn + &#x27;_l&#x27; + (lc + 1),
+										});
+										pc++;
+									}
+									else {
+										generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+										pc++;
+									}
+									generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+									lc++;
+									cx = data[k + 2];
+									cy = data[k + 3];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;s&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 4) {
+									if (i &gt; 0 &amp;&amp; my.contains(stat1, set [i - 1][0])) {
+										lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
+											name: tn + &#x27;_p&#x27; + pc,
+											currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].local.x),
+											currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].local.y),
+											startLink: tn + &#x27;_l&#x27; + (lc + 1),
+										});
+										pc++;
+									}
+									else {
+										generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+										pc++;
+									}
+									generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generatePoint(tn, pc, sn, cx + data[k + 2], cy + data[k + 3], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+									lc++;
+									cx += data[k + 2];
+									cy += data[k + 3];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;Q&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 4) {
+									generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+									lc++;
+									cx = data[k + 2];
+									cy = data[k + 3];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;q&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 4) {
+									generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generatePoint(tn, pc, sn, cx + data[k + 2], cy + data[k + 3], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+									lc++;
+									cx += data[k + 2];
+									cy += data[k + 3];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;T&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 2) {
+									if (i &gt; 0 &amp;&amp; my.contains(stat2, set [i - 1][0])) {
+										lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
+											name: tn + &#x27;_p&#x27; + pc,
+											currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].local.x),
+											currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].local.y),
+											startLink: tn + &#x27;_l&#x27; + (lc + 1),
+										});
+										pc++;
+									}
+									else {
+										generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+										pc++;
+									}
+									generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+									lc++;
+									cx = data[k];
+									cy = data[k + 1];
+									checkMinMax(cx, cy);
+								}
+								break;
+							case &#x27;t&#x27;:
+								for (k = 0, v = data.length; k &lt; v; k += 2) {
+									if (i &gt; 0 &amp;&amp; my.contains(stat2, set [i - 1][0])) {
+										lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
+											name: tn + &#x27;_p&#x27; + pc,
+											currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].local.x),
+											currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].local.y),
+											startLink: tn + &#x27;_l&#x27; + (lc + 1),
+										});
+										pc++;
+									}
+									else {
+										generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
+										pc++;
+									}
+									generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
+									pc++;
+									generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
+									lc++;
+									cx += data[k];
+									cy += data[k + 1];
+									checkMinMax(cx, cy);
+								}
+								break;
+							default:
+						}
+					}
+					generateLink(tn, lc, sn, false, &#x27;end&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc)]);
+					myShape.set({
+						firstPoint: tn + &#x27;_p0&#x27;,
+						width: (maxX - minX) * items.scaleX,
+						height: (maxY - minY) * items.scaleY,
+					});
+					myShape.buildPositions();
+					return myShape;
+				}
 			}
 			return false;
 		};
-		var generatePoint = function(_tempname, _pcount, _shapename, _x, _y, _lcount, _sx, _sy) {
-			my.newPoint({
-				name: _tempname + &#x27;_p&#x27; + _pcount,
-				sprite: _shapename,
-				currentX: _x * _sx,
-				currentY: _y * _sy,
-				startLink: _tempname + &#x27;_l&#x27; + _lcount,
-			});
+		my.pushUnique(my.sectionlist, &#x27;point&#x27;);
+		my.pushUnique(my.nameslist, &#x27;pointnames&#x27;);
+		my.pushUnique(my.sectionlist, &#x27;link&#x27;);
+		my.pushUnique(my.nameslist, &#x27;linknames&#x27;);
+
+		/**
+    # Path
+
+    ## Instantiation
+
+    * scrawl.makePath() - Irregular, path-based shapes
+
+    Additional factory functions to instantiate Path objects are available in the __pathFactoryFunctions__ module
+
+    ## Purpose
+
+    * Defines a entity composed of lines, quadratic and bezier curves, etc
+    * Makes use of, but doesn&#x27;t contain, Point and Link objects to define the entity
+    * Can be used as a path for placing and animating other entitys
+    * Point objects can be used as pivots by other entitys
+
+    ## Access
+
+    * scrawl.entity.PATHNAME - for the Path entity object
+
+    @class Path
+    @constructor
+    @extends Entity
+    @param {Object} [items] Key:value Object argument for setting attributes
+    **/
+		my.Path = function(items) {
+			items = my.safeObject(items);
+			my.Entity.call(this, items);
+			my.Position.prototype.set.call(this, items);
+			this.isLine = (my.isa(items.isLine, &#x27;bool&#x27;)) ? items.isLine : true;
+			this.linkList = [];
+			this.linkDurations = [];
+			this.pointList = [];
+			this.perimeterLength = 0;
+			this.registerInLibrary();
+			my.pushUnique(my.group[this.group].entitys, this.name);
+			return this;
 		};
-		var generateLink = function(_tempname, _lcount, _shapename, _spec, _act, _spt, _ept, _cp1, _cp2) {
-			_ept = (my.xt(_ept)) ? _ept : {};
-			_cp1 = (my.xt(_cp1)) ? _cp1 : {};
-			_cp2 = (my.xt(_cp2)) ? _cp2 : {};
-			my.newLink({
-				name: _tempname + &#x27;_l&#x27; + _lcount,
-				sprite: _shapename,
-				species: _spec,
-				startPoint: _spt.name,
-				endPoint: _ept.name || false,
-				controlPoint1: _cp1.name || false,
-				controlPoint2: _cp2.name || false,
-				precision: items.precision || false,
-				action: _act,
-			});
+		my.Path.prototype = Object.create(my.Entity.prototype);
+		/**
+    @property type
+    @type String
+    @default &#x27;Path&#x27;
+    @final
+    **/
+		my.Path.prototype.type = &#x27;Path&#x27;;
+		my.Path.prototype.classname = &#x27;entitynames&#x27;;
+		my.d.Path = {
+			/**
+    POINTNAME of the Point object that commences the drawing operation
+
+    Set automatically by Path creation factory functions
+    @property firstPoint
+    @type String
+    @default &#x27;&#x27;
+    @private
+    **/
+			firstPoint: &#x27;&#x27;,
+			/**
+    Drawing flag - when set to true, will treat the first drawing (not positioning) data point as the start point
+
+    Generally this is set automatically as part of an outline factory function
+    @property isLine
+    @type Boolean
+    @default true
+    **/
+			isLine: true,
+			/**
+    Drawing flag - when true, path will be closed
+
+    _Note: this attribute must be set to true for those drawing methods that use a fill flood as part of their operation
+    @property closed
+    @type Boolean
+    @default true
+    **/
+			closed: true,
+			/**
+    Array of LINKNAME Strings for Link objects associated with this Path entity
+    @property linkList
+    @type Array
+    @default []
+    @private
+    **/
+			linkList: [],
+			/**
+    Array of length (Number) values for each Link object associated with this Path entity
+    @property linkDurations
+    @type Array
+    @default []
+    @private
+    **/
+			linkDurations: [],
+			/**
+    Array of POINTNAME Strings for Point objects associated with this Path entity
+    @property pointList
+    @type Array
+    @default []
+    @private
+    **/
+			pointList: [],
+			/**
+    Path length - calculated automatically by scrawl
+
+    _Note: this value will be affected by the value of the precision attribute - hiher precisions lead to more accurate perimeterLength values, particularly along curves_
+    @property perimeterLength
+    @type Number
+    @default 0
+    **/
+			perimeterLength: 0,
+			/**
+    Path marker entitys - SPRITENAME String of entity used at start of the Path
+    @property markStart
+    @type String
+    @default &#x27;&#x27;
+    **/
+			markStart: &#x27;&#x27;,
+			/**
+    Path marker entitys - SPRITENAME String of entity used at the line/curve joints along the Path
+    @property markMid
+    @type String
+    @default &#x27;&#x27;
+    **/
+			markMid: &#x27;&#x27;,
+			/**
+    Path marker entitys - SPRITENAME String of entity used at end of the Path
+    @property markEnd
+    @type String
+    @default &#x27;&#x27;
+    **/
+			markEnd: &#x27;&#x27;,
+			/**
+    Path marker entitys - SPRITENAME String of entity used as the fallback when markStart, markMid or markEnd attributes are not set
+    @property mark
+    @type String
+    @default &#x27;&#x27;
+    **/
+			mark: &#x27;&#x27;,
+			/**
+    Path entity default method attribute is &#x27;draw&#x27;, not &#x27;fill&#x27;
+    @property method
+    @type String
+    @default &#x27;draw&#x27;
+    **/
+			method: &#x27;draw&#x27;,
+			/**
+    Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure entitys will follow the path more accurately
+    @property precision
+    @type Number
+    @default 10
+    **/
+			precision: 10,
 		};
-		if (my.xt(items.data)) {
-			myShape = my.newPath(items);
-			sn = myShape.name;
-			tn = sn.replace(&#x27;~&#x27;, &#x27;_&#x27;, &#x27;g&#x27;);
-			lib = my.point;
-			sx = items.scaleX;
-			sy = items.scaleY;
-			if (myShape) {
-				set = items.data.match(/([A-Za-z][0-9. ,\-]*)/g);
-				generatePoint(tn, pc, sn, cx, cy, lc, sx, sy);
-				pc++;
-				for (var i = 0, iz = set.length; i &lt; iz; i++) {
-					command = set [i][0];
-					data = getPathSetData(set [i]);
-					switch (command) {
-						case &#x27;M&#x27;:
-							cx = data[0];
-							cy = data[1];
-							checkMinMax(cx, cy);
-							generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
-							pc++;
-							generateLink(tn, lc, sn, false, &#x27;move&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-							lc++;
-							for (k = 2, v = data.length; k &lt; v; k += 2) {
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-								lc++;
-								cx = data[k];
-								cy = data[k + 1];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;m&#x27;:
-							if (i === 0) {
-								cx = data[0];
-								cy = data[1];
-							}
-							else {
-								cx += data[0];
-								cy += data[1];
-							}
-							checkMinMax(cx, cy);
-							generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
-							pc++;
-							generateLink(tn, lc, sn, false, &#x27;move&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-							lc++;
-							for (k = 2, v = data.length; k &lt; v; k += 2) {
-								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-								lc++;
-								cx += data[k];
-								cy += data[k + 1];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;Z&#x27;:
-						case &#x27;z&#x27;:
-							generatePoint(tn, pc, sn, myShape.start.x, myShape.start.y, lc + 1, sx, sy);
-							pc++;
-							generateLink(tn, lc, sn, false, &#x27;close&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-							lc++;
-							break;
-						case &#x27;L&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 2) {
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-								lc++;
-								cx = data[k];
-								cy = data[k + 1];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;l&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 2) {
-								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-								lc++;
-								cx += data[k];
-								cy += data[k + 1];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;H&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k++) {
-								generatePoint(tn, pc, sn, data[k], cy, lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-								lc++;
-								cx = data[k];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;h&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k++) {
-								generatePoint(tn, pc, sn, cx + data[k], cy, lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-								lc++;
-								cx += data[k];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;V&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k++) {
-								generatePoint(tn, pc, sn, cx, data[k], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-								lc++;
-								cy = data[k];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;v&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k++) {
-								generatePoint(tn, pc, sn, cx, cy + data[k], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;line&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 2)], lib[tn + &#x27;_p&#x27; + (pc - 1)]);
-								lc++;
-								cy += data[k];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;C&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 6) {
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
-								pc++;
-								generatePoint(tn, pc, sn, data[k + 4], data[k + 5], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
-								lc++;
-								cx = data[k + 4];
-								cy = data[k + 5];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;c&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 6) {
-								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generatePoint(tn, pc, sn, cx + data[k + 2], cy + data[k + 3], lc + 1, sx, sy);
-								pc++;
-								generatePoint(tn, pc, sn, cx + data[k + 4], cy + data[k + 5], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
-								lc++;
-								cx += data[k + 4];
-								cy += data[k + 5];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;S&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 4) {
-								if (i &gt; 0 &amp;&amp; my.contains([&#x27;C&#x27;, &#x27;c&#x27;, &#x27;S&#x27;, &#x27;s&#x27;], set [i - 1][0])) {
-									lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
-										name: tn + &#x27;_p&#x27; + pc,
-										currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentX),
-										currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentY),
-									});
-									pc++;
-								}
-								else {
-									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
-									pc++;
-								}
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
-								lc++;
-								cx = data[k + 2];
-								cy = data[k + 3];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;s&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 4) {
-								if (i &gt; 0 &amp;&amp; my.contains([&#x27;C&#x27;, &#x27;c&#x27;, &#x27;S&#x27;, &#x27;s&#x27;], set [i - 1][0])) {
-									lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
-										name: tn + &#x27;_p&#x27; + pc,
-										currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentX),
-										currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentY),
-									});
-									pc++;
-								}
-								else {
-									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
-									pc++;
-								}
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;bezier&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 4)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
-								lc++;
-								cx += data[k + 2];
-								cy += data[k + 3];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;Q&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 4) {
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generatePoint(tn, pc, sn, data[k + 2], data[k + 3], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
-								lc++;
-								cx = data[k + 2];
-								cy = data[k + 3];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;q&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 4) {
-								generatePoint(tn, pc, sn, cx + data[k], cy + data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generatePoint(tn, pc, sn, cx + data[k + 2], cy + data[k + 3], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
-								lc++;
-								cx += data[k + 2];
-								cy += data[k + 3];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;T&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 2) {
-								if (i &gt; 0 &amp;&amp; my.contains([&#x27;Q&#x27;, &#x27;q&#x27;, &#x27;T&#x27;, &#x27;t&#x27;], set [i - 1][0])) {
-									lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
-										name: tn + &#x27;_p&#x27; + pc,
-										currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentX),
-										currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentY),
-									});
-									pc++;
-								}
-								else {
-									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
-									pc++;
-								}
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
-								lc++;
-								cx = data[k];
-								cy = data[k + 1];
-								checkMinMax(cx, cy);
-							}
-							break;
-						case &#x27;t&#x27;:
-							for (k = 0, v = data.length; k &lt; v; k += 2) {
-								if (i &gt; 0 &amp;&amp; my.contains([&#x27;Q&#x27;, &#x27;q&#x27;, &#x27;T&#x27;, &#x27;t&#x27;], set [i - 1][0])) {
-									lib[tn + &#x27;_p&#x27; + (pc - 2)].clone({
-										name: tn + &#x27;_p&#x27; + pc,
-										currentX: cx + (cx - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentX),
-										currentY: cy + (cy - lib[tn + &#x27;_p&#x27; + (pc - 2)].currentY),
-									});
-									pc++;
-								}
-								else {
-									generatePoint(tn, pc, sn, cx, cy, lc + 1, sx, sy);
-									pc++;
-								}
-								generatePoint(tn, pc, sn, data[k], data[k + 1], lc + 1, sx, sy);
-								pc++;
-								generateLink(tn, lc, sn, &#x27;quadratic&#x27;, &#x27;add&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 3)], lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc - 2)]);
-								lc++;
-								cx += data[k];
-								cy += data[k + 1];
-								checkMinMax(cx, cy);
-							}
-							break;
-						default:
+		my.mergeInto(my.d.Path, my.d.Entity);
+		/**
+    Helper function - define the entity&#x27;s path on the &amp;lt;canvas&amp;gt; element&#x27;s context engine
+    @method prepareShape
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.prepareShape = function(ctx, cell) {
+			var here;
+			my.cell[cell].setEngine(this);
+			if (this.firstPoint) {
+				here = this.prepareStamp();
+				this.rotateCell(ctx, cell);
+				ctx.translate(here.x, here.y);
+				ctx.beginPath();
+				my.link[my.point[this.firstPoint].startLink].sketch(ctx);
+			}
+			return this;
+		};
+		/**
+    Augments Position.getPivotOffsetVector()
+    @method getPivotOffsetVector
+    @return A Vector of calculated offset values to help determine where entity drawing should start
+    @private
+    **/
+		my.Path.prototype.getPivotOffsetVector = function() {
+			return (this.isLine) ? my.Entity.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
+		};
+		/**
+    Display helper function
+
+    Stamp mark entitys onto Path
+
+    @method stampMark
+    @param {Entity} entity Entity object to be stamped
+    @param {Number} pos Path position (between 0 and 1)
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.stampMark = function(entity, pos, ctx, cell) {
+			var path,
+				place,
+				group,
+				handle,
+				arg = {
+					path: &#x27;&#x27;,
+					pathPlace: 0,
+					group: &#x27;&#x27;,
+					handle: null
+				};
+			path = entity.path;
+			place = entity.pathPlace;
+			group = entity.group;
+			handle = entity.handle;
+			arg.path = this.name;
+			arg.pathPlace = pos;
+			arg.group = cell;
+			arg.handle = this.handle;
+			entity.set(arg).forceStamp();
+			arg.path = path;
+			arg.pathPlace = place;
+			arg.group = group;
+			arg.handle = handle;
+			entity.set(arg);
+			return this;
+		};
+		/**
+    Display helper function
+
+    Prepare mark entitys for stamping onto Path
+
+    @method addMarks
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.addMarks = function(ctx, cell) {
+			var mark,
+				entity,
+				link,
+				i,
+				iz;
+			mark = false;
+			if (my.xtGet(this.mark, this.markStart, this.markMid, this.markEnd)) {
+				this.buildPositions();
+				link = this.get(&#x27;linkDurations&#x27;);
+				mark = my.xtGetTrue(this.markStart, this.mark);
+				if (mark &amp;&amp; my.entity[mark]) {
+					this.stampMark(my.entity[mark], 0, ctx, cell);
+				}
+				mark = my.xtGetTrue(this.markMid, this.mark);
+				if (mark &amp;&amp; my.entity[mark]) {
+					entity = my.entity[mark];
+					for (i = 0, iz = link.length - 1; i &lt; iz; i++) {
+						this.stampMark(entity, link[i], ctx, cell);
 					}
 				}
-				generateLink(tn, lc, sn, false, &#x27;end&#x27;, lib[tn + &#x27;_p&#x27; + (pc - 1)], lib[tn + &#x27;_p&#x27; + (pc)]);
-				myShape.set({
-					firstPoint: tn + &#x27;_p0&#x27;,
-					width: (maxX - minX) * items.scaleX,
-					height: (maxY - minY) * items.scaleY,
-				});
-				myShape.buildPositions();
-				return myShape;
-			}
-		}
-		return false;
-	};
-	my.pushUnique(my.sectionlist, &#x27;point&#x27;);
-	my.pushUnique(my.nameslist, &#x27;pointnames&#x27;);
-	my.pushUnique(my.sectionlist, &#x27;link&#x27;);
-	my.pushUnique(my.nameslist, &#x27;linknames&#x27;);
-
-	/**
-# Path
-
-## Instantiation
-
-* scrawl.makePath() - Irregular, path-based shapes
-
-Additional factory functions to instantiate Path objects are available in the __pathFactoryFunctions__ module
-
-## Purpose
-
-* Defines a sprite composed of lines, quadratic and bezier curves, etc
-* Makes use of, but doesn&#x27;t contain, Point and Link objects to define the sprite
-* Can be used as a path for placing and animating other sprites
-* Point objects can be used as pivots by other sprites
-
-## Access
-
-* scrawl.sprite.PATHNAME - for the Path sprite object
-
-@class Path
-@constructor
-@extends Sprite
-@param {Object} [items] Key:value Object argument for setting attributes
-**/
-	my.Path = function(items) {
-		items = my.safeObject(items);
-		my.Sprite.call(this, items);
-		my.Position.prototype.set.call(this, items);
-		this.isLine = (my.isa(items.isLine, &#x27;bool&#x27;)) ? items.isLine : true;
-		this.linkList = [];
-		this.linkDurations = [];
-		this.pointList = [];
-		this.registerInLibrary();
-		my.pushUnique(my.group[this.group].sprites, this.name);
-		return this;
-	};
-	my.Path.prototype = Object.create(my.Sprite.prototype);
-	/**
-@property type
-@type String
-@default &#x27;Path&#x27;
-@final
-**/
-	my.Path.prototype.type = &#x27;Path&#x27;;
-	my.Path.prototype.classname = &#x27;spritenames&#x27;;
-	my.d.Path = {
-		/**
-POINTNAME of the Point object that commences the drawing operation
-
-Set automatically by Path creation factory functions
-@property firstPoint
-@type String
-@default &#x27;&#x27;
-@private
-**/
-		firstPoint: &#x27;&#x27;,
-		/**
-Drawing flag - when set to true, will treat the first drawing (not positioning) data point as the start point
-
-Generally this is set automatically as part of an outline factory function
-@property isLine
-@type Boolean
-@default true
-**/
-		isLine: true,
-		/**
-Drawing flag - when true, path will be closed
-
-_Note: this attribute must be set to true for those drawing methods that use a fill flood as part of their operation
-@property closed
-@type Boolean
-@default true
-**/
-		closed: true,
-		/**
-Array of LINKNAME Strings for Link objects associated with this Path sprite
-@property linkList
-@type Array
-@default []
-@private
-**/
-		linkList: [],
-		/**
-Array of length (Number) values for each Link object associated with this Path sprite
-@property linkDurations
-@type Array
-@default []
-@private
-**/
-		linkDurations: [],
-		/**
-Array of POINTNAME Strings for Point objects associated with this Path sprite
-@property pointList
-@type Array
-@default []
-@private
-**/
-		pointList: [],
-		/**
-Path length - calculated automatically by scrawl
-
-_Note: this value will be affected by the value of the precision attribute - hiher precisions lead to more accurate perimeterLength values, particularly along curves_
-@property perimeterLength
-@type Number
-@default 0
-**/
-		perimeterLength: 0,
-		/**
-Path marker sprites - SPRITENAME String of sprite used at start of the Path
-@property markStart
-@type String
-@default &#x27;&#x27;
-**/
-		markStart: &#x27;&#x27;,
-		/**
-Path marker sprites - SPRITENAME String of sprite used at the line/curve joints along the Path
-@property markMid
-@type String
-@default &#x27;&#x27;
-**/
-		markMid: &#x27;&#x27;,
-		/**
-Path marker sprites - SPRITENAME String of sprite used at end of the Path
-@property markEnd
-@type String
-@default &#x27;&#x27;
-**/
-		markEnd: &#x27;&#x27;,
-		/**
-Path marker sprites - SPRITENAME String of sprite used as the fallback when markStart, markMid or markEnd attributes are not set
-@property mark
-@type String
-@default &#x27;&#x27;
-**/
-		mark: &#x27;&#x27;,
-		/**
-Path sprite default method attribute is &#x27;draw&#x27;, not &#x27;fill&#x27;
-@property method
-@type String
-@default &#x27;draw&#x27;
-**/
-		method: &#x27;draw&#x27;,
-		/**
-Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure sprites will follow the path more accurately
-@property precision
-@type Number
-@default 10
-**/
-		precision: 10,
-	};
-	my.mergeInto(my.d.Path, my.d.Sprite);
-	/**
-Helper function - define the sprite&#x27;s path on the &amp;lt;canvas&amp;gt; element&#x27;s context engine
-@method prepareShape
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.prepareShape = function(ctx, cell) {
-		var here;
-		my.cell[cell].setEngine(this);
-		if (this.firstPoint) {
-			here = this.prepareStamp();
-			this.rotateCell(ctx);
-			ctx.translate(here.x, here.y);
-			ctx.beginPath();
-			my.link[my.point[this.firstPoint].startLink].sketch(ctx);
-		}
-		return this;
-	};
-	/**
-Augments Position.getPivotOffsetVector()
-@method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where sprite drawing should start
-@private
-**/
-	my.Path.prototype.getPivotOffsetVector = function() {
-		return (this.isLine) ? my.Sprite.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
-	};
-	/**
-Display helper function
-
-Stamp mark sprites onto Path
-
-@method stampMark
-@param {Sprite} sprite Sprite object to be stamped
-@param {Number} pos Path position (between 0 and 1)
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.stampMark = function(sprite, pos, ctx, cell) {
-		var tPath,
-			tPathPlace,
-			tGroup,
-			tHandle;
-		tPath = sprite.path;
-		tPathPlace = sprite.pathPlace;
-		tGroup = sprite.group;
-		tHandle = sprite.handle;
-		sprite.set({
-			path: this.name,
-			pathPlace: pos,
-			group: cell,
-			handle: this.handle,
-		}).forceStamp();
-		sprite.set({
-			path: tPath,
-			pathPlace: tPathPlace,
-			group: tGroup,
-			handle: tHandle,
-		});
-		return this;
-	};
-	/**
-Display helper function
-
-Prepare mark sprites for stamping onto Path
-
-@method addMarks
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.addMarks = function(ctx, cell) {
-		var mark = this.get(&#x27;mark&#x27;),
-			markStart = this.get(&#x27;markStart&#x27;),
-			markMid = this.get(&#x27;markMid&#x27;),
-			markEnd = this.get(&#x27;markEnd&#x27;),
-			myMark = false,
-			sprite,
-			linkDurations;
-		if (mark || markStart || markMid || markEnd) {
-			this.buildPositions();
-			linkDurations = this.get(&#x27;linkDurations&#x27;);
-			myMark = markStart || mark || false;
-			if (myMark &amp;&amp; my.contains(my.spritenames, myMark)) {
-				this.stampMark(my.sprite[myMark], 0, ctx, cell);
-			}
-			myMark = markMid || mark || false;
-			if (myMark &amp;&amp; my.contains(my.spritenames, myMark)) {
-				sprite = my.sprite[myMark];
-				for (var j = 0, w = linkDurations.length - 1; j &lt; w; j++) {
-					this.stampMark(sprite, linkDurations[j], ctx, cell);
+				mark = my.xtGetTrue(this.markEnd, this.mark);
+				if (mark &amp;&amp; my.entity[mark]) {
+					this.stampMark(my.entity[mark], 1, ctx, cell);
 				}
 			}
-			myMark = markEnd || mark || false;
-			if (myMark &amp;&amp; my.contains(my.spritenames, myMark)) {
-				this.stampMark(my.sprite[myMark], 1, ctx, cell);
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;clip&#x27; method draw
+    @method clip
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.clip = function(ctx, cell) {
+			if (this.closed) {
+				this.prepareShape(ctx, cell);
+				ctx.clip();
 			}
-		}
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;clip&#x27; method draw
-@method clip
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.clip = function(ctx, cell) {
-		if (this.closed) {
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;clear&#x27; method draw
+    @method clear
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.clear = function(ctx, cell) {
 			this.prepareShape(ctx, cell);
-			ctx.clip();
-		}
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;clear&#x27; method draw
-@method clear
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.clear = function(ctx, cell) {
-		this.prepareShape(ctx, cell);
-		ctx.globalCompositeOperation = &#x27;destination-out&#x27;;
-		ctx.stroke();
-		ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-		ctx.globalCompositeOperation = my.ctx[cell].get(&#x27;globalCompositeOperation&#x27;);
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
-@method clearWithBackground
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.clearWithBackground = function(ctx, cell) {
-		var c = my.cell[cell],
-			bc = c.get(&#x27;backgroundColor&#x27;),
-			cx = my.ctx[cell],
-			fillStyle = cx.get(&#x27;fillStyle&#x27;),
-			strokeStyle = cx.get(&#x27;strokeStyle&#x27;),
-			ga = cx.get(&#x27;globalAlpha&#x27;);
-		this.prepareShape(ctx, cell);
-		ctx.fillStyle = bc;
-		ctx.strokeStyle = bc;
-		ctx.globalAlpha = 1;
-		ctx.stroke();
-		ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-		ctx.fillStyle = fillStyle;
-		ctx.strokeStyle = strokeStyle;
-		ctx.globalAlpha = globalAlpha;
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;fill&#x27; method draw
-@method fill
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.fill = function(ctx, cell) {
-		if (this.get(&#x27;closed&#x27;)) {
-			this.prepareShape(ctx, cell);
+			ctx.globalCompositeOperation = &#x27;destination-out&#x27;;
+			ctx.stroke();
 			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			ctx.globalCompositeOperation = my.ctx[cell].get(&#x27;globalCompositeOperation&#x27;);
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
+    @method clearWithBackground
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.clearWithBackground = function(ctx, cell) {
+			var context,
+				background,
+				fill,
+				stroke,
+				alpha;
+			cell = my.cell[cell];
+			background = cell.get(&#x27;backgroundColor&#x27;);
+			context = my.ctx[cell];
+			fill = context.get(&#x27;fillStyle&#x27;);
+			stroke = context.get(&#x27;strokeStyle&#x27;);
+			alpha = context.get(&#x27;globalAlpha&#x27;);
+			this.prepareShape(ctx, cell);
+			ctx.fillStyle = background;
+			ctx.strokeStyle = background;
+			ctx.globalAlpha = 1;
+			ctx.stroke();
+			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			ctx.fillStyle = fill;
+			ctx.strokeStyle = stroke;
+			ctx.globalAlpha = alpha;
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;fill&#x27; method draw
+    @method fill
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.fill = function(ctx, cell) {
+			if (this.get(&#x27;closed&#x27;)) {
+				this.prepareShape(ctx, cell);
+				ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+				this.addMarks(ctx, cell);
+			}
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;draw&#x27; method draw
+    @method draw
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.draw = function(ctx, cell) {
+			this.prepareShape(ctx, cell);
+			ctx.stroke();
 			this.addMarks(ctx, cell);
-		}
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;draw&#x27; method draw
-@method draw
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.draw = function(ctx, cell) {
-		this.prepareShape(ctx, cell);
-		ctx.stroke();
-		this.addMarks(ctx, cell);
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;drawFill&#x27; method draw
-@method drawFill
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.drawFill = function(ctx, cell) {
-		this.prepareShape(ctx, cell);
-		ctx.stroke();
-		if (this.get(&#x27;closed&#x27;)) {
-			this.clearShadow(ctx, cell);
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-		}
-		this.addMarks(ctx, cell);
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
-@method fillDraw
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.fillDraw = function(ctx, cell) {
-		this.prepareShape(ctx, cell);
-		if (this.get(&#x27;closed&#x27;)) {
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-			this.clearShadow(ctx, cell);
-		}
-		ctx.stroke();
-		this.addMarks(ctx, cell);
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
-@method sinkInto
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.sinkInto = function(ctx, cell) {
-		this.prepareShape(ctx, cell);
-		if (this.get(&#x27;closed&#x27;)) {
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-		}
-		ctx.stroke();
-		this.addMarks(ctx, cell);
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;floatOver&#x27; method draw
-@method floatOver
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.floatOver = function(ctx, cell) {
-		this.prepareShape(ctx, cell);
-		ctx.stroke();
-		if (this.get(&#x27;closed&#x27;)) {
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
-		}
-		this.addMarks(ctx, cell);
-		return this;
-	};
-	/**
-Stamp helper function - perform a &#x27;none&#x27; method draw. This involves setting the &amp;lt;canvas&amp;gt; element&#x27;s context engine&#x27;s values with this sprite&#x27;s context values and defining the sprites path, on the canvas, but not drawing (fill stroke) the sprite.
-@method none
-@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#x27;s Group object
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.none = function(ctx, cell) {
-		this.prepareShape(ctx, cell);
-		return this;
-	};
-	/**
-@method getFullPointList
-@return Array containing POINTNAME Strings of all Point objects associated with this Path object
-**/
-	my.Path.prototype.getFullPointList = function() {
-		var myPointList = [],
-			search = new RegExp(this.name + &#x27;_.*&#x27;);
-		for (var i = 0, iz = my.pointnames.length; i &lt; iz; i++) {
-			if (search.test(my.pointnames[i])) {
-				myPointList.push(my.pointnames[i]);
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;drawFill&#x27; method draw
+    @method drawFill
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.drawFill = function(ctx, cell) {
+			this.prepareShape(ctx, cell);
+			ctx.stroke();
+			if (this.get(&#x27;closed&#x27;)) {
+				this.clearShadow(ctx, cell);
+				ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
 			}
-		}
-		return myPointList;
-	};
-	/**
-@method getFullLinkList
-@return Array containing LINKNAME Strings of all Link objects associated with this Path object
-**/
-	my.Path.prototype.getFullLinkList = function() {
-		var myLinkList = [],
-			search = new RegExp(this.name + &#x27;_.*&#x27;);
-		for (var i = 0, iz = my.linknames.length; i &lt; iz; i++) {
-			if (search.test(my.linknames[i])) {
-				myLinkList.push(my.linknames[i]);
+			this.addMarks(ctx, cell);
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
+    @method fillDraw
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.fillDraw = function(ctx, cell) {
+			this.prepareShape(ctx, cell);
+			if (this.get(&#x27;closed&#x27;)) {
+				ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+				this.clearShadow(ctx, cell);
 			}
-		}
-		return myLinkList;
-	};
-	/**
-Calculate and return Path object&#x27;s path length
+			ctx.stroke();
+			this.addMarks(ctx, cell);
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
+    @method sinkInto
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.sinkInto = function(ctx, cell) {
+			this.prepareShape(ctx, cell);
+			if (this.get(&#x27;closed&#x27;)) {
+				ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			}
+			ctx.stroke();
+			this.addMarks(ctx, cell);
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;floatOver&#x27; method draw
+    @method floatOver
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.floatOver = function(ctx, cell) {
+			this.prepareShape(ctx, cell);
+			ctx.stroke();
+			if (this.get(&#x27;closed&#x27;)) {
+				ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			}
+			this.addMarks(ctx, cell);
+			return this;
+		};
+		/**
+    Stamp helper function - perform a &#x27;none&#x27; method draw. This involves setting the &amp;lt;canvas&amp;gt; element&#x27;s context engine&#x27;s values with this entity&#x27;s context values and defining the entitys path, on the canvas, but not drawing (fill stroke) the entity.
+    @method none
+    @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.none = function(ctx, cell) {
+			this.prepareShape(ctx, cell);
+			return this;
+		};
+		/**
+    @method getFullPointList
+    @return Array containing POINTNAME Strings of all Point objects associated with this Path object
+    **/
+		my.Path.prototype.getFullPointList = function() {
+			var search,
+				list,
+				i,
+				iz;
+			list = [];
+			search = new RegExp(this.name + &#x27;_.*&#x27;);
+			for (i = 0, iz = my.pointnames.length; i &lt; iz; i++) {
+				if (search.test(my.pointnames[i])) {
+					list.push(my.pointnames[i]);
+				}
+			}
+			return list;
+		};
+		/**
+    @method getFullLinkList
+    @return Array containing LINKNAME Strings of all Link objects associated with this Path object
+    **/
+		my.Path.prototype.getFullLinkList = function() {
+			var search,
+				list,
+				i,
+				iz;
+			list = [];
+			search = new RegExp(this.name + &#x27;_.*&#x27;);
+			for (i = 0, iz = my.linknames.length; i &lt; iz; i++) {
+				if (search.test(my.linknames[i])) {
+					list.push(my.linknames[i]);
+				}
+			}
+			return list;
+		};
+		/**
+    Calculate and return Path object&#x27;s path length
 
-Accuracy of returned value depends on the setting of the __precision__ attribute; lower precision is less accurate for curves
-@method getPerimeterLength
-@param {Boolean} [force] If set to true, forces a complete recalculation
-@return Path length, in pixels
-**/
-	my.Path.prototype.getPerimeterLength = function(force) {
-		if (force || !this.get(&#x27;perimeterLength&#x27;) || this.get(&#x27;linkDurations&#x27;).length === 0) {
-			this.buildPositions();
-		}
-		return this.get(&#x27;perimeterLength&#x27;);
-	};
-	/**
-Helper function - calculate the positions and lengths of the Path&#x27;s constituent Point and Link objects
-@method buildPositions
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.buildPositions = function() {
-		var linkList = this.get(&#x27;linkList&#x27;),
-			linkDurations = [],
-			cumLen = 0,
-			len,
-			myLink,
-			tPos;
-		for (var i = 0, iz = linkList.length; i &lt; iz; i++) {
-			my.link[linkList[i]].setPositions();
-		}
-		for (var j = 0, jz = linkList.length; j &lt; jz; j++) {
-			myLink = my.link[linkList[j]];
-			tPos = myLink.get(&#x27;positions&#x27;);
-			len = tPos[tPos.length - 1].cumulativeLength;
-			cumLen += len;
-			linkDurations.push(cumLen);
-		}
-		for (var k = 0, kz = linkList.length; k &lt; kz; k++) {
-			linkDurations[k] /= cumLen;
-		}
-		my.Base.prototype.set.call(this, {
-			perimeterLength: cumLen,
-			linkDurations: linkDurations,
-		});
-		return this;
-	};
-	/**
-Calculate coordinates of point at given distance along the Shape sprite&#x27;s path
-@method getPerimeterPosition
-@param {Number} [val] Distance along path, between 0 (start) and 1 (end); default: 1
-@param {Boolean} [steady] Steady flag - if true, return &#x27;steady calculation&#x27; coordinates; otherwise return &#x27;simple calculation&#x27; coordinates. Default: true
-@param {Boolean} [roll] Roll flag - if true, return tangent angle (degrees) at that point along the path. Default: false
-@param {Boolean} [local] Local flag - if true, return coordinate Vector relative to Sprite start parameter; otherwise return Cell coordinate Vector. Default: false
-@return Vector coordinates
-**/
-	my.Path.prototype.getPerimeterPosition = function(val, steady, roll, local) {
-		val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
-		steady = (my.isa(steady, &#x27;bool&#x27;)) ? steady : true;
-		roll = (my.isa(roll, &#x27;bool&#x27;)) ? roll : false;
-		local = (my.isa(local, &#x27;bool&#x27;)) ? local : false;
-		var myLink,
-			linkVal,
-			linkList,
-			linkDurations,
-			beforex,
-			beforey,
-			bVal,
-			afterx,
-			aftery,
-			aVal,
-			here,
-			angle,
-			temp;
-		this.getPerimeterLength();
-		linkList = this.get(&#x27;linkList&#x27;);
-		linkDurations = this.get(&#x27;linkDurations&#x27;);
-		for (var i = 0, iz = linkList.length; i &lt; iz; i++) {
-			myLink = my.link[linkList[i]];
-			if (linkDurations[i] &gt;= val) {
-				if (i === 0) {
-					linkVal = val / linkDurations[i];
-				}
-				else {
-					linkVal = ((val - linkDurations[i - 1]) / (linkDurations[i] - linkDurations[i - 1]));
-				}
-				linkVal = (linkVal &lt; 0) ? 0 : ((linkVal &gt; 1) ? 1 : linkVal);
-				bVal = (linkVal - 0.0000001 &lt; 0) ? 0 : linkVal - 0.0000001;
-				aVal = (linkVal + 0.0000001 &gt; 1) ? 1 : linkVal + 0.0000001;
-				if (steady) {
-					if (roll) {
-						temp = (local) ? myLink.getLocalSteadyPositionOnLink(bVal) : myLink.getSteadyPositionOnLink(bVal);
-						beforex = temp.x;
-						beforey = temp.y;
-						temp = (local) ? myLink.getLocalSteadyPositionOnLink(aVal) : myLink.getSteadyPositionOnLink(aVal);
-						afterx = temp.x;
-						aftery = temp.y;
-						angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
-						here = (local) ? myLink.getLocalSteadyPositionOnLink(linkVal) : myLink.getSteadyPositionOnLink(linkVal);
-						return {
-							x: here.x,
-							y: here.y,
-							r: angle
-						};
+    Accuracy of returned value depends on the setting of the __precision__ attribute; lower precision is less accurate for curves
+    @method getPerimeterLength
+    @param {Boolean} [force] If set to true, forces a complete recalculation
+    @return Path length, in pixels
+    **/
+		my.Path.prototype.getPerimeterLength = function(force) {
+			if (force || !this.perimeterLength || this.get(&#x27;linkDurations&#x27;).length === 0) {
+				this.buildPositions();
+			}
+			return this.perimeterLength;
+		};
+		/**
+    Helper function - calculate the positions and lengths of the Path&#x27;s constituent Point and Link objects
+    @method buildPositions
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.buildPositions = function() {
+			var i,
+				iz,
+				links,
+				durations,
+				len,
+				cumlen,
+				link,
+				pos;
+			links = this.get(&#x27;linkList&#x27;);
+			durations = [];
+			cumlen = 0;
+			for (i = 0, iz = links.length; i &lt; iz; i++) {
+				my.link[links[i]].setPositions();
+			}
+			for (i = 0, iz = links.length; i &lt; iz; i++) {
+				link = my.link[links[i]];
+				pos = link.get(&#x27;positionsCumulativeLength&#x27;);
+				len = pos[pos.length - 1];
+				cumlen += len;
+				durations.push(cumlen);
+			}
+			for (i = 0, iz = links.length; i &lt; iz; i++) {
+				durations[i] /= cumlen;
+			}
+			this.perimeterLength = cumlen;
+			this.linkDurations.length = 0;
+			for (i = 0, iz = durations.length; i &lt; iz; i++) {
+				this.linkDurations.push(durations[i]);
+			}
+			return this;
+		};
+		/**
+    Calculate coordinates of point at given distance along the Shape entity&#x27;s path
+    @method getPerimeterPosition
+    @param {Number} [val] Distance along path, between 0 (start) and 1 (end); default: 1
+    @param {Boolean} [steady] Steady flag - if true, return &#x27;steady calculation&#x27; coordinates; otherwise return &#x27;simple calculation&#x27; coordinates. Default: true
+    @param {Boolean} [roll] Roll flag - if true, return tangent angle (degrees) at that point along the path. Default: false
+    @param {Boolean} [local] Local flag - if true, return coordinate Vector relative to Entity start parameter; otherwise return Cell coordinate Vector. Default: false
+    @return Vector coordinates
+    **/
+		my.Path.prototype.getPerimeterPosition = function(val, steady, roll, local) {
+			var i,
+				iz,
+				links,
+				link,
+				linkVal,
+				durations,
+				beforex,
+				beforey,
+				bVal,
+				afterx,
+				aftery,
+				aVal,
+				here,
+				angle,
+				temp,
+				result = {
+					x: 0,
+					y: 0,
+					r: 0
+				};
+			val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
+			steady = (my.isa(steady, &#x27;bool&#x27;)) ? steady : true;
+			roll = (my.isa(roll, &#x27;bool&#x27;)) ? roll : false;
+			local = (my.isa(local, &#x27;bool&#x27;)) ? local : false;
+			this.getPerimeterLength();
+			links = this.get(&#x27;linkList&#x27;);
+			durations = this.get(&#x27;linkDurations&#x27;);
+			for (i = 0, iz = links.length; i &lt; iz; i++) {
+				link = my.link[links[i]];
+				if (durations[i] &gt;= val) {
+					if (i === 0) {
+						linkVal = val / durations[i];
 					}
 					else {
-						return (local) ? myLink.getLocalSteadyPositionOnLink(linkVal) : myLink.getSteadyPositionOnLink(linkVal);
+						linkVal = ((val - durations[i - 1]) / (durations[i] - durations[i - 1]));
 					}
-				}
-				else {
-					if (roll) {
-						temp = (local) ? myLink.getLocalPositionOnLink(bVal) : myLink.getPositionOnLink(bVal);
-						beforex = temp.x;
-						beforey = temp.y;
-						temp = (local) ? myLink.getLocalPositionOnLink(aVal) : myLink.getPositionOnLink(aVal);
-						afterx = temp.x;
-						aftery = temp.y;
-						angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
-						here = (local) ? myLink.getLocalPositionOnLink(linkVal) : myLink.getPositionOnLink(linkVal);
-						return {
-							x: here.x,
-							y: here.y,
-							r: angle
-						};
-					}
-					else {
-						return (local) ? myLink.getLocalPositionOnLink(linkVal) : myLink.getPositionOnLink(linkVal);
-					}
-				}
-			}
-		}
-		return false;
-	};
-	/**
-Check a set of coordinates to see if any of them fall within this sprite&#x27;s path - uses JavaScript&#x27;s _isPointInPath_ function
-
-Argument object contains the following attributes:
-
-* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
-* __x__ - X coordinate
-* __y__ - Y coordinate
-
-Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
-@method checkHit
-@param {Object} items Argument object
-@return The first coordinate to fall within the sprite&#x27;s path; false if none fall within the path
-**/
-	my.Path.prototype.checkHit = function(items) {
-		items = my.safeObject(items);
-		var ctx = my.cvx,
-			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)],
-			result = false,
-			here,
-			winding = my.ctx[this.context].winding;
-		ctx.mozFillRule = winding;
-		ctx.msFillRule = winding;
-		if (this.firstPoint) {
-			here = this.prepareStamp();
-			this.rotateCell(ctx);
-			ctx.translate(here.x, here.y);
-			ctx.beginPath();
-			my.link[my.point[this.firstPoint].startLink].sketch(ctx);
-		}
-		for (var i = 0, iz = tests.length; i &lt; iz; i += 2) {
-			result = ctx.isPointInPath(tests[i], tests[i + 1]);
-			if (result) {
-				break;
-			}
-		}
-		return (result) ? {
-			x: tests[i],
-			y: tests[i + 1]
-		} : false;
-	};
-	/**
-Collision detection helper function
-
-Parses the collisionPoints array to generate coordinate Vectors representing the sprite&#x27;s collision points
-@method buildCollisionVectors
-@param {Array} [items] Array of collision point data
-@return This
-@chainable
-@private
-**/
-	my.Path.prototype.buildCollisionVectors = function(items) {
-		if (my.xt(my.d.Path.fieldChannel)) {
-			var p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints,
-				myAdvance,
-				point,
-				c = [],
-				currentPos = 0;
-			for (var i = 0, iz = p.length; i &lt; iz; i++) {
-				if (my.isa(p[i], &#x27;num&#x27;) &amp;&amp; p[i] &gt;= 0) {
-					if (p[i] &gt; 1) {
-						//regular points along the path
-						myAdvance = 1 / p[i];
-						for (var j = 0; j &lt; p[i]; j++) {
-							point = this.getPerimeterPosition(currentPos, true, false, true);
-							c.push(point.x);
-							c.push(point.y);
-							currentPos += myAdvance;
+					linkVal = (linkVal &lt; 0) ? 0 : ((linkVal &gt; 1) ? 1 : linkVal);
+					bVal = (linkVal - 0.0000001 &lt; 0) ? 0 : linkVal - 0.0000001;
+					aVal = (linkVal + 0.0000001 &gt; 1) ? 1 : linkVal + 0.0000001;
+					if (steady) {
+						if (roll) {
+							temp = (local) ? link.getLocalSteadyPositionOnLink(bVal) : link.getSteadyPositionOnLink(bVal);
+							beforex = temp.x;
+							beforey = temp.y;
+							temp = (local) ? link.getLocalSteadyPositionOnLink(aVal) : link.getSteadyPositionOnLink(aVal);
+							afterx = temp.x;
+							aftery = temp.y;
+							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
+							here = (local) ? link.getLocalSteadyPositionOnLink(linkVal) : link.getSteadyPositionOnLink(linkVal);
+							result.x = here.x;
+							result.y = here.y;
+							result.r = angle;
+							return result;
+						}
+						else {
+							return (local) ? link.getLocalSteadyPositionOnLink(linkVal) : link.getSteadyPositionOnLink(linkVal);
 						}
 					}
 					else {
-						//a point at a specific position on the path
-						point = this.getPerimeterPosition(p[i], true, false, true);
-						c.push(point.x);
-						c.push(point.y);
+						if (roll) {
+							temp = (local) ? link.getLocalPositionOnLink(bVal) : link.getPositionOnLink(bVal);
+							beforex = temp.x;
+							beforey = temp.y;
+							temp = (local) ? link.getLocalPositionOnLink(aVal) : link.getPositionOnLink(aVal);
+							afterx = temp.x;
+							aftery = temp.y;
+							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
+							here = (local) ? link.getLocalPositionOnLink(linkVal) : link.getPositionOnLink(linkVal);
+							result.x = here.x;
+							result.y = here.y;
+							result.r = angle;
+							return result;
+						}
+						else {
+							return (local) ? link.getLocalPositionOnLink(linkVal) : link.getPositionOnLink(linkVal);
+						}
 					}
-				}
-				else if (my.isa(p[i], &#x27;str&#x27;)) {
-					switch (p[i]) {
-						case &#x27;start&#x27;:
-							c.push(0);
-							c.push(0);
-							break;
-					}
-				}
-				else if (my.isa(p[i], &#x27;vector&#x27;)) {
-					c.push(p[i].x);
-					c.push(p[i].y);
 				}
 			}
-			this.collisionVectors = c;
-		}
-		return this;
-	};
-
-	/**
-# Point
-
-## Instantiation
-
-* Objects created via Path factories
-* scrawl.makeCartesianPoints() - deprecated
-* scrawl.makePolarPoints() - deprecated
-
-## Purpose
-
-* Defines a movable point within a Path sprite object
-* Acts as a coordinate vector for Link drawing
-
-Path creation factories will all create Point objects automatically as part of the generation process. Point objects will be named regularly, depending on the factory:
-
-* scrawl.makeLine(): SPRITENAME_p1 (start point), SPRITENAME_p2 (end point)
-* scrawl.makeQuadratic(): SPRITENAME_p1 (start point), SPRITENAME_p2 (control point), SPRITENAME_p3 (end point)
-* scrawl.makeBezier(): SPRITENAME_p1 (start point), SPRITENAME_p2 (first control point), SPRITENAME_p3 (second control point), SPRITENAME_p4 (end point)
-* scrawl.makeRegularShape(): each angle point is numbered consecutively, starting at SPRITENAME_p1
-* scrawl.makePath(): points are numbered consecutively, beginning from SPRITENAME_p1 at the start of the path; the end point of a line, quadratic curve or bezier curve will also act as the start point for the next line or curve
-
-## Access
-
-* scrawl.point.POINTNAME - for the Point object
-
-@class Point
-@constructor
-@extends Base
-@param {Object} [items] Key:value Object argument for setting attributes
-**/
-	my.Point = function(items) {
-		items = my.safeObject(items);
-		my.Base.call(this, items);
-		var local = (my.xt(items.local)) ? items.local : {};
-		this.sprite = items.sprite || &#x27;&#x27;;
-		this.local = items.local || my.newVector({
-			x: items.startX || items.currentX || local.x || 0,
-			y: items.startY || items.currentY || local.y || 0,
-		});
-		this.work.local = my.newVector({
-			name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.local&#x27;
-		});
-		this.work.local.name = this.type + &#x27;.&#x27; + this.name + &#x27;.work.local&#x27;;
-		this.startLink = items.startLink || &#x27;&#x27;;
-		this.fixed = items.fixed || false;
-		if (my.xto([items.angle, items.distance])) {
-			this.setPolar(items);
-		}
-		my.point[this.name] = this;
-		my.pushUnique(my.pointnames, this.name);
-		if (this.sprite &amp;&amp; my.sprite[this.sprite].type === &#x27;Path&#x27;) {
-			my.pushUnique(my.sprite[this.sprite].pointList, this.name);
-		}
-		return this;
-	};
-	my.Point.prototype = Object.create(my.Base.prototype);
-	/**
-@property type
-@type String
-@default &#x27;Point&#x27;
-@final
-**/
-	my.Point.prototype.type = &#x27;Point&#x27;;
-	my.Point.prototype.classname = &#x27;pointnames&#x27;;
-	my.d.Point = {
+			return false;
+		};
 		/**
-SPRITENAME String of point object&#x27;s parent sprite
-@property sprite
-@type String
-@default &#x27;&#x27;
-**/
-		sprite: &#x27;&#x27;,
+    Check a set of coordinates to see if any of them fall within this entity&#x27;s path - uses JavaScript&#x27;s _isPointInPath_ function
+
+    Argument object contains the following attributes:
+
+    * __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
+    * __x__ - X coordinate
+    * __y__ - Y coordinate
+
+    Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+    @method checkHit
+    @param {Object} items Argument object
+    @return The first coordinate to fall within the entity&#x27;s path; false if none fall within the path
+    **/
+		my.Path.prototype.checkHit = function(items) {
+			var i,
+				iz,
+				tests,
+				result,
+				here,
+				winding,
+				returnCoord = {
+					x: 0,
+					y: 0
+				};
+			items = my.safeObject(items);
+			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
+			result = false;
+			winding = my.ctx[this.context].winding;
+			my.cvx.mozFillRule = winding;
+			my.cvx.msFillRule = winding;
+			if (this.firstPoint) {
+				here = this.prepareStamp();
+				this.rotateCell(my.cvx, my.group[this.group].cell);
+				my.cvx.translate(here.x, here.y);
+				my.cvx.beginPath();
+				my.link[my.point[this.firstPoint].startLink].sketch(my.cvx);
+			}
+			for (i = 0, iz = tests.length; i &lt; iz; i += 2) {
+				result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
+				if (result) {
+					break;
+				}
+			}
+			if (result) {
+				returnCoord.x = tests[i];
+				returnCoord.y = tests[i + 1];
+				return returnCoord;
+			}
+			return false;
+		};
 		/**
-Point&#x27;s coordinate Vector - generally the Vector marks the Point&#x27;s position (in pixels) from the Parent sprite&#x27;s start coordinates, though this can be changed by setting the __fixed__ attribute to true.
+    Collision detection helper function
 
-The following argument attributes can be used to initialize, set and get this attribute&#x27;s component values:
+    Parses the collisionPoints array to generate coordinate Vectors representing the entity&#x27;s collision points
+    @method buildCollisionVectors
+    @param {Array} [items] Array of collision point data
+    @return This
+    @chainable
+    @private
+    **/
+		my.Path.prototype.buildCollisionVectors = function(items) {
+			var i,
+				iz,
+				j,
+				p = [],
+				advance,
+				point,
+				currentPos;
+			if (my.xt(my.d.Path.fieldChannel)) {
+				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
+				//advance,
+				//point,
+				this.collisionVectors.length = 0;
+				currentPos = 0;
+				for (i = 0, iz = p.length; i &lt; iz; i++) {
+					if (my.isa(p[i], &#x27;num&#x27;) &amp;&amp; p[i] &gt;= 0) {
+						if (p[i] &gt; 1) {
+							//regular points along the path
+							advance = 1 / p[i];
+							for (j = 0; j &lt; p[i]; j++) {
+								point = this.getPerimeterPosition(currentPos, true, false, true);
+								this.collisionVectors.push(point.x);
+								this.collisionVectors.push(point.y);
+								currentPos += advance;
+							}
+						}
+						else {
+							//a point at a specific position on the path
+							point = this.getPerimeterPosition(p[i], true, false, true);
+							this.collisionVectors.push(point.x);
+							this.collisionVectors.push(point.y);
+						}
+					}
+					else if (my.isa(p[i], &#x27;str&#x27;)) {
+						switch (p[i]) {
+							case &#x27;start&#x27;:
+								this.collisionVectors.push(0);
+								this.collisionVectors.push(0);
+								break;
+						}
+					}
+					else if (my.isa(p[i], &#x27;vector&#x27;)) {
+						this.collisionVectors.push(p[i].x);
+						this.collisionVectors.push(p[i].y);
+					}
+				}
+			}
+			return this;
+		};
 
-* __startX__ or __currentX__ to set the x coordinate value
-* __startY__ or __currentY__ to set the y coordinate value
-@property local
-@type Vector
-@default zero value Vector
-**/
-		local: {
-			x: 0,
-			y: 0,
-			z: 0
-		},
 		/**
-LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
-@property startLink
-@type String
-@default &#x27;&#x27;
-@private
-**/
-		startLink: &#x27;&#x27;,
+    # Point
+
+    ## Instantiation
+
+    * Objects created via Path factories
+    * scrawl.makeCartesianPoints() - deprecated
+    * scrawl.makePolarPoints() - deprecated
+
+    ## Purpose
+
+    * Defines a movable point within a Path entity object
+    * Acts as a coordinate vector for Link drawing
+
+    Path creation factories will all create Point objects automatically as part of the generation process. Point objects will be named regularly, depending on the factory:
+
+    * scrawl.makeLine(): SPRITENAME_p1 (start point), SPRITENAME_p2 (end point)
+    * scrawl.makeQuadratic(): SPRITENAME_p1 (start point), SPRITENAME_p2 (control point), SPRITENAME_p3 (end point)
+    * scrawl.makeBezier(): SPRITENAME_p1 (start point), SPRITENAME_p2 (first control point), SPRITENAME_p3 (second control point), SPRITENAME_p4 (end point)
+    * scrawl.makeRegularShape(): each angle point is numbered consecutively, starting at SPRITENAME_p1
+    * scrawl.makePath(): points are numbered consecutively, beginning from SPRITENAME_p1 at the start of the path; the end point of a line, quadratic curve or bezier curve will also act as the start point for the next line or curve
+
+    ## Access
+
+    * scrawl.point.POINTNAME - for the Point object
+
+    @class Point
+    @constructor
+    @extends Base
+    @param {Object} [items] Key:value Object argument for setting attributes
+    **/
+		my.Point = function(items) {
+			var local;
+			items = my.safeObject(items);
+			my.Base.call(this, items);
+			local = my.safeObject(items.local);
+			this.entity = my.xtGet(items.entity, &#x27;&#x27;);
+			this.local = my.newVector({
+				x: my.xtGet(items.startX, items.currentX, local.x, 0),
+				y: my.xtGet(items.startY, items.currentY, local.y, 0),
+			});
+			this.work.local = my.newVector({
+				name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.local&#x27;
+			});
+			this.work.local.name = this.type + &#x27;.&#x27; + this.name + &#x27;.work.local&#x27;;
+			this.startLink = my.xtGet(items.startLink, &#x27;&#x27;);
+			this.fixed = my.xtGet(items.fixed, false);
+			if (my.xto(items.angle, items.distance)) {
+				this.setPolar(items);
+			}
+			my.point[this.name] = this;
+			my.pushUnique(my.pointnames, this.name);
+			if (this.entity &amp;&amp; my.entity[this.entity].type === &#x27;Path&#x27;) {
+				my.pushUnique(my.entity[this.entity].pointList, this.name);
+			}
+			return this;
+		};
+		my.Point.prototype = Object.create(my.Base.prototype);
 		/**
-Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (true), or to a Sprite start Vector (SPRITENAME). Default action is to treat the Point as local to its parent Sprite&#x27;s start coordinate
-@property fixed
-@type Boolean
-@default false
-**/
-		fixed: false,
-	};
-	my.mergeInto(my.d.Point, my.d.Base);
-	/**
-Augments Base.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
-@method set
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-**/
-	my.Point.prototype.set = function(items) {
-		my.Base.prototype.set.call(this, items);
-		items = my.safeObject(items);
-		var local = (my.xt(items.local)) ? items.local : {};
-		if (my.xto([items.distance, items.angle])) {
-			this.setPolar(items);
-		}
-		else if (my.xto([items.startX, items.startY, items.currentX, items.currentY, items.local])) {
-			this.local.x = (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : this.local.x));
-			this.local.y = (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : this.local.y));
-		}
-		return this;
-	};
-	/**
-Add values to the local attribute. Permitted attributes of the argument object include:
+    @property type
+    @type String
+    @default &#x27;Point&#x27;
+    @final
+    **/
+		my.Point.prototype.type = &#x27;Point&#x27;;
+		my.Point.prototype.classname = &#x27;pointnames&#x27;;
+		my.d.Point = {
+			/**
+    SPRITENAME String of point object&#x27;s parent entity
+    @property entity
+    @type String
+    @default &#x27;&#x27;
+    **/
+			entity: &#x27;&#x27;,
+			/**
+    Point&#x27;s coordinate Vector - generally the Vector marks the Point&#x27;s position (in pixels) from the Parent entity&#x27;s start coordinates, though this can be changed by setting the __fixed__ attribute to true.
 
-* __startX__, __currentX__ - added to _local.x
-* __startY__, __currentY__ - added to _local.y
-* __distance__ - recalculates the _local_ vector to set its values to equal vector&#x27;s current magnitude + distance (in pixels)
-* __angle__ - recalculates the _local_ vector to rotate it by the angle value (in degrees)
-@method setDelta
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-**/
-	my.Point.prototype.setDelta = function(items) {
-		var m,
-			d,
-			a,
-			local = (my.xt(items.local)) ? items.local : {};
-		items = my.safeObject(items);
-		if (my.xto([items.startX, items.startY, items.currentX, items.currentY, items.local])) {
-			this.local.x += (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : 0));
-			this.local.y += (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : 0));
-		}
-		if (my.xt(items.distance)) {
-			m = this.local.getMagnitude();
-			this.local.scalarMultiply((items.distance + m) / m);
-		}
-		if (my.xt(items.angle)) {
-			d = this.local.getMagnitude();
-			a = Math.atan2(this.local.y, this.local.x);
-			a += (items.angle * my.radian);
-			this.local.x = d * Math.cos(a);
-			this.local.y = d * Math.sin(a);
-		}
-		return this;
-	};
-	/**
-Sets the local attribute using angle and/or distance parameters:
+    The following argument attributes can be used to initialize, set and get this attribute&#x27;s component values:
 
-* __distance__ - calculates the _local_ vector to set its values to equal vector&#x27;s current magnitude + distance (in pixels)
-* __angle__ - calculates the _local_ vector to rotate it by the angle value (in degrees)
-@method setPolar
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-**/
-	my.Point.prototype.setPolar = function(items) {
-		var m,
-			d,
-			a;
-		my.Base.prototype.set.call(this, items);
-		items = my.safeObject(items);
-		if (my.xta([items.distance, items.angle])) {
-			a = items.angle * my.radian;
-			this.local.x = items.distance * Math.cos(a);
-			this.local.y = items.distance * Math.sin(a);
-		}
-		else {
+    * __startX__ or __currentX__ to set the x coordinate value
+    * __startY__ or __currentY__ to set the y coordinate value
+    @property local
+    @type Vector
+    @default zero value Vector
+    **/
+			local: {
+				x: 0,
+				y: 0,
+				z: 0
+			},
+			/**
+    LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
+    @property startLink
+    @type String
+    @default &#x27;&#x27;
+    @private
+    **/
+			startLink: &#x27;&#x27;,
+			/**
+    Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (true), or to a Entity start Vector (SPRITENAME). Default action is to treat the Point as local to its parent Entity&#x27;s start coordinate
+    @property fixed
+    @type Boolean
+    @default false
+    **/
+			fixed: false,
+		};
+		my.mergeInto(my.d.Point, my.d.Base);
+		/**
+    Augments Base.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
+    @method set
+    @param {Object} items Object consisting of key:value attributes
+    @return This
+    @chainable
+    **/
+		my.Point.prototype.set = function(items) {
+			var local;
+			my.Base.prototype.set.call(this, items);
+			items = my.safeObject(items);
+			local = my.safeObject(items.local);
+			if (my.xto(items.distance, items.angle)) {
+				this.setPolar(items);
+			}
+			else if (my.xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
+				this.local.x = (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : this.local.x));
+				this.local.y = (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : this.local.y));
+			}
+			return this;
+		};
+		/**
+    Add values to the local attribute. Permitted attributes of the argument object include:
+
+    * __startX__, __currentX__ - added to _local.x
+    * __startY__, __currentY__ - added to _local.y
+    * __distance__ - recalculates the _local_ vector to set its values to equal vector&#x27;s current magnitude + distance (in pixels)
+    * __angle__ - recalculates the _local_ vector to rotate it by the angle value (in degrees)
+    @method setDelta
+    @param {Object} items Object consisting of key:value attributes
+    @return This
+    @chainable
+    **/
+		my.Point.prototype.setDelta = function(items) {
+			var local,
+				m,
+				d,
+				a;
+			items = my.safeObject(items);
+			local = my.safeObject(items.local);
+			if (my.xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
+				this.local.x += (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : 0));
+				this.local.y += (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : 0));
+			}
 			if (my.xt(items.distance)) {
 				m = this.local.getMagnitude();
-				m = (my.xt(m) &amp;&amp; m &gt; 0.0000001) ? m : 1;
-				this.local.scalarMultiply(items.distance / m);
+				this.local.scalarMultiply((items.distance + m) / m);
 			}
 			if (my.xt(items.angle)) {
 				d = this.local.getMagnitude();
-				a = items.angle * my.radian;
+				a = Math.atan2(this.local.y, this.local.x);
+				a += (items.angle * my.radian);
 				this.local.x = d * Math.cos(a);
 				this.local.y = d * Math.sin(a);
 			}
-		}
-		return this;
-	};
-	/**
-Retrieve Point object&#x27;s coordinates, together with additional data
+			return this;
+		};
+		/**
+    Sets the local attribute using angle and/or distance parameters:
 
-* Coordinate reference frame determined by the value of Point.local
-* Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object&#x27;s position and settings
-
-Return object has the following attributes:
-
-* __name__ - Point.name
-* __current__ - coordinate Vector
-* __startLink__ - Point.startLink
-
-@method getData
-@return Result object
-@private
-**/
-	my.Point.prototype.getData = function() {
-		var c,
-			s = my.sprite[this.sprite],
-			myPivot,
-			fixed = this.fixed,
-			scale = s.scale;
-		this.resetWork();
-		if (my.xt(this.local) &amp;&amp; this.local.type === &#x27;Vector&#x27;) {
-			c = this.work.local;
-			if (my.isa(fixed, &#x27;str&#x27;) &amp;&amp; (my.contains(my.spritenames, fixed) || my.contains(my.pointnames, fixed))) {
-				myPivot = my.sprite[fixed] || my.point[fixed];
-				if (myPivot.type === &#x27;Point&#x27;) {
-					c.set(myPivot.local);
-					c.scalarMultiply(scale || 1);
+    * __distance__ - calculates the _local_ vector to set its values to equal vector&#x27;s current magnitude + distance (in pixels)
+    * __angle__ - calculates the _local_ vector to rotate it by the angle value (in degrees)
+    @method setPolar
+    @param {Object} items Object consisting of key:value attributes
+    @return This
+    @chainable
+    **/
+		my.Point.prototype.setPolar = function(items) {
+			var m,
+				d,
+				a;
+			items = my.safeObject(items);
+			my.Base.prototype.set.call(this, items);
+			if (my.xta(items.distance, items.angle)) {
+				a = items.angle * my.radian;
+				this.local.x = items.distance * Math.cos(a);
+				this.local.y = items.distance * Math.sin(a);
+			}
+			else {
+				if (my.xt(items.distance)) {
+					m = this.local.getMagnitude();
+					m = (my.xt(m) &amp;&amp; m &gt; 0.0000001) ? m : 1;
+					this.local.scalarMultiply(items.distance / m);
 				}
-				else {
-					if (myPivot.type === &#x27;Particle&#x27;) {
-						c.set(myPivot.get(&#x27;place&#x27;));
+				if (my.xt(items.angle)) {
+					d = this.local.getMagnitude();
+					a = items.angle * my.radian;
+					this.local.x = d * Math.cos(a);
+					this.local.y = d * Math.sin(a);
+				}
+			}
+			return this;
+		};
+		/**
+    Retrieve Point object&#x27;s coordinates, together with additional data
+
+    * Coordinate reference frame determined by the value of Point.local
+    * Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object&#x27;s position and settings
+
+    Return object has the following attributes:
+
+    * __name__ - Point.name
+    * __current__ - coordinate Vector
+    * __startLink__ - Point.startLink
+
+    @method getData
+    @return Result object
+    @private
+    **/
+		my.Point.prototype.getData = function() {
+			var s,
+				myPivot,
+				scale,
+				result = {
+					name: &#x27;&#x27;,
+					current: null,
+					startLink: null
+				};
+			s = my.entity[this.entity];
+			scale = s.scale;
+			this.resetWork();
+			if (my.xt(this.local) &amp;&amp; this.local.type === &#x27;Vector&#x27;) {
+				if (my.isa(this.fixed, &#x27;str&#x27;) &amp;&amp; (my.entity[this.fixed] || my.point[this.fixed])) {
+					myPivot = my.entity[this.fixed] || my.point[this.fixed];
+					if (myPivot.type === &#x27;Point&#x27;) {
+						this.work.local.set(myPivot.local);
+						this.work.local.scalarMultiply(scale || 1);
 					}
 					else {
-						c.set(myPivot.start);
+						if (myPivot.type === &#x27;Particle&#x27;) {
+							this.work.local.set(myPivot.get(&#x27;place&#x27;));
+						}
+						else {
+							this.work.local.set(myPivot.start);
+						}
 					}
 				}
+				else if (!this.fixed) {
+					this.work.local.scalarMultiply(scale || 1);
+				}
+				else {
+					this.work.local.vectorSubtract(s.start || my.o);
+					this.work.local.scalarMultiply(scale || 1);
+					this.work.local.rotate(-s.roll);
+				}
+				result.name = this.name;
+				result.current = this.work.local;
+				result.startLink = this.startLink;
+				return result;
 			}
-			else if (!fixed) {
-				c.scalarMultiply(scale || 1);
+			return false;
+		};
+		/**
+    Retrieve Point object&#x27;s coordinates
+
+    * Coordinate reference frame determined by the value of Point.local
+    * Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object&#x27;s position and settings
+    @method getCurrentCoordinates
+    @return Coordinate Vector
+    **/
+		my.Point.prototype.getCurrentCoordinates = function() {
+			return this.getData().current;
+		};
+		/**
+    Set Point.fixed attribute
+    @method setToFixed
+    @param {Mixed} items - either a coordinate Vector; or an Object with x and y attributes; or a Number representing the horizontal coordinate, in pixels, from &amp;lt;canvas&amp;gt; element&#x27;s left edge; or a pivot SPRITENAME, POINTNAME or PARTICLENAME String
+    @param {Number} [y] - vertical coordinate, in pixels, from &amp;lt;canvas&amp;gt; element&#x27;s top edge
+    @return This
+    @chainable
+    **/
+		my.Point.prototype.setToFixed = function(items, y) {
+			var x;
+			if (my.isa(items, &#x27;str&#x27;)) {
+				this.fixed = items;
 			}
 			else {
-				c.vectorSubtract(s.start || {});
-				c.scalarMultiply(scale || 1);
-				c.rotate(-s.roll);
+				x = (my.isa(items, &#x27;obj&#x27;) &amp;&amp; my.xt(items.x)) ? items.x : ((my.isa(items, &#x27;num&#x27;)) ? items : 0);
+				y = (my.isa(items, &#x27;obj&#x27;) &amp;&amp; my.xt(items.y)) ? items.y : ((my.isa(y, &#x27;num&#x27;)) ? y : 0);
+				this.local.x = x;
+				this.local.y = y;
+				this.fixed = true;
 			}
-			return {
-				name: this.name,
-				current: c,
-				startLink: this.startLink,
+			return this;
+		};
+
+		/**
+    # Link
+
+    ## Instantiation
+
+    * Objects created via Path factories
+
+    ## Purpose
+
+    * Defines the type of line to be drawn between two Point objects
+    * Can be of the form (species): line, bezier, quadratic
+    * Posesses actions: &#x27;add&#x27;, &#x27;move&#x27; (to not draw a line), &#x27;close&#x27; (end Point is Path object&#x27;s startPoint), &#x27;end&#x27; (for non-closed Path objects)
+    * Makes use of additional control points to determine curves
+
+    ## Access
+
+    * scrawl.link.LINKNAME - for the Link object
+
+    @class Link
+    @constructor
+    @extends Base
+    @param {Object} [items] Key:value Object argument for setting attributes
+    @private
+    **/
+		my.Link = function(items) {
+			items = my.safeObject(items);
+			my.Base.call(this, items);
+			my.Base.prototype.set.call(this, items);
+			this.startPoint = my.xtGet(items.startPoint, my.d.Link.startPoint);
+			this.entity = (my.xt(my.point[this.startPoint])) ? my.point[this.startPoint].entity : my.d.Link.entity;
+			this.endPoint = my.xtGet(items.endPoint, my.d.Link.endPoint);
+			this.species = my.xtGet(items.species, my.d.Link.species);
+			this.action = my.xtGet(items.action, my.d.Link.action);
+			my.link[this.name] = this;
+			my.pushUnique(my.linknames, this.name);
+			this.positionsX = [];
+			this.positionsY = [];
+			this.positionsLength = [];
+			this.positionsCumulativeLength = [];
+			if (this.startPoint &amp;&amp; this.entity &amp;&amp; this.action === &#x27;add&#x27;) {
+				my.pushUnique(my.entity[this.entity].linkList, this.name);
+			}
+			return this;
+		};
+		my.Link.prototype = Object.create(my.Base.prototype);
+		/**
+    @property type
+    @type String
+    @default &#x27;Link&#x27;
+    @final
+    **/
+		my.Link.prototype.type = &#x27;Link&#x27;;
+		my.Link.prototype.classname = &#x27;linknames&#x27;;
+		if (!my.xt(my.worklink)) {
+			my.worklink = {
+				start: my.newVector({
+					name: &#x27;scrawl.worklink.start&#x27;
+				}),
+				end: my.newVector({
+					name: &#x27;scrawl.worklink.end&#x27;
+				}),
+				control1: my.newVector({
+					name: &#x27;scrawl.worklink.control1&#x27;
+				}),
+				control2: my.newVector({
+					name: &#x27;scrawl.worklink.control2&#x27;
+				}),
+				v1: my.newVector({
+					name: &#x27;scrawl.worklink.v1&#x27;
+				}),
+				v2: my.newVector({
+					name: &#x27;scrawl.worklink.v2&#x27;
+				}),
+				v3: my.newVector({
+					name: &#x27;scrawl.worklink.v3&#x27;
+				}),
 			};
 		}
-		return false;
-	};
-	/**
-Retrieve Point object&#x27;s coordinates
-
-* Coordinate reference frame determined by the value of Point.local
-* Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object&#x27;s position and settings
-@method getCurrentCoordinates
-@return Coordinate Vector
-**/
-	my.Point.prototype.getCurrentCoordinates = function() {
-		return this.getData().current;
-	};
-	/**
-Set Point.fixed attribute
-@method setToFixed
-@param {Mixed} items - either a coordinate Vector; or an Object with x and y attributes; or a Number representing the horizontal coordinate, in pixels, from &amp;lt;canvas&amp;gt; element&#x27;s left edge; or a pivot SPRITENAME, POINTNAME or PARTICLENAME String
-@param {Number} [y] - vertical coordinate, in pixels, from &amp;lt;canvas&amp;gt; element&#x27;s top edge
-@return This
-@chainable
-**/
-	my.Point.prototype.setToFixed = function(items, y) {
-		var myX,
-			myY;
-		if (my.isa(items, &#x27;str&#x27;)) {
-			this.fixed = items;
-		}
-		else {
-			myX = (my.isa(items, &#x27;obj&#x27;) &amp;&amp; my.xt(items.x)) ? items.x : ((my.isa(items, &#x27;num&#x27;)) ? items : 0);
-			myY = (my.isa(items, &#x27;obj&#x27;) &amp;&amp; my.xt(items.y)) ? items.y : ((my.isa(y, &#x27;num&#x27;)) ? y : 0);
-			this.local.set({
-				x: myX,
-				y: myY,
-			});
-			this.fixed = true;
-		}
-		return this;
-	};
-
-	/**
-# Link
-
-## Instantiation
-
-* Objects created via Path factories
-
-## Purpose
-
-* Defines the type of line to be drawn between two Point objects
-* Can be of the form (species): line, bezier, quadratic
-* Posesses actions: &#x27;add&#x27;, &#x27;move&#x27; (to not draw a line), &#x27;close&#x27; (end Point is Path object&#x27;s startPoint), &#x27;end&#x27; (for non-closed Path objects)
-* Makes use of additional control points to determine curves
-
-## Access
-
-* scrawl.link.LINKNAME - for the Link object
-
-@class Link
-@constructor
-@extends Base
-@param {Object} [items] Key:value Object argument for setting attributes
-@private
-**/
-	my.Link = function(items) {
-		items = my.safeObject(items);
-		my.Base.call(this, items);
-		my.Base.prototype.set.call(this, items);
-		this.startPoint = items.startPoint || my.d.Link.startPoint;
-		this.sprite = (my.xt(my.point[this.startPoint])) ? my.point[this.startPoint].sprite : my.d.Link.sprite;
-		this.endPoint = items.endPoint || my.d.Link.endPoint;
-		this.species = items.species || my.d.Link.species;
-		this.action = items.action || my.d.Link.action;
-		my.link[this.name] = this;
-		my.pushUnique(my.linknames, this.name);
-		this.positions = [];
-		if (this.startPoint &amp;&amp; this.sprite &amp;&amp; this.action === &#x27;add&#x27;) {
-			my.pushUnique(my.sprite[this.sprite].linkList, this.name);
-		}
-		return this;
-	};
-	my.Link.prototype = Object.create(my.Base.prototype);
-	/**
-@property type
-@type String
-@default &#x27;Link&#x27;
-@final
-**/
-	my.Link.prototype.type = &#x27;Link&#x27;;
-	my.Link.prototype.classname = &#x27;linknames&#x27;;
-	if (!my.xt(my.worklink)) {
-		my.worklink = {
-			start: my.newVector({
-				name: &#x27;scrawl.worklink.start&#x27;
-			}),
-			end: my.newVector({
-				name: &#x27;scrawl.worklink.end&#x27;
-			}),
-			control1: my.newVector({
-				name: &#x27;scrawl.worklink.control1&#x27;
-			}),
-			control2: my.newVector({
-				name: &#x27;scrawl.worklink.control2&#x27;
-			}),
-			v1: my.newVector({
-				name: &#x27;scrawl.worklink.v1&#x27;
-			}),
-			v2: my.newVector({
-				name: &#x27;scrawl.worklink.v2&#x27;
-			}),
-			v3: my.newVector({
-				name: &#x27;scrawl.worklink.v3&#x27;
-			}),
+		my.d.Link = {
+			/**
+    Type of link - permitted values include: &#x27;line&#x27;, &#x27;quadratic&#x27;, &#x27;bezier&#x27;
+    @property species
+    @type String
+    @default &#x27;&#x27;
+    **/
+			species: &#x27;&#x27;,
+			/**
+    POINTNAME of start Point object - used by line, quadratic and bezier links
+    @property startPoint
+    @type String
+    @default &#x27;&#x27;
+    **/
+			startPoint: &#x27;&#x27;,
+			/**
+    SPRITENAME of this Link&#x27;s parent entity object
+    @property entity
+    @type String
+    @default &#x27;&#x27;
+    **/
+			entity: &#x27;&#x27;,
+			/**
+    POINTNAME of end Point object - used by line, quadratic and bezier links
+    @property endPoint
+    @type String
+    @default &#x27;&#x27;
+    **/
+			endPoint: &#x27;&#x27;,
+			/**
+    POINTNAME of first control Point object - used by quadratic and bezier links
+    @property controlPoint1
+    @type String
+    @default &#x27;&#x27;
+    **/
+			controlPoint1: &#x27;&#x27;,
+			/**
+    POINTNAME of second control Point object - used by bezier links
+    @property controlPoint2
+    @type String
+    @default &#x27;&#x27;
+    **/
+			controlPoint2: &#x27;&#x27;,
+			/**
+    Link object&#x27;s action - permitted values include: &#x27;add&#x27;, &#x27;move&#x27;, &#x27;close&#x27;, &#x27;end&#x27;
+    @property startLink
+    @type String
+    @default &#x27;add&#x27;
+    **/
+			action: &#x27;add&#x27;,
+			/**
+    Link length - this value will be affected by the value of the parent Entity object&#x27;s __precision__ attribute
+    @property length
+    @type Number
+    @default 0
+    @private
+    **/
+			length: 0,
+			/**
+    Positions Arrays along the length of the Link&#x27;s path - these values will be affected by the value of the parent Entity object&#x27;s __precision__ attribute
+    @property positionsX
+    @type Array
+    @default []
+    @private
+    **/
+			positionsX: [],
+			/**
+    Positions Arrays along the length of the Link&#x27;s path - these values will be affected by the value of the parent Entity object&#x27;s __precision__ attribute
+    @property positionsY
+    @type Array
+    @default []
+    @private
+    **/
+			positionsY: [],
+			/**
+    Positions Arrays along the length of the Link&#x27;s path - these values will be affected by the value of the parent Entity object&#x27;s __precision__ attribute
+    @property positionsLength
+    @type Array
+    @default []
+    @private
+    **/
+			positionsLength: [],
+			/**
+    Positions Arrays along the length of the Link&#x27;s path - these values will be affected by the value of the parent Entity object&#x27;s __precision__ attribute
+    @property positionsCumulativeLength
+    @type Array
+    @default []
+    @private
+    **/
+			positionsCumulativeLength: []
 		};
-	}
-	my.d.Link = {
+		my.mergeInto(my.d.Link, my.d.Base);
 		/**
-Type of link - permitted values include: &#x27;line&#x27;, &#x27;quadratic&#x27;, &#x27;bezier&#x27;
-@property species
-@type String
-@default &#x27;&#x27;
-**/
-		species: &#x27;&#x27;,
-		/**
-POINTNAME of start Point object - used by line, quadratic and bezier links
-@property startPoint
-@type String
-@default &#x27;&#x27;
-**/
-		startPoint: &#x27;&#x27;,
-		/**
-SPRITENAME of this Link&#x27;s parent sprite object
-@property sprite
-@type String
-@default &#x27;&#x27;
-**/
-		sprite: &#x27;&#x27;,
-		/**
-POINTNAME of end Point object - used by line, quadratic and bezier links
-@property endPoint
-@type String
-@default &#x27;&#x27;
-**/
-		endPoint: &#x27;&#x27;,
-		/**
-POINTNAME of first control Point object - used by quadratic and bezier links
-@property controlPoint1
-@type String
-@default &#x27;&#x27;
-**/
-		controlPoint1: &#x27;&#x27;,
-		/**
-POINTNAME of second control Point object - used by bezier links
-@property controlPoint2
-@type String
-@default &#x27;&#x27;
-**/
-		controlPoint2: &#x27;&#x27;,
-		/**
-Link object&#x27;s action - permitted values include: &#x27;add&#x27;, &#x27;move&#x27;, &#x27;close&#x27;, &#x27;end&#x27;
-@property startLink
-@type String
-@default &#x27;add&#x27;
-**/
-		action: &#x27;add&#x27;,
-		/**
-Link length - this value will be affected by the value of the parent Sprite object&#x27;s __precision__ attribute
-@property length
-@type Number
-@default 0
-@private
-**/
-		length: 0,
-		/**
-Positions Array along the length of the Link&#x27;s path - these values will be affected by the value of the parent Sprite object&#x27;s __precision__ attribute
-@property positions
-@type Array
-@default []
-@private
-**/
-		positions: [],
-	};
-	my.mergeInto(my.d.Link, my.d.Base);
-	/**
-Augments Base.set()
-@method set
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-**/
-	my.Link.prototype.set = function(items) {
-		my.Base.prototype.set.call(this, items);
-		items = my.safeObject(items);
-		if (my.isa(items.sprite, &#x27;str&#x27;) &amp;&amp; items.sprite !== this.sprite &amp;&amp; this.sprite) {
-			my.removeItem(my.sprite[this.sprite].linkList, this.name);
-		}
-		if (my.isa(items.action, &#x27;str&#x27;) &amp;&amp; this.sprite &amp;&amp; my.contains(my.spritenames, this.sprite)) {
-			if (items.action === &#x27;add&#x27;) {
-				my.pushUnique(my.sprite[this.sprite].linkList, this.name);
+    Augments Base.set()
+    @method set
+    @param {Object} items Object consisting of key:value attributes
+    @return This
+    @chainable
+    **/
+		my.Link.prototype.set = function(items) {
+			my.Base.prototype.set.call(this, items);
+			items = my.safeObject(items);
+			if (my.isa(items.entity, &#x27;str&#x27;) &amp;&amp; items.entity !== this.entity &amp;&amp; this.entity) {
+				my.removeItem(my.entity[this.entity].linkList, this.name);
 			}
-			else {
-				my.removeItem(my.sprite[this.sprite].linkList, this.name);
+			if (my.isa(items.action, &#x27;str&#x27;) &amp;&amp; this.entity &amp;&amp; my.entity[this.entity]) {
+				if (items.action === &#x27;add&#x27;) {
+					my.pushUnique(my.entity[this.entity].linkList, this.name);
+				}
+				else {
+					my.removeItem(my.entity[this.entity].linkList, this.name);
+				}
 			}
-		}
-		return this;
-	};
-	/**
-Position calculation helper function
-@method pointOnLine
-@param {Point} origin Start Point for calculation
-@param {Point} destination End Point for calculation
-@param {Number} val Distance between start and end points, where 0 = start and 1 = end
-@return Coordinate Vector
-@private
-**/
-	my.Link.prototype.pointOnLine = function(origin, destination, val) {
-		//console.log(this.name, &#x27;pointOnLine&#x27;);
-		if (origin &amp;&amp; destination &amp;&amp; my.isa(val, &#x27;num&#x27;)) {
-			return destination.vectorSubtract(origin).scalarMultiply(val).vectorAdd(origin);
-		}
-		return false;
-	};
-	/**
-Position calculation helper function
+			return this;
+		};
+		/**
+    Position calculation helper function
+    @method pointOnLine
+    @param {Point} origin Start Point for calculation
+    @param {Point} destination End Point for calculation
+    @param {Number} val Distance between start and end points, where 0 = start and 1 = end
+    @return Coordinate Vector
+    @private
+    **/
+		my.Link.prototype.pointOnLine = function(origin, destination, val) {
+			if (origin &amp;&amp; destination &amp;&amp; my.isa(val, &#x27;num&#x27;)) {
+				return destination.vectorSubtract(origin).scalarMultiply(val).vectorAdd(origin);
+			}
+			return false;
+		};
+		/**
+    Position calculation helper function
 
-Result Object contains the following attributes:
+    Result Object contains the following attributes:
 
-* __start__ - Link.start Point object&#x27;s local Vector
-* __end__ - Link.end Point object&#x27;s local Vector
-* __control1__ - Link.controlPoint1 Point object&#x27;s local Vector
-* __control2__ - Link.controlPoint2 Point object&#x27;s local Vector
-@method getPointCoordinates
-@return Result Object
-@private
-**/
-	my.Link.prototype.getPointCoordinates = function() {
-		my.worklink.start.set((this.startPoint) ? my.point[this.startPoint].getCurrentCoordinates() : {
-			x: 0,
-			y: 0,
-			z: 0
-		});
-		my.worklink.end.set((this.endPoint) ? my.point[this.endPoint].getCurrentCoordinates() : {
-			x: 0,
-			y: 0,
-			z: 0
-		});
-		my.worklink.control1.set((this.controlPoint1) ? my.point[this.controlPoint1].getCurrentCoordinates() : {
-			x: 0,
-			y: 0,
-			z: 0
-		});
-		my.worklink.control2.set((this.controlPoint2) ? my.point[this.controlPoint2].getCurrentCoordinates() : {
-			x: 0,
-			y: 0,
-			z: 0
-		});
-		return my.worklink;
-	};
-	/**
-Position calculation helper function
-@method getLocalPositionOnLink
-@param {Number} [val] - distance along link, where 0 = start and 1 = end
-@return coordinate Vector
-@private
-**/
-	my.Link.prototype.getLocalPositionOnLink = function(val) {
-		val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
-		var mid1,
-			mid2,
-			fst1,
-			fst2,
-			fst3,
-			sec1,
-			sec2,
-			result;
-		this.getPointCoordinates();
-		switch (this.species) {
-			case &#x27;line&#x27;:
-				my.worklink.v1.set(this.pointOnLine(my.worklink.start, my.worklink.end, val));
-				break;
-			case &#x27;quadratic&#x27;:
-				mid2 = this.pointOnLine(my.worklink.control1, my.worklink.end, val);
-				mid1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
-				my.worklink.v1.set(this.pointOnLine(mid1, mid2, val));
-				break;
-			case &#x27;bezier&#x27;:
-				fst3 = this.pointOnLine(my.worklink.control2, my.worklink.end, val);
-				fst2 = this.pointOnLine(my.worklink.control1, my.worklink.control2, val);
-				fst1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
-				sec2 = this.pointOnLine(fst2, fst3, val);
-				sec1 = this.pointOnLine(fst1, fst2, val);
-				my.worklink.v1.set(this.pointOnLine(sec1, sec2, val));
-				break;
-			default:
-				my.worklink.v1.set({
+    * __start__ - Link.start Point object&#x27;s local Vector
+    * __end__ - Link.end Point object&#x27;s local Vector
+    * __control1__ - Link.controlPoint1 Point object&#x27;s local Vector
+    * __control2__ - Link.controlPoint2 Point object&#x27;s local Vector
+    @method getPointCoordinates
+    @return Result Object
+    @private
+    **/
+		my.Link.prototype.getPointCoordinates = function() {
+			var vector;
+			vector = (this.startPoint) ? my.point[this.startPoint].getCurrentCoordinates() : my.o;
+			my.worklink.start.x = vector.x || 0;
+			my.worklink.start.y = vector.y || 0;
+			my.worklink.start.z = vector.z || 0;
+			vector = (this.endPoint) ? my.point[this.endPoint].getCurrentCoordinates() : my.o;
+			my.worklink.end.x = vector.x || 0;
+			my.worklink.end.y = vector.y || 0;
+			my.worklink.end.z = vector.z || 0;
+			vector = (this.controlPoint1) ? my.point[this.controlPoint1].getCurrentCoordinates() : my.o;
+			my.worklink.control1.x = vector.x || 0;
+			my.worklink.control1.y = vector.y || 0;
+			my.worklink.control1.z = vector.z || 0;
+			vector = (this.controlPoint2) ? my.point[this.controlPoint2].getCurrentCoordinates() : my.o;
+			my.worklink.control2.x = vector.x || 0;
+			my.worklink.control2.y = vector.y || 0;
+			my.worklink.control2.z = vector.z || 0;
+			return my.worklink;
+		};
+		/**
+    Position calculation helper function
+    @method getLocalPositionOnLink
+    @param {Number} [val] - distance along link, where 0 = start and 1 = end
+    @return coordinate Vector
+    @private
+    **/
+		my.Link.prototype.getLocalPositionOnLink = function(val) {
+			var mid1,
+				mid2,
+				fst1,
+				fst2,
+				fst3,
+				sec1,
+				sec2,
+				result = {
 					x: 0,
 					y: 0,
 					z: 0
-				});
-		}
-		return my.worklink.v1;
-	};
-	/**
-Position calculation helper function
-@method getPositionOnLink
-@param {Number} [val] - distance along link, where 0 = start and 1 = end
-@return coordinate Vector
-@private
-**/
-	my.Link.prototype.getPositionOnLink = function(val) {
-		var mySprite = my.sprite[this.sprite],
-			scale = mySprite.scale,
-			roll = mySprite.roll,
-			result;
-		if (my.isa(val, &#x27;num&#x27;)) {
-			result = this.getLocalPositionOnLink(val);
-			return result.rotate(roll).vectorAdd(mySprite.start);
-		}
-		return false;
-	};
-	/**
-Position calculation helper function
-@method getLocalSteadyPositionOnLink
-@param {Number} [val] - distance along link, where 0 = start and 1 = end
-@return coordinate Vector
-@private
-**/
-	my.Link.prototype.getLocalSteadyPositionOnLink = function(val) {
-		val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
-		var s,
-			d,
-			dPos,
-			precision = my.sprite[this.sprite].get(&#x27;precision&#x27;),
-			positions = this.positions,
-			length = this.length,
-			distance = length * val;
-		distance = (distance &gt; positions[precision].cumulativeLength) ? positions[precision].cumulativeLength : ((distance &lt; 0) ? 0 : distance);
-		for (var i = 1; i &lt;= precision; i++) {
-			if (distance &lt;= positions[i].cumulativeLength) {
-				s = my.worklink.v1.set(positions[i - 1].p);
-				d = my.worklink.v2.set(positions[i].p);
-				d.vectorSubtract(s);
-				dPos = (distance - positions[i - 1].cumulativeLength) / positions[i].length;
-				return d.scalarMultiply(dPos).vectorAdd(s);
+				};
+			val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
+			this.getPointCoordinates();
+			switch (this.species) {
+				case &#x27;line&#x27;:
+					my.worklink.v1.set(this.pointOnLine(my.worklink.start, my.worklink.end, val));
+					break;
+				case &#x27;quadratic&#x27;:
+					mid2 = this.pointOnLine(my.worklink.control1, my.worklink.end, val);
+					mid1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
+					my.worklink.v1.set(this.pointOnLine(mid1, mid2, val));
+					break;
+				case &#x27;bezier&#x27;:
+					fst3 = this.pointOnLine(my.worklink.control2, my.worklink.end, val);
+					fst2 = this.pointOnLine(my.worklink.control1, my.worklink.control2, val);
+					fst1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
+					sec2 = this.pointOnLine(fst2, fst3, val);
+					sec1 = this.pointOnLine(fst1, fst2, val);
+					my.worklink.v1.set(this.pointOnLine(sec1, sec2, val));
+					break;
+				default:
+					my.worklink.v1.set(result);
 			}
-		}
-		return false;
-	};
-	/**
-Position calculation helper function
-@method getSteadyPositionOnLink
-@param {Number} [val] - distance along link, where 0 = start and 1 = end
-@return coordinate Vector
-@private
-**/
-	my.Link.prototype.getSteadyPositionOnLink = function(val) {
-		var mySprite = my.sprite[this.sprite],
-			d = this.getLocalSteadyPositionOnLink(val);
-		d.rotate(mySprite.roll).vectorAdd(mySprite.start);
-		return d;
-	};
-	/**
-Returns length of Link, in pixels
-@method getLength
-@return Length, in pixels
-**/
-	my.Link.prototype.getLength = function() {
-		this.setPositions();
-		return this.length;
-	};
-	/**
-(re)Calculate the Link object&#x27;s __positions__ array
-@method setPositions
-@param {Number} [val] - precision level for the calculation. Default: parent Shape object&#x27;s precision value
-@return This
-@chainable
-**/
-	my.Link.prototype.setPositions = function(val) {
-		if (this.action === &#x27;add&#x27;) {
-			var pts = this.getPointCoordinates(),
-				precision = (my.isa(val, &#x27;num&#x27;) &amp;&amp; val &gt; 0) ? val : (my.sprite[this.sprite].get(&#x27;precision&#x27;)),
-				step = 1 / precision,
-				pos,
-				here,
-				vHere = my.worklink.v3,
-				dist,
-				d,
-				cumLen = 0,
-				cur = my.worklink.v2.set(pts.start), //my.worklink.v2
-				sprite = my.sprite[this.sprite],
-				temp = sprite.roll;
-			if (this.positions.length !== precision + 1) {
-				this.positions.length = 0;
-				for (var i = 0; i &lt;= precision; i++) {
-					this.positions[i] = {
-						p: my.newVector(),
-						length: 0,
-						cumulativeLength: 0,
-					};
+			return my.worklink.v1;
+		};
+		/**
+    Position calculation helper function
+    @method getPositionOnLink
+    @param {Number} [val] - distance along link, where 0 = start and 1 = end
+    @return coordinate Vector
+    @private
+    **/
+		my.Link.prototype.getPositionOnLink = function(val) {
+			var entity,
+				result;
+			entity = my.entity[this.entity];
+			if (my.isa(val, &#x27;num&#x27;)) {
+				result = this.getLocalPositionOnLink(val);
+				return result.rotate(entity.roll).vectorAdd(entity.start);
+			}
+			return false;
+		};
+		/**
+    Position calculation helper function
+    @method getLocalSteadyPositionOnLink
+    @param {Number} [val] - distance along link, where 0 = start and 1 = end
+    @return coordinate Vector
+    @private
+    **/
+		my.Link.prototype.getLocalSteadyPositionOnLink = function(val) {
+			var dPos,
+				precision,
+				distance,
+				i,
+				iz;
+			val = (my.isa(val, &#x27;num&#x27;)) ? val : 1;
+			precision = my.entity[this.entity].get(&#x27;precision&#x27;);
+			distance = this.length * val;
+			distance = (distance &gt; this.positionsCumulativeLength[precision]) ? this.positionsCumulativeLength[precision] : ((distance &lt; 0) ? 0 : distance);
+			for (i = 1; i &lt;= precision; i++) {
+				if (distance &lt;= this.positionsCumulativeLength[i]) {
+					my.worklink.v1.x = this.positionsX[i - 1];
+					my.worklink.v1.y = this.positionsY[i - 1];
+					my.worklink.v2.x = this.positionsX[i];
+					my.worklink.v2.y = this.positionsY[i];
+					my.worklink.v2.vectorSubtract(my.worklink.v1);
+					dPos = (distance - this.positionsCumulativeLength[i - 1]) / this.positionsLength[i];
+					return my.worklink.v2.scalarMultiply(dPos).vectorAdd(my.worklink.v1);
 				}
 			}
-			this.positions[0].p.set(cur);
-			sprite.set({
-				roll: 0,
-			});
-			for (var j = 1; j &lt;= precision; j++) {
-				pos = step * ((j - 1) + 1);
-				here = this.getPositionOnLink(pos); //my.worklink.v1
-				here.vectorSubtract(sprite.start);
-				vHere.set(here); //my.worklink.v3
-				dist = here.vectorSubtract(cur).getMagnitude();
-				cur.set(vHere); //my.worklink.v2
-				cumLen += dist;
-				this.positions[j].p.set(cur);
-				this.positions[j].length = dist;
-				this.positions[j].cumulativeLength = cumLen;
+			return false;
+		};
+		/**
+    Position calculation helper function
+    @method getSteadyPositionOnLink
+    @param {Number} [val] - distance along link, where 0 = start and 1 = end
+    @return coordinate Vector
+    @private
+    **/
+		my.Link.prototype.getSteadyPositionOnLink = function(val) {
+			var entity,
+				result;
+			entity = my.entity[this.entity];
+			result = this.getLocalSteadyPositionOnLink(val);
+			result.rotate(entity.roll).vectorAdd(entity.start);
+			return result;
+		};
+		/**
+    Returns length of Link, in pixels
+    @method getLength
+    @return Length, in pixels
+    **/
+		my.Link.prototype.getLength = function() {
+			this.setPositions();
+			return this.length;
+		};
+		/**
+    (re)Calculate the Link object&#x27;s __positions__ array
+    @method setPositions
+    @param {Number} [val] - precision level for the calculation. Default: parent Shape object&#x27;s precision value
+    @return This
+    @chainable
+    **/
+		my.Link.prototype.setPositions = function(val) {
+			var pts,
+				precision,
+				step,
+				pos,
+				here,
+				dist,
+				cumLen,
+				entity,
+				temp,
+				j;
+			if (this.action === &#x27;add&#x27;) {
+				pts = this.getPointCoordinates();
+				precision = (my.isa(val, &#x27;num&#x27;) &amp;&amp; val &gt; 0) ? val : (my.entity[this.entity].get(&#x27;precision&#x27;));
+				step = 1 / precision;
+				cumLen = 0;
+				my.worklink.v2.set(pts.start); //my.worklink.v2
+				entity = my.entity[this.entity];
+				temp = entity.roll;
+				this.positionsX.length = 0;
+				this.positionsY.length = 0;
+				this.positionsLength.length = 0;
+				this.positionsCumulativeLength.length = 0;
+				this.positionsX[0] = my.worklink.v2.x;
+				this.positionsY[0] = my.worklink.v2.y;
+				this.positionsLength[0] = 0;
+				this.positionsCumulativeLength[0] = 0;
+				entity.roll = 0;
+				for (j = 1; j &lt;= precision; j++) {
+					pos = step * ((j - 1) + 1);
+					here = this.getPositionOnLink(pos); //my.worklink.v1
+					here.vectorSubtract(entity.start);
+					my.worklink.v3.set(here); //my.worklink.v3
+					dist = here.vectorSubtract(my.worklink.v2).getMagnitude();
+					my.worklink.v2.set(my.worklink.v3); //my.worklink.v2
+					cumLen += dist;
+					this.positionsX[j] = my.worklink.v2.x;
+					this.positionsY[j] = my.worklink.v2.y;
+					this.positionsLength[j] = dist;
+					this.positionsCumulativeLength[j] = cumLen;
+				}
+				this.length = this.positionsCumulativeLength[precision];
+				entity.roll = temp;
 			}
-			this.length = this.positions[precision].cumulativeLength;
-			sprite.roll = temp;
-		}
-		return this;
-	};
-	/**
-Path object drawing helper function
+			return this;
+		};
+		/**
+    Path object drawing helper function
 
-_Note: this function is recursive_
+    _Note: this function is recursive_
 
-@method sketch
-@param {Object} ctx Sprite Cell&#x27;s &amp;lt;canvas&amp;gt; element&#x27;s context engine Object
-@return True (eventually)
-@private
-**/
-	my.Link.prototype.sketch = function(ctx) {
-		var myEnd,
-			myCon1,
-			myCon2,
-			myResult;
-		switch (this.action) {
-			case &#x27;close&#x27;:
-				ctx.closePath();
-				break;
-			case &#x27;move&#x27;:
-				try {
+    @method sketch
+    @param {Object} ctx Entity Cell&#x27;s &amp;lt;canvas&amp;gt; element&#x27;s context engine Object
+    @return True (eventually)
+    @private
+    **/
+		my.Link.prototype.sketch = function(ctx) {
+			var myEnd,
+				myCon1,
+				myCon2;
+			switch (this.action) {
+				case &#x27;close&#x27;:
+					ctx.closePath();
+					break;
+				case &#x27;move&#x27;:
 					myEnd = my.point[this.endPoint].getCurrentCoordinates();
 					ctx.moveTo(
 						myEnd.x,
 						myEnd.y
 					);
-				}
-				catch (e) {
-					return true;
-				}
-				break;
-			case &#x27;add&#x27;:
-				try {
+					break;
+				case &#x27;add&#x27;:
 					switch (this.species) {
 						case &#x27;line&#x27;:
 							myEnd = my.point[this.endPoint].getCurrentCoordinates();
@@ -2234,25 +2369,17 @@ _Note: this function is recursive_
 						default:
 							return true;
 					}
-				}
-				catch (e) {
+					break;
+				default:
 					return true;
-				}
-				break;
-			default:
-				return true;
-		}
-		try {
-			myResult = my.link[my.point[this.endPoint].startLink].sketch(ctx);
-		}
-		catch (e) {
+			}
+			my.link[my.point[this.endPoint].startLink].sketch(ctx);
 			return true;
-		}
-		return true;
-	};
+		};
 
-	return my;
-}(scrawl));
+		return my;
+	}(scrawl));
+}
 
     </pre>
 </div>

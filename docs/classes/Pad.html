@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -218,7 +252,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlCore.js.html#l3121"><code>source\scrawlCore.js:3121</code></a>
+            Defined in: <a href="../files/source_scrawlCore.js.html#l2973"><code>source\scrawlCore.js:2973</code></a>
         </div>
     
 
@@ -250,8 +284,8 @@
 <h2 id="access">Access</h2>
 <ul>
 <li>scrawl.pad.PADNAME - for the Pad object</li>
-<li>scrawl.canvas.PADNAME - for the Pad object&#39;s visible &lt;canvas&gt; element</li>
-<li>scrawl.context.PADNAME - for the &amp;ltcanvas&gt; element&#39;s 2d context engine</li>
+<li>scrawl.canvas.PADNAME - for the Pad object&#39;s visible (display) &lt;canvas&gt; element</li>
+<li>scrawl.context.PADNAME - for the visible (display) &amp;ltcanvas&gt; element&#39;s 2d context engine</li>
 <li>scrawl.cell[scrawl.pad.PADNAME.display] - for the Pad object&#39;s display cell</li>
 <li>scrawl.cell[scrawl.pad.PADNAME.base] - for the Pad object&#39;s base cell</li>
 </ul>
@@ -303,7 +337,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3121"><code>source\scrawlCore.js:3121</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2973"><code>source\scrawlCore.js:2973</code></a>
         
         </p>
 
@@ -425,15 +459,15 @@
                                 
                             </li>
                         
-                            <li class="index-item method inherited inherited">
-                                <a href="#method_get">get</a>
+                            <li class="index-item method private">
+                                <a href="#method_filtersPadInit">filtersPadInit</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_getCellsForDisplayAction">getCellsForDisplayAction</a>
+                            <li class="index-item method inherited inherited">
+                                <a href="#method_get">get</a>
 
                                 
                                 
@@ -476,6 +510,20 @@
                         
                             <li class="index-item method">
                                 <a href="#method_makeCurrent">makeCurrent</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_padStacksConstructor">padStacksConstructor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_padStacksSet">padStacksSet</a>
 
                                 
                                 
@@ -537,8 +585,8 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_setDrawOrder">setDrawOrder</a>
+                            <li class="index-item method private inherited">
+                                <a href="#method_setLocalDimensions">setLocalDimensions</a>
 
                                 
                                 
@@ -551,15 +599,29 @@
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_stacksPageElementConstructor">stacksPageElementConstructor</a>
+                            <li class="index-item method private">
+                                <a href="#method_sortCellsCompile">sortCellsCompile</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_stampBackground">stampBackground</a>
+                            <li class="index-item method private">
+                                <a href="#method_sortCellsShow">sortCellsShow</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_stacksPadInit">stacksPadInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_stacksPageElementConstructor">stacksPageElementConstructor</a>
 
                                 
                                 
@@ -633,15 +695,22 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_drawOrder">drawOrder</a>
+                            <li class="index-item property inherited">
+                                <a href="#property_height">height</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property inherited">
-                                <a href="#property_height">height</a>
+                                <a href="#property_localHeight">localHeight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_localWidth">localWidth</a>
 
                                 
                                 
@@ -772,7 +841,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3584"><code>source\scrawlCore.js:3584</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3347"><code>source\scrawlCore.js:3347</code></a>
         
         </p>
 
@@ -796,13 +865,13 @@
                 <li class="param">
                     
                         <code class="param-name">items</code>
-                        <span class="type">Array</span>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>An Array of CELLNAME Strings; alternatively the argument can be a single CELLNAME String</p>
+                        <p>One or more CELLNAME Strings</p>
 
                     </div>
 
@@ -868,7 +937,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3078"><code>source\scrawlCore.js:3078</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2932"><code>source\scrawlCore.js:2932</code></a>
         
         </p>
 
@@ -949,7 +1018,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3549"><code>source\scrawlCore.js:3549</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3312"><code>source\scrawlCore.js:3312</code></a>
         
         </p>
 
@@ -1029,17 +1098,7 @@ scrawl.pad.mycanvas.addNewCell({
     <h3 class="name"><code>clear</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[command]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -1073,7 +1132,7 @@ scrawl.pad.mycanvas.addNewCell({
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3401"><code>source\scrawlCore.js:3401</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3217"><code>source\scrawlCore.js:3217</code></a>
         
         </p>
 
@@ -1085,48 +1144,10 @@ scrawl.pad.mycanvas.addNewCell({
 
     <div class="description">
         <p>Display function - requests Cells to clear their &lt;canvas&gt; element</p>
-<p>Argument String can be in the form of:</p>
-<ul>
-<li>&#39;all&#39; - for all canvases</li>
-<li>&#39;display&#39; - for the display canvas only</li>
-<li>&#39;base&#39; - for the base canvas only</li>
-<li>&#39;non-base&#39; for all canvases except the base canvas</li>
-<li>&#39;current&#39; - for the current canvas only</li>
-<li>&#39;non-current&#39; - for all canvases except the current canvas</li>
-<li>&#39;additionals&#39; - for all canvases except the display and base canvases</li>
-<li>&#39;non-additionals&#39; - for the display and base canvases only</li>
-<li>&#39;none&#39; - for no canvases</li>
-<li>the <strong>default</strong> is to return an Array containing all canvases except the display canvas</li>
-</ul>
-<p>The argument can also be an Array of CELLNAME strings</p>
+<p>Cells with cleared = true will clear theid displays in preparation for compile/stamp operations</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[command]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Command String; or alternatively an Array of CELLNAME Strings</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -1192,7 +1213,7 @@ scrawl.pad.mycanvas.addNewCell({
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2187"><code>source\scrawlCore.js:2187</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1875"><code>source\scrawlCore.js:1875</code></a>
         
         </p>
 
@@ -1204,6 +1225,7 @@ scrawl.pad.mycanvas.addNewCell({
 
     <div class="description">
         <p>Clone a Scrawl.js object, optionally altering attribute values in the cloned object</p>
+<p>Note that any callback or fn attribute functions will be referenced by the clone, not copied to the clone; these can be overwritten with new anonymous functions by including them in the items argument object</p>
 <p>(This function is replaced by the path module)</p>
 
     </div>
@@ -1255,13 +1277,13 @@ scrawl.pad.mycanvas.addNewCell({
             <div class="example-content">
                 <pre class="code prettyprint"><code>var box = scrawl.newBlock({
     width: 50,
-    height: 50,
+    height: 50
     });
 var newBox = box.clone({
-    height: 100,
+    height: 100
     });
 newBox.get(&#39;width&#39;);        //returns 50
-newBox.get(&#39;height&#39;);        //returns 100</code></pre>
+newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 
             </div>
         </div>
@@ -1273,17 +1295,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
     <h3 class="name"><code>compile</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[command]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -1317,7 +1329,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3431"><code>source\scrawlCore.js:3431</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3238"><code>source\scrawlCore.js:3238</code></a>
         
         </p>
 
@@ -1329,48 +1341,16 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
 
     <div class="description">
         <p>Display function - requests Cells to compile their &lt;canvas&gt; element</p>
-<p>Argument String can be in the form of:</p>
+<p>Cells will compile in ascending order of their compileOrder attributes, if their compiled attribute = true</p>
+<p>By default:</p>
 <ul>
-<li>&#39;all&#39; - for all canvases</li>
-<li>&#39;display&#39; - for the display canvas only</li>
-<li>&#39;base&#39; - for the base canvas only</li>
-<li>&#39;non-base&#39; for all canvases except the base canvas</li>
-<li>&#39;current&#39; - for the current canvas only</li>
-<li>&#39;non-current&#39; - for all canvases except the current canvas</li>
-<li>&#39;additionals&#39; - for all canvases except the display and base canvases</li>
-<li>&#39;non-additionals&#39; - for the display and base canvases only</li>
-<li>&#39;none&#39; - for no canvases</li>
-<li>the <strong>default</strong> is to return an Array containing all canvases except the display canvas</li>
+<li>the initial base canvas has a compileOrder of 9999 and compiles last</li>
+<li>the initial display canvas has compiled = false and will not compile</li>
 </ul>
-<p>The argument can also be an Array of CELLNAME strings</p>
+<p>(This function is replaced by the Filters module)</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[command]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Command String; or alternatively an Array of CELLNAME Strings</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -1439,7 +1419,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3601"><code>source\scrawlCore.js:3601</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3370"><code>source\scrawlCore.js:3370</code></a>
         
         </p>
 
@@ -1499,6 +1479,63 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
 </div>
 
                 
+                    <div id="method_filtersPadInit" class="method item private">
+    <h3 class="name"><code>filtersPadInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3134"><code>source\scrawlCore.js:3134</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Pad constructor hook function - modified by filters module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_get" class="method item inherited">
     <h3 class="name"><code>get</code></h3>
 
@@ -1545,7 +1582,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2842"><code>source\scrawlCore.js:2842</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2673"><code>source\scrawlCore.js:2673</code></a>
         
         </p>
 
@@ -1605,128 +1642,6 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_getCellsForDisplayAction" class="method item private">
-    <h3 class="name"><code>getCellsForDisplayAction</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[command]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l3334"><code>source\scrawlCore.js:3334</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Display helper function - determines which Cell &lt;canvas&gt; elements need to be manipulated in line with the supplied &#39;command&#39; argument</p>
-<p>Argument String can be in the form of:</p>
-<ul>
-<li>&#39;all&#39; - for all canvases</li>
-<li>&#39;display&#39; - for the display canvas only</li>
-<li>&#39;base&#39; - for the base canvas only</li>
-<li>&#39;non-base&#39; for all canvases except the base canvas</li>
-<li>&#39;current&#39; - for the current canvas only</li>
-<li>&#39;non-current&#39; - for all canvases except the current canvas</li>
-<li>&#39;additionals&#39; - for all canvases except the display and base canvases</li>
-<li>&#39;non-additionals&#39; - for the display and base canvases only</li>
-<li>&#39;none&#39; - for no canvases</li>
-<li>the <strong>default</strong> is to return an Array containing all canvases except the display canvas</li>
-</ul>
-<p>The argument can also be an Array of CELLNAME strings</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[command]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Command String; or alternatively an Array of CELLNAME Strings</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Array of CELLNAME Strings</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_getElement" class="method item private">
     <h3 class="name"><code>getElement</code></h3>
 
@@ -1765,7 +1680,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3262"><code>source\scrawlCore.js:3262</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3125"><code>source\scrawlCore.js:3125</code></a>
         
         </p>
 
@@ -1833,7 +1748,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2971"><code>source\scrawlCore.js:2971</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2816"><code>source\scrawlCore.js:2816</code></a>
         
         </p>
 
@@ -1922,7 +1837,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2989"><code>source\scrawlCore.js:2989</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2834"><code>source\scrawlCore.js:2834</code></a>
         
         </p>
 
@@ -2026,7 +1941,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3038"><code>source\scrawlCore.js:3038</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2891"><code>source\scrawlCore.js:2891</code></a>
         
         </p>
 
@@ -2132,7 +2047,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3054"><code>source\scrawlCore.js:3054</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2908"><code>source\scrawlCore.js:2908</code></a>
         
         </p>
 
@@ -2229,7 +2144,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3627"><code>source\scrawlCore.js:3627</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3396"><code>source\scrawlCore.js:3396</code></a>
         
         </p>
 
@@ -2268,11 +2183,157 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
                 <pre class="code prettyprint"><code>scrawl.addCanvasToPage({
     name: &#39;mycanvas&#39;,
     width: 200,
-    height: 200,
+    height: 200
     }).makeCurrent();</code></pre>
 
             </div>
         </div>
+    
+</div>
+
+                
+                    <div id="method_padStacksConstructor" class="method item private">
+    <h3 class="name"><code>padStacksConstructor</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3181"><code>source\scrawlCore.js:3181</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Pad constructor hook function - amended by Stacks module</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Nothing</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_padStacksSet" class="method item private">
+    <h3 class="name"><code>padStacksSet</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3188"><code>source\scrawlCore.js:3188</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Pad set hook function - amended by Stacks module</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Nothing</p>
+
+                
+            </div>
+        </div>
+    
+
     
 </div>
 
@@ -2314,7 +2375,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3106"><code>source\scrawlCore.js:3106</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2958"><code>source\scrawlCore.js:2958</code></a>
         
         </p>
 
@@ -2353,17 +2414,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
     <h3 class="name"><code>render</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[command]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -2397,7 +2448,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3529"><code>source\scrawlCore.js:3529</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3299"><code>source\scrawlCore.js:3299</code></a>
         
         </p>
 
@@ -2409,40 +2460,9 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
 
     <div class="description">
         <p>Display function - Pad tells its associated Cell objects to undertake a complete clear-compile-show display cycle</p>
-<p>Argument Object can have the following (optional) attributes:</p>
-<ul>
-<li>clear:COMMAND</li>
-<li>compile:COMMAND</li>
-<li>show:COMMAND</li>
-</ul>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[command]</code>
-                        <span class="type">Object</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Command Object</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -2498,7 +2518,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2220"><code>source\scrawlCore.js:2220</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1922"><code>source\scrawlCore.js:1922</code></a>
         
         </p>
 
@@ -2578,7 +2598,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2944"><code>source\scrawlCore.js:2944</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2777"><code>source\scrawlCore.js:2777</code></a>
         
         </p>
 
@@ -2685,7 +2705,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3271"><code>source\scrawlCore.js:3271</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3146"><code>source\scrawlCore.js:3146</code></a>
         
         </p>
 
@@ -2696,7 +2716,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>Augments PageElement.set(), to allow users to set Pad.drawOrder correctly, and also cascade scale, backgroundColor, globalAlpha and globalCompositeOperation changes to associated Cell objects</p>
+        <p>Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and globalCompositeOperation changes to associated Cell objects</p>
 
     </div>
 
@@ -2792,7 +2812,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3643"><code>source\scrawlCore.js:3643</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3412"><code>source\scrawlCore.js:3412</code></a>
         
         </p>
 
@@ -2893,7 +2913,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3668"><code>source\scrawlCore.js:3668</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3438"><code>source\scrawlCore.js:3438</code></a>
         
         </p>
 
@@ -2963,7 +2983,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2923"><code>source\scrawlCore.js:2923</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2756"><code>source\scrawlCore.js:2756</code></a>
         
         </p>
 
@@ -2998,21 +3018,11 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_setDrawOrder" class="method item">
-    <h3 class="name"><code>setDrawOrder</code></h3>
+                    <div id="method_setLocalDimensions" class="method item private inherited">
+    <h3 class="name"><code>setLocalDimensions</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -3023,6 +3033,8 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -3038,15 +3050,12 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/PageElement.html#method_setLocalDimensions">PageElement</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3312"><code>source\scrawlCore.js:3312</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2791"><code>source\scrawlCore.js:2791</code></a>
         
         </p>
 
@@ -3057,34 +3066,10 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>Set the drawOrder attribute</p>
+        <p>Helper function - set local dimensions (width, height)</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Array</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of CELLNAME Strings; alternatively, supply a CELLNAME String argument</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -3101,24 +3086,6 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
         </div>
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code>scrawl.addCanvasToPage({
-    name: &#39;mycanvas&#39;,
-    });
-scrawl.pad.mycanvas.addNewCell({
-    name: &#39;action&#39;,
-    });
-scrawl.pad.mycanvas.addNewCell({
-    name: &#39;background&#39;,
-    });
-scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</code></pre>
-
-            </div>
-        </div>
     
 </div>
 
@@ -3127,17 +3094,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
     <h3 class="name"><code>show</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[command]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -3171,7 +3128,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3491"><code>source\scrawlCore.js:3491</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3266"><code>source\scrawlCore.js:3266</code></a>
         
         </p>
 
@@ -3182,43 +3139,17 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
     </div>
 
     <div class="description">
-        <p>Display function - Pad tells its visible &lt;canvas&gt; element to clear itself and then copy associated canvases onto itself</p>
-<p>Argument String can be in the form of:</p>
+        <p>Display function - requests Cells to show their &lt;canvas&gt; element </p>
+<p>Cells will show in ascending order of their showOrder attributes, if their show attribute = true</p>
+<p>By default, the initial base and display canvases have shown = false:</p>
 <ul>
-<li>&#39;wipe-base&#39; - base canvas is cleared before copy operation starts</li>
-<li>&#39;wipe both&#39; - both the base canvas and the display canvas are cleared before the copy operation starts</li>
-<li>the <strong>default</strong> is to only clear the display canvas before the copy operation starts</li>
+<li>&#39;show&#39; involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself</li>
+<li>the last action is to copy the base cell onto the display cell</li>
 </ul>
-<p>Canvases are copied onto the <em>base</em> (not display) canvas in the order supplied by the Pad.drawOrder Array. This means that anything drawn on the base canvas will be at the bottom of the eventual scene.</p>
-<p>The base canvas is then copied onto the display canvas, as the last copy operation.</p>
+<p>(This function is replaced by the Filters module)</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[command]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Command String</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -3233,6 +3164,209 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_sortCellsCompile" class="method item private">
+    <h3 class="name"><code>sortCellsCompile</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3195"><code>source\scrawlCore.js:3195</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Display function sorting routine - cells are sorted according to their compileOrder attribute value, in ascending order</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Nothing</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_sortCellsShow" class="method item private">
+    <h3 class="name"><code>sortCellsShow</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3206"><code>source\scrawlCore.js:3206</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Display function sorting routine - cells are sorted according to their showOrder attribute value, in ascending order</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Nothing</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_stacksPadInit" class="method item private">
+    <h3 class="name"><code>stacksPadInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3140"><code>source\scrawlCore.js:3140</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Pad constructor hook function - modified by stacks module</p>
+
+    </div>
+
+    
+
     
 
     
@@ -3270,7 +3404,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2836"><code>source\scrawlCore.js:2836</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2667"><code>source\scrawlCore.js:2667</code></a>
         
         </p>
 
@@ -3287,128 +3421,6 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
 
     
 
-    
-
-    
-</div>
-
-                
-                    <div id="method_stampBackground" class="method item">
-    <h3 class="name"><code>stampBackground</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[command]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l3461"><code>source\scrawlCore.js:3461</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Display function - requests Cells to clear their &lt;canvas&gt; element using their backgroundColor</p>
-<p>Argument String can be in the form of:</p>
-<ul>
-<li>&#39;all&#39; - for all canvases</li>
-<li>&#39;display&#39; - for the display canvas only</li>
-<li>&#39;base&#39; - for the base canvas only</li>
-<li>&#39;non-base&#39; for all canvases except the base canvas</li>
-<li>&#39;current&#39; - for the current canvas only</li>
-<li>&#39;non-current&#39; - for all canvases except the current canvas</li>
-<li>&#39;additionals&#39; - for all canvases except the display and base canvases</li>
-<li>&#39;non-additionals&#39; - for the display and base canvases only</li>
-<li>&#39;none&#39; - for no canvases</li>
-<li>the <strong>default</strong> is to return an Array containing all canvases except the display canvas</li>
-</ul>
-<p>The argument can also be an Array of CELLNAME strings</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[command]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Command String; or alternatively an Array of CELLNAME Strings</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
     
 
     
@@ -3448,7 +3460,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2212"><code>source\scrawlCore.js:2212</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1914"><code>source\scrawlCore.js:1914</code></a>
         
         </p>
 
@@ -3514,7 +3526,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3245"><code>source\scrawlCore.js:3245</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3105"><code>source\scrawlCore.js:3105</code></a>
         
         </p>
 
@@ -3561,7 +3573,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3231"><code>source\scrawlCore.js:3231</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3091"><code>source\scrawlCore.js:3091</code></a>
         
         </p>
 
@@ -3605,7 +3617,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2120"><code>source\scrawlCore.js:2120</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1808"><code>source\scrawlCore.js:1808</code></a>
         
         </p>
 
@@ -3654,7 +3666,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3252"><code>source\scrawlCore.js:3252</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3112"><code>source\scrawlCore.js:3112</code></a>
         
         </p>
 
@@ -3665,6 +3677,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
 
     <div class="description">
         <p>Pad&#39;s currently active &lt;canvas&gt; element - CELLNAME</p>
+<p>//not convinced there&#39;s any point in keeping this attribute anymore - take it out?</p>
 
     </div>
 
@@ -3701,7 +3714,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3238"><code>source\scrawlCore.js:3238</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3098"><code>source\scrawlCore.js:3098</code></a>
         
         </p>
 
@@ -3745,7 +3758,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2792"><code>source\scrawlCore.js:2792</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2623"><code>source\scrawlCore.js:2623</code></a>
         
         </p>
 
@@ -3789,7 +3802,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2799"><code>source\scrawlCore.js:2799</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2630"><code>source\scrawlCore.js:2630</code></a>
         
         </p>
 
@@ -3805,53 +3818,6 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
 
     
         <p><strong>Default:</strong> 0</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_drawOrder" class="property item">
-    <h3 class="name"><code>drawOrder</code></h3>
-    <span class="type">Array</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l3224"><code>source\scrawlCore.js:3224</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Array of CELLNAME Strings determining the order in which non-display &lt;canvas&gt; elements are to be copied onto the display &lt;canvas&gt;</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> []</p>
     
 
     
@@ -3880,7 +3846,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2785"><code>source\scrawlCore.js:2785</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2602"><code>source\scrawlCore.js:2602</code></a>
         
         </p>
 
@@ -3896,6 +3862,94 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
 
     
         <p><strong>Default:</strong> 150</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_localHeight" class="property item inherited">
+    <h3 class="name"><code>localHeight</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/PageElement.html#property_localHeight">PageElement</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2616"><code>source\scrawlCore.js:2616</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>DOM element localHeight</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 150</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_localWidth" class="property item inherited">
+    <h3 class="name"><code>localWidth</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/PageElement.html#property_localWidth">PageElement</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2609"><code>source\scrawlCore.js:2609</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>DOM element localWidth</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 300</p>
     
 
     
@@ -3924,7 +3978,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2813"><code>source\scrawlCore.js:2813</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2644"><code>source\scrawlCore.js:2644</code></a>
         
         </p>
 
@@ -3971,7 +4025,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2091"><code>source\scrawlCore.js:2091</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1779"><code>source\scrawlCore.js:1779</code></a>
         
         </p>
 
@@ -4013,7 +4067,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2827"><code>source\scrawlCore.js:2827</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2658"><code>source\scrawlCore.js:2658</code></a>
         
         </p>
 
@@ -4057,7 +4111,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2806"><code>source\scrawlCore.js:2806</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2637"><code>source\scrawlCore.js:2637</code></a>
         
         </p>
 
@@ -4101,7 +4155,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2134"><code>source\scrawlCore.js:2134</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1822"><code>source\scrawlCore.js:1822</code></a>
         
         </p>
 
@@ -4145,7 +4199,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2127"><code>source\scrawlCore.js:2127</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1815"><code>source\scrawlCore.js:1815</code></a>
         
         </p>
 
@@ -4194,7 +4248,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3215"><code>source\scrawlCore.js:3215</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3082"><code>source\scrawlCore.js:3082</code></a>
         
         </p>
 
@@ -4237,7 +4291,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2778"><code>source\scrawlCore.js:2778</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2595"><code>source\scrawlCore.js:2595</code></a>
         
         </p>
 
@@ -4283,7 +4337,7 @@ scrawl.pad.mycanvas.setDrawOrder([&#39;background&#39;, &#39;action&#39;]);</cod
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2101"><code>source\scrawlCore.js:2101</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1789"><code>source\scrawlCore.js:1789</code></a>
         
         </p>
 

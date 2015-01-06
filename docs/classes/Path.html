@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -212,13 +246,13 @@
 
     
         <div class="extends">
-            Extends <a href="../classes/Sprite.html" class="crosslink">Sprite</a>
+            Extends <a href="../classes/Entity.html" class="crosslink">Entity</a>
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlPath.js.html#l591"><code>source\scrawlPath.js:591</code></a>
+            Defined in: <a href="../files/source_scrawlPath.js.html#l625"><code>source\scrawlPath.js:625</code></a>
         </div>
     
 
@@ -242,14 +276,14 @@
 <p>Additional factory functions to instantiate Path objects are available in the <strong>pathFactoryFunctions</strong> module</p>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>Defines a sprite composed of lines, quadratic and bezier curves, etc</li>
-<li>Makes use of, but doesn&#39;t contain, Point and Link objects to define the sprite</li>
-<li>Can be used as a path for placing and animating other sprites</li>
-<li>Point objects can be used as pivots by other sprites</li>
+<li>Defines a entity composed of lines, quadratic and bezier curves, etc</li>
+<li>Makes use of, but doesn&#39;t contain, Point and Link objects to define the entity</li>
+<li>Can be used as a path for placing and animating other entitys</li>
+<li>Point objects can be used as pivots by other entitys</li>
 </ul>
 <h2 id="access">Access</h2>
 <ul>
-<li>scrawl.sprite.PATHNAME - for the Path sprite object</li>
+<li>scrawl.entity.PATHNAME - for the Path entity object</li>
 </ul>
 
 </div>
@@ -299,7 +333,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l591"><code>source\scrawlPath.js:591</code></a>
+        <a href="../files/source_scrawlPath.js.html#l625"><code>source\scrawlPath.js:625</code></a>
         
         </p>
 
@@ -478,21 +512,42 @@
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_collisionsSpriteConstructor">collisionsSpriteConstructor</a>
+                                <a href="#method_collisionsEntityConstructor">collisionsEntityConstructor</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_collisionsSpriteRegisterInLibrary">collisionsSpriteRegisterInLibrary</a>
+                                <a href="#method_collisionsEntityRegisterInLibrary">collisionsEntityRegisterInLibrary</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_collisionsSpriteSet">collisionsSpriteSet</a>
+                                <a href="#method_collisionsEntitySet">collisionsEntitySet</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_collisionsEntitySetDelta">collisionsEntitySetDelta</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_convertX">convertX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_convertY">convertY</a>
 
                                 
                                 
@@ -527,7 +582,7 @@
                             </li>
                         
                             <li class="index-item method inherited">
-                                <a href="#method_dropSprite">dropSprite</a>
+                                <a href="#method_dropEntity">dropEntity</a>
 
                                 
                                 
@@ -542,6 +597,13 @@
                         
                             <li class="index-item method private inherited">
                                 <a href="#method_fillDraw">fillDraw</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_filtersEntityInit">filtersEntityInit</a>
 
                                 
                                 
@@ -584,6 +646,13 @@
                         
                             <li class="index-item method private inherited">
                                 <a href="#method_getContextFromEngine">getContextFromEngine</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_getEntityCell">getEntityCell</a>
 
                                 
                                 
@@ -667,7 +736,7 @@
                             </li>
                         
                             <li class="index-item method inherited">
-                                <a href="#method_pickupSprite">pickupSprite</a>
+                                <a href="#method_pickupEntity">pickupEntity</a>
 
                                 
                                 
@@ -729,8 +798,50 @@
                                 
                             </li>
                         
+                            <li class="index-item method inherited">
+                                <a href="#method_setDeltaHandle">setDeltaHandle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setDeltaScale">setDeltaScale</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setDeltaStart">setDeltaStart</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setHandle">setHandle</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private inherited">
                                 <a href="#method_setStampUsingPivot">setStampUsingPivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setStampUsingStacksPivot">setStampUsingStacksPivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setStart">setStart</a>
 
                                 
                                 
@@ -745,6 +856,13 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_stamp">stamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_stampFilter">stampFilter</a>
 
                                 
                                 
@@ -874,6 +992,13 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_handle">handle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_height">height</a>
 
                                 
                                 
@@ -1166,7 +1291,7 @@
                                 
                             </li>
                         
-                            <li class="index-item property inherited inherited">
+                            <li class="index-item property inherited">
                                 <a href="#property_width">width</a>
 
                                 
@@ -1257,7 +1382,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l810"><code>source\scrawlPath.js:810</code></a>
+        <a href="../files/source_scrawlPath.js.html#l849"><code>source\scrawlPath.js:849</code></a>
         
         </p>
 
@@ -1269,7 +1394,7 @@
 
     <div class="description">
         <p>Display helper function</p>
-<p>Prepare mark sprites for stamping onto Path</p>
+<p>Prepare mark entitys for stamping onto Path</p>
 
     </div>
 
@@ -1304,7 +1429,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -1364,7 +1489,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2570"><code>source\scrawlCore.js:2570</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2351"><code>source\scrawlCore.js:2351</code></a>
         
         </p>
 
@@ -1418,7 +1543,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2470"><code>source\scrawlCore.js:2470</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2173"><code>source\scrawlCore.js:2173</code></a>
         
         </p>
 
@@ -1472,7 +1597,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2434"><code>source\scrawlCore.js:2434</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2137"><code>source\scrawlCore.js:2137</code></a>
         
         </p>
 
@@ -1526,7 +1651,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2505"><code>source\scrawlCore.js:2505</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2236"><code>source\scrawlCore.js:2236</code></a>
         
         </p>
 
@@ -1599,7 +1724,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1232"><code>source\scrawlPath.js:1232</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1304"><code>source\scrawlPath.js:1304</code></a>
         
         </p>
 
@@ -1611,7 +1736,7 @@
 
     <div class="description">
         <p>Collision detection helper function</p>
-<p>Parses the collisionPoints array to generate coordinate Vectors representing the sprite&#39;s collision points</p>
+<p>Parses the collisionPoints array to generate coordinate Vectors representing the entity&#39;s collision points</p>
 
     </div>
 
@@ -1700,7 +1825,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1072"><code>source\scrawlPath.js:1072</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1123"><code>source\scrawlPath.js:1123</code></a>
         
         </p>
 
@@ -1798,7 +1923,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2610"><code>source\scrawlCore.js:2610</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2405"><code>source\scrawlCore.js:2405</code></a>
         
         </p>
 
@@ -1968,11 +2093,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_callMethod">Sprite</a>:
+                <a href="../classes/Entity.html#method_callMethod">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5543"><code>source\scrawlCore.js:5543</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5972"><code>source\scrawlCore.js:5972</code></a>
         
         </p>
 
@@ -1983,7 +2108,7 @@
     </div>
 
     <div class="description">
-        <p>Stamp helper function - direct sprite to the required drawing method function</p>
+        <p>Stamp helper function - direct entity to the required drawing method function</p>
 
     </div>
 
@@ -2002,7 +2127,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -2035,7 +2160,7 @@
                     
 
                     <div class="param-description">
-                        <p>Permitted method attribute String; by default, will use sprite&#39;s own method setting</p>
+                        <p>Permitted method attribute String; by default, will use entity&#39;s own method setting</p>
 
                     </div>
 
@@ -2102,15 +2227,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_checkHit">
-                Sprite
+            <a href="../classes/Entity.html#method_checkHit">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1191"><code>source\scrawlPath.js:1191</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1253"><code>source\scrawlPath.js:1253</code></a>
         
         </p>
 
@@ -2121,7 +2246,7 @@
     </div>
 
     <div class="description">
-        <p>Check a set of coordinates to see if any of them fall within this sprite&#39;s path - uses JavaScript&#39;s <em>isPointInPath</em> function</p>
+        <p>Check a set of coordinates to see if any of them fall within this entity&#39;s path - uses JavaScript&#39;s <em>isPointInPath</em> function</p>
 <p>Argument object contains the following attributes:</p>
 <ul>
 <li><strong>tests</strong> - an array of Vector coordinates to be checked; alternatively can be a single Vector</li>
@@ -2165,7 +2290,7 @@
             <div class="returns-description">
                 
                     
-                    <p>The first coordinate to fall within the sprite&#39;s path; false if none fall within the path</p>
+                    <p>The first coordinate to fall within the entity&#39;s path; false if none fall within the path</p>
 
                 
             </div>
@@ -2224,15 +2349,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_clear">
-                Sprite
+            <a href="../classes/Entity.html#method_clear">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l867"><code>source\scrawlPath.js:867</code></a>
+        <a href="../files/source_scrawlPath.js.html#l905"><code>source\scrawlPath.js:905</code></a>
         
         </p>
 
@@ -2278,7 +2403,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -2356,11 +2481,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_clearShadow">Sprite</a>:
+                <a href="../classes/Entity.html#method_clearShadow">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5744"><code>source\scrawlCore.js:5744</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6273"><code>source\scrawlCore.js:6273</code></a>
         
         </p>
 
@@ -2406,7 +2531,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -2483,15 +2608,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_clearWithBackground">
-                Sprite
+            <a href="../classes/Entity.html#method_clearWithBackground">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l884"><code>source\scrawlPath.js:884</code></a>
+        <a href="../files/source_scrawlPath.js.html#l922"><code>source\scrawlPath.js:922</code></a>
         
         </p>
 
@@ -2537,7 +2662,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -2614,15 +2739,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_clip">
-                Sprite
+            <a href="../classes/Entity.html#method_clip">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l851"><code>source\scrawlPath.js:851</code></a>
+        <a href="../files/source_scrawlPath.js.html#l889"><code>source\scrawlPath.js:889</code></a>
         
         </p>
 
@@ -2668,7 +2793,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -2745,7 +2870,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5420"><code>source\scrawlCore.js:5420</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5829"><code>source\scrawlCore.js:5829</code></a>
         
         </p>
 
@@ -2804,8 +2929,8 @@
 </div>
 
                 
-                    <div id="method_collisionsSpriteConstructor" class="method item private inherited">
-    <h3 class="name"><code>collisionsSpriteConstructor</code></h3>
+                    <div id="method_collisionsEntityConstructor" class="method item private inherited">
+    <h3 class="name"><code>collisionsEntityConstructor</code></h3>
 
     
         <span class="paren">()</span>
@@ -2831,11 +2956,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_collisionsSpriteConstructor">Sprite</a>:
+                <a href="../classes/Entity.html#method_collisionsEntityConstructor">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5318"><code>source\scrawlCore.js:5318</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5715"><code>source\scrawlCore.js:5715</code></a>
         
         </p>
 
@@ -2846,7 +2971,7 @@
     </div>
 
     <div class="description">
-        <p>Sprite constructor hook function - modified by collisions module</p>
+        <p>Entity constructor hook function - modified by collisions module</p>
 
     </div>
 
@@ -2858,8 +2983,8 @@
 </div>
 
                 
-                    <div id="method_collisionsSpriteRegisterInLibrary" class="method item private inherited">
-    <h3 class="name"><code>collisionsSpriteRegisterInLibrary</code></h3>
+                    <div id="method_collisionsEntityRegisterInLibrary" class="method item private inherited">
+    <h3 class="name"><code>collisionsEntityRegisterInLibrary</code></h3>
 
     
         <span class="paren">()</span>
@@ -2885,11 +3010,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_collisionsSpriteRegisterInLibrary">Sprite</a>:
+                <a href="../classes/Entity.html#method_collisionsEntityRegisterInLibrary">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5338"><code>source\scrawlCore.js:5338</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5735"><code>source\scrawlCore.js:5735</code></a>
         
         </p>
 
@@ -2900,7 +3025,7 @@
     </div>
 
     <div class="description">
-        <p>Sprite.registerInLibrary hook function - modified by collisions module</p>
+        <p>Entity.registerInLibrary hook function - modified by collisions module</p>
 
     </div>
 
@@ -2912,8 +3037,8 @@
 </div>
 
                 
-                    <div id="method_collisionsSpriteSet" class="method item private inherited">
-    <h3 class="name"><code>collisionsSpriteSet</code></h3>
+                    <div id="method_collisionsEntitySet" class="method item private inherited">
+    <h3 class="name"><code>collisionsEntitySet</code></h3>
 
     
         <span class="paren">()</span>
@@ -2939,11 +3064,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_collisionsSpriteSet">Sprite</a>:
+                <a href="../classes/Entity.html#method_collisionsEntitySet">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5390"><code>source\scrawlCore.js:5390</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5787"><code>source\scrawlCore.js:5787</code></a>
         
         </p>
 
@@ -2954,12 +3079,318 @@
     </div>
 
     <div class="description">
-        <p>Sprite.set hook function - modified by collisions module</p>
+        <p>Entity.set hook function - modified by collisions module</p>
 
     </div>
 
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_collisionsEntitySetDelta" class="method item private inherited">
+    <h3 class="name"><code>collisionsEntitySetDelta</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Entity.html#method_collisionsEntitySetDelta">Entity</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5823"><code>source\scrawlCore.js:5823</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.setDelta hook function - modified by collisions module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_convertX" class="method item private inherited">
+    <h3 class="name"><code>convertX</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Entity.html#method_convertX">Entity</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l6065"><code>source\scrawlCore.js:6065</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - convert string start.x values to numerical values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">x</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinate String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>reference cell name String; or alternatively DOM canvas object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number - x value</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_convertY" class="method item private inherited">
+    <h3 class="name"><code>convertY</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>y</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Entity.html#method_convertY">Entity</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l6100"><code>source\scrawlCore.js:6100</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - convert string start.y values to numerical values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinate String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>reference cell name String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number - y value</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -2997,7 +3428,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2398"><code>source\scrawlCore.js:2398</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2101"><code>source\scrawlCore.js:2101</code></a>
         
         </p>
 
@@ -3069,7 +3500,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2717"><code>source\scrawlCore.js:2717</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2521"><code>source\scrawlCore.js:2521</code></a>
         
         </p>
 
@@ -3081,7 +3512,6 @@
 
     <div class="description">
         <p>Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions</p>
-<p>Takes into account lock flag settings</p>
 
     </div>
 
@@ -3194,15 +3624,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_draw">
-                Sprite
+            <a href="../classes/Entity.html#method_draw">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l928"><code>source\scrawlPath.js:928</code></a>
+        <a href="../files/source_scrawlPath.js.html#l971"><code>source\scrawlPath.js:971</code></a>
         
         </p>
 
@@ -3248,7 +3678,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -3325,15 +3755,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_drawFill">
-                Sprite
+            <a href="../classes/Entity.html#method_drawFill">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l943"><code>source\scrawlPath.js:943</code></a>
+        <a href="../files/source_scrawlPath.js.html#l986"><code>source\scrawlPath.js:986</code></a>
         
         </p>
 
@@ -3379,7 +3809,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -3408,8 +3838,8 @@
 </div>
 
                 
-                    <div id="method_dropSprite" class="method item inherited">
-    <h3 class="name"><code>dropSprite</code></h3>
+                    <div id="method_dropEntity" class="method item inherited">
+    <h3 class="name"><code>dropEntity</code></h3>
 
     
         <div class="args">
@@ -3449,11 +3879,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_dropSprite">Sprite</a>:
+                <a href="../classes/Entity.html#method_dropEntity">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5800"><code>source\scrawlCore.js:5800</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6328"><code>source\scrawlCore.js:6328</code></a>
         
         </p>
 
@@ -3464,7 +3894,7 @@
     </div>
 
     <div class="description">
-        <p>Revert pickupSprite() actions, ensuring sprite is left where the user drops it</p>
+        <p>Revert pickupEntity() actions, ensuring entity is left where the user drops it</p>
 
     </div>
 
@@ -3561,15 +3991,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_fill">
-                Sprite
+            <a href="../classes/Entity.html#method_fill">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l911"><code>source\scrawlPath.js:911</code></a>
+        <a href="../files/source_scrawlPath.js.html#l954"><code>source\scrawlPath.js:954</code></a>
         
         </p>
 
@@ -3615,7 +4045,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -3692,15 +4122,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_fillDraw">
-                Sprite
+            <a href="../classes/Entity.html#method_fillDraw">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l962"><code>source\scrawlPath.js:962</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1005"><code>source\scrawlPath.js:1005</code></a>
         
         </p>
 
@@ -3746,7 +4176,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -3769,6 +4199,60 @@
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_filtersEntityInit" class="method item private inherited">
+    <h3 class="name"><code>filtersEntityInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Entity.html#method_filtersEntityInit">Entity</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5709"><code>source\scrawlCore.js:5709</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity constructor hook function - modified by filters module</p>
+
+    </div>
+
+    
+
     
 
     
@@ -3823,15 +4307,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_floatOver">
-                Sprite
+            <a href="../classes/Entity.html#method_floatOver">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l999"><code>source\scrawlPath.js:999</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1042"><code>source\scrawlPath.js:1042</code></a>
         
         </p>
 
@@ -3877,7 +4361,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -3953,11 +4437,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_forceStamp">Sprite</a>:
+                <a href="../classes/Entity.html#method_forceStamp">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5459"><code>source\scrawlCore.js:5459</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5878"><code>source\scrawlCore.js:5878</code></a>
         
         </p>
 
@@ -3968,19 +4452,19 @@
     </div>
 
     <div class="description">
-        <p><p>Stamp function - instruct sprite to draw itself on a Cell&#39;s &lt;canvas&gt; element, regardless of the setting of its visibility attribute</p></p>
+        <p><p>Stamp function - instruct entity to draw itself on a Cell&#39;s &lt;canvas&gt; element, regardless of the setting of its visibility attribute</p></p>
 <p><p>Permitted methods include:</p></p>
 <ul>
-<li>&#39;draw&#39; - stroke the sprite&#39;s path with the sprite&#39;s strokeStyle color, pattern or gradient</li>
-<li>&#39;fill&#39; - fill the sprite&#39;s path with the sprite&#39;s fillStyle color, pattern or gradient</li>
-<li>&#39;drawFill&#39; - stroke, and then fill, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
-<li>&#39;fillDraw&#39; - fill, and then stroke, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
-<li>&#39;floatOver&#39; - stroke, and then fill, the sprite&#39;s path; shadow offset is added to both actions</li>
-<li>&#39;sinkInto&#39; - fill, and then stroke, the sprite&#39;s path; shadow offset is added to both actions</li>
-<li>&#39;clear&#39; - fill the sprite&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
-<li>&#39;clearWithBackground&#39; - fill the sprite&#39;s path with the Cell&#39;s current backgroundColor</li>
-<li>&#39;clip&#39; - clip the drawing zone to the sprite&#39;s path (not tested)</li>
-<li>&#39;none&#39; - perform all necessary updates, but do not draw the sprite onto the canvas</li>
+<li>&#39;draw&#39; - stroke the entity&#39;s path with the entity&#39;s strokeStyle color, pattern or gradient</li>
+<li>&#39;fill&#39; - fill the entity&#39;s path with the entity&#39;s fillStyle color, pattern or gradient</li>
+<li>&#39;drawFill&#39; - stroke, and then fill, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
+<li>&#39;fillDraw&#39; - fill, and then stroke, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
+<li>&#39;floatOver&#39; - stroke, and then fill, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;sinkInto&#39; - fill, and then stroke, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;clear&#39; - fill the entity&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
+<li>&#39;clearWithBackground&#39; - fill the entity&#39;s path with the Cell&#39;s current backgroundColor</li>
+<li>&#39;clip&#39; - clip the drawing zone to the entity&#39;s path (not tested)</li>
+<li>&#39;none&#39; - perform all necessary updates, but do not draw the entity onto the canvas</li>
 </ul>
 
     </div>
@@ -4001,7 +4485,7 @@
                     
 
                     <div class="param-description">
-                        <p>Permitted method attribute String; by default, will use sprite&#39;s own method setting</p>
+                        <p>Permitted method attribute String; by default, will use entity&#39;s own method setting</p>
 
                     </div>
 
@@ -4018,7 +4502,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -4093,7 +4577,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5344"><code>source\scrawlCore.js:5344</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5741"><code>source\scrawlCore.js:5741</code></a>
         
         </p>
 
@@ -4105,7 +4589,7 @@
 
     <div class="description">
         <p>Augments Position.get()</p>
-<p>Allows users to retrieve a sprite&#39;s Context object&#39;s values via the sprite</p>
+<p>Allows users to retrieve a entity&#39;s Context object&#39;s values via the entity</p>
 
     </div>
 
@@ -4188,7 +4672,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2594"><code>source\scrawlCore.js:2594</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2388"><code>source\scrawlCore.js:2388</code></a>
         
         </p>
 
@@ -4216,7 +4700,7 @@
             <div class="returns-description">
                 
                     
-                    <p>A Vector of calculated offset values to help determine where sprite/cell/element drawing should start</p>
+                    <p>A Vector of calculated offset values to help determine where entity/cell/element drawing should start</p>
 
                 
             </div>
@@ -4274,7 +4758,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4802"><code>source\scrawlCore.js:4802</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5120"><code>source\scrawlCore.js:5120</code></a>
         
         </p>
 
@@ -4381,7 +4865,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4783"><code>source\scrawlCore.js:4783</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5101"><code>source\scrawlCore.js:5101</code></a>
         
         </p>
 
@@ -4441,6 +4925,76 @@
 </div>
 
                 
+                    <div id="method_getEntityCell" class="method item private inherited">
+    <h3 class="name"><code>getEntityCell</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Entity.html#method_getEntityCell">Entity</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5869"><code>source\scrawlCore.js:5869</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Helper function - get a entity&#39;s cell onbject</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Cell object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_getFullLinkList" class="method item">
     <h3 class="name"><code>getFullLinkList</code></h3>
 
@@ -4477,7 +5031,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1044"><code>source\scrawlPath.js:1044</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1091"><code>source\scrawlPath.js:1091</code></a>
         
         </p>
 
@@ -4547,7 +5101,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1030"><code>source\scrawlPath.js:1030</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1073"><code>source\scrawlPath.js:1073</code></a>
         
         </p>
 
@@ -4622,11 +5176,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_getGroup">Sprite</a>:
+                <a href="../classes/Entity.html#method_getGroup">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5443"><code>source\scrawlCore.js:5443</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5853"><code>source\scrawlCore.js:5853</code></a>
         
         </p>
 
@@ -4637,7 +5191,7 @@
     </div>
 
     <div class="description">
-        <p>Constructor helper function - discover this sprite&#39;s default group affiliation</p>
+        <p>Constructor helper function - discover this entity&#39;s default group affiliation</p>
 
     </div>
 
@@ -4719,7 +5273,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2659"><code>source\scrawlCore.js:2659</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2455"><code>source\scrawlCore.js:2455</code></a>
         
         </p>
 
@@ -4743,7 +5297,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Final offset values (as a Vector) to determine where sprite, cell or element drawing should start</p>
+                    <p>Final offset values (as a Vector) to determine where entity, cell or element drawing should start</p>
 
                 
             </div>
@@ -4800,7 +5354,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1058"><code>source\scrawlPath.js:1058</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1109"><code>source\scrawlPath.js:1109</code></a>
         
         </p>
 
@@ -4925,7 +5479,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1105"><code>source\scrawlPath.js:1105</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1162"><code>source\scrawlPath.js:1162</code></a>
         
         </p>
 
@@ -4936,7 +5490,7 @@
     </div>
 
     <div class="description">
-        <p>Calculate coordinates of point at given distance along the Shape sprite&#39;s path</p>
+        <p>Calculate coordinates of point at given distance along the Shape entity&#39;s path</p>
 
     </div>
 
@@ -5007,7 +5561,7 @@
                     
 
                     <div class="param-description">
-                        <p>Local flag - if true, return coordinate Vector relative to Sprite start parameter; otherwise return Cell coordinate Vector. Default: false</p>
+                        <p>Local flag - if true, return coordinate Vector relative to Entity start parameter; otherwise return Cell coordinate Vector. Default: false</p>
 
                     </div>
 
@@ -5074,7 +5628,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l764"><code>source\scrawlPath.js:764</code></a>
+        <a href="../files/source_scrawlPath.js.html#l799"><code>source\scrawlPath.js:799</code></a>
         
         </p>
 
@@ -5098,7 +5652,7 @@
             <div class="returns-description">
                 
                     
-                    <p>A Vector of calculated offset values to help determine where sprite drawing should start</p>
+                    <p>A Vector of calculated offset values to help determine where entity drawing should start</p>
 
                 
             </div>
@@ -5157,15 +5711,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_none">
-                Sprite
+            <a href="../classes/Entity.html#method_none">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1017"><code>source\scrawlPath.js:1017</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1060"><code>source\scrawlPath.js:1060</code></a>
         
         </p>
 
@@ -5176,7 +5730,7 @@
     </div>
 
     <div class="description">
-        <p>Stamp helper function - perform a &#39;none&#39; method draw. This involves setting the &lt;canvas&gt; element&#39;s context engine&#39;s values with this sprite&#39;s context values and defining the sprites path, on the canvas, but not drawing (fill stroke) the sprite.</p>
+        <p>Stamp helper function - perform a &#39;none&#39; method draw. This involves setting the &lt;canvas&gt; element&#39;s context engine&#39;s values with this entity&#39;s context values and defining the entitys path, on the canvas, but not drawing (fill stroke) the entity.</p>
 
     </div>
 
@@ -5211,7 +5765,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -5271,7 +5825,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2440"><code>source\scrawlCore.js:2440</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2143"><code>source\scrawlCore.js:2143</code></a>
         
         </p>
 
@@ -5325,7 +5879,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2537"><code>source\scrawlCore.js:2537</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2317"><code>source\scrawlCore.js:2317</code></a>
         
         </p>
 
@@ -5375,11 +5929,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_pathStamp">Sprite</a>:
+                <a href="../classes/Entity.html#method_pathStamp">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5537"><code>source\scrawlCore.js:5537</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5960"><code>source\scrawlCore.js:5960</code></a>
         
         </p>
 
@@ -5390,7 +5944,7 @@
     </div>
 
     <div class="description">
-        <p>Sprite.stamp hook function - modified by path module</p>
+        <p>Entity.stamp hook function - modified by path module</p>
 
     </div>
 
@@ -5402,8 +5956,8 @@
 </div>
 
                 
-                    <div id="method_pickupSprite" class="method item inherited">
-    <h3 class="name"><code>pickupSprite</code></h3>
+                    <div id="method_pickupEntity" class="method item inherited">
+    <h3 class="name"><code>pickupEntity</code></h3>
 
     
         <div class="args">
@@ -5443,11 +5997,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_pickupSprite">Sprite</a>:
+                <a href="../classes/Entity.html#method_pickupEntity">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5776"><code>source\scrawlCore.js:5776</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6307"><code>source\scrawlCore.js:6307</code></a>
         
         </p>
 
@@ -5458,7 +6012,7 @@
     </div>
 
     <div class="description">
-        <p>Set sprite&#39;s pivot to &#39;mouse&#39;; set handles to supplied Vector value; set order to +9999</p>
+        <p>Set entity&#39;s pivot to &#39;mouse&#39;; set handles to supplied Vector value; set order to +9999</p>
 
     </div>
 
@@ -5562,7 +6116,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l743"><code>source\scrawlPath.js:743</code></a>
+        <a href="../files/source_scrawlPath.js.html#l778"><code>source\scrawlPath.js:778</code></a>
         
         </p>
 
@@ -5573,7 +6127,7 @@
     </div>
 
     <div class="description">
-        <p>Helper function - define the sprite&#39;s path on the &lt;canvas&gt; element&#39;s context engine</p>
+        <p>Helper function - define the entity&#39;s path on the &lt;canvas&gt; element&#39;s context engine</p>
 
     </div>
 
@@ -5608,7 +6162,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -5670,11 +6224,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_prepareStamp">Sprite</a>:
+                <a href="../classes/Entity.html#method_prepareStamp">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5487"><code>source\scrawlCore.js:5487</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5906"><code>source\scrawlCore.js:5906</code></a>
         
         </p>
 
@@ -5742,11 +6296,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_registerInLibrary">Sprite</a>:
+                <a href="../classes/Entity.html#method_registerInLibrary">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5324"><code>source\scrawlCore.js:5324</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5721"><code>source\scrawlCore.js:5721</code></a>
         
         </p>
 
@@ -5757,7 +6311,7 @@
     </div>
 
     <div class="description">
-        <p>Constructor helper function - register sprite object in the scrawl library</p>
+        <p>Constructor helper function - register entity object in the scrawl library</p>
 
     </div>
 
@@ -5816,7 +6370,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2220"><code>source\scrawlCore.js:2220</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1922"><code>source\scrawlCore.js:1922</code></a>
         
         </p>
 
@@ -5900,11 +6454,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_restoreShadow">Sprite</a>:
+                <a href="../classes/Entity.html#method_restoreShadow">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5760"><code>source\scrawlCore.js:5760</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6290"><code>source\scrawlCore.js:6290</code></a>
         
         </p>
 
@@ -5950,7 +6504,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -5992,6 +6546,12 @@
                     
                 </li>
             
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
             </ul><span class="paren">)</span>
         </div>
     
@@ -6022,11 +6582,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_rotateCell">Sprite</a>:
+                <a href="../classes/Entity.html#method_rotateCell">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5588"><code>source\scrawlCore.js:5588</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6036"><code>source\scrawlCore.js:6036</code></a>
         
         </p>
 
@@ -6037,7 +6597,7 @@
     </div>
 
     <div class="description">
-        <p>Stamp helper function - rotate and position canvas ready for drawing sprite</p>
+        <p>Stamp helper function - rotate and position canvas ready for drawing entity</p>
 
     </div>
 
@@ -6057,6 +6617,22 @@
 
                     <div class="param-description">
                         <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Cell name</p>
 
                     </div>
 
@@ -6133,7 +6709,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5364"><code>source\scrawlCore.js:5364</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5761"><code>source\scrawlCore.js:5761</code></a>
         
         </p>
 
@@ -6147,8 +6723,8 @@
         <p><p>Augments Position.set()</p></p>
 <p><p>Allows users to:</p></p>
 <ul>
-<li>set a sprite&#39;s Context object&#39;s values via the sprite</li>
-<li>shift a sprite between groups</li>
+<li>set a entity&#39;s Context object&#39;s values via the entity</li>
+<li>shift a entity between groups</li>
 </ul>
 
     </div>
@@ -6245,7 +6821,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5396"><code>source\scrawlCore.js:5396</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5793"><code>source\scrawlCore.js:5793</code></a>
         
         </p>
 
@@ -6257,7 +6833,423 @@
 
     <div class="description">
         <p>Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function</p>
-<p>Allows users to amend a sprite&#39;s Context object&#39;s values via the sprite, in addition to its own attribute values</p>
+<p>Allows users to amend a entity&#39;s Context object&#39;s values via the entity, in addition to its own attribute values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaHandle" class="method item inherited">
+    <h3 class="name"><code>setDeltaHandle</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setDeltaHandle">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2286"><code>source\scrawlCore.js:2286</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaScale" class="method item inherited">
+    <h3 class="name"><code>setDeltaScale</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setDeltaScale">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2305"><code>source\scrawlCore.js:2305</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds the value of each attribute supplied in the argument to existing values. This function accepts scale</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaStart" class="method item inherited">
+    <h3 class="name"><code>setDeltaStart</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setDeltaStart">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2268"><code>source\scrawlCore.js:2268</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds the value of each attribute supplied in the argument to existing values; This function accepts start, startX, startY</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setHandle" class="method item inherited">
+    <h3 class="name"><code>setHandle</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setHandle">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2218"><code>source\scrawlCore.js:2218</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments Base.setHandle(), to allow users to set the handle attributes using handle, handleX, handleY</p>
 
     </div>
 
@@ -6352,7 +7344,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2673"><code>source\scrawlCore.js:2673</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2472"><code>source\scrawlCore.js:2472</code></a>
         
         </p>
 
@@ -6363,7 +7355,7 @@
     </div>
 
     <div class="description">
-        <p>Stamp helper function - set this sprite, cell or element start values to its pivot sprite/point start value, or to the current mouse coordinates</p>
+        <p>Stamp helper function - set this entity, cell or element start values to its pivot entity/point start value, or to the current mouse coordinates</p>
 <p>Takes into account lock flag settings</p>
 
     </div>
@@ -6385,6 +7377,178 @@
 
                     <div class="param-description">
                         <p>CELLNAME String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setStampUsingStacksPivot" class="method item inherited">
+    <h3 class="name"><code>setStampUsingStacksPivot</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setStampUsingStacksPivot">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2547"><code>source\scrawlCore.js:2547</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper hook function - amended by stacks module</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>this</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setStart" class="method item inherited">
+    <h3 class="name"><code>setStart</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setStart">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2200"><code>source\scrawlCore.js:2200</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments Base.setStart(), to allow users to set the start attributes using start, startX, startY</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
 
                     </div>
 
@@ -6461,15 +7625,15 @@
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#method_sinkInto">
-                Sprite
+            <a href="../classes/Entity.html#method_sinkInto">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l981"><code>source\scrawlPath.js:981</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1024"><code>source\scrawlPath.js:1024</code></a>
         
         </p>
 
@@ -6515,7 +7679,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -6591,11 +7755,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#method_stamp">Sprite</a>:
+                <a href="../classes/Entity.html#method_stamp">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5501"><code>source\scrawlCore.js:5501</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5920"><code>source\scrawlCore.js:5920</code></a>
         
         </p>
 
@@ -6606,19 +7770,19 @@
     </div>
 
     <div class="description">
-        <p><p>Stamp function - instruct sprite to draw itself on a Cell&#39;s &lt;canvas&gt; element, if its visibility attribute is true</p></p>
+        <p><p>Stamp function - instruct entity to draw itself on a Cell&#39;s &lt;canvas&gt; element, if its visibility attribute is true</p></p>
 <p><p>Permitted methods include:</p></p>
 <ul>
-<li>&#39;draw&#39; - stroke the sprite&#39;s path with the sprite&#39;s strokeStyle color, pattern or gradient</li>
-<li>&#39;fill&#39; - fill the sprite&#39;s path with the sprite&#39;s fillStyle color, pattern or gradient</li>
-<li>&#39;drawFill&#39; - stroke, and then fill, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
-<li>&#39;fillDraw&#39; - fill, and then stroke, the sprite&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
-<li>&#39;floatOver&#39; - stroke, and then fill, the sprite&#39;s path; shadow offset is added to both actions</li>
-<li>&#39;sinkInto&#39; - fill, and then stroke, the sprite&#39;s path; shadow offset is added to both actions</li>
-<li>&#39;clear&#39; - fill the sprite&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
-<li>&#39;clearWithBackground&#39; - fill the sprite&#39;s path with the Cell&#39;s current backgroundColor</li>
-<li>&#39;clip&#39; - clip the drawing zone to the sprite&#39;s path (not tested)</li>
-<li>&#39;none&#39; - perform all necessary updates, but do not draw the sprite onto the canvas</li>
+<li>&#39;draw&#39; - stroke the entity&#39;s path with the entity&#39;s strokeStyle color, pattern or gradient</li>
+<li>&#39;fill&#39; - fill the entity&#39;s path with the entity&#39;s fillStyle color, pattern or gradient</li>
+<li>&#39;drawFill&#39; - stroke, and then fill, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
+<li>&#39;fillDraw&#39; - fill, and then stroke, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
+<li>&#39;floatOver&#39; - stroke, and then fill, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;sinkInto&#39; - fill, and then stroke, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;clear&#39; - fill the entity&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
+<li>&#39;clearWithBackground&#39; - fill the entity&#39;s path with the Cell&#39;s current backgroundColor</li>
+<li>&#39;clip&#39; - clip the drawing zone to the entity&#39;s path (not tested)</li>
+<li>&#39;none&#39; - perform all necessary updates, but do not draw the entity onto the canvas</li>
 </ul>
 
     </div>
@@ -6639,7 +7803,7 @@
                     
 
                     <div class="param-description">
-                        <p>Permitted method attribute String; by default, will use sprite&#39;s own method setting</p>
+                        <p>Permitted method attribute String; by default, will use entity&#39;s own method setting</p>
 
                     </div>
 
@@ -6656,7 +7820,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -6685,6 +7849,60 @@
 </div>
 
                 
+                    <div id="method_stampFilter" class="method item private inherited">
+    <h3 class="name"><code>stampFilter</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Entity.html#method_stampFilter">Entity</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l5966"><code>source\scrawlCore.js:5966</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.stamp hook function - modified by filters module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_stampMark" class="method item private">
     <h3 class="name"><code>stampMark</code></h3>
 
@@ -6694,7 +7912,7 @@
             
                 <li class="arg">
                     
-                        <code>sprite</code>
+                        <code>entity</code>
                     
                 </li>
             
@@ -6753,7 +7971,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l773"><code>source\scrawlPath.js:773</code></a>
+        <a href="../files/source_scrawlPath.js.html#l808"><code>source\scrawlPath.js:808</code></a>
         
         </p>
 
@@ -6765,7 +7983,7 @@
 
     <div class="description">
         <p>Display helper function</p>
-<p>Stamp mark sprites onto Path</p>
+<p>Stamp mark entitys onto Path</p>
 
     </div>
 
@@ -6777,14 +7995,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">sprite</code>
-                        <span class="type"><a href="../classes/Sprite.html" class="crosslink">Sprite</a></span>
+                        <code class="param-name">entity</code>
+                        <span class="type"><a href="../classes/Entity.html" class="crosslink">Entity</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Sprite object to be stamped</p>
+                        <p>Entity object to be stamped</p>
 
                     </div>
 
@@ -6832,7 +8050,7 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this sprite&#39;s Group object</p>
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
 
                     </div>
 
@@ -6894,7 +8112,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2212"><code>source\scrawlCore.js:2212</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1914"><code>source\scrawlCore.js:1914</code></a>
         
         </p>
 
@@ -6960,7 +8178,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l657"><code>source\scrawlPath.js:657</code></a>
+        <a href="../files/source_scrawlPath.js.html#l692"><code>source\scrawlPath.js:692</code></a>
         
         </p>
 
@@ -7005,7 +8223,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2120"><code>source\scrawlCore.js:2120</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1808"><code>source\scrawlCore.js:1808</code></a>
         
         </p>
 
@@ -7047,11 +8265,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#property_context">Sprite</a>:
+                <a href="../classes/Entity.html#property_context">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5299"><code>source\scrawlCore.js:5299</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5690"><code>source\scrawlCore.js:5690</code></a>
         
         </p>
 
@@ -7061,7 +8279,7 @@
     </div>
 
     <div class="description">
-        <p>CTXNAME of this Sprite&#39;s Context object</p>
+        <p>CTXNAME of this Entity&#39;s Context object</p>
 
     </div>
 
@@ -7091,11 +8309,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#property_data">Sprite</a>:
+                <a href="../classes/Entity.html#property_data">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5271"><code>source\scrawlCore.js:5271</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5662"><code>source\scrawlCore.js:5662</code></a>
         
         </p>
 
@@ -7105,7 +8323,7 @@
     </div>
 
     <div class="description">
-        <p>Current SVGTiny data string for the sprite (only supported by Path and Shape sprites)</p>
+        <p>Current SVGTiny data string for the entity (only supported by Path and Shape entitys)</p>
 
     </div>
 
@@ -7139,7 +8357,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2382"><code>source\scrawlCore.js:2382</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2085"><code>source\scrawlCore.js:2085</code></a>
         
         </p>
 
@@ -7180,11 +8398,11 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#property_fastStamp">Sprite</a>:
+                <a href="../classes/Entity.html#property_fastStamp">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5292"><code>source\scrawlCore.js:5292</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5683"><code>source\scrawlCore.js:5683</code></a>
         
         </p>
 
@@ -7194,7 +8412,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Display cycle flag; if set to true, sprite will not change the &lt;canvas&gt; element&#39;s context engine&#39;s settings before drawing itself on the cell</p>
+        <p>Display cycle flag; if set to true, entity will not change the &lt;canvas&gt; element&#39;s context engine&#39;s settings before drawing itself on the cell</p>
 
     </div>
 
@@ -7228,7 +8446,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4557"><code>source\scrawlCore.js:4557</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4875"><code>source\scrawlCore.js:4875</code></a>
         
         </p>
 
@@ -7238,7 +8456,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p><p>Color, gradient or pattern used to fill a sprite. Can be:</p></p>
+        <p><p>Color, gradient or pattern used to fill a entity. Can be:</p></p>
 <ul>
 <li>Cascading Style Sheet format color String - &#39;#fff&#39;, &#39;#ffffff&#39;, &#39;rgb(255,255,255)&#39;, &#39;rgba(255,255,255,1)&#39;, &#39;white&#39;</li>
 <li>COLORNAME String</li>
@@ -7284,7 +8502,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l638"><code>source\scrawlPath.js:638</code></a>
+        <a href="../files/source_scrawlPath.js.html#l673"><code>source\scrawlPath.js:673</code></a>
         
         </p>
 
@@ -7329,7 +8547,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2319"><code>source\scrawlCore.js:2319</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2022"><code>source\scrawlCore.js:2022</code></a>
         
         </p>
 
@@ -7339,7 +8557,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Reflection flag; set to true to flip sprite, cell or element along the Y axis</p>
+        <p>Reflection flag; set to true to flip entity, cell or element along the Y axis</p>
 
     </div>
 
@@ -7373,7 +8591,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2326"><code>source\scrawlCore.js:2326</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2029"><code>source\scrawlCore.js:2029</code></a>
         
         </p>
 
@@ -7383,7 +8601,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Reflection flag; set to true to flip sprite, cell or element along the X axis</p>
+        <p>Reflection flag; set to true to flip entity, cell or element along the X axis</p>
 
     </div>
 
@@ -7417,7 +8635,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4706"><code>source\scrawlCore.js:4706</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5024"><code>source\scrawlCore.js:5024</code></a>
         
         </p>
 
@@ -7427,7 +8645,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Cascading Style Sheet font String, for Phrase sprites</p>
+        <p>Cascading Style Sheet font String, for Phrase entitys</p>
 
     </div>
 
@@ -7461,7 +8679,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4593"><code>source\scrawlCore.js:4593</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4911"><code>source\scrawlCore.js:4911</code></a>
         
         </p>
 
@@ -7471,7 +8689,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Sprite transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque</p>
+        <p>Entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque</p>
 
     </div>
 
@@ -7505,7 +8723,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4600"><code>source\scrawlCore.js:4600</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4918"><code>source\scrawlCore.js:4918</code></a>
         
         </p>
 
@@ -7515,7 +8733,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Compositing method for applying the sprite to an existing Cell (&lt;canvas&gt;) display. Permitted values include</p>
+        <p>Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include</p>
 <ul>
 <li>&#39;source-over&#39;</li>
 <li>&#39;source-atop&#39;</li>
@@ -7560,11 +8778,11 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#property_group">Sprite</a>:
+                <a href="../classes/Entity.html#property_group">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5307"><code>source\scrawlCore.js:5307</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5698"><code>source\scrawlCore.js:5698</code></a>
         
         </p>
 
@@ -7574,8 +8792,8 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>GROUPNAME String for this sprite&#39;s default group</p>
-<p><em>Note: a sprite can belong to more than one group by being added to other Group objects via the <strong>scrawl.addSpritesToGroups()</strong> and <strong>Group.addSpriteToGroup()</strong> functions</em></p>
+        <p>GROUPNAME String for this entity&#39;s default group</p>
+<p><em>Note: a entity can belong to more than one group by being added to other Group objects via the <strong>scrawl.addEntitysToGroups()</strong> and <strong>Group.addEntityToGroup()</strong> functions</em></p>
 
     </div>
 
@@ -7609,7 +8827,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2287"><code>source\scrawlCore.js:2287</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1991"><code>source\scrawlCore.js:1991</code></a>
         
         </p>
 
@@ -7629,6 +8847,50 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
 
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_height" class="property item inherited">
+    <h3 class="name"><code>height</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_height">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2064"><code>source\scrawlCore.js:2064</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity, cell or element height (in pixels)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -7660,7 +8922,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l648"><code>source\scrawlPath.js:648</code></a>
+        <a href="../files/source_scrawlPath.js.html#l683"><code>source\scrawlPath.js:683</code></a>
         
         </p>
 
@@ -7705,7 +8967,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4630"><code>source\scrawlCore.js:4630</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4948"><code>source\scrawlCore.js:4948</code></a>
         
         </p>
 
@@ -7754,7 +9016,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4654"><code>source\scrawlCore.js:4654</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4972"><code>source\scrawlCore.js:4972</code></a>
         
         </p>
 
@@ -7798,7 +9060,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4661"><code>source\scrawlCore.js:4661</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4979"><code>source\scrawlCore.js:4979</code></a>
         
         </p>
 
@@ -7808,7 +9070,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Line dash offset - distance along the sprite&#39;s outline at which to start the line dash. Changing this value can be used to create a &#39;marching ants effect</p>
+        <p>Line dash offset - distance along the entity&#39;s outline at which to start the line dash. Changing this value can be used to create a &#39;marching ants effect</p>
 
     </div>
 
@@ -7842,7 +9104,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4642"><code>source\scrawlCore.js:4642</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4960"><code>source\scrawlCore.js:4960</code></a>
         
         </p>
 
@@ -7891,7 +9153,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4623"><code>source\scrawlCore.js:4623</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4941"><code>source\scrawlCore.js:4941</code></a>
         
         </p>
 
@@ -7940,7 +9202,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l674"><code>source\scrawlPath.js:674</code></a>
+        <a href="../files/source_scrawlPath.js.html#l709"><code>source\scrawlPath.js:709</code></a>
         
         </p>
 
@@ -7950,7 +9212,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Array of length (Number) values for each Link object associated with this Path sprite</p>
+        <p>Array of length (Number) values for each Link object associated with this Path entity</p>
 
     </div>
 
@@ -7989,7 +9251,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l666"><code>source\scrawlPath.js:666</code></a>
+        <a href="../files/source_scrawlPath.js.html#l701"><code>source\scrawlPath.js:701</code></a>
         
         </p>
 
@@ -7999,7 +9261,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Array of LINKNAME Strings for Link objects associated with this Path sprite</p>
+        <p>Array of LINKNAME Strings for Link objects associated with this Path entity</p>
 
     </div>
 
@@ -8033,7 +9295,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2333"><code>source\scrawlCore.js:2333</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2036"><code>source\scrawlCore.js:2036</code></a>
         
         </p>
 
@@ -8077,7 +9339,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2340"><code>source\scrawlCore.js:2340</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2043"><code>source\scrawlCore.js:2043</code></a>
         
         </p>
 
@@ -8124,7 +9386,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l720"><code>source\scrawlPath.js:720</code></a>
+        <a href="../files/source_scrawlPath.js.html#l755"><code>source\scrawlPath.js:755</code></a>
         
         </p>
 
@@ -8134,7 +9396,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Path marker sprites - SPRITENAME String of sprite used as the fallback when markStart, markMid or markEnd attributes are not set</p>
+        <p>Path marker entitys - SPRITENAME String of entity used as the fallback when markStart, markMid or markEnd attributes are not set</p>
 
     </div>
 
@@ -8171,7 +9433,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l713"><code>source\scrawlPath.js:713</code></a>
+        <a href="../files/source_scrawlPath.js.html#l748"><code>source\scrawlPath.js:748</code></a>
         
         </p>
 
@@ -8181,7 +9443,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Path marker sprites - SPRITENAME String of sprite used at end of the Path</p>
+        <p>Path marker entitys - SPRITENAME String of entity used at end of the Path</p>
 
     </div>
 
@@ -8218,7 +9480,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l706"><code>source\scrawlPath.js:706</code></a>
+        <a href="../files/source_scrawlPath.js.html#l741"><code>source\scrawlPath.js:741</code></a>
         
         </p>
 
@@ -8228,7 +9490,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Path marker sprites - SPRITENAME String of sprite used at the line/curve joints along the Path</p>
+        <p>Path marker entitys - SPRITENAME String of entity used at the line/curve joints along the Path</p>
 
     </div>
 
@@ -8265,7 +9527,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l699"><code>source\scrawlPath.js:699</code></a>
+        <a href="../files/source_scrawlPath.js.html#l734"><code>source\scrawlPath.js:734</code></a>
         
         </p>
 
@@ -8275,7 +9537,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Path marker sprites - SPRITENAME String of sprite used at start of the Path</p>
+        <p>Path marker entitys - SPRITENAME String of entity used at start of the Path</p>
 
     </div>
 
@@ -8304,15 +9566,15 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     <div class="meta">
         
             <p>Inherited from
-            <a href="../classes/Sprite.html#property_method">
-                Sprite
+            <a href="../classes/Entity.html#property_method">
+                Entity
             </a>
             
             but overwritten in
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l727"><code>source\scrawlPath.js:727</code></a>
+        <a href="../files/source_scrawlPath.js.html#l762"><code>source\scrawlPath.js:762</code></a>
         
         </p>
 
@@ -8322,7 +9584,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Path sprite default method attribute is &#39;draw&#39;, not &#39;fill&#39;</p>
+        <p>Path entity default method attribute is &#39;draw&#39;, not &#39;fill&#39;</p>
 
     </div>
 
@@ -8356,7 +9618,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4668"><code>source\scrawlCore.js:4668</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4986"><code>source\scrawlCore.js:4986</code></a>
         
         </p>
 
@@ -8400,7 +9662,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2091"><code>source\scrawlCore.js:2091</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1779"><code>source\scrawlCore.js:1779</code></a>
         
         </p>
 
@@ -8438,11 +9700,11 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#property_order">Sprite</a>:
+                <a href="../classes/Entity.html#property_order">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5237"><code>source\scrawlCore.js:5237</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5628"><code>source\scrawlCore.js:5628</code></a>
         
         </p>
 
@@ -8452,7 +9714,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
     </div>
 
     <div class="description">
-        <p>Sprite order value - lower order sprites are drawn on &lt;canvas&gt; elements before higher order sprites</p>
+        <p>Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys</p>
 
     </div>
 
@@ -8486,7 +9748,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2368"><code>source\scrawlCore.js:2368</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2071"><code>source\scrawlCore.js:2071</code></a>
         
         </p>
 
@@ -8497,7 +9759,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
 
     <div class="description">
         <p>(Added by the path module)
-The SPRITENAME of a Shape sprite whose path is used to calculate this object&#39;s start point</p>
+The SPRITENAME of a Shape entity whose path is used to calculate this object&#39;s start point</p>
 
     </div>
 
@@ -8531,7 +9793,7 @@ The SPRITENAME of a Shape sprite whose path is used to calculate this object&#39
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2375"><code>source\scrawlCore.js:2375</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2078"><code>source\scrawlCore.js:2078</code></a>
         
         </p>
 
@@ -8576,7 +9838,7 @@ A value between 0 and 1 to represent the distance along a Shape object&#39;s pat
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2389"><code>source\scrawlCore.js:2389</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2092"><code>source\scrawlCore.js:2092</code></a>
         
         </p>
 
@@ -8624,7 +9886,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l690"><code>source\scrawlPath.js:690</code></a>
+        <a href="../files/source_scrawlPath.js.html#l725"><code>source\scrawlPath.js:725</code></a>
         
         </p>
 
@@ -8669,7 +9931,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2305"><code>source\scrawlCore.js:2305</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2008"><code>source\scrawlCore.js:2008</code></a>
         
         </p>
 
@@ -8679,7 +9941,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>The SPRITENAME or POINTNAME of a sprite or Point object to be used for setting this object&#39;s start point</p>
+        <p>The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object&#39;s start point</p>
 
     </div>
 
@@ -8718,7 +9980,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l682"><code>source\scrawlPath.js:682</code></a>
+        <a href="../files/source_scrawlPath.js.html#l717"><code>source\scrawlPath.js:717</code></a>
         
         </p>
 
@@ -8728,7 +9990,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Array of POINTNAME Strings for Point objects associated with this Path sprite</p>
+        <p>Array of POINTNAME Strings for Point objects associated with this Path entity</p>
 
     </div>
 
@@ -8765,7 +10027,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l734"><code>source\scrawlPath.js:734</code></a>
+        <a href="../files/source_scrawlPath.js.html#l769"><code>source\scrawlPath.js:769</code></a>
         
         </p>
 
@@ -8775,7 +10037,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure sprites will follow the path more accurately</p>
+        <p>Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure entitys will follow the path more accurately</p>
 
     </div>
 
@@ -8805,11 +10067,11 @@ A flag to determine whether the object will calculate its position along a Shape
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#property_radius">Sprite</a>:
+                <a href="../classes/Entity.html#property_radius">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5278"><code>source\scrawlCore.js:5278</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5669"><code>source\scrawlCore.js:5669</code></a>
         
         </p>
 
@@ -8819,7 +10081,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Sprite radius, in pixels - not supported by all sprite objects</p>
+        <p>Entity radius, in pixels - not supported by all entity objects</p>
 
     </div>
 
@@ -8853,7 +10115,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2347"><code>source\scrawlCore.js:2347</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2050"><code>source\scrawlCore.js:2050</code></a>
         
         </p>
 
@@ -8863,7 +10125,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Current rotation of the sprite, cell or element (in degrees)</p>
+        <p>Current rotation of the entity, cell or element (in degrees)</p>
 
     </div>
 
@@ -8897,7 +10159,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2312"><code>source\scrawlCore.js:2312</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2015"><code>source\scrawlCore.js:2015</code></a>
         
         </p>
 
@@ -8937,11 +10199,11 @@ A flag to determine whether the object will calculate its position along a Shape
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#property_scaleOutline">Sprite</a>:
+                <a href="../classes/Entity.html#property_scaleOutline">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5285"><code>source\scrawlCore.js:5285</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5676"><code>source\scrawlCore.js:5676</code></a>
         
         </p>
 
@@ -8985,7 +10247,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4689"><code>source\scrawlCore.js:4689</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5007"><code>source\scrawlCore.js:5007</code></a>
         
         </p>
 
@@ -8995,7 +10257,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Blur border for a sprite&#39;s shadow, in pixels</p>
+        <p>Blur border for a entity&#39;s shadow, in pixels</p>
 
     </div>
 
@@ -9029,7 +10291,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4696"><code>source\scrawlCore.js:4696</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5014"><code>source\scrawlCore.js:5014</code></a>
         
         </p>
 
@@ -9039,7 +10301,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p><p>Color, gradient or pattern used for sprite shadow effect. Can be:</p></p>
+        <p><p>Color, gradient or pattern used for entity shadow effect. Can be:</p></p>
 <ul>
 <li>Cascading Style Sheet format color String - &#39;#fff&#39;, &#39;#ffffff&#39;, &#39;rgb(255,255,255)&#39;, &#39;rgba(255,255,255,1)&#39;, &#39;white&#39;</li>
 <li>COLORNAME String</li>
@@ -9077,7 +10339,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4675"><code>source\scrawlCore.js:4675</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4993"><code>source\scrawlCore.js:4993</code></a>
         
         </p>
 
@@ -9087,7 +10349,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Horizontal offset of a sprite&#39;s shadow, in pixels</p>
+        <p>Horizontal offset of a entity&#39;s shadow, in pixels</p>
 
     </div>
 
@@ -9121,7 +10383,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4682"><code>source\scrawlCore.js:4682</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5000"><code>source\scrawlCore.js:5000</code></a>
         
         </p>
 
@@ -9131,7 +10393,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Vertical offset of a sprite&#39;s shadow, in pixels</p>
+        <p>Vertical offset of a entity&#39;s shadow, in pixels</p>
 
     </div>
 
@@ -9165,7 +10427,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2271"><code>source\scrawlCore.js:2271</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1976"><code>source\scrawlCore.js:1976</code></a>
         
         </p>
 
@@ -9212,7 +10474,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4580"><code>source\scrawlCore.js:4580</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4898"><code>source\scrawlCore.js:4898</code></a>
         
         </p>
 
@@ -9222,7 +10484,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p><p>Color, gradient or pattern used to outline a sprite. Can be:</p></p>
+        <p><p>Color, gradient or pattern used to outline a entity. Can be:</p></p>
 <ul>
 <li>Cascading Style Sheet format color String - &#39;#fff&#39;, &#39;#ffffff&#39;, &#39;rgb(255,255,255)&#39;, &#39;rgba(255,255,255,1)&#39;, &#39;white&#39;</li>
 <li>COLORNAME String</li>
@@ -9263,7 +10525,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4713"><code>source\scrawlCore.js:4713</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5031"><code>source\scrawlCore.js:5031</code></a>
         
         </p>
 
@@ -9273,7 +10535,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p><p>Text alignment for multi-line Phrase sprites. Permitted values include:</p></p>
+        <p><p>Text alignment for multi-line Phrase entitys. Permitted values include:</p></p>
 <ul>
 <li>&#39;start&#39;</li>
 <li>&#39;left&#39;</li>
@@ -9314,7 +10576,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4727"><code>source\scrawlCore.js:4727</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5045"><code>source\scrawlCore.js:5045</code></a>
         
         </p>
 
@@ -9324,7 +10586,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p><p>Text baseline value for single-line Phrase sprites set to follow a Path sprite path. Permitted values include:</p></p>
+        <p><p>Text baseline value for single-line Phrase entitys set to follow a Path entity path. Permitted values include:</p></p>
 <ul>
 <li>&#39;alphabetic&#39;</li>
 <li>&#39;top&#39;</li>
@@ -9366,7 +10628,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2134"><code>source\scrawlCore.js:2134</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1822"><code>source\scrawlCore.js:1822</code></a>
         
         </p>
 
@@ -9410,7 +10672,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2127"><code>source\scrawlCore.js:2127</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1815"><code>source\scrawlCore.js:1815</code></a>
         
         </p>
 
@@ -9459,7 +10721,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l629"><code>source\scrawlPath.js:629</code></a>
+        <a href="../files/source_scrawlPath.js.html#l664"><code>source\scrawlPath.js:664</code></a>
         
         </p>
 
@@ -9498,11 +10760,11 @@ A flag to determine whether the object will calculate its position along a Shape
         
             
                 <p>Inherited from
-                <a href="../classes/Sprite.html#property_visibility">Sprite</a>:
+                <a href="../classes/Entity.html#property_visibility">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5244"><code>source\scrawlCore.js:5244</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5635"><code>source\scrawlCore.js:5635</code></a>
         
         </p>
 
@@ -9512,7 +10774,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Visibility flag - sprites will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false</p>
+        <p>Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false</p>
 
     </div>
 
@@ -9540,16 +10802,13 @@ A flag to determine whether the object will calculate its position along a Shape
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/Position.html#property_width">
-                Position
-            </a>
             
-            but overwritten in
+                <p>Inherited from
+                <a href="../classes/Position.html#property_width">Position</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2354"><code>source\scrawlCore.js:2354</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2057"><code>source\scrawlCore.js:2057</code></a>
         
         </p>
 
@@ -9559,7 +10818,7 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p>Sprite, cell or element width (in pixels)</p>
+        <p>Entity, cell or element width (in pixels)</p>
 
     </div>
 
@@ -9593,7 +10852,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4570"><code>source\scrawlCore.js:4570</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4888"><code>source\scrawlCore.js:4888</code></a>
         
         </p>
 
@@ -9603,10 +10862,10 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p><p>Shape and Path sprite fill method. Can be:</p></p>
+        <p><p>Shape and Path entity fill method. Can be:</p></p>
 <ul>
-<li>&#39;nonzero&#39; - all areas enclosed by the sprite&#39;s path are flooded</li>
-<li>&#39;evenodd&#39; - only &#39;odd&#39; areas of the sprite&#39;s path are flooded</li>
+<li>&#39;nonzero&#39; - all areas enclosed by the entity&#39;s path are flooded</li>
+<li>&#39;evenodd&#39; - only &#39;odd&#39; areas of the entity&#39;s path are flooded</li>
 </ul>
 
     </div>
@@ -9643,7 +10902,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2101"><code>source\scrawlCore.js:2101</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1789"><code>source\scrawlCore.js:1789</code></a>
         
         </p>
 

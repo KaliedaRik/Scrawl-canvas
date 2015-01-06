@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -218,7 +252,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlImages.js.html#l256"><code>source\scrawlImages.js:256</code></a>
+            Defined in: <a href="../files/source_scrawlImages.js.html#l193"><code>source\scrawlImages.js:193</code></a>
         </div>
     
 
@@ -242,8 +276,10 @@
 <h2 id="purpose">Purpose</h2>
 <ul>
 <li>Defines a pattern</li>
-<li>Used with sprite.strokeStyle and sprite.fillStyle attributes</li>
+<li>Used with entity.strokeStyle and entity.fillStyle attributes</li>
 </ul>
+<p>Note that a pattern image will always start at the entity&#39;s rotation/reflection (start vector) position, extending in all directions. To move a entity over a &#39;static&#39; (cell-bound) pattern, more inventive solutions need to be found - for instance a combination of Picture entitys, dedicated cells and the &#39;source-in&#39; globalCompositeOperation attribute.</p>
+<p>Patterns are not restricted to images. A pattern can also be sourced from another cell (canvas element) or even a video element.</p>
 <h2 id="access">Access</h2>
 <ul>
 <li>scrawl.design.PATTERNNAME - for the Pattern design object</li>
@@ -296,7 +332,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l256"><code>source\scrawlImages.js:256</code></a>
+        <a href="../files/source_scrawlImages.js.html#l193"><code>source\scrawlImages.js:193</code></a>
         
         </p>
 
@@ -390,6 +426,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_getSourceType">getSourceType</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private">
                                 <a href="#method_makeDesign">makeDesign</a>
 
@@ -413,13 +456,6 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_set">set</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_setImage">setImage</a>
 
                                 
                                 
@@ -450,14 +486,14 @@
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property">
-                                <a href="#property_canvas">canvas</a>
+                                <a href="#property_autoUpdate">autoUpdate</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_cell">cell</a>
+                                <a href="#property_callback">callback</a>
 
                                 
                                 
@@ -465,13 +501,6 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_comment">comment</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_image">image</a>
 
                                 
                                 
@@ -514,6 +543,13 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_type">type</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_url">url</a>
 
                                 
                                 
@@ -585,7 +621,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2187"><code>source\scrawlCore.js:2187</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1875"><code>source\scrawlCore.js:1875</code></a>
         
         </p>
 
@@ -597,6 +633,7 @@
 
     <div class="description">
         <p>Clone a Scrawl.js object, optionally altering attribute values in the cloned object</p>
+<p>Note that any callback or fn attribute functions will be referenced by the clone, not copied to the clone; these can be overwritten with new anonymous functions by including them in the items argument object</p>
 <p>(This function is replaced by the path module)</p>
 
     </div>
@@ -648,13 +685,13 @@
             <div class="example-content">
                 <pre class="code prettyprint"><code>var box = scrawl.newBlock({
     width: 50,
-    height: 50,
+    height: 50
     });
 var newBox = box.clone({
-    height: 100,
+    height: 100
     });
 newBox.get(&#39;width&#39;);        //returns 50
-newBox.get(&#39;height&#39;);        //returns 100</code></pre>
+newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 
             </div>
         </div>
@@ -705,7 +742,7 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2142"><code>source\scrawlCore.js:2142</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1830"><code>source\scrawlCore.js:1830</code></a>
         
         </p>
 
@@ -768,9 +805,9 @@ newBox.get(&#39;height&#39;);        //returns 100</code></pre>
                 <pre class="code prettyprint"><code>var box = scrawl.newBlock({
     width: 50,
     });
-box.get(&#39;width&#39;);                //returns 50
-box.get(&#39;height&#39;);                //returns 0
-box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
+box.get(&#39;width&#39;);               //returns 50
+box.get(&#39;height&#39;);              //returns 0
+box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
             </div>
         </div>
@@ -816,7 +853,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l418"><code>source\scrawlImages.js:418</code></a>
+        <a href="../files/source_scrawlImages.js.html#l318"><code>source\scrawlImages.js:318</code></a>
         
         </p>
 
@@ -841,6 +878,77 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
                 
                     
                     <p>JavaScript pattern object, or String</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getSourceType" class="method item">
+    <h3 class="name"><code>getSourceType</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImages.js.html#l288"><code>source\scrawlImages.js:288</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Constructor/set helper</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>String - one from: &#39;image&#39;, &#39;cell&#39;, &#39;video&#39;; false on failure to identify source type</p>
 
                 
             </div>
@@ -891,7 +999,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l427"><code>source\scrawlImages.js:427</code></a>
+        <a href="../files/source_scrawlImages.js.html#l331"><code>source\scrawlImages.js:331</code></a>
         
         </p>
 
@@ -962,7 +1070,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l447"><code>source\scrawlImages.js:447</code></a>
+        <a href="../files/source_scrawlImages.js.html#l370"><code>source\scrawlImages.js:370</code></a>
         
         </p>
 
@@ -1032,7 +1140,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2220"><code>source\scrawlCore.js:2220</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1922"><code>source\scrawlCore.js:1922</code></a>
         
         </p>
 
@@ -1115,7 +1223,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l333"><code>source\scrawlImages.js:333</code></a>
+        <a href="../files/source_scrawlImages.js.html#l305"><code>source\scrawlImages.js:305</code></a>
         
         </p>
 
@@ -1146,137 +1254,6 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
 
                     <div class="param-description">
                         <p>Object consisting of key:value attributes</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setImage" class="method item private">
-    <h3 class="name"><code>setImage</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>source</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[callback]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlImages.js.html#l345"><code>source\scrawlImages.js:345</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Discover this Pattern&#39;s image source, loading it if necessary</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">source</code>
-                        <span class="type">Mixed</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[callback]</code>
-                        <span class="type">Function</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Function to be run once Image is successfully loaded</p>
 
                     </div>
 
@@ -1338,7 +1315,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2212"><code>source\scrawlCore.js:2212</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1914"><code>source\scrawlCore.js:1914</code></a>
         
         </p>
 
@@ -1411,7 +1388,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l458"><code>source\scrawlImages.js:458</code></a>
+        <a href="../files/source_scrawlImages.js.html#l381"><code>source\scrawlImages.js:381</code></a>
         
         </p>
 
@@ -1454,9 +1431,9 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_canvas" class="property item">
-    <h3 class="name"><code>canvas</code></h3>
-    <span class="type">String</span>
+                    <div id="property_autoUpdate" class="property item">
+    <h3 class="name"><code>autoUpdate</code></h3>
+    <span class="type">Boolean</span>
 
     
 
@@ -1477,7 +1454,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l324"><code>source\scrawlImages.js:324</code></a>
+        <a href="../files/source_scrawlImages.js.html#l262"><code>source\scrawlImages.js:262</code></a>
         
         </p>
 
@@ -1487,12 +1464,12 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>CELLNAME String - used when pattern is based on a &lt;canvas&gt; element&#39;s image</p>
+        <p>Drawing flag - when set to true, force the pattern to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;&#x27;</p>
+        <p><strong>Default:</strong> false</p>
     
 
     
@@ -1501,9 +1478,9 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_cell" class="property item">
-    <h3 class="name"><code>cell</code></h3>
-    <span class="type">String</span>
+                    <div id="property_callback" class="property item">
+    <h3 class="name"><code>callback</code></h3>
+    <span class="type">Function</span>
 
     
 
@@ -1524,7 +1501,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l303"><code>source\scrawlImages.js:303</code></a>
+        <a href="../files/source_scrawlImages.js.html#l277"><code>source\scrawlImages.js:277</code></a>
         
         </p>
 
@@ -1534,12 +1511,13 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set</p>
+        <p>Asynchronous loading of image file from the server - function to run once image has successfully loaded</p>
+<p>Used only with <strong>scrawl.newPattern()</strong> and <strong>Pattern.clone()</strong> operations. This attribute is not retained</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;&#x27;</p>
+        <p><strong>Default:</strong> undefined</p>
     
 
     
@@ -1568,7 +1546,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2120"><code>source\scrawlCore.js:2120</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1808"><code>source\scrawlCore.js:1808</code></a>
         
         </p>
 
@@ -1579,53 +1557,6 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
 
     <div class="description">
         <p>Comment, for accessibility</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> &#x27;&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_image" class="property item">
-    <h3 class="name"><code>image</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlImages.js.html#l310"><code>source\scrawlImages.js:310</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>SCRAWLIMAGENAME String - used when pattern is based on an image already imported into the scrawl library</p>
 
     </div>
 
@@ -1659,7 +1590,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2091"><code>source\scrawlCore.js:2091</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1779"><code>source\scrawlCore.js:1779</code></a>
         
         </p>
 
@@ -1704,7 +1635,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l296"><code>source\scrawlImages.js:296</code></a>
+        <a href="../files/source_scrawlImages.js.html#l248"><code>source\scrawlImages.js:248</code></a>
         
         </p>
 
@@ -1751,7 +1682,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l317"><code>source\scrawlImages.js:317</code></a>
+        <a href="../files/source_scrawlImages.js.html#l255"><code>source\scrawlImages.js:255</code></a>
         
         </p>
 
@@ -1761,7 +1692,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Full path to image file on server - used when pattern is based on a dynamically loaded image</p>
+        <p>CELLNAME, VIDEONAME or IMAGENAME of Pattern source data</p>
 
     </div>
 
@@ -1795,7 +1726,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2134"><code>source\scrawlCore.js:2134</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1822"><code>source\scrawlCore.js:1822</code></a>
         
         </p>
 
@@ -1839,7 +1770,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2127"><code>source\scrawlCore.js:2127</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1815"><code>source\scrawlCore.js:1815</code></a>
         
         </p>
 
@@ -1888,7 +1819,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l287"><code>source\scrawlImages.js:287</code></a>
+        <a href="../files/source_scrawlImages.js.html#l239"><code>source\scrawlImages.js:239</code></a>
         
         </p>
 
@@ -1903,6 +1834,54 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
 
     
         <p><strong>Default:</strong> &#x27;Pattern&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_url" class="property item">
+    <h3 class="name"><code>url</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImages.js.html#l269"><code>source\scrawlImages.js:269</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Asynchronous loading of image file from the server - path/to/image file</p>
+<p>Used only with <strong>scrawl.newPattern()</strong> and <strong>Pattern.clone()</strong> operations. This attribute is not retained</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
     
 
     
@@ -1933,7 +1912,7 @@ box.get(&#39;favouriteAnimal&#39;);        //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2101"><code>source\scrawlCore.js:2101</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1789"><code>source\scrawlCore.js:1789</code></a>
         
         </p>
 

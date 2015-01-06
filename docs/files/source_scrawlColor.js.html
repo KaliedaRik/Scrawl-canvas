@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -239,610 +273,605 @@
 
 ## Purpose and features
 
-The Color module adds a controllable color object that can be used with sprite fillStyle and strokeStyle attributes
+The Color module adds a controllable color object that can be used with entity fillStyle and strokeStyle attributes
 
 @module scrawlColor
 **/
 
-var scrawl = (function(my) {
-	&#x27;use strict&#x27;;
+if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.contains(window.scrawl.modules, &#x27;color&#x27;)) {
+	var scrawl = (function(my) {
+		&#x27;use strict&#x27;;
 
-	/**
-# window.scrawl
+		/**
+	# window.scrawl
 
-scrawlColor module adaptions to the Scrawl library object
+	scrawlColor module adaptions to the Scrawl library object
 
-@class window.scrawl_Color
-**/
+	@class window.scrawl_Color
+	**/
 
-	/**
-A __factory__ function to generate new Color objects
-@method newColor
-@param {Object} items Key:value Object argument for setting attributes
-@return Color object
-**/
-	my.newColor = function(items) {
-		return new my.Color(items);
-	};
+		/**
+	A __factory__ function to generate new Color objects
+	@method newColor
+	@param {Object} items Key:value Object argument for setting attributes
+	@return Color object
+	**/
+		my.newColor = function(items) {
+			return new my.Color(items);
+		};
 
-	/**
-# Color
+		/**
+	# Color
 
-## Instantiation
+	## Instantiation
 
-* scrawl.newColor()
+	* scrawl.newColor()
 
-## Purpose
+	## Purpose
 
-* Defines a color object
-* Used with sprite.strokeStyle and sprite.fillStyle attributes
+	* Defines a color object
+	* Used with entity.strokeStyle and entity.fillStyle attributes
 
-## Access
+	## Access
 
-* scrawl.design.COLORNAME - for the Color design object
+	* scrawl.design.COLORNAME - for the Color design object
 
-@class Color
-@constructor
-@extends Base
-@param {Object} [items] Key:value Object argument for setting attributes
-**/
-	my.Color = function(items) {
-		items = my.safeObject(items);
-		my.Base.call(this, items);
-		this.set(items);
-		if (my.xt(items.color)) {
-			this.convert(items.color);
-		}
-		if (items.random) {
-			this.generateRandomColor(items);
-		}
-		this.checkValues();
-		my.design[this.name] = this;
-		my.pushUnique(my.designnames, this.name);
-		return this;
-	};
-	my.Color.prototype = Object.create(my.Base.prototype);
-	/**
-@property type
-@type String
-@default &#x27;Color&#x27;
-@final
-**/
-	my.Color.prototype.type = &#x27;Color&#x27;;
-	my.Color.prototype.classname = &#x27;designnames&#x27;;
-	my.d.Color = {
-		/**
-Red channel value: 0 - 255
-@property r
-@type Number
-@default 0
-**/
-		r: 0,
-		/**
-Green channel value: 0 - 255
-@property g
-@type Number
-@default 0
-**/
-		g: 0,
-		/**
-Blue channel value: 0 - 255
-@property b
-@type Number
-@default 0
-**/
-		b: 0,
-		/**
-Alpha channel value: 0 - 1
-@property a
-@type Number
-@default 1
-**/
-		a: 1,
-		/**
-Red channel delta value
-@property rShift
-@type Number
-@default 0
-**/
-		rShift: 0,
-		/**
-Green channel delta value
-@property gShift
-@type Number
-@default 0
-**/
-		gShift: 0,
-		/**
-Blue channel delta value
-@property bShift
-@type Number
-@default 0
-**/
-		bShift: 0,
-		/**
-Alpha channel delta value
-@property aShift
-@type Number
-@default 0
-**/
-		aShift: 0,
-		/**
-Red channel maximum permitted value: 0 - 255
-@property rMax
-@type Number
-@default 255
-**/
-		rMax: 255,
-		/**
-Green channel maximum permitted value: 0 - 255
-@property gMax
-@type Number
-@default 255
-**/
-		gMax: 255,
-		/**
-Blue channel maximum permitted value: 0 - 255
-@property bMax
-@type Number
-@default 255
-**/
-		bMax: 255,
-		/**
-Alpha channel maximum permitted value: 0 - 1
-@property aMax
-@type Number
-@default 1
-**/
-		aMax: 1,
-		/**
-Red channel minimum permitted value: 0 - 255
-@property rMin
-@type Number
-@default 0
-**/
-		rMin: 0,
-		/**
-Green channel minimum permitted value: 0 - 255
-@property gMin
-@type Number
-@default 0
-**/
-		gMin: 0,
-		/**
-Blue channel minimum permitted value: 0 - 255
-@property bMin
-@type Number
-@default 0
-**/
-		bMin: 0,
-		/**
-Alpha channel minimum permitted value: 0 - 1
-@property aMin
-@type Number
-@default 0
-**/
-		aMin: 0,
-		/**
-Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel&#x27;s maximum or minimum value is breached
-@property rBounce
-@type Boolean
-@default false
-**/
-		rBounce: false,
-		/**
-Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel&#x27;s maximum or minimum value is breached
-@property gBounce
-@type Boolean
-@default false
-**/
-		gBounce: false,
-		/**
-Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel&#x27;s maximum or minimum value is breached
-@property bBounce
-@type Boolean
-@default false
-**/
-		bBounce: false,
-		/**
-Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel&#x27;s maximum or minimum value is breached
-@property aBounce
-@type Boolean
-@default false
-**/
-		aBounce: false,
-		/**
-Requires Color object to recalculate its attribute values before each display cycle commences
-@property autoUpdate
-@type Boolean
-@default false
-**/
-		autoUpdate: false,
-		/**
-Generation flag - if true, Color object will set itself to a random color within minimum and maximum attributes
-
-This attribute is not retained by the color object, and can only be used in the __scrawl.newColor()__ and __Color.set()__ functions
-@property random
-@type Boolean
-@default false
-**/
-	};
-	my.mergeInto(my.d.Color, my.d.Base);
-	/**
-Augments Base.get()
-
-* If called with no argument, will return the current color String
-* if called with the String argument &#x27;random&#x27;, will generate a random color (within permitted limits) and return that
-@method get
-@param {String} item Attribute key String
-@return Attribute value, or CSS color string
-**/
-	my.Color.prototype.get = function(item) {
-		if (!my.xt(item)) {
-			return &#x27;rgba(&#x27; + (this.r || 0) + &#x27;, &#x27; + (this.g || 0) + &#x27;, &#x27; + (this.b || 0) + &#x27;, &#x27; + (this.a || 1) + &#x27;)&#x27;;
-		}
-		else if (item === &#x27;random&#x27;) {
-			this.generateRandomColor();
-			return this.get();
-		}
-		else {
-			return my.Base.prototype.get.call(this, item);
-		}
-	};
-	/**
-Augments Base.clone()
-@method clone
-@param {Object} items Object consisting of key:value attributes
-@return Cloned Color object
-**/
-	my.Color.prototype.clone = function(items) {
-		var a = this.parse(),
-			b,
-			c;
-		b = my.mergeOver(a, ((my.isa(items, &#x27;obj&#x27;)) ? items : {}));
-		c = my.newColor(b);
-		items = my.safeObject(items);
-		if (my.xt(items.random) &amp;&amp; items.random) {
-			delete c.r;
-			delete c.g;
-			delete c.b;
-			delete c.a;
-			c.generateRandomColor(items);
-		}
-		return c;
-	};
-	/**
-Returns current color, or next color value in sequence if .autoUpdate is true
-@method getData
-@return CSS color String
-@private
-**/
-	my.Color.prototype.getData = function() {
-		if (this.get(&#x27;autoUpdate&#x27;)) {
-			this.update();
-		}
-		this.checkValues();
-		return this.get();
-	};
-	/**
-Generates a random color
-
-Argument can include preset color channel values (0-255, 0-1 for alpha): {r:Number, g:Number, b:Number, a:Number}
-@method generateRandomColor
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-@private
-**/
-	my.Color.prototype.generateRandomColor = function(items) {
-		var rMax = this.get(&#x27;rMax&#x27;),
-			gMax = this.get(&#x27;gMax&#x27;),
-			bMax = this.get(&#x27;bMax&#x27;),
-			aMax = this.get(&#x27;aMax&#x27;),
-			rMin = this.get(&#x27;rMin&#x27;),
-			gMin = this.get(&#x27;gMin&#x27;),
-			bMin = this.get(&#x27;bMin&#x27;),
-			aMin = this.get(&#x27;aMin&#x27;);
-		items = my.safeObject(items);
-		my.Base.prototype.set.call(this, {
-			r: items.r || Math.round((Math.random() * (rMax - rMin)) + rMin),
-			g: items.g || Math.round((Math.random() * (gMax - gMin)) + gMin),
-			b: items.b || Math.round((Math.random() * (bMax - bMin)) + bMin),
-			a: items.a || (Math.random() * (aMax - aMin)) + aMin,
-		});
-		this.checkValues();
-		return this;
-	};
-	/**
-Checks that color channel values are of the permitted form (integer vs float) and within permitted ranges
-@method checkValues
-@return This
-@chainable
-@private
-**/
-	my.Color.prototype.checkValues = function() {
-		var r = Math.floor(this.r) || 0,
-			g = Math.floor(this.g) || 0,
-			b = Math.floor(this.b) || 0,
-			a = this.a || 1;
-		r = (r &gt; 255) ? 255 : ((r &lt; 0) ? 0 : r);
-		g = (g &gt; 255) ? 255 : ((g &lt; 0) ? 0 : g);
-		b = (b &gt; 255) ? 255 : ((b &lt; 0) ? 0 : b);
-		a = (a &gt; 1) ? 1 : ((a &lt; 0) ? 0 : a);
-		my.Base.prototype.set.call(this, {
-			r: r,
-			g: g,
-			b: b,
-			a: a,
-		});
-		return this;
-	};
-	/**
-Augments Base.set()
-@method set
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-**/
-	my.Color.prototype.set = function(items) {
-		my.Base.prototype.set.call(this, items);
-		items = my.safeObject(items);
-		if (items.random) {
-			this.generateRandomColor(items);
-		}
-		this.checkValues();
-		return this;
-	};
-	/**
-Update the current color, taking into account shift and bounce attribute values
-@method update
-@return This
-@chainable
-**/
-	my.Color.prototype.update = function() {
-		var l = [&#x27;r&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;a&#x27;],
-			col,
-			res = [],
-			sft = [],
-			shift,
-			min,
-			max,
-			bounce,
-			r,
-			g,
-			b,
-			a;
-		for (var i = 0, iz = l.length; i &lt; iz; i++) {
-			col = this.get(l[i]);
-			shift = this.get(l[i] + &#x27;Shift&#x27;);
-			min = this.get(l[i] + &#x27;Min&#x27;);
-			max = this.get(l[i] + &#x27;Max&#x27;);
-			bounce = this.get(l[i] + &#x27;Bounce&#x27;);
-			if (!my.isBetween((col + shift), max, min, true)) {
-				if (bounce) {
-					shift = -shift;
-				}
-				else {
-					col = (col &gt; (max + min) / 2) ? max : min;
-					shift = 0;
-				}
+	@class Color
+	@constructor
+	@extends Base
+	@param {Object} [items] Key:value Object argument for setting attributes
+	**/
+		my.Color = function(items) {
+			items = my.safeObject(items);
+			my.Base.call(this, items);
+			this.set(items);
+			if (my.xt(items.color)) {
+				this.convert(items.color);
 			}
-			res[i] = col + shift;
-			sft[i] = shift;
-		}
-		my.Base.prototype.set.call(this, {
-			r: res[0],
-			g: res[1],
-			b: res[2],
-			a: res[3],
-			rShift: sft[0],
-			gShift: sft[1],
-			bShift: sft[2],
-			aShift: sft[3],
-		});
-		return this;
-	};
-	/**
-Add values to Number attributes - limited to altering __r__, __g__, __b__ and __a__ attributes
-@method setDelta
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-**/
-	my.Color.prototype.setDelta = function(items) {
-		items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
-		my.Base.prototype.set.call(this, {
-			r: (this.r || 0) + (items.r || 0),
-			g: (this.g || 0) + (items.g || 0),
-			b: (this.b || 0) + (items.b || 0),
-			a: (this.a || 1) + (items.a || 0),
-		});
-		this.checkValues();
-		return this;
-	};
-	/**
-Convert a CSS color string value into native attribute values. 
-
-Converts: &#x27;#nnn&#x27;, &#x27;#nnnnnn&#x27;, &#x27;rgb(n, n, n)&#x27;, &#x27;rgba(n, n, n, a), color names.
-
-Color names are limited to those supported by SVGTiny: &#x27;green&#x27;, &#x27;silver&#x27;, &#x27;lime&#x27;, &#x27;gray&#x27;, &#x27;grey&#x27;, &#x27;olive&#x27;, &#x27;white&#x27;, &#x27;yellow&#x27;, &#x27;maroon&#x27;, &#x27;navy&#x27;, &#x27;red&#x27;, &#x27;blue&#x27;, &#x27;purple&#x27;, &#x27;teal&#x27;, &#x27;fuchsia&#x27;, &#x27;aqua&#x27;. Default: &#x27;black&#x27;.
-@method convert
-@param {String} items CSS color String 
-@return This
-@chainable
-**/
-	my.Color.prototype.convert = function(items) {
-		items = (my.isa(items, &#x27;str&#x27;)) ? items : &#x27;&#x27;;
-		if (items.length &gt; 0) {
-			items.toLowerCase();
-			var temp,
-				r = 0,
-				g = 0,
-				b = 0,
-				a = 1;
-			if (items[0] === &#x27;#&#x27;) {
-				if (items.length &lt; 5) {
-					r = this.toDecimal(items[1] + items[1]);
-					g = this.toDecimal(items[2] + items[2]);
-					b = this.toDecimal(items[3] + items[3]);
-				}
-				else if (items.length &lt; 8) {
-					r = this.toDecimal(items[1] + items[2]);
-					g = this.toDecimal(items[3] + items[4]);
-					b = this.toDecimal(items[5] + items[6]);
-				}
+			if (items.random) {
+				this.generateRandomColor(items);
 			}
-			else if (/rgb\(/.test(items)) {
-				temp = items.match(/([0-9.]+\b)/g);
-				if (/%/.test(items)) {
-					r = Math.round((temp[0] / 100) * 255);
-					g = Math.round((temp[1] / 100) * 255);
-					b = Math.round((temp[2] / 100) * 255);
-				}
-				else {
-					r = Math.round(temp[0]);
-					g = Math.round(temp[1]);
-					b = Math.round(temp[2]);
-				}
+			this.checkValues();
+			my.design[this.name] = this;
+			my.pushUnique(my.designnames, this.name);
+			return this;
+		};
+		my.Color.prototype = Object.create(my.Base.prototype);
+		/**
+	@property type
+	@type String
+	@default &#x27;Color&#x27;
+	@final
+	**/
+		my.Color.prototype.type = &#x27;Color&#x27;;
+		my.Color.prototype.classname = &#x27;designnames&#x27;;
+		my.d.Color = {
+			/**
+	Red channel value: 0 - 255
+	@property r
+	@type Number
+	@default 0
+	**/
+			r: 0,
+			/**
+	Green channel value: 0 - 255
+	@property g
+	@type Number
+	@default 0
+	**/
+			g: 0,
+			/**
+	Blue channel value: 0 - 255
+	@property b
+	@type Number
+	@default 0
+	**/
+			b: 0,
+			/**
+	Alpha channel value: 0 - 1
+	@property a
+	@type Number
+	@default 1
+	**/
+			a: 1,
+			/**
+	Red channel delta value
+	@property rShift
+	@type Number
+	@default 0
+	**/
+			rShift: 0,
+			/**
+	Green channel delta value
+	@property gShift
+	@type Number
+	@default 0
+	**/
+			gShift: 0,
+			/**
+	Blue channel delta value
+	@property bShift
+	@type Number
+	@default 0
+	**/
+			bShift: 0,
+			/**
+	Alpha channel delta value
+	@property aShift
+	@type Number
+	@default 0
+	**/
+			aShift: 0,
+			/**
+	Red channel maximum permitted value: 0 - 255
+	@property rMax
+	@type Number
+	@default 255
+	**/
+			rMax: 255,
+			/**
+	Green channel maximum permitted value: 0 - 255
+	@property gMax
+	@type Number
+	@default 255
+	**/
+			gMax: 255,
+			/**
+	Blue channel maximum permitted value: 0 - 255
+	@property bMax
+	@type Number
+	@default 255
+	**/
+			bMax: 255,
+			/**
+	Alpha channel maximum permitted value: 0 - 1
+	@property aMax
+	@type Number
+	@default 1
+	**/
+			aMax: 1,
+			/**
+	Red channel minimum permitted value: 0 - 255
+	@property rMin
+	@type Number
+	@default 0
+	**/
+			rMin: 0,
+			/**
+	Green channel minimum permitted value: 0 - 255
+	@property gMin
+	@type Number
+	@default 0
+	**/
+			gMin: 0,
+			/**
+	Blue channel minimum permitted value: 0 - 255
+	@property bMin
+	@type Number
+	@default 0
+	**/
+			bMin: 0,
+			/**
+	Alpha channel minimum permitted value: 0 - 1
+	@property aMin
+	@type Number
+	@default 0
+	**/
+			aMin: 0,
+			/**
+	Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel&#x27;s maximum or minimum value is breached
+	@property rBounce
+	@type Boolean
+	@default false
+	**/
+			rBounce: false,
+			/**
+	Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel&#x27;s maximum or minimum value is breached
+	@property gBounce
+	@type Boolean
+	@default false
+	**/
+			gBounce: false,
+			/**
+	Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel&#x27;s maximum or minimum value is breached
+	@property bBounce
+	@type Boolean
+	@default false
+	**/
+			bBounce: false,
+			/**
+	Drawing flag - if true, when color updates the delta value will reverse its sign just before the channel&#x27;s maximum or minimum value is breached
+	@property aBounce
+	@type Boolean
+	@default false
+	**/
+			aBounce: false,
+			/**
+	Requires Color object to recalculate its attribute values before each display cycle commences
+	@property autoUpdate
+	@type Boolean
+	@default false
+	**/
+			autoUpdate: false,
+			/**
+	Generation flag - if true, Color object will set itself to a random color within minimum and maximum attributes
+
+	This attribute is not retained by the color object, and can only be used in the __scrawl.newColor()__ and __Color.set()__ functions
+	@property random
+	@type Boolean
+	@default false
+	**/
+		};
+		my.mergeInto(my.d.Color, my.d.Base);
+		/**
+	Augments Base.get()
+
+	* If called with no argument, will return the current color String
+	* if called with the String argument &#x27;random&#x27;, will generate a random color (within permitted limits) and return that
+	@method get
+	@param {String} item Attribute key String
+	@return Attribute value, or CSS color string
+	**/
+		my.Color.prototype.get = function(item) {
+			if (!my.xt(item)) {
+				return &#x27;rgba(&#x27; + (this.r || 0) + &#x27;, &#x27; + (this.g || 0) + &#x27;, &#x27; + (this.b || 0) + &#x27;, &#x27; + (this.a || 1) + &#x27;)&#x27;;
 			}
-			else if (/rgba\(/.test(items)) {
-				temp = items.match(/([0-9.]+\b)/g);
-				r = temp[0];
-				g = temp[1];
-				b = temp[2];
-				a = temp[3];
+			else if (item === &#x27;random&#x27;) {
+				this.generateRandomColor();
+				return this.get();
 			}
 			else {
-				switch (items) {
-					case &#x27;green&#x27;:
-						r = 0;
-						g = 128;
-						b = 0;
-						break;
-					case &#x27;silver&#x27;:
-						r = 192;
-						g = 192;
-						b = 192;
-						break;
-					case &#x27;lime&#x27;:
-						r = 0;
-						g = 255;
-						b = 0;
-						break;
-					case &#x27;gray&#x27;:
-						r = 128;
-						g = 128;
-						b = 128;
-						break;
-					case &#x27;grey&#x27;:
-						r = 128;
-						g = 128;
-						b = 128;
-						break;
-					case &#x27;olive&#x27;:
-						r = 128;
-						g = 128;
-						b = 0;
-						break;
-					case &#x27;white&#x27;:
-						r = 255;
-						g = 255;
-						b = 255;
-						break;
-					case &#x27;yellow&#x27;:
-						r = 255;
-						g = 255;
-						b = 0;
-						break;
-					case &#x27;maroon&#x27;:
-						r = 128;
-						g = 0;
-						b = 0;
-						break;
-					case &#x27;navy&#x27;:
-						r = 0;
-						g = 0;
-						b = 128;
-						break;
-					case &#x27;red&#x27;:
-						r = 255;
-						g = 0;
-						b = 0;
-						break;
-					case &#x27;blue&#x27;:
-						r = 0;
-						g = 0;
-						b = 255;
-						break;
-					case &#x27;purple&#x27;:
-						r = 128;
-						g = 0;
-						b = 128;
-						break;
-					case &#x27;teal&#x27;:
-						r = 0;
-						g = 128;
-						b = 128;
-						break;
-					case &#x27;fuchsia&#x27;:
-						r = 255;
-						g = 0;
-						b = 255;
-						break;
-					case &#x27;aqua&#x27;:
-						r = 0;
-						g = 255;
-						b = 255;
-						break;
-					default:
-						r = 0;
-						g = 0;
-						b = 0;
-						break;
-				}
+				return my.Base.prototype.get.call(this, item);
 			}
+		};
+		/**
+	Augments Base.clone()
+	@method clone
+	@param {Object} items Object consisting of key:value attributes
+	@return Cloned Color object
+	**/
+		my.Color.prototype.clone = function(items) {
+			var a = this.parse(),
+				b = my.mergeOver(a, ((my.isa(items, &#x27;obj&#x27;)) ? items : {})),
+				c = my.newColor(b);
+			items = my.safeObject(items);
+			if (my.xt(items.random) &amp;&amp; items.random) {
+				delete c.r;
+				delete c.g;
+				delete c.b;
+				delete c.a;
+				c.generateRandomColor(items);
+			}
+			return c;
+		};
+		/**
+	Returns current color, or next color value in sequence if .autoUpdate is true
+	@method getData
+	@return CSS color String
+	@private
+	**/
+		my.Color.prototype.getData = function() {
+			if (this.get(&#x27;autoUpdate&#x27;)) {
+				this.update();
+			}
+			this.checkValues();
+			return this.get();
+		};
+		/**
+	Generates a random color
+
+	Argument can include preset color channel values (0-255, 0-1 for alpha): {r:Number, g:Number, b:Number, a:Number}
+	@method generateRandomColor
+	@param {Object} items Object consisting of key:value attributes
+	@return This
+	@chainable
+	@private
+	**/
+		my.Color.prototype.generateRandomColor = function(items) {
+			var rMax = this.get(&#x27;rMax&#x27;),
+				gMax = this.get(&#x27;gMax&#x27;),
+				bMax = this.get(&#x27;bMax&#x27;),
+				aMax = this.get(&#x27;aMax&#x27;),
+				rMin = this.get(&#x27;rMin&#x27;),
+				gMin = this.get(&#x27;gMin&#x27;),
+				bMin = this.get(&#x27;bMin&#x27;),
+				aMin = this.get(&#x27;aMin&#x27;);
+			items = my.safeObject(items);
+			this.r = items.r || Math.round((Math.random() * (rMax - rMin)) + rMin);
+			this.g = items.g || Math.round((Math.random() * (gMax - gMin)) + gMin);
+			this.b = items.b || Math.round((Math.random() * (bMax - bMin)) + bMin);
+			this.a = items.a || (Math.random() * (aMax - aMin)) + aMin;
+			this.checkValues();
+			return this;
+		};
+		/**
+	Checks that color channel values are of the permitted form (integer vs float) and within permitted ranges
+	@method checkValues
+	@return This
+	@chainable
+	@private
+	**/
+		my.Color.prototype.checkValues = function() {
+			var r = Math.floor(this.r) || 0,
+				g = Math.floor(this.g) || 0,
+				b = Math.floor(this.b) || 0,
+				a = this.a || 1;
+			r = (r &gt; 255) ? 255 : ((r &lt; 0) ? 0 : r);
+			g = (g &gt; 255) ? 255 : ((g &lt; 0) ? 0 : g);
+			b = (b &gt; 255) ? 255 : ((b &lt; 0) ? 0 : b);
+			a = (a &gt; 1) ? 1 : ((a &lt; 0) ? 0 : a);
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.a = a;
+			return this;
+		};
+		/**
+	Augments Base.set()
+	@method set
+	@param {Object} items Object consisting of key:value attributes
+	@return This
+	@chainable
+	**/
+		my.Color.prototype.set = function(items) {
+			my.Base.prototype.set.call(this, items);
+			items = my.safeObject(items);
+			if (items.random) {
+				this.generateRandomColor(items);
+			}
+			this.checkValues();
+			return this;
+		};
+		/**
+	Update the current color, taking into account shift and bounce attribute values
+	@method update
+	@return This
+	@chainable
+	**/
+		my.Color.prototype.update = function() {
+			var i,
+				iz,
+				list = [&#x27;r&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;a&#x27;],
+				col,
+				res,
+				sft,
+				shift,
+				min,
+				max,
+				bounce;
+			res = [];
+			sft = [];
+			for (i = 0, iz = list.length; i &lt; iz; i++) {
+				col = this.get(list[i]);
+				shift = this.get(list[i] + &#x27;Shift&#x27;);
+				min = this.get(list[i] + &#x27;Min&#x27;);
+				max = this.get(list[i] + &#x27;Max&#x27;);
+				bounce = this.get(list[i] + &#x27;Bounce&#x27;);
+				if (!my.isBetween((col + shift), max, min, true)) {
+					if (bounce) {
+						shift = -shift;
+					}
+					else {
+						col = (col &gt; (max + min) / 2) ? max : min;
+						shift = 0;
+					}
+				}
+				res[i] = col + shift;
+				sft[i] = shift;
+			}
+			this.r = res[0];
+			this.g = res[1];
+			this.b = res[2];
+			this.a = res[3];
+			this.rShift = sft[0];
+			this.gShift = sft[1];
+			this.bShift = sft[2];
+			this.aShift = sft[3];
+			return this;
+		};
+		/**
+	Add values to Number attributes - limited to altering __r__, __g__, __b__ and __a__ attributes
+	@method setDelta
+	@param {Object} items Object consisting of key:value attributes
+	@return This
+	@chainable
+	**/
+		my.Color.prototype.setDelta = function(items) {
+			items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
 			my.Base.prototype.set.call(this, {
-				r: r,
-				g: g,
-				b: b,
-				a: a,
+				r: (this.r || 0) + (items.r || 0),
+				g: (this.g || 0) + (items.g || 0),
+				b: (this.b || 0) + (items.b || 0),
+				a: (this.a || 1) + (items.a || 0),
 			});
 			this.checkValues();
-		}
-		return this;
-	};
-	/**
-Convert a decimal Number to its hexidecimal String value
-@method toDecimal
-@param {Number} items decimal value
-@return Hexidecimal String
-**/
-	my.Color.prototype.toDecimal = function(item) {
-		return parseInt(item, 16);
-	};
-	/**
-Convert a hexidecimal String to its decimal Number value
-@method toHex
-@param {String} Hexidecimal String value
-@return Decimal Number
-**/
-	my.Color.prototype.toHex = function(item) {
-		return item.toString(16);
-	};
-	/**
-Delete this Color object from the scrawl library
-@method remove
-@return Always true
-**/
-	my.Color.prototype.remove = function() {
-		delete my.dsn[this.name];
-		delete my.design[this.name];
-		my.removeItem(my.designnames, this.name);
-		return true;
-	};
+			return this;
+		};
+		/**
+	Convert a CSS color string value into native attribute values. 
 
-	return my;
-}(scrawl));
+	Converts: &#x27;#nnn&#x27;, &#x27;#nnnnnn&#x27;, &#x27;rgb(n, n, n)&#x27;, &#x27;rgba(n, n, n, a), color names.
+
+	Color names are limited to those supported by SVGTiny: &#x27;green&#x27;, &#x27;silver&#x27;, &#x27;lime&#x27;, &#x27;gray&#x27;, &#x27;grey&#x27;, &#x27;olive&#x27;, &#x27;white&#x27;, &#x27;yellow&#x27;, &#x27;maroon&#x27;, &#x27;navy&#x27;, &#x27;red&#x27;, &#x27;blue&#x27;, &#x27;purple&#x27;, &#x27;teal&#x27;, &#x27;fuchsia&#x27;, &#x27;aqua&#x27;. Default: &#x27;black&#x27;.
+	@method convert
+	@param {String} items CSS color String 
+	@return This
+	@chainable
+	**/
+		my.Color.prototype.convert = function(items) {
+			var r,
+				g,
+				b,
+				a,
+				temp;
+			items = (my.isa(items, &#x27;str&#x27;)) ? items : &#x27;&#x27;;
+			if (items.length &gt; 0) {
+				items.toLowerCase();
+				r = 0;
+				g = 0;
+				b = 0;
+				a = 1;
+				if (items[0] === &#x27;#&#x27;) {
+					if (items.length &lt; 5) {
+						r = this.toDecimal(items[1] + items[1]);
+						g = this.toDecimal(items[2] + items[2]);
+						b = this.toDecimal(items[3] + items[3]);
+					}
+					else if (items.length &lt; 8) {
+						r = this.toDecimal(items[1] + items[2]);
+						g = this.toDecimal(items[3] + items[4]);
+						b = this.toDecimal(items[5] + items[6]);
+					}
+				}
+				else if (/rgb\(/.test(items)) {
+					temp = items.match(/([0-9.]+\b)/g);
+					if (/%/.test(items)) {
+						r = Math.round((temp[0] / 100) * 255);
+						g = Math.round((temp[1] / 100) * 255);
+						b = Math.round((temp[2] / 100) * 255);
+					}
+					else {
+						r = Math.round(temp[0]);
+						g = Math.round(temp[1]);
+						b = Math.round(temp[2]);
+					}
+				}
+				else if (/rgba\(/.test(items)) {
+					temp = items.match(/([0-9.]+\b)/g);
+					r = temp[0];
+					g = temp[1];
+					b = temp[2];
+					a = temp[3];
+				}
+				else {
+					switch (items) {
+						case &#x27;green&#x27;:
+							r = 0;
+							g = 128;
+							b = 0;
+							break;
+						case &#x27;silver&#x27;:
+							r = 192;
+							g = 192;
+							b = 192;
+							break;
+						case &#x27;lime&#x27;:
+							r = 0;
+							g = 255;
+							b = 0;
+							break;
+						case &#x27;gray&#x27;:
+							r = 128;
+							g = 128;
+							b = 128;
+							break;
+						case &#x27;grey&#x27;:
+							r = 128;
+							g = 128;
+							b = 128;
+							break;
+						case &#x27;olive&#x27;:
+							r = 128;
+							g = 128;
+							b = 0;
+							break;
+						case &#x27;white&#x27;:
+							r = 255;
+							g = 255;
+							b = 255;
+							break;
+						case &#x27;yellow&#x27;:
+							r = 255;
+							g = 255;
+							b = 0;
+							break;
+						case &#x27;maroon&#x27;:
+							r = 128;
+							g = 0;
+							b = 0;
+							break;
+						case &#x27;navy&#x27;:
+							r = 0;
+							g = 0;
+							b = 128;
+							break;
+						case &#x27;red&#x27;:
+							r = 255;
+							g = 0;
+							b = 0;
+							break;
+						case &#x27;blue&#x27;:
+							r = 0;
+							g = 0;
+							b = 255;
+							break;
+						case &#x27;purple&#x27;:
+							r = 128;
+							g = 0;
+							b = 128;
+							break;
+						case &#x27;teal&#x27;:
+							r = 0;
+							g = 128;
+							b = 128;
+							break;
+						case &#x27;fuchsia&#x27;:
+							r = 255;
+							g = 0;
+							b = 255;
+							break;
+						case &#x27;aqua&#x27;:
+							r = 0;
+							g = 255;
+							b = 255;
+							break;
+						default:
+							r = 0;
+							g = 0;
+							b = 0;
+					}
+				}
+				this.r = r;
+				this.g = g;
+				this.b = b;
+				this.a = a;
+				this.checkValues();
+			}
+			return this;
+		};
+		/**
+	Convert a decimal Number to its hexidecimal String value
+	@method toDecimal
+	@param {Number} items decimal value
+	@return Hexidecimal String
+	**/
+		my.Color.prototype.toDecimal = function(item) {
+			return parseInt(item, 16);
+		};
+		/**
+	Convert a hexidecimal String to its decimal Number value
+	@method toHex
+	@param {String} Hexidecimal String value
+	@return Decimal Number
+	**/
+		my.Color.prototype.toHex = function(item) {
+			return item.toString(16);
+		};
+		/**
+	Delete this Color object from the scrawl library
+	@method remove
+	@return Always true
+	**/
+		my.Color.prototype.remove = function() {
+			delete my.dsn[this.name];
+			delete my.design[this.name];
+			my.removeItem(my.designnames, this.name);
+			return true;
+		};
+
+		return my;
+	}(scrawl));
+}
 
     </pre>
 </div>

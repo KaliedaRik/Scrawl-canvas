@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -214,7 +248,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlCollisions.js.html#l39"><code>source\scrawlCollisions.js:39</code></a>
+            Defined in: <a href="../files/source_scrawlCollisions.js.html#l40"><code>source\scrawlCollisions.js:40</code></a>
         </div>
     
 
@@ -236,10 +270,10 @@
 <ul>
 <li>Position.delta - default: {x:0,y:0,z:0};</li>
 <li>Cell.fieldLabel - default: &#39;&#39;;</li>
-<li>Sprite.fieldChannel - default: &#39;anycolor&#39;;</li>
-<li>Sprite.fieldTest - default: 0;</li>
-<li>Sprite.collisionVectors - default: [];</li>
-<li>Sprite.collisionPoints - default: [];</li>
+<li>Entity.fieldChannel - default: &#39;anycolor&#39;;</li>
+<li>Entity.fieldTest - default: 0;</li>
+<li>Entity.collisionVectors - default: [];</li>
+<li>Entity.collisionPoints - default: [];</li>
 </ul>
 
 </div>
@@ -292,28 +326,126 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_Group.getBetweenGroupSpriteHits">Group.getBetweenGroupSpriteHits</a>
+                                <a href="#method_Entity.addEntityToCellFences">Entity.addEntityToCellFences</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_Group.getFieldSpriteHits">Group.getFieldSpriteHits</a>
+                                <a href="#method_Entity.addEntityToCellFields">Entity.addEntityToCellFields</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_Entity.buildCollisionVectors">Entity.buildCollisionVectors</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_Group.getInGroupSpriteHits">Group.getInGroupSpriteHits</a>
+                                <a href="#method_Entity.checkField">Entity.checkField</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_Entity.collisionsEntityConstructor">Entity.collisionsEntityConstructor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_Entity.collisionsEntityRegisterInLibrary">Entity.collisionsEntityRegisterInLibrary</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_Entity.collisionsEntitySet">Entity.collisionsEntitySet</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_Entity.collisionsEntitySetDelta">Entity.collisionsEntitySetDelta</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_Group.getSpritesCollidingWith">Group.getSpritesCollidingWith</a>
+                                <a href="#method_Entity.getCollisionPoints">Entity.getCollisionPoints</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_Entity.parseCollisionPoints">Entity.parseCollisionPoints</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_Entity.removeEntityFromCellFences">Entity.removeEntityFromCellFences</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_Entity.removeEntityFromCellFields">Entity.removeEntityFromCellFields</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_Entity.resetCollisionPoints">Entity.resetCollisionPoints</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_Group.getBetweenGroupEntityHits">Group.getBetweenGroupEntityHits</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_Group.getEntitysCollidingWith">Group.getEntitysCollidingWith</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_Group.getFieldEntityHits">Group.getFieldEntityHits</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_Group.getInGroupEntityHits">Group.getInGroupEntityHits</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_Group.resetCollisionPoints">Group.resetCollisionPoints</a>
 
                                 
                                 
@@ -328,83 +460,6 @@
                         
                             <li class="index-item method">
                                 <a href="#method_scrawl.buildFields">scrawl.buildFields</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_Sprite.addSpriteToCellFences">Sprite.addSpriteToCellFences</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_Sprite.addSpriteToCellFields">Sprite.addSpriteToCellFields</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_Sprite.buildCollisionVectors">Sprite.buildCollisionVectors</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_Sprite.checkField">Sprite.checkField</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_Sprite.collisionsSpriteConstructor">Sprite.collisionsSpriteConstructor</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_Sprite.collisionsSpriteRegisterInLibrary">Sprite.collisionsSpriteRegisterInLibrary</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_Sprite.collisionsSpriteSet">Sprite.collisionsSpriteSet</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_Sprite.getCollisionPoints">Sprite.getCollisionPoints</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_Sprite.parseCollisionPoints">Sprite.parseCollisionPoints</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_Sprite.removeSpriteFromCellFences">Sprite.removeSpriteFromCellFences</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_Sprite.removeSpriteFromCellFields">Sprite.removeSpriteFromCellFields</a>
 
                                 
                                 
@@ -479,7 +534,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l129"><code>source\scrawlCollisions.js:129</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l133"><code>source\scrawlCollisions.js:133</code></a>
         
         </p>
 
@@ -490,7 +545,7 @@
     </div>
 
     <div class="description">
-        <p>Builds a collision map image from sprites, for use in sprite field collision detection functions</p>
+        <p>Builds a collision map image from entitys, for use in entity field collision detection functions</p>
 
     </div>
 
@@ -562,7 +617,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l174"><code>source\scrawlCollisions.js:174</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l192"><code>source\scrawlCollisions.js:192</code></a>
         
         </p>
 
@@ -589,8 +644,8 @@
 <p>Either include a single coordinate (x, y), or an array of coordinate Vectors</p>
 <p>Test will return: </p>
 <ul>
-<li>false if it encounters a coordinate outside the bou8ds of its image map</li>
-<li>true if all coordinates exceed the test level (thus a sprite testing in the red channel will report true if it is entirely within a red part of the collision map</li>
+<li>false if it encounters a coordinate outside the bounds of its image map</li>
+<li>true if all coordinates exceed the test level (thus a entity testing in the red channel will report true if it is entirely within a red part of the collision map</li>
 <li>the first coordinate that falls below, or equals, the test level</li>
 </ul>
 
@@ -674,7 +729,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l104"><code>source\scrawlCollisions.js:104</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l108"><code>source\scrawlCollisions.js:108</code></a>
         
         </p>
 
@@ -697,8 +752,8 @@
 </div>
 
                 
-                    <div id="method_Group.getBetweenGroupSpriteHits" class="method item">
-    <h3 class="name"><code>Group.getBetweenGroupSpriteHits</code></h3>
+                    <div id="method_Entity.addEntityToCellFences" class="method item">
+    <h3 class="name"><code>Entity.addEntityToCellFences</code></h3>
 
     
         <div class="args">
@@ -706,7 +761,7 @@
             
                 <li class="arg">
                     
-                        <code>g</code>
+                        <code class="optional">[items]</code>
                     
                 </li>
             
@@ -729,6 +784,8 @@
     
 
     
+        <span class="flag chainable">chainable</span>
+    
 
     
 
@@ -743,7 +800,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l342"><code>source\scrawlCollisions.js:342</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l598"><code>source\scrawlCollisions.js:598</code></a>
         
         </p>
 
@@ -754,7 +811,7 @@
     </div>
 
     <div class="description">
-        <p>Check all sprites in this Group against all sprites in the argument Group, to see if they are in collision</p>
+        <p>Add this entity to a (range of) Cell object fence groups</p>
 
     </div>
 
@@ -766,14 +823,15 @@
             
                 <li class="param">
                     
-                        <code class="param-name">g</code>
-                        <span class="type">String</span>
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Array</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument</p>
+                        <p>Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied</p>
 
                     </div>
 
@@ -791,7 +849,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of sprites currently in collision</p>
+                    <p>This</p>
 
                 
             </div>
@@ -802,8 +860,227 @@
 </div>
 
                 
-                    <div id="method_Group.getFieldSpriteHits" class="method item">
-    <h3 class="name"><code>Group.getFieldSpriteHits</code></h3>
+                    <div id="method_Entity.addEntityToCellFields" class="method item">
+    <h3 class="name"><code>Entity.addEntityToCellFields</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l580"><code>source\scrawlCollisions.js:580</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Add this entity to a (range of) Cell object field groups</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Array</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.buildCollisionVectors" class="method item private">
+    <h3 class="name"><code>Entity.buildCollisionVectors</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l701"><code>source\scrawlCollisions.js:701</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Collision detection helper function</p>
+<p>Parses the collisionPoints array to generate coordinate Vectors representing the entity&#39;s collision points</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Array</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of collision point data</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.checkField" class="method item">
+    <h3 class="name"><code>Entity.checkField</code></h3>
 
     
         <div class="args">
@@ -848,7 +1125,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l416"><code>source\scrawlCollisions.js:416</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l652"><code>source\scrawlCollisions.js:652</code></a>
         
         </p>
 
@@ -859,9 +1136,1029 @@
     </div>
 
     <div class="description">
-        <p>Check all sprites in this Group against a &lt;canvas&gt; element&#39;s collision field image</p>
+        <p>Check this entity&#39;s collision Vectors against a Cell object&#39;s collision field image to see if any of them are colliding with the Cell&#39;s field entitys</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME String of the Cell to be checked against</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>First Vector coordinate to &#39;pass&#39; the Cell.checkFieldAt() function&#39;s test; true if none pass; false if the test parameters are out of bounds</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.collisionsEntityConstructor" class="method item private">
+    <h3 class="name"><code>Entity.collisionsEntityConstructor</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l503"><code>source\scrawlCollisions.js:503</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity constructor hook function - modified by collisions module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.collisionsEntityRegisterInLibrary" class="method item private">
+    <h3 class="name"><code>Entity.collisionsEntityRegisterInLibrary</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l516"><code>source\scrawlCollisions.js:516</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.registerInLibrary hook function - modified by collisions module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.collisionsEntitySet" class="method item private">
+    <h3 class="name"><code>Entity.collisionsEntitySet</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l527"><code>source\scrawlCollisions.js:527</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.set hook function - modified by collisions module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.collisionsEntitySetDelta" class="method item private">
+    <h3 class="name"><code>Entity.collisionsEntitySetDelta</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l567"><code>source\scrawlCollisions.js:567</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.setDelta hook function - modified by collisions module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.getCollisionPoints" class="method item">
+    <h3 class="name"><code>Entity.getCollisionPoints</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l670"><code>source\scrawlCollisions.js:670</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Calculate the current positions of this entity&#39;s collision Vectors, taking into account the entity&#39;s current position, roll and scale</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Array of coordinate Vectors</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.parseCollisionPoints" class="method item private">
+    <h3 class="name"><code>Entity.parseCollisionPoints</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l783"><code>source\scrawlCollisions.js:783</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Collision detection helper function</p>
+<p>Parses user input for the collisionPoint attribute</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Array</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of collision point data</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.removeEntityFromCellFences" class="method item">
+    <h3 class="name"><code>Entity.removeEntityFromCellFences</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l634"><code>source\scrawlCollisions.js:634</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Remove this entity from a (range of) Cell object fence groups</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Array</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.removeEntityFromCellFields" class="method item">
+    <h3 class="name"><code>Entity.removeEntityFromCellFields</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l616"><code>source\scrawlCollisions.js:616</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Remove this entity from a (range of) Cell object field groups</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">Array</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.resetCollisionPoints" class="method item">
+    <h3 class="name"><code>Entity.resetCollisionPoints</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l551"><code>source\scrawlCollisions.js:551</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Recalculate the entity&#39;s current collision point positions</p>
+<p>This will be triggered automatically when changing the following attributes via set ort setDelta:</p>
+<ul>
+<li>for set() - start, startX, startY, handle, handleX, handleY, scale, roll, collisionPoints, width, height, radius, pasteWidth, pasteHeight</li>
+<li>for setDelta() - start, startX, startY, handle, handleX, handleY, scale, roll, width, height, radius, pasteWidth, pasteHeight</li>
+</ul>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>this</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Group.getBetweenGroupEntityHits" class="method item">
+    <h3 class="name"><code>Group.getBetweenGroupEntityHits</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>g</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l374"><code>source\scrawlCollisions.js:374</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check all entitys in this Group against all entitys in the argument Group, to see if they are in collision</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">g</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Group.getEntitysCollidingWith" class="method item">
+    <h3 class="name"><code>Group.getEntitysCollidingWith</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>entity</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l284"><code>source\scrawlCollisions.js:284</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check all entitys in the Group to see if they are colliding with the supplied entity object. An Array of all entity objects colliding with the reference entity will be returned</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">entity</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>SPRITENAME String of the reference entity; alternatively the entity Object itself can be passed as the argument</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Array of visible entity Objects currently colliding with the reference entity</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Group.getFieldEntityHits" class="method item">
+    <h3 class="name"><code>Group.getFieldEntityHits</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCollisions.js.html#l441"><code>source\scrawlCollisions.js:441</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check all entitys in this Group against a &lt;canvas&gt; element&#39;s collision field image</p>
 <p>If no argument is supplied, the Group&#39;s default Cell&#39;s &lt;canvas&gt; element will be used for the check</p>
-<p>An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the sprite that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring</p>
+<p>An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the entity that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring</p>
 
     </div>
 
@@ -910,8 +2207,8 @@
 </div>
 
                 
-                    <div id="method_Group.getInGroupSpriteHits" class="method item">
-    <h3 class="name"><code>Group.getInGroupSpriteHits</code></h3>
+                    <div id="method_Group.getInGroupEntityHits" class="method item">
+    <h3 class="name"><code>Group.getInGroupEntityHits</code></h3>
 
     
         <span class="paren">()</span>
@@ -946,7 +2243,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l292"><code>source\scrawlCollisions.js:292</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l324"><code>source\scrawlCollisions.js:324</code></a>
         
         </p>
 
@@ -957,7 +2254,7 @@
     </div>
 
     <div class="description">
-        <p>Check all sprites in the Group against each other to see if they are in collision</p>
+        <p>Check all entitys in the Group against each other to see if they are in collision</p>
 
     </div>
 
@@ -970,7 +2267,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of sprites currently in collision</p>
+                    <p>Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision</p>
 
                 
             </div>
@@ -981,21 +2278,11 @@
 </div>
 
                 
-                    <div id="method_Group.getSpritesCollidingWith" class="method item">
-    <h3 class="name"><code>Group.getSpritesCollidingWith</code></h3>
+                    <div id="method_Group.resetCollisionPoints" class="method item">
+    <h3 class="name"><code>Group.resetCollisionPoints</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>sprite</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -1013,6 +2300,8 @@
     
 
     
+        <span class="flag chainable">chainable</span>
+    
 
     
 
@@ -1027,7 +2316,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l266"><code>source\scrawlCollisions.js:266</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l490"><code>source\scrawlCollisions.js:490</code></a>
         
         </p>
 
@@ -1038,34 +2327,10 @@
     </div>
 
     <div class="description">
-        <p>Check all sprites in the Group to see if they are colliding with the supplied sprite object. An Array of all sprite objects colliding with the reference sprite will be returned</p>
+        <p>Recalculate the current collision point positions for all entitys in the group</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">sprite</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>SPRITENAME String of the reference sprite; alternatively the sprite Object itself can be passed as the argument</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -1075,7 +2340,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Array of visible sprite Objects currently colliding with the reference sprite</p>
+                    <p>this</p>
 
                 
             </div>
@@ -1124,7 +2389,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l91"><code>source\scrawlCollisions.js:91</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l95"><code>source\scrawlCollisions.js:95</code></a>
         
         </p>
 
@@ -1205,7 +2470,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l74"><code>source\scrawlCollisions.js:74</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l75"><code>source\scrawlCollisions.js:75</code></a>
         
         </p>
 
@@ -1265,1008 +2530,6 @@
 </div>
 
                 
-                    <div id="method_Sprite.addSpriteToCellFences" class="method item">
-    <h3 class="name"><code>Sprite.addSpriteToCellFences</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[items]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l522"><code>source\scrawlCollisions.js:522</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Add this sprite to a (range of) Cell object fence groups</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[items]</code>
-                        <span class="type">Array</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.addSpriteToCellFields" class="method item">
-    <h3 class="name"><code>Sprite.addSpriteToCellFields</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[items]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l506"><code>source\scrawlCollisions.js:506</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Add this sprite to a (range of) Cell object field groups</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[items]</code>
-                        <span class="type">Array</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.buildCollisionVectors" class="method item private">
-    <h3 class="name"><code>Sprite.buildCollisionVectors</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[items]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l618"><code>source\scrawlCollisions.js:618</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Collision detection helper function</p>
-<p>Parses the collisionPoints array to generate coordinate Vectors representing the sprite&#39;s collision points</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[items]</code>
-                        <span class="type">Array</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of collision point data</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.checkField" class="method item">
-    <h3 class="name"><code>Sprite.checkField</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[cell]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l570"><code>source\scrawlCollisions.js:570</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Check this sprite&#39;s collision Vectors against a Cell object&#39;s collision field image to see if any of them are colliding with the Cell&#39;s field sprites</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[cell]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>CELLNAME String of the Cell to be checked against</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>First Vector coordinate to &#39;pass&#39; the Cell.checkFieldAt() function&#39;s test; true if none pass; false if the test parameters are out of bounds</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.collisionsSpriteConstructor" class="method item private">
-    <h3 class="name"><code>Sprite.collisionsSpriteConstructor</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l461"><code>source\scrawlCollisions.js:461</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Sprite constructor hook function - modified by collisions module</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.collisionsSpriteRegisterInLibrary" class="method item private">
-    <h3 class="name"><code>Sprite.collisionsSpriteRegisterInLibrary</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l474"><code>source\scrawlCollisions.js:474</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Sprite.registerInLibrary hook function - modified by collisions module</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.collisionsSpriteSet" class="method item private">
-    <h3 class="name"><code>Sprite.collisionsSpriteSet</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l486"><code>source\scrawlCollisions.js:486</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Sprite.set hook function - modified by collisions module</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.getCollisionPoints" class="method item">
-    <h3 class="name"><code>Sprite.getCollisionPoints</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l584"><code>source\scrawlCollisions.js:584</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Calculate the current positions of this sprite&#39;s collision Vectors, taking into account the sprite&#39;s current position, roll and scale</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Array of coordinate Vectors</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.parseCollisionPoints" class="method item private">
-    <h3 class="name"><code>Sprite.parseCollisionPoints</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[items]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l687"><code>source\scrawlCollisions.js:687</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Collision detection helper function</p>
-<p>Parses user input for the collisionPoint attribute</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[items]</code>
-                        <span class="type">Array</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of collision point data</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.removeSpriteFromCellFences" class="method item">
-    <h3 class="name"><code>Sprite.removeSpriteFromCellFences</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[items]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l554"><code>source\scrawlCollisions.js:554</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Remove this sprite from a (range of) Cell object fence groups</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[items]</code>
-                        <span class="type">Array</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_Sprite.removeSpriteFromCellFields" class="method item">
-    <h3 class="name"><code>Sprite.removeSpriteFromCellFields</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[items]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCollisions.js.html#l538"><code>source\scrawlCollisions.js:538</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Remove this sprite from a (range of) Cell object field groups</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[items]</code>
-                        <span class="type">Array</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
             </div>
         
 
@@ -2300,7 +2563,7 @@
             
         
         
-        <a href="../files/source_scrawlCollisions.js.html#l56"><code>source\scrawlCollisions.js:56</code></a>
+        <a href="../files/source_scrawlCollisions.js.html#l57"><code>source\scrawlCollisions.js:57</code></a>
         
         </p>
 

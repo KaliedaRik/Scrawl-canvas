@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -214,7 +248,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlImages.js.html#l45"><code>source\scrawlImages.js:45</code></a>
+            Defined in: <a href="../files/source_scrawlImages.js.html#l46"><code>source\scrawlImages.js:46</code></a>
         </div>
     
 
@@ -251,6 +285,8 @@
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
         
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+        
         
         
     </ul>
@@ -273,6 +309,13 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_Entity.convertToPicture">Entity.convertToPicture</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_getImageById">getImageById</a>
 
                                 
@@ -287,14 +330,21 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_Group.convertToSprite">Group.convertToSprite</a>
+                                <a href="#method_getVideoById">getVideoById</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_newAnimSheet">newAnimSheet</a>
+                                <a href="#method_Group.convertGroupToPicture">Group.convertGroupToPicture</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_newImage">newImage</a>
 
                                 
                                 
@@ -321,15 +371,15 @@
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_prepareConvert">prepareConvert</a>
+                            <li class="index-item method">
+                                <a href="#method_newSpriteAnimation">newSpriteAnimation</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_Sprite.convertToPicture">Sprite.convertToPicture</a>
+                            <li class="index-item method private">
+                                <a href="#method_prepareConvert">prepareConvert</a>
 
                                 
                                 
@@ -339,6 +389,35 @@
                 </div>
             
 
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                        
+                            <li class="index-item property private">
+                                <a href="#property_imageCanvas">imageCanvas</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_imageCvx">imageCvx</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_imageFragment">imageFragment</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
             
 
             
@@ -389,7 +468,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l239"><code>source\scrawlImages.js:239</code></a>
+        <a href="../files/source_scrawlImages.js.html#l177"><code>source\scrawlImages.js:177</code></a>
         
         </p>
 
@@ -413,7 +492,117 @@
             <div class="returns-description">
                 
                     
-                    <p>Picture sprite object</p>
+                    <p>Picture entity object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_Entity.convertToPicture" class="method item">
+    <h3 class="name"><code>Entity.convertToPicture</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImages.js.html#l79"><code>source\scrawlImages.js:79</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>factory</strong> function to convert a entity into a Picture entity</p>
+<p>Argument attributes can include any entity positioning and styling values, alongside the following flag:</p>
+<ul>
+<li><strong>convert</strong> - when set to true, existing entity will be deleted; default: false</li>
+</ul>
+<p>If no name attribute is supplied in the argument object, the new Picture entity will be given the name: SPRITENAME+&#39;_picture&#39;</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key:value Object argument for setting attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Picture entity object</p>
 
                 
             </div>
@@ -469,6 +658,8 @@
         
             
                 
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
                 <p>
                 
                 Defined in
@@ -476,7 +667,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l85"><code>source\scrawlImages.js:85</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l136"><code>source\scrawlImageLoad.js:136</code></a>
         
         </p>
 
@@ -487,7 +678,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>general</strong> function to generate a ScrawlImage wrapper object for an &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; element identified by an id string</p>
+        <p>A <strong>general</strong> function to generate a Image wrapper object for an &lt;img&gt; or &lt;svg&gt; element identified by an id string</p>
 
     </div>
 
@@ -597,6 +788,8 @@
         
             
                 
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
                 <p>
                 
                 Defined in
@@ -604,7 +797,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l59"><code>source\scrawlImages.js:59</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l107"><code>source\scrawlImageLoad.js:107</code></a>
         
         </p>
 
@@ -615,7 +808,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>general</strong> function to generate ScrawlImage wrapper objects for &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; elements identified by class string</p>
+        <p>A <strong>general</strong> function to generate Image wrapper objects for &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; elements identified by class string</p>
 
     </div>
 
@@ -680,8 +873,8 @@
 </div>
 
                 
-                    <div id="method_Group.convertToSprite" class="method item">
-    <h3 class="name"><code>Group.convertToSprite</code></h3>
+                    <div id="method_getVideoById" class="method item">
+    <h3 class="name"><code>getVideoById</code></h3>
 
     
         <div class="args">
@@ -689,7 +882,13 @@
             
                 <li class="arg">
                     
-                        <code>items</code>
+                        <code>idtag</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[kill]</code>
                     
                 </li>
             
@@ -719,6 +918,8 @@
         
             
                 
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
                 <p>
                 
                 Defined in
@@ -726,7 +927,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l176"><code>source\scrawlImages.js:176</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l155"><code>source\scrawlImageLoad.js:155</code></a>
         
         </p>
 
@@ -737,12 +938,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to convert a group of sprites into a single Picture sprite</p>
-<p>Argument attributes can include any sprite positioning and styling values, alongside the following flag:</p>
-<ul>
-<li><strong>convert</strong> - when set to true, existing sprites in the group will be deleted; default: false</li>
-</ul>
-<p>If no name attribute is supplied in the argument object, the new Picture sprite will be given the name: GROUPNAME+&#39;_sprite&#39;</p>
+        <p>A <strong>general</strong> function to generate a Video wrapper object for a &lt;video&gt; element identified by an id string</p>
 
     </div>
 
@@ -754,14 +950,31 @@
             
                 <li class="param">
                     
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">idtag</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Key:value Object argument for setting attributes</p>
+                        <p>Id string value of DOM object to be imported into the scrawl library</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[kill]</code>
+                        <span class="type">Boolean</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library</p>
 
                     </div>
 
@@ -779,7 +992,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Picture sprite object; false if no sprites contained in group</p>
+                    <p>String name; false on failure</p>
 
                 
             </div>
@@ -790,8 +1003,8 @@
 </div>
 
                 
-                    <div id="method_newAnimSheet" class="method item">
-    <h3 class="name"><code>newAnimSheet</code></h3>
+                    <div id="method_Group.convertGroupToPicture" class="method item">
+    <h3 class="name"><code>Group.convertGroupToPicture</code></h3>
 
     
         <div class="args">
@@ -836,7 +1049,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l134"><code>source\scrawlImages.js:134</code></a>
+        <a href="../files/source_scrawlImages.js.html#l106"><code>source\scrawlImages.js:106</code></a>
         
         </p>
 
@@ -847,7 +1060,12 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate new AnimSheet objects</p>
+        <p>A <strong>factory</strong> function to convert a group of entitys into a single Picture entity</p>
+<p>Argument attributes can include any entity positioning and styling values, alongside the following flag:</p>
+<ul>
+<li><strong>convert</strong> - when set to true, existing entitys in the group will be deleted; default: false</li>
+</ul>
+<p>If no name attribute is supplied in the argument object, the new Picture entity will be given the name: GROUPNAME+&#39;_entity&#39;</p>
 
     </div>
 
@@ -884,7 +1102,7 @@
             <div class="returns-description">
                 
                     
-                    <p>AnimSheet object</p>
+                    <p>Picture entity object; false if no entitys contained in group</p>
 
                 
             </div>
@@ -936,6 +1154,8 @@
         
             
                 
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
                 <p>
                 
                 Defined in
@@ -943,7 +1163,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l121"><code>source\scrawlImages.js:121</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l86"><code>source\scrawlImageLoad.js:86</code></a>
         
         </p>
 
@@ -954,7 +1174,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate new ScrawlImage objects</p>
+        <p>A <strong>factory</strong> function to generate new Video objects</p>
 
     </div>
 
@@ -992,6 +1212,115 @@
                 
                     
                     <p>ScrawlImage object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_newImage" class="method item private">
+    <h3 class="name"><code>newImage</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImageLoad.js.html#l67"><code>source\scrawlImageLoad.js:67</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>factory</strong> function to generate new Image objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key:value Object argument for setting attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Image object</p>
 
                 
             </div>
@@ -1048,7 +1377,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l103"><code>source\scrawlImages.js:103</code></a>
+        <a href="../files/source_scrawlImages.js.html#l60"><code>source\scrawlImages.js:60</code></a>
         
         </p>
 
@@ -1153,7 +1482,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l112"><code>source\scrawlImages.js:112</code></a>
+        <a href="../files/source_scrawlImages.js.html#l69"><code>source\scrawlImages.js:69</code></a>
         
         </p>
 
@@ -1164,7 +1493,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate new Picture sprites</p>
+        <p>A <strong>factory</strong> function to generate new Picture entitys</p>
 
     </div>
 
@@ -1201,7 +1530,114 @@
             <div class="returns-description">
                 
                     
-                    <p>Picture sprite object</p>
+                    <p>Picture entity object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_newSpriteAnimation" class="method item">
+    <h3 class="name"><code>newSpriteAnimation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImageLoad.js.html#l77"><code>source\scrawlImageLoad.js:77</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>factory</strong> function to generate new SpriteAnimation objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key:value Object argument for setting attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>SpriteAnimation object</p>
 
                 
             </div>
@@ -1250,7 +1686,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l206"><code>source\scrawlImages.js:206</code></a>
+        <a href="../files/source_scrawlImages.js.html#l136"><code>source\scrawlImages.js:136</code></a>
         
         </p>
 
@@ -1285,35 +1721,22 @@
 </div>
 
                 
-                    <div id="method_Sprite.convertToPicture" class="method item">
-    <h3 class="name"><code>Sprite.convertToPicture</code></h3>
+            </div>
+        
 
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
 
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
+                
+                    <div id="property_imageCanvas" class="property item private">
+    <h3 class="name"><code>imageCanvas</code></h3>
+    <span class="type">CasnvasObject</span>
 
     
 
     
-
-    
-
+        <span class="flag private">private</span>
     
 
     
@@ -1324,6 +1747,8 @@
         
             
                 
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
                 <p>
                 
                 Defined in
@@ -1331,10 +1756,9 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l149"><code>source\scrawlImages.js:149</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l51"><code>source\scrawlImageLoad.js:51</code></a>
         
         </p>
-
 
         
 
@@ -1342,53 +1766,110 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to convert a sprite into a Picture sprite</p>
-<p>Argument attributes can include any sprite positioning and styling values, alongside the following flag:</p>
-<ul>
-<li><strong>convert</strong> - when set to true, existing sprite will be deleted; default: false</li>
-</ul>
-<p>If no name attribute is supplied in the argument object, the new Picture sprite will be given the name: SPRITENAME+&#39;_picture&#39;</p>
+        <p>Utility canvas - never displayed</p>
 
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Key:value Object argument for setting attributes</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Picture sprite object</p>
+</div>
 
                 
-            </div>
-        </div>
+                    <div id="property_imageCvx" class="property item private">
+    <h3 class="name"><code>imageCvx</code></h3>
+    <span class="type">CasnvasContextObject</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImageLoad.js.html#l60"><code>source\scrawlImageLoad.js:60</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Utility canvas 2d context engine</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_imageFragment" class="property item private">
+    <h3 class="name"><code>imageFragment</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImageLoad.js.html#l44"><code>source\scrawlImageLoad.js:44</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>DOM document fragment</p>
+
+    </div>
+
+    
+
     
 
     
@@ -1396,8 +1877,6 @@
 
                 
             </div>
-        
-
         
 
         

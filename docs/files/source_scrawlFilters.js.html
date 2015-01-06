@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 3.1.7</em>
+            <em>API Docs for: 4.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -43,13 +43,19 @@
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
-                <li><a href="../classes/AnimSheet.html">AnimSheet</a></li>
-            
                 <li><a href="../classes/Base.html">Base</a></li>
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
                 <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
@@ -59,13 +65,31 @@
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
                 <li><a href="../classes/Force.html">Force</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
                 <li><a href="../classes/Group.html">Group</a></li>
             
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
                 <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -81,6 +105,8 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -89,21 +115,29 @@
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
             
-                <li><a href="../classes/ScrawlImage.html">ScrawlImage</a></li>
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
             
-                <li><a href="../classes/Sprite.html">Sprite</a></li>
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
             
                 <li><a href="../classes/Wheel.html">Wheel</a></li>
             
@@ -245,476 +279,2100 @@ The Filters module adds a set of filter algorithms to the Scrawl library
 @module scrawlFilters
 **/
 
-var scrawl = (function(my) {
-	&#x27;use strict&#x27;;
-	/**
+if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.contains(window.scrawl.modules, &#x27;filters&#x27;)) {
+	var scrawl = (function(my) {
+		&#x27;use strict&#x27;;
+		/**
 # window.scrawl
 
 scrawlFilters module adaptions to the Scrawl library object
 
 ## New library sections
 
-* scrawl.filter - for image filter algorithms
+* scrawl.filter - for filter objects
+* scrawl.filterFactory - for filter factory objects
 
 @class window.scrawl_Filters
 **/
+		my.pushUnique(my.sectionlist, &#x27;filter&#x27;);
+		my.pushUnique(my.nameslist, &#x27;filternames&#x27;);
+		/**
+Utility canvases - never displayed
+@property filterCanvas
+@type {CasnvasObject}
+@private
+**/
+		my.filterCanvas = document.createElement(&#x27;canvas&#x27;);
+		my.filterCanvas.id = &#x27;filterHiddenCanvasElement&#x27;;
+		my.f.appendChild(my.filterCanvas);
+		/**
+Utility canvas 2d context engine
+@property filterCvx
+@type {CasnvasContextObject}
+@private
+**/
+		my.filterCvx = my.filterCanvas.getContext(&#x27;2d&#x27;);
+		/**
+Array of FILTERNAME strings, for filters to be applied to the Pad
+@property filters
+@type Array
+@default []
+**/
+		my.d.Pad.filters = [];
+		/**
+Array of FILTERNAME strings, for filters to be applied to the Cell
+@property filters
+@type Array
+@default []
+**/
+		my.d.Cell.filters = [];
+		/**
+Array of FILTERNAME strings, for filters to be applied to Entitys in this group
+@property filters
+@type Array
+@default []
+**/
+		my.d.Group.filters = [];
+		/**
+Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
+@property filterOnStroke
+@type Boolean
+@default false
+**/
+		my.d.Group.filterOnStroke = false;
+		/**
+The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
 
-	my.prepareFilterSection();
+* &#x27;__entity__&#x27; - filter is applied immediately after the Entity has stamped itself onto a cell
+* &#x27;__cell__&#x27; - filter is applied after all Entites have completed stamping themselves onto the cell
+* &#x27;__pad__&#x27; - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
 
-	my.filterSetup = function(items, image) {
-		items = my.safeObject(items);
-		var myUse = (my.xt(items.useSourceData)) ? items.useSourceData : false,
-			result = {};
-		result.items = items;
-		result.image = image || false;
-		result.useSourceData = myUse;
-		//console.log(&#x27;filterSetup #1&#x27;, myUse, items.use);
-		result.imgData = items.use || image.getImageData(myUse);
-		//console.log(&#x27;filterSetup #2&#x27;, result.imgData.data[0], result.imgData.data[100], result.imgData.data[200], result.imgData.data[300], result.imgData.data[400], result.imgData.data[500]);
-		result.save = (my.xt(items.save)) ? items.save : true;
-		return result;
-	};
-	my.filterSave = function(args) {
-		var result;
-		if (args.save &amp;&amp; args.image) {
-			result = args.image.getImageDataUrl(args.imgData, true);
-			my.img[args.image.name] = args.image.makeImage(result, args.image.name + &#x27;_current&#x27;, args.image.width, args.image.height);
+@property filterLevel
+@type String
+@default &#x27;entity&#x27;
+**/
+		my.d.Group.filterLevel = &#x27;entity&#x27;;
+		/**
+Array of FILTERNAME strings, for filters to be applied to this entity
+@property filters
+@type Array
+@default []
+**/
+		my.d.Entity.filters = [];
+		/**
+Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
+@property filterOnStroke
+@type Boolean
+@default false
+**/
+		my.d.Entity.filterOnStroke = false;
+		/**
+The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
+
+* &#x27;__entity__&#x27; - filter is applied immediately after the Entity has stamped itself onto a cell
+* &#x27;__cell__&#x27; - filter is applied after all Entites have completed stamping themselves onto the cell
+* &#x27;__pad__&#x27; - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
+
+@property filterLevel
+@type String
+@default &#x27;entity&#x27;
+**/
+		my.d.Entity.filterLevel = &#x27;entity&#x27;;
+		if (my.xt(my.d.Block)) {
+			my.mergeInto(my.d.Block, my.d.Entity);
 		}
-	};
-
-	/**
-Grayscale filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of grayscaling effect: as a Number, between 0 (no effect) and 1 (full grayscale effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method grayscale
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.filter.grayscale = function(items, image) {
-		//console.log(&#x27;grayscale #1&#x27;, items);
-		var args = my.filterSetup(items, image),
-			value = (my.xt(args.items.value)) ? args.items.value : 1,
-			data = args.imgData.data,
-			gray,
-			here;
-		value = (my.isa(value, &#x27;str&#x27;)) ? parseFloat(value) / 100 : value;
-		value = (my.isBetween(value, 0, 1, true)) ? value : ((value &gt; 0.5) ? 1 : 0);
-		//console.log(&#x27;grayscale #2&#x27;, args, value, data.length);
-		for (var i = 0, z = data.length; i &lt; z; i += 4) {
-			here = i;
-			gray = Math.floor((0.2126 * data[here]) + (0.7152 * data[++here]) + (0.0722 * data[++here]));
-			for (var j = 0; j &lt; 3; j++) {
-				here = i + j;
-				data[here] = data[here] + ((gray - data[here]) * value);
-			}
+		if (my.xt(my.d.Shape)) {
+			my.mergeInto(my.d.Shape, my.d.Entity);
 		}
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;grayscale&#x27;);
-	/**
-Sharpen filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of sharpen effect: as a Number, between 0 (no effect) and 1 (full sharpen effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method sharpen
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
+		if (my.xt(my.d.Wheel)) {
+			my.mergeInto(my.d.Wheel, my.d.Entity);
+		}
+		if (my.xt(my.d.Picture)) {
+			my.mergeInto(my.d.Picture, my.d.Entity);
+		}
+		if (my.xt(my.d.Phrase)) {
+			my.mergeInto(my.d.Phrase, my.d.Entity);
+		}
+		if (my.xt(my.d.Path)) {
+			my.mergeInto(my.d.Path, my.d.Entity);
+		}
+		/**
+Pad constructor hook function - modified by filters module
+@method filtersPadInit
+@private
 **/
-	my.filter.sharpen = function(items, image) {
-		var args = my.filterSetup(items, image),
-			value = (my.xt(args.items.value)) ? args.items.value : 1,
-			mask;
-		value = (my.isa(value, &#x27;str&#x27;)) ? parseFloat(value) / 100 : value;
-		mask = my.filter.matrix({
-			use: args.imgData,
-			data: [0, -1, 0, -1, 5, -1, 0, -1, 0],
-			save: false,
-		}, args.image);
-		args.imgData = my.filter.mergeImages({
-			image1: args.imgData,
-			image2: mask,
-			value: value,
-		});
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;sharpen&#x27;);
-	/**
-Filter helper function - merge one image data object into another
-
-Attributes in the argument object:
-
-* __value__ - Number. Percentage value of merge, between 0 (image1 returned) and 1 (image2 returned)
-* __image1__ - First image data object - fully displayed when _value_ is 0
-* __image2__ - Second image data object - fully displayed when _value_ is 1
-@method mergeImages
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
+		my.Pad.prototype.filtersPadInit = function(items) {
+			this.filters = [];
+		};
+		/**
+Cell constructor hook function - modified by filters module
+@method filtersCellInit
+@private
 **/
-	my.filter.mergeImages = function(items) {
-		if (my.isa(items, &#x27;obj&#x27;) &amp;&amp; my.xta([items.image1, items.image2, items.value])) {
-			var img1 = items.image1,
-				dat1 = img1.data,
-				img2 = items.image2,
-				dat2 = img2.data,
-				val = items.value,
-				iVal = 1 - val,
-				here;
-			if (val === 0) {
-				return img1;
+		my.Cell.prototype.filtersCellInit = function(items) {
+			this.filters = [];
+		};
+		/**
+Group constructor hook function - modified by filters module
+@method filtersGroupInit
+@private
+**/
+		my.Group.prototype.filtersGroupInit = function(items) {
+			items = my.safeObject(items);
+			this.filters = (my.xt(items.filters)) ? items.filters : [];
+			this.filterOnStroke = my.xtGet(items.filterOnStroke, false);
+			this.filterLevel = my.xtGet(items.filterLevel, &#x27;entity&#x27;);
+		};
+		/**
+Entity constructor hook function - modified by filters module
+@method filtersEntityInit
+@private
+**/
+		my.Entity.prototype.filtersEntityInit = function(items) {
+			items = my.safeObject(items);
+			this.filters = (my.xt(items.filters)) ? items.filters : [];
+			this.filterOnStroke = my.xtGet(items.filterOnStroke, false);
+			this.filterLevel = my.xtGet(items.filterLevel, &#x27;entity&#x27;);
+		};
+
+		/**
+A __factory__ function to generate new Greyscale filter objects
+@method newGreyscaleFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return GreyscaleFilter object
+**/
+		my.newGreyscaleFilter = function(items) {
+			return new my.GreyscaleFilter(items);
+		};
+		/**
+A __factory__ function to generate new Invert filter objects
+@method newInvertFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return InvertFilter object
+**/
+		my.newInvertFilter = function(items) {
+			return new my.InvertFilter(items);
+		};
+		/**
+A __factory__ function to generate new Brightness filter objects
+@method newBrightnessFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return BrightnessFilter object
+**/
+		my.newBrightnessFilter = function(items) {
+			return new my.BrightnessFilter(items);
+		};
+		/**
+A __factory__ function to generate new Saturation filter objects
+@method newSaturationFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return SaturationFilter object
+**/
+		my.newSaturationFilter = function(items) {
+			return new my.SaturationFilter(items);
+		};
+		/**
+A __factory__ function to generate new Threshold filter objects
+@method newThresholdFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return ThresholdFilter object
+**/
+		my.newThresholdFilter = function(items) {
+			return new my.ThresholdFilter(items);
+		};
+		/**
+A __factory__ function to generate new Channels filter objects
+@method newChannelsFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return ChannelsFilter object
+**/
+		my.newChannelsFilter = function(items) {
+			return new my.ChannelsFilter(items);
+		};
+		/**
+A __factory__ function to generate new ChannelStep filter objects
+@method newChannelStepFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return ChannelStepFilter object
+**/
+		my.newChannelStepFilter = function(items) {
+			return new my.ChannelStepFilter(items);
+		};
+		/**
+A __factory__ function to generate new Tint filter objects
+@method newTintFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return TintFilter object
+**/
+		my.newTintFilter = function(items) {
+			return new my.TintFilter(items);
+		};
+		/**
+A __factory__ function to generate new Tint filter objects preset with values for creating a sepia tint
+@method newSepiaFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return TintFilter object
+**/
+		my.newSepiaFilter = function(items) {
+			items.redInRed = 0.393;
+			items.redInGreen = 0.349;
+			items.redInBlue = 0.272;
+			items.greenInRed = 0.769;
+			items.greenInGreen = 0.686;
+			items.greenInBlue = 0.534;
+			items.blueInRed = 0.189;
+			items.blueInGreen = 0.168;
+			items.blueInBlue = 0.131;
+			return new my.TintFilter(items);
+		};
+		/**
+A __factory__ function to generate new Matrix filter objects
+@method newMatrixFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return MatrixFilter object
+**/
+		my.newMatrixFilter = function(items) {
+			return new my.MatrixFilter(items);
+		};
+		/**
+A __factory__ function to generate new Sharpen filter objects
+@method newSharpenFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return SharpenFilter object
+**/
+		my.newSharpenFilter = function(items) {
+			items.data = [0, -1, 0, -1, 5, -1, 0, -1, 0];
+			return new my.MatrixFilter(items);
+		};
+		/**
+A __factory__ function to generate new Pixelate filter objects
+@method newPixelateFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return PixelateFilter object
+**/
+		my.newPixelateFilter = function(items) {
+			return new my.PixelateFilter(items);
+		};
+		/**
+A __factory__ function to generate new Blur filter objects
+@method newBlurFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return BlurFilter object
+**/
+		my.newBlurFilter = function(items) {
+			return new my.BlurFilter(items);
+		};
+		/**
+A __factory__ function to generate new Leach filter objects
+@method newLeachFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return LeachFilter object
+**/
+		my.newLeachFilter = function(items) {
+			return new my.LeachFilter(items);
+		};
+		/**
+A __factory__ function to generate new Separate filter objects
+@method newSeparateFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return newSeparateFilter object
+**/
+		my.newSeparateFilter = function(items) {
+			return new my.SeparateFilter(items);
+		};
+		/**
+A __factory__ function to generate new Noise filter objects
+@method newNoiseFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return NoiseFilter object
+**/
+		my.newNoiseFilter = function(items) {
+			return new my.NoiseFilter(items);
+		};
+
+		/**
+Display function - requests Cells to compile their &amp;lt;canvas&amp;gt; element
+
+Cells will compile in ascending order of their compileOrder attributes, if their compiled attribute = true
+
+By default:
+* the initial base canvas has a compileOrder of 9999 and compiles last
+* the initial display canvas has compiled = false and will not compile
+
+(As amended by Filters module)
+
+@method compile
+@return This
+@chainable
+**/
+		my.Pad.prototype.compile = function() {
+			var c,
+				i,
+				iz;
+			this.filters.length = 0;
+			this.sortCellsCompile();
+			for (i = 0, iz = this.cells.length; i &lt; iz; i++) {
+				c = my.cell[this.cells[i]];
+				if (c.rendered &amp;&amp; c.compiled) {
+					c.compile();
+				}
 			}
-			else if (val === 1) {
-				return img2;
+			return this;
+		};
+		/**
+Display function - requests Cells to show their &amp;lt;canvas&amp;gt; element 
+
+Cells will show in ascending order of their showOrder attributes, if their show attribute = true
+
+By default, the initial base and display canvases have shown = false:
+* &#x27;show&#x27; involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
+* the last action is to copy the base cell onto the display cell
+
+(As amended by Filters module)
+
+@method show
+@return This
+@chainable
+**/
+		my.Pad.prototype.show = function(command) {
+			var d,
+				b,
+				c,
+				i,
+				iz;
+			d = my.cell[this.display];
+			b = my.cell[this.base];
+			this.sortCellsShow();
+			for (i = 0, iz = this.cells.length; i &lt; iz; i++) {
+				c = my.cell[this.cells[i]];
+				if (c.rendered &amp;&amp; c.shown) {
+					b.copyCellToSelf(c);
+				}
 			}
-			else {
-				for (var i = 0, z = dat1.length; i &lt; z; i += 4) {
-					for (var j = 0; j &lt; 3; j++) {
-						here = i + j;
-						dat1[here] = (dat1[here] * iVal) + (dat2[here] * val);
+			for (i = 0, iz = this.filters.length; i &lt; iz; i++) {
+				if (my.xt(my.entity[this.filters[i]])) {
+					my.entity[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
+				}
+				if (my.xt(my.group[this.filters[i]])) {
+					my.group[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
+				}
+			}
+			d.copyCellToSelf(b, true);
+			return this;
+		};
+		/**
+Prepare to draw entitys onto the Cell&#x27;s &amp;lt;canvas&amp;gt; element, in line with the Cell&#x27;s group Array 
+
+(As amended by Filters module)
+@method compileFilters
+@return always true
+@chainable
+**/
+		my.Cell.prototype.compile = function() {
+			var g,
+				i,
+				iz;
+			this.filters.length = 0;
+			this.groups.sort(function(a, b) {
+				return my.group[a].order - my.group[b].order;
+			});
+			for (i = 0, iz = this.groups.length; i &lt; iz; i++) {
+				g = my.group[this.groups[i]];
+				if (g.get(&#x27;visibility&#x27;)) {
+					g.stamp(false, this.name);
+				}
+			}
+			for (i = 0, iz = this.filters.length; i &lt; iz; i++) {
+				if (my.xt(my.entity[this.filters[i]])) {
+					my.entity[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
+				}
+				else if (my.xt(my.group[this.filters[i]])) {
+					my.group[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
+				}
+			}
+			return true;
+		};
+		/**
+Group.stamp hook function - add a filter to a group of Entitys, and any background detail enclosed by them
+@method stampFilter
+@private
+**/
+		my.Group.prototype.stampFilter = function(engine, cell, force) {
+			var imageData,
+				canvas,
+				composite,
+				e,
+				eStroke,
+				i,
+				iz;
+			force = my.xtGet(force, false);
+			if (this.filters.length &gt; 0) {
+				canvas = my.canvas[cell];
+				my.cv.width = canvas.width;
+				my.cv.height = canvas.height;
+				my.filterCanvas.width = canvas.width;
+				my.filterCanvas.height = canvas.height;
+				my.filterCvx.clearRect(0, 0, canvas.width, canvas.height);
+				for (i = 0, iz = this.entitys.length; i &lt; iz; i++) {
+					e = my.entity[this.entitys[i]];
+					eStroke = e.filterOnStroke;
+					e.filterOnStroke = this.filterOnStroke;
+					my.cvx.save();
+					switch (e.type) {
+						case &#x27;Phrase&#x27;:
+							imageData = e.stampFilterPhrase(engine, cell, force);
+							break;
+						case &#x27;Picture&#x27;:
+							imageData = e.stampFilterPicture(engine, cell, force);
+							break;
+						case &#x27;Wheel&#x27;:
+							imageData = e.stampFilterWheel(engine, cell, force);
+							break;
+						default:
+							imageData = e.stampFilterDefault(engine, cell, force);
+					}
+					e.filterOnStroke = eStroke;
+					my.filterCvx.putImageData(imageData, 0, 0);
+					my.cvx.restore();
+				}
+				imageData = my.filterCvx.getImageData(0, 0, canvas.width, canvas.height);
+				if (imageData) {
+					for (i = 0, iz = this.filters.length; i &lt; iz; i++) {
+						if (this.filterLevel === &#x27;pad&#x27; &amp;&amp; !force) {
+							my.pad[my.cell[this.cell].pad].filters.push(this.name);
+						}
+						else if (this.filterLevel === &#x27;cell&#x27; &amp;&amp; !force) {
+							my.cell[this.cell].filters.push(this.name);
+						}
+						else if (my.filter[this.filters[i]]) {
+							imageData = my.filter[this.filters[i]].add(imageData);
+						}
 					}
 				}
-				return img1;
+				my.cvx.putImageData(imageData, 0, 0);
+				composite = engine.globalCompositeOperation;
+				engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
+				engine.setTransform(1, 0, 0, 1, 0, 0);
+				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+				engine.globalCompositeOperation = composite;
 			}
-		}
-		return false;
-	};
-	my.pushUnique(my.filternames, &#x27;mergeImages&#x27;);
-	/**
-Invert filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of invert effect: as a Number, between 0 (no effect) and 1 (full invert effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method invert
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
+		};
+		/**
+Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
+@method stampFilter
+@private
 **/
-	my.filter.invert = function(items, image) {
-		var args = my.filterSetup(items, image),
-			value = (my.xt(args.items.value)) ? args.items.value : 1,
-			data = args.imgData.data,
-			iVal, here;
-		value = (my.isa(value, &#x27;str&#x27;)) ? parseFloat(value) / 100 : value;
-		value = (my.isBetween(value, 0, 1, true)) ? value : (value &gt; 0.5) ? 1 : 0;
-		iVal = 1 - value;
-		for (var i = 0, iz = data.length; i &lt; iz; i += 4) {
-			for (var j = 0; j &lt; 3; j++) {
-				here = i + j;
-				data[here] = (data[here] * iVal) + ((255 - data[here]) * value);
+		my.Entity.prototype.stampFilter = function(engine, cell, force) {
+			var imageData,
+				canvas,
+				composite,
+				i,
+				iz;
+			force = my.xtGet(force, false);
+			if (this.filters.length &gt; 0) {
+				canvas = my.canvas[cell];
+				my.cv.width = canvas.width;
+				my.cv.height = canvas.height;
+				my.cvx.save();
+				switch (this.type) {
+					case &#x27;Phrase&#x27;:
+						imageData = this.stampFilterPhrase(engine, cell, force);
+						break;
+					case &#x27;Picture&#x27;:
+						imageData = this.stampFilterPicture(engine, cell, force);
+						break;
+					case &#x27;Wheel&#x27;:
+						imageData = this.stampFilterWheel(engine, cell, force);
+						break;
+					default:
+						imageData = this.stampFilterDefault(engine, cell, force);
+				}
+				if (imageData) {
+					for (i = 0, iz = this.filters.length; i &lt; iz; i++) {
+						if (this.filterLevel === &#x27;pad&#x27; &amp;&amp; !force) {
+							my.pad[my.cell[my.group[this.group].cell].pad].filters.push(this.name);
+						}
+						else if (this.filterLevel === &#x27;cell&#x27; &amp;&amp; !force) {
+							my.cell[my.group[this.group].cell].filters.push(this.name);
+						}
+						else if (my.filter[this.filters[i]]) {
+							imageData = my.filter[this.filters[i]].add(imageData);
+						}
+					}
+					my.cvx.putImageData(imageData, 0, 0);
+					composite = engine.globalCompositeOperation;
+					engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
+					engine.setTransform(1, 0, 0, 1, 0, 0);
+					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+					engine.globalCompositeOperation = composite;
+				}
+				my.cvx.restore();
 			}
-		}
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;invert&#x27;);
-	/**
-Brightness filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1). Values can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method brightness
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterPhrase
+@private
 **/
-	my.filter.brightness = function(items, image) {
-		var args = my.filterSetup(items, image),
-			value = (my.xt(args.items.value)) ? args.items.value : 1,
-			data = args.imgData.data,
-			here;
-		value = (my.isa(value, &#x27;str&#x27;)) ? parseFloat(value) / 100 : value;
-		value = (value &lt; 0) ? 0 : value;
-		for (var i = 0, iz = data.length; i &lt; iz; i += 4) {
-			for (var j = 0; j &lt; 3; j++) {
-				here = i + j;
-				data[here] = data[here] * value;
+		my.Entity.prototype.stampFilterPhrase = function(engine, cell, force) {
+			var context,
+				canvas,
+				test,
+				i,
+				iz,
+				o,
+				here,
+				textY,
+				tX,
+				tY;
+			canvas = my.canvas[cell];
+			context = my.ctx[this.context];
+			my.cvx.font = context.font;
+			my.cvx.fillStyle = &#x27;rgb(0, 0, 0)&#x27;;
+			my.cvx.textAlign = context.textAlign;
+			my.cvx.textBaseline = context.textBaseline;
+			test = (my.entity[this.path] &amp;&amp; my.entity[this.path].type === &#x27;Path&#x27;);
+			if (this.pivot || !test || this.get(&#x27;textAlongPath&#x27;) === &#x27;phrase&#x27;) {
+				o = this.getOffset();
+				here = this.prepareStamp();
+				textY = this.size * this.lineHeight * this.scale;
+				this.rotateCell(my.cvx, my.cv);
+				tX = here.x + o.x;
+				for (i = 0, iz = this.texts.length; i &lt; iz; i++) {
+					tY = here.y + (textY * i) + o.y;
+					my.text[this.texts[i]].fill(my.cvx, cell, tX, tY);
+				}
 			}
-		}
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;brightness&#x27;);
-	/**
-Saturation filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of saturation effect: as a Number, between 0 (gray) and 1 (no effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1). Values can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method saturation
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.filter.saturation = function(items, image) {
-		var args = my.filterSetup(items, image),
-			value = (my.xt(args.items.value)) ? args.items.value : 1,
-			data = args.imgData.data,
-			here;
-		value = (my.isa(value, &#x27;str&#x27;)) ? parseFloat(value) / 100 : value;
-		value = (value &lt; 0) ? 0 : value;
-		for (var i = 0, iz = data.length; i &lt; iz; i += 4) {
-			for (var j = 0; j &lt; 3; j++) {
-				here = i + j;
-				data[here] = 127 + ((data[here] - 127) * value);
+			else {
+				my.text[this.texts[0]].clipAlongPath();
 			}
-		}
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;saturation&#x27;);
-	/**
-Threshold filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __value__ - Number or String. Percentage value of threshold border: as a Number, between 0 (black) and 1 (white); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 0.5)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method threshold
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
+			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+			my.cvx.globalCompositeOperation = &#x27;source-in&#x27;;
+			my.cvx.drawImage(canvas, 0, 0);
+			my.cvx.globalCompositeOperation = &#x27;source-over&#x27;;
+			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterWheel
+@private
 **/
-	my.filter.threshold = function(items, image) {
-		var args = my.filterSetup(items, image),
-			value = (my.xt(items.value)) ? items.value : 0.5,
-			data,
-			here;
-		value = (my.isa(value, &#x27;str&#x27;)) ? parseFloat(value) / 100 : value;
-		value = (my.isBetween(value, 0, 1, true)) ? value : ((value &gt; 0.5) ? 1 : 0);
-		value *= 255;
-		args.imgData = my.filter.grayscale({
-			useSourceData: args.useSourceData,
-			use: args.imgData,
-			save: false,
-		}, args.image);
-		data = args.imgData.data;
-		for (var i = 0, iz = data.length; i &lt; iz; i += 4) {
-			for (var j = 0; j &lt; 3; j++) {
-				here = i + j;
-				data[here] = (data[here] &gt; value) ? 255 : 0;
+		my.Entity.prototype.stampFilterWheel = function(engine, cell, force) {
+			var canvas = my.canvas[cell],
+				context = my.ctx[this.context];
+			if (this.filterOnStroke) {
+				my.cvx.lineWidth = context.lineWidth;
+				my.cvx.shadowOffsetX = context.shadowOffsetX;
+				my.cvx.shadowOffsetY = context.shadowOffsetY;
+				my.cvx.shadowBlur = context.shadowBlur;
+				my.cvx.lineJoin = context.lineJoin;
+				my.cvx.lineCap = context.lineCap;
+				my.cvx.miterLimit = context.miterLimit;
+				my.cvx.lineDash = context.lineDash;
+				my.cvx.lineDashOffset = context.lineDashOffset;
+				my.cvx.globalAlpha = context.globalAlpha;
+				this.buildPath(my.cvx, my.cv);
+				my.cvx.stroke();
+				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+				my.cvx.globalCompositeOperation = &#x27;source-in&#x27;;
+				my.cvx.drawImage(canvas, 0, 0);
+				my.cvx.globalCompositeOperation = &#x27;source-over&#x27;;
 			}
-		}
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;threshold&#x27;);
-	/**
-Channels filter (added to the core by the scrawlFilters module)
+			else {
+				this.clip(my.cvx, cell);
+				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+				my.cvx.drawImage(canvas, 0, 0);
+			}
+			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterPicture
+@private
+**/
+		my.Entity.prototype.stampFilterPicture = function(engine, cell, force) {
+			var canvas,
+				data,
+				here;
+			canvas = my.canvas[cell];
+			data = this.getImage();
+			if (data) {
+				here = this.prepareStamp();
+				this.rotateCell(my.cvx, my.cv);
+				my.cvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+				my.cvx.globalCompositeOperation = &#x27;source-in&#x27;;
+				my.cvx.drawImage(canvas, 0, 0);
+				my.cvx.globalCompositeOperation = &#x27;source-over&#x27;;
+				return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+			}
+			return false;
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterDefault
+@private
+**/
+		my.Entity.prototype.stampFilterDefault = function(engine, cell, force) {
+			var canvas = my.canvas[cell];
+			this.clip(my.cvx, cell);
+			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
+			my.cvx.drawImage(canvas, 0, 0);
+			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+		};
 
-Alter the relative channel levels for an image
+		/**
+# Filter
 
-Attributes in the argument object:
+## Instantiation
 
-* __red__ - Number or String. Percentage value of red channel effect on the pixel: as a Number, between 0 (set red channel to zero) and 1 (no effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1). Can go above 1.
-* __green__ - Number or String. Percentage value of green channel effect on the pixel: as a Number, between 0 (set green channel to zero) and 1 (no effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1). Can go above 1.
-* __blue__ - Number or String. Percentage value of blue channel effect on the pixel: as a Number, between 0 (set blue channel to zero) and 1 (no effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1). Can go above 1.
-* __alpha__ - Number or String. Percentage value of alpha channel effect on the pixel: as a Number, between 0 (set alpha channel to zero) and 1 (no effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1). Can go above 1.
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method channels
+* scrawl.newFilter()
+
+## Purpose
+
+* Adds a filter effect to an Entity
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the Filter object
+
+@class Filter
+@constructor
+@extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.Filter = function Filter(items) {
+			items = my.safeObject(items);
+			my.Base.call(this, items);
+			this.alpha = my.xtGet(items.alpha, 1);
+			this.composite = my.xtGet(items.composite, &#x27;source-over&#x27;);
+			return this;
+		};
+		my.Filter.prototype = Object.create(my.Base.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.Filter.prototype.type = &#x27;Filter&#x27;;
+		my.Filter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.Filter = {
+			/**
+Filter alpha
+
+values between 0 (transparent) and 1 (current alpha values); or &#x27;0%&#x27; and &#x27;100%&#x27;
+@property alpha
+@type Number - or alternatively percentage String
+@default 1
+**/
+			alpha: 1,
+			/**
+Filter composite operation
+
+Only the final filter in an array of filters will determine the composite operation to be used on the cell
+@property composite
+@type String
+@default &#x27;source-over&#x27;
+**/
+			composite: &#x27;source-over&#x27;,
+		};
+		my.mergeInto(my.d.Filter, my.d.Base);
+		/**
+Add function - overwritten by individual filters
+
+@method add
+@param {Object} data - canvas getImageData object
+@return original image data
+**/
+		my.Filter.prototype.add = function(data) {
+			return data;
+		};
+		/**
+cloneImageData function
+
+@method cloneImageData
+@param {Object} original - canvas getImageData object
+@return cloned image data object; false on error
+**/
+		my.Filter.prototype.cloneImageData = function(original) {
+			var w,
+				h;
+			if (my.xt(original)) {
+				if (my.xta(original.width, original.height)) {
+					w = original.width;
+					h = original.height;
+					my.filterCanvas.width = w;
+					my.filterCanvas.height = h;
+					my.filterCvx.putImageData(original, 0, 0);
+					return my.filterCvx.getImageData(0, 0, w, h);
+				}
+			}
+			return false;
+		};
+		/**
+getAlpha function
+
+@method getAlpha
+@return numerical strength value, between 0 and 1
+@private
+**/
+		my.Filter.prototype.getAlpha = function() {
+			var a = (my.isa(this.alpha, &#x27;str&#x27;)) ? parseFloat(this.alpha) / 100 : this.alpha;
+			if (a &gt;= 0 &amp;&amp; a &lt;= 1) {
+				return a;
+			}
+			else {
+				return (a &gt; 0.5) ? 1 : 0;
+			}
+		};
+		/**
+# GreyscaleFilter
+
+## Instantiation
+
+* scrawl.newGreyscaleFilter()
+
+## Purpose
+
+* Adds a greyscale filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the GreyscaleFilter object
+
+@class GreyscaleFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.GreyscaleFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.GreyscaleFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.GreyscaleFilter.prototype.type = &#x27;GreyscaleFilter&#x27;;
+		my.GreyscaleFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.GreyscaleFilter = {};
+		my.mergeInto(my.d.GreyscaleFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its greyscale and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-	my.filter.channels = function(items, image) {
-		var args = my.filterSetup(items, image),
-			red = (my.xt(args.items.red)) ? args.items.red : 1,
-			green = (my.xt(args.items.green)) ? args.items.green : 1,
-			blue = (my.xt(args.items.blue)) ? args.items.blue : 1,
-			alpha = (my.xt(args.items.alpha)) ? args.items.alpha : 1,
-			data = args.imgData.data,
-			here;
-		red = (my.isa(red, &#x27;str&#x27;)) ? parseFloat(red) / 100 : red;
-		green = (my.isa(green, &#x27;str&#x27;)) ? parseFloat(green) / 100 : green;
-		blue = (my.isa(blue, &#x27;str&#x27;)) ? parseFloat(blue) / 100 : blue;
-		alpha = (my.isa(alpha, &#x27;str&#x27;)) ? parseFloat(alpha) / 100 : alpha;
-		for (var i = 0, z = data.length; i &lt; z; i += 4) {
-			here = i;
-			data[here] = data[here] * red;
-			here++;
-			data[here] = data[here] * green;
-			here++;
-			data[here] = data[here] * blue;
-			here++;
-			data[here] = data[here] * alpha;
-		}
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;channels&#x27;);
-	/**
-ChannelStep filter (added to the core by the scrawlFilters module)
+		my.GreyscaleFilter.prototype.add = function(data) {
+			var alpha,
+				d,
+				here,
+				grey,
+				i,
+				iz;
+			alpha = this.getAlpha();
+			d = data.data;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					here = i;
+					grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
+					here = i;
+					d[here] = grey;
+					d[++here] = grey;
+					d[++here] = grey;
+					d[++here] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# InvertFilter
 
-Limit the number of values used in each channel
+## Instantiation
 
-Attributes in the argument object:
+* scrawl.newInvertFilter()
 
-* __red__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __green__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __blue__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __alpha__ - Number. Channel step size, between 1 (256 steps) and 128 (2 steps) - default: 1
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method channelStep
+## Purpose
+
+* Adds an invert filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the InvertFilter object
+
+@class InvertFilter
+@constructor
+@extends Filter
 @param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.InvertFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.InvertFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.InvertFilter.prototype.type = &#x27;InvertFilter&#x27;;
+		my.InvertFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.InvertFilter = {};
+		my.mergeInto(my.d.InvertFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its invert and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-	my.filter.channelStep = function(items, image) {
-		var args = my.filterSetup(items, image),
-			red = (my.xt(args.items.red)) ? args.items.red : 1,
-			green = (my.xt(args.items.green)) ? args.items.green : 1,
-			blue = (my.xt(args.items.blue)) ? args.items.blue : 1,
-			alpha = (my.xt(args.items.alpha)) ? args.items.alpha : 1,
-			data = args.imgData.data,
-			here;
-		for (var i = 0, z = data.length; i &lt; z; i += 4) {
-			here = i;
-			data[here] = Math.floor(data[here] / red) * red;
-			here++;
-			data[here] = Math.floor(data[here] / green) * green;
-			here++;
-			data[here] = Math.floor(data[here] / blue) * blue;
-			here++;
-			data[here] = Math.floor(data[here] / alpha) * alpha;
-		}
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;channelStep&#x27;);
-	/**
-Sepia filter (added to the core by the scrawlFilters module)
+		my.InvertFilter.prototype.add = function(data) {
+			var alpha,
+				d,
+				here,
+				i,
+				iz;
+			alpha = this.getAlpha();
+			d = data.data;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					here = i;
+					d[here] = 255 - d[here];
+					d[++here] = 255 - d[here];
+					d[++here] = 255 - d[here];
+					d[++here] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# BrightnessFilter
 
-Attributes in the argument object:
+## Instantiation
 
-* __value__ - Number or String. Percentage value of sepia effect: as a Number, between 0 (no effect) and 1 (full sepia tint); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1).
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method sepia
+* scrawl.newBrightnessFilter()
+
+## Purpose
+
+* Adds a brightness filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the BrightnessFilter object
+
+@class BrightnessFilter
+@constructor
+@extends Filter
 @param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.BrightnessFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.brightness = my.xtGet(items.brightness, 1);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.BrightnessFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.BrightnessFilter.prototype.type = &#x27;BrightnessFilter&#x27;;
+		my.BrightnessFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.BrightnessFilter = {
+			/**
+Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1). Values can go above 1 or 100%
+
+@property brightness
+@type Number - or alternatively percentage String
+@default 1
+**/
+			brightness: 1,
+		};
+		my.mergeInto(my.d.BrightnessFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its brightness and replaces the old color data with new
+
+@method add
+@param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-	my.filter.sepia = function(items, image) {
-		return my.filter.tint(items, image);
-	};
-	my.pushUnique(my.filternames, &#x27;sepia&#x27;);
-	/**
-Tint filter (added to the core by the scrawlFilters module)
+		my.BrightnessFilter.prototype.add = function(data) {
+			var alpha,
+				d,
+				here,
+				brightness,
+				i,
+				iz;
+			alpha = this.getAlpha();
+			brightness = (my.isa(this.brightness, &#x27;str&#x27;)) ? parseFloat(this.brightness) / 100 : this.brightness;
+			d = data.data;
+			brightness = (brightness &lt; 0) ? 0 : brightness;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					here = i;
+					d[here] *= brightness;
+					d[++here] *= brightness;
+					d[++here] *= brightness;
+					d[++here] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# SaturationFilter
 
-Attributes in the argument object:
+## Instantiation
 
-* __value__ - Number or String. Percentage value of tint effect: as a Number, between 0 (no effect) and 1 (full tint); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1).
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
+* scrawl.newSaturationFilter()
 
-The argument object can take up to nine additional attributes, used to set the tinting effect. Default values for these attributes will generate a sepia tint. All values are Numbers between 0 and 1:
+## Purpose
 
-* __redInRed__ or __rr__ - default 0.393
-* __redInGreen__ or __rg__ - default 0.349
-* __redInBlue__ or __rb__ - default 0.272
-* __greenInRed__ or __gr__ - default 0.769
-* __greenInGreen__ or __gg__ - default 0.686
-* __greenInBlue__ or __gb__ - default 0.534
-* __blueInRed__ or __br__ - default 0.189
-* __blueInGreen__ or __bg__ - default 0.168
-* __blueInBlue__ or __bb__ - default 0.131
-@method tint
+* Adds a saturation filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the SaturationFilter object
+
+@class SaturationFilter
+@constructor
+@extends Filter
 @param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.SaturationFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.saturation = my.xtGet(items.saturation, 1);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.SaturationFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.SaturationFilter.prototype.type = &#x27;SaturationFilter&#x27;;
+		my.SaturationFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.SaturationFilter = {
+			/**
+Percentage value of saturation effect: as a Number, between 0 (uniform grey) and 1 (no effect); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 1). Values can go above 1 or 100%
+
+@property saturation
+@type Number - or alternatively percentage String
+@default 1
+**/
+			saturation: 1,
+		};
+		my.mergeInto(my.d.SaturationFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its saturation and replaces the old color data with new
+
+@method add
+@param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-	my.filter.tint = function(items, image) {
-		var args = my.filterSetup(items, image),
-			value = (my.xt(args.items.value)) ? args.items.value : 1,
-			iVal,
-			rr = args.items.rr || args.items.redInRed || 0.393,
-			rg = args.items.rg || args.items.redInGreen || 0.349,
-			rb = args.items.rb || args.items.redInBlue || 0.272,
-			gr = args.items.gr || args.items.greenInRed || 0.769,
-			gg = args.items.gg || args.items.greenInGreen || 0.686,
-			gb = args.items.gb || args.items.greenInBlue || 0.534,
-			br = args.items.br || args.items.blueInRed || 0.189,
-			bg = args.items.bg || args.items.blueInGreen || 0.168,
-			bb = args.items.bb || args.items.blueInBlue || 0.131,
-			data = args.imgData.data,
-			r, red,
-			g, grn,
-			b, blu;
-		value = (my.isa(value, &#x27;str&#x27;)) ? parseFloat(value) / 100 : value;
-		value = (my.isBetween(value, 0, 1, true)) ? value : ((value &gt; 0.5) ? 1 : 0);
-		iVal = 1 - value;
-		for (var i = 0, iz = data.length; i &lt; iz; i += 4) {
-			r = data[i];
-			g = data[i + 1];
-			b = data[i + 2];
-			red = (r * rr) + (g * gr) + (b * br);
-			grn = (r * rg) + (g * gg) + (b * bg);
-			blu = (r * rb) + (g * gb) + (b * bb);
-			data[i] = (r * iVal) + (red * value);
-			data[i + 1] = (g * iVal) + (grn * value);
-			data[i + 2] = (b * iVal) + (blu * value);
-		}
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;tint&#x27;);
-	/**
-Blur filter (added to the core by the scrawlFilters module)
+		my.SaturationFilter.prototype.add = function(data) {
+			var alpha,
+				d,
+				here,
+				saturation,
+				i,
+				iz;
+			alpha = this.getAlpha();
+			saturation = (my.isa(this.saturation, &#x27;str&#x27;)) ? parseFloat(this.saturation) / 100 : this.saturation;
+			d = data.data;
+			saturation = (saturation &lt; 0) ? 0 : saturation;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					here = i;
+					d[here] = 127 + ((d[here] - 127) * saturation);
+					d[++here] = 127 + ((d[here] - 127) * saturation);
+					d[++here] = 127 + ((d[here] - 127) * saturation);
+					d[++here] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# ThresholdFilter
 
-Attributes in the argument object:
+## Instantiation
 
-* __brush__ - Array. A pre-compiled filter.getBrush() array to be used with the blur filter; alternatively, define the brush dynamically using the radius/radiusX/radiusY/roll attributes below
-* __radiusX__ - Number. Blur brush x radius (default: 2)
-* __radiusY__ - Number. Blur brush y radius (default: 2)
-* __roll__ - Number. Blur brush roll value (default: 0)
-* __radius__ - Number. Blur brush x and y radius (default: 0)
-* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method blur
+* scrawl.newThresholdFilter()
+
+## Purpose
+
+* Adds a threshold filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the ThresholdFilter object
+
+@class ThresholdFilter
+@constructor
+@extends Filter
 @param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.ThresholdFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.threshold = my.xtGet(items.threshold, 0.5);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.ThresholdFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.ThresholdFilter.prototype.type = &#x27;ThresholdFilter&#x27;;
+		my.ThresholdFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.ThresholdFilter = {
+			/**
+Percentage value of threshold effect: as a Number, between 0 (all black) and 1 (all white); as a String, between &#x27;0%&#x27; and &#x27;100%&#x27; (default: 0.5).
+
+@property threshold
+@type Number - or alternatively percentage String
+@default 1
+**/
+			threshold: 0.5,
+		};
+		my.mergeInto(my.d.ThresholdFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its threshold and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-	my.filter.blur = function(items, image) {
-		var args = my.filterSetup(items, image);
-		args.items.includeAlpha = (my.isa(args.items.includeAlpha, &#x27;bool&#x27;)) ? args.items.includeAlpha : false;
-		args.items.wrap = false;
-		if (!my.xt(args.items.brush)) {
-			var radius = (my.xt(args.items.radius)) ? Math.abs(args.items.radius) : 0,
-				radiusX = (my.xt(args.items.radiusX)) ? Math.abs(args.items.radiusX) : 2,
-				radiusY = (my.xt(args.items.radiusY)) ? Math.abs(args.items.radiusY) : 2,
-				roll = (my.xt(args.items.roll)) ? args.items.roll : 0,
-				rx = radius || radiusX || 2,
-				ry = radius || radiusY || 2;
-			args.items.brush = my.filter.getBrush(rx, ry, roll);
-		}
-		args.imgData = my.filter.doMatrix(args.items.brush, args);
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;blur&#x27;);
-	/**
+		my.ThresholdFilter.prototype.add = function(data) {
+			var alpha,
+				d,
+				here,
+				threshold,
+				i,
+				iz;
+			alpha = this.getAlpha();
+			threshold = (my.isa(this.threshold, &#x27;str&#x27;)) ? parseFloat(this.threshold) / 100 : this.threshold;
+			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold &gt; 0.5) ? 1 : 0);
+			threshold *= 255;
+			data = my.GreyscaleFilter.prototype.add.call(this, data);
+			d = data.data;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					here = i;
+					d[here] = (d[here] &gt; threshold) ? 255 : 0;
+					d[++here] = (d[here] &gt; threshold) ? 255 : 0;
+					d[++here] = (d[here] &gt; threshold) ? 255 : 0;
+					d[++here] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# ChannelsFilter
+
+## Instantiation
+
+* scrawl.newChannelsFilter()
+
+## Purpose
+
+* Adds a channels filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the ChannelsFilter object
+
+@class ChannelsFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.ChannelsFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.red = my.xtGet(items.red, 1);
+			this.green = my.xtGet(items.green, 1);
+			this.blue = my.xtGet(items.blue, 1);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.ChannelsFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.ChannelsFilter.prototype.type = &#x27;ChannelsFilter&#x27;;
+		my.ChannelsFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.ChannelsFilter = {
+			/**
+value of red channel, from 0 or 0% upwards beyond 1 or 100%
+
+@property red
+@type Number - or alternatively percentage String
+@default 1
+**/
+			red: 1,
+			/**
+value of green channel, from 0 or 0% upwards beyond 1 or 100%
+
+@property green
+@type Number - or alternatively percentage String
+@default 1
+**/
+			green: 1,
+			/**
+value of blue channel, from 0 or 0% upwards beyond 1 or 100%
+
+@property blue
+@type Number - or alternatively percentage String
+@default 1
+**/
+			blue: 1,
+		};
+		my.mergeInto(my.d.ChannelsFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.ChannelsFilter.prototype.add = function(data) {
+			var alpha,
+				d,
+				here,
+				red,
+				green,
+				blue,
+				i,
+				iz;
+			alpha = this.getAlpha();
+			red = (my.isa(this.red, &#x27;str&#x27;)) ? parseFloat(this.red) / 100 : this.red;
+			green = (my.isa(this.green, &#x27;str&#x27;)) ? parseFloat(this.green) / 100 : this.green;
+			blue = (my.isa(this.blue, &#x27;str&#x27;)) ? parseFloat(this.blue) / 100 : this.blue;
+			d = data.data;
+			red = (red &lt; 0) ? 0 : red;
+			green = (green &lt; 0) ? 0 : green;
+			blue = (blue &lt; 0) ? 0 : blue;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					here = i;
+					d[here] *= red;
+					d[++here] *= green;
+					d[++here] *= blue;
+					d[++here] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# ChannelStepFilter
+
+## Instantiation
+
+* scrawl.newChannelStepFilter()
+
+## Purpose
+
+* Adds a channel step filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the ChannelStepFilter object
+
+@class ChannelStepFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.ChannelStepFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.red = my.xtGet(items.red, 1);
+			this.green = my.xtGet(items.green, 1);
+			this.blue = my.xtGet(items.blue, 1);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.ChannelStepFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.ChannelStepFilter.prototype.type = &#x27;ChannelStepFilter&#x27;;
+		my.ChannelStepFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.ChannelStepFilter = {
+			/**
+Step value of red channel, between 1 (256 steps, default) and 128 (2 steps)
+
+@property red
+@type Number
+@default 1
+**/
+			red: 1,
+			/**
+Step value of green channel, between 1 (256 steps, default) and 128 (2 steps)
+
+@property green
+@type Number
+@default 1
+**/
+			green: 1,
+			/**
+Step value of blue channel, between 1 (256 steps, default) and 128 (2 steps)
+
+@property blue
+@type Number
+@default 1
+**/
+			blue: 1,
+		};
+		my.mergeInto(my.d.ChannelStepFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.ChannelStepFilter.prototype.add = function(data) {
+			var alpha,
+				d,
+				here,
+				red,
+				green,
+				blue,
+				r,
+				g,
+				b,
+				i,
+				iz;
+			alpha = this.getAlpha();
+			red = this.red;
+			green = this.green;
+			blue = this.blue;
+			d = data.data;
+			red = (red &lt; 1) ? 1 : red;
+			green = (green &lt; 1) ? 1 : green;
+			blue = (blue &lt; 1) ? 1 : blue;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					here = i;
+					r = d[here];
+					g = d[++here];
+					b = d[++here];
+					here = i;
+					d[here] = Math.floor(r / red) * red;
+					d[++here] = Math.floor(g / green) * green;
+					d[++here] = Math.floor(b / blue) * blue;
+					d[++here] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# TintFilter
+
+## Instantiation
+
+* scrawl.newTintFilter()
+
+## Purpose
+
+* Adds a tint filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the TintFilter object
+
+@class TintFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.TintFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.redInRed = my.xtGet(items.redInRed, 1);
+			this.redInGreen = my.xtGet(items.redInGreen, 0);
+			this.redInBlue = my.xtGet(items.redInBlue, 0);
+			this.greenInRed = my.xtGet(items.greenInRed, 0);
+			this.greenInGreen = my.xtGet(items.greenInGreen, 1);
+			this.greenInBlue = my.xtGet(items.greenInBlue, 0);
+			this.blueInRed = my.xtGet(items.blueInRed, 0);
+			this.blueInGreen = my.xtGet(items.blueInGreen, 0);
+			this.blueInBlue = my.xtGet(items.blueInBlue, 1);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.TintFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.TintFilter.prototype.type = &#x27;TintFilter&#x27;;
+		my.TintFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.TintFilter = {
+			/**
+@property redInRed
+@type Number - or alternatively percentage String
+@default 1
+**/
+			redInRed: 1,
+			/**
+@property greenInRed
+@type Number - or alternatively percentage String
+@default 0
+**/
+			greenInRed: 0,
+			/**
+@property blueInRed
+@type Number - or alternatively percentage String
+@default 0
+**/
+			blueInRed: 0,
+			/**
+@property redInGreen
+@type Number - or alternatively percentage String
+@default 0
+**/
+			redInGreen: 0,
+			/**
+@property greenInGreen
+@type Number - or alternatively percentage String
+@default 1
+**/
+			greenInGreen: 1,
+			/**
+@property blueInGreen
+@type Number - or alternatively percentage String
+@default 0
+**/
+			blueInGreen: 0,
+			/**
+@property redInBlue
+@type Number - or alternatively percentage String
+@default 0
+**/
+			redInBlue: 0,
+			/**
+@property greenInBlue
+@type Number - or alternatively percentage String
+@default 0
+**/
+			greenInBlue: 0,
+			/**
+@property blueInBlue
+@type Number - or alternatively percentage String
+@default 1
+**/
+			blueInBlue: 1,
+		};
+		my.mergeInto(my.d.TintFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.TintFilter.prototype.add = function(data) {
+			var alpha,
+				d,
+				here,
+				r,
+				g,
+				b,
+				rr,
+				rg,
+				rb,
+				gr,
+				gg,
+				gb,
+				br,
+				bg,
+				bb,
+				i,
+				iz;
+			alpha = this.getAlpha();
+			rr = (my.isa(this.redInRed, &#x27;str&#x27;)) ? parseFloat(this.redInRed) / 100 : this.redInRed;
+			rg = (my.isa(this.redInGreen, &#x27;str&#x27;)) ? parseFloat(this.redInGreen) / 100 : this.redInGreen;
+			rb = (my.isa(this.redInBlue, &#x27;str&#x27;)) ? parseFloat(this.redInBlue) / 100 : this.redInBlue;
+			gr = (my.isa(this.greenInRed, &#x27;str&#x27;)) ? parseFloat(this.greenInRed) / 100 : this.greenInRed;
+			gg = (my.isa(this.greenInGreen, &#x27;str&#x27;)) ? parseFloat(this.greenInGreen) / 100 : this.greenInGreen;
+			gb = (my.isa(this.greenInBlue, &#x27;str&#x27;)) ? parseFloat(this.greenInBlue) / 100 : this.greenInBlue;
+			br = (my.isa(this.blueInRed, &#x27;str&#x27;)) ? parseFloat(this.blueInRed) / 100 : this.blueInRed;
+			bg = (my.isa(this.blueInGreen, &#x27;str&#x27;)) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen;
+			bb = (my.isa(this.blueInBlue, &#x27;str&#x27;)) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue;
+			d = data.data;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] !== 0) {
+					here = i;
+					r = d[here];
+					g = d[++here];
+					b = d[++here];
+					here = i;
+					d[here] = (r * rr) + (g * gr) + (b * br);
+					d[++here] = (r * rg) + (g * gg) + (b * bg);
+					d[++here] = (r * rb) + (g * gb) + (b * bb);
+					d[++here] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# MatrixFilter
+
+## Instantiation
+
+* scrawl.newMatrixFilter()
+
+## Purpose
+
+* Adds a matrix filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the MatrixFilter object
+
+@class MatrixFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.MatrixFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.width = my.xtGet(items.width, false);
+			this.height = my.xtGet(items.height, false);
+			this.data = (my.xt(items.data)) ? items.data : [1];
+			this.x = my.xtGet(items.x, Math.floor(this.width / 2));
+			this.y = my.xtGet(items.y, Math.floor(this.height / 2));
+			this.includeInvisiblePoints = my.xtGet(items.includeInvisiblePoints, false);
+			this.setFilter();
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.MatrixFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.MatrixFilter.prototype.type = &#x27;MatrixFilter&#x27;;
+		my.MatrixFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.MatrixFilter = {
+			/**
+@property width - matrix maximum width
+@type Number
+@default 1
+**/
+			width: 1,
+			/**
+@property height - matrix maximum height
+@type Number
+@default 1
+**/
+			height: 1,
+			/**
+@property x - home cell along the horizontal
+@type Number
+@default 0
+**/
+			x: 0,
+			/**
+@property y - home cell along the vertical
+@type Number
+@default 0
+**/
+			y: 0,
+			/**
+@property includeInvisiblePoints
+@type Number
+@default false
+**/
+			includeInvisiblePoints: false,
+			/**
+Data is made up of an array of weightings - for instance a 3 x 3 matrix will contain 9 Number values; this data then gets converted into Matrix cells
+
+The data array has no meaning without width and height dimensions - if no dimension values are supplied, the constructor will assume a odd-numbered square larger than the square root of the length of the data array (eg 3x3, 5x5), with home coordinates at the center of the square, and pad empty spaces at the end of the array with zero weights (which then get ignored)
+
+@property data - raw data supplied
+@type Array
+@default false
+**/
+			data: false,
+		};
+		my.mergeInto(my.d.MatrixFilter, my.d.Filter);
+		/**
+Set attribute values.
+
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.MatrixFilter.prototype.set = function(items) {
+			my.Base.prototype.set.call(this, items);
+			this.width = my.xtGet(items.width, false);
+			this.height = my.xtGet(items.height, false);
+			this.setFilter();
+		};
+		/**
+SetFilter builds the matrix from width, height and data attributes already supplied to the filter via the constructor or MatrixFilter.set()
+
+@method setFilter
+@return This
+@chainable
+@private
+**/
+		my.MatrixFilter.prototype.setFilter = function() {
+			var i,
+				j,
+				k,
+				reqLen,
+				counter = 0;
+			if (!this.height &amp;&amp; this.width &amp;&amp; my.isa(this.width, &#x27;num&#x27;) &amp;&amp; this.width &gt;= 1) {
+				this.width = Math.floor(this.width);
+				reqLen = Math.ceil(this.data.length / this.width);
+				this.height = reqLen;
+				reqLen = this.width * this.height;
+			}
+			else if (!this.width &amp;&amp; this.height &amp;&amp; my.isa(this.height, &#x27;num&#x27;) &amp;&amp; this.height &gt;= 1) {
+				this.height = Math.floor(this.height);
+				reqLen = Math.ceil(this.data.length / this.height);
+				this.width = reqLen;
+				reqLen = this.width * this.height;
+			}
+			else if (this.width &amp;&amp; my.isa(this.width, &#x27;num&#x27;) &amp;&amp; this.width &gt;= 1 &amp;&amp; this.height &amp;&amp; my.isa(this.height, &#x27;num&#x27;) &amp;&amp; this.height &gt;= 1) {
+				this.width = Math.round(this.width);
+				this.height = Math.round(this.height);
+				reqLen = this.width * this.height;
+			}
+			else {
+				reqLen = Math.ceil(Math.sqrt(this.data.length));
+				reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
+				this.width = Math.round(Math.sqrt(reqLen));
+				this.height = this.width;
+			}
+			for (k = 0; k &lt; reqLen; k++) {
+				this.data[k] = (my.xt(this.data[k])) ? parseFloat(this.data[k]) : 0;
+				this.data[k] = (isNaN(this.data[k])) ? 0 : this.data[k];
+			}
+			this.cells = [];
+			for (i = 0; i &lt; this.height; i++) { //col (y)
+				for (j = 0; j &lt; this.width; j++) { //row (x)
+					if (this.data[counter] !== 0) {
+						this.cells.push([j - this.x, i - this.y, this.data[counter]]);
+					}
+					counter++;
+				}
+			}
+			return this;
+		};
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.MatrixFilter.prototype.add = function(data) {
+			var alpha,
+				d0,
+				dR,
+				result,
+				r,
+				g,
+				b,
+				i,
+				iz,
+				j,
+				jz,
+				k,
+				kz,
+				w,
+				c,
+				e,
+				e0,
+				x,
+				y;
+			alpha = this.getAlpha();
+			d0 = data.data;
+			result = my.cvx.createImageData(data.width, data.height);
+			dR = result.data;
+			if (this.includeInvisiblePoints) {
+				for (i = 0, iz = data.height; i &lt; iz; i++) {
+					for (j = 0, jz = data.width; j &lt; jz; j++) {
+						e0 = ((i * jz) + j) * 4;
+						if (d0[e0 + 3] &gt; 0) {
+							r = 0;
+							g = 0;
+							b = 0;
+							c = 0;
+							for (k = 0, kz = this.cells.length; k &lt; kz; k++) {
+								x = j + this.cells[k][0];
+								y = i + this.cells[k][1];
+								if (x &gt;= 0 &amp;&amp; x &lt; jz &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; iz) {
+									w = this.cells[k][2];
+									e = ((y * jz) + x) * 4;
+									c += w;
+									r += (d0[e] * w);
+									e++;
+									g += (d0[e] * w);
+									e++;
+									b += (d0[e] * w);
+								}
+							}
+							if (c !== 0) {
+								r /= c;
+								g /= c;
+								b /= c;
+							}
+							dR[e0] = r;
+							e0++;
+							dR[e0] = g;
+							e0++;
+							dR[e0] = b;
+							e0++;
+							dR[e0] = d0[e0] * alpha;
+						}
+					}
+				}
+			}
+			else {
+				for (i = 0, iz = data.height; i &lt; iz; i++) {
+					for (j = 0, jz = data.width; j &lt; jz; j++) {
+						e0 = ((i * jz) + j) * 4;
+						if (d0[e0 + 3] &gt; 0) {
+							r = 0;
+							g = 0;
+							b = 0;
+							c = 0;
+							for (k = 0, kz = this.cells.length; k &lt; kz; k++) {
+								x = j + this.cells[k][0];
+								y = i + this.cells[k][1];
+								if (x &gt;= 0 &amp;&amp; x &lt; jz &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; iz) {
+									w = this.cells[k][2];
+									e = ((y * jz) + x) * 4;
+									if (d0[e + 3] &gt; 0) {
+										c += w;
+										r += (d0[e] * w);
+										e++;
+										g += (d0[e] * w);
+										e++;
+										b += (d0[e] * w);
+									}
+								}
+							}
+							if (c !== 0) {
+								r /= c;
+								g /= c;
+								b /= c;
+							}
+							dR[e0] = r;
+							e0++;
+							dR[e0] = g;
+							e0++;
+							dR[e0] = b;
+							e0++;
+							dR[e0] = d0[e0] * alpha;
+						}
+					}
+				}
+			}
+			return result;
+		};
+		/**
+# PixelateFilter
+
+## Instantiation
+
+* scrawl.newPixelateFilter()
+
+## Purpose
+
+* Adds a pixelate filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the PixelateFilter object
+
+@class PixelateFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.PixelateFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.width = my.xtGet(items.width, 5);
+			this.height = my.xtGet(items.height, 5);
+			this.offsetX = my.xtGet(items.offsetX, 0);
+			this.offsetY = my.xtGet(items.offsetY, 0);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.PixelateFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.PixelateFilter.prototype.type = &#x27;PixelateFilter&#x27;;
+		my.PixelateFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.PixelateFilter = {
+			/**
+@property width - pixelization width
+@type Number
+@default 5
+**/
+			width: 5,
+			/**
+@property height - pixelization height
+@type Number
+@default 5
+**/
+			height: 5,
+			/**
+@property offsetX - horizontal coordinate from which to begin pexelization
+@type Number
+@default 0
+**/
+			offsetX: 0,
+			/**
+@property offsetY - vertical coordinate from which to begin pexelization
+@type Number
+@default 0
+**/
+			offsetY: 0,
+		};
+		my.mergeInto(my.d.PixelateFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.PixelateFilter.prototype.add = function(data) {
+			var alpha,
+				d0,
+				dR,
+				result,
+				r,
+				g,
+				b,
+				a,
+				i,
+				iz,
+				j,
+				jz,
+				x,
+				y,
+				w,
+				h,
+				xj,
+				yi,
+				dW,
+				dH,
+				tW,
+				tH,
+				count,
+				pos,
+				test;
+			alpha = this.getAlpha();
+			d0 = data.data;
+			result = my.cvx.createImageData(data.width, data.height);
+			dR = result.data;
+			dW = data.width;
+			dH = data.height;
+			tW = dW - 1;
+			tH = dH - 1;
+			w = this.width;
+			h = this.height;
+			for (x = this.offsetX - w; x &lt; dW; x += w) {
+				for (y = this.offsetY - h; y &lt; dH; y += h) {
+					r = 0;
+					g = 0;
+					b = 0;
+					a = 0;
+					count = 0;
+					for (i = y, iz = y + h; i &lt; iz; i++) {
+						for (j = x, jz = x + w; j &lt; jz; j++) {
+							test = (j &lt; 0 || j &gt; tW || i &lt; 0 || i &gt; tH) ? true : false;
+							if (!test) {
+								pos = ((i * dW) + j) * 4;
+								if (d0[pos + 3] &gt; 0) {
+									r += d0[pos];
+									g += d0[++pos];
+									b += d0[++pos];
+									a += d0[++pos];
+									count++;
+								}
+							}
+						}
+					}
+					if (count &gt; 0 &amp;&amp; a &gt; 0) {
+						r = Math.round(r / count);
+						g = Math.round(g / count);
+						b = Math.round(b / count);
+						pos = ((y * dW) + x) * 4;
+						for (i = y, iz = y + h; i &lt; iz; i++) {
+							for (j = x, jz = x + w; j &lt; jz; j++) {
+								pos = ((i * dW) + j) * 4;
+								dR[pos] = r;
+								dR[++pos] = g;
+								dR[++pos] = b;
+								dR[++pos] = d0[pos] * alpha;
+							}
+						}
+					}
+				}
+			}
+			return result;
+		};
+		/**
+# BlurFilter
+
+## Instantiation
+
+* scrawl.newBlurFilter()
+
+## Purpose
+
+* Adds a blur filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the BlurFilter object
+
+@class BlurFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.BlurFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.radiusX = my.xtGet(items.radiusX, 2);
+			this.radiusY = my.xtGet(items.radiusY, 2);
+			this.roll = my.xtGet(items.roll, 2);
+			this.skip = my.xtGet(items.skip, 1);
+			this.cells = (my.xt(items.cells)) ? items.cells : false;
+			this.includeInvisiblePoints = my.xtGet(items.includeInvisiblePoints, false);
+			if (!my.isa(this.cells, &#x27;arr&#x27;)) {
+				this.cells = this.getBrush();
+			}
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.BlurFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.BlurFilter.prototype.type = &#x27;BlurFilter&#x27;;
+		my.BlurFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.BlurFilter = {
+			/**
+@property radiusX
+@type Number
+@default 2
+**/
+			radiusX: 2,
+			/**
+@property radiusY
+@type Number
+@default 2
+**/
+			radiusY: 2,
+			/**
+@property skip
+@type Number
+@default 1
+**/
+			skip: 1,
+			/**
+@property roll
+@type Number
+@default 0
+**/
+			roll: 0,
+			/**
+@property includeInvisiblePoints
+@type Number
+@default false
+**/
+			includeInvisiblePoints: false,
+		};
+		my.mergeInto(my.d.BlurFilter, my.d.Filter);
+		/**
+Set attribute values.
+
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.BlurFilter.prototype.set = function(items) {
+			my.Base.prototype.set.call(this, items);
+			if (!my.isa(items.cells, &#x27;arr&#x27;)) {
+				this.cells = this.getBrush();
+			}
+		};
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.BlurFilter.prototype.add = function(data) {
+			var alpha,
+				d0,
+				result,
+				dR,
+				c,
+				s,
+				count,
+				i,
+				iz,
+				j,
+				jz,
+				k,
+				kz,
+				r,
+				g,
+				b,
+				e,
+				e0,
+				x,
+				y;
+			alpha = this.getAlpha();
+			d0 = data.data;
+			result = my.cvx.createImageData(data.width, data.height);
+			dR = result.data;
+			c = this.cells.length;
+			s = Math.floor(c / this.skip);
+			if (this.includeInvisiblePoints) {
+				for (i = 0, iz = data.height; i &lt; iz; i++) {
+					for (j = 0, jz = data.width; j &lt; jz; j++) {
+						e0 = ((i * jz) + j) * 4;
+						if (d0[e0 + 3] &gt; 0) {
+							r = 0;
+							g = 0;
+							b = 0;
+							for (k = 0, kz = c; k &lt; kz; k += this.skip) {
+								x = j + this.cells[k][0];
+								y = i + this.cells[k][1];
+								if (x &gt;= 0 &amp;&amp; x &lt; jz &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; iz) {
+									e = ((y * jz) + x) * 4;
+									r += d0[e];
+									e++;
+									g += d0[e];
+									e++;
+									b += d0[e];
+								}
+							}
+							if (s !== 0) {
+								r /= s;
+								g /= s;
+								b /= s;
+							}
+							dR[e0] = r;
+							e0++;
+							dR[e0] = g;
+							e0++;
+							dR[e0] = b;
+							e0++;
+							dR[e0] = d0[e0] * alpha;
+						}
+					}
+				}
+			}
+			else {
+				for (i = 0, iz = data.height; i &lt; iz; i++) {
+					for (j = 0, jz = data.width; j &lt; jz; j++) {
+						e0 = ((i * jz) + j) * 4;
+						if (d0[e0 + 3] &gt; 0) {
+							r = 0;
+							g = 0;
+							b = 0;
+							count = 0;
+							for (k = 0, kz = c; k &lt; kz; k += this.skip) {
+								x = j + this.cells[k][0];
+								y = i + this.cells[k][1];
+								if (x &gt;= 0 &amp;&amp; x &lt; jz &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; iz) {
+									e = ((y * jz) + x) * 4;
+									if (d0[e + 3] &gt; 0) {
+										count++;
+										r += d0[e];
+										e++;
+										g += d0[e];
+										e++;
+										b += d0[e];
+									}
+								}
+							}
+							if (count !== 0) {
+								r /= count;
+								g /= count;
+								b /= count;
+							}
+							dR[e0] = r;
+							e0++;
+							dR[e0] = g;
+							e0++;
+							dR[e0] = b;
+							e0++;
+							dR[e0] = d0[e0] * alpha;
+						}
+					}
+				}
+			}
+			return result;
+		};
+		/**
 Blur helper function
 
 @method getBrush
@@ -723,282 +2381,465 @@ Blur helper function
 @param r {Number} brush roll (in degrees)
 @return Array of objects used for the blur brush
 **/
-	my.filter.getBrush = function(x, y, r) {
-		var dim = (x &gt; y) ? x + 2 : y + 2,
-			hDim = Math.floor(dim / 2),
-			cos = Math.cos(r * my.radian),
-			sin = Math.sin(r * my.radian),
+		my.BlurFilter.prototype.getBrush = function() {
+			var x,
+				y,
+				r,
+				dim,
+				hDim,
+				cos,
+				sin,
+				brush,
+				cv,
+				cvx,
+				i,
+				j;
+			x = this.radiusX;
+			y = this.radiusY;
+			r = this.roll;
+			dim = (x &gt; y) ? x + 2 : y + 2;
+			hDim = Math.floor(dim / 2);
+			cos = Math.cos(r * my.radian);
+			sin = Math.sin(r * my.radian);
 			brush = [];
-		my.cv.width = dim;
-		my.cv.height = dim;
-		my.cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
-		my.cvx.beginPath();
-		my.cvx.moveTo(-x, 0);
-		my.cvx.lineTo(-1, -1);
-		my.cvx.lineTo(0, -y);
-		my.cvx.lineTo(1, -1);
-		my.cvx.lineTo(x, 0);
-		my.cvx.lineTo(1, 1);
-		my.cvx.lineTo(0, y);
-		my.cvx.lineTo(-1, 1);
-		my.cvx.lineTo(-x, 0);
-		my.cvx.closePath();
-		for (var i = 0; i &lt; dim; i++) { //rows (y)
-			for (var j = 0; j &lt; dim; j++) { //cols (x)
-				if (my.cvx.isPointInPath(j, i)) {
-					brush.push({
-						ox: j - hDim,
-						oy: i - hDim,
-						wt: 1
-					});
-				}
-			}
-		}
-		my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-		return brush;
-	};
-	my.pushUnique(my.filternames, &#x27;getBrush&#x27;);
-	/**
-Pixelate filter (added to the core by the scrawlFilters module)
-
-Attributes in the argument object:
-
-* __width__ - Number. Block width (default: 5)
-* __height__ - Number. Block height (default: 5)
-* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method pixelate
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended image data object
-**/
-	my.filter.pixelate = function(items, image) {
-		var args = my.filterSetup(items, image),
-			width = (my.xt(args.items.width)) ? Math.ceil(args.items.width) : 5,
-			height = (my.xt(args.items.height)) ? Math.ceil(args.items.height) : 5,
-			addAlpha = (my.xt(args.items.includeAlpha)) ? args.items.includeAlpha : false,
-			iWidth = args.imgData.width,
-			iHeight = args.imgData.height,
-			red,
-			grn,
-			blu,
-			alp,
-			block,
-			count,
-			tW,
-			tH,
-			vol,
-			here;
-		my.cv.width = iWidth;
-		my.cv.height = iHeight;
-		my.cvx.putImageData(args.imgData, 0, 0);
-		for (var i = 0; i &lt; iHeight; i += height) { //rows (y)
-			for (var j = 0; j &lt; iWidth; j += width) { //cols (x)
-				red = grn = blu = alp = count = 0;
-				tW = (j + width &gt; iWidth) ? iWidth - j : width;
-				tH = (i + height &gt; iHeight) ? iHeight - i : height;
-				vol = tW * tH * 4;
-				block = my.cvx.getImageData(j, i, tW, tH);
-				for (var k = 0; k &lt; vol; k += 4) {
-					if (block.data[k + 3] &gt; 0) {
-						here = k;
-						red += block.data[here];
-						grn += block.data[++here];
-						blu += block.data[++here];
-						alp += block.data[++here];
-						count++;
+			cv = my.filterCanvas;
+			cvx = my.filterCvx;
+			cv.width = dim;
+			cv.height = dim;
+			cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
+			cvx.beginPath();
+			cvx.moveTo(-x, 0);
+			cvx.lineTo(-1, -1);
+			cvx.lineTo(0, -y);
+			cvx.lineTo(1, -1);
+			cvx.lineTo(x, 0);
+			cvx.lineTo(1, 1);
+			cvx.lineTo(0, y);
+			cvx.lineTo(-1, 1);
+			cvx.lineTo(-x, 0);
+			cvx.closePath();
+			for (i = 0; i &lt; dim; i++) { //rows (y)
+				for (j = 0; j &lt; dim; j++) { //cols (x)
+					if (cvx.isPointInPath(j, i)) {
+						brush.push([j - hDim, i - hDim, 1]);
 					}
 				}
-				red = Math.floor(red / count);
-				grn = Math.floor(grn / count);
-				blu = Math.floor(blu / count);
-				alp = Math.floor(alp / count);
-				my.cvx.fillStyle = (addAlpha) ? &#x27;rgba(&#x27; + red + &#x27;,&#x27; + grn + &#x27;,&#x27; + blu + &#x27;,&#x27; + alp + &#x27;)&#x27; : &#x27;rgb(&#x27; + red + &#x27;,&#x27; + grn + &#x27;,&#x27; + blu + &#x27;)&#x27;;
-				my.cvx.fillRect(j, i, tW, tH);
 			}
-		}
-		args.imgData = my.cvx.getImageData(0, 0, args.imgData.width, args.imgData.height);
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;pixelate&#x27;);
-	/**
-Glass Tile filter (added to the core by the scrawlFilters module)
+			cvx.setTransform(1, 0, 0, 1, 0, 0);
+			return brush;
+		};
+		/**
+# LeachFilter
 
-Attributes in the argument object:
+## Instantiation
 
-* __width__ - Number. Block width (default: 5)
-* __height__ - Number. Block height (default: 5)
-* __outerWidth__ - Number. Block width (default: 8)
-* __outerHeight__ - Number. Block height (default: 8)
-* __use__ - Object. Image data object on which to apply the filter (default: undefined)
-* __save__ - Boolean. When true, will save the resulting image data for display by picture sprites using this image (default: true)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method glassTile
+* scrawl.newLeachFilter()
+
+## Purpose
+
+* Adds a leach filter effect to an Entity or cell. Leaching turns certain color ranges to transparency
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the LeachFilter object
+
+@class LeachFilter
+@constructor
+@extends Filter
 @param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.LeachFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.minRed = my.xtGet(items.minRed, 0);
+			this.minGreen = my.xtGet(items.minGreen, 0);
+			this.minBlue = my.xtGet(items.minBlue, 0);
+			this.maxRed = my.xtGet(items.maxRed, 255);
+			this.maxGreen = my.xtGet(items.maxGreen, 255);
+			this.maxBlue = my.xtGet(items.maxBlue, 255);
+			this.preserve = my.xtGet(items.preserve, false);
+			this.composite = (this.preserve) ? &#x27;destination-in&#x27; : &#x27;destination-out&#x27;;
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.LeachFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.LeachFilter.prototype.type = &#x27;LeachFilter&#x27;;
+		my.LeachFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.LeachFilter = {
+			/**
+@property minRed
+@type Number
+@default 0
+**/
+			minRed: 0,
+			/**
+@property minGreen
+@type Number
+@default 0
+**/
+			minGreen: 0,
+			/**
+@property minBlue
+@type Number
+@default 0
+**/
+			minBlue: 0,
+			/**
+@property maxRed
+@type Number
+@default 255
+**/
+			maxRed: 255,
+			/**
+@property maxGreen
+@type Number
+@default 255
+**/
+			maxGreen: 255,
+			/**
+@property maxBlue
+@type Number
+@default 255
+**/
+			maxBlue: 255,
+			/**
+When the preserve function is set to true, the selected areas are retained; on false they are leached
+@property preserve
+@type Boolean
+@default false
+**/
+			preserve: false,
+		};
+		my.mergeInto(my.d.LeachFilter, my.d.Filter);
+		/**
+Set attribute values.
+
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.LeachFilter.prototype.set = function(items) {
+			my.Base.prototype.set.call(this, items);
+			if (my.xt(items.preserve) &amp;&amp; my.isa(items.preserve, &#x27;bool&#x27;)) {
+				this.composite = (items.preserve) ? &#x27;destination-in&#x27; : &#x27;destination-out&#x27;;
+			}
+		};
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-	my.filter.glassTile = function(items, image) {
-		var args = my.filterSetup(items, image),
-			width = (my.xt(args.items.width)) ? Math.ceil(args.items.width) : 5,
-			height = (my.xt(args.items.height)) ? Math.ceil(args.items.height) : 5,
-			outerWidth = (my.xt(args.items.outerWidth)) ? Math.ceil(args.items.outerWidth) : 8,
-			outerHeight = (my.xt(args.items.outerHeight)) ? Math.ceil(args.items.outerHeight) : 8,
-			tW,
-			tH,
-			block;
-		my.cv.width = args.imgData.width;
-		my.cv.height = args.imgData.height;
-		my.cvx.putImageData(args.imgData, 0, 0);
-		for (var i = 0; i &lt; args.imgData.height; i += height) { //rows (y)
-			for (var j = 0; j &lt; args.imgData.width; j += width) { //cols (x)
-				tW = (j + outerWidth &gt; args.imgData.width) ? args.imgData.width - j : outerWidth;
-				tH = (i + outerHeight &gt; args.imgData.height) ? args.imgData.height - i : outerHeight;
-				my.cvx.drawImage(my.cv, j, i, tW, tH, j, i, width, height);
-			}
-		}
-		args.imgData = my.cvx.getImageData(0, 0, args.imgData.width, args.imgData.height);
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;glassTile&#x27;);
-	/**
-Matrix filter (added to the core by the scrawlFilters module)
-
-Transforms an image using a weighted matrix
-
-Matrix is composed of an array of weightings to be applied to the colors of surrounding pixels. The function expects the weightings data to equate to a square matrix with an odd number of colums/rows - thusthe data array should consist of 9, 25, 49, etc elements. if the data array is missing the requisite number of elements, the function will add zeros to it to pad it out.
-
-Attributes in the argument object:
-
-* __data__ - Array of Numbers. (default: [1])
-* __includeAlpha__ - Boolean. When true, alpha values are included in the calculation (default: false)
-* __wrap__ - Boolean. When true, offset pixels that fall outside the boundaries of the image will be wrapped to the opposite end of the image row or column; when false, the offset pixels are ignored and their weightings excluded from the calculation (default: false)
-* __useSourceData__ - Boolean. When true, applies filter to data from source image; when false, filters current image (default: false). Has no meaning if an image data object is supplied via the _use_ attribute 
-@method matrix
-@param {Object} [items] Key:value Object argument for setting attributes
-@return amended data image object
-**/
-	my.filter.matrix = function(items, image) {
-		var args = my.filterSetup(items, image),
-			myArray = (my.isa(args.items.data, &#x27;arr&#x27;)) ? args.items.data : [1],
-			matrix = [],
-			reqLen,
-			matrixMid,
-			matrixDim,
-			matrixCenter,
-			counter = 0,
-			imgData;
-		args.items.includeAlpha = (my.isa(args.items.includeAlpha, &#x27;bool&#x27;)) ? args.items.includeAlpha : false;
-		args.items.wrap = (my.isa(args.items.wrap, &#x27;bool&#x27;)) ? args.items.wrap : false;
-		reqLen = Math.ceil(Math.sqrt(myArray.length));
-		reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
-		for (var k = 0; k &lt; reqLen; k++) {
-			myArray[k] = (my.xt(myArray[k])) ? parseFloat(myArray[k]) : 0;
-			myArray[k] = (isNaN(myArray[k])) ? 0 : myArray[k];
-		}
-		matrixMid = Math.floor(myArray.length / 2);
-		matrixDim = Math.sqrt(myArray.length);
-		matrixCenter = Math.floor(matrixDim / 2);
-		for (var i = 0; i &lt; matrixDim; i++) { //col (y)
-			for (var j = 0; j &lt; matrixDim; j++) { //row (x)
-				if (myArray[counter] !== 0) {
-					matrix.push({
-						ox: j - matrixCenter,
-						oy: i - matrixCenter,
-						wt: myArray[counter],
-					});
-				}
-				counter++;
-			}
-		}
-		args.imgData = my.filter.doMatrix(matrix, args);
-		my.filterSave(args);
-		return args.imgData;
-	};
-	my.pushUnique(my.filternames, &#x27;matrix&#x27;);
-	/**
-Helper function
-
-The matrix array consists of objects with the following attributes:
-
-* __ox__ horizontal offset from the current pixel
-* __oy__ vertical offset from the current pixel
-* __wt__ weighting to be used when adding the color values of the offset pixel to the resulting color for current pixel
-
-Function used by matrix() and blur() filter functions
-
-@method doMatrix
-@param {Array} matrix Array of matrix objects
-@param {Object} args Arguments object supplied by filter
-@return Updated ImageData data on success; false otherwise
-**/
-	my.filter.doMatrix = function(matrix, args) {
-		var width = args.imgData.width,
-			height = args.imgData.height,
-			source = args.imgData.data,
-			result = my.cvx.createImageData(args.imgData),
-			destination = result.data,
-			addAlpha = args.items.includeAlpha,
-			wrap = args.items.wrap,
-			w, r, g, b, a, x, y, wt,
-			here, there, addPix, boundX, boundY,
-			length = matrix.length;
-		if (length &gt; 0) {
-			for (var i = 0; i &lt; height; i++) { //rows (y)
-				for (var j = 0; j &lt; width; j++) { //cols (x)
-					r = 0;
-					b = 0;
-					g = 0;
-					a = 0;
-					w = 0;
-					here = 4 * ((i * width) + j);
-					for (var k = 0; k &lt; length; k++) {
-						addPix = true;
-						x = matrix[k].ox;
-						y = matrix[k].oy;
-						wt = matrix[k].wt;
-						boundX = my.isBetween(j + x, 0, width - 1, true);
-						boundY = my.isBetween(i + y, 0, height - 1, true);
-						if (!boundX || !boundY) {
-							if (wrap) {
-								if (!boundX) {
-									x += (x &gt; 0) ? -width : width;
-								}
-								if (!boundY) {
-									y += (y &gt; 0) ? -height : height;
-								}
-							}
-							else {
-								addPix = false;
-							}
-						}
-						if (addPix) {
-							there = here + (4 * ((y * width) + x));
-							r += source[there] * wt;
-							g += source[++there] * wt;
-							b += source[++there] * wt;
-							w += wt;
-							if (addAlpha) {
-								a += source[++there] * wt;
+		my.LeachFilter.prototype.add = function(data) {
+			var alpha,
+				rMax,
+				gMax,
+				bMax,
+				rMin,
+				gMin,
+				bMin,
+				d,
+				i,
+				iz,
+				flag;
+			alpha = Math.floor(this.getAlpha() * 255);
+			rMax = this.maxRed;
+			gMax = this.maxGreen;
+			bMax = this.maxBlue;
+			rMin = this.minRed;
+			gMin = this.minGreen;
+			bMin = this.minBlue;
+			d = data.data;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] &gt; 0) {
+					flag = false;
+					if (my.isBetween(d[i], rMin, rMax, true)) {
+						if (my.isBetween(d[i + 1], gMin, gMax, true)) {
+							if (my.isBetween(d[i + 2], bMin, bMax, true)) {
+								d[i + 3] = alpha;
+								flag = true;
 							}
 						}
 					}
-					destination[here] = (w !== 0) ? r / w : r;
-					destination[++here] = (w !== 0) ? g / w : g;
-					destination[++here] = (w !== 0) ? b / w : b;
-					destination[++here] = (addAlpha) ? ((w !== 0) ? a / w : a) : source[here];
+					if (!flag) {
+						d[i + 3] = 0;
+					}
+				}
+			}
+			return data;
+		};
+		/**
+# SeparateFilter
+
+## Instantiation
+
+* scrawl.newSeparateFilter()
+
+## Purpose
+
+* separate and reposition the color channels
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the StereoFilter object
+
+@class StereoFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.SeparateFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.channel = my.xtGet(items.channel, &#x27;all&#x27;);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.SeparateFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.SeparateFilter.prototype.type = &#x27;SeparateFilter&#x27;;
+		my.SeparateFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.SeparateFilter = {
+			/**
+@property channel
+
+Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;
+
+@type String
+@default &#x27;all&#x27;
+**/
+			channel: &#x27;all&#x27;,
+		};
+		my.mergeInto(my.d.SeparateFilter, my.d.Filter);
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.SeparateFilter.prototype.add = function(data) {
+			var alpha,
+				channel,
+				d,
+				i,
+				iz,
+				col;
+			alpha = this.getAlpha();
+			channel = this.channel;
+			d = data.data;
+			//i, iz, col;
+			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
+				if (d[i + 3] &gt; 0) {
+					switch (channel) {
+						case &#x27;red&#x27;:
+							d[i + 1] = 0;
+							d[i + 2] = 0;
+							break;
+						case &#x27;green&#x27;:
+							d[i] = 0;
+							d[i + 2] = 0;
+							break;
+						case &#x27;blue&#x27;:
+							d[i] = 0;
+							d[i + 1] = 0;
+							break;
+						case &#x27;cyan&#x27;:
+							col = (d[i + 1] + d[i + 2]) / 2;
+							d[i] = 0;
+							d[i + 1] = col;
+							d[i + 2] = col;
+							break;
+						case &#x27;magenta&#x27;:
+							col = (d[i] + d[i + 2]) / 2;
+							d[i + 1] = 0;
+							d[i] = col;
+							d[i + 2] = col;
+							break;
+						case &#x27;yellow&#x27;:
+							col = (d[i] + d[i + 1]) / 2;
+							d[i + 2] = 0;
+							d[i + 1] = col;
+							d[i] = col;
+							break;
+						default:
+							// case &#x27;all&#x27; - do nothing
+					}
+					d[i + 3] *= alpha;
+				}
+			}
+			return data;
+		};
+		/**
+# NoiseFilter
+
+## Instantiation
+
+* scrawl.newNoiseFilter()
+
+## Purpose
+
+* Adds a noise filter effect to an Entity or cell
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the NoiseFilter object
+
+@class NoiseFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.NoiseFilter = function(items) {
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.radiusX = my.xtGet(items.radiusX, 2);
+			this.radiusY = my.xtGet(items.radiusY, 2);
+			this.roll = my.xtGet(items.roll, 2);
+			this.cells = (my.xt(items.cells)) ? items.cells : false;
+			this.strength = my.xtGet(items.strength, 0.3);
+			if (!my.isa(this.cells, &#x27;arr&#x27;)) {
+				this.cells = this.getBrush();
+			}
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.NoiseFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default &#x27;Filter&#x27;
+@final
+**/
+		my.NoiseFilter.prototype.type = &#x27;NoiseFilter&#x27;;
+		my.NoiseFilter.prototype.classname = &#x27;filternames&#x27;;
+		my.d.NoiseFilter = {
+			/**
+@property radiusX
+@type Number
+@default 2
+**/
+			radiusX: 2,
+			/**
+@property radiusY
+@type Number
+@default 2
+**/
+			radiusY: 2,
+			/**
+@property roll
+@type Number
+@default 0
+**/
+			roll: 0,
+			/**
+@property strength
+@type Number
+@default 0.3
+**/
+			strength: 0.3,
+		};
+		my.mergeInto(my.d.NoiseFilter, my.d.Filter);
+		/**
+Set attribute values.
+
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.NoiseFilter.prototype.set = function(items) {
+			return my.BlurFilter.prototype.set.call(this, items);
+		};
+		/**
+Set attribute values.
+
+@method getBrush
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+		my.NoiseFilter.prototype.getBrush = function() {
+			return my.BlurFilter.prototype.getBrush.call(this);
+		};
+		/**
+Add function - takes data, calculates its channels and combines it with data
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.NoiseFilter.prototype.add = function(data) {
+			var alpha,
+				d0,
+				dR,
+				result,
+				strength,
+				i,
+				iz,
+				j,
+				jz,
+				k,
+				kz,
+				e,
+				e0,
+				x,
+				y,
+				cell,
+				cellLen;
+			alpha = this.getAlpha();
+			d0 = data.data;
+			result = my.cvx.createImageData(data.width, data.height);
+			dR = result.data;
+			strength = this.strength;
+			cellLen = this.cells.length;
+			for (i = 0, iz = data.height; i &lt; iz; i++) {
+				for (j = 0, jz = data.width; j &lt; jz; j++) {
+					e0 = ((i * jz) + j) * 4;
+					if (d0[e0 + 3] &gt; 0) {
+						if (Math.random() &lt; strength) {
+							cell = this.cells[Math.floor(Math.random() * cellLen)];
+							x = j + cell[0];
+							y = i + cell[1];
+							if (x &gt;= 0 &amp;&amp; x &lt; jz &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; iz) {
+								e = ((y * jz) + x) * 4;
+								dR[e0] = d0[e];
+								dR[e0 + 1] = d0[e + 1];
+								dR[e0 + 2] = d0[e + 2];
+								dR[e0 + 3] = d0[e0 + 3] * alpha;
+							}
+						}
+						else {
+							dR[e0] = d0[e0];
+							dR[e0 + 1] = d0[e0 + 1];
+							dR[e0 + 2] = d0[e0 + 2];
+							dR[e0 + 3] = d0[e0 + 3] * alpha;
+						}
+					}
 				}
 			}
 			return result;
-		}
-		return false;
-	};
-	my.pushUnique(my.filternames, &#x27;doMatrix&#x27;);
+		};
 
-	return my;
-}(scrawl));
+		return my;
+	}(scrawl));
+}
 
     </pre>
 </div>
