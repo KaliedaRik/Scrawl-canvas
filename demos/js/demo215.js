@@ -404,7 +404,13 @@ var mycode = function() {
 				'; <b>handleX:</b> ' + current_blueparahandle_x +
 				'; <b>handleY:</b> ' + current_blueparahandle_y +
 				'; <b>width:</b> ' + current_bluepara_width +
-				'; <b>height:</b> ' + current_bluepara_height;
+				'; <b>height:</b> ' + current_bluepara_height +
+				'; <br /><b>blue localwidth:</b> ' + bluepara.localWidth +
+				'; <b>blue localheight:</b> ' + bluepara.localHeight +
+				'; <br /><b>red localwidth:</b> ' + redpara.localWidth +
+				'; <b>red localheight:</b> ' + redpara.localHeight +
+				'; <br /><b>green localwidth:</b> ' + greenpara.localWidth +
+				'; <b>green localheight:</b> ' + greenpara.localHeight;
 
 			//hide-start
 			testNow = Date.now();

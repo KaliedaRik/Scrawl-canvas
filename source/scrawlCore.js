@@ -896,6 +896,7 @@ Generate unique names for new Scrawl objects
 			name = name.replace(/\(/g, '_');
 			name = name.replace(/\)/g, '_');
 			name = name.replace(/~/g, '_');
+			name = name.replace(/-/g, '_');
 			name = name.replace(/#/g, '_');
 			name = name.replace(/\\/g, '_');
 			name = name.replace(/\^/g, '_');

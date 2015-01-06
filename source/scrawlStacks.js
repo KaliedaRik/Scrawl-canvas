@@ -760,6 +760,10 @@ PageElement constructor hook function - modified by stacks module
 			if (this.group) {
 				my.group[this.group].addElementsToGroup(this.name);
 			}
+			this.offset = my.newVector({
+				name: this.type + '.' + this.name + '.offset'
+			});
+			this.offset.flag = false;
 		};
 		/**
 Augments Base.get() to retrieve DOM element width and height values, and stack-related attributes
@@ -858,11 +862,14 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 				this.setDeltaRotation(items);
 			}
 			if (my.xto(items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
+				if (my.group[this.group] && my.group[this.group].checkEqualDimensions()) {
+					my.group[this.group].recalculateDimensions = true;
+				}
 				this.setLocalDimensions();
 				this.setDimensions();
 			}
 			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
-				delete this.offset;
+				this.offset.flag = false;
 			}
 			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				this.setDisplayOffsets();
@@ -1123,7 +1130,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				this.deltaRotation.quaternionMultiply(temp);
 			}
 			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
-				delete this.offset;
+				this.offset.flag = false;
 			}
 			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start)) {
 				this.setDisplayOffsets();
@@ -1132,6 +1139,9 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				this.setTransformOrigin();
 			}
 			if (my.xto(items.width, items.height, items.scale)) {
+				if (my.group[this.group] && my.group[this.group].checkEqualDimensions()) {
+					my.group[this.group].recalculateDimensions = true;
+				}
 				this.setLocalDimensions();
 				this.setDimensions();
 			}
@@ -1278,8 +1288,9 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				i;
 			g = my.group[this.group];
 			pere2[0] = this.getElement();
-			if (!my.xt(this.offset)) {
-				this.offset = this.getOffsetStartVector();
+			if (!this.offset.flag) {
+				this.offset.set(this.getOffsetStartVector());
+				this.offset.flag = true;
 			}
 			if (this.path) {
 				this.setStampUsingPath();
@@ -1447,8 +1458,9 @@ setStampUsingPivot helper function
 				x,
 				y;
 			myPVector = e.getStartValues();
-			if (!my.xt(e.offset)) {
-				e.offset = e.getOffsetStartVector();
+			if (!e.offset.flag) {
+				e.offset.set(e.getOffsetStartVector());
+				e.offset.flag = true;
 			}
 			x = myPVector.x + e.offset.x;
 			y = myPVector.y + e.offset.y;
@@ -1516,7 +1528,8 @@ Calculate the element's display offset values
 					myDisplay = myDisplay.offsetParent;
 				} while (myDisplay.offsetParent);
 			}
-			this.offset = this.getOffsetStartVector();
+			this.offset.set(this.getOffsetStartVector());
+			this.offset.flag = true;
 			this.displayOffsetX = dox;
 			this.displayOffsetY = doy;
 			return this;
@@ -2262,6 +2275,13 @@ When true, forces all elements (including stacks, pads) to use the height of the
 			equalHeight: false,
 			/**
 STACKNAME of the default Stack object to which this group is associated
+@property recalculateDimensions
+@type Boolean
+@default false
+**/
+			recalculateDimensions: false,
+			/**
+STACKNAME of the default Stack object to which this group is associated
 @property stack
 @type String
 @default ''
@@ -2300,12 +2320,19 @@ Tell the Group to ask its constituent elements to render
 				w,
 				h,
 				el;
-			if (this.equalHeight || this.equalWidth) {
+			if (this.recalculateDimensions) {
+				for (i = 0, iz = this.elements.length; i < iz; i++) {
+					el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+					el.setLocalDimensions();
+				}
+				this.recalculateDimensions = false;
+			}
+			if (this.checkEqualDimensions()) {
 				this.currentWidth = 0;
 				this.currentHeight = 0;
 				for (i = 0, iz = this.elements.length; i < iz; i++) {
 					el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
-					el.group = this.name;
+					//el.group = this.name;
 					if (el.localWidth > this.currentWidth) {
 						this.currentWidth = el.localWidth;
 					}
@@ -2348,6 +2375,15 @@ Argument can contain the following (optional) attributes:
 				}
 			}
 			return this;
+		};
+		/**
+check whether this.equalHeight or this.equalWidth has been set to true
+
+@method checkEqualDimensions
+@return True if either equalWidth or equalHeight is true; false otherwise
+**/
+		my.ElementGroup.prototype.checkEqualDimensions = function() {
+			return (this.equalHeight || this.equalWidth) ? true : false;
 		};
 		/**
 Add elements to the Group
@@ -2494,7 +2530,7 @@ Ask all elements in the Group to perform a dimension update operation
 				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
 				temp.setLocalDimensions();
 				temp.setDimensions();
-				delete temp.offset;
+				temp.offset.flag = false;
 				if (temp.type === 'Stack') {
 					my.group[temp.name].updateDimensions();
 				}
