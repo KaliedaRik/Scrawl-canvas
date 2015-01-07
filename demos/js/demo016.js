@@ -43,6 +43,7 @@ var mycode = function() {
 };
 
 scrawl.loadModules({
+	// path: '../min/',
 	path: '../source/',
 	minified: false,
 	modules: ['shape', 'factories', 'animation'],
