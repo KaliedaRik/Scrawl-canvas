@@ -323,7 +323,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			if (my.xt(items.data)) {
 				myShape = my.newPath(items);
 				sn = myShape.name;
-				tn = sn.replace('~', '_', 'g');
+				tn = sn.replace('_', '=', 'g');
 				lib = my.point;
 				sx = items.scaleX;
 				sy = items.scaleY;
