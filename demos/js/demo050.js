@@ -239,6 +239,7 @@ var mycode = function() {
 };
 
 scrawl.loadModules({
+	// path: '../min/',
 	path: '../source/',
 	minified: false,
 	//test to prevent multi-loading of modules
