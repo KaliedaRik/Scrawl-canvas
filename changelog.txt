@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.5 - 30 July 2014
+*	version 4.0.0 - 7 January 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -52,6 +52,10 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+December 2014 - 150107
+	- major overhaul of library and demos
+		- in preparation for version 4
+
 141129
 	- fixed localWidth, localHeight for Stack and Element objects
 	- NEW OBJECT

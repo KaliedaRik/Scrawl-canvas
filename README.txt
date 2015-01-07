@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 3.1.7 - 5 August 2014
+*	version 4.0.0 - 7 January 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -84,63 +84,66 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 3.1.7 released 5 August 2014
+VERSION 4.0.0 released 7 January 2015
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (61kb)
-		- scrawlAnimation-min.js (14kb)
-		- scrawlBlock-min.js (3kb)
-		- scrawlCollisions-min.js (10kb)
+		- scrawlCore-min.js (66kb)
+		- scrawlAnimation-min.js (18kb)
+		- scrawlBlock-min.js (4kb)
+		- scrawlCollisions-min.js (12kb)
 		- scrawlColor-min.js (5kb)
-		- scrawlFilters-min.js (9kb)
-		- scrawlImages-min.js (19kb)
-		- scrawlPath-min.js (23kb)
-		- scrawlPathFactories-min.js (8kb)
-		- scrawlPhrase-min.js (12kb)
+		- scrawlFilters-min.js (25kb)
+		- scrawlImageLoad-min.js (8kb)
+		- scrawlImages-min.js (15kb)
+		- scrawlPath-min.js (24kb)
+		- scrawlPathFactories-min.js (9kb)
+		- scrawlPhrase-min.js (13kb)
 		- scrawlPhysics-min.js (10kb)
+		- scrawlQuaternion-min.js (7kb)
 		- scrawlSaveLoad-min.js (8kb)
 		- scrawlShape-min.js (9kb)
-		- scrawlStacks-min.js (24kb)
-		- scrawlWheel-min.js (5kb)
+		- scrawlStacks-min.js (34kb)
+		- scrawlWheel-min.js (6kb)
 
 		Development:
-		- scrawlCore.js (188kb)
-		- scrawlAnimation.js (38kb)
-		- scrawlBlock.js (8kb)
-		- scrawlCollisions.js (22kb)
-		- scrawlColor.js (13kb)
-		- scrawlFilters.js (32kb)
-		- scrawlImages.js (50kb)
-		- scrawlPath.js (60kb)
-		- scrawlPathFactories.js (17kb)
-		- scrawlPhrase.js (33kb)
-		- scrawlPhysics.js (23kb)
-		- scrawlSaveLoad.js (16kb)
-		- scrawlShape.js (22kb)
-		- scrawlStacks.js (53kb)
-		- scrawlWheel.js (14kb)
+		- scrawlCore.js (196kb)
+		- scrawlAnimation.js (47kb)
+		- scrawlBlock.js (12kb)
+		- scrawlCollisions.js (28kb)
+		- scrawlColor.js (15kb)
+		- scrawlFilters.js (64kb)
+		- scrawlImageLoad.js (24kb)
+		- scrawlImages.js (38kb)
+		- scrawlPath.js (67kb)
+		- scrawlPathFactories.js (26kb)
+		- scrawlPhrase.js (37kb)
+		- scrawlPhysics.js (24kb)
+		- scrawlQuaternion.js (18kb)
+		- scrawlSaveLoad.js (18kb)
+		- scrawlShape.js (25kb)
+		- scrawlStacks.js (79kb)
+		- scrawlWheel.js (17kb)
 
 		Documentation:
 		- changelog.txt
 		- README.txt (this file)
 
-The latest versions of scrawl.js can be found on their SourceForge page: 
-https://sourceforge.net/projects/scrawljs/
-
 scrawl.js is also available for forking from GitHub: 
-https://github.com/KaliedaRik/Scrawl.js
+https://github.com/KaliedaRik/Scrawl-canvas
 
-There's discussion pages for Scrawl.js on both the SourceForge and GitHub websites. 
+There's discussion pages for Scrawl.js on the GitHub website. 
 Please post all questions, suggestions and critiques of Scrawl.js to those pages:
-https://sourceforge.net/p/scrawljs/discussion/
-https://github.com/KaliedaRik/Scrawl.js/pulls
+https://github.com/KaliedaRik/Scrawl-canvas/pulls
 
 If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+VERSION 4.0.0 uploaded 7 January 2015
+	- major overhaul of library
+
 Version 3.1.7 uploaded 5 August 2014
 	- all sourcefiles linted and beautified
 Version 3.1.6 uploaded 3 August 2014
