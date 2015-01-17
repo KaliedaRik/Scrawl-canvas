@@ -28,36 +28,36 @@ and wrapper objects for each <canvas> element it finds.
 
 It can also generate visible canvas elements programatically, and add them to the DOM.
 
-Users create sprite and gradient objects using scrawl factory functions, set their 
+Users create entity and gradient objects using scrawl factory functions, set their 
 styling and position, and render them onto the canvas element. Creation, positioning 
 and styling can all be handled by a single call to the factory function.
 
-Sprites include: basic rectangles (Block), advanced rectangles capable of displaying 
-images and sprite animations (Picture), circles (Wheel), single-line text (Phrase), 
+Entitys include: basic rectangles (Block), advanced rectangles capable of displaying 
+images and entity animations (Picture), circles (Wheel), single-line text (Phrase), 
 and complex designs composed of lines, arcs and curves (Outline, Shape).
 
 Factory functions can be used to easily create lines, curves and regular shapes 
 (triangles, stars, etc).
 
 JPG, PNG and SVG images (and videos – experimental) can be imported and used by 
-Picture sprites.
+Picture entitys.
 
-Animations can be achieved by manipulating a sprite/gradient’s attributes within 
+Animations can be achieved by manipulating a entity/gradient’s attributes within 
 a user-coded animation loop. Scrawl also supports animation tweens, and easing.
 
-All sprites, gradients and cells – can be given drag-and-drop and attach-to-mouse 
+All entitys, gradients and cells – can be given drag-and-drop and attach-to-mouse 
 functionality.
 
-Scrawl sprites can be gathered into groups for easier manipulation.
+Scrawl entitys can be gathered into groups for easier manipulation.
 
-Sprites can also be linked together directly (using their pivot attribute) so that 
-positioning/moving one sprite will position/move all other sprites associated with it.
+Entitys can also be linked together directly (using their pivot attribute) so that 
+positioning/moving one entity will position/move all other entitys associated with it.
 
-All sprites - including text - can be animated along paths.
+All entitys - including text - can be animated along paths.
 
-Scrawl.js has good support for collision detection between, and within, sprites 
+Scrawl.js has good support for collision detection between, and within, entitys 
 gathered into groups. Collision fields can be generated for canvas elements to 
-constrain sprite movements.
+constrain entity movements.
 
 A visible canvas can be linked to additional (non-DOM/invisible) canvases to create 
 complex, multi-layered displays; these additional canvases can also be manipulated 
@@ -155,14 +155,14 @@ Version 3.1.4 uploaded 7 July 2014
 	- included MIT licence text in all source files
 	- added a bower.json file to the distribution
 Version 3.1.3 uploaded 9 May 2014
-	- minor bug fix - using Phrase sprites in tween animations
+	- minor bug fix - using Phrase entitys in tween animations
 Version 3.1.2 uploaded 9 May 2014
 	- improvements to check hitting and mouse position functions
 Version 3.1.1 uploaded 30 April 2014
 	- added callback functionality to animation tweens
 	- minor bug fix: wheel checkHit()
 Version 3.1.0 uploaded 22 April 2014
-	- extended filters to include sprites
+	- extended filters to include entitys
 	- improved stack handling
 	- improved memory management
 VERSION 3.0.0 uploaded 5 April 2014

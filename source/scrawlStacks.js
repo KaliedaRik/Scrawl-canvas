@@ -783,18 +783,18 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 				switch (this.type) {
 					case 'Pad':
 						if ('width' === item) {
-							return this.width || parseFloat(el.width) || my.d[this.type].width;
+							return this.localWidth || this.width || parseFloat(el.width) || my.d[this.type].width;
 						}
 						if ('height' === item) {
-							return this.height || parseFloat(el.height) || my.d[this.type].height;
+							return this.localHeight || this.height || parseFloat(el.height) || my.d[this.type].height;
 						}
 						break;
 					default:
 						if ('width' === item) {
-							return this.width || parseFloat(el.style.width) || parseFloat(el.clientWidth) || my.d[this.type].width;
+							return this.localWidth || this.width || parseFloat(el.style.width) || parseFloat(el.clientWidth) || my.d[this.type].width;
 						}
 						if ('height' === item) {
-							return this.height || parseFloat(el.style.height) || parseFloat(el.clientHeight) || my.d[this.type].height;
+							return this.localHeight || this.height || parseFloat(el.style.height) || parseFloat(el.clientHeight) || my.d[this.type].height;
 						}
 				}
 			}
@@ -1041,6 +1041,7 @@ Constructor / set helper function
 			}
 			return this;
 		};
+		my.css = ['alignContent', 'alignItems', 'alignSelf', 'all', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundImage', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'backgroundSize', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRadius', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopLeftRadius', 'borderTopRightRadius', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'breakAfter', 'breakBefore', 'breakInside', 'captionSide', 'clear', 'clip', 'clipPath', 'color', 'columns', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'float', 'font', 'fontFamily', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'hyphens', 'imageRendering', 'imageResolution', 'imageOrientation', 'imeMode', 'inherit', 'initial', 'isolation', 'justifyContent', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'mixBlendMode', 'objectFit', 'objectPosition', 'opacity', 'orphans', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'padding', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'quotes', 'resize', 'rubyAlign', 'rubyMerge', 'rubyPosition', 's', 'scrollBehavior', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'tabSize', 'textAlign', 'textAlignLast', 'textCombineUpright', 'textDecoration', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'touchAction', 'unicodeBidi', 'unicodeRange', 'unset', 'verticalAlign', 'visibility', 'whiteSpace', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'writingMode'];
 		/**
 Handles the setting of position, transformOrigin, backfaceVisibility, margin, border, padding
 @method PageElement.setStyles
@@ -1049,8 +1050,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 @chainable
 **/
 		my.PageElement.prototype.setStyles = function(items) {
-			var stat1 = ['hidden', 'none'],
-				stat2 = ['backfaceVisibility', 'display', 'width', 'height', 'transform', 'translate', 'translateX', 'translateY', 'translateZ', 'top', 'left', 'bottom', 'right', 'zIndex', 'title', 'comment'],
+			var stat = ['hidden', 'none'],
 				el,
 				k,
 				i,
@@ -1066,7 +1066,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 				}
 				else if (k[i] === 'visibility') {
 					if (my.isa(items.visibility, 'str')) {
-						this.visibility = (!my.contains(stat1, items.visibility)) ? true : false;
+						this.visibility = (!my.contains(stat, items.visibility)) ? true : false;
 					}
 					else {
 						this.visibility = (items.visibility) ? true : false;
@@ -1078,13 +1078,9 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 						el.style.display = (this.visibility) ? 'block' : 'none';
 					}
 				}
-				else {
-					if (!my.contains(stat2, k[i])) {
-						if (my.xt(el.style[k[i]])) {
-							el.style[k[i]] = items[k[i]];
-						}
-						// need an 'else' here with a whitelist of browser-specific css styles that require prefixes to work
-						// Scrawl users shouldn't care about prefixing ...
+				else if (my.contains(my.css, k[i])) {
+					if (my.xt(el.style[k[i]])) {
+						el.style[k[i]] = items[k[i]];
 					}
 				}
 			}
@@ -1419,6 +1415,9 @@ Calculate start Vector in reference to a entity or Point object's position
 					}
 				}
 			}
+			if (this.name === 'strapline') {
+				console.log(this.name, 'sSUP-ERROR', this.pivot);
+			}
 			return this;
 		};
 		/**
@@ -1548,6 +1547,8 @@ Helper function - set local dimensions (width, height)
 				wVal,
 				parent,
 				el,
+				measure,
+				unit,
 				s;
 			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
 			if (parent) {
@@ -1566,10 +1567,17 @@ Helper function - set local dimensions (width, height)
 				}
 			}
 			else if (parent && my.isa(this.width, 'str') && w) {
-				this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+				measure = this.width.match(/^-?\d+\.?\d*(\D*)/);
+				unit = measure[1];
+				if (unit === '%') {
+					this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+				}
+				else {
+					this.localWidth = parseFloat(this.width) * this.scale;
+				}
 			}
 			else {
-				this.localWidth = this.width * this.scale;
+				this.localWidth = parseFloat(this.width) * this.scale;
 			}
 			hVal = parseFloat(this.height);
 			if (hVal === 0 || isNaN(hVal)) {
@@ -1579,10 +1587,17 @@ Helper function - set local dimensions (width, height)
 				}
 			}
 			else if (parent && my.isa(this.height, 'str') && h) {
-				this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+				measure = this.height.match(/^-?\d+\.?\d*(\D*)/);
+				unit = measure[1];
+				if (unit === '%') {
+					this.localHeight = ((parseFloat(this.height) / 100) * w) * this.scale;
+				}
+				else {
+					this.localHeight = parseFloat(this.height) * this.scale;
+				}
 			}
 			else {
-				this.localHeight = this.height * this.scale;
+				this.localHeight = parseFloat(this.height) * this.scale;
 			}
 			if (this.type === 'Pad') {
 				this.setCellLocalDimensions();
@@ -1846,6 +1861,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				if (this.group) {
 					my.stk[this.name].style.margin = '0';
 					my.stk[this.name].style.boxSizing = 'border-box';
+					items.stackElement.style.position = 'absolute';
 				}
 				return this;
 			}
@@ -1987,6 +2003,86 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 			return this;
 		};
 		/**
+Helper function - set local dimensions (width, height)
+
+_Replaces PageElement.setLocalDimensions
+@method setLocalDimensions
+@return This
+@chainable
+@private
+**/
+		my.Stack.prototype.setLocalDimensions = function() {
+			var h,
+				w,
+				hVal,
+				wVal,
+				parent,
+				el,
+				elRes,
+				g,
+				gRes;
+			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
+			if (parent) {
+				w = parent.localWidth;
+				h = parent.localHeight;
+			}
+			wVal = parseFloat(this.width);
+			hVal = parseFloat(this.height);
+			if (wVal === 0 || isNaN(wVal) || hVal === 0 || isNaN(hVal)) {
+				g = my.group[this.name];
+				if (g) {
+					gRes = g.getElementGroupDimensions();
+				}
+				else {
+					el = this.getElement();
+					if (el) {
+						elRes = window.getComputedStyle(el, null);
+					}
+				}
+			}
+			if (wVal === 0 || isNaN(wVal)) {
+				if (gRes) {
+					this.localWidth = gRes.width;
+				}
+				else if (elRes) {
+					el.style.width = 'auto';
+					this.localWidth = parseFloat(elRes.getPropertyValue('width'));
+				}
+				else {
+					this.localWidth = 0;
+				}
+			}
+			else {
+				if (parent && my.isa(this.width, 'str') && w) {
+					this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+				}
+				else {
+					this.localWidth = this.width * this.scale;
+				}
+			}
+			if (hVal === 0 || isNaN(hVal)) {
+				if (gRes) {
+					this.localHeight = gRes.height;
+				}
+				else if (elRes) {
+					el.style.width = 'auto';
+					this.localWidth = parseFloat(elRes.getPropertyValue('width'));
+				}
+				else {
+					this.localHeight = 0;
+				}
+			}
+			else {
+				if (parent && my.isa(this.height, 'str') && h) {
+					this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+				}
+				else {
+					this.localHeight = this.height * this.scale;
+				}
+			}
+			return this;
+		};
+		/**
 Import elements into the stack DOM object, and create element object wrappers for them
 @method addElementById
 @param {String} DOM element id String
@@ -2101,6 +2197,15 @@ Calculates the pixels value of the object's perspective attribute
 		my.pushUnique(my.sectionlist, 'element');
 		my.pushUnique(my.sectionlist, 'elm');
 		my.pushUnique(my.nameslist, 'elementnames');
+		/**
+Get dimensions of Stack
+@method getStackDimensions
+@return Object with width and height attributes
+**/
+		my.Stack.prototype.getStackDimensions = function() {
+			var g = my.group[this.name];
+			return (g) ? g.getElementGroupDimensions() : my.o;
+		};
 		/**
 # Element
 
@@ -2307,6 +2412,39 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 				my.entity[this.entitys[i]].stamp('none', stack);
 			}
 			return this;
+		};
+		/**
+Get collective dimensions of ElementGroup elements
+@method getElementGroupDimensions
+@return Object with width and height attributes
+**/
+		my.ElementGroup.prototype.getElementGroupDimensions = function() {
+			var temp,
+				el, e,
+				result = {
+					width: 0,
+					height: 0
+				},
+				i, iz;
+			for (i = 0, iz = this.elements.length; i < iz; i++) {
+				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				if (el.visibility) {
+					e = el.getElement();
+					switch (el.type) {
+						case 'Stack':
+							temp = el.getStackDimensions();
+							result.width = (temp.width > result.width) ? temp.width : result.width;
+							result.height = (temp.height > result.height) ? temp.height : result.height;
+							break;
+						default:
+							temp = parseFloat(e.style.left) + el.localWidth - el.offset.x;
+							result.width = (temp > result.width) ? temp : result.width;
+							temp = parseFloat(e.style.top) + el.localHeight - el.offset.y;
+							result.height = (temp > result.height) ? temp : result.height;
+					}
+				}
+			}
+			return result;
 		};
 		/**
 Tell the Group to ask its constituent elements to render

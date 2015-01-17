@@ -503,6 +503,18 @@ A __utility__ function that checks an array to see if it contains a given value
 		return (item.indexOf(k) >= 0) ? true : false;
 	};
 	/**
+A __utility__ function to convert strings (such as percentages) to integer values
+@method toInt
+@param {String} item
+@return Integer number; 0 on error
+**/
+	my.toInt = function(item) {
+		if (item.substring) {
+			item = parseFloat(item);
+		}
+		return (item.toFixed) ? item | 0 : 0;
+	};
+	/**
 A __utility__ function that adds a value to an array if the array doesn't already contain an element with that value
 @method pushUnique
 @param {Array} item Reference array
@@ -677,8 +689,7 @@ Valid identifier Strings include:
     scrawl.isa(myboolean, 'str');   //returns false
 **/
 	my.isa = function() {
-		var slice;
-		slice = Array.prototype.slice.call(arguments);
+		var slice = Array.prototype.slice.call(arguments);
 		if (slice.length == 2 && my.xt(slice[0])) {
 			//because we mostly test for str or fn
 			if (slice[1] == 'str') {
