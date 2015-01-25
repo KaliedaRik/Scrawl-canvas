@@ -985,6 +985,54 @@ Augments PageElement.set()
 			return this;
 		};
 		/**
+Add a CSS class to the DOM element
+@method addClass
+@param {String} item String consisting of one or more classes to be added to the DOM element - a space will be prepended to the start of the string automatically
+@return This
+@chainable
+**/
+		my.PageElement.prototype.addClass = function(item) {
+			var el;
+			if (my.isa(item, 'str')) {
+				el = this.getElement();
+				if (0 === el.className.length) {
+					el.className = item;
+				}
+				else if (' ' === el.className[el.className.length - 1]) {
+					el.className += item;
+				}
+				else {
+					el.className += ' ' + item;
+				}
+				return this;
+			}
+		};
+		/**
+Remove a CSS class from the DOM element
+@method removeClass
+@param {String} item String consisting of one or more classes to be removed from the DOM element
+@return This
+@chainable
+**/
+		my.PageElement.prototype.removeClass = function(item) {
+			var el,
+				classes,
+				eClass,
+				search,
+				i, iz;
+			if (my.isa(item, 'str')) {
+				el = this.getElement();
+				eClass = el.className;
+				classes = item.split();
+				for (i = 0, iz = classes.length; i < iz; i++) {
+					search = new RegExp(' ?' + classes[i] + ' ?');
+					eClass = eClass.replace(search, ' ');
+				}
+				el.className = eClass;
+			}
+			return this;
+		};
+		/**
 Augments PageElement.set()
 @method setDeltaTranslate
 @param {Object} items Object consisting of key:value attributes
@@ -1415,9 +1463,6 @@ Calculate start Vector in reference to a entity or Point object's position
 					}
 				}
 			}
-			if (this.name === 'strapline') {
-				console.log(this.name, 'sSUP-ERROR', this.pivot);
-			}
 			return this;
 		};
 		/**
@@ -1590,7 +1635,7 @@ Helper function - set local dimensions (width, height)
 				measure = this.height.match(/^-?\d+\.?\d*(\D*)/);
 				unit = measure[1];
 				if (unit === '%') {
-					this.localHeight = ((parseFloat(this.height) / 100) * w) * this.scale;
+					this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
 				}
 				else {
 					this.localHeight = parseFloat(this.height) * this.scale;
@@ -1722,7 +1767,6 @@ Pad lockTo helper
 			var i,
 				iz,
 				cell;
-			console.log(this.name, 'sCLD', this.localWidth, this.localHeight);
 			if (my.xt(this.cells)) {
 				for (i = 0, iz = this.cells.length; i < iz; i++) {
 					cell = my.cell[this.cells[i]];
@@ -1865,7 +1909,6 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				}
 				return this;
 			}
-			console.log('Failed to generate a Stack wrapper - no DOM element supplied');
 			return false;
 		};
 		my.Stack.prototype = Object.create(my.PageElement.prototype);
@@ -1963,6 +2006,7 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 						}
 					}
 				}
+				this.setPerspective();
 			}
 			return this;
 		};
@@ -2164,8 +2208,8 @@ Parse the perspective Vector attribute
 		my.Stack.prototype.parsePerspective = function() {
 			var height,
 				width;
-			height = this.height || this.get('height');
-			width = this.width || this.get('width');
+			height = this.localHeight || this.height || this.get('height');
+			width = this.localWidth || this.width || this.get('width');
 			return my.Position.prototype.calculatePOV.call(this, this.work.perspective, width, height, false);
 		};
 		/**
@@ -2185,7 +2229,7 @@ Calculates the pixels value of the object's perspective attribute
 			el = this.getElement();
 			myH.x *= sx;
 			myH.y *= sy;
-			myH.z *= sx;
+			//myH.z *= sx;
 			el.style.mozPerspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
 			el.style.webkitPerspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
 			el.style.perspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
@@ -2255,7 +2299,6 @@ Get dimensions of Stack
 				}
 				return this;
 			}
-			console.log('Failed to generate an Element wrapper - no DOM element supplied');
 			return false;
 		};
 		my.Element.prototype = Object.create(my.PageElement.prototype);

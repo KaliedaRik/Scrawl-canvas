@@ -149,7 +149,6 @@ Position.get hook function - modified by animation module
 				}
 			}
 			if ('delta' === item) {
-				console.log(this.name, 'get delta vector');
 				return this.delta.getVector();
 			}
 			return false;
@@ -1657,7 +1656,7 @@ add() and remove() helper function
 			return true;
 		};
 		/**
-Add Actions to the timeline - add Actions as one or more arguments to this function
+Add Actions to the timeline - list Actions as one or more arguments to this function
 @method add
 @return this
 @chainable
@@ -1669,11 +1668,10 @@ Add Actions to the timeline - add Actions as one or more arguments to this funct
 				my.pushUnique(this.actionsList, slice[i]);
 			}
 			this.resolve();
-			this.counter = 0;
 			return this;
 		};
 		/**
-Remove Actions from the timeline - add Actions as one or more arguments to this function
+Remove Actions from the timeline - list Actions as one or more arguments to this function
 @method remove
 @return this
 @chainable
@@ -1685,7 +1683,6 @@ Remove Actions from the timeline - add Actions as one or more arguments to this 
 				my.removeItem(this.actionsList, slice[i]);
 			}
 			this.resolve();
-			this.counter = 0;
 			return this;
 		};
 		/**
@@ -1734,6 +1731,7 @@ Function triggered by the animation loop
 					a = my.animation[this.actionsList[i]];
 					if (a.timeValue + this.startTime <= this.currentTime) {
 						a.run();
+						this.counter++;
 						if (this.counter + 1 === this.actionsList.length) {
 							this.counter++;
 						}
@@ -1744,7 +1742,7 @@ Function triggered by the animation loop
 					}
 				}
 			}
-			if (this.counter === this.actionsList.length) {
+			if (this.counter >= this.actionsList.length) {
 				this.halt();
 			}
 		};
@@ -1879,16 +1877,16 @@ Convert a time into its component properties
 		/**
 Invoke the associated function
 @method run
-@param {Object} [items] Object argument to be passed to the action
 @return always true
 **/
-		my.Action.prototype.run = function(items) {
+		my.Action.prototype.run = function() {
+			var a = ['Tween', 'Animation'];
 			if (my.xt(this.action)) {
-				if (this.action.type === 'Tween') {
-					this.action.run(items);
+				if (my.contains(a, this.action.type)) {
+					this.action.run();
 				}
 				else {
-					this.action(items);
+					this.action();
 				}
 				return true;
 			}

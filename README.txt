@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.0.0 - 7 January 2015
+*	version 4.1.0 - 25 January 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -33,19 +33,20 @@ styling and position, and render them onto the canvas element. Creation, positio
 and styling can all be handled by a single call to the factory function.
 
 Entitys include: basic rectangles (Block), advanced rectangles capable of displaying 
-images and entity animations (Picture), circles (Wheel), single-line text (Phrase), 
-and complex designs composed of lines, arcs and curves (Outline, Shape).
+images and entity animations (Picture), circles (Wheel), multi-line text (Phrase), 
+and complex designs composed of lines, arcs and curves (Path, Shape).
 
 Factory functions can be used to easily create lines, curves and regular shapes 
 (triangles, stars, etc).
 
 JPG, PNG and SVG images (and videos – experimental) can be imported and used by 
-Picture entitys.
+Picture entitys and Patterns
 
 Animations can be achieved by manipulating a entity/gradient’s attributes within 
-a user-coded animation loop. Scrawl also supports animation tweens, and easing.
+a user-coded animation loop. Scrawl also supports animation timelines, tweens, and 
+easing.
 
-All entitys, gradients and cells – can be given drag-and-drop and attach-to-mouse 
+All entitys, gradients and cells can be given drag-and-drop and attach-to-mouse 
 functionality.
 
 Scrawl entitys can be gathered into groups for easier manipulation.
@@ -55,7 +56,7 @@ positioning/moving one entity will position/move all other entitys associated wi
 
 All entitys - including text - can be animated along paths.
 
-Scrawl.js has good support for collision detection between, and within, entitys 
+Scrawl-canvas has good support for collision detection between, and within, entitys 
 gathered into groups. Collision fields can be generated for canvas elements to 
 constrain entity movements.
 
@@ -66,25 +67,26 @@ for animation purposes.
 Canvas rendering can be simple, or it can be broken down into clear, compile and show 
 operations for more complex compositions.
 
-Scrawl.js includes functionality to manipulate multiple visible canvas elements in 
+Scrawl-canvas includes functionality to manipulate multiple visible canvas elements in 
 3 dimensions using CSS 3d transforms – where supported by the browser.
 
 Other DOM elements – including SVG images – can be included in Scrawl stacks, and 
 manipulated via Scrawl.js functionality.
 
 Canvases and elements in a Scrawl.js stack (including other stacks) can be moved and 
-scaled very easily.
+scaled very easily. DOM elements can be pivoted to each other and to canvas cells and
+entitys - and vice-versa.
 
-(Does not add canvas functionality to those browsers that do not support 
-the HTML5 <canvas> element. Tested in: IE9 and 10, and modern versions of 
-Firefox, Chrome, Opera, Safari for Windows.)
+Does not add canvas functionality to those browsers that do not support 
+the HTML5 <canvas> element. Tested in: IE11, and modern versions of 
+Firefox, Chrome, Opera, Safari(Windows).
 
 http://scrawl.rikweb.org.uk/
 
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 4.0.0 released 7 January 2015
+VERSION 4.1.0 released 25 January 2015
 
     - the zip file includes:
 		
@@ -130,24 +132,35 @@ VERSION 4.0.0 released 7 January 2015
 		- changelog.txt
 		- README.txt (this file)
 
-scrawl.js is also available for forking from GitHub: 
+scrawl-canvas is also available for forking from GitHub: 
 https://github.com/KaliedaRik/Scrawl-canvas
 
 There's discussion pages for Scrawl.js on the GitHub website. 
 Please post all questions, suggestions and critiques of Scrawl.js to those pages:
 https://github.com/KaliedaRik/Scrawl-canvas/pulls
 
+(I no longer update the version of scrawl on SourceForge - too much work)
+
 If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 4.1.0 uploaded 25 January 2015
+	- added timeline functionality
+	- numerous small bugfixes following release of version 4
 VERSION 4.0.0 uploaded 7 January 2015
 	- major overhaul of library
+	- major new functionality including: 
+		- ability to position anything using % strings
+		- tweens now accept numeric strings of percent and other units
+		- new filters
+	- this version breaks functionality of previous versions in many different ways
+		- complete rethink of scrawl nomenclature and object attributes
 
 Version 3.1.7 uploaded 5 August 2014
 	- all sourcefiles linted and beautified
 Version 3.1.6 uploaded 3 August 2014
-	- (released in error - lerarning to use github via command line)
+	- (released in error - learning to use github via command line)
 Version 3.1.5 uploaded 30 July 2014
 	- bugfixes for element positioning within a scrawl stack
 	- added ability to order animations
@@ -183,6 +196,7 @@ Previous versions are NOT compatible with version 2.00+
 	Version 1.02 uploaded 24 November 2013
 	Version 1.01 uploaded 6 November 2013
 	VERSION 1.00 uploaded 30 October 2013
+
 	version 0.300 uploaded 20 August 2013
 	version 0.200(beta) uploaded 21 May 2013
 	version 0.02(beta) uploaded 27 April 2013

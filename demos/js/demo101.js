@@ -95,9 +95,7 @@ var mycode = function() {
 	});
 	scrawl.newLeachFilter({
 		name: 'myLeach',
-		maxRed: 150,
-		maxBlue: 150,
-		minGreen: 100,
+		exclude: [[0, 40, 0, 200, 255, 100]],
 	});
 	scrawl.newSeparateFilter({
 		name: 'mySeparate',
@@ -334,7 +332,6 @@ var mycode = function() {
 };
 
 scrawl.loadModules({
-	// path: '../min/',
 	path: '../source/',
 	minified: false,
 	modules: ['images', 'animation', 'filters', 'block', 'wheel', 'phrase', 'path', 'shape', 'factories'],

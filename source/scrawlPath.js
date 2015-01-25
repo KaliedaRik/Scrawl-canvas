@@ -250,7 +250,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				myPivot,
 				temp,
 				i,
-				iz;
+				iz,
+				search = new RegExp('_', 'g');
 			items = (my.isa(items, 'obj')) ? items : {};
 			minX = 999999;
 			minY = 999999;
@@ -323,7 +324,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			if (my.xt(items.data)) {
 				myShape = my.newPath(items);
 				sn = myShape.name;
-				tn = sn.replace('_', '=', 'g');
+				tn = sn.replace(search, '=');
 				lib = my.point;
 				sx = items.scaleX;
 				sy = items.scaleY;
@@ -1952,7 +1953,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			entity = my.entity[this.entity];
 			if (my.isa(val, 'num')) {
 				result = this.getLocalPositionOnLink(val);
-				return result.rotate(entity.roll).vectorAdd(entity.start);
+				return result.rotate(entity.roll).vectorAdd(entity.getStartValues());
 			}
 			return false;
 		};
@@ -1998,7 +1999,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				result;
 			entity = my.entity[this.entity];
 			result = this.getLocalSteadyPositionOnLink(val);
-			result.rotate(entity.roll).vectorAdd(entity.start);
+			result.rotate(entity.roll).vectorAdd(entity.getStartValues());
 			return result;
 		};
 		/**
@@ -2033,7 +2034,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				precision = (my.isa(val, 'num') && val > 0) ? val : (my.entity[this.entity].get('precision'));
 				step = 1 / precision;
 				cumLen = 0;
-				my.worklink.v2.set(pts.start); //my.worklink.v2
+				my.worklink.v2.set(pts.start);
 				entity = my.entity[this.entity];
 				temp = entity.roll;
 				this.positionsX.length = 0;
@@ -2048,10 +2049,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				for (j = 1; j <= precision; j++) {
 					pos = step * ((j - 1) + 1);
 					here = this.getPositionOnLink(pos); //my.worklink.v1
-					here.vectorSubtract(entity.start);
-					my.worklink.v3.set(here); //my.worklink.v3
+					here.vectorSubtract(entity.getStartValues());
+					my.worklink.v3.set(here);
 					dist = here.vectorSubtract(my.worklink.v2).getMagnitude();
-					my.worklink.v2.set(my.worklink.v3); //my.worklink.v2
+					my.worklink.v2.set(my.worklink.v3);
 					cumLen += dist;
 					this.positionsX[j] = my.worklink.v2.x;
 					this.positionsY[j] = my.worklink.v2.y;

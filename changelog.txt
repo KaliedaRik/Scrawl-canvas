@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.0.0 - 7 January 2015
+*	version 4.1.0 - 25 January 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -10,24 +10,14 @@
 
 Currently working on ...
 ------------------------------------------------------------------------------------
-- integrating canvases with stacks
-	- code up extra functionality for sprite, pad and element widths and heights
-		- allow pad, stack and element width and height to be a % of containing stack's width and height
-		- allow sprite width and height (radius?) to be a % of the containing cell's width and height
-	- stack and element auto height feature
-		- so height includes the heights of all children elements
-	- new sprite lockTo attribute
-		- in particular so block and picture sprites, patterns and gradients use element width/height
-- recode setDelta routines so that they can handle % additions and subtractions
+- bugtracking following release of v4.1.0
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
 - improving the code base (always)
 - user accessibility issues
+- improve save/load operations - to allow realtime updates of a shared canvas over the net
 - physics engine - rigid body interactions
-- better, more responsive stacks
-	- scrawl and svg interoperability
-- isometric game demos
 - using scrawl with popular javascript frameworks and web building software
 	- jQuery
 	- WordPress
@@ -52,9 +42,39 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+150127
+	- version 4.1.0 released
+
+150108-27
+	- added in new Timeline functionality
+	- coded up new Scrawl website tour page
+		- panel 0 - replaced 'hello world' with animation along path + parallax scrolling
+		- panel 2 now includes animated gradient
+		- panel 4 - made background image greyscale
+		- panel 6 (see below)
+	- checked all demos, making an effort to include new functionalities where relevant
+	- coded up new Scrawl website demos page
+		- demos display in an iframe
+	- undertool testing of new pages and demos in all relevant browsers
+		- firefox; chrome; IE11 - all work as expected, except:
+			- IE11 may have an issue with entity ordering when dropping an entity from the mouse
+			- Chrome appears to have developed an issue with entity shadows on the fill (but not draw) method
+			- in all browsers, nesting stacks to more than 3 layers does not work
+				- replaced canvas 6 3d running cat with a new video/filter/animated gradient demo
+		- safari (windows) - major issue of videos not playing
+			- which damages display of new canvas 6
+	- bugfixes for issues uncovered during testing
+		- video and image loading
+		- Path entity cloning
+		- numerous smaller bugfixes
+
+150107
+	- version 4.0.0 released
+
 December 2014 - 150107
-	- major overhaul of library and demos
+	- MAJOR overhaul of library and demos
 		- in preparation for version 4
+		- all code scrutinised for efficiencies
 
 141129
 	- fixed localWidth, localHeight for Stack and Element objects

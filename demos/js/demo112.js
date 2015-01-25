@@ -100,9 +100,7 @@ var mycode = function() {
 	});
 	scrawl.newLeachFilter({
 		name: 'myLeach',
-		minRed: 180,
-		minBlue: 180,
-		minGreen: 180,
+		exclude: [[120, 120, 120, 255, 255, 255]]
 	});
 	scrawl.newSeparateFilter({
 		name: 'mySeparate',

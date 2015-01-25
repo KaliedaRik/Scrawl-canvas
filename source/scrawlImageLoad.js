@@ -109,66 +109,104 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 @method getImagesByClass
 @param {String} classtag Class string value of DOM objects to be imported into the scrawl library
 @param {Boolean} [kill] when set to true, the &lt;img&gt; elements will be removed from the DOM when imported into the library
-@return Array of String names; false on failure
+@return true if one or more images are identified; false otherwise
 **/
 		my.getImagesByClass = function(classtag, kill) {
-			var names,
-				s,
-				myImg,
-				i;
+			var s,
+				i,
+				kill = my.xtGet(kill, true);
 			if (classtag) {
-				names = [];
 				s = document.getElementsByClassName(classtag);
 				if (s.length > 0) {
 					for (i = s.length; i > 0; i--) {
-						myImg = my.newImage({
-							element: s[i - 1],
-							removeImageFromDOM: my.xtGet(kill, true)
-						});
-						names.push(myImg.name);
+						if(s[i - 1].complete){
+							my.newImage({
+								element: s[i - 1],
+								removeImageFromDOM: kill,
+								crossOrigin: 'anonymous'
+							});
+						}
+						else {
+							s[i - 1].addEventListener('load', my.getImagesCallback, false);
+						}
 					}
-					return names;
+					return true;
 				}
 			}
-			console.log('my.getImageById() failed to find any <img> elements of class="' + classtag + '" on the page');
 			return false;
+		};
+		/**
+Helper function
+@method getImagesCallback
+@private
+**/
+		my.getImagesCallback = function() {
+			my.newImage({
+				element: this, // should be the image element itself
+				crossOrigin: 'anonymous'
+			});
 		};
 		/**
 A __general__ function to generate a Image wrapper object for an &lt;img&gt; or &lt;svg&gt; element identified by an id string
 @method getImageById
 @param {String} idtag Id string value of DOM object to be imported into the scrawl library
 @param {Boolean} [kill] when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library
-@return String name; false on failure
+@return true if image is identified; false otherwise
 **/
 		my.getImageById = function(idtag, kill) {
-			var myImg;
+			var myImg,
+				kill = my.xtGet(kill, true);
 			if (idtag) {
-				myImg = my.newImage({
-					element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-					removeImageFromDOM: my.xtGet(kill, true)
-				});
-				return myImg.name;
+				myImg = document.getElementById(idtag);
+				if(myImg.complete){
+					my.newImage({
+						element: myImg,
+						removeImageFromDOM: kill,
+						crossOrigin: 'anonymous'
+					});
+				}
+				else{
+					myImg.addEventListener('load', my.getImagesCallback, false);
+				}
+				return true;
 			}
-			console.log('my.getImagesByClass() failed to find any <img> elements with id="' + classtag + '" on the page');
 			return false;
+		};
+		/**
+Helper function
+@method getVideoCallback
+@private
+**/
+		my.getVideoCallback = function() {
+			my.newVideo({
+				element: this, //unrecorded flag for triggering Image stuff
+				crossOrigin: 'anonymous'
+			});	
 		};
 		/**
 A __general__ function to generate a Video wrapper object for a &lt;video&gt; element identified by an id string
 @method getVideoById
 @param {String} idtag Id string value of DOM object to be imported into the scrawl library
-@param {Boolean} [kill] when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library
-@return String name; false on failure
+@param {Boolean} [stream] defaults to 'raw'
+@return true if video is identified; false otherwise
 **/
 		my.getVideoById = function(idtag, stream) {
-			var myVideo;
+			var myVideo,
+				stream = my.xtGet(stream, 'raw');
 			if (idtag) {
-				myVideo = my.newVideo({
-					element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-					stream: my.xtGet(stream, 'raw')
-				});
-				return myVideo.name;
+				myVideo = document.getElementById(idtag);
+				if(myVideo.readyState > 1){
+					my.newVideo({
+						element: myVideo, //unrecorded flag for triggering Image stuff
+						stream: stream,
+						crossOrigin: 'anonymous'
+					});	
+				}
+				else {
+					myVideo.addEventListener('loadeddata', my.getVideoCallback, false);
+				}
+				return true;
 			}
-			console.log('my.getVideoById() failed to find any <video> elements with id="' + idtag + '" on the page');
 			return false;
 		};
 
@@ -365,9 +403,7 @@ Import an image using the supplied url string
 						items.callback();
 					}
 				};
-				el.onerror = function(e) {
-					console.log('Download of image failed for ', that.name);
-				};
+				el.onerror = function(e) {};
 				el.src = items.url;
 				return true;
 			}
@@ -748,8 +784,8 @@ Adds a DOM &lt;video&gt; element to the library
 			var el = items.element;
 			if (my.xt(el)) {
 				el.id = this.name;
-				this.width = 0;
-				this.height = 0;
+				this.width = 1;
+				this.height = 1;
 				my.imageFragment.appendChild(el);
 				my.asset[this.name] = my.imageFragment.querySelector('#' + this.name);
 				my.pushUnique(my.assetnames, this.name);
@@ -776,10 +812,22 @@ Video constructor helper function
 **/
 		my.Video.prototype.setIntrinsicDimensions = function() {
 			var ent,
+				api,
+				wrapper,
 				i,
 				iz;
-			this.width = this.api.videoWidth;
-			this.height = this.api.videoHeight;
+			if(my.xt(this.api)){
+				//this = scrawl wrapper
+				api = this.api;
+				wrapper = this;
+			}
+			else{
+				//this = dom video element
+				api = this;
+				wrapper = my.video[this.id];
+			}
+			wrapper.width = api.videoWidth;
+			wrapper.height = api.videoHeight;
 			for (i = 0, iz = my.entitynames.length; i < iz; i++) {
 				ent = my.entity[my.entitynames[i]];
 				if (ent.type === 'Picture') {

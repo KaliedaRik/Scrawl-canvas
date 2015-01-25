@@ -455,6 +455,7 @@ Group.stamp hook function - add a filter to a group of Entitys, and any backgrou
 			var imageData,
 				canvas,
 				composite,
+				localComposite = 'source-over',
 				e,
 				eStroke,
 				i,
@@ -500,15 +501,22 @@ Group.stamp hook function - add a filter to a group of Entitys, and any backgrou
 						}
 						else if (my.filter[this.filters[i]]) {
 							imageData = my.filter[this.filters[i]].add(imageData);
+							localComposite = (my.xt(my.filter[this.filters[i]].operation)) ? my.filter[this.filters[i]].operation : localComposite;
 						}
 					}
 				}
 				my.cvx.putImageData(imageData, 0, 0);
-				composite = engine.globalCompositeOperation;
-				engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
-				engine.setTransform(1, 0, 0, 1, 0, 0);
-				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-				engine.globalCompositeOperation = composite;
+				if (engine.globalCompositeOperation !== localComposite) {
+					composite = engine.globalCompositeOperation;
+					engine.globalCompositeOperation = localComposite;
+					engine.setTransform(1, 0, 0, 1, 0, 0);
+					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+					engine.globalCompositeOperation = composite;
+				}
+				else {
+					engine.setTransform(1, 0, 0, 1, 0, 0);
+					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+				}
 			}
 		};
 		/**
@@ -520,6 +528,7 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 			var imageData,
 				canvas,
 				composite,
+				localComposite = 'source-over',
 				i,
 				iz;
 			force = my.xtGet(force, false);
@@ -551,14 +560,21 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 						}
 						else if (my.filter[this.filters[i]]) {
 							imageData = my.filter[this.filters[i]].add(imageData);
+							localComposite = (my.xt(my.filter[this.filters[i]].operation)) ? my.filter[this.filters[i]].operation : localComposite;
 						}
 					}
 					my.cvx.putImageData(imageData, 0, 0);
-					composite = engine.globalCompositeOperation;
-					engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
-					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-					engine.globalCompositeOperation = composite;
+					if (engine.globalCompositeOperation !== localComposite) {
+						composite = engine.globalCompositeOperation;
+						engine.globalCompositeOperation = localComposite;
+						engine.setTransform(1, 0, 0, 1, 0, 0);
+						engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+						engine.globalCompositeOperation = composite;
+					}
+					else {
+						engine.setTransform(1, 0, 0, 1, 0, 0);
+						engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+					}
 				}
 				my.cvx.restore();
 			}
@@ -729,7 +745,7 @@ Only the final filter in an array of filters will determine the composite operat
 @type String
 @default 'source-over'
 **/
-			composite: 'source-over',
+			//composite: 'source-over',
 		};
 		my.mergeInto(my.d.Filter, my.d.Base);
 		/**
@@ -2205,14 +2221,8 @@ Blur helper function
 		my.LeachFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.minRed = my.xtGet(items.minRed, 0);
-			this.minGreen = my.xtGet(items.minGreen, 0);
-			this.minBlue = my.xtGet(items.minBlue, 0);
-			this.maxRed = my.xtGet(items.maxRed, 255);
-			this.maxGreen = my.xtGet(items.maxGreen, 255);
-			this.maxBlue = my.xtGet(items.maxBlue, 255);
-			this.preserve = my.xtGet(items.preserve, false);
-			this.composite = (this.preserve) ? 'destination-in' : 'destination-out';
+			this.exclude = items.exclude || [];
+			this.operation = 'xor';
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -2228,64 +2238,27 @@ Blur helper function
 		my.LeachFilter.prototype.classname = 'filternames';
 		my.d.LeachFilter = {
 			/**
-@property minRed
-@type Number
-@default 0
+Unlike other filters, the leach filter uses an 'xor' GCO to stamp itself onto the canvas - this is changeable, if necessary
+
+@property operation
+@type String
+@default 'xor'
 **/
-			minRed: 0,
+			operation: 'xor',
 			/**
-@property minGreen
-@type Number
-@default 0
+The exclude array should contain a set of arrays defining the color ranges to be leached (have their alpha values set to 0) from the image. Each array within the exclude array must include the following six numbers in exactly this order: 
+
+[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue]
+
+... where the numbers are integers between 0 and 255
+
+@property exclude
+@type Array
+@default []
 **/
-			minGreen: 0,
-			/**
-@property minBlue
-@type Number
-@default 0
-**/
-			minBlue: 0,
-			/**
-@property maxRed
-@type Number
-@default 255
-**/
-			maxRed: 255,
-			/**
-@property maxGreen
-@type Number
-@default 255
-**/
-			maxGreen: 255,
-			/**
-@property maxBlue
-@type Number
-@default 255
-**/
-			maxBlue: 255,
-			/**
-When the preserve function is set to true, the selected areas are retained; on false they are leached
-@property preserve
-@type Boolean
-@default false
-**/
-			preserve: false,
+			exclude: []
 		};
 		my.mergeInto(my.d.LeachFilter, my.d.Filter);
-		/**
-Set attribute values.
-
-@method set
-@param {Object} items Object containing attribute key:value pairs
-@return This
-@chainable
-**/
-		my.LeachFilter.prototype.set = function(items) {
-			my.Base.prototype.set.call(this, items);
-			if (my.xt(items.preserve) && my.isa(items.preserve, 'bool')) {
-				this.composite = (items.preserve) ? 'destination-in' : 'destination-out';
-			}
-		};
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2294,7 +2267,9 @@ Add function - takes data, calculates its channels and combines it with data
 @return amended image data object
 **/
 		my.LeachFilter.prototype.add = function(data) {
-			var alpha,
+			var r,
+				g,
+				b,
 				rMax,
 				gMax,
 				bMax,
@@ -2304,29 +2279,29 @@ Add function - takes data, calculates its channels and combines it with data
 				d,
 				i,
 				iz,
+				j,
+				jz,
 				flag;
-			alpha = Math.floor(this.getAlpha() * 255);
-			rMax = this.maxRed;
-			gMax = this.maxGreen;
-			bMax = this.maxBlue;
-			rMin = this.minRed;
-			gMin = this.minGreen;
-			bMin = this.minBlue;
 			d = data.data;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] > 0) {
 					flag = false;
-					if (my.isBetween(d[i], rMin, rMax, true)) {
-						if (my.isBetween(d[i + 1], gMin, gMax, true)) {
-							if (my.isBetween(d[i + 2], bMin, bMax, true)) {
-								d[i + 3] = alpha;
-								flag = true;
-							}
+					r = d[i];
+					g = d[i + 1];
+					b = d[i + 2];
+					for (j = 0, jz = this.exclude.length; j < jz; j++) {
+						rMin = this.exclude[j][0];
+						gMin = this.exclude[j][1];
+						bMin = this.exclude[j][2];
+						rMax = this.exclude[j][3];
+						gMax = this.exclude[j][4];
+						bMax = this.exclude[j][5];
+						if (r >= rMin && r <= rMax && g >= gMin && g <= gMax && b >= bMin && b <= bMax) {
+							flag = true;
+							break;
 						}
 					}
-					if (!flag) {
-						d[i + 3] = 0;
-					}
+					d[i + 3] = (flag) ? 255 : 0;
 				}
 			}
 			return data;

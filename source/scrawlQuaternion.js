@@ -199,7 +199,6 @@ Add a quaternion to this quaternion
 				this.v.z += item.v.z || 0;
 				return this;
 			}
-			console.log('Quaternion.quaternionAdd() error: argument is not a Quaternion object');
 			return this;
 		};
 		/**
@@ -217,7 +216,6 @@ Subtract a quaternion from this quaternion
 				this.v.z -= item.v.z || 0;
 				return this;
 			}
-			console.log('Quaternion.quaternionSubtract() error: argument is not a Quaternion object');
 			return this;
 		};
 		/**
@@ -234,7 +232,6 @@ Multiply quaternion by a scalar value
 				this.v.z *= item;
 				return this;
 			}
-			console.log('Quaternion.scalarMultiply() error: argument is not a number');
 			return this;
 		};
 		/**
@@ -252,7 +249,6 @@ Divide quaternion by a scalar value
 				this.v.z /= item;
 				return this;
 			}
-			console.log('Quaternion.scalarMultiply() error: argument is not a number, or is zero');
 			return this;
 		};
 		/**
@@ -327,7 +323,6 @@ Set the values for this quaternion based on the values of the argument quaternio
 				this.v.z = item.v.z;
 				return this;
 			}
-			console.log('Quaternion.setFromQuaternion() error: argument is not a Quaternion object');
 			return this;
 		};
 		/**
@@ -345,7 +340,6 @@ Set the values for this quaternion based on the values of the reference vector
 				this.v.z = item.z;
 				return this;
 			}
-			console.log('Quaternion.setFromVector() error: argument is not a Vector object');
 			return this;
 		};
 		/**
@@ -381,7 +375,6 @@ _Quaternion multiplication is not comutative - arithmetic is this*item, not item
 				this.v.z = (n1 * z2) + (z1 * n2) + (x1 * y2) - (y1 * x2);
 				return this;
 			}
-			console.log('Quaternion.quaternionMultiply() error: argument is not a Quaternion object');
 			return this;
 		};
 		/**
@@ -415,7 +408,6 @@ _Quaternion multiplication is not comutative - arithmetic is this*item, not item
 				this.v.z = (n1 * z2) + (x1 * y2) - (y1 * x2);
 				return this;
 			}
-			console.log('Quaternion.vectorMultiply() error: argument is not a Vector object');
 			return this;
 		};
 		/**
@@ -456,7 +448,6 @@ _Quaternion multiplication is not comutative - arithmetic is item (representing 
 				my.workquat.q5.set(this);
 				return this.set(my.workquat.q4.quaternionMultiply(my.workquat.q5));
 			}
-			console.log('Quaternion.quaternionRotate() error: argument is not a Quaternion object');
 			return this;
 		};
 		/**
@@ -469,7 +460,6 @@ Rotate a Vector by this quaternion
 			if (my.isa(item, 'vector')) {
 				return item.rotate3d(this);
 			}
-			console.log('Quaternion.vectorRotate() error: argument is not a Vector object');
 			return false;
 		};
 		/**
