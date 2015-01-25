@@ -149,7 +149,6 @@ Position.get hook function - modified by animation module
 				}
 			}
 			if ('delta' === item) {
-				console.log(this.name, 'get delta vector');
 				return this.delta.getVector();
 			}
 			return false;
@@ -776,6 +775,24 @@ A __factory__ function to generate new Tween objects
 		my.newTween = function(items) {
 			return new my.Tween(items);
 		};
+		/**
+A __factory__ function to generate new Timeline objects
+@method newTimeline
+@param {Object} items Key:value Object argument for setting attributes
+@return Timeline object
+**/
+		my.newTimeline = function(items) {
+			return new my.Timeline(items);
+		};
+		/**
+A __factory__ function to generate new Action objects
+@method newAction
+@param {Object} items Key:value Object argument for setting attributes
+@return Action object
+**/
+		my.newAction = function(items) {
+			return new my.Action(items);
+		};
 		my.pushUnique(my.sectionlist, 'animation');
 		my.pushUnique(my.nameslist, 'animate');
 		my.pushUnique(my.nameslist, 'animationnames');
@@ -1194,7 +1211,8 @@ Tween animation function
 				argSet,
 				keys,
 				temp,
-				percent,
+				measure,
+				unit,
 				t,
 				tz,
 				k,
@@ -1210,14 +1228,21 @@ Tween animation function
 							argSet = {};
 							for (k = 0, kz = keys.length; k < kz; k++) {
 								temp = this.initVals[t][keys[k]];
-								percent = (my.isa(temp.start, 'str') || my.isa(temp.change, 'str')) ? true : false;
+								unit = 0;
+								if (my.isa(temp.change, 'str')) {
+									measure = temp.change.match(/^-?\d+\.?\d*(\D*)/);
+									unit = measure[1];
+									if (!my.xt(unit)) {
+										unit = '%';
+									}
+								}
 								argSet[keys[k]] = this.engine(
 									parseFloat(temp.start),
 									parseFloat(temp.change),
 									progress,
 									this.engines[keys[k]],
 									this.reverse);
-								argSet[keys[k]] = (percent) ? argSet[keys[k]] + '%' : argSet[keys[k]];
+								argSet[keys[k]] = argSet[keys[k]] + unit;
 							}
 							entity.set(argSet);
 						}
@@ -1344,8 +1369,9 @@ Run a tween animation
 				start,
 				end,
 				percent,
+				measure,
+				unit,
 				temp,
-				func,
 				i,
 				iz,
 				j,
@@ -1358,7 +1384,6 @@ Run a tween animation
 				mz,
 				l,
 				lz;
-			func = my.subtractPercentages;
 			if (!this.active) {
 				activeTweens = [];
 				keys = Object.keys(this.end);
@@ -1391,19 +1416,33 @@ Run a tween animation
 				if (this.currentTargets.length > 0) {
 					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
 						if (my.xt(this.currentTargets[t])) {
-							this.currentTargets[t].set(this.onCommence);
+							if (this.reverse) {
+								this.currentTargets[t].set(this.onComplete);
+								this.currentTargets[t].set(this.end);
+							}
+							else {
+								this.currentTargets[t].set(this.onCommence);
+								this.currentTargets[t].set(this.start);
+							}
 							this.initVals.push({});
 							for (m = 0, mz = keys.length; m < mz; m++) {
 								start = (my.xt(this.start[keys[m]])) ? this.start[keys[m]] : this.currentTargets[t].get([keys[m]]);
 								end = this.end[keys[m]];
-								percent = (my.isa(start, 'str') || my.isa(end, 'str')) ? true : false;
-								temp = (percent) ? func(end, start) : end - start;
+								temp = parseFloat(end) - parseFloat(start);
+								unit = 0;
+								if (my.isa(end, 'str')) {
+									measure = end.match(/^-?\d+\.?\d*(\D*)/);
+									unit = measure[1];
+									if (!my.xt(unit)) {
+										unit = '%';
+									}
+								}
 								if (this.reverse) {
-									temp = (percent) ? -parseFloat(temp) + '%' : -temp;
+									temp = -temp;
 								}
 								this.initVals[t][keys[m]] = {
 									start: (this.reverse) ? end : start,
-									change: temp,
+									change: temp + unit,
 								};
 							}
 						}
@@ -1427,7 +1466,27 @@ Finish running a tween
 				tz;
 			for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
 				if (my.xt(this.currentTargets[t])) {
-					this.currentTargets[t].set(this.onComplete);
+					//this.reverse will already have changed state if either of these two are set
+					if (this.autoReverse || this.autoReverseAndRun) {
+						if (this.reverse) {
+							this.currentTargets[t].set(this.end);
+							this.currentTargets[t].set(this.onComplete);
+						}
+						else {
+							this.currentTargets[t].set(this.start);
+							this.currentTargets[t].set(this.onCommence);
+						}
+					}
+					else {
+						if (this.reverse) {
+							this.currentTargets[t].set(this.start);
+							this.currentTargets[t].set(this.onCommence);
+						}
+						else {
+							this.currentTargets[t].set(this.end);
+							this.currentTargets[t].set(this.onComplete);
+						}
+					}
 				}
 			}
 			if (this.nextTween) {
@@ -1469,6 +1528,376 @@ Remove this tween from the scrawl library
 				}
 			}
 			my.removeItem(my.animate, this.name);
+			my.removeItem(my.animationnames, this.name);
+			delete my.animation[this.name];
+			return true;
+		};
+
+		/**
+# Timeline
+
+## Instantiation
+
+* scrawl.newTimeline()
+
+## Purpose
+
+* Defines a sequence of functions or tweens to be performed at given moments along a timeline
+
+Note: Timelines need to be defined before Actions can be added to them. Because Timelines, Tweens, Actions and other animations all share the same space in the Scrawl library, they must all be given unique names
+
+## Access
+
+* scrawl.animation.TIMELINENAME - for the Timeline object
+
+## Timeline functions
+
+* Start a Timeline from the beginning by calling the __run()__ function on it.
+* Timelines can be stopped by calling the __halt()__ function on it.
+* Start a Timeline from the poinht at which it was previously halted by calling the __resume()__ function on it.
+* A Timeline can be deleted by calling the __kill()__ function on it.
+* Add Actions to the Timeline using the __add()__ function.
+* Remove Actions from the Timeline using the __remove()__ function.
+
+@class Timeline
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.Timeline = function(items) {
+			my.Base.call(this, items);
+			items = my.safeObject(items);
+			this.duration = items.duration || 1000;
+			this.counter = 0;
+			this.startTime = 0;
+			this.currentTime = 0;
+			this.active = false;
+			this.actionsList = [];
+			my.animation[this.name] = this;
+			my.pushUnique(my.animationnames, this.name);
+			return this;
+		};
+		my.Timeline.prototype = Object.create(my.Base.prototype);
+		/**
+@property type
+@type String
+@default 'Tween'
+@final
+**/
+		my.Timeline.prototype.type = 'Timeline';
+		my.Timeline.prototype.classname = 'animationnames';
+		my.d.Timeline = {
+			/**
+Timeline length, in milliseconds
+
+If no duration is set, Timeline will set the last Action's time as its duration, or alternatively default to 1000 (1 second)
+@property duration
+@type Number
+@default 1000
+**/
+			duration: 1000
+		};
+		/**
+Sort the actions based on their timeValue values
+@method sortActions
+@return nothing
+**/
+		my.Timeline.prototype.sortActions = function() {
+			this.actionsList.sort(function(a, b) {
+				return my.animation[a].timeValue - my.animation[b].timeValue;
+			});
+		};
+		/**
+Set the duration - only useful for setting Actions with % time strings;
+@method set
+@param {Object} [items] Key:value Object argument for setting attributes
+@return this
+**/
+		my.Timeline.prototype.set = function(items) {
+			var i, iz, a;
+			items = my.safeObject(items);
+			if (my.isa(items.duration, 'num')) {
+				this.duration = items.duration;
+				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+					a = my.animation[this.actionsList[i]];
+					if (a.timeUnit === '%') {
+						a.timeValue = (parseFloat(a.time) / 100) * this.duration;
+					}
+				}
+				this.sortActions();
+			}
+			return this;
+		};
+		/**
+add() and remove() helper function
+@method resolve
+@return always true
+@private
+**/
+		my.Timeline.prototype.resolve = function() {
+			var i, iz, temp, a;
+			this.sortActions();
+			temp = this.duration;
+			for (i = this.actionsList.length - 1; i >= 0; i--) {
+				a = my.animation[this.actionsList[i]];
+				if (my.contains(['s', 'ms'], a.timeUnit)) {
+					this.duration = a.timeValue;
+					break;
+				}
+			}
+			this.duration = (temp > this.duration) ? temp : this.duration;
+			for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+				a = my.animation[this.actionsList[i]];
+				if (a.timeUnit === '%') {
+					a.timeValue = (parseFloat(a.time) / 100) * this.duration;
+				}
+			}
+			this.sortActions();
+			return true;
+		};
+		/**
+Add Actions to the timeline - list Actions as one or more arguments to this function
+@method add
+@return this
+@chainable
+**/
+		my.Timeline.prototype.add = function() {
+			var i, iz,
+				slice = Array.prototype.slice.call(arguments);
+			for (i = 0, iz = slice.length; i < iz; i++) {
+				my.pushUnique(this.actionsList, slice[i]);
+			}
+			this.resolve();
+			return this;
+		};
+		/**
+Remove Actions from the timeline - list Actions as one or more arguments to this function
+@method remove
+@return this
+@chainable
+**/
+		my.Timeline.prototype.remove = function() {
+			var i, iz,
+				slice = Array.prototype.slice.call(arguments);
+			for (i = 0, iz = slice.length; i < iz; i++) {
+				my.removeItem(this.actionsList, slice[i]);
+			}
+			this.resolve();
+			return this;
+		};
+		/**
+Start the timeline running from the beginning
+@method run
+@return this
+@chainable
+**/
+		my.Timeline.prototype.run = function() {
+			if (!this.active) {
+				this.startTime = Date.now();
+				this.currentTime = this.startTime;
+				this.counter = 0;
+				my.pushUnique(my.animate, this.name);
+				this.active = true;
+			}
+			return this;
+		};
+		/**
+Start the timeline running from the point at which it was halted
+@method resume
+@return this
+@chainable
+**/
+		my.Timeline.prototype.resume = function() {
+			var t0 = this.currentTime - this.startTime;
+			if (!this.active) {
+				this.currentTime = Date.now();
+				this.startTime = this.currentTime - t0;
+				my.pushUnique(my.animate, this.name);
+				this.active = true;
+			}
+			return this;
+		};
+		/**
+Function triggered by the animation loop
+@method fn
+@return nothing
+@private
+**/
+		my.Timeline.prototype.fn = function() {
+			var i, iz, a;
+			this.currentTime = Date.now();
+			if (this.counter < this.actionsList.length) {
+				for (i = this.counter, iz = this.actionsList.length; i < iz; i++) {
+					a = my.animation[this.actionsList[i]];
+					if (a.timeValue + this.startTime <= this.currentTime) {
+						a.run();
+						this.counter++;
+						if (this.counter + 1 === this.actionsList.length) {
+							this.counter++;
+						}
+					}
+					else {
+						this.counter = i;
+						break;
+					}
+				}
+			}
+			if (this.counter >= this.actionsList.length) {
+				this.halt();
+			}
+		};
+		/**
+Stop a Timeline; can be resumed using resume() or started again from the beginning using run()
+@method halt
+@return this
+@chainable
+**/
+		my.Timeline.prototype.halt = function() {
+			this.active = false;
+			my.removeItem(my.animate, this.name);
+			return this;
+		};
+		/**
+Remove this Timeline from the scrawl library
+@method kill
+@return Always true
+**/
+		my.Timeline.prototype.kill = function() {
+			my.removeItem(my.animate, this.name);
+			my.removeItem(my.animationnames, this.name);
+			delete my.animation[this.name];
+			return true;
+		};
+
+		/**
+# Action
+
+## Instantiation
+
+* scrawl.newAction()
+
+## Purpose
+
+* Defines an action to be performed along a timeline
+
+## Access
+
+* scrawl.animation.ACTIONNAME - for the Action object
+
+## Action functions
+
+* __run()__ - run associated function
+* __kill()__ - delete Action
+
+@class Action
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.Action = function(items) {
+			my.Base.call(this, items);
+			items = my.safeObject(items);
+			this.time = items.time || 0;
+			this.convertTime();
+			this.action = items.action || false;
+			my.animation[this.name] = this;
+			my.pushUnique(my.animationnames, this.name);
+			return this;
+		};
+		my.Action.prototype = Object.create(my.Base.prototype);
+		/**
+@property type
+@type String
+@default 'Action'
+@final
+**/
+		my.Action.prototype.type = 'Action';
+		my.Action.prototype.classname = 'animationnames';
+		my.d.Action = {
+			/**
+Keyframe time - may be expressed as a Number (in milliseconds), or as a string:
+* '10ms' - ten milliseconds
+* '10s' - ten seconds
+* '10%' - ten percent along a timeline (relative value)
+@property time
+@type String (or number)
+@default '0ms'
+**/
+			time: '0ms',
+			/**
+Keyframe time value, in milliseconds (calculated)
+@property timeValue
+@type Number
+@default 0
+**/
+			timeValue: 0,
+			/**
+Keyframe time unit value (calculated)
+@property timeUnit
+@type String
+@default 'ms'
+**/
+			timeUnit: 'ms',
+			/**
+Keyframe function to be called
+@property fn
+@type Function
+@default false
+**/
+			action: false
+		};
+		/**
+Convert a time into its component properties
+@method convertTime
+@return always true
+@private
+**/
+		my.Action.prototype.convertTime = function() {
+			var a;
+			if (this.time.toFixed) {
+				this.timeUnit = 'ms';
+				this.timeValue = this.time;
+				return true;
+			}
+			a = this.time.match(/^\d+\.?\d*(\D*)/);
+			if (a[1].toLowerCase)
+				this.timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
+			switch (this.timeUnit) {
+				case 's':
+					this.timeValue = parseFloat(this.time) * 1000;
+					break;
+				case '%':
+					this.timeValue = 0;
+					break;
+				default:
+					this.timeValue = parseFloat(this.time);
+			}
+			return true;
+		};
+		/**
+Invoke the associated function
+@method run
+@return always true
+**/
+		my.Action.prototype.run = function() {
+			var a = ['Tween', 'Animation'];
+			if (my.xt(this.action)) {
+				if (my.contains(a, this.action.type)) {
+					this.action.run();
+				}
+				else {
+					this.action();
+				}
+				return true;
+			}
+			return false;
+		};
+		/**
+Remove this Action from the scrawl library
+@method kill
+@return Always true
+**/
+		my.Action.prototype.kill = function() {
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
 			return true;

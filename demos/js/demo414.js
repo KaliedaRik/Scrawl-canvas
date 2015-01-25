@@ -9,6 +9,7 @@ var mycode = function() {
 
 	//define variables
 	var filter,
+		setExclude,
 
 		current_alpha = 1,
 		input_alpha = document.getElementById('alpha'),
@@ -53,13 +54,7 @@ var mycode = function() {
 	filter = scrawl.newLeachFilter({
 		name: 'myfilter',
 		alpha: 1,
-		minRed: 0,
-		minGreen: 0,
-		minBlue: 0,
-		maxRed: 50,
-		maxGreen: 50,
-		maxBlue: 50,
-		preserve: true,
+		exclude: [[0, 0, 0, 50, 50, 50]]
 	});
 
 	//define entity
@@ -77,6 +72,14 @@ var mycode = function() {
 		url: 'img/carousel/cagedparrot.png',
 	});
 
+	setExclude = function() {
+		filter.set({
+			alpha: current_alpha,
+			exclude: [[current_minRed, current_minGreen, current_minBlue, current_maxRed, current_maxGreen, current_maxBlue]]
+		});
+		console.log(filter.exclude.length, filter.exclude[0].length, filter.exclude[0][0], filter.exclude[0][1], filter.exclude[0][2], filter.exclude[0][3], filter.exclude[0][4], filter.exclude[0][5]);
+	};
+
 	//event listeners
 	stopE = function(e) {
 		e.preventDefault();
@@ -86,9 +89,7 @@ var mycode = function() {
 	event_alpha = function(e) {
 		stopE(e);
 		current_alpha = parseFloat(input_alpha.value);
-		filter.set({
-			alpha: current_alpha,
-		});
+		setExclude();
 	};
 	input_alpha.addEventListener('input', event_alpha, false);
 	input_alpha.addEventListener('change', event_alpha, false);
@@ -96,9 +97,7 @@ var mycode = function() {
 	event_minRed = function(e) {
 		stopE(e);
 		current_minRed = parseFloat(input_minRed.value);
-		filter.set({
-			minRed: current_minRed,
-		});
+		setExclude();
 	};
 	input_minRed.addEventListener('input', event_minRed, false);
 	input_minRed.addEventListener('change', event_minRed, false);
@@ -106,9 +105,7 @@ var mycode = function() {
 	event_minGreen = function(e) {
 		stopE(e);
 		current_minGreen = parseFloat(input_minGreen.value);
-		filter.set({
-			minGreen: current_minGreen,
-		});
+		setExclude();
 	};
 	input_minGreen.addEventListener('input', event_minGreen, false);
 	input_minGreen.addEventListener('change', event_minGreen, false);
@@ -116,9 +113,7 @@ var mycode = function() {
 	event_minBlue = function(e) {
 		stopE(e);
 		current_minBlue = parseFloat(input_minBlue.value);
-		filter.set({
-			minBlue: current_minBlue,
-		});
+		setExclude();
 	};
 	input_minBlue.addEventListener('input', event_minBlue, false);
 	input_minBlue.addEventListener('change', event_minBlue, false);
@@ -126,9 +121,7 @@ var mycode = function() {
 	event_maxRed = function(e) {
 		stopE(e);
 		current_maxRed = parseFloat(input_maxRed.value);
-		filter.set({
-			maxRed: current_maxRed,
-		});
+		setExclude();
 	};
 	input_maxRed.addEventListener('input', event_maxRed, false);
 	input_maxRed.addEventListener('change', event_maxRed, false);
@@ -136,9 +129,7 @@ var mycode = function() {
 	event_maxGreen = function(e) {
 		stopE(e);
 		current_maxGreen = parseFloat(input_maxGreen.value);
-		filter.set({
-			maxGreen: current_maxGreen,
-		});
+		setExclude();
 	};
 	input_maxGreen.addEventListener('input', event_maxGreen, false);
 	input_maxGreen.addEventListener('change', event_maxGreen, false);
@@ -146,9 +137,7 @@ var mycode = function() {
 	event_maxBlue = function(e) {
 		stopE(e);
 		current_maxBlue = parseFloat(input_maxBlue.value);
-		filter.set({
-			maxBlue: current_maxBlue,
-		});
+		setExclude();
 	};
 	input_maxBlue.addEventListener('input', event_maxBlue, false);
 	input_maxBlue.addEventListener('change', event_maxBlue, false);

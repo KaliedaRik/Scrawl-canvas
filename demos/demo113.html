@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo 113</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 113</h1>
+  <h2>Timelines and Actions</h2>
+  <h3>Modules: phrase, animation</h3>
+
+  <div>
+    <button name="button" onclick="scrawl.animation.myTimeline.run();">Run</button>
+    <button name="button" onclick="scrawl.animation.myTimeline.halt();">Halt</button>
+    <button name="button" onclick="scrawl.animation.myTimeline.resume();">Resume</button>
+    Duration:
+    <select onchange="changeDuration(this)">
+      <option value='500'>0.5 seconds</option>
+      <option value='2000' selected>2 seconds</option>
+      <option value='4000'>4 seconds</option>
+    </select>
+    <button name="button" onclick="scrawl.animation.myTimeline.remove('a_ms_0', 'a_s_1_first', 'a_percent_40_5_second');">Remove column 3</button>
+    <button name="button" onclick="scrawl.animation.myTimeline.add('a_ms_0', 'a_s_1_first', 'a_percent_40_5_second');">Add column 3</button>
+  </div>
+
+  <!-- additional or alternate setup here -->
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="testmessage"></p>
+
+  <!-- test details block -->
+  <div id="testdetails">
+    <p><b>Scenario:</b> text</p>
+    <p><b>Actions:</b>
+    </p>
+    <ol>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ol>
+    <p><b>Known browser issues:</b> text</p>
+    <p><b>Result images:</b>
+    </p>
+    <img src="img/demopics/demo113.png" alt="image of expected test result" />
+  </div>
+
+  <script src="../source/scrawlCore.js"></script>
+  <script id="testscript" src="js/demo113.js"></script>
+  <script>
+    function changeDuration(sel) {
+      scrawl.animation.myTimeline.set({
+        duration: parseFloat(sel.value)
+      });
+    }
+  </script>
+</body>
+
+</html>

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
+// Copyright (c) 2015 Richard James Roots
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,15 @@
 /**
 # scrawlCore
 
-## Version 4.0.0 - 31 December 2014
+## Version 4.1.0 - 25 January 2015
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
 Scrawl demo website: <http://scrawl.rikweb.org.uk>
 
-### Be aware that the current develop branch includes changes beyond v4.0.0 that break that version
+### Be aware that the current develop branch (probably) includes changes beyond v4.1.0 that break that version
 
-The next version, being coded up on the develop branch, will be v4.0.1, for bugfixes only
+The next version, being coded up on the develop branch, will be v4.1.1, for bugfixes only
 
 ## Purpose and features
 
@@ -108,10 +108,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 3.1.4
+@default 4.1.0
 @final
 **/
-	my.version = '4.0.0';
+	my.version = '4.1.0';
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -390,7 +390,6 @@ Any supplied callback function will only be run once all modules have been loade
 						done(module);
 					};
 					mod.onerror = function(e) {
-						console.log('... ' + module + ' failed to load');
 						done(module, true);
 					};
 					mod.src = (/\.js$/.test(myMod)) ? path + myMod : path + myMod + tail;
@@ -400,7 +399,6 @@ Any supplied callback function will only be run once all modules have been loade
 			done = function(m, e) {
 				my.removeItem(loaded, m);
 				if (e || Date.now() > startTime + timeout) {
-					console.log('failed to load all modules');
 					error();
 				}
 				else {
@@ -501,6 +499,18 @@ A __utility__ function that checks an array to see if it contains a given value
 **/
 	my.contains = function(item, k) {
 		return (item.indexOf(k) >= 0) ? true : false;
+	};
+	/**
+A __utility__ function to convert strings (such as percentages) to integer values
+@method toInt
+@param {String} item
+@return Integer number; 0 on error
+**/
+	my.toInt = function(item) {
+		if (item.substring) {
+			item = parseFloat(item);
+		}
+		return (item.toFixed) ? item | 0 : 0;
 	};
 	/**
 A __utility__ function that adds a value to an array if the array doesn't already contain an element with that value
@@ -677,8 +687,7 @@ Valid identifier Strings include:
     scrawl.isa(myboolean, 'str');   //returns false
 **/
 	my.isa = function() {
-		var slice;
-		slice = Array.prototype.slice.call(arguments);
+		var slice = Array.prototype.slice.call(arguments);
 		if (slice.length == 2 && my.xt(slice[0])) {
 			//because we mostly test for str or fn
 			if (slice[1] == 'str') {
@@ -775,7 +784,6 @@ A __utility__ function that checks an argument list of values and returns the fi
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('xtGet - needs updating: ', slice);
 			slice = slice[0];
 		}
 		if (slice.length > 0) {
@@ -801,7 +809,6 @@ False: 0, -0, '', undefined, null, false, NaN
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('xtGetTrue - needs updating: ', slice);
 			slice = slice[0];
 		}
 		if (slice.length > 0) {
@@ -831,7 +838,6 @@ A __utility__ function for variable type checking
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('xta - needs updating: ', slice);
 			slice = slice[0];
 		}
 		if (slice.length > 0) {
@@ -861,7 +867,6 @@ A __utility__ function for variable type checking
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('xto - needs updating: ', slice);
 			slice = slice[0];
 		}
 		if (slice.length > 0) {
@@ -906,7 +911,6 @@ Generate unique names for new Scrawl objects
 			nameArray = name.split('___');
 			return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
 		}
-		console.log('scrawl.makeName() error: insufficient or incorrect argument attributes', item);
 		return false;
 	};
 	/**
@@ -1128,7 +1132,6 @@ A __general__ function which deletes Cell objects and their associated paraphina
 			jz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('deleteCells - needs updating: ', slice);
 			slice = slice[0];
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
@@ -1224,7 +1227,6 @@ A __general__ function to delete entity objects
 			contextName;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('deleteEntity - needs updating: ', slice);
 			slice = slice[0];
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
@@ -1562,7 +1564,6 @@ Multiply this Vector by a scalar value
 			this.z *= item;
 			return this;
 		}
-		console.log('Vector.scalarMultiply() error: argument is not a number');
 		return this;
 	};
 	/**
@@ -1579,7 +1580,6 @@ Divide this Vector by a scalar value
 			this.z /= item;
 			return this;
 		}
-		console.log('Vector.scalarDivide() error: argument is not a number, or is zero');
 		return this;
 	};
 	/**
@@ -1604,7 +1604,6 @@ Return a clone of this Vector
 @return Clone of this Vector
 **/
 	my.Vector.prototype.getVector = function() {
-		console.log('Vector.getVector');
 		return my.newVector({
 			x: this.x,
 			y: this.y,
@@ -1643,7 +1642,6 @@ Arithmetic is v(crossProduct)u, not u(crossProduct)v
 				z: (v1x * v2y) + (v1y * v2x)
 			});
 		}
-		console.log('Vector.getCrossProduct() error: argument is not a Vector');
 		return this;
 	};
 	/**
@@ -1661,7 +1659,6 @@ Arithmetic is v(dotProduct)u, not u(dotProduct)v
 			v = (my.isa(v, 'vector')) ? v : this;
 			return ((u.x || 0) * (v.x || 0)) + ((u.y || 0) * (v.y || 0)) + ((u.z || 0) * (v.z || 0));
 		}
-		console.log('Vector.getDotProduct() error: argument is not a Vector');
 		return false;
 	};
 	/**
@@ -1695,7 +1692,6 @@ Obtain the triple scalar product of two Vectors and this, or a third, Vector
 			wz = w.z || 0;
 			return (ux * ((vy * wz) - (vz * wy))) + (uy * (-(vx * wz) + (vz * wx))) + (uz * ((vx * wy) - (vy * wx)));
 		}
-		console.log('Vector.getTripleScalarProduct() error: argument is not a Vector');
 		return false;
 	};
 	/**
@@ -1715,7 +1711,6 @@ Rotate the Vector by a given angle
 			this.y = stat_vr[1] * Math.sin(stat_vr[0]);
 			return this;
 		}
-		console.log('Vector.rotate() error: argument is not a Number');
 		return this;
 	};
 	/**
@@ -1752,7 +1747,6 @@ Rotate a Vector object by a Quaternion rotation
 			this.set(q1.v).setMagnitudeTo(mag);
 			return this;
 		}
-		console.log('Vector.rotate3d() error: argument is not a Quaternion');
 		return this;
 	};
 
@@ -1986,7 +1980,7 @@ SubScrawl, and all Objects that prototype chain to Subscrawl, supports the follo
 **/
 		start: {
 			x: 0,
-			Y: 0
+			y: 0
 		},
 		/**
 An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
@@ -2003,7 +1997,7 @@ Where values are Numbers, handle can be treated like any other Vector
 **/
 		handle: {
 			x: 0,
-			Y: 0
+			y: 0
 		},
 		/**
 The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object's start point
@@ -2844,49 +2838,55 @@ mousemove event listener function
 			mouseY,
 			maxX,
 			maxY,
-			stat = ['relative', 'absolute', 'fixed', 'sticky'];
+			stat = ['relative', 'absolute', 'fixed', 'sticky'],
+			choke = parseInt(1000 / 60, 10),
+			current = Date.now();
 		e = (my.xt(e)) ? e : window.event;
 		mouseX = 0;
 		mouseY = 0;
 		wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
 		if (wrapper) {
-			wrapper.mouse.active = false;
-			wrapper.mouse.element = wrapper.name;
-			wrapper.mouse.type = wrapper.type;
-			if (wrapper.mouse.layer || my.xta(e, e.layerX) && my.contains(stat, wrapper.position)) {
-				mouseX = e.layerX;
-				mouseY = e.layerY;
-				if (mouseX >= 0 && mouseX <= (wrapper.width * wrapper.scale) && mouseY >= 0 && mouseY <= (wrapper.height * wrapper.scale)) {
-					wrapper.mouse.active = true;
+			if (!my.xt(wrapper.mouse.time) || wrapper.mouse.time + choke < current) {
+				wrapper.mouse.active = false;
+				wrapper.mouse.element = wrapper.name;
+				wrapper.mouse.type = wrapper.type;
+				wrapper.mouse.time = current;
+				if (wrapper.mouse.layer || my.xta(e, e.layerX) && my.contains(stat, wrapper.position)) {
+					mouseX = e.layerX;
+					mouseY = e.layerY;
+					if (mouseX >= 0 && mouseX <= wrapper.localWidth && mouseY >= 0 && mouseY <= wrapper.localHeight) {
+						wrapper.mouse.active = true;
+					}
+					wrapper.mouse.x = e.layerX;
+					wrapper.mouse.y = e.layerY;
+					wrapper.mouse.layer = true;
 				}
-				// wrapper.mouse.x = e.layerX * (1 / wrapper.scale);
-				// wrapper.mouse.y = e.layerY * (1 / wrapper.scale);
-				wrapper.mouse.x = e.layerX;
-				wrapper.mouse.y = e.layerY;
-				wrapper.mouse.layer = true;
+				else {
+					if (e.pageX || e.pageY) {
+						mouseX = e.pageX;
+						mouseY = e.pageY;
+					}
+					else if (e.clientX || e.clientY) {
+						mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+						mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+					}
+					maxX = wrapper.displayOffsetX + wrapper.localWidth;
+					maxY = wrapper.displayOffsetY + wrapper.localHeight;
+					if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
+						wrapper.mouse.active = true;
+					}
+					wrapper.mouse.x = (mouseX - wrapper.displayOffsetX);
+					wrapper.mouse.y = (mouseY - wrapper.displayOffsetY);
+					wrapper.mouse.layer = false;
+				}
+				if (wrapper.type === 'Pad') {
+					wrapper.mouse.x = wrapper.mouse.x / wrapper.scale || 1;
+					wrapper.mouse.y = wrapper.mouse.y / wrapper.scale || 1;
+				}
 			}
-			else {
-				if (e.pageX || e.pageY) {
-					mouseX = e.pageX;
-					mouseY = e.pageY;
-				}
-				else if (e.clientX || e.clientY) {
-					mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-					mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-				}
-				maxX = wrapper.displayOffsetX + (wrapper.width * wrapper.scale);
-				maxY = wrapper.displayOffsetY + (wrapper.height * wrapper.scale);
-				if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
-					wrapper.mouse.active = true;
-				}
-				// wrapper.mouse.x = (mouseX - wrapper.displayOffsetX) * (1 / wrapper.scale);
-				// wrapper.mouse.y = (mouseY - wrapper.displayOffsetY) * (1 / wrapper.scale);
-				wrapper.mouse.x = (mouseX - wrapper.displayOffsetX);
-				wrapper.mouse.y = (mouseY - wrapper.displayOffsetY);
-				wrapper.mouse.layer = false;
-			}
+			return wrapper;
 		}
-		return wrapper;
+		return false;
 	};
 	/**
 mouseout event listener function
@@ -3053,8 +3053,8 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				canvas: canvas,
 				compileOrder: 9999,
 				shown: false,
-				width: this.localWidth / this.scale,
-				height: this.localHeight / this.scale
+				width: '100%',
+				height: '100%'
 			});
 			my.pushUnique(this.cells, base.name);
 			this.base = base.name;
@@ -3075,7 +3075,6 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 		}
 
 		// on failure, return false
-		console.log('Failed to generate a Pad controller - no canvas element supplied');
 		return false;
 	};
 	my.Pad.prototype = Object.create(my.PageElement.prototype);
@@ -3357,7 +3356,6 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('addCells - needs updating: ', slice);
 			slice = slice[0];
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
@@ -3390,7 +3388,6 @@ _Note: does not delete the canvas, or the Cell object, from the scrawl library_
 			}
 			return this;
 		}
-		console.log('Pad.deleteCell error: argument is not a String');
 		return this;
 	};
 	/**
@@ -3502,7 +3499,6 @@ Cell supports the following 'virtual' attributes for this attribute:
 			this.filtersCellInit(items);
 			return this;
 		}
-		console.log('Cell constructor encountered an error: no canvas element supplied to it');
 		return false;
 	};
 	my.Cell.prototype = Object.create(my.Position.prototype);
@@ -4583,36 +4579,41 @@ Cell.setPaste update pasteData object values
 **/
 	my.Cell.prototype.setPaste = function() {
 		var pad = my.pad[this.pad],
-			width = pad.localWidth,
-			height = pad.localHeight;
-		this.pasteData.x = this.start.x;
-		if (my.isa(this.pasteData.x, 'str')) {
-			this.pasteData.x = this.convertX(this.pasteData.x, width);
+			display = my.cell[pad.display],
+			base = my.cell[pad.base],
+			width, height;
+		if (my.xta(display, base)) {
+			width = (this.name === pad.base) ? display.actualWidth : base.actualWidth;
+			height = (this.name === pad.base) ? display.actualHeight : base.actualHeight;
+			this.pasteData.x = this.start.x;
+			if (my.isa(this.pasteData.x, 'str')) {
+				this.pasteData.x = this.convertX(this.pasteData.x, width);
+			}
+			this.pasteData.y = this.start.y;
+			if (my.isa(this.pasteData.y, 'str')) {
+				this.pasteData.y = this.convertY(this.pasteData.y, height);
+			}
+			this.pasteData.w = this.pasteWidth;
+			if (my.isa(this.pasteData.w, 'str')) {
+				this.pasteData.w = this.convertX(this.pasteData.w, width);
+			}
+			this.pasteData.w *= this.scale;
+			this.pasteData.h = this.pasteHeight;
+			if (my.isa(this.pasteData.h, 'str')) {
+				this.pasteData.h = this.convertY(this.pasteData.h, height);
+			}
+			this.pasteData.h *= this.scale;
+			if (this.pasteData.w < 1) {
+				this.pasteData.w = 1;
+			}
+			if (this.pasteData.h < 1) {
+				this.pasteData.h = 1;
+			}
+			this.pasteData.x = Math.floor(this.pasteData.x);
+			this.pasteData.y = Math.floor(this.pasteData.y);
+			this.pasteData.w = Math.floor(this.pasteData.w);
+			this.pasteData.h = Math.floor(this.pasteData.h);
 		}
-		this.pasteData.y = this.start.y;
-		if (my.isa(this.pasteData.y, 'str')) {
-			this.pasteData.y = this.convertY(this.pasteData.y, height);
-		}
-		this.pasteData.w = this.pasteWidth;
-		if (my.isa(this.pasteData.w, 'str')) {
-			this.pasteData.w = this.convertX(this.pasteData.w, width);
-		}
-		this.pasteData.w *= this.scale;
-		this.pasteData.h = this.pasteHeight;
-		if (my.isa(this.pasteData.h, 'str')) {
-			this.pasteData.h = this.convertY(this.pasteData.h, height);
-		}
-		this.pasteData.h *= this.scale;
-		if (this.pasteData.w < 1) {
-			this.pasteData.w = 1;
-		}
-		if (this.pasteData.h < 1) {
-			this.pasteData.h = 1;
-		}
-		this.pasteData.x = Math.floor(this.pasteData.x);
-		this.pasteData.y = Math.floor(this.pasteData.y);
-		this.pasteData.w = Math.floor(this.pasteData.w);
-		this.pasteData.h = Math.floor(this.pasteData.h);
 		return this;
 	};
 	/**
@@ -5341,10 +5342,6 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 				if (entity) {
 					entity.group = this.name;
 					entity.stamp(method, cell);
-				}
-				else {
-					console.log(this.name, this.entitys);
-					console.log(i, iz, this.entitys[i], 'FAIL');
 				}
 			}
 			this.stampFilter(my.context[this.cell], this.cell);
@@ -6081,7 +6078,7 @@ Stamp helper function - convert string start.x values to numerical values
 				width = cell;
 				break;
 			default:
-				width = cell.width;
+				width = cell.actualWidth;
 		}
 
 		result = parseFloat(x) / 100;
@@ -6096,6 +6093,21 @@ Stamp helper function - convert string start.x values to numerical values
 			}
 		}
 		return result * width;
+	};
+	/**
+Entity.getStartValues
+@method getStartValues
+@private
+**/
+	my.Entity.prototype.getStartValues = function() {
+		var cell = this.getEntityCell(),
+			result = {
+				x: 0,
+				y: 0
+			};
+		result.x = (my.isa(this.start.x, 'str')) ? this.convertX(this.start.x, cell) : this.start.x;
+		result.y = (my.isa(this.start.y, 'str')) ? this.convertY(this.start.y, cell) : this.start.y;
+		return result;
 	};
 	/**
 Stamp helper function - convert string start.y values to numerical values
@@ -6116,7 +6128,7 @@ Stamp helper function - convert string start.y values to numerical values
 				height = cell;
 				break;
 			default:
-				height = cell.height;
+				height = cell.actualHeight;
 		}
 		result = parseFloat(y) / 100;
 		if (isNaN(result)) {

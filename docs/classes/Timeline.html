@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>StereoFilter - scrawl-canvas</title>
+    <title>Timeline - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -244,25 +244,25 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>StereoFilter Class</h1>
+                        <h1>Timeline Class</h1>
 <div class="box meta">
     
 
     
         <div class="extends">
-            Extends <a href="../classes/Filter.html" class="crosslink">Filter</a>
+            Extends <a href="../classes/Base.html" class="crosslink">Base</a>
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlFilters.js.html#l2309"><code>source\scrawlFilters.js:2309</code></a>
+            Defined in: <a href="../files/source_scrawlAnimation.js.html#l1536"><code>source\scrawlAnimation.js:1536</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/scrawlFilters.html">scrawlFilters</a>
+            Module: <a href="../modules/scrawlAnimation.html">scrawlAnimation</a>
         
     
 
@@ -272,18 +272,28 @@
 
 
 <div class="box intro">
-    <h1 id="separatefilter">SeparateFilter</h1>
+    <h1 id="timeline">Timeline</h1>
 <h2 id="instantiation">Instantiation</h2>
 <ul>
-<li>scrawl.newSeparateFilter()</li>
+<li>scrawl.newTimeline()</li>
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>separate and reposition the color channels</li>
+<li>Defines a sequence of functions or tweens to be performed at given moments along a timeline</li>
 </ul>
+<p>Note: Timelines need to be defined before Actions can be added to them. Because Timelines, Tweens, Actions and other animations all share the same space in the Scrawl library, they must all be given unique names</p>
 <h2 id="access">Access</h2>
 <ul>
-<li>scrawl.filter.FILTERNAME - for the StereoFilter object</li>
+<li>scrawl.animation.TIMELINENAME - for the Timeline object</li>
+</ul>
+<h2 id="timeline-functions">Timeline functions</h2>
+<ul>
+<li>Start a Timeline from the beginning by calling the <strong>run()</strong> function on it.</li>
+<li>Timelines can be stopped by calling the <strong>halt()</strong> function on it.</li>
+<li>Start a Timeline from the poinht at which it was previously halted by calling the <strong>resume()</strong> function on it.</li>
+<li>A Timeline can be deleted by calling the <strong>kill()</strong> function on it.</li>
+<li>Add Actions to the Timeline using the <strong>add()</strong> function.</li>
+<li>Remove Actions from the Timeline using the <strong>remove()</strong> function.</li>
 </ul>
 
 </div>
@@ -291,8 +301,8 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_StereoFilter" class="method item">
-    <h3 class="name"><code>StereoFilter</code></h3>
+        <div id="method_Timeline" class="method item">
+    <h3 class="name"><code>Timeline</code></h3>
 
     
         <div class="args">
@@ -333,7 +343,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2309"><code>source\scrawlFilters.js:2309</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l1536"><code>source\scrawlAnimation.js:1536</code></a>
         
         </p>
 
@@ -406,7 +416,7 @@
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method inherited">
+                            <li class="index-item method">
                                 <a href="#method_add">add</a>
 
                                 
@@ -420,8 +430,8 @@
                                 
                             </li>
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_cloneImageData">cloneImageData</a>
+                            <li class="index-item method private">
+                                <a href="#method_fn">fn</a>
 
                                 
                                 
@@ -434,8 +444,22 @@
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_getAlpha">getAlpha</a>
+                            <li class="index-item method">
+                                <a href="#method_halt">halt</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_kill">kill</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_remove">remove</a>
 
                                 
                                 
@@ -448,8 +472,36 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_resolve">resolve</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_resume">resume</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_run">run</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method inherited">
                                 <a href="#method_set">set</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_sortActions">sortActions</a>
 
                                 
                                 
@@ -473,32 +525,14 @@
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property inherited">
-                                <a href="#property_alpha">alpha</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_channel
-
-Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;">channel
-
-Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property inherited">
                                 <a href="#property_comment">comment</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property inherited">
-                                <a href="#property_composite">composite</a>
+                            <li class="index-item property">
+                                <a href="#property_duration">duration</a>
 
                                 
                                 
@@ -557,17 +591,7 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
     <h3 class="name"><code>add</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>data</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -585,21 +609,23 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
     
 
     
+        <span class="flag chainable">chainable</span>
+    
 
     
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/Filter.html#method_add">
-                Filter
-            </a>
             
-            but overwritten in
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2358"><code>source\scrawlFilters.js:2358</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l1658"><code>source\scrawlAnimation.js:1658</code></a>
         
         </p>
 
@@ -610,36 +636,10 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
     </div>
 
     <div class="description">
-        <p>Add function - takes data, calculates its channels and combines it with data</p>
+        <p>Add Actions to the timeline - list Actions as one or more arguments to this function</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">data</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -649,7 +649,7 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
             <div class="returns-description">
                 
                     
-                    <p>amended image data object</p>
+                    <p>this</p>
 
                 
             </div>
@@ -783,21 +783,11 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_cloneImageData" class="method item inherited">
-    <h3 class="name"><code>cloneImageData</code></h3>
+                    <div id="method_fn" class="method item private">
+    <h3 class="name"><code>fn</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>original</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -808,6 +798,8 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -821,12 +813,15 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_cloneImageData">Filter</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l761"><code>source\scrawlFilters.js:761</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l1720"><code>source\scrawlAnimation.js:1720</code></a>
         
         </p>
 
@@ -837,36 +832,10 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>cloneImageData function</p>
+        <p>Function triggered by the animation loop</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">original</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -876,7 +845,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>cloned image data object; false on error</p>
+                    <p>nothing</p>
 
                 
             </div>
@@ -1003,8 +972,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_getAlpha" class="method item private inherited">
-    <h3 class="name"><code>getAlpha</code></h3>
+                    <div id="method_halt" class="method item">
+    <h3 class="name"><code>halt</code></h3>
 
     
         <span class="paren">()</span>
@@ -1019,7 +988,78 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-        <span class="flag private">private</span>
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l1749"><code>source\scrawlAnimation.js:1749</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stop a Timeline; can be resumed using resume() or started again from the beginning using run()</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>this</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_kill" class="method item">
+    <h3 class="name"><code>kill</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
     
 
     
@@ -1033,12 +1073,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_getAlpha">Filter</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l783"><code>source\scrawlFilters.js:783</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l1760"><code>source\scrawlAnimation.js:1760</code></a>
         
         </p>
 
@@ -1049,7 +1092,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>getAlpha function</p>
+        <p>Remove this Timeline from the scrawl library</p>
 
     </div>
 
@@ -1062,7 +1105,80 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>numerical strength value, between 0 and 1</p>
+                    <p>Always true</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_remove" class="method item">
+    <h3 class="name"><code>remove</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l1673"><code>source\scrawlAnimation.js:1673</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Remove Actions from the timeline - list Actions as one or more arguments to this function</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>this</p>
 
                 
             </div>
@@ -1143,21 +1259,84 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_set" class="method item inherited">
-    <h3 class="name"><code>set</code></h3>
+                    <div id="method_resolve" class="method item private">
+    <h3 class="name"><code>resolve</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
             
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
+                
+                <p>
+                
+                Defined in
+                
             
-            </ul><span class="paren">)</span>
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l1631"><code>source\scrawlAnimation.js:1631</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>add() and remove() helper function</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
+
+                
+            </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_resume" class="method item">
+    <h3 class="name"><code>resume</code></h3>
+
+    
+        <span class="paren">()</span>
     
 
     
@@ -1183,12 +1362,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Base.html#method_set">Base</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1840"><code>source\scrawlCore.js:1840</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l1704"><code>source\scrawlAnimation.js:1704</code></a>
         
         </p>
 
@@ -1199,8 +1381,161 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.</p>
-<p>An attribute value will only be set if the object already has a default value for that attribute. This restricts the ability of coders to add attributes to Scrawl objects.</p>
+        <p>Start the timeline running from the point at which it was halted</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>this</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_run" class="method item">
+    <h3 class="name"><code>run</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l1688"><code>source\scrawlAnimation.js:1688</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Start the timeline running from the beginning</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>this</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_set" class="method item">
+    <h3 class="name"><code>set</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/Base.html#method_set">
+                Base
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l1610"><code>source\scrawlAnimation.js:1610</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Set the duration - only useful for setting Actions with % time strings;</p>
 
     </div>
 
@@ -1212,14 +1547,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
                 <li class="param">
                     
-                        <code class="param-name">items</code>
+                        <code class="param-name optional">[items]</code>
                         <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
+                        <p>Key:value Object argument for setting attributes</p>
 
                     </div>
 
@@ -1237,7 +1573,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>This</p>
+                    <p>this</p>
 
                 
             </div>
@@ -1245,24 +1581,76 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-        <div class="example">
-            <h4>Example:</h4>
+</div>
 
-            <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.newBlock({
-    width: 50,
-    height: 50
-    });
-box.set({
-    height: 100,
-    favouriteAnimal: &#39;cat&#39;
-    });
-box.get(&#39;width&#39;);               //returns 50
-box.get(&#39;height&#39;);              //returns 100
-box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
+                
+                    <div id="method_sortActions" class="method item">
+    <h3 class="name"><code>sortActions</code></h3>
 
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l1600"><code>source\scrawlAnimation.js:1600</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sort the actions based on their timeValue values</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>nothing</p>
+
+                
             </div>
         </div>
+    
+
     
 </div>
 
@@ -1343,101 +1731,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_alpha" class="property item inherited">
-    <h3 class="name"><code>alpha</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_alpha">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l731"><code>source\scrawlFilters.js:731</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Filter alpha</p>
-<p>values between 0 (transparent) and 1 (current alpha values); or &#39;0%&#39; and &#39;100%&#39;</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> 1</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_channel
-
-Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;" class="property item">
-    <h3 class="name"><code>channel
-
-Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l2347"><code>source\scrawlFilters.js:2347</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <p><strong>Default:</strong> &#x27;all&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="property_comment" class="property item inherited">
     <h3 class="name"><code>comment</code></h3>
     <span class="type">String</span>
@@ -1482,9 +1775,9 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
 </div>
 
                 
-                    <div id="property_composite" class="property item inherited">
-    <h3 class="name"><code>composite</code></h3>
-    <span class="type">String</span>
+                    <div id="property_duration" class="property item">
+    <h3 class="name"><code>duration</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -1497,12 +1790,15 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_composite">Filter</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l740"><code>source\scrawlFilters.js:740</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l1590"><code>source\scrawlAnimation.js:1590</code></a>
         
         </p>
 
@@ -1512,13 +1808,13 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
     </div>
 
     <div class="description">
-        <p>Filter composite operation</p>
-<p>Only the final filter in an array of filters will determine the composite operation to be used on the cell</p>
+        <p>Timeline length, in milliseconds</p>
+<p>If no duration is set, Timeline will set the last Action&#39;s time as its duration, or alternatively default to 1000 (1 second)</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;source-over&#x27;</p>
+        <p><strong>Default:</strong> 1000</p>
     
 
     
@@ -1682,7 +1978,7 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2338"><code>source\scrawlFilters.js:2338</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l1581"><code>source\scrawlAnimation.js:1581</code></a>
         
         </p>
 
@@ -1696,7 +1992,7 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;Filter&#x27;</p>
+        <p><strong>Default:</strong> &#x27;Tween&#x27;</p>
     
 
     

@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.0.0</em>
+            <em>API Docs for: 4.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
@@ -130,6 +132,8 @@
                 <li><a href="../classes/Text.html">Text</a></li>
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/Timeline.html">Timeline</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -1029,18 +1033,18 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 				switch (this.type) {
 					case &#x27;Pad&#x27;:
 						if (&#x27;width&#x27; === item) {
-							return this.width || parseFloat(el.width) || my.d[this.type].width;
+							return this.localWidth || this.width || parseFloat(el.width) || my.d[this.type].width;
 						}
 						if (&#x27;height&#x27; === item) {
-							return this.height || parseFloat(el.height) || my.d[this.type].height;
+							return this.localHeight || this.height || parseFloat(el.height) || my.d[this.type].height;
 						}
 						break;
 					default:
 						if (&#x27;width&#x27; === item) {
-							return this.width || parseFloat(el.style.width) || parseFloat(el.clientWidth) || my.d[this.type].width;
+							return this.localWidth || this.width || parseFloat(el.style.width) || parseFloat(el.clientWidth) || my.d[this.type].width;
 						}
 						if (&#x27;height&#x27; === item) {
-							return this.height || parseFloat(el.style.height) || parseFloat(el.clientHeight) || my.d[this.type].height;
+							return this.localHeight || this.height || parseFloat(el.style.height) || parseFloat(el.clientHeight) || my.d[this.type].height;
 						}
 				}
 			}
@@ -1231,6 +1235,54 @@ Augments PageElement.set()
 			return this;
 		};
 		/**
+Add a CSS class to the DOM element
+@method addClass
+@param {String} item String consisting of one or more classes to be added to the DOM element - a space will be prepended to the start of the string automatically
+@return This
+@chainable
+**/
+		my.PageElement.prototype.addClass = function(item) {
+			var el;
+			if (my.isa(item, &#x27;str&#x27;)) {
+				el = this.getElement();
+				if (0 === el.className.length) {
+					el.className = item;
+				}
+				else if (&#x27; &#x27; === el.className[el.className.length - 1]) {
+					el.className += item;
+				}
+				else {
+					el.className += &#x27; &#x27; + item;
+				}
+				return this;
+			}
+		};
+		/**
+Remove a CSS class from the DOM element
+@method removeClass
+@param {String} item String consisting of one or more classes to be removed from the DOM element
+@return This
+@chainable
+**/
+		my.PageElement.prototype.removeClass = function(item) {
+			var el,
+				classes,
+				eClass,
+				search,
+				i, iz;
+			if (my.isa(item, &#x27;str&#x27;)) {
+				el = this.getElement();
+				eClass = el.className;
+				classes = item.split();
+				for (i = 0, iz = classes.length; i &lt; iz; i++) {
+					search = new RegExp(&#x27; ?&#x27; + classes[i] + &#x27; ?&#x27;);
+					eClass = eClass.replace(search, &#x27; &#x27;);
+				}
+				el.className = eClass;
+			}
+			return this;
+		};
+		/**
 Augments PageElement.set()
 @method setDeltaTranslate
 @param {Object} items Object consisting of key:value attributes
@@ -1287,6 +1339,7 @@ Constructor / set helper function
 			}
 			return this;
 		};
+		my.css = [&#x27;alignContent&#x27;, &#x27;alignItems&#x27;, &#x27;alignSelf&#x27;, &#x27;all&#x27;, &#x27;animation&#x27;, &#x27;animationDelay&#x27;, &#x27;animationDirection&#x27;, &#x27;animationDuration&#x27;, &#x27;animationFillMode&#x27;, &#x27;animationIterationCount&#x27;, &#x27;animationName&#x27;, &#x27;animationPlayState&#x27;, &#x27;animationTimingFunction&#x27;, &#x27;background&#x27;, &#x27;backgroundAttachment&#x27;, &#x27;backgroundBlendMode&#x27;, &#x27;backgroundClip&#x27;, &#x27;backgroundColor&#x27;, &#x27;backgroundImage&#x27;, &#x27;backgroundOrigin&#x27;, &#x27;backgroundPosition&#x27;, &#x27;backgroundRepeat&#x27;, &#x27;backgroundSize&#x27;, &#x27;border&#x27;, &#x27;borderBottom&#x27;, &#x27;borderBottomColor&#x27;, &#x27;borderBottomLeftRadius&#x27;, &#x27;borderBottomRightRadius&#x27;, &#x27;borderBottomStyle&#x27;, &#x27;borderBottomWidth&#x27;, &#x27;borderCollapse&#x27;, &#x27;borderColor&#x27;, &#x27;borderImage&#x27;, &#x27;borderImageOutset&#x27;, &#x27;borderImageRepeat&#x27;, &#x27;borderImageSlice&#x27;, &#x27;borderImageSource&#x27;, &#x27;borderImageWidth&#x27;, &#x27;borderLeft&#x27;, &#x27;borderLeftColor&#x27;, &#x27;borderLeftStyle&#x27;, &#x27;borderLeftWidth&#x27;, &#x27;borderRadius&#x27;, &#x27;borderRight&#x27;, &#x27;borderRightColor&#x27;, &#x27;borderRightStyle&#x27;, &#x27;borderRightWidth&#x27;, &#x27;borderSpacing&#x27;, &#x27;borderStyle&#x27;, &#x27;borderTop&#x27;, &#x27;borderTopColor&#x27;, &#x27;borderTopLeftRadius&#x27;, &#x27;borderTopRightRadius&#x27;, &#x27;borderTopStyle&#x27;, &#x27;borderTopWidth&#x27;, &#x27;borderWidth&#x27;, &#x27;boxDecorationBreak&#x27;, &#x27;boxShadow&#x27;, &#x27;boxSizing&#x27;, &#x27;breakAfter&#x27;, &#x27;breakBefore&#x27;, &#x27;breakInside&#x27;, &#x27;captionSide&#x27;, &#x27;clear&#x27;, &#x27;clip&#x27;, &#x27;clipPath&#x27;, &#x27;color&#x27;, &#x27;columns&#x27;, &#x27;columnCount&#x27;, &#x27;columnFill&#x27;, &#x27;columnGap&#x27;, &#x27;columnRule&#x27;, &#x27;columnRuleColor&#x27;, &#x27;columnRuleStyle&#x27;, &#x27;columnRuleWidth&#x27;, &#x27;columnSpan&#x27;, &#x27;columnWidth&#x27;, &#x27;content&#x27;, &#x27;counterIncrement&#x27;, &#x27;counterReset&#x27;, &#x27;cursor&#x27;, &#x27;direction&#x27;, &#x27;display&#x27;, &#x27;emptyCells&#x27;, &#x27;flex&#x27;, &#x27;flexBasis&#x27;, &#x27;flexDirection&#x27;, &#x27;flexFlow&#x27;, &#x27;flexGrow&#x27;, &#x27;flexShrink&#x27;, &#x27;flexWrap&#x27;, &#x27;float&#x27;, &#x27;font&#x27;, &#x27;fontFamily&#x27;, &#x27;fontFeatureSettings&#x27;, &#x27;fontKerning&#x27;, &#x27;fontLanguageOverride&#x27;, &#x27;fontSize&#x27;, &#x27;fontSizeAdjust&#x27;, &#x27;fontStretch&#x27;, &#x27;fontStyle&#x27;, &#x27;fontSynthesis&#x27;, &#x27;fontVariant&#x27;, &#x27;fontVariantAlternates&#x27;, &#x27;fontVariantCaps&#x27;, &#x27;fontVariantEastAsian&#x27;, &#x27;fontVariantLigatures&#x27;, &#x27;fontVariantNumeric&#x27;, &#x27;fontVariantPosition&#x27;, &#x27;fontWeight&#x27;, &#x27;grid&#x27;, &#x27;gridArea&#x27;, &#x27;gridAutoColumns&#x27;, &#x27;gridAutoFlow&#x27;, &#x27;gridAutoPosition&#x27;, &#x27;gridAutoRows&#x27;, &#x27;gridColumn&#x27;, &#x27;gridColumnStart&#x27;, &#x27;gridColumnEnd&#x27;, &#x27;gridRow&#x27;, &#x27;gridRowStart&#x27;, &#x27;gridRowEnd&#x27;, &#x27;gridTemplate&#x27;, &#x27;gridTemplateAreas&#x27;, &#x27;gridTemplateRows&#x27;, &#x27;gridTemplateColumns&#x27;, &#x27;hyphens&#x27;, &#x27;imageRendering&#x27;, &#x27;imageResolution&#x27;, &#x27;imageOrientation&#x27;, &#x27;imeMode&#x27;, &#x27;inherit&#x27;, &#x27;initial&#x27;, &#x27;isolation&#x27;, &#x27;justifyContent&#x27;, &#x27;letterSpacing&#x27;, &#x27;lineBreak&#x27;, &#x27;lineHeight&#x27;, &#x27;listStyle&#x27;, &#x27;listStyleImage&#x27;, &#x27;listStylePosition&#x27;, &#x27;listStyleType&#x27;, &#x27;margin&#x27;, &#x27;marginBottom&#x27;, &#x27;marginLeft&#x27;, &#x27;marginRight&#x27;, &#x27;marginTop&#x27;, &#x27;marks&#x27;, &#x27;mask&#x27;, &#x27;maskType&#x27;, &#x27;mixBlendMode&#x27;, &#x27;objectFit&#x27;, &#x27;objectPosition&#x27;, &#x27;opacity&#x27;, &#x27;orphans&#x27;, &#x27;outline&#x27;, &#x27;outlineColor&#x27;, &#x27;outlineOffset&#x27;, &#x27;outlineStyle&#x27;, &#x27;outlineWidth&#x27;, &#x27;overflow&#x27;, &#x27;overflowWrap&#x27;, &#x27;overflowX&#x27;, &#x27;overflowY&#x27;, &#x27;padding&#x27;, &#x27;paddingBottom&#x27;, &#x27;paddingLeft&#x27;, &#x27;paddingRight&#x27;, &#x27;paddingTop&#x27;, &#x27;pageBreakAfter&#x27;, &#x27;pageBreakBefore&#x27;, &#x27;pageBreakInside&#x27;, &#x27;pointerEvents&#x27;, &#x27;position&#x27;, &#x27;quotes&#x27;, &#x27;resize&#x27;, &#x27;rubyAlign&#x27;, &#x27;rubyMerge&#x27;, &#x27;rubyPosition&#x27;, &#x27;s&#x27;, &#x27;scrollBehavior&#x27;, &#x27;shapeImageThreshold&#x27;, &#x27;shapeMargin&#x27;, &#x27;shapeOutside&#x27;, &#x27;tableLayout&#x27;, &#x27;tabSize&#x27;, &#x27;textAlign&#x27;, &#x27;textAlignLast&#x27;, &#x27;textCombineUpright&#x27;, &#x27;textDecoration&#x27;, &#x27;textDecorationColor&#x27;, &#x27;textDecorationLine&#x27;, &#x27;textDecorationStyle&#x27;, &#x27;textIndent&#x27;, &#x27;textOrientation&#x27;, &#x27;textOverflow&#x27;, &#x27;textRendering&#x27;, &#x27;textShadow&#x27;, &#x27;textTransform&#x27;, &#x27;textUnderlinePosition&#x27;, &#x27;touchAction&#x27;, &#x27;unicodeBidi&#x27;, &#x27;unicodeRange&#x27;, &#x27;unset&#x27;, &#x27;verticalAlign&#x27;, &#x27;visibility&#x27;, &#x27;whiteSpace&#x27;, &#x27;widows&#x27;, &#x27;willChange&#x27;, &#x27;wordBreak&#x27;, &#x27;wordSpacing&#x27;, &#x27;wordWrap&#x27;, &#x27;writingMode&#x27;];
 		/**
 Handles the setting of position, transformOrigin, backfaceVisibility, margin, border, padding
 @method PageElement.setStyles
@@ -1295,8 +1348,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 @chainable
 **/
 		my.PageElement.prototype.setStyles = function(items) {
-			var stat1 = [&#x27;hidden&#x27;, &#x27;none&#x27;],
-				stat2 = [&#x27;backfaceVisibility&#x27;, &#x27;display&#x27;, &#x27;width&#x27;, &#x27;height&#x27;, &#x27;transform&#x27;, &#x27;translate&#x27;, &#x27;translateX&#x27;, &#x27;translateY&#x27;, &#x27;translateZ&#x27;, &#x27;top&#x27;, &#x27;left&#x27;, &#x27;bottom&#x27;, &#x27;right&#x27;, &#x27;zIndex&#x27;, &#x27;title&#x27;, &#x27;comment&#x27;],
+			var stat = [&#x27;hidden&#x27;, &#x27;none&#x27;],
 				el,
 				k,
 				i,
@@ -1312,7 +1364,7 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 				}
 				else if (k[i] === &#x27;visibility&#x27;) {
 					if (my.isa(items.visibility, &#x27;str&#x27;)) {
-						this.visibility = (!my.contains(stat1, items.visibility)) ? true : false;
+						this.visibility = (!my.contains(stat, items.visibility)) ? true : false;
 					}
 					else {
 						this.visibility = (items.visibility) ? true : false;
@@ -1324,13 +1376,9 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 						el.style.display = (this.visibility) ? &#x27;block&#x27; : &#x27;none&#x27;;
 					}
 				}
-				else {
-					if (!my.contains(stat2, k[i])) {
-						if (my.xt(el.style[k[i]])) {
-							el.style[k[i]] = items[k[i]];
-						}
-						// need an &#x27;else&#x27; here with a whitelist of browser-specific css styles that require prefixes to work
-						// Scrawl users shouldn&#x27;t care about prefixing ...
+				else if (my.contains(my.css, k[i])) {
+					if (my.xt(el.style[k[i]])) {
+						el.style[k[i]] = items[k[i]];
 					}
 				}
 			}
@@ -1794,6 +1842,8 @@ Helper function - set local dimensions (width, height)
 				wVal,
 				parent,
 				el,
+				measure,
+				unit,
 				s;
 			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
 			if (parent) {
@@ -1812,10 +1862,17 @@ Helper function - set local dimensions (width, height)
 				}
 			}
 			else if (parent &amp;&amp; my.isa(this.width, &#x27;str&#x27;) &amp;&amp; w) {
-				this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+				measure = this.width.match(/^-?\d+\.?\d*(\D*)/);
+				unit = measure[1];
+				if (unit === &#x27;%&#x27;) {
+					this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+				}
+				else {
+					this.localWidth = parseFloat(this.width) * this.scale;
+				}
 			}
 			else {
-				this.localWidth = this.width * this.scale;
+				this.localWidth = parseFloat(this.width) * this.scale;
 			}
 			hVal = parseFloat(this.height);
 			if (hVal === 0 || isNaN(hVal)) {
@@ -1825,10 +1882,17 @@ Helper function - set local dimensions (width, height)
 				}
 			}
 			else if (parent &amp;&amp; my.isa(this.height, &#x27;str&#x27;) &amp;&amp; h) {
-				this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+				measure = this.height.match(/^-?\d+\.?\d*(\D*)/);
+				unit = measure[1];
+				if (unit === &#x27;%&#x27;) {
+					this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+				}
+				else {
+					this.localHeight = parseFloat(this.height) * this.scale;
+				}
 			}
 			else {
-				this.localHeight = this.height * this.scale;
+				this.localHeight = parseFloat(this.height) * this.scale;
 			}
 			if (this.type === &#x27;Pad&#x27;) {
 				this.setCellLocalDimensions();
@@ -1953,7 +2017,6 @@ Pad lockTo helper
 			var i,
 				iz,
 				cell;
-			console.log(this.name, &#x27;sCLD&#x27;, this.localWidth, this.localHeight);
 			if (my.xt(this.cells)) {
 				for (i = 0, iz = this.cells.length; i &lt; iz; i++) {
 					cell = my.cell[this.cells[i]];
@@ -2092,10 +2155,10 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				if (this.group) {
 					my.stk[this.name].style.margin = &#x27;0&#x27;;
 					my.stk[this.name].style.boxSizing = &#x27;border-box&#x27;;
+					items.stackElement.style.position = &#x27;absolute&#x27;;
 				}
 				return this;
 			}
-			console.log(&#x27;Failed to generate a Stack wrapper - no DOM element supplied&#x27;);
 			return false;
 		};
 		my.Stack.prototype = Object.create(my.PageElement.prototype);
@@ -2193,6 +2256,7 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 						}
 					}
 				}
+				this.setPerspective();
 			}
 			return this;
 		};
@@ -2228,6 +2292,86 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 					if (g.stack === this.name) {
 						g.updateDimensions();
 					}
+				}
+			}
+			return this;
+		};
+		/**
+Helper function - set local dimensions (width, height)
+
+_Replaces PageElement.setLocalDimensions
+@method setLocalDimensions
+@return This
+@chainable
+@private
+**/
+		my.Stack.prototype.setLocalDimensions = function() {
+			var h,
+				w,
+				hVal,
+				wVal,
+				parent,
+				el,
+				elRes,
+				g,
+				gRes;
+			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
+			if (parent) {
+				w = parent.localWidth;
+				h = parent.localHeight;
+			}
+			wVal = parseFloat(this.width);
+			hVal = parseFloat(this.height);
+			if (wVal === 0 || isNaN(wVal) || hVal === 0 || isNaN(hVal)) {
+				g = my.group[this.name];
+				if (g) {
+					gRes = g.getElementGroupDimensions();
+				}
+				else {
+					el = this.getElement();
+					if (el) {
+						elRes = window.getComputedStyle(el, null);
+					}
+				}
+			}
+			if (wVal === 0 || isNaN(wVal)) {
+				if (gRes) {
+					this.localWidth = gRes.width;
+				}
+				else if (elRes) {
+					el.style.width = &#x27;auto&#x27;;
+					this.localWidth = parseFloat(elRes.getPropertyValue(&#x27;width&#x27;));
+				}
+				else {
+					this.localWidth = 0;
+				}
+			}
+			else {
+				if (parent &amp;&amp; my.isa(this.width, &#x27;str&#x27;) &amp;&amp; w) {
+					this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+				}
+				else {
+					this.localWidth = this.width * this.scale;
+				}
+			}
+			if (hVal === 0 || isNaN(hVal)) {
+				if (gRes) {
+					this.localHeight = gRes.height;
+				}
+				else if (elRes) {
+					el.style.width = &#x27;auto&#x27;;
+					this.localWidth = parseFloat(elRes.getPropertyValue(&#x27;width&#x27;));
+				}
+				else {
+					this.localHeight = 0;
+				}
+			}
+			else {
+				if (parent &amp;&amp; my.isa(this.height, &#x27;str&#x27;) &amp;&amp; h) {
+					this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+				}
+				else {
+					this.localHeight = this.height * this.scale;
 				}
 			}
 			return this;
@@ -2314,8 +2458,8 @@ Parse the perspective Vector attribute
 		my.Stack.prototype.parsePerspective = function() {
 			var height,
 				width;
-			height = this.height || this.get(&#x27;height&#x27;);
-			width = this.width || this.get(&#x27;width&#x27;);
+			height = this.localHeight || this.height || this.get(&#x27;height&#x27;);
+			width = this.localWidth || this.width || this.get(&#x27;width&#x27;);
 			return my.Position.prototype.calculatePOV.call(this, this.work.perspective, width, height, false);
 		};
 		/**
@@ -2335,7 +2479,7 @@ Calculates the pixels value of the object&#x27;s perspective attribute
 			el = this.getElement();
 			myH.x *= sx;
 			myH.y *= sy;
-			myH.z *= sx;
+			//myH.z *= sx;
 			el.style.mozPerspectiveOrigin = myH.x + &#x27;px &#x27; + myH.y + &#x27;px&#x27;;
 			el.style.webkitPerspectiveOrigin = myH.x + &#x27;px &#x27; + myH.y + &#x27;px&#x27;;
 			el.style.perspectiveOrigin = myH.x + &#x27;px &#x27; + myH.y + &#x27;px&#x27;;
@@ -2347,6 +2491,15 @@ Calculates the pixels value of the object&#x27;s perspective attribute
 		my.pushUnique(my.sectionlist, &#x27;element&#x27;);
 		my.pushUnique(my.sectionlist, &#x27;elm&#x27;);
 		my.pushUnique(my.nameslist, &#x27;elementnames&#x27;);
+		/**
+Get dimensions of Stack
+@method getStackDimensions
+@return Object with width and height attributes
+**/
+		my.Stack.prototype.getStackDimensions = function() {
+			var g = my.group[this.name];
+			return (g) ? g.getElementGroupDimensions() : my.o;
+		};
 		/**
 # Element
 
@@ -2396,7 +2549,6 @@ Calculates the pixels value of the object&#x27;s perspective attribute
 				}
 				return this;
 			}
-			console.log(&#x27;Failed to generate an Element wrapper - no DOM element supplied&#x27;);
 			return false;
 		};
 		my.Element.prototype = Object.create(my.PageElement.prototype);
@@ -2553,6 +2705,39 @@ Tell the Group to ask its constituent entitys to draw themselves on a &amp;lt;ca
 				my.entity[this.entitys[i]].stamp(&#x27;none&#x27;, stack);
 			}
 			return this;
+		};
+		/**
+Get collective dimensions of ElementGroup elements
+@method getElementGroupDimensions
+@return Object with width and height attributes
+**/
+		my.ElementGroup.prototype.getElementGroupDimensions = function() {
+			var temp,
+				el, e,
+				result = {
+					width: 0,
+					height: 0
+				},
+				i, iz;
+			for (i = 0, iz = this.elements.length; i &lt; iz; i++) {
+				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				if (el.visibility) {
+					e = el.getElement();
+					switch (el.type) {
+						case &#x27;Stack&#x27;:
+							temp = el.getStackDimensions();
+							result.width = (temp.width &gt; result.width) ? temp.width : result.width;
+							result.height = (temp.height &gt; result.height) ? temp.height : result.height;
+							break;
+						default:
+							temp = parseFloat(e.style.left) + el.localWidth - el.offset.x;
+							result.width = (temp &gt; result.width) ? temp : result.width;
+							temp = parseFloat(e.style.top) + el.localHeight - el.offset.y;
+							result.height = (temp &gt; result.height) ? temp : result.height;
+					}
+				}
+			}
+			return result;
 		};
 		/**
 Tell the Group to ask its constituent elements to render
