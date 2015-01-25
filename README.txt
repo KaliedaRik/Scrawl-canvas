@@ -91,8 +91,8 @@ VERSION 4.1.0 released 25 January 2015
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (66kb)
-		- scrawlAnimation-min.js (18kb)
+		- scrawlCore-min.js (65kb)
+		- scrawlAnimation-min.js (22kb)
 		- scrawlBlock-min.js (4kb)
 		- scrawlCollisions-min.js (12kb)
 		- scrawlColor-min.js (5kb)
@@ -100,18 +100,18 @@ VERSION 4.1.0 released 25 January 2015
 		- scrawlImageLoad-min.js (8kb)
 		- scrawlImages-min.js (15kb)
 		- scrawlPath-min.js (24kb)
-		- scrawlPathFactories-min.js (9kb)
+		- scrawlPathFactories-min.js (10kb)
 		- scrawlPhrase-min.js (13kb)
 		- scrawlPhysics-min.js (10kb)
-		- scrawlQuaternion-min.js (7kb)
+		- scrawlQuaternion-min.js (6kb)
 		- scrawlSaveLoad-min.js (8kb)
 		- scrawlShape-min.js (9kb)
-		- scrawlStacks-min.js (34kb)
+		- scrawlStacks-min.js (39kb)
 		- scrawlWheel-min.js (6kb)
 
 		Development:
 		- scrawlCore.js (196kb)
-		- scrawlAnimation.js (47kb)
+		- scrawlAnimation.js (57kb)
 		- scrawlBlock.js (12kb)
 		- scrawlCollisions.js (28kb)
 		- scrawlColor.js (15kb)
@@ -122,10 +122,10 @@ VERSION 4.1.0 released 25 January 2015
 		- scrawlPathFactories.js (26kb)
 		- scrawlPhrase.js (37kb)
 		- scrawlPhysics.js (24kb)
-		- scrawlQuaternion.js (18kb)
+		- scrawlQuaternion.js (17kb)
 		- scrawlSaveLoad.js (18kb)
 		- scrawlShape.js (25kb)
-		- scrawlStacks.js (79kb)
+		- scrawlStacks.js (87kb)
 		- scrawlWheel.js (17kb)
 
 		Documentation:
