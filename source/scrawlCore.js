@@ -2879,7 +2879,7 @@ mousemove event listener function
 					wrapper.mouse.y = (mouseY - wrapper.displayOffsetY);
 					wrapper.mouse.layer = false;
 				}
-				if(wrapper.type === 'Pad'){
+				if (wrapper.type === 'Pad') {
 					wrapper.mouse.x = wrapper.mouse.x / wrapper.scale || 1;
 					wrapper.mouse.y = wrapper.mouse.y / wrapper.scale || 1;
 				}

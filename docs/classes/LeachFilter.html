@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.0.0</em>
+            <em>API Docs for: 4.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
@@ -130,6 +132,8 @@
                 <li><a href="../classes/Text.html">Text</a></li>
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/Timeline.html">Timeline</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -252,7 +256,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlFilters.js.html#l2185"><code>source\scrawlFilters.js:2185</code></a>
+            Defined in: <a href="../files/source_scrawlFilters.js.html#l2201"><code>source\scrawlFilters.js:2201</code></a>
         </div>
     
 
@@ -329,7 +333,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2185"><code>source\scrawlFilters.js:2185</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l2201"><code>source\scrawlFilters.js:2201</code></a>
         
         </p>
 
@@ -490,42 +494,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_maxBlue">maxBlue</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_maxGreen">maxGreen</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_maxRed">maxRed</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_minBlue">minBlue</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_minGreen">minGreen</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_minRed">minRed</a>
+                                <a href="#property_exclude">exclude</a>
 
                                 
                                 
@@ -539,7 +508,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_preserve">preserve</a>
+                                <a href="#property_operation">operation</a>
 
                                 
                                 
@@ -633,7 +602,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2289"><code>source\scrawlFilters.js:2289</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l2262"><code>source\scrawlFilters.js:2262</code></a>
         
         </p>
 
@@ -739,7 +708,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1875"><code>source\scrawlCore.js:1875</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1869"><code>source\scrawlCore.js:1869</code></a>
         
         </p>
 
@@ -860,7 +829,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l745"><code>source\scrawlFilters.js:745</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l761"><code>source\scrawlFilters.js:761</code></a>
         
         </p>
 
@@ -964,7 +933,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1830"><code>source\scrawlCore.js:1830</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1824"><code>source\scrawlCore.js:1824</code></a>
         
         </p>
 
@@ -1072,7 +1041,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l767"><code>source\scrawlFilters.js:767</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l783"><code>source\scrawlFilters.js:783</code></a>
         
         </p>
 
@@ -1142,7 +1111,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1922"><code>source\scrawlCore.js:1922</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1916"><code>source\scrawlCore.js:1916</code></a>
         
         </p>
 
@@ -1177,7 +1146,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_set" class="method item">
+                    <div id="method_set" class="method item inherited">
     <h3 class="name"><code>set</code></h3>
 
     
@@ -1216,16 +1185,13 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/Base.html#method_set">
-                Base
-            </a>
             
-            but overwritten in
+                <p>Inherited from
+                <a href="../classes/Base.html#method_set">Base</a>:
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2275"><code>source\scrawlFilters.js:2275</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1840"><code>source\scrawlCore.js:1840</code></a>
         
         </p>
 
@@ -1236,7 +1202,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Set attribute values.</p>
+        <p>Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.</p>
+<p>An attribute value will only be set if the object already has a default value for that attribute. This restricts the ability of coders to add attributes to Scrawl objects.</p>
 
     </div>
 
@@ -1281,6 +1248,25 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>var box = scrawl.newBlock({
+    width: 50,
+    height: 50
+    });
+box.set({
+    height: 100,
+    favouriteAnimal: &#39;cat&#39;
+    });
+box.get(&#39;width&#39;);               //returns 50
+box.get(&#39;height&#39;);              //returns 100
+box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
+
+            </div>
+        </div>
+    
 </div>
 
                 
@@ -1317,7 +1303,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1914"><code>source\scrawlCore.js:1914</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1908"><code>source\scrawlCore.js:1908</code></a>
         
         </p>
 
@@ -1380,7 +1366,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l715"><code>source\scrawlFilters.js:715</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l731"><code>source\scrawlFilters.js:731</code></a>
         
         </p>
 
@@ -1425,7 +1411,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1808"><code>source\scrawlCore.js:1808</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1802"><code>source\scrawlCore.js:1802</code></a>
         
         </p>
 
@@ -1469,7 +1455,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l724"><code>source\scrawlFilters.js:724</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l740"><code>source\scrawlFilters.js:740</code></a>
         
         </p>
 
@@ -1494,101 +1480,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_maxBlue" class="property item">
-    <h3 class="name"><code>maxBlue</code></h3>
-    <span class="type">Number</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l2260"><code>source\scrawlFilters.js:2260</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <p><strong>Default:</strong> 255</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_maxGreen" class="property item">
-    <h3 class="name"><code>maxGreen</code></h3>
-    <span class="type">Number</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l2254"><code>source\scrawlFilters.js:2254</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <p><strong>Default:</strong> 255</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_maxRed" class="property item">
-    <h3 class="name"><code>maxRed</code></h3>
-    <span class="type">Number</span>
+                    <div id="property_exclude" class="property item">
+    <h3 class="name"><code>exclude</code></h3>
+    <span class="type">Array</span>
 
     
 
@@ -1619,149 +1513,14 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>The exclude array should contain a set of arrays defining the color ranges to be leached (have their alpha values set to 0) from the image. Each array within the exclude array must include the following six numbers in exactly this order: </p>
+<p>[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue]</p>
+<p>... where the numbers are integers between 0 and 255</p>
+
     </div>
 
     
-        <p><strong>Default:</strong> 255</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_minBlue" class="property item">
-    <h3 class="name"><code>minBlue</code></h3>
-    <span class="type">Number</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l2242"><code>source\scrawlFilters.js:2242</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <p><strong>Default:</strong> 0</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_minGreen" class="property item">
-    <h3 class="name"><code>minGreen</code></h3>
-    <span class="type">Number</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l2236"><code>source\scrawlFilters.js:2236</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <p><strong>Default:</strong> 0</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_minRed" class="property item">
-    <h3 class="name"><code>minRed</code></h3>
-    <span class="type">Number</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l2230"><code>source\scrawlFilters.js:2230</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <p><strong>Default:</strong> 0</p>
+        <p><strong>Default:</strong> []</p>
     
 
     
@@ -1790,7 +1549,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1779"><code>source\scrawlCore.js:1779</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1773"><code>source\scrawlCore.js:1773</code></a>
         
         </p>
 
@@ -1812,9 +1571,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_preserve" class="property item">
-    <h3 class="name"><code>preserve</code></h3>
-    <span class="type">Boolean</span>
+                    <div id="property_operation" class="property item">
+    <h3 class="name"><code>operation</code></h3>
+    <span class="type">String</span>
 
     
 
@@ -1835,7 +1594,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2266"><code>source\scrawlFilters.js:2266</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l2240"><code>source\scrawlFilters.js:2240</code></a>
         
         </p>
 
@@ -1845,12 +1604,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>When the preserve function is set to true, the selected areas are retained; on false they are leached</p>
+        <p>Unlike other filters, the leach filter uses an &#39;xor&#39; GCO to stamp itself onto the canvas - this is changeable, if necessary</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> false</p>
+        <p><strong>Default:</strong> &#x27;xor&#x27;</p>
     
 
     
@@ -1879,7 +1638,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1822"><code>source\scrawlCore.js:1822</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1816"><code>source\scrawlCore.js:1816</code></a>
         
         </p>
 
@@ -1923,7 +1682,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1815"><code>source\scrawlCore.js:1815</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1809"><code>source\scrawlCore.js:1809</code></a>
         
         </p>
 
@@ -1972,7 +1731,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2221"><code>source\scrawlFilters.js:2221</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l2231"><code>source\scrawlFilters.js:2231</code></a>
         
         </p>
 
@@ -2017,7 +1776,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1789"><code>source\scrawlCore.js:1789</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1783"><code>source\scrawlCore.js:1783</code></a>
         
         </p>
 

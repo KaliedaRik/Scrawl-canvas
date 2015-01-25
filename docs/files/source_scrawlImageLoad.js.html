@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.0.0</em>
+            <em>API Docs for: 4.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
@@ -130,6 +132,8 @@
                 <li><a href="../classes/Text.html">Text</a></li>
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/Timeline.html">Timeline</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -355,66 +359,104 @@ A __general__ function to generate Image wrapper objects for &amp;lt;img&amp;gt;
 @method getImagesByClass
 @param {String} classtag Class string value of DOM objects to be imported into the scrawl library
 @param {Boolean} [kill] when set to true, the &amp;lt;img&amp;gt; elements will be removed from the DOM when imported into the library
-@return Array of String names; false on failure
+@return true if one or more images are identified; false otherwise
 **/
 		my.getImagesByClass = function(classtag, kill) {
-			var names,
-				s,
-				myImg,
+			var s,
 				i;
+			kill = my.xtGet(kill, true);
 			if (classtag) {
-				names = [];
 				s = document.getElementsByClassName(classtag);
 				if (s.length &gt; 0) {
 					for (i = s.length; i &gt; 0; i--) {
-						myImg = my.newImage({
-							element: s[i - 1],
-							removeImageFromDOM: my.xtGet(kill, true)
-						});
-						names.push(myImg.name);
+						if (s[i - 1].complete) {
+							my.newImage({
+								element: s[i - 1],
+								removeImageFromDOM: kill,
+								crossOrigin: &#x27;anonymous&#x27;
+							});
+						}
+						else {
+							s[i - 1].addEventListener(&#x27;load&#x27;, my.getImagesCallback, false);
+						}
 					}
-					return names;
+					return true;
 				}
 			}
-			console.log(&#x27;my.getImageById() failed to find any &lt;img&gt; elements of class=&quot;&#x27; + classtag + &#x27;&quot; on the page&#x27;);
 			return false;
+		};
+		/**
+Helper function
+@method getImagesCallback
+@private
+**/
+		my.getImagesCallback = function() {
+			my.newImage({
+				element: this, // should be the image element itself
+				crossOrigin: &#x27;anonymous&#x27;
+			});
 		};
 		/**
 A __general__ function to generate a Image wrapper object for an &amp;lt;img&amp;gt; or &amp;lt;svg&amp;gt; element identified by an id string
 @method getImageById
 @param {String} idtag Id string value of DOM object to be imported into the scrawl library
 @param {Boolean} [kill] when set to true, the &amp;lt;img&amp;gt; element will be removed from the DOM when imported into the library
-@return String name; false on failure
+@return true if image is identified; false otherwise
 **/
 		my.getImageById = function(idtag, kill) {
 			var myImg;
+			kill = my.xtGet(kill, true);
 			if (idtag) {
-				myImg = my.newImage({
-					element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-					removeImageFromDOM: my.xtGet(kill, true)
-				});
-				return myImg.name;
+				myImg = document.getElementById(idtag);
+				if (myImg.complete) {
+					my.newImage({
+						element: myImg,
+						removeImageFromDOM: kill,
+						crossOrigin: &#x27;anonymous&#x27;
+					});
+				}
+				else {
+					myImg.addEventListener(&#x27;load&#x27;, my.getImagesCallback, false);
+				}
+				return true;
 			}
-			console.log(&#x27;my.getImagesByClass() failed to find any &lt;img&gt; elements with id=&quot;&#x27; + classtag + &#x27;&quot; on the page&#x27;);
 			return false;
+		};
+		/**
+Helper function
+@method getVideoCallback
+@private
+**/
+		my.getVideoCallback = function() {
+			my.newVideo({
+				element: this, //unrecorded flag for triggering Image stuff
+				crossOrigin: &#x27;anonymous&#x27;
+			});
 		};
 		/**
 A __general__ function to generate a Video wrapper object for a &amp;lt;video&amp;gt; element identified by an id string
 @method getVideoById
 @param {String} idtag Id string value of DOM object to be imported into the scrawl library
-@param {Boolean} [kill] when set to true, the &amp;lt;img&amp;gt; element will be removed from the DOM when imported into the library
-@return String name; false on failure
+@param {Boolean} [stream] defaults to &#x27;raw&#x27;
+@return true if video is identified; false otherwise
 **/
 		my.getVideoById = function(idtag, stream) {
 			var myVideo;
+			stream = my.xtGet(stream, &#x27;raw&#x27;);
 			if (idtag) {
-				myVideo = my.newVideo({
-					element: document.getElementById(idtag), //unrecorded flag for triggering Image stuff
-					stream: my.xtGet(stream, &#x27;raw&#x27;)
-				});
-				return myVideo.name;
+				myVideo = document.getElementById(idtag);
+				if (myVideo.readyState &gt; 1) {
+					my.newVideo({
+						element: myVideo, //unrecorded flag for triggering Image stuff
+						stream: stream,
+						crossOrigin: &#x27;anonymous&#x27;
+					});
+				}
+				else {
+					myVideo.addEventListener(&#x27;loadeddata&#x27;, my.getVideoCallback, false);
+				}
+				return true;
 			}
-			console.log(&#x27;my.getVideoById() failed to find any &lt;video&gt; elements with id=&quot;&#x27; + idtag + &#x27;&quot; on the page&#x27;);
 			return false;
 		};
 
@@ -611,9 +653,7 @@ Import an image using the supplied url string
 						items.callback();
 					}
 				};
-				el.onerror = function(e) {
-					console.log(&#x27;Download of image failed for &#x27;, that.name);
-				};
+				el.onerror = function(e) {};
 				el.src = items.url;
 				return true;
 			}
@@ -994,8 +1034,8 @@ Adds a DOM &amp;lt;video&amp;gt; element to the library
 			var el = items.element;
 			if (my.xt(el)) {
 				el.id = this.name;
-				this.width = 0;
-				this.height = 0;
+				this.width = 1;
+				this.height = 1;
 				my.imageFragment.appendChild(el);
 				my.asset[this.name] = my.imageFragment.querySelector(&#x27;#&#x27; + this.name);
 				my.pushUnique(my.assetnames, this.name);
@@ -1022,10 +1062,22 @@ Video constructor helper function
 **/
 		my.Video.prototype.setIntrinsicDimensions = function() {
 			var ent,
+				api,
+				wrapper,
 				i,
 				iz;
-			this.width = this.api.videoWidth;
-			this.height = this.api.videoHeight;
+			if (my.xt(this.api)) {
+				//this = scrawl wrapper
+				api = this.api;
+				wrapper = this;
+			}
+			else {
+				//this = dom video element
+				api = this;
+				wrapper = my.video[this.id];
+			}
+			wrapper.width = api.videoWidth;
+			wrapper.height = api.videoHeight;
 			for (i = 0, iz = my.entitynames.length; i &lt; iz; i++) {
 				ent = my.entity[my.entitynames[i]];
 				if (ent.type === &#x27;Picture&#x27;) {

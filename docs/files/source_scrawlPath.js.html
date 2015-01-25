@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.0.0</em>
+            <em>API Docs for: 4.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
@@ -130,6 +132,8 @@
                 <li><a href="../classes/Text.html">Text</a></li>
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/Timeline.html">Timeline</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -496,7 +500,8 @@ if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.con
 				myPivot,
 				temp,
 				i,
-				iz;
+				iz,
+				search = new RegExp(&#x27;_&#x27;, &#x27;g&#x27;);
 			items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
 			minX = 999999;
 			minY = 999999;
@@ -569,7 +574,7 @@ if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.con
 			if (my.xt(items.data)) {
 				myShape = my.newPath(items);
 				sn = myShape.name;
-				tn = sn.replace(&#x27;~&#x27;, &#x27;_&#x27;, &#x27;g&#x27;);
+				tn = sn.replace(search, &#x27;=&#x27;);
 				lib = my.point;
 				sx = items.scaleX;
 				sy = items.scaleY;
@@ -2198,7 +2203,7 @@ if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.con
 			entity = my.entity[this.entity];
 			if (my.isa(val, &#x27;num&#x27;)) {
 				result = this.getLocalPositionOnLink(val);
-				return result.rotate(entity.roll).vectorAdd(entity.start);
+				return result.rotate(entity.roll).vectorAdd(entity.getStartValues());
 			}
 			return false;
 		};
@@ -2244,7 +2249,7 @@ if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.con
 				result;
 			entity = my.entity[this.entity];
 			result = this.getLocalSteadyPositionOnLink(val);
-			result.rotate(entity.roll).vectorAdd(entity.start);
+			result.rotate(entity.roll).vectorAdd(entity.getStartValues());
 			return result;
 		};
 		/**
@@ -2279,7 +2284,7 @@ if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.con
 				precision = (my.isa(val, &#x27;num&#x27;) &amp;&amp; val &gt; 0) ? val : (my.entity[this.entity].get(&#x27;precision&#x27;));
 				step = 1 / precision;
 				cumLen = 0;
-				my.worklink.v2.set(pts.start); //my.worklink.v2
+				my.worklink.v2.set(pts.start);
 				entity = my.entity[this.entity];
 				temp = entity.roll;
 				this.positionsX.length = 0;
@@ -2294,10 +2299,10 @@ if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.con
 				for (j = 1; j &lt;= precision; j++) {
 					pos = step * ((j - 1) + 1);
 					here = this.getPositionOnLink(pos); //my.worklink.v1
-					here.vectorSubtract(entity.start);
-					my.worklink.v3.set(here); //my.worklink.v3
+					here.vectorSubtract(entity.getStartValues());
+					my.worklink.v3.set(here);
 					dist = here.vectorSubtract(my.worklink.v2).getMagnitude();
-					my.worklink.v2.set(my.worklink.v3); //my.worklink.v2
+					my.worklink.v2.set(my.worklink.v3);
 					cumLen += dist;
 					this.positionsX[j] = my.worklink.v2.x;
 					this.positionsY[j] = my.worklink.v2.y;

@@ -113,13 +113,13 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 **/
 		my.getImagesByClass = function(classtag, kill) {
 			var s,
-				i,
-				kill = my.xtGet(kill, true);
+				i;
+			kill = my.xtGet(kill, true);
 			if (classtag) {
 				s = document.getElementsByClassName(classtag);
 				if (s.length > 0) {
 					for (i = s.length; i > 0; i--) {
-						if(s[i - 1].complete){
+						if (s[i - 1].complete) {
 							my.newImage({
 								element: s[i - 1],
 								removeImageFromDOM: kill,
@@ -154,18 +154,18 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 @return true if image is identified; false otherwise
 **/
 		my.getImageById = function(idtag, kill) {
-			var myImg,
-				kill = my.xtGet(kill, true);
+			var myImg;
+			kill = my.xtGet(kill, true);
 			if (idtag) {
 				myImg = document.getElementById(idtag);
-				if(myImg.complete){
+				if (myImg.complete) {
 					my.newImage({
 						element: myImg,
 						removeImageFromDOM: kill,
 						crossOrigin: 'anonymous'
 					});
 				}
-				else{
+				else {
 					myImg.addEventListener('load', my.getImagesCallback, false);
 				}
 				return true;
@@ -181,7 +181,7 @@ Helper function
 			my.newVideo({
 				element: this, //unrecorded flag for triggering Image stuff
 				crossOrigin: 'anonymous'
-			});	
+			});
 		};
 		/**
 A __general__ function to generate a Video wrapper object for a &lt;video&gt; element identified by an id string
@@ -191,16 +191,16 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 @return true if video is identified; false otherwise
 **/
 		my.getVideoById = function(idtag, stream) {
-			var myVideo,
-				stream = my.xtGet(stream, 'raw');
+			var myVideo;
+			stream = my.xtGet(stream, 'raw');
 			if (idtag) {
 				myVideo = document.getElementById(idtag);
-				if(myVideo.readyState > 1){
+				if (myVideo.readyState > 1) {
 					my.newVideo({
 						element: myVideo, //unrecorded flag for triggering Image stuff
 						stream: stream,
 						crossOrigin: 'anonymous'
-					});	
+					});
 				}
 				else {
 					myVideo.addEventListener('loadeddata', my.getVideoCallback, false);
@@ -816,12 +816,12 @@ Video constructor helper function
 				wrapper,
 				i,
 				iz;
-			if(my.xt(this.api)){
+			if (my.xt(this.api)) {
 				//this = scrawl wrapper
 				api = this.api;
 				wrapper = this;
 			}
-			else{
+			else {
 				//this = dom video element
 				api = this;
 				wrapper = my.video[this.id];

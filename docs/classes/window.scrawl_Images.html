@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.0.0</em>
+            <em>API Docs for: 4.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
@@ -130,6 +132,8 @@
                 <li><a href="../classes/Text.html">Text</a></li>
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/Timeline.html">Timeline</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -329,8 +333,22 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_getImagesCallback">getImagesCallback</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_getVideoById">getVideoById</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getVideoCallback">getVideoCallback</a>
 
                                 
                                 
@@ -667,7 +685,7 @@
             
         
         
-        <a href="../files/source_scrawlImageLoad.js.html#l136"><code>source\scrawlImageLoad.js:136</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l149"><code>source\scrawlImageLoad.js:149</code></a>
         
         </p>
 
@@ -732,7 +750,7 @@
             <div class="returns-description">
                 
                     
-                    <p>String name; false on failure</p>
+                    <p>true if image is identified; false otherwise</p>
 
                 
             </div>
@@ -862,11 +880,70 @@
             <div class="returns-description">
                 
                     
-                    <p>Array of String names; false on failure</p>
+                    <p>true if one or more images are identified; false otherwise</p>
 
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getImagesCallback" class="method item private">
+    <h3 class="name"><code>getImagesCallback</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImageLoad.js.html#l138"><code>source\scrawlImageLoad.js:138</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Helper function</p>
+
+    </div>
+
+    
+
     
 
     
@@ -888,7 +965,7 @@
             
                 <li class="arg">
                     
-                        <code class="optional">[kill]</code>
+                        <code class="optional">[stream]</code>
                     
                 </li>
             
@@ -927,7 +1004,7 @@
             
         
         
-        <a href="../files/source_scrawlImageLoad.js.html#l155"><code>source\scrawlImageLoad.js:155</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l186"><code>source\scrawlImageLoad.js:186</code></a>
         
         </p>
 
@@ -966,7 +1043,7 @@
             
                 <li class="param">
                     
-                        <code class="param-name optional">[kill]</code>
+                        <code class="param-name optional">[stream]</code>
                         <span class="type">Boolean</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
@@ -974,7 +1051,7 @@
                     
 
                     <div class="param-description">
-                        <p>when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library</p>
+                        <p>defaults to &#39;raw&#39;</p>
 
                     </div>
 
@@ -992,11 +1069,70 @@
             <div class="returns-description">
                 
                     
-                    <p>String name; false on failure</p>
+                    <p>true if video is identified; false otherwise</p>
 
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getVideoCallback" class="method item private">
+    <h3 class="name"><code>getVideoCallback</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                    <p>Provided by the <a href="../modules/scrawlFilters.html">scrawlFilters</a> module.</p>
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImageLoad.js.html#l175"><code>source\scrawlImageLoad.js:175</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Helper function</p>
+
+    </div>
+
+    
+
     
 
     

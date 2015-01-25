@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.0.0</em>
+            <em>API Docs for: 4.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
@@ -130,6 +132,8 @@
                 <li><a href="../classes/Text.html">Text</a></li>
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/Timeline.html">Timeline</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -701,6 +705,7 @@ Group.stamp hook function - add a filter to a group of Entitys, and any backgrou
 			var imageData,
 				canvas,
 				composite,
+				localComposite = &#x27;source-over&#x27;,
 				e,
 				eStroke,
 				i,
@@ -746,15 +751,22 @@ Group.stamp hook function - add a filter to a group of Entitys, and any backgrou
 						}
 						else if (my.filter[this.filters[i]]) {
 							imageData = my.filter[this.filters[i]].add(imageData);
+							localComposite = (my.xt(my.filter[this.filters[i]].operation)) ? my.filter[this.filters[i]].operation : localComposite;
 						}
 					}
 				}
 				my.cvx.putImageData(imageData, 0, 0);
-				composite = engine.globalCompositeOperation;
-				engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
-				engine.setTransform(1, 0, 0, 1, 0, 0);
-				engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-				engine.globalCompositeOperation = composite;
+				if (engine.globalCompositeOperation !== localComposite) {
+					composite = engine.globalCompositeOperation;
+					engine.globalCompositeOperation = localComposite;
+					engine.setTransform(1, 0, 0, 1, 0, 0);
+					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+					engine.globalCompositeOperation = composite;
+				}
+				else {
+					engine.setTransform(1, 0, 0, 1, 0, 0);
+					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+				}
 			}
 		};
 		/**
@@ -766,6 +778,7 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 			var imageData,
 				canvas,
 				composite,
+				localComposite = &#x27;source-over&#x27;,
 				i,
 				iz;
 			force = my.xtGet(force, false);
@@ -797,14 +810,21 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 						}
 						else if (my.filter[this.filters[i]]) {
 							imageData = my.filter[this.filters[i]].add(imageData);
+							localComposite = (my.xt(my.filter[this.filters[i]].operation)) ? my.filter[this.filters[i]].operation : localComposite;
 						}
 					}
 					my.cvx.putImageData(imageData, 0, 0);
-					composite = engine.globalCompositeOperation;
-					engine.globalCompositeOperation = my.filter[this.filters[this.filters.length - 1]].composite;
-					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-					engine.globalCompositeOperation = composite;
+					if (engine.globalCompositeOperation !== localComposite) {
+						composite = engine.globalCompositeOperation;
+						engine.globalCompositeOperation = localComposite;
+						engine.setTransform(1, 0, 0, 1, 0, 0);
+						engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+						engine.globalCompositeOperation = composite;
+					}
+					else {
+						engine.setTransform(1, 0, 0, 1, 0, 0);
+						engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+					}
 				}
 				my.cvx.restore();
 			}
@@ -975,7 +995,7 @@ Only the final filter in an array of filters will determine the composite operat
 @type String
 @default &#x27;source-over&#x27;
 **/
-			composite: &#x27;source-over&#x27;,
+			//composite: &#x27;source-over&#x27;,
 		};
 		my.mergeInto(my.d.Filter, my.d.Base);
 		/**
@@ -2451,14 +2471,8 @@ Blur helper function
 		my.LeachFilter = function(items) {
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.minRed = my.xtGet(items.minRed, 0);
-			this.minGreen = my.xtGet(items.minGreen, 0);
-			this.minBlue = my.xtGet(items.minBlue, 0);
-			this.maxRed = my.xtGet(items.maxRed, 255);
-			this.maxGreen = my.xtGet(items.maxGreen, 255);
-			this.maxBlue = my.xtGet(items.maxBlue, 255);
-			this.preserve = my.xtGet(items.preserve, false);
-			this.composite = (this.preserve) ? &#x27;destination-in&#x27; : &#x27;destination-out&#x27;;
+			this.exclude = items.exclude || [];
+			this.operation = &#x27;xor&#x27;;
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -2474,64 +2488,27 @@ Blur helper function
 		my.LeachFilter.prototype.classname = &#x27;filternames&#x27;;
 		my.d.LeachFilter = {
 			/**
-@property minRed
-@type Number
-@default 0
+Unlike other filters, the leach filter uses an &#x27;xor&#x27; GCO to stamp itself onto the canvas - this is changeable, if necessary
+
+@property operation
+@type String
+@default &#x27;xor&#x27;
 **/
-			minRed: 0,
+			operation: &#x27;xor&#x27;,
 			/**
-@property minGreen
-@type Number
-@default 0
+The exclude array should contain a set of arrays defining the color ranges to be leached (have their alpha values set to 0) from the image. Each array within the exclude array must include the following six numbers in exactly this order: 
+
+[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue]
+
+... where the numbers are integers between 0 and 255
+
+@property exclude
+@type Array
+@default []
 **/
-			minGreen: 0,
-			/**
-@property minBlue
-@type Number
-@default 0
-**/
-			minBlue: 0,
-			/**
-@property maxRed
-@type Number
-@default 255
-**/
-			maxRed: 255,
-			/**
-@property maxGreen
-@type Number
-@default 255
-**/
-			maxGreen: 255,
-			/**
-@property maxBlue
-@type Number
-@default 255
-**/
-			maxBlue: 255,
-			/**
-When the preserve function is set to true, the selected areas are retained; on false they are leached
-@property preserve
-@type Boolean
-@default false
-**/
-			preserve: false,
+			exclude: []
 		};
 		my.mergeInto(my.d.LeachFilter, my.d.Filter);
-		/**
-Set attribute values.
-
-@method set
-@param {Object} items Object containing attribute key:value pairs
-@return This
-@chainable
-**/
-		my.LeachFilter.prototype.set = function(items) {
-			my.Base.prototype.set.call(this, items);
-			if (my.xt(items.preserve) &amp;&amp; my.isa(items.preserve, &#x27;bool&#x27;)) {
-				this.composite = (items.preserve) ? &#x27;destination-in&#x27; : &#x27;destination-out&#x27;;
-			}
-		};
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2540,7 +2517,9 @@ Add function - takes data, calculates its channels and combines it with data
 @return amended image data object
 **/
 		my.LeachFilter.prototype.add = function(data) {
-			var alpha,
+			var r,
+				g,
+				b,
 				rMax,
 				gMax,
 				bMax,
@@ -2550,29 +2529,29 @@ Add function - takes data, calculates its channels and combines it with data
 				d,
 				i,
 				iz,
+				j,
+				jz,
 				flag;
-			alpha = Math.floor(this.getAlpha() * 255);
-			rMax = this.maxRed;
-			gMax = this.maxGreen;
-			bMax = this.maxBlue;
-			rMin = this.minRed;
-			gMin = this.minGreen;
-			bMin = this.minBlue;
 			d = data.data;
 			for (i = 0, iz = d.length; i &lt; iz; i += 4) {
 				if (d[i + 3] &gt; 0) {
 					flag = false;
-					if (my.isBetween(d[i], rMin, rMax, true)) {
-						if (my.isBetween(d[i + 1], gMin, gMax, true)) {
-							if (my.isBetween(d[i + 2], bMin, bMax, true)) {
-								d[i + 3] = alpha;
-								flag = true;
-							}
+					r = d[i];
+					g = d[i + 1];
+					b = d[i + 2];
+					for (j = 0, jz = this.exclude.length; j &lt; jz; j++) {
+						rMin = this.exclude[j][0];
+						gMin = this.exclude[j][1];
+						bMin = this.exclude[j][2];
+						rMax = this.exclude[j][3];
+						gMax = this.exclude[j][4];
+						bMax = this.exclude[j][5];
+						if (r &gt;= rMin &amp;&amp; r &lt;= rMax &amp;&amp; g &gt;= gMin &amp;&amp; g &lt;= gMax &amp;&amp; b &gt;= bMin &amp;&amp; b &lt;= bMax) {
+							flag = true;
+							break;
 						}
 					}
-					if (!flag) {
-						d[i + 3] = 0;
-					}
+					d[i + 3] = (flag) ? 255 : 0;
 				}
 			}
 			return data;

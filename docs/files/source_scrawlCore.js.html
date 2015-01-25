@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.0.0</em>
+            <em>API Docs for: 4.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
             
                 <li><a href="../classes/Animation.html">Animation</a></li>
             
@@ -130,6 +132,8 @@
                 <li><a href="../classes/Text.html">Text</a></li>
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/Timeline.html">Timeline</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -247,7 +251,7 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
+// Copyright (c) 2015 Richard James Roots
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the &quot;Software&quot;), to deal
@@ -271,15 +275,15 @@
 /**
 # scrawlCore
 
-## Version 4.0.0 - 31 December 2014
+## Version 4.1.0 - 25 January 2015
 
 Developed by Rik Roots - &lt;rik.roots@gmail.com&gt;, &lt;rik@rikweb.org.uk&gt;
 
 Scrawl demo website: &lt;http://scrawl.rikweb.org.uk&gt;
 
-### Be aware that the current develop branch includes changes beyond v4.0.0 that break that version
+### Be aware that the current develop branch (probably) includes changes beyond v4.1.0 that break that version
 
-The next version, being coded up on the develop branch, will be v4.0.1, for bugfixes only
+The next version, being coded up on the develop branch, will be v4.1.1, for bugfixes only
 
 ## Purpose and features
 
@@ -354,10 +358,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 3.1.4
+@default 4.1.0
 @final
 **/
-	my.version = &#x27;4.0.0&#x27;;
+	my.version = &#x27;4.1.0&#x27;;
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -636,7 +640,6 @@ Any supplied callback function will only be run once all modules have been loade
 						done(module);
 					};
 					mod.onerror = function(e) {
-						console.log(&#x27;... &#x27; + module + &#x27; failed to load&#x27;);
 						done(module, true);
 					};
 					mod.src = (/\.js$/.test(myMod)) ? path + myMod : path + myMod + tail;
@@ -646,7 +649,6 @@ Any supplied callback function will only be run once all modules have been loade
 			done = function(m, e) {
 				my.removeItem(loaded, m);
 				if (e || Date.now() &gt; startTime + timeout) {
-					console.log(&#x27;failed to load all modules&#x27;);
 					error();
 				}
 				else {
@@ -747,6 +749,18 @@ A __utility__ function that checks an array to see if it contains a given value
 **/
 	my.contains = function(item, k) {
 		return (item.indexOf(k) &gt;= 0) ? true : false;
+	};
+	/**
+A __utility__ function to convert strings (such as percentages) to integer values
+@method toInt
+@param {String} item
+@return Integer number; 0 on error
+**/
+	my.toInt = function(item) {
+		if (item.substring) {
+			item = parseFloat(item);
+		}
+		return (item.toFixed) ? item | 0 : 0;
 	};
 	/**
 A __utility__ function that adds a value to an array if the array doesn&#x27;t already contain an element with that value
@@ -923,8 +937,7 @@ Valid identifier Strings include:
     scrawl.isa(myboolean, &#x27;str&#x27;);   //returns false
 **/
 	my.isa = function() {
-		var slice;
-		slice = Array.prototype.slice.call(arguments);
+		var slice = Array.prototype.slice.call(arguments);
 		if (slice.length == 2 &amp;&amp; my.xt(slice[0])) {
 			//because we mostly test for str or fn
 			if (slice[1] == &#x27;str&#x27;) {
@@ -1021,7 +1034,6 @@ A __utility__ function that checks an argument list of values and returns the fi
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log(&#x27;xtGet - needs updating: &#x27;, slice);
 			slice = slice[0];
 		}
 		if (slice.length &gt; 0) {
@@ -1047,7 +1059,6 @@ False: 0, -0, &#x27;&#x27;, undefined, null, false, NaN
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log(&#x27;xtGetTrue - needs updating: &#x27;, slice);
 			slice = slice[0];
 		}
 		if (slice.length &gt; 0) {
@@ -1077,7 +1088,6 @@ A __utility__ function for variable type checking
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log(&#x27;xta - needs updating: &#x27;, slice);
 			slice = slice[0];
 		}
 		if (slice.length &gt; 0) {
@@ -1107,7 +1117,6 @@ A __utility__ function for variable type checking
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log(&#x27;xto - needs updating: &#x27;, slice);
 			slice = slice[0];
 		}
 		if (slice.length &gt; 0) {
@@ -1152,7 +1161,6 @@ Generate unique names for new Scrawl objects
 			nameArray = name.split(&#x27;___&#x27;);
 			return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + &#x27;___&#x27; + Math.floor(Math.random() * 100000000) : nameArray[0];
 		}
-		console.log(&#x27;scrawl.makeName() error: insufficient or incorrect argument attributes&#x27;, item);
 		return false;
 	};
 	/**
@@ -1374,7 +1382,6 @@ A __general__ function which deletes Cell objects and their associated paraphina
 			jz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log(&#x27;deleteCells - needs updating: &#x27;, slice);
 			slice = slice[0];
 		}
 		for (i = 0, iz = slice.length; i &lt; iz; i++) {
@@ -1470,7 +1477,6 @@ A __general__ function to delete entity objects
 			contextName;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log(&#x27;deleteEntity - needs updating: &#x27;, slice);
 			slice = slice[0];
 		}
 		for (i = 0, iz = slice.length; i &lt; iz; i++) {
@@ -1808,7 +1814,6 @@ Multiply this Vector by a scalar value
 			this.z *= item;
 			return this;
 		}
-		console.log(&#x27;Vector.scalarMultiply() error: argument is not a number&#x27;);
 		return this;
 	};
 	/**
@@ -1825,7 +1830,6 @@ Divide this Vector by a scalar value
 			this.z /= item;
 			return this;
 		}
-		console.log(&#x27;Vector.scalarDivide() error: argument is not a number, or is zero&#x27;);
 		return this;
 	};
 	/**
@@ -1850,7 +1854,6 @@ Return a clone of this Vector
 @return Clone of this Vector
 **/
 	my.Vector.prototype.getVector = function() {
-		console.log(&#x27;Vector.getVector&#x27;);
 		return my.newVector({
 			x: this.x,
 			y: this.y,
@@ -1889,7 +1892,6 @@ Arithmetic is v(crossProduct)u, not u(crossProduct)v
 				z: (v1x * v2y) + (v1y * v2x)
 			});
 		}
-		console.log(&#x27;Vector.getCrossProduct() error: argument is not a Vector&#x27;);
 		return this;
 	};
 	/**
@@ -1907,7 +1909,6 @@ Arithmetic is v(dotProduct)u, not u(dotProduct)v
 			v = (my.isa(v, &#x27;vector&#x27;)) ? v : this;
 			return ((u.x || 0) * (v.x || 0)) + ((u.y || 0) * (v.y || 0)) + ((u.z || 0) * (v.z || 0));
 		}
-		console.log(&#x27;Vector.getDotProduct() error: argument is not a Vector&#x27;);
 		return false;
 	};
 	/**
@@ -1941,7 +1942,6 @@ Obtain the triple scalar product of two Vectors and this, or a third, Vector
 			wz = w.z || 0;
 			return (ux * ((vy * wz) - (vz * wy))) + (uy * (-(vx * wz) + (vz * wx))) + (uz * ((vx * wy) - (vy * wx)));
 		}
-		console.log(&#x27;Vector.getTripleScalarProduct() error: argument is not a Vector&#x27;);
 		return false;
 	};
 	/**
@@ -1961,7 +1961,6 @@ Rotate the Vector by a given angle
 			this.y = stat_vr[1] * Math.sin(stat_vr[0]);
 			return this;
 		}
-		console.log(&#x27;Vector.rotate() error: argument is not a Number&#x27;);
 		return this;
 	};
 	/**
@@ -1998,7 +1997,6 @@ Rotate a Vector object by a Quaternion rotation
 			this.set(q1.v).setMagnitudeTo(mag);
 			return this;
 		}
-		console.log(&#x27;Vector.rotate3d() error: argument is not a Quaternion&#x27;);
 		return this;
 	};
 
@@ -2232,7 +2230,7 @@ SubScrawl, and all Objects that prototype chain to Subscrawl, supports the follo
 **/
 		start: {
 			x: 0,
-			Y: 0
+			y: 0
 		},
 		/**
 An Object (in fact, a Vector) containing offset instructions from the object&#x27;s rotation/flip point, where drawing commences. 
@@ -2249,7 +2247,7 @@ Where values are Numbers, handle can be treated like any other Vector
 **/
 		handle: {
 			x: 0,
-			Y: 0
+			y: 0
 		},
 		/**
 The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object&#x27;s start point
@@ -3090,49 +3088,55 @@ mousemove event listener function
 			mouseY,
 			maxX,
 			maxY,
-			stat = [&#x27;relative&#x27;, &#x27;absolute&#x27;, &#x27;fixed&#x27;, &#x27;sticky&#x27;];
+			stat = [&#x27;relative&#x27;, &#x27;absolute&#x27;, &#x27;fixed&#x27;, &#x27;sticky&#x27;],
+			choke = parseInt(1000 / 60, 10),
+			current = Date.now();
 		e = (my.xt(e)) ? e : window.event;
 		mouseX = 0;
 		mouseY = 0;
 		wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
 		if (wrapper) {
-			wrapper.mouse.active = false;
-			wrapper.mouse.element = wrapper.name;
-			wrapper.mouse.type = wrapper.type;
-			if (wrapper.mouse.layer || my.xta(e, e.layerX) &amp;&amp; my.contains(stat, wrapper.position)) {
-				mouseX = e.layerX;
-				mouseY = e.layerY;
-				if (mouseX &gt;= 0 &amp;&amp; mouseX &lt;= (wrapper.width * wrapper.scale) &amp;&amp; mouseY &gt;= 0 &amp;&amp; mouseY &lt;= (wrapper.height * wrapper.scale)) {
-					wrapper.mouse.active = true;
+			if (!my.xt(wrapper.mouse.time) || wrapper.mouse.time + choke &lt; current) {
+				wrapper.mouse.active = false;
+				wrapper.mouse.element = wrapper.name;
+				wrapper.mouse.type = wrapper.type;
+				wrapper.mouse.time = current;
+				if (wrapper.mouse.layer || my.xta(e, e.layerX) &amp;&amp; my.contains(stat, wrapper.position)) {
+					mouseX = e.layerX;
+					mouseY = e.layerY;
+					if (mouseX &gt;= 0 &amp;&amp; mouseX &lt;= wrapper.localWidth &amp;&amp; mouseY &gt;= 0 &amp;&amp; mouseY &lt;= wrapper.localHeight) {
+						wrapper.mouse.active = true;
+					}
+					wrapper.mouse.x = e.layerX;
+					wrapper.mouse.y = e.layerY;
+					wrapper.mouse.layer = true;
 				}
-				// wrapper.mouse.x = e.layerX * (1 / wrapper.scale);
-				// wrapper.mouse.y = e.layerY * (1 / wrapper.scale);
-				wrapper.mouse.x = e.layerX;
-				wrapper.mouse.y = e.layerY;
-				wrapper.mouse.layer = true;
+				else {
+					if (e.pageX || e.pageY) {
+						mouseX = e.pageX;
+						mouseY = e.pageY;
+					}
+					else if (e.clientX || e.clientY) {
+						mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+						mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+					}
+					maxX = wrapper.displayOffsetX + wrapper.localWidth;
+					maxY = wrapper.displayOffsetY + wrapper.localHeight;
+					if (mouseX &gt;= wrapper.displayOffsetX &amp;&amp; mouseX &lt;= maxX &amp;&amp; mouseY &gt;= wrapper.displayOffsetY &amp;&amp; mouseY &lt;= maxY) {
+						wrapper.mouse.active = true;
+					}
+					wrapper.mouse.x = (mouseX - wrapper.displayOffsetX);
+					wrapper.mouse.y = (mouseY - wrapper.displayOffsetY);
+					wrapper.mouse.layer = false;
+				}
+				if (wrapper.type === &#x27;Pad&#x27;) {
+					wrapper.mouse.x = wrapper.mouse.x / wrapper.scale || 1;
+					wrapper.mouse.y = wrapper.mouse.y / wrapper.scale || 1;
+				}
 			}
-			else {
-				if (e.pageX || e.pageY) {
-					mouseX = e.pageX;
-					mouseY = e.pageY;
-				}
-				else if (e.clientX || e.clientY) {
-					mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-					mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-				}
-				maxX = wrapper.displayOffsetX + (wrapper.width * wrapper.scale);
-				maxY = wrapper.displayOffsetY + (wrapper.height * wrapper.scale);
-				if (mouseX &gt;= wrapper.displayOffsetX &amp;&amp; mouseX &lt;= maxX &amp;&amp; mouseY &gt;= wrapper.displayOffsetY &amp;&amp; mouseY &lt;= maxY) {
-					wrapper.mouse.active = true;
-				}
-				// wrapper.mouse.x = (mouseX - wrapper.displayOffsetX) * (1 / wrapper.scale);
-				// wrapper.mouse.y = (mouseY - wrapper.displayOffsetY) * (1 / wrapper.scale);
-				wrapper.mouse.x = (mouseX - wrapper.displayOffsetX);
-				wrapper.mouse.y = (mouseY - wrapper.displayOffsetY);
-				wrapper.mouse.layer = false;
-			}
+			return wrapper;
 		}
-		return wrapper;
+		return false;
 	};
 	/**
 mouseout event listener function
@@ -3299,8 +3303,8 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				canvas: canvas,
 				compileOrder: 9999,
 				shown: false,
-				width: this.localWidth / this.scale,
-				height: this.localHeight / this.scale
+				width: &#x27;100%&#x27;,
+				height: &#x27;100%&#x27;
 			});
 			my.pushUnique(this.cells, base.name);
 			this.base = base.name;
@@ -3321,7 +3325,6 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 		}
 
 		// on failure, return false
-		console.log(&#x27;Failed to generate a Pad controller - no canvas element supplied&#x27;);
 		return false;
 	};
 	my.Pad.prototype = Object.create(my.PageElement.prototype);
@@ -3603,7 +3606,6 @@ Associate existing &amp;lt;canvas&amp;gt; elements, and their Cell wrappers, wit
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log(&#x27;addCells - needs updating: &#x27;, slice);
 			slice = slice[0];
 		}
 		for (i = 0, iz = slice.length; i &lt; iz; i++) {
@@ -3636,7 +3638,6 @@ _Note: does not delete the canvas, or the Cell object, from the scrawl library_
 			}
 			return this;
 		}
-		console.log(&#x27;Pad.deleteCell error: argument is not a String&#x27;);
 		return this;
 	};
 	/**
@@ -3748,7 +3749,6 @@ Cell supports the following &#x27;virtual&#x27; attributes for this attribute:
 			this.filtersCellInit(items);
 			return this;
 		}
-		console.log(&#x27;Cell constructor encountered an error: no canvas element supplied to it&#x27;);
 		return false;
 	};
 	my.Cell.prototype = Object.create(my.Position.prototype);
@@ -4829,36 +4829,41 @@ Cell.setPaste update pasteData object values
 **/
 	my.Cell.prototype.setPaste = function() {
 		var pad = my.pad[this.pad],
-			width = pad.localWidth,
-			height = pad.localHeight;
-		this.pasteData.x = this.start.x;
-		if (my.isa(this.pasteData.x, &#x27;str&#x27;)) {
-			this.pasteData.x = this.convertX(this.pasteData.x, width);
+			display = my.cell[pad.display],
+			base = my.cell[pad.base],
+			width, height;
+		if (my.xta(display, base)) {
+			width = (this.name === pad.base) ? display.actualWidth : base.actualWidth;
+			height = (this.name === pad.base) ? display.actualHeight : base.actualHeight;
+			this.pasteData.x = this.start.x;
+			if (my.isa(this.pasteData.x, &#x27;str&#x27;)) {
+				this.pasteData.x = this.convertX(this.pasteData.x, width);
+			}
+			this.pasteData.y = this.start.y;
+			if (my.isa(this.pasteData.y, &#x27;str&#x27;)) {
+				this.pasteData.y = this.convertY(this.pasteData.y, height);
+			}
+			this.pasteData.w = this.pasteWidth;
+			if (my.isa(this.pasteData.w, &#x27;str&#x27;)) {
+				this.pasteData.w = this.convertX(this.pasteData.w, width);
+			}
+			this.pasteData.w *= this.scale;
+			this.pasteData.h = this.pasteHeight;
+			if (my.isa(this.pasteData.h, &#x27;str&#x27;)) {
+				this.pasteData.h = this.convertY(this.pasteData.h, height);
+			}
+			this.pasteData.h *= this.scale;
+			if (this.pasteData.w &lt; 1) {
+				this.pasteData.w = 1;
+			}
+			if (this.pasteData.h &lt; 1) {
+				this.pasteData.h = 1;
+			}
+			this.pasteData.x = Math.floor(this.pasteData.x);
+			this.pasteData.y = Math.floor(this.pasteData.y);
+			this.pasteData.w = Math.floor(this.pasteData.w);
+			this.pasteData.h = Math.floor(this.pasteData.h);
 		}
-		this.pasteData.y = this.start.y;
-		if (my.isa(this.pasteData.y, &#x27;str&#x27;)) {
-			this.pasteData.y = this.convertY(this.pasteData.y, height);
-		}
-		this.pasteData.w = this.pasteWidth;
-		if (my.isa(this.pasteData.w, &#x27;str&#x27;)) {
-			this.pasteData.w = this.convertX(this.pasteData.w, width);
-		}
-		this.pasteData.w *= this.scale;
-		this.pasteData.h = this.pasteHeight;
-		if (my.isa(this.pasteData.h, &#x27;str&#x27;)) {
-			this.pasteData.h = this.convertY(this.pasteData.h, height);
-		}
-		this.pasteData.h *= this.scale;
-		if (this.pasteData.w &lt; 1) {
-			this.pasteData.w = 1;
-		}
-		if (this.pasteData.h &lt; 1) {
-			this.pasteData.h = 1;
-		}
-		this.pasteData.x = Math.floor(this.pasteData.x);
-		this.pasteData.y = Math.floor(this.pasteData.y);
-		this.pasteData.w = Math.floor(this.pasteData.w);
-		this.pasteData.h = Math.floor(this.pasteData.h);
 		return this;
 	};
 	/**
@@ -5587,10 +5592,6 @@ Tell the Group to ask its constituent entitys to draw themselves on a &amp;lt;ca
 				if (entity) {
 					entity.group = this.name;
 					entity.stamp(method, cell);
-				}
-				else {
-					console.log(this.name, this.entitys);
-					console.log(i, iz, this.entitys[i], &#x27;FAIL&#x27;);
 				}
 			}
 			this.stampFilter(my.context[this.cell], this.cell);
@@ -6327,7 +6328,7 @@ Stamp helper function - convert string start.x values to numerical values
 				width = cell;
 				break;
 			default:
-				width = cell.width;
+				width = cell.actualWidth;
 		}
 
 		result = parseFloat(x) / 100;
@@ -6342,6 +6343,21 @@ Stamp helper function - convert string start.x values to numerical values
 			}
 		}
 		return result * width;
+	};
+	/**
+Entity.getStartValues
+@method getStartValues
+@private
+**/
+	my.Entity.prototype.getStartValues = function() {
+		var cell = this.getEntityCell(),
+			result = {
+				x: 0,
+				y: 0
+			};
+		result.x = (my.isa(this.start.x, &#x27;str&#x27;)) ? this.convertX(this.start.x, cell) : this.start.x;
+		result.y = (my.isa(this.start.y, &#x27;str&#x27;)) ? this.convertY(this.start.y, cell) : this.start.y;
+		return result;
 	};
 	/**
 Stamp helper function - convert string start.y values to numerical values
@@ -6362,7 +6378,7 @@ Stamp helper function - convert string start.y values to numerical values
 				height = cell;
 				break;
 			default:
-				height = cell.height;
+				height = cell.actualHeight;
 		}
 		result = parseFloat(y) / 100;
 		if (isNaN(result)) {
