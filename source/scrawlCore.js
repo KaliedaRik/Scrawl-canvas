@@ -5833,8 +5833,10 @@ Augments Position.clone()
 	my.Entity.prototype.clone = function(items) {
 		var context,
 			enhancedItems,
-			clone;
+			clone,
+			i, iz;
 		items = my.safeObject(items);
+
 		context = JSON.parse(JSON.stringify(my.ctx[this.context]));
 		delete context.name;
 		enhancedItems = my.mergeInto(items, context);

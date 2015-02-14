@@ -430,6 +430,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					if (src) {
 						my.Entity.call(this, items);
 						tempV = my.safeObject(items.paste);
+						//start vector already set by the Entity call
 						this.start.x = my.xtGet(items.pasteX, tempV.x, this.start.x);
 						this.start.y = my.xtGet(items.pasteY, tempV.y, this.start.y);
 						this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');

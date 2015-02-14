@@ -190,15 +190,14 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 @param {Boolean} [stream] defaults to 'raw'
 @return true if video is identified; false otherwise
 **/
-		my.getVideoById = function(idtag, stream) {
+		my.getVideoById = function(idtag) {
 			var myVideo;
-			stream = my.xtGet(stream, 'raw');
 			if (idtag) {
 				myVideo = document.getElementById(idtag);
+				myVideo.callback = 'anonymous';
 				if (myVideo.readyState > 1) {
 					my.newVideo({
 						element: myVideo, //unrecorded flag for triggering Image stuff
-						stream: stream,
 						crossOrigin: 'anonymous'
 					});
 				}

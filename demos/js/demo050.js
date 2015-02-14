@@ -99,6 +99,7 @@ var mycode = function() {
 
 	//define entitys
 	scrawl.makeRegularShape({
+		name: 'C0_hello', //for testing clones of Path objects that include underscores in their names
 		startX: 420,
 		startY: 100,
 		angle: 144,
@@ -239,7 +240,6 @@ var mycode = function() {
 };
 
 scrawl.loadModules({
-	// path: '../min/',
 	path: '../source/',
 	minified: false,
 	//test to prevent multi-loading of modules

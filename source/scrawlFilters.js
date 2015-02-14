@@ -262,7 +262,7 @@ A __factory__ function to generate new Tint filter objects
 			return new my.TintFilter(items);
 		};
 		/**
-A __factory__ function to generate new Tint filter objects preset with values for creating a sepia tint
+A __factory__ function to generate new Sepia filter objects preset with values for creating a sepia tint
 @method newSepiaFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return TintFilter object
@@ -2321,7 +2321,7 @@ Add function - takes data, calculates its channels and combines it with data
 
 * scrawl.filter.FILTERNAME - for the StereoFilter object
 
-@class StereoFilter
+@class SeparateFilter
 @constructor
 @extends Filter
 @param {Object} [items] Key:value Object argument for setting attributes

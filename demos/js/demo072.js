@@ -142,7 +142,6 @@ var mycode = function() {
 };
 
 scrawl.loadModules({
-	// path: '../min/',
 	path: '../source/',
 	minified: false,
 	modules: ['block', 'path', 'factories', 'animation', 'collisions', 'wheel'],
