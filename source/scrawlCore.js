@@ -2636,19 +2636,35 @@ The object's scale value - larger values increase the object's size
 **/
 		scale: 1,
 		/**
-Mouse vector - holds the mouse pointer coordinates relative to the top left corner of the element
+Mouse Number - the number of Mouse/Touch Vectors to be tracked by the Pad, Stack or Element
 
-When instantiating DOM element wrappers (Pad, Stack, Element), setting this attribute to true will make Scrawl add a mousemove event listener to the element. By default, Pads and Stacks will add the event listener to the &lt;canvas&gt; or &lt;div&gt; element (mouse == true); Elements will not (mouse == false).
+When instantiating DOM element wrappers (Pad, Stack, Element), setting this attribute to > 0 will make Scrawl add a mousemove/touchmove event listener to the element. By default, Pads and Stacks will add the event listener to the &lt;canvas&gt; or &lt;div&gt; element (mouse > 0); Elements will not (mouse == 0).
 
-The event listener can be added to, or removed from, an element at any time using the set() function with an argument attribute of _mouse: true_ or _mouse: false_.
+The value refers to the maximum number of touch points to be tracked by the DOM element. This needsa to be set to at least 1 even if scrawl is not expected to run in a touch-enabled environment.
+
+The event listener can be added to, or removed from, an element at any time using the set() function with an argument attribute of _mouse: number_ or _mouse: 0_.
 
 The functions _addMouseMove()_ and _removeMouseMove()_ can also be called directly.
 
 @property mouse
-@type Vector
-@default false
+@type Number
+@default 0
 **/
-		mouse: false,
+		mouse: 0,
+		/**
+Mouse array - holds the mouse/touch pointer coordinates relative to the top left corner of the element
+
+mouseArray[0] holds details of the current mouse pointer position
+
+mouseArray[1] holds details of the first touch point position; additional vectors in the array refer to additional touch points as and when they are recorded as starting or moving
+
+During initialization, a minimum of two Vectors will be created; the first for the mouse pointer, the second for the first touch position.
+
+@property mouseArray
+@type Array
+@default []
+**/
+		mouseArray: [],
 		/**
 Element CSS position styling attribute
 @property position
@@ -2693,6 +2709,8 @@ Augments Base.set() to allow the setting of DOM element dimension values
 
 (The stack module replaces this core function rather than augmenting it via a hook function)
 
+Do not use this function to change mouse/mouseArray settings
+
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -2700,6 +2718,8 @@ Augments Base.set() to allow the setting of DOM element dimension values
 **/
 	my.PageElement.prototype.set = function(items) {
 		items = my.safeObject(items);
+		delete items.mouse;
+		delete items.mouseArray;
 		my.Base.prototype.set.call(this, items);
 		if (my.xto(items.width, items.height, items.scale)) {
 			this.setLocalDimensions();
@@ -2708,11 +2728,6 @@ Augments Base.set() to allow the setting of DOM element dimension values
 		}
 		if (my.xt(items.position)) {
 			this.position = items.position;
-		}
-		if (my.xt(items.mouse)) {
-			this.initMouse({
-				mouse: items.mouse
-			});
 		}
 		if (my.xt(items.pivot)) {
 			this.pivot = items.pivot;
@@ -2810,83 +2825,231 @@ Helper function - set DOM element dimensions (width, height)
 	/**
 Retrieve details of the Mouse cursor position in relation to the DOM element's top left hand corner. Most useful for determining mouse cursor position over Stack and Pad (visible &lt;canvas&gt;) elements.
 
+This function is also used to retrieve details of touch positions.
+
 _Note: if changes are made elsewhere to the web page (DOM) after the page loads, the function .getDisplayOffsets() will need to be called to recalculate the element's position within the page - failure to do so will lead to this function returning incorrect data. getDisplayOffsets() does not need to be called during/after page scrolling._
+
+By default, the function returns a single Vector containing either the first touch position or the current mouse cursor position.
 
 The returned object is a Vector containing the mouse cursor's current x and y coordinates in relation to the DOM element's top left corner, together with the following additional attributes:
 
 * __active__ - set to true if mouse is hovering over the element; false otherwise
 * __type__ - element's type ('stack', 'element', 'pad')
 * __element__ - Scrawl wrapper object's name attribute
-* __type__ - Scrawl wrapper object's type ('Pad', 'Stack', 'Element')
-* __layer__ - true if coordinates have been calculated using e.layerX, e.layerY; false otherwise
+* __origin__ - 0 for mouse; 1 for first touch position, etc
+
+If an argument is supplied, then all currently existing mouse/touch vectors are returned as an array, with index 0 representing the mouse pointer, index 1 representing the first touch coordinate and additional indexes representing additional touch coordinates 
 @method getMouse
-@return Vector containing localized mouse coordinates, with additional attributes
+@param {Boolean} item - true to return the array; false (default) to return either first touch or mouse Vector
+@return Vector, or an array of Vectors containing localized coordinates, with additional attributes; if mouse/touch has been disabled for the DOM element, returns false
 **/
-	my.PageElement.prototype.getMouse = function() {
-		return this.mouse;
+	my.PageElement.prototype.getMouse = function(item) {
+		if (item) {
+			return this.mouseArray;
+		}
+		else {
+			if (this.mouse) {
+				if (this.mouseArray[1].active) {
+					return this.mouseArray[1];
+				}
+				return this.mouseArray[0];
+			}
+			return false;
+		}
 	};
 	/**
 mousemove event listener function
 @method handleMouseMove
 @param {Object} e window.event
+@param {Boolean} active - set only by handleMouseIn, handleMouseOut
 @return This
 @private
 **/
-	my.PageElement.prototype.handleMouseMove = function(e) {
-		var wrapper,
-			mouseX,
-			mouseY,
-			maxX,
-			maxY,
-			stat = ['relative', 'absolute', 'fixed', 'sticky'],
-			choke = parseInt(1000 / 60, 10),
-			current = Date.now();
-		e = (my.xt(e)) ? e : window.event;
-		mouseX = 0;
-		mouseY = 0;
-		wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
-		if (wrapper) {
-			if (!my.xt(wrapper.mouse.time) || wrapper.mouse.time + choke < current) {
-				wrapper.mouse.active = false;
-				wrapper.mouse.element = wrapper.name;
-				wrapper.mouse.type = wrapper.type;
-				wrapper.mouse.time = current;
-				if (wrapper.mouse.layer || my.xta(e, e.layerX) && my.contains(stat, wrapper.position)) {
-					mouseX = e.layerX;
-					mouseY = e.layerY;
-					if (mouseX >= 0 && mouseX <= wrapper.localWidth && mouseY >= 0 && mouseY <= wrapper.localHeight) {
-						wrapper.mouse.active = true;
+	my.PageElement.prototype.handleMouseMove = function(e, active) {
+		var mouseX, mouseY, maxX, maxY, wrapper, currentVector, i, iz, j, jz, el, touches;
+		e.stopPropagation();
+		e.preventDefault();
+
+		if (my.xt(this.id)) {
+			//invoked directly by move listeners
+			wrapper = my.pad[this.id] || my.stack[this.id] || my.element[this.id] || false;
+			el = this;
+		}
+		else {
+			//invoked via scrawl function
+			wrapper = this;
+			el = this.getElement();
+		}
+
+		//touch event
+		if (e.changedTouches) {
+			touches = e.changedTouches;
+			for (i = 0, iz = touches.length; i < iz; i++) {
+				currentVector = 0;
+				if (my.xt(active)) {
+					if (active) {
+						//start event - need to find a spare vector to store data in
+						for (j = 1, jz = wrapper.mouseArray.length; j < jz; j++) {
+							if (!my.xt(wrapper.mouseArray[j].id) || !wrapper.mouseArray[j].id) {
+								wrapper.mouseArray[j].id = touches[i].identifier;
+								wrapper.mouseArray[j].active = true;
+								currentVector = j;
+								break;
+							}
+						}
 					}
-					wrapper.mouse.x = e.layerX;
-					wrapper.mouse.y = e.layerY;
-					wrapper.mouse.layer = true;
+					else {
+						//end event - clear vector ready for future pointers
+						for (j = 1, jz = wrapper.mouseArray.length; j < jz; j++) {
+							if (touches[i].identifier === wrapper.mouseArray[j].id) {
+								wrapper.mouseArray[j].id = false;
+								wrapper.mouseArray[j].active = false;
+								break;
+							}
+						}
+					}
 				}
 				else {
-					if (e.pageX || e.pageY) {
-						mouseX = e.pageX;
-						mouseY = e.pageY;
+					// move event
+					for (j = 1, jz = wrapper.mouseArray.length; j < jz; j++) {
+						if (touches[i].identifier === wrapper.mouseArray[j].id) {
+							currentVector = j;
+							break;
+						}
 					}
-					else if (e.clientX || e.clientY) {
-						mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-						mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-					}
-					maxX = wrapper.displayOffsetX + wrapper.localWidth;
-					maxY = wrapper.displayOffsetY + wrapper.localHeight;
-					if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
-						wrapper.mouse.active = true;
-					}
-					wrapper.mouse.x = (mouseX - wrapper.displayOffsetX);
-					wrapper.mouse.y = (mouseY - wrapper.displayOffsetY);
-					wrapper.mouse.layer = false;
 				}
+				//touch coordinates
+				if (e.pageX || e.pageY) {
+					mouseX = e.pageX;
+					mouseY = e.pageY;
+				}
+				else if (e.clientX || e.clientY) {
+					mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+					mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+				}
+				maxX = wrapper.displayOffsetX + wrapper.localWidth;
+				maxY = wrapper.displayOffsetY + wrapper.localHeight;
+				wrapper.mouseArray[currentVector].active = false;
+				if (e.type === 'touchenter') {
+					wrapper.mouseArray[currentVector].active = true;
+				}
+				else if (e.type === 'touchleave' || e.type === 'touchcancel') {
+					wrapper.mouseArray[currentVector].active = false;
+				}
+				else if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
+					wrapper.mouseArray[currentVector].active = true;
+				}
+				wrapper.mouseArray[currentVector].x = (mouseX - wrapper.displayOffsetX);
+				wrapper.mouseArray[currentVector].y = (mouseY - wrapper.displayOffsetY);
 				if (wrapper.type === 'Pad') {
-					wrapper.mouse.x = wrapper.mouse.x / wrapper.scale || 1;
-					wrapper.mouse.y = wrapper.mouse.y / wrapper.scale || 1;
+					wrapper.mouseArray[currentVector].x = Math.round(wrapper.mouseArray[currentVector].x / wrapper.scale || 1);
+					wrapper.mouseArray[currentVector].y = Math.round(wrapper.mouseArray[currentVector].y / wrapper.scale || 1);
 				}
 			}
-			return wrapper;
 		}
-		return false;
+		//pointer event
+		else if (e.pointerType) {
+			e.cancelBubble = true;
+			currentVector = -1;
+			//pointer-related mouse and pen events - assume only one input
+			if (e.pointerType !== 'touch') {
+				currentVector = 0;
+				if (my.xt(active)) {
+					if (active) {
+						el.setPointerCapture(e.pointerId);
+					}
+					else {
+						el.releasePointerCapture(e.pointerId);
+					}
+				}
+			}
+			//pointer-related touch events
+			else {
+				//test to see if we have a start or end event
+				if (my.xt(active)) {
+					if (active) {
+						//start event - need to find a spare vector to store data in
+						for (i = 1, iz = wrapper.mouseArray.length; i < iz; i++) {
+							if (!my.xt(wrapper.mouseArray[i].id) || !wrapper.mouseArray[i].id) {
+								wrapper.mouseArray[i].id = e.pointerId;
+								wrapper.mouseArray[i].active = true;
+								currentVector = i;
+								el.setPointerCapture(e.pointerId);
+								break;
+							}
+						}
+					}
+					else {
+						//end event - clear vector ready for future pointers
+						for (i = 1, iz = wrapper.mouseArray.length; i < iz; i++) {
+							if (e.pointerId === wrapper.mouseArray[i].id) {
+								wrapper.mouseArray[i].id = false;
+								wrapper.mouseArray[i].active = false;
+								el.releasePointerCapture(e.pointerId);
+								break;
+							}
+						}
+					}
+				}
+				else {
+					// move event
+					for (i = 1, iz = wrapper.mouseArray.length; i < iz; i++) {
+						if (e.pointerId === wrapper.mouseArray[i].id) {
+							currentVector = i;
+							break;
+						}
+					}
+				}
+			}
+			//pointer coordinates
+			wrapper.mouseArray[currentVector].active = true;
+			if (e.offsetX < 0 || e.offsetX > wrapper.localWidth || e.offsetY < 0 || e.offsetY > wrapper.localHeight) {
+				wrapper.mouseArray[currentVector].active = false;
+			}
+			if (currentVector >= 0) {
+				wrapper.mouseArray[currentVector].x = e.offsetX;
+				wrapper.mouseArray[currentVector].y = e.offsetY;
+				if (wrapper.type === 'Pad') {
+					wrapper.mouseArray[currentVector].x = Math.round(wrapper.mouseArray[currentVector].x / wrapper.scale || 1);
+					wrapper.mouseArray[currentVector].y = Math.round(wrapper.mouseArray[currentVector].y / wrapper.scale || 1);
+				}
+				else {
+					wrapper.mouseArray[currentVector].x = Math.round(wrapper.mouseArray[currentVector].x);
+					wrapper.mouseArray[currentVector].y = Math.round(wrapper.mouseArray[currentVector].y);
+				}
+			}
+		}
+		//mouse/pen event
+		else {
+			if (e.pageX || e.pageY) {
+				mouseX = e.pageX;
+				mouseY = e.pageY;
+			}
+			else if (e.clientX || e.clientY) {
+				mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+				mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+			}
+			maxX = wrapper.displayOffsetX + wrapper.localWidth;
+			maxY = wrapper.displayOffsetY + wrapper.localHeight;
+			wrapper.mouseArray[0].active = false;
+			if (e.type === 'mouseenter' || e.type === 'mouseover') {
+				wrapper.mouseArray[0].active = true;
+			}
+			else if (e.type === 'mouseleave' || e.type === 'mouseout') {
+				wrapper.mouseArray[0].active = false;
+			}
+			else if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
+				wrapper.mouseArray[0].active = true;
+			}
+			wrapper.mouseArray[0].x = (mouseX - wrapper.displayOffsetX);
+			wrapper.mouseArray[0].y = (mouseY - wrapper.displayOffsetY);
+			if (wrapper.type === 'Pad') {
+				wrapper.mouseArray[0].x = Math.round(wrapper.mouseArray[0].x / wrapper.scale || 1);
+				wrapper.mouseArray[0].y = Math.round(wrapper.mouseArray[0].y / wrapper.scale || 1);
+			}
+		}
+		wrapper.handleMouseTilt(e);
+		return wrapper;
 	};
 	/**
 mouseout event listener function
@@ -2896,77 +3059,145 @@ mouseout event listener function
 @private
 **/
 	my.PageElement.prototype.handleMouseOut = function(e) {
-		var wrapper;
 		e = (my.xt(e)) ? e : window.event;
-		wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
+		var wrapper = my.pad[this.id] || my.stack[this.id] || my.element[this.id] || false;
 		if (wrapper) {
-			wrapper.mouse.active = false;
+			wrapper.handleMouseMove(e, false);
 		}
-		return wrapper;
 	};
-
+	/**
+mouseout event listener function
+@method handleMouseIn
+@param {Object} e window.event
+@return This
+@private
+**/
+	my.PageElement.prototype.handleMouseIn = function(e) {
+		e = (my.xt(e)) ? e : window.event;
+		var wrapper = my.pad[this.id] || my.stack[this.id] || my.element[this.id] || false;
+		if (wrapper) {
+			wrapper.handleMouseMove(e, true);
+		}
+	};
+	/**
+mouseTilt hook function - amended by scrawlStacks module
+@method handleMouseTilt
+@param {Object} e window.event
+@return This
+@private
+**/
+	my.PageElement.prototype.handleMouseTilt = function(e) {};
 	/**
 Constructor helper function
 @method initMouse
-@param constructor argument object
+@param {Number} item - maximum number of mouse/touch point Vectors to create - default: 0
 @return This
 @chainable
 @private
 **/
-	my.PageElement.prototype.initMouse = function(items) {
-		this.mouse = my.newVector({
-			name: this.type + '.' + this.name + '.mouse'
-		});
-		if (!this.position) {
-			this.position = this.get('position');
+	my.PageElement.prototype.initMouse = function(item) {
+		var el = this.getElement();
+		this.mouse = my.xt(item) ? item : 0;
+		this.mouseArray = [];
+		if (this.mouse) {
+			this.mouseArray[0] = my.newVector({
+				name: this.type + '.' + this.name + '.mouse'
+			});
+			this.mouseArray[1] = my.newVector({
+				name: this.type + '.' + this.name + '.touch1'
+			});
+			for (var i = 2; i <= this.mouse; i++) {
+				this.mouseArray[i] = my.newVector({
+					name: this.type + '.' + this.name + '.touch' + i
+				});
+			}
 		}
-		if (items.mouse) {
-			this.mouse.set(items.mouse);
+		if (this.mouseArray.length > 0) {
+			if (typeof el.style.msTouchAction != 'undefined') {
+				el.style.msTouchAction = 'none';
+			}
 			this.addMouseMove();
 		}
 		else {
 			this.removeMouseMove();
 		}
+
 		return this;
 	};
 	/**
-Adds a mousemove event listener to the element
+Adds event listeners to the element
 @method addMouseMove
 @return This
 @chainable
 @private
 **/
 	my.PageElement.prototype.addMouseMove = function() {
-		var element,
-			test;
-		element = this.getElement();
-		element.removeEventListener('mousemove', this.handleMouseMove, false);
-		element.addEventListener('mousemove', this.handleMouseMove, false);
-		element.removeEventListener('mouseout', this.handleMouseOut, false);
-		element.removeEventListener('mouseleave', this.handleMouseOut, false);
-		element.setAttribute('onmouseout', 'return;');
-		test = typeof element.onmouseout == 'function';
-		element.setAttribute('onmouseout', null);
-		if (test) {
-			element.addEventListener('mouseout', this.handleMouseOut, false);
+		var el = this.getElement();
+
+		this.removeMouseMove();
+
+		if (navigator.pointerEnabled || navigator.msPointerEnabled) {
+			el.addEventListener('pointerdown', this.handleMouseIn, false);
+			el.addEventListener('pointerover', this.handleMouseIn, false);
+			el.addEventListener('pointermove', this.handleMouseMove, false);
+			el.addEventListener('pointerup', this.handleMouseOut, false);
+			el.addEventListener('pointerout', this.handleMouseOut, false);
+			el.addEventListener('pointercancel', this.handleMouseOut, false);
+			el.addEventListener('lostpointercapture', this.handleMouseOut, false);
 		}
 		else {
-			element.addEventListener('mouseleave', this.handleMouseOut, false);
+			el.addEventListener('mousedown', this.handleMouseIn, false);
+			el.addEventListener('mouseover', this.handleMouseIn, false);
+			el.addEventListener('mouseenter', this.handleMouseIn, false);
+			el.addEventListener('touchstart', this.handleMouseIn, false);
+			el.addEventListener('touchenter', this.handleMouseIn, false);
+			el.addEventListener('mousemove', this.handleMouseMove, false);
+			el.addEventListener('touchmove', this.handleMouseMove, false);
+			el.addEventListener('mouseup', this.handleMouseOut, false);
+			el.addEventListener('mouseout', this.handleMouseOut, false);
+			el.addEventListener('mouseleave', this.handleMouseOut, false);
+			el.addEventListener('touchend', this.handleMouseOut, false);
+			el.addEventListener('touchleave', this.handleMouseOut, false);
+			el.addEventListener('touchcancel', this.handleMouseOut, false);
 		}
+
 		return this;
 	};
 	/**
-Remove the mousemove event listener from the element
+Remove event listeners from the element
 @method removeMouseMove
 @return This
 @chainable
 @private
 **/
 	my.PageElement.prototype.removeMouseMove = function() {
-		var element = this.getElement();
-		element.removeEventListener('mousemove', this.handleMouseMove, false);
-		element.removeEventListener('mouseout', this.handleMouseOut, false);
-		element.removeEventListener('mouseleave', this.handleMouseOut, false);
+		var el = this.getElement();
+
+		if (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
+			el.removeEventListener('pointerdown', this.handleMouseIn, false);
+			el.removeEventListener('pointerover', this.handleMouseIn, false);
+			el.removeEventListener('pointermove', this.handleMouseMove, false);
+			el.removeEventListener('pointerup', this.handleMouseOut, false);
+			el.removeEventListener('pointerout', this.handleMouseOut, false);
+			el.removeEventListener('pointercancel', this.handleMouseOut, false);
+			el.removeEventListener('lostpointercapture', this.handleMouseOut, false);
+		}
+		else {
+			el.removeEventListener('mousedown', this.handleMouseIn, false);
+			el.removeEventListener('mouseover', this.handleMouseIn, false);
+			el.removeEventListener('mouseenter', this.handleMouseIn, false);
+			el.removeEventListener('touchstart', this.handleMouseIn, false);
+			el.removeEventListener('touchenter', this.handleMouseIn, false);
+			el.removeEventListener('mousemove', this.handleMouseMove, false);
+			el.removeEventListener('touchmove', this.handleMouseMove, false);
+			el.removeEventListener('mouseup', this.handleMouseOut, false);
+			el.removeEventListener('mouseout', this.handleMouseOut, false);
+			el.removeEventListener('mouseleave', this.handleMouseOut, false);
+			el.removeEventListener('touchend', this.handleMouseOut, false);
+			el.removeEventListener('touchleave', this.handleMouseOut, false);
+			el.removeEventListener('touchcancel', this.handleMouseOut, false);
+		}
+
 		return this;
 	};
 
@@ -3063,10 +3294,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			// finalise stuff for this Pad
 			this.setDisplayOffsets();
 			this.setAccessibility(items);
-			//items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
-			this.initMouse({
-				mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
-			});
+			this.initMouse(items.mouse || 1);
 			this.filtersPadInit();
 			this.padStacksConstructor(items);
 

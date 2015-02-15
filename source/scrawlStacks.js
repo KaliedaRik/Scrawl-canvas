@@ -877,11 +877,6 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			if (my.xto(items.handleX, items.handleY, items.handle)) {
 				this.setTransformOrigin();
 			}
-			if (my.xt(items.mouse)) {
-				this.initMouse({
-					mouse: items.mouse
-				});
-			}
 			if (my.xt(items.group)) {
 				this.setGroupAttribute(items);
 			}
@@ -1887,9 +1882,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.work.perspective = my.newVector({
 					name: this.type + '.' + this.name + '.work.perspective'
 				});
-				this.initMouse({
-					mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
-				});
+				this.initMouse(items.mouse || 1);
 				this.groups = [this.name];
 				my.newElementGroup({
 					name: this.name,
@@ -2288,9 +2281,7 @@ Get dimensions of Stack
 				my.elm[this.name] = items.domElement;
 				my.pushUnique(my.elementnames, this.name);
 				this.setDisplayOffsets();
-				this.initMouse({
-					mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
-				});
+				this.initMouse(items.mouse || 0);
 				this.setStyles(items);
 				this.setTransformOrigin();
 				if (this.group) {

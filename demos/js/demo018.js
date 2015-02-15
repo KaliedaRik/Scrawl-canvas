@@ -418,7 +418,7 @@ var mycode = function() {
 			here = myPad.getMouse();
 			myColor = peacock.getImageDataValue(here);
 			titles.style.backgroundColor = (here.active && myColor) ? myColor : 'transparent';
-			message.innerHTML = 'x: ' + here.x + '; y: ' + here.y + '; color: ' + myColor;
+			message.innerHTML = (here.active) ? 'x: ' + here.x + '; y: ' + here.y + '; color: ' + myColor + '; active: ' + here.active + '; vector: ' + here.name : 'Move mouse over canvas';
 
 			//hide-start
 			testNow = Date.now();

@@ -240,7 +240,6 @@ var mycode = function() {
 
 //module loading and initialization function
 scrawl.loadModules({
-	// path: '../min/',
 	path: '../source/',
 	minified: false,
 	modules: ['stacks', 'animation'],
