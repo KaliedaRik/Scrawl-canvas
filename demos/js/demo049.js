@@ -14,7 +14,8 @@ var mycode = function() {
 		entityList = ['Air', 'Bone', 'Clay', 'Fire', 'Metal', 'Radiance', 'Rock', 'Smoke', 'Water', 'Wood'],
 		myGroup,
 		getIcon,
-		dropIcon;
+		dropIcon,
+		stopE;
 
 	//import inmages into scrawl library
 	scrawl.getImagesByClass('demo049');
@@ -39,28 +40,28 @@ var mycode = function() {
 	}
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getIcon = function(e) {
+		stopE(e);
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropIcon = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getIcon, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropIcon, false);
+	scrawl.addListener('down', getIcon, scrawl.canvas.mycanvas);
+	scrawl.addListener('up', dropIcon, scrawl.canvas.mycanvas);
 
 	//animation object
 	scrawl.newAnimation({

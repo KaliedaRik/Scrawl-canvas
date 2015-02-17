@@ -671,6 +671,7 @@ Valid identifier Strings include:
 * __fn__ for Function objects
 * __arr__ for Array objects
 * __obj__ for Object objects (excluding DOM objects)
+* __dom__ for DOM objects
 * __date__ for Date objects
 * __vector__ for Scrawl Vector objects
 * __quaternion__ for Scrawl Quaternion objects
@@ -715,6 +716,8 @@ Valid identifier Strings include:
 					switch (slice[1]) {
 						case 'date':
 							return (Object.prototype.toString.call(slice[0]) === '[object Date]') ? true : false;
+						case 'dom':
+							return (slice[0].querySelector && slice[0].dispatchEvent) ? true : false;
 						case 'img':
 							return (Object.prototype.toString.call(slice[0]) === '[object HTMLImageElement]') ? true : false;
 						default:
@@ -1105,6 +1108,166 @@ A __utility__ function to subtract a percent string from another
 		a = parseFloat(a);
 		b = parseFloat(b);
 		return (a - b) + '%';
+	};
+	/**
+Adds event listeners to the element
+@method addListener
+@param {String} evt - one from: 'up', 'down', 'enter', 'leave', 'move'
+@param {Function} fn - function to be called when event triggers
+@param {String} targ - either a querySelectorAll string, or a DOM element
+@return true on success; false otherwise
+**/
+	my.addListener = function(evt, fn, targ) {
+		var targets, i, iz, nav;
+		if (my.contains(['up', 'down', 'move', 'enter', 'leave'], evt) && my.isa(fn, 'fn') && (my.isa(targ, 'str') || my.isa(targ, 'dom'))) {
+			if (targ.substring) {
+				targets = document.body.querySelectorAll(targ);
+			}
+			else {
+				targets = [targ];
+			}
+
+			my.removeListener(evt, fn, targ);
+
+			nav = (navigator.pointerEnabled || navigator.msPointerEnabled) ? true : false;
+
+			for (i = 0, iz = targets.length; i < iz; i++) {
+				switch (evt) {
+					case 'leave':
+						if (nav) {
+							targets[i].addEventListener('pointerout', fn, false);
+							targets[i].addEventListener('pointercancel', fn, false);
+							targets[i].addEventListener('lostpointercapture', fn, false);
+						}
+						else {
+							targets[i].addEventListener('mouseout', fn, false);
+							targets[i].addEventListener('mouseleave', fn, false);
+							targets[i].addEventListener('touchleave', fn, false);
+							targets[i].addEventListener('touchcancel', fn, false);
+						}
+						break;
+					case 'up':
+						if (nav) {
+							targets[i].addEventListener('pointerup', fn, false);
+						}
+						else {
+							targets[i].addEventListener('mouseup', fn, false);
+							targets[i].addEventListener('touchend', fn, false);
+						}
+						break;
+					case 'enter':
+						if (nav) {
+							targets[i].addEventListener('pointerover', fn, false);
+						}
+						else {
+							targets[i].addEventListener('mouseover', fn, false);
+							targets[i].addEventListener('mouseenter', fn, false);
+							targets[i].addEventListener('touchenter', fn, false);
+						}
+						break;
+					case 'down':
+						if (nav) {
+							targets[i].addEventListener('pointerdown', fn, false);
+							targets[i].addEventListener('pointerover', fn, false);
+						}
+						else {
+							targets[i].addEventListener('mousedown', fn, false);
+							targets[i].addEventListener('touchstart', fn, false);
+						}
+						break;
+					case 'move':
+						if (nav) {
+							targets[i].addEventListener('pointermove', fn, false);
+						}
+						else {
+							targets[i].addEventListener('mousemove', fn, false);
+							targets[i].addEventListener('touchmove', fn, false);
+						}
+						break;
+				}
+			}
+			return true;
+		}
+		return false;
+	};
+	/**
+Remove event listeners from the element
+@method removeListener
+@param {String} evt - one from: 'up', 'down', 'enter', 'leave', 'move'
+@param {Function} fn - function to be called when event triggers
+@param {String} targ - either a querySelectorAll string, or a DOM element
+@return true on success; false otherwise
+**/
+	my.removeListener = function(evt, fn, targ) {
+		var targets, i, iz, nav;
+		if (my.contains(['up', 'down', 'move', 'enter', 'leave'], evt) && my.isa(fn, 'fn') && (my.isa(targ, 'str') || my.isa(targ, 'dom'))) {
+			if (targ.substring) {
+				targets = document.body.querySelectorAll(targ);
+			}
+			else {
+				targets = [targ];
+			}
+
+			nav = (navigator.pointerEnabled || navigator.msPointerEnabled) ? true : false;
+
+			for (i = 0, iz = targets.length; i < iz; i++) {
+				switch (evt) {
+					case 'leave':
+						if (nav) {
+							targets[i].removeEventListener('pointerout', fn, false);
+							targets[i].removeEventListener('pointercancel', fn, false);
+							targets[i].removeEventListener('lostpointercapture', fn, false);
+						}
+						else {
+							targets[i].removeEventListener('mouseout', fn, false);
+							targets[i].removeEventListener('mouseleave', fn, false);
+							targets[i].removeEventListener('touchleave', fn, false);
+							targets[i].removeEventListener('touchcancel', fn, false);
+						}
+						break;
+					case 'up':
+						if (nav) {
+							targets[i].removeEventListener('pointerup', fn, false);
+						}
+						else {
+							targets[i].removeEventListener('mouseup', fn, false);
+							targets[i].removeEventListener('touchend', fn, false);
+						}
+						break;
+					case 'enter':
+						if (nav) {
+							targets[i].removeEventListener('pointerover', fn, false);
+						}
+						else {
+							targets[i].removeEventListener('mouseover', fn, false);
+							targets[i].removeEventListener('mouseenter', fn, false);
+							targets[i].removeEventListener('touchenter', fn, false);
+						}
+						break;
+					case 'down':
+						if (nav) {
+							targets[i].removeEventListener('pointerdown', fn, false);
+							targets[i].removeEventListener('pointerover', fn, false);
+						}
+						else {
+							targets[i].removeEventListener('mousedown', fn, false);
+							targets[i].removeEventListener('touchstart', fn, false);
+						}
+						break;
+					case 'move':
+						if (nav) {
+							targets[i].removeEventListener('pointermove', fn, false);
+						}
+						else {
+							targets[i].removeEventListener('mousemove', fn, false);
+							targets[i].removeEventListener('touchmove', fn, false);
+						}
+						break;
+				}
+			}
+			return true;
+		}
+		return false;
 	};
 	/**
 A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects - see Pad.addNewCell() for more details
@@ -2499,8 +2662,8 @@ Takes into account lock flag settings
 		if (this.pivot === 'mouse') {
 			cell = my.cell[cell];
 			pad = my.pad[cell.pad];
-			mouse = this.correctCoordinates(pad.mouse, cell);
-			if (!my.xta(this.oldX, this.oldY)) {
+			mouse = this.correctCoordinates(pad.mouseArray[this.mouseIndex], cell);
+			if (this.oldX == null && this.oldY == null) { //jshint ignore:line
 				this.oldX = this.start.x;
 				this.oldY = this.start.y;
 			}
@@ -2709,8 +2872,6 @@ Augments Base.set() to allow the setting of DOM element dimension values
 
 (The stack module replaces this core function rather than augmenting it via a hook function)
 
-Do not use this function to change mouse/mouseArray settings
-
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -2735,6 +2896,9 @@ Do not use this function to change mouse/mouseArray settings
 				delete this.oldX;
 				delete this.oldY;
 			}
+		}
+		if (my.xt(items.mouse)) {
+			this.initMouse(items.mouse);
 		}
 		if (my.xto(items.title, items.comment)) {
 			this.setAccessibility(items);
@@ -3096,7 +3260,7 @@ Constructor helper function
 @private
 **/
 	my.PageElement.prototype.initMouse = function(item) {
-		var el = this.getElement();
+		var i, iz, el = this.getElement();
 		this.mouse = my.xt(item) ? item : 0;
 		this.mouseArray = [];
 		if (this.mouse) {
@@ -3106,7 +3270,7 @@ Constructor helper function
 			this.mouseArray[1] = my.newVector({
 				name: this.type + '.' + this.name + '.touch1'
 			});
-			for (var i = 2; i <= this.mouse; i++) {
+			for (i = 2; i <= this.mouse; i++) {
 				this.mouseArray[i] = my.newVector({
 					name: this.type + '.' + this.name + '.touch' + i
 				});
@@ -3121,6 +3285,9 @@ Constructor helper function
 		else {
 			this.removeMouseMove();
 		}
+		for (i = 0, iz = this.mouseArray.length; i < iz; i++) {
+			this.mouseArray[i].order = i;
+		}
 
 		return this;
 	};
@@ -3133,34 +3300,11 @@ Adds event listeners to the element
 **/
 	my.PageElement.prototype.addMouseMove = function() {
 		var el = this.getElement();
-
-		this.removeMouseMove();
-
-		if (navigator.pointerEnabled || navigator.msPointerEnabled) {
-			el.addEventListener('pointerdown', this.handleMouseIn, false);
-			el.addEventListener('pointerover', this.handleMouseIn, false);
-			el.addEventListener('pointermove', this.handleMouseMove, false);
-			el.addEventListener('pointerup', this.handleMouseOut, false);
-			el.addEventListener('pointerout', this.handleMouseOut, false);
-			el.addEventListener('pointercancel', this.handleMouseOut, false);
-			el.addEventListener('lostpointercapture', this.handleMouseOut, false);
-		}
-		else {
-			el.addEventListener('mousedown', this.handleMouseIn, false);
-			el.addEventListener('mouseover', this.handleMouseIn, false);
-			el.addEventListener('mouseenter', this.handleMouseIn, false);
-			el.addEventListener('touchstart', this.handleMouseIn, false);
-			el.addEventListener('touchenter', this.handleMouseIn, false);
-			el.addEventListener('mousemove', this.handleMouseMove, false);
-			el.addEventListener('touchmove', this.handleMouseMove, false);
-			el.addEventListener('mouseup', this.handleMouseOut, false);
-			el.addEventListener('mouseout', this.handleMouseOut, false);
-			el.addEventListener('mouseleave', this.handleMouseOut, false);
-			el.addEventListener('touchend', this.handleMouseOut, false);
-			el.addEventListener('touchleave', this.handleMouseOut, false);
-			el.addEventListener('touchcancel', this.handleMouseOut, false);
-		}
-
+		my.addListener('up', this.handleMouseOut, el);
+		my.addListener('down', this.handleMouseIn, el);
+		my.addListener('move', this.handleMouseMove, el);
+		my.addListener('enter', this.handleMouseIn, el);
+		my.addListener('leave', this.handleMouseOut, el);
 		return this;
 	};
 	/**
@@ -3172,32 +3316,11 @@ Remove event listeners from the element
 **/
 	my.PageElement.prototype.removeMouseMove = function() {
 		var el = this.getElement();
-
-		if (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
-			el.removeEventListener('pointerdown', this.handleMouseIn, false);
-			el.removeEventListener('pointerover', this.handleMouseIn, false);
-			el.removeEventListener('pointermove', this.handleMouseMove, false);
-			el.removeEventListener('pointerup', this.handleMouseOut, false);
-			el.removeEventListener('pointerout', this.handleMouseOut, false);
-			el.removeEventListener('pointercancel', this.handleMouseOut, false);
-			el.removeEventListener('lostpointercapture', this.handleMouseOut, false);
-		}
-		else {
-			el.removeEventListener('mousedown', this.handleMouseIn, false);
-			el.removeEventListener('mouseover', this.handleMouseIn, false);
-			el.removeEventListener('mouseenter', this.handleMouseIn, false);
-			el.removeEventListener('touchstart', this.handleMouseIn, false);
-			el.removeEventListener('touchenter', this.handleMouseIn, false);
-			el.removeEventListener('mousemove', this.handleMouseMove, false);
-			el.removeEventListener('touchmove', this.handleMouseMove, false);
-			el.removeEventListener('mouseup', this.handleMouseOut, false);
-			el.removeEventListener('mouseout', this.handleMouseOut, false);
-			el.removeEventListener('mouseleave', this.handleMouseOut, false);
-			el.removeEventListener('touchend', this.handleMouseOut, false);
-			el.removeEventListener('touchleave', this.handleMouseOut, false);
-			el.removeEventListener('touchcancel', this.handleMouseOut, false);
-		}
-
+		my.removeListener('up', this.handleMouseOut, el);
+		my.removeListener('down', this.handleMouseIn, el);
+		my.removeListener('move', this.handleMouseMove, el);
+		my.removeListener('enter', this.handleMouseIn, el);
+		my.removeListener('leave', this.handleMouseOut, el);
 		return this;
 	};
 
@@ -5838,6 +5961,7 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 		this.method = my.xtGet(items.method, my.d[this.type].method);
 		this.collisionsEntityConstructor(items);
 		this.filtersEntityInit(items);
+		this.mouseIndex = my.xtGet(items.mouseIndex, 0);
 		return this;
 	};
 	my.Entity.prototype = Object.create(my.Position.prototype);
@@ -5920,6 +6044,15 @@ CTXNAME of this Entity's Context object
 @private
 **/
 		context: '',
+		/**
+Index of mouse vector to use when pivot === 'mouse'
+
+The Pad.mouseArray attribute can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: 0 (for the mouse cursor vector)
+@property mouseIndex
+@type Number
+@default 0
+**/
+		mouseIndex: 0,
 		/**
 GROUPNAME String for this entity's default group
 
@@ -6560,7 +6693,8 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		coordinate = this.correctCoordinates(coordinate, cell);
 		this.oldX = coordinate.x || 0;
 		this.oldY = coordinate.y || 0;
-		this.realPivot = this.pivot;
+		this.oldPivot = this.pivot;
+		this.mouseIndex = my.xtGet(items.order, -1);
 		this.pivot = 'mouse';
 		this.order += this.order + 9999;
 		return this;
@@ -6575,12 +6709,13 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 	my.Entity.prototype.dropEntity = function(item) {
 		var order = this.order;
 		this.set({
-			pivot: my.xtGet(item, this.realPivot, false),
+			pivot: my.xtGet(item, this.oldPivot, false),
 			order: (order >= 9999) ? order - 9999 : 0
 		});
-		delete this.realPivot;
-		delete this.oldX;
-		delete this.oldY;
+		this.oldPivot = null;
+		this.oldX = null;
+		this.oldY = null;
+		this.mouseIndex = null;
 		return this;
 	};
 	/**
