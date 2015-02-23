@@ -127,7 +127,7 @@ var mycode = function() {
 			selectImage();
 		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mouseup', checkClick, false);
+	scrawl.addListener('up', checkClick, scrawl.canvas.mycanvas);
 
 	//animation function
 	updateCarousel = function() {

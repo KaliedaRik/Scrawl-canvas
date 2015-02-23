@@ -128,7 +128,7 @@ var mycode = function() {
 			}
 		}
 	};
-	myCanvas.addEventListener('click', startNewTween, false);
+	scrawl.addListener('up', startNewTween, myCanvas);
 
 	//animation object
 	scrawl.newAnimation({

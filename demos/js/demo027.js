@@ -13,6 +13,7 @@ var mycode = function() {
 		myPad = scrawl.pad.mycanvas,
 		myGroup = scrawl.group[myPad.base],
 		star,
+		stopE,
 		catchStar,
 		dropStar;
 
@@ -62,36 +63,35 @@ var mycode = function() {
 	});
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	catchStar = function(e) {
+		stopE(e);
+		here = myPad.getMouse();
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropStar = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', catchStar, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropStar, false);
+	scrawl.addListener('down', catchStar, scrawl.canvas.mycanvas);
+	scrawl.addListener('up', dropStar, scrawl.canvas.mycanvas);
+	scrawl.addListener('leave', dropStar, scrawl.canvas.mycanvas);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			here = myPad.getMouse();
-			if (!here.active && myEntity) {
-				dropStar();
-			}
+
 			star.setDelta({
 				roll: 1,
 			});

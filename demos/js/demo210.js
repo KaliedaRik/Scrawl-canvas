@@ -140,9 +140,12 @@ var mycode = function() {
 		e.returnValue = false;
 		scrawl.animation[e.target.id].run();
 	};
-	for (i = 0; i < 4; i++) {
-		scrawl.elm[buttons[i].name].addEventListener('click', moveButton, false);
-	}
+	scrawl.addListener('up', moveButton, [
+		scrawl.elm.button0,
+		scrawl.elm.button1,
+		scrawl.elm.button2,
+		scrawl.elm.button3
+	]);
 
 	//animation object
 	scrawl.newAnimation({

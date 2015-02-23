@@ -14,6 +14,7 @@ var mycode = function() {
 		bendy,
 		getWheel,
 		dropWheel,
+		stopE,
 		myEntity = false;
 
 	//define groups
@@ -83,28 +84,31 @@ var mycode = function() {
 	});
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getWheel = function(e) {
+		stopE(e);
+		here = scrawl.pad.mycanvas.getMouse();
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropWheel = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
-		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
+			bendy.buildPositions();
 		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getWheel, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, scrawl.canvas.mycanvas);
+	scrawl.addListener('up', dropWheel, scrawl.canvas.mycanvas);
+	scrawl.addListener('leave', dropWheel, scrawl.canvas.mycanvas);
 
 	//tweens
 	scrawl.newTween({
@@ -117,22 +121,16 @@ var mycode = function() {
 			pathPlace: 1
 		},
 		duration: 10000,
-		nextTween: 'goldTween',
+		count: true
 	}).run();
 	scrawl.animation.goldTween.clone({
 		name: 'pinkTween',
-		targets: scrawl.entity.pinkwheel,
-		nextTween: 'pinkTween',
+		targets: scrawl.entity.pinkwheel
 	}).run();
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			//get mouse coordinates
-			here = scrawl.pad.mycanvas.getMouse();
-			if (!here.active && myEntity) {
-				dropWheel();
-			}
 
 			//update curve
 			if (myEntity) {

@@ -83,7 +83,7 @@ var mycode = function() {
 		}
 		scrawl.animation.myanim.run();
 	}
-	document.addEventListener('mouseup', moveIn, false);
+	scrawl.addListener('up', moveIn, document);
 
 	//animation object
 	scrawl.newAnimation({

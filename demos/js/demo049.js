@@ -10,7 +10,10 @@ var mycode = function() {
 	//define variables
 	var myPad = scrawl.pad.mycanvas,
 		here,
+		myEntities = [],
+		myEntitiesCheck,
 		myEntity = false,
+		i, iz,
 		entityList = ['Air', 'Bone', 'Clay', 'Fire', 'Metal', 'Radiance', 'Rock', 'Smoke', 'Water', 'Wood'],
 		myGroup,
 		getIcon,
@@ -26,7 +29,7 @@ var mycode = function() {
 	});
 
 	//define entitys; get their image data
-	for (var i = 0, z = entityList.length; i < z; i++) {
+	for (i = 0, iz = entityList.length; i < iz; i++) {
 		scrawl.newPicture({
 			name: entityList[i],
 			source: 'button' + entityList[i],
@@ -48,28 +51,39 @@ var mycode = function() {
 	};
 	getIcon = function(e) {
 		stopE(e);
-		myEntity = myGroup.getEntityAt(here);
-		if (myEntity) {
-			myEntity.pickupEntity(here);
+		//here is an array of mouse vectors
+		here = myPad.getMouse(e);
+		for (i = 0, iz = here.length; i < iz; i++) {
+			myEntity = myGroup.getEntityAt(here[i]);
+			if (myEntity) {
+				scrawl.pushUnique(myEntities, myEntity.name);
+				myEntity.pickupEntity(here[i]);
+			}
 		}
 	};
 	dropIcon = function(e) {
 		stopE(e);
-		if (myEntity) {
-			myEntity.dropEntity();
-			myEntity = false;
+		if (myEntities.length > 0) {
+			//here is an array of mouse vector id strings
+			here = myPad.getMouseIdFromEvent(e);
+			myEntitiesCheck = myEntities.slice();
+			for (i = 0, iz = myEntitiesCheck.length; i < iz; i++) {
+				myEntity = scrawl.entity[myEntitiesCheck[i]];
+				if (scrawl.contains(here, myEntity.mouseIndex)) {
+					myEntity.dropEntity();
+					scrawl.removeItem(myEntities, myEntity.name);
+				}
+			}
 		}
 	};
 	scrawl.addListener('down', getIcon, scrawl.canvas.mycanvas);
 	scrawl.addListener('up', dropIcon, scrawl.canvas.mycanvas);
+	scrawl.addListener('leave', dropIcon, scrawl.canvas.mycanvas);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			here = myPad.getMouse();
-			if (!here.active && myEntity) {
-				dropIcon();
-			}
+
 			scrawl.render();
 
 			//hide-start

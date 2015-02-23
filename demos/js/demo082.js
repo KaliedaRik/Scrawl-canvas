@@ -122,8 +122,8 @@ var mycode = function() {
 			e.preventDefault();
 		}
 	};
-	canvas.addEventListener('mousedown', getText, false);
-	canvas.addEventListener('mouseup', dropText, false);
+	scrawl.addListener('down', getText, canvas);
+	scrawl.addListener('up', dropText, canvas);
 
 	updateText = function(e) { //changing the text content
 		displayText.set({

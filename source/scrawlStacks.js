@@ -1882,7 +1882,6 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.work.perspective = my.newVector({
 					name: this.type + '.' + this.name + '.work.perspective'
 				});
-				this.initMouse(items.mouse || 1);
 				this.groups = [this.name];
 				my.newElementGroup({
 					name: this.name,
@@ -1899,6 +1898,11 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 					my.stk[this.name].style.margin = '0';
 					my.stk[this.name].style.boxSizing = 'border-box';
 					items.stackElement.style.position = 'absolute';
+				}
+				this.interactive = my.xtGet(items.interactive, true);
+				this.removeMouseMove();
+				if (this.interactive) {
+					this.addMouseMove();
 				}
 				return this;
 			}
@@ -2281,12 +2285,16 @@ Get dimensions of Stack
 				my.elm[this.name] = items.domElement;
 				my.pushUnique(my.elementnames, this.name);
 				this.setDisplayOffsets();
-				this.initMouse(items.mouse || 0);
 				this.setStyles(items);
 				this.setTransformOrigin();
 				if (this.group) {
 					my.elm[this.name].style.margin = '0';
 					my.elm[this.name].style.boxSizing = 'border-box';
+				}
+				this.interactive = my.xtGet(items.interactive, false);
+				this.removeMouseMove();
+				if (this.interactive) {
+					this.addMouseMove();
 				}
 				return this;
 			}

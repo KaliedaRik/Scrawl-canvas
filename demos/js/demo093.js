@@ -59,7 +59,8 @@ var mycode = function() {
 		counter++;
 		scrawl.newWheel({
 			name: 'drop' + counter,
-			start: here,
+			startX: here.x,
+			startY: here.y,
 			radius: 1,
 			method: 'none',
 			lineWidth: 4,
@@ -67,7 +68,7 @@ var mycode = function() {
 			order: counter,
 		});
 	};
-	canvas.addEventListener('mouseup', newRing, false);
+	scrawl.addListener('up', newRing, canvas);
 
 	//animation object
 	scrawl.newAnimation({

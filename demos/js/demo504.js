@@ -210,7 +210,7 @@ var mycode = function() {
 			myPad.setDisplayOffsets();
 		}
 	};
-	myCanvas.addEventListener('mouseup', handleEntity, false);
+	scrawl.addListener('up', handleEntity, myCanvas);
 
 	//animation object
 	scrawl.newAnimation({

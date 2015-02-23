@@ -17,8 +17,6 @@ var mycode = function() {
 		totalBunnies = 0,
 		group,
 		bunny,
-		//moveEntitys,
-		//checkBounds,
 		myEntity,
 		coord,
 		hits,
@@ -91,8 +89,7 @@ var mycode = function() {
 		}
 		totalBunnies += 10;
 	};
-	canvas.addEventListener('mouseup', addBunnies, false);
-
+	scrawl.addListener('up', addBunnies, canvas);
 	//initialize scene
 	addBunnies();
 

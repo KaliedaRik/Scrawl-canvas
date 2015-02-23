@@ -109,9 +109,9 @@ var mycode = function() {
 			currentEntity = false;
 		}
 	};
-	canvas.addEventListener('mousedown', pickupEntity, false);
-	document.body.addEventListener('mouseup', dropEntity, false);
-	document.body.addEventListener('mouseleave', dropEntity, false);
+	scrawl.addListener('down', pickupEntity, canvas);
+	scrawl.addListener('up', dropEntity, [canvas, document.body]);
+	scrawl.addListener('leave', dropEntity, document.body);
 
 	//animation object
 	scrawl.newAnimation({

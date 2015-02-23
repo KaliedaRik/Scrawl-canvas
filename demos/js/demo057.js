@@ -21,6 +21,7 @@ var mycode = function() {
 		startDrawing,
 		keepDrawing,
 		endDrawing,
+		stopE,
 		spinLines;
 
 	//setup canvas
@@ -45,7 +46,15 @@ var mycode = function() {
 	});
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	startDrawing = function(e) {
+		stopE(e);
+		here = myPad.getMouse();
 		mouseDown = true;
 		currentEntity = scrawl.newShape({
 			start: here.getData(),
@@ -59,31 +68,26 @@ var mycode = function() {
 			}).name,
 			data: 'l0,0 ',
 			group: 'lines',
+			order: lines.entitys.length
 		});
 		sX = here.x;
 		sY = here.y;
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', startDrawing, false);
+	scrawl.addListener('down', startDrawing, scrawl.canvas.mycanvas);
 
 	endDrawing = function(e) {
+		stopE(e);
 		if (currentEntity) {
 			currentEntity = false;
 		}
 		mouseDown = false;
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mouseup', endDrawing, false);
+	scrawl.addListener('up', endDrawing, scrawl.canvas.mycanvas);
 
 	//animation functions
 	keepDrawing = function() {
 		if (currentEntity) {
+			here = myPad.getMouse();
 			if (here.x !== sX || here.y !== sY) {
 				currentEntity.set({
 					data: currentEntity.data + ' ' + (here.x - sX) + ',' + (here.y - sY),
@@ -104,8 +108,7 @@ var mycode = function() {
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			here = myPad.getMouse();
-			if (here.active) {
+			if (myPad.getMouse().active) {
 				if (mouseDown) {
 					keepDrawing();
 				}

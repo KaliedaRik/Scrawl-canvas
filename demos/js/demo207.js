@@ -134,8 +134,8 @@ var mycode = function() {
 			e.preventDefault();
 		}
 	};
-	canvas.addEventListener('mousedown', getWheel, false);
-	canvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, canvas);
+	scrawl.addListener('up', dropWheel, canvas);
 
 	//button event listeners
 	moveButton = function(e) {

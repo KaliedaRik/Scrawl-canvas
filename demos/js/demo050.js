@@ -184,6 +184,7 @@ var mycode = function() {
 			currentObject = null;
 		}
 		else {
+			here = myPad.getMouse();
 			clickedObject = myGroup.getEntityAt(here);
 			if (clickedObject) {
 				currentObject = clickedObject.clone({
@@ -200,12 +201,11 @@ var mycode = function() {
 			}
 		}
 	};
-	myCanvas.addEventListener('mouseup', handleEntity, false);
+	scrawl.addListener('up', handleEntity, myCanvas);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			here = myPad.getMouse();
 			for (var i = 0, z = myGroup.entitys.length; i < z; i++) {
 				if (scrawl.entity[myGroup.entitys[i]].type === 'Path') {
 					scrawl.entity[myGroup.entitys[i]].setDelta({
@@ -223,6 +223,7 @@ var mycode = function() {
 					});
 				}
 			}
+			here = myPad.getMouse();
 			if (here.active) {
 				myCanvas.style.cursor = (myGroup.getEntityAt(here)) ? 'pointer' : 'auto';
 			}

@@ -13,6 +13,7 @@ var mycode = function() {
 		doLines,
 		getWheel,
 		dropWheel,
+		stopE,
 		myPos = 0,
 		dPos = 0.005,
 		length,
@@ -123,38 +124,36 @@ var mycode = function() {
 	};
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getWheel = function(e) {
+		stopE(e);
+		here = scrawl.pad.mycanvas.getMouse();
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropWheel = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getWheel, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, scrawl.canvas.mycanvas);
+	scrawl.addListener('up', dropWheel, scrawl.canvas.mycanvas);
+	scrawl.addListener('leave', dropWheel, scrawl.canvas.mycanvas);
 
 	length = scrawl.entity.mycurve.getPerimeterLength(true);
 
 	//animation object
 	scrawl.newAnimation({
 		fn: function() {
-			here = scrawl.pad.mycanvas.getMouse();
-			if (!here.active && myEntity) {
-				dropWheel();
-			}
 			if (myEntity) {
 				length = scrawl.entity.mycurve.getPerimeterLength(true);
 			}

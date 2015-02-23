@@ -103,7 +103,7 @@ var mycode = function() {
 		testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
 		//hide-end
 	};
-	canvas.addEventListener('click', toggleState, false);
+	scrawl.addListener('up', toggleState, canvas);
 
 	//hide-start
 	testNow = Date.now();

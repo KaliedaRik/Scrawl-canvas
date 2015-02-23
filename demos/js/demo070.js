@@ -71,8 +71,8 @@ var mycode = function() {
 			e.preventDefault();
 		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getPhrase, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropPhrase, false);
+	scrawl.addListener('down', getPhrase, scrawl.canvas.mycanvas);
+	scrawl.addListener('up', dropPhrase, scrawl.canvas.mycanvas);
 
 	//animation object
 	scrawl.newAnimation({

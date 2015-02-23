@@ -50,7 +50,7 @@ var mycode = function() {
 		}
 		totalBunnies += 100;
 	};
-	canvas.addEventListener('mouseup', addBunnies, false);
+	scrawl.addListener('up', addBunnies, canvas);
 
 	//animation (display loop) function
 	moveBunnies = function() {

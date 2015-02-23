@@ -193,7 +193,7 @@ var mycode = function() {
 			}
 		}
 	};
-	myCanvas.addEventListener('mouseup', handleEntity, false);
+	scrawl.addListener('up', handleEntity, myCanvas);
 
 	//animation object
 	scrawl.newAnimation({

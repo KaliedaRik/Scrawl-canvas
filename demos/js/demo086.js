@@ -482,7 +482,7 @@ var mycode = function() {
 			}
 		}
 	};
-	myCanvas.addEventListener('mouseup', changeGraph, false);
+	scrawl.addListener('up', changeGraph, myCanvas);
 
 	//animation object
 	scrawl.newAnimation({

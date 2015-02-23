@@ -1267,6 +1267,9 @@ Tween animation function
 							this.run();
 						}
 					}
+					else if (my.isa(this.count, 'bool') && this.count) {
+						this.run();
+					}
 					else {
 						this.runComplete();
 					}

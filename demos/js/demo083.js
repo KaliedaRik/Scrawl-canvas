@@ -144,8 +144,8 @@ var mycode = function() {
 			e.preventDefault();
 		}
 	};
-	canvas.addEventListener('mousedown', getWheel, false);
-	canvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, canvas);
+	scrawl.addListener('up', dropWheel, canvas);
 
 	//going to do the text transform 'raw' - painting directly onto the canvas's base cell
 	doTransform = function() {
