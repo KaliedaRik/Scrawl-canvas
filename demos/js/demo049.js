@@ -77,8 +77,7 @@ var mycode = function() {
 		}
 	};
 	scrawl.addListener('down', getIcon, scrawl.canvas.mycanvas);
-	scrawl.addListener('up', dropIcon, scrawl.canvas.mycanvas);
-	scrawl.addListener('leave', dropIcon, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropIcon, scrawl.canvas.mycanvas);
 
 	//animation object
 	scrawl.newAnimation({

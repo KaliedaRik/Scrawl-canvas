@@ -124,8 +124,7 @@ var mycode = function() {
 		}
 	};
 	scrawl.addListener('down', getWheel, scrawl.canvas.mycanvas);
-	scrawl.addListener('up', dropWheel, scrawl.canvas.mycanvas);
-	scrawl.addListener('leave', dropWheel, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropWheel, scrawl.canvas.mycanvas);
 
 	length = scrawl.entity.mycurve.getPerimeterLength(true);
 

@@ -13,7 +13,8 @@ var mycode = function() {
 		here,
 		dragGroup,
 		getPhrase,
-		dropPhrase;
+		dropPhrase,
+		stopE;
 
 	//define groups
 	dragGroup = scrawl.newGroup({
@@ -51,28 +52,28 @@ var mycode = function() {
 	});
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getPhrase = function(e) {
+		stopE(e);
 		myEntity = dragGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropPhrase = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	scrawl.addListener('down', getPhrase, scrawl.canvas.mycanvas);
-	scrawl.addListener('up', dropPhrase, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropPhrase, scrawl.canvas.mycanvas);
 
 	//animation object
 	scrawl.newAnimation({

@@ -19,6 +19,7 @@ var mycode = function() {
 		myText,
 		getText,
 		dropText,
+		stopE,
 		textInput,
 		sizeInput,
 		updateTextSize,
@@ -102,63 +103,56 @@ var mycode = function() {
 	};
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getText = function(e) { //text drag-and-drop
+		stopE(e);
 		myText = texts.getEntityAt(here);
 		if (myText) {
 			myText.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropText = function(e) {
+		stopE(e);
 		if (myText) {
 			myText.dropEntity();
 			myText = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	scrawl.addListener('down', getText, canvas);
-	scrawl.addListener('up', dropText, canvas);
+	scrawl.addListener(['up', 'leave'], dropText, canvas);
 
 	updateText = function(e) { //changing the text content
+		stopE(e);
 		displayText.set({
 			text: parseText(displayText.get('font'), textInput.value),
 		});
-		if (e) {
-			e.preventDefault();
-			e.returnValue = false;
-		}
 	};
-	textInput.addEventListener('keyup', updateText, false);
+	scrawl.addNativeListener('keyup', updateText, textInput);
 
 	updateTextSize = function(e) { //changing the text size
+		stopE(e);
 		displayText.set({
 			size: sizeInput.value,
 		});
 		displayText.set({
 			text: parseText(displayText.get('font'), textInput.value),
 		});
-		e.preventDefault();
-		e.returnValue = false;
 	};
-	sizeInput.addEventListener('input', updateTextSize, false); //for firefox real-time updating
-	sizeInput.addEventListener('change', updateTextSize, false);
+	scrawl.addNativeListener(['input', 'change'], updateTextSize, sizeInput);
 
 	updateTextWidth = function(e) { //changing the text width
+		stopE(e);
 		currentMaxWidth = widthInput.value;
 		displayText.set({
 			text: parseText(displayText.get('font'), textInput.value),
 		});
-		e.preventDefault();
-		e.returnValue = false;
 	};
-	widthInput.addEventListener('input', updateTextWidth, false); //for firefox real-time updating
-	widthInput.addEventListener('change', updateTextWidth, false);
+	scrawl.addNativeListener(['input', 'change'], updateTextWidth, widthInput);
 
 	updateText();
 

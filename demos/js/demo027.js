@@ -85,8 +85,7 @@ var mycode = function() {
 		}
 	};
 	scrawl.addListener('down', catchStar, scrawl.canvas.mycanvas);
-	scrawl.addListener('up', dropStar, scrawl.canvas.mycanvas);
-	scrawl.addListener('leave', dropStar, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropStar, scrawl.canvas.mycanvas);
 
 	//animation object
 	scrawl.newAnimation({

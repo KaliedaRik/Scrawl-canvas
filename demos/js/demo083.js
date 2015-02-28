@@ -21,7 +21,8 @@ var mycode = function() {
 		getWheel,
 		dropWheel,
 		doTransform,
-		updateScene;
+		updateScene,
+		stopE;
 
 	//add canvas to web page
 	scrawl.addCanvasToPage({
@@ -124,28 +125,28 @@ var mycode = function() {
 	scrawl.point.baseline_p3.setToFixed('wheel_5');
 
 	//event listeners, for drag-dropping the circles
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getWheel = function(e) {
+		stopE(e);
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropWheel = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	scrawl.addListener('down', getWheel, canvas);
-	scrawl.addListener('up', dropWheel, canvas);
+	scrawl.addListener(['up', 'leave'], dropWheel, canvas);
 
 	//going to do the text transform 'raw' - painting directly onto the canvas's base cell
 	doTransform = function() {

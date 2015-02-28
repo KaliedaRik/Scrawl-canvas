@@ -135,7 +135,7 @@ var mycode = function() {
 		}
 	};
 	scrawl.addListener('down', getWheel, canvas);
-	scrawl.addListener('up', dropWheel, canvas);
+	scrawl.addListener(['up', 'leave'], dropWheel, canvas);
 
 	//button event listeners
 	moveButton = function(e) {

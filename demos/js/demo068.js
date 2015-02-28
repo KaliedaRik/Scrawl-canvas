@@ -19,7 +19,8 @@ var mycode = function() {
 		handleFiles,
 		handleFile,
 		pickupEntity,
-		dropEntity;
+		dropEntity,
+		stopE;
 
 	//define groups
 	background = scrawl.newGroup({
@@ -44,15 +45,19 @@ var mycode = function() {
 	});
 
 	//event listener functions for dragging and dropping files onto canvas
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	drag = function(e) {
-		e.stopPropagation();
-		e.preventDefault();
+		stopE(e);
 	};
 	dragdrop = function(e) {
 		var dt = e.dataTransfer,
 			files = dt.files;
-		e.stopPropagation();
-		e.preventDefault();
+		stopE(e);
 		handleFiles(files);
 	};
 	handleFiles = function(files) {
@@ -81,16 +86,12 @@ var mycode = function() {
 		};
 		reader.readAsDataURL(file);
 	};
-	canvas.addEventListener("dragenter", drag, false);
-	canvas.addEventListener("dragover", drag, false);
-	canvas.addEventListener("drop", dragdrop, false);
+	scrawl.addNativeListener(['dragenter', 'dragover'], drag, canvas);
+	scrawl.addNativeListener('drop', dragdrop, canvas);
 
 	//event listeners for dragging and dropping entitys within the canvas
 	pickupEntity = function(e) {
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
+		stopE(e);
 		if (currentEntity) {
 			dropEntity();
 		}
@@ -100,18 +101,14 @@ var mycode = function() {
 		}
 	};
 	dropEntity = function(e) {
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
+		stopE(e);
 		if (currentEntity) {
 			currentEntity.dropEntity();
 			currentEntity = false;
 		}
 	};
 	scrawl.addListener('down', pickupEntity, canvas);
-	scrawl.addListener('up', dropEntity, [canvas, document.body]);
-	scrawl.addListener('leave', dropEntity, document.body);
+	scrawl.addListener(['up', 'leave'], dropEntity, canvas);
 
 	//animation object
 	scrawl.newAnimation({
