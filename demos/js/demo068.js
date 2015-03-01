@@ -23,11 +23,11 @@ var mycode = function() {
 		stopE;
 
 	//define groups
-	background = scrawl.newGroup({
+	background = scrawl.makeGroup({
 		name: 'background',
 		order: 0,
 	});
-	myImages = scrawl.newGroup({
+	myImages = scrawl.makeGroup({
 		name: 'myImages',
 		order: 1,
 	});

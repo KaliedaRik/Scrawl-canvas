@@ -84,11 +84,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			deltaTime: 0,
 		};
 		my.workphys = {
-			v1: my.newVector(),
-			v2: my.newVector(),
-			v3: my.newVector(),
-			v4: my.newVector(),
-			v5: my.newVector(),
+			v1: my.makeVector(),
+			v2: my.makeVector(),
+			v3: my.makeVector(),
+			v4: my.makeVector(),
+			v5: my.makeVector(),
 		};
 		/**
 	A __general__ function to undertake a round of calculations for Spring objects
@@ -198,12 +198,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Particle = function(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.place = my.newVector();
-			this.work.place = my.newVector();
-			this.velocity = my.newVector();
-			this.work.velocity = my.newVector();
+			this.place = my.makeVector();
+			this.work.place = my.makeVector();
+			this.velocity = my.makeVector();
+			this.work.velocity = my.makeVector();
 			this.set(items);
-			this.priorPlace = my.newVector(this.place);
+			this.priorPlace = my.makeVector(this.place);
 			this.engine = items.engine || 'euler';
 			this.userVar = items.userVar || {};
 			this.mobile = (my.isa(items.mobile, 'bool')) ? items.mobile : true;
@@ -215,7 +215,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			if (items.radius || items.area) {
 				this.area = items.area || 2 * Math.PI * this.get('radius') * this.get('radius') || my.d.Particle.area;
 			}
-			this.load = my.newVector();
+			this.load = my.makeVector();
 			my.entity[this.name] = this;
 			my.pushUnique(my.entitynames, this.name);
 			this.group = my.Entity.prototype.getGroup.call(this, items);
@@ -352,7 +352,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	@default Zero vector
 	@private
 	**/
-			load: my.newVector(),
+			load: my.makeVector(),
 		};
 		my.mergeInto(my.d.Particle, my.d.Scrawl);
 		/**
@@ -369,7 +369,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
 			if (!this.place.type || this.place.type !== 'Vector') {
-				this.place = my.newVector(items.place || this.place);
+				this.place = my.makeVector(items.place || this.place);
 			}
 			if (my.xto(items.start, items.startX, items.startY)) {
 				temp = my.safeObject(items.start);
@@ -377,7 +377,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				this.place.y = my.xtGet(items.startY, temp.y, this.place.y);
 			}
 			if (!this.velocity.type || this.velocity.type !== 'Vector') {
-				this.velocity = my.newVector(items.velocity || this.velocity);
+				this.velocity = my.makeVector(items.velocity || this.velocity);
 			}
 			if (my.xto(items.delta, items.deltaX, items.deltaY, items.velocity)) {
 				temp = my.safeObject(items.delta);
@@ -398,8 +398,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				i,
 				iz;
 			a = my.Base.prototype.clone.call(this, items);
-			a.place = my.newVector(a.place);
-			a.velocity = my.newVector(a.velocity);
+			a.place = my.makeVector(a.place);
+			a.velocity = my.makeVector(a.velocity);
 			a.forces = [];
 			for (i = 0, iz = this.forces.length; i < iz; i++) {
 				a.forces.push(this.forces[i]);
@@ -714,8 +714,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					this.restLength = r.getMagnitude();
 				}
 				this.currentLength = items.currentLength || this.restLength;
-				this.force = my.newVector();
-				this.work.force = my.newVector();
+				this.force = my.makeVector();
+				this.work.force = my.makeVector();
 				my.spring[this.name] = this;
 				my.pushUnique(my.springnames, this.name);
 				return this;
@@ -872,7 +872,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 
 		function(ball){
 			//get or build a Vector object to hold the result
-			var result = scrawl.newVector();	//creating the vector
+			var result = scrawl.makeVector();	//creating the vector
 			var result = scrawl.workphys.v1;	//using an existing work vector: scrawl.workphys.v1 to v5
 
 			//calculate the force - Particle attributes are available via the _ball_ argument

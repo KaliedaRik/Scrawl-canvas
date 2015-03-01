@@ -15,39 +15,39 @@ var mycode = function() {
 		scaleDelta = 0.002,
 		tiggy,
 		myStarts = [
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 100,
 				y: 100
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 300,
 				y: 100
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 500,
 				y: 100
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 500,
 				y: 300
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 300,
 				y: 300
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 100,
 				y: 300
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 100,
 				y: 500
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 300,
 				y: 500
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 500,
 				y: 500
 			})

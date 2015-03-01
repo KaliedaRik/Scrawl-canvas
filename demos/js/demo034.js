@@ -9,7 +9,7 @@ var mycode = function() {
 
 	//define variables
 	var here,
-		there = scrawl.newVector(),
+		there = scrawl.makeVector(),
 		coordinates = [],
 		data,
 		color = [],
@@ -51,7 +51,7 @@ var mycode = function() {
 		color: '#8888ff',
 		stop: 0.9999
 	});
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'gradient',
 		startX: -100,
 		startY: -100,

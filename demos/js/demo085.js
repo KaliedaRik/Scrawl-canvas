@@ -66,7 +66,7 @@ var mycode = function() {
 
 
 	//code here
-	cellGrad = scrawl.newRadialGradient({
+	cellGrad = scrawl.makeRadialGradient({
 		name: 'g1',
 		lockTo: false,
 		startX: 400,
@@ -92,7 +92,7 @@ var mycode = function() {
 			stop: 1
         }, ],
 	});
-	entityGrad = scrawl.newRadialGradient({
+	entityGrad = scrawl.makeRadialGradient({
 		name: 'g2',
 		lockTo: true,
 		startX: 100,

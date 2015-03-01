@@ -93,16 +93,16 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 									}
 									break;
 								case 'group':
-									my.newGroup(a);
+									my.makeGroup(a);
 									break;
 								case 'path':
 									my.makePath(a);
 									break;
 								case 'gradient':
-									my.newGradient(a);
+									my.makeGradient(a);
 									break;
 								case 'radialgradient':
-									my.newRadialGradient(a);
+									my.makeRadialGradient(a);
 									break;
 								default:
 									new my[a.type](a);

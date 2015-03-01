@@ -16,7 +16,7 @@ var mycode = function() {
 	}).makeCurrent();
 
 	//define designs (gradients)
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'grad_1',
 		setToEntity: true,
 		startX: '-50%',

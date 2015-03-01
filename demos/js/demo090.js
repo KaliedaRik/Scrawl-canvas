@@ -191,7 +191,7 @@ var mycode = function() {
 				stop: i + 0.005
 			});
 		}
-		scrawl.newRadialGradient({
+		scrawl.makeRadialGradient({
 			name: 'myradial',
 			startX: '50%',
 			startY: '50%',

@@ -61,7 +61,7 @@ var mycode = function() {
 	document.getElementById('flip').value = 'normal';
 
 	//code here
-	cellGrad = scrawl.newGradient({
+	cellGrad = scrawl.makeGradient({
 		name: 'g1',
 		lockTo: false,
 		color: [{
@@ -81,7 +81,7 @@ var mycode = function() {
 			stop: 1
         }, ],
 	});
-	entityGrad = scrawl.newGradient({
+	entityGrad = scrawl.makeGradient({
 		name: 'g2',
 		lockTo: true,
 		color: [{

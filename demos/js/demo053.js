@@ -15,7 +15,7 @@ var mycode = function() {
 		star,
 		box;
 
-	scrawl.newRadialGradient({
+	scrawl.makeRadialGradient({
 		name: 'gradient',
 		startX: '50%',
 		endX: '50%',

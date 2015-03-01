@@ -34,7 +34,7 @@ var mycode = function() {
 		autoUpdate: true,
 	});
 
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'gradient',
 		shift: 0.002,
 		lockTo: true,

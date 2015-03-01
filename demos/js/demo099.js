@@ -18,7 +18,7 @@ var mycode = function() {
 		here;
 
 	//group
-	myBlocks = scrawl.newGroup({
+	myBlocks = scrawl.makeGroup({
 		name: 'blocks',
 	});
 
@@ -27,7 +27,7 @@ var mycode = function() {
 		name: 'mycolor',
 	});
 
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'mygradient',
 		setToEntity: true,
 		endY: 0,

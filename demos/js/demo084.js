@@ -37,15 +37,15 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo084');
 
 	//define groups
-	myTiles = scrawl.newGroup({
+	myTiles = scrawl.makeGroup({
 		name: 'tiles',
 		order: 1,
 	});
-	mySpace = scrawl.newGroup({
+	mySpace = scrawl.makeGroup({
 		name: 'space',
 		order: 3,
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'lines',
 		order: 2,
 	});

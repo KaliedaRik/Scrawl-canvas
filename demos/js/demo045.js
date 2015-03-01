@@ -13,7 +13,7 @@ var mycode = function() {
 		chokeTime = Date.now(),
 		radius = 10,
 		snake,
-		vector = scrawl.newVector(),
+		vector = scrawl.makeVector(),
 		updateSnake;
 
 	//define entitys

@@ -62,13 +62,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @private
     **/
 		my.workcols = {
-			v1: my.newVector({
+			v1: my.makeVector({
 				name: 'scrawl.workcols.v1'
 			}),
-			v2: my.newVector({
+			v2: my.makeVector({
 				name: 'scrawl.workcols.v2'
 			}),
-			v3: my.newVector({
+			v3: my.makeVector({
 				name: 'scrawl.workcols.v3'
 			}),
 		};
@@ -111,7 +111,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
     @private
     **/
 		my.Cell.prototype.collisionsCellInit = function(items) {
-			my.newGroup({
+			my.makeGroup({
 				name: this.name + '_field',
 				cell: this.name,
 				visibility: false,
@@ -119,7 +119,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			if (items.field) {
 				my.group[this.name + '_field'].entitys = [].concat(items.field);
 			}
-			my.newGroup({
+			my.makeGroup({
 				name: this.name + '_fence',
 				cell: this.name,
 				visibility: false,

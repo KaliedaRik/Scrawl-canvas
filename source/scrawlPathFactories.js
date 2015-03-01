@@ -627,25 +627,25 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 
 		if (!my.xt(my.worklink)) {
 			my.worklink = {
-				start: my.newVector({
+				start: my.makeVector({
 					name: 'scrawl.worklink.start'
 				}),
-				end: my.newVector({
+				end: my.makeVector({
 					name: 'scrawl.worklink.end'
 				}),
-				control1: my.newVector({
+				control1: my.makeVector({
 					name: 'scrawl.worklink.control1'
 				}),
-				control2: my.newVector({
+				control2: my.makeVector({
 					name: 'scrawl.worklink.control2'
 				}),
-				v1: my.newVector({
+				v1: my.makeVector({
 					name: 'scrawl.worklink.v1'
 				}),
-				v2: my.newVector({
+				v2: my.makeVector({
 					name: 'scrawl.worklink.v2'
 				}),
-				v3: my.newVector({
+				v3: my.makeVector({
 					name: 'scrawl.worklink.v3'
 				}),
 			};

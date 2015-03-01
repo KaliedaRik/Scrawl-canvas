@@ -22,7 +22,7 @@ var mycode = function() {
 		checkCollisions;
 
 	//define groups
-	group = scrawl.newGroup({
+	group = scrawl.makeGroup({
 		name: 'colsGroup',
 		regionRadius: 25,
 	});

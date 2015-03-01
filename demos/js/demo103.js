@@ -13,7 +13,7 @@ var mycode = function() {
 	//import images; setup variables
 	scrawl.getImagesByClass('demo103');
 
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mygroup',
 	});
 

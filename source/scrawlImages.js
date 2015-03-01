@@ -440,12 +440,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						this.source = items.source;
 						this.imageType = this.sourceImage();
 						tempV = my.safeObject(items.copy);
-						this.copy = my.newVector({
+						this.copy = my.makeVector({
 							x: my.xtGet(items.copyX, tempV.x, 0),
 							y: my.xtGet(items.copyY, tempV.y, 0),
 							name: this.type + '.' + this.name + '.copy'
 						});
-						this.work.copy = my.newVector({
+						this.work.copy = my.makeVector({
 							name: this.type + '.' + this.name + '.work.copy'
 						});
 						this.registerInLibrary();

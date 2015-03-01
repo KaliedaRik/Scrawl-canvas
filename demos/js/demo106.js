@@ -17,7 +17,7 @@ var mycode = function() {
 		i, iz;
 
 	//define bar entity
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'bargroup',
 		order: 1,
 	});
@@ -32,10 +32,10 @@ var mycode = function() {
 	});
 
 	//define bubble entitys
-	bubbles = scrawl.newGroup({
+	bubbles = scrawl.makeGroup({
 		name: 'bubbles',
 	});
-	hitbubbles = scrawl.newGroup({
+	hitbubbles = scrawl.makeGroup({
 		name: 'hitbubbles',
 	});
 	color = scrawl.newColor({

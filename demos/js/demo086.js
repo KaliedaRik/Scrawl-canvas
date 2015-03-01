@@ -214,15 +214,15 @@ var mycode = function() {
 	};
 
 	//setup groups
-	myPins = scrawl.newGroup({
+	myPins = scrawl.makeGroup({
 		name: 'myPins',
 		order: 2,
 	});
-	myGraphs = scrawl.newGroup({
+	myGraphs = scrawl.makeGroup({
 		name: 'myGraphs',
 		order: 3,
 	});
-	myDetails = scrawl.newGroup({
+	myDetails = scrawl.makeGroup({
 		name: 'detailsBox',
 		order: 4,
 		visibility: false,

@@ -47,7 +47,7 @@ var mycode = function() {
 	widthInput.value = 150;
 
 	//define groups
-	texts = scrawl.newGroup({
+	texts = scrawl.makeGroup({
 		name: 'texts',
 	});
 

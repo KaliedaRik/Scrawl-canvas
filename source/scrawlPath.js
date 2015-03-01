@@ -1399,11 +1399,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			my.Base.call(this, items);
 			local = my.safeObject(items.local);
 			this.entity = my.xtGet(items.entity, '');
-			this.local = my.newVector({
+			this.local = my.makeVector({
 				x: my.xtGet(items.startX, items.currentX, local.x, 0),
 				y: my.xtGet(items.startY, items.currentY, local.y, 0),
 			});
-			this.work.local = my.newVector({
+			this.work.local = my.makeVector({
 				name: this.type + '.' + this.name + '.work.local'
 			});
 			this.work.local.name = this.type + '.' + this.name + '.work.local';
@@ -1710,25 +1710,25 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.Link.prototype.classname = 'linknames';
 		if (!my.xt(my.worklink)) {
 			my.worklink = {
-				start: my.newVector({
+				start: my.makeVector({
 					name: 'scrawl.worklink.start'
 				}),
-				end: my.newVector({
+				end: my.makeVector({
 					name: 'scrawl.worklink.end'
 				}),
-				control1: my.newVector({
+				control1: my.makeVector({
 					name: 'scrawl.worklink.control1'
 				}),
-				control2: my.newVector({
+				control2: my.makeVector({
 					name: 'scrawl.worklink.control2'
 				}),
-				v1: my.newVector({
+				v1: my.makeVector({
 					name: 'scrawl.worklink.v1'
 				}),
-				v2: my.newVector({
+				v2: my.makeVector({
 					name: 'scrawl.worklink.v2'
 				}),
-				v3: my.newVector({
+				v3: my.makeVector({
 					name: 'scrawl.worklink.v3'
 				}),
 			};

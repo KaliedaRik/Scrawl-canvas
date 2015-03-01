@@ -194,7 +194,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 							});
 						}
 					}
-					myPad = my.newPad({
+					myPad = my.makePad({
 						canvasElement: el[i],
 					});
 					if (stack) {
@@ -676,51 +676,51 @@ PageElement constructor hook function - modified by stacks module
 **/
 		my.PageElement.prototype.stacksPageElementConstructor = function(items) {
 			var temp = my.safeObject(items.start);
-			this.start = my.newVector({
+			this.start = my.makeVector({
 				name: this.type + '.' + this.name + '.start',
 				x: my.xtGet(items.startX, temp.x, 0),
 				y: my.xtGet(items.startY, temp.y, 0)
 			});
 			this.correctStart();
-			this.work.start = my.newVector({
+			this.work.start = my.makeVector({
 				name: this.type + '.' + this.name + '.work.start'
 			});
 			temp = my.safeObject(items.delta);
-			this.delta = my.newVector({
+			this.delta = my.makeVector({
 				name: this.type + '.' + this.name + '.delta',
 				x: my.xtGet(items.deltaX, temp.x, 0),
 				y: my.xtGet(items.deltaY, temp.y, 0)
 			});
-			this.work.delta = my.newVector({
+			this.work.delta = my.makeVector({
 				name: this.type + '.' + this.name + '.work.delta'
 			});
 			temp = my.safeObject(items.handle);
-			this.handle = my.newVector({
+			this.handle = my.makeVector({
 				name: this.type + '.' + this.name + '.handle',
 				x: my.xtGet(items.handleX, temp.x, 0),
 				y: my.xtGet(items.handleY, temp.y, 0)
 			});
-			this.work.handle = my.newVector({
+			this.work.handle = my.makeVector({
 				name: this.type + '.' + this.name + '.work.handle'
 			});
 			temp = my.safeObject(items.translate);
-			this.translate = my.newVector({
+			this.translate = my.makeVector({
 				name: this.type + '.' + this.name + '.translate',
 				x: my.xtGet(items.translateX, temp.x, 0),
 				y: my.xtGet(items.translateY, temp.y, 0),
 				z: my.xtGet(items.translateZ, temp.z, 0)
 			});
-			this.work.translate = my.newVector({
+			this.work.translate = my.makeVector({
 				name: this.type + '.' + this.name + '.work.translate'
 			});
 			temp = my.safeObject(items.deltaTranslate);
-			this.deltaTranslate = my.newVector({
+			this.deltaTranslate = my.makeVector({
 				name: this.type + '.' + this.name + '.deltaTranslate',
 				x: my.xtGet(items.deltaTranslateX, temp.x, 0),
 				y: my.xtGet(items.deltaTranslateY, temp.y, 0),
 				z: my.xtGet(items.deltaTranslateZ, temp.z, 0)
 			});
-			this.work.deltaTranslate = my.newVector({
+			this.work.deltaTranslate = my.makeVector({
 				name: this.type + '.' + this.name + '.work.deltaTranslate'
 			});
 			this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
@@ -760,7 +760,7 @@ PageElement constructor hook function - modified by stacks module
 			if (this.group) {
 				my.group[this.group].addElementsToGroup(this.name);
 			}
-			this.offset = my.newVector({
+			this.offset = my.makeVector({
 				name: this.type + '.' + this.name + '.offset'
 			});
 			this.offset.flag = false;
@@ -971,7 +971,7 @@ Augments PageElement.set()
 			var temp;
 			items = my.safeObject(items);
 			if (!this.translate.type || this.translate.type !== 'Vector') {
-				this.translate = my.newVector(items.translate || this.translate);
+				this.translate = my.makeVector(items.translate || this.translate);
 			}
 			temp = my.safeObject(items.translate);
 			this.translate.x = my.xtGet(items.translateX, temp.x, this.translate.x);
@@ -1038,7 +1038,7 @@ Augments PageElement.set()
 			var temp;
 			items = my.safeObject(items);
 			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
-				this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
+				this.deltaTranslate = my.makeVector(items.deltaTranslate || this.deltaTranslate);
 			}
 			temp = my.safeObject(items.deltaTranslate);
 			this.deltaTranslate.x = my.xtGet(items.deltaTranslateX, temp.x, this.deltaTranslate.x);
@@ -1873,13 +1873,13 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.setDisplayOffsets();
 				this.setAccessibility(items);
 				temp = my.safeObject(items.perspective);
-				this.perspective = my.newVector({
+				this.perspective = my.makeVector({
 					name: this.type + '.' + this.name + '.perspective',
 					x: my.xtGet(items.perspectiveX, temp.x, 'center'),
 					y: my.xtGet(items.perspectiveY, temp.y, 'center'),
 					z: my.xtGet(items.perspectiveZ, temp.z, 0)
 				});
-				this.work.perspective = my.newVector({
+				this.work.perspective = my.makeVector({
 					name: this.type + '.' + this.name + '.work.perspective'
 				});
 				this.groups = [this.name];
@@ -1984,7 +1984,7 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 			my.PageElement.prototype.set.call(this, items);
 			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
-					this.perspective = my.newVector(items.perspective || this.perspective);
+					this.perspective = my.makeVector(items.perspective || this.perspective);
 				}
 				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 					temp = my.safeObject(items.perspective);
@@ -2023,7 +2023,7 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 			my.PageElement.prototype.setDelta.call(this, items);
 			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
-					this.perspective = my.newVector(items.perspective || this.perspective);
+					this.perspective = my.makeVector(items.perspective || this.perspective);
 				}
 				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 					temp = my.safeObject(items.perspective);

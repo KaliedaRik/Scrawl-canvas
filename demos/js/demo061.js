@@ -16,7 +16,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo061');
 
 	//define groups
-	trains = scrawl.newGroup({ //train group
+	trains = scrawl.makeGroup({ //train group
 		name: 'trains',
 	});
 

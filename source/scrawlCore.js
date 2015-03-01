@@ -337,7 +337,7 @@ Any supplied callback function will only be run once all modules have been loade
             <script src="js/scrawlCore-min.js"></script>
             <script>
                 var mycode = function(){
-                    scrawl.newWheel({
+                    scrawl.makeWheel({
                         startX: 50,
                         startY: 50,
                         radius: 40,
@@ -956,7 +956,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 		elements = document.getElementsByTagName("canvas");
 		if (elements.length > 0) {
 			for (i = 0, iz = elements.length; i < iz; i++) {
-				pad = my.newPad({
+				pad = my.makePad({
 					canvasElement: elements[i]
 				});
 				if (i === 0) {
@@ -1551,7 +1551,7 @@ A __general__ function to delete entity objects
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-    scrawl.newBlock({
+    scrawl.makeBlock({
         name: 'myblock',
         });
     scrawl.deleteEntity(['myblock']);
@@ -1591,74 +1591,133 @@ scrawl.deleteEntity hook function - modified by path module
 **/
 	my.pathDeleteEntity = function(items) {};
 	/**
-A __factory__ function to generate new Vector objects
+Alias for makeVector()
 @method newVector
+@deprecated
+**/
+	my.newVector = function(items) {
+		return my.makeVector(items);
+	};
+	/**
+Alias for makePad()
+@method newPad
+@private
+@deprecated
+**/
+	my.newPad = function(items) {
+		return my.makePad(items);
+	};
+	/**
+Alias for makeCell()
+@method newCell
+@private
+@deprecated
+**/
+	my.newCell = function(items) {
+		return my.makeCell(items);
+	};
+	/**
+Alias for makeContext()
+@method newContext
+@private
+@deprecated
+**/
+	my.newContext = function(items) {
+		return my.makeContext(items);
+	};
+	/**
+Alias for makeGroup()
+@method newGroup
+@deprecated
+**/
+	my.newGroup = function(items) {
+		return my.makeGroup(items);
+	};
+	/**
+Alias for makeGradient()
+@method newGradient
+@deprecated
+**/
+	my.newGradient = function(items) {
+		return my.makeGradient(items);
+	};
+	/**
+Alias for makeRadialGradient()
+@method newRadialGradient
+@deprecated
+**/
+	my.newRadialGradient = function(items) {
+		return my.makeRadialGradient(items);
+	};
+	/**
+A __factory__ function to generate new Vector objects
+@method makeVector
 @param {Object} items Key:value Object argument for setting attributes
 @return Vector object
 @example
-    var myVector = scrawl.newVector({
+    var myVector = scrawl.makeVector({
         x: 100,
         y: 200,
         });
 **/
-	my.newVector = function(items) {
+	my.makeVector = function(items) {
 		return new my.Vector(items);
 	};
 	/**
 A __factory__ function to generate new Pad objects
-@method newPad
+@method makePad
 @param {Object} items Key:value Object argument for setting attributes
 @return Pad object
 @private
 **/
-	my.newPad = function(items) {
+	my.makePad = function(items) {
 		return new my.Pad(items);
 	};
 	/**
 A __factory__ function to generate new Cell objects
-@method newCell
+@method makeCell
 @param {Object} items Key:value Object argument for setting attributes
 @return Cell object
 @private
 **/
-	my.newCell = function(items) {
+	my.makeCell = function(items) {
 		return new my.Cell(items);
 	};
 	/**
 A __factory__ function to generate new Context objects
-@method newContext
+@method makeContext
 @param {Object} items Key:value Object argument for setting attributes
 @return Context object
 @private
 **/
-	my.newContext = function(items) {
+	my.makeContext = function(items) {
 		return new my.Context(items);
 	};
 	/**
 A __factory__ function to generate new Group objects
-@method newGroup
+@method makeGroup
 @param {Object} items Key:value Object argument for setting attributes
 @return Group object
 **/
-	my.newGroup = function(items) {
+	my.makeGroup = function(items) {
 		return new my.Group(items);
 	};
 	/**
 A __factory__ function to generate new Gradient objects
-@method newGradient
+@method makeGradient
 @param {Object} items Key:value Object argument for setting attributes
 @return Gradient object
 **/
-	my.newGradient = function(items) {
+	my.makeGradient = function(items) {
 		return new my.Gradient(items);
 	};
 	/**
 A __factory__ function to generate new RadialGradient objects
-@method newRadialGradient
+@method makeRadialGradient
 @param {Object} items Key:value Object argument for setting attributes
 @return RadialGradient object
 **/
-	my.newRadialGradient = function(items) {
+	my.makeRadialGradient = function(items) {
 		return new my.RadialGradient(items);
 	};
 
@@ -1667,7 +1726,7 @@ A __factory__ function to generate new RadialGradient objects
 
 ## Instantiation
 
-* scrawl.newVector()
+* scrawl.makeVector()
 
 ## Purpose
 
@@ -1943,7 +2002,7 @@ Return a clone of this Vector
 @return Clone of this Vector
 **/
 	my.Vector.prototype.getVector = function() {
-		return my.newVector({
+		return my.makeVector({
 			x: this.x,
 			y: this.y,
 			z: this.z
@@ -1975,7 +2034,7 @@ Arithmetic is v(crossProduct)u, not u(crossProduct)v
 			v2x = u.x || 0;
 			v2y = u.y || 0;
 			v2z = u.z || 0;
-			return my.newVector({
+			return my.makeVector({
 				x: (v1y * v2z) - (v1z * v2y),
 				y: -(v1x * v2z) + (v1z * v2x),
 				z: (v1x * v2y) + (v1y * v2x)
@@ -2166,7 +2225,7 @@ Retrieve an attribute value. If the attribute value has not been set, then the d
 @param {String} item Attribute key
 @return Attribute value
 @example
-    var box = scrawl.newBlock({
+    var box = scrawl.makeBlock({
         width: 50,
         });
     box.get('width');               //returns 50
@@ -2185,7 +2244,7 @@ An attribute value will only be set if the object already has a default value fo
 @return This
 @chainable
 @example
-    var box = scrawl.newBlock({
+    var box = scrawl.makeBlock({
         width: 50,
         height: 50
         });
@@ -2217,7 +2276,7 @@ Note that any callback or fn attribute functions will be referenced by the clone
 @return Cloned object
 @chainable
 @example
-    var box = scrawl.newBlock({
+    var box = scrawl.makeBlock({
         width: 50,
         height: 50
         });
@@ -2438,21 +2497,21 @@ Position constructor hook function - core functionality
 **/
 	my.Position.prototype.corePositionInit = function(items) {
 		var temp = my.safeObject(items.start);
-		this.start = my.newVector({
+		this.start = my.makeVector({
 			x: my.xtGet(items.startX, temp.x, 0),
 			y: my.xtGet(items.startY, temp.y, 0),
 			name: this.type + '.' + this.name + '.start'
 		});
-		this.work.start = my.newVector({
+		this.work.start = my.makeVector({
 			name: this.type + '.' + this.name + '.work.start'
 		});
 		temp = my.safeObject(items.handle);
-		this.handle = my.newVector({
+		this.handle = my.makeVector({
 			x: my.xtGet(items.handleX, temp.x, 0),
 			y: my.xtGet(items.handleY, temp.y, 0),
 			name: this.type + '.' + this.name + '.handle'
 		});
-		this.work.handle = my.newVector({
+		this.work.handle = my.makeVector({
 			name: this.type + '.' + this.name + '.work.handle'
 		});
 		this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
@@ -2462,7 +2521,7 @@ Position constructor hook function - core functionality
 		this.flipUpend = my.xtGet(items.flipUpend, my.d[this.type].flipUpend);
 		this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
 		this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
-		this.offset = my.newVector({
+		this.offset = my.makeVector({
 			name: this.type + '.' + this.name + '.offset'
 		});
 		this.offset.flag = false;
@@ -2541,7 +2600,7 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 		var temp;
 		items = my.safeObject(items);
 		if (!my.isa(this.start, 'vector')) {
-			this.start = my.newVector(items.start || this.start);
+			this.start = my.makeVector(items.start || this.start);
 		}
 		temp = my.safeObject(items.start);
 		this.start.x = my.xtGet(items.startX, temp.x, this.start.x);
@@ -2559,7 +2618,7 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 		var temp;
 		items = my.safeObject(items);
 		if (!my.isa(this.handle, 'vector')) {
-			this.handle = my.newVector(items.handle || this.handle);
+			this.handle = my.makeVector(items.handle || this.handle);
 		}
 		temp = my.safeObject(items.handle);
 		this.handle.x = my.xtGet(items.handleX, temp.x, this.handle.x);
@@ -2667,13 +2726,13 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 		items = my.safeObject(items);
 		clone = my.Base.prototype.clone.call(this, items);
 		temp = my.safeObject(items.start);
-		clone.start = my.newVector({
+		clone.start = my.makeVector({
 			x: my.xtGet(items.startX, temp.x, clone.start.x),
 			y: my.xtGet(items.startY, temp.y, clone.start.y),
 			name: clone.type + '.' + clone.name + '.start'
 		});
 		temp = my.safeObject(items.handle);
-		clone.handle = my.newVector({
+		clone.handle = my.makeVector({
 			x: my.xtGet(items.handleX, temp.x, clone.handle.x),
 			y: my.xtGet(items.handleY, temp.y, clone.handle.y),
 			name: clone.type + '.' + clone.name + '.handle'
@@ -3355,7 +3414,7 @@ mousemove event listener function
 				}
 				//determine if a vector already exists for this touch
 				if (!my.xt(wrapper.mice[id])) {
-					wrapper.mice[id] = my.newVector({
+					wrapper.mice[id] = my.makeVector({
 						name: wrapper.type + '.' + wrapper.name + '.t.' + id
 					});
 					wrapper.mice[id].active = null;
@@ -3422,7 +3481,7 @@ mousemove event listener function
 
 			//determine if a vector already exists for this pointer
 			if (!my.xt(wrapper.mice[id])) {
-				wrapper.mice[id] = my.newVector({
+				wrapper.mice[id] = my.makeVector({
 					name: wrapper.type + '.' + wrapper.name + '.p.' + id
 				});
 				wrapper.mice[id].active = null;
@@ -3444,7 +3503,7 @@ mousemove event listener function
 		//mouse/pen event
 		else {
 			if (!my.xt(wrapper.mice.mouse)) {
-				wrapper.mice.mouse = my.newVector({
+				wrapper.mice.mouse = my.makeVector({
 					name: wrapper.type + '.' + wrapper.name + '.ui.mouse'
 				});
 				wrapper.mice.mouse.active = null;
@@ -3570,7 +3629,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			this.cells = [];
 
 			// create a wrapper for the display canvas element
-			display = my.newCell({
+			display = my.makeCell({
 				name: this.name,
 				pad: this.name,
 				canvas: items.canvasElement,
@@ -3587,7 +3646,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			canvas.setAttribute('id', this.name + '_base');
 
 			// create a wrapper for the base canvas element
-			base = my.newCell({
+			base = my.makeCell({
 				name: this.name + '_base',
 				pad: this.name,
 				canvas: canvas,
@@ -3878,7 +3937,7 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 			canvas.setAttribute('width', data.width);
 			data.pad = this.name;
 			data.canvas = canvas;
-			cell = my.newCell(data);
+			cell = my.makeCell(data);
 			my.pushUnique(this.cells, cell.name);
 			return cell;
 		}
@@ -4257,12 +4316,12 @@ Cell constructor hook function - core module
 		my.pushUnique(my.cellnames, this.name);
 		this.pad = my.xtGet(items.pad, false);
 		temp = my.safeObject(items.copy);
-		this.copy = my.newVector({
+		this.copy = my.makeVector({
 			x: my.xtGet(items.copyX, temp.x, 0),
 			y: my.xtGet(items.copyY, temp.y, 0),
 			name: this.type + '.' + this.name + '.copy'
 		});
-		this.work.copy = my.newVector({
+		this.work.copy = my.makeVector({
 			name: this.type + '.' + this.name + '.work.copy'
 		});
 		this.actualWidth = my.canvas[this.name].width;
@@ -4296,7 +4355,7 @@ Cell constructor hook function - core module
 		}
 		this.setCopy();
 		this.setPaste();
-		context = my.newContext({
+		context = my.makeContext({
 			name: this.name,
 			cell: my.context[this.name]
 		});
@@ -4316,7 +4375,7 @@ Cell constructor hook function - core module
 		this.globalCompositeOperation = my.xtGet(items.globalCompositeOperation, 'source-over');
 		this.globalAlpha = my.xtGet(items.globalAlpha, 1);
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
-		my.newGroup({
+		my.makeGroup({
 			name: this.name,
 			cell: this.name
 		});
@@ -5749,7 +5808,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 
 ## Instantiation
 
-* scrawl.newGroup()
+* scrawl.makeGroup()
 
 ## Purpose
 
@@ -6141,7 +6200,7 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 		items = my.safeObject(items);
 		my.Position.call(this, items);
 		items.name = this.name;
-		var myContext = my.newContext(items);
+		var myContext = my.makeContext(items);
 		this.context = myContext.name;
 		this.group = this.getGroup(items);
 		this.fastStamp = my.xtGet(items.fastStamp, false);
@@ -7258,7 +7317,7 @@ Remove this gradient from the scrawl library
 
 ## Instantiation
 
-* scrawl.newGradient()
+* scrawl.makeGradient()
 
 ## Purpose
 
@@ -7299,7 +7358,7 @@ Remove this gradient from the scrawl library
 
 ## Instantiation
 
-* scrawl.newRadialGradient()
+* scrawl.makeRadialGradient()
 
 ## Purpose
 
@@ -7350,7 +7409,7 @@ End circle radius, in pixels or percentage of entity/cell width
 	};
 	my.mergeInto(my.d.RadialGradient, my.d.Design);
 
-	my.v = my.newVector({
+	my.v = my.makeVector({
 		name: 'scrawl.v'
 	});
 

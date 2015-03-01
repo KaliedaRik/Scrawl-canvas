@@ -20,7 +20,7 @@ var mycode = function() {
 		dropWheel;
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'mygroup',
 	});
 

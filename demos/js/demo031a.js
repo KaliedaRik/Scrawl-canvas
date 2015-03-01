@@ -40,7 +40,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo031');
 
 	//define groups
-	group = scrawl.newGroup({
+	group = scrawl.makeGroup({
 		name: 'mygroup',
 	});
 

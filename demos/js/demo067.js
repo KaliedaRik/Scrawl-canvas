@@ -11,7 +11,7 @@ var mycode = function() {
 	var myGroup;
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'phrases',
 	});
 

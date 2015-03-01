@@ -104,10 +104,9 @@ var mycode = function() {
 			translateZ: 1,
 		});
 		scrawl.render();
-		//... then set their initial values, and add event listeners to them
 		scrawl.elm[xAxisLabels[i]].value = 0;
-		scrawl.elm[xAxisLabels[i]].addEventListener('change', updateLine, false);
 	}
+	scrawl.addNativeListener('change', updateLine, '.mySelector');
 
 	//display initial scene
 	scrawl.render();

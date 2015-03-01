@@ -124,7 +124,7 @@ var mycode = function() {
 		visibility: false,
 	});
 	myCircles = [];
-	myCirclesGroup = scrawl.newGroup({
+	myCirclesGroup = scrawl.makeGroup({
 		name: 'circles',
 	});
 	for (var i = 0; i < 20; i++) {

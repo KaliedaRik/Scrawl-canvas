@@ -13,19 +13,19 @@ var mycode = function() {
 		changeDisplay;
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'corners',
 		order: 4
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'edges',
 		order: 3
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'center',
 		order: 1
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'start',
 		order: 2
 	});

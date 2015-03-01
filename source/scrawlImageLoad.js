@@ -94,7 +94,7 @@ A __factory__ function to generate new Video objects
 			return new my.Video(items);
 		};
 		my.workimg = {
-			v1: my.newVector(),
+			v1: my.makeVector(),
 		};
 		my.pushUnique(my.sectionlist, 'image');
 		my.pushUnique(my.nameslist, 'imagenames');

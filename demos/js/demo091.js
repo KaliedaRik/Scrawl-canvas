@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define gradient
-	var myRad = scrawl.newRadialGradient({
+	var myRad = scrawl.makeRadialGradient({
 		name: 'gradient',
 		endX: 200,
 		endY: 200,

@@ -51,7 +51,7 @@ var mycode = function() {
 	input_lineType.value = 'l';
 
 	//define gradient
-	scrawl.newRadialGradient({
+	scrawl.makeRadialGradient({
 		name: 'gradient',
 		startX: '50%',
 		endX: '50%',

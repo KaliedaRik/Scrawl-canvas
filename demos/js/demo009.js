@@ -19,7 +19,7 @@ var mycode = function() {
 		length,
 		lengthText = document.getElementById('curveLength');
 
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mygroup',
 	});
 	for (var i = 0; i < 4; i++) {

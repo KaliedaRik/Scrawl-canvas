@@ -23,7 +23,7 @@ var mycode = function() {
 		checkCollisions;
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 		regionRadius: 100,
 	});

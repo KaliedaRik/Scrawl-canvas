@@ -74,7 +74,7 @@ var mycode = function() {
 	});
 
 	//... and some circles to grab onto, to manipulate the guide lines
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 	});
 	for (var i = 0; i < 6; i++) {

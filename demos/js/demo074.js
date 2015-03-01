@@ -26,15 +26,15 @@ var mycode = function() {
 		checkCollisions;
 
 	//define groups
-	groupA = scrawl.newGroup({
+	groupA = scrawl.makeGroup({
 		name: 'A',
 		regionRadius: 200,
 	});
-	groupB = scrawl.newGroup({
+	groupB = scrawl.makeGroup({
 		name: 'B',
 		regionRadius: 200,
 	});
-	allEntitys = scrawl.newGroup({
+	allEntitys = scrawl.makeGroup({
 		name: 'all',
 	});
 

@@ -17,7 +17,7 @@ var mycode = function() {
 	scrawl.canvas.mycanvas.style.cursor = 'crosshair';
 
 	//define entity
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'gradient',
 		shift: 0.002,
 		autoUpdate: true,

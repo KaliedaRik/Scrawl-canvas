@@ -26,7 +26,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo075');
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 		regionRadius: 80,
 	});

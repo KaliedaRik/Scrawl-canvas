@@ -49,7 +49,7 @@ var mycode = function() {
 		precision: 100,
 	});
 	//dragging entitys to change the curve of the easing path entity
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 	});
 	for (i = 0; i < 4; i++) {

@@ -26,7 +26,7 @@ var mycode = function() {
 		updateTimer;
 
 	//define groups
-	group = scrawl.newGroup({
+	group = scrawl.makeGroup({
 		name: 'colsGroup',
 	});
 

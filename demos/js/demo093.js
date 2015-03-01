@@ -34,7 +34,7 @@ var mycode = function() {
 	});
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'ripples',
 		order: 1,
 		filters: ['sat'],

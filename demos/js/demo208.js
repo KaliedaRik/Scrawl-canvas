@@ -108,7 +108,7 @@ var mycode = function() {
 		deltaYaw: 0,
 		deltaTranslateZ: 100
 	});
-	words = scrawl.newGroup({
+	words = scrawl.makeGroup({
 		name: 'words',
 		visibility: false,
 		entitys: sides,

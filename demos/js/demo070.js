@@ -17,7 +17,7 @@ var mycode = function() {
 		stopE;
 
 	//define groups
-	dragGroup = scrawl.newGroup({
+	dragGroup = scrawl.makeGroup({
 		name: 'drag',
 	});
 

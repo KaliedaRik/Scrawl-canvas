@@ -15,10 +15,10 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo089');
 
 	//define groups
-	myPics = scrawl.newGroup({
+	myPics = scrawl.makeGroup({
 		name: 'pics',
 	});
-	myTexts = scrawl.newGroup({
+	myTexts = scrawl.makeGroup({
 		name: 'texts',
 	});
 

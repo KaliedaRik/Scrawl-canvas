@@ -41,7 +41,7 @@ var mycode = function() {
 	});
 
 	//define groups
-	lines = scrawl.newGroup({
+	lines = scrawl.makeGroup({
 		name: 'lines',
 	});
 

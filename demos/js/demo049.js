@@ -24,7 +24,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo049');
 
 	//define group
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 	});
 

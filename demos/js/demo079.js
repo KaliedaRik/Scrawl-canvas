@@ -22,11 +22,11 @@ var mycode = function() {
 		tkr;
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'particles',
 		order: 0,
 	});
-	myWheels = scrawl.newGroup({
+	myWheels = scrawl.makeGroup({
 		name: 'wheels',
 		order: 1,
 	});

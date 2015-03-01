@@ -74,7 +74,7 @@ Argument object can be in the following form, where all values (which default to
 			vector = my.safeObject(items.v);
 			this.name = items.name || 'generic';
 			this.n = items.n || 1;
-			this.v = my.newVector({
+			this.v = my.makeVector({
 				x: vector.x || items.x || 0,
 				y: vector.y || items.y || 0,
 				z: vector.z || items.z || 0,

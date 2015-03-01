@@ -18,7 +18,7 @@ var mycode = function() {
 		here;
 
 	//group
-	myBlocks = scrawl.newGroup({
+	myBlocks = scrawl.makeGroup({
 		name: 'blocks',
 	});
 

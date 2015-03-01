@@ -27,15 +27,15 @@ var mycode = function() {
 	document.getElementById('upend').options.selectedIndex = 0;
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'mylabels',
 		order: 0,
 	});
-	myEntitys = scrawl.newGroup({
+	myEntitys = scrawl.makeGroup({
 		name: 'myentitys',
 		order: 1,
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'mypins',
 		order: 2,
 	});
@@ -54,7 +54,7 @@ var mycode = function() {
 		autoUpdate: true,
 	});
 
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'gradient',
 		shift: 0.002,
 		lockTo: true,

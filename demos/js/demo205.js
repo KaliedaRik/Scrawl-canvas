@@ -99,7 +99,7 @@ var mycode = function() {
 	});
 
 	//define entitys to display on each canvas
-	words = scrawl.newGroup({
+	words = scrawl.makeGroup({
 		name: 'words',
 		visibility: false,
 		entitys: sides,

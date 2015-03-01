@@ -32,7 +32,7 @@ var mycode = function() {
 	});
 
 	//add balls
-	balls = scrawl.newGroup({
+	balls = scrawl.makeGroup({
 		name: 'balls',
 	});
 	goldie = scrawl.newWheel({

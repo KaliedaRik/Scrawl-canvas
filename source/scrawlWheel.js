@@ -65,7 +65,7 @@ A __factory__ function to generate new Wheel entitys
 		};
 
 		my.workwheel = {
-			v1: my.newVector(),
+			v1: my.makeVector(),
 		};
 		/**
 # Wheel

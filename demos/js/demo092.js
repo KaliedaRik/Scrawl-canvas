@@ -18,7 +18,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo092');
 
 	//define designs (gradient)
-	gradient = scrawl.newRadialGradient({
+	gradient = scrawl.makeRadialGradient({
 		name: 'spotlight',
 		startRadius: 50,
 		endRadius: 150,

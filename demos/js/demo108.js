@@ -19,7 +19,7 @@ var mycode = function() {
 	head.appendChild(link);
 
 	//define entity(s)
-	icon = scrawl.newGroup({
+	icon = scrawl.makeGroup({
 		name: 'myentitys',
 	});
 	scrawl.newBlock({

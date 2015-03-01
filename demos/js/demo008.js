@@ -19,10 +19,10 @@ var mycode = function() {
 		myEntity = false;
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mygroup',
 	});
-	balls = scrawl.newGroup({
+	balls = scrawl.makeGroup({
 		name: 'balls',
 	});
 

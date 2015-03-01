@@ -23,11 +23,11 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo047');
 
 	//define groups
-	iGroup = scrawl.newGroup({
+	iGroup = scrawl.makeGroup({
 		name: 'iconGroup',
 		order: 1,
 	});
-	pGroup = scrawl.newGroup({
+	pGroup = scrawl.makeGroup({
 		name: 'pivotGroup',
 		order: 2,
 	});

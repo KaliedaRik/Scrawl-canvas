@@ -123,7 +123,7 @@ var mycode = function() {
 		collisionPoints: 12,
 		pivot: 'ball',
 	});
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'colgroup',
 		visibility: false,
 		entitys: ['fender'],

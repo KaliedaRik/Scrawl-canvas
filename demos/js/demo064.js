@@ -12,7 +12,7 @@ var mycode = function() {
 		brush;
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mywheels',
 		regionRadius: 90,
 	});

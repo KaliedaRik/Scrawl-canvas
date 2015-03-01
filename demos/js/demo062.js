@@ -37,11 +37,11 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo062');
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 		order: 2,
 	});
-	myReflections = scrawl.newGroup({
+	myReflections = scrawl.makeGroup({
 		name: 'myReflections',
 		order: 1,
 	});

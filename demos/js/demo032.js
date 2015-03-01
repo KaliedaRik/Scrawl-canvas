@@ -29,7 +29,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo032');
 
 	//define groups
-	group = scrawl.newGroup({
+	group = scrawl.makeGroup({
 		name: 'mygroup',
 		entitySort: false,
 		//entitySort=false - turns off pre-sorting of entitys before each display cycle (small speed gain)
