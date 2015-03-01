@@ -51,7 +51,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	myTile = scrawl.newPicture({
+	myTile = scrawl.makePicture({
 		source: 'gun',
 		group: 'tiles',
 		width: 80,
@@ -76,14 +76,14 @@ var mycode = function() {
 	}
 	scrawl.deleteEntity(myTile.name, 'tile44');
 
-	scrawl.newShape({
+	scrawl.makeShape({
 		strokeStyle: 'white',
 		lineWidth: 2,
 		group: 'lines',
 		data: 'm0,79 400,0m0,80-400,0m0,80 400,0m0,80-400,0m80,80 0-400m80,0 0,400m80,0 0-400m80,0 0,400',
 	});
 
-	spaceBlock = scrawl.newBlock({
+	spaceBlock = scrawl.makeBlock({
 		name: 'spacer',
 		startX: 360,
 		startY: 360,
@@ -196,7 +196,7 @@ var mycode = function() {
 	scrawl.addListener('up', handleEntity, myCanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (prepare) {

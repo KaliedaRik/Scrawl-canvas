@@ -28,7 +28,7 @@ var mycode = function() {
 		strokeStyle: 'DarkGray',
 	});
 
-	myAngle = scrawl.newWheel({
+	myAngle = scrawl.makeWheel({
 		name: 'angle',
 		pivot: 'arrowCenter',
 		radius: 20,
@@ -40,7 +40,7 @@ var mycode = function() {
 		closed: false,
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'arrowCenter',
 		startX: 375,
 		startY: 187.5,
@@ -64,7 +64,7 @@ var mycode = function() {
 		y: 187.5,
 	});
 
-	report = scrawl.newPhrase({
+	report = scrawl.makePhrase({
 		name: 'msg',
 		method: 'fill',
 		text: 'Polar coordinates',
@@ -106,7 +106,7 @@ var mycode = function() {
 	scrawl.render();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {

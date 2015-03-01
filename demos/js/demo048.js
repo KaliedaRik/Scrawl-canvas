@@ -43,7 +43,7 @@ var mycode = function() {
         }, ],
 	});
 
-	myWheel = scrawl.newWheel({
+	myWheel = scrawl.makeWheel({
 		strokeStyle: 'Red',
 		fillStyle: 'gradient',
 		radius: 50,
@@ -53,7 +53,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {

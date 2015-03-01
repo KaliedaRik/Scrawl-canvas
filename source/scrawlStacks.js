@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -109,13 +107,13 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 					stacks.push(s[i]);
 				}
 				for (i = 0, iz = s.length; i < iz; i++) {
-					myStack = my.newStack({
+					myStack = my.makeStack({
 						stackElement: stacks[i]
 					});
 					for (j = 0, jz = my.stk[myStack.name].children.length; j < jz; j++) {
 						my.stk[myStack.name].children[j].style.position = 'absolute';
 						if (my.stk[myStack.name].children[j].tagName !== 'CANVAS') {
-							my.newElement({
+							my.makeElement({
 								domElement: my.stk[myStack.name].children[j],
 								group: myStack.name
 							});
@@ -189,7 +187,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 							myElement.id = myStack;
 							el[i].parentElement.appendChild(myElement);
 							myElement.appendChild(el[i]);
-							stack = my.newStack({
+							stack = my.makeStack({
 								stackElement: myElement
 							});
 						}
@@ -247,7 +245,7 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 							myStack = el[i].className.match(/stack:(\w+)/);
 							if (my.contains(my.stacknames, myStack[1])) {
 								my.stk[myStack[1]].appendChild(el[i]);
-								my.newElement({
+								my.makeElement({
 									domElement: el[i],
 									group: myStack[1],
 								});
@@ -354,7 +352,7 @@ The argument object should include the following attributes:
 				myElement.style.height = my.xtGet(items.height, 150) + 'px';
 				items.parentElement.appendChild(myElement);
 				items.stackElement = myElement;
-				myStack = my.newStack(items);
+				myStack = my.makeStack(items);
 				myStack.group = (my.stack[items.parentElement.id]) ? items.parentElement.id : '';
 				return myStack;
 			}
@@ -735,24 +733,24 @@ PageElement constructor hook function - modified by stacks module
 			this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
 			this.scale = my.xtGet(items.scale, 1);
 			this.visibility = my.xtGet(items.visibility, my.d[this.type].visibility);
-			this.rotation = my.newQuaternion({
+			this.rotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.rotation'
 			}).setFromEuler({
 				pitch: items.pitch || 0,
 				yaw: items.yaw || 0,
 				roll: items.roll || 0,
 			});
-			this.work.rotation = my.newQuaternion({
+			this.work.rotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.work.rotation'
 			});
-			this.deltaRotation = my.newQuaternion({
+			this.deltaRotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.deltaRotation'
 			}).setFromEuler({
 				pitch: items.deltaPitch || 0,
 				yaw: items.deltaYaw || 0,
 				roll: items.deltaRoll || 0,
 			});
-			this.work.deltaRotation = my.newQuaternion({
+			this.work.deltaRotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.work.deltaRotation'
 			});
 			this.rotationTolerance = my.xtGet(items.rotationTolerance, my.d[this.type].rotationTolerance);
@@ -1691,33 +1689,63 @@ Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use stylin
 			return this;
 		};
 		/**
-A __factory__ function to generate new Stack objects
+Alias for makeStack()
 @method newStack
 @param {Object} items Key:value Object argument for setting attributes
 @return Stack object
 @private
 **/
 		my.newStack = function(items) {
-			return new my.Stack(items);
+			return my.makeStack(items);
 		};
 		/**
-A __factory__ function to generate new Element objects
+Alias for makeElement()
 @method newElement
 @param {Object} items Key:value Object argument for setting attributes
 @return Element object
 @private
 **/
 		my.newElement = function(items) {
-			return new my.Element(items);
+			return my.makeElement(items);
 		};
 		/**
-A __factory__ function to generate new ElementGroup objects
+Alias for makeElementGroup()
 @method newElementGroup
 @param {Object} items Key:value Object argument for setting attributes
 @return ElementGroup object
 @private
 **/
 		my.newElementGroup = function(items) {
+			return my.makeElementGroup(items);
+		};
+		/**
+A __factory__ function to generate new Stack objects
+@method makeStack
+@param {Object} items Key:value Object argument for setting attributes
+@return Stack object
+@private
+**/
+		my.makeStack = function(items) {
+			return new my.Stack(items);
+		};
+		/**
+A __factory__ function to generate new Element objects
+@methodmakewElement
+@param {Object} items Key:value Object argument for setting attributes
+@return Element object
+@private
+**/
+		my.makeElement = function(items) {
+			return new my.Element(items);
+		};
+		/**
+A __factory__ function to generate new ElementGroup objects
+@method makeElementGroup
+@param {Object} items Key:value Object argument for setting attributes
+@return ElementGroup object
+@private
+**/
+		my.makeElementGroup = function(items) {
 			return new my.ElementGroup(items);
 		};
 
@@ -1883,7 +1911,7 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 					name: this.type + '.' + this.name + '.work.perspective'
 				});
 				this.groups = [this.name];
-				my.newElementGroup({
+				my.makeElementGroup({
 					name: this.name,
 					stack: this.name
 				});
@@ -2131,7 +2159,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 **/
 		my.Stack.prototype.addElementById = function(item) {
 			if (my.isa(item, 'str')) {
-				var myElement = my.newElement({
+				var myElement = my.makeElement({
 					domElement: document.getElementById(item),
 					group: this.name,
 				});
@@ -2159,7 +2187,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 				for (i = 0, iz = myArray.length; i < iz; i++) {
 					thisElement = myArray[i];
 					if (thisElement.nodeName !== 'CANVAS') {
-						myElement = my.newElement({
+						myElement = my.makeElement({
 							domElement: thisElement,
 							group: this.name,
 						});
@@ -2334,7 +2362,7 @@ Return the DOM element wrapped by this object
 
 ## Instantiation
 
-* scrawl.newElementGroup()
+* scrawl.makeElementGroup()
 
 ## Purpose
 

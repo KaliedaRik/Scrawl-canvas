@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//entitys
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'circle1',
 		startX: 50,
 		startY: 50,
@@ -31,7 +31,7 @@ var mycode = function() {
 	});
 
 	//tweens
-	scrawl.newTween({
+	scrawl.makeTween({
 		name: 'tween1',
 		targets: scrawl.entity.circle1,
 		start: {
@@ -80,7 +80,7 @@ var mycode = function() {
 	}).run();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.render();
 

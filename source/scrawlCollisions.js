@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -38,29 +36,29 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		'use strict';
 
 		/**
-    # window.scrawl
+# window.scrawl
 
-    scrawlCollisions module adaptions to the Scrawl library object
+scrawlCollisions module adaptions to the Scrawl library object
 
-    ## New default attributes
+## New default attributes
 
-    * Position.delta - default: {x:0,y:0,z:0};
-    * Cell.fieldLabel - default: '';
-    * Entity.fieldChannel - default: 'anycolor';
-    * Entity.fieldTest - default: 0;
-    * Entity.collisionVectors - default: [];
-    * Entity.collisionPoints - default: [];
+* Position.delta - default: {x:0,y:0,z:0};
+* Cell.fieldLabel - default: '';
+* Entity.fieldChannel - default: 'anycolor';
+* Entity.fieldTest - default: 0;
+* Entity.collisionVectors - default: [];
+* Entity.collisionPoints - default: [];
 
-    @class window.scrawl_Collisions
-    **/
+@class window.scrawl_Collisions
+**/
 
 		/**
-    Collision vectors, for use in collision detection calculations
-    @property scrawl.workcols
-    @type Object 
-    @value Object containing three vectors - v1, v2, v3
-    @private
-    **/
+Collision vectors, for use in collision detection calculations
+@property scrawl.workcols
+@type Object 
+@value Object containing three vectors - v1, v2, v3
+@private
+**/
 		my.workcols = {
 			v1: my.makeVector({
 				name: 'scrawl.workcols.v1'
@@ -73,11 +71,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			}),
 		};
 		/**
-    A __general__ function which asks Cell objects to generate field collision tables
-    @method scrawl.buildFields
-    @param {Array} [items] Array of CELLNAME Strings - can also be a String
-    @return Always true
-    **/
+A __general__ function which asks Cell objects to generate field collision tables
+@method scrawl.buildFields
+@param {Array} [items] Array of CELLNAME Strings - can also be a String
+@return Always true
+**/
 		my.buildFields = function(items) {
 			var cells,
 				i,
@@ -93,11 +91,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		/**
-    Orders all Cell objects associated with this Pad to (re)create their field collision image maps
-    @method Pad.buildFields
-    @return This
-    @chainable
-    **/
+Orders all Cell objects associated with this Pad to (re)create their field collision image maps
+@method Pad.buildFields
+@return This
+@chainable
+**/
 		my.Pad.prototype.buildFields = function() {
 			for (var i = 0, iz = this.cells.length; i < iz; i++) {
 				my.cell[this.cells[i]].buildField();
@@ -106,10 +104,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		/**
-    Cell constructor hook function - modified by collisions module
-    @method Cell.collisionsCellInit
-    @private
-    **/
+Cell constructor hook function - modified by collisions module
+@method Cell.collisionsCellInit
+@private
+**/
 		my.Cell.prototype.collisionsCellInit = function(items) {
 			my.makeGroup({
 				name: this.name + '_field',
@@ -131,11 +129,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 
 		my.d.Cell.fieldLabel = '';
 		/**
-    Builds a collision map image from entitys, for use in entity field collision detection functions
-    @method Cell.buildField
-    @return This
-    @chainable
-    **/
+Builds a collision map image from entitys, for use in entity field collision detection functions
+@method Cell.buildField
+@return This
+@chainable
+**/
 		my.Cell.prototype.buildField = function() {
 			var i,
 				iz,
@@ -190,31 +188,31 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Cell field collision detection function
+Cell field collision detection function
 
-    Argument should be in the form of:
+Argument should be in the form of:
 
-    * {channel:String, test:Number, coordinates:Array of Vectors, x:Number, y:Number}
+* {channel:String, test:Number, coordinates:Array of Vectors, x:Number, y:Number}
 
-    Where:
+Where:
 
-    * __channel__ (optional) can be 'red', 'green', 'blue', 'alpha', or 'anycolor' (default)
-    * __test__ (optional) can be a value between 0 and 254 (default: 0)
-    * __coordinates__ (optional) is an array of Vector coordinates, in pixels, relative to the Cell's &lt;canvas&gt; element's top left corner
-    * __x__ (optional) is the horizontal coordinate, in pixels, relative to the Cell's top left corner
-    * __y__ (optional) is the vertical coordinate, in pixels, relative to the Cell's top left corner
+* __channel__ (optional) can be 'red', 'green', 'blue', 'alpha', or 'anycolor' (default)
+* __test__ (optional) can be a value between 0 and 254 (default: 0)
+* __coordinates__ (optional) is an array of Vector coordinates, in pixels, relative to the Cell's &lt;canvas&gt; element's top left corner
+* __x__ (optional) is the horizontal coordinate, in pixels, relative to the Cell's top left corner
+* __y__ (optional) is the vertical coordinate, in pixels, relative to the Cell's top left corner
 
-    Either include a single coordinate (x, y), or an array of coordinate Vectors
+Either include a single coordinate (x, y), or an array of coordinate Vectors
 
-    Test will return: 
-    * false if it encounters a coordinate outside the bounds of its image map
-    * true if all coordinates exceed the test level (thus a entity testing in the red channel will report true if it is entirely within a red part of the collision map
-    * the first coordinate that falls below, or equals, the test level
-    @method Cell.checkFieldAt
-    @param {Object} items Argument containing details of how and where to check the cell's collision map image
-    @return Vector of first the first coordinates to 'pass' the test
-    @private
-    **/
+Test will return: 
+* false if it encounters a coordinate outside the bounds of its image map
+* true if all coordinates exceed the test level (thus a entity testing in the red channel will report true if it is entirely within a red part of the collision map
+* the first coordinate that falls below, or equals, the test level
+@method Cell.checkFieldAt
+@param {Object} items Argument containing details of how and where to check the cell's collision map image
+@return Vector of first the first coordinates to 'pass' the test
+@private
+**/
 		my.Cell.prototype.checkFieldAt = function(items) {
 			var i,
 				iz,
@@ -282,11 +280,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		/**
-    Check all entitys in the Group to see if they are colliding with the supplied entity object. An Array of all entity objects colliding with the reference entity will be returned
-    @method Group.getEntitysCollidingWith
-    @param {String} entity SPRITENAME String of the reference entity; alternatively the entity Object itself can be passed as the argument
-    @return Array of visible entity Objects currently colliding with the reference entity
-    **/
+Check all entitys in the Group to see if they are colliding with the supplied entity object. An Array of all entity objects colliding with the reference entity will be returned
+@method Group.getEntitysCollidingWith
+@param {String} entity SPRITENAME String of the reference entity; alternatively the entity Object itself can be passed as the argument
+@return Array of visible entity Objects currently colliding with the reference entity
+**/
 		my.Group.prototype.getEntitysCollidingWith = function(entity) {
 			var i,
 				iz,
@@ -322,10 +320,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Check all entitys in the Group against each other to see if they are in collision
-    @method Group.getInGroupEntityHits
-    @return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
-    **/
+Check all entitys in the Group against each other to see if they are in collision
+@method Group.getInGroupEntityHits
+@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
+**/
 		my.Group.prototype.getInGroupEntityHits = function() {
 			var j,
 				jz,
@@ -372,11 +370,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return hits;
 		};
 		/**
-    Check all entitys in this Group against all entitys in the argument Group, to see if they are in collision
-    @method Group.getBetweenGroupEntityHits
-    @param {String} g GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument
-    @return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
-    **/
+Check all entitys in this Group against all entitys in the argument Group, to see if they are in collision
+@method Group.getBetweenGroupEntityHits
+@param {String} g GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument
+@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
+**/
 		my.Group.prototype.getBetweenGroupEntityHits = function(g) {
 			var j,
 				jz,
@@ -439,15 +437,15 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Check all entitys in this Group against a &lt;canvas&gt; element's collision field image
+Check all entitys in this Group against a &lt;canvas&gt; element's collision field image
 
-    If no argument is supplied, the Group's default Cell's &lt;canvas&gt; element will be used for the check
+If no argument is supplied, the Group's default Cell's &lt;canvas&gt; element will be used for the check
 
-    An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the entity that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring
-    @method Group.getFieldEntityHits
-    @param {String} [cell] CELLNAME of Cell whose &lt;canvas&gt; element is to be used for the check
-    @return Array of [SPRITENAME, Vector] Arrays
-    **/
+An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the entity that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring
+@method Group.getFieldEntityHits
+@param {String} [cell] CELLNAME of Cell whose &lt;canvas&gt; element is to be used for the check
+@return Array of [SPRITENAME, Vector] Arrays
+**/
 		my.Group.prototype.getFieldEntityHits = function(cell) {
 			var j,
 				jz,
@@ -488,12 +486,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			my.mergeInto(my.d.Path, my.d.Entity);
 		}
 		/**
-    Recalculate the current collision point positions for all entitys in the group
+Recalculate the current collision point positions for all entitys in the group
 
-    @method Group.resetCollisionPoints
-    @return this
-    @chainable
-    **/
+@method Group.resetCollisionPoints
+@return this
+@chainable
+**/
 		my.Group.prototype.resetCollisionPoints = function() {
 			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
 				my.entity[this.entitys[i]].resetCollisionPoints();
@@ -501,10 +499,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Entity constructor hook function - modified by collisions module
-    @method Entity.collisionsEntityConstructor
-    @private
-    **/
+Entity constructor hook function - modified by collisions module
+@method Entity.collisionsEntityConstructor
+@private
+**/
 		my.Entity.prototype.collisionsEntityConstructor = function(items) {
 			if (my.xt(items.field)) {
 				this.addEntityToCellFields();
@@ -514,10 +512,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			}
 		};
 		/**
-    Entity.registerInLibrary hook function - modified by collisions module
-    @method Entity.collisionsEntityRegisterInLibrary
-    @private
-    **/
+Entity.registerInLibrary hook function - modified by collisions module
+@method Entity.collisionsEntityRegisterInLibrary
+@private
+**/
 		my.Entity.prototype.collisionsEntityRegisterInLibrary = function() {
 			this.collisionVectors = [];
 			this.collisionArray = [];
@@ -525,10 +523,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Entity.set hook function - modified by collisions module
-    @method Entity.collisionsEntitySet
-    @private
-    **/
+Entity.set hook function - modified by collisions module
+@method Entity.collisionsEntitySet
+@private
+**/
 		my.Entity.prototype.collisionsEntitySet = function(items) {
 			if (my.xt(items.collisionPoints)) {
 				this.parseCollisionPoints();
@@ -549,26 +547,26 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			}
 		};
 		/**
-    Recalculate the entity's current collision point positions
+Recalculate the entity's current collision point positions
 
-    This will be triggered automatically when changing the following attributes via set ort setDelta:
+This will be triggered automatically when changing the following attributes via set ort setDelta:
 
-    * for set() - start, startX, startY, handle, handleX, handleY, scale, roll, collisionPoints, width, height, radius, pasteWidth, pasteHeight
-    * for setDelta() - start, startX, startY, handle, handleX, handleY, scale, roll, width, height, radius, pasteWidth, pasteHeight
+* for set() - start, startX, startY, handle, handleX, handleY, scale, roll, collisionPoints, width, height, radius, pasteWidth, pasteHeight
+* for setDelta() - start, startX, startY, handle, handleX, handleY, scale, roll, width, height, radius, pasteWidth, pasteHeight
 
-    @method Entity.resetCollisionPoints
-    @return this
-    @chainable
-    **/
+@method Entity.resetCollisionPoints
+@return this
+@chainable
+**/
 		my.Entity.prototype.resetCollisionPoints = function() {
 			this.collisionArray.length = 0;
 			return this;
 		};
 		/**
-    Entity.setDelta hook function - modified by collisions module
-    @method Entity.collisionsEntitySetDelta
-    @private
-    **/
+Entity.setDelta hook function - modified by collisions module
+@method Entity.collisionsEntitySetDelta
+@private
+**/
 		my.Entity.prototype.collisionsEntitySetDelta = function(items) {
 			if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
 				this.collisionArray.length = 0;
@@ -578,12 +576,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			}
 		};
 		/**
-    Add this entity to a (range of) Cell object field groups
-    @method Entity.addEntityToCellFields
-    @param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
-    @return This
-    @chainable
-    **/
+Add this entity to a (range of) Cell object field groups
+@method Entity.addEntityToCellFields
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
 		my.Entity.prototype.addEntityToCellFields = function(cells) {
 			var i,
 				iz;
@@ -596,12 +594,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Add this entity to a (range of) Cell object fence groups
-    @method Entity.addEntityToCellFences
-    @param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
-    @return This
-    @chainable
-    **/
+Add this entity to a (range of) Cell object fence groups
+@method Entity.addEntityToCellFences
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
 		my.Entity.prototype.addEntityToCellFences = function(cells) {
 			var i,
 				iz;
@@ -614,12 +612,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Remove this entity from a (range of) Cell object field groups
-    @method Entity.removeEntityFromCellFields
-    @param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
-    @return This
-    @chainable
-    **/
+Remove this entity from a (range of) Cell object field groups
+@method Entity.removeEntityFromCellFields
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
 		my.Entity.prototype.removeEntityFromCellFields = function(cells) {
 			var i,
 				iz;
@@ -632,12 +630,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Remove this entity from a (range of) Cell object fence groups
-    @method Entity.removeEntityFromCellFences
-    @param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
-    @return This
-    @chainable
-    **/
+Remove this entity from a (range of) Cell object fence groups
+@method Entity.removeEntityFromCellFences
+@param {Array} [items] Array of CELLNAME Strings; alternatively, a single CELLNAME String can be supplied
+@return This
+@chainable
+**/
 		my.Entity.prototype.removeEntityFromCellFences = function(cells) {
 			var i,
 				iz;
@@ -650,11 +648,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Check this entity's collision Vectors against a Cell object's collision field image to see if any of them are colliding with the Cell's field entitys
-    @method Entity.checkField
-    @param {String} [cell] CELLNAME String of the Cell to be checked against
-    @return First Vector coordinate to 'pass' the Cell.checkFieldAt() function's test; true if none pass; false if the test parameters are out of bounds
-    **/
+Check this entity's collision Vectors against a Cell object's collision field image to see if any of them are colliding with the Cell's field entitys
+@method Entity.checkField
+@param {String} [cell] CELLNAME String of the Cell to be checked against
+@return First Vector coordinate to 'pass' the Cell.checkFieldAt() function's test; true if none pass; false if the test parameters are out of bounds
+**/
 		my.Entity.prototype.checkField = function(cell) {
 			var arg = {
 				coordinates: [],
@@ -668,10 +666,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return cell.checkFieldAt(arg);
 		};
 		/**
-    Calculate the current positions of this entity's collision Vectors, taking into account the entity's current position, roll and scale
-    @method Entity.getCollisionPoints
-    @return Array of coordinate Vectors
-    **/
+Calculate the current positions of this entity's collision Vectors, taking into account the entity's current position, roll and scale
+@method Entity.getCollisionPoints
+@return Array of coordinate Vectors
+**/
 		my.Entity.prototype.getCollisionPoints = function() {
 			var i,
 				iz;
@@ -699,15 +697,15 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this.collisionArray;
 		};
 		/**
-    Collision detection helper function
+Collision detection helper function
 
-    Parses the collisionPoints array to generate coordinate Vectors representing the entity's collision points
-    @method Entity.buildCollisionVectors
-    @param {Array} [items] Array of collision point data
-    @return This
-    @chainable
-    @private
-    **/
+Parses the collisionPoints array to generate coordinate Vectors representing the entity's collision points
+@method Entity.buildCollisionVectors
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
 		my.Entity.prototype.buildCollisionVectors = function() {
 			var i,
 				iz,
@@ -781,15 +779,15 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Collision detection helper function
+Collision detection helper function
 
-    Parses user input for the collisionPoint attribute
-    @method Entity.parseCollisionPoints
-    @param {Array} [items] Array of collision point data
-    @return This
-    @chainable
-    @private
-    **/
+Parses user input for the collisionPoint attribute
+@method Entity.parseCollisionPoints
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
 		my.Entity.prototype.parseCollisionPoints = function() {
 			var i,
 				iz,

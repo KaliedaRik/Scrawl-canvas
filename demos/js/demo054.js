@@ -19,7 +19,7 @@ var mycode = function() {
 	scrawl.canvas.mycanvas.style.cursor = 'crosshair';
 
 	//define entity
-	mySvg = scrawl.newPicture({
+	mySvg = scrawl.makePicture({
 		name: 'svgCow',
 		source: 'svgCow',
 		method: 'fill',
@@ -31,7 +31,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = scrawl.pad.mycanvas.getMouse();
 			if (here.active) {

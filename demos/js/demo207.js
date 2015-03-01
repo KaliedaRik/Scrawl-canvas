@@ -53,7 +53,7 @@ var mycode = function() {
 		name: 'myGroup',
 	});
 	for (i = 0; i < 4; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			lineWidth: 2,
@@ -151,7 +151,7 @@ var mycode = function() {
 	}
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			if (!here.active) {

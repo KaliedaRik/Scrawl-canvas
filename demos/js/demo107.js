@@ -110,7 +110,7 @@ var mycode = function() {
 			visibility: false,
 		});
 	};
-	myBlock = scrawl.newBlock({
+	myBlock = scrawl.makeBlock({
 		name: 'myblock',
 		fillStyle: 'white',
 		visibility: false,
@@ -128,7 +128,7 @@ var mycode = function() {
 		name: 'circles',
 	});
 	for (var i = 0; i < 20; i++) {
-		myCircles.push(scrawl.newWheel({
+		myCircles.push(scrawl.makeWheel({
 			radius: 200,
 			group: 'circles',
 			fillStyle: 'lightblue',
@@ -191,7 +191,7 @@ var mycode = function() {
 	returnButton.addEventListener('click', doButtons, false);
 
 	//roller animation: animate block by its height
-	rollerIn = scrawl.newTween({
+	rollerIn = scrawl.makeTween({
 		name: 'rollerIn',
 		start: {
 			height: 0
@@ -202,7 +202,7 @@ var mycode = function() {
 		duration: 1000,
 		killOnComplete: true,
 	});
-	rollerOut = scrawl.newTween({
+	rollerOut = scrawl.makeTween({
 		name: 'rollerOut',
 		end: {
 			height: 0
@@ -269,7 +269,7 @@ var mycode = function() {
 	};
 
 	//starburst animation: animate star by its scale and roll
-	starburstIn = scrawl.newTween({
+	starburstIn = scrawl.makeTween({
 		name: 'starburstIn',
 		start: {
 			scale: 0.01,
@@ -285,7 +285,7 @@ var mycode = function() {
 		duration: 3000,
 		killOnComplete: true,
 	});
-	starburstOut = scrawl.newTween({
+	starburstOut = scrawl.makeTween({
 		name: 'starburstOut',
 		start: {
 			scale: 2,
@@ -350,7 +350,7 @@ var mycode = function() {
 	};
 
 	//fog animation: white out browser - animate block by its globalAlpha
-	fogIn = scrawl.newTween({
+	fogIn = scrawl.makeTween({
 		name: 'fogIn',
 		start: {
 			globalAlpha: 0
@@ -361,7 +361,7 @@ var mycode = function() {
 		duration: 1000,
 		killOnComplete: true,
 	});
-	fogOut = scrawl.newTween({
+	fogOut = scrawl.makeTween({
 		name: 'fogOut',
 		start: {
 			globalAlpha: 1
@@ -422,7 +422,7 @@ var mycode = function() {
 	};
 
 	//clear from center: animate block by its scale and roll
-	clearFromCenterIn = scrawl.newTween({
+	clearFromCenterIn = scrawl.makeTween({
 		name: 'clearFromCenterIn',
 		start: {
 			scale: 0,
@@ -435,7 +435,7 @@ var mycode = function() {
 		duration: 1500,
 		killOnComplete: true,
 	});
-	clearFromCenterOut = scrawl.newTween({
+	clearFromCenterOut = scrawl.makeTween({
 		name: 'clearFromCenterOut',
 		start: {
 			scale: 1,
@@ -499,7 +499,7 @@ var mycode = function() {
 	};
 
 	//clear with circles: animate circles by their scale
-	clearCirclesIn = scrawl.newTween({
+	clearCirclesIn = scrawl.makeTween({
 		name: 'clearCirclesIn',
 		start: {
 			scale: 0
@@ -513,7 +513,7 @@ var mycode = function() {
 		duration: 2000,
 		killOnComplete: true,
 	});
-	clearCirclesOut = scrawl.newTween({
+	clearCirclesOut = scrawl.makeTween({
 		name: 'clearCirclesOut',
 		start: {
 			scale: 2
@@ -575,7 +575,7 @@ var mycode = function() {
 	};
 
 	//canvas animation - runs all the time
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.render();
 		},

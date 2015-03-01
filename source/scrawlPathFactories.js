@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -37,28 +35,28 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		'use strict';
 
 		/**
-	# window.scrawl
+# window.scrawl
 
-	scrawlPathFactories module adaptions to the Scrawl library object
+scrawlPathFactories module adaptions to the Scrawl library object
 
-	@class window.scrawl_Factories
-	**/
+@class window.scrawl_Factories
+**/
 
 		/**
-	A __factory__ function to generate elliptical Shape or Path entity objects
+A __factory__ function to generate elliptical Shape or Path entity objects
 
-	The argument can include:
-	* __radiusX__ - Number, horizontal radius of ellipse; default: 0 (not retained)
-	* __radiusY__ - Number, vertical radius of ellipse; default: 0 (not retained)
-	* __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
-	* any other legitimate Entity, Context or Shape/Path attribute
+The argument can include:
+* __radiusX__ - Number, horizontal radius of ellipse; default: 0 (not retained)
+* __radiusY__ - Number, vertical radius of ellipse; default: 0 (not retained)
+* __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
+* any other legitimate Entity, Context or Shape/Path attribute
 
-	Percentage String values are relative to the entity's cell's dimensions
+Percentage String values are relative to the entity's cell's dimensions
 
-	@method makeEllipse
-	@param {Object} items Object containing attributes
-	@return Shape or Path entity object
-	**/
+@method makeEllipse
+@param {Object} items Object containing attributes
+@return Shape or Path entity object
+**/
 		my.makeEllipse = function(items) {
 			var cell,
 				startX,
@@ -130,24 +128,24 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			myData += 'z';
 			items.isLine = false;
 			items.data = myData;
-			return (items.shape) ? my.newShape(items) : my.makePath(items);
+			return (items.shape) ? my.makeShape(items) : my.makePath(items);
 		};
 		/**
-	A __factory__ function to generate rectangular Shape or Path entity objects, with optional rounded corners
+A __factory__ function to generate rectangular Shape or Path entity objects, with optional rounded corners
 
-	The argument can include:
-	* __width__ - Number or % String, default: 0
-	* __height__ - Number or % String, default: 0
-	* also, 0, 1 or more of the following __radius__ attributes (all Number, default: radius=0): radiusTopLeftX, radiusTopLeftY, radiusTopRightX, radiusTopRightY, radiusBottomRightX, radiusBottomRightY, radiusBottomLeftX, radiusBottomLeftY, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft, radiusTopX, radiusTopY, radiusBottomX, radiusBottomY, radiusLeftX, radiusLeftY, radiusRightX, radiusRightY, radiusTop, radiusBottom, radiusRight, radiusLeft, radiusX, radiusY, radius (not retained)
-	* __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
-	* any other legitimate Entity, Context or Shape/Path attribute
+The argument can include:
+* __width__ - Number or % String, default: 0
+* __height__ - Number or % String, default: 0
+* also, 0, 1 or more of the following __radius__ attributes (all Number, default: radius=0): radiusTopLeftX, radiusTopLeftY, radiusTopRightX, radiusTopRightY, radiusBottomRightX, radiusBottomRightY, radiusBottomLeftX, radiusBottomLeftY, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft, radiusTopX, radiusTopY, radiusBottomX, radiusBottomY, radiusLeftX, radiusLeftY, radiusRightX, radiusRightY, radiusTop, radiusBottom, radiusRight, radiusLeft, radiusX, radiusY, radius (not retained)
+* __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
+* any other legitimate Entity, Context or Shape/Path attribute
 
-	Percentage String values are relative to the entity's cell's dimensions
+Percentage String values are relative to the entity's cell's dimensions
 
-	@method makeRectangle
-	@param {Object} items Object containing attributes
-	@return Shape or Path entity object
-	**/
+@method makeRectangle
+@param {Object} items Object containing attributes
+@return Shape or Path entity object
+**/
 		my.makeRectangle = function(items) {
 			var cell,
 				startX,
@@ -262,29 +260,29 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			myData += 'z';
 			items.isLine = false;
 			items.data = myData;
-			return (items.shape) ? my.newShape(items) : my.makePath(items);
+			return (items.shape) ? my.makeShape(items) : my.makePath(items);
 		};
 		/**
-	A __factory__ function to generate bezier curve Shape or Path entity objects
+A __factory__ function to generate bezier curve Shape or Path entity objects
 
-	The argument can include:
-	* __startX__ - Number or % String; default: 0
-	* __startY__ - Number or % String; default: 0
-	* __startControlX__ - Number or % String; default: 0 (not retained)
-	* __startControlY__ - Number or % String; default: 0 (not retained)
-	* __endControlX__ - Number or % String; default: 0 (not retained)
-	* __endControlY__ - Number or % String; default: 0 (not retained)
-	* __endX__ - Number or % String; default: 0 (not retained)
-	* __endY__ - Number or % String; default: 0 (not retained)
-	* __shape__ - Boolean, true to create Shape; false (default) to create Path 
-	* any other legitimate Entity, Context or Shape/Path attribute
+The argument can include:
+* __startX__ - Number or % String; default: 0
+* __startY__ - Number or % String; default: 0
+* __startControlX__ - Number or % String; default: 0 (not retained)
+* __startControlY__ - Number or % String; default: 0 (not retained)
+* __endControlX__ - Number or % String; default: 0 (not retained)
+* __endControlY__ - Number or % String; default: 0 (not retained)
+* __endX__ - Number or % String; default: 0 (not retained)
+* __endY__ - Number or % String; default: 0 (not retained)
+* __shape__ - Boolean, true to create Shape; false (default) to create Path 
+* any other legitimate Entity, Context or Shape/Path attribute
 
-	Percentage String values are relative to the entity's cell's dimensions
+Percentage String values are relative to the entity's cell's dimensions
 
-	@method makeBezier
-	@param {Object} items Object containing attributes
-	@return Shape or Path entity object
-	**/
+@method makeBezier
+@param {Object} items Object containing attributes
+@return Shape or Path entity object
+**/
 		my.makeBezier = function(items) {
 			var cell,
 				startX,
@@ -321,7 +319,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				(endX - startX) + ',' + (endY - startY);
 			items.data = data;
 			if (items.shape) {
-				myShape = my.newShape(items);
+				myShape = my.makeShape(items);
 			}
 			else {
 				myShape = my.makePath(items);
@@ -354,24 +352,24 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return myShape;
 		};
 		/**
-	A __factory__ function to generate quadratic curve Shape or Path entity objects
+A __factory__ function to generate quadratic curve Shape or Path entity objects
 
-	The argument can include:
-	* __startX__ - Number or % String; default: 0
-	* __startY__ - Number or % String; default: 0
-	* __controlX__ - Number or % String; default: 0 (not retained)
-	* __controlY__ - Number or % String; default: 0 (not retained)
-	* __endX__ - Number or % String; default: 0 (not retained)
-	* __endY__ - Number or % String; default: 0 (not retained)
-	* __shape__ - Boolean, true to create Shape; false (default) to create Path 
-	* any other legitimate Entity, Context or Shape/Path attribute
+The argument can include:
+* __startX__ - Number or % String; default: 0
+* __startY__ - Number or % String; default: 0
+* __controlX__ - Number or % String; default: 0 (not retained)
+* __controlY__ - Number or % String; default: 0 (not retained)
+* __endX__ - Number or % String; default: 0 (not retained)
+* __endY__ - Number or % String; default: 0 (not retained)
+* __shape__ - Boolean, true to create Shape; false (default) to create Path 
+* any other legitimate Entity, Context or Shape/Path attribute
 
-	Percentage String values are relative to the entity's cell's dimensions
+Percentage String values are relative to the entity's cell's dimensions
 
-	@method makeQuadratic
-	@param {Object} items Object containing attributes
-	@return Shape or Path entity object
-	**/
+@method makeQuadratic
+@param {Object} items Object containing attributes
+@return Shape or Path entity object
+**/
 		my.makeQuadratic = function(items) {
 			var cell,
 				startX,
@@ -403,7 +401,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			items.fixed = false;
 			items.data = data;
 			if (items.shape) {
-				myShape = my.newShape(items);
+				myShape = my.makeShape(items);
 			}
 			else {
 				myShape = my.makePath(items);
@@ -432,22 +430,22 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return myShape;
 		};
 		/**
-	A __factory__ function to generate straight line Shape or Path entity objects
+A __factory__ function to generate straight line Shape or Path entity objects
 
-	The argument can include:
-	* __startX__ - Number or % String; default: 0
-	* __startY__ - Number or % String; default: 0
-	* __endX__ - Number or % String; default: 0 (not retained)
-	* __endY__ - Number or % String; default: 0 (not retained)
-	* __shape__ - Boolean, true to create Shape; false (default) to create Path 
-	* any other legitimate Entity, Context or Shape/Path attribute
+The argument can include:
+* __startX__ - Number or % String; default: 0
+* __startY__ - Number or % String; default: 0
+* __endX__ - Number or % String; default: 0 (not retained)
+* __endY__ - Number or % String; default: 0 (not retained)
+* __shape__ - Boolean, true to create Shape; false (default) to create Path 
+* any other legitimate Entity, Context or Shape/Path attribute
 
-	Percentage String values are relative to the entity's cell's dimensions
+Percentage String values are relative to the entity's cell's dimensions
 
-	@method makeLine
-	@param {Object} items Object containing attributes
-	@return Shape or Path entity object
-	**/
+@method makeLine
+@param {Object} items Object containing attributes
+@return Shape or Path entity object
+**/
 		my.makeLine = function(items) {
 			var cell,
 				startX,
@@ -473,7 +471,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			items.fixed = false;
 			items.data = data;
 			if (items.shape) {
-				myShape = my.newShape(items);
+				myShape = my.makeShape(items);
 			}
 			else {
 				myShape = my.makePath(items);
@@ -494,38 +492,38 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return myShape;
 		};
 		/**
-	A __factory__ function to generate regular entitys such as triangles, stars, hexagons, etc
+A __factory__ function to generate regular entitys such as triangles, stars, hexagons, etc
 
-	The argument can include:
-	* __angle__ - Number; eg an angle of 72 produces a pentagon, while 144 produces a five-pointed star - default: 0
-	* __sides__ - Number; number of sides to the regular entity - default: 0
-	* __outline__ - Number; default: 0
-	* __radius__ - Number; default: 0 (not retained)
-	* __startControlX__ - Number or % String - x coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)
-	* __controlX__ - alias for startControlX; default: 0 (not retained)
-	* __startControlY__ - Number or % String - y coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)
-	* __controlY__ - alias for startControlY; default: 0 (not retained)
-	* __endControlX__ - Number or % String - x coordinate for endControl (bezier) curve; default: 0 (not retained)
-	* __endControlY__ - Number or % String - y coordinate for endControl (bezier) curve; default: 0 (not retained)
-	* __lineType__ - String defining type of line/curve to use for generated entity (not retained)
-	* __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
-	* any other legitimate Entity, Context or Shape/Path attribute
+The argument can include:
+* __angle__ - Number; eg an angle of 72 produces a pentagon, while 144 produces a five-pointed star - default: 0
+* __sides__ - Number; number of sides to the regular entity - default: 0
+* __outline__ - Number; default: 0
+* __radius__ - Number; default: 0 (not retained)
+* __startControlX__ - Number or % String - x coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)
+* __controlX__ - alias for startControlX; default: 0 (not retained)
+* __startControlY__ - Number or % String - y coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)
+* __controlY__ - alias for startControlY; default: 0 (not retained)
+* __endControlX__ - Number or % String - x coordinate for endControl (bezier) curve; default: 0 (not retained)
+* __endControlY__ - Number or % String - y coordinate for endControl (bezier) curve; default: 0 (not retained)
+* __lineType__ - String defining type of line/curve to use for generated entity (not retained)
+* __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
+* any other legitimate Entity, Context or Shape/Path attribute
 
-	Entitys can be generated using lines, or quadratic or bezier curves. The species of line to use is defined in the __lineType__ attribute which accepts the following values:
-	* '__l__' - straight line (default)
-	* '__q__' - quadratic curve
-	* '__t__' - reflected quadratic curve
-	* '__c__' - bezier curve
-	* '__s__' - reflected bezier curve
+Entitys can be generated using lines, or quadratic or bezier curves. The species of line to use is defined in the __lineType__ attribute which accepts the following values:
+* '__l__' - straight line (default)
+* '__q__' - quadratic curve
+* '__t__' - reflected quadratic curve
+* '__c__' - bezier curve
+* '__s__' - reflected bezier curve
 
-	_Either the 'angle' attribute or the 'sides' attribute (but not both) must be included in the argument object_
+_Either the 'angle' attribute or the 'sides' attribute (but not both) must be included in the argument object_
 
-	Percentage String values are relative to the entity's cell's dimensions
+Percentage String values are relative to the entity's cell's dimensions
 
-	@method makeRegularShape
-	@param {Object} items Object containing attributes
-	@return Shape or Path entity object
-	**/
+@method makeRegularShape
+@param {Object} items Object containing attributes
+@return Shape or Path entity object
+**/
 		my.makeRegularShape = function(items) {
 			var stat1 = ['c', 's', 'q', 't', 'l'],
 				stat2 = ['s', 't'],
@@ -620,7 +618,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				} while (test !== '0' && count < 1000);
 				data += 'z';
 				items.data = data;
-				return (items.shape) ? my.newShape(items) : my.makePath(items);
+				return (items.shape) ? my.makeShape(items) : my.makePath(items);
 			}
 			return false;
 		};
@@ -651,14 +649,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			};
 		}
 		/**
-	A __factory__ helper function - convert percentage values to pixel values
-	@method convertPercentage
-	@param {String} val - the percentage to be converted
-	@param {Object} cell - the reference cell
-	@param {Boolean} useWidth - true calculates the x point along the cell width; false calculates the y point against height
-	@return Number result (px)
-	@private
-	**/
+A __factory__ helper function - convert percentage values to pixel values
+@method convertPercentage
+@param {String} val - the percentage to be converted
+@param {Object} cell - the reference cell
+@param {Boolean} useWidth - true calculates the x point along the cell width; false calculates the y point against height
+@return Number result (px)
+@private
+**/
 		my.convertPercentage = function(val, cell, useWidth) {
 			return (useWidth) ? (parseFloat(val) / 100) * cell.actualWidth : (parseFloat(val) / 100) * cell.actualHeight;
 		};

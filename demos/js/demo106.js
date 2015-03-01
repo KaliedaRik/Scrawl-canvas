@@ -38,7 +38,7 @@ var mycode = function() {
 	hitbubbles = scrawl.makeGroup({
 		name: 'hitbubbles',
 	});
-	color = scrawl.newColor({
+	color = scrawl.makeColor({
 		rMax: 200,
 		gMax: 200,
 		bMax: 200,
@@ -46,7 +46,7 @@ var mycode = function() {
 		aMin: 1,
 	});
 	for (i = 0; i < 40; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			radius: Math.ceil(Math.random() * 40) + 5,
 			startX: Math.ceil((Math.random() * 100) + 150),
 			startY: Math.ceil((Math.random() * 100) + 150),
@@ -59,7 +59,7 @@ var mycode = function() {
 	}
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			hitbubbles.setEntitysTo({
 				globalAlpha: 0.4,

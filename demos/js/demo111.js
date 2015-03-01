@@ -27,7 +27,7 @@ var mycode = function() {
 
 
 	//build entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		startX: '50%',
 		startY: '50%',
 		width: 540,
@@ -169,7 +169,7 @@ var mycode = function() {
 	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

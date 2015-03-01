@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -1737,9 +1735,33 @@ A __factory__ function to generate new RadialGradient objects
 **/
 	my.Vector = function(items) {
 		items = my.safeObject(items);
+		/**
+X coordinate (px)
+@property x
+@type Number
+@default 0
+**/
 		this.x = items.x || 0;
+		/**
+Y coodinate (px)
+@property y
+@type Number
+@default 0
+**/
 		this.y = items.y || 0;
+		/**
+Z coordinate (px)
+@property z
+@type Number
+@default 0
+**/
 		this.z = items.z || 0;
+		/**
+Vector name - not guaranteed to be unique
+@property name
+@type String
+@default 'generic'
+**/
 		this.name = items.name || 'generic';
 		return this;
 	};
@@ -1752,33 +1774,9 @@ A __factory__ function to generate new RadialGradient objects
 **/
 	my.Vector.prototype.type = 'Vector';
 	my.d.Vector = {
-		/**
-X coordinate (px)
-@property x
-@type Number
-@default 0
-**/
 		x: 0,
-		/**
-Y coodinate (px)
-@property y
-@type Number
-@default 0
-**/
 		y: 0,
-		/**
-Z coordinate (px)
-@property z
-@type Number
-@default 0
-**/
 		z: 0,
-		/**
-Vector name - not guaranteed to be unique
-@property name
-@type String
-@default 'generic'
-**/
 		name: 'generic'
 	};
 	/**

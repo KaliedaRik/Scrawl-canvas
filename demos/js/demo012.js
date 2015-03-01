@@ -35,7 +35,7 @@ var mycode = function() {
 	balls = scrawl.makeGroup({
 		name: 'balls',
 	});
-	goldie = scrawl.newWheel({
+	goldie = scrawl.makeWheel({
 		group: 'balls',
 		radius: 10,
 		fillStyle: 'gold',
@@ -65,7 +65,7 @@ var mycode = function() {
 	}
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			myStar.setDelta({
 				roll: 0.1,

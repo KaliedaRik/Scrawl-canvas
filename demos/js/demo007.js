@@ -19,7 +19,7 @@ var mycode = function() {
 	}).clear();
 
 	//define entitys
-	myBlock = scrawl.newBlock({ //template
+	myBlock = scrawl.makeBlock({ //template
 		name: 'template',
 		width: 50,
 		height: 50,
@@ -33,7 +33,7 @@ var mycode = function() {
 		shadowBlur: 4,
 		shadowColor: 'black',
 	});
-	myLabel = scrawl.newPhrase({ //template label
+	myLabel = scrawl.makePhrase({ //template label
 		pivot: 'template',
 		handleX: 'center',
 		handleY: 50,

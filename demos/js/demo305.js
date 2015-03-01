@@ -36,7 +36,7 @@ var mycode = function() {
 	//define physics - forces
 	scrawl.physics.windSpeedX = 3;
 	scrawl.physics.windSpeedY = -0.2;
-	scrawl.newForce({
+	scrawl.makeForce({
 		name: 'wind',
 		fn: function(ball) {
 			// constant = 0.5 * 1.23 [default airDensity] * 6.428 [half surface area of 1m radius sphere] * 0.42 [default drag]
@@ -54,7 +54,7 @@ var mycode = function() {
 	//define physics - particles
 	for (i = 0; i < rows; i++) {
 		for (j = 0; j < cols; j++) {
-			scrawl.newParticle({
+			scrawl.makeParticle({
 				name: 'b_' + i + '_' + j,
 				startX: 200.5 + (i * holeW),
 				startY: 150.5 + (j * holeH),
@@ -137,7 +137,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			updateWind();
 			calculatePositions();

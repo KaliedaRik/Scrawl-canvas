@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -65,34 +63,61 @@ Utility canvas 2d context engine
 **/
 		my.imageCvx = my.imageCanvas.getContext('2d');
 		/**
-A __factory__ function to generate new Image objects
+Alias for makeImage()
 @method newImage
+@deprecated
+@private
+**/
+		my.newImage = function(items) {
+			return my.makeImage(items);
+		};
+		/**
+Alias for makeSpriteAnimation()
+@method newSpriteAnimation
+@deprecated
+**/
+		my.newSpriteAnimation = function(items) {
+			return my.makeSpriteAnimation(items);
+		};
+		/**
+Alias for makeVideo()
+method newVideo
+@deprecated
+@private
+**/
+		my.newVideo = function(items) {
+			return my.makeVideo(items);
+		};
+		/**
+A __factory__ function to generate new Image objects
+@method makeImage
 @param {Object} items Key:value Object argument for setting attributes
 @return Image object
 @private
 **/
-		my.newImage = function(items) {
+		my.makeImage = function(items) {
 			return new my.Image(items);
 		};
 		/**
 A __factory__ function to generate new SpriteAnimation objects
-@method newSpriteAnimation
+@method makeSpriteAnimation
 @param {Object} items Key:value Object argument for setting attributes
 @return SpriteAnimation object
 **/
-		my.newSpriteAnimation = function(items) {
+		my.makeSpriteAnimation = function(items) {
 			return new my.SpriteAnimation(items);
 		};
 		/**
 A __factory__ function to generate new Video objects
-@method newImage
+@method makeVideo
 @param {Object} items Key:value Object argument for setting attributes
 @return ScrawlImage object
 @private
 **/
-		my.newVideo = function(items) {
+		my.makeVideo = function(items) {
 			return new my.Video(items);
 		};
+
 		my.workimg = {
 			v1: my.makeVector(),
 		};
@@ -120,7 +145,7 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 				if (s.length > 0) {
 					for (i = s.length; i > 0; i--) {
 						if (s[i - 1].complete) {
-							my.newImage({
+							my.makeImage({
 								element: s[i - 1],
 								removeImageFromDOM: kill,
 								crossOrigin: 'anonymous'
@@ -141,7 +166,7 @@ Helper function
 @private
 **/
 		my.getImagesCallback = function() {
-			my.newImage({
+			my.makeImage({
 				element: this, // should be the image element itself
 				crossOrigin: 'anonymous'
 			});
@@ -159,7 +184,7 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 			if (idtag) {
 				myImg = document.getElementById(idtag);
 				if (myImg.complete) {
-					my.newImage({
+					my.makeImage({
 						element: myImg,
 						removeImageFromDOM: kill,
 						crossOrigin: 'anonymous'
@@ -178,7 +203,7 @@ Helper function
 @private
 **/
 		my.getVideoCallback = function() {
-			my.newVideo({
+			my.makeVideo({
 				element: this, //unrecorded flag for triggering Image stuff
 				crossOrigin: 'anonymous'
 			});
@@ -196,7 +221,7 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 			if (idtag) {
 				myVideo = document.getElementById(idtag);
 				if (myVideo.readyState > 1) {
-					my.newVideo({
+					my.makeVideo({
 						element: myVideo, //unrecorded flag for triggering Image stuff
 						stream: stream,
 						crossOrigin: 'anonymous'
@@ -467,7 +492,7 @@ Clone an Image object
 **/
 		my.Image.prototype.clone = function(items) {
 			items.element = my.imageFragment.getElementById(this.name).cloneNode();
-			return my.newImage(items);
+			return my.makeImage(items);
 		};
 
 		/**
@@ -475,7 +500,7 @@ Clone an Image object
 
 ## Instantiation
 
-* scrawl.newSpriteAnimation()
+* scrawl.makeSpriteAnimation()
 
 ## Purpose
 
@@ -690,7 +715,7 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 ## Instantiation
 
 * scrawl.getVideoById()
-* scrawl.newVideo()
+* scrawl.makeVideo()
 
 ## Purpose
 

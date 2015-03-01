@@ -44,7 +44,7 @@ var mycode = function() {
 	myGroup = scrawl.group.bigcell;
 
 	//define designs (colors)
-	myColor = scrawl.newColor({
+	myColor = scrawl.makeColor({
 		a: 1,
 		aMin: 1,
 		rMax: 200,
@@ -53,7 +53,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 10,
 		startY: 10,
 		width: 1580,
@@ -63,7 +63,7 @@ var mycode = function() {
 		lineWidth: 5,
 	});
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		text: 'This cell is zoomable\n' +
 			'Use the + and - keys to zoom in or out\n' +
 			'(or use the mouse wheel for zooming)\n' +
@@ -174,7 +174,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveEntitys();
 			pad.render();

@@ -20,7 +20,7 @@ var mycode = function() {
 	});
 
 	//define, and stamp, entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		startX: 180,
 		startY: 200,
 		width: 300,
@@ -41,7 +41,7 @@ var mycode = function() {
 	}).getImageData().stamp();
 
 	//define brush entity ...
-	brush = scrawl.newWheel({
+	brush = scrawl.makeWheel({
 		radius: 3,
 		method: 'fill',
 	});

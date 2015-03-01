@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -41,30 +39,30 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		'use strict';
 
 		/**
-    # window.scrawl
+# window.scrawl
 
-    scrawlPath module adaptions to the Scrawl library object
+scrawlPath module adaptions to the Scrawl library object
 
-    ## New library sections
+## New library sections
 
-    * scrawl.point 
-    * scrawl.link 
+* scrawl.point 
+* scrawl.link 
 
-    ## New default attributes
+## New default attributes
 
-    * Position.pathPlace - default: 0
-    * Position.pathRoll - default: 0;
-    * Position.addPathRoll - default: false;
-    * Position.path - default: '';
+* Position.pathPlace - default: 0
+* Position.pathRoll - default: 0;
+* Position.addPathRoll - default: false;
+* Position.path - default: '';
 
-    @class window.scrawl_Path
-    **/
+@class window.scrawl_Path
+**/
 
 		/**
-    scrawl.deleteEntity hook function - modified by path module
-    @method pathDeleteEntity
-    @private
-    **/
+scrawl.deleteEntity hook function - modified by path module
+@method pathDeleteEntity
+@private
+**/
 		my.pathDeleteEntity = function(item) {
 			var pointList,
 				linkList,
@@ -86,25 +84,25 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			}
 		};
 		/**
-    Clone a Scrawl.js object, optionally altering attribute values in the cloned object
+Clone a Scrawl.js object, optionally altering attribute values in the cloned object
 
-    (This function replaces the core function)
+(This function replaces the core function)
 
-    @method Base.clone
-    @param {Object} items Object containing attribute key:value pairs; will overwrite existing values in the cloned, but not the source, Object
-    @return Cloned object
-    @chainable
-    @example
-        var box = scrawl.newBlock({
-            width: 50,
-            height: 50,
-            });
-        var newBox = box.clone({
-            height: 100,
-            });
-        newBox.get('width');        //returns 50
-        newBox.get('height');       //returns 100
-    **/
+@method Base.clone
+@param {Object} items Object containing attribute key:value pairs; will overwrite existing values in the cloned, but not the source, Object
+@return Cloned object
+@chainable
+@example
+    var box = scrawl.makeBlock({
+        width: 50,
+        height: 50,
+        });
+    var newBox = box.clone({
+        height: 100,
+        });
+    newBox.get('width');        //returns 50
+    newBox.get('height');       //returns 100
+**/
 		my.Base.prototype.clone = function(items) {
 			var b = my.mergeOver(this.parse(), my.safeObject(items));
 			delete b.context; //required for successful cloning of entitys
@@ -132,10 +130,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			my.mergeInto(my.d.Phrase, my.d.Entity);
 		}
 		/**
-    Position constructor hook function - modified by path module
-    @method pathPositionInit
-    @private
-    **/
+Position constructor hook function - modified by path module
+@method pathPositionInit
+@private
+**/
 		my.Position.prototype.pathPositionInit = function(items) {
 			this.path = my.xtGet(items.path, my.d[this.type].path);
 			this.pathRoll = my.xtGet(items.pathRoll, my.d[this.type].pathRoll);
@@ -143,20 +141,20 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			this.pathPlace = my.xtGet(items.pathPlace, my.d[this.type].pathPlace);
 		};
 		/**
-    Position.setDelta hook function - modified by path module
-    @method pathPositionSetDelta
-    @private
-    **/
+Position.setDelta hook function - modified by path module
+@method pathPositionSetDelta
+@private
+**/
 		my.Position.prototype.pathPositionSetDelta = function(items) {
 			if (items.pathPlace) {
 				this.pathPlace += items.pathPlace;
 			}
 		};
 		/**
-    Cell.prepareToCopyCell hook function - modified by path module
-    @method pathPrepareToCopyCell
-    @private
-    **/
+Cell.prepareToCopyCell hook function - modified by path module
+@method pathPrepareToCopyCell
+@private
+**/
 		my.Cell.prototype.pathPrepareToCopyCell = function() {
 			var here;
 			if (my.entity[this.path] && my.entity[this.path].type === 'Path') {
@@ -167,10 +165,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			}
 		};
 		/**
-    Entity.stamp hook function - modified by path module
-    @method pathStamp
-    @private
-    **/
+Entity.stamp hook function - modified by path module
+@method pathStamp
+@private
+**/
 		my.Entity.prototype.pathStamp = function(method, cell) {
 			var here;
 			if (my.entity[this.path] && my.entity[this.path].type === 'Path') {
@@ -181,50 +179,68 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			}
 		};
 		/**
-    A __factory__ function to generate new Point objects
-    @method newPoint
-    @param {Object} items Key:value Object argument for setting attributes
-    @return Point object
-    @private
-    **/
+Alias for makePoint()
+@method newPoint
+@deprecated
+@private
+**/
 		my.newPoint = function(items) {
+			return my.makePoint(items);
+		};
+		/**
+Alias for makeLink()
+@method newLink
+@deprecated
+@private
+**/
+		my.newLink = function(items) {
+			return my.makeLink(items);
+		};
+		/**
+A __factory__ function to generate new Point objects
+@method makePoint
+@param {Object} items Key:value Object argument for setting attributes
+@return Point object
+@private
+**/
+		my.makePoint = function(items) {
 			return new my.Point(items);
 		};
 		/**
-    A __factory__ function to generate new Link objects
-    @method newLink
-    @param {Object} items Key:value Object argument for setting attributes
-    @return Link object
-    @private
-    **/
-		my.newLink = function(items) {
+A __factory__ function to generate new Link objects
+@method makeLink
+@param {Object} items Key:value Object argument for setting attributes
+@return Link object
+@private
+**/
+		my.makeLink = function(items) {
 			return new my.Link(items);
 		};
 		/**
-    A __factory__ function to generate new Path objects
+A __factory__ function to generate new Path objects
 
-    _Note: this function does NOT produce Path entitys_ - use scrawl.makePath()
-    @method newPath
-    @param {Object} items Key:value Object argument for setting attributes
-    @return Path object
-    @private
-    **/
-		my.newPath = function(items) {
+_Note: this function does NOT produce Path entitys_ - use scrawl.makePath()
+@method newPathObject
+@param {Object} items Key:value Object argument for setting attributes
+@return Path object
+@private
+**/
+		my.newPathObject = function(items) {
 			return new my.Path(items);
 		};
 		/**
-    A __factory__ function to generate new Path entitys
-    @method makePath
-    @param {Object} items Key:value Object argument for setting attributes
-    @return Path entity
-    @example
-        scrawl.makePath({
-            startX: 50,
-            startY: 20,
-            fillStyle: 'red',
-            data: 'M0,0 50,0 60,20, 10,20 0,0z',
-            });
-    **/
+A __factory__ function to generate new Path entitys
+@method makePath
+@param {Object} items Key:value Object argument for setting attributes
+@return Path entity
+@example
+    scrawl.makePath({
+        startX: 50,
+        startY: 20,
+        fillStyle: 'red',
+        data: 'M0,0 50,0 60,20, 10,20 0,0z',
+        });
+**/
 		my.makePath = function(items) {
 			var stat1 = ['C', 'c', 'S', 's'],
 				stat2 = ['Q', 'q', 'T', 't'],
@@ -297,7 +313,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				return false;
 			};
 			var generatePoint = function(_tempname, _pcount, _shapename, _x, _y, _lcount, _sx, _sy) {
-				my.newPoint({
+				my.makePoint({
 					name: _tempname + '_p' + _pcount,
 					entity: _shapename,
 					currentX: _x * _sx,
@@ -309,7 +325,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				_ept = (my.xt(_ept)) ? _ept : {};
 				_cp1 = (my.xt(_cp1)) ? _cp1 : {};
 				_cp2 = (my.xt(_cp2)) ? _cp2 : {};
-				my.newLink({
+				my.makeLink({
 					name: _tempname + '_l' + _lcount,
 					entity: _shapename,
 					species: _spec,
@@ -322,7 +338,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				});
 			};
 			if (my.xt(items.data)) {
-				myShape = my.newPath(items);
+				myShape = my.newPathObject(items);
 				sn = myShape.name;
 				tn = sn.replace(search, '=');
 				lib = my.point;
@@ -624,30 +640,30 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.pushUnique(my.nameslist, 'linknames');
 
 		/**
-    # Path
+# Path
 
-    ## Instantiation
+## Instantiation
 
-    * scrawl.makePath() - Irregular, path-based shapes
+* scrawl.makePath() - Irregular, path-based shapes
 
-    Additional factory functions to instantiate Path objects are available in the __pathFactoryFunctions__ module
+Additional factory functions to instantiate Path objects are available in the __pathFactoryFunctions__ module
 
-    ## Purpose
+## Purpose
 
-    * Defines a entity composed of lines, quadratic and bezier curves, etc
-    * Makes use of, but doesn't contain, Point and Link objects to define the entity
-    * Can be used as a path for placing and animating other entitys
-    * Point objects can be used as pivots by other entitys
+* Defines a entity composed of lines, quadratic and bezier curves, etc
+* Makes use of, but doesn't contain, Point and Link objects to define the entity
+* Can be used as a path for placing and animating other entitys
+* Point objects can be used as pivots by other entitys
 
-    ## Access
+## Access
 
-    * scrawl.entity.PATHNAME - for the Path entity object
+* scrawl.entity.PATHNAME - for the Path entity object
 
-    @class Path
-    @constructor
-    @extends Entity
-    @param {Object} [items] Key:value Object argument for setting attributes
-    **/
+@class Path
+@constructor
+@extends Entity
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Path = function(items) {
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
@@ -663,128 +679,128 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Path.prototype = Object.create(my.Entity.prototype);
 		/**
-    @property type
-    @type String
-    @default 'Path'
-    @final
-    **/
+@property type
+@type String
+@default 'Path'
+@final
+**/
 		my.Path.prototype.type = 'Path';
 		my.Path.prototype.classname = 'entitynames';
 		my.d.Path = {
 			/**
-    POINTNAME of the Point object that commences the drawing operation
+POINTNAME of the Point object that commences the drawing operation
 
-    Set automatically by Path creation factory functions
-    @property firstPoint
-    @type String
-    @default ''
-    @private
-    **/
+Set automatically by Path creation factory functions
+@property firstPoint
+@type String
+@default ''
+@private
+**/
 			firstPoint: '',
 			/**
-    Drawing flag - when set to true, will treat the first drawing (not positioning) data point as the start point
+Drawing flag - when set to true, will treat the first drawing (not positioning) data point as the start point
 
-    Generally this is set automatically as part of an outline factory function
-    @property isLine
-    @type Boolean
-    @default true
-    **/
+Generally this is set automatically as part of an outline factory function
+@property isLine
+@type Boolean
+@default true
+**/
 			isLine: true,
 			/**
-    Drawing flag - when true, path will be closed
+Drawing flag - when true, path will be closed
 
-    _Note: this attribute must be set to true for those drawing methods that use a fill flood as part of their operation
-    @property closed
-    @type Boolean
-    @default true
-    **/
+_Note: this attribute must be set to true for those drawing methods that use a fill flood as part of their operation
+@property closed
+@type Boolean
+@default true
+**/
 			closed: true,
 			/**
-    Array of LINKNAME Strings for Link objects associated with this Path entity
-    @property linkList
-    @type Array
-    @default []
-    @private
-    **/
+Array of LINKNAME Strings for Link objects associated with this Path entity
+@property linkList
+@type Array
+@default []
+@private
+**/
 			linkList: [],
 			/**
-    Array of length (Number) values for each Link object associated with this Path entity
-    @property linkDurations
-    @type Array
-    @default []
-    @private
-    **/
+Array of length (Number) values for each Link object associated with this Path entity
+@property linkDurations
+@type Array
+@default []
+@private
+**/
 			linkDurations: [],
 			/**
-    Array of POINTNAME Strings for Point objects associated with this Path entity
-    @property pointList
-    @type Array
-    @default []
-    @private
-    **/
+Array of POINTNAME Strings for Point objects associated with this Path entity
+@property pointList
+@type Array
+@default []
+@private
+**/
 			pointList: [],
 			/**
-    Path length - calculated automatically by scrawl
+Path length - calculated automatically by scrawl
 
-    _Note: this value will be affected by the value of the precision attribute - hiher precisions lead to more accurate perimeterLength values, particularly along curves_
-    @property perimeterLength
-    @type Number
-    @default 0
-    **/
+_Note: this value will be affected by the value of the precision attribute - hiher precisions lead to more accurate perimeterLength values, particularly along curves_
+@property perimeterLength
+@type Number
+@default 0
+**/
 			perimeterLength: 0,
 			/**
-    Path marker entitys - SPRITENAME String of entity used at start of the Path
-    @property markStart
-    @type String
-    @default ''
-    **/
+Path marker entitys - SPRITENAME String of entity used at start of the Path
+@property markStart
+@type String
+@default ''
+**/
 			markStart: '',
 			/**
-    Path marker entitys - SPRITENAME String of entity used at the line/curve joints along the Path
-    @property markMid
-    @type String
-    @default ''
-    **/
+Path marker entitys - SPRITENAME String of entity used at the line/curve joints along the Path
+@property markMid
+@type String
+@default ''
+**/
 			markMid: '',
 			/**
-    Path marker entitys - SPRITENAME String of entity used at end of the Path
-    @property markEnd
-    @type String
-    @default ''
-    **/
+Path marker entitys - SPRITENAME String of entity used at end of the Path
+@property markEnd
+@type String
+@default ''
+**/
 			markEnd: '',
 			/**
-    Path marker entitys - SPRITENAME String of entity used as the fallback when markStart, markMid or markEnd attributes are not set
-    @property mark
-    @type String
-    @default ''
-    **/
+Path marker entitys - SPRITENAME String of entity used as the fallback when markStart, markMid or markEnd attributes are not set
+@property mark
+@type String
+@default ''
+**/
 			mark: '',
 			/**
-    Path entity default method attribute is 'draw', not 'fill'
-    @property method
-    @type String
-    @default 'draw'
-    **/
+Path entity default method attribute is 'draw', not 'fill'
+@property method
+@type String
+@default 'draw'
+**/
 			method: 'draw',
 			/**
-    Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure entitys will follow the path more accurately
-    @property precision
-    @type Number
-    @default 10
-    **/
+Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure entitys will follow the path more accurately
+@property precision
+@type Number
+@default 10
+**/
 			precision: 10,
 		};
 		my.mergeInto(my.d.Path, my.d.Entity);
 		/**
-    Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
-    @method prepareShape
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
+@method prepareShape
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.prepareShape = function(ctx, cell) {
 			var here;
 			my.cell[cell].setEngine(this);
@@ -798,28 +814,28 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Augments Position.getPivotOffsetVector()
-    @method getPivotOffsetVector
-    @return A Vector of calculated offset values to help determine where entity drawing should start
-    @private
-    **/
+Augments Position.getPivotOffsetVector()
+@method getPivotOffsetVector
+@return A Vector of calculated offset values to help determine where entity drawing should start
+@private
+**/
 		my.Path.prototype.getPivotOffsetVector = function() {
 			return (this.isLine) ? my.Entity.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
 		};
 		/**
-    Display helper function
+Display helper function
 
-    Stamp mark entitys onto Path
+Stamp mark entitys onto Path
 
-    @method stampMark
-    @param {Entity} entity Entity object to be stamped
-    @param {Number} pos Path position (between 0 and 1)
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+@method stampMark
+@param {Entity} entity Entity object to be stamped
+@param {Number} pos Path position (between 0 and 1)
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.stampMark = function(entity, pos, ctx, cell) {
 			var path,
 				place,
@@ -848,17 +864,17 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Display helper function
+Display helper function
 
-    Prepare mark entitys for stamping onto Path
+Prepare mark entitys for stamping onto Path
 
-    @method addMarks
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+@method addMarks
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.addMarks = function(ctx, cell) {
 			var mark,
 				entity,
@@ -888,14 +904,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'clip' method draw
-    @method clip
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.clip = function(ctx, cell) {
 			if (this.closed) {
 				this.prepareShape(ctx, cell);
@@ -904,14 +920,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'clear' method draw
-    @method clear
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.clear = function(ctx, cell) {
 			this.prepareShape(ctx, cell);
 			ctx.globalCompositeOperation = 'destination-out';
@@ -921,14 +937,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'clearWithBackground' method draw
-    @method clearWithBackground
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.clearWithBackground = function(ctx, cell) {
 			var context,
 				background,
@@ -953,14 +969,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'fill' method draw
-    @method fill
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.fill = function(ctx, cell) {
 			if (this.get('closed')) {
 				this.prepareShape(ctx, cell);
@@ -970,14 +986,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'draw' method draw
-    @method draw
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.draw = function(ctx, cell) {
 			this.prepareShape(ctx, cell);
 			ctx.stroke();
@@ -985,14 +1001,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'drawFill' method draw
-    @method drawFill
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.drawFill = function(ctx, cell) {
 			this.prepareShape(ctx, cell);
 			ctx.stroke();
@@ -1004,14 +1020,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'fillDraw' method draw
-    @method fillDraw
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.fillDraw = function(ctx, cell) {
 			this.prepareShape(ctx, cell);
 			if (this.get('closed')) {
@@ -1023,14 +1039,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'sinkInto' method draw
-    @method sinkInto
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.sinkInto = function(ctx, cell) {
 			this.prepareShape(ctx, cell);
 			if (this.get('closed')) {
@@ -1041,14 +1057,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'floatOver' method draw
-    @method floatOver
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.floatOver = function(ctx, cell) {
 			this.prepareShape(ctx, cell);
 			ctx.stroke();
@@ -1059,22 +1075,22 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this entity's context values and defining the entitys path, on the canvas, but not drawing (fill stroke) the entity.
-    @method none
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this entity's context values and defining the entitys path, on the canvas, but not drawing (fill stroke) the entity.
+@method none
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.none = function(ctx, cell) {
 			this.prepareShape(ctx, cell);
 			return this;
 		};
 		/**
-    @method getFullPointList
-    @return Array containing POINTNAME Strings of all Point objects associated with this Path object
-    **/
+@method getFullPointList
+@return Array containing POINTNAME Strings of all Point objects associated with this Path object
+**/
 		my.Path.prototype.getFullPointList = function() {
 			var search,
 				list,
@@ -1090,9 +1106,9 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return list;
 		};
 		/**
-    @method getFullLinkList
-    @return Array containing LINKNAME Strings of all Link objects associated with this Path object
-    **/
+@method getFullLinkList
+@return Array containing LINKNAME Strings of all Link objects associated with this Path object
+**/
 		my.Path.prototype.getFullLinkList = function() {
 			var search,
 				list,
@@ -1108,13 +1124,13 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return list;
 		};
 		/**
-    Calculate and return Path object's path length
+Calculate and return Path object's path length
 
-    Accuracy of returned value depends on the setting of the __precision__ attribute; lower precision is less accurate for curves
-    @method getPerimeterLength
-    @param {Boolean} [force] If set to true, forces a complete recalculation
-    @return Path length, in pixels
-    **/
+Accuracy of returned value depends on the setting of the __precision__ attribute; lower precision is less accurate for curves
+@method getPerimeterLength
+@param {Boolean} [force] If set to true, forces a complete recalculation
+@return Path length, in pixels
+**/
 		my.Path.prototype.getPerimeterLength = function(force) {
 			if (force || !this.perimeterLength || this.get('linkDurations').length === 0) {
 				this.buildPositions();
@@ -1122,12 +1138,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this.perimeterLength;
 		};
 		/**
-    Helper function - calculate the positions and lengths of the Path's constituent Point and Link objects
-    @method buildPositions
-    @return This
-    @chainable
-    @private
-    **/
+Helper function - calculate the positions and lengths of the Path's constituent Point and Link objects
+@method buildPositions
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.buildPositions = function() {
 			var i,
 				iz,
@@ -1161,14 +1177,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Calculate coordinates of point at given distance along the Shape entity's path
-    @method getPerimeterPosition
-    @param {Number} [val] Distance along path, between 0 (start) and 1 (end); default: 1
-    @param {Boolean} [steady] Steady flag - if true, return 'steady calculation' coordinates; otherwise return 'simple calculation' coordinates. Default: true
-    @param {Boolean} [roll] Roll flag - if true, return tangent angle (degrees) at that point along the path. Default: false
-    @param {Boolean} [local] Local flag - if true, return coordinate Vector relative to Entity start parameter; otherwise return Cell coordinate Vector. Default: false
-    @return Vector coordinates
-    **/
+Calculate coordinates of point at given distance along the Shape entity's path
+@method getPerimeterPosition
+@param {Number} [val] Distance along path, between 0 (start) and 1 (end); default: 1
+@param {Boolean} [steady] Steady flag - if true, return 'steady calculation' coordinates; otherwise return 'simple calculation' coordinates. Default: true
+@param {Boolean} [roll] Roll flag - if true, return tangent angle (degrees) at that point along the path. Default: false
+@param {Boolean} [local] Local flag - if true, return coordinate Vector relative to Entity start parameter; otherwise return Cell coordinate Vector. Default: false
+@return Vector coordinates
+**/
 		my.Path.prototype.getPerimeterPosition = function(val, steady, roll, local) {
 			var i,
 				iz,
@@ -1252,19 +1268,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Check a set of coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
+Check a set of coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
 
-    Argument object contains the following attributes:
+Argument object contains the following attributes:
 
-    * __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
-    * __x__ - X coordinate
-    * __y__ - Y coordinate
+* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
+* __x__ - X coordinate
+* __y__ - Y coordinate
 
-    Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
-    @method checkHit
-    @param {Object} items Argument object
-    @return The first coordinate to fall within the entity's path; false if none fall within the path
-    **/
+Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+@method checkHit
+@param {Object} items Argument object
+@return The first coordinate to fall within the entity's path; false if none fall within the path
+**/
 		my.Path.prototype.checkHit = function(items) {
 			var i,
 				iz,
@@ -1303,15 +1319,15 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Collision detection helper function
+Collision detection helper function
 
-    Parses the collisionPoints array to generate coordinate Vectors representing the entity's collision points
-    @method buildCollisionVectors
-    @param {Array} [items] Array of collision point data
-    @return This
-    @chainable
-    @private
-    **/
+Parses the collisionPoints array to generate coordinate Vectors representing the entity's collision points
+@method buildCollisionVectors
+@param {Array} [items] Array of collision point data
+@return This
+@chainable
+@private
+**/
 		my.Path.prototype.buildCollisionVectors = function(items) {
 			var i,
 				iz,
@@ -1363,36 +1379,36 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		/**
-    # Point
+# Point
 
-    ## Instantiation
+## Instantiation
 
-    * Objects created via Path factories
-    * scrawl.makeCartesianPoints() - deprecated
-    * scrawl.makePolarPoints() - deprecated
+* Objects created via Path factories
+* scrawl.makeCartesianPoints() - deprecated
+* scrawl.makePolarPoints() - deprecated
 
-    ## Purpose
+## Purpose
 
-    * Defines a movable point within a Path entity object
-    * Acts as a coordinate vector for Link drawing
+* Defines a movable point within a Path entity object
+* Acts as a coordinate vector for Link drawing
 
-    Path creation factories will all create Point objects automatically as part of the generation process. Point objects will be named regularly, depending on the factory:
+Path creation factories will all create Point objects automatically as part of the generation process. Point objects will be named regularly, depending on the factory:
 
-    * scrawl.makeLine(): SPRITENAME_p1 (start point), SPRITENAME_p2 (end point)
-    * scrawl.makeQuadratic(): SPRITENAME_p1 (start point), SPRITENAME_p2 (control point), SPRITENAME_p3 (end point)
-    * scrawl.makeBezier(): SPRITENAME_p1 (start point), SPRITENAME_p2 (first control point), SPRITENAME_p3 (second control point), SPRITENAME_p4 (end point)
-    * scrawl.makeRegularShape(): each angle point is numbered consecutively, starting at SPRITENAME_p1
-    * scrawl.makePath(): points are numbered consecutively, beginning from SPRITENAME_p1 at the start of the path; the end point of a line, quadratic curve or bezier curve will also act as the start point for the next line or curve
+* scrawl.makeLine(): SPRITENAME_p1 (start point), SPRITENAME_p2 (end point)
+* scrawl.makeQuadratic(): SPRITENAME_p1 (start point), SPRITENAME_p2 (control point), SPRITENAME_p3 (end point)
+* scrawl.makeBezier(): SPRITENAME_p1 (start point), SPRITENAME_p2 (first control point), SPRITENAME_p3 (second control point), SPRITENAME_p4 (end point)
+* scrawl.makeRegularShape(): each angle point is numbered consecutively, starting at SPRITENAME_p1
+* scrawl.makePath(): points are numbered consecutively, beginning from SPRITENAME_p1 at the start of the path; the end point of a line, quadratic curve or bezier curve will also act as the start point for the next line or curve
 
-    ## Access
+## Access
 
-    * scrawl.point.POINTNAME - for the Point object
+* scrawl.point.POINTNAME - for the Point object
 
-    @class Point
-    @constructor
-    @extends Base
-    @param {Object} [items] Key:value Object argument for setting attributes
-    **/
+@class Point
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Point = function(items) {
 			var local;
 			items = my.safeObject(items);
@@ -1421,61 +1437,61 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Point.prototype = Object.create(my.Base.prototype);
 		/**
-    @property type
-    @type String
-    @default 'Point'
-    @final
-    **/
+@property type
+@type String
+@default 'Point'
+@final
+**/
 		my.Point.prototype.type = 'Point';
 		my.Point.prototype.classname = 'pointnames';
 		my.d.Point = {
 			/**
-    SPRITENAME String of point object's parent entity
-    @property entity
-    @type String
-    @default ''
-    **/
+SPRITENAME String of point object's parent entity
+@property entity
+@type String
+@default ''
+**/
 			entity: '',
 			/**
-    Point's coordinate Vector - generally the Vector marks the Point's position (in pixels) from the Parent entity's start coordinates, though this can be changed by setting the __fixed__ attribute to true.
+Point's coordinate Vector - generally the Vector marks the Point's position (in pixels) from the Parent entity's start coordinates, though this can be changed by setting the __fixed__ attribute to true.
 
-    The following argument attributes can be used to initialize, set and get this attribute's component values:
+The following argument attributes can be used to initialize, set and get this attribute's component values:
 
-    * __startX__ or __currentX__ to set the x coordinate value
-    * __startY__ or __currentY__ to set the y coordinate value
-    @property local
-    @type Vector
-    @default zero value Vector
-    **/
+* __startX__ or __currentX__ to set the x coordinate value
+* __startY__ or __currentY__ to set the y coordinate value
+@property local
+@type Vector
+@default zero value Vector
+**/
 			local: {
 				x: 0,
 				y: 0,
 				z: 0
 			},
 			/**
-    LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
-    @property startLink
-    @type String
-    @default ''
-    @private
-    **/
+LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
+@property startLink
+@type String
+@default ''
+@private
+**/
 			startLink: '',
 			/**
-    Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (true), or to a Entity start Vector (SPRITENAME). Default action is to treat the Point as local to its parent Entity's start coordinate
-    @property fixed
-    @type Boolean
-    @default false
-    **/
+Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (true), or to a Entity start Vector (SPRITENAME). Default action is to treat the Point as local to its parent Entity's start coordinate
+@property fixed
+@type Boolean
+@default false
+**/
 			fixed: false,
 		};
 		my.mergeInto(my.d.Point, my.d.Base);
 		/**
-    Augments Base.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
-    @method set
-    @param {Object} items Object consisting of key:value attributes
-    @return This
-    @chainable
-    **/
+Augments Base.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		my.Point.prototype.set = function(items) {
 			var local;
 			my.Base.prototype.set.call(this, items);
@@ -1491,17 +1507,17 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Add values to the local attribute. Permitted attributes of the argument object include:
+Add values to the local attribute. Permitted attributes of the argument object include:
 
-    * __startX__, __currentX__ - added to _local.x
-    * __startY__, __currentY__ - added to _local.y
-    * __distance__ - recalculates the _local_ vector to set its values to equal vector's current magnitude + distance (in pixels)
-    * __angle__ - recalculates the _local_ vector to rotate it by the angle value (in degrees)
-    @method setDelta
-    @param {Object} items Object consisting of key:value attributes
-    @return This
-    @chainable
-    **/
+* __startX__, __currentX__ - added to _local.x
+* __startY__, __currentY__ - added to _local.y
+* __distance__ - recalculates the _local_ vector to set its values to equal vector's current magnitude + distance (in pixels)
+* __angle__ - recalculates the _local_ vector to rotate it by the angle value (in degrees)
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		my.Point.prototype.setDelta = function(items) {
 			var local,
 				m,
@@ -1527,15 +1543,15 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Sets the local attribute using angle and/or distance parameters:
+Sets the local attribute using angle and/or distance parameters:
 
-    * __distance__ - calculates the _local_ vector to set its values to equal vector's current magnitude + distance (in pixels)
-    * __angle__ - calculates the _local_ vector to rotate it by the angle value (in degrees)
-    @method setPolar
-    @param {Object} items Object consisting of key:value attributes
-    @return This
-    @chainable
-    **/
+* __distance__ - calculates the _local_ vector to set its values to equal vector's current magnitude + distance (in pixels)
+* __angle__ - calculates the _local_ vector to rotate it by the angle value (in degrees)
+@method setPolar
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		my.Point.prototype.setPolar = function(items) {
 			var m,
 				d,
@@ -1563,21 +1579,21 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Retrieve Point object's coordinates, together with additional data
+Retrieve Point object's coordinates, together with additional data
 
-    * Coordinate reference frame determined by the value of Point.local
-    * Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object's position and settings
+* Coordinate reference frame determined by the value of Point.local
+* Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object's position and settings
 
-    Return object has the following attributes:
+Return object has the following attributes:
 
-    * __name__ - Point.name
-    * __current__ - coordinate Vector
-    * __startLink__ - Point.startLink
+* __name__ - Point.name
+* __current__ - coordinate Vector
+* __startLink__ - Point.startLink
 
-    @method getData
-    @return Result object
-    @private
-    **/
+@method getData
+@return Result object
+@private
+**/
 		my.Point.prototype.getData = function() {
 			var s,
 				myPivot,
@@ -1622,24 +1638,24 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Retrieve Point object's coordinates
+Retrieve Point object's coordinates
 
-    * Coordinate reference frame determined by the value of Point.local
-    * Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object's position and settings
-    @method getCurrentCoordinates
-    @return Coordinate Vector
-    **/
+* Coordinate reference frame determined by the value of Point.local
+* Coordinate values determined by setting of Point.fixed, Point.local and the parent Shape object's position and settings
+@method getCurrentCoordinates
+@return Coordinate Vector
+**/
 		my.Point.prototype.getCurrentCoordinates = function() {
 			return this.getData().current;
 		};
 		/**
-    Set Point.fixed attribute
-    @method setToFixed
-    @param {Mixed} items - either a coordinate Vector; or an Object with x and y attributes; or a Number representing the horizontal coordinate, in pixels, from &lt;canvas&gt; element's left edge; or a pivot SPRITENAME, POINTNAME or PARTICLENAME String
-    @param {Number} [y] - vertical coordinate, in pixels, from &lt;canvas&gt; element's top edge
-    @return This
-    @chainable
-    **/
+Set Point.fixed attribute
+@method setToFixed
+@param {Mixed} items - either a coordinate Vector; or an Object with x and y attributes; or a Number representing the horizontal coordinate, in pixels, from &lt;canvas&gt; element's left edge; or a pivot SPRITENAME, POINTNAME or PARTICLENAME String
+@param {Number} [y] - vertical coordinate, in pixels, from &lt;canvas&gt; element's top edge
+@return This
+@chainable
+**/
 		my.Point.prototype.setToFixed = function(items, y) {
 			var x;
 			if (my.isa(items, 'str')) {
@@ -1656,29 +1672,29 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 
 		/**
-    # Link
+# Link
 
-    ## Instantiation
+## Instantiation
 
-    * Objects created via Path factories
+* Objects created via Path factories
 
-    ## Purpose
+## Purpose
 
-    * Defines the type of line to be drawn between two Point objects
-    * Can be of the form (species): line, bezier, quadratic
-    * Posesses actions: 'add', 'move' (to not draw a line), 'close' (end Point is Path object's startPoint), 'end' (for non-closed Path objects)
-    * Makes use of additional control points to determine curves
+* Defines the type of line to be drawn between two Point objects
+* Can be of the form (species): line, bezier, quadratic
+* Posesses actions: 'add', 'move' (to not draw a line), 'close' (end Point is Path object's startPoint), 'end' (for non-closed Path objects)
+* Makes use of additional control points to determine curves
 
-    ## Access
+## Access
 
-    * scrawl.link.LINKNAME - for the Link object
+* scrawl.link.LINKNAME - for the Link object
 
-    @class Link
-    @constructor
-    @extends Base
-    @param {Object} [items] Key:value Object argument for setting attributes
-    @private
-    **/
+@class Link
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+@private
+**/
 		my.Link = function(items) {
 			items = my.safeObject(items);
 			my.Base.call(this, items);
@@ -1701,11 +1717,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Link.prototype = Object.create(my.Base.prototype);
 		/**
-    @property type
-    @type String
-    @default 'Link'
-    @final
-    **/
+@property type
+@type String
+@default 'Link'
+@final
+**/
 		my.Link.prototype.type = 'Link';
 		my.Link.prototype.classname = 'linknames';
 		if (!my.xt(my.worklink)) {
@@ -1735,103 +1751,103 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		}
 		my.d.Link = {
 			/**
-    Type of link - permitted values include: 'line', 'quadratic', 'bezier'
-    @property species
-    @type String
-    @default ''
-    **/
+Type of link - permitted values include: 'line', 'quadratic', 'bezier'
+@property species
+@type String
+@default ''
+**/
 			species: '',
 			/**
-    POINTNAME of start Point object - used by line, quadratic and bezier links
-    @property startPoint
-    @type String
-    @default ''
-    **/
+POINTNAME of start Point object - used by line, quadratic and bezier links
+@property startPoint
+@type String
+@default ''
+**/
 			startPoint: '',
 			/**
-    SPRITENAME of this Link's parent entity object
-    @property entity
-    @type String
-    @default ''
-    **/
+SPRITENAME of this Link's parent entity object
+@property entity
+@type String
+@default ''
+**/
 			entity: '',
 			/**
-    POINTNAME of end Point object - used by line, quadratic and bezier links
-    @property endPoint
-    @type String
-    @default ''
-    **/
+POINTNAME of end Point object - used by line, quadratic and bezier links
+@property endPoint
+@type String
+@default ''
+**/
 			endPoint: '',
 			/**
-    POINTNAME of first control Point object - used by quadratic and bezier links
-    @property controlPoint1
-    @type String
-    @default ''
-    **/
+POINTNAME of first control Point object - used by quadratic and bezier links
+@property controlPoint1
+@type String
+@default ''
+**/
 			controlPoint1: '',
 			/**
-    POINTNAME of second control Point object - used by bezier links
-    @property controlPoint2
-    @type String
-    @default ''
-    **/
+POINTNAME of second control Point object - used by bezier links
+@property controlPoint2
+@type String
+@default ''
+**/
 			controlPoint2: '',
 			/**
-    Link object's action - permitted values include: 'add', 'move', 'close', 'end'
-    @property startLink
-    @type String
-    @default 'add'
-    **/
+Link object's action - permitted values include: 'add', 'move', 'close', 'end'
+@property startLink
+@type String
+@default 'add'
+**/
 			action: 'add',
 			/**
-    Link length - this value will be affected by the value of the parent Entity object's __precision__ attribute
-    @property length
-    @type Number
-    @default 0
-    @private
-    **/
+Link length - this value will be affected by the value of the parent Entity object's __precision__ attribute
+@property length
+@type Number
+@default 0
+@private
+**/
 			length: 0,
 			/**
-    Positions Arrays along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
-    @property positionsX
-    @type Array
-    @default []
-    @private
-    **/
+Positions Arrays along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
+@property positionsX
+@type Array
+@default []
+@private
+**/
 			positionsX: [],
 			/**
-    Positions Arrays along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
-    @property positionsY
-    @type Array
-    @default []
-    @private
-    **/
+Positions Arrays along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
+@property positionsY
+@type Array
+@default []
+@private
+**/
 			positionsY: [],
 			/**
-    Positions Arrays along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
-    @property positionsLength
-    @type Array
-    @default []
-    @private
-    **/
+Positions Arrays along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
+@property positionsLength
+@type Array
+@default []
+@private
+**/
 			positionsLength: [],
 			/**
-    Positions Arrays along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
-    @property positionsCumulativeLength
-    @type Array
-    @default []
-    @private
-    **/
+Positions Arrays along the length of the Link's path - these values will be affected by the value of the parent Entity object's __precision__ attribute
+@property positionsCumulativeLength
+@type Array
+@default []
+@private
+**/
 			positionsCumulativeLength: []
 		};
 		my.mergeInto(my.d.Link, my.d.Base);
 		/**
-    Augments Base.set()
-    @method set
-    @param {Object} items Object consisting of key:value attributes
-    @return This
-    @chainable
-    **/
+Augments Base.set()
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		my.Link.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
 			items = my.safeObject(items);
@@ -1849,14 +1865,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Position calculation helper function
-    @method pointOnLine
-    @param {Point} origin Start Point for calculation
-    @param {Point} destination End Point for calculation
-    @param {Number} val Distance between start and end points, where 0 = start and 1 = end
-    @return Coordinate Vector
-    @private
-    **/
+Position calculation helper function
+@method pointOnLine
+@param {Point} origin Start Point for calculation
+@param {Point} destination End Point for calculation
+@param {Number} val Distance between start and end points, where 0 = start and 1 = end
+@return Coordinate Vector
+@private
+**/
 		my.Link.prototype.pointOnLine = function(origin, destination, val) {
 			if (origin && destination && my.isa(val, 'num')) {
 				return destination.vectorSubtract(origin).scalarMultiply(val).vectorAdd(origin);
@@ -1864,18 +1880,18 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Position calculation helper function
+Position calculation helper function
 
-    Result Object contains the following attributes:
+Result Object contains the following attributes:
 
-    * __start__ - Link.start Point object's local Vector
-    * __end__ - Link.end Point object's local Vector
-    * __control1__ - Link.controlPoint1 Point object's local Vector
-    * __control2__ - Link.controlPoint2 Point object's local Vector
-    @method getPointCoordinates
-    @return Result Object
-    @private
-    **/
+* __start__ - Link.start Point object's local Vector
+* __end__ - Link.end Point object's local Vector
+* __control1__ - Link.controlPoint1 Point object's local Vector
+* __control2__ - Link.controlPoint2 Point object's local Vector
+@method getPointCoordinates
+@return Result Object
+@private
+**/
 		my.Link.prototype.getPointCoordinates = function() {
 			var vector;
 			vector = (this.startPoint) ? my.point[this.startPoint].getCurrentCoordinates() : my.o;
@@ -1897,12 +1913,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return my.worklink;
 		};
 		/**
-    Position calculation helper function
-    @method getLocalPositionOnLink
-    @param {Number} [val] - distance along link, where 0 = start and 1 = end
-    @return coordinate Vector
-    @private
-    **/
+Position calculation helper function
+@method getLocalPositionOnLink
+@param {Number} [val] - distance along link, where 0 = start and 1 = end
+@return coordinate Vector
+@private
+**/
 		my.Link.prototype.getLocalPositionOnLink = function(val) {
 			var mid1,
 				mid2,
@@ -1941,12 +1957,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return my.worklink.v1;
 		};
 		/**
-    Position calculation helper function
-    @method getPositionOnLink
-    @param {Number} [val] - distance along link, where 0 = start and 1 = end
-    @return coordinate Vector
-    @private
-    **/
+Position calculation helper function
+@method getPositionOnLink
+@param {Number} [val] - distance along link, where 0 = start and 1 = end
+@return coordinate Vector
+@private
+**/
 		my.Link.prototype.getPositionOnLink = function(val) {
 			var entity,
 				result;
@@ -1958,12 +1974,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Position calculation helper function
-    @method getLocalSteadyPositionOnLink
-    @param {Number} [val] - distance along link, where 0 = start and 1 = end
-    @return coordinate Vector
-    @private
-    **/
+Position calculation helper function
+@method getLocalSteadyPositionOnLink
+@param {Number} [val] - distance along link, where 0 = start and 1 = end
+@return coordinate Vector
+@private
+**/
 		my.Link.prototype.getLocalSteadyPositionOnLink = function(val) {
 			var dPos,
 				precision,
@@ -1988,12 +2004,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Position calculation helper function
-    @method getSteadyPositionOnLink
-    @param {Number} [val] - distance along link, where 0 = start and 1 = end
-    @return coordinate Vector
-    @private
-    **/
+Position calculation helper function
+@method getSteadyPositionOnLink
+@param {Number} [val] - distance along link, where 0 = start and 1 = end
+@return coordinate Vector
+@private
+**/
 		my.Link.prototype.getSteadyPositionOnLink = function(val) {
 			var entity,
 				result;
@@ -2003,21 +2019,21 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return result;
 		};
 		/**
-    Returns length of Link, in pixels
-    @method getLength
-    @return Length, in pixels
-    **/
+Returns length of Link, in pixels
+@method getLength
+@return Length, in pixels
+**/
 		my.Link.prototype.getLength = function() {
 			this.setPositions();
 			return this.length;
 		};
 		/**
-    (re)Calculate the Link object's __positions__ array
-    @method setPositions
-    @param {Number} [val] - precision level for the calculation. Default: parent Shape object's precision value
-    @return This
-    @chainable
-    **/
+(re)Calculate the Link object's __positions__ array
+@method setPositions
+@param {Number} [val] - precision level for the calculation. Default: parent Shape object's precision value
+@return This
+@chainable
+**/
 		my.Link.prototype.setPositions = function(val) {
 			var pts,
 				precision,
@@ -2065,15 +2081,15 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Path object drawing helper function
+Path object drawing helper function
 
-    _Note: this function is recursive_
+_Note: this function is recursive_
 
-    @method sketch
-    @param {Object} ctx Entity Cell's &lt;canvas&gt; element's context engine Object
-    @return True (eventually)
-    @private
-    **/
+@method sketch
+@param {Object} ctx Entity Cell's &lt;canvas&gt; element's context engine Object
+@return True (eventually)
+@private
+**/
 		my.Link.prototype.sketch = function(ctx) {
 			var myEnd,
 				myCon1,

@@ -22,7 +22,7 @@ var mycode = function() {
 	icon = scrawl.makeGroup({
 		name: 'myentitys',
 	});
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'blocky',
 		width: '80%',
 		height: '20%',
@@ -33,7 +33,7 @@ var mycode = function() {
 		startY: '50%',
 		group: 'myentitys',
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'wheely',
 		radius: 15,
 		startAngle: 30,
@@ -51,7 +51,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			//animate entity
 			icon.updateEntitysBy({

@@ -28,7 +28,7 @@ var mycode = function() {
 	pad = scrawl.pad.myCanvas;
 
 	//define filters
-	scrawl.newSaturationFilter({
+	scrawl.makeSaturationFilter({
 		name: 'sat',
 		saturation: 3,
 	});
@@ -43,7 +43,7 @@ var mycode = function() {
 	filterEntitys = scrawl.group.ripples.entitys;
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'myImage',
 		width: 600,
 		height: 400,
@@ -57,7 +57,7 @@ var mycode = function() {
 			e.preventDefault();
 		}
 		counter++;
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'drop' + counter,
 			startX: here.x,
 			startY: here.y,
@@ -71,7 +71,7 @@ var mycode = function() {
 	scrawl.addListener('up', newRing, canvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			for (var i = 0, z = filterEntitys.length; i < z; i++) {

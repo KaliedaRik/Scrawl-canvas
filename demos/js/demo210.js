@@ -44,7 +44,7 @@ var mycode = function() {
 	}
 	scrawl.renderElements();
 
-	scrawl.newTween({
+	scrawl.makeTween({
 		name: 'button0',
 		targets: buttons,
 		start: {
@@ -148,7 +148,7 @@ var mycode = function() {
 	]);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.renderElements();
 

@@ -28,7 +28,7 @@ var mycode = function() {
 
 	//define entitys
 	for (var i = 0; i < 4; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			fillStyle: 'blue',
@@ -53,7 +53,7 @@ var mycode = function() {
 	scrawl.point.mycurve_p3.setToFixed('wheel_2');
 	scrawl.point.mycurve_p4.setToFixed('wheel_3');
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		font: '12pt Arial, sans-serif',
 		handleX: 'center',
 		handleY: 30,
@@ -71,7 +71,7 @@ var mycode = function() {
 		pivot: 'wheel_3',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'goldwheel',
 		radius: 10,
 		fillStyle: 'gold',
@@ -115,7 +115,7 @@ var mycode = function() {
 	scrawl.addListener(['up', 'leave'], dropWheel, scrawl.canvas.mycanvas);
 
 	//tweens
-	scrawl.newTween({
+	scrawl.makeTween({
 		name: 'goldTween',
 		targets: scrawl.entity.goldwheel,
 		start: {
@@ -134,7 +134,7 @@ var mycode = function() {
 	}).run();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			if (myEntity) {
 				bendy.buildPositions();

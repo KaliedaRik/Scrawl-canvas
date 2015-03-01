@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -190,84 +188,212 @@ Entity constructor hook function - modified by filters module
 		};
 
 		/**
-A __factory__ function to generate new Greyscale filter objects
+Alias for makeGreyscaleFilter()
 @method newGreyscaleFilter
+@deprecated
+**/
+		my.newGreyscaleFilter = function(items) {
+			return my.makeGreyscaleFilter(items);
+		};
+		/**
+Alias for makeInvertFilter()
+@method newInvertFilter
+@deprecated
+**/
+		my.newInvertFilter = function(items) {
+			return my.makeInvertFilter(items);
+		};
+		/**
+Alias for makeBrightnessFilter()
+@method newBrightnessFilter
+@deprecated
+**/
+		my.newBrightnessFilter = function(items) {
+			return my.makeBrightnessFilter(items);
+		};
+		/**
+Alias for makeSaturationFilter()
+@method newSaturationFilter
+@deprecated
+**/
+		my.newSaturationFilter = function(items) {
+			return my.makeSaturationFilter(items);
+		};
+		/**
+Alias for makeThresholdFilter()
+@method newThresholdFilter
+@deprecated
+**/
+		my.newThresholdFilter = function(items) {
+			return my.makeThresholdFilter(items);
+		};
+		/**
+Alias for makeChannelsFilter()
+@method newChannelsFilter
+@deprecated
+**/
+		my.newChannelsFilter = function(items) {
+			return my.makeChannelsFilter(items);
+		};
+		/**
+Alias for makeChannelStepFilter()
+@method newChannelStepFilter
+@deprecated
+**/
+		my.newChannelStepFilter = function(items) {
+			return my.makeChannelStepFilter(items);
+		};
+		/**
+Alias for makeTintFilter()
+@method newTintFilter
+@deprecated
+**/
+		my.newTintFilter = function(items) {
+			return my.makeTintFilter(items);
+		};
+		/**
+Alias for makeSepiaFilter()
+@method newSepiaFilter
+@deprecated
+**/
+		my.newSepiaFilter = function(items) {
+			return my.makeSepiaFilter(items);
+		};
+		/**
+Alias for makeMatrixFilter()
+@method newMatrixFilter
+@deprecated
+**/
+		my.newMatrixFilter = function(items) {
+			return my.makeMatrixFilter(items);
+		};
+		/**
+Alias for makeSharpenFilter()
+@method newSharpenFilter
+@deprecated
+**/
+		my.newSharpenFilter = function(items) {
+			return my.makeSharpenFilter(items);
+		};
+		/**
+Alias for makePixelateFilter()
+@method newPixelateFilter
+@deprecated
+**/
+		my.newPixelateFilter = function(items) {
+			return my.makePixelateFilter(items);
+		};
+		/**
+Alias for makeBlurFilter()
+@method newBlurFilter
+@deprecated
+**/
+		my.newBlurFilter = function(items) {
+			return my.makeBlurFilter(items);
+		};
+		/**
+Alias for makeLeachFilter()
+@method newLeachFilter
+@deprecated
+**/
+		my.newLeachFilter = function(items) {
+			return my.makeLeachFilter(items);
+		};
+		/**
+Alias for makeSeparateFilter()
+@method newSeparateFilter
+@deprecated
+**/
+		my.newSeparateFilter = function(items) {
+			return my.makeSeparateFilter(items);
+		};
+		/**
+Alias for makeNoiseFilter()
+@method newNoiseFilter
+@deprecated
+**/
+		my.newNoiseFilter = function(items) {
+			return my.makeNoiseFilter(items);
+		};
+		/**
+A __factory__ function to generate new Greyscale filter objects
+@method makeGreyscaleFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return GreyscaleFilter object
 **/
-		my.newGreyscaleFilter = function(items) {
+		my.makeGreyscaleFilter = function(items) {
 			return new my.GreyscaleFilter(items);
 		};
 		/**
 A __factory__ function to generate new Invert filter objects
-@method newInvertFilter
+@method makeInvertFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return InvertFilter object
 **/
-		my.newInvertFilter = function(items) {
+		my.makeInvertFilter = function(items) {
 			return new my.InvertFilter(items);
 		};
 		/**
 A __factory__ function to generate new Brightness filter objects
-@method newBrightnessFilter
+@method makeBrightnessFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return BrightnessFilter object
 **/
-		my.newBrightnessFilter = function(items) {
+		my.makeBrightnessFilter = function(items) {
 			return new my.BrightnessFilter(items);
 		};
 		/**
 A __factory__ function to generate new Saturation filter objects
-@method newSaturationFilter
+@method makeSaturationFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return SaturationFilter object
 **/
-		my.newSaturationFilter = function(items) {
+		my.makeSaturationFilter = function(items) {
 			return new my.SaturationFilter(items);
 		};
 		/**
 A __factory__ function to generate new Threshold filter objects
-@method newThresholdFilter
+@method makeThresholdFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return ThresholdFilter object
 **/
-		my.newThresholdFilter = function(items) {
+		my.makeThresholdFilter = function(items) {
 			return new my.ThresholdFilter(items);
 		};
 		/**
 A __factory__ function to generate new Channels filter objects
-@method newChannelsFilter
+@method makeChannelsFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return ChannelsFilter object
 **/
-		my.newChannelsFilter = function(items) {
+		my.makeChannelsFilter = function(items) {
 			return new my.ChannelsFilter(items);
 		};
 		/**
 A __factory__ function to generate new ChannelStep filter objects
-@method newChannelStepFilter
+@method makeChannelStepFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return ChannelStepFilter object
 **/
-		my.newChannelStepFilter = function(items) {
+		my.makeChannelStepFilter = function(items) {
 			return new my.ChannelStepFilter(items);
 		};
 		/**
 A __factory__ function to generate new Tint filter objects
-@method newTintFilter
+@method makeTintFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return TintFilter object
 **/
-		my.newTintFilter = function(items) {
+		my.makeTintFilter = function(items) {
 			return new my.TintFilter(items);
 		};
 		/**
 A __factory__ function to generate new Tint filter objects preset with values for creating a sepia tint
-@method newSepiaFilter
+@method makeSepiaFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return TintFilter object
 **/
-		my.newSepiaFilter = function(items) {
+		my.makeSepiaFilter = function(items) {
 			items.redInRed = 0.393;
 			items.redInGreen = 0.349;
 			items.redInBlue = 0.272;
@@ -281,66 +407,66 @@ A __factory__ function to generate new Tint filter objects preset with values fo
 		};
 		/**
 A __factory__ function to generate new Matrix filter objects
-@method newMatrixFilter
+@method makeMatrixFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return MatrixFilter object
 **/
-		my.newMatrixFilter = function(items) {
+		my.makeMatrixFilter = function(items) {
 			return new my.MatrixFilter(items);
 		};
 		/**
 A __factory__ function to generate new Sharpen filter objects
-@method newSharpenFilter
+@method makeSharpenFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return SharpenFilter object
 **/
-		my.newSharpenFilter = function(items) {
+		my.makeSharpenFilter = function(items) {
 			items.data = [0, -1, 0, -1, 5, -1, 0, -1, 0];
 			return new my.MatrixFilter(items);
 		};
 		/**
 A __factory__ function to generate new Pixelate filter objects
-@method newPixelateFilter
+@method makePixelateFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return PixelateFilter object
 **/
-		my.newPixelateFilter = function(items) {
+		my.makePixelateFilter = function(items) {
 			return new my.PixelateFilter(items);
 		};
 		/**
 A __factory__ function to generate new Blur filter objects
-@method newBlurFilter
+@method makeBlurFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return BlurFilter object
 **/
-		my.newBlurFilter = function(items) {
+		my.makeBlurFilter = function(items) {
 			return new my.BlurFilter(items);
 		};
 		/**
 A __factory__ function to generate new Leach filter objects
-@method newLeachFilter
+@method makeLeachFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return LeachFilter object
 **/
-		my.newLeachFilter = function(items) {
+		my.makeLeachFilter = function(items) {
 			return new my.LeachFilter(items);
 		};
 		/**
 A __factory__ function to generate new Separate filter objects
-@method newSeparateFilter
+@method makeSeparateFilter
 @param {Object} items Key:value Object argument for setting attributes
-@return newSeparateFilter object
+@return SeparateFilter object
 **/
-		my.newSeparateFilter = function(items) {
+		my.makeSeparateFilter = function(items) {
 			return new my.SeparateFilter(items);
 		};
 		/**
 A __factory__ function to generate new Noise filter objects
-@method newNoiseFilter
+@method makeNoiseFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return NoiseFilter object
 **/
-		my.newNoiseFilter = function(items) {
+		my.makeNoiseFilter = function(items) {
 			return new my.NoiseFilter(items);
 		};
 
@@ -696,7 +822,7 @@ Entity.stamp hook helper function
 
 ## Instantiation
 
-* scrawl.newFilter()
+* This object should never be instantiated by users
 
 ## Purpose
 
@@ -801,7 +927,7 @@ getAlpha function
 
 ## Instantiation
 
-* scrawl.newGreyscaleFilter()
+* scrawl.makeGreyscaleFilter()
 
 ## Purpose
 
@@ -868,7 +994,7 @@ Add function - takes data, calculates its greyscale and combines it with data
 
 ## Instantiation
 
-* scrawl.newInvertFilter()
+* scrawl.makeInvertFilter()
 
 ## Purpose
 
@@ -932,7 +1058,7 @@ Add function - takes data, calculates its invert and combines it with data
 
 ## Instantiation
 
-* scrawl.newBrightnessFilter()
+* scrawl.makeBrightnessFilter()
 
 ## Purpose
 
@@ -1009,7 +1135,7 @@ Add function - takes data, calculates its brightness and replaces the old color 
 
 ## Instantiation
 
-* scrawl.newSaturationFilter()
+* scrawl.makeSaturationFilter()
 
 ## Purpose
 
@@ -1086,7 +1212,7 @@ Add function - takes data, calculates its saturation and replaces the old color 
 
 ## Instantiation
 
-* scrawl.newThresholdFilter()
+* scrawl.makeThresholdFilter()
 
 ## Purpose
 
@@ -1165,7 +1291,7 @@ Add function - takes data, calculates its threshold and combines it with data
 
 ## Instantiation
 
-* scrawl.newChannelsFilter()
+* scrawl.makeChannelsFilter()
 
 ## Purpose
 
@@ -1266,7 +1392,7 @@ Add function - takes data, calculates its channels and combines it with data
 
 ## Instantiation
 
-* scrawl.newChannelStepFilter()
+* scrawl.makeChannelStepFilter()
 
 ## Purpose
 
@@ -1374,7 +1500,7 @@ Add function - takes data, calculates its channels and combines it with data
 
 ## Instantiation
 
-* scrawl.newTintFilter()
+* scrawl.makeTintFilter()
 
 ## Purpose
 
@@ -1527,7 +1653,7 @@ Add function - takes data, calculates its channels and combines it with data
 
 ## Instantiation
 
-* scrawl.newMatrixFilter()
+* scrawl.makeMatrixFilter()
 
 ## Purpose
 
@@ -1792,7 +1918,7 @@ Add function - takes data, calculates its channels and combines it with data
 
 ## Instantiation
 
-* scrawl.newPixelateFilter()
+* scrawl.makePixelateFilter()
 
 ## Purpose
 
@@ -1943,7 +2069,7 @@ Add function - takes data, calculates its channels and combines it with data
 
 ## Instantiation
 
-* scrawl.newBlurFilter()
+* scrawl.makeBlurFilter()
 
 ## Purpose
 
@@ -2203,7 +2329,7 @@ Blur helper function
 
 ## Instantiation
 
-* scrawl.newLeachFilter()
+* scrawl.makeLeachFilter()
 
 ## Purpose
 
@@ -2311,7 +2437,7 @@ Add function - takes data, calculates its channels and combines it with data
 
 ## Instantiation
 
-* scrawl.newSeparateFilter()
+* scrawl.makeSeparateFilter()
 
 ## Purpose
 
@@ -2419,7 +2545,7 @@ Add function - takes data, calculates its channels and combines it with data
 
 ## Instantiation
 
-* scrawl.newNoiseFilter()
+* scrawl.makeNoiseFilter()
 
 ## Purpose
 

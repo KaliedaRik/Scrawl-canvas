@@ -35,14 +35,14 @@ var mycode = function() {
 	});
 
 	//build entity
-	scrawl.newPattern({
+	scrawl.makePattern({
 		name: 'p1',
 		source: 'warning',
 	}).clone({
 		name: 'p2',
 		source: 'nops',
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		startX: 65,
 		startY: 65,
 		radius: 60,
@@ -52,7 +52,7 @@ var mycode = function() {
 		method: 'fillDraw',
 		//entity is only stamped once - the display cycle will never clear the base cell
 	}).stamp();
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		startX: 25,
 		startY: 25,
 		radius: 8,
@@ -62,7 +62,7 @@ var mycode = function() {
 
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			//move the base cell's show area - use a basic box collision detection system to keep entity in view
 			if (!scrawl.isBetween(myCell.start.x, xMax, xMin, true)) {

@@ -34,79 +34,79 @@ var mycode = function() {
 		}, false);
 	}
 
-	scrawl.newPattern({
+	scrawl.makePattern({
 		name: 'mypattern',
 		source: 'myvideo',
 	});
 
 	//define filters
-	scrawl.newGreyscaleFilter({
+	scrawl.makeGreyscaleFilter({
 		name: 'myGreyscale',
 		filterStrength: 0.9,
 	});
-	scrawl.newInvertFilter({
+	scrawl.makeInvertFilter({
 		name: 'myInvert',
 	});
-	scrawl.newBrightnessFilter({
+	scrawl.makeBrightnessFilter({
 		name: 'myBrightness',
 		brightness: 0.4,
 	});
-	scrawl.newSaturationFilter({
+	scrawl.makeSaturationFilter({
 		name: 'mySaturation',
 		saturation: 0.4,
 	});
-	scrawl.newThresholdFilter({
+	scrawl.makeThresholdFilter({
 		name: 'myThreshold',
 		filterStrength: 0.8,
 		threshold: 0.6,
 	});
-	scrawl.newChannelsFilter({
+	scrawl.makeChannelsFilter({
 		name: 'myChannels',
 		red: 1.3,
 		green: '120%',
 		blue: 0,
 	});
-	scrawl.newChannelStepFilter({
+	scrawl.makeChannelStepFilter({
 		name: 'myChannelStep',
 		red: 64,
 		green: 64,
 		blue: 64,
 	});
-	scrawl.newTintFilter({
+	scrawl.makeTintFilter({
 		name: 'myTint',
 		greenInGreen: 0,
 		blueInGreen: 1,
 	});
-	scrawl.newSepiaFilter({
+	scrawl.makeSepiaFilter({
 		name: 'mySepia',
 	});
-	scrawl.newMatrixFilter({
+	scrawl.makeMatrixFilter({
 		name: 'myMatrix',
 		data: [-2, -1, 0, -1, 0, 1, 0, 1, 2],
 	});
-	scrawl.newSharpenFilter({
+	scrawl.makeSharpenFilter({
 		name: 'mySharpen',
 	});
-	scrawl.newPixelateFilter({
+	scrawl.makePixelateFilter({
 		name: 'myPixelate',
 		width: 8,
 		height: 8,
 	});
-	scrawl.newBlurFilter({
+	scrawl.makeBlurFilter({
 		name: 'myBlur',
 		radiusX: 10,
 		radiusY: 10,
 		skip: 10,
 	});
-	scrawl.newLeachFilter({
+	scrawl.makeLeachFilter({
 		name: 'myLeach',
 		exclude: [[120, 120, 120, 255, 255, 255]]
 	});
-	scrawl.newSeparateFilter({
+	scrawl.makeSeparateFilter({
 		name: 'mySeparate',
 		channel: 'yellow',
 	});
-	scrawl.newNoiseFilter({
+	scrawl.makeNoiseFilter({
 		name: 'myNoise',
 		radiusX: 12,
 		radiusY: 4,
@@ -118,7 +118,7 @@ var mycode = function() {
 	input_filter.value = 'myGreyscale';
 
 	//build entitys
-	picture = scrawl.newPicture({
+	picture = scrawl.makePicture({
 		method: 'fill',
 		pasteWidth: '50%',
 		pasteHeight: '50%',
@@ -132,7 +132,7 @@ var mycode = function() {
 		source: 'myvideo',
 	});
 
-	wheel = scrawl.newWheel({
+	wheel = scrawl.makeWheel({
 		radius: 140,
 		startX: 220,
 		startY: -50,
@@ -159,7 +159,7 @@ var mycode = function() {
 	input_filter.addEventListener('change', event_filter, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			picture.setDelta({

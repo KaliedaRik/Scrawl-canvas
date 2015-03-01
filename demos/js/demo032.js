@@ -36,7 +36,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	bunny = scrawl.newPicture({ //bunny entity template
+	bunny = scrawl.makePicture({ //bunny entity template
 		name: 'bunny',
 		source: 'bunny',
 		handleX: 'center',
@@ -101,7 +101,7 @@ var mycode = function() {
 	addBunnies();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveBunnies();
 			pad.render();

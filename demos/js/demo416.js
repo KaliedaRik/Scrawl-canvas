@@ -40,7 +40,7 @@ var mycode = function() {
 	input_radiusY.value = '3';
 
 	//define filter
-	filter = scrawl.newNoiseFilter({
+	filter = scrawl.makeNoiseFilter({
 		name: 'myfilter',
 		alpha: 1,
 		roll: 0,
@@ -50,7 +50,7 @@ var mycode = function() {
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -121,7 +121,7 @@ var mycode = function() {
 	input_radiusY.addEventListener('change', event_radiusY, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

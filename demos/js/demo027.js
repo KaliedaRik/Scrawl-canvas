@@ -37,7 +37,7 @@ var mycode = function() {
 	});
 
 	//add in some Phrase entitys
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		text: '1',
 		pivot: 'star_p1',
 		font: '18pt bold Arial, sans-serif',
@@ -88,7 +88,7 @@ var mycode = function() {
 	scrawl.addListener(['up', 'leave'], dropStar, scrawl.canvas.mycanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			star.setDelta({

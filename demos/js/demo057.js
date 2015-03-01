@@ -30,7 +30,7 @@ var mycode = function() {
 	});
 
 	//define designs (color)
-	myColor = scrawl.newColor({
+	myColor = scrawl.makeColor({
 		rMin: 50,
 		rMax: 220,
 		gMin: 50,
@@ -56,7 +56,7 @@ var mycode = function() {
 		stopE(e);
 		here = myPad.getMouse();
 		mouseDown = true;
-		currentEntity = scrawl.newShape({
+		currentEntity = scrawl.makeShape({
 			start: here.getData(),
 			method: 'draw',
 			lineWidth: 10,
@@ -106,7 +106,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			if (myPad.getMouse().active) {
 				if (mouseDown) {

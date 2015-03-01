@@ -35,7 +35,7 @@ var mycode = function() {
 	});
 
 	for (var i = 1; i < 6; i++) {
-		scrawl.newPhrase({
+		scrawl.makePhrase({
 			name: 'aPoint' + i,
 			text: ' p' + i + ' ',
 			pivot: 'arrow_p' + i,
@@ -54,7 +54,7 @@ var mycode = function() {
 	scrawl.render();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {

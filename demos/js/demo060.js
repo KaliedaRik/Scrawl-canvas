@@ -30,7 +30,7 @@ var mycode = function() {
 	scrawl.cell[scrawl.pad.mycanvas.base].set({
 		backgroundColor: 'rgba(0,127,0,0.2)',
 	});
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 50,
 		startY: 50,
 		width: 650,
@@ -45,7 +45,7 @@ var mycode = function() {
 		order: 0,
 	});
 	//add some fences in the field which entity will not be able to cross
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		startX: 500,
 		startY: 125,
 		radius: 50,
@@ -85,10 +85,10 @@ var mycode = function() {
 	scrawl.buildFields();
 
 	//define physics entitys
-	fieldBall = scrawl.newParticle({
+	fieldBall = scrawl.makeParticle({
 		mass: 1000000,
 	});
-	myBall = scrawl.newParticle({
+	myBall = scrawl.makeParticle({
 		name: 'ball',
 		startX: 100,
 		startY: 100,
@@ -113,7 +113,7 @@ var mycode = function() {
 		order: 1,
 		pivot: 'ball',
 	});
-	myFender = scrawl.newWheel({
+	myFender = scrawl.makeWheel({
 		name: 'fender',
 		radius: 10,
 		lineWidth: 2,
@@ -170,7 +170,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			updateTimer();
 			checkBounds();

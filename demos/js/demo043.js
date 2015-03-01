@@ -36,7 +36,7 @@ var mycode = function() {
 	});
 
 	for (var i = 1; i < 11; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			pivot: 'frame_p' + i,
 			radius: 12,
 			fillStyle: 'Green',
@@ -44,7 +44,7 @@ var mycode = function() {
 		});
 	}
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		pivot: 'frame',
 		radius: 4,
 		fillStyle: 'red',
@@ -52,7 +52,7 @@ var mycode = function() {
 	});
 
 	//entity used to build Cell collision zone image
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 50,
 		startY: 50,
 		width: 650,
@@ -90,7 +90,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveEntitys();
 			scrawl.render();

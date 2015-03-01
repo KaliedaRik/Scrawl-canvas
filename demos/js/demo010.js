@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define entitys
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'mywheel',
 		startX: 100,
 		startY: 100,

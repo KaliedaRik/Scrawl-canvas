@@ -315,7 +315,7 @@ var mycode = function() {
 	input_blueparahandle_yString.addEventListener('change', event_blueparahandle_yString, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			//move circles in line with their stack and element pivots

@@ -24,14 +24,14 @@ var mycode = function() {
 	input_saturation.value = '1.5';
 
 	//define filter
-	filter = scrawl.newSaturationFilter({
+	filter = scrawl.makeSaturationFilter({
 		name: 'myfilter',
 		alpha: 1,
 		saturation: 1.5,
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -72,7 +72,7 @@ var mycode = function() {
 	input_saturation.addEventListener('change', event_saturation, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

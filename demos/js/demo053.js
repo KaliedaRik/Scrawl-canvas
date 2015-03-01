@@ -73,7 +73,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			if (!scrawl.isBetween((star.scale + myScale), maxScale, minScale, true)) {
 				myScale = -myScale;

@@ -22,7 +22,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'lefty',
 		group: 'drag',
 		text: 'Hello! Lefty reporting for duty!\nI am a very long line of text\nthat has been broken up into\nseparate lines. I am\nleft justified and my lineHeight\nattribute has been set to\na value of 1.2.',
@@ -76,7 +76,7 @@ var mycode = function() {
 	scrawl.addListener(['up', 'leave'], dropPhrase, scrawl.canvas.mycanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (!here.active && myEntity) {

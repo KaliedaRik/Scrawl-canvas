@@ -32,7 +32,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = mystack.getMouse();
 			myScale = (1 - ((Math.abs(here.y - (mystack.height / 2)) / mystack.height) + (Math.abs(here.x - (mystack.width / 2)) / mystack.width))) + 0.1;

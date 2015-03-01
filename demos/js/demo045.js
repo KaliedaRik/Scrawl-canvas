@@ -18,7 +18,7 @@ var mycode = function() {
 
 	//define entitys
 	for (var i = 0; i < 29; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'seg_' + i,
 			startX: 350,
 			startY: 187,
@@ -30,7 +30,7 @@ var mycode = function() {
 		});
 	}
 
-	snake = scrawl.newWheel({
+	snake = scrawl.makeWheel({
 		name: 'seg_29',
 		startX: 350,
 		startY: 187,
@@ -67,7 +67,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = scrawl.pad.mycanvas.getMouse();
 			if (here.active) {

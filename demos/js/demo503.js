@@ -28,7 +28,7 @@ var mycode = function() {
 	scrawl.load(objects);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.render();
 

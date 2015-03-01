@@ -44,7 +44,7 @@ var mycode = function() {
 	});
 
 	//build entity
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'mywheel',
 		radius: 70,
 		fillStyle: 'blue',
@@ -55,7 +55,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.entity.mywheel.set({

@@ -63,7 +63,7 @@ var mycode = function() {
 	});
 
 	//add a entity to display the gradient in the background ...
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'curtain',
 		width: 400,
 		height: 300,
@@ -74,7 +74,7 @@ var mycode = function() {
 	});
 
 	//set up a Shape entity for drawing the thick line on the hidden cell
-	myLine = scrawl.newShape({
+	myLine = scrawl.makeShape({
 		name: 'reveal',
 		method: 'draw',
 		lineWidth: 70,
@@ -89,7 +89,7 @@ var mycode = function() {
 	});
 
 	//animation entity sheet for the cat entity
-	scrawl.newSpriteAnimation({
+	scrawl.makeSpriteAnimation({
 		name: 'animatedCat',
 		running: 'forward',
 		loop: 'loop',
@@ -145,7 +145,7 @@ var mycode = function() {
         }, ],
 	});
 	//the cat entity stamps over the line, so only part of the image is visible
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'runningcat',
 		startX: 200,
 		startY: 150,
@@ -168,7 +168,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			//get current mouse coordinates over the visible canvas
 			here = myPad.getMouse();

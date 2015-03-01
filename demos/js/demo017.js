@@ -46,7 +46,7 @@ var mycode = function() {
 	document.getElementById('flip').value = 'normal';
 
 	//build entity
-	peacock = scrawl.newPicture({
+	peacock = scrawl.makePicture({
 		pasteX: '50%',
 		pasteY: '50%',
 		pasteWidth: '50%',
@@ -161,7 +161,7 @@ var mycode = function() {
 	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

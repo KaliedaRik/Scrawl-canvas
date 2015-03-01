@@ -31,7 +31,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		startX: 200,
 		startY: 200,
 		radius: 150,
@@ -40,7 +40,7 @@ var mycode = function() {
 		method: 'draw',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'north',
 		startX: 200,
 		startY: 50,
@@ -93,7 +93,7 @@ var mycode = function() {
 		radius: 7,
 	});
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		pivot: 'north',
 		text: 'north/N',
 		handleX: 'center',

@@ -119,7 +119,7 @@ var mycode = function() {
         }, ],
 	});
 
-	cellBox = scrawl.newBlock({
+	cellBox = scrawl.makeBlock({
 		name: 'box1',
 		startX: 150,
 		startY: 200,
@@ -132,7 +132,7 @@ var mycode = function() {
 		lineWidth: 2,
 		fillStyle: 'g1',
 	});
-	entityBox = scrawl.newBlock({
+	entityBox = scrawl.makeBlock({
 		name: 'box2',
 		startX: 450,
 		startY: 200,
@@ -143,7 +143,7 @@ var mycode = function() {
 		lineWidth: 2,
 		fillStyle: 'g2',
 	});
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		pivot: 'box1',
 		text: 'Cell gradient',
 		handleX: -20,
@@ -334,7 +334,7 @@ var mycode = function() {
 	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			//code here

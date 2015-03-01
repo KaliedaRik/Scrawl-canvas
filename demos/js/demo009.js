@@ -23,7 +23,7 @@ var mycode = function() {
 		name: 'mygroup',
 	});
 	for (var i = 0; i < 4; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			fillStyle: 'blue',
@@ -75,7 +75,7 @@ var mycode = function() {
 	scrawl.point.endline_p1.setToFixed('wheel_2');
 	scrawl.point.endline_p2.setToFixed('wheel_3');
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		font: '12pt Arial, sans-serif',
 		handleX: 'center',
 		handleY: 30,
@@ -93,7 +93,7 @@ var mycode = function() {
 		pivot: 'wheel_3',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'goldwheel',
 		radius: 10,
 		fillStyle: 'gold',
@@ -151,7 +151,7 @@ var mycode = function() {
 	length = scrawl.entity.mycurve.getPerimeterLength(true);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			if (myEntity) {
 				length = scrawl.entity.mycurve.getPerimeterLength(true);

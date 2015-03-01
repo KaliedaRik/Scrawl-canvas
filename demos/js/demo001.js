@@ -14,7 +14,7 @@ var mycode = function() {
 	}).makeCurrent();
 
 	//define a phrase entity to hold some text
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		text: 'Hello, Scrawl World!',
 		startX: 50,
 		startY: 50,

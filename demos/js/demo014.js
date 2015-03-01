@@ -35,7 +35,7 @@ var mycode = function() {
 	//			},
 	//		};
 	for (var country in worldMap.shapes) {
-		scrawl.newShape({
+		scrawl.makeShape({
 			name: country,
 			data: worldMap.shapes[country],
 			method: 'drawFill',
@@ -49,7 +49,7 @@ var mycode = function() {
 	countries.regionRadius = 465;
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			//update display; check if mouse cursor is over an outline
 			here = mypad.show().getMouse();

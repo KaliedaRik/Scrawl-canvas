@@ -26,14 +26,14 @@ var mycode = function() {
 		precision: 1,
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'joint',
 		radius: 3,
 		fillStyle: 'gold',
 		visibility: 'false',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'pin',
 		method: 'fillDraw',
 		radius: 10,
@@ -44,7 +44,7 @@ var mycode = function() {
 
 	//define physics objects
 	for (i = 0; i < 20; i++) { //define particles for animating rope
-		scrawl.newParticle({
+		scrawl.makeParticle({
 			name: 'b_' + i,
 			startX: 300 + (i * 15),
 			startY: 100,
@@ -79,7 +79,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			calculatePositions();
 

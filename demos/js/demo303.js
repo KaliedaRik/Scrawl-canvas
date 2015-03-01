@@ -28,7 +28,7 @@ var mycode = function() {
 	});
 
 	//define cell collision zone
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 10.5,
 		startY: 10.5,
 		width: 580,
@@ -37,7 +37,7 @@ var mycode = function() {
 		order: 10,
 		field: true,
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		radius: 90,
 		startX: 300,
 		startY: 300,
@@ -61,7 +61,7 @@ var mycode = function() {
 	scrawl.physics.jetSpeed = 300;
 
 	//define physics objects - forces
-	scrawl.newForce({
+	scrawl.makeForce({
 		name: 'wind',
 		fn: function(ball) {
 			var c = 0.5 * scrawl.physics.airDensity * scrawl.physics.windSpeed * scrawl.physics.windSpeed,
@@ -73,7 +73,7 @@ var mycode = function() {
 			ball.load.vectorAdd(wind);
 		},
 	});
-	scrawl.newForce({
+	scrawl.makeForce({
 		name: 'jet',
 		fn: function(ball) {
 			if (scrawl.entity.jet.checkHit(ball.place)) {
@@ -93,12 +93,12 @@ var mycode = function() {
 		},
 	});
 
-	fieldBall = scrawl.newParticle({
+	fieldBall = scrawl.makeParticle({
 		mass: 1000000,
 		elasticity: 1.21,
 	});
 
-	pBall = scrawl.newParticle({
+	pBall = scrawl.makeParticle({
 		name: 'pBall_0',
 		startX: 30,
 		startY: 30,
@@ -109,7 +109,7 @@ var mycode = function() {
 	pBall.addForce('gravity').addForce('drag').addForce('wind').addForce('jet');
 
 	//define entitys
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'jet',
 		startX: 590,
 		startY: 600,
@@ -126,7 +126,7 @@ var mycode = function() {
 		return 'rgb(0,' + (255 - (Math.floor(mass * 160))) + ',' + (255 - (Math.floor(mass * 160))) + ')';
 	};
 
-	dWheel = scrawl.newWheel({
+	dWheel = scrawl.makeWheel({
 		name: 'dWheel_0',
 		pivot: 'pBall_0',
 		group: 'colsGroup',
@@ -210,7 +210,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			updateTimer();
 			inflateBalls();

@@ -21,7 +21,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo018');
 
 	//build entity
-	peacock = scrawl.newPicture({
+	peacock = scrawl.makePicture({
 		pasteX: '50%',
 		pasteY: '50%',
 		pasteWidth: '50%',
@@ -164,7 +164,7 @@ var mycode = function() {
 	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

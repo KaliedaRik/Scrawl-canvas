@@ -58,7 +58,7 @@ var mycode = function() {
 
 	//define entitys - display photos
 	for (var i = 0, z = items.length; i < z; i++) {
-		scrawl.newPicture({
+		scrawl.makePicture({
 			name: items[i],
 			group: 'myGroup',
 			source: items[i],
@@ -172,7 +172,7 @@ var mycode = function() {
 	updateCarousel();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {

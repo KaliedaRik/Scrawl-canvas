@@ -32,13 +32,13 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		source: 'flower',
 		width: 750,
 		height: 500,
 	});
 
-	myGloom = scrawl.newBlock({
+	myGloom = scrawl.makeBlock({
 		name: 'gloomy',
 		fillStyle: 'rgba(0,0,0,0.8)',
 		method: 'fill',
@@ -53,7 +53,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {

@@ -51,7 +51,7 @@ var mycode = function() {
 	});
 
 	//initialize instructions element
-	scrawl.newElementGroup({
+	scrawl.makeElementGroup({
 		name: 'instructions',
 		stack: 'mystack'
 	});
@@ -105,7 +105,7 @@ var mycode = function() {
 		entitys: sides,
 	});
 	for (i = 0, iz = sides.length; i < iz; i++) {
-		scrawl.newPicture({
+		scrawl.makePicture({
 			name: pics[i],
 			pivot: sides[i],
 			handleX: 'center',
@@ -116,7 +116,7 @@ var mycode = function() {
 			order: 0,
 			group: pads[sides[i]].base,
 		});
-		scrawl.newPhrase({
+		scrawl.makePhrase({
 			name: sides[i],
 			startX: 100,
 			startY: 100,
@@ -130,7 +130,7 @@ var mycode = function() {
 	}
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			//rotate the cube
 			cube.quaternionMultiply(deltaCube);

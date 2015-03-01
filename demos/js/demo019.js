@@ -16,7 +16,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo019');
 
 	//define AnimSheet object
-	scrawl.newSpriteAnimation({
+	scrawl.makeSpriteAnimation({
 		name: 'animatedCat',
 		running: 'forward',
 		loop: 'loop',
@@ -73,7 +73,7 @@ var mycode = function() {
 	});
 
 	//define Picture entity which will display animation
-	myCat = scrawl.newPicture({
+	myCat = scrawl.makePicture({
 		startX: 'center',
 		startY: 'center',
 		handleX: 'center',
@@ -163,7 +163,7 @@ var mycode = function() {
 	// input_running.addEventListener('change', event_running, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.render();
 

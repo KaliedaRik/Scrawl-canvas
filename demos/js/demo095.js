@@ -74,7 +74,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'filter',
 		text: 'Look what\nScrawl.js\ncan do!',
 		textAlign: 'center',
@@ -96,7 +96,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.pad.canvas.render();
 

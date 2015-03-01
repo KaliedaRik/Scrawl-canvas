@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -46,12 +44,20 @@ scrawlWheel module adaptions to the Scrawl library object
 **/
 
 		/**
-A __factory__ function to generate new Wheel entitys
+Alias for makeWheel()
 @method newWheel
+@deprecated
+**/
+		my.newWheel = function(items) {
+			return my.makeWheel(items);
+		};
+		/**
+A __factory__ function to generate new Wheel entitys
+@method makeWheel
 @param {Object} items Key:value Object argument for setting attributes
 @return Wheel object
 @example
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		radius: 50,
 		startX: 150,
 		startY: 60,
@@ -60,7 +66,7 @@ A __factory__ function to generate new Wheel entitys
 		method: 'drawFill',
 		});
 **/
-		my.newWheel = function(items) {
+		my.makeWheel = function(items) {
 			return new my.Wheel(items);
 		};
 
@@ -72,7 +78,7 @@ A __factory__ function to generate new Wheel entitys
 
 ## Instantiation
 
-* scrawl.newWheel()
+* scrawl.makeWheel()
 
 ## Purpose
 

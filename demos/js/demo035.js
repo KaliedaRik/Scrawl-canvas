@@ -41,12 +41,12 @@ var mycode = function() {
 	});
 
 	//define designs (colors, gradients)
-	scrawl.newColor({
+	scrawl.makeColor({
 		name: 'myRed',
 		color: '#f00',
 	});
 
-	myCol = scrawl.newColor({
+	myCol = scrawl.makeColor({
 		name: 'myBlue',
 		random: true,
 		aShift: 0.002,
@@ -80,7 +80,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	pin = scrawl.newWheel({ //template entity
+	pin = scrawl.makeWheel({ //template entity
 		radius: 3,
 		method: 'fillDraw',
 		fillStyle: '#880000',
@@ -88,7 +88,7 @@ var mycode = function() {
 		visibility: false,
 	});
 
-	scrawl.newPhrase({ //background texts
+	scrawl.makePhrase({ //background texts
 		startX: 400,
 		startY: 100,
 		globalAlpha: 0.3,
@@ -245,7 +245,7 @@ var mycode = function() {
 		visibility: 'true',
 	});
 
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'mypicture',
 		url: 'img/carousel/angelfish.png',
 		strokeStyle: 'Gold',
@@ -264,7 +264,7 @@ var mycode = function() {
 		visibility: 'true',
 	});
 
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'myblock',
 		strokeStyle: 'Orange',
 		fillStyle: 'myBlue',
@@ -282,7 +282,7 @@ var mycode = function() {
 		visibility: 'true',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'mywheel',
 		strokeStyle: '#800',
 		fillStyle: 'gradient',
@@ -299,7 +299,7 @@ var mycode = function() {
 		visibility: 'true',
 	});
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'myphrase',
 		text: 'Hello Scrawl,\nHello World',
 		startX: 700,
@@ -360,7 +360,7 @@ var mycode = function() {
 	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			myEntitys.updateEntitysBy({
 				roll: 1,

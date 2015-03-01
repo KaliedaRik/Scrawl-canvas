@@ -57,7 +57,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo094');
 
 	//define entity
-	tiggy = scrawl.newPicture({
+	tiggy = scrawl.makePicture({
 		width: 200,
 		height: 200,
 		handleX: 'center',
@@ -68,7 +68,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			if (!scrawl.isBetween(scale, scaleMax, scaleMin)) {
 				scaleDelta = -scaleDelta;

@@ -23,7 +23,7 @@ var mycode = function() {
 	});
 
 	//entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 50,
 		startY: 70,
 		fillStyle: 'red',
@@ -48,7 +48,7 @@ var mycode = function() {
 	});
 
 	//tweens
-	myTween = scrawl.newTween({
+	myTween = scrawl.makeTween({
 		start: {
 			startY: 70,
 			roll: 0,
@@ -82,7 +82,7 @@ var mycode = function() {
 	scrawl.addListener('up', startNewTween, myCanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			scrawl.render();

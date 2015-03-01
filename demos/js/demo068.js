@@ -33,7 +33,7 @@ var mycode = function() {
 	});
 
 	//define initial entity
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		font: '40pt Arial, sans-serif',
 		text: 'Drag image files\nonto this canvas',
 		startX: 300,
@@ -70,7 +70,7 @@ var mycode = function() {
 	handleFile = function(file, offset) {
 		var reader = new FileReader();
 		reader.onload = function() {
-			scrawl.newPicture({
+			scrawl.makePicture({
 				name: file.name,
 				url: reader.result,
 				strokeStyle: 'red',
@@ -111,7 +111,7 @@ var mycode = function() {
 	scrawl.addListener(['up', 'leave'], dropEntity, canvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			if (!here.active) {

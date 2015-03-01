@@ -80,14 +80,14 @@ var mycode = function() {
 		cleared: false,
 		shown: false,
 	});
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'temporary',
 		source: 'catSky',
 		width: 1100,
 		height: 500,
 		group: 'skyImage',
 	}).stamp();
-	skyEntity = scrawl.newPicture({
+	skyEntity = scrawl.makePicture({
 		source: 'skyImage',
 		width: 1000,
 		height: 500,
@@ -105,7 +105,7 @@ var mycode = function() {
 		cleared: false,
 		shown: false
 	});
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'temporary',
 		source: 'catGround',
 		width: 1100,
@@ -113,7 +113,7 @@ var mycode = function() {
 		group: 'groundImage',
 	}).stamp();
 	scrawl.deleteEntity('temporary');
-	groundEntity = scrawl.newPicture({
+	groundEntity = scrawl.makePicture({
 		source: 'groundImage',
 		width: 1000,
 		height: 500,
@@ -123,7 +123,7 @@ var mycode = function() {
 	});
 
 	//build cat canvas
-	scrawl.newSpriteAnimation({
+	scrawl.makeSpriteAnimation({
 		name: 'animatedCat',
 		running: 'forward',
 		loop: 'loop',
@@ -178,7 +178,7 @@ var mycode = function() {
 			d: 100,
         }, ],
 	});
-	scrawl.newPicture({
+	scrawl.makePicture({
 		width: 300,
 		height: 150,
 		source: 'cat',
@@ -187,7 +187,7 @@ var mycode = function() {
 	});
 
 	//animation objects
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		name: 'sky',
 		fn: function() {
 			if (skyEntity.copy.x + skySpeed >= 100) {
@@ -204,7 +204,7 @@ var mycode = function() {
 			});
 		},
 	});
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		name: 'ground',
 		fn: function() {
 			if (groundEntity.copy.x + groundSpeed >= 100) {
@@ -221,7 +221,7 @@ var mycode = function() {
 			});
 		},
 	});
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		name: 'cat',
 		fn: function() {
 			scrawl.render();

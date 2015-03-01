@@ -392,7 +392,7 @@ var mycode = function() {
 	input_equalheight.addEventListener('change', event_equalheight, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

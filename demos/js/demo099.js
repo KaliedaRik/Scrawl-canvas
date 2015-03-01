@@ -23,7 +23,7 @@ var mycode = function() {
 	});
 
 	//designs
-	scrawl.newColor({
+	scrawl.makeColor({
 		name: 'mycolor',
 	});
 
@@ -98,7 +98,7 @@ var mycode = function() {
 	});
 
 	//entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'block1',
 		startX: 25,
 		startY: 25,
@@ -116,7 +116,7 @@ var mycode = function() {
 	});
 
 	//tweens
-	colorTween = scrawl.newTween({
+	colorTween = scrawl.makeTween({
 		targets: scrawl.design.mycolor,
 		start: {
 			r: 0,
@@ -135,7 +135,7 @@ var mycode = function() {
 		autoReverseAndRun: true,
 	});
 
-	gradientTween = scrawl.newTween({
+	gradientTween = scrawl.makeTween({
 		targets: scrawl.design.mygradient,
 		end: {
 			shift: 0.025
@@ -168,7 +168,7 @@ var mycode = function() {
 	scrawl.addListener('up', startNewTween, myCanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			scrawl.render();

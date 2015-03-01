@@ -46,7 +46,7 @@ var mycode = function() {
 	pad1.makeCurrent();
 
 	//define entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'box1',
 		startX: 10,
 		startY: 10,
@@ -147,7 +147,7 @@ var mycode = function() {
 	scrawl.addListener(['move', 'enter', 'leave'], continueMove, [scrawl.canvas.canvas1, scrawl.canvas.canvas2]);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

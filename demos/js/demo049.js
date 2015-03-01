@@ -30,7 +30,7 @@ var mycode = function() {
 
 	//define entitys; get their image data
 	for (i = 0, iz = entityList.length; i < iz; i++) {
-		scrawl.newPicture({
+		scrawl.makePicture({
 			name: entityList[i],
 			source: 'button' + entityList[i],
 			startX: (i * 58) + 85,
@@ -80,7 +80,7 @@ var mycode = function() {
 	scrawl.addListener(['up', 'leave'], dropIcon, scrawl.canvas.mycanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

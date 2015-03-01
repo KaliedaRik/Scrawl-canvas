@@ -34,74 +34,74 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo101');
 
 	//define filters
-	scrawl.newGreyscaleFilter({
+	scrawl.makeGreyscaleFilter({
 		name: 'myGreyscale',
 		filterStrength: 0.9,
 	});
-	scrawl.newInvertFilter({
+	scrawl.makeInvertFilter({
 		name: 'myInvert',
 	});
-	scrawl.newBrightnessFilter({
+	scrawl.makeBrightnessFilter({
 		name: 'myBrightness',
 		brightness: 0.4,
 	});
-	scrawl.newSaturationFilter({
+	scrawl.makeSaturationFilter({
 		name: 'mySaturation',
 		saturation: 0.4,
 	});
-	scrawl.newThresholdFilter({
+	scrawl.makeThresholdFilter({
 		name: 'myThreshold',
 		filterStrength: 0.8,
 		threshold: 0.6,
 	});
-	scrawl.newChannelsFilter({
+	scrawl.makeChannelsFilter({
 		name: 'myChannels',
 		red: 1.3,
 		green: '120%',
 		blue: 0,
 	});
-	scrawl.newChannelStepFilter({
+	scrawl.makeChannelStepFilter({
 		name: 'myChannelStep',
 		red: 64,
 		green: 64,
 		blue: 64,
 	});
-	scrawl.newTintFilter({
+	scrawl.makeTintFilter({
 		name: 'myTint',
 		greenInGreen: 0,
 		blueInGreen: 1,
 	});
-	scrawl.newSepiaFilter({
+	scrawl.makeSepiaFilter({
 		name: 'mySepia',
 	});
-	scrawl.newMatrixFilter({
+	scrawl.makeMatrixFilter({
 		name: 'myMatrix',
 		data: [-2, -1, 0, -1, 0, 1, 0, 1, 2],
 	});
-	scrawl.newSharpenFilter({
+	scrawl.makeSharpenFilter({
 		name: 'mySharpen',
 	});
-	scrawl.newPixelateFilter({
+	scrawl.makePixelateFilter({
 		name: 'myPixelate',
 		width: 8,
 		height: 8,
 	});
-	scrawl.newBlurFilter({
+	scrawl.makeBlurFilter({
 		name: 'myBlur',
 		radiusX: 12,
 		radiusY: 4,
 		roll: 45,
 		includeInvisiblePoints: true,
 	});
-	scrawl.newLeachFilter({
+	scrawl.makeLeachFilter({
 		name: 'myLeach',
 		exclude: [[0, 40, 0, 200, 255, 100]],
 	});
-	scrawl.newSeparateFilter({
+	scrawl.makeSeparateFilter({
 		name: 'mySeparate',
 		channel: 'yellow',
 	});
-	scrawl.newNoiseFilter({
+	scrawl.makeNoiseFilter({
 		name: 'myNoise',
 		radiusX: 12,
 		radiusY: 4,
@@ -112,7 +112,7 @@ var mycode = function() {
 	current_filter = 'myGreyscale';
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'background',
 		width: 600,
 		height: 300,
@@ -122,7 +122,7 @@ var mycode = function() {
 		copyHeight: 300,
 		source: 'flower',
 	});
-	blocky = scrawl.newBlock({
+	blocky = scrawl.makeBlock({
 		width: 100,
 		height: 100,
 		roll: 30,
@@ -133,7 +133,7 @@ var mycode = function() {
 		visibility: false,
 		filters: [current_filter],
 	});
-	wheely = scrawl.newWheel({
+	wheely = scrawl.makeWheel({
 		radius: 70,
 		startAngle: 20,
 		endAngle: 340,
@@ -155,7 +155,7 @@ var mycode = function() {
 		pivot: 'mouse',
 		method: 'none',
 	});
-	texty = scrawl.newPhrase({
+	texty = scrawl.makePhrase({
 		method: 'draw',
 		textAlign: 'center',
 		font: '70pt bold Arial, sans-serif',
@@ -191,7 +191,7 @@ var mycode = function() {
 		visibility: false,
 		filters: [current_filter],
 	});
-	scrawl.newSpriteAnimation({
+	scrawl.makeSpriteAnimation({
 		name: 'animatedCat',
 		running: 'forward',
 		loop: 'loop',
@@ -246,7 +246,7 @@ var mycode = function() {
 			d: 100,
         }, ],
 	});
-	piccy = scrawl.newPicture({
+	piccy = scrawl.makePicture({
 		handleX: 'center',
 		handleY: 'center',
 		width: 400,
@@ -307,7 +307,7 @@ var mycode = function() {
 	input_filter.addEventListener('change', event_filter, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 

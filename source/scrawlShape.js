@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -48,19 +46,27 @@ scrawlShape module adaptions to the Scrawl library object
 **/
 
 		/**
-A __factory__ function to generate new Shape entitys
+Alias for makeShape()
 @method newShape
+@deprecated
+**/
+		my.newShape = function(items) {
+			return my.makeShape(items);
+		};
+		/**
+A __factory__ function to generate new Shape entitys
+@method makeShape
 @param {Object} items Key:value Object argument for setting attributes
 @return Shape object
 @example
-	scrawl.newShape({
+	scrawl.makeShape({
 		startX: 50,
 		startY: 20,
 		fillStyle: 'red',
 		data: 'M0,0 50,0 60,20, 10,20 0,0z',
 		});
 **/
-		my.newShape = function(items) {
+		my.makeShape = function(items) {
 			return new my.Shape(items);
 		};
 
@@ -69,7 +75,7 @@ A __factory__ function to generate new Shape entitys
 
 ## Instantiation
 
-* scrawl.newShape() - Irregular, path-based shapes
+* scrawl.makeShape() - Irregular, path-based shapes
 
 Additional factory functions to instantiate Shape objects are available in the __pathFactoryFunctions__ module
 

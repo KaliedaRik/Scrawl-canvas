@@ -125,7 +125,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 10,
 		startY: 10,
 		width: 730,

@@ -19,13 +19,13 @@ var mycode = function() {
 	input_alpha.value = '1';
 
 	//define filter
-	filter = scrawl.newGreyscaleFilter({
+	filter = scrawl.makeGreyscaleFilter({
 		name: 'myfilter',
 		alpha: 1,
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -56,7 +56,7 @@ var mycode = function() {
 	input_alpha.addEventListener('change', event_alpha, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

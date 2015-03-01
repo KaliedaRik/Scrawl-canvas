@@ -58,14 +58,14 @@ var mycode = function() {
 	scrawl.render();
 
 	//finish drawing the background cells by adding wheels and stars to them
-	myColor = scrawl.newColor({
+	myColor = scrawl.makeColor({
 		aMin: 0.4,
 		aMax: 0.7,
 		rMax: 200,
 		gMax: 200,
 		bMax: 200,
 	});
-	wheelStamp = scrawl.newWheel({
+	wheelStamp = scrawl.makeWheel({
 		group: 'wheelBackground',
 		method: 'fill',
 	});
@@ -185,7 +185,7 @@ var mycode = function() {
 	scrawl.show();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = scrawl.pad.mycanvas.getMouse();
 			if (here.active) {

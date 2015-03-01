@@ -23,7 +23,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'b0',
 		source: 'fraud',
 		width: 120,
@@ -63,7 +63,7 @@ var mycode = function() {
 		method: 'sinkInto',
 		startX: 500,
 	});
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'p0',
 		handleX: 'center',
 		handleY: 'center',
@@ -95,7 +95,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			myPics.updateEntitysBy({
 				roll: 1,

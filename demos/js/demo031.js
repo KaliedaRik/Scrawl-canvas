@@ -33,7 +33,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newBlock({ //cell collision zone
+	scrawl.makeBlock({ //cell collision zone
 		startX: 5,
 		startY: 5,
 		width: 590,
@@ -43,7 +43,7 @@ var mycode = function() {
 	});
 	scrawl.buildFields();
 
-	bunny = scrawl.newPicture({ //bunny entity template
+	bunny = scrawl.makePicture({ //bunny entity template
 		name: 'bunny',
 		source: 'bunny',
 		handleX: 'center',
@@ -94,7 +94,7 @@ var mycode = function() {
 	addBunnies();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveBunnies();
 			pad.render();

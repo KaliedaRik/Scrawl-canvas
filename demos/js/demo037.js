@@ -24,7 +24,7 @@ var mycode = function() {
 		compiled: false,
 		showOrder: 1,
 	});
-	backgroundEntity = scrawl.newPicture({
+	backgroundEntity = scrawl.makePicture({
 		name: 'miniscene',
 		source: 'river',
 		method: 'fill',
@@ -49,7 +49,7 @@ var mycode = function() {
 		rendered: false,
 		showOrder: 2,
 	});
-	magnifierEntity = scrawl.newPicture({
+	magnifierEntity = scrawl.makePicture({
 		name: 'magnifier',
 		source: 'river',
 		method: 'fill',
@@ -60,7 +60,7 @@ var mycode = function() {
 		copyWidth: 140,
 		copyHeight: 140,
 	});
-	stencilEntity = scrawl.newWheel({
+	stencilEntity = scrawl.makeWheel({
 		name: 'stencil',
 		startX: 70,
 		startY: 70,
@@ -70,7 +70,7 @@ var mycode = function() {
 		group: 'magnifier',
 	});
 
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			//only render the magnifier cell when the mouse is over the canvas

@@ -153,7 +153,7 @@ var mycode = function() {
 	});
 
 	//setup circles to mark the start (rotation/reflection) points for each stack and element
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'substackWheel',
 		pivot: 'substack',
 		fillStyle: 'red',
@@ -565,7 +565,7 @@ var mycode = function() {
 	input_redparahandle_yString.addEventListener('change', event_redparahandle_yString, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			//move stacks and elements in line with controller input

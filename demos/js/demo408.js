@@ -40,7 +40,7 @@ var mycode = function() {
 	input_skip.value = '1';
 
 	//define filter
-	filter = scrawl.newBlurFilter({
+	filter = scrawl.makeBlurFilter({
 		name: 'myfilter',
 		alpha: 1,
 		roll: 0,
@@ -50,7 +50,7 @@ var mycode = function() {
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -121,7 +121,7 @@ var mycode = function() {
 	input_skip.addEventListener('change', event_skip, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

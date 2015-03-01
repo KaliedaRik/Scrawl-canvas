@@ -35,7 +35,7 @@ var mycode = function() {
 	//code here
 	scrawl.getImagesByClass('demo109');
 
-	block = scrawl.newBlock({
+	block = scrawl.makeBlock({
 		name: 'myBlock',
 		startX: '15%',
 		startY: '20%',
@@ -48,7 +48,7 @@ var mycode = function() {
 		handleX: 'center',
 		handleY: 'center',
 	});
-	image = scrawl.newPicture({
+	image = scrawl.makePicture({
 		name: 'myImage',
 		startX: '45%',
 		startY: '70%',
@@ -58,7 +58,7 @@ var mycode = function() {
 		handleX: 'center',
 		handleY: 'center',
 	});
-	wheel = scrawl.newWheel({
+	wheel = scrawl.makeWheel({
 		name: 'myWheel',
 		startX: '50%',
 		startY: '20%',
@@ -68,7 +68,7 @@ var mycode = function() {
 		strokeStyle: 'brown',
 		lineWidth: 3,
 	});
-	phrase = scrawl.newPhrase({
+	phrase = scrawl.makePhrase({
 		name: 'myPhrase',
 		text: 'Hello world!\nHow are you today?',
 		font: '20pt Arial',
@@ -101,7 +101,7 @@ var mycode = function() {
 		lineWidth: 3,
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		pivot: 'myBlock',
 		fillStyle: 'red',
 		radius: 4,
@@ -212,7 +212,7 @@ var mycode = function() {
 	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			//code here

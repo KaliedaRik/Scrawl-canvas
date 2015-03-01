@@ -51,14 +51,14 @@ var mycode = function() {
 	input_maxBlue.value = '50';
 
 	//define filter
-	filter = scrawl.newLeachFilter({
+	filter = scrawl.makeLeachFilter({
 		name: 'myfilter',
 		alpha: 1,
 		exclude: [[0, 0, 0, 50, 50, 50]]
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -143,7 +143,7 @@ var mycode = function() {
 	input_maxBlue.addEventListener('change', event_maxBlue, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

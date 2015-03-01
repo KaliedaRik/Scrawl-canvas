@@ -122,7 +122,7 @@ var mycode = function() {
 		});
 		data.innerHTML = '<br />Shape: scrawl.makeRegularShape({radius: ' + current_radius + ', angle: ' + current_angle + ', startControlX: ' + current_CX1 + ', startControlY: ' + current_CY1 + ', endControlX: ' + current_CX2 + ', endControlY: ' + current_CY2 + ', lineType: "' + current_lineType + '", shape: true});<br />Path: scrawl.makeRegularShape({radius: ' + current_radius + ', angle: ' + current_angle + ', startControlX: ' + current_CX1 + ', startControlY: ' + current_CY1 + ', endControlX: ' + current_CX2 + ', endControlY: ' + current_CY2 + ', lineType: "' + current_lineType + '", shape: false});';
 	};
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		font: '20pt Arial, sans-serif',
 		text: 'Path Entity',
 		handleX: 'center',
@@ -197,7 +197,7 @@ var mycode = function() {
 	input_CY2.addEventListener('change', event_CY2, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

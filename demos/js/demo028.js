@@ -33,7 +33,7 @@ var mycode = function() {
 	patternGroup = scrawl.group.patternCell;
 
 	//add entitys to the pattern cell ...
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		radius: 10,
 		fillStyle: 'red',
 		method: 'fill',
@@ -50,13 +50,13 @@ var mycode = function() {
 	});
 
 	//build the pattern
-	dotty = scrawl.newPattern({
+	dotty = scrawl.makePattern({
 		name: 'dotty',
 		source: 'patternCell',
 	});
 
 	//add a block entity, for showing off the pattern
-	frame = scrawl.newBlock({
+	frame = scrawl.makeBlock({
 		startX: 200,
 		startY: 200,
 		handleX: 'center',
@@ -71,7 +71,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			frame.setDelta({
 				roll: 0.5,

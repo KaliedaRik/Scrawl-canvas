@@ -31,12 +31,12 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo087');
 
 	//define entitys
-	background = scrawl.newPicture({
+	background = scrawl.makePicture({
 		source: 'background',
 		fastStamp: true,
 	});
 
-	myBlob = scrawl.newPicture({
+	myBlob = scrawl.makePicture({
 		source: 'blob',
 		fastStamp: true,
 	});
@@ -86,7 +86,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			moveBlobs();

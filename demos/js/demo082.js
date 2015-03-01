@@ -52,12 +52,12 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'penguin',
 		url: 'img/penguin02.jpg',
 	});
 
-	displayText = scrawl.newPhrase({
+	displayText = scrawl.makePhrase({
 		font: '20pt bold Arial, sans-serif',
 		handleX: 'center',
 		handleY: 'center',
@@ -157,7 +157,7 @@ var mycode = function() {
 	updateText();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			if (!here.active) {

@@ -9,7 +9,7 @@ var mycode = function() {
 	//hide-end
 
 	//code here
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'bare_0',
 		font: '18pt Arial, sans-serif',
 		text: '0',
@@ -63,7 +63,7 @@ var mycode = function() {
 		startX: '80%',
 	});
 
-	scrawl.newTween({
+	scrawl.makeTween({
 		name: 't_bare_0',
 		targets: scrawl.entity.bare_0,
 		start: {
@@ -111,68 +111,68 @@ var mycode = function() {
 		targets: scrawl.entity.percent_100,
 	});
 
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_bare_0',
 		time: 0,
 		action: scrawl.animation.t_bare_0,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_bare_1200_5',
 		time: 1200.5,
 		action: scrawl.animation.t_bare_1200_5,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_ms_0',
 		time: '0ms',
 		action: scrawl.animation.t_ms_0,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_ms_1773_975',
 		time: '1773.975ms',
 		action: scrawl.animation.t_ms_1773_975,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_s_1_94',
 		time: '1.94s',
 		action: scrawl.animation.t_s_1_94,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_s_1_first',
 		time: '1s',
 		action: scrawl.animation.t_s_1_first,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_s_1_second',
 		time: '1s',
 		action: scrawl.animation.t_s_1_second,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_s_0',
 		time: '0s',
 		action: scrawl.animation.t_s_0,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_percent_0',
 		time: '0%',
 		action: scrawl.animation.t_percent_0,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_percent_40_5_first',
 		time: '40.5%',
 		action: scrawl.animation.t_percent_40_5_first,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_percent_40_5_second',
 		time: '40.5%',
 		action: scrawl.animation.t_percent_40_5_second,
 	});
-	scrawl.newAction({
+	scrawl.makeAction({
 		name: 'a_percent_100',
 		time: '100%',
 		action: scrawl.animation.t_percent_100,
 	});
 
-	scrawl.newTimeline({
+	scrawl.makeTimeline({
 		name: 'myTimeline',
 		duration: 2000,
 	}).add(
@@ -182,7 +182,7 @@ var mycode = function() {
 	);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

@@ -47,7 +47,7 @@ var mycode = function() {
 	original = scrawl.canvas.original;
 
 	//... and a Phrase entity to place on the holding cell
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		text: 'HELLO',
 		font: '80pt 900 Arial, sans-serif',
 		startX: 200,
@@ -78,7 +78,7 @@ var mycode = function() {
 		name: 'myGroup',
 	});
 	for (var i = 0; i < 6; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			lineWidth: 2,
@@ -184,7 +184,7 @@ var mycode = function() {
 	updateScene();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			if (!here.active && myEntity) {

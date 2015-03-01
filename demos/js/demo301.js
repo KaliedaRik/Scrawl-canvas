@@ -20,7 +20,7 @@ var mycode = function() {
 	scrawl.physics.windSpeed = 15; //meters per second, blowing horizontally left-to-right
 
 	//define physics objects
-	pBall = scrawl.newParticle({
+	pBall = scrawl.makeParticle({
 		name: 'myball',
 		startX: 300,
 		startY: 20,
@@ -39,7 +39,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	dBall = scrawl.newWheel({
+	dBall = scrawl.makeWheel({
 		pivot: 'myball',
 		radius: 10,
 	});
@@ -65,7 +65,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			checkPositions();
 			pad.render();
