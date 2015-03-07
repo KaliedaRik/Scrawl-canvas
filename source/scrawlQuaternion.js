@@ -513,7 +513,7 @@ Argument object can be in the form, where all values (which default to 0) are in
 			x = (s1 * s2 * c3) + (c1 * c2 * s3);
 			y = (s1 * c2 * c3) + (c1 * s2 * s3);
 			z = (c1 * s2 * c3) - (s1 * c2 * s3);
-			return my.makeQuaternion({
+			return new my.Quaternion({
 				n: w,
 				x: x,
 				y: y,

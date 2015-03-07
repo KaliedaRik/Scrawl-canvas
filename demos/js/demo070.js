@@ -60,6 +60,7 @@ var mycode = function() {
 	};
 	getPhrase = function(e) {
 		stopE(e);
+		here = myPad.getMouse();
 		myEntity = dragGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);

@@ -272,16 +272,16 @@ The argument object should include the following attributes:
 @return The new Pad object
 @example
     <body>
-		<div id="canvasholder"></div>
-		<script src="js/scrawlCore-min.js"></script>
-		<script>
-			scrawl.addCanvasToPage({
-				name:	'mycanvas',
-				stackName: 'mystack',
-				width: 400,
-				height: 200,
-				}).makeCurrent();
-		</script>
+        <div id="canvasholder"></div>
+        <script src="js/scrawlCore-min.js"></script>
+        <script>
+            scrawl.addCanvasToPage({
+                name:   'mycanvas',
+                stackName: 'mystack',
+                width: 400,
+                height: 200,
+                }).makeCurrent();
+        </script>
     </body>
 
 <a href="../../demo002.html">Live demo</a>
@@ -369,7 +369,7 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-	scrawl.setDisplayOffsets();
+    scrawl.setDisplayOffsets();
 **/
 		my.setDisplayOffsets = function(item) {
 			var i,
@@ -666,6 +666,15 @@ A flag to determine whether an element displays itself
 @default true
 **/
 		my.d.PageElement.visibility = true;
+		/**
+Index of mouse vector to use when pivot === 'mouse'
+
+The Pad/Stack/Element.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
+@property mouseIndex
+@type String
+@default 'mouse'
+**/
+		my.d.PageElement.mouseIndex = 'mouse';
 		my.mergeInto(my.d.Pad, my.d.PageElement);
 		/**
 PageElement constructor hook function - modified by stacks module
@@ -761,6 +770,7 @@ PageElement constructor hook function - modified by stacks module
 			this.offset = my.makeVector({
 				name: this.type + '.' + this.name + '.offset'
 			});
+			this.mouseIndex = my.xtGet(items.mouseIndex, 'mouse');
 			this.offset.flag = false;
 		};
 		/**
@@ -1408,11 +1418,12 @@ Calculate start Vector in reference to a entity or Point object's position
 @private
 **/
 		my.PageElement.prototype.setStampUsingPivot = function() {
-			var here,
+			var mouse,
+				stack,
 				myP,
 				myPVector,
 				pEntity,
-				temp;
+				x, y;
 			if (my.point && my.point[this.pivot]) {
 				myP = my.point[this.pivot];
 				pEntity = my.entity[myP.entity];
@@ -1442,20 +1453,46 @@ Calculate start Vector in reference to a entity or Point object's position
 			}
 			if (this.pivot === 'mouse') {
 				if (this.group) {
-					here = my.stack[my.group[this.group].stack].getMouse();
-					temp = this.getStartValues();
-					if (!my.xta(this.mouseX, this.mouseY)) {
-						this.oldX = temp.x;
-						this.oldY = temp.y;
+					stack = my.stack[my.group[this.group].stack];
+					x = (this.start.x.substring) ? my.Position.prototype.convertX.call(this, this.start.x, stack.localWidth) : this.start.x;
+					y = (this.start.y.substring) ? my.Position.prototype.convertY.call(this, this.start.y, stack.localHeight) : this.start.y;
+					x = (isNaN(x)) ? 0 : x;
+					y = (isNaN(y)) ? 0 : y;
+					mouse = stack.mice[this.mouseIndex] || {};
+					if (!my.xt(mouse)) {
+						mouse.x = 0;
+						mouse.y = false;
+						mouse.active = false;
 					}
-					if (here.active) {
-						this.start.x = (!this.lockX) ? temp.x + here.x - this.oldX : this.start.x;
-						this.start.y = (!this.lockY) ? temp.y + here.y - this.oldY : this.start.y;
-						this.oldX = here.x;
-						this.oldY = here.y;
+					if (this.oldX == null && this.oldY == null) { //jshint ignore:line
+						this.oldX = x;
+						this.oldY = y;
 					}
+					this.start.x = (!this.lockX) ? x + mouse.x - this.oldX : x;
+					this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
+					this.oldX = mouse.x;
+					this.oldY = mouse.y;
+					return this.setStampUsingStacksPivot();
 				}
 			}
+			return this;
+		};
+		/**
+Stamp helper hook function - amended by stacks module
+
+@method setStampUsingStacksPivot
+@return this
+**/
+		my.Position.prototype.setStampUsingStacksPivot = function() {
+			return this;
+		};
+		/**
+Stamp helper hook function - amended by stacks module
+
+@method setStampUsingStacksPivot
+@return this
+**/
+		my.PageElement.prototype.setStampUsingStacksPivot = function() {
 			return this;
 		};
 		/**
@@ -1928,7 +1965,6 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 					items.stackElement.style.position = 'absolute';
 				}
 				this.interactive = my.xtGet(items.interactive, true);
-				this.removeMouseMove();
 				if (this.interactive) {
 					this.addMouseMove();
 				}
@@ -2320,7 +2356,6 @@ Get dimensions of Stack
 					my.elm[this.name].style.boxSizing = 'border-box';
 				}
 				this.interactive = my.xtGet(items.interactive, false);
-				this.removeMouseMove();
 				if (this.interactive) {
 					this.addMouseMove();
 				}

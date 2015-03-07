@@ -403,7 +403,7 @@ var mycode = function() {
 			}
 			else {
 				stopTiger();
-				myMessage.innerHTML = 'Move mouse over canvas';
+				myMessage.innerHTML = 'Move mouse over, or tap on, canvas to animate cat';
 			}
 			scrawl.render();
 

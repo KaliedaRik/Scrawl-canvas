@@ -133,6 +133,7 @@ var mycode = function() {
 	};
 	getWheel = function(e) {
 		stopE(e);
+		here = pad.getMouse();
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
@@ -173,8 +174,8 @@ var mycode = function() {
 
 	//animation function
 	updateScene = function() {
-		pad.clear('base');
-		pad.compile('base');
+		pad.clear();
+		pad.compile();
 		doTransform();
 		myGroup.stamp();
 		pad.show();
@@ -186,10 +187,7 @@ var mycode = function() {
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			here = pad.getMouse();
-			if (!here.active && myEntity) {
-				dropWheel();
-			}
+
 			//only refresh the scene if guidelines have changed
 			if (myEntity) {
 				updateScene();

@@ -144,7 +144,7 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 				s = document.getElementsByClassName(classtag);
 				if (s.length > 0) {
 					for (i = s.length; i > 0; i--) {
-						if (s[i - 1].complete) {
+						if (s[i - 1].width && s[i - 1].height) {
 							my.makeImage({
 								element: s[i - 1],
 								removeImageFromDOM: kill,
@@ -152,24 +152,18 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 							});
 						}
 						else {
-							s[i - 1].addEventListener('load', my.getImagesCallback, false);
+							my.makeImage({
+								url: s[i - 1].src,
+								name: s[i - 1].id,
+								removeImageFromDOM: kill,
+								crossOrigin: 'anonymous'
+							});
 						}
 					}
 					return true;
 				}
 			}
 			return false;
-		};
-		/**
-Helper function
-@method getImagesCallback
-@private
-**/
-		my.getImagesCallback = function() {
-			my.makeImage({
-				element: this, // should be the image element itself
-				crossOrigin: 'anonymous'
-			});
 		};
 		/**
 A __general__ function to generate a Image wrapper object for an &lt;img&gt; or &lt;svg&gt; element identified by an id string
@@ -183,7 +177,7 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 			kill = my.xtGet(kill, true);
 			if (idtag) {
 				myImg = document.getElementById(idtag);
-				if (myImg.complete) {
+				if (myImg.width && myImg.height) {
 					my.makeImage({
 						element: myImg,
 						removeImageFromDOM: kill,
@@ -191,7 +185,12 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 					});
 				}
 				else {
-					myImg.addEventListener('load', my.getImagesCallback, false);
+					my.makeImage({
+						url: myImg.src,
+						name: myImg.id,
+						removeImageFromDOM: kill,
+						crossOrigin: 'anonymous'
+					});
 				}
 				return true;
 			}

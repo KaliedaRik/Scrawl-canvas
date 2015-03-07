@@ -15,7 +15,8 @@ var mycode = function() {
 		clickedObject,
 		myCol,
 		myGroup = scrawl.group[myPad.base],
-		handleEntity;
+		createEntity,
+		placeEntity;
 
 	//import images into scrawl library
 	scrawl.getImagesByClass('demo050');
@@ -173,8 +174,27 @@ var mycode = function() {
 		font: '20pt Arial, Helvetica'
 	});
 
-	//event listener
-	handleEntity = function(e) {
+	//event listeners
+	createEntity = function(e) {
+		placeEntity(e);
+		here = myPad.getMouse();
+		clickedObject = myGroup.getEntityAt(here);
+		if (clickedObject) {
+			currentObject = clickedObject.clone({
+				order: myGroup.entitys.length,
+			}).pickupEntity(here);
+			if (currentObject.type === 'Block') {
+				currentObject.set({
+					fillStyle: myCol.clone({
+						random: true
+					}).name
+				});
+			}
+		}
+	};
+	scrawl.addListener('down', createEntity, myCanvas);
+
+	placeEntity = function(e) {
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
@@ -183,25 +203,16 @@ var mycode = function() {
 			currentObject.dropEntity();
 			currentObject = null;
 		}
-		else {
-			here = myPad.getMouse();
-			clickedObject = myGroup.getEntityAt(here);
-			if (clickedObject) {
-				currentObject = clickedObject.clone({
-					order: myGroup.entitys.length,
-				}).pickupEntity(here);
-				if (currentObject.type === 'Block') {
-					var newColor = myCol.clone({
-						random: true
-					});
-					currentObject.set({
-						fillStyle: newColor.name
-					});
-				}
-			}
-		}
 	};
-	scrawl.addListener('up', handleEntity, myCanvas);
+	scrawl.addListener(['up', 'leave'], placeEntity, myCanvas);
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, myCanvas);
 
 	//animation object
 	scrawl.makeAnimation({

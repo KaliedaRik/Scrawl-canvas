@@ -47,6 +47,14 @@ var mycode = function() {
 	snake.forceStamp();
 	scrawl.show();
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation function
 	updateSnake = function() {
 		if (chokeTime + choke < Date.now()) {

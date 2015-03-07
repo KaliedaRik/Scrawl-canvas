@@ -30,6 +30,7 @@ var mycode = function() {
 	myImages = scrawl.makeGroup({
 		name: 'myImages',
 		order: 1,
+		//entitySort: false
 	});
 
 	//define initial entity
@@ -68,20 +69,25 @@ var mycode = function() {
 		}
 	};
 	handleFile = function(file, offset) {
-		var reader = new FileReader();
+		var reader = new FileReader(),
+			x, y;
 		reader.onload = function() {
+			here = pad.getMouse();
+			x = (here) ? here.x : 150;
+			y = (here) ? here.y : 100;
 			scrawl.makePicture({
 				name: file.name,
 				url: reader.result,
 				strokeStyle: 'red',
 				method: 'fillDraw',
-				startX: here.x + (offset * 10),
-				startY: here.y + (offset * 10),
+				startX: x + (offset * 10),
+				startY: y + (offset * 10),
 				width: 150,
 				height: 100,
 				handleX: 'center',
 				handleY: 'center',
 				group: 'myImages',
+				order: myImages.entitys.length
 			});
 		};
 		reader.readAsDataURL(file);
@@ -92,6 +98,7 @@ var mycode = function() {
 	//event listeners for dragging and dropping entitys within the canvas
 	pickupEntity = function(e) {
 		stopE(e);
+		here = pad.getMouse();
 		if (currentEntity) {
 			dropEntity();
 		}
@@ -109,14 +116,17 @@ var mycode = function() {
 	};
 	scrawl.addListener('down', pickupEntity, canvas);
 	scrawl.addListener(['up', 'leave'], dropEntity, canvas);
+	scrawl.addListener(['enter', 'move'], function(e) {
+		here = pad.getMouse();
+	}, canvas);
 
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
-			if (!here.active) {
-				dropEntity();
-			}
+			// if (!here.active) {
+			// 	dropEntity();
+			// }
 			scrawl.render();
 			myImages.updateEntitysBy({
 				roll: 0.2,

@@ -111,6 +111,7 @@ var mycode = function() {
 	};
 	getText = function(e) { //text drag-and-drop
 		stopE(e);
+		here = pad.getMouse();
 		myText = texts.getEntityAt(here);
 		if (myText) {
 			myText.pickupEntity(here);
@@ -159,12 +160,6 @@ var mycode = function() {
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			here = pad.getMouse();
-			if (!here.active) {
-				if (myText) {
-					dropText();
-				}
-			}
 
 			pad.render();
 

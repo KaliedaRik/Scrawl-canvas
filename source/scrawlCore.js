@@ -254,7 +254,25 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 		my.animationInit();
 		my.physicsInit();
 		my.filtersInit();
+		my.resizePageListener();
 		return my;
+	};
+	/**
+event listener for browser resize actions
+@method resizePageListener
+@private
+**/
+	my.resizePageListener = function() {
+		window.removeEventListener('resize', my.resizePageEvent, false);
+		window.addEventListener('resize', my.resizePageEvent, false);
+	};
+	/**
+function for handling browser resize actions
+@method resizePageEvent
+@private
+**/
+	my.resizePageEvent = function(e) {
+		my.setDisplayOffsets('all');
 	};
 	/**
 scrawl.init hook function - modified by stacks module
@@ -787,9 +805,6 @@ A __utility__ function that checks an argument list of values and returns the fi
 			i,
 			iz;
 		slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(slice[0])) {
-			slice = slice[0];
-		}
 		if (slice.length > 0) {
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				if (typeof slice[i] !== 'undefined') {
@@ -812,9 +827,6 @@ False: 0, -0, '', undefined, null, false, NaN
 			i,
 			iz;
 		slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(slice[0])) {
-			slice = slice[0];
-		}
 		if (slice.length > 0) {
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				if (slice[i]) {
@@ -2231,7 +2243,7 @@ Retrieve an attribute value. If the attribute value has not been set, then the d
     box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.get = function(item) {
-		return (my.xt(this[item])) ? this[item] : my.d[this.type][item];
+		return my.xtGet(this[item], my.d[this.type][item]);
 	};
 	/**
 Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.
@@ -2348,7 +2360,117 @@ Certain Scrawl modules will add functionality to this object, for instance scraw
 	my.Position = function(items) {
 		my.Base.call(this, items);
 		items = my.safeObject(items);
-		this.corePositionInit(items);
+		/**
+The coordinate Vector representing the object's rotation/flip point
+
+SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
+
+* __startX__ - (Number) the x coordinate of the object's rotation/flip point, in pixels, from the left side of the object's cell
+* __startY__ - (Number) the y coordinate of the object's rotation/flip point, in pixels, from the top side of the object's cell
+
+@property start
+@type Vector
+**/
+		var temp = my.safeObject(items.start);
+		this.start = my.makeVector({
+			x: my.xtGet(items.startX, temp.x, 0),
+			y: my.xtGet(items.startY, temp.y, 0),
+			name: this.type + '.' + this.name + '.start'
+		});
+		this.work.start = my.makeVector({
+			name: this.type + '.' + this.name + '.work.start'
+		});
+		/**
+An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
+
+SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
+
+* __handleX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'
+* __handleY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'
+
+Where values are Numbers, handle can be treated like any other Vector
+
+@property handle
+@type Object
+**/
+		temp = my.safeObject(items.handle);
+		this.handle = my.makeVector({
+			x: my.xtGet(items.handleX, temp.x, 0),
+			y: my.xtGet(items.handleY, temp.y, 0),
+			name: this.type + '.' + this.name + '.handle'
+		});
+		this.work.handle = my.makeVector({
+			name: this.type + '.' + this.name + '.work.handle'
+		});
+		/**
+The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point
+@property pivot
+@type String
+@default null
+**/
+		this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
+		/**
+The object's scale value - larger values increase the object's size
+@property scale
+@type Number
+@default 1
+**/
+		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
+		/**
+Current rotation of the entity, cell or element (in degrees)
+@property roll
+@type Number
+@default 0
+**/
+		this.roll = my.xtGet(items.roll, my.d[this.type].roll);
+		/**
+Reflection flag; set to true to flip entity, cell or element along the Y axis
+@property flipReverse
+@type Boolean
+@default false
+**/
+		this.flipReverse = my.xtGet(items.flipReverse, my.d[this.type].flipReverse);
+		/**
+Reflection flag; set to true to flip entity, cell or element along the X axis
+@property flipUpend
+@type Boolean
+@default false
+**/
+		this.flipUpend = my.xtGet(items.flipUpend, my.d[this.type].flipUpend);
+		/**
+Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis
+@property lockX
+@type Boolean
+@default false
+**/
+		this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
+		/**
+Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis
+@property lockY
+@type Boolean
+@default false
+**/
+		this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
+		/**
+Positioning helper vector - includes a flag attribute for dirty checking
+@property offset
+@type Vector
+@default zero vector
+@private
+**/
+		this.offset = my.makeVector({
+			name: this.type + '.' + this.name + '.offset'
+		});
+		this.offset.flag = false;
+		/**
+Index of mouse vector to use when pivot === 'mouse'
+
+The Pad.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
+@property mouseIndex
+@type String
+@default 'mouse'
+**/
+		this.mouseIndex = my.xtGet(items.mouseIndex, 'mouse');
 		this.animationPositionInit(items);
 		this.pathPositionInit(items);
 		return this;
@@ -2363,87 +2485,22 @@ Certain Scrawl modules will add functionality to this object, for instance scraw
 	my.Position.prototype.type = 'Position';
 	my.Position.prototype.classname = 'objectnames';
 	my.d.Position = {
-		/**
-The coordinate Vector representing the object's rotation/flip point
-
-SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
-
-* __startX__ - (Number) the x coordinate of the object's rotation/flip point, in pixels, from the left side of the object's cell
-* __startY__ - (Number) the y coordinate of the object's rotation/flip point, in pixels, from the top side of the object's cell
-
-@property start
-@type Vector
-**/
 		start: {
 			x: 0,
 			y: 0
 		},
-		/**
-An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
-
-SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
-
-* __handleX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'
-* __handleY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'
-
-Where values are Numbers, handle can be treated like any other Vector
-
-@property handle
-@type Object
-**/
 		handle: {
 			x: 0,
 			y: 0
 		},
-		/**
-The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object's start point
-@property pivot
-@type String
-@default null
-**/
 		pivot: null,
-		/**
-The object's scale value - larger values increase the object's size
-@property scale
-@type Number
-@default 1
-**/
 		scale: 1,
-		/**
-Reflection flag; set to true to flip entity, cell or element along the Y axis
-@property flipReverse
-@type Boolean
-@default false
-**/
 		flipReverse: false,
-		/**
-Reflection flag; set to true to flip entity, cell or element along the X axis
-@property flipUpend
-@type Boolean
-@default false
-**/
 		flipUpend: false,
-		/**
-Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis
-@property lockX
-@type Boolean
-@default false
-**/
 		lockX: false,
-		/**
-Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis
-@property lockY
-@type Boolean
-@default false
-**/
 		lockY: false,
-		/**
-Current rotation of the entity, cell or element (in degrees)
-@property roll
-@type Number
-@default 0
-**/
 		roll: 0,
+		mouseIndex: 'mouse',
 		/**
 Entity, cell or element width (in pixels)
 @property width
@@ -2488,42 +2545,6 @@ A flag to determine whether the object will calculate its position along a Shape
 **/
 	};
 	my.mergeInto(my.d.Position, my.d.Base);
-	/**
-Position constructor hook function - core functionality
-@method corePositionInit
-@private
-**/
-	my.Position.prototype.corePositionInit = function(items) {
-		var temp = my.safeObject(items.start);
-		this.start = my.makeVector({
-			x: my.xtGet(items.startX, temp.x, 0),
-			y: my.xtGet(items.startY, temp.y, 0),
-			name: this.type + '.' + this.name + '.start'
-		});
-		this.work.start = my.makeVector({
-			name: this.type + '.' + this.name + '.work.start'
-		});
-		temp = my.safeObject(items.handle);
-		this.handle = my.makeVector({
-			x: my.xtGet(items.handleX, temp.x, 0),
-			y: my.xtGet(items.handleY, temp.y, 0),
-			name: this.type + '.' + this.name + '.handle'
-		});
-		this.work.handle = my.makeVector({
-			name: this.type + '.' + this.name + '.work.handle'
-		});
-		this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
-		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
-		this.roll = my.xtGet(items.roll, my.d[this.type].roll);
-		this.flipReverse = my.xtGet(items.flipReverse, my.d[this.type].flipReverse);
-		this.flipUpend = my.xtGet(items.flipUpend, my.d[this.type].flipUpend);
-		this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
-		this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
-		this.offset = my.makeVector({
-			name: this.type + '.' + this.name + '.offset'
-		});
-		this.offset.flag = false;
-	};
 	/**
 Position constructor hook function - modified by animation module
 @method animationPositionInit
@@ -2909,9 +2930,9 @@ Takes into account lock flag settings
 			this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
 			this.oldX = mouse.x;
 			this.oldY = mouse.y;
-			return this;
+			return this.setStampUsingStacksPivot();
 		}
-		return this.setStampUsingStacksPivot();
+		return this;
 	};
 	/**
 Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions
@@ -3039,11 +3060,39 @@ The core implementation of this object is a stub that supplies Pad objects with 
 	my.PageElement = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
+		/**
+DOM element width
+@property width
+@type Number
+@default 300
+**/
 		this.width = my.xtGet(items.width, my.d[this.type].width);
+		/**
+DOM element height
+@property height
+@type Number
+@default 150
+**/
 		this.height = my.xtGet(items.height, my.d[this.type].height);
+		/**
+The object's scale value - larger values increase the object's size
+@property scale
+@type Number
+@default 1
+**/
 		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
 		this.setLocalDimensions();
 		this.stacksPageElementConstructor(items);
+		/**
+The mice attribute is an object containing supplemented vectors which hold real-time information about the current coordinates of the mouse pointer and any other pointer or touch instances occurring over the element
+
+mice.mouse - always refers to the mouse pointer
+mice.ui0, mice.ui1 etc - refers to pointer and touch events
+
+@property mice
+@type Object
+@default {}
+**/
 		this.mice = {};
 		return this;
 	};
@@ -3057,19 +3106,7 @@ The core implementation of this object is a stub that supplies Pad objects with 
 	my.PageElement.prototype.type = 'PageElement';
 	my.PageElement.prototype.classname = 'objectnames';
 	my.d.PageElement = {
-		/**
-DOM element width
-@property width
-@type Number
-@default 300
-**/
 		width: 300,
-		/**
-DOM element height
-@property height
-@type Number
-@default 150
-**/
 		height: 150,
 		/**
 DOM element localWidth
@@ -3099,23 +3136,7 @@ DOM element's current vertical offset from the left side of the web page
 @default 0
 **/
 		displayOffsetY: 0,
-		/**
-The object's scale value - larger values increase the object's size
-@property scale
-@type Number
-@default 1
-**/
 		scale: 1,
-		/**
-The mice attribute is an object containing supplemented vectors which hold real-time information about the current coordinates of the mouse pointer and any other pointer or touch instances occurring over the element
-
-mice.mouse - always refers to the mouse pointer
-mice.ui0, mice.ui1 etc - refers to pointer and touch events
-
-@property mice
-@type Object
-@default {}
-**/
 		mice: {},
 		/**
 Set the interactive attribute to true to track mouse/pointer/touch events on the element. By default Pad and Stack objects set their element's interactivity to true, while Element objects set it to false 
@@ -3379,8 +3400,6 @@ mousemove event listener function
 **/
 	my.PageElement.prototype.handleMouseMove = function(e) {
 		var mouseX, mouseY, maxX, maxY, wrapper, i, iz, j, jz, el, touches, newActive, id, altEl, altWrapper;
-		e.stopPropagation();
-		e.preventDefault();
 
 		if (my.xt(this.id)) {
 			//invoked directly by DOM listeners
@@ -3474,7 +3493,6 @@ mousemove event listener function
 		}
 		//pointer event
 		else if (e.pointerType) {
-			e.cancelBubble = true;
 			id = (e.pointerType !== 'touch') ? e.pointerType : 'p' + e.pointerId;
 
 			//determine if a vector already exists for this pointer
@@ -3623,6 +3641,12 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			my.pad[this.name] = this;
 			my.pushUnique(my.padnames, this.name);
 
+			/**
+Array of CELLNAME Strings associated with this Pad
+@property cells
+@type Array
+@default []
+**/
 			// prepare for cell creation
 			this.cells = [];
 
@@ -3637,6 +3661,12 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				height: this.localHeight
 			});
 			my.pushUnique(this.cells, display.name);
+			/**
+Pad's display (visible) &lt;canvas&gt; element - CELLNAME
+@property display
+@type String
+@default ''
+**/
 			this.display = display.name;
 
 			// create a new canvas element to act as the base
@@ -3654,7 +3684,23 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				height: '100%'
 			});
 			my.pushUnique(this.cells, base.name);
+			/**
+Pad's base (hidden) &lt;canvas&gt; element - CELLNAME
+@property base
+@type String
+@default ''
+**/
 			this.base = base.name;
+			/**
+Pad's currently active &lt;canvas&gt; element - CELLNAME
+
+//not convinced there's any point in keeping this attribute anymore - take it out?
+
+@property current
+@type String
+@default ''
+@deprecated
+**/
 			this.current = base.name;
 
 			// finalise stuff for this Pad
@@ -3663,7 +3709,6 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			this.filtersPadInit();
 			this.padStacksConstructor(items);
 			this.interactive = my.xtGet(items.interactive, true);
-			this.removeMouseMove();
 			if (this.interactive) {
 				this.addMouseMove();
 			}
@@ -3685,37 +3730,9 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 	my.Pad.prototype.type = 'Pad';
 	my.Pad.prototype.classname = 'padnames';
 	my.d.Pad = {
-		/**
-Array of CELLNAME Strings associated with this Pad
-@property cells
-@type Array
-@default []
-**/
 		cells: [],
-		/**
-Pad's display (visible) &lt;canvas&gt; element - CELLNAME
-@property display
-@type String
-@default ''
-**/
 		display: '',
-		/**
-Pad's base (hidden) &lt;canvas&gt; element - CELLNAME
-@property base
-@type String
-@default ''
-**/
 		base: '',
-		/**
-Pad's currently active &lt;canvas&gt; element - CELLNAME
-
-//not convinced there's any point in keeping this attribute anymore - take it out?
-
-@property current
-@type String
-@default ''
-@deprecated
-**/
 		current: ''
 	};
 	my.mergeInto(my.d.Pad, my.d.PageElement);
@@ -5827,11 +5844,47 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 	my.Group = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
+		/**
+Array of SPRITENAME Strings of entitys that comprise this Group
+@property entitys
+@type Array
+@default []
+**/
 		this.entitys = (my.xt(items.entitys)) ? [].concat(items.entitys) : [];
+		/**
+CELLNAME of the default Cell object to which this group is associated
+@property cell
+@type String
+@default ''
+**/
 		this.cell = items.cell || my.pad[my.currentPad].current;
+		/**
+Group order value - lower order Groups are drawn on &lt;canvas&gt; elements before higher order Groups
+@property order
+@type Number
+@default 0
+**/
 		this.order = my.xtGet(items.order, 0);
+		/**
+Visibility flag - Group entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
+@property visibility
+@type Boolean
+@default true
+**/
 		this.visibility = my.xtGet(items.visibility, true);
+		/**
+Sorting flag - when set to true, Groups will sort their constituent entity object according to their entity.order attribute for each iteration of the display cycle
+@property entitySort
+@type Boolean
+@default true
+**/
 		this.entitySort = my.xtGet(items.entitySort, true);
+		/**
+Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked entity is to the current reference entity or mouse coordinate; when set to 0, this collision check step is skipped and all entitys move on to the next step
+@property regionRadius
+@type Number
+@default 0
+**/
 		this.regionRadius = my.xtGet(items.regionRadius, 0);
 		my.group[this.name] = this;
 		this.filtersGroupInit(items);
@@ -5849,47 +5902,11 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 	my.Group.prototype.type = 'Group';
 	my.Group.prototype.classname = 'groupnames';
 	my.d.Group = {
-		/**
-Array of SPRITENAME Strings of entitys that comprise this Group
-@property entitys
-@type Array
-@default []
-**/
 		entitys: [],
-		/**
-CELLNAME of the default Cell object to which this group is associated
-@property cell
-@type String
-@default ''
-**/
 		cell: '',
-		/**
-Group order value - lower order Groups are drawn on &lt;canvas&gt; elements before higher order Groups
-@property order
-@type Number
-@default 0
-**/
 		order: 0,
-		/**
-Visibility flag - Group entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
-@property visibility
-@type Boolean
-@default true
-**/
 		visibility: true,
-		/**
-Sorting flag - when set to true, Groups will sort their constituent entity object according to their entity.order attribute for each iteration of the display cycle
-@property entitySort
-@type Boolean
-@default true
-**/
 		entitySort: true,
-		/**
-Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked entity is to the current reference entity or mouse coordinate; when set to 0, this collision check step is skipped and all entitys move on to the next step
-@property regionRadius
-@type Number
-@default 0
-**/
 		regionRadius: 0
 	};
 	my.mergeInto(my.d.Group, my.d.Base);
@@ -6132,6 +6149,26 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 		return false;
 	};
 	/**
+Check all entitys in the Group to see which one(s) are associated with a particular mouse index
+@method getEntitysByMouseIndex
+@param {String} item Mouse index string
+@return Array of Entity objects
+**/
+	my.Group.prototype.getEntitysByMouseIndex = function(item) {
+		var result = [],
+			i, iz,
+			entity;
+		if (my.isa(item, 'str')) {
+			for (i = 0, iz = this.entitys.length; i < iz; i++) {
+				entity = my.entity[this.entitys[i]];
+				if (entity.mouseIndex === item) {
+					result.push(entity);
+				}
+			}
+		}
+		return result;
+	};
+	/**
 Check all entitys in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the entitys have been sorted; all entitys (in the group) colliding with the coordinate are returned as an array of entity objects
 @method getEntityAt
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
@@ -6199,42 +6236,51 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 		my.Position.call(this, items);
 		items.name = this.name;
 		var myContext = my.makeContext(items);
-		this.context = myContext.name;
-		this.group = this.getGroup(items);
-		this.fastStamp = my.xtGet(items.fastStamp, false);
-		this.scaleOutline = my.xtGet(items.scaleOutline, true);
-		this.order = my.xtGet(items.order, 0);
-		this.visibility = my.xtGet(items.visibility, true);
-		this.method = my.xtGet(items.method, my.d[this.type].method);
-		this.collisionsEntityConstructor(items);
-		this.filtersEntityInit(items);
-		this.mouseIndex = my.xtGet(items.mouseIndex, 'mouse');
-		return this;
-	};
-	my.Entity.prototype = Object.create(my.Position.prototype);
-	/**
-@property type
+		/**
+CTXNAME of this Entity's Context object
+@property context
 @type String
-@default 'Entity'
-@final
+@default ''
+@private
 **/
-	my.Entity.prototype.type = 'Entity';
-	my.Entity.prototype.classname = 'entitynames';
-	my.d.Entity = {
+		this.context = myContext.name;
+		/**
+GROUPNAME String for this entity's default group
+
+_Note: a entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_
+@property group
+@type String
+@default ''
+**/
+		this.group = this.getGroup(items);
+		/**
+Display cycle flag; if set to true, entity will not change the &lt;canvas&gt; element's context engine's settings before drawing itself on the cell
+@property fastStamp
+@type Boolean
+@default false
+**/
+		this.fastStamp = my.xtGet(items.fastStamp, false);
+		/**
+Scaling flag; set to true to ensure lineWidth scales in line with the scale attribute value
+@property scaleOutline
+@type Boolean
+@default true
+**/
+		this.scaleOutline = my.xtGet(items.scaleOutline, true);
 		/**
 Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys
 @property order
 @type Number
 @default 0
 **/
-		order: 0,
+		this.order = my.xtGet(items.order, 0);
 		/**
 Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
 @property visibility
 @type Boolean
 @default true
 **/
-		visibility: true,
+		this.visibility = my.xtGet(items.visibility, true);
 		/**
 Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
 
@@ -6254,6 +6300,23 @@ _Note: not all entitys support all of these operations_
 @type String
 @default 'fill'
 **/
+		this.method = my.xtGet(items.method, my.d[this.type].method);
+		this.collisionsEntityConstructor(items);
+		this.filtersEntityInit(items);
+		return this;
+	};
+	my.Entity.prototype = Object.create(my.Position.prototype);
+	/**
+@property type
+@type String
+@default 'Entity'
+@final
+**/
+	my.Entity.prototype.type = 'Entity';
+	my.Entity.prototype.classname = 'entitynames';
+	my.d.Entity = {
+		order: 0,
+		visibility: true,
 		method: 'fill',
 		/**
 Current SVGTiny data string for the entity (only supported by Path and Shape entitys)
@@ -6269,45 +6332,9 @@ Entity radius, in pixels - not supported by all entity objects
 @default 0
 **/
 		radius: 0,
-		/**
-Scaling flag; set to true to ensure lineWidth scales in line with the scale attribute value
-@property scaleOutline
-@type Boolean
-@default true
-**/
 		scaleOutline: true,
-		/**
-Display cycle flag; if set to true, entity will not change the &lt;canvas&gt; element's context engine's settings before drawing itself on the cell
-@property fastStamp
-@type Boolean
-@default false
-**/
 		fastStamp: false,
-		/**
-CTXNAME of this Entity's Context object
-@property context
-@type String
-@default ''
-@private
-**/
 		context: '',
-		/**
-Index of mouse vector to use when pivot === 'mouse'
-
-The Pad.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
-@property mouseIndex
-@type String
-@default 'mouse'
-**/
-		mouseIndex: 'mouse',
-		/**
-GROUPNAME String for this entity's default group
-
-_Note: a entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_
-@property group
-@type String
-@default ''
-**/
 		group: ''
 	};
 	my.mergeInto(my.d.Entity, my.d.Position);
@@ -6965,6 +6992,12 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Design = function(items) {
 		my.Base.call(this, items);
+		/**
+Drawing flag - when set to 'entity' (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to 'cell' (or false - default), will use Cell-based coordinates
+@property lockTo
+@type String - or alternatively Boolean
+@default 'cell'
+**/
 		this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
 		return this;
 	};
@@ -6996,12 +7029,6 @@ Objects take the form {color:String, stop:Number} where:
 			color: 'white',
 			stop: 0.999999
         }],
-		/**
-Drawing flag - when set to 'entity' (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to 'cell' (or false - default), will use Cell-based coordinates
-@property lockTo
-@type String - or alternatively Boolean
-@default 'cell'
-**/
 		lockTo: 'cell',
 		/**
 Drawing flag - when set to true, force the gradient to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities

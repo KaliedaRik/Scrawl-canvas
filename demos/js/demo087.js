@@ -85,6 +85,14 @@ var mycode = function() {
 		pad.show();
 	};
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {

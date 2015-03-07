@@ -21,7 +21,8 @@ var mycode = function() {
 		tweenCounter = 0,
 		tweenReduce,
 		expanded = false,
-		mouseIn, mouseOut, triggerTween;
+		mouseIn, mouseOut, triggerTween,
+		here;
 
 	//prepare elements
 	mystack.set({
@@ -220,7 +221,8 @@ var mycode = function() {
 				scrawl.renderElements();
 			}
 			else {
-				if (mystack.mouse.active) {
+				here = mystack.getMouse();
+				if (here.active) {
 					mouseIn();
 				}
 				else {
