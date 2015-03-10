@@ -114,24 +114,25 @@ var mycode = function() {
 
 	//dragging entity event listeners
 	getWheel = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+		here = pad.getMouse();
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
+	};
+	dropWheel = function(e) {
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
 		}
-	};
-	dropWheel = function(e) {
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 			guide.buildPositions();
-		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
 		}
 	};
 	scrawl.addListener('down', getWheel, canvas);
@@ -153,12 +154,7 @@ var mycode = function() {
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			here = pad.getMouse();
-			if (!here.active) {
-				if (myEntity) {
-					dropWheel();
-				}
-			}
+
 			doButtons();
 			pad.render();
 

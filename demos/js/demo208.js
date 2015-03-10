@@ -19,6 +19,7 @@ var mycode = function() {
 			back: scrawl.cell[pads.back.base],
 		},
 		mystack = scrawl.stack.mystack,
+		elstack = scrawl.stk.mystack,
 		group = scrawl.group.mystack,
 		cube = scrawl.makeQuaternion(),
 		deltaCube = scrawl.makeQuaternion({
@@ -157,9 +158,40 @@ var mycode = function() {
 	resize = function(e) {
 		setSize();
 	};
-	window.addEventListener('resize', resize);
+	window.addEventListener('resize', resize, false);
 
 	setSize();
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener(['move', 'down'], function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+		var here = mystack.getMouse();
+		if (here.active) {
+			group.setElementsTo({
+				pivot: 'mouse',
+				mouseIndex: here.id
+			});
+		}
+		else {
+			group.setElementsTo({
+				pivot: '',
+				mouseIndex: '',
+				startX: 'center',
+				startY: 'center'
+			});
+		}
+	}, elstack);
+	scrawl.addListener('leave', function(e) {
+		group.setElementsTo({
+			pivot: '',
+			mouseIndex: '',
+			startX: 'center',
+			startY: 'center'
+		});
+	}, elstack);
 
 	scrawl.makeAnimation({
 		fn: function() {
@@ -171,21 +203,9 @@ var mycode = function() {
 			words.updateEntitysBy({
 				roll: 0.5,
 			});
-			here = mystack.getMouse();
-			if (here.active) {
-				group.setElementsTo({
-					pivot: 'mouse',
-				});
-			}
-			else {
-				group.setElementsTo({
-					pivot: '',
-					startX: 'center',
-					startY: 'center',
-				});
-			}
+
 			scrawl.render();
-		},
+		}
 	});
 };
 scrawl.loadModules({

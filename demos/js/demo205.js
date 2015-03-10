@@ -27,6 +27,7 @@ var mycode = function() {
 			back: scrawl.cell[pads.back.base],
 		},
 		mystack = scrawl.stack.mystack,
+		elstack = scrawl.stk.mystack,
 		group = scrawl.group.mystack,
 		//use a virtual cube to determine the constructed cube's orientation
 		cube = scrawl.makeQuaternion(),
@@ -69,7 +70,6 @@ var mycode = function() {
 		pivot: 'mouse',
 		handleX: 'center',
 		handleY: 'center',
-		mouse: false,
 		pointerEvents: 'none'
 	});
 	//each of the canvas elements has its own initial rotation and translation values
@@ -128,6 +128,33 @@ var mycode = function() {
 			group: pads[sides[i]].base,
 		});
 	}
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener(['move', 'down'], function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+		var here = mystack.getMouse();
+		if (here.active) {
+			group.setElementsTo({
+				pivot: 'mouse',
+				mouseIndex: here.id
+			});
+		}
+		else {
+			group.setElementsTo({
+				pivot: '',
+				mouseIndex: ''
+			});
+		}
+	}, elstack);
+	scrawl.addListener('leave', function(e) {
+		group.setElementsTo({
+			pivot: '',
+			mouseIndex: ''
+		});
+	}, elstack);
 
 	//animation object
 	scrawl.makeAnimation({

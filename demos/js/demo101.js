@@ -306,14 +306,31 @@ var mycode = function() {
 	};
 	input_filter.addEventListener('change', event_filter, false);
 
+	scrawl.addListener(['down', 'move'], function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			here = myPad.getMouse();
+			current_entity.set({
+				mouseIndex: here.id,
+				visibility: true
+			});
+		}
+	}, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			current_entity.set({
+				mouseIndex: '',
+				visibility: false
+			});
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			here = myPad.getMouse();
-
-			current_entity.set({
-				visibility: (here.active) ? true : false,
-			});
 
 			scrawl.render();
 

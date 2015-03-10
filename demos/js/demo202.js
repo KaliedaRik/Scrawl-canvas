@@ -9,6 +9,7 @@ var mycode = function() {
 
 	//define variables
 	var mystack = scrawl.stack.mystack,
+		elstack = scrawl.stk.mystack,
 		cw = 280,
 		ch = 315,
 		mypad = scrawl.pad.mycanvas,
@@ -31,15 +32,30 @@ var mycode = function() {
 		pointerEvents: 'none',
 	});
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener(['move', 'down'], function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+		here = mystack.getMouse();
+		myScale = (1 - ((Math.abs(here.y - (mystack.height / 2)) / mystack.height) + (Math.abs(here.x - (mystack.width / 2)) / mystack.width))) + 0.1;
+		mycow.set({
+			width: (here.active) ? Math.floor(cw * myScale) : 1,
+			height: (here.active) ? Math.floor(ch * myScale) : 1,
+			visibility: (here.active) ? true : false,
+			mouseIndex: here.id
+		});
+	}, elstack);
+
+	scrawl.addListener('leave', function(e) {
+		mycow.visibility = false;
+	}, elstack);
+
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			here = mystack.getMouse();
-			myScale = (1 - ((Math.abs(here.y - (mystack.height / 2)) / mystack.height) + (Math.abs(here.x - (mystack.width / 2)) / mystack.width))) + 0.1;
-			mycow.set({
-				width: (here.active) ? Math.floor(cw * myScale) : 1,
-				height: (here.active) ? Math.floor(ch * myScale) : 1,
-			});
+
 			scrawl.render();
 
 			//hide-start
