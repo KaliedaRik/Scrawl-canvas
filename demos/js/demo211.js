@@ -9,11 +9,22 @@ var mycode = function() {
 
 	//define variables
 	var mystack = scrawl.stack.mystack,
-		mypad = scrawl.pad.mycanvas,
-		mydiv = scrawl.element.testpanel,
-		mycanvas = scrawl.pad.mycanvas,
-		eldiv = scrawl.elm.testpanel,
 		elstk = scrawl.stk.mystack,
+		mycanvas = scrawl.pad.mycanvas,
+		temp = scrawl.canvas.mycanvas,
+		currentPitch = 0,
+		currentYaw = 0,
+		currentRoll = 0,
+		currentPerspectiveX = 300,
+		currentPerspectiveY = 200,
+		currentPerspectiveZ = 1000,
+		currentStartX = 300,
+		currentStartY = 200,
+		currentHandleX = 300,
+		currentHandleY = 200,
+		wheel,
+		events,
+		stopE,
 		here;
 
 	//style the stack
@@ -26,25 +37,14 @@ var mycode = function() {
 
 	//style the stack elements
 	mycanvas.set({
-		startX: 300,
-		startY: 200,
+		startX: 'center',
+		startY: 'center',
 		handleX: 'center',
 		handleY: 'center',
-	});
-	mydiv.set({
-		startX: 150,
-		startY: 100,
-		width: 300,
-		height: 200,
-		border: '1px solid black',
-		overflow: 'hidden',
-		handleX: 'center',
-		handleY: 'center',
-		//pointerEvents: 'none',
 	});
 
 	//build entity
-	scrawl.makeWheel({
+	wheel = scrawl.makeWheel({
 		name: 'mywheel',
 		radius: 70,
 		fillStyle: 'blue',
@@ -54,21 +54,88 @@ var mycode = function() {
 		pivot: 'mouse',
 	});
 
+	//event listeners
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
+	events = function(e) {
+		var items = {},
+			temp;
+		stop(e);
+		if (scrawl.contains(['perspectiveX', 'perspectiveY', 'perspectiveZ'], e.target.id)) {
+			switch (e.target.id) {
+				case 'perspectiveX':
+					currentPerspectiveX = Math.round(e.target.value);
+					break;
+				case 'perspectiveY':
+					currentPerspectiveY = Math.round(e.target.value);
+					break;
+				case 'perspectiveZ':
+					currentPerspectiveZ = Math.round(e.target.value);
+					break;
+				default:
+					items = false;
+			}
+			if (items) {
+				items.perspectiveX = currentPerspectiveX;
+				items.perspectiveY = currentPerspectiveY;
+				items.perspectiveZ = currentPerspectiveZ;
+				mystack.set(items);
+			}
+		}
+		else {
+			switch (e.target.id) {
+				case 'pitch':
+					currentPitch = Math.round(e.target.value);
+					break;
+				case 'yaw':
+					currentYaw = Math.round(e.target.value);
+					break;
+				case 'roll':
+					currentRoll = Math.round(e.target.value);
+					break;
+				case 'startX':
+					currentStartX = Math.round(e.target.value);
+					break;
+				case 'startY':
+					currentStartY = Math.round(e.target.value);
+					break;
+				case 'handleX':
+					currentHandleX = Math.round(e.target.value);
+					break;
+				case 'handleY':
+					currentHandleY = Math.round(e.target.value);
+					break;
+				default:
+					items = false;
+			}
+			if (items) {
+				items.pitch = currentPitch;
+				items.yaw = currentYaw;
+				items.roll = currentRoll;
+				items.startX = currentStartX;
+				items.startY = currentStartY;
+				items.handleX = currentHandleX;
+				items.handleY = currentHandleY;
+				mycanvas.set(items);
+			}
+		}
+	};
+	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener(['move', 'down'], function(e) {
+		stopE(e);
+		here = mycanvas.getMouse();
+		wheel.mouseIndex = here.id;
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
 
-			scrawl.entity.mywheel.set({
-				visibility: (mycanvas.getMouse().active) ? true : false,
-			});
 			scrawl.render();
-			mycanvas.setDelta({
-				yaw: 0.5,
-			});
-			mydiv.setDelta({
-				pitch: 0.5,
-			});
-			scrawl.renderElements();
 
 			//hide-start
 			testNow = Date.now();

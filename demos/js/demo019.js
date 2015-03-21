@@ -132,36 +132,6 @@ var mycode = function() {
 	};
 	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
-	// event_speed = function(e) {
-	// 	stopE(e);
-	// 	current_speed = parseFloat(input_speed.value);
-	// 	myCat.set({
-	// 		speed: current_speed,
-	// 	});
-	// };
-	// input_speed.addEventListener('input', event_speed, false);
-	// input_speed.addEventListener('change', event_speed, false);
-
-	// event_loop = function(e) {
-	// 	stopE(e);
-	// 	current_loop = input_loop.value;
-	// 	myCat.set({
-	// 		loop: current_loop,
-	// 	});
-	// };
-	// input_loop.addEventListener('input', event_loop, false);
-	// input_loop.addEventListener('change', event_loop, false);
-
-	// event_running = function(e) {
-	// 	stopE(e);
-	// 	current_running = input_running.value;
-	// 	myCat.set({
-	// 		running: current_running,
-	// 	});
-	// };
-	// input_running.addEventListener('input', event_running, false);
-	// input_running.addEventListener('change', event_running, false);
-
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
