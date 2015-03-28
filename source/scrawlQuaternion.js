@@ -49,6 +49,7 @@ Argument object can be in the following form, where all values (which default to
 		});
 **/
 		my.makeQuaternion = function(items) {
+			items = my.safeObject(items);
 			if (my.xto(items.pitch, items.yaw, items.roll)) {
 				return my.Quaternion.prototype.makeFromEuler(items);
 			}
