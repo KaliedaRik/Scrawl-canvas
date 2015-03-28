@@ -101,7 +101,7 @@ var mycode = function() {
 	events = function(e) {
 		var items = {},
 			temp;
-		stop(e);
+		stopE(e);
 		switch (e.target.id) {
 			case 'scale':
 				items.scale = parseFloat(e.target.value);

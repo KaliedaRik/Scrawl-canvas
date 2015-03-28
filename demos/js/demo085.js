@@ -164,7 +164,7 @@ var mycode = function() {
 			cellGradItems = {},
 			entityGradItems = {},
 			temp;
-		stop(e);
+		stopE(e);
 		switch (e.target.id) {
 			case 'cellblock_startX_abs':
 				cellBlockItems.startX = Math.round(e.target.value);

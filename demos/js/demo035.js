@@ -321,7 +321,7 @@ var mycode = function() {
 	};
 	events = function(e) {
 		var items = {};
-		stop(e);
+		stopE(e);
 		switch (e.target.id) {
 			case 'xAbsolute':
 				items.handleX = Math.round(e.target.value);

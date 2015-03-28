@@ -33,15 +33,6 @@ Alias for makeQuaternion()
 			return my.makeQuaternion(items);
 		};
 		/**
-A __factory__ function to generate new Quaternion objects - see also scrawl.makeQuaternion()
-@method makeQuaternion
-@param {Object} items Key:value Object argument for setting attributes
-@return Quaternion object
-**/
-		my.makeQuaternion = function(items) {
-			return new my.Quaternion(items);
-		};
-		/**
 A __factory__ function to build a Quaternion object from Euler angle values
 
 Argument object can be in the following form, where all values (which default to 0) are in degrees:
@@ -58,7 +49,10 @@ Argument object can be in the following form, where all values (which default to
 		});
 **/
 		my.makeQuaternion = function(items) {
-			return my.Quaternion.prototype.makeFromEuler(items);
+			if (my.xto(items.pitch, items.yaw, items.roll)) {
+				return my.Quaternion.prototype.makeFromEuler(items);
+			}
+			return new my.Quaternion(items);
 		};
 		/**
 # Quaternion

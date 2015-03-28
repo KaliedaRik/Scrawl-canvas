@@ -2315,8 +2315,8 @@ Note that any callback or fn attribute functions will be referenced by the clone
 	};
 	/**
 Turn the object into a JSON String
-@method toString
-@return JSON string of non-default value attributes
+@method parse
+@return object of object's currently set attributes
 **/
 	my.Base.prototype.parse = function() {
 		return JSON.parse(JSON.stringify(this));
@@ -2930,9 +2930,8 @@ Takes into account lock flag settings
 			this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
 			this.oldX = mouse.x;
 			this.oldY = mouse.y;
-			return this.setStampUsingStacksPivot();
 		}
-		return this;
+		return this.setStampUsingStacksPivot();
 	};
 	/**
 Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions

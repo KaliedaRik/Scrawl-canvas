@@ -27,20 +27,32 @@ var mycode = function() {
 		stopE,
 		here;
 
+	//initialize sliders
+	document.getElementById('pitch').value = 0;
+	document.getElementById('yaw').value = 0;
+	document.getElementById('roll').value = 0;
+	document.getElementById('perspectiveX').value = 300;
+	document.getElementById('perspectiveY').value = 200;
+	document.getElementById('perspectiveZ').value = 1000;
+	document.getElementById('startX').value = 300;
+	document.getElementById('startY').value = 200;
+	document.getElementById('handleX').value = 300;
+	document.getElementById('handleY').value = 200;
+
 	//style the stack
 	mystack.set({
 		width: 600,
 		height: 400,
 		perspectiveZ: 1000,
-		border: '1px solid red',
+		border: '1px solid red'
 	});
 
 	//style the stack elements
 	mycanvas.set({
-		startX: 'center',
-		startY: 'center',
-		handleX: 'center',
-		handleY: 'center',
+		startX: 300,
+		startY: 200,
+		handleX: 300,
+		handleY: 200
 	});
 
 	//build entity
@@ -62,7 +74,7 @@ var mycode = function() {
 	events = function(e) {
 		var items = {},
 			temp;
-		stop(e);
+		stopE(e);
 		if (scrawl.contains(['perspectiveX', 'perspectiveY', 'perspectiveZ'], e.target.id)) {
 			switch (e.target.id) {
 				case 'perspectiveX':

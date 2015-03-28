@@ -430,6 +430,23 @@ A __display__ function to move DOM elements within a Stack
 			}
 			return true;
 		};
+		/**
+A __display__ function to initialize DOM elements with their existing values
+@method domInit
+@return Always true
+**/
+		my.domInit = function() {
+			var i,
+				iz,
+				s;
+			for (i = 0, iz = my.stacknames.length; i < iz; i++) {
+				s = my.stack[my.stacknames[i]];
+				if (!s.group) {
+					s.domInit();
+				}
+			}
+			return true;
+		};
 
 		/**
 A __display__ function to update DOM elements' 3d position/rotation
@@ -1092,9 +1109,11 @@ Constructor / set helper function
 			}
 			return this;
 		};
-		my.css = ['alignContent', 'alignItems', 'alignSelf', 'all', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundImage', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'backgroundSize', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRadius', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopLeftRadius', 'borderTopRightRadius', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'breakAfter', 'breakBefore', 'breakInside', 'captionSide', 'clear', 'clip', 'clipPath', 'color', 'columns', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'float', 'font', 'fontFamily', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'hyphens', 'imageRendering', 'imageResolution', 'imageOrientation', 'imeMode', 'inherit', 'initial', 'isolation', 'justifyContent', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'mixBlendMode', 'objectFit', 'objectPosition', 'opacity', 'orphans', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'padding', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'quotes', 'resize', 'rubyAlign', 'rubyMerge', 'rubyPosition', 's', 'scrollBehavior', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'tabSize', 'textAlign', 'textAlignLast', 'textCombineUpright', 'textDecoration', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'touchAction', 'unicodeBidi', 'unicodeRange', 'unset', 'verticalAlign', 'visibility', 'whiteSpace', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'writingMode'];
+		my.css = ['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontKerning', 'fontLanguageOverride', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'hyphens', 'imageRendering', 'imageResolution', 'imageOrientation', 'imeMode', 'inherit', 'initial', 'isolation', 'justifyContent', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'mixBlendMode', 'objectFit', 'objectPosition', 'opacity', 'orphans', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'padding', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'quotes', 'resize', 'rubyAlign', 'rubyMerge', 'rubyPosition', 's', 'scrollBehavior', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'tabSize', 'textAlign', 'textAlignLast', 'textCombineUpright', 'textDecoration', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'touchAction', 'unicodeBidi', 'unicodeRange', 'unset', 'verticalAlign', 'visibility', 'whiteSpace', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'writingMode'];
+		//need to complete this array
+		my.xcss = ['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap'];
 		/**
-Handles the setting of position, transformOrigin, backfaceVisibility, margin, border, padding
+Handles the setting of many CSS attributes
 @method PageElement.setStyles
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -1105,17 +1124,14 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 				el,
 				k,
 				i,
-				iz;
+				iz,
+				firstLetter,
+				remainder;
 			items = my.safeObject(items);
 			el = this.getElement();
 			k = Object.keys(items);
 			for (i = 0, iz = k.length; i < iz; i++) {
-				if (k[i] === 'backfaceVisibility') {
-					el.style.webkitBackfaceVisibility = items.backfaceVisibility;
-					el.style.mozBackfaceVisibility = items.backfaceVisibility;
-					el.style.backfaceVisibility = items.backfaceVisibility;
-				}
-				else if (k[i] === 'visibility') {
+				if (k[i] === 'visibility') {
 					if (my.isa(items.visibility, 'str')) {
 						this.visibility = (!my.contains(stat, items.visibility)) ? true : false;
 					}
@@ -1129,10 +1145,17 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 						el.style.display = (this.visibility) ? 'block' : 'none';
 					}
 				}
+				else if (my.contains(my.xcss, k[i])) {
+					firstLetter = k[i][0].toUpperCase;
+					remainder = k[i].substr(1);
+					el.style['webkit' + firstLetter + remainder] = items[k[i]];
+					el.style['moz' + firstLetter + remainder] = items[k[i]];
+					el.style['ms' + firstLetter + remainder] = items[k[i]];
+					el.style['o' + firstLetter + remainder] = items[k[i]];
+					el.style[k[i]] = items[k[i]];
+				}
 				else if (my.contains(my.css, k[i])) {
-					if (my.xt(el.style[k[i]])) {
-						el.style[k[i]] = items[k[i]];
-					}
+					el.style[k[i]] = items[k[i]];
 				}
 			}
 			return this;
@@ -1472,7 +1495,6 @@ Calculate start Vector in reference to a entity or Point object's position
 					this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
 					this.oldX = mouse.x;
 					this.oldY = mouse.y;
-					return this.setStampUsingStacksPivot();
 				}
 			}
 			return this;
@@ -1484,16 +1506,18 @@ Stamp helper hook function - amended by stacks module
 @return this
 **/
 		my.Position.prototype.setStampUsingStacksPivot = function() {
-			return this;
-		};
-		/**
-Stamp helper hook function - amended by stacks module
-
-@method setStampUsingStacksPivot
-@return this
-**/
-		my.PageElement.prototype.setStampUsingStacksPivot = function() {
-			return this;
+			if (my.pad[this.pivot]) {
+				this.setStampUsingDomElement(my.pad[this.pivot]);
+				return this;
+			}
+			if (my.element[this.pivot]) {
+				this.setStampUsingDomElement(my.element[this.pivot]);
+				return this;
+			}
+			if (my.stack[this.pivot]) {
+				this.setStampUsingDomElement(my.stack[this.pivot]);
+				return this;
+			}
 		};
 		/**
 setStampUsingPivot helper function
@@ -1704,6 +1728,24 @@ Overwritesa core setDimensions()
 			return this;
 		};
 		/**
+Reinitialize element with existing values
+@method domInitialize
+@return This
+@chainable
+**/
+		my.PageElement.prototype.domInitialize = function() {
+			this.set({
+				startX: this.start.x || 0,
+				startY: this.start.y || 0,
+				handleX: this.handle.x || 0,
+				handleY: this.handle.y || 0,
+				width: this.width || my.d[this.type].width,
+				height: this.height || my.d[this.type].height,
+				scale: this.scale || 1
+			});
+			return this;
+		};
+		/**
 Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use styling to set their drawing region dimensions
 
 @method setDimensions
@@ -1814,6 +1856,8 @@ Pad set hook function - amended by Stacks module
 			}
 			if (this.group) {
 				my.canvas[this.name].style.margin = '0';
+				my.canvas[this.name].style.webkitBoxSizing = 'border-box';
+				my.canvas[this.name].style.mozBoxSizing = 'border-box';
 				my.canvas[this.name].style.boxSizing = 'border-box';
 			}
 		};
@@ -1961,6 +2005,8 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.setTransformOrigin();
 				if (this.group) {
 					my.stk[this.name].style.margin = '0';
+					my.stk[this.name].style.webkitBoxSizing = 'border-box';
+					my.stk[this.name].style.mozBoxSizing = 'border-box';
 					my.stk[this.name].style.boxSizing = 'border-box';
 					items.stackElement.style.position = 'absolute';
 				}
@@ -2170,8 +2216,8 @@ _Replaces PageElement.setLocalDimensions
 					this.localHeight = gRes.height;
 				}
 				else if (elRes) {
-					el.style.width = 'auto';
-					this.localWidth = parseFloat(elRes.getPropertyValue('width'));
+					el.style.height = 'auto';
+					this.localHeight = parseFloat(elRes.getPropertyValue('height'));
 				}
 				else {
 					this.localHeight = 0;
@@ -2246,6 +2292,17 @@ Move DOM elements within a Stack, via the Stack's groups
 		my.Stack.prototype.render = function() {
 			for (var i = 0, iz = this.groups.length; i < iz; i++) {
 				my.group[this.groups[i]].render();
+			}
+			return true;
+		};
+		/**
+Reinitialize element with existing values
+@method domInit
+@return Always true
+**/
+		my.Stack.prototype.domInit = function() {
+			for (var i = 0, iz = this.groups.length; i < iz; i++) {
+				my.group[this.groups[i]].domInit();
 			}
 			return true;
 		};
@@ -2353,6 +2410,8 @@ Get dimensions of Stack
 				this.setTransformOrigin();
 				if (this.group) {
 					my.elm[this.name].style.margin = '0';
+					my.elm[this.name].style.webkitBoxSizing = 'border-box';
+					my.elm[this.name].style.mozBoxSizing = 'border-box';
 					my.elm[this.name].style.boxSizing = 'border-box';
 				}
 				this.interactive = my.xtGet(items.interactive, false);
@@ -2589,6 +2648,25 @@ Tell the Group to ask its constituent elements to render
 				el.renderElement();
 				if (el.type === 'Stack') {
 					my.group[el.name].render();
+				}
+			}
+			return this;
+		};
+		/**
+Reinitialize group elements with existing values
+@method domInit
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.domInit = function() {
+			var i,
+				iz,
+				el;
+			for (i = 0, iz = this.elements.length; i < iz; i++) {
+				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				el.domInitialize();
+				if (el.type === 'Stack') {
+					my.group[el.name].domInit();
 				}
 			}
 			return this;

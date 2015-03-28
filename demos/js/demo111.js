@@ -79,7 +79,7 @@ var mycode = function() {
 	events = function(e) {
 		var items = {},
 			temp;
-		stop(e);
+		stopE(e);
 		switch (e.target.id) {
 			case 'pasteX_abs':
 				items.pasteX = Math.round(e.target.value);

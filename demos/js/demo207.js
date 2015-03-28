@@ -84,7 +84,7 @@ var mycode = function() {
 			startX: 30,
 			startY: (i * 100) + 50,
 			lockY: true,
-			width: 80,
+			width: 86,
 			height: 26,
 			path: 'guide',
 			pathPlace: 0,
