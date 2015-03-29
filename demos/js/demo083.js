@@ -21,7 +21,8 @@ var mycode = function() {
 		getWheel,
 		dropWheel,
 		doTransform,
-		updateScene;
+		updateScene,
+		stopE;
 
 	//add canvas to web page
 	scrawl.addCanvasToPage({
@@ -46,7 +47,7 @@ var mycode = function() {
 	original = scrawl.canvas.original;
 
 	//... and a Phrase entity to place on the holding cell
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		text: 'HELLO',
 		font: '80pt 900 Arial, sans-serif',
 		startX: 200,
@@ -73,11 +74,11 @@ var mycode = function() {
 	});
 
 	//... and some circles to grab onto, to manipulate the guide lines
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 	});
 	for (var i = 0; i < 6; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			lineWidth: 2,
@@ -124,28 +125,29 @@ var mycode = function() {
 	scrawl.point.baseline_p3.setToFixed('wheel_5');
 
 	//event listeners, for drag-dropping the circles
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getWheel = function(e) {
+		stopE(e);
+		here = pad.getMouse();
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropWheel = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	canvas.addEventListener('mousedown', getWheel, false);
-	canvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, canvas);
+	scrawl.addListener(['up', 'leave'], dropWheel, canvas);
 
 	//going to do the text transform 'raw' - painting directly onto the canvas's base cell
 	doTransform = function() {
@@ -172,8 +174,8 @@ var mycode = function() {
 
 	//animation function
 	updateScene = function() {
-		pad.clear('base');
-		pad.compile('base');
+		pad.clear();
+		pad.compile();
 		doTransform();
 		myGroup.stamp();
 		pad.show();
@@ -183,12 +185,9 @@ var mycode = function() {
 	updateScene();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			here = pad.getMouse();
-			if (!here.active && myEntity) {
-				dropWheel();
-			}
+
 			//only refresh the scene if guidelines have changed
 			if (myEntity) {
 				updateScene();

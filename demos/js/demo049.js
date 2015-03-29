@@ -10,23 +10,27 @@ var mycode = function() {
 	//define variables
 	var myPad = scrawl.pad.mycanvas,
 		here,
+		myEntities = [],
+		myEntitiesCheck,
 		myEntity = false,
+		i, iz,
 		entityList = ['Air', 'Bone', 'Clay', 'Fire', 'Metal', 'Radiance', 'Rock', 'Smoke', 'Water', 'Wood'],
 		myGroup,
 		getIcon,
-		dropIcon;
+		dropIcon,
+		stopE;
 
 	//import inmages into scrawl library
 	scrawl.getImagesByClass('demo049');
 
 	//define group
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 	});
 
 	//define entitys; get their image data
-	for (var i = 0, z = entityList.length; i < z; i++) {
-		scrawl.newPicture({
+	for (i = 0, iz = entityList.length; i < iz; i++) {
+		scrawl.makePicture({
 			name: entityList[i],
 			source: 'button' + entityList[i],
 			startX: (i * 58) + 85,
@@ -39,36 +43,46 @@ var mycode = function() {
 	}
 
 	//event listeners
-	getIcon = function(e) {
-		myEntity = myGroup.getEntityAt(here);
-		if (myEntity) {
-			myEntity.pickupEntity(here);
-		}
+	stopE = function(e) {
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
+		}
+	};
+	getIcon = function(e) {
+		stopE(e);
+		//here is an array of mouse vectors
+		here = myPad.getMouse(e);
+		for (i = 0, iz = here.length; i < iz; i++) {
+			myEntity = myGroup.getEntityAt(here[i]);
+			if (myEntity) {
+				scrawl.pushUnique(myEntities, myEntity.name);
+				myEntity.pickupEntity(here[i]);
+			}
 		}
 	};
 	dropIcon = function(e) {
-		if (myEntity) {
-			myEntity.dropEntity();
-			myEntity = false;
-		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
+		stopE(e);
+		if (myEntities.length > 0) {
+			//here is an array of mouse vector id strings
+			here = myPad.getMouseIdFromEvent(e);
+			myEntitiesCheck = myEntities.slice();
+			for (i = 0, iz = myEntitiesCheck.length; i < iz; i++) {
+				myEntity = scrawl.entity[myEntitiesCheck[i]];
+				if (scrawl.contains(here, myEntity.mouseIndex)) {
+					myEntity.dropEntity();
+					scrawl.removeItem(myEntities, myEntity.name);
+				}
+			}
 		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getIcon, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropIcon, false);
+	scrawl.addListener('down', getIcon, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropIcon, scrawl.canvas.mycanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			here = myPad.getMouse();
-			if (!here.active && myEntity) {
-				dropIcon();
-			}
+
 			scrawl.render();
 
 			//hide-start

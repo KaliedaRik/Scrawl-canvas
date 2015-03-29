@@ -21,14 +21,22 @@ var mycode = function() {
 		shape: true,
 	});
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.entity.ellie.setDelta({
 				roll: 1,
 			});
 			scrawl.cell.mycanvas_base.set({
-				backgroundColor: (scrawl.entity.ellie.checkHit(scrawl.pad.mycanvas.getMouse())) ? 'lightblue' : 'lightgreen',
+				backgroundColor: (scrawl.entity.ellie.checkHit(scrawl.pad.mycanvas.getMouse())) ? 'lightblue' : 'lightgreen'
 			});
 			scrawl.render();
 

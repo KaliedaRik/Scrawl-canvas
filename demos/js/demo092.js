@@ -18,7 +18,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo092');
 
 	//define designs (gradient)
-	gradient = scrawl.newRadialGradient({
+	gradient = scrawl.makeRadialGradient({
 		name: 'spotlight',
 		startRadius: 50,
 		endRadius: 150,
@@ -32,13 +32,13 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		source: 'flower',
 		width: 750,
 		height: 500,
 	});
 
-	myGloom = scrawl.newBlock({
+	myGloom = scrawl.makeBlock({
 		name: 'gloomy',
 		fillStyle: 'rgba(0,0,0,0.8)',
 		method: 'fill',
@@ -52,8 +52,16 @@ var mycode = function() {
 		fillStyle: 'spotlight',
 	});
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {

@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -123,11 +121,11 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 **/
 		my.Position.prototype.animationPositionInit = function(items) {
 			var temp = my.safeObject(items.delta);
-			this.delta = my.newVector({
+			this.delta = my.makeVector({
 				x: my.xtGet(items.deltaX, temp.x, 0),
 				y: my.xtGet(items.deltaY, temp.y, 0),
 			});
-			this.work.delta = my.newVector({
+			this.work.delta = my.makeVector({
 				name: this.type + '.' + this.name + '.work.delta'
 			});
 			this.pathSpeedConstant = my.xtGet(items.pathSpeedConstant, my.d[this.type].pathSpeedConstant);
@@ -179,7 +177,7 @@ Be aware that this is different to the Position.setDelta() function inherited by
 			var temp;
 			items = my.safeObject(items);
 			if (!my.isa(this.delta, 'vector')) {
-				this.delta = my.newVector(items.delta || this.delta);
+				this.delta = my.makeVector(items.delta || this.delta);
 			}
 			temp = my.safeObject(items.delta);
 			this.delta.x = my.xtGet(items.deltaX, temp.x, this.delta.x);
@@ -193,7 +191,7 @@ Position.clone hook function - modified by animation module
 **/
 		my.Position.prototype.animationPositionClone = function(a, items) {
 			var temp = my.safeObject(items.delta);
-			a.delta = my.newVector({
+			a.delta = my.makeVector({
 				x: my.xtGet(items.deltaX, temp.x, a.delta.x),
 				y: my.xtGet(items.deltaY, temp.y, a.delta.y),
 			});
@@ -341,11 +339,11 @@ Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to 
 **/
 		my.Cell.prototype.animationCellInit = function(items) {
 			var temp = my.safeObject(items.copyDelta);
-			this.copyDelta = my.newVector({
+			this.copyDelta = my.makeVector({
 				x: my.xtGet(items.copyDeltaX, temp.x, 0),
 				y: my.xtGet(items.copyDeltaY, temp.y, 0),
 			});
-			this.work.copyDelta = my.newVector();
+			this.work.copyDelta = my.makeVector();
 		};
 		/**
 Cell.get hook function - modified by animation module
@@ -758,39 +756,71 @@ Gradient builder helper function - sorts color attribute Objects by their stop a
 			this.color = color;
 		};
 		/**
-A __factory__ function to generate new Animation objects
+Alias for makeAnimation()
 @method newAnimation
+@deprecated
+**/
+		my.newAnimation = function(items) {
+			return my.makeAnimation(items);
+		};
+		/**
+Alias for makeTween()
+@method newTween
+@deprecated
+**/
+		my.newTween = function(items) {
+			return my.makeTween(items);
+		};
+		/**
+Alias for makeTimeline()
+@method newTimeline
+@deprecated
+**/
+		my.newTimeline = function(items) {
+			return my.makeTimeline(items);
+		};
+		/**
+Alias for makeAction()
+@method newAction
+@deprecated
+**/
+		my.newAction = function(items) {
+			return my.makeAction(items);
+		};
+		/**
+A __factory__ function to generate new Animation objects
+@method makeAnimation
 @param {Object} items Key:value Object argument for setting attributes
 @return Animation object
 **/
-		my.newAnimation = function(items) {
+		my.makeAnimation = function(items) {
 			return new my.Animation(items);
 		};
 		/**
 A __factory__ function to generate new Tween objects
-@method newTween
+@method makeTween
 @param {Object} items Key:value Object argument for setting attributes
 @return Tween object
 **/
-		my.newTween = function(items) {
+		my.makeTween = function(items) {
 			return new my.Tween(items);
 		};
 		/**
 A __factory__ function to generate new Timeline objects
-@method newTimeline
+@method makeTimeline
 @param {Object} items Key:value Object argument for setting attributes
 @return Timeline object
 **/
-		my.newTimeline = function(items) {
+		my.makeTimeline = function(items) {
 			return new my.Timeline(items);
 		};
 		/**
 A __factory__ function to generate new Action objects
-@method newAction
+@methodmakewAction
 @param {Object} items Key:value Object argument for setting attributes
 @return Action object
 **/
-		my.newAction = function(items) {
+		my.makeAction = function(items) {
 			return new my.Action(items);
 		};
 		my.pushUnique(my.sectionlist, 'animation');
@@ -857,7 +887,7 @@ Animation sorting routine - animation objects are sorted according to their anim
 
 ## Instantiation
 
-* scrawl.newAnimation()
+* scrawl.makeAnimation()
 
 ## Purpose
 
@@ -955,7 +985,7 @@ Remove this Animation from the scrawl library
 
 ## Instantiation
 
-* scrawl.newTween()
+* scrawl.makeTween()
 
 ## Purpose
 
@@ -1267,6 +1297,9 @@ Tween animation function
 							this.run();
 						}
 					}
+					else if (my.isa(this.count, 'bool') && this.count) {
+						this.run();
+					}
 					else {
 						this.runComplete();
 					}
@@ -1538,7 +1571,7 @@ Remove this tween from the scrawl library
 
 ## Instantiation
 
-* scrawl.newTimeline()
+* scrawl.makeTimeline()
 
 ## Purpose
 
@@ -1774,7 +1807,7 @@ Remove this Timeline from the scrawl library
 
 ## Instantiation
 
-* scrawl.newAction()
+* scrawl.makeAction()
 
 ## Purpose
 

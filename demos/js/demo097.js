@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'block1',
 		startX: 50,
 		startY: 70,
@@ -30,7 +30,7 @@ var mycode = function() {
 	});
 
 	//tweens
-	scrawl.newTween({
+	scrawl.makeTween({
 		name: 'tween1',
 		targets: scrawl.entity.block1,
 		start: {
@@ -62,7 +62,7 @@ var mycode = function() {
 			roll: 360,
 		},
 	}).run();
-	scrawl.newTween({
+	scrawl.makeTween({
 		name: 'tween3',
 		targets: scrawl.entity.block2,
 		duration: 2000,
@@ -119,7 +119,7 @@ var mycode = function() {
 	scrawl.animation.tween3.run();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.render();
 

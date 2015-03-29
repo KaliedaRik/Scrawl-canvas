@@ -65,7 +65,7 @@ var mycode = function() {
 	input_blueInBlue.value = '0';
 
 	//define filter
-	filter = scrawl.newTintFilter({
+	filter = scrawl.makeTintFilter({
 		name: 'myfilter',
 		alpha: 1,
 		redInRed: 0,
@@ -80,7 +80,7 @@ var mycode = function() {
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -201,7 +201,7 @@ var mycode = function() {
 	input_blueInBlue.addEventListener('change', event_blueInBlue, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

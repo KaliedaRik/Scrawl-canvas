@@ -42,6 +42,33 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+February - March 2015
+	- major overhaul of events
+		- scrawl-specific events: down; move; enter; leave; up
+			- integrates mouse, pointer and touch events
+		- new scrawl functions to handle adding/removing events
+			- addListener(), removeListener() - for scrawl-specific events
+			- addNativeListener(), removeNativeListener() - for other DOM events
+	- further integration of stacks (DOM elements) and the rest of the scrawl environment
+		- new DOM class - 'withcanvas' -  for generating stacks with attached canvases
+		- stacks now follow the Pad model for updating and rendering their associated elements (and entitys)
+			- scrawl.render() will trigger stack repositioning automatically
+		- entitys can use elements as pivots, and vice versa
+		- massive cleanup of stack-related code
+	- many demos rewritten to take into account new event listener, and stacks, code
+		- interactive demos now usable on touch devices (emulated - needs further testing)
+	- testing:
+		- Firefox (latest) - pass
+		- IE11 - pass
+		- Chrome/Opera (latest) - pass
+		- iPad emulated on Chrome - pass
+		- Safari for Windows - fail
+			- specifically, breaks on scrawl-specific events
+				- executive decision: end testing on Safari for Windows
+				- will need to test and fix on Safari for MacPro and devices
+		- further testing/fixing required on real devices:
+			- particularly important for multitouch events
+			- Android tablet, Android phone, iPad, iPhone, windows touch devices
 150127
 	- version 4.1.0 released
 

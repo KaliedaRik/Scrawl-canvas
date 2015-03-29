@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -27,13 +25,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		'use strict';
 
 		/**
-A __factory__ function to generate new Quaternion objects - see also scrawl.makeQuaternion()
+Alias for makeQuaternion()
 @method newQuaternion
-@param {Object} items Key:value Object argument for setting attributes
-@return Quaternion object
+@deprecated
 **/
 		my.newQuaternion = function(items) {
-			return new my.Quaternion(items);
+			return my.makeQuaternion(items);
 		};
 		/**
 A __factory__ function to build a Quaternion object from Euler angle values
@@ -52,14 +49,18 @@ Argument object can be in the following form, where all values (which default to
 		});
 **/
 		my.makeQuaternion = function(items) {
-			return my.Quaternion.prototype.makeFromEuler(items);
+			items = my.safeObject(items);
+			if (my.xto(items.pitch, items.yaw, items.roll)) {
+				return my.Quaternion.prototype.makeFromEuler(items);
+			}
+			return new my.Quaternion(items);
 		};
 		/**
 # Quaternion
 
 ## Instantiation
 
-* scrawl.newQuaternion()
+* scrawl.makeQuaternion()
 
 ## Purpose
 
@@ -74,7 +75,7 @@ Argument object can be in the following form, where all values (which default to
 			vector = my.safeObject(items.v);
 			this.name = items.name || 'generic';
 			this.n = items.n || 1;
-			this.v = my.newVector({
+			this.v = my.makeVector({
 				x: vector.x || items.x || 0,
 				y: vector.y || items.y || 0,
 				z: vector.z || items.z || 0,
@@ -507,7 +508,7 @@ Argument object can be in the form, where all values (which default to 0) are in
 			x = (s1 * s2 * c3) + (c1 * c2 * s3);
 			y = (s1 * c2 * c3) + (c1 * s2 * s3);
 			z = (c1 * s2 * c3) - (s1 * c2 * s3);
-			return my.newQuaternion({
+			return new my.Quaternion({
 				n: w,
 				x: x,
 				y: y,
@@ -604,19 +605,19 @@ Retrieve rotations (Euler angles) from a quaternion
 			return result;
 		};
 		my.workquat = {
-			q1: my.newQuaternion({
+			q1: my.makeQuaternion({
 				name: 'scrawl.workquat.q1'
 			}),
-			q2: my.newQuaternion({
+			q2: my.makeQuaternion({
 				name: 'scrawl.workquat.q2'
 			}),
-			q3: my.newQuaternion({
+			q3: my.makeQuaternion({
 				name: 'scrawl.workquat.q3'
 			}),
-			q4: my.newQuaternion({
+			q4: my.makeQuaternion({
 				name: 'scrawl.workquat.q4'
 			}),
-			q5: my.newQuaternion({
+			q5: my.makeQuaternion({
 				name: 'scrawl.workquat.q5'
 			}),
 		};

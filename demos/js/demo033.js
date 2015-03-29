@@ -25,7 +25,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo033');
 
 	//define a single bunny entity - start and delta values will be stored in the bunnyPos array
-	bunny = scrawl.newPicture({
+	bunny = scrawl.makePicture({
 		name: 'bunny',
 		source: 'bunny',
 		handleX: 'center',
@@ -50,7 +50,7 @@ var mycode = function() {
 		}
 		totalBunnies += 100;
 	};
-	canvas.addEventListener('mouseup', addBunnies, false);
+	scrawl.addListener('up', addBunnies, canvas);
 
 	//animation (display loop) function
 	moveBunnies = function() {
@@ -78,7 +78,7 @@ var mycode = function() {
 	addBunnies();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveBunnies();
 

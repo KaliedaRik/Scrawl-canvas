@@ -13,25 +13,25 @@ var mycode = function() {
 		changeDisplay;
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'corners',
 		order: 4
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'edges',
 		order: 3
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'center',
 		order: 1
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'start',
 		order: 2
 	});
 
 	//define entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 50,
 		startY: 50,
 		width: 300,
@@ -41,7 +41,7 @@ var mycode = function() {
 		method: 'draw',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'north',
 		startX: 200,
 		startY: 50,
@@ -94,7 +94,7 @@ var mycode = function() {
 		group: 'start',
 	});
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		pivot: 'north',
 		text: 'north/N',
 		handleX: 'center',

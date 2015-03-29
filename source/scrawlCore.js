@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -25,7 +23,7 @@
 /**
 # scrawlCore
 
-## Version 4.1.0 - 25 January 2015
+## Version 4.2.0 - 29 March 2015
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -108,10 +106,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 4.1.0
+@default 4.2.0
 @final
 **/
-	my.version = '4.1.0';
+	my.version = '4.2.0';
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -256,7 +254,25 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 		my.animationInit();
 		my.physicsInit();
 		my.filtersInit();
+		my.resizePageListener();
 		return my;
+	};
+	/**
+event listener for browser resize actions
+@method resizePageListener
+@private
+**/
+	my.resizePageListener = function() {
+		window.removeEventListener('resize', my.resizePageEvent, false);
+		window.addEventListener('resize', my.resizePageEvent, false);
+	};
+	/**
+function for handling browser resize actions
+@method resizePageEvent
+@private
+**/
+	my.resizePageEvent = function(e) {
+		my.setDisplayOffsets('all');
 	};
 	/**
 scrawl.init hook function - modified by stacks module
@@ -337,7 +353,7 @@ Any supplied callback function will only be run once all modules have been loade
             <script src="js/scrawlCore-min.js"></script>
             <script>
                 var mycode = function(){
-                    scrawl.newWheel({
+                    scrawl.makeWheel({
                         startX: 50,
                         startY: 50,
                         radius: 40,
@@ -671,6 +687,8 @@ Valid identifier Strings include:
 * __fn__ for Function objects
 * __arr__ for Array objects
 * __obj__ for Object objects (excluding DOM objects)
+* __dom__ for DOM objects
+* __event__ for DOM event objects
 * __date__ for Date objects
 * __vector__ for Scrawl Vector objects
 * __quaternion__ for Scrawl Quaternion objects
@@ -715,6 +733,10 @@ Valid identifier Strings include:
 					switch (slice[1]) {
 						case 'date':
 							return (Object.prototype.toString.call(slice[0]) === '[object Date]') ? true : false;
+						case 'dom':
+							return (slice[0].querySelector && slice[0].dispatchEvent) ? true : false;
+						case 'event':
+							return (slice[0].preventDefault && slice[0].initEvent) ? true : false;
 						case 'img':
 							return (Object.prototype.toString.call(slice[0]) === '[object HTMLImageElement]') ? true : false;
 						default:
@@ -783,9 +805,6 @@ A __utility__ function that checks an argument list of values and returns the fi
 			i,
 			iz;
 		slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(slice[0])) {
-			slice = slice[0];
-		}
 		if (slice.length > 0) {
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				if (typeof slice[i] !== 'undefined') {
@@ -808,9 +827,6 @@ False: 0, -0, '', undefined, null, false, NaN
 			i,
 			iz;
 		slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(slice[0])) {
-			slice = slice[0];
-		}
 		if (slice.length > 0) {
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				if (slice[i]) {
@@ -950,7 +966,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 		elements = document.getElementsByTagName("canvas");
 		if (elements.length > 0) {
 			for (i = 0, iz = elements.length; i < iz; i++) {
-				pad = my.newPad({
+				pad = my.makePad({
 					canvasElement: elements[i]
 				});
 				if (i === 0) {
@@ -1107,6 +1123,339 @@ A __utility__ function to subtract a percent string from another
 		return (a - b) + '%';
 	};
 	/**
+A custom __event listener__ helper array
+@property activeListeners
+@type {Array}
+@private
+**/
+	my.activeListeners = [];
+	if (window.CustomEvent) {
+		/**
+A custom __event listener__ helper array
+@property eventAttributes
+@type {Array}
+@private
+**/
+		my.eventAttributes = ['altKey', 'bubbles', 'cancelBubble', 'cancelable', 'charCode', 'clipboardData', 'ctrlKey', 'currentTarget', 'defaultPrevented', 'detail', 'eventPhase', 'keyCode', 'layerX', 'layerY', 'metaKey', 'pageX', 'pageY', 'returnValue', 'shiftKey', 'srcElement', 'target', 'timestamp', 'view', 'which'];
+		/**
+A custom __event listener__ helper array
+@property touchEventAttributes
+@type {Array}
+@private
+**/
+		my.touchEventAttributes = ['clientX', 'clientY', 'force', 'identifier', 'pageX', 'pageY', 'radiusX', 'radiusY', 'screenX', 'screenY', 'target', 'webkitForce', 'webkitRadiusX', 'webkitRadiusY', 'webkitRotationAngle'];
+		/**
+A custom __event listener__ function
+
+The touchenter event is deprecated, but necessary for scrawl functionality
+
+@method triggerTouchEnter
+@private
+**/
+		my.triggerTouchEnter = function(e, el) {
+			my.updateCustomTouch(e, el, new CustomEvent('touchenter', {
+				detail: {},
+				type: 'touchenter'
+			}));
+		};
+		/**
+A custom __event listener__ function
+
+The touchleave event is deprecated, but necessary for scrawl functionality
+
+@method triggerTouchLeave
+@private
+**/
+		my.triggerTouchLeave = function(e, el) {
+			my.updateCustomTouch(e, el, new CustomEvent('touchleave', {
+				detail: {},
+				type: 'touchenter'
+			}));
+		};
+		/**
+A custom __event listener__ function
+
+The touchfollow event is entirely custom, designed to allow elements to subscribe to an event that started in a different element
+
+@method triggerTouchFollow
+@private
+**/
+		my.triggerTouchFollow = function(e, el) {
+			my.updateCustomTouch(e, el, new CustomEvent('touchfollow', {
+				detail: {},
+				type: 'touchfollow'
+			}));
+		};
+		/**
+A custom __event listener__ helper function
+@method updateCustomTouch
+@private
+**/
+		my.updateCustomTouch = function(data, el, evt) {
+			// creates plain objects and arrays, not Touch objects etc. So shoot me!
+			var i, iz, j, jz;
+			for (i = 0, iz = my.eventAttributes.length; i < iz; i++) {
+				if (my.xt(data[my.eventAttributes[i]])) {
+					evt[my.eventAttributes[i]] = data[my.eventAttributes[i]];
+				}
+			}
+			evt.changedTouches = [];
+			if (my.xt(data.changedTouches)) {
+				for (i = 0, iz = data.changedTouches.length; i < iz; i++) {
+					evt.changedTouches.push({});
+					for (j = 0, jz = my.touchEventAttributes.length; j < jz; j++) {
+						if (my.xt(data.changedTouches[i][my.touchEventAttributes[j]])) {
+							evt.changedTouches[i][my.touchEventAttributes[j]] = data.changedTouches[i][my.touchEventAttributes[j]];
+						}
+					}
+				}
+			}
+			if (my.xt(data.path)) {
+				evt.path = data.path;
+			}
+			evt.targetTouches = [];
+			if (my.xt(data.targetTouches)) {
+				for (i = 0, iz = data.targetTouches.length; i < iz; i++) {
+					evt.targetTouches.push({});
+					for (j = 0, jz = my.touchEventAttributes.length; j < jz; j++) {
+						if (my.xt(data.targetTouches[i][my.touchEventAttributes[j]])) {
+							evt.targetTouches[i][my.touchEventAttributes[j]] = data.targetTouches[i][my.touchEventAttributes[j]];
+						}
+					}
+				}
+			}
+			evt.touches = [];
+			if (my.xt(data.touches)) {
+				for (i = 0, iz = data.touches.length; i < iz; i++) {
+					evt.touches.push({});
+					for (j = 0, jz = my.touchEventAttributes.length; j < jz; j++) {
+						if (my.xt(data.touches[i][my.touchEventAttributes[j]])) {
+							evt.touches[i][my.touchEventAttributes[j]] = data.touches[i][my.touchEventAttributes[j]];
+						}
+					}
+				}
+			}
+			el.dispatchEvent(evt);
+		};
+	}
+	/**
+A utility function for adding JavaScript event listeners to multiple elements
+@method addNativeListener
+@param {String} evt - or an Array of Strings
+@param {Function} fn - function to be called when event triggers
+@param {String} targ - either a querySelectorAll string, or a DOM element, or an Array of DOM elements
+@return always true
+**/
+	my.addNativeListener = function(evt, fn, targ) {
+		var targets, i, iz, j, jz;
+		my.removeNativeListener(evt, fn, targ);
+		evt = [].concat(evt);
+		if (targ.substring) {
+			targets = document.body.querySelectorAll(targ);
+		}
+		else if (Array.isArray(targ)) {
+			targets = targ;
+		}
+		else {
+			targets = [targ];
+		}
+		if (my.isa(fn, 'fn')) {
+			for (j = 0, jz = evt.length; j < jz; j++) {
+				for (i = 0, iz = targets.length; i < iz; i++) {
+					targets[i].addEventListener(evt[j], fn, false);
+				}
+			}
+		}
+	};
+	/**
+A utility function for adding JavaScript event listeners to multiple elements
+@method addNativeListener
+@param {String} evt - or an Array of Strings
+@param {Function} fn - function to be called when event triggers
+@param {String} targ - either a querySelectorAll string, or a DOM element, or an Array of DOM elements
+@return always true
+**/
+	my.removeNativeListener = function(evt, fn, targ) {
+		var targets, i, iz, j, jz;
+		evt = [].concat(evt);
+		if (targ.substring) {
+			targets = document.body.querySelectorAll(targ);
+		}
+		else if (Array.isArray(targ)) {
+			targets = targ;
+		}
+		else {
+			targets = [targ];
+		}
+		if (my.isa(fn, 'fn')) {
+			for (j = 0, jz = evt.length; j < jz; j++) {
+				for (i = 0, iz = targets.length; i < iz; i++) {
+					targets[i].removeEventListener(evt[j], fn, false);
+				}
+			}
+		}
+	};
+	/**
+Adds event listeners to the element
+@method addListener
+@param {String} evt - or an Array of Strings from: 'up', 'down', 'enter', 'leave', 'move'
+@param {Function} fn - function to be called when event triggers
+@param {String} targ - either a querySelectorAll string, or a DOM element, or an Array of DOM elements
+@return always true
+**/
+	my.addListener = function(evt, fn, targ) {
+		var targets, i, iz, j, jz, nav;
+		my.removeListener(evt, fn, targ);
+		nav = (navigator.pointerEnabled || navigator.msPointerEnabled) ? true : false;
+		evt = [].concat(evt);
+		if (targ.substring) {
+			targets = document.body.querySelectorAll(targ);
+		}
+		else if (Array.isArray(targ)) {
+			targets = targ;
+		}
+		else {
+			targets = [targ];
+		}
+		if (my.isa(fn, 'fn')) {
+			for (j = 0, jz = evt.length; j < jz; j++) {
+				for (i = 0, iz = targets.length; i < iz; i++) {
+					if (my.isa(targets[i], 'dom')) {
+						switch (evt[j]) {
+							case 'leave':
+								if (nav) {
+									targets[i].addEventListener('pointerleave', fn, false);
+								}
+								else {
+									targets[i].addEventListener('mouseleave', fn, false);
+									targets[i].addEventListener('touchleave', fn, false);
+								}
+								break;
+							case 'up':
+								if (nav) {
+									targets[i].addEventListener('pointerup', fn, false);
+								}
+								else {
+									targets[i].addEventListener('mouseup', fn, false);
+									targets[i].addEventListener('touchend', fn, false);
+								}
+								break;
+							case 'enter':
+								if (nav) {
+									targets[i].addEventListener('pointerenter', fn, false);
+								}
+								else {
+									targets[i].addEventListener('mouseenter', fn, false);
+									targets[i].addEventListener('touchenter', fn, false);
+								}
+								break;
+							case 'down':
+								if (nav) {
+									targets[i].addEventListener('pointerdown', fn, false);
+								}
+								else {
+									targets[i].addEventListener('mousedown', fn, false);
+									targets[i].addEventListener('touchstart', fn, false);
+								}
+								break;
+							case 'move':
+								if (nav) {
+									targets[i].addEventListener('pointermove', fn, false);
+								}
+								else {
+									targets[i].addEventListener('mousemove', fn, false);
+									targets[i].addEventListener('touchmove', fn, false);
+									targets[i].addEventListener('touchfollow', fn, false);
+								}
+								break;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	};
+	/**
+Remove event listeners from the element
+@method removeListener
+@param {String} evt - one from: 'up', 'down', 'enter', 'leave', 'move'
+@param {Function} fn - function to be called when event triggers
+@param {String} targ - either a querySelectorAll string, or a DOM element
+@return true on success; false otherwise
+**/
+	my.removeListener = function(evt, fn, targ) {
+		var targets, i, iz, j, jz, nav;
+		evt = [].concat(evt);
+		nav = (navigator.pointerEnabled || navigator.msPointerEnabled) ? true : false;
+		if (targ.substring) {
+			targets = document.body.querySelectorAll(targ);
+		}
+		else if (Array.isArray(targ)) {
+			targets = targ;
+		}
+		else {
+			targets = [targ];
+		}
+
+		if (my.isa(fn, 'fn')) {
+			for (j = 0, jz = evt.length; j < jz; j++) {
+				for (i = 0, iz = targets.length; i < iz; i++) {
+					if (my.isa(targets[i], 'dom')) {
+						switch (evt[j]) {
+							case 'leave':
+								if (nav) {
+									targets[i].removeEventListener('pointerleave', fn, false);
+								}
+								else {
+									targets[i].removeEventListener('mouseleave', fn, false);
+									targets[i].removeEventListener('touchleave', fn, false);
+								}
+								break;
+							case 'up':
+								if (nav) {
+									targets[i].removeEventListener('pointerup', fn, false);
+								}
+								else {
+									targets[i].removeEventListener('mouseup', fn, false);
+									targets[i].removeEventListener('touchend', fn, false);
+								}
+								break;
+							case 'enter':
+								if (nav) {
+									targets[i].removeEventListener('pointerenter', fn, false);
+								}
+								else {
+									targets[i].removeEventListener('mouseenter', fn, false);
+									targets[i].removeEventListener('touchenter', fn, false);
+								}
+								break;
+							case 'down':
+								if (nav) {
+									targets[i].removeEventListener('pointerdown', fn, false);
+								}
+								else {
+									targets[i].removeEventListener('mousedown', fn, false);
+									targets[i].removeEventListener('touchstart', fn, false);
+								}
+								break;
+							case 'move':
+								if (nav) {
+									targets[i].removeEventListener('pointermove', fn, false);
+								}
+								else {
+									targets[i].removeEventListener('mousemove', fn, false);
+									targets[i].removeEventListener('touchmove', fn, false);
+									targets[i].removeEventListener('touchfollow', fn, false);
+								}
+								break;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	};
+	/**
 A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects - see Pad.addNewCell() for more details
 @method addNewCell
 @param {Object} data Initial attribute values for new object
@@ -1212,7 +1561,7 @@ A __general__ function to delete entity objects
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-    scrawl.newBlock({
+    scrawl.makeBlock({
         name: 'myblock',
         });
     scrawl.deleteEntity(['myblock']);
@@ -1252,74 +1601,133 @@ scrawl.deleteEntity hook function - modified by path module
 **/
 	my.pathDeleteEntity = function(items) {};
 	/**
-A __factory__ function to generate new Vector objects
+Alias for makeVector()
 @method newVector
+@deprecated
+**/
+	my.newVector = function(items) {
+		return my.makeVector(items);
+	};
+	/**
+Alias for makePad()
+@method newPad
+@private
+@deprecated
+**/
+	my.newPad = function(items) {
+		return my.makePad(items);
+	};
+	/**
+Alias for makeCell()
+@method newCell
+@private
+@deprecated
+**/
+	my.newCell = function(items) {
+		return my.makeCell(items);
+	};
+	/**
+Alias for makeContext()
+@method newContext
+@private
+@deprecated
+**/
+	my.newContext = function(items) {
+		return my.makeContext(items);
+	};
+	/**
+Alias for makeGroup()
+@method newGroup
+@deprecated
+**/
+	my.newGroup = function(items) {
+		return my.makeGroup(items);
+	};
+	/**
+Alias for makeGradient()
+@method newGradient
+@deprecated
+**/
+	my.newGradient = function(items) {
+		return my.makeGradient(items);
+	};
+	/**
+Alias for makeRadialGradient()
+@method newRadialGradient
+@deprecated
+**/
+	my.newRadialGradient = function(items) {
+		return my.makeRadialGradient(items);
+	};
+	/**
+A __factory__ function to generate new Vector objects
+@method makeVector
 @param {Object} items Key:value Object argument for setting attributes
 @return Vector object
 @example
-    var myVector = scrawl.newVector({
+    var myVector = scrawl.makeVector({
         x: 100,
         y: 200,
         });
 **/
-	my.newVector = function(items) {
+	my.makeVector = function(items) {
 		return new my.Vector(items);
 	};
 	/**
 A __factory__ function to generate new Pad objects
-@method newPad
+@method makePad
 @param {Object} items Key:value Object argument for setting attributes
 @return Pad object
 @private
 **/
-	my.newPad = function(items) {
+	my.makePad = function(items) {
 		return new my.Pad(items);
 	};
 	/**
 A __factory__ function to generate new Cell objects
-@method newCell
+@method makeCell
 @param {Object} items Key:value Object argument for setting attributes
 @return Cell object
 @private
 **/
-	my.newCell = function(items) {
+	my.makeCell = function(items) {
 		return new my.Cell(items);
 	};
 	/**
 A __factory__ function to generate new Context objects
-@method newContext
+@method makeContext
 @param {Object} items Key:value Object argument for setting attributes
 @return Context object
 @private
 **/
-	my.newContext = function(items) {
+	my.makeContext = function(items) {
 		return new my.Context(items);
 	};
 	/**
 A __factory__ function to generate new Group objects
-@method newGroup
+@method makeGroup
 @param {Object} items Key:value Object argument for setting attributes
 @return Group object
 **/
-	my.newGroup = function(items) {
+	my.makeGroup = function(items) {
 		return new my.Group(items);
 	};
 	/**
 A __factory__ function to generate new Gradient objects
-@method newGradient
+@method makeGradient
 @param {Object} items Key:value Object argument for setting attributes
 @return Gradient object
 **/
-	my.newGradient = function(items) {
+	my.makeGradient = function(items) {
 		return new my.Gradient(items);
 	};
 	/**
 A __factory__ function to generate new RadialGradient objects
-@method newRadialGradient
+@method makeRadialGradient
 @param {Object} items Key:value Object argument for setting attributes
 @return RadialGradient object
 **/
-	my.newRadialGradient = function(items) {
+	my.makeRadialGradient = function(items) {
 		return new my.RadialGradient(items);
 	};
 
@@ -1328,7 +1736,7 @@ A __factory__ function to generate new RadialGradient objects
 
 ## Instantiation
 
-* scrawl.newVector()
+* scrawl.makeVector()
 
 ## Purpose
 
@@ -1339,9 +1747,33 @@ A __factory__ function to generate new RadialGradient objects
 **/
 	my.Vector = function(items) {
 		items = my.safeObject(items);
+		/**
+X coordinate (px)
+@property x
+@type Number
+@default 0
+**/
 		this.x = items.x || 0;
+		/**
+Y coodinate (px)
+@property y
+@type Number
+@default 0
+**/
 		this.y = items.y || 0;
+		/**
+Z coordinate (px)
+@property z
+@type Number
+@default 0
+**/
 		this.z = items.z || 0;
+		/**
+Vector name - not guaranteed to be unique
+@property name
+@type String
+@default 'generic'
+**/
 		this.name = items.name || 'generic';
 		return this;
 	};
@@ -1354,33 +1786,9 @@ A __factory__ function to generate new RadialGradient objects
 **/
 	my.Vector.prototype.type = 'Vector';
 	my.d.Vector = {
-		/**
-X coordinate (px)
-@property x
-@type Number
-@default 0
-**/
 		x: 0,
-		/**
-Y coodinate (px)
-@property y
-@type Number
-@default 0
-**/
 		y: 0,
-		/**
-Z coordinate (px)
-@property z
-@type Number
-@default 0
-**/
 		z: 0,
-		/**
-Vector name - not guaranteed to be unique
-@property name
-@type String
-@default 'generic'
-**/
 		name: 'generic'
 	};
 	/**
@@ -1604,7 +2012,7 @@ Return a clone of this Vector
 @return Clone of this Vector
 **/
 	my.Vector.prototype.getVector = function() {
-		return my.newVector({
+		return my.makeVector({
 			x: this.x,
 			y: this.y,
 			z: this.z
@@ -1636,7 +2044,7 @@ Arithmetic is v(crossProduct)u, not u(crossProduct)v
 			v2x = u.x || 0;
 			v2y = u.y || 0;
 			v2z = u.z || 0;
-			return my.newVector({
+			return my.makeVector({
 				x: (v1y * v2z) - (v1z * v2y),
 				y: -(v1x * v2z) + (v1z * v2x),
 				z: (v1x * v2y) + (v1y * v2x)
@@ -1827,7 +2235,7 @@ Retrieve an attribute value. If the attribute value has not been set, then the d
 @param {String} item Attribute key
 @return Attribute value
 @example
-    var box = scrawl.newBlock({
+    var box = scrawl.makeBlock({
         width: 50,
         });
     box.get('width');               //returns 50
@@ -1835,7 +2243,7 @@ Retrieve an attribute value. If the attribute value has not been set, then the d
     box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.get = function(item) {
-		return (my.xt(this[item])) ? this[item] : my.d[this.type][item];
+		return my.xtGet(this[item], my.d[this.type][item]);
 	};
 	/**
 Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.
@@ -1846,7 +2254,7 @@ An attribute value will only be set if the object already has a default value fo
 @return This
 @chainable
 @example
-    var box = scrawl.newBlock({
+    var box = scrawl.makeBlock({
         width: 50,
         height: 50
         });
@@ -1878,7 +2286,7 @@ Note that any callback or fn attribute functions will be referenced by the clone
 @return Cloned object
 @chainable
 @example
-    var box = scrawl.newBlock({
+    var box = scrawl.makeBlock({
         width: 50,
         height: 50
         });
@@ -1907,8 +2315,8 @@ Note that any callback or fn attribute functions will be referenced by the clone
 	};
 	/**
 Turn the object into a JSON String
-@method toString
-@return JSON string of non-default value attributes
+@method parse
+@return object of object's currently set attributes
 **/
 	my.Base.prototype.parse = function() {
 		return JSON.parse(JSON.stringify(this));
@@ -1952,7 +2360,117 @@ Certain Scrawl modules will add functionality to this object, for instance scraw
 	my.Position = function(items) {
 		my.Base.call(this, items);
 		items = my.safeObject(items);
-		this.corePositionInit(items);
+		/**
+The coordinate Vector representing the object's rotation/flip point
+
+SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
+
+* __startX__ - (Number) the x coordinate of the object's rotation/flip point, in pixels, from the left side of the object's cell
+* __startY__ - (Number) the y coordinate of the object's rotation/flip point, in pixels, from the top side of the object's cell
+
+@property start
+@type Vector
+**/
+		var temp = my.safeObject(items.start);
+		this.start = my.makeVector({
+			x: my.xtGet(items.startX, temp.x, 0),
+			y: my.xtGet(items.startY, temp.y, 0),
+			name: this.type + '.' + this.name + '.start'
+		});
+		this.work.start = my.makeVector({
+			name: this.type + '.' + this.name + '.work.start'
+		});
+		/**
+An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
+
+SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
+
+* __handleX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'
+* __handleY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'
+
+Where values are Numbers, handle can be treated like any other Vector
+
+@property handle
+@type Object
+**/
+		temp = my.safeObject(items.handle);
+		this.handle = my.makeVector({
+			x: my.xtGet(items.handleX, temp.x, 0),
+			y: my.xtGet(items.handleY, temp.y, 0),
+			name: this.type + '.' + this.name + '.handle'
+		});
+		this.work.handle = my.makeVector({
+			name: this.type + '.' + this.name + '.work.handle'
+		});
+		/**
+The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point
+@property pivot
+@type String
+@default null
+**/
+		this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
+		/**
+The object's scale value - larger values increase the object's size
+@property scale
+@type Number
+@default 1
+**/
+		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
+		/**
+Current rotation of the entity, cell or element (in degrees)
+@property roll
+@type Number
+@default 0
+**/
+		this.roll = my.xtGet(items.roll, my.d[this.type].roll);
+		/**
+Reflection flag; set to true to flip entity, cell or element along the Y axis
+@property flipReverse
+@type Boolean
+@default false
+**/
+		this.flipReverse = my.xtGet(items.flipReverse, my.d[this.type].flipReverse);
+		/**
+Reflection flag; set to true to flip entity, cell or element along the X axis
+@property flipUpend
+@type Boolean
+@default false
+**/
+		this.flipUpend = my.xtGet(items.flipUpend, my.d[this.type].flipUpend);
+		/**
+Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis
+@property lockX
+@type Boolean
+@default false
+**/
+		this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
+		/**
+Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis
+@property lockY
+@type Boolean
+@default false
+**/
+		this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
+		/**
+Positioning helper vector - includes a flag attribute for dirty checking
+@property offset
+@type Vector
+@default zero vector
+@private
+**/
+		this.offset = my.makeVector({
+			name: this.type + '.' + this.name + '.offset'
+		});
+		this.offset.flag = false;
+		/**
+Index of mouse vector to use when pivot === 'mouse'
+
+The Pad.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
+@property mouseIndex
+@type String
+@default 'mouse'
+**/
+		this.mouseIndex = my.xtGet(items.mouseIndex, 'mouse');
 		this.animationPositionInit(items);
 		this.pathPositionInit(items);
 		return this;
@@ -1967,87 +2485,22 @@ Certain Scrawl modules will add functionality to this object, for instance scraw
 	my.Position.prototype.type = 'Position';
 	my.Position.prototype.classname = 'objectnames';
 	my.d.Position = {
-		/**
-The coordinate Vector representing the object's rotation/flip point
-
-SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
-
-* __startX__ - (Number) the x coordinate of the object's rotation/flip point, in pixels, from the left side of the object's cell
-* __startY__ - (Number) the y coordinate of the object's rotation/flip point, in pixels, from the top side of the object's cell
-
-@property start
-@type Vector
-**/
 		start: {
 			x: 0,
 			y: 0
 		},
-		/**
-An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
-
-SubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:
-
-* __handleX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'
-* __handleY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'
-
-Where values are Numbers, handle can be treated like any other Vector
-
-@property handle
-@type Object
-**/
 		handle: {
 			x: 0,
 			y: 0
 		},
-		/**
-The SPRITENAME or POINTNAME of a entity or Point object to be used for setting this object's start point
-@property pivot
-@type String
-@default ''
-**/
-		pivot: '',
-		/**
-The object's scale value - larger values increase the object's size
-@property scale
-@type Number
-@default 1
-**/
+		pivot: null,
 		scale: 1,
-		/**
-Reflection flag; set to true to flip entity, cell or element along the Y axis
-@property flipReverse
-@type Boolean
-@default false
-**/
 		flipReverse: false,
-		/**
-Reflection flag; set to true to flip entity, cell or element along the X axis
-@property flipUpend
-@type Boolean
-@default false
-**/
 		flipUpend: false,
-		/**
-Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis
-@property lockX
-@type Boolean
-@default false
-**/
 		lockX: false,
-		/**
-Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis
-@property lockY
-@type Boolean
-@default false
-**/
 		lockY: false,
-		/**
-Current rotation of the entity, cell or element (in degrees)
-@property roll
-@type Number
-@default 0
-**/
 		roll: 0,
+		mouseIndex: 'mouse',
 		/**
 Entity, cell or element width (in pixels)
 @property width
@@ -2092,42 +2545,6 @@ A flag to determine whether the object will calculate its position along a Shape
 **/
 	};
 	my.mergeInto(my.d.Position, my.d.Base);
-	/**
-Position constructor hook function - core functionality
-@method corePositionInit
-@private
-**/
-	my.Position.prototype.corePositionInit = function(items) {
-		var temp = my.safeObject(items.start);
-		this.start = my.newVector({
-			x: my.xtGet(items.startX, temp.x, 0),
-			y: my.xtGet(items.startY, temp.y, 0),
-			name: this.type + '.' + this.name + '.start'
-		});
-		this.work.start = my.newVector({
-			name: this.type + '.' + this.name + '.work.start'
-		});
-		temp = my.safeObject(items.handle);
-		this.handle = my.newVector({
-			x: my.xtGet(items.handleX, temp.x, 0),
-			y: my.xtGet(items.handleY, temp.y, 0),
-			name: this.type + '.' + this.name + '.handle'
-		});
-		this.work.handle = my.newVector({
-			name: this.type + '.' + this.name + '.work.handle'
-		});
-		this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
-		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
-		this.roll = my.xtGet(items.roll, my.d[this.type].roll);
-		this.flipReverse = my.xtGet(items.flipReverse, my.d[this.type].flipReverse);
-		this.flipUpend = my.xtGet(items.flipUpend, my.d[this.type].flipUpend);
-		this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
-		this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
-		this.offset = my.newVector({
-			name: this.type + '.' + this.name + '.offset'
-		});
-		this.offset.flag = false;
-	};
 	/**
 Position constructor hook function - modified by animation module
 @method animationPositionInit
@@ -2202,7 +2619,7 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 		var temp;
 		items = my.safeObject(items);
 		if (!my.isa(this.start, 'vector')) {
-			this.start = my.newVector(items.start || this.start);
+			this.start = my.makeVector(items.start || this.start);
 		}
 		temp = my.safeObject(items.start);
 		this.start.x = my.xtGet(items.startX, temp.x, this.start.x);
@@ -2220,7 +2637,7 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 		var temp;
 		items = my.safeObject(items);
 		if (!my.isa(this.handle, 'vector')) {
-			this.handle = my.newVector(items.handle || this.handle);
+			this.handle = my.makeVector(items.handle || this.handle);
 		}
 		temp = my.safeObject(items.handle);
 		this.handle.x = my.xtGet(items.handleX, temp.x, this.handle.x);
@@ -2328,13 +2745,13 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 		items = my.safeObject(items);
 		clone = my.Base.prototype.clone.call(this, items);
 		temp = my.safeObject(items.start);
-		clone.start = my.newVector({
+		clone.start = my.makeVector({
 			x: my.xtGet(items.startX, temp.x, clone.start.x),
 			y: my.xtGet(items.startY, temp.y, clone.start.y),
 			name: clone.type + '.' + clone.name + '.start'
 		});
 		temp = my.safeObject(items.handle);
-		clone.handle = my.newVector({
+		clone.handle = my.makeVector({
 			x: my.xtGet(items.handleX, temp.x, clone.handle.x),
 			y: my.xtGet(items.handleY, temp.y, clone.handle.y),
 			name: clone.type + '.' + clone.name + '.handle'
@@ -2478,6 +2895,7 @@ Takes into account lock flag settings
 			vector,
 			entity,
 			mouse,
+			x, y,
 			pad;
 		if (my.xt(my.pointnames)) {
 			pivot = my.point[this.pivot];
@@ -2499,16 +2917,19 @@ Takes into account lock flag settings
 		if (this.pivot === 'mouse') {
 			cell = my.cell[cell];
 			pad = my.pad[cell.pad];
-			mouse = this.correctCoordinates(pad.mouse, cell);
-			if (!my.xta(this.oldX, this.oldY)) {
-				this.oldX = this.start.x;
-				this.oldY = this.start.y;
+			x = (this.start.x.substring) ? this.convertX(this.start.x, cell) : this.start.x;
+			y = (this.start.y.substring) ? this.convertY(this.start.y, cell) : this.start.y;
+			x = (isNaN(x)) ? 0 : x;
+			y = (isNaN(y)) ? 0 : y;
+			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
+			if (this.oldX == null && this.oldY == null) { //jshint ignore:line
+				this.oldX = x;
+				this.oldY = y;
 			}
-			this.start.x = (!this.lockX) ? this.start.x + mouse.x - this.oldX : this.start.x;
-			this.start.y = (!this.lockY) ? this.start.y + mouse.y - this.oldY : this.start.y;
+			this.start.x = (!this.lockX) ? x + mouse.x - this.oldX : x;
+			this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
 			this.oldX = mouse.x;
 			this.oldY = mouse.y;
-			return this;
 		}
 		return this.setStampUsingStacksPivot();
 	};
@@ -2547,6 +2968,75 @@ Stamp helper hook function - amended by stacks module
 	my.Position.prototype.setStampUsingStacksPivot = function() {
 		return this;
 	};
+	/**
+Stamp helper function - convert string start.x values to numerical values
+@method convertX
+@param {String} x coordinate String
+@param {String} cell reference cell name String; or alternatively DOM canvas object
+@return Number - x value
+@private
+**/
+	my.Position.prototype.convertX = function(x, cell) {
+		var width,
+			result;
+		switch (typeof cell) {
+			case 'string':
+				width = scrawl.cell[cell].actualWidth;
+				break;
+			case 'number':
+				width = cell;
+				break;
+			default:
+				width = cell.actualWidth;
+		}
+
+		result = parseFloat(x) / 100;
+		if (isNaN(result)) {
+			switch (x) {
+				case 'right':
+					return width;
+				case 'center':
+					return width / 2;
+				default:
+					return 0;
+			}
+		}
+		return result * width;
+	};
+	/**
+Stamp helper function - convert string start.y values to numerical values
+@method convertY
+@param {String} y coordinate String
+@param {String} cell reference cell name String
+@return Number - y value
+@private
+**/
+	my.Position.prototype.convertY = function(y, cell) {
+		var height,
+			result;
+		switch (typeof cell) {
+			case 'string':
+				height = scrawl.cell[cell].actualHeight;
+				break;
+			case 'number':
+				height = cell;
+				break;
+			default:
+				height = cell.actualHeight;
+		}
+		result = parseFloat(y) / 100;
+		if (isNaN(result)) {
+			switch (y) {
+				case 'bottom':
+					return height;
+				case 'center':
+					return height / 2;
+				default:
+					return 0;
+			}
+		}
+		return result * height;
+	};
 
 	/**
 # PageElement
@@ -2569,11 +3059,40 @@ The core implementation of this object is a stub that supplies Pad objects with 
 	my.PageElement = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
+		/**
+DOM element width
+@property width
+@type Number
+@default 300
+**/
 		this.width = my.xtGet(items.width, my.d[this.type].width);
+		/**
+DOM element height
+@property height
+@type Number
+@default 150
+**/
 		this.height = my.xtGet(items.height, my.d[this.type].height);
+		/**
+The object's scale value - larger values increase the object's size
+@property scale
+@type Number
+@default 1
+**/
 		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
 		this.setLocalDimensions();
 		this.stacksPageElementConstructor(items);
+		/**
+The mice attribute is an object containing supplemented vectors which hold real-time information about the current coordinates of the mouse pointer and any other pointer or touch instances occurring over the element
+
+mice.mouse - always refers to the mouse pointer
+mice.ui0, mice.ui1 etc - refers to pointer and touch events
+
+@property mice
+@type Object
+@default {}
+**/
+		this.mice = {};
 		return this;
 	};
 	my.PageElement.prototype = Object.create(my.Base.prototype);
@@ -2586,19 +3105,7 @@ The core implementation of this object is a stub that supplies Pad objects with 
 	my.PageElement.prototype.type = 'PageElement';
 	my.PageElement.prototype.classname = 'objectnames';
 	my.d.PageElement = {
-		/**
-DOM element width
-@property width
-@type Number
-@default 300
-**/
 		width: 300,
-		/**
-DOM element height
-@property height
-@type Number
-@default 150
-**/
 		height: 150,
 		/**
 DOM element localWidth
@@ -2628,27 +3135,15 @@ DOM element's current vertical offset from the left side of the web page
 @default 0
 **/
 		displayOffsetY: 0,
-		/**
-The object's scale value - larger values increase the object's size
-@property scale
-@type Number
-@default 1
-**/
 		scale: 1,
+		mice: {},
 		/**
-Mouse vector - holds the mouse pointer coordinates relative to the top left corner of the element
-
-When instantiating DOM element wrappers (Pad, Stack, Element), setting this attribute to true will make Scrawl add a mousemove event listener to the element. By default, Pads and Stacks will add the event listener to the &lt;canvas&gt; or &lt;div&gt; element (mouse == true); Elements will not (mouse == false).
-
-The event listener can be added to, or removed from, an element at any time using the set() function with an argument attribute of _mouse: true_ or _mouse: false_.
-
-The functions _addMouseMove()_ and _removeMouseMove()_ can also be called directly.
-
-@property mouse
-@type Vector
-@default false
+Set the interactive attribute to true to track mouse/pointer/touch events on the element. By default Pad and Stack objects set their element's interactivity to true, while Element objects set it to false 
+@property interactive
+@type Boolean
+@default true (false for Element objects)
 **/
-		mouse: false,
+		interactive: true,
 		/**
 Element CSS position styling attribute
 @property position
@@ -2709,17 +3204,15 @@ Augments Base.set() to allow the setting of DOM element dimension values
 		if (my.xt(items.position)) {
 			this.position = items.position;
 		}
-		if (my.xt(items.mouse)) {
-			this.initMouse({
-				mouse: items.mouse
-			});
-		}
 		if (my.xt(items.pivot)) {
 			this.pivot = items.pivot;
 			if (!this.pivot) {
 				delete this.oldX;
 				delete this.oldY;
 			}
+		}
+		if (my.xt(items.mouse)) {
+			this.initMouse(items.mouse);
 		}
 		if (my.xto(items.title, items.comment)) {
 			this.setAccessibility(items);
@@ -2810,163 +3303,284 @@ Helper function - set DOM element dimensions (width, height)
 	/**
 Retrieve details of the Mouse cursor position in relation to the DOM element's top left hand corner. Most useful for determining mouse cursor position over Stack and Pad (visible &lt;canvas&gt;) elements.
 
+This function is also used to retrieve details of touch positions.
+
 _Note: if changes are made elsewhere to the web page (DOM) after the page loads, the function .getDisplayOffsets() will need to be called to recalculate the element's position within the page - failure to do so will lead to this function returning incorrect data. getDisplayOffsets() does not need to be called during/after page scrolling._
+
+By default, the function returns a single Vector containing either the first touch position or the current mouse cursor position.
 
 The returned object is a Vector containing the mouse cursor's current x and y coordinates in relation to the DOM element's top left corner, together with the following additional attributes:
 
 * __active__ - set to true if mouse is hovering over the element; false otherwise
-* __type__ - element's type ('stack', 'element', 'pad')
-* __element__ - Scrawl wrapper object's name attribute
-* __type__ - Scrawl wrapper object's type ('Pad', 'Stack', 'Element')
-* __layer__ - true if coordinates have been calculated using e.layerX, e.layerY; false otherwise
+* __id__ - event vector id (-1: mouse; 0+ touch or pointer)
+* __order__ - event order (0: mouse; 1+ touch or pointer)
+
+If an argument is supplied, then all currently existing mouse/touch vectors are returned as an array, with index 0 representing the mouse pointer, index 1 representing the first touch coordinate and additional indexes representing additional touch coordinates 
 @method getMouse
-@return Vector containing localized mouse coordinates, with additional attributes
+@param {Boolean} item - true to return the array; false (default) to return either first touch or mouse Vector
+@return Vector, or an array of Vectors containing localized coordinates, with additional attributes; if mouse/touch has been disabled for the DOM element, returns false
 **/
-	my.PageElement.prototype.getMouse = function() {
-		return this.mouse;
+	my.PageElement.prototype.getMouse = function(item) {
+		var id, i, iz,
+			r = [];
+		if (my.xt(item)) {
+			//boolean true returns the element's mice object
+			if (my.xt(item) && my.isa(item, 'bool') && item) {
+				return this.mice;
+			}
+			//an event object returns an array of relevant vectors
+			else if (my.isa(item, 'event')) {
+				if (item.changedTouches) {
+					for (i = 0, iz = item.changedTouches.length; i < iz; i++) {
+						id = 't' + item.changedTouches[i].identifier;
+						r.push(this.mice[id]);
+					}
+					return r;
+				}
+				else if (item.pointerType) {
+					if (item.pointerType !== 'touch') {
+						id = item.pointerType;
+					}
+					else {
+						id = 'p' + item.pointerId;
+					}
+					return [this.mice[id]];
+				}
+				else {
+					return [this.mice.mouse];
+				}
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			//item undefined returns a vector, or false
+			return my.xtGet(this.mice.t0, this.mice.p1, this.mice.pen, this.mice.mouse, false);
+		}
+	};
+	/**
+@method getMouseIdFromEvent
+@param {Boolean} item - DOM event object
+@return Array - mouse id strings associated with event(s)
+**/
+	my.PageElement.prototype.getMouseIdFromEvent = function(item) {
+		var id, i, iz,
+			r = [];
+		if (my.isa(item, 'event')) {
+			if (item.changedTouches) {
+				for (i = 0, iz = item.changedTouches.length; i < iz; i++) {
+					id = 't' + item.changedTouches[i].identifier;
+					r.push(id);
+				}
+			}
+			else if (item.pointerType) {
+				if (item.pointerType !== 'touch') {
+					id = item.pointerType;
+				}
+				else {
+					id = 'p' + item.pointerId;
+				}
+				r.push(id);
+			}
+			else {
+				r.push('mouse');
+			}
+		}
+		return r;
 	};
 	/**
 mousemove event listener function
 @method handleMouseMove
 @param {Object} e window.event
+@param {Boolean} active - set only by handleMouseIn, handleMouseOut
 @return This
 @private
 **/
 	my.PageElement.prototype.handleMouseMove = function(e) {
-		var wrapper,
-			mouseX,
-			mouseY,
-			maxX,
-			maxY,
-			stat = ['relative', 'absolute', 'fixed', 'sticky'],
-			choke = parseInt(1000 / 60, 10),
-			current = Date.now();
-		e = (my.xt(e)) ? e : window.event;
-		mouseX = 0;
-		mouseY = 0;
-		wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
-		if (wrapper) {
-			if (!my.xt(wrapper.mouse.time) || wrapper.mouse.time + choke < current) {
-				wrapper.mouse.active = false;
-				wrapper.mouse.element = wrapper.name;
-				wrapper.mouse.type = wrapper.type;
-				wrapper.mouse.time = current;
-				if (wrapper.mouse.layer || my.xta(e, e.layerX) && my.contains(stat, wrapper.position)) {
-					mouseX = e.layerX;
-					mouseY = e.layerY;
-					if (mouseX >= 0 && mouseX <= wrapper.localWidth && mouseY >= 0 && mouseY <= wrapper.localHeight) {
-						wrapper.mouse.active = true;
+		var mouseX, mouseY, maxX, maxY, wrapper, i, iz, j, jz, el, touches, newActive, id, altEl, altWrapper;
+
+		if (my.xt(this.id)) {
+			//invoked directly by DOM listeners
+			wrapper = my.pad[this.id] || my.stack[this.id] || my.element[this.id] || false;
+			el = this;
+		}
+		else {
+			//invoked via scrawl function
+			wrapper = this;
+			el = this.getElement();
+		}
+
+		//touch event(s)
+		if (e.changedTouches) {
+			touches = e.changedTouches;
+
+			//process each change in turn
+			for (i = 0, iz = touches.length; i < iz; i++) {
+				id = 't' + touches[i].identifier;
+
+				//get rid of existing mouse vectors for a start - else things get very messy very quickly
+				if (e.type === 'touchstart') {
+					for (j = 0, jz = my.activeListeners.length; j < jz; j++) {
+						altWrapper = my.pad[my.activeListeners[j]] || my.stack[my.activeListeners[j]] || my.element[my.activeListeners[j]] || false;
+						if (altWrapper) {
+							delete altWrapper.mice[id];
+						}
 					}
-					wrapper.mouse.x = e.layerX;
-					wrapper.mouse.y = e.layerY;
-					wrapper.mouse.layer = true;
 				}
-				else {
-					if (e.pageX || e.pageY) {
-						mouseX = e.pageX;
-						mouseY = e.pageY;
-					}
-					else if (e.clientX || e.clientY) {
-						mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-						mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-					}
-					maxX = wrapper.displayOffsetX + wrapper.localWidth;
-					maxY = wrapper.displayOffsetY + wrapper.localHeight;
-					if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
-						wrapper.mouse.active = true;
-					}
-					wrapper.mouse.x = (mouseX - wrapper.displayOffsetX);
-					wrapper.mouse.y = (mouseY - wrapper.displayOffsetY);
-					wrapper.mouse.layer = false;
+				//determine if a vector already exists for this touch
+				if (!my.xt(wrapper.mice[id])) {
+					wrapper.mice[id] = my.makeVector({
+						name: wrapper.type + '.' + wrapper.name + '.t.' + id
+					});
+					wrapper.mice[id].active = null;
+					wrapper.mice[id].id = id;
 				}
+
+				//coordinates
+				if (touches[i].pageX || touches[i].pageY) {
+					mouseX = touches[i].pageX;
+					mouseY = touches[i].pageY;
+				}
+				else if (touches[i].clientX || touches[i].clientY) {
+					mouseX = touches[i].clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+					mouseY = touches[i].clientY + document.body.scrollTop + document.documentElement.scrollTop;
+				}
+				maxX = wrapper.displayOffsetX + wrapper.localWidth;
+				maxY = wrapper.displayOffsetY + wrapper.localHeight;
+
+				//touchmove doesn't propogate beyond its triggering element
+				if (e.type === 'touchmove') {
+					for (j = 0, jz = my.activeListeners.length; j < jz; j++) {
+						if (this.name !== my.activeListeners[j]) {
+							altEl = my.canvas[my.activeListeners[j]] || my.stk[my.activeListeners[j]] || my.elm[my.activeListeners[j]] || false;
+							if (altEl) {
+								my.triggerTouchFollow(e, altEl);
+							}
+						}
+					}
+				}
+				//touchleave and touchenter are deprecated - have to spoof them via custom events
+				newActive = (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) ? true : false;
+				if (wrapper.mice[id].active !== newActive) {
+					wrapper.mice[id].active = newActive;
+					//only trigger enter/leave if we're currently in the middle of a move event
+					if (e.type === 'touchmove' || e.type === 'touchfollow') {
+						if (newActive) {
+							//touchenter
+							my.triggerTouchEnter(e, el);
+						}
+						else {
+							//touchleave
+							my.triggerTouchLeave(e, el);
+						}
+					}
+				}
+
+				//finalize coordinates
+				wrapper.mice[id].x = (mouseX - wrapper.displayOffsetX);
+				wrapper.mice[id].y = (mouseY - wrapper.displayOffsetY);
 				if (wrapper.type === 'Pad') {
-					wrapper.mouse.x = wrapper.mouse.x / wrapper.scale || 1;
-					wrapper.mouse.y = wrapper.mouse.y / wrapper.scale || 1;
+					wrapper.mice[id].x = Math.round(wrapper.mice[id].x / wrapper.scale || 1);
+					wrapper.mice[id].y = Math.round(wrapper.mice[id].y / wrapper.scale || 1);
+				}
+				if (e.type === 'touchup' || e.type === 'touchleave') {
+					wrapper.mice[id].x = null;
+					wrapper.mice[id].y = null;
 				}
 			}
-			return wrapper;
 		}
-		return false;
+		//pointer event
+		else if (e.pointerType) {
+			id = (e.pointerType !== 'touch') ? e.pointerType : 'p' + e.pointerId;
+
+			//determine if a vector already exists for this pointer
+			if (!my.xt(wrapper.mice[id])) {
+				wrapper.mice[id] = my.makeVector({
+					name: wrapper.type + '.' + wrapper.name + '.p.' + id
+				});
+				wrapper.mice[id].active = null;
+				wrapper.mice[id].id = id;
+			}
+
+			//pointer coordinates
+			wrapper.mice[id].active = false;
+			if (e.offsetX >= 0 && e.offsetX <= wrapper.localWidth && e.offsetY >= 0 && e.offsetY <= wrapper.localHeight) {
+				wrapper.mice[id].active = true;
+			}
+			wrapper.mice[id].x = Math.round(e.offsetX);
+			wrapper.mice[id].y = Math.round(e.offsetY);
+			if (wrapper.type === 'Pad') {
+				wrapper.mice[id].x = Math.round(wrapper.mice[id].x / (wrapper.scale || 1));
+				wrapper.mice[id].y = Math.round(wrapper.mice[id].y / (wrapper.scale || 1));
+			}
+		}
+		//mouse/pen event
+		else {
+			if (!my.xt(wrapper.mice.mouse)) {
+				wrapper.mice.mouse = my.makeVector({
+					name: wrapper.type + '.' + wrapper.name + '.ui.mouse'
+				});
+				wrapper.mice.mouse.active = null;
+				wrapper.mice.mouse.id = 'mouse';
+			}
+
+			if (e.pageX || e.pageY) {
+				mouseX = e.pageX;
+				mouseY = e.pageY;
+			}
+			else if (e.clientX || e.clientY) {
+				mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+				mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+			}
+			maxX = wrapper.displayOffsetX + wrapper.localWidth;
+			maxY = wrapper.displayOffsetY + wrapper.localHeight;
+			wrapper.mice.mouse.active = false;
+			if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
+				wrapper.mice.mouse.active = true;
+			}
+			wrapper.mice.mouse.x = (mouseX - wrapper.displayOffsetX);
+			wrapper.mice.mouse.y = (mouseY - wrapper.displayOffsetY);
+			if (wrapper.type === 'Pad') {
+				wrapper.mice.mouse.x = Math.round(wrapper.mice.mouse.x / (wrapper.scale || 1));
+				wrapper.mice.mouse.y = Math.round(wrapper.mice.mouse.y / (wrapper.scale || 1));
+			}
+		}
+		wrapper.handleMouseTilt(e);
+		return wrapper;
 	};
 	/**
-mouseout event listener function
-@method handleMouseOut
+mouseTilt hook function - amended by scrawlStacks module
+@method handleMouseTilt
 @param {Object} e window.event
 @return This
 @private
 **/
-	my.PageElement.prototype.handleMouseOut = function(e) {
-		var wrapper;
-		e = (my.xt(e)) ? e : window.event;
-		wrapper = scrawl.pad[e.target.id] || scrawl.stack[e.target.id] || scrawl.element[e.target.id] || false;
-		if (wrapper) {
-			wrapper.mouse.active = false;
-		}
-		return wrapper;
-	};
-
+	my.PageElement.prototype.handleMouseTilt = function(e) {};
 	/**
-Constructor helper function
-@method initMouse
-@param constructor argument object
-@return This
-@chainable
-@private
-**/
-	my.PageElement.prototype.initMouse = function(items) {
-		this.mouse = my.newVector({
-			name: this.type + '.' + this.name + '.mouse'
-		});
-		if (!this.position) {
-			this.position = this.get('position');
-		}
-		if (items.mouse) {
-			this.mouse.set(items.mouse);
-			this.addMouseMove();
-		}
-		else {
-			this.removeMouseMove();
-		}
-		return this;
-	};
-	/**
-Adds a mousemove event listener to the element
+Adds event listeners to the element
 @method addMouseMove
 @return This
 @chainable
 @private
 **/
 	my.PageElement.prototype.addMouseMove = function() {
-		var element,
-			test;
-		element = this.getElement();
-		element.removeEventListener('mousemove', this.handleMouseMove, false);
-		element.addEventListener('mousemove', this.handleMouseMove, false);
-		element.removeEventListener('mouseout', this.handleMouseOut, false);
-		element.removeEventListener('mouseleave', this.handleMouseOut, false);
-		element.setAttribute('onmouseout', 'return;');
-		test = typeof element.onmouseout == 'function';
-		element.setAttribute('onmouseout', null);
-		if (test) {
-			element.addEventListener('mouseout', this.handleMouseOut, false);
-		}
-		else {
-			element.addEventListener('mouseleave', this.handleMouseOut, false);
-		}
+		var el = this.getElement();
+		my.addListener(['up', 'down', 'move', 'enter', 'leave'], this.handleMouseMove, el);
+		my.pushUnique(my.activeListeners, this.name);
 		return this;
 	};
 	/**
-Remove the mousemove event listener from the element
+Remove event listeners from the element
 @method removeMouseMove
 @return This
 @chainable
 @private
 **/
 	my.PageElement.prototype.removeMouseMove = function() {
-		var element = this.getElement();
-		element.removeEventListener('mousemove', this.handleMouseMove, false);
-		element.removeEventListener('mouseout', this.handleMouseOut, false);
-		element.removeEventListener('mouseleave', this.handleMouseOut, false);
+		var el = this.getElement();
+		my.removeListener(['up', 'down', 'move', 'enter', 'leave'], this.handleMouseMove, el);
+		my.removeItem(my.activeListeners, this.name);
 		return this;
 	};
 
@@ -3026,11 +3640,17 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			my.pad[this.name] = this;
 			my.pushUnique(my.padnames, this.name);
 
+			/**
+Array of CELLNAME Strings associated with this Pad
+@property cells
+@type Array
+@default []
+**/
 			// prepare for cell creation
 			this.cells = [];
 
 			// create a wrapper for the display canvas element
-			display = my.newCell({
+			display = my.makeCell({
 				name: this.name,
 				pad: this.name,
 				canvas: items.canvasElement,
@@ -3040,6 +3660,12 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				height: this.localHeight
 			});
 			my.pushUnique(this.cells, display.name);
+			/**
+Pad's display (visible) &lt;canvas&gt; element - CELLNAME
+@property display
+@type String
+@default ''
+**/
 			this.display = display.name;
 
 			// create a new canvas element to act as the base
@@ -3047,7 +3673,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			canvas.setAttribute('id', this.name + '_base');
 
 			// create a wrapper for the base canvas element
-			base = my.newCell({
+			base = my.makeCell({
 				name: this.name + '_base',
 				pad: this.name,
 				canvas: canvas,
@@ -3057,20 +3683,36 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 				height: '100%'
 			});
 			my.pushUnique(this.cells, base.name);
+			/**
+Pad's base (hidden) &lt;canvas&gt; element - CELLNAME
+@property base
+@type String
+@default ''
+**/
 			this.base = base.name;
+			/**
+Pad's currently active &lt;canvas&gt; element - CELLNAME
+
+//not convinced there's any point in keeping this attribute anymore - take it out?
+
+@property current
+@type String
+@default ''
+@deprecated
+**/
 			this.current = base.name;
 
 			// finalise stuff for this Pad
 			this.setDisplayOffsets();
 			this.setAccessibility(items);
-			//items.mouse = (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true;
-			this.initMouse({
-				mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
-			});
 			this.filtersPadInit();
 			this.padStacksConstructor(items);
+			this.interactive = my.xtGet(items.interactive, true);
+			if (this.interactive) {
+				this.addMouseMove();
+			}
 
-			// return this
+			// return this mouseArray
 			return this;
 		}
 
@@ -3087,37 +3729,9 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 	my.Pad.prototype.type = 'Pad';
 	my.Pad.prototype.classname = 'padnames';
 	my.d.Pad = {
-		/**
-Array of CELLNAME Strings associated with this Pad
-@property cells
-@type Array
-@default []
-**/
 		cells: [],
-		/**
-Pad's display (visible) &lt;canvas&gt; element - CELLNAME
-@property display
-@type String
-@default ''
-**/
 		display: '',
-		/**
-Pad's base (hidden) &lt;canvas&gt; element - CELLNAME
-@property base
-@type String
-@default ''
-**/
 		base: '',
-		/**
-Pad's currently active &lt;canvas&gt; element - CELLNAME
-
-//not convinced there's any point in keeping this attribute anymore - take it out?
-
-@property current
-@type String
-@default ''
-@deprecated
-**/
 		current: ''
 	};
 	my.mergeInto(my.d.Pad, my.d.PageElement);
@@ -3337,7 +3951,7 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 			canvas.setAttribute('width', data.width);
 			data.pad = this.name;
 			data.canvas = canvas;
-			cell = my.newCell(data);
+			cell = my.makeCell(data);
 			my.pushUnique(this.cells, cell.name);
 			return cell;
 		}
@@ -3716,12 +4330,12 @@ Cell constructor hook function - core module
 		my.pushUnique(my.cellnames, this.name);
 		this.pad = my.xtGet(items.pad, false);
 		temp = my.safeObject(items.copy);
-		this.copy = my.newVector({
+		this.copy = my.makeVector({
 			x: my.xtGet(items.copyX, temp.x, 0),
 			y: my.xtGet(items.copyY, temp.y, 0),
 			name: this.type + '.' + this.name + '.copy'
 		});
-		this.work.copy = my.newVector({
+		this.work.copy = my.makeVector({
 			name: this.type + '.' + this.name + '.work.copy'
 		});
 		this.actualWidth = my.canvas[this.name].width;
@@ -3755,7 +4369,7 @@ Cell constructor hook function - core module
 		}
 		this.setCopy();
 		this.setPaste();
-		context = my.newContext({
+		context = my.makeContext({
 			name: this.name,
 			cell: my.context[this.name]
 		});
@@ -3775,7 +4389,7 @@ Cell constructor hook function - core module
 		this.globalCompositeOperation = my.xtGet(items.globalCompositeOperation, 'source-over');
 		this.globalAlpha = my.xtGet(items.globalAlpha, 1);
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
-		my.newGroup({
+		my.makeGroup({
 			name: this.name,
 			cell: this.name
 		});
@@ -5208,7 +5822,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 
 ## Instantiation
 
-* scrawl.newGroup()
+* scrawl.makeGroup()
 
 ## Purpose
 
@@ -5229,11 +5843,47 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 	my.Group = function(items) {
 		items = my.safeObject(items);
 		my.Base.call(this, items);
+		/**
+Array of SPRITENAME Strings of entitys that comprise this Group
+@property entitys
+@type Array
+@default []
+**/
 		this.entitys = (my.xt(items.entitys)) ? [].concat(items.entitys) : [];
+		/**
+CELLNAME of the default Cell object to which this group is associated
+@property cell
+@type String
+@default ''
+**/
 		this.cell = items.cell || my.pad[my.currentPad].current;
+		/**
+Group order value - lower order Groups are drawn on &lt;canvas&gt; elements before higher order Groups
+@property order
+@type Number
+@default 0
+**/
 		this.order = my.xtGet(items.order, 0);
+		/**
+Visibility flag - Group entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
+@property visibility
+@type Boolean
+@default true
+**/
 		this.visibility = my.xtGet(items.visibility, true);
+		/**
+Sorting flag - when set to true, Groups will sort their constituent entity object according to their entity.order attribute for each iteration of the display cycle
+@property entitySort
+@type Boolean
+@default true
+**/
 		this.entitySort = my.xtGet(items.entitySort, true);
+		/**
+Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked entity is to the current reference entity or mouse coordinate; when set to 0, this collision check step is skipped and all entitys move on to the next step
+@property regionRadius
+@type Number
+@default 0
+**/
 		this.regionRadius = my.xtGet(items.regionRadius, 0);
 		my.group[this.name] = this;
 		this.filtersGroupInit(items);
@@ -5251,47 +5901,11 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 	my.Group.prototype.type = 'Group';
 	my.Group.prototype.classname = 'groupnames';
 	my.d.Group = {
-		/**
-Array of SPRITENAME Strings of entitys that comprise this Group
-@property entitys
-@type Array
-@default []
-**/
 		entitys: [],
-		/**
-CELLNAME of the default Cell object to which this group is associated
-@property cell
-@type String
-@default ''
-**/
 		cell: '',
-		/**
-Group order value - lower order Groups are drawn on &lt;canvas&gt; elements before higher order Groups
-@property order
-@type Number
-@default 0
-**/
 		order: 0,
-		/**
-Visibility flag - Group entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
-@property visibility
-@type Boolean
-@default true
-**/
 		visibility: true,
-		/**
-Sorting flag - when set to true, Groups will sort their constituent entity object according to their entity.order attribute for each iteration of the display cycle
-@property entitySort
-@type Boolean
-@default true
-**/
 		entitySort: true,
-		/**
-Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked entity is to the current reference entity or mouse coordinate; when set to 0, this collision check step is skipped and all entitys move on to the next step
-@property regionRadius
-@type Number
-@default 0
-**/
 		regionRadius: 0
 	};
 	my.mergeInto(my.d.Group, my.d.Base);
@@ -5534,6 +6148,26 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 		return false;
 	};
 	/**
+Check all entitys in the Group to see which one(s) are associated with a particular mouse index
+@method getEntitysByMouseIndex
+@param {String} item Mouse index string
+@return Array of Entity objects
+**/
+	my.Group.prototype.getEntitysByMouseIndex = function(item) {
+		var result = [],
+			i, iz,
+			entity;
+		if (my.isa(item, 'str')) {
+			for (i = 0, iz = this.entitys.length; i < iz; i++) {
+				entity = my.entity[this.entitys[i]];
+				if (entity.mouseIndex === item) {
+					result.push(entity);
+				}
+			}
+		}
+		return result;
+	};
+	/**
 Check all entitys in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the entitys have been sorted; all entitys (in the group) colliding with the coordinate are returned as an array of entity objects
 @method getEntityAt
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
@@ -5600,42 +6234,52 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 		items = my.safeObject(items);
 		my.Position.call(this, items);
 		items.name = this.name;
-		var myContext = my.newContext(items);
-		this.context = myContext.name;
-		this.group = this.getGroup(items);
-		this.fastStamp = my.xtGet(items.fastStamp, false);
-		this.scaleOutline = my.xtGet(items.scaleOutline, true);
-		this.order = my.xtGet(items.order, 0);
-		this.visibility = my.xtGet(items.visibility, true);
-		this.method = my.xtGet(items.method, my.d[this.type].method);
-		this.collisionsEntityConstructor(items);
-		this.filtersEntityInit(items);
-		return this;
-	};
-	my.Entity.prototype = Object.create(my.Position.prototype);
-	/**
-@property type
+		var myContext = my.makeContext(items);
+		/**
+CTXNAME of this Entity's Context object
+@property context
 @type String
-@default 'Entity'
-@final
+@default ''
+@private
 **/
-	my.Entity.prototype.type = 'Entity';
-	my.Entity.prototype.classname = 'entitynames';
-	my.d.Entity = {
+		this.context = myContext.name;
+		/**
+GROUPNAME String for this entity's default group
+
+_Note: a entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_
+@property group
+@type String
+@default ''
+**/
+		this.group = this.getGroup(items);
+		/**
+Display cycle flag; if set to true, entity will not change the &lt;canvas&gt; element's context engine's settings before drawing itself on the cell
+@property fastStamp
+@type Boolean
+@default false
+**/
+		this.fastStamp = my.xtGet(items.fastStamp, false);
+		/**
+Scaling flag; set to true to ensure lineWidth scales in line with the scale attribute value
+@property scaleOutline
+@type Boolean
+@default true
+**/
+		this.scaleOutline = my.xtGet(items.scaleOutline, true);
 		/**
 Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys
 @property order
 @type Number
 @default 0
 **/
-		order: 0,
+		this.order = my.xtGet(items.order, 0);
 		/**
 Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
 @property visibility
 @type Boolean
 @default true
 **/
-		visibility: true,
+		this.visibility = my.xtGet(items.visibility, true);
 		/**
 Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
 
@@ -5655,6 +6299,23 @@ _Note: not all entitys support all of these operations_
 @type String
 @default 'fill'
 **/
+		this.method = my.xtGet(items.method, my.d[this.type].method);
+		this.collisionsEntityConstructor(items);
+		this.filtersEntityInit(items);
+		return this;
+	};
+	my.Entity.prototype = Object.create(my.Position.prototype);
+	/**
+@property type
+@type String
+@default 'Entity'
+@final
+**/
+	my.Entity.prototype.type = 'Entity';
+	my.Entity.prototype.classname = 'entitynames';
+	my.d.Entity = {
+		order: 0,
+		visibility: true,
 		method: 'fill',
 		/**
 Current SVGTiny data string for the entity (only supported by Path and Shape entitys)
@@ -5670,36 +6331,9 @@ Entity radius, in pixels - not supported by all entity objects
 @default 0
 **/
 		radius: 0,
-		/**
-Scaling flag; set to true to ensure lineWidth scales in line with the scale attribute value
-@property scaleOutline
-@type Boolean
-@default true
-**/
 		scaleOutline: true,
-		/**
-Display cycle flag; if set to true, entity will not change the &lt;canvas&gt; element's context engine's settings before drawing itself on the cell
-@property fastStamp
-@type Boolean
-@default false
-**/
 		fastStamp: false,
-		/**
-CTXNAME of this Entity's Context object
-@property context
-@type String
-@default ''
-@private
-**/
 		context: '',
-		/**
-GROUPNAME String for this entity's default group
-
-_Note: a entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_
-@property group
-@type String
-@default ''
-**/
 		group: ''
 	};
 	my.mergeInto(my.d.Entity, my.d.Position);
@@ -6062,41 +6696,6 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 		return this;
 	};
 	/**
-Stamp helper function - convert string start.x values to numerical values
-@method convertX
-@param {String} x coordinate String
-@param {String} cell reference cell name String; or alternatively DOM canvas object
-@return Number - x value
-@private
-**/
-	my.Entity.prototype.convertX = function(x, cell) {
-		var width,
-			result;
-		switch (typeof cell) {
-			case 'string':
-				width = scrawl.cell[cell].actualWidth;
-				break;
-			case 'number':
-				width = cell;
-				break;
-			default:
-				width = cell.actualWidth;
-		}
-
-		result = parseFloat(x) / 100;
-		if (isNaN(result)) {
-			switch (x) {
-				case 'right':
-					return width;
-				case 'center':
-					return width / 2;
-				default:
-					return 0;
-			}
-		}
-		return result * width;
-	};
-	/**
 Entity.getStartValues
 @method getStartValues
 @private
@@ -6110,40 +6709,6 @@ Entity.getStartValues
 		result.x = (my.isa(this.start.x, 'str')) ? this.convertX(this.start.x, cell) : this.start.x;
 		result.y = (my.isa(this.start.y, 'str')) ? this.convertY(this.start.y, cell) : this.start.y;
 		return result;
-	};
-	/**
-Stamp helper function - convert string start.y values to numerical values
-@method convertY
-@param {String} y coordinate String
-@param {String} cell reference cell name String
-@return Number - y value
-@private
-**/
-	my.Entity.prototype.convertY = function(y, cell) {
-		var height,
-			result;
-		switch (typeof cell) {
-			case 'string':
-				height = scrawl.cell[cell].actualHeight;
-				break;
-			case 'number':
-				height = cell;
-				break;
-			default:
-				height = cell.actualHeight;
-		}
-		result = parseFloat(y) / 100;
-		if (isNaN(result)) {
-			switch (y) {
-				case 'bottom':
-					return height;
-				case 'center':
-					return height / 2;
-				default:
-					return 0;
-			}
-		}
-		return result * height;
 	};
 	/**
 Stamp helper function - perform a 'clear' method draw
@@ -6334,7 +6899,8 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		coordinate = this.correctCoordinates(coordinate, cell);
 		this.oldX = coordinate.x || 0;
 		this.oldY = coordinate.y || 0;
-		this.realPivot = this.pivot;
+		this.oldPivot = this.pivot;
+		this.mouseIndex = my.xtGet(items.id || 'mouse');
 		this.pivot = 'mouse';
 		this.order += this.order + 9999;
 		return this;
@@ -6349,12 +6915,13 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 	my.Entity.prototype.dropEntity = function(item) {
 		var order = this.order;
 		this.set({
-			pivot: my.xtGet(item, this.realPivot, false),
+			pivot: my.xtGet(item, this.oldPivot, null),
 			order: (order >= 9999) ? order - 9999 : 0
 		});
-		delete this.realPivot;
-		delete this.oldX;
-		delete this.oldY;
+		this.oldPivot = null;
+		this.oldX = null;
+		this.oldY = null;
+		this.mouseIndex = null;
 		return this;
 	};
 	/**
@@ -6426,6 +6993,12 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 **/
 	my.Design = function(items) {
 		my.Base.call(this, items);
+		/**
+Drawing flag - when set to 'entity' (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to 'cell' (or false - default), will use Cell-based coordinates
+@property lockTo
+@type String - or alternatively Boolean
+@default 'cell'
+**/
 		this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
 		return this;
 	};
@@ -6457,12 +7030,6 @@ Objects take the form {color:String, stop:Number} where:
 			color: 'white',
 			stop: 0.999999
         }],
-		/**
-Drawing flag - when set to 'entity' (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to 'cell' (or false - default), will use Cell-based coordinates
-@property lockTo
-@type String - or alternatively Boolean
-@default 'cell'
-**/
 		lockTo: 'cell',
 		/**
 Drawing flag - when set to true, force the gradient to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
@@ -6776,7 +7343,7 @@ Remove this gradient from the scrawl library
 
 ## Instantiation
 
-* scrawl.newGradient()
+* scrawl.makeGradient()
 
 ## Purpose
 
@@ -6817,7 +7384,7 @@ Remove this gradient from the scrawl library
 
 ## Instantiation
 
-* scrawl.newRadialGradient()
+* scrawl.makeRadialGradient()
 
 ## Purpose
 
@@ -6868,7 +7435,7 @@ End circle radius, in pixels or percentage of entity/cell width
 	};
 	my.mergeInto(my.d.RadialGradient, my.d.Design);
 
-	my.v = my.newVector({
+	my.v = my.makeVector({
 		name: 'scrawl.v'
 	});
 

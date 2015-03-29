@@ -19,6 +19,7 @@ var mycode = function() {
 			back: scrawl.cell[pads.back.base],
 		},
 		mystack = scrawl.stack.mystack,
+		elstack = scrawl.stk.mystack,
 		group = scrawl.group.mystack,
 		cube = scrawl.makeQuaternion(),
 		deltaCube = scrawl.makeQuaternion({
@@ -46,7 +47,7 @@ var mycode = function() {
 		perspectiveZ: 800,
 		overflow: 'hidden',
 	});
-	scrawl.newElementGroup({
+	scrawl.makeElementGroup({
 		name: 'instructions',
 		stack: 'mystack'
 	});
@@ -108,13 +109,13 @@ var mycode = function() {
 		deltaYaw: 0,
 		deltaTranslateZ: 100
 	});
-	words = scrawl.newGroup({
+	words = scrawl.makeGroup({
 		name: 'words',
 		visibility: false,
 		entitys: sides,
 	});
 	for (i = 0, iz = sides.length; i < iz; i++) {
-		scrawl.newPicture({
+		scrawl.makePicture({
 			name: pics[i],
 			pivot: sides[i],
 			handleX: 'center',
@@ -125,7 +126,7 @@ var mycode = function() {
 			order: 0,
 			group: pads[sides[i]].base,
 		});
-		scrawl.newPhrase({
+		scrawl.makePhrase({
 			name: sides[i],
 			startX: 100,
 			startY: 100,
@@ -153,15 +154,47 @@ var mycode = function() {
 		group.setElementsTo({
 			scale: ratio,
 		});
+		scrawl.domInit();
 	};
 	resize = function(e) {
 		setSize();
 	};
-	window.addEventListener('resize', resize);
+	window.addEventListener('resize', resize, false);
 
 	setSize();
 
-	scrawl.newAnimation({
+	//stop touchmove dragging the page up/down
+	scrawl.addListener(['move', 'down'], function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+		var here = mystack.getMouse();
+		if (here.active) {
+			group.setElementsTo({
+				pivot: 'mouse',
+				mouseIndex: here.id
+			});
+		}
+		else {
+			group.setElementsTo({
+				pivot: '',
+				mouseIndex: '',
+				startX: 'center',
+				startY: 'center'
+			});
+		}
+	}, elstack);
+	scrawl.addListener('leave', function(e) {
+		group.setElementsTo({
+			pivot: '',
+			mouseIndex: '',
+			startX: 'center',
+			startY: 'center'
+		});
+	}, elstack);
+
+	scrawl.makeAnimation({
 		fn: function() {
 			cube.quaternionMultiply(deltaCube);
 			group.update({
@@ -171,23 +204,12 @@ var mycode = function() {
 			words.updateEntitysBy({
 				roll: 0.5,
 			});
-			here = mystack.getMouse();
-			if (here.active) {
-				group.setElementsTo({
-					pivot: 'mouse',
-				});
-			}
-			else {
-				group.setElementsTo({
-					pivot: '',
-					startX: 'center',
-					startY: 'center',
-				});
-			}
+
 			scrawl.render();
-		},
+		}
 	});
 };
+
 scrawl.loadModules({
 	path: '../source/',
 	minified: false,

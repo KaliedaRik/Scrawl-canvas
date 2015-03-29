@@ -40,7 +40,7 @@ var mycode = function() {
 	input_offsetY.value = '0';
 
 	//define filter
-	filter = scrawl.newPixelateFilter({
+	filter = scrawl.makePixelateFilter({
 		name: 'myfilter',
 		alpha: 1,
 		width: 10,
@@ -50,7 +50,7 @@ var mycode = function() {
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -121,7 +121,7 @@ var mycode = function() {
 	input_offsetY.addEventListener('change', event_offsetY, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

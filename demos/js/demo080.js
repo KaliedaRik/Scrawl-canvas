@@ -26,7 +26,7 @@ var mycode = function() {
 	});
 
 	//define designs (color)
-	myCol = scrawl.newColor({
+	myCol = scrawl.makeColor({
 		name: 'myCol',
 		random: true,
 		a: 1,
@@ -64,7 +64,7 @@ var mycode = function() {
 		group: 'struts',
 		pivot: 'strutOne_p2',
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		pivot: 'strutOne_p1',
 		radius: 5,
 		method: 'fillDraw',
@@ -79,7 +79,7 @@ var mycode = function() {
 	});
 	scrawl.cell.struts.compile();
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'pen',
 		pivot: 'strutTwo_p2',
 		radius: 1,
@@ -114,7 +114,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveStruts();
 			scrawl.render();

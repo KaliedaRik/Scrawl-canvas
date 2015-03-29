@@ -14,11 +14,13 @@ cd into the scrawl directory
 
     $ cd Scrawl-canvas
 
-Wherever possible, use the 'git flow' methodology. Start git flow ...
+Feel free to use the 'git flow' methodology. Start git flow ...
 
     $ git flow init
 
 ... and accept all the default parameters. When completed, you will be in the 'develop' branch.
+
+If you choose not to use git flow, all development work should be done in feature branches, branched off the develop branch. Merges will only be accepted back into the develop branch.
 
 Let the local repository know the remote repository exists:
 
@@ -44,9 +46,7 @@ directory. Documents should only be regenerated when a new release candidate is 
 
 ## Coding
 
-All development work should take place on the 'develop' branch - specifically in a new 'git flow feature' branch (unless the changes are trivial).
-
-Changes to the source files need to be checked against relevant demos to make sure new, or amended, code doesn't break the library.
+All development work should take place in feature branches branched from the 'develop' branch. Changes to the source files need to be checked against relevant demos to make sure new, or amended, code doesn't break the library.
 
 All code needs to pass the linting test, and be beautified. Run these grunt tasks before finishing your git flow feature:
 
@@ -79,7 +79,7 @@ Scrawl uses an x.y.z approach to tagging releases, where
     y = minor release - adds new functionality to the library
     z = bug fixes
 
-Current version (at the time of writing this document) is 4.0.0
+Current version (at the time of writing this document) is 4.2.0
 
 Start a release branch via git flow
 
@@ -91,7 +91,7 @@ After any final bug fixes have been committed to the release branch, the followi
 
     package.json
     bower.json
-    source/scrawlCore.js (in 2 places)
+    source/scrawlCore.js (in 3 places)
 
 > lint and beautify
 

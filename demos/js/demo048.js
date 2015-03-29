@@ -9,15 +9,13 @@ var mycode = function() {
 
 	//define variables
 	var myPad = scrawl.pad.mycanvas,
-		here,
-		myScale,
-		myWheel;
+		myWheels;
 
 	//setup canvas
 	scrawl.canvas.mycanvas.style.cursor = 'crosshair';
 
 	//define entity
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'gradient',
 		shift: 0.002,
 		autoUpdate: true,
@@ -43,26 +41,70 @@ var mycode = function() {
         }, ],
 	});
 
-	myWheel = scrawl.newWheel({
-		strokeStyle: 'Red',
-		fillStyle: 'gradient',
-		radius: 50,
-		lineWidth: 4,
-		pivot: 'mouse',
-		method: 'fillDraw',
+	myWheels = scrawl.makeGroup({
+		name: 'wheels'
 	});
 
-	//animation object
-	scrawl.newAnimation({
-		fn: function() {
-			here = myPad.getMouse();
-			if (here.active) {
-				myScale = (50 - Math.floor(((Math.abs(here.y - 187.5) / 187.5) * 24) + ((Math.abs(here.x - 375) / 375) * 24))) / 25;
+	for (var i = 0; i < 10; i++) {
+		scrawl.makeWheel({
+			strokeStyle: 'Red',
+			fillStyle: 'gradient',
+			radius: 100,
+			lineWidth: 4,
+			pivot: 'mouse',
+			method: 'fillDraw',
+			order: i,
+			name: 'orb' + i,
+			group: 'wheels',
+			visibility: false
+		});
+	}
+
+	//event listeners
+	scrawl.addListener(['down', 'move'], function(e) {
+		var here, j, jz;
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			here = myPad.getMouse(e);
+			for (j = 0, jz = here.length; j < jz; j++) {
+				if (here[j].active) {
+					scrawl.entity['orb' + j].set({
+						mouseIndex: here[j].id,
+						visibility: true
+					});
+				}
+				else {
+					scrawl.entity['orb' + j].set({
+						mouseIndex: '',
+						visibility: false
+					});
+				}
 			}
-			myWheel.set({
-				scale: myScale,
-				visibility: (here.active) ? true : false,
-			});
+		}
+	}, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], function(e) {
+		var here, i, iz, j, jz, orbs;
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			here = myPad.getMouse(e);
+			for (j = 0, jz = here.length; j < jz; j++) {
+				orbs = myWheels.getEntitysByMouseIndex(here[j].id);
+				for (i = 0, iz = orbs.length; i < iz; i++) {
+					orbs[i].set({
+						mouseIndex: '',
+						visibility: false
+					});
+				}
+			}
+		}
+	}, scrawl.canvas.mycanvas);
+
+	//animation object
+	scrawl.makeAnimation({
+		fn: function() {
+
 			scrawl.render();
 
 			//hide-start

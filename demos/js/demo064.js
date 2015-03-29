@@ -12,13 +12,13 @@ var mycode = function() {
 		brush;
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mywheels',
 		regionRadius: 90,
 	});
 
 	//define, and stamp, entitys
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		startX: 100,
 		startY: 100,
 		radius: 90,
@@ -39,7 +39,7 @@ var mycode = function() {
 	}).stamp();
 
 	//define brush entity ...
-	brush = scrawl.newWheel({
+	brush = scrawl.makeWheel({
 		radius: 3,
 		method: 'fill',
 	});

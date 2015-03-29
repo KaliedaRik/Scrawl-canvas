@@ -17,9 +17,9 @@ var mycode = function() {
 		i, iz;
 
 	//define bar entity
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'bargroup',
-		order: 1,
+		order: 1
 	});
 	bar = scrawl.makeLine({
 		startX: 50,
@@ -28,25 +28,26 @@ var mycode = function() {
 		endY: 200,
 		collisionPoints: 10,
 		lineWidth: 4,
-		group: 'bargroup',
+		group: 'bargroup'
 	});
 
 	//define bubble entitys
-	bubbles = scrawl.newGroup({
+	bubbles = scrawl.makeGroup({
 		name: 'bubbles',
+		entitySort: false
 	});
-	hitbubbles = scrawl.newGroup({
-		name: 'hitbubbles',
+	hitbubbles = scrawl.makeGroup({
+		name: 'hitbubbles'
 	});
-	color = scrawl.newColor({
+	color = scrawl.makeColor({
 		rMax: 200,
 		gMax: 200,
 		bMax: 200,
 		aMax: 1,
-		aMin: 1,
+		aMin: 1
 	});
 	for (i = 0; i < 40; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			radius: Math.ceil(Math.random() * 40) + 5,
 			startX: Math.ceil((Math.random() * 100) + 150),
 			startY: Math.ceil((Math.random() * 100) + 150),
@@ -54,15 +55,23 @@ var mycode = function() {
 			handleY: Math.ceil((Math.random() * 300) - 150),
 			globalAlpha: 0.4,
 			group: 'bubbles',
-			fillStyle: color.get('random'),
+			fillStyle: color.get('random')
 		});
 	}
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			hitbubbles.setEntitysTo({
-				globalAlpha: 0.4,
+				globalAlpha: 0.4
 			});
 			hitbubbles.entitys.length = 0;
 			hits = bubbles.getEntitysCollidingWith(bar);
@@ -70,10 +79,10 @@ var mycode = function() {
 			hits = bubbles.getAllEntitysAt(pad.getMouse());
 			hitbubbles.addEntitysToGroup(hits);
 			hitbubbles.setEntitysTo({
-				globalAlpha: 0.9,
+				globalAlpha: 0.8
 			});
 			bubbles.updateEntitysBy({
-				roll: 0.5,
+				roll: 0.5
 			});
 			scrawl.render();
 

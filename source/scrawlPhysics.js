@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -40,62 +38,62 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		'use strict';
 
 		/**
-	# window.scrawl
+# window.scrawl
 
-	scrawlPhysics module adaptions to the Scrawl library object
+scrawlPhysics module adaptions to the Scrawl library object
 
-	## New library sections
+## New library sections
 
-	* scrawl.force - for Force objects
-	* scrawl.spring - for Spring objects
-	* scrawl.physics - an area for storing physics constants and variables that affect multiple particles
+* scrawl.force - for Force objects
+* scrawl.spring - for Spring objects
+* scrawl.physics - an area for storing physics constants and variables that affect multiple particles
 
-	Particle objects are treated like entitys, and stored in the scrawl.entity section of the library
+Particle objects are treated like entitys, and stored in the scrawl.entity section of the library
 
-	@class window.scrawl_Physics
-	**/
+@class window.scrawl_Physics
+**/
 
 		/**
-	An Object containing parameter:value pairs representing the physical parameters within which a physics model operates
-	@property physics
-	@type {Object}
-	**/
+An Object containing parameter:value pairs representing the physical parameters within which a physics model operates
+@property physics
+@type {Object}
+**/
 		my.physics = {
 			/**
-	Gravity - positive values are assumed to act downwards from the top of the &lt;canvas&gt; element. Measured in meters per second squared
-	@property physics.gravity
-	@type Number
-	@default 9.8
-	**/
+Gravity - positive values are assumed to act downwards from the top of the &lt;canvas&gt; element. Measured in meters per second squared
+@property physics.gravity
+@type Number
+@default 9.8
+**/
 			gravity: 9.8,
 			/**
-	Air density, measured in kilograms per cubic meter; default is air density at seal level
-	@property physics.airDensity
-	@type Number
-	@default 1.23
-	**/
+Air density, measured in kilograms per cubic meter; default is air density at seal level
+@property physics.airDensity
+@type Number
+@default 1.23
+**/
 			airDensity: 1.23,
 			/**
-	Change in time since last update, measured in seconds
-	@property physics.deltaTime
-	@type Number
-	@default 0
-	**/
+Change in time since last update, measured in seconds
+@property physics.deltaTime
+@type Number
+@default 0
+**/
 			deltaTime: 0,
 		};
 		my.workphys = {
-			v1: my.newVector(),
-			v2: my.newVector(),
-			v3: my.newVector(),
-			v4: my.newVector(),
-			v5: my.newVector(),
+			v1: my.makeVector(),
+			v2: my.makeVector(),
+			v3: my.makeVector(),
+			v4: my.makeVector(),
+			v5: my.makeVector(),
 		};
 		/**
-	A __general__ function to undertake a round of calculations for Spring objects
-	@method updateSprings
-	@param {Array} [items] Array of SPRINGNAMES; defaults to all Spring objects
-	@return True on success; false otherwise
-	**/
+A __general__ function to undertake a round of calculations for Spring objects
+@method updateSprings
+@param {Array} [items] Array of SPRINGNAMES; defaults to all Spring objects
+@return True on success; false otherwise
+**/
 		my.updateSprings = function(items) {
 			var i,
 				iz,
@@ -117,16 +115,16 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-	scrawl.init hook function - modified by physics module
+scrawl.init hook function - modified by physics module
 
-	Initiates two forces:
+Initiates two forces:
 
-	* force.gravity() - gravity force at sea level
-	* force.drag() - air drag force at sea level
-	@method physicsInit
-	**/
+* force.gravity() - gravity force at sea level
+* force.drag() - air drag force at sea level
+@method physicsInit
+**/
 		my.physicsInit = function() {
-			my.newForce({
+			my.makeForce({
 				name: 'gravity',
 				fn: function(ball) {
 					ball.load.vectorAdd({
@@ -134,7 +132,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					});
 				},
 			});
-			my.newForce({
+			my.makeForce({
 				name: 'drag',
 				fn: function(ball) {
 					var d, s, df;
@@ -148,62 +146,86 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			});
 		};
 		/**
-	A __factory__ function to generate new Particle objects
-	@method newParticle
-	@param {Object} items Key:value Object argument for setting attributes
-	@return Particle object
-	**/
+Alias for makeParticle()
+@method newParticle
+@deprecated
+**/
 		my.newParticle = function(items) {
+			return my.makeParticle(items);
+		};
+		/**
+Alias for makeSpring()
+@method newSpring
+@deprecated
+**/
+		my.newSpring = function(items) {
+			return my.makeSpring(items);
+		};
+		/**
+Alias for makeForce()
+@method newForce
+@deprecated
+**/
+		my.newForce = function(items) {
+			return my.makeForce(items);
+		};
+		/**
+A __factory__ function to generate new Particle objects
+@method makeParticle
+@param {Object} items Key:value Object argument for setting attributes
+@return Particle object
+**/
+		my.makeParticle = function(items) {
 			return new my.Particle(items);
 		};
 		/**
-	A __factory__ function to generate new Spring objects
-	@method newSpring
-	@param {Object} items Key:value Object argument for setting attributes
-	@return Spring object
-	**/
-		my.newSpring = function(items) {
+A __factory__ function to generate new Spring objects
+@method makeSpring
+@param {Object} items Key:value Object argument for setting attributes
+@return Spring object
+**/
+		my.makeSpring = function(items) {
 			return new my.Spring(items);
 		};
 		/**
-	A __factory__ function to generate new Force objects
-	@method newForce
-	@param {Object} items Key:value Object argument for setting attributes
-	@return Force object
-	**/
-		my.newForce = function(items) {
+A __factory__ function to generate new Force objects
+@method makeForce
+@param {Object} items Key:value Object argument for setting attributes
+@return Force object
+**/
+		my.makeForce = function(items) {
 			return new my.Force(items);
 		};
 
 		/**
-	# Particle
+# Particle
 
-	## Instantiation
+## Instantiation
 
-	* scrawl.newParticle()
+* scrawl.makeParticle()
 
-	## Purpose
+## Purpose
 
-	* Defines Particle object, for physics simulations
+* Defines Particle object, for physics simulations
 
-	## Access
+## Access
 
-	* scrawl.entity.PARTICLENAME - for the Animation object
+* scrawl.entity.PARTICLENAME - for the Animation object
 
-	@class Particle
-	@constructor
-	@extends Base
-	@param {Object} [items] Key:value Object argument for setting attributes
-	**/
+@class Particle
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Particle = function(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.place = my.newVector();
-			this.work.place = my.newVector();
-			this.velocity = my.newVector();
-			this.work.velocity = my.newVector();
+			this.place = my.makeVector();
+			this.work.place = my.makeVector();
+			this.velocity = my.makeVector();
+			this.work.velocity = my.makeVector();
 			this.set(items);
-			this.priorPlace = my.newVector(this.place);
+			this.priorPlace = my.makeVector(this.place);
 			this.engine = items.engine || 'euler';
 			this.userVar = items.userVar || {};
 			this.mobile = (my.isa(items.mobile, 'bool')) ? items.mobile : true;
@@ -215,7 +237,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			if (items.radius || items.area) {
 				this.area = items.area || 2 * Math.PI * this.get('radius') * this.get('radius') || my.d.Particle.area;
 			}
-			this.load = my.newVector();
+			this.load = my.makeVector();
 			my.entity[this.name] = this;
 			my.pushUnique(my.entitynames, this.name);
 			this.group = my.Entity.prototype.getGroup.call(this, items);
@@ -224,152 +246,152 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Particle.prototype = Object.create(my.Base.prototype);
 		/**
-	@property type
-	@type String
-	@default 'Particle'
-	@final
-	**/
+@property type
+@type String
+@default 'Particle'
+@final
+**/
 		my.Particle.prototype.type = 'Particle';
 		my.Particle.prototype.classname = 'entitynames';
 		my.Particle.prototype.order = 0; //included to allow normal entitys to sort themselves properly
 		my.d.Particle = {
 			/**
-	Current group
-	@property group
-	@type String
-	@default ''
-	**/
+Current group
+@property group
+@type String
+@default ''
+**/
 			group: '',
 			order: 0,
 			/**
-	Mobility flag; when false, particle is fixed to the Cell at its position attribute coordinate vector
-	@property mobile
-	@type Boolean
-	@default true
-	**/
+Mobility flag; when false, particle is fixed to the Cell at its position attribute coordinate vector
+@property mobile
+@type Boolean
+@default true
+**/
 			mobile: true,
 			/**
-	Particle mass value, in kilograms
-	@property mass
-	@type Number
-	@default 1
-	**/
+Particle mass value, in kilograms
+@property mass
+@type Number
+@default 1
+**/
 			mass: 1,
 			/**
-	Particle radius, in meters
-	@property radius
-	@type Number
-	@default 0.1
-	**/
+Particle radius, in meters
+@property radius
+@type Number
+@default 0.1
+**/
 			radius: 0.1,
 			/**
-	Projected surface area - assumed to be of a sphere - in square meters
-	@property area
-	@type Number
-	@default 0.03
-	**/
+Projected surface area - assumed to be of a sphere - in square meters
+@property area
+@type Number
+@default 0.03
+**/
 			area: 0.03,
 			/**
-	Air drag coefficient - assumed to be operating on a smooth sphere
-	@property drag
-	@type Number
-	@default 0.42
-	**/
+Air drag coefficient - assumed to be operating on a smooth sphere
+@property drag
+@type Number
+@default 0.42
+**/
 			drag: 0.42,
 			/**
-	Elasticity coefficient, where 0.0 = 100% elastic and 1.0 is 100% inelastic
-	@property elasticity
-	@type Number
-	@default 1
-	**/
+Elasticity coefficient, where 0.0 = 100% elastic and 1.0 is 100% inelastic
+@property elasticity
+@type Number
+@default 1
+**/
 			elasticity: 1,
 			/**
-	Object in which user key:value pairs can be stored - clonable
-	@property userVar
-	@type Object
-	@default {}
-	**/
+Object in which user key:value pairs can be stored - clonable
+@property userVar
+@type Object
+@default {}
+**/
 			userVar: {},
 			/**
-	Position vector - assume 1 pixel = 1 meter
+Position vector - assume 1 pixel = 1 meter
 
-	Vector attributes can be set using the following alias attributes:
+Vector attributes can be set using the following alias attributes:
 
-	* place.x - __startX__ or __start.x__
-	* place.y - __startY__ or __start.y__
-	@property place
-	@type Vector
-	@default Zero values vector
-	**/
+* place.x - __startX__ or __start.x__
+* place.y - __startY__ or __start.y__
+@property place
+@type Vector
+@default Zero values vector
+**/
 			place: {
 				x: 0,
 				y: 0,
 				z: 0
 			},
 			/**
-	Velocity vector - assume 1 pixel = 1 meter per second
+Velocity vector - assume 1 pixel = 1 meter per second
 
-	Vector attributes can be set using the following alias attributes:
+Vector attributes can be set using the following alias attributes:
 
-	* velocity.x - __deltaX__ or __delta.x__
-	* velocity.y - __deltaY__ or __delta.y__
-	@property velocity
-	@type Vector
-	@default Zero values vector
-	**/
+* velocity.x - __deltaX__ or __delta.x__
+* velocity.y - __deltaY__ or __delta.y__
+@property velocity
+@type Vector
+@default Zero values vector
+**/
 			velocity: {
 				x: 0,
 				y: 0,
 				z: 0
 			},
 			/**
-	Particle calculator engine - a String value. 
+Particle calculator engine - a String value. 
 
-	Current engines include: 'rungeKutter' (most accurate), 'improvedEuler', 'euler' (default)
-	@property engine
-	@type String
-	@default 'euler'
-	**/
+Current engines include: 'rungeKutter' (most accurate), 'improvedEuler', 'euler' (default)
+@property engine
+@type String
+@default 'euler'
+**/
 			engine: 'euler',
 			/**
-	An Array containing FORCENAME Strings and/or force Functions
-	@property forces
-	@type Array
-	@default []
-	**/
+An Array containing FORCENAME Strings and/or force Functions
+@property forces
+@type Array
+@default []
+**/
 			forces: [],
 			/**
-	An Array containing SPRINGNAME Strings
-	@property springs
-	@type Array
-	@default []
-	**/
+An Array containing SPRINGNAME Strings
+@property springs
+@type Array
+@default []
+**/
 			springs: [],
 			/**
-	Load Vector - recreated at the start of every calculation cycle iteration
-	@property load
-	@type Vector
-	@default Zero vector
-	@private
-	**/
-			load: my.newVector(),
+Load Vector - recreated at the start of every calculation cycle iteration
+@property load
+@type Vector
+@default Zero vector
+@private
+**/
+			load: my.makeVector(),
 		};
 		my.mergeInto(my.d.Particle, my.d.Scrawl);
 		/**
-	Augments Base.set()
+Augments Base.set()
 
-	Allows users to set the Particle's position and velocity attributes using startX, startY, start, deltaX, deltaY, delta values
-	@method set
-	@param {Object} items Object consisting of key:value attributes
-	@return This
-	@chainable
-	**/
+Allows users to set the Particle's position and velocity attributes using startX, startY, start, deltaX, deltaY, delta values
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		my.Particle.prototype.set = function(items) {
 			var temp;
 			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
 			if (!this.place.type || this.place.type !== 'Vector') {
-				this.place = my.newVector(items.place || this.place);
+				this.place = my.makeVector(items.place || this.place);
 			}
 			if (my.xto(items.start, items.startX, items.startY)) {
 				temp = my.safeObject(items.start);
@@ -377,7 +399,7 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				this.place.y = my.xtGet(items.startY, temp.y, this.place.y);
 			}
 			if (!this.velocity.type || this.velocity.type !== 'Vector') {
-				this.velocity = my.newVector(items.velocity || this.velocity);
+				this.velocity = my.makeVector(items.velocity || this.velocity);
 			}
 			if (my.xto(items.delta, items.deltaX, items.deltaY, items.velocity)) {
 				temp = my.safeObject(items.delta);
@@ -387,19 +409,19 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Augments Base.clone()
-	@method clone
-	@param {Object} items Object consisting of key:value attributes
-	@return Cloned Particle object
-	@chainable
-	**/
+Augments Base.clone()
+@method clone
+@param {Object} items Object consisting of key:value attributes
+@return Cloned Particle object
+@chainable
+**/
 		my.Particle.prototype.clone = function(items) {
 			var a,
 				i,
 				iz;
 			a = my.Base.prototype.clone.call(this, items);
-			a.place = my.newVector(a.place);
-			a.velocity = my.newVector(a.velocity);
+			a.place = my.makeVector(a.place);
+			a.velocity = my.makeVector(a.velocity);
 			a.forces = [];
 			for (i = 0, iz = this.forces.length; i < iz; i++) {
 				a.forces.push(this.forces[i]);
@@ -407,12 +429,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return a;
 		};
 		/**
-	Add a force to the forces array
-	@method addForce
-	@param {Object} item Anonymous Function, or FORCENAME String
-	@return This
-	@chainable
-	**/
+Add a force to the forces array
+@method addForce
+@param {Object} item Anonymous Function, or FORCENAME String
+@return This
+@chainable
+**/
 		my.Particle.prototype.addForce = function(item) {
 			if (my.xt(item)) {
 				this.forces.push(item);
@@ -424,11 +446,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Undertake a calculation cycle iteration
-	@method stamp
-	@return This
-	@chainable
-	**/
+Undertake a calculation cycle iteration
+@method stamp
+@return This
+@chainable
+**/
 		my.Particle.prototype.stamp = function() {
 			if (this.mobile) {
 				this.calculateLoads();
@@ -446,30 +468,30 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Alias for Particle.stamp()
-	@method forceStamp
-	@return This
-	@chainable
-	**/
+Alias for Particle.stamp()
+@method forceStamp
+@return This
+@chainable
+**/
 		my.Particle.prototype.forceStamp = function() {
 			return this.stamp();
 		};
 		/**
-	Alias for Particle.stamp()
-	@method update
-	@return This
-	@chainable
-	**/
+Alias for Particle.stamp()
+@method update
+@return This
+@chainable
+**/
 		my.Particle.prototype.update = function() {
 			return this.stamp();
 		};
 		/**
-	Calculate the loads (via forces) acting on the particle for this calculation cycle iteration
-	@method calculateLoads
-	@return This
-	@chainable
-	@private
-	**/
+Calculate the loads (via forces) acting on the particle for this calculation cycle iteration
+@method calculateLoads
+@return This
+@chainable
+@private
+**/
 		my.Particle.prototype.calculateLoads = function() {
 			var i,
 				iz;
@@ -493,12 +515,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Calculation cycle engine
-	@method updateEuler
-	@return This
-	@chainable
-	@private
-	**/
+Calculation cycle engine
+@method updateEuler
+@return This
+@chainable
+@private
+**/
 		my.Particle.prototype.updateEuler = function() {
 			this.resetWork();
 			my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
@@ -509,12 +531,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Calculation cycle engine
-	@method updateImprovedEuler
-	@return This
-	@chainable
-	@private
-	**/
+Calculation cycle engine
+@method updateImprovedEuler
+@return This
+@chainable
+@private
+**/
 		my.Particle.prototype.updateImprovedEuler = function() {
 			var v1,
 				v2,
@@ -530,12 +552,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Calculation cycle engine
-	@method updateRungeKutter
-	@return This
-	@chainable
-	@private
-	**/
+Calculation cycle engine
+@method updateRungeKutter
+@return This
+@chainable
+@private
+**/
 		my.Particle.prototype.updateRungeKutter = function() {
 			var v1,
 				v2,
@@ -558,12 +580,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Calculation cycle engine - linear particle collisions
-	@method linearCollide
-	@return This
-	@chainable
-	@private
-	**/
+Calculation cycle engine - linear particle collisions
+@method linearCollide
+@return This
+@chainable
+@private
+**/
 		my.Particle.prototype.linearCollide = function(b) {
 			var normal,
 				relVelocity,
@@ -582,14 +604,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Create a new Spring object and add it to this, and another, Particle objects' springs array
+Create a new Spring object and add it to this, and another, Particle objects' springs array
 
-	Argument can be either a PARTICLENAME String, or an Object which includes an __end__ attribute set to a PARTICLENAME String
-	@method addSpring
-	@param {Object} items Object consisting of key:value attributes; alternatively, use a PARTICLENAME String
-	@return This
-	@chainable
-	**/
+Argument can be either a PARTICLENAME String, or an Object which includes an __end__ attribute set to a PARTICLENAME String
+@method addSpring
+@param {Object} items Object consisting of key:value attributes; alternatively, use a PARTICLENAME String
+@return This
+@chainable
+**/
 		my.Particle.prototype.addSpring = function(items) {
 			var mySpring,
 				end,
@@ -601,14 +623,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 				end = items;
 				arg.start = this.name;
 				arg.end = items;
-				mySpring = my.newSpring(arg);
+				mySpring = my.makeSpring(arg);
 			}
 			else {
 				items = my.safeObject(items);
 				end = items.end || false;
 				if (end && my.entity[end]) {
 					items.start = this.name;
-					mySpring = my.newSpring(items);
+					mySpring = my.makeSpring(items);
 				}
 			}
 			if (mySpring) {
@@ -618,11 +640,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Delete all springs associated with this Particle
-	@method removeSprings
-	@return This
-	@chainable
-	**/
+Delete all springs associated with this Particle
+@method removeSprings
+@return This
+@chainable
+**/
 		my.Particle.prototype.removeSprings = function() {
 			var i,
 				iz,
@@ -634,12 +656,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Delete a named Spring object from this Particle
-	@method removeSpringsTo
-	@param {String} item SPRINGNAME String
-	@return This
-	@chainable
-	**/
+Delete a named Spring object from this Particle
+@method removeSpringsTo
+@param {String} item SPRINGNAME String
+@return This
+@chainable
+**/
 		my.Particle.prototype.removeSpringsTo = function(item) {
 			var i,
 				iz,
@@ -672,26 +694,26 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.pushUnique(my.sectionlist, 'spring');
 		my.pushUnique(my.nameslist, 'springnames');
 		/**
-	# Spring
+# Spring
 
-	## Instantiation
+## Instantiation
 
-	* scrawl.newSpring()
-	* Particle.addSpring()
+* scrawl.makeSpring()
+* Particle.addSpring()
 
-	## Purpose
+## Purpose
 
-	* Defines a Spring object connecting two Particle objects
+* Defines a Spring object connecting two Particle objects
 
-	## Access
+## Access
 
-	* scrawl.spring.SPRINGNAME - for the Spring object
+* scrawl.spring.SPRINGNAME - for the Spring object
 
-	@class Spring
-	@constructor
-	@extends Base
-	@param {Object} [items] Key:value Object argument for setting attributes
-	**/
+@class Spring
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Spring = function Spring(items) {
 			var b1,
 				b2,
@@ -714,8 +736,8 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 					this.restLength = r.getMagnitude();
 				}
 				this.currentLength = items.currentLength || this.restLength;
-				this.force = my.newVector();
-				this.work.force = my.newVector();
+				this.force = my.makeVector();
+				this.work.force = my.makeVector();
 				my.spring[this.name] = this;
 				my.pushUnique(my.springnames, this.name);
 				return this;
@@ -724,68 +746,68 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Spring.prototype = Object.create(my.Base.prototype);
 		/**
-	@property type
-	@type String
-	@default 'Spring'
-	@final
-	**/
+@property type
+@type String
+@default 'Spring'
+@final
+**/
 		my.Spring.prototype.type = 'Spring';
 		my.Spring.prototype.classname = 'springnames';
 		my.d.Spring = {
 			/**
-	First Particle PARTICLENAME
-	@property start
-	@type String
-	@default ''
-	**/
+First Particle PARTICLENAME
+@property start
+@type String
+@default ''
+**/
 			start: '',
 			/**
-	Second Particle PARTICLENAME
-	@property end
-	@type String
-	@default ''
-	**/
+Second Particle PARTICLENAME
+@property end
+@type String
+@default ''
+**/
 			end: '',
 			/**
-	Spring constant
-	@property springConstant
-	@type Number
-	@default 1000
-	**/
+Spring constant
+@property springConstant
+@type Number
+@default 1000
+**/
 			springConstant: 1000,
 			/**
-	Spring damper constant
-	@property damperConstant
-	@type Number
-	@default 100
-	**/
+Spring damper constant
+@property damperConstant
+@type Number
+@default 100
+**/
 			damperConstant: 100,
 			/**
-	Rest length, in pixels, between the Spring object's two Particle objects
-	@property restLength
-	@type Number
-	@default 1
-	**/
+Rest length, in pixels, between the Spring object's two Particle objects
+@property restLength
+@type Number
+@default 1
+**/
 			restLength: 1,
 			/**
-	Current length, in pixels, between the Spring object's two Particle objects
+Current length, in pixels, between the Spring object's two Particle objects
 
-	Recalculated as part of each  calculation cycle iteration
-	@property currentLength
-	@type Number
-	@default 1
-	@private
-	**/
+Recalculated as part of each  calculation cycle iteration
+@property currentLength
+@type Number
+@default 1
+@private
+**/
 			currentLength: 1,
 			/**
-	Vector representing the Spring object's current force on its Particles
+Vector representing the Spring object's current force on its Particles
 
-	Recalculated as part of each  calculation cycle iteration
-	@property force
-	@type Vector
-	@default Zero value vector
-	@private
-	**/
+Recalculated as part of each  calculation cycle iteration
+@property force
+@type Vector
+@default Zero value vector
+@private
+**/
 			force: {
 				x: 0,
 				y: 0,
@@ -794,12 +816,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.mergeInto(my.d.Spring, my.d.Scrawl);
 		/**
-	Calculate the force exerted by the spring for this calculation cycle iteration
-	@method update
-	@return This
-	@chainable
-	@private
-	**/
+Calculate the force exerted by the spring for this calculation cycle iteration
+@method update
+@return This
+@chainable
+@private
+**/
 		my.Spring.prototype.update = function() {
 			var vr,
 				r,
@@ -813,10 +835,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Remove this Spring from its Particle objects, and from the scrawl library
-	@method kill
-	@return Always true
-	**/
+Remove this Spring from its Particle objects, and from the scrawl library
+@method kill
+@return Always true
+**/
 		my.Spring.prototype.kill = function() {
 			my.removeItem(my.entity[this.start].springs, this.name);
 			my.removeItem(my.entity[this.end].springs, this.name);
@@ -828,25 +850,25 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		my.pushUnique(my.sectionlist, 'force');
 		my.pushUnique(my.nameslist, 'forcenames');
 		/**
-	# Force
+# Force
 
-	## Instantiation
+## Instantiation
 
-	* scrawl.newForce()
+* scrawl.makeForce()
 
-	## Purpose
+## Purpose
 
-	* Defines a Force function that can calculate forces on Particle objects
+* Defines a Force function that can calculate forces on Particle objects
 
-	Two forces are pre-defined by scrawl:
+Two forces are pre-defined by scrawl:
 
-	* __scrawl.force.gravity__ - calculates the gravitational force acting on a Particle, as determined by the _scrawl.physics.gravity_ value and the Particle's _mass_
-	* __scrawl.force.drag__ - calculates the air drag force acting on a Particle, as determined by the scrawl.physics.airDensity value, and the Particle's _area_ and _drag_ attribute values
-	@class Force
-	@constructor
-	@extends Base
-	@param {Object} [items] Key:value Object argument for setting attributes
-	**/
+* __scrawl.force.gravity__ - calculates the gravitational force acting on a Particle, as determined by the _scrawl.physics.gravity_ value and the Particle's _mass_
+* __scrawl.force.drag__ - calculates the air drag force acting on a Particle, as determined by the scrawl.physics.airDensity value, and the Particle's _area_ and _drag_ attribute values
+@class Force
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Force = function Force(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
@@ -857,50 +879,50 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Force.prototype = Object.create(my.Base.prototype);
 		/**
-	@property type
-	@type String
-	@default 'Force'
-	@final
-	**/
+@property type
+@type String
+@default 'Force'
+@final
+**/
 		my.Force.prototype.type = 'Force';
 		my.Force.prototype.classname = 'forcenames';
 		my.d.Force = {
 			/**
-	Anonymous function for calculating a force on a Particle
+Anonymous function for calculating a force on a Particle
 
-	Functions need to be in the form:
+Functions need to be in the form:
 
-		function(ball){
-			//get or build a Vector object to hold the result
-			var result = scrawl.newVector();	//creating the vector
-			var result = scrawl.workphys.v1;	//using an existing work vector: scrawl.workphys.v1 to v5
+	function(ball){
+		//get or build a Vector object to hold the result
+		var result = scrawl.makeVector();	//creating the vector
+		var result = scrawl.workphys.v1;	//using an existing work vector: scrawl.workphys.v1 to v5
 
-			//calculate the force - Particle attributes are available via the _ball_ argument
-			
-			//add the force to the Particle's load Vector
-			ball.load.vectorAdd(result);
-			}
+		//calculate the force - Particle attributes are available via the _ball_ argument
+		
+		//add the force to the Particle's load Vector
+		ball.load.vectorAdd(result);
+		}
 
-	@property fn
-	@type Function
-	@default function(){}
-	**/
+@property fn
+@type Function
+@default function(){}
+**/
 			fn: function() {},
 		};
 		my.mergeInto(my.d.Force, my.d.Scrawl);
 		/**
-	Calculate the force for this calculation cycle iteration
-	@method run
-	@return force Vector, as defined in the force function
-	**/
+Calculate the force for this calculation cycle iteration
+@method run
+@return force Vector, as defined in the force function
+**/
 		my.Force.prototype.run = function(item) {
 			return this.fn(item);
 		};
 		/**
-	Remove this Force from the scrawl library
-	@method kill
-	@return Always true
-	**/
+Remove this Force from the scrawl library
+@method kill
+@return Always true
+**/
 		my.Force.prototype.kill = function() {
 			delete my.force[this.name];
 			my.removeItem(my.forcenames, this.name);

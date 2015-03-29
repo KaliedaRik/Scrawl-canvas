@@ -15,7 +15,7 @@ var mycode = function() {
 		star,
 		box;
 
-	scrawl.newRadialGradient({
+	scrawl.makeRadialGradient({
 		name: 'gradient',
 		startX: '50%',
 		endX: '50%',
@@ -73,7 +73,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			if (!scrawl.isBetween((star.scale + myScale), maxScale, minScale, true)) {
 				myScale = -myScale;

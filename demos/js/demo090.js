@@ -45,7 +45,7 @@ var mycode = function() {
 		updateClock;
 
 	//define designs (colors)
-	myColor = scrawl.newColor({
+	myColor = scrawl.makeColor({
 		a: 1,
 		random: true,
 	});
@@ -155,7 +155,7 @@ var mycode = function() {
 			count++;
 		}
 		for (i = 0; i < wheels; i++) {
-			myShape = scrawl.newWheel({
+			myShape = scrawl.makeWheel({
 				startX: (Math.floor(Math.random() * 140)) + 50,
 				startY: (Math.floor(Math.random() * 140)) + 50,
 				lineWidth: Math.floor((Math.random() * 6) + 1),
@@ -191,7 +191,7 @@ var mycode = function() {
 				stop: i + 0.005
 			});
 		}
-		scrawl.newRadialGradient({
+		scrawl.makeRadialGradient({
 			name: 'myradial',
 			startX: '50%',
 			startY: '50%',
@@ -204,7 +204,7 @@ var mycode = function() {
 			shift: 0.0002,
 			autoUpdate: true,
 		});
-		backplate = scrawl.newWheel({
+		backplate = scrawl.makeWheel({
 			radius: 240,
 			startX: '50%',
 			startY: '50%',
@@ -212,7 +212,7 @@ var mycode = function() {
 			fillStyle: 'myradial',
 			method: 'fill',
 		});
-		scrawl.newPicture({
+		scrawl.makePicture({
 			name: 'segment',
 			source: 'kaliedoscopeBackground',
 			method: 'fill',
@@ -226,7 +226,7 @@ var mycode = function() {
 			copyHeight: 235,
 			order: 1,
 		});
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'stencil',
 			startX: 60,
 			startY: 240,
@@ -239,7 +239,7 @@ var mycode = function() {
 			order: 0,
 			group: 'kaliedoscopeSegment',
 		});
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'clockButton',
 			startX: 250,
 			startY: 250,
@@ -249,7 +249,7 @@ var mycode = function() {
 			order: 8,
 			group: 'clock',
 		});
-		entityPie = scrawl.newPicture({
+		entityPie = scrawl.makePicture({
 			name: 'kaliedoscope',
 			source: 'kaliedoscopeSegment',
 			method: 'fill',
@@ -261,7 +261,7 @@ var mycode = function() {
 			handleX: 'center',
 			handleY: 'bottom',
 		});
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'rimBase',
 			pivot: 'clockButton',
 			radius: 240,
@@ -283,7 +283,7 @@ var mycode = function() {
 			group: 'clock',
 			order: 4,
 		});
-		hourHand = scrawl.newShape({
+		hourHand = scrawl.makeShape({
 			name: 'hour',
 			pivot: 'clockButton',
 			method: 'fill',
@@ -360,7 +360,7 @@ var mycode = function() {
 	doClock();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			updateClock();
 

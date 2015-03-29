@@ -19,13 +19,13 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo056');
 
 	//define designs (pattern)
-	scrawl.newPattern({
+	scrawl.makePattern({
 		name: 'marble',
 		source: 'marble',
 	});
 
 	//define entity
-	hello = scrawl.newPhrase({
+	hello = scrawl.makePhrase({
 		name: 'hello',
 		text: 'Hello, from Scrawl!',
 		weight: 'bold',
@@ -40,7 +40,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			delta = (delta > 180) ? delta - 359 : delta + 1;
 			hello.set({

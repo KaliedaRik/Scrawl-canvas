@@ -18,16 +18,16 @@ var mycode = function() {
 		here;
 
 	//group
-	myBlocks = scrawl.newGroup({
+	myBlocks = scrawl.makeGroup({
 		name: 'blocks',
 	});
 
 	//designs
-	scrawl.newColor({
+	scrawl.makeColor({
 		name: 'mycolor',
 	});
 
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'mygradient',
 		setToEntity: true,
 		endY: 0,
@@ -98,7 +98,7 @@ var mycode = function() {
 	});
 
 	//entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'block1',
 		startX: 25,
 		startY: 25,
@@ -116,7 +116,7 @@ var mycode = function() {
 	});
 
 	//tweens
-	colorTween = scrawl.newTween({
+	colorTween = scrawl.makeTween({
 		targets: scrawl.design.mycolor,
 		start: {
 			r: 0,
@@ -135,7 +135,7 @@ var mycode = function() {
 		autoReverseAndRun: true,
 	});
 
-	gradientTween = scrawl.newTween({
+	gradientTween = scrawl.makeTween({
 		targets: scrawl.design.mygradient,
 		end: {
 			shift: 0.025
@@ -165,10 +165,18 @@ var mycode = function() {
 			}
 		}
 	};
-	myCanvas.addEventListener('click', startNewTween, false);
+	scrawl.addListener('up', startNewTween, myCanvas);
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, myCanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			scrawl.render();

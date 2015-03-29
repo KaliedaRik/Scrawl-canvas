@@ -17,7 +17,7 @@ var mycode = function() {
 		moveEntitys;
 
 	//bouncing block
-	myEntity = scrawl.newBlock({
+	myEntity = scrawl.makeBlock({
 		name: 'myblock',
 		startX: 375,
 		startY: 187,
@@ -40,7 +40,7 @@ var mycode = function() {
 	});
 
 	//pin to mark start/rotate/reflect point on bouncing block
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		pivot: 'myblock',
 		radius: 4,
 		fillStyle: 'blue',
@@ -53,7 +53,7 @@ var mycode = function() {
 	});
 
 	//block used for building cell field image
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 50,
 		startY: 50,
 		width: 650,
@@ -86,7 +86,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveEntitys();
 			scrawl.render();

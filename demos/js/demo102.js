@@ -17,24 +17,24 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo102');
 
 	//define filters
-	scrawl.newMatrixFilter({
+	scrawl.makeMatrixFilter({
 		name: 'myMatrix',
 		data: [-2, -1, 0, -1, 1, 1, 0, 1, 2],
 	});
-	scrawl.newChannelStepFilter({
+	scrawl.makeChannelStepFilter({
 		name: 'myChannelStep',
 		red: 64,
 		green: 64,
 		blue: 64,
 	});
-	scrawl.newPixelateFilter({
+	scrawl.makePixelateFilter({
 		name: 'myPixelate',
 		width: 8,
 		height: 8,
 	});
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'background',
 		width: 400,
 		height: 400,
@@ -44,7 +44,7 @@ var mycode = function() {
 		copyHeight: 400,
 		source: 'flower',
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'eWheel',
 		radius: 200,
 		method: 'none',
@@ -103,7 +103,7 @@ var mycode = function() {
 		testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
 		//hide-end
 	};
-	canvas.addEventListener('click', toggleState, false);
+	scrawl.addListener('up', toggleState, canvas);
 
 	//hide-start
 	testNow = Date.now();

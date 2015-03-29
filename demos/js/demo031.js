@@ -17,8 +17,6 @@ var mycode = function() {
 		totalBunnies = 0,
 		group,
 		bunny,
-		//moveEntitys,
-		//checkBounds,
 		myEntity,
 		coord,
 		hits,
@@ -30,12 +28,12 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo031');
 
 	//define groups
-	group = scrawl.newGroup({
+	group = scrawl.makeGroup({
 		name: 'mygroup',
 	});
 
 	//define entitys
-	scrawl.newBlock({ //cell collision zone
+	scrawl.makeBlock({ //cell collision zone
 		startX: 5,
 		startY: 5,
 		width: 590,
@@ -45,7 +43,7 @@ var mycode = function() {
 	});
 	scrawl.buildFields();
 
-	bunny = scrawl.newPicture({ //bunny entity template
+	bunny = scrawl.makePicture({ //bunny entity template
 		name: 'bunny',
 		source: 'bunny',
 		handleX: 'center',
@@ -91,13 +89,12 @@ var mycode = function() {
 		}
 		totalBunnies += 10;
 	};
-	canvas.addEventListener('mouseup', addBunnies, false);
-
+	scrawl.addListener('up', addBunnies, canvas);
 	//initialize scene
 	addBunnies();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveBunnies();
 			pad.render();

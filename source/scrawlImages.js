@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -44,50 +42,66 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		'use strict';
 
 		/**
-    # window.scrawl
+# window.scrawl
 
-    scrawlImages module adaptions to the Scrawl library object
+scrawlImages module adaptions to the Scrawl library object
 
-    ## New library sections
+## New library sections
 
-    * scrawl.image - for ScrawlImage objects
-    * scrawl.img - linking to copies of DOM &lt;img&gt; elements - links to the original elements are stored in scrawl.object
-    * scrawl.anim - for AnimSheet objects
+* scrawl.image - for ScrawlImage objects
+* scrawl.img - linking to copies of DOM &lt;img&gt; elements - links to the original elements are stored in scrawl.object
+* scrawl.anim - for AnimSheet objects
 
-    @class window.scrawl_Images
-    **/
+@class window.scrawl_Images
+**/
 
 		/**
-    A __factory__ function to generate new Pattern objects
-    @method newPattern
-    @param {Object} items Key:value Object argument for setting attributes
-    @return Pattern object
-    **/
+Alias for makePattern()
+@method newPattern
+@deprecated
+**/
 		my.newPattern = function(items) {
+			return my.makePattern(items);
+		};
+		/**
+Alias for makePicture()
+@method newPicture
+@deprecated
+**/
+		my.newPicture = function(items) {
+			return my.makePicture(items);
+		};
+		/**
+A __factory__ function to generate new Pattern objects
+@method makePattern
+@param {Object} items Key:value Object argument for setting attributes
+@return Pattern object
+**/
+		my.makePattern = function(items) {
 			return new my.Pattern(items);
 		};
 		/**
-    A __factory__ function to generate new Picture entitys
-    @method newPicture
-    @param {Object} items Key:value Object argument for setting attributes
-    @return Picture entity object
-    **/
-		my.newPicture = function(items) {
+A __factory__ function to generate new Picture entitys
+@method makePicture
+@param {Object} items Key:value Object argument for setting attributes
+@return Picture entity object
+**/
+		my.makePicture = function(items) {
 			return new my.Picture(items);
 		};
 
 		/**
-    A __factory__ function to convert a entity into a Picture entity
+A __factory__ function to convert a entity into a Picture entity
 
-    Argument attributes can include any entity positioning and styling values, alongside the following flag:
+Argument attributes can include any entity positioning and styling values, alongside the following flag:
 
-    * __convert__ - when set to true, existing entity will be deleted; default: false
+* __convert__ - when set to true, existing entity will be deleted; default: false
 
-    If no name attribute is supplied in the argument object, the new Picture entity will be given the name: SPRITENAME+'_picture'
-    @method Entity.convertToPicture
-    @param {Object} items Key:value Object argument for setting attributes
-    @return Picture entity object
-    **/
+If no name attribute is supplied in the argument object, the new Picture entity will be given the name: SPRITENAME+'_picture'
+@method Entity.convertToPicture
+@param {Object} items Key:value Object argument for setting attributes
+@return Picture entity object
+**/
 		my.Entity.prototype.convertToPicture = function(items) {
 			var image,
 				cell,
@@ -104,17 +118,17 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return my.doConvert(image, items);
 		};
 		/**
-    A __factory__ function to convert a group of entitys into a single Picture entity
+A __factory__ function to convert a group of entitys into a single Picture entity
 
-    Argument attributes can include any entity positioning and styling values, alongside the following flag:
+Argument attributes can include any entity positioning and styling values, alongside the following flag:
 
-    * __convert__ - when set to true, existing entitys in the group will be deleted; default: false
+* __convert__ - when set to true, existing entitys in the group will be deleted; default: false
 
-    If no name attribute is supplied in the argument object, the new Picture entity will be given the name: GROUPNAME+'_entity'
-    @method Group.convertGroupToPicture
-    @param {Object} items Key:value Object argument for setting attributes
-    @return Picture entity object; false if no entitys contained in group
-    **/
+If no name attribute is supplied in the argument object, the new Picture entity will be given the name: GROUPNAME+'_entity'
+@method Group.convertGroupToPicture
+@param {Object} items Key:value Object argument for setting attributes
+@return Picture entity object; false if no entitys contained in group
+**/
 		my.Group.prototype.convertGroupToPicture = function(items) {
 			var image,
 				cell,
@@ -134,11 +148,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Helper function for convert functions
-    @method prepareConvert
-    @return ImageData object
-    @private
-    **/
+Helper function for convert functions
+@method prepareConvert
+@return ImageData object
+@private
+**/
 		my.prepareConvert = function(cell, ctx, obj) {
 			var image,
 				data,
@@ -175,11 +189,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return image;
 		};
 		/**
-    Helper function for convert functions
-    @method doConvert
-    @return Picture entity object
-    @private
-    **/
+Helper function for convert functions
+@method doConvert
+@return Picture entity object
+@private
+**/
 		my.doConvert = function(image, items) {
 			my.imageCanvas.width = image.width;
 			my.imageCanvas.height = image.height;
@@ -187,41 +201,41 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			items.url = my.imageCanvas.toDataURL();
 			items.width = image.width;
 			items.height = image.height;
-			image = new my.Image(items);
-			return my.newPicture(items);
+			image = my.makeImage(items);
+			return my.makePicture(items);
 		};
 		/**
-    # Pattern
+# Pattern
 
-    ## Instantiation
+## Instantiation
 
-    * scrawl.newPattern()
+* scrawl.makePattern()
 
-    ## Purpose
+## Purpose
 
-    * Defines a pattern
-    * Used with entity.strokeStyle and entity.fillStyle attributes
+* Defines a pattern
+* Used with entity.strokeStyle and entity.fillStyle attributes
 
-    Note that a pattern image will always start at the entity's rotation/reflection (start vector) position, extending in all directions. To move a entity over a 'static' (cell-bound) pattern, more inventive solutions need to be found - for instance a combination of Picture entitys, dedicated cells and the 'source-in' globalCompositeOperation attribute.
+Note that a pattern image will always start at the entity's rotation/reflection (start vector) position, extending in all directions. To move a entity over a 'static' (cell-bound) pattern, more inventive solutions need to be found - for instance a combination of Picture entitys, dedicated cells and the 'source-in' globalCompositeOperation attribute.
 
-    Patterns are not restricted to images. A pattern can also be sourced from another cell (canvas element) or even a video element.
+Patterns are not restricted to images. A pattern can also be sourced from another cell (canvas element) or even a video element.
 
-    ## Access
+## Access
 
-    * scrawl.design.PATTERNNAME - for the Pattern design object
+* scrawl.design.PATTERNNAME - for the Pattern design object
 
-    @class Pattern
-    @constructor
-    @extends Base
-    @param {Object} [items] Key:value Object argument for setting attributes
-    **/
+@class Pattern
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Pattern = function(items) {
 			var temp;
 			if (my.isa(items, 'obj') && my.xt(items.url) && !my.xt(items.dynamic)) {
 				items.dynamic = true;
-				temp = my.newImage(items);
+				temp = my.makeImage(items);
 				items.source = temp.name;
-				return my.newPattern(items);
+				return my.makePattern(items);
 			}
 			else {
 				items = my.safeObject(items);
@@ -237,59 +251,59 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Pattern.prototype = Object.create(my.Base.prototype);
 		/**
-    @property type
-    @type String
-    @default 'Pattern'
-    @final
-    **/
+@property type
+@type String
+@default 'Pattern'
+@final
+**/
 		my.Pattern.prototype.type = 'Pattern';
 		my.Pattern.prototype.classname = 'designnames';
 		my.d.Pattern = {
 			/**
-    Drawing parameter
-    @property repeat
-    @type String
-    @default 'repeat'
-    **/
+Drawing parameter
+@property repeat
+@type String
+@default 'repeat'
+**/
 			repeat: 'repeat',
 			/**
-    CELLNAME, VIDEONAME or IMAGENAME of Pattern source data
-    @property source
-    @type String
-    @default ''
-    **/
+CELLNAME, VIDEONAME or IMAGENAME of Pattern source data
+@property source
+@type String
+@default ''
+**/
 			source: '',
 			/**
-    Drawing flag - when set to true, force the pattern to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
-    @property autoUpdate
-    @type Boolean
-    @default false
-    **/
+Drawing flag - when set to true, force the pattern to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities
+@property autoUpdate
+@type Boolean
+@default false
+**/
 			autoUpdate: false,
 			/**
-    Asynchronous loading of image file from the server - path/to/image file
+Asynchronous loading of image file from the server - path/to/image file
 
-    Used only with __scrawl.newPattern()__ and __Pattern.clone()__ operations. This attribute is not retained
-    @property url
-    @type String
-    @default ''
-    **/
+Used only with __scrawl.makePattern()__ and __Pattern.clone()__ operations. This attribute is not retained
+@property url
+@type String
+@default ''
+**/
 			/**
-    Asynchronous loading of image file from the server - function to run once image has successfully loaded
+Asynchronous loading of image file from the server - function to run once image has successfully loaded
 
-    Used only with __scrawl.newPattern()__ and __Pattern.clone()__ operations. This attribute is not retained
-    @property callback
-    @type Function
-    @default undefined
-    **/
+Used only with __scrawl.makePattern()__ and __Pattern.clone()__ operations. This attribute is not retained
+@property callback
+@type Function
+@default undefined
+**/
 			callback: false,
 		};
 		my.mergeInto(my.d.Pattern, my.d.Base);
 		/**
-    Constructor/set helper
-    @method getSourceType
-    @return String - one from: 'image', 'cell', 'video'; false on failure to identify source type
-    **/
+Constructor/set helper
+@method getSourceType
+@return String - one from: 'image', 'cell', 'video'; false on failure to identify source type
+**/
 		my.Pattern.prototype.getSourceType = function() {
 			if (my.contains(my.imagenames, this.source)) {
 				return 'image';
@@ -303,12 +317,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return false;
 		};
 		/**
-    Augments Base.set()
-    @method set
-    @param {Object} items Object consisting of key:value attributes
-    @return This
-    @chainable
-    **/
+Augments Base.set()
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		my.Pattern.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
 			this.sourceType = this.getSourceType();
@@ -316,11 +330,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Returns &lt;canvas&gt; element's contenxt engine's pattern object, or 'rgba(0,0,0,0)' on failure
-    @method getData
-    @return JavaScript pattern object, or String
-    @private
-    **/
+Returns &lt;canvas&gt; element's contenxt engine's pattern object, or 'rgba(0,0,0,0)' on failure
+@method getData
+@return JavaScript pattern object, or String
+@private
+**/
 		my.Pattern.prototype.getData = function(entity, cell) {
 			if (!this.sourceType) {
 				this.sourceType = this.getSourceType();
@@ -329,12 +343,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return (my.xt(my.dsn[this.name])) ? my.dsn[this.name] : 'rgba(0,0,0,0)';
 		};
 		/**
-    Builds &lt;canvas&gt; element's contenxt engine's pattern object
-    @method makeDesign
-    @return This
-    @chainable
-    @private
-    **/
+Builds &lt;canvas&gt; element's contenxt engine's pattern object
+@method makeDesign
+@return This
+@chainable
+@private
+**/
 		my.Pattern.prototype.makeDesign = function(entity, cell) {
 			var temp,
 				engine;
@@ -368,10 +382,10 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-    Remove this pattern from the scrawl library
-    @method remove
-    @return Always true
-    **/
+Remove this pattern from the scrawl library
+@method remove
+@return Always true
+**/
 		my.Pattern.prototype.remove = function() {
 			delete my.dsn[this.name];
 			delete my.design[this.name];
@@ -379,49 +393,49 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return true;
 		};
 		/**
-    Alias for Pattern.makeDesign()
-    @method update
-    @return This
-    @chainable
-    **/
+Alias for Pattern.makeDesign()
+@method update
+@return This
+@chainable
+**/
 		my.Pattern.prototype.update = function(entity, cell) {
 			return this.makeDesign(entity, cell);
 		};
 
 		/**
-    # Picture
+# Picture
 
-    ## Instantiation
+## Instantiation
 
-    * scrawl.newPicture()
+* scrawl.makePicture()
 
-    ## Purpose
+## Purpose
 
-    * Defines rectangular image-based objects for displaying on a Cell's canvas
-    * Used to display both static and entity sheet image animations
-    * Links to details of an image's data; can use image data (rgba data) during collision detection
-    * Can handle video input (experimental)
-    * Performs 'rect' and 'drawImage' drawing operations on canvases
+* Defines rectangular image-based objects for displaying on a Cell's canvas
+* Used to display both static and entity sheet image animations
+* Links to details of an image's data; can use image data (rgba data) during collision detection
+* Can handle video input (experimental)
+* Performs 'rect' and 'drawImage' drawing operations on canvases
 
-    ## Access
+## Access
 
-    * scrawl.entity.PICTURENAME - for the Picture entity object
+* scrawl.entity.PICTURENAME - for the Picture entity object
 
-    @class Picture
-    @constructor
-    @extends Entity
-    @uses AnimSheet
-    @param {Object} [items] Key:value Object argument for setting attributes
-    **/
+@class Picture
+@constructor
+@extends Entity
+@uses AnimSheet
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Picture = function(items) {
 			var temp,
 				tempV,
 				src;
 			if (my.isa(items, 'obj') && my.xt(items.url) && !my.xt(items.dynamic)) {
 				items.dynamic = true;
-				temp = my.newImage(items);
+				temp = my.makeImage(items);
 				items.source = temp.name;
-				return my.newPicture(items);
+				return my.makePicture(items);
 			}
 			else {
 				items = my.safeObject(items);
@@ -441,12 +455,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 						this.source = items.source;
 						this.imageType = this.sourceImage();
 						tempV = my.safeObject(items.copy);
-						this.copy = my.newVector({
+						this.copy = my.makeVector({
 							x: my.xtGet(items.copyX, tempV.x, 0),
 							y: my.xtGet(items.copyY, tempV.y, 0),
 							name: this.type + '.' + this.name + '.copy'
 						});
-						this.work.copy = my.newVector({
+						this.work.copy = my.makeVector({
 							name: this.type + '.' + this.name + '.work.copy'
 						});
 						this.registerInLibrary();
@@ -564,7 +578,7 @@ Local target data
 			/**
 Asynchronous loading of image file from the server - path/to/image file
 
-Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
+Used only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This attribute is not retained
 @property url
 @type String
 @default ''
@@ -572,7 +586,7 @@ Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This 
 			/**
 Asynchronous loading of image file from the server - function to run once image has successfully loaded
 
-Used only with __scrawl.newPicture()__ and __Picture.clone()__ operations. This attribute is not retained
+Used only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This attribute is not retained
 @property callback
 @type Function
 @default undefined
@@ -765,12 +779,12 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Augments Entity.clone()
-    @method clone
-    @param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
-    @return Cloned object
-    @chainable
-    **/
+Augments Entity.clone()
+@method clone
+@param {Object} items Object consisting of key:value attributes, used to update the clone's attributes with new values
+@return Cloned object
+@chainable
+**/
 		my.Picture.prototype.clone = function(items) {
 			var a = my.Entity.prototype.clone.call(this, items);
 			items = my.safeObject(items);
@@ -780,12 +794,12 @@ Picture.setPaste update pasteData object values
 			return a;
 		};
 		/**
-    Clone helper function
-    @method fitToImageSize
-    @return This
-    @chainable
-    @private
-    **/
+Clone helper function
+@method fitToImageSize
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.fitToImageSize = function() {
 			var img;
 			if (this.imageType === 'img') {
@@ -800,11 +814,11 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Constructor and clone helper function
-    @method sourceImage
-    @return Correct imageType attribute value for this entity
-    @private
-    **/
+Constructor and clone helper function
+@method sourceImage
+@return Correct imageType attribute value for this entity
+@private
+**/
 		my.Picture.prototype.sourceImage = function() {
 			if (my.contains(my.videonames, this.source)) {
 				return 'video';
@@ -822,14 +836,14 @@ Picture.setPaste update pasteData object values
 			return false;
 		};
 		/**
-    Stamp helper function - perform a 'clip' method draw
-    @method clip
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.clip = function(ctx, cell) {
 			var here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
@@ -839,27 +853,27 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'none' method draw
-    @method none
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'none' method draw
+@method none
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.none = function(ctx, cell) {
 			this.prepareStamp();
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'clear' method draw
-    @method clear
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.clear = function(ctx, cell) {
 			var here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
@@ -867,14 +881,14 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'clearWithBackground' method draw
-    @method clearWithBackground
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.clearWithBackground = function(ctx, cell) {
 			var here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
@@ -889,14 +903,14 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'draw' method draw
-    @method draw
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.draw = function(ctx, cell) {
 			var here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
@@ -905,14 +919,14 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'fill' method draw
-    @method fill
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.fill = function(ctx, cell) {
 			var here,
 				data = this.getImage();
@@ -925,14 +939,14 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'drawFill' method draw
-    @method drawFill
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.drawFill = function(ctx, cell) {
 			var here,
 				data = this.getImage();
@@ -947,14 +961,14 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'fillDraw' method draw
-    @method fillDraw
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.fillDraw = function(ctx, cell) {
 			var here,
 				data = this.getImage();
@@ -969,14 +983,14 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'sinkInto' method draw
-    @method sinkInto
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.sinkInto = function(ctx, cell) {
 			var here,
 				data = this.getImage();
@@ -990,14 +1004,14 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Stamp helper function - perform a 'floatOver' method draw
-    @method floatOver
-    @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-    @param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-    @return This
-    @chainable
-    @private
-    **/
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Picture.prototype.floatOver = function(ctx, cell) {
 			var here,
 				data = this.getImage();
@@ -1012,13 +1026,13 @@ Picture.setPaste update pasteData object values
 		};
 
 		/**
-    Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for entity sheet images
+Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for entity sheet images
 
-    Also generates new filtered images, when necessary
-    @method getImage
-    @return Image Object
-    @private
-    **/
+Also generates new filtered images, when necessary
+@method getImage
+@return Image Object
+@private
+**/
 		my.Picture.prototype.getImage = function() {
 			var anim;
 			switch (this.imageType) {
@@ -1040,12 +1054,12 @@ Picture.setPaste update pasteData object values
 			}
 		};
 		/**
-    Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library
-    @method getImageData
-    @param {String} [label] IMAGEDATANAME - default: PICTURENAME_data
-    @return This
-    @chainable
-    **/
+Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library
+@method getImageData
+@param {String} [label] IMAGEDATANAME - default: PICTURENAME_data
+@return This
+@chainable
+**/
 		my.Picture.prototype.getImageData = function(label) {
 			var data;
 			label = (my.xt(label)) ? label : 'data';
@@ -1060,13 +1074,13 @@ Picture.setPaste update pasteData object values
 			return this;
 		};
 		/**
-    Get the pixel color or channel data from Picture object's image at given coordinate
+Get the pixel color or channel data from Picture object's image at given coordinate
 
-    Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha' (default), 'color'
-    @method getImageDataValue
-    @param {Object} items Coordinate Vector or Object
-    @return Color value at coordinate; false if no color found
-    **/
+Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha' (default), 'color'
+@method getImageDataValue
+@param {Object} items Coordinate Vector or Object
+@return Color value at coordinate; false if no color found
+**/
 		my.Picture.prototype.getImageDataValue = function(items) {
 			var data,
 				array,
@@ -1103,19 +1117,19 @@ Picture.setPaste update pasteData object values
 			return false;
 		};
 		/**
-    Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
+Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
 
-    Argument object contains the following attributes:
+Argument object contains the following attributes:
 
-    * __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
-    * __x__ - X coordinate
-    * __y__ - Y coordinate
+* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector
+* __x__ - X coordinate
+* __y__ - Y coordinate
 
-    Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
-    @method checkHit
-    @param {Object} items Argument object
-    @return The first coordinate to fall within the entity's path; false if none fall within the path
-    **/
+Either the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values
+@method checkHit
+@param {Object} items Argument object
+@return The first coordinate to fall within the entity's path; false if none fall within the path
+**/
 		my.Picture.prototype.checkHit = function(items) {
 			var tests = [],
 				hit = [],

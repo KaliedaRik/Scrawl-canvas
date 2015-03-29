@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -39,55 +37,63 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	var scrawl = (function(my) {
 		'use strict';
 		/**
-	# window.scrawl
+# window.scrawl
 
-	scrawlBlock module adaptions to the Scrawl library object
+scrawlBlock module adaptions to the Scrawl library object
 
-	@class window.scrawl_Block
-	**/
+@class window.scrawl_Block
+**/
 
 		/**
-	A __factory__ function to generate new Block entitys
-	@method newBlock
-	@param {Object} items Key:value Object argument for setting attributes
-	@return Block object
-	@example
-		scrawl.newBlock({
-			width: 100,
-			height: 50,
-			startX: 150,
-			startY: 60,
-			fillStyle: 'blue',
-			strokeStyle: 'red',
-			roll: 30,
-			method: 'sinkInto',
-			});
-	**/
+Alias for makeBlock()
+@method newBlock
+@deprecated
+**/
 		my.newBlock = function(items) {
+			return new my.Block(items);
+		};
+		/**
+A __factory__ function to generate new Block entitys
+@method makeBlock
+@param {Object} items Key:value Object argument for setting attributes
+@return Block object
+@example
+	scrawl.makeBlock({
+		width: 100,
+		height: 50,
+		startX: 150,
+		startY: 60,
+		fillStyle: 'blue',
+		strokeStyle: 'red',
+		roll: 30,
+		method: 'sinkInto',
+		});
+**/
+		my.makeBlock = function(items) {
 			return new my.Block(items);
 		};
 
 		/**
-	# Block
+# Block
 
-	## Instantiation
+## Instantiation
 
-	* scrawl.newBlock()
+* scrawl.makeBlock()
 
-	## Purpose
+## Purpose
 
-	* Defines 'rect' objects for displaying on a Cell's canvas
-	* Performs 'rect' based drawing operations on canvases
+* Defines 'rect' objects for displaying on a Cell's canvas
+* Performs 'rect' based drawing operations on canvases
 
-	## Access
+## Access
 
-	* scrawl.entity.BLOCKNAME - for the Block entity object
+* scrawl.entity.BLOCKNAME - for the Block entity object
 
-	@class Block
-	@constructor
-	@extends Entity
-	@param {Object} [items] Key:value Object argument for setting attributes
-	**/
+@class Block
+@constructor
+@extends Entity
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
 		my.Block = function Block(items) {
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
@@ -101,37 +107,37 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		};
 		my.Block.prototype = Object.create(my.Entity.prototype);
 		/**
-	@property type
-	@type String
-	@default 'Block'
-	@final
-	**/
+@property type
+@type String
+@default 'Block'
+@final
+**/
 		my.Block.prototype.type = 'Block';
 		my.Block.prototype.classname = 'entitynames';
 		my.d.Block = {
 			/**
-	Block display - width, in pixels
-	@property localWidth
-	@type Number
-	@default 0
-	**/
+Block display - width, in pixels
+@property localWidth
+@type Number
+@default 0
+**/
 			localWidth: 0,
 			/**
-	Block display - height, in pixels
-	@property localHeight
-	@type Number
-	@default 0
-	**/
+Block display - height, in pixels
+@property localHeight
+@type Number
+@default 0
+**/
 			localHeight: 0,
 		};
 		my.mergeInto(my.d.Block, my.d.Entity);
 		/**
-	Augments Entity.set()
-	@method set
-	@param {Object} items Object consisting of key:value attributes
-	@return This
-	@chainable
-	**/
+Augments Entity.set()
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		my.Block.prototype.set = function(items) {
 			my.Entity.prototype.set.call(this, items);
 			if (my.xto(items.width, items.height, items.scale)) {
@@ -140,12 +146,12 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Augments Entity.set()
-	@method setDelta
-	@param {Object} items Object consisting of key:value attributes
-	@return This
-	@chainable
-	**/
+Augments Entity.set()
+@method setDelta
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
 		my.Block.prototype.setDelta = function(items) {
 			my.Entity.prototype.setDelta.call(this, items);
 			if (my.xto(items.width, items.height, items.scale)) {
@@ -154,11 +160,11 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Augments Entity.set() - sets the local dimensions
-	@method setLocalDimensions
-	@return This
-	@chainable
-	**/
+Augments Entity.set() - sets the local dimensions
+@method setLocalDimensions
+@return This
+@chainable
+**/
 		my.Block.prototype.setLocalDimensions = function() {
 			var cell = my.cell[my.group[this.group].cell];
 			if (my.isa(this.width, 'str')) {
@@ -176,14 +182,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'clip' method draw
-	@method clip
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'clip' method draw
+@method clip
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.clip = function(ctx, cell) {
 			var here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
@@ -193,14 +199,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'clear' method draw
-	@method clear
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'clear' method draw
+@method clear
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.clear = function(ctx, cell) {
 			var here = this.prepareStamp();
 			my.cell[cell].setToClearShape();
@@ -209,14 +215,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'clearWithBackground' method draw
-	@method clearWithBackground
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'clearWithBackground' method draw
+@method clearWithBackground
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.clearWithBackground = function(ctx, cell) {
 			var myCell = my.cell[cell],
 				bg = myCell.get('backgroundColor'),
@@ -237,14 +243,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'draw' method draw
-	@method draw
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'draw' method draw
+@method draw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.draw = function(ctx, cell) {
 			var here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
@@ -253,14 +259,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'fill' method draw
-	@method fill
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'fill' method draw
+@method fill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.fill = function(ctx, cell) {
 			var here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
@@ -269,14 +275,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'drawFill' method draw
-	@method drawFill
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'drawFill' method draw
+@method drawFill
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.drawFill = function(ctx, cell) {
 			var here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
@@ -287,14 +293,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'fillDraw' method draw
-	@method fillDraw
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'fillDraw' method draw
+@method fillDraw
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.fillDraw = function(ctx, cell) {
 			var here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
@@ -305,14 +311,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'sinkInto' method draw
-	@method sinkInto
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'sinkInto' method draw
+@method sinkInto
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.sinkInto = function(ctx, cell) {
 			var here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
@@ -322,14 +328,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'floatOver' method draw
-	@method floatOver
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'floatOver' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.floatOver = function(ctx, cell) {
 			var here = this.prepareStamp();
 			my.cell[cell].setEngine(this);
@@ -339,14 +345,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 			return this;
 		};
 		/**
-	Stamp helper function - perform a 'none' method draw
-	@method floatOver
-	@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-	@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
-	@return This
-	@chainable
-	@private
-	**/
+Stamp helper function - perform a 'none' method draw
+@method floatOver
+@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@return This
+@chainable
+@private
+**/
 		my.Block.prototype.none = function(ctx, cell) {
 			this.prepareStamp();
 			return this;

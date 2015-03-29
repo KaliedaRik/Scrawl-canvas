@@ -31,7 +31,7 @@ var mycode = function() {
 	scrawl.load(entitys);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.group.myentitys.updateEntitysBy({
 				roll: 1,

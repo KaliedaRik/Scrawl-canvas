@@ -21,7 +21,8 @@ var mycode = function() {
 		tweenCounter = 0,
 		tweenReduce,
 		expanded = false,
-		mouseIn, mouseOut, triggerTween;
+		mouseIn, mouseOut, triggerTween,
+		here;
 
 	//prepare elements
 	mystack.set({
@@ -86,7 +87,7 @@ var mycode = function() {
 			expanded = !expanded;
 		}
 	};
-	tweenFadeOutImg = scrawl.newTween({
+	tweenFadeOutImg = scrawl.makeTween({
 		start: {
 			opacity: 1,
 			width: '99%',
@@ -106,7 +107,7 @@ var mycode = function() {
 		duration: 800,
 		callback: tweenReduce,
 	});
-	tweenText = scrawl.newTween({
+	tweenText = scrawl.makeTween({
 		start: {
 			opacity: 0,
 			startY: '70%',
@@ -125,7 +126,7 @@ var mycode = function() {
 		duration: 800,
 		callback: tweenReduce,
 	});
-	tweenTitle = scrawl.newTween({
+	tweenTitle = scrawl.makeTween({
 		start: {
 			opacity: 0,
 			pitch: 90,
@@ -147,7 +148,7 @@ var mycode = function() {
 		duration: 800,
 		callback: tweenReduce,
 	});
-	tweenGrowStack = scrawl.newTween({
+	tweenGrowStack = scrawl.makeTween({
 		start: {
 			scale: 1
 		},
@@ -161,7 +162,7 @@ var mycode = function() {
 		duration: 800,
 		callback: tweenReduce,
 	});
-	tweenGrowRule = scrawl.newTween({
+	tweenGrowRule = scrawl.makeTween({
 		start: {
 			opacity: 0,
 			width: '60%'
@@ -211,7 +212,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		order: 1000,
 		fn: function() {
 
@@ -220,7 +221,8 @@ var mycode = function() {
 				scrawl.renderElements();
 			}
 			else {
-				if (mystack.mouse.active) {
+				here = mystack.getMouse();
+				if (here.active) {
 					mouseIn();
 				}
 				else {

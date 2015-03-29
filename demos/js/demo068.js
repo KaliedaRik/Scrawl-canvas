@@ -19,20 +19,22 @@ var mycode = function() {
 		handleFiles,
 		handleFile,
 		pickupEntity,
-		dropEntity;
+		dropEntity,
+		stopE;
 
 	//define groups
-	background = scrawl.newGroup({
+	background = scrawl.makeGroup({
 		name: 'background',
 		order: 0,
 	});
-	myImages = scrawl.newGroup({
+	myImages = scrawl.makeGroup({
 		name: 'myImages',
 		order: 1,
+		//entitySort: false
 	});
 
 	//define initial entity
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		font: '40pt Arial, sans-serif',
 		text: 'Drag image files\nonto this canvas',
 		startX: 300,
@@ -44,15 +46,19 @@ var mycode = function() {
 	});
 
 	//event listener functions for dragging and dropping files onto canvas
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	drag = function(e) {
-		e.stopPropagation();
-		e.preventDefault();
+		stopE(e);
 	};
 	dragdrop = function(e) {
 		var dt = e.dataTransfer,
 			files = dt.files;
-		e.stopPropagation();
-		e.preventDefault();
+		stopE(e);
 		handleFiles(files);
 	};
 	handleFiles = function(files) {
@@ -63,34 +69,36 @@ var mycode = function() {
 		}
 	};
 	handleFile = function(file, offset) {
-		var reader = new FileReader();
+		var reader = new FileReader(),
+			x, y;
 		reader.onload = function() {
-			scrawl.newPicture({
+			here = pad.getMouse();
+			x = (here) ? here.x : 150;
+			y = (here) ? here.y : 100;
+			scrawl.makePicture({
 				name: file.name,
 				url: reader.result,
 				strokeStyle: 'red',
 				method: 'fillDraw',
-				startX: here.x + (offset * 10),
-				startY: here.y + (offset * 10),
+				startX: x + (offset * 10),
+				startY: y + (offset * 10),
 				width: 150,
 				height: 100,
 				handleX: 'center',
 				handleY: 'center',
 				group: 'myImages',
+				order: myImages.entitys.length
 			});
 		};
 		reader.readAsDataURL(file);
 	};
-	canvas.addEventListener("dragenter", drag, false);
-	canvas.addEventListener("dragover", drag, false);
-	canvas.addEventListener("drop", dragdrop, false);
+	scrawl.addNativeListener(['dragenter', 'dragover'], drag, canvas);
+	scrawl.addNativeListener('drop', dragdrop, canvas);
 
 	//event listeners for dragging and dropping entitys within the canvas
 	pickupEntity = function(e) {
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
+		stopE(e);
+		here = pad.getMouse();
 		if (currentEntity) {
 			dropEntity();
 		}
@@ -100,26 +108,25 @@ var mycode = function() {
 		}
 	};
 	dropEntity = function(e) {
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
+		stopE(e);
 		if (currentEntity) {
 			currentEntity.dropEntity();
 			currentEntity = false;
 		}
 	};
-	canvas.addEventListener('mousedown', pickupEntity, false);
-	document.body.addEventListener('mouseup', dropEntity, false);
-	document.body.addEventListener('mouseleave', dropEntity, false);
+	scrawl.addListener('down', pickupEntity, canvas);
+	scrawl.addListener(['up', 'leave'], dropEntity, canvas);
+	scrawl.addListener(['enter', 'move'], function(e) {
+		here = pad.getMouse();
+	}, canvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
-			if (!here.active) {
-				dropEntity();
-			}
+			// if (!here.active) {
+			// 	dropEntity();
+			// }
 			scrawl.render();
 			myImages.updateEntitysBy({
 				roll: 0.2,

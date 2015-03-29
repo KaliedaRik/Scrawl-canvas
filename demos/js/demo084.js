@@ -37,21 +37,21 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo084');
 
 	//define groups
-	myTiles = scrawl.newGroup({
+	myTiles = scrawl.makeGroup({
 		name: 'tiles',
 		order: 1,
 	});
-	mySpace = scrawl.newGroup({
+	mySpace = scrawl.makeGroup({
 		name: 'space',
 		order: 3,
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'lines',
 		order: 2,
 	});
 
 	//define entitys
-	myTile = scrawl.newPicture({
+	myTile = scrawl.makePicture({
 		source: 'gun',
 		group: 'tiles',
 		width: 80,
@@ -76,14 +76,14 @@ var mycode = function() {
 	}
 	scrawl.deleteEntity(myTile.name, 'tile44');
 
-	scrawl.newShape({
+	scrawl.makeShape({
 		strokeStyle: 'white',
 		lineWidth: 2,
 		group: 'lines',
 		data: 'm0,79 400,0m0,80-400,0m0,80 400,0m0,80-400,0m80,80 0-400m80,0 0,400m80,0 0-400m80,0 0,400',
 	});
 
-	spaceBlock = scrawl.newBlock({
+	spaceBlock = scrawl.makeBlock({
 		name: 'spacer',
 		startX: 360,
 		startY: 360,
@@ -193,10 +193,10 @@ var mycode = function() {
 			}
 		}
 	};
-	myCanvas.addEventListener('mouseup', handleEntity, false);
+	scrawl.addListener('up', handleEntity, myCanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (prepare) {

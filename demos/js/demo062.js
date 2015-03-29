@@ -37,11 +37,11 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo062');
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 		order: 2,
 	});
-	myReflections = scrawl.newGroup({
+	myReflections = scrawl.makeGroup({
 		name: 'myReflections',
 		order: 1,
 	});
@@ -58,7 +58,7 @@ var mycode = function() {
 
 	//define entitys - display photos
 	for (var i = 0, z = items.length; i < z; i++) {
-		scrawl.newPicture({
+		scrawl.makePicture({
 			name: items[i],
 			group: 'myGroup',
 			source: items[i],
@@ -127,7 +127,7 @@ var mycode = function() {
 			selectImage();
 		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mouseup', checkClick, false);
+	scrawl.addListener('up', checkClick, scrawl.canvas.mycanvas);
 
 	//animation function
 	updateCarousel = function() {
@@ -172,7 +172,7 @@ var mycode = function() {
 	updateCarousel();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {

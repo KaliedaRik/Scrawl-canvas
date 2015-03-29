@@ -13,19 +13,19 @@ var mycode = function() {
 	//import images; setup variables
 	scrawl.getImagesByClass('demo104');
 
-	scrawl.newSepiaFilter({
+	scrawl.makeSepiaFilter({
 		name: 'sepia',
 	});
 
 	//build entity
-	scrawl.newPattern({
+	scrawl.makePattern({
 		name: 'p1',
 		source: 'warning',
 	}).clone({
 		name: 'p2',
 		source: 'leaves',
 	});
-	myEntity = scrawl.newWheel({
+	myEntity = scrawl.makeWheel({
 		name: 'mainWheel',
 		startX: 100,
 		startY: 100,

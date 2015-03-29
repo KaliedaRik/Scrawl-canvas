@@ -24,14 +24,14 @@ var mycode = function() {
 	input_threshold.value = '0.5';
 
 	//define filter
-	filter = scrawl.newThresholdFilter({
+	filter = scrawl.makeThresholdFilter({
 		name: 'myfilter',
 		alpha: 1,
 		threshold: 0.5,
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -72,7 +72,7 @@ var mycode = function() {
 	input_threshold.addEventListener('change', event_threshold, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

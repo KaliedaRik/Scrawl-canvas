@@ -21,12 +21,12 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo504');
 
 	//define designs (gradients, colors)
-	scrawl.newColor({
+	scrawl.makeColor({
 		name: 'myRed',
 		color: '#f00',
 	});
 
-	myCol = scrawl.newColor({
+	myCol = scrawl.makeColor({
 		name: 'myBlue',
 		random: true,
 		aShift: 0.002,
@@ -34,7 +34,7 @@ var mycode = function() {
 		autoUpdate: true,
 	});
 
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'gradient',
 		shift: 0.002,
 		lockTo: true,
@@ -60,7 +60,7 @@ var mycode = function() {
 	});
 
 	//define animation sheets
-	scrawl.newSpriteAnimation({
+	scrawl.makeSpriteAnimation({
 		name: 'mytiger',
 		running: 'forward',
 		loop: 'loop',
@@ -109,7 +109,7 @@ var mycode = function() {
 		method: 'fillDraw',
 	});
 
-	scrawl.newPicture({
+	scrawl.makePicture({
 		source: 'angelfish',
 		strokeStyle: 'Gold',
 		lineWidth: 3,
@@ -123,7 +123,7 @@ var mycode = function() {
 		scaleOutline: false,
 	});
 
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		strokeStyle: 'Orange',
 		fillStyle: 'myBlue',
 		lineWidth: 6,
@@ -136,7 +136,7 @@ var mycode = function() {
 		lineDash: [20, 5],
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		strokeStyle: '#800',
 		fillStyle: 'gradient',
 		lineWidth: 6,
@@ -148,7 +148,7 @@ var mycode = function() {
 		order: myGroup.entitys.length,
 	});
 
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'cat',
 		startX: 100,
 		startY: 300,
@@ -165,7 +165,7 @@ var mycode = function() {
 		roll: 10,
 	});
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		method: 'fill',
 		order: myGroup.entitys.length,
 		text: 'No! Clone me! Me!',
@@ -210,10 +210,10 @@ var mycode = function() {
 			myPad.setDisplayOffsets();
 		}
 	};
-	myCanvas.addEventListener('mouseup', handleEntity, false);
+	scrawl.addListener('up', handleEntity, myCanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			for (var i = 0, z = myGroup.entitys.length; i < z; i++) {

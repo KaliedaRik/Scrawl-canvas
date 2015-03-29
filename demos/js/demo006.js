@@ -16,16 +16,17 @@ var mycode = function() {
 		lengthText = document.getElementById('curveLength'),
 		doLines,
 		getWheel,
+		stopE,
 		dropWheel;
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'mygroup',
 	});
 
 	//define entitys
 	for (var i = 0; i < 3; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			fillStyle: 'blue',
@@ -64,7 +65,7 @@ var mycode = function() {
 	scrawl.point.startMidEnd_p1.setToFixed(true);
 	scrawl.point.startMidEnd_p2.setToFixed(true);
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		font: '12pt Arial, sans-serif',
 		handleX: 'center',
 		handleY: 30,
@@ -79,7 +80,7 @@ var mycode = function() {
 		pivot: 'wheel_2',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'goldwheel',
 		radius: 10,
 		fillStyle: 'gold',
@@ -101,38 +102,35 @@ var mycode = function() {
 	};
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getWheel = function(e) {
+		stopE(e);
+		here = scrawl.pad.mycanvas.getMouse();
 		myEntity = scrawl.group.mygroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropWheel = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getWheel, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropWheel, scrawl.canvas.mycanvas);
 
 	length = scrawl.entity.mycurve.getPerimeterLength(true);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			here = scrawl.pad.mycanvas.getMouse();
-			if (!here.active && myEntity) {
-				dropWheel();
-			}
 			if (myEntity) {
 				length = scrawl.entity.mycurve.getPerimeterLength(true);
 			}

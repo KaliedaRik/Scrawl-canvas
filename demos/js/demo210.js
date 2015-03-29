@@ -21,7 +21,7 @@ var mycode = function() {
 		parentElement: document.getElementById('stackHolder'),
 		width: 600,
 		height: 240,
-		perspectiveZ: 400,
+		perspectiveZ: 400
 	});
 
 	//get DOM buttons and add them to the stack
@@ -39,71 +39,78 @@ var mycode = function() {
 			width: 100,
 			height: 40,
 			handleX: 'center',
-			handleY: 'center',
+			handleY: 'center'
 		});
 	}
 	scrawl.renderElements();
 
-	scrawl.newTween({
+	scrawl.makeTween({
 		name: 'button0',
 		targets: buttons,
 		start: {
 			startX: left,
-			roll: 0,
+			roll: 0
 		},
 		engines: {
 			startX: 'easeOutIn3',
-			roll: 'easeOutIn3',
+			roll: 'easeOutIn3'
+		},
+		end: {
+			startX: right,
+			roll: 360
+		},
+		onComplete: {
+			startX: left,
+			roll: 0
+		},
+		duration: 3000,
+		count: 2,
+		autoReverseAndRun: true
+	}).clone({
+		name: 'button1',
+		targets: scrawl.element.button1,
+		start: {
+			startX: left,
+			roll: 0,
+			scale: 1,
+			fontSize: '100%'
 		},
 		end: {
 			startX: right,
 			roll: 360,
+			scale: 2,
+			fontSize: '200%'
 		},
 		onComplete: {
 			startX: left,
 			roll: 0,
-		},
-		duration: 3000,
-		count: 2,
-		autoReverseAndRun: true,
-	}).clone({
-		name: 'button1',
-		targets: scrawl.element.button1,
-		onCommence: {
-			fontSize: '120%',
-			color: 'red',
-		},
-		onComplete: {
-			startX: left,
-			roll: 0,
-			fontSize: '100%',
-			color: 'black',
+			scale: 1,
+			fontSize: '100%'
 		},
 		engines: {
 			startX: 'easeIn5',
-			roll: 'easeOut5',
-		},
+			roll: 'easeOut5'
+		}
 	}).clone({
 		name: 'button2',
 		targets: scrawl.element.button2,
-		onCommence: {},
 		start: {
 			startX: left,
-			height: 40,
+			height: 40
 		},
 		end: {
 			startX: right,
-			height: 100,
+			height: 100
 		},
 		onComplete: {
 			startX: left,
-			height: 40,
+			height: 40
 		},
 		engines: {
 			startX: 'easeIn3',
-			height: 'easeIn3',
+			height: 'easeIn3'
 		},
-		duration: 2000,
+		duration: 2000
 	}).clone({
 		name: 'button3',
 		targets: [scrawl.element.button1, buttons[3]],
@@ -111,27 +118,27 @@ var mycode = function() {
 			startX: left,
 			roll: 0,
 			pitch: 0,
-			yaw: 0,
+			yaw: 0
 		},
 		end: {
 			startX: right,
 			roll: 360,
 			pitch: 360,
-			yaw: 360,
+			yaw: 360
 		},
 		onComplete: {
 			startX: left,
 			roll: 0,
 			pitch: 0,
-			yaw: 0,
+			yaw: 0
 		},
 		engines: {
 			startX: 'easeOutIn3',
 			roll: 'easeOut4',
 			pitch: 'in',
-			yaw: 'out',
+			yaw: 'out'
 		},
-		duration: 4000,
+		duration: 4000
 	});
 
 	//button event listeners
@@ -140,12 +147,15 @@ var mycode = function() {
 		e.returnValue = false;
 		scrawl.animation[e.target.id].run();
 	};
-	for (i = 0; i < 4; i++) {
-		scrawl.elm[buttons[i].name].addEventListener('click', moveButton, false);
-	}
+	scrawl.addListener('up', moveButton, [
+		scrawl.elm.button0,
+		scrawl.elm.button1,
+		scrawl.elm.button2,
+		scrawl.elm.button3
+	]);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.renderElements();
 

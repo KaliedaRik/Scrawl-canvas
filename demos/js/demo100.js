@@ -18,12 +18,12 @@ var mycode = function() {
 		here;
 
 	//group
-	myBlocks = scrawl.newGroup({
+	myBlocks = scrawl.makeGroup({
 		name: 'blocks',
 	});
 
 	//entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'block1',
 		startX: 50,
 		startY: 70,
@@ -54,7 +54,7 @@ var mycode = function() {
 	});
 
 	//tweens
-	myTween = scrawl.newTween({
+	myTween = scrawl.makeTween({
 		start: {
 			startY: 70,
 			roll: 0,
@@ -128,10 +128,18 @@ var mycode = function() {
 			}
 		}
 	};
-	myCanvas.addEventListener('click', startNewTween, false);
+	scrawl.addListener('up', startNewTween, myCanvas);
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, myCanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			scrawl.render();

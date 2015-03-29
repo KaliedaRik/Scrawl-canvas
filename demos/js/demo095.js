@@ -16,7 +16,7 @@ var mycode = function() {
 	}).makeCurrent();
 
 	//define designs (gradients)
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'grad_1',
 		setToEntity: true,
 		startX: '-50%',
@@ -74,7 +74,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'filter',
 		text: 'Look what\nScrawl.js\ncan do!',
 		textAlign: 'center',
@@ -96,7 +96,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.pad.canvas.render();
 

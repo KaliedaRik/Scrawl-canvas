@@ -23,17 +23,17 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo047');
 
 	//define groups
-	iGroup = scrawl.newGroup({
+	iGroup = scrawl.makeGroup({
 		name: 'iconGroup',
 		order: 1,
 	});
-	pGroup = scrawl.newGroup({
+	pGroup = scrawl.makeGroup({
 		name: 'pivotGroup',
 		order: 2,
 	});
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'air',
 		source: 'buttonAir',
 		startX: 60,
@@ -86,7 +86,7 @@ var mycode = function() {
 		startY: 60,
 	});
 
-	pivot = scrawl.newWheel({
+	pivot = scrawl.makeWheel({
 		name: 'centerpoint',
 		radius: 7,
 		startX: 120,
@@ -102,7 +102,7 @@ var mycode = function() {
 	iGroup.pivotEntitysTo(pivot.name);
 
 	//build cell collision field
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 50,
 		startY: 50,
 		width: 650,
@@ -130,7 +130,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			move();
 			scrawl.render();

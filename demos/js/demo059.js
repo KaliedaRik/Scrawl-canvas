@@ -28,7 +28,7 @@ var mycode = function() {
 		strokeStyle: 'DarkGray',
 	});
 
-	myAngle = scrawl.newWheel({
+	myAngle = scrawl.makeWheel({
 		name: 'angle',
 		pivot: 'arrowCenter',
 		radius: 20,
@@ -40,7 +40,7 @@ var mycode = function() {
 		closed: false,
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'arrowCenter',
 		startX: 375,
 		startY: 187.5,
@@ -64,7 +64,7 @@ var mycode = function() {
 		y: 187.5,
 	});
 
-	report = scrawl.newPhrase({
+	report = scrawl.makePhrase({
 		name: 'msg',
 		method: 'fill',
 		text: 'Polar coordinates',
@@ -75,7 +75,7 @@ var mycode = function() {
 	});
 
 	//animation function
-	mouse = function() {
+	mouse = function(e) {
 		var myA = here.x - 375,
 			myO = here.y - 187.5,
 			myH = Math.sqrt((myA * myA) + (myO * myO)),
@@ -84,8 +84,8 @@ var mycode = function() {
 			msgOrientation;
 		cellRotation = Math.atan2(myO, myA) / scrawl.radian;
 		myArrow.set({
-			pivot: 'mouse',
 			roll: cellRotation,
+			mouseIndex: myPad.getMouseIdFromEvent(e)
 		});
 		myAngle.endAngle = cellRotation;
 		myAngle.clockwise = (cellRotation > 0) ? false : true;
@@ -104,17 +104,29 @@ var mycode = function() {
 
 	//display initial scene; start animation
 	scrawl.render();
+	myArrow.pivot = 'mouse';
+
+
+	//do animation via an event listener rather than an animation object
+	scrawl.addListener(['down', 'move'], function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			here = myPad.getMouse();
+			if (here.active) {
+				mouse(e);
+			}
+		}
+	}, scrawl.canvas.mycanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (here.active) {
-				mouse();
 				scrawl.render();
 			}
 			else {
-				myArrow.pivot = null;
 				myMessage.innerHTML = 'Move mouse over canvas';
 			}
 

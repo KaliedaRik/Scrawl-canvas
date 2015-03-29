@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.1.0</em>
+            <em>API Docs for: 4.2.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -252,7 +252,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlStacks.js.html#l44"><code>source\scrawlStacks.js:44</code></a>
+            Defined in: <a href="../files/source_scrawlStacks.js.html#l42"><code>source\scrawlStacks.js:42</code></a>
         </div>
     
 
@@ -348,6 +348,20 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_domInit">domInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_domInitialize">domInitialize</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private">
                                 <a href="#method_getCanvases">getCanvases</a>
 
@@ -371,6 +385,20 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_getStacks">getStacks</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_makeElementGroup">makeElementGroup</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_makeStack">makeStack</a>
 
                                 
                                 
@@ -593,14 +621,14 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_setDimensions">setDimensions</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private">
+                            <li class="index-item method">
                                 <a href="#method_setDimensions">setDimensions</a>
 
                                 
@@ -650,6 +678,13 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_setStampUsingStacksPivot">setStampUsingStacksPivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_setTranslate">setTranslate</a>
 
                                 
@@ -686,6 +721,13 @@
                     <h3>Properties</h3>
 
                     <ul class="index-list properties">
+                        
+                            <li class="index-item property">
+                                <a href="#property_mouseIndex">mouseIndex</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item property">
                                 <a href="#property_PageElement.addPathRoll">PageElement.addPathRoll</a>
@@ -887,7 +929,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l262"><code>source\scrawlStacks.js:262</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l260"><code>source\scrawlStacks.js:260</code></a>
         
         </p>
 
@@ -959,7 +1001,7 @@
     &lt;script src=&quot;js/scrawlCore-min.js&quot;&gt;&lt;/script&gt;
     &lt;script&gt;
         scrawl.addCanvasToPage({
-            name:    &#39;mycanvas&#39;,
+            name:   &#39;mycanvas&#39;,
             stackName: &#39;mystack&#39;,
             width: 400,
             height: 200,
@@ -1022,7 +1064,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l987"><code>source\scrawlStacks.js:987</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1007"><code>source\scrawlStacks.js:1007</code></a>
         
         </p>
 
@@ -1127,7 +1169,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l334"><code>source\scrawlStacks.js:334</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l332"><code>source\scrawlStacks.js:332</code></a>
         
         </p>
 
@@ -1192,6 +1234,150 @@
 </div>
 
                 
+                    <div id="method_domInit" class="method item">
+    <h3 class="name"><code>domInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l433"><code>source\scrawlStacks.js:433</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>display</strong> function to initialize DOM elements with their existing values</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Always true</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_domInitialize" class="method item">
+    <h3 class="name"><code>domInitialize</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1730"><code>source\scrawlStacks.js:1730</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Reinitialize element with existing values</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_getCanvases" class="method item private">
     <h3 class="name"><code>getCanvases</code></h3>
 
@@ -1230,7 +1416,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l145"><code>source\scrawlStacks.js:145</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l143"><code>source\scrawlStacks.js:143</code></a>
         
         </p>
 
@@ -1304,7 +1490,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l224"><code>source\scrawlStacks.js:224</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l222"><code>source\scrawlStacks.js:222</code></a>
         
         </p>
 
@@ -1377,7 +1563,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1809"><code>source\scrawlStacks.js:1809</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1913"><code>source\scrawlStacks.js:1913</code></a>
         
         </p>
 
@@ -1454,7 +1640,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l90"><code>source\scrawlStacks.js:90</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l88"><code>source\scrawlStacks.js:88</code></a>
         
         </p>
 
@@ -1479,6 +1665,220 @@
                 
                     
                     <p>True on success; false otherwise</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeElementGroup" class="method item private">
+    <h3 class="name"><code>makeElementGroup</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1820"><code>source\scrawlStacks.js:1820</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>factory</strong> function to generate new ElementGroup objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key:value Object argument for setting attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>ElementGroup object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeStack" class="method item private">
+    <h3 class="name"><code>makeStack</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1800"><code>source\scrawlStacks.js:1800</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>factory</strong> function to generate new Stack objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key:value Object argument for setting attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Stack object</p>
 
                 
             </div>
@@ -1537,7 +1937,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1708"><code>source\scrawlStacks.js:1708</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1780"><code>source\scrawlStacks.js:1780</code></a>
         
         </p>
 
@@ -1548,7 +1948,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate new Element objects</p>
+        <p>Alias for makeElement()</p>
 
     </div>
 
@@ -1644,7 +2044,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1718"><code>source\scrawlStacks.js:1718</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1790"><code>source\scrawlStacks.js:1790</code></a>
         
         </p>
 
@@ -1655,7 +2055,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate new ElementGroup objects</p>
+        <p>Alias for makeElementGroup()</p>
 
     </div>
 
@@ -1751,7 +2151,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1698"><code>source\scrawlStacks.js:1698</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1770"><code>source\scrawlStacks.js:1770</code></a>
         
         </p>
 
@@ -1762,7 +2162,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate new Stack objects</p>
+        <p>Alias for makeStack()</p>
 
     </div>
 
@@ -1848,7 +2248,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1742"><code>source\scrawlStacks.js:1742</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1844"><code>source\scrawlStacks.js:1844</code></a>
         
         </p>
 
@@ -1923,7 +2323,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1054"><code>source\scrawlStacks.js:1054</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1074"><code>source\scrawlStacks.js:1074</code></a>
         
         </p>
 
@@ -2004,7 +2404,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l768"><code>source\scrawlStacks.js:768</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l793"><code>source\scrawlStacks.js:793</code></a>
         
         </p>
 
@@ -2100,7 +2500,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1314"><code>source\scrawlStacks.js:1314</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1340"><code>source\scrawlStacks.js:1340</code></a>
         
         </p>
 
@@ -2173,7 +2573,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1273"><code>source\scrawlStacks.js:1273</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1299"><code>source\scrawlStacks.js:1299</code></a>
         
         </p>
 
@@ -2250,7 +2650,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1286"><code>source\scrawlStacks.js:1286</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1312"><code>source\scrawlStacks.js:1312</code></a>
         
         </p>
 
@@ -2326,7 +2726,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1322"><code>source\scrawlStacks.js:1322</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1348"><code>source\scrawlStacks.js:1348</code></a>
         
         </p>
 
@@ -2409,7 +2809,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1262"><code>source\scrawlStacks.js:1262</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1288"><code>source\scrawlStacks.js:1288</code></a>
         
         </p>
 
@@ -2517,7 +2917,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1212"><code>source\scrawlStacks.js:1212</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1238"><code>source\scrawlStacks.js:1238</code></a>
         
         </p>
 
@@ -2632,7 +3032,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l829"><code>source\scrawlStacks.js:829</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l854"><code>source\scrawlStacks.js:854</code></a>
         
         </p>
 
@@ -2740,7 +3140,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1137"><code>source\scrawlStacks.js:1137</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1163"><code>source\scrawlStacks.js:1163</code></a>
         
         </p>
 
@@ -2837,7 +3237,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1555"><code>source\scrawlStacks.js:1555</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1609"><code>source\scrawlStacks.js:1609</code></a>
         
         </p>
 
@@ -2910,7 +3310,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1468"><code>source\scrawlStacks.js:1468</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1522"><code>source\scrawlStacks.js:1522</code></a>
         
         </p>
 
@@ -2983,7 +3383,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1482"><code>source\scrawlStacks.js:1482</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1536"><code>source\scrawlStacks.js:1536</code></a>
         
         </p>
 
@@ -3056,7 +3456,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1493"><code>source\scrawlStacks.js:1493</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1547"><code>source\scrawlStacks.js:1547</code></a>
         
         </p>
 
@@ -3131,7 +3531,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1386"><code>source\scrawlStacks.js:1386</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1412"><code>source\scrawlStacks.js:1412</code></a>
         
         </p>
 
@@ -3206,7 +3606,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1410"><code>source\scrawlStacks.js:1410</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1436"><code>source\scrawlStacks.js:1436</code></a>
         
         </p>
 
@@ -3289,7 +3689,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1093"><code>source\scrawlStacks.js:1093</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1115"><code>source\scrawlStacks.js:1115</code></a>
         
         </p>
 
@@ -3300,7 +3700,7 @@
     </div>
 
     <div class="description">
-        <p>Handles the setting of position, transformOrigin, backfaceVisibility, margin, border, padding</p>
+        <p>Handles the setting of many CSS attributes</p>
 
     </div>
 
@@ -3386,7 +3786,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1531"><code>source\scrawlStacks.js:1531</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1585"><code>source\scrawlStacks.js:1585</code></a>
         
         </p>
 
@@ -3469,7 +3869,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1230"><code>source\scrawlStacks.js:1230</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1256"><code>source\scrawlStacks.js:1256</code></a>
         
         </p>
 
@@ -3588,7 +3988,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1194"><code>source\scrawlStacks.js:1194</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1220"><code>source\scrawlStacks.js:1220</code></a>
         
         </p>
 
@@ -3689,7 +4089,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l80"><code>source\scrawlStacks.js:80</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l78"><code>source\scrawlStacks.js:78</code></a>
         
         </p>
 
@@ -3760,7 +4160,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1010"><code>source\scrawlStacks.js:1010</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1030"><code>source\scrawlStacks.js:1030</code></a>
         
         </p>
 
@@ -3867,7 +4267,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l397"><code>source\scrawlStacks.js:397</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l395"><code>source\scrawlStacks.js:395</code></a>
         
         </p>
 
@@ -3964,7 +4364,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l418"><code>source\scrawlStacks.js:418</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l416"><code>source\scrawlStacks.js:416</code></a>
         
         </p>
 
@@ -4037,7 +4437,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1760"><code>source\scrawlStacks.js:1760</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1864"><code>source\scrawlStacks.js:1864</code></a>
         
         </p>
 
@@ -4120,7 +4520,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l953"><code>source\scrawlStacks.js:953</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l973"><code>source\scrawlStacks.js:973</code></a>
         
         </p>
 
@@ -4227,7 +4627,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1035"><code>source\scrawlStacks.js:1035</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1055"><code>source\scrawlStacks.js:1055</code></a>
         
         </p>
 
@@ -4266,79 +4666,6 @@
             
             </ul>
         </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setDimensions" class="method item">
-    <h3 class="name"><code>setDimensions</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l1676"><code>source\scrawlStacks.js:1676</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use styling to set their drawing region dimensions</p>
-
-    </div>
-
     
 
     
@@ -4399,7 +4726,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1652"><code>source\scrawlStacks.js:1652</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1706"><code>source\scrawlStacks.js:1706</code></a>
         
         </p>
 
@@ -4412,6 +4739,79 @@
     <div class="description">
         <p>Helper function - set DOM element dimensions (width, height)</p>
 <p>Overwritesa core setDimensions()</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDimensions" class="method item">
+    <h3 class="name"><code>setDimensions</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1748"><code>source\scrawlStacks.js:1748</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use styling to set their drawing region dimensions</p>
 
     </div>
 
@@ -4483,7 +4883,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l363"><code>source\scrawlStacks.js:363</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l361"><code>source\scrawlStacks.js:361</code></a>
         
         </p>
 
@@ -4602,7 +5002,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l912"><code>source\scrawlStacks.js:912</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l932"><code>source\scrawlStacks.js:932</code></a>
         
         </p>
 
@@ -4701,7 +5101,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1581"><code>source\scrawlStacks.js:1581</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1635"><code>source\scrawlStacks.js:1635</code></a>
         
         </p>
 
@@ -4784,7 +5184,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l897"><code>source\scrawlStacks.js:897</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l917"><code>source\scrawlStacks.js:917</code></a>
         
         </p>
 
@@ -4891,7 +5291,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l938"><code>source\scrawlStacks.js:938</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l958"><code>source\scrawlStacks.js:958</code></a>
         
         </p>
 
@@ -4986,7 +5386,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1788"><code>source\scrawlStacks.js:1788</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1892"><code>source\scrawlStacks.js:1892</code></a>
         
         </p>
 
@@ -5011,6 +5411,77 @@
                 
                     
                     <p>always true</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setStampUsingStacksPivot" class="method item">
+    <h3 class="name"><code>setStampUsingStacksPivot</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1502"><code>source\scrawlStacks.js:1502</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper hook function - amended by stacks module</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>this</p>
 
                 
             </div>
@@ -5069,7 +5540,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l968"><code>source\scrawlStacks.js:968</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l988"><code>source\scrawlStacks.js:988</code></a>
         
         </p>
 
@@ -5166,7 +5637,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1732"><code>source\scrawlStacks.js:1732</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1834"><code>source\scrawlStacks.js:1834</code></a>
         
         </p>
 
@@ -5235,7 +5706,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l672"><code>source\scrawlStacks.js:672</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l696"><code>source\scrawlStacks.js:696</code></a>
         
         </p>
 
@@ -5304,7 +5775,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l436"><code>source\scrawlStacks.js:436</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l451"><code>source\scrawlStacks.js:451</code></a>
         
         </p>
 
@@ -5378,6 +5849,54 @@
                 <h2 class="off-left">Properties</h2>
 
                 
+                    <div id="property_mouseIndex" class="property item">
+    <h3 class="name"><code>mouseIndex</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l686"><code>source\scrawlStacks.js:686</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Index of mouse vector to use when pivot === &#39;mouse&#39;</p>
+<p>The Pad/Stack/Element.mice object can hold details of multiple touch events - when an entity is assigned to a &#39;mouse&#39;, it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;mouse&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_PageElement.addPathRoll" class="property item">
     <h3 class="name"><code>PageElement.addPathRoll</code></h3>
     <span class="type">Boolean</span>
@@ -5401,7 +5920,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l599"><code>source\scrawlStacks.js:599</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l614"><code>source\scrawlStacks.js:614</code></a>
         
         </p>
 
@@ -5448,7 +5967,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l490"><code>source\scrawlStacks.js:490</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l505"><code>source\scrawlStacks.js:505</code></a>
         
         </p>
 
@@ -5498,7 +6017,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l578"><code>source\scrawlStacks.js:578</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l593"><code>source\scrawlStacks.js:593</code></a>
         
         </p>
 
@@ -5545,7 +6064,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l643"><code>source\scrawlStacks.js:643</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l658"><code>source\scrawlStacks.js:658</code></a>
         
         </p>
 
@@ -5592,7 +6111,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l523"><code>source\scrawlStacks.js:523</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l538"><code>source\scrawlStacks.js:538</code></a>
         
         </p>
 
@@ -5636,7 +6155,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l557"><code>source\scrawlStacks.js:557</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l572"><code>source\scrawlStacks.js:572</code></a>
         
         </p>
 
@@ -5683,7 +6202,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l532"><code>source\scrawlStacks.js:532</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l547"><code>source\scrawlStacks.js:547</code></a>
         
         </p>
 
@@ -5734,7 +6253,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l606"><code>source\scrawlStacks.js:606</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l621"><code>source\scrawlStacks.js:621</code></a>
         
         </p>
 
@@ -5782,7 +6301,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l615"><code>source\scrawlStacks.js:615</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l630"><code>source\scrawlStacks.js:630</code></a>
         
         </p>
 
@@ -5829,7 +6348,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l622"><code>source\scrawlStacks.js:622</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l637"><code>source\scrawlStacks.js:637</code></a>
         
         </p>
 
@@ -5876,7 +6395,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l564"><code>source\scrawlStacks.js:564</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l579"><code>source\scrawlStacks.js:579</code></a>
         
         </p>
 
@@ -5923,7 +6442,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l571"><code>source\scrawlStacks.js:571</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l586"><code>source\scrawlStacks.js:586</code></a>
         
         </p>
 
@@ -5970,7 +6489,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l592"><code>source\scrawlStacks.js:592</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l607"><code>source\scrawlStacks.js:607</code></a>
         
         </p>
 
@@ -6017,7 +6536,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l585"><code>source\scrawlStacks.js:585</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l600"><code>source\scrawlStacks.js:600</code></a>
         
         </p>
 
@@ -6064,7 +6583,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l550"><code>source\scrawlStacks.js:550</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l565"><code>source\scrawlStacks.js:565</code></a>
         
         </p>
 
@@ -6111,7 +6630,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l629"><code>source\scrawlStacks.js:629</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l644"><code>source\scrawlStacks.js:644</code></a>
         
         </p>
 
@@ -6158,7 +6677,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l657"><code>source\scrawlStacks.js:657</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l672"><code>source\scrawlStacks.js:672</code></a>
         
         </p>
 
@@ -6205,7 +6724,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l468"><code>source\scrawlStacks.js:468</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l483"><code>source\scrawlStacks.js:483</code></a>
         
         </p>
 
@@ -6261,7 +6780,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l506"><code>source\scrawlStacks.js:506</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l521"><code>source\scrawlStacks.js:521</code></a>
         
         </p>
 
@@ -6312,7 +6831,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l664"><code>source\scrawlStacks.js:664</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l679"><code>source\scrawlStacks.js:679</code></a>
         
         </p>
 

@@ -63,7 +63,7 @@ var mycode = function() {
 	}
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			var entity = entitys[count];
 			checkBounds();

@@ -33,7 +33,7 @@ var mycode = function() {
 	});
 
 	//build entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		width: 540,
 		height: 360,
 		handleX: 'center',
@@ -49,7 +49,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.update();
 			scrawl.render();

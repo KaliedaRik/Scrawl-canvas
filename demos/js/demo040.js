@@ -11,14 +11,14 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo040');
 
 	//define patterns
-	scrawl.newPattern({ //uses preloaded images
+	scrawl.makePattern({ //uses preloaded images
 		name: 'leaves',
 		source: 'leaves',
 	}).clone({
 		name: 'water',
 		source: 'water',
 	});
-	scrawl.newPattern({ //loads images dynamically before using them
+	scrawl.makePattern({ //loads images dynamically before using them
 		name: 'marble',
 		url: 'img/marble.png',
 		callback: function() {
@@ -30,7 +30,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'b1',
 		startX: 35,
 		startY: 10,

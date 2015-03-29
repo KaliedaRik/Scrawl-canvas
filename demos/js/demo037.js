@@ -8,24 +8,18 @@ var mycode = function() {
 	//hide-end
 
 	var myPad = scrawl.pad.mycanvas,
-		backgroundCell,
 		magnifierCell,
-		backgroundEntity,
-		magnifierEntity,
-		stencilEntity,
-		here;
+		magnifierEntity;
 
 	scrawl.getImagesByClass('demo037');
 
-	backgroundCell = myPad.addNewCell({
+	// background
+	myPad.addNewCell({
 		name: 'background',
-		//restrict this cell's activity within the display cycle
-		cleared: false,
-		compiled: false,
 		showOrder: 1,
 	});
-	backgroundEntity = scrawl.newPicture({
-		name: 'miniscene',
+	scrawl.makePicture({
+		name: 'scene',
 		source: 'river',
 		method: 'fill',
 		group: 'background',
@@ -36,8 +30,8 @@ var mycode = function() {
 		copyWidth: 3750,
 		copyHeight: 1875,
 	});
-	backgroundCell.compile();
 
+	// magnifier
 	magnifierCell = myPad.addNewCell({
 		name: 'magnifier',
 		height: 140,
@@ -45,12 +39,11 @@ var mycode = function() {
 		handleX: 'center',
 		handleY: 'center',
 		pivot: 'mouse',
-		//take the cell out of the display cycle
 		rendered: false,
 		showOrder: 2,
 	});
-	magnifierEntity = scrawl.newPicture({
-		name: 'magnifier',
+	magnifierEntity = scrawl.makePicture({
+		name: 'sceneclip',
 		source: 'river',
 		method: 'fill',
 		group: 'magnifier',
@@ -59,36 +52,58 @@ var mycode = function() {
 		height: 140,
 		copyWidth: 140,
 		copyHeight: 140,
+		order: 1,
 	});
-	stencilEntity = scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'stencil',
 		startX: 70,
 		startY: 70,
 		radius: 69,
+		method: 'fill',
+		order: 0,
+		group: 'magnifier',
+	}).clone({
+		name: 'outline',
 		lineWidth: 1,
 		strokeStyle: 'Red',
-		group: 'magnifier',
+		method: 'draw',
+		order: 2,
 	});
 
-	scrawl.newAnimation({
-		fn: function() {
+	//event listeners
+	scrawl.addListener(['down', 'move'], function(e) {
+		var here;
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
 			here = myPad.getMouse();
-			//only render the magnifier cell when the mouse is over the canvas
-			magnifierCell.set({
-				rendered: (here.active) ? true : false,
-			});
-			//split the display cycle into its clear, compile/stamp and show components
-			myPad.clear();
 			if (here.active) {
+				magnifierCell.set({
+					rendered: true,
+					mouseIndex: myPad.getMouseIdFromEvent(e)
+				});
 				magnifierEntity.set({
 					copyX: (here.x * 5) + 10,
 					copyY: (here.y * 5) + 650,
 				});
-				stencilEntity.stamp('fill');
-				magnifierEntity.stamp();
-				stencilEntity.stamp('draw');
 			}
-			myPad.show();
+			else {
+				magnifierCell.rendered = false;
+			}
+		}
+	}, scrawl.canvas.mycanvas);
+	scrawl.addListener('leave', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			magnifierCell.rendered = false;
+		}
+	}, scrawl.canvas.mycanvas);
+
+	scrawl.makeAnimation({
+		fn: function() {
+
+			myPad.render();
 
 			//hide-start
 			testNow = Date.now();

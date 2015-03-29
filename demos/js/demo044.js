@@ -14,7 +14,7 @@ var mycode = function() {
 		dScale = 0.02;
 
 	//define designs (colors)
-	scrawl.newColor({
+	scrawl.makeColor({
 		name: 'liner',
 		random: true,
 		rMin: 50,
@@ -37,7 +37,7 @@ var mycode = function() {
 	});
 
 	//define entity
-	myWheel = scrawl.newWheel({
+	myWheel = scrawl.makeWheel({
 		startX: 200,
 		startY: 200,
 		radius: 18,
@@ -58,7 +58,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			if (!scrawl.isBetween((myWheel.scale + dScale), maxScale, minScale)) {
 				dScale = -dScale;

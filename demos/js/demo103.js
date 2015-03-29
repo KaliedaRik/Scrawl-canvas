@@ -13,23 +13,23 @@ var mycode = function() {
 	//import images; setup variables
 	scrawl.getImagesByClass('demo103');
 
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mygroup',
 	});
 
-	scrawl.newGreyscaleFilter({
+	scrawl.makeGreyscaleFilter({
 		name: 'gscale',
 	});
 
 	//build entity
-	scrawl.newPattern({
+	scrawl.makePattern({
 		name: 'p1',
 		source: 'warning',
 	}).clone({
 		name: 'p2',
 		source: 'leaves',
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'mainWheel',
 		startX: 100,
 		startY: 100,
@@ -41,7 +41,7 @@ var mycode = function() {
 		roll: 45,
 		group: 'mygroup',
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		pivot: 'mainWheel',
 		handleY: 70,
 		radius: 8,

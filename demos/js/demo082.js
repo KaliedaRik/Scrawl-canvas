@@ -19,6 +19,7 @@ var mycode = function() {
 		myText,
 		getText,
 		dropText,
+		stopE,
 		textInput,
 		sizeInput,
 		updateTextSize,
@@ -46,17 +47,17 @@ var mycode = function() {
 	widthInput.value = 150;
 
 	//define groups
-	texts = scrawl.newGroup({
+	texts = scrawl.makeGroup({
 		name: 'texts',
 	});
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'penguin',
 		url: 'img/penguin02.jpg',
 	});
 
-	displayText = scrawl.newPhrase({
+	displayText = scrawl.makePhrase({
 		font: '20pt bold Arial, sans-serif',
 		handleX: 'center',
 		handleY: 'center',
@@ -102,75 +103,63 @@ var mycode = function() {
 	};
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getText = function(e) { //text drag-and-drop
+		stopE(e);
+		here = pad.getMouse();
 		myText = texts.getEntityAt(here);
 		if (myText) {
 			myText.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropText = function(e) {
+		stopE(e);
 		if (myText) {
 			myText.dropEntity();
 			myText = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	canvas.addEventListener('mousedown', getText, false);
-	canvas.addEventListener('mouseup', dropText, false);
+	scrawl.addListener('down', getText, canvas);
+	scrawl.addListener(['up', 'leave'], dropText, canvas);
 
 	updateText = function(e) { //changing the text content
+		stopE(e);
 		displayText.set({
 			text: parseText(displayText.get('font'), textInput.value),
 		});
-		if (e) {
-			e.preventDefault();
-			e.returnValue = false;
-		}
 	};
-	textInput.addEventListener('keyup', updateText, false);
+	scrawl.addNativeListener('keyup', updateText, textInput);
 
 	updateTextSize = function(e) { //changing the text size
+		stopE(e);
 		displayText.set({
 			size: sizeInput.value,
 		});
 		displayText.set({
 			text: parseText(displayText.get('font'), textInput.value),
 		});
-		e.preventDefault();
-		e.returnValue = false;
 	};
-	sizeInput.addEventListener('input', updateTextSize, false); //for firefox real-time updating
-	sizeInput.addEventListener('change', updateTextSize, false);
+	scrawl.addNativeListener(['input', 'change'], updateTextSize, sizeInput);
 
 	updateTextWidth = function(e) { //changing the text width
+		stopE(e);
 		currentMaxWidth = widthInput.value;
 		displayText.set({
 			text: parseText(displayText.get('font'), textInput.value),
 		});
-		e.preventDefault();
-		e.returnValue = false;
 	};
-	widthInput.addEventListener('input', updateTextWidth, false); //for firefox real-time updating
-	widthInput.addEventListener('change', updateTextWidth, false);
+	scrawl.addNativeListener(['input', 'change'], updateTextWidth, widthInput);
 
 	updateText();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			here = pad.getMouse();
-			if (!here.active) {
-				if (myText) {
-					dropText();
-				}
-			}
 
 			pad.render();
 

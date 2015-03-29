@@ -13,12 +13,12 @@ var mycode = function() {
 		chokeTime = Date.now(),
 		radius = 10,
 		snake,
-		vector = scrawl.newVector(),
+		vector = scrawl.makeVector(),
 		updateSnake;
 
 	//define entitys
 	for (var i = 0; i < 29; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'seg_' + i,
 			startX: 350,
 			startY: 187,
@@ -30,7 +30,7 @@ var mycode = function() {
 		});
 	}
 
-	snake = scrawl.newWheel({
+	snake = scrawl.makeWheel({
 		name: 'seg_29',
 		startX: 350,
 		startY: 187,
@@ -46,6 +46,14 @@ var mycode = function() {
 	scrawl.compile();
 	snake.forceStamp();
 	scrawl.show();
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
 
 	//animation function
 	updateSnake = function() {
@@ -67,7 +75,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = scrawl.pad.mycanvas.getMouse();
 			if (here.active) {

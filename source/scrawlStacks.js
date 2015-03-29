@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -109,13 +107,13 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 					stacks.push(s[i]);
 				}
 				for (i = 0, iz = s.length; i < iz; i++) {
-					myStack = my.newStack({
+					myStack = my.makeStack({
 						stackElement: stacks[i]
 					});
 					for (j = 0, jz = my.stk[myStack.name].children.length; j < jz; j++) {
 						my.stk[myStack.name].children[j].style.position = 'absolute';
 						if (my.stk[myStack.name].children[j].tagName !== 'CANVAS') {
-							my.newElement({
+							my.makeElement({
 								domElement: my.stk[myStack.name].children[j],
 								group: myStack.name
 							});
@@ -189,12 +187,12 @@ A __private__ function that searches the DOM for canvas elements and generates P
 							myElement.id = myStack;
 							el[i].parentElement.appendChild(myElement);
 							myElement.appendChild(el[i]);
-							stack = my.newStack({
+							stack = my.makeStack({
 								stackElement: myElement
 							});
 						}
 					}
-					myPad = my.newPad({
+					myPad = my.makePad({
 						canvasElement: el[i],
 					});
 					if (stack) {
@@ -247,7 +245,7 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 							myStack = el[i].className.match(/stack:(\w+)/);
 							if (my.contains(my.stacknames, myStack[1])) {
 								my.stk[myStack[1]].appendChild(el[i]);
-								my.newElement({
+								my.makeElement({
 									domElement: el[i],
 									group: myStack[1],
 								});
@@ -274,16 +272,16 @@ The argument object should include the following attributes:
 @return The new Pad object
 @example
     <body>
-		<div id="canvasholder"></div>
-		<script src="js/scrawlCore-min.js"></script>
-		<script>
-			scrawl.addCanvasToPage({
-				name:	'mycanvas',
-				stackName: 'mystack',
-				width: 400,
-				height: 200,
-				}).makeCurrent();
-		</script>
+        <div id="canvasholder"></div>
+        <script src="js/scrawlCore-min.js"></script>
+        <script>
+            scrawl.addCanvasToPage({
+                name:   'mycanvas',
+                stackName: 'mystack',
+                width: 400,
+                height: 200,
+                }).makeCurrent();
+        </script>
     </body>
 
 <a href="../../demo002.html">Live demo</a>
@@ -354,7 +352,7 @@ The argument object should include the following attributes:
 				myElement.style.height = my.xtGet(items.height, 150) + 'px';
 				items.parentElement.appendChild(myElement);
 				items.stackElement = myElement;
-				myStack = my.newStack(items);
+				myStack = my.makeStack(items);
 				myStack.group = (my.stack[items.parentElement.id]) ? items.parentElement.id : '';
 				return myStack;
 			}
@@ -371,7 +369,7 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-	scrawl.setDisplayOffsets();
+    scrawl.setDisplayOffsets();
 **/
 		my.setDisplayOffsets = function(item) {
 			var i,
@@ -428,6 +426,23 @@ A __display__ function to move DOM elements within a Stack
 				s = my.stack[my.stacknames[i]];
 				if (!s.group) {
 					s.render();
+				}
+			}
+			return true;
+		};
+		/**
+A __display__ function to initialize DOM elements with their existing values
+@method domInit
+@return Always true
+**/
+		my.domInit = function() {
+			var i,
+				iz,
+				s;
+			for (i = 0, iz = my.stacknames.length; i < iz; i++) {
+				s = my.stack[my.stacknames[i]];
+				if (!s.group) {
+					s.domInit();
 				}
 			}
 			return true;
@@ -668,6 +683,15 @@ A flag to determine whether an element displays itself
 @default true
 **/
 		my.d.PageElement.visibility = true;
+		/**
+Index of mouse vector to use when pivot === 'mouse'
+
+The Pad/Stack/Element.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
+@property mouseIndex
+@type String
+@default 'mouse'
+**/
+		my.d.PageElement.mouseIndex = 'mouse';
 		my.mergeInto(my.d.Pad, my.d.PageElement);
 		/**
 PageElement constructor hook function - modified by stacks module
@@ -676,51 +700,51 @@ PageElement constructor hook function - modified by stacks module
 **/
 		my.PageElement.prototype.stacksPageElementConstructor = function(items) {
 			var temp = my.safeObject(items.start);
-			this.start = my.newVector({
+			this.start = my.makeVector({
 				name: this.type + '.' + this.name + '.start',
 				x: my.xtGet(items.startX, temp.x, 0),
 				y: my.xtGet(items.startY, temp.y, 0)
 			});
 			this.correctStart();
-			this.work.start = my.newVector({
+			this.work.start = my.makeVector({
 				name: this.type + '.' + this.name + '.work.start'
 			});
 			temp = my.safeObject(items.delta);
-			this.delta = my.newVector({
+			this.delta = my.makeVector({
 				name: this.type + '.' + this.name + '.delta',
 				x: my.xtGet(items.deltaX, temp.x, 0),
 				y: my.xtGet(items.deltaY, temp.y, 0)
 			});
-			this.work.delta = my.newVector({
+			this.work.delta = my.makeVector({
 				name: this.type + '.' + this.name + '.work.delta'
 			});
 			temp = my.safeObject(items.handle);
-			this.handle = my.newVector({
+			this.handle = my.makeVector({
 				name: this.type + '.' + this.name + '.handle',
 				x: my.xtGet(items.handleX, temp.x, 0),
 				y: my.xtGet(items.handleY, temp.y, 0)
 			});
-			this.work.handle = my.newVector({
+			this.work.handle = my.makeVector({
 				name: this.type + '.' + this.name + '.work.handle'
 			});
 			temp = my.safeObject(items.translate);
-			this.translate = my.newVector({
+			this.translate = my.makeVector({
 				name: this.type + '.' + this.name + '.translate',
 				x: my.xtGet(items.translateX, temp.x, 0),
 				y: my.xtGet(items.translateY, temp.y, 0),
 				z: my.xtGet(items.translateZ, temp.z, 0)
 			});
-			this.work.translate = my.newVector({
+			this.work.translate = my.makeVector({
 				name: this.type + '.' + this.name + '.work.translate'
 			});
 			temp = my.safeObject(items.deltaTranslate);
-			this.deltaTranslate = my.newVector({
+			this.deltaTranslate = my.makeVector({
 				name: this.type + '.' + this.name + '.deltaTranslate',
 				x: my.xtGet(items.deltaTranslateX, temp.x, 0),
 				y: my.xtGet(items.deltaTranslateY, temp.y, 0),
 				z: my.xtGet(items.deltaTranslateZ, temp.z, 0)
 			});
-			this.work.deltaTranslate = my.newVector({
+			this.work.deltaTranslate = my.makeVector({
 				name: this.type + '.' + this.name + '.work.deltaTranslate'
 			});
 			this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
@@ -735,24 +759,24 @@ PageElement constructor hook function - modified by stacks module
 			this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
 			this.scale = my.xtGet(items.scale, 1);
 			this.visibility = my.xtGet(items.visibility, my.d[this.type].visibility);
-			this.rotation = my.newQuaternion({
+			this.rotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.rotation'
 			}).setFromEuler({
 				pitch: items.pitch || 0,
 				yaw: items.yaw || 0,
 				roll: items.roll || 0,
 			});
-			this.work.rotation = my.newQuaternion({
+			this.work.rotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.work.rotation'
 			});
-			this.deltaRotation = my.newQuaternion({
+			this.deltaRotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.deltaRotation'
 			}).setFromEuler({
 				pitch: items.deltaPitch || 0,
 				yaw: items.deltaYaw || 0,
 				roll: items.deltaRoll || 0,
 			});
-			this.work.deltaRotation = my.newQuaternion({
+			this.work.deltaRotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.work.deltaRotation'
 			});
 			this.rotationTolerance = my.xtGet(items.rotationTolerance, my.d[this.type].rotationTolerance);
@@ -760,9 +784,10 @@ PageElement constructor hook function - modified by stacks module
 			if (this.group) {
 				my.group[this.group].addElementsToGroup(this.name);
 			}
-			this.offset = my.newVector({
+			this.offset = my.makeVector({
 				name: this.type + '.' + this.name + '.offset'
 			});
+			this.mouseIndex = my.xtGet(items.mouseIndex, 'mouse');
 			this.offset.flag = false;
 		};
 		/**
@@ -877,11 +902,6 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			if (my.xto(items.handleX, items.handleY, items.handle)) {
 				this.setTransformOrigin();
 			}
-			if (my.xt(items.mouse)) {
-				this.initMouse({
-					mouse: items.mouse
-				});
-			}
 			if (my.xt(items.group)) {
 				this.setGroupAttribute(items);
 			}
@@ -976,7 +996,7 @@ Augments PageElement.set()
 			var temp;
 			items = my.safeObject(items);
 			if (!this.translate.type || this.translate.type !== 'Vector') {
-				this.translate = my.newVector(items.translate || this.translate);
+				this.translate = my.makeVector(items.translate || this.translate);
 			}
 			temp = my.safeObject(items.translate);
 			this.translate.x = my.xtGet(items.translateX, temp.x, this.translate.x);
@@ -1043,7 +1063,7 @@ Augments PageElement.set()
 			var temp;
 			items = my.safeObject(items);
 			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
-				this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
+				this.deltaTranslate = my.makeVector(items.deltaTranslate || this.deltaTranslate);
 			}
 			temp = my.safeObject(items.deltaTranslate);
 			this.deltaTranslate.x = my.xtGet(items.deltaTranslateX, temp.x, this.deltaTranslate.x);
@@ -1089,9 +1109,11 @@ Constructor / set helper function
 			}
 			return this;
 		};
-		my.css = ['alignContent', 'alignItems', 'alignSelf', 'all', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundImage', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'backgroundSize', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRadius', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopLeftRadius', 'borderTopRightRadius', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'breakAfter', 'breakBefore', 'breakInside', 'captionSide', 'clear', 'clip', 'clipPath', 'color', 'columns', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'float', 'font', 'fontFamily', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'hyphens', 'imageRendering', 'imageResolution', 'imageOrientation', 'imeMode', 'inherit', 'initial', 'isolation', 'justifyContent', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'mixBlendMode', 'objectFit', 'objectPosition', 'opacity', 'orphans', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'padding', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'quotes', 'resize', 'rubyAlign', 'rubyMerge', 'rubyPosition', 's', 'scrollBehavior', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'tabSize', 'textAlign', 'textAlignLast', 'textCombineUpright', 'textDecoration', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'touchAction', 'unicodeBidi', 'unicodeRange', 'unset', 'verticalAlign', 'visibility', 'whiteSpace', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'writingMode'];
+		my.css = ['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontKerning', 'fontLanguageOverride', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'hyphens', 'imageRendering', 'imageResolution', 'imageOrientation', 'imeMode', 'inherit', 'initial', 'isolation', 'justifyContent', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'mixBlendMode', 'objectFit', 'objectPosition', 'opacity', 'orphans', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'padding', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'quotes', 'resize', 'rubyAlign', 'rubyMerge', 'rubyPosition', 's', 'scrollBehavior', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'tabSize', 'textAlign', 'textAlignLast', 'textCombineUpright', 'textDecoration', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'touchAction', 'unicodeBidi', 'unicodeRange', 'unset', 'verticalAlign', 'visibility', 'whiteSpace', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'writingMode'];
+		//need to complete this array
+		my.xcss = ['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap'];
 		/**
-Handles the setting of position, transformOrigin, backfaceVisibility, margin, border, padding
+Handles the setting of many CSS attributes
 @method PageElement.setStyles
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -1102,17 +1124,14 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 				el,
 				k,
 				i,
-				iz;
+				iz,
+				firstLetter,
+				remainder;
 			items = my.safeObject(items);
 			el = this.getElement();
 			k = Object.keys(items);
 			for (i = 0, iz = k.length; i < iz; i++) {
-				if (k[i] === 'backfaceVisibility') {
-					el.style.webkitBackfaceVisibility = items.backfaceVisibility;
-					el.style.mozBackfaceVisibility = items.backfaceVisibility;
-					el.style.backfaceVisibility = items.backfaceVisibility;
-				}
-				else if (k[i] === 'visibility') {
+				if (k[i] === 'visibility') {
 					if (my.isa(items.visibility, 'str')) {
 						this.visibility = (!my.contains(stat, items.visibility)) ? true : false;
 					}
@@ -1126,10 +1145,17 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 						el.style.display = (this.visibility) ? 'block' : 'none';
 					}
 				}
+				else if (my.contains(my.xcss, k[i])) {
+					firstLetter = k[i][0].toUpperCase;
+					remainder = k[i].substr(1);
+					el.style['webkit' + firstLetter + remainder] = items[k[i]];
+					el.style['moz' + firstLetter + remainder] = items[k[i]];
+					el.style['ms' + firstLetter + remainder] = items[k[i]];
+					el.style['o' + firstLetter + remainder] = items[k[i]];
+					el.style[k[i]] = items[k[i]];
+				}
 				else if (my.contains(my.css, k[i])) {
-					if (my.xt(el.style[k[i]])) {
-						el.style[k[i]] = items[k[i]];
-					}
+					el.style[k[i]] = items[k[i]];
 				}
 			}
 			return this;
@@ -1415,11 +1441,12 @@ Calculate start Vector in reference to a entity or Point object's position
 @private
 **/
 		my.PageElement.prototype.setStampUsingPivot = function() {
-			var here,
+			var mouse,
+				stack,
 				myP,
 				myPVector,
 				pEntity,
-				temp;
+				x, y;
 			if (my.point && my.point[this.pivot]) {
 				myP = my.point[this.pivot];
 				pEntity = my.entity[myP.entity];
@@ -1449,21 +1476,48 @@ Calculate start Vector in reference to a entity or Point object's position
 			}
 			if (this.pivot === 'mouse') {
 				if (this.group) {
-					here = my.stack[my.group[this.group].stack].getMouse();
-					temp = this.getStartValues();
-					if (!my.xta(this.mouseX, this.mouseY)) {
-						this.oldX = temp.x;
-						this.oldY = temp.y;
+					stack = my.stack[my.group[this.group].stack];
+					x = (this.start.x.substring) ? my.Position.prototype.convertX.call(this, this.start.x, stack.localWidth) : this.start.x;
+					y = (this.start.y.substring) ? my.Position.prototype.convertY.call(this, this.start.y, stack.localHeight) : this.start.y;
+					x = (isNaN(x)) ? 0 : x;
+					y = (isNaN(y)) ? 0 : y;
+					mouse = stack.mice[this.mouseIndex] || {};
+					if (!my.xt(mouse)) {
+						mouse.x = 0;
+						mouse.y = false;
+						mouse.active = false;
 					}
-					if (here.active) {
-						this.start.x = (!this.lockX) ? temp.x + here.x - this.oldX : this.start.x;
-						this.start.y = (!this.lockY) ? temp.y + here.y - this.oldY : this.start.y;
-						this.oldX = here.x;
-						this.oldY = here.y;
+					if (this.oldX == null && this.oldY == null) { //jshint ignore:line
+						this.oldX = x;
+						this.oldY = y;
 					}
+					this.start.x = (!this.lockX) ? x + mouse.x - this.oldX : x;
+					this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
+					this.oldX = mouse.x;
+					this.oldY = mouse.y;
 				}
 			}
 			return this;
+		};
+		/**
+Stamp helper hook function - amended by stacks module
+
+@method setStampUsingStacksPivot
+@return this
+**/
+		my.Position.prototype.setStampUsingStacksPivot = function() {
+			if (my.pad[this.pivot]) {
+				this.setStampUsingDomElement(my.pad[this.pivot]);
+				return this;
+			}
+			if (my.element[this.pivot]) {
+				this.setStampUsingDomElement(my.element[this.pivot]);
+				return this;
+			}
+			if (my.stack[this.pivot]) {
+				this.setStampUsingDomElement(my.stack[this.pivot]);
+				return this;
+			}
 		};
 		/**
 setStampUsingPivot helper function
@@ -1674,6 +1728,24 @@ Overwritesa core setDimensions()
 			return this;
 		};
 		/**
+Reinitialize element with existing values
+@method domInitialize
+@return This
+@chainable
+**/
+		my.PageElement.prototype.domInitialize = function() {
+			this.set({
+				startX: this.start.x || 0,
+				startY: this.start.y || 0,
+				handleX: this.handle.x || 0,
+				handleY: this.handle.y || 0,
+				width: this.width || my.d[this.type].width,
+				height: this.height || my.d[this.type].height,
+				scale: this.scale || 1
+			});
+			return this;
+		};
+		/**
 Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use styling to set their drawing region dimensions
 
 @method setDimensions
@@ -1696,33 +1768,63 @@ Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use stylin
 			return this;
 		};
 		/**
-A __factory__ function to generate new Stack objects
+Alias for makeStack()
 @method newStack
 @param {Object} items Key:value Object argument for setting attributes
 @return Stack object
 @private
 **/
 		my.newStack = function(items) {
-			return new my.Stack(items);
+			return my.makeStack(items);
 		};
 		/**
-A __factory__ function to generate new Element objects
+Alias for makeElement()
 @method newElement
 @param {Object} items Key:value Object argument for setting attributes
 @return Element object
 @private
 **/
 		my.newElement = function(items) {
-			return new my.Element(items);
+			return my.makeElement(items);
 		};
 		/**
-A __factory__ function to generate new ElementGroup objects
+Alias for makeElementGroup()
 @method newElementGroup
 @param {Object} items Key:value Object argument for setting attributes
 @return ElementGroup object
 @private
 **/
 		my.newElementGroup = function(items) {
+			return my.makeElementGroup(items);
+		};
+		/**
+A __factory__ function to generate new Stack objects
+@method makeStack
+@param {Object} items Key:value Object argument for setting attributes
+@return Stack object
+@private
+**/
+		my.makeStack = function(items) {
+			return new my.Stack(items);
+		};
+		/**
+A __factory__ function to generate new Element objects
+@methodmakewElement
+@param {Object} items Key:value Object argument for setting attributes
+@return Element object
+@private
+**/
+		my.makeElement = function(items) {
+			return new my.Element(items);
+		};
+		/**
+A __factory__ function to generate new ElementGroup objects
+@method makeElementGroup
+@param {Object} items Key:value Object argument for setting attributes
+@return ElementGroup object
+@private
+**/
+		my.makeElementGroup = function(items) {
 			return new my.ElementGroup(items);
 		};
 
@@ -1754,6 +1856,8 @@ Pad set hook function - amended by Stacks module
 			}
 			if (this.group) {
 				my.canvas[this.name].style.margin = '0';
+				my.canvas[this.name].style.webkitBoxSizing = 'border-box';
+				my.canvas[this.name].style.mozBoxSizing = 'border-box';
 				my.canvas[this.name].style.boxSizing = 'border-box';
 			}
 		};
@@ -1878,20 +1982,17 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.setDisplayOffsets();
 				this.setAccessibility(items);
 				temp = my.safeObject(items.perspective);
-				this.perspective = my.newVector({
+				this.perspective = my.makeVector({
 					name: this.type + '.' + this.name + '.perspective',
 					x: my.xtGet(items.perspectiveX, temp.x, 'center'),
 					y: my.xtGet(items.perspectiveY, temp.y, 'center'),
 					z: my.xtGet(items.perspectiveZ, temp.z, 0)
 				});
-				this.work.perspective = my.newVector({
+				this.work.perspective = my.makeVector({
 					name: this.type + '.' + this.name + '.work.perspective'
 				});
-				this.initMouse({
-					mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
-				});
 				this.groups = [this.name];
-				my.newElementGroup({
+				my.makeElementGroup({
 					name: this.name,
 					stack: this.name
 				});
@@ -1904,8 +2005,14 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.setTransformOrigin();
 				if (this.group) {
 					my.stk[this.name].style.margin = '0';
+					my.stk[this.name].style.webkitBoxSizing = 'border-box';
+					my.stk[this.name].style.mozBoxSizing = 'border-box';
 					my.stk[this.name].style.boxSizing = 'border-box';
 					items.stackElement.style.position = 'absolute';
+				}
+				this.interactive = my.xtGet(items.interactive, true);
+				if (this.interactive) {
+					this.addMouseMove();
 				}
 				return this;
 			}
@@ -1987,7 +2094,7 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 			my.PageElement.prototype.set.call(this, items);
 			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
-					this.perspective = my.newVector(items.perspective || this.perspective);
+					this.perspective = my.makeVector(items.perspective || this.perspective);
 				}
 				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 					temp = my.safeObject(items.perspective);
@@ -2026,7 +2133,7 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 			my.PageElement.prototype.setDelta.call(this, items);
 			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
-					this.perspective = my.newVector(items.perspective || this.perspective);
+					this.perspective = my.makeVector(items.perspective || this.perspective);
 				}
 				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 					temp = my.safeObject(items.perspective);
@@ -2109,8 +2216,8 @@ _Replaces PageElement.setLocalDimensions
 					this.localHeight = gRes.height;
 				}
 				else if (elRes) {
-					el.style.width = 'auto';
-					this.localWidth = parseFloat(elRes.getPropertyValue('width'));
+					el.style.height = 'auto';
+					this.localHeight = parseFloat(elRes.getPropertyValue('height'));
 				}
 				else {
 					this.localHeight = 0;
@@ -2134,7 +2241,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 **/
 		my.Stack.prototype.addElementById = function(item) {
 			if (my.isa(item, 'str')) {
-				var myElement = my.newElement({
+				var myElement = my.makeElement({
 					domElement: document.getElementById(item),
 					group: this.name,
 				});
@@ -2162,7 +2269,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 				for (i = 0, iz = myArray.length; i < iz; i++) {
 					thisElement = myArray[i];
 					if (thisElement.nodeName !== 'CANVAS') {
-						myElement = my.newElement({
+						myElement = my.makeElement({
 							domElement: thisElement,
 							group: this.name,
 						});
@@ -2185,6 +2292,17 @@ Move DOM elements within a Stack, via the Stack's groups
 		my.Stack.prototype.render = function() {
 			for (var i = 0, iz = this.groups.length; i < iz; i++) {
 				my.group[this.groups[i]].render();
+			}
+			return true;
+		};
+		/**
+Reinitialize element with existing values
+@method domInit
+@return Always true
+**/
+		my.Stack.prototype.domInit = function() {
+			for (var i = 0, iz = this.groups.length; i < iz; i++) {
+				my.group[this.groups[i]].domInit();
 			}
 			return true;
 		};
@@ -2288,14 +2406,17 @@ Get dimensions of Stack
 				my.elm[this.name] = items.domElement;
 				my.pushUnique(my.elementnames, this.name);
 				this.setDisplayOffsets();
-				this.initMouse({
-					mouse: (my.isa(items.mouse, 'bool') || my.isa(items.mouse, 'vector')) ? items.mouse : true
-				});
 				this.setStyles(items);
 				this.setTransformOrigin();
 				if (this.group) {
 					my.elm[this.name].style.margin = '0';
+					my.elm[this.name].style.webkitBoxSizing = 'border-box';
+					my.elm[this.name].style.mozBoxSizing = 'border-box';
 					my.elm[this.name].style.boxSizing = 'border-box';
+				}
+				this.interactive = my.xtGet(items.interactive, false);
+				if (this.interactive) {
+					this.addMouseMove();
 				}
 				return this;
 			}
@@ -2335,7 +2456,7 @@ Return the DOM element wrapped by this object
 
 ## Instantiation
 
-* scrawl.newElementGroup()
+* scrawl.makeElementGroup()
 
 ## Purpose
 
@@ -2527,6 +2648,25 @@ Tell the Group to ask its constituent elements to render
 				el.renderElement();
 				if (el.type === 'Stack') {
 					my.group[el.name].render();
+				}
+			}
+			return this;
+		};
+		/**
+Reinitialize group elements with existing values
+@method domInit
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.domInit = function() {
+			var i,
+				iz,
+				el;
+			for (i = 0, iz = this.elements.length; i < iz; i++) {
+				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				el.domInitialize();
+				if (el.type === 'Stack') {
+					my.group[el.name].domInit();
 				}
 			}
 			return this;

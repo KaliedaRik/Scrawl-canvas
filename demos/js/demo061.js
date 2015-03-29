@@ -16,7 +16,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo061');
 
 	//define groups
-	trains = scrawl.newGroup({ //train group
+	trains = scrawl.makeGroup({ //train group
 		name: 'trains',
 	});
 
@@ -41,7 +41,7 @@ var mycode = function() {
 		group: 'trains',
 	});
 
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'Chica',
 		width: 60,
 		height: 30,
@@ -115,7 +115,7 @@ var mycode = function() {
 		fillStyle: 'green',
 	});
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'Steve',
 		text: 'Hello, everyone!',
 		font: '20pt Arial, sans-serif',
@@ -125,7 +125,7 @@ var mycode = function() {
 		group: 'trains',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'Jimmy',
 		fillStyle: 'pink',
 		radius: 25,
@@ -138,7 +138,7 @@ var mycode = function() {
 		group: 'trains',
 	});
 
-	scrawl.newSpriteAnimation({
+	scrawl.makeSpriteAnimation({
 		name: 'animatedCat',
 		running: 'forward',
 		loop: 'loop',
@@ -193,7 +193,7 @@ var mycode = function() {
 			d: 100,
         }, ],
 	});
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'Charlie',
 		width: 128,
 		height: 64,
@@ -213,7 +213,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			track.setDelta({
 				roll: -0.2,

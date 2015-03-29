@@ -24,7 +24,7 @@ var mycode = function() {
 	});
 
 	//define mark entitys
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'circle',
 		visibility: false,
 		fillStyle: 'red',
@@ -32,7 +32,7 @@ var mycode = function() {
 		method: 'fillDraw',
 		radius: 15,
 	});
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'diamond',
 		visibility: false,
 		width: 20,
@@ -46,7 +46,7 @@ var mycode = function() {
 		lineWidth: 2,
 		globalAlpha: 0.8,
 	});
-	scrawl.newShape({
+	scrawl.makeShape({
 		name: 'arrow',
 		visibility: false,
 		data: 'l0,0 40,15 -40,15 0-30z',

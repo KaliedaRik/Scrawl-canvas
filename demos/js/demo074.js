@@ -26,20 +26,20 @@ var mycode = function() {
 		checkCollisions;
 
 	//define groups
-	groupA = scrawl.newGroup({
+	groupA = scrawl.makeGroup({
 		name: 'A',
 		regionRadius: 200,
 	});
-	groupB = scrawl.newGroup({
+	groupB = scrawl.makeGroup({
 		name: 'B',
 		regionRadius: 200,
 	});
-	allEntitys = scrawl.newGroup({
+	allEntitys = scrawl.makeGroup({
 		name: 'all',
 	});
 
 	//build cell collision map
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 10,
 		startY: 10,
 		width: 730,
@@ -52,7 +52,7 @@ var mycode = function() {
 
 	//define entitys
 	for (var i = 0; i < 6; i++) {
-		scrawl.newPhrase({
+		scrawl.makePhrase({
 			name: 'text' + i,
 			startX: (100 * i) + 100,
 			startY: 300,
@@ -73,7 +73,7 @@ var mycode = function() {
 			backgroundMargin: 2,
 			text: phrase[i],
 		});
-		scrawl.newBlock({
+		scrawl.makeBlock({
 			name: 'B' + i,
 			startX: (100 * i) + 100,
 			startY: 60,
@@ -152,7 +152,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			checkBounds();
 			checkCollisions();

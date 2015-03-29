@@ -22,13 +22,13 @@ var mycode = function() {
 	});
 
 	//define entitys
-	circle = scrawl.newWheel({
+	circle = scrawl.makeWheel({
 		name: 'here',
 		radius: 50,
 		fillStyle: 'red',
 		globalCompositeOperation: 'source-over',
 	});
-	square = scrawl.newBlock({
+	square = scrawl.makeBlock({
 		pivot: 'here',
 		handleX: 'center',
 		handleY: 'center',
@@ -36,7 +36,7 @@ var mycode = function() {
 		height: 50,
 		fillStyle: 'blue',
 	});
-	label = scrawl.newPhrase({
+	label = scrawl.makePhrase({
 		pivot: 'here',
 		handleX: 'center',
 		handleY: 75,

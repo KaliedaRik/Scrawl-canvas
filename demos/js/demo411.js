@@ -35,7 +35,7 @@ var mycode = function() {
 	input_blue.value = '0';
 
 	//define filter
-	filter = scrawl.newChannelsFilter({
+	filter = scrawl.makeChannelsFilter({
 		name: 'myfilter',
 		alpha: 1,
 		red: 2,
@@ -44,7 +44,7 @@ var mycode = function() {
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -105,7 +105,7 @@ var mycode = function() {
 	input_blue.addEventListener('change', event_blue, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

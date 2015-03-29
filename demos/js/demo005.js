@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define block entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 10,
 		startY: 10,
 		width: 180,

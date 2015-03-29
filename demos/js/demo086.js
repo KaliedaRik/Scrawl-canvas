@@ -214,22 +214,22 @@ var mycode = function() {
 	};
 
 	//setup groups
-	myPins = scrawl.newGroup({
+	myPins = scrawl.makeGroup({
 		name: 'myPins',
 		order: 2,
 	});
-	myGraphs = scrawl.newGroup({
+	myGraphs = scrawl.makeGroup({
 		name: 'myGraphs',
 		order: 3,
 	});
-	myDetails = scrawl.newGroup({
+	myDetails = scrawl.makeGroup({
 		name: 'detailsBox',
 		order: 4,
 		visibility: false,
 	});
 
 	//define entitys
-	background = scrawl.newPicture({
+	background = scrawl.makePicture({
 		name: 'background',
 		width: 400,
 		height: 400,
@@ -239,7 +239,7 @@ var mycode = function() {
 		startY: graphY,
 		order: 1,
 	});
-	scrawl.newShape({
+	scrawl.makeShape({
 		lineWidth: 3,
 		order: 2,
 		startX: graphX,
@@ -250,7 +250,7 @@ var mycode = function() {
 		startX: graphX - 10,
 		data: 'h410m0,100h-410m0,100h410m0,100h-410',
 	});
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		handleX: 'center',
 		handleY: 'top',
 		startX: graphX + 20,
@@ -267,7 +267,7 @@ var mycode = function() {
 		startX: graphX + 380,
 		text: '2011',
 	});
-	yLabel[0] = scrawl.newPhrase({
+	yLabel[0] = scrawl.makePhrase({
 		handleX: 'right',
 		handleY: 'center',
 		startX: graphX - 15,
@@ -291,7 +291,7 @@ var mycode = function() {
 		startY: graphY,
 		text: addCommas(gridMax[currentCategory]),
 	});
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		handleX: 'right',
 		handleY: 'top',
 		startX: 15,
@@ -300,7 +300,7 @@ var mycode = function() {
 		text: 'Total annual crimes reported',
 		roll: -90,
 	});
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		handleX: 'center',
 		handleY: 'top',
 		font: '16pt Arial, sans-serif',
@@ -317,7 +317,7 @@ var mycode = function() {
 	});
 
 	//Graph title
-	myTitle = scrawl.newPhrase({
+	myTitle = scrawl.makePhrase({
 		handleX: 'center',
 		handleY: 'top',
 		startX: 350,
@@ -328,7 +328,7 @@ var mycode = function() {
 
 	//clickable graph labels
 	for (i = 0, iz = categories.length; i < iz; i++) {
-		scrawl.newPhrase({
+		scrawl.makePhrase({
 			name: categories[i],
 			font: '14pt Arial, sans-serif',
 			handleX: 'left',
@@ -353,7 +353,7 @@ var mycode = function() {
 		data: 'm' + (20 + graphX) + ',' + graphY + ' 30,0 30,0 30,0 30,0 30,0 30,0 30,0 30,0 30,0 30,0 30,0 30,0',
 	});
 	for (i = 0, iz = years.length; i < iz; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'y' + (1999 + i),
 			radius: 5,
 			fillStyle: 'blue',
@@ -365,7 +365,7 @@ var mycode = function() {
 	}
 
 	//pin details box
-	details = scrawl.newBlock({
+	details = scrawl.makeBlock({
 		name: 'details',
 		pivot: 'y1999',
 		width: 91,
@@ -378,7 +378,7 @@ var mycode = function() {
 		order: 6,
 		group: 'detailsBox',
 	});
-	detailsYear = scrawl.newPhrase({
+	detailsYear = scrawl.makePhrase({
 		font: '10pt bold Arial, sans-serif',
 		handleX: 'center',
 		text: '',
@@ -482,10 +482,18 @@ var mycode = function() {
 			}
 		}
 	};
-	myCanvas.addEventListener('mouseup', changeGraph, false);
+	scrawl.addListener('up', changeGraph, myCanvas);
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, myCanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			checkGraphLabels();

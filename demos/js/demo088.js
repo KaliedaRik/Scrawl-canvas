@@ -36,7 +36,7 @@ var mycode = function() {
 		method: 'draw',
 	});
 
-	myPin2 = scrawl.newWheel({
+	myPin2 = scrawl.makeWheel({
 		name: 'pin2',
 		radius: 5,
 		fillStyle: 'black',
@@ -59,7 +59,7 @@ var mycode = function() {
 		fillStyle: 'blue',
 		pathPlace: 0.5,
 	});
-	label2 = scrawl.newPhrase({
+	label2 = scrawl.makePhrase({
 		name: 'normal',
 		pivot: 'pin2',
 		handleX: 'center',
@@ -101,7 +101,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			myGroup.updateStart();
 			updateLabels();

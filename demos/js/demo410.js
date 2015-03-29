@@ -146,14 +146,14 @@ var mycode = function() {
 	input_cell24.value = '0';
 
 	//define filter
-	filter = scrawl.newMatrixFilter({
+	filter = scrawl.makeMatrixFilter({
 		name: 'myfilter',
 		alpha: 1,
 		data: [-2, -1, 0, -1, 1, 1, 0, 1, 2],
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -391,7 +391,7 @@ var mycode = function() {
 	input_cell24.addEventListener('change', event_cell24, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

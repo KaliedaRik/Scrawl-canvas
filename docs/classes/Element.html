@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.1.0</em>
+            <em>API Docs for: 4.2.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -256,7 +256,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlStacks.js.html#l2253"><code>source\scrawlStacks.js:2253</code></a>
+            Defined in: <a href="../files/source_scrawlStacks.js.html#l2371"><code>source\scrawlStacks.js:2371</code></a>
         </div>
     
 
@@ -335,7 +335,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2253"><code>source\scrawlStacks.js:2253</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2371"><code>source\scrawlStacks.js:2371</code></a>
         
         </p>
 
@@ -443,6 +443,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method inherited">
+                                <a href="#method_getMouseIdFromEvent">getMouseIdFromEvent</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private inherited">
                                 <a href="#method_handleMouseMove">handleMouseMove</a>
 
@@ -451,14 +458,14 @@
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_handleMouseOut">handleMouseOut</a>
+                                <a href="#method_handleMouseTilt">handleMouseTilt</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_initMouse">initMouse</a>
+                            <li class="index-item method inherited">
+                                <a href="#method_parse">parse</a>
 
                                 
                                 
@@ -527,13 +534,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_toString">toString</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -573,6 +573,13 @@
                             </li>
                         
                             <li class="index-item property inherited">
+                                <a href="#property_interactive">interactive</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
                                 <a href="#property_localHeight">localHeight</a>
 
                                 
@@ -587,7 +594,7 @@
                             </li>
                         
                             <li class="index-item property inherited">
-                                <a href="#property_mouse">mouse</a>
+                                <a href="#property_mice">mice</a>
 
                                 
                                 
@@ -700,7 +707,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2932"><code>source\scrawlCore.js:2932</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3560"><code>source\scrawlCore.js:3560</code></a>
         
         </p>
 
@@ -711,7 +718,7 @@
     </div>
 
     <div class="description">
-        <p>Adds a mousemove event listener to the element</p>
+        <p>Adds event listeners to the element</p>
 
     </div>
 
@@ -780,7 +787,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1869"><code>source\scrawlCore.js:1869</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2277"><code>source\scrawlCore.js:2277</code></a>
         
         </p>
 
@@ -842,7 +849,7 @@
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.newBlock({
+                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
     width: 50,
     height: 50
     });
@@ -904,7 +911,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2667"><code>source\scrawlCore.js:2667</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3162"><code>source\scrawlCore.js:3162</code></a>
         
         </p>
 
@@ -1000,7 +1007,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2323"><code>source\scrawlStacks.js:2323</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2444"><code>source\scrawlStacks.js:2444</code></a>
         
         </p>
 
@@ -1039,7 +1046,17 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     <h3 class="name"><code>getMouse</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>item</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -1068,7 +1085,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2810"><code>source\scrawlCore.js:2810</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3303"><code>source\scrawlCore.js:3303</code></a>
         
         </p>
 
@@ -1079,19 +1096,46 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p><p>Retrieve details of the Mouse cursor position in relation to the DOM element&#39;s top left hand corner. Most useful for determining mouse cursor position over Stack and Pad (visible &lt;canvas&gt;) elements.</p></p>
-<p><p><em>Note: if changes are made elsewhere to the web page (DOM) after the page loads, the function .getDisplayOffsets() will need to be called to recalculate the element&#39;s position within the page - failure to do so will lead to this function returning incorrect data. getDisplayOffsets() does not need to be called during/after page scrolling.</em></p></p>
-<p><p>The returned object is a Vector containing the mouse cursor&#39;s current x and y coordinates in relation to the DOM element&#39;s top left corner, together with the following additional attributes:</p></p>
+        <p>Retrieve details of the Mouse cursor position in relation to the DOM element&#39;s top left hand corner. Most useful for determining mouse cursor position over Stack and Pad (visible &lt;canvas&gt;) elements.</p>
+<p>This function is also used to retrieve details of touch positions.</p>
+<p><em>Note: if changes are made elsewhere to the web page (DOM) after the page loads, the function .getDisplayOffsets() will need to be called to recalculate the element&#39;s position within the page - failure to do so will lead to this function returning incorrect data. getDisplayOffsets() does not need to be called during/after page scrolling.</em></p>
+<p>By default, the function returns a single Vector containing either the first touch position or the current mouse cursor position.</p>
+<p>The returned object is a Vector containing the mouse cursor&#39;s current x and y coordinates in relation to the DOM element&#39;s top left corner, together with the following additional attributes:</p>
 <ul>
 <li><strong>active</strong> - set to true if mouse is hovering over the element; false otherwise</li>
-<li><strong>type</strong> - element&#39;s type (&#39;stack&#39;, &#39;element&#39;, &#39;pad&#39;)</li>
-<li><strong>element</strong> - Scrawl wrapper object&#39;s name attribute</li>
-<li><strong>type</strong> - Scrawl wrapper object&#39;s type (&#39;Pad&#39;, &#39;Stack&#39;, &#39;Element&#39;)</li>
-<li><strong>layer</strong> - true if coordinates have been calculated using e.layerX, e.layerY; false otherwise</li>
+<li><strong>id</strong> - event vector id (-1: mouse; 0+ touch or pointer)</li>
+<li><strong>order</strong> - event order (0: mouse; 1+ touch or pointer)</li>
 </ul>
+<p>If an argument is supplied, then all currently existing mouse/touch vectors are returned as an array, with index 0 representing the mouse pointer, index 1 representing the first touch coordinate and additional indexes representing additional touch coordinates</p>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">item</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>true to return the array; false (default) to return either first touch or mouse Vector</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1101,7 +1145,110 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>Vector containing localized mouse coordinates, with additional attributes</p>
+                    <p>Vector, or an array of Vectors containing localized coordinates, with additional attributes; if mouse/touch has been disabled for the DOM element, returns false</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getMouseIdFromEvent" class="method item inherited">
+    <h3 class="name"><code>getMouseIdFromEvent</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>item</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/PageElement.html#method_getMouseIdFromEvent">PageElement</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3362"><code>source\scrawlCore.js:3362</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">item</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>DOM event object</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Array - mouse id strings associated with event(s)</p>
 
                 
             </div>
@@ -1122,6 +1269,12 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
                 <li class="arg">
                     
                         <code>e</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>active</code>
                     
                 </li>
             
@@ -1157,7 +1310,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2828"><code>source\scrawlCore.js:2828</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3392"><code>source\scrawlCore.js:3392</code></a>
         
         </p>
 
@@ -1194,6 +1347,24 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
                     
                 </li>
             
+                <li class="param">
+                    
+                        <code class="param-name">active</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>set only by handleMouseIn, handleMouseOut</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
             </ul>
         </div>
     
@@ -1216,8 +1387,8 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_handleMouseOut" class="method item private inherited">
-    <h3 class="name"><code>handleMouseOut</code></h3>
+                    <div id="method_handleMouseTilt" class="method item private inherited">
+    <h3 class="name"><code>handleMouseTilt</code></h3>
 
     
         <div class="args">
@@ -1257,11 +1428,11 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
         
             
                 <p>Inherited from
-                <a href="../classes/PageElement.html#method_handleMouseOut">PageElement</a>:
+                <a href="../classes/PageElement.html#method_handleMouseTilt">PageElement</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2891"><code>source\scrawlCore.js:2891</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3552"><code>source\scrawlCore.js:3552</code></a>
         
         </p>
 
@@ -1272,7 +1443,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>mouseout event listener function</p>
+        <p>mouseTilt hook function - amended by scrawlStacks module</p>
 
     </div>
 
@@ -1320,21 +1491,11 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_initMouse" class="method item private inherited">
-    <h3 class="name"><code>initMouse</code></h3>
+                    <div id="method_parse" class="method item inherited">
+    <h3 class="name"><code>parse</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>constructor</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -1346,15 +1507,11 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     
 
     
-        <span class="flag private">private</span>
-    
 
     
 
     
 
-    
-        <span class="flag chainable">chainable</span>
     
 
     
@@ -1363,11 +1520,11 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
         
             
                 <p>Inherited from
-                <a href="../classes/PageElement.html#method_initMouse">PageElement</a>:
+                <a href="../classes/Base.html#method_parse">Base</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2908"><code>source\scrawlCore.js:2908</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2316"><code>source\scrawlCore.js:2316</code></a>
         
         </p>
 
@@ -1378,34 +1535,10 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>Constructor helper function</p>
+        <p>Turn the object into a JSON String</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">constructor</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>argument object</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -1415,7 +1548,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>This</p>
+                    <p>object of object&#39;s currently set attributes</p>
 
                 
             </div>
@@ -1463,7 +1596,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2958"><code>source\scrawlCore.js:2958</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3573"><code>source\scrawlCore.js:3573</code></a>
         
         </p>
 
@@ -1474,7 +1607,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>Remove the mousemove event listener from the element</p>
+        <p>Remove event listeners from the element</p>
 
     </div>
 
@@ -1533,7 +1666,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1916"><code>source\scrawlCore.js:1916</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2324"><code>source\scrawlCore.js:2324</code></a>
         
         </p>
 
@@ -1613,7 +1746,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2771"><code>source\scrawlCore.js:2771</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3264"><code>source\scrawlCore.js:3264</code></a>
         
         </p>
 
@@ -1720,7 +1853,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2691"><code>source\scrawlCore.js:2691</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3186"><code>source\scrawlCore.js:3186</code></a>
         
         </p>
 
@@ -1825,7 +1958,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2729"><code>source\scrawlCore.js:2729</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3222"><code>source\scrawlCore.js:3222</code></a>
         
         </p>
 
@@ -1921,7 +2054,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2797"><code>source\scrawlCore.js:2797</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3290"><code>source\scrawlCore.js:3290</code></a>
         
         </p>
 
@@ -1991,7 +2124,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2750"><code>source\scrawlCore.js:2750</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3243"><code>source\scrawlCore.js:3243</code></a>
         
         </p>
 
@@ -2063,7 +2196,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2785"><code>source\scrawlCore.js:2785</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3278"><code>source\scrawlCore.js:3278</code></a>
         
         </p>
 
@@ -2129,7 +2262,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2661"><code>source\scrawlCore.js:2661</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3156"><code>source\scrawlCore.js:3156</code></a>
         
         </p>
 
@@ -2146,74 +2279,6 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 
     
 
-    
-
-    
-</div>
-
-                
-                    <div id="method_toString" class="method item inherited">
-    <h3 class="name"><code>toString</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#method_toString">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l1908"><code>source\scrawlCore.js:1908</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Turn the object into a JSON String</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>JSON string of non-default value attributes</p>
-
-                
-            </div>
-        </div>
     
 
     
@@ -2248,7 +2313,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1802"><code>source\scrawlCore.js:1802</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2210"><code>source\scrawlCore.js:2210</code></a>
         
         </p>
 
@@ -2292,7 +2357,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2617"><code>source\scrawlCore.js:2617</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3124"><code>source\scrawlCore.js:3124</code></a>
         
         </p>
 
@@ -2336,7 +2401,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2624"><code>source\scrawlCore.js:2624</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3131"><code>source\scrawlCore.js:3131</code></a>
         
         </p>
 
@@ -2383,7 +2448,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2314"><code>source\scrawlStacks.js:2314</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2435"><code>source\scrawlStacks.js:2435</code></a>
         
         </p>
 
@@ -2399,6 +2464,50 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 
     
         <p><strong>Default:</strong> &#x27;auto&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_interactive" class="property item inherited">
+    <h3 class="name"><code>interactive</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/PageElement.html#property_interactive">PageElement</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3140"><code>source\scrawlCore.js:3140</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Set the interactive attribute to true to track mouse/pointer/touch events on the element. By default Pad and Stack objects set their element&#39;s interactivity to true, while Element objects set it to false</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> true (false for Element objects)</p>
     
 
     
@@ -2427,7 +2536,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2610"><code>source\scrawlCore.js:2610</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3117"><code>source\scrawlCore.js:3117</code></a>
         
         </p>
 
@@ -2471,7 +2580,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2603"><code>source\scrawlCore.js:2603</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3110"><code>source\scrawlCore.js:3110</code></a>
         
         </p>
 
@@ -2495,9 +2604,9 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="property_mouse" class="property item inherited">
-    <h3 class="name"><code>mouse</code></h3>
-    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                    <div id="property_mice" class="property item inherited">
+    <h3 class="name"><code>mice</code></h3>
+    <span class="type">Object</span>
 
     
 
@@ -2511,11 +2620,11 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
         
             
                 <p>Inherited from
-                <a href="../classes/PageElement.html#property_mouse">PageElement</a>:
+                <a href="../classes/PageElement.html#property_mice">PageElement</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2638"><code>source\scrawlCore.js:2638</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3085"><code>source\scrawlCore.js:3085</code></a>
         
         </p>
 
@@ -2525,15 +2634,14 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>Mouse vector - holds the mouse pointer coordinates relative to the top left corner of the element</p>
-<p>When instantiating DOM element wrappers (Pad, Stack, Element), setting this attribute to true will make Scrawl add a mousemove event listener to the element. By default, Pads and Stacks will add the event listener to the &lt;canvas&gt; or &lt;div&gt; element (mouse == true); Elements will not (mouse == false).</p>
-<p>The event listener can be added to, or removed from, an element at any time using the set() function with an argument attribute of <em>mouse: true</em> or <em>mouse: false</em>.</p>
-<p>The functions <em>addMouseMove()</em> and <em>removeMouseMove()</em> can also be called directly.</p>
+        <p>The mice attribute is an object containing supplemented vectors which hold real-time information about the current coordinates of the mouse pointer and any other pointer or touch instances occurring over the element</p>
+<p>mice.mouse - always refers to the mouse pointer
+mice.ui0, mice.ui1 etc - refers to pointer and touch events</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> false</p>
+        <p><strong>Default:</strong> {}</p>
     
 
     
@@ -2562,7 +2670,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1773"><code>source\scrawlCore.js:1773</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2181"><code>source\scrawlCore.js:2181</code></a>
         
         </p>
 
@@ -2604,7 +2712,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2652"><code>source\scrawlCore.js:2652</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3147"><code>source\scrawlCore.js:3147</code></a>
         
         </p>
 
@@ -2648,7 +2756,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2631"><code>source\scrawlCore.js:2631</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3076"><code>source\scrawlCore.js:3076</code></a>
         
         </p>
 
@@ -2692,7 +2800,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1816"><code>source\scrawlCore.js:1816</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2224"><code>source\scrawlCore.js:2224</code></a>
         
         </p>
 
@@ -2736,7 +2844,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1809"><code>source\scrawlCore.js:1809</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2217"><code>source\scrawlCore.js:2217</code></a>
         
         </p>
 
@@ -2785,7 +2893,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2305"><code>source\scrawlStacks.js:2305</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2426"><code>source\scrawlStacks.js:2426</code></a>
         
         </p>
 
@@ -2828,7 +2936,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2589"><code>source\scrawlCore.js:2589</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3062"><code>source\scrawlCore.js:3062</code></a>
         
         </p>
 
@@ -2874,7 +2982,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1783"><code>source\scrawlCore.js:1783</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2191"><code>source\scrawlCore.js:2191</code></a>
         
         </p>
 

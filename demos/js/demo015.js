@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define entity ...
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		startX: 200,
 		startY: 100,
 		handleX: 'center',

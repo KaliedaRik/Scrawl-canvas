@@ -10,15 +10,17 @@ var mycode = function() {
 	//define variables
 	var pad1,
 		pad2,
-		pad1Here,
-		pad2Here,
-		currentEntity,
 		group1,
 		group2,
-		pickupEntity,
-		dropEntity,
-		dragenter,
-		dragover;
+		pad1Here,
+		pad2Here,
+		currentEntity = false,
+		startMove,
+		continueMove,
+		endMove,
+		setActivePad,
+		activePad = 0,
+		stopE;
 
 	//add canvases to page
 	pad1 = scrawl.addCanvasToPage({
@@ -44,7 +46,7 @@ var mycode = function() {
 	pad1.makeCurrent();
 
 	//define entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'box1',
 		startX: 10,
 		startY: 10,
@@ -64,66 +66,91 @@ var mycode = function() {
 	});
 
 	//event listeners
-	pickupEntity = function(e) {
-		currentEntity = group1.getEntityAt(pad1Here) || group2.getEntityAt(pad2Here);
-		if (currentEntity) {
-			currentEntity.pickupEntity((pad1Here.active) ? pad1Here : pad2Here);
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
 		}
-		e.stopPropagation();
-		e.preventDefault();
 	};
-	dropEntity = function(e) {
+	setActivePad = function(e) {
+		//each pad has its own mouse/pointer/touch tracker
+		pad1Here = pad1.getMouse();
+		pad2Here = pad2.getMouse();
+
+		//is the mouse/pointer/touch hovering over/moving over either pad? 
+		switch (true) {
+			case (pad1Here && pad1Here.active):
+				activePad = -1;
+				break;
+			case (pad2Here && pad2Here.active):
+				activePad = 1;
+				break;
+			default:
+				activePad = 0;
+		}
+
+		// show or hide the dragged block - will only display on current active pad
+		if (activePad < 0) {
+			group1.addEntitysToGroup(currentEntity.name);
+			group2.removeEntitysFromGroup(currentEntity.name);
+		}
+		else if (activePad > 0) {
+			group2.addEntitysToGroup(currentEntity.name);
+			group1.removeEntitysFromGroup(currentEntity.name);
+		}
+		else {
+			group1.removeEntitysFromGroup(currentEntity.name);
+			group2.removeEntitysFromGroup(currentEntity.name);
+		}
+
+		//change the background color of the current active pad
+		scrawl.cell[pad1.base].set({
+			backgroundColor: (activePad < 0) ? 'lightblue' : 'white'
+		});
+		scrawl.cell[pad2.base].set({
+			backgroundColor: (activePad > 0) ? 'lightblue' : 'white'
+		});
+	};
+	endMove = function(e) {
+		stopE(e);
+		setActivePad(e);
 		if (currentEntity) {
 			currentEntity.dropEntity();
+			//to fix the case where mouse/pointer/touch ends outside of any canvas element
+			if (activePad === 0) {
+				currentEntity.set({
+					startX: 'center',
+					startY: 'center',
+					handleX: 'center',
+					handleY: 'center'
+				});
+				//dump misplaced blocks in the top pad
+				group2.removeEntitysFromGroup(currentEntity.name);
+				group1.addEntitysToGroup(currentEntity.name);
+			}
 			currentEntity = false;
 		}
-		e.stopPropagation();
-		e.preventDefault();
 	};
-	dragenter = function(e) {
-		e.stopPropagation();
-		e.preventDefault();
+	startMove = function(e) {
+		endMove(e); //to fix the case where mouse/pointer/touch ends outside of the browser window
+		currentEntity = (e.target.id === 'canvas1') ? group1.getEntityAt(pad1Here) : group2.getEntityAt(pad2Here);
+		if (currentEntity) {
+			currentEntity.pickupEntity((activePad < 0) ? pad1Here : pad2Here);
+		}
 	};
-	dragover = function(e) {
-		e.stopPropagation();
-		e.preventDefault();
+	continueMove = function(e) {
+		stopE(e);
+		setActivePad(e);
 	};
-	scrawl.canvas.canvas1.addEventListener('mousedown', pickupEntity, false);
-	scrawl.canvas.canvas1.addEventListener('dragenter', dragenter, false);
-	scrawl.canvas.canvas1.addEventListener('dragover', dragover, false);
-	scrawl.canvas.canvas2.addEventListener('mousedown', pickupEntity, false);
-	scrawl.canvas.canvas2.addEventListener('dragenter', dragenter, false);
-	scrawl.canvas.canvas2.addEventListener('dragover', dragover, false);
-	document.body.addEventListener('mouseup', dropEntity, false);
-	document.body.addEventListener('mouseleave', dropEntity, false);
+	scrawl.addListener('up', endMove, [document.body, scrawl.canvas.canvas1, scrawl.canvas.canvas2]);
+	scrawl.addListener('down', startMove, [scrawl.canvas.canvas1, scrawl.canvas.canvas2]);
+	scrawl.addListener(['move', 'enter', 'leave'], continueMove, [scrawl.canvas.canvas1, scrawl.canvas.canvas2]);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			pad1Here = pad1.getMouse();
-			pad2Here = pad2.getMouse();
-			scrawl.cell[pad1.base].set({
-				backgroundColor: (pad1Here.active) ? 'lightblue' : 'white',
-			});
-			scrawl.cell[pad2.base].set({
-				backgroundColor: (pad2Here.active) ? 'lightblue' : 'white',
-			});
-			if (currentEntity) {
-				if (scrawl.contains(group1.entitys, currentEntity.name)) {
-					if (pad2Here.active) {
-						group1.removeEntitysFromGroup(currentEntity.name);
-						group2.addEntitysToGroup(currentEntity.name);
-					}
-				}
-				else if (scrawl.contains(group2.entitys, currentEntity.name)) {
-					if (pad1Here.active) {
-						group2.removeEntitysFromGroup(currentEntity.name);
-						group1.addEntitysToGroup(currentEntity.name);
-					}
-				}
-			}
-			pad1.render();
-			pad2.render();
+
+			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

@@ -28,13 +28,13 @@ var mycode = function() {
 	pad = scrawl.pad.myCanvas;
 
 	//define filters
-	scrawl.newSaturationFilter({
+	scrawl.makeSaturationFilter({
 		name: 'sat',
 		saturation: 3,
 	});
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'ripples',
 		order: 1,
 		filters: ['sat'],
@@ -43,7 +43,7 @@ var mycode = function() {
 	filterEntitys = scrawl.group.ripples.entitys;
 
 	//define entitys
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'myImage',
 		width: 600,
 		height: 400,
@@ -57,9 +57,10 @@ var mycode = function() {
 			e.preventDefault();
 		}
 		counter++;
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'drop' + counter,
-			start: here,
+			startX: here.x,
+			startY: here.y,
 			radius: 1,
 			method: 'none',
 			lineWidth: 4,
@@ -67,10 +68,18 @@ var mycode = function() {
 			order: counter,
 		});
 	};
-	canvas.addEventListener('mouseup', newRing, false);
+	scrawl.addListener('up', newRing, canvas);
+
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, canvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			for (var i = 0, z = filterEntitys.length; i < z; i++) {

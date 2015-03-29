@@ -31,12 +31,12 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo087');
 
 	//define entitys
-	background = scrawl.newPicture({
+	background = scrawl.makePicture({
 		source: 'background',
 		fastStamp: true,
 	});
 
-	myBlob = scrawl.newPicture({
+	myBlob = scrawl.makePicture({
 		source: 'blob',
 		fastStamp: true,
 	});
@@ -85,8 +85,16 @@ var mycode = function() {
 		pad.show();
 	};
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
 			moveBlobs();

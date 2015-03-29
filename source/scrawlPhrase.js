@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -53,12 +51,20 @@ scrawlPhrase module adaptions to the Scrawl library object
 **/
 
 		/**
-A __factory__ function to generate new Phrase entitys
+Alias for makePhrase()
 @method newPhrase
+@deprecated
+**/
+		my.newPhrase = function(items) {
+			return my.makePhrase(items);
+		};
+		/**
+A __factory__ function to generate new Phrase entitys
+@method makePhrase
 @param {Object} items Key:value Object argument for setting attributes
 @return Phrase object
 @example
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		startX: 50,
 		startY: 20,
 		fillStyle: 'red',
@@ -67,7 +73,7 @@ A __factory__ function to generate new Phrase entitys
 		text: 'Hello, world!\nHow are you today?',
 		});
 **/
-		my.newPhrase = function(items) {
+		my.makePhrase = function(items) {
 			return new my.Phrase(items);
 		};
 		my.pushUnique(my.sectionlist, 'text');
@@ -78,7 +84,7 @@ A __factory__ function to generate new Phrase entitys
 
 ## Instantiation
 
-* scrawl.newPhrase()
+* scrawl.makePhrase()
 
 ## Purpose
 

@@ -40,7 +40,7 @@ var mycode = function() {
 		visibility: false,
 		group: 'myCell',
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		radius: 10,
 		fillStyle: 'red',
 		method: 'fill',
@@ -63,14 +63,14 @@ var mycode = function() {
 	});
 
 	//build the pattern
-	scrawl.newPattern({
+	scrawl.makePattern({
 		name: 'dotty',
 		source: 'myCell',
 		autoUpdate: true,
 	});
 
 	//add a block entity, for displaying the pattern
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 200,
 		startY: 200,
 		handleX: 'center',
@@ -86,7 +86,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			patternCellGroup.updateStart();

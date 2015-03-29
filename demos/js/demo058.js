@@ -39,7 +39,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo058');
 
 	//define entity sheet objects - one for each animation sequence
-	scrawl.newSpriteAnimation({
+	scrawl.makeSpriteAnimation({
 		name: 'tiger_leftStand',
 		running: 'forward',
 		loop: 'pause',
@@ -292,7 +292,7 @@ var mycode = function() {
 	});
 
 	//define entity
-	myTiger = scrawl.newPicture({
+	myTiger = scrawl.makePicture({
 		name: 'tigerFrame',
 		startX: 375,
 		startY: 187,
@@ -393,8 +393,16 @@ var mycode = function() {
 		timeAtMouse = false;
 	};
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = scrawl.pad.mycanvas.getMouse();
 			if (here.active) {
@@ -403,7 +411,7 @@ var mycode = function() {
 			}
 			else {
 				stopTiger();
-				myMessage.innerHTML = 'Move mouse over canvas';
+				myMessage.innerHTML = 'Move mouse over, or tap on, canvas to animate cat';
 			}
 			scrawl.render();
 

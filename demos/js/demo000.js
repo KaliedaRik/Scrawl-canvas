@@ -15,7 +15,7 @@ var mycode = function() {
 	//code here
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			//code here

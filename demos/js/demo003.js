@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define some phrase entitys to hold the text
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		text: 'Hello, Scrawl World!',
 		handleX: 'center',
 		handleY: 'center',

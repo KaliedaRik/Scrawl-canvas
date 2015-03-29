@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -93,16 +91,16 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 									}
 									break;
 								case 'group':
-									my.newGroup(a);
+									my.makeGroup(a);
 									break;
 								case 'path':
 									my.makePath(a);
 									break;
 								case 'gradient':
-									my.newGradient(a);
+									my.makeGradient(a);
 									break;
 								case 'radialgradient':
-									my.newRadialGradient(a);
+									my.makeRadialGradient(a);
 									break;
 								default:
 									new my[a.type](a);

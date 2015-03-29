@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define entitys
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'mywheel',
 		startX: 200,
 		startY: 200,
@@ -29,7 +29,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.entity.mywheel.setDelta({
 				roll: 0.5,

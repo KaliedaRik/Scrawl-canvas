@@ -41,8 +41,10 @@
 <body>
   <h1><a href="../index.html">Scrawl.js</a> - demonstration 215</h1>
   <h2>Locking elements horizontally and vertically</h2>
-  <h3>Modules: stacks, animation</h3>
-  <p>Control the stack scale, and element width, height and position, using the controllers below. Setting the element's height attribute to 0% triggers height:auto.</p>
+  <h3>Modules: stacks</h3>
+  <p>Setting the element's height attribute to 0 or '0%' triggers height:auto.</p>
+  <p>Note: For best results, set the margin, padding and borders of stack elements (including pads and stacks) to 0; borders can be recreated with scrawl entities, if required. Otherwise the current implementation of this functionality leads to display discrepancies
+    between IE and other browsers</p>
 
   <!-- this section for the stacks and elements -->
   <div id="mainstack" class="scrawlstack">
@@ -55,71 +57,63 @@
     </ul>
   </div>
 
-  <p id="testmessage"></p>
-
-  <!-- this section for the stack and element status messages -->
-  <p id="status"></p>
-
   <!-- the remaining section for controllers -->
-  <h4>Main (dark blue) stack</h4>
   <table>
     <tr class="t1">
       <td class="rowlabel">Scale (n)</td>
       <td>0.5
-        <input id="bluestack_scale" type="range" value="1" min="0.5" max="1.5" step="0.01" />1.5</td>
+        <input class="controlItem" id="bluestack_scale" type="range" value="1" min="0.5" max="1.5" step="0.01" />1.5</td>
     </tr>
   </table>
-
-  <h4>Main (light blue) paragraph</h4>
   <table>
     <tr class="t0">
       <td class="rowlabel">Width</td>
       <td>(%) 0
-        <input id="bluepara_widthPercent" type="range" value="50" min="0" max="120" step="1" />120</td>
+        <input class="controlItem" id="bluepara_widthPercent" type="range" value="50" min="0" max="120" step="1" />120</td>
       <td>(px) 0
-        <input id="bluepara_widthAbsolute" type="range" value="300" min="0" max="600" step="10" />600</td>
+        <input class="controlItem" id="bluepara_widthAbsolute" type="range" value="300" min="0" max="600" step="10" />600</td>
       <td class="rowlabel">Height</td>
       <td>(%) 0
-        <input id="bluepara_heightPercent" type="range" value="50" min="0" max="120" step="1" />120</td>
+        <input class="controlItem" id="bluepara_heightPercent" type="range" value="50" min="0" max="120" step="1" />120</td>
       <td>(px) 0
-        <input id="bluepara_heightAbsolute" type="range" value="300" min="0" max="600" step="10" />600</td>
+        <input class="controlItem" id="bluepara_heightAbsolute" type="range" value="300" min="0" max="600" step="10" />600</td>
     </tr>
     <tr class="t1">
       <td class="rowlabel">Starts ('n%')</td>
       <td>X: -50%
-        <input id="blueparastart_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+        <input class="controlItem" id="blueparastart_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
       <td>Y: -50%
-        <input id="blueparastart_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+        <input class="controlItem" id="blueparastart_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
       <td class="rowlabel"><b>Handles ('n%')</b>
       </td>
       <td>X: -50%
-        <input id="blueparahandle_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+        <input class="controlItem" id="blueparahandle_xPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
       <td>Y: -50%
-        <input id="blueparahandle_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
+        <input class="controlItem" id="blueparahandle_yPercent" type="range" value="0" min="-50" max="150" step="1" />150%</td>
     </tr>
     <tr class="t0">
       <td class="rowlabel">Starts (n)</td>
       <td>X: -20
-        <input id="blueparastart_xAbsolute" type="range" value="0" min="-20" max="620" step="5" />620</td>
+        <input class="controlItem" id="blueparastart_xAbsolute" type="range" value="0" min="-20" max="620" step="5" />620</td>
       <td>Y: -20
-        <input id="blueparastart_yAbsolute" type="range" value="0" min="-20" max="620" step="5" />620</td>
+        <input class="controlItem" id="blueparastart_yAbsolute" type="range" value="0" min="-20" max="620" step="5" />620</td>
       <td class="rowlabel">Handles (n)</td>
       <td>X: -100
-        <input id="blueparahandle_xAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
+        <input class="controlItem" id="blueparahandle_xAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
       <td>Y: -100
-        <input id="blueparahandle_yAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
+        <input class="controlItem" id="blueparahandle_yAbsolute" type="range" value="0" min="-100" max="100" step="1" />100</td>
     </tr>
     <tr class="t1">
       <td class="rowlabel">Starts ('str')</td>
       <td>X:
-        <select id="blueparastart_xString">
+        <select class="controlItem" id="blueparastart_xString">
           <option value="left">left</option>
           <option value="center">center</option>
           <option value="right">right</option>
         </select>
       </td>
       <td>Y:
-        <select id="blueparastart_yString">
+        <select class="controlItem" id="blueparastart_yString">
           <option value="top">top</option>
           <option value="center">center</option>
           <option value="bottom">bottom</option>
@@ -127,14 +121,14 @@
       </td>
       <td class="rowlabel">Handles ('str')</td>
       <td>X:
-        <select id="blueparahandle_xString">
+        <select class="controlItem" id="blueparahandle_xString">
           <option value="left">left</option>
           <option value="center">center</option>
           <option value="right">right</option>
         </select>
       </td>
       <td>Y:
-        <select id="blueparahandle_yString">
+        <select class="controlItem" id="blueparahandle_yString">
           <option value="top">top</option>
           <option value="center">center</option>
           <option value="bottom">bottom</option>
@@ -144,10 +138,10 @@
     <tr class="t0">
       <td class="rowlabel">Border width</td>
       <td colspan="2">0
-        <input id="bluepara_borderWidth" type="range" value="1" min="0" max="50" step="1" />50</td>
+        <input class="controlItem" id="borderWidth" type="range" value="1" min="0" max="50" step="1" />50</td>
       <td class="rowlabel">Border style</td>
       <td colspan="2">
-        <select id="bluepara_borderStyle">
+        <select class="controlItem" id="borderStyle">
           <option value="solid">solid</option>
           <option value="dotted">dotted</option>
           <option value="dashed">dashed</option>
@@ -162,23 +156,21 @@
     <tr class="t1">
       <td class="rowlabel">Padding</td>
       <td colspan="2">0
-        <input id="bluepara_padding" type="range" value="0" min="0" max="50" step="1" />50</td>
+        <input class="controlItem" id="padding" type="range" value="0" min="0" max="50" step="1" />50</td>
       <td class="rowlabel">Box sizing</td>
       <td colspan="2">
-        <select id="bluepara_boxSizing">
+        <select class="controlItem" id="boxSizing">
           <option value="content-box">content-box</option>
           <option value="border-box">border-box</option>
         </select>
       </td>
     </tr>
   </table>
-
-  <h4>Other elements</h4>
   <table>
     <tr class="t1">
       <td class="rowlabel">Red element - lock to</td>
       <td>
-        <select id="redpara_lockto">
+        <select class="controlItem" id="redpara_lockto">
           <option value="">(empty string)</option>
           <option value="top">top</option>
           <option value="right">right</option>
@@ -188,7 +180,7 @@
       </td>
       <td class="rowlabel">Green element - lock to</td>
       <td>
-        <select id="greenpara_lockto">
+        <select class="controlItem" id="greenpara_lockto">
           <option value="">(empty string)</option>
           <option value="top">top</option>
           <option value="right">right</option>
@@ -200,14 +192,14 @@
     <tr class="t0">
       <td class="rowlabel">Equal height</td>
       <td>
-        <select id="equalheight">
+        <select class="controlItem" id="equalheight">
           <option value="0">false</option>
           <option value="1">true</option>
         </select>
       </td>
       <td class="rowlabel">Equal width</td>
       <td>
-        <select id="equalwidth">
+        <select class="controlItem" id="equalwidth">
           <option value="0">false</option>
           <option value="1">true</option>
         </select>
@@ -230,7 +222,6 @@
 
   <script src="../source/scrawlCore.js"></script>
   <script id="testscript" src="js/demo215.js"></script>
-  <script src="js/changePage.js"></script>
 </body>
 
 </html>

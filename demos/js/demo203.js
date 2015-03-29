@@ -16,7 +16,7 @@ var mycode = function() {
 		davey;
 
 	//add stuff to the canvas
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		startX: 20,
 		startY: 50,
 		size: 20,
@@ -83,10 +83,10 @@ var mycode = function() {
 		}
 		scrawl.animation.myanim.run();
 	}
-	document.addEventListener('mouseup', moveIn, false);
+	scrawl.addListener('up', moveIn, document);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		name: 'myanim',
 		delay: true,
 		fn: function() {

@@ -13,15 +13,16 @@ var mycode = function() {
 		here,
 		dragGroup,
 		getPhrase,
-		dropPhrase;
+		dropPhrase,
+		stopE;
 
 	//define groups
-	dragGroup = scrawl.newGroup({
+	dragGroup = scrawl.makeGroup({
 		name: 'drag',
 	});
 
 	//define entitys
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'lefty',
 		group: 'drag',
 		text: 'Hello! Lefty reporting for duty!\nI am a very long line of text\nthat has been broken up into\nseparate lines. I am\nleft justified and my lineHeight\nattribute has been set to\na value of 1.2.',
@@ -51,31 +52,32 @@ var mycode = function() {
 	});
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getPhrase = function(e) {
+		stopE(e);
+		here = myPad.getMouse();
 		myEntity = dragGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropPhrase = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getPhrase, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropPhrase, false);
+	scrawl.addListener('down', getPhrase, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropPhrase, scrawl.canvas.mycanvas);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			here = myPad.getMouse();
 			if (!here.active && myEntity) {

@@ -40,12 +40,12 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo031');
 
 	//define groups
-	group = scrawl.newGroup({
+	group = scrawl.makeGroup({
 		name: 'mygroup',
 	});
 
 	//define entitys
-	scrawl.newBlock({ //cell collision zone
+	scrawl.makeBlock({ //cell collision zone
 		startX: 10,
 		startY: 10,
 		width: 580,
@@ -55,7 +55,7 @@ var mycode = function() {
 	});
 	scrawl.buildFields();
 
-	bunny = scrawl.newPicture({ //bunny entity template
+	bunny = scrawl.makePicture({ //bunny entity template
 		name: 'bunny',
 		source: 'bunny',
 		handleX: 'center',
@@ -139,7 +139,7 @@ var mycode = function() {
 	addBunnies();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveBunnies();
 			pad.render();

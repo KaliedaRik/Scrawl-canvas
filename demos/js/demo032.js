@@ -29,14 +29,14 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo032');
 
 	//define groups
-	group = scrawl.newGroup({
+	group = scrawl.makeGroup({
 		name: 'mygroup',
 		entitySort: false,
 		//entitySort=false - turns off pre-sorting of entitys before each display cycle (small speed gain)
 	});
 
 	//define entitys
-	bunny = scrawl.newPicture({ //bunny entity template
+	bunny = scrawl.makePicture({ //bunny entity template
 		name: 'bunny',
 		source: 'bunny',
 		handleX: 'center',
@@ -95,13 +95,13 @@ var mycode = function() {
 		}
 		totalBunnies += 10;
 	};
-	canvas.addEventListener('mouseup', addBunnies, false);
+	scrawl.addListener('up', addBunnies, canvas);
 
 	//initialize scene
 	addBunnies();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveBunnies();
 			pad.render();

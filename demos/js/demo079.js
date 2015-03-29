@@ -22,11 +22,11 @@ var mycode = function() {
 		tkr;
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'particles',
 		order: 0,
 	});
-	myWheels = scrawl.newGroup({
+	myWheels = scrawl.makeGroup({
 		name: 'wheels',
 		order: 1,
 	});
@@ -39,7 +39,7 @@ var mycode = function() {
 		backgroundColor: 'black',
 		rendered: false,
 	}).clear();
-	scrawl.newBlock({ //add, and stamp, entitys
+	scrawl.makeBlock({ //add, and stamp, entitys
 		startX: 10,
 		startY: 50,
 		width: 580,
@@ -49,7 +49,7 @@ var mycode = function() {
 		method: 'draw',
 		group: 'collisionMap',
 	}).stamp('fill');
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 300,
 		startY: 200,
 		handleX: 'center',
@@ -62,7 +62,7 @@ var mycode = function() {
 		method: 'draw',
 		group: 'collisionMap',
 	}).stamp('fill');
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		startX: 150,
 		startY: 200,
 		radius: 140,
@@ -85,10 +85,10 @@ var mycode = function() {
 	myBaseGroup.addEntitysToGroup(scrawl.group.collisionMap.entitys);
 
 	//define physics entitys
-	fieldBall = scrawl.newParticle({
+	fieldBall = scrawl.makeParticle({
 		mass: 1000000,
 	});
-	scrawl.newParticle({
+	scrawl.makeParticle({
 		name: 'redP',
 		startX: 300,
 		startY: 120,
@@ -116,7 +116,7 @@ var mycode = function() {
 	});
 
 	//define other entitys
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'redB',
 		radius: 20,
 		method: 'fillDraw',
@@ -173,7 +173,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			updateTimer();
 			checkBounds();

@@ -8,7 +8,7 @@ var mycode = function() {
 	//hide-end
 
 	//define gradient
-	var myRad = scrawl.newRadialGradient({
+	var myRad = scrawl.makeRadialGradient({
 		name: 'gradient',
 		endX: 200,
 		endY: 200,
@@ -85,7 +85,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'b',
 		width: 400,
 		height: 400,
@@ -94,7 +94,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			scrawl.render();
 

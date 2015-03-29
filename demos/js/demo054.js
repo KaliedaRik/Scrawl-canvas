@@ -19,7 +19,7 @@ var mycode = function() {
 	scrawl.canvas.mycanvas.style.cursor = 'crosshair';
 
 	//define entity
-	mySvg = scrawl.newPicture({
+	mySvg = scrawl.makePicture({
 		name: 'svgCow',
 		source: 'svgCow',
 		method: 'fill',
@@ -28,19 +28,31 @@ var mycode = function() {
 		handleX: 'center',
 		handleY: 'center',
 		pivot: 'mouse',
+		scale: 0.01
 	});
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener(['move', 'down'], function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+		here = scrawl.pad.mycanvas.getMouse();
+		mySvg.set({
+			scale: 1 - (((Math.abs(here.y - 200) / 200) * 0.49) + ((Math.abs(here.x - 300) / 300) * 0.49)),
+			visibility: (here.active) ? true : false,
+			mouseIndex: here.id
+		});
+	}, scrawl.canvas.mycanvas);
+
+	scrawl.addListener(['leave'], function(e) {
+		mySvg.visibility = false;
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			here = scrawl.pad.mycanvas.getMouse();
-			if (here.active) {
-				myScale = 1 - (((Math.abs(here.y - 200) / 200) * 0.49) + ((Math.abs(here.x - 300) / 300) * 0.49));
-			}
-			mySvg.set({
-				scale: myScale,
-				visibility: (here.active) ? true : false,
-			});
+
 			scrawl.render();
 
 			//hide-start

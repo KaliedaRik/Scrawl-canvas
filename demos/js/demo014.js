@@ -35,7 +35,7 @@ var mycode = function() {
 	//			},
 	//		};
 	for (var country in worldMap.shapes) {
-		scrawl.newShape({
+		scrawl.makeShape({
 			name: country,
 			data: worldMap.shapes[country],
 			method: 'drawFill',
@@ -48,8 +48,16 @@ var mycode = function() {
 	//limit the checking region for country entity collision detection
 	countries.regionRadius = 465;
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, scrawl.canvas.mycanvas);
+
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			//update display; check if mouse cursor is over an outline
 			here = mypad.show().getMouse();

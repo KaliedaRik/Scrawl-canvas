@@ -25,14 +25,14 @@ var mycode = function() {
 	input_channel.value = 'red';
 
 	//define filter
-	filter = scrawl.newSeparateFilter({
+	filter = scrawl.makeSeparateFilter({
 		name: 'myfilter',
 		alpha: 1,
 		channel: 'red',
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -72,7 +72,7 @@ var mycode = function() {
 	input_channel.addEventListener('change', event_channel, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();

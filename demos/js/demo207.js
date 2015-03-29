@@ -49,11 +49,11 @@ var mycode = function() {
 		precision: 100,
 	});
 	//dragging entitys to change the curve of the easing path entity
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 	});
 	for (i = 0; i < 4; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			lineWidth: 2,
@@ -84,7 +84,7 @@ var mycode = function() {
 			startX: 30,
 			startY: (i * 100) + 50,
 			lockY: true,
-			width: 80,
+			width: 86,
 			height: 26,
 			path: 'guide',
 			pathPlace: 0,
@@ -114,28 +114,29 @@ var mycode = function() {
 
 	//dragging entity event listeners
 	getWheel = function(e) {
-		myEntity = myGroup.getEntityAt(here);
-		if (myEntity) {
-			myEntity.pickupEntity(here);
-		}
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
 		}
+		here = pad.getMouse();
+		myEntity = myGroup.getEntityAt(here);
+		if (myEntity) {
+			myEntity.pickupEntity(here);
+		}
 	};
 	dropWheel = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 			guide.buildPositions();
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	canvas.addEventListener('mousedown', getWheel, false);
-	canvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, canvas);
+	scrawl.addListener(['up', 'leave'], dropWheel, canvas);
 
 	//button event listeners
 	moveButton = function(e) {
@@ -151,14 +152,9 @@ var mycode = function() {
 	}
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			here = pad.getMouse();
-			if (!here.active) {
-				if (myEntity) {
-					dropWheel();
-				}
-			}
+
 			doButtons();
 			pad.render();
 

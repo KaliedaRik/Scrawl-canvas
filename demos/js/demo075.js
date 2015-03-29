@@ -26,13 +26,13 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo075');
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
 		regionRadius: 80,
 	});
 
 	//build cell collision map
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'fence',
 		startX: 10,
 		startY: 10,
@@ -46,7 +46,7 @@ var mycode = function() {
 
 	//define entitys
 	for (var i = 0, z = entityList.length; i < z; i++) {
-		scrawl.newPicture({
+		scrawl.makePicture({
 			name: entityList[i],
 			source: 'button' + entityList[i],
 			startX: (i * 70) + 80,
@@ -114,7 +114,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			checkBounds();
 			checkCollisions();

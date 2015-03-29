@@ -11,66 +11,42 @@ var mycode = function() {
 	var myEntitys,
 		pin,
 		myCol,
-		currentScale = 1,
-		currentXHandle = 0,
-		currentYHandle = 0,
-		currentFlipUpend = false,
-		currentFlipReverse = false,
-		scaleInput = document.getElementById('scale'), //capture DOM select and input elements
-		xPercentInput = document.getElementById('xPercent'),
-		yPercentInput = document.getElementById('yPercent'),
-		xAbsoluteInput = document.getElementById('xAbsolute'),
-		yAbsoluteInput = document.getElementById('yAbsolute'),
-		xStringInput = document.getElementById('xString'),
-		yStringInput = document.getElementById('yString'),
-		reverseInput = document.getElementById('reverse'),
-		upendInput = document.getElementById('upend'),
-		updateScale, //for event listeners
-		updateXPercent,
-		updateYPercent,
-		updateXAbsolute,
-		updateYAbsolute,
-		updateXString,
-		updateYString,
-		updateReverse,
-		updateUpend,
-		status = document.getElementById('status');
-
-	//import image into scrawl library
-	//scrawl.getImagesByClass('demo035');
+		status = document.getElementById('status'),
+		events,
+		stopE;
 
 	//setup DOM controls
-	scaleInput.value = 1;
-	xPercentInput.value = 0;
-	yPercentInput.value = 0;
-	xAbsoluteInput.value = 0;
-	yAbsoluteInput.value = 0;
-	xStringInput.options.selectedIndex = 1;
-	yStringInput.options.selectedIndex = 1;
-	reverseInput.options.selectedIndex = 0;
-	upendInput.options.selectedIndex = 0;
+	document.getElementById('scale').value = 1;
+	document.getElementById('xPercent').value = 0;
+	document.getElementById('yPercent').value = 0;
+	document.getElementById('xAbsolute').value = 0;
+	document.getElementById('yAbsolute').value = 0;
+	document.getElementById('xString').options.selectedIndex = 1;
+	document.getElementById('yString').options.selectedIndex = 1;
+	document.getElementById('reverse').options.selectedIndex = 0;
+	document.getElementById('upend').options.selectedIndex = 0;
 
 	//define groups
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'mylabels',
 		order: 0,
 	});
-	myEntitys = scrawl.newGroup({
+	myEntitys = scrawl.makeGroup({
 		name: 'myentitys',
 		order: 1,
 	});
-	scrawl.newGroup({
+	scrawl.makeGroup({
 		name: 'mypins',
 		order: 2,
 	});
 
 	//define designs (colors, gradients)
-	scrawl.newColor({
+	scrawl.makeColor({
 		name: 'myRed',
 		color: '#f00',
 	});
 
-	myCol = scrawl.newColor({
+	myCol = scrawl.makeColor({
 		name: 'myBlue',
 		random: true,
 		aShift: 0.002,
@@ -78,7 +54,7 @@ var mycode = function() {
 		autoUpdate: true,
 	});
 
-	scrawl.newGradient({
+	scrawl.makeGradient({
 		name: 'gradient',
 		shift: 0.002,
 		lockTo: true,
@@ -104,7 +80,7 @@ var mycode = function() {
 	});
 
 	//define entitys
-	pin = scrawl.newWheel({ //template entity
+	pin = scrawl.makeWheel({ //template entity
 		radius: 3,
 		method: 'fillDraw',
 		fillStyle: '#880000',
@@ -112,7 +88,7 @@ var mycode = function() {
 		visibility: false,
 	});
 
-	scrawl.newPhrase({ //background texts
+	scrawl.makePhrase({ //background texts
 		startX: 400,
 		startY: 100,
 		globalAlpha: 0.3,
@@ -269,9 +245,8 @@ var mycode = function() {
 		visibility: 'true',
 	});
 
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'mypicture',
-		//source: 'angelfish',
 		url: 'img/carousel/angelfish.png',
 		strokeStyle: 'Gold',
 		lineWidth: 3,
@@ -289,7 +264,7 @@ var mycode = function() {
 		visibility: 'true',
 	});
 
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		name: 'myblock',
 		strokeStyle: 'Orange',
 		fillStyle: 'myBlue',
@@ -307,7 +282,7 @@ var mycode = function() {
 		visibility: 'true',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'mywheel',
 		strokeStyle: '#800',
 		fillStyle: 'gradient',
@@ -324,7 +299,7 @@ var mycode = function() {
 		visibility: 'true',
 	});
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		name: 'myphrase',
 		text: 'Hello Scrawl,\nHello World',
 		startX: 700,
@@ -338,112 +313,66 @@ var mycode = function() {
 	});
 
 	//event listeners
-	updateScale = function(e) {
-		currentScale = scaleInput.value;
-		myEntitys.setEntitysTo({
-			scale: parseFloat(currentScale),
-		});
-		e.preventDefault();
-		e.returnValue = false;
+	stopE = function(e) {
+		if (e) {
+			e.preventDefault();
+			e.returnValue = false;
+		}
 	};
-	scaleInput.addEventListener('input', updateScale, false); //for firefox real-time updating
-	scaleInput.addEventListener('change', updateScale, false);
-
-	updateXPercent = function(e) {
-		currentXHandle = xPercentInput.value + '%';
-		myEntitys.setEntitysTo({
-			handleX: currentXHandle,
-		});
-		e.preventDefault();
-		e.returnValue = false;
+	events = function(e) {
+		var items = {};
+		stopE(e);
+		switch (e.target.id) {
+			case 'xAbsolute':
+				items.handleX = Math.round(e.target.value);
+				break;
+			case 'xPercent':
+				items.handleX = e.target.value + '%';
+				break;
+			case 'xString':
+				items.handleX = e.target.value;
+				break;
+			case 'yAbsolute':
+				items.handleY = Math.round(e.target.value);
+				break;
+			case 'yPercent':
+				items.handleY = e.target.value + '%';
+				break;
+			case 'yString':
+				items.handleY = e.target.value;
+				break;
+			case 'scale':
+				items.scale = parseFloat(e.target.value);
+				break;
+			case 'reverse':
+				items.flipReverse = (e.target.value === 'true') ? true : false;
+				break;
+			case 'upend':
+				items.flipUpend = (e.target.value === 'true') ? true : false;
+				break;
+			default:
+				items = false;
+		}
+		if (items) {
+			myEntitys.setEntitysTo(items);
+		}
 	};
-	xPercentInput.addEventListener('input', updateXPercent, false);
-	xPercentInput.addEventListener('change', updateXPercent, false);
-
-	updateYPercent = function(e) {
-		currentYHandle = yPercentInput.value + '%';
-		myEntitys.setEntitysTo({
-			handleY: currentYHandle,
-		});
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	yPercentInput.addEventListener('input', updateYPercent, false);
-	yPercentInput.addEventListener('change', updateYPercent, false);
-
-	updateXAbsolute = function(e) {
-		currentXHandle = xAbsoluteInput.value;
-		myEntitys.setEntitysTo({
-			handleX: parseFloat(currentXHandle),
-		});
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	xAbsoluteInput.addEventListener('input', updateXAbsolute, false);
-	xAbsoluteInput.addEventListener('change', updateXAbsolute, false);
-
-	updateYAbsolute = function(e) {
-		currentYHandle = yAbsoluteInput.value;
-		myEntitys.setEntitysTo({
-			handleY: parseFloat(currentYHandle),
-		});
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	yAbsoluteInput.addEventListener('input', updateYAbsolute, false);
-	yAbsoluteInput.addEventListener('change', updateYAbsolute, false);
-
-	updateXString = function(e) {
-		currentXHandle = xStringInput.value;
-		myEntitys.setEntitysTo({
-			handleX: currentXHandle,
-		});
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	xStringInput.addEventListener('input', updateXString, false);
-	xStringInput.addEventListener('change', updateXString, false);
-
-	updateYString = function(e) {
-		currentYHandle = yStringInput.value;
-		myEntitys.setEntitysTo({
-			handleY: currentYHandle,
-		});
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	yStringInput.addEventListener('input', updateYString, false);
-	yStringInput.addEventListener('change', updateYString, false);
-
-	updateReverse = function(e) {
-		currentFlipReverse = reverseInput.value;
-		myEntitys.setEntitysTo({
-			flipReverse: (currentFlipReverse === 'true') ? true : false,
-		});
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	reverseInput.addEventListener('change', updateReverse, false);
-
-	updateUpend = function(e) {
-		currentFlipUpend = upendInput.value;
-		myEntitys.setEntitysTo({
-			flipUpend: (currentFlipUpend === 'true') ? true : false,
-		});
-		e.preventDefault();
-		e.returnValue = false;
-	};
-	upendInput.addEventListener('change', updateUpend, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			myEntitys.updateEntitysBy({
 				roll: 1,
 			});
 			scrawl.render();
 
-			status.innerHTML = '<b>Current settings - scale:</b> ' + currentScale + '; <b>handleX:</b> ' + currentXHandle + '; <b>handleY:</b> ' + currentYHandle + '; <b>flipReverse:</b> ' + currentFlipReverse + '; <b>flipUpend:</b> ' + currentFlipUpend;
+			status.innerHTML = '<b>Current settings - scale:</b> ' + scrawl.entity.myblock.scale +
+				'; <b>handleX:</b> ' + scrawl.entity.myblock.handle.x +
+				'; <b>handleY:</b> ' + scrawl.entity.myblock.handle.y +
+				'; <b>flipReverse:</b> ' + scrawl.entity.myblock.flipReverse +
+				'; <b>flipUpend:</b> ' + scrawl.entity.myblock.flipUpend;
+
 			//hide-start
 			testNow = Date.now();
 			testTime = testNow - testTicker;

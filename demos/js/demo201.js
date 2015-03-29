@@ -24,7 +24,7 @@ var mycode = function() {
 	}).makeCurrent();
 
 	//define entitys
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		text: 'Hello, Scrawl World!',
 		handleX: 'center',
 		handleY: 'bottom',
@@ -59,7 +59,7 @@ var mycode = function() {
 	}).makeCurrent();
 
 	//define some more entitys
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		text: 'Hello, I\'m a second canvas',
 		handleX: 'center',
 		handleY: 'top',

@@ -12,7 +12,7 @@ var mycode = function() {
 		brush;
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mystars',
 		regionRadius: 190,
 	});
@@ -34,7 +34,7 @@ var mycode = function() {
 	}).stamp();
 
 	//define brush entity ...
-	brush = scrawl.newWheel({
+	brush = scrawl.makeWheel({
 		radius: 3,
 		method: 'fill',
 	});

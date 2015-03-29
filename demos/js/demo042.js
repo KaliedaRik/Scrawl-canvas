@@ -41,7 +41,7 @@ var mycode = function() {
 		collisionPoints: 'start',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		pivot: 'star',
 		radius: 4,
 		fillStyle: 'gold',
@@ -50,7 +50,7 @@ var mycode = function() {
 	});
 
 	//entity used to build Cell collision zone image
-	scrawl.newBlock({
+	scrawl.makeBlock({
 		startX: 50,
 		startY: 50,
 		width: 650,
@@ -88,7 +88,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveEntitys();
 			scrawl.render();

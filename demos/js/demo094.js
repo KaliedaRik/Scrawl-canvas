@@ -15,39 +15,39 @@ var mycode = function() {
 		scaleDelta = 0.002,
 		tiggy,
 		myStarts = [
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 100,
 				y: 100
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 300,
 				y: 100
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 500,
 				y: 100
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 500,
 				y: 300
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 300,
 				y: 300
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 100,
 				y: 300
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 100,
 				y: 500
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 300,
 				y: 500
 			}),
-          scrawl.newVector({
+          scrawl.makeVector({
 				x: 500,
 				y: 500
 			})
@@ -57,7 +57,7 @@ var mycode = function() {
 	scrawl.getImagesByClass('demo094');
 
 	//define entity
-	tiggy = scrawl.newPicture({
+	tiggy = scrawl.makePicture({
 		width: 200,
 		height: 200,
 		handleX: 'center',
@@ -68,7 +68,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			if (!scrawl.isBetween(scale, scaleMax, scaleMin)) {
 				scaleDelta = -scaleDelta;

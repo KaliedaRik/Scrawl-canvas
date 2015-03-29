@@ -14,19 +14,20 @@ var mycode = function() {
 		bendy,
 		getWheel,
 		dropWheel,
+		stopE,
 		myEntity = false;
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mygroup',
 	});
-	balls = scrawl.newGroup({
+	balls = scrawl.makeGroup({
 		name: 'balls',
 	});
 
 	//define entitys
 	for (var i = 0; i < 3; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			fillStyle: 'blue',
@@ -50,7 +51,7 @@ var mycode = function() {
 	scrawl.point.mycurve_p2.setToFixed('wheel_1');
 	scrawl.point.mycurve_p3.setToFixed('wheel_2');
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		font: '12pt Arial, sans-serif',
 		handleX: 'center',
 		handleY: 30,
@@ -65,7 +66,7 @@ var mycode = function() {
 		pivot: 'wheel_2',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'goldwheel',
 		radius: 10,
 		fillStyle: 'gold',
@@ -83,31 +84,33 @@ var mycode = function() {
 	});
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getWheel = function(e) {
+		stopE(e);
+		here = scrawl.pad.mycanvas.getMouse();
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropWheel = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
-		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
+			bendy.buildPositions();
 		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getWheel, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropWheel, scrawl.canvas.mycanvas);
 
 	//tweens
-	scrawl.newTween({
+	scrawl.makeTween({
 		name: 'goldTween',
 		targets: scrawl.entity.goldwheel,
 		start: {
@@ -117,22 +120,16 @@ var mycode = function() {
 			pathPlace: 1
 		},
 		duration: 10000,
-		nextTween: 'goldTween',
+		count: true
 	}).run();
 	scrawl.animation.goldTween.clone({
 		name: 'pinkTween',
-		targets: scrawl.entity.pinkwheel,
-		nextTween: 'pinkTween',
+		targets: scrawl.entity.pinkwheel
 	}).run();
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			//get mouse coordinates
-			here = scrawl.pad.mycanvas.getMouse();
-			if (!here.active && myEntity) {
-				dropWheel();
-			}
 
 			//update curve
 			if (myEntity) {

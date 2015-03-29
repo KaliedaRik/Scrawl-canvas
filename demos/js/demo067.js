@@ -11,7 +11,7 @@ var mycode = function() {
 	var myGroup;
 
 	//define groups
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'phrases',
 	});
 
@@ -26,7 +26,7 @@ var mycode = function() {
 		precision: 100,
 	});
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		textAlign: 'center',
 		name: 'chinese',
 		font: '36pt "KaiTi", "楷体", STKaiti, "华文楷体", "Microsoft YaHei New", "Microsoft Yahei", "微软雅黑", STXihei, "华文细黑", SimSun, 宋体, Georgia, "Times New Roman", serif',
@@ -68,7 +68,7 @@ var mycode = function() {
 	});
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			myGroup.updateStart();
 			scrawl.render();

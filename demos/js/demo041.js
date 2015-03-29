@@ -16,7 +16,7 @@ var mycode = function() {
 		moveEntitys;
 
 	//define entitys
-	myEntity = scrawl.newBlock({
+	myEntity = scrawl.makeBlock({
 		name: 'block',
 		startX: '50%',
 		startY: '50%',
@@ -33,7 +33,7 @@ var mycode = function() {
 		method: 'fillDraw',
 		collisionPoints: 'center',
 	});
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		pivot: 'block',
 		radius: 4,
 		fillStyle: 'blue',
@@ -53,7 +53,7 @@ var mycode = function() {
 	};
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 			moveEntitys();
 			scrawl.render();

@@ -38,7 +38,7 @@ var mycode = function() {
 	};
 
 	//define the grid object - all other objects will pivot from this
-	grid = scrawl.newShape({
+	grid = scrawl.makeShape({
 		name: 'grid',
 		//draw axes and ticks
 		data: 'L0,0 0,300 480,300 M0,0 -5,0 M0,75 -5,75 M0,150 -5,150 M0,225 -5,225 M0,300 -5,300 M60,300 60,305 M120,300 120,305 M180,300 180,305 M240,300 240,305 M300,300 300,305 M360,300 360,305 M420,300 420,305',
@@ -50,7 +50,7 @@ var mycode = function() {
 
 	//Labels for the grid axes
 	for (i = 0, iz = yAxisLabels.length; i < iz; i++) {
-		scrawl.newPhrase({ //y-axis percent labels
+		scrawl.makePhrase({ //y-axis percent labels
 			pivot: 'grid',
 			family: 'monospace',
 			handleX: 45 - ((4 - yAxisLabels[i].length) * 10),
@@ -58,7 +58,7 @@ var mycode = function() {
 			text: yAxisLabels[i],
 		});
 	}
-	scrawl.newPhrase({ //y-axis title
+	scrawl.makePhrase({ //y-axis title
 		pivot: 'grid',
 		size: 20,
 		text: 'Percentage',
@@ -76,7 +76,7 @@ var mycode = function() {
 		lineWidth: 4,
 	});
 	//... and the line marks
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'circle',
 		radius: 10,
 		fillStyle: 'red',
@@ -85,7 +85,7 @@ var mycode = function() {
 	});
 
 	for (i = 0, iz = xAxisLabels.length; i < iz; i++) {
-		scrawl.newPhrase({ //x-axis day labels
+		scrawl.makePhrase({ //x-axis day labels
 			name: xAxisLabels[i],
 			pivot: 'line_p' + (i + 1),
 			family: 'monospace',
@@ -104,10 +104,9 @@ var mycode = function() {
 			translateZ: 1,
 		});
 		scrawl.render();
-		//... then set their initial values, and add event listeners to them
 		scrawl.elm[xAxisLabels[i]].value = 0;
-		scrawl.elm[xAxisLabels[i]].addEventListener('change', updateLine, false);
 	}
+	scrawl.addNativeListener('change', updateLine, '.mySelector');
 
 	//display initial scene
 	scrawl.render();

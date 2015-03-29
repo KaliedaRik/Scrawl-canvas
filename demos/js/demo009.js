@@ -13,16 +13,17 @@ var mycode = function() {
 		doLines,
 		getWheel,
 		dropWheel,
+		stopE,
 		myPos = 0,
 		dPos = 0.005,
 		length,
 		lengthText = document.getElementById('curveLength');
 
-	myGroup = scrawl.newGroup({
+	myGroup = scrawl.makeGroup({
 		name: 'mygroup',
 	});
 	for (var i = 0; i < 4; i++) {
-		scrawl.newWheel({
+		scrawl.makeWheel({
 			name: 'wheel_' + i,
 			radius: 10,
 			fillStyle: 'blue',
@@ -74,7 +75,7 @@ var mycode = function() {
 	scrawl.point.endline_p1.setToFixed('wheel_2');
 	scrawl.point.endline_p2.setToFixed('wheel_3');
 
-	scrawl.newPhrase({
+	scrawl.makePhrase({
 		font: '12pt Arial, sans-serif',
 		handleX: 'center',
 		handleY: 30,
@@ -92,7 +93,7 @@ var mycode = function() {
 		pivot: 'wheel_3',
 	});
 
-	scrawl.newWheel({
+	scrawl.makeWheel({
 		name: 'goldwheel',
 		radius: 10,
 		fillStyle: 'gold',
@@ -123,38 +124,35 @@ var mycode = function() {
 	};
 
 	//event listeners
+	stopE = function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 	getWheel = function(e) {
+		stopE(e);
+		here = scrawl.pad.mycanvas.getMouse();
 		myEntity = myGroup.getEntityAt(here);
 		if (myEntity) {
 			myEntity.pickupEntity(here);
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
 	dropWheel = function(e) {
+		stopE(e);
 		if (myEntity) {
 			myEntity.dropEntity();
 			myEntity = false;
 		}
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
 	};
-	scrawl.canvas.mycanvas.addEventListener('mousedown', getWheel, false);
-	scrawl.canvas.mycanvas.addEventListener('mouseup', dropWheel, false);
+	scrawl.addListener('down', getWheel, scrawl.canvas.mycanvas);
+	scrawl.addListener(['up', 'leave'], dropWheel, scrawl.canvas.mycanvas);
 
 	length = scrawl.entity.mycurve.getPerimeterLength(true);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
-			here = scrawl.pad.mycanvas.getMouse();
-			if (!here.active && myEntity) {
-				dropWheel();
-			}
 			if (myEntity) {
 				length = scrawl.entity.mycurve.getPerimeterLength(true);
 			}

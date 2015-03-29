@@ -24,14 +24,14 @@ var mycode = function() {
 	input_brightness.value = '1.5';
 
 	//define filter
-	filter = scrawl.newBrightnessFilter({
+	filter = scrawl.makeBrightnessFilter({
 		name: 'myfilter',
 		alpha: 1,
 		brightness: 1.5,
 	});
 
 	//define entity
-	scrawl.newPicture({
+	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
@@ -72,7 +72,7 @@ var mycode = function() {
 	input_brightness.addEventListener('change', event_brightness, false);
 
 	//animation object
-	scrawl.newAnimation({
+	scrawl.makeAnimation({
 		fn: function() {
 
 			scrawl.render();
