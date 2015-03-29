@@ -154,6 +154,7 @@ var mycode = function() {
 		group.setElementsTo({
 			scale: ratio,
 		});
+		scrawl.domInit();
 	};
 	resize = function(e) {
 		setSize();

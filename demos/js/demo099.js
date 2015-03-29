@@ -167,6 +167,14 @@ var mycode = function() {
 	};
 	scrawl.addListener('up', startNewTween, myCanvas);
 
+	//stop touchmove dragging the page up/down
+	scrawl.addListener('move', function(e) {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, myCanvas);
+
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
