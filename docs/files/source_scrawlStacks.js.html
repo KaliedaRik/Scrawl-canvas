@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.1.0</em>
+            <em>API Docs for: 4.2.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -251,8 +251,6 @@
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Richard James Roots
-//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the &quot;Software&quot;), to deal
 // in the Software without restriction, including without limitation the rights
@@ -359,13 +357,13 @@ A __private__ function that searches the DOM for elements with class=&quot;scraw
 					stacks.push(s[i]);
 				}
 				for (i = 0, iz = s.length; i &lt; iz; i++) {
-					myStack = my.newStack({
+					myStack = my.makeStack({
 						stackElement: stacks[i]
 					});
 					for (j = 0, jz = my.stk[myStack.name].children.length; j &lt; jz; j++) {
 						my.stk[myStack.name].children[j].style.position = &#x27;absolute&#x27;;
 						if (my.stk[myStack.name].children[j].tagName !== &#x27;CANVAS&#x27;) {
-							my.newElement({
+							my.makeElement({
 								domElement: my.stk[myStack.name].children[j],
 								group: myStack.name
 							});
@@ -439,12 +437,12 @@ A __private__ function that searches the DOM for canvas elements and generates P
 							myElement.id = myStack;
 							el[i].parentElement.appendChild(myElement);
 							myElement.appendChild(el[i]);
-							stack = my.newStack({
+							stack = my.makeStack({
 								stackElement: myElement
 							});
 						}
 					}
-					myPad = my.newPad({
+					myPad = my.makePad({
 						canvasElement: el[i],
 					});
 					if (stack) {
@@ -497,7 +495,7 @@ A __private__ function that searches the DOM for elements with class=&quot;scraw
 							myStack = el[i].className.match(/stack:(\w+)/);
 							if (my.contains(my.stacknames, myStack[1])) {
 								my.stk[myStack[1]].appendChild(el[i]);
-								my.newElement({
+								my.makeElement({
 									domElement: el[i],
 									group: myStack[1],
 								});
@@ -524,16 +522,16 @@ The argument object should include the following attributes:
 @return The new Pad object
 @example
     &lt;body&gt;
-		&lt;div id=&quot;canvasholder&quot;&gt;&lt;/div&gt;
-		&lt;script src=&quot;js/scrawlCore-min.js&quot;&gt;&lt;/script&gt;
-		&lt;script&gt;
-			scrawl.addCanvasToPage({
-				name:	&#x27;mycanvas&#x27;,
-				stackName: &#x27;mystack&#x27;,
-				width: 400,
-				height: 200,
-				}).makeCurrent();
-		&lt;/script&gt;
+        &lt;div id=&quot;canvasholder&quot;&gt;&lt;/div&gt;
+        &lt;script src=&quot;js/scrawlCore-min.js&quot;&gt;&lt;/script&gt;
+        &lt;script&gt;
+            scrawl.addCanvasToPage({
+                name:   &#x27;mycanvas&#x27;,
+                stackName: &#x27;mystack&#x27;,
+                width: 400,
+                height: 200,
+                }).makeCurrent();
+        &lt;/script&gt;
     &lt;/body&gt;
 
 &lt;a href=&quot;../../demo002.html&quot;&gt;Live demo&lt;/a&gt;
@@ -604,7 +602,7 @@ The argument object should include the following attributes:
 				myElement.style.height = my.xtGet(items.height, 150) + &#x27;px&#x27;;
 				items.parentElement.appendChild(myElement);
 				items.stackElement = myElement;
-				myStack = my.newStack(items);
+				myStack = my.makeStack(items);
 				myStack.group = (my.stack[items.parentElement.id]) ? items.parentElement.id : &#x27;&#x27;;
 				return myStack;
 			}
@@ -621,7 +619,7 @@ The argument is an optional String - permitted values include &#x27;stack&#x27;,
 @return The Scrawl library object (scrawl)
 @chainable
 @example
-	scrawl.setDisplayOffsets();
+    scrawl.setDisplayOffsets();
 **/
 		my.setDisplayOffsets = function(item) {
 			var i,
@@ -678,6 +676,23 @@ A __display__ function to move DOM elements within a Stack
 				s = my.stack[my.stacknames[i]];
 				if (!s.group) {
 					s.render();
+				}
+			}
+			return true;
+		};
+		/**
+A __display__ function to initialize DOM elements with their existing values
+@method domInit
+@return Always true
+**/
+		my.domInit = function() {
+			var i,
+				iz,
+				s;
+			for (i = 0, iz = my.stacknames.length; i &lt; iz; i++) {
+				s = my.stack[my.stacknames[i]];
+				if (!s.group) {
+					s.domInit();
 				}
 			}
 			return true;
@@ -918,6 +933,15 @@ A flag to determine whether an element displays itself
 @default true
 **/
 		my.d.PageElement.visibility = true;
+		/**
+Index of mouse vector to use when pivot === &#x27;mouse&#x27;
+
+The Pad/Stack/Element.mice object can hold details of multiple touch events - when an entity is assigned to a &#x27;mouse&#x27;, it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
+@property mouseIndex
+@type String
+@default &#x27;mouse&#x27;
+**/
+		my.d.PageElement.mouseIndex = &#x27;mouse&#x27;;
 		my.mergeInto(my.d.Pad, my.d.PageElement);
 		/**
 PageElement constructor hook function - modified by stacks module
@@ -926,51 +950,51 @@ PageElement constructor hook function - modified by stacks module
 **/
 		my.PageElement.prototype.stacksPageElementConstructor = function(items) {
 			var temp = my.safeObject(items.start);
-			this.start = my.newVector({
+			this.start = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.start&#x27;,
 				x: my.xtGet(items.startX, temp.x, 0),
 				y: my.xtGet(items.startY, temp.y, 0)
 			});
 			this.correctStart();
-			this.work.start = my.newVector({
+			this.work.start = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.start&#x27;
 			});
 			temp = my.safeObject(items.delta);
-			this.delta = my.newVector({
+			this.delta = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.delta&#x27;,
 				x: my.xtGet(items.deltaX, temp.x, 0),
 				y: my.xtGet(items.deltaY, temp.y, 0)
 			});
-			this.work.delta = my.newVector({
+			this.work.delta = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.delta&#x27;
 			});
 			temp = my.safeObject(items.handle);
-			this.handle = my.newVector({
+			this.handle = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.handle&#x27;,
 				x: my.xtGet(items.handleX, temp.x, 0),
 				y: my.xtGet(items.handleY, temp.y, 0)
 			});
-			this.work.handle = my.newVector({
+			this.work.handle = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.handle&#x27;
 			});
 			temp = my.safeObject(items.translate);
-			this.translate = my.newVector({
+			this.translate = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.translate&#x27;,
 				x: my.xtGet(items.translateX, temp.x, 0),
 				y: my.xtGet(items.translateY, temp.y, 0),
 				z: my.xtGet(items.translateZ, temp.z, 0)
 			});
-			this.work.translate = my.newVector({
+			this.work.translate = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.translate&#x27;
 			});
 			temp = my.safeObject(items.deltaTranslate);
-			this.deltaTranslate = my.newVector({
+			this.deltaTranslate = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.deltaTranslate&#x27;,
 				x: my.xtGet(items.deltaTranslateX, temp.x, 0),
 				y: my.xtGet(items.deltaTranslateY, temp.y, 0),
 				z: my.xtGet(items.deltaTranslateZ, temp.z, 0)
 			});
-			this.work.deltaTranslate = my.newVector({
+			this.work.deltaTranslate = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.deltaTranslate&#x27;
 			});
 			this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
@@ -985,24 +1009,24 @@ PageElement constructor hook function - modified by stacks module
 			this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
 			this.scale = my.xtGet(items.scale, 1);
 			this.visibility = my.xtGet(items.visibility, my.d[this.type].visibility);
-			this.rotation = my.newQuaternion({
+			this.rotation = my.makeQuaternion({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.rotation&#x27;
 			}).setFromEuler({
 				pitch: items.pitch || 0,
 				yaw: items.yaw || 0,
 				roll: items.roll || 0,
 			});
-			this.work.rotation = my.newQuaternion({
+			this.work.rotation = my.makeQuaternion({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.rotation&#x27;
 			});
-			this.deltaRotation = my.newQuaternion({
+			this.deltaRotation = my.makeQuaternion({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.deltaRotation&#x27;
 			}).setFromEuler({
 				pitch: items.deltaPitch || 0,
 				yaw: items.deltaYaw || 0,
 				roll: items.deltaRoll || 0,
 			});
-			this.work.deltaRotation = my.newQuaternion({
+			this.work.deltaRotation = my.makeQuaternion({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.deltaRotation&#x27;
 			});
 			this.rotationTolerance = my.xtGet(items.rotationTolerance, my.d[this.type].rotationTolerance);
@@ -1010,9 +1034,10 @@ PageElement constructor hook function - modified by stacks module
 			if (this.group) {
 				my.group[this.group].addElementsToGroup(this.name);
 			}
-			this.offset = my.newVector({
+			this.offset = my.makeVector({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.offset&#x27;
 			});
+			this.mouseIndex = my.xtGet(items.mouseIndex, &#x27;mouse&#x27;);
 			this.offset.flag = false;
 		};
 		/**
@@ -1127,11 +1152,6 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			if (my.xto(items.handleX, items.handleY, items.handle)) {
 				this.setTransformOrigin();
 			}
-			if (my.xt(items.mouse)) {
-				this.initMouse({
-					mouse: items.mouse
-				});
-			}
 			if (my.xt(items.group)) {
 				this.setGroupAttribute(items);
 			}
@@ -1226,7 +1246,7 @@ Augments PageElement.set()
 			var temp;
 			items = my.safeObject(items);
 			if (!this.translate.type || this.translate.type !== &#x27;Vector&#x27;) {
-				this.translate = my.newVector(items.translate || this.translate);
+				this.translate = my.makeVector(items.translate || this.translate);
 			}
 			temp = my.safeObject(items.translate);
 			this.translate.x = my.xtGet(items.translateX, temp.x, this.translate.x);
@@ -1293,7 +1313,7 @@ Augments PageElement.set()
 			var temp;
 			items = my.safeObject(items);
 			if (!this.deltaTranslate.type || this.deltaTranslate.type !== &#x27;Vector&#x27;) {
-				this.deltaTranslate = my.newVector(items.deltaTranslate || this.deltaTranslate);
+				this.deltaTranslate = my.makeVector(items.deltaTranslate || this.deltaTranslate);
 			}
 			temp = my.safeObject(items.deltaTranslate);
 			this.deltaTranslate.x = my.xtGet(items.deltaTranslateX, temp.x, this.deltaTranslate.x);
@@ -1339,9 +1359,11 @@ Constructor / set helper function
 			}
 			return this;
 		};
-		my.css = [&#x27;alignContent&#x27;, &#x27;alignItems&#x27;, &#x27;alignSelf&#x27;, &#x27;all&#x27;, &#x27;animation&#x27;, &#x27;animationDelay&#x27;, &#x27;animationDirection&#x27;, &#x27;animationDuration&#x27;, &#x27;animationFillMode&#x27;, &#x27;animationIterationCount&#x27;, &#x27;animationName&#x27;, &#x27;animationPlayState&#x27;, &#x27;animationTimingFunction&#x27;, &#x27;background&#x27;, &#x27;backgroundAttachment&#x27;, &#x27;backgroundBlendMode&#x27;, &#x27;backgroundClip&#x27;, &#x27;backgroundColor&#x27;, &#x27;backgroundImage&#x27;, &#x27;backgroundOrigin&#x27;, &#x27;backgroundPosition&#x27;, &#x27;backgroundRepeat&#x27;, &#x27;backgroundSize&#x27;, &#x27;border&#x27;, &#x27;borderBottom&#x27;, &#x27;borderBottomColor&#x27;, &#x27;borderBottomLeftRadius&#x27;, &#x27;borderBottomRightRadius&#x27;, &#x27;borderBottomStyle&#x27;, &#x27;borderBottomWidth&#x27;, &#x27;borderCollapse&#x27;, &#x27;borderColor&#x27;, &#x27;borderImage&#x27;, &#x27;borderImageOutset&#x27;, &#x27;borderImageRepeat&#x27;, &#x27;borderImageSlice&#x27;, &#x27;borderImageSource&#x27;, &#x27;borderImageWidth&#x27;, &#x27;borderLeft&#x27;, &#x27;borderLeftColor&#x27;, &#x27;borderLeftStyle&#x27;, &#x27;borderLeftWidth&#x27;, &#x27;borderRadius&#x27;, &#x27;borderRight&#x27;, &#x27;borderRightColor&#x27;, &#x27;borderRightStyle&#x27;, &#x27;borderRightWidth&#x27;, &#x27;borderSpacing&#x27;, &#x27;borderStyle&#x27;, &#x27;borderTop&#x27;, &#x27;borderTopColor&#x27;, &#x27;borderTopLeftRadius&#x27;, &#x27;borderTopRightRadius&#x27;, &#x27;borderTopStyle&#x27;, &#x27;borderTopWidth&#x27;, &#x27;borderWidth&#x27;, &#x27;boxDecorationBreak&#x27;, &#x27;boxShadow&#x27;, &#x27;boxSizing&#x27;, &#x27;breakAfter&#x27;, &#x27;breakBefore&#x27;, &#x27;breakInside&#x27;, &#x27;captionSide&#x27;, &#x27;clear&#x27;, &#x27;clip&#x27;, &#x27;clipPath&#x27;, &#x27;color&#x27;, &#x27;columns&#x27;, &#x27;columnCount&#x27;, &#x27;columnFill&#x27;, &#x27;columnGap&#x27;, &#x27;columnRule&#x27;, &#x27;columnRuleColor&#x27;, &#x27;columnRuleStyle&#x27;, &#x27;columnRuleWidth&#x27;, &#x27;columnSpan&#x27;, &#x27;columnWidth&#x27;, &#x27;content&#x27;, &#x27;counterIncrement&#x27;, &#x27;counterReset&#x27;, &#x27;cursor&#x27;, &#x27;direction&#x27;, &#x27;display&#x27;, &#x27;emptyCells&#x27;, &#x27;flex&#x27;, &#x27;flexBasis&#x27;, &#x27;flexDirection&#x27;, &#x27;flexFlow&#x27;, &#x27;flexGrow&#x27;, &#x27;flexShrink&#x27;, &#x27;flexWrap&#x27;, &#x27;float&#x27;, &#x27;font&#x27;, &#x27;fontFamily&#x27;, &#x27;fontFeatureSettings&#x27;, &#x27;fontKerning&#x27;, &#x27;fontLanguageOverride&#x27;, &#x27;fontSize&#x27;, &#x27;fontSizeAdjust&#x27;, &#x27;fontStretch&#x27;, &#x27;fontStyle&#x27;, &#x27;fontSynthesis&#x27;, &#x27;fontVariant&#x27;, &#x27;fontVariantAlternates&#x27;, &#x27;fontVariantCaps&#x27;, &#x27;fontVariantEastAsian&#x27;, &#x27;fontVariantLigatures&#x27;, &#x27;fontVariantNumeric&#x27;, &#x27;fontVariantPosition&#x27;, &#x27;fontWeight&#x27;, &#x27;grid&#x27;, &#x27;gridArea&#x27;, &#x27;gridAutoColumns&#x27;, &#x27;gridAutoFlow&#x27;, &#x27;gridAutoPosition&#x27;, &#x27;gridAutoRows&#x27;, &#x27;gridColumn&#x27;, &#x27;gridColumnStart&#x27;, &#x27;gridColumnEnd&#x27;, &#x27;gridRow&#x27;, &#x27;gridRowStart&#x27;, &#x27;gridRowEnd&#x27;, &#x27;gridTemplate&#x27;, &#x27;gridTemplateAreas&#x27;, &#x27;gridTemplateRows&#x27;, &#x27;gridTemplateColumns&#x27;, &#x27;hyphens&#x27;, &#x27;imageRendering&#x27;, &#x27;imageResolution&#x27;, &#x27;imageOrientation&#x27;, &#x27;imeMode&#x27;, &#x27;inherit&#x27;, &#x27;initial&#x27;, &#x27;isolation&#x27;, &#x27;justifyContent&#x27;, &#x27;letterSpacing&#x27;, &#x27;lineBreak&#x27;, &#x27;lineHeight&#x27;, &#x27;listStyle&#x27;, &#x27;listStyleImage&#x27;, &#x27;listStylePosition&#x27;, &#x27;listStyleType&#x27;, &#x27;margin&#x27;, &#x27;marginBottom&#x27;, &#x27;marginLeft&#x27;, &#x27;marginRight&#x27;, &#x27;marginTop&#x27;, &#x27;marks&#x27;, &#x27;mask&#x27;, &#x27;maskType&#x27;, &#x27;mixBlendMode&#x27;, &#x27;objectFit&#x27;, &#x27;objectPosition&#x27;, &#x27;opacity&#x27;, &#x27;orphans&#x27;, &#x27;outline&#x27;, &#x27;outlineColor&#x27;, &#x27;outlineOffset&#x27;, &#x27;outlineStyle&#x27;, &#x27;outlineWidth&#x27;, &#x27;overflow&#x27;, &#x27;overflowWrap&#x27;, &#x27;overflowX&#x27;, &#x27;overflowY&#x27;, &#x27;padding&#x27;, &#x27;paddingBottom&#x27;, &#x27;paddingLeft&#x27;, &#x27;paddingRight&#x27;, &#x27;paddingTop&#x27;, &#x27;pageBreakAfter&#x27;, &#x27;pageBreakBefore&#x27;, &#x27;pageBreakInside&#x27;, &#x27;pointerEvents&#x27;, &#x27;position&#x27;, &#x27;quotes&#x27;, &#x27;resize&#x27;, &#x27;rubyAlign&#x27;, &#x27;rubyMerge&#x27;, &#x27;rubyPosition&#x27;, &#x27;s&#x27;, &#x27;scrollBehavior&#x27;, &#x27;shapeImageThreshold&#x27;, &#x27;shapeMargin&#x27;, &#x27;shapeOutside&#x27;, &#x27;tableLayout&#x27;, &#x27;tabSize&#x27;, &#x27;textAlign&#x27;, &#x27;textAlignLast&#x27;, &#x27;textCombineUpright&#x27;, &#x27;textDecoration&#x27;, &#x27;textDecorationColor&#x27;, &#x27;textDecorationLine&#x27;, &#x27;textDecorationStyle&#x27;, &#x27;textIndent&#x27;, &#x27;textOrientation&#x27;, &#x27;textOverflow&#x27;, &#x27;textRendering&#x27;, &#x27;textShadow&#x27;, &#x27;textTransform&#x27;, &#x27;textUnderlinePosition&#x27;, &#x27;touchAction&#x27;, &#x27;unicodeBidi&#x27;, &#x27;unicodeRange&#x27;, &#x27;unset&#x27;, &#x27;verticalAlign&#x27;, &#x27;visibility&#x27;, &#x27;whiteSpace&#x27;, &#x27;widows&#x27;, &#x27;willChange&#x27;, &#x27;wordBreak&#x27;, &#x27;wordSpacing&#x27;, &#x27;wordWrap&#x27;, &#x27;writingMode&#x27;];
+		my.css = [&#x27;all&#x27;, &#x27;background&#x27;, &#x27;backgroundAttachment&#x27;, &#x27;backgroundBlendMode&#x27;, &#x27;backgroundClip&#x27;, &#x27;backgroundColor&#x27;, &#x27;backgroundOrigin&#x27;, &#x27;backgroundPosition&#x27;, &#x27;backgroundRepeat&#x27;, &#x27;border&#x27;, &#x27;borderBottom&#x27;, &#x27;borderBottomColor&#x27;, &#x27;borderBottomStyle&#x27;, &#x27;borderBottomWidth&#x27;, &#x27;borderCollapse&#x27;, &#x27;borderColor&#x27;, &#x27;borderLeft&#x27;, &#x27;borderLeftColor&#x27;, &#x27;borderLeftStyle&#x27;, &#x27;borderLeftWidth&#x27;, &#x27;borderRight&#x27;, &#x27;borderRightColor&#x27;, &#x27;borderRightStyle&#x27;, &#x27;borderRightWidth&#x27;, &#x27;borderSpacing&#x27;, &#x27;borderStyle&#x27;, &#x27;borderTop&#x27;, &#x27;borderTopColor&#x27;, &#x27;borderTopStyle&#x27;, &#x27;borderTopWidth&#x27;, &#x27;borderWidth&#x27;, &#x27;clear&#x27;, &#x27;color&#x27;, &#x27;columns&#x27;, &#x27;content&#x27;, &#x27;counterIncrement&#x27;, &#x27;counterReset&#x27;, &#x27;cursor&#x27;, &#x27;direction&#x27;, &#x27;display&#x27;, &#x27;emptyCells&#x27;, &#x27;float&#x27;, &#x27;font&#x27;, &#x27;fontFamily&#x27;, &#x27;fontKerning&#x27;, &#x27;fontLanguageOverride&#x27;, &#x27;fontSize&#x27;, &#x27;fontSizeAdjust&#x27;, &#x27;fontStretch&#x27;, &#x27;fontStyle&#x27;, &#x27;fontSynthesis&#x27;, &#x27;fontVariant&#x27;, &#x27;fontVariantAlternates&#x27;, &#x27;fontVariantCaps&#x27;, &#x27;fontVariantEastAsian&#x27;, &#x27;fontVariantLigatures&#x27;, &#x27;fontVariantNumeric&#x27;, &#x27;fontVariantPosition&#x27;, &#x27;fontWeight&#x27;, &#x27;grid&#x27;, &#x27;gridArea&#x27;, &#x27;gridAutoColumns&#x27;, &#x27;gridAutoFlow&#x27;, &#x27;gridAutoPosition&#x27;, &#x27;gridAutoRows&#x27;, &#x27;gridColumn&#x27;, &#x27;gridColumnStart&#x27;, &#x27;gridColumnEnd&#x27;, &#x27;gridRow&#x27;, &#x27;gridRowStart&#x27;, &#x27;gridRowEnd&#x27;, &#x27;gridTemplate&#x27;, &#x27;gridTemplateAreas&#x27;, &#x27;gridTemplateRows&#x27;, &#x27;gridTemplateColumns&#x27;, &#x27;hyphens&#x27;, &#x27;imageRendering&#x27;, &#x27;imageResolution&#x27;, &#x27;imageOrientation&#x27;, &#x27;imeMode&#x27;, &#x27;inherit&#x27;, &#x27;initial&#x27;, &#x27;isolation&#x27;, &#x27;justifyContent&#x27;, &#x27;letterSpacing&#x27;, &#x27;lineBreak&#x27;, &#x27;lineHeight&#x27;, &#x27;listStyle&#x27;, &#x27;listStyleImage&#x27;, &#x27;listStylePosition&#x27;, &#x27;listStyleType&#x27;, &#x27;margin&#x27;, &#x27;marginBottom&#x27;, &#x27;marginLeft&#x27;, &#x27;marginRight&#x27;, &#x27;marginTop&#x27;, &#x27;marks&#x27;, &#x27;mask&#x27;, &#x27;maskType&#x27;, &#x27;mixBlendMode&#x27;, &#x27;objectFit&#x27;, &#x27;objectPosition&#x27;, &#x27;opacity&#x27;, &#x27;orphans&#x27;, &#x27;outline&#x27;, &#x27;outlineColor&#x27;, &#x27;outlineOffset&#x27;, &#x27;outlineStyle&#x27;, &#x27;outlineWidth&#x27;, &#x27;overflow&#x27;, &#x27;overflowWrap&#x27;, &#x27;overflowX&#x27;, &#x27;overflowY&#x27;, &#x27;padding&#x27;, &#x27;paddingBottom&#x27;, &#x27;paddingLeft&#x27;, &#x27;paddingRight&#x27;, &#x27;paddingTop&#x27;, &#x27;pageBreakAfter&#x27;, &#x27;pageBreakBefore&#x27;, &#x27;pageBreakInside&#x27;, &#x27;pointerEvents&#x27;, &#x27;position&#x27;, &#x27;quotes&#x27;, &#x27;resize&#x27;, &#x27;rubyAlign&#x27;, &#x27;rubyMerge&#x27;, &#x27;rubyPosition&#x27;, &#x27;s&#x27;, &#x27;scrollBehavior&#x27;, &#x27;shapeImageThreshold&#x27;, &#x27;shapeMargin&#x27;, &#x27;shapeOutside&#x27;, &#x27;tableLayout&#x27;, &#x27;tabSize&#x27;, &#x27;textAlign&#x27;, &#x27;textAlignLast&#x27;, &#x27;textCombineUpright&#x27;, &#x27;textDecoration&#x27;, &#x27;textDecorationColor&#x27;, &#x27;textDecorationLine&#x27;, &#x27;textDecorationStyle&#x27;, &#x27;textIndent&#x27;, &#x27;textOrientation&#x27;, &#x27;textOverflow&#x27;, &#x27;textRendering&#x27;, &#x27;textShadow&#x27;, &#x27;textTransform&#x27;, &#x27;textUnderlinePosition&#x27;, &#x27;touchAction&#x27;, &#x27;unicodeBidi&#x27;, &#x27;unicodeRange&#x27;, &#x27;unset&#x27;, &#x27;verticalAlign&#x27;, &#x27;visibility&#x27;, &#x27;whiteSpace&#x27;, &#x27;widows&#x27;, &#x27;willChange&#x27;, &#x27;wordBreak&#x27;, &#x27;wordSpacing&#x27;, &#x27;wordWrap&#x27;, &#x27;writingMode&#x27;];
+		//need to complete this array
+		my.xcss = [&#x27;alignContent&#x27;, &#x27;alignItems&#x27;, &#x27;alignSelf&#x27;, &#x27;animation&#x27;, &#x27;animationDelay&#x27;, &#x27;animationDirection&#x27;, &#x27;animationDuration&#x27;, &#x27;animationFillMode&#x27;, &#x27;animationIterationCount&#x27;, &#x27;animationName&#x27;, &#x27;animationPlayState&#x27;, &#x27;animationTimingFunction&#x27;, &#x27;backfaceVisibility&#x27;, &#x27;backgroundImage&#x27;, &#x27;backgroundSize&#x27;, &#x27;borderBottomLeftRadius&#x27;, &#x27;borderBottomRightRadius&#x27;, &#x27;borderImage&#x27;, &#x27;borderImageOutset&#x27;, &#x27;borderImageRepeat&#x27;, &#x27;borderImageSlice&#x27;, &#x27;borderImageSource&#x27;, &#x27;borderImageWidth&#x27;, &#x27;borderRadius&#x27;, &#x27;borderTopLeftRadius&#x27;, &#x27;borderTopRightRadius&#x27;, &#x27;boxDecorationBreak&#x27;, &#x27;boxShadow&#x27;, &#x27;boxSizing&#x27;, &#x27;columnCount&#x27;, &#x27;columnFill&#x27;, &#x27;columnGap&#x27;, &#x27;columnRule&#x27;, &#x27;columnRuleColor&#x27;, &#x27;columnRuleStyle&#x27;, &#x27;columnRuleWidth&#x27;, &#x27;columnSpan&#x27;, &#x27;columnWidth&#x27;, &#x27;filter&#x27;, &#x27;flex&#x27;, &#x27;flexBasis&#x27;, &#x27;flexDirection&#x27;, &#x27;flexFlow&#x27;, &#x27;flexGrow&#x27;, &#x27;flexShrink&#x27;, &#x27;flexWrap&#x27;];
 		/**
-Handles the setting of position, transformOrigin, backfaceVisibility, margin, border, padding
+Handles the setting of many CSS attributes
 @method PageElement.setStyles
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -1352,17 +1374,14 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 				el,
 				k,
 				i,
-				iz;
+				iz,
+				firstLetter,
+				remainder;
 			items = my.safeObject(items);
 			el = this.getElement();
 			k = Object.keys(items);
 			for (i = 0, iz = k.length; i &lt; iz; i++) {
-				if (k[i] === &#x27;backfaceVisibility&#x27;) {
-					el.style.webkitBackfaceVisibility = items.backfaceVisibility;
-					el.style.mozBackfaceVisibility = items.backfaceVisibility;
-					el.style.backfaceVisibility = items.backfaceVisibility;
-				}
-				else if (k[i] === &#x27;visibility&#x27;) {
+				if (k[i] === &#x27;visibility&#x27;) {
 					if (my.isa(items.visibility, &#x27;str&#x27;)) {
 						this.visibility = (!my.contains(stat, items.visibility)) ? true : false;
 					}
@@ -1376,10 +1395,17 @@ Handles the setting of position, transformOrigin, backfaceVisibility, margin, bo
 						el.style.display = (this.visibility) ? &#x27;block&#x27; : &#x27;none&#x27;;
 					}
 				}
+				else if (my.contains(my.xcss, k[i])) {
+					firstLetter = k[i][0].toUpperCase;
+					remainder = k[i].substr(1);
+					el.style[&#x27;webkit&#x27; + firstLetter + remainder] = items[k[i]];
+					el.style[&#x27;moz&#x27; + firstLetter + remainder] = items[k[i]];
+					el.style[&#x27;ms&#x27; + firstLetter + remainder] = items[k[i]];
+					el.style[&#x27;o&#x27; + firstLetter + remainder] = items[k[i]];
+					el.style[k[i]] = items[k[i]];
+				}
 				else if (my.contains(my.css, k[i])) {
-					if (my.xt(el.style[k[i]])) {
-						el.style[k[i]] = items[k[i]];
-					}
+					el.style[k[i]] = items[k[i]];
 				}
 			}
 			return this;
@@ -1665,11 +1691,12 @@ Calculate start Vector in reference to a entity or Point object&#x27;s position
 @private
 **/
 		my.PageElement.prototype.setStampUsingPivot = function() {
-			var here,
+			var mouse,
+				stack,
 				myP,
 				myPVector,
 				pEntity,
-				temp;
+				x, y;
 			if (my.point &amp;&amp; my.point[this.pivot]) {
 				myP = my.point[this.pivot];
 				pEntity = my.entity[myP.entity];
@@ -1699,21 +1726,48 @@ Calculate start Vector in reference to a entity or Point object&#x27;s position
 			}
 			if (this.pivot === &#x27;mouse&#x27;) {
 				if (this.group) {
-					here = my.stack[my.group[this.group].stack].getMouse();
-					temp = this.getStartValues();
-					if (!my.xta(this.mouseX, this.mouseY)) {
-						this.oldX = temp.x;
-						this.oldY = temp.y;
+					stack = my.stack[my.group[this.group].stack];
+					x = (this.start.x.substring) ? my.Position.prototype.convertX.call(this, this.start.x, stack.localWidth) : this.start.x;
+					y = (this.start.y.substring) ? my.Position.prototype.convertY.call(this, this.start.y, stack.localHeight) : this.start.y;
+					x = (isNaN(x)) ? 0 : x;
+					y = (isNaN(y)) ? 0 : y;
+					mouse = stack.mice[this.mouseIndex] || {};
+					if (!my.xt(mouse)) {
+						mouse.x = 0;
+						mouse.y = false;
+						mouse.active = false;
 					}
-					if (here.active) {
-						this.start.x = (!this.lockX) ? temp.x + here.x - this.oldX : this.start.x;
-						this.start.y = (!this.lockY) ? temp.y + here.y - this.oldY : this.start.y;
-						this.oldX = here.x;
-						this.oldY = here.y;
+					if (this.oldX == null &amp;&amp; this.oldY == null) { //jshint ignore:line
+						this.oldX = x;
+						this.oldY = y;
 					}
+					this.start.x = (!this.lockX) ? x + mouse.x - this.oldX : x;
+					this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
+					this.oldX = mouse.x;
+					this.oldY = mouse.y;
 				}
 			}
 			return this;
+		};
+		/**
+Stamp helper hook function - amended by stacks module
+
+@method setStampUsingStacksPivot
+@return this
+**/
+		my.Position.prototype.setStampUsingStacksPivot = function() {
+			if (my.pad[this.pivot]) {
+				this.setStampUsingDomElement(my.pad[this.pivot]);
+				return this;
+			}
+			if (my.element[this.pivot]) {
+				this.setStampUsingDomElement(my.element[this.pivot]);
+				return this;
+			}
+			if (my.stack[this.pivot]) {
+				this.setStampUsingDomElement(my.stack[this.pivot]);
+				return this;
+			}
 		};
 		/**
 setStampUsingPivot helper function
@@ -1924,6 +1978,24 @@ Overwritesa core setDimensions()
 			return this;
 		};
 		/**
+Reinitialize element with existing values
+@method domInitialize
+@return This
+@chainable
+**/
+		my.PageElement.prototype.domInitialize = function() {
+			this.set({
+				startX: this.start.x || 0,
+				startY: this.start.y || 0,
+				handleX: this.handle.x || 0,
+				handleY: this.handle.y || 0,
+				width: this.width || my.d[this.type].width,
+				height: this.height || my.d[this.type].height,
+				scale: this.scale || 1
+			});
+			return this;
+		};
+		/**
 Overrides PageElement.setDimensions(); &amp;lt;canvas&amp;gt; elements do not use styling to set their drawing region dimensions
 
 @method setDimensions
@@ -1946,33 +2018,63 @@ Overrides PageElement.setDimensions(); &amp;lt;canvas&amp;gt; elements do not us
 			return this;
 		};
 		/**
-A __factory__ function to generate new Stack objects
+Alias for makeStack()
 @method newStack
 @param {Object} items Key:value Object argument for setting attributes
 @return Stack object
 @private
 **/
 		my.newStack = function(items) {
-			return new my.Stack(items);
+			return my.makeStack(items);
 		};
 		/**
-A __factory__ function to generate new Element objects
+Alias for makeElement()
 @method newElement
 @param {Object} items Key:value Object argument for setting attributes
 @return Element object
 @private
 **/
 		my.newElement = function(items) {
-			return new my.Element(items);
+			return my.makeElement(items);
 		};
 		/**
-A __factory__ function to generate new ElementGroup objects
+Alias for makeElementGroup()
 @method newElementGroup
 @param {Object} items Key:value Object argument for setting attributes
 @return ElementGroup object
 @private
 **/
 		my.newElementGroup = function(items) {
+			return my.makeElementGroup(items);
+		};
+		/**
+A __factory__ function to generate new Stack objects
+@method makeStack
+@param {Object} items Key:value Object argument for setting attributes
+@return Stack object
+@private
+**/
+		my.makeStack = function(items) {
+			return new my.Stack(items);
+		};
+		/**
+A __factory__ function to generate new Element objects
+@methodmakewElement
+@param {Object} items Key:value Object argument for setting attributes
+@return Element object
+@private
+**/
+		my.makeElement = function(items) {
+			return new my.Element(items);
+		};
+		/**
+A __factory__ function to generate new ElementGroup objects
+@method makeElementGroup
+@param {Object} items Key:value Object argument for setting attributes
+@return ElementGroup object
+@private
+**/
+		my.makeElementGroup = function(items) {
 			return new my.ElementGroup(items);
 		};
 
@@ -2004,6 +2106,8 @@ Pad set hook function - amended by Stacks module
 			}
 			if (this.group) {
 				my.canvas[this.name].style.margin = &#x27;0&#x27;;
+				my.canvas[this.name].style.webkitBoxSizing = &#x27;border-box&#x27;;
+				my.canvas[this.name].style.mozBoxSizing = &#x27;border-box&#x27;;
 				my.canvas[this.name].style.boxSizing = &#x27;border-box&#x27;;
 			}
 		};
@@ -2128,20 +2232,17 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.setDisplayOffsets();
 				this.setAccessibility(items);
 				temp = my.safeObject(items.perspective);
-				this.perspective = my.newVector({
+				this.perspective = my.makeVector({
 					name: this.type + &#x27;.&#x27; + this.name + &#x27;.perspective&#x27;,
 					x: my.xtGet(items.perspectiveX, temp.x, &#x27;center&#x27;),
 					y: my.xtGet(items.perspectiveY, temp.y, &#x27;center&#x27;),
 					z: my.xtGet(items.perspectiveZ, temp.z, 0)
 				});
-				this.work.perspective = my.newVector({
+				this.work.perspective = my.makeVector({
 					name: this.type + &#x27;.&#x27; + this.name + &#x27;.work.perspective&#x27;
 				});
-				this.initMouse({
-					mouse: (my.isa(items.mouse, &#x27;bool&#x27;) || my.isa(items.mouse, &#x27;vector&#x27;)) ? items.mouse : true
-				});
 				this.groups = [this.name];
-				my.newElementGroup({
+				my.makeElementGroup({
 					name: this.name,
 					stack: this.name
 				});
@@ -2154,8 +2255,14 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 				this.setTransformOrigin();
 				if (this.group) {
 					my.stk[this.name].style.margin = &#x27;0&#x27;;
+					my.stk[this.name].style.webkitBoxSizing = &#x27;border-box&#x27;;
+					my.stk[this.name].style.mozBoxSizing = &#x27;border-box&#x27;;
 					my.stk[this.name].style.boxSizing = &#x27;border-box&#x27;;
 					items.stackElement.style.position = &#x27;absolute&#x27;;
+				}
+				this.interactive = my.xtGet(items.interactive, true);
+				if (this.interactive) {
+					this.addMouseMove();
 				}
 				return this;
 			}
@@ -2237,7 +2344,7 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 			my.PageElement.prototype.set.call(this, items);
 			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== &#x27;Vector&#x27;) {
-					this.perspective = my.newVector(items.perspective || this.perspective);
+					this.perspective = my.makeVector(items.perspective || this.perspective);
 				}
 				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 					temp = my.safeObject(items.perspective);
@@ -2276,7 +2383,7 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 			my.PageElement.prototype.setDelta.call(this, items);
 			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== &#x27;Vector&#x27;) {
-					this.perspective = my.newVector(items.perspective || this.perspective);
+					this.perspective = my.makeVector(items.perspective || this.perspective);
 				}
 				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 					temp = my.safeObject(items.perspective);
@@ -2359,8 +2466,8 @@ _Replaces PageElement.setLocalDimensions
 					this.localHeight = gRes.height;
 				}
 				else if (elRes) {
-					el.style.width = &#x27;auto&#x27;;
-					this.localWidth = parseFloat(elRes.getPropertyValue(&#x27;width&#x27;));
+					el.style.height = &#x27;auto&#x27;;
+					this.localHeight = parseFloat(elRes.getPropertyValue(&#x27;height&#x27;));
 				}
 				else {
 					this.localHeight = 0;
@@ -2384,7 +2491,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 **/
 		my.Stack.prototype.addElementById = function(item) {
 			if (my.isa(item, &#x27;str&#x27;)) {
-				var myElement = my.newElement({
+				var myElement = my.makeElement({
 					domElement: document.getElementById(item),
 					group: this.name,
 				});
@@ -2412,7 +2519,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 				for (i = 0, iz = myArray.length; i &lt; iz; i++) {
 					thisElement = myArray[i];
 					if (thisElement.nodeName !== &#x27;CANVAS&#x27;) {
-						myElement = my.newElement({
+						myElement = my.makeElement({
 							domElement: thisElement,
 							group: this.name,
 						});
@@ -2435,6 +2542,17 @@ Move DOM elements within a Stack, via the Stack&#x27;s groups
 		my.Stack.prototype.render = function() {
 			for (var i = 0, iz = this.groups.length; i &lt; iz; i++) {
 				my.group[this.groups[i]].render();
+			}
+			return true;
+		};
+		/**
+Reinitialize element with existing values
+@method domInit
+@return Always true
+**/
+		my.Stack.prototype.domInit = function() {
+			for (var i = 0, iz = this.groups.length; i &lt; iz; i++) {
+				my.group[this.groups[i]].domInit();
 			}
 			return true;
 		};
@@ -2538,14 +2656,17 @@ Get dimensions of Stack
 				my.elm[this.name] = items.domElement;
 				my.pushUnique(my.elementnames, this.name);
 				this.setDisplayOffsets();
-				this.initMouse({
-					mouse: (my.isa(items.mouse, &#x27;bool&#x27;) || my.isa(items.mouse, &#x27;vector&#x27;)) ? items.mouse : true
-				});
 				this.setStyles(items);
 				this.setTransformOrigin();
 				if (this.group) {
 					my.elm[this.name].style.margin = &#x27;0&#x27;;
+					my.elm[this.name].style.webkitBoxSizing = &#x27;border-box&#x27;;
+					my.elm[this.name].style.mozBoxSizing = &#x27;border-box&#x27;;
 					my.elm[this.name].style.boxSizing = &#x27;border-box&#x27;;
+				}
+				this.interactive = my.xtGet(items.interactive, false);
+				if (this.interactive) {
+					this.addMouseMove();
 				}
 				return this;
 			}
@@ -2585,7 +2706,7 @@ Return the DOM element wrapped by this object
 
 ## Instantiation
 
-* scrawl.newElementGroup()
+* scrawl.makeElementGroup()
 
 ## Purpose
 
@@ -2777,6 +2898,25 @@ Tell the Group to ask its constituent elements to render
 				el.renderElement();
 				if (el.type === &#x27;Stack&#x27;) {
 					my.group[el.name].render();
+				}
+			}
+			return this;
+		};
+		/**
+Reinitialize group elements with existing values
+@method domInit
+@return This
+@chainable
+**/
+		my.ElementGroup.prototype.domInit = function() {
+			var i,
+				iz,
+				el;
+			for (i = 0, iz = this.elements.length; i &lt; iz; i++) {
+				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				el.domInitialize();
+				if (el.type === &#x27;Stack&#x27;) {
+					my.group[el.name].domInit();
 				}
 			}
 			return this;

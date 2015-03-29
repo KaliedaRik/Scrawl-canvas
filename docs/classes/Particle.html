@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.1.0</em>
+            <em>API Docs for: 4.2.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -256,7 +256,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlPhysics.js.html#l178"><code>source\scrawlPhysics.js:178</code></a>
+            Defined in: <a href="../files/source_scrawlPhysics.js.html#l200"><code>source\scrawlPhysics.js:200</code></a>
         </div>
     
 
@@ -275,7 +275,7 @@
     <h1 id="particle">Particle</h1>
 <h2 id="instantiation">Instantiation</h2>
 <ul>
-<li>scrawl.newParticle()</li>
+<li>scrawl.makeParticle()</li>
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
@@ -333,7 +333,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l178"><code>source\scrawlPhysics.js:178</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l200"><code>source\scrawlPhysics.js:200</code></a>
         
         </p>
 
@@ -455,6 +455,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method inherited">
+                                <a href="#method_parse">parse</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_removeSprings">removeSprings</a>
 
@@ -485,13 +492,6 @@
                         
                             <li class="index-item method">
                                 <a href="#method_stamp">stamp</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_toString">toString</a>
 
                                 
                                 
@@ -737,7 +737,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l409"><code>source\scrawlPhysics.js:409</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l431"><code>source\scrawlPhysics.js:431</code></a>
         
         </p>
 
@@ -844,7 +844,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l584"><code>source\scrawlPhysics.js:584</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l606"><code>source\scrawlPhysics.js:606</code></a>
         
         </p>
 
@@ -944,7 +944,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l466"><code>source\scrawlPhysics.js:466</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l488"><code>source\scrawlPhysics.js:488</code></a>
         
         </p>
 
@@ -1027,7 +1027,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l389"><code>source\scrawlPhysics.js:389</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l411"><code>source\scrawlPhysics.js:411</code></a>
         
         </p>
 
@@ -1124,7 +1124,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l448"><code>source\scrawlPhysics.js:448</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l470"><code>source\scrawlPhysics.js:470</code></a>
         
         </p>
 
@@ -1202,7 +1202,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1824"><code>source\scrawlCore.js:1824</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2232"><code>source\scrawlCore.js:2232</code></a>
         
         </p>
 
@@ -1262,7 +1262,7 @@
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.newBlock({
+                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
     width: 50,
     });
 box.get(&#39;width&#39;);               //returns 50
@@ -1315,7 +1315,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l560"><code>source\scrawlPhysics.js:560</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l582"><code>source\scrawlPhysics.js:582</code></a>
         
         </p>
 
@@ -1340,6 +1340,74 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 
                     
                     <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_parse" class="method item inherited">
+    <h3 class="name"><code>parse</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_parse">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2316"><code>source\scrawlCore.js:2316</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Turn the object into a JSON String</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>object of object&#39;s currently set attributes</p>
 
                 
             </div>
@@ -1388,7 +1456,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l620"><code>source\scrawlPhysics.js:620</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l642"><code>source\scrawlPhysics.js:642</code></a>
         
         </p>
 
@@ -1471,7 +1539,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l636"><code>source\scrawlPhysics.js:636</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l658"><code>source\scrawlPhysics.js:658</code></a>
         
         </p>
 
@@ -1565,7 +1633,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1916"><code>source\scrawlCore.js:1916</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2324"><code>source\scrawlCore.js:2324</code></a>
         
         </p>
 
@@ -1648,7 +1716,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l358"><code>source\scrawlPhysics.js:358</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l380"><code>source\scrawlPhysics.js:380</code></a>
         
         </p>
 
@@ -1746,7 +1814,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l426"><code>source\scrawlPhysics.js:426</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l448"><code>source\scrawlPhysics.js:448</code></a>
         
         </p>
 
@@ -1771,74 +1839,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 
                     
                     <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_toString" class="method item inherited">
-    <h3 class="name"><code>toString</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#method_toString">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l1908"><code>source\scrawlCore.js:1908</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Turn the object into a JSON String</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>JSON string of non-default value attributes</p>
 
                 
             </div>
@@ -1887,7 +1887,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l457"><code>source\scrawlPhysics.js:457</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l479"><code>source\scrawlPhysics.js:479</code></a>
         
         </p>
 
@@ -1962,7 +1962,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l495"><code>source\scrawlPhysics.js:495</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l517"><code>source\scrawlPhysics.js:517</code></a>
         
         </p>
 
@@ -2037,7 +2037,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l511"><code>source\scrawlPhysics.js:511</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l533"><code>source\scrawlPhysics.js:533</code></a>
         
         </p>
 
@@ -2112,7 +2112,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l532"><code>source\scrawlPhysics.js:532</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l554"><code>source\scrawlPhysics.js:554</code></a>
         
         </p>
 
@@ -2178,7 +2178,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l265"><code>source\scrawlPhysics.js:265</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l287"><code>source\scrawlPhysics.js:287</code></a>
         
         </p>
 
@@ -2222,7 +2222,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1802"><code>source\scrawlCore.js:1802</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2210"><code>source\scrawlCore.js:2210</code></a>
         
         </p>
 
@@ -2269,7 +2269,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l272"><code>source\scrawlPhysics.js:272</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l294"><code>source\scrawlPhysics.js:294</code></a>
         
         </p>
 
@@ -2316,7 +2316,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l279"><code>source\scrawlPhysics.js:279</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l301"><code>source\scrawlPhysics.js:301</code></a>
         
         </p>
 
@@ -2363,7 +2363,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l325"><code>source\scrawlPhysics.js:325</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l347"><code>source\scrawlPhysics.js:347</code></a>
         
         </p>
 
@@ -2411,7 +2411,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l334"><code>source\scrawlPhysics.js:334</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l356"><code>source\scrawlPhysics.js:356</code></a>
         
         </p>
 
@@ -2458,7 +2458,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l236"><code>source\scrawlPhysics.js:236</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l258"><code>source\scrawlPhysics.js:258</code></a>
         
         </p>
 
@@ -2507,7 +2507,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l348"><code>source\scrawlPhysics.js:348</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l370"><code>source\scrawlPhysics.js:370</code></a>
         
         </p>
 
@@ -2554,7 +2554,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l251"><code>source\scrawlPhysics.js:251</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l273"><code>source\scrawlPhysics.js:273</code></a>
         
         </p>
 
@@ -2601,7 +2601,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l244"><code>source\scrawlPhysics.js:244</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l266"><code>source\scrawlPhysics.js:266</code></a>
         
         </p>
 
@@ -2645,7 +2645,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1773"><code>source\scrawlCore.js:1773</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2181"><code>source\scrawlCore.js:2181</code></a>
         
         </p>
 
@@ -2690,7 +2690,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l293"><code>source\scrawlPhysics.js:293</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l315"><code>source\scrawlPhysics.js:315</code></a>
         
         </p>
 
@@ -2742,7 +2742,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l258"><code>source\scrawlPhysics.js:258</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l280"><code>source\scrawlPhysics.js:280</code></a>
         
         </p>
 
@@ -2789,7 +2789,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l341"><code>source\scrawlPhysics.js:341</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l363"><code>source\scrawlPhysics.js:363</code></a>
         
         </p>
 
@@ -2833,7 +2833,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1816"><code>source\scrawlCore.js:1816</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2224"><code>source\scrawlCore.js:2224</code></a>
         
         </p>
 
@@ -2877,7 +2877,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1809"><code>source\scrawlCore.js:1809</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2217"><code>source\scrawlCore.js:2217</code></a>
         
         </p>
 
@@ -2926,7 +2926,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l226"><code>source\scrawlPhysics.js:226</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l248"><code>source\scrawlPhysics.js:248</code></a>
         
         </p>
 
@@ -2972,7 +2972,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l286"><code>source\scrawlPhysics.js:286</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l308"><code>source\scrawlPhysics.js:308</code></a>
         
         </p>
 
@@ -3019,7 +3019,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l309"><code>source\scrawlPhysics.js:309</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l331"><code>source\scrawlPhysics.js:331</code></a>
         
         </p>
 
@@ -3070,7 +3070,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1783"><code>source\scrawlCore.js:1783</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2191"><code>source\scrawlCore.js:2191</code></a>
         
         </p>
 
