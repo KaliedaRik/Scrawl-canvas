@@ -19,7 +19,7 @@ Scrawl.js is  JavaScript library which adds an API for handling and manipulating
 HTML5 <canvas> elements in the DOM.
 
 The library is modular - only load the JavaScript that is needed, nothing more. Scrawl core
-is 60kb, much less when gzipped. Modules can be loaded asynchronously, saving load time.
+is 70kb, much less when gzipped. Modules can be loaded asynchronously, saving load time.
 
 Scrawl uses the ’2d’ context with each canvas element.
 
@@ -86,18 +86,18 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 4.1.0 released 25 January 2015
+VERSION 4.2.0 released 29 March 2015
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (65kb)
+		- scrawlCore-min.js (72kb)
 		- scrawlAnimation-min.js (22kb)
 		- scrawlBlock-min.js (4kb)
 		- scrawlCollisions-min.js (12kb)
 		- scrawlColor-min.js (5kb)
-		- scrawlFilters-min.js (25kb)
-		- scrawlImageLoad-min.js (8kb)
+		- scrawlFilters-min.js (26kb)
+		- scrawlImageLoad-min.js (9kb)
 		- scrawlImages-min.js (15kb)
 		- scrawlPath-min.js (24kb)
 		- scrawlPathFactories-min.js (10kb)
@@ -106,26 +106,26 @@ VERSION 4.1.0 released 25 January 2015
 		- scrawlQuaternion-min.js (6kb)
 		- scrawlSaveLoad-min.js (8kb)
 		- scrawlShape-min.js (9kb)
-		- scrawlStacks-min.js (39kb)
+		- scrawlStacks-min.js (41kb)
 		- scrawlWheel-min.js (6kb)
 
 		Development:
-		- scrawlCore.js (196kb)
-		- scrawlAnimation.js (57kb)
-		- scrawlBlock.js (12kb)
-		- scrawlCollisions.js (28kb)
+		- scrawlCore.js (212kb)
+		- scrawlAnimation.js (58kb)
+		- scrawlBlock.js (11kb)
+		- scrawlCollisions.js (27kb)
 		- scrawlColor.js (15kb)
-		- scrawlFilters.js (64kb)
-		- scrawlImageLoad.js (24kb)
+		- scrawlFilters.js (67kb)
 		- scrawlImages.js (38kb)
-		- scrawlPath.js (67kb)
-		- scrawlPathFactories.js (26kb)
+		- scrawlImageLoad.js (25kb)
+		- scrawlPath.js (65kb)
+		- scrawlPathFactories.js (25kb)
 		- scrawlPhrase.js (37kb)
 		- scrawlPhysics.js (24kb)
 		- scrawlQuaternion.js (17kb)
 		- scrawlSaveLoad.js (18kb)
 		- scrawlShape.js (25kb)
-		- scrawlStacks.js (87kb)
+		- scrawlStacks.js (91kb)
 		- scrawlWheel.js (17kb)
 
 		Documentation:
@@ -145,6 +145,15 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 4.2.0 uploaded 29 March 2015
+	- work to further integrate stacks, canvases, entitys and elements
+		- new elementGroup object
+	- overhaul events
+		- new scrawl functions: 
+			- addListener(), removeListener() 
+			- addNativeListener(), removeNativeListener()
+		- mouse, touch and pointer events now combined
+			- demos reweritten to take account of touch/pointer events
 Version 4.1.0 uploaded 25 January 2015
 	- added timeline functionality
 	- numerous small bugfixes following release of version 4
