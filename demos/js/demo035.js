@@ -383,10 +383,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['factories', 'block', 'wheel', 'path', 'shape', 'images', 'phrase', 'color', 'animation'],
+	extensions: ['factories', 'block', 'wheel', 'path', 'shape', 'images', 'phrase', 'color', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

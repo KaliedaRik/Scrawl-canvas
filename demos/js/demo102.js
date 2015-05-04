@@ -113,10 +113,10 @@ var mycode = function() {
 
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'filters', 'wheel'],
+	extensions: ['images', 'filters', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

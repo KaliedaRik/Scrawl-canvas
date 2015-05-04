@@ -94,10 +94,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['wheel', 'animation'],
+	extensions: ['wheel', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -231,10 +231,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'wheel', 'factories', 'animation', 'images', 'path', 'phrase'],
+	extensions: ['block', 'wheel', 'factories', 'animation', 'images', 'path', 'phrase'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

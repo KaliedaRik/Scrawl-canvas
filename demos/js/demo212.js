@@ -241,10 +241,10 @@ var mycode = function() {
 };
 
 //module loading and initialization function
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['stacks', 'animation'],
+	extensions: ['stacks', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

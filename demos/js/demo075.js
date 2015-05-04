@@ -131,10 +131,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'images', 'collisions', 'animation'],
+	extensions: ['block', 'images', 'collisions', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

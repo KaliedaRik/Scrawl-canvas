@@ -151,10 +151,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['path', 'wheel', 'phrase', 'factories', 'animation'],
+	extensions: ['path', 'wheel', 'phrase', 'factories', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

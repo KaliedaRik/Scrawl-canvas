@@ -140,10 +140,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['wheel', 'phrase', 'path', 'factories', 'animation'],
+	extensions: ['wheel', 'phrase', 'path', 'factories', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

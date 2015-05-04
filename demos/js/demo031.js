@@ -111,10 +111,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'collisions', 'animation', 'block'],
+	extensions: ['images', 'collisions', 'animation', 'block'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

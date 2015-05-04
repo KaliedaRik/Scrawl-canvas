@@ -407,10 +407,10 @@ var mycode = function() {
 
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'filters', 'animation'],
+	extensions: ['images', 'filters', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

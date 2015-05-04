@@ -204,10 +204,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['color', 'factories', 'wheel', 'path', 'animation'],
+	extensions: ['color', 'factories', 'wheel', 'path', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

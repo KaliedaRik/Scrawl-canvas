@@ -136,10 +136,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['animation', 'shape', 'color'],
+	extensions: ['animation', 'shape', 'color'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

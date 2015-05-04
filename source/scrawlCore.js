@@ -209,12 +209,20 @@ Key:value pairs of module alias:filename Strings, used by scrawl.loadModules()
 		imageload: 'scrawlImageLoad'
 	};
 	/**
-Array of loaded module arrays
-@property modules
+Array of loaded extensions arrays
+@property extensions
 @type {Array}
 @private
 **/
-	my.modules = [];
+	my.extensions = [];
+	/**
+Array of loaded extensions arrays (name changed from modules to extensions because Scrawl 'modules' are not modules)
+@property modules
+@type {Array}
+@private
+@deprecated
+**/
+	my.modules = my.extensions;
 	/**
 Key:value pairs of module alias:Array, used by scrawl.loadModules()
 @property loadDependencies
@@ -318,11 +326,11 @@ A __general__ function that resets the Scrawl library to empty arrays and object
 		return my;
 	};
 	/**
-A __general__ function that loads supporting modules and integrates them into the core
+A __general__ function that loads supporting extensions and integrates them into the core
 
-Module names are supplied as an array of Strings and can be either the module filename (with or without the '.js' suffix), or an alias string.
+Extension names are supplied as an array of Strings and can be either the extension filename (with or without the '.js' suffix), or an alias string.
 
-Scrawl currently supports the following modules:
+Scrawl currently supports the following extensions:
 * __scrawlAnimation.js__ - alias __animation__ - adds animation and tween functionality to the core
 * __scrawlBlock.js__ - alias __block__ - adds _Block_ (square and rectangle) entitys to the core
 * __scrawlCollisions.js__ - alias __collisions__ - adds entity collision detection functionality to the core
@@ -341,9 +349,9 @@ Scrawl currently supports the following modules:
 * __scrawlImageLoad.js__ - alias __imageload__ - adds the ability to load img elements into the library
 * __scrawlQuaternion.js__ - alias __quaternion__ - adds quaternion maths functionality to the core
 
-Where permitted, Scrawl will load modules asynchronously. Modules have no dependencies beyond their need for the core module, and can be loaded in any order.
+Where permitted, Scrawl will load extensions asynchronously. Extensions have no external dependencies beyond their need for the core module, and can be loaded in any order.
 
-Any supplied callback function will only be run once all modules have been loaded.
+Any supplied callback function will only be run once all extensions have been loaded.
 @example
     <!DOCTYPE html>
     <html>
@@ -360,9 +368,9 @@ Any supplied callback function will only be run once all modules have been loade
                         });
                     scrawl.render();
                     };
-                scrawl.loadModules({
+                scrawl.loadExtensions({
                     path: 'js/',
-                    modules: ['wheel'],         
+                    extensions: ['wheel'],         
                     callback: function(){
                         window.addEventListener('load', function(){
                             scrawl.init();
@@ -374,18 +382,18 @@ Any supplied callback function will only be run once all modules have been loade
         </body>
     </html>
 
-@method loadModules
-@param {String} [path] File path String to the directory where the Scrawl module scripts have been stored, relative to the web page's main file; default ('') will assume modules are in the same directory as the web page file
-@param {Array} modules Array of module Strings (either filenames or module aliases), representing Scrawl modules to be loaded into the core
-@param {Boolean} [mini] When set to true (the default), will load minified versions of the modules; false will load source versions
-@param {Function} [callback] An anonymous function to be run once module loading completes
+@method loadExtensions
+@param {String} [path] File path String to the directory where the Scrawl extension scripts have been stored, relative to the web page's main file; default ('') will assume extensions are in the same directory as the web page file
+@param {Array} extensions Array of extension Strings (either filenames or extension aliases), representing Scrawl extensions to be loaded into the core
+@param {Boolean} [mini] When set to true (the default), will load minified versions of the extensions; false will load source versions
+@param {Function} [callback] An anonymous function to be run once extension loading completes
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.loadModules = function(items) {
+	my.loadExtensions = function(items) {
 		items = my.safeObject(items);
 		var path = items.path || '',
-			modules = [].concat(items.modules),
+			exts = [],
 			callback = (my.isa(items.callback, 'fn')) ? items.callback : function() {},
 			error = (my.isa(items.error, 'fn')) ? items.error : function() {},
 			mini = my.xtGet(items.minified, true),
@@ -393,23 +401,23 @@ Any supplied callback function will only be run once all modules have been loade
 			loaded = [],
 			required = [],
 			startTime = Date.now(),
-			timeout = 30000, // allow a maximum of 30 seconds to get all modules
+			timeout = 30000, // allow a maximum of 30 seconds to get all extensions
 			i, iz, j, jz,
-			getModule = function(module) {
-				var mod,
-					myMod = my.loadAlias[module] || module;
-				if (!my.contains(my.modules, myMod)) {
-					mod = document.createElement('script');
-					mod.type = 'text/javascript';
-					mod.async = 'true';
-					mod.onload = function(e) {
-						done(module);
+			getExtensions = function(ext) {
+				var scriptTag,
+					myExt = my.loadAlias[ext] || ext;
+				if (!my.contains(my.extensions, myExt)) {
+					scriptTag = document.createElement('script');
+					scriptTag.type = 'text/javascript';
+					scriptTag.async = 'true';
+					scriptTag.onload = function(e) {
+						done(ext);
 					};
-					mod.onerror = function(e) {
-						done(module, true);
+					scriptTag.onerror = function(e) {
+						done(ext, true);
 					};
-					mod.src = (/\.js$/.test(myMod)) ? path + myMod : path + myMod + tail;
-					document.body.appendChild(mod);
+					scriptTag.src = (/\.js$/.test(myExt)) ? path + myExt : path + myExt + tail;
+					document.body.appendChild(scriptTag);
 				}
 			},
 			done = function(m, e) {
@@ -418,24 +426,45 @@ Any supplied callback function will only be run once all modules have been loade
 					error();
 				}
 				else {
-					my.pushUnique(my.modules, m);
+					my.pushUnique(my.extensions, m);
 				}
 				if (loaded.length === 0) {
 					callback();
 				}
 			};
-		for (i = 0, iz = modules.length; i < iz; i++) {
-			for (j = 0, jz = my.loadDependencies[modules[i]].length; j < jz; j++) {
-				my.pushUnique(required, my.loadDependencies[modules[i]][j]);
+		if (my.xt(items.extensions)) {
+			exts = exts.concat([].concat(items.extensions));
+		}
+		if (my.xt(items.modules)) {
+			exts = exts.concat([].concat(items.modules));
+		}
+		for (i = 0, iz = exts.length; i < iz; i++) {
+			for (j = 0, jz = my.loadDependencies[exts[i]].length; j < jz; j++) {
+				my.pushUnique(required, my.loadDependencies[exts[i]][j]);
 			}
-			my.pushUnique(required, modules[i]);
+			my.pushUnique(required, exts[i]);
 		}
 		loaded = [].concat(required);
 		for (i = 0, iz = required.length; i < iz; i++) {
-			getModule(required[i]);
+			getExtensions(required[i]);
 		}
 		return my;
 	};
+	/**
+A __general__ function that loads supporting extensions and integrates them into the core
+
+(function name changed from loadModules to loadExtensions because Scrawl 'modules' are not modules)
+
+@method loadModules
+@param {String} [path] File path String to the directory where the Scrawl extension scripts have been stored, relative to the web page's main file; default ('') will assume extensions are in the same directory as the web page file
+@param {Array} extensions Array of extension Strings (either filenames or extension aliases), representing Scrawl extensions to be loaded into the core
+@param {Boolean} [mini] When set to true (the default), will load minified versions of the extensions; false will load source versions
+@param {Function} [callback] An anonymous function to be run once extension loading completes
+@return The Scrawl library object (scrawl)
+@chainable
+@deprecated
+**/
+	my.loadModules = my.loadExtensions;
 	/**
 A __utility__ function that adds the attributes of the additive object to those of the reference object, where those attributes don't already exist in the reference object
 @method mergeInto

@@ -71,10 +71,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'wheel', 'animation'],
+	extensions: ['block', 'wheel', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

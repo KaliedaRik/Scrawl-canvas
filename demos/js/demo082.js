@@ -173,10 +173,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['phrase', 'images', 'animation'],
+	extensions: ['phrase', 'images', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

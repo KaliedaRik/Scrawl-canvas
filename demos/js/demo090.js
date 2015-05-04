@@ -374,10 +374,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['animation', 'shape', 'factories', 'color', 'images', 'wheel'],
+	extensions: ['animation', 'shape', 'factories', 'color', 'images', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

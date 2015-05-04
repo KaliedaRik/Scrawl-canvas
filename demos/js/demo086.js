@@ -519,10 +519,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['phrase', 'block', 'images', 'shape', 'path', 'wheel', 'animation'],
+	extensions: ['phrase', 'block', 'images', 'shape', 'path', 'wheel', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -30,10 +30,10 @@ var mycode = function() {
 	//hide-end
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	minified: false,
 	path: '../source/',
-	modules: 'phrase',
+	extensions: 'phrase',
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

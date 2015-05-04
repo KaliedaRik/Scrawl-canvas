@@ -159,10 +159,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['animation', 'stacks', 'wheel'],
+	extensions: ['animation', 'stacks', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

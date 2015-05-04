@@ -100,10 +100,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['animation', 'path', 'factories'],
+	extensions: ['animation', 'path', 'factories'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

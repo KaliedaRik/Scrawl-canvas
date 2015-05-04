@@ -107,10 +107,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['factories', 'path', 'phrase', 'animation'],
+	extensions: ['factories', 'path', 'phrase', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

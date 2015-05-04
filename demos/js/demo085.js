@@ -349,10 +349,10 @@ var mycode = function() {
 
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'wheel', 'phrase', 'animation'],
+	extensions: ['block', 'wheel', 'phrase', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

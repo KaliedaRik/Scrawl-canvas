@@ -112,10 +112,10 @@ var mycode = function() {
 	scrawl.render();
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['shape', 'phrase', 'path', 'wheel', 'stacks'],
+	extensions: ['shape', 'phrase', 'path', 'wheel', 'stacks'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

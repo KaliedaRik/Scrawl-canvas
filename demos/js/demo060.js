@@ -187,10 +187,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['animation', 'block', 'wheel', 'path', 'factories', 'collisions', 'physics'],
+	extensions: ['animation', 'block', 'wheel', 'path', 'factories', 'collisions', 'physics'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

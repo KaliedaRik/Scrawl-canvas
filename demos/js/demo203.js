@@ -103,10 +103,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['phrase', 'stacks', 'animation'],
+	extensions: ['phrase', 'stacks', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();
