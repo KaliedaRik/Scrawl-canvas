@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.2.0 - 29 March 2015
+*	version 4.2.1 - 4 May 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -18,8 +18,8 @@ A. PURPOSE AND FEATURES
 Scrawl.js is  JavaScript library which adds an API for handling and manipulating 
 HTML5 <canvas> elements in the DOM.
 
-The library is modular - only load the JavaScript that is needed, nothing more. Scrawl core
-is 70kb, much less when gzipped. Modules can be loaded asynchronously, saving load time.
+The library is extendable - only load the JavaScript that is needed, nothing more. Scrawl core
+is 70kb, much less when gzipped. Extensions can be loaded asynchronously, saving load time.
 
 Scrawl uses the ’2d’ context with each canvas element.
 
@@ -86,7 +86,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 4.2.0 released 29 March 2015
+VERSION 4.2.1 released 4 May 2015
 
     - the zip file includes:
 		
@@ -110,7 +110,7 @@ VERSION 4.2.0 released 29 March 2015
 		- scrawlWheel-min.js (6kb)
 
 		Development:
-		- scrawlCore.js (212kb)
+		- scrawlCore.js (214kb)
 		- scrawlAnimation.js (58kb)
 		- scrawlBlock.js (11kb)
 		- scrawlCollisions.js (27kb)
@@ -145,6 +145,10 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 4.2.1 uploaded 4 May 2015
+	- nomenclature change: 'module' becomes 'extension'
+	- scrawl.loadModules() deprecated in favour of scrawl.loadExtensions()
+	- monor bugfixes
 Version 4.2.0 uploaded 29 March 2015
 	- work to further integrate stacks, canvases, entitys and elements
 		- new elementGroup object
