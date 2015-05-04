@@ -171,10 +171,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['path', 'wheel', 'factories', 'animation', 'phrase'],
+	extensions: ['path', 'wheel', 'factories', 'animation', 'phrase'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -110,10 +110,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'wheel', 'animation', 'filters'],
+	extensions: ['images', 'wheel', 'animation', 'filters'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -141,10 +141,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'path', 'factories', 'animation', 'collisions', 'wheel'],
+	extensions: ['block', 'path', 'factories', 'animation', 'collisions', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

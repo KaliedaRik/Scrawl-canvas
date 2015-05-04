@@ -189,10 +189,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'animation', 'path', 'factories'],
+	extensions: ['images', 'animation', 'path', 'factories'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

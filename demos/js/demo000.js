@@ -40,10 +40,10 @@ var mycode = function() {
   */
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: [],
+	extensions: [],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

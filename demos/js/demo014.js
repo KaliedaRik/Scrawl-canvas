@@ -93,10 +93,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['shape', 'animation'],
+	extensions: ['shape', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

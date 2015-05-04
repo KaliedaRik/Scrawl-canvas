@@ -102,10 +102,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'images', 'path', 'wheel', 'factories', 'animation'],
+	extensions: ['block', 'images', 'path', 'wheel', 'factories', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

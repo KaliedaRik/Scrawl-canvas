@@ -88,10 +88,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['wheel', 'images', 'animation'],
+	extensions: ['wheel', 'images', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

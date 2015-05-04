@@ -145,10 +145,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'wheel', 'images', 'animation', 'collisions'],
+	extensions: ['block', 'wheel', 'images', 'animation', 'collisions'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

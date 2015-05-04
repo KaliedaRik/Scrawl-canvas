@@ -96,10 +96,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['path', 'factories', 'collisions', 'animation', 'wheel', 'color'],
+	extensions: ['path', 'factories', 'collisions', 'animation', 'wheel', 'color'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -68,10 +68,10 @@ var mycode = function() {
 	//hide-end
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: 'wheel',
+	extensions: 'wheel',
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

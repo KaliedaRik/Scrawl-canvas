@@ -587,10 +587,10 @@ var mycode = function() {
 };
 
 //load scrawl modules used in this demo
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['path', 'factories', 'animation', 'stacks', 'block', 'wheel'],
+	extensions: ['path', 'factories', 'animation', 'stacks', 'block', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

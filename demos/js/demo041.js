@@ -68,10 +68,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'wheel', 'animation', 'collisions'],
+	extensions: ['block', 'wheel', 'animation', 'collisions'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

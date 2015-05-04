@@ -178,10 +178,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'wheel', 'physics', 'animation', 'collisions'],
+	extensions: ['block', 'wheel', 'physics', 'animation', 'collisions'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

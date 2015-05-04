@@ -153,10 +153,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['block', 'path', 'factories', 'wheel', 'animation', 'collisions'],
+	extensions: ['block', 'path', 'factories', 'wheel', 'animation', 'collisions'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

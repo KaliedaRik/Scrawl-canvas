@@ -42,10 +42,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['saveload', 'animation', 'block', 'images'],
+	extensions: ['saveload', 'animation', 'block', 'images'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -150,10 +150,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['physics', 'animation'],
+	extensions: ['physics', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

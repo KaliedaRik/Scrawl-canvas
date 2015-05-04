@@ -228,10 +228,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['factories', 'shape', 'physics', 'wheel', 'block', 'animation', 'collisions'],
+	extensions: ['factories', 'shape', 'physics', 'wheel', 'block', 'animation', 'collisions'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

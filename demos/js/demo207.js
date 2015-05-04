@@ -168,10 +168,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['wheel', 'path', 'factories', 'animation', 'stacks'],
+	extensions: ['wheel', 'path', 'factories', 'animation', 'stacks'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

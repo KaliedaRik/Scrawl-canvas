@@ -83,10 +83,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['wheel', 'path', 'animation'],
+	extensions: ['wheel', 'path', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -248,10 +248,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['saveload', 'animation', 'block', 'wheel', 'phrase', 'path', 'factories', 'images', 'color'],
+	extensions: ['saveload', 'animation', 'block', 'wheel', 'phrase', 'path', 'factories', 'images', 'color'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

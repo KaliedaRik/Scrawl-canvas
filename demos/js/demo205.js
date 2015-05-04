@@ -181,10 +181,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'phrase', 'animation', 'stacks'],
+	extensions: ['images', 'phrase', 'animation', 'stacks'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

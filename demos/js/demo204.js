@@ -64,10 +64,10 @@ var mycode = function() {
 	});
 };
 
-scrawl.loadModules({
+scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	modules: ['images', 'stacks', 'animation'],
+	extensions: ['images', 'stacks', 'animation'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();
