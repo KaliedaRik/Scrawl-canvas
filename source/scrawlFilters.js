@@ -871,7 +871,7 @@ Only the final filter in an array of filters will determine the composite operat
 @type String
 @default 'source-over'
 **/
-			//composite: 'source-over',
+			composite: 'source-over'
 		};
 		my.mergeInto(my.d.Filter, my.d.Base);
 		/**
@@ -1693,25 +1693,33 @@ Add function - takes data, calculates its channels and combines it with data
 		my.MatrixFilter.prototype.classname = 'filternames';
 		my.d.MatrixFilter = {
 			/**
-@property width - matrix maximum width
+Matrix maximum width
+
+@property width
 @type Number
 @default 1
 **/
 			width: 1,
 			/**
-@property height - matrix maximum height
+Matrix maximum height
+
+@property height
 @type Number
 @default 1
 **/
 			height: 1,
 			/**
-@property x - home cell along the horizontal
+Home cell along the horizontal
+
+@property x
 @type Number
 @default 0
 **/
 			x: 0,
 			/**
-@property y - home cell along the vertical
+Home cell along the vertical
+
+@property y
 @type Number
 @default 0
 **/
@@ -1727,11 +1735,11 @@ Data is made up of an array of weightings - for instance a 3 x 3 matrix will con
 
 The data array has no meaning without width and height dimensions - if no dimension values are supplied, the constructor will assume a odd-numbered square larger than the square root of the length of the data array (eg 3x3, 5x5), with home coordinates at the center of the square, and pad empty spaces at the end of the array with zero weights (which then get ignored)
 
-@property data - raw data supplied
+@property data
 @type Array
 @default false
 **/
-			data: false,
+			data: false
 		};
 		my.mergeInto(my.d.MatrixFilter, my.d.Filter);
 		/**
@@ -1955,25 +1963,33 @@ Add function - takes data, calculates its channels and combines it with data
 		my.PixelateFilter.prototype.classname = 'filternames';
 		my.d.PixelateFilter = {
 			/**
-@property width - pixelization width
+Pixelization width
+
+@property width
 @type Number
 @default 5
 **/
 			width: 5,
 			/**
-@property height - pixelization height
+Pixelization height
+
+@property height
 @type Number
 @default 5
 **/
 			height: 5,
 			/**
-@property offsetX - horizontal coordinate from which to begin pexelization
+Horizontal coordinate from which to begin pexelization
+
+@property offsetX
 @type Number
 @default 0
 **/
 			offsetX: 0,
 			/**
-@property offsetY - vertical coordinate from which to begin pexelization
+Vertical coordinate from which to begin pexelization
+
+@property offsetY
 @type Number
 @default 0
 **/
@@ -2139,7 +2155,7 @@ Add function - takes data, calculates its channels and combines it with data
 @type Number
 @default false
 **/
-			includeInvisiblePoints: false,
+			includeInvisiblePoints: false
 		};
 		my.mergeInto(my.d.BlurFilter, my.d.Filter);
 		/**
@@ -2441,11 +2457,11 @@ Add function - takes data, calculates its channels and combines it with data
 
 ## Purpose
 
-* separate and reposition the color channels
+* Separate colours to show primary or secondary colour channels only
 
 ## Access
 
-* scrawl.filter.FILTERNAME - for the StereoFilter object
+* scrawl.filter.FILTERNAME - for the SeparateFilter object
 
 @class SeparateFilter
 @constructor
@@ -2471,10 +2487,9 @@ Add function - takes data, calculates its channels and combines it with data
 		my.SeparateFilter.prototype.classname = 'filternames';
 		my.d.SeparateFilter = {
 			/**
-@property channel
-
 Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'all'
 
+@property channel
 @type String
 @default 'all'
 **/

@@ -601,20 +601,20 @@ Color names are limited to those supported by SVGTiny: 'green', 'silver', 'lime'
 		};
 		/**
 Convert a decimal Number to its hexidecimal String value
-@method toDecimal
+@method toHex
 @param {Number} items decimal value
 @return Hexidecimal String
 **/
-		my.Color.prototype.toDecimal = function(item) {
+		my.Color.prototype.toHex = function(item) {
 			return parseInt(item, 16);
 		};
 		/**
 Convert a hexidecimal String to its decimal Number value
-@method toHex
+@method toDecimal
 @param {String} Hexidecimal String value
 @return Decimal Number
 **/
-		my.Color.prototype.toHex = function(item) {
+		my.Color.prototype.toDecimal = function(item) {
 			return item.toString(16);
 		};
 		/**

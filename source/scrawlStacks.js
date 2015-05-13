@@ -2045,14 +2045,6 @@ the Stack constructor, and set() function, supports the following 'virtual' attr
 				z: 0
 			},
 			/**
-A flag to indicate whether element text should be scaled at the same time as the stack. Default; false (do not scale text)
-
-@property scaleText
-@type Boolean
-@default false
-**/
-			scaleText: false,
-			/**
 The PADNAME String of a canvas locked to the stack
 
 @property canvas
