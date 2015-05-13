@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.0</em>
+            <em>API Docs for: 4.2.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -119,6 +119,8 @@
             
                 <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
+                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
+            
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
@@ -126,8 +128,6 @@
                 <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
-            
-                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
             
                 <li><a href="../classes/Text.html">Text</a></li>
             
@@ -273,7 +273,7 @@
 /**
 # scrawlCore
 
-## Version 4.2.0 - 29 March 2015
+## Version 4.2.1 - 4 May 2015
 
 Developed by Rik Roots - &lt;rik.roots@gmail.com&gt;, &lt;rik@rikweb.org.uk&gt;
 
@@ -356,10 +356,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 4.2.0
+@default 4.2.1
 @final
 **/
-	my.version = &#x27;4.2.0&#x27;;
+	my.version = &#x27;4.2.1&#x27;;
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -6746,8 +6746,10 @@ Augments Position.clone()
 	my.Entity.prototype.clone = function(items) {
 		var context,
 			enhancedItems,
-			clone;
+			clone,
+			i, iz;
 		items = my.safeObject(items);
+
 		context = JSON.parse(JSON.stringify(my.ctx[this.context]));
 		delete context.name;
 		enhancedItems = my.mergeInto(items, context);

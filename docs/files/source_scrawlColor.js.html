@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.0</em>
+            <em>API Docs for: 4.2.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -119,6 +119,8 @@
             
                 <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
+                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
+            
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
@@ -126,8 +128,6 @@
                 <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
-            
-                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
             
                 <li><a href="../classes/Text.html">Text</a></li>
             
@@ -851,20 +851,20 @@ Color names are limited to those supported by SVGTiny: &#x27;green&#x27;, &#x27;
 		};
 		/**
 Convert a decimal Number to its hexidecimal String value
-@method toDecimal
+@method toHex
 @param {Number} items decimal value
 @return Hexidecimal String
 **/
-		my.Color.prototype.toDecimal = function(item) {
+		my.Color.prototype.toHex = function(item) {
 			return parseInt(item, 16);
 		};
 		/**
 Convert a hexidecimal String to its decimal Number value
-@method toHex
+@method toDecimal
 @param {String} Hexidecimal String value
 @return Decimal Number
 **/
-		my.Color.prototype.toHex = function(item) {
+		my.Color.prototype.toDecimal = function(item) {
 			return item.toString(16);
 		};
 		/**

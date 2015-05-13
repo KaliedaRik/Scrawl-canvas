@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>StereoFilter - scrawl-canvas</title>
+    <title>SeparateFilter - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.0</em>
+            <em>API Docs for: 4.2.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -119,6 +119,8 @@
             
                 <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
+                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
+            
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
@@ -126,8 +128,6 @@
                 <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
-            
-                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
             
                 <li><a href="../classes/Text.html">Text</a></li>
             
@@ -244,7 +244,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>StereoFilter Class</h1>
+                        <h1>SeparateFilter Class</h1>
 <div class="box meta">
     
 
@@ -256,7 +256,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlFilters.js.html#l2435"><code>source\scrawlFilters.js:2435</code></a>
+            Defined in: <a href="../files/source_scrawlFilters.js.html#l2451"><code>source\scrawlFilters.js:2451</code></a>
         </div>
     
 
@@ -279,11 +279,11 @@
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>separate and reposition the color channels</li>
+<li>Separate colours to show primary or secondary colour channels only</li>
 </ul>
 <h2 id="access">Access</h2>
 <ul>
-<li>scrawl.filter.FILTERNAME - for the StereoFilter object</li>
+<li>scrawl.filter.FILTERNAME - for the SeparateFilter object</li>
 </ul>
 
 </div>
@@ -291,8 +291,8 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_StereoFilter" class="method item">
-    <h3 class="name"><code>StereoFilter</code></h3>
+        <div id="method_SeparateFilter" class="method item">
+    <h3 class="name"><code>SeparateFilter</code></h3>
 
     
         <div class="args">
@@ -333,7 +333,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2435"><code>source\scrawlFilters.js:2435</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l2451"><code>source\scrawlFilters.js:2451</code></a>
         
         </p>
 
@@ -480,11 +480,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_channel
-
-Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;">channel
-
-Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;</a>
+                                <a href="#property_channel">channel</a>
 
                                 
                                 
@@ -599,7 +595,7 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2484"><code>source\scrawlFilters.js:2484</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l2499"><code>source\scrawlFilters.js:2499</code></a>
         
         </p>
 
@@ -1388,12 +1384,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_channel
-
-Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;" class="property item">
-    <h3 class="name"><code>channel
-
-Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&#x27;, &#x27;magenta&#x27;, &#x27;yellow&#x27;, &#x27;all&#x27;</code></h3>
+                    <div id="property_channel" class="property item">
+    <h3 class="name"><code>channel</code></h3>
     <span class="type">String</span>
 
     
@@ -1415,7 +1407,7 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2473"><code>source\scrawlFilters.js:2473</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l2489"><code>source\scrawlFilters.js:2489</code></a>
         
         </p>
 
@@ -1425,7 +1417,8 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
     </div>
 
     <div class="description">
-        
+        <p>Can be one of: &#39;red&#39;, &#39;green&#39;, &#39;blue&#39;, &#39;cyan&#39;, &#39;magenta&#39;, &#39;yellow&#39;, &#39;all&#39;</p>
+
     </div>
 
     
@@ -1682,7 +1675,7 @@ Can be one of: &#x27;red&#x27;, &#x27;green&#x27;, &#x27;blue&#x27;, &#x27;cyan&
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l2464"><code>source\scrawlFilters.js:2464</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l2480"><code>source\scrawlFilters.js:2480</code></a>
         
         </p>
 

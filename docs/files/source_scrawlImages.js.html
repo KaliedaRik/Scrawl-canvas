@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.0</em>
+            <em>API Docs for: 4.2.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -119,6 +119,8 @@
             
                 <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
+                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
+            
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
@@ -126,8 +128,6 @@
                 <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
-            
-                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
             
                 <li><a href="../classes/Text.html">Text</a></li>
             
@@ -694,6 +694,7 @@ Alias for Pattern.makeDesign()
 					if (src) {
 						my.Entity.call(this, items);
 						tempV = my.safeObject(items.paste);
+						//start vector already set by the Entity call
 						this.start.x = my.xtGet(items.pasteX, tempV.x, this.start.x);
 						this.start.y = my.xtGet(items.pasteY, tempV.y, this.start.y);
 						this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, &#x27;100%&#x27;);

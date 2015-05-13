@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.0</em>
+            <em>API Docs for: 4.2.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -119,6 +119,8 @@
             
                 <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
             
+                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
+            
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
                 <li><a href="../classes/Spring.html">Spring</a></li>
@@ -126,8 +128,6 @@
                 <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
-            
-                <li><a href="../classes/StereoFilter.html">StereoFilter</a></li>
             
                 <li><a href="../classes/Text.html">Text</a></li>
             
@@ -464,15 +464,14 @@ A __general__ function to generate a Video wrapper object for a &amp;lt;video&am
 @param {Boolean} [stream] defaults to &#x27;raw&#x27;
 @return true if video is identified; false otherwise
 **/
-		my.getVideoById = function(idtag, stream) {
+		my.getVideoById = function(idtag) {
 			var myVideo;
-			stream = my.xtGet(stream, &#x27;raw&#x27;);
 			if (idtag) {
 				myVideo = document.getElementById(idtag);
+				myVideo.callback = &#x27;anonymous&#x27;;
 				if (myVideo.readyState &gt; 1) {
 					my.makeVideo({
 						element: myVideo, //unrecorded flag for triggering Image stuff
-						stream: stream,
 						crossOrigin: &#x27;anonymous&#x27;
 					});
 				}
