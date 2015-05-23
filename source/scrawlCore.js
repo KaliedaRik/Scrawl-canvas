@@ -3806,6 +3806,9 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 				pasteHeight: (items.height) ? this.localHeight : display.pasteHeight,
 				scale: items.scale || display.scale
 			});
+			base.set({
+				scale: items.scale || base.scale
+			});
 		}
 		this.padStacksSet(items);
 		if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.width, items.height)) {

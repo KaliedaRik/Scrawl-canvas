@@ -1874,12 +1874,12 @@ Pad lockTo helper
 			if (my.xt(this.cells)) {
 				for (i = 0, iz = this.cells.length; i < iz; i++) {
 					cell = my.cell[this.cells[i]];
-					if (this.lockTo && cell.name === this.base) {
-						cell.set({
-							width: this.localWidth,
-							height: this.localHeight
-						});
-					}
+					// if (this.lockTo && cell.name === this.base) {
+					// 	cell.set({
+					// 		width: this.localWidth,
+					// 		height: this.localHeight
+					// 	});
+					// }
 					if (cell.name === this.display) {
 						cell.set({
 							width: this.localWidth,
