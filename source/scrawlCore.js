@@ -29,10 +29,6 @@ Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
 Scrawl demo website: <http://scrawl.rikweb.org.uk>
 
-### Be aware that the current develop branch (probably) includes changes beyond v4.1.0 that break that version
-
-The next version, being coded up on the develop branch, will be v4.1.1, for bugfixes only
-
 ## Purpose and features
 
 The core module is the only essential module in Scrawl. It must always be directly, and completely, loaded into the web page before any additional Scrawl modules are added to it. 
