@@ -459,7 +459,6 @@ Color names are limited to those supported by SVGTiny: 'green', 'silver', 'lime'
 @chainable
 **/
 		my.Color.prototype.convert = function(items) {
-			console.log(items);
 			var r,
 				g,
 				b,
