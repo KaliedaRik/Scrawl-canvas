@@ -459,6 +459,7 @@ Color names are limited to those supported by SVGTiny: 'green', 'silver', 'lime'
 @chainable
 **/
 		my.Color.prototype.convert = function(items) {
+			console.log(items);
 			var r,
 				g,
 				b,
@@ -606,7 +607,7 @@ Convert a decimal Number to its hexidecimal String value
 @return Hexidecimal String
 **/
 		my.Color.prototype.toHex = function(item) {
-			return parseInt(item, 16);
+			return item.toString(16);
 		};
 		/**
 Convert a hexidecimal String to its decimal Number value
@@ -615,7 +616,7 @@ Convert a hexidecimal String to its decimal Number value
 @return Decimal Number
 **/
 		my.Color.prototype.toDecimal = function(item) {
-			return item.toString(16);
+			return parseInt(item, 16);
 		};
 		/**
 Delete this Color object from the scrawl library
