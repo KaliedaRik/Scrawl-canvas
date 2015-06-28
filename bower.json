@@ -5,14 +5,17 @@
   "authors": [
     "Rik Roots <rik.roots@gmail.com>"
   ],
+  "main": [
+    "min/scrawlCore-min.js"
+  ],
   "description": "A JavaScript library designed to make using the HTML5 canvas element a bit easier, and a bit more fun!",
   "license": "MIT",
   "ignore": [
-    ".*",
-    "*.json",
-    "*.js",
-    "*.png",
-    "./demos/**/*",
-    "./docs/**/*"
+    "package.json",
+    "gruntfile.js",
+    "logo.png",
+    "node_modules",
+    "demos",
+    "docs"
   ]
 }
