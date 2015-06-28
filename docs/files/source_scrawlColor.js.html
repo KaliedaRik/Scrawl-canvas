@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.1</em>
+            <em>API Docs for: 4.2.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -856,7 +856,7 @@ Convert a decimal Number to its hexidecimal String value
 @return Hexidecimal String
 **/
 		my.Color.prototype.toHex = function(item) {
-			return parseInt(item, 16);
+			return item.toString(16);
 		};
 		/**
 Convert a hexidecimal String to its decimal Number value
@@ -865,7 +865,7 @@ Convert a hexidecimal String to its decimal Number value
 @return Decimal Number
 **/
 		my.Color.prototype.toDecimal = function(item) {
-			return item.toString(16);
+			return parseInt(item, 16);
 		};
 		/**
 Delete this Color object from the scrawl library

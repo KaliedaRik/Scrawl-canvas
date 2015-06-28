@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.2.1 - 4 May 2015
+*	version 4.2.2 - 28 June 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -86,7 +86,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 4.2.1 released 4 May 2015
+VERSION 4.2.2 released 28 June 2015
 
     - the zip file includes:
 		
@@ -145,6 +145,8 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 4.2.2 uploaded 28 June 2015
+	- minor bugfixes
 Version 4.2.1 uploaded 4 May 2015
 	- nomenclature change: 'module' becomes 'extension'
 	- scrawl.loadModules() deprecated in favour of scrawl.loadExtensions()
