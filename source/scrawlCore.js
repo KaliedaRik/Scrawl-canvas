@@ -5227,6 +5227,8 @@ Cell.setPaste update pasteData object values
 		var pad = my.pad[this.pad],
 			display = my.cell[pad.display],
 			base = my.cell[pad.base],
+			stack = (my.xt(pad.group)) ? true : false,
+			isBase = (this.name === pad.base) ? true : false,
 			width, height;
 		if (my.xta(display, base)) {
 			width = (this.name === pad.base) ? display.actualWidth : base.actualWidth;
@@ -5243,12 +5245,16 @@ Cell.setPaste update pasteData object values
 			if (my.isa(this.pasteData.w, 'str')) {
 				this.pasteData.w = this.convertX(this.pasteData.w, width);
 			}
-			this.pasteData.w *= this.scale;
+			if(!isBase || !stack){
+				this.pasteData.w *= this.scale;
+			}
 			this.pasteData.h = this.pasteHeight;
 			if (my.isa(this.pasteData.h, 'str')) {
 				this.pasteData.h = this.convertY(this.pasteData.h, height);
 			}
-			this.pasteData.h *= this.scale;
+			if(!isBase || !stack){
+				this.pasteData.h *= this.scale;
+			}
 			if (this.pasteData.w < 1) {
 				this.pasteData.w = 1;
 			}
