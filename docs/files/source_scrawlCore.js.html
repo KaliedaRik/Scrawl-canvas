@@ -4056,6 +4056,9 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 				pasteHeight: (items.height) ? this.localHeight : display.pasteHeight,
 				scale: items.scale || display.scale
 			});
+			base.set({
+				scale: items.scale || base.scale
+			});
 		}
 		this.padStacksSet(items);
 		if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.width, items.height)) {
@@ -5474,6 +5477,8 @@ Cell.setPaste update pasteData object values
 		var pad = my.pad[this.pad],
 			display = my.cell[pad.display],
 			base = my.cell[pad.base],
+			stack = (my.xt(pad.group)) ? true : false,
+			isBase = (this.name === pad.base) ? true : false,
 			width, height;
 		if (my.xta(display, base)) {
 			width = (this.name === pad.base) ? display.actualWidth : base.actualWidth;
@@ -5490,12 +5495,16 @@ Cell.setPaste update pasteData object values
 			if (my.isa(this.pasteData.w, &#x27;str&#x27;)) {
 				this.pasteData.w = this.convertX(this.pasteData.w, width);
 			}
-			this.pasteData.w *= this.scale;
+			if(!isBase || !stack){
+				this.pasteData.w *= this.scale;
+			}
 			this.pasteData.h = this.pasteHeight;
 			if (my.isa(this.pasteData.h, &#x27;str&#x27;)) {
 				this.pasteData.h = this.convertY(this.pasteData.h, height);
 			}
-			this.pasteData.h *= this.scale;
+			if(!isBase || !stack){
+				this.pasteData.h *= this.scale;
+			}
 			if (this.pasteData.w &lt; 1) {
 				this.pasteData.w = 1;
 			}
