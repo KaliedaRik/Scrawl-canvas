@@ -5241,14 +5241,14 @@ Cell.setPaste update pasteData object values
 			if (my.isa(this.pasteData.w, 'str')) {
 				this.pasteData.w = this.convertX(this.pasteData.w, width);
 			}
-			if(!isBase || !stack){
+			if (!isBase || !stack) {
 				this.pasteData.w *= this.scale;
 			}
 			this.pasteData.h = this.pasteHeight;
 			if (my.isa(this.pasteData.h, 'str')) {
 				this.pasteData.h = this.convertY(this.pasteData.h, height);
 			}
-			if(!isBase || !stack){
+			if (!isBase || !stack) {
 				this.pasteData.h *= this.scale;
 			}
 			if (this.pasteData.w < 1) {

@@ -797,6 +797,7 @@ _This attribute is not retained by the object_
 Adds a DOM &lt;video&gt; element to the library
 
 * items.element MUST be a reference to the element, and the element MUST be present in the DOM
+* items.readyState is the readystate value (integer between 0 and 4) which must be reached before dimensions are set and any callback function triggered - default: 1 (HAVE_METADATA, loadedmetadata)
 
 @method addVideoByElement
 @param {Object} [items] Key:value Object argument for setting attributes
@@ -804,7 +805,9 @@ Adds a DOM &lt;video&gt; element to the library
 @private
 **/
 		my.Video.prototype.addVideoByElement = function(items) {
-			var el = items.element;
+			var el = items.element,
+				listener = ['loadstart', 'loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'],
+				readyState = my.xtGet(items.readyState, 1);
 			if (my.xt(el)) {
 				el.id = this.name;
 				this.width = 1;
@@ -813,14 +816,19 @@ Adds a DOM &lt;video&gt; element to the library
 				my.asset[this.name] = my.imageFragment.querySelector('#' + this.name);
 				my.pushUnique(my.assetnames, this.name);
 				this.api = my.asset[this.name];
-				if (this.api.readyState > 0) {
+				if (this.api.readyState >= readyState) {
 					this.setIntrinsicDimensions();
+					if (my.isa(items.callback, 'fn')) {
+						items.callback();
+					}
 				}
 				else {
-					this.api.addEventListener('loadedmetadata', this.setIntrinsicDimensions, false);
-				}
-				if (my.isa(items.callback, 'fn')) {
-					items.callback();
+					this.api.addEventListener(listener[readyState], function() {
+						this.setIntrinsicDimensions();
+						if (my.isa(items.callback, 'fn')) {
+							items.callback();
+						}
+					}, false);
 				}
 				return true;
 			}
