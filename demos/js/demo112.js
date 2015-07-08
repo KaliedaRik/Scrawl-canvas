@@ -19,35 +19,14 @@ var mycode = function() {
 		stopE;
 
 	//import video into library
-	// scrawl.getVideoById('myvideo');
-	// video = scrawl.video.myvideo;
-	// if (video.api.readyState > 1) {
-	// 	video.api.loop = true;
-	// 	video.api.muted = true;
-	// 	video.api.play();
-	// }
-	// else {
-	// 	video.api.addEventListener('canplay', function() {
-	// 		video.api.loop = true;
-	// 		video.api.muted = true;
-	// 		video.api.play();
-	// 	}, false);
-	// }
-
 	scrawl.makeVideo({
 		element: document.getElementById('myvideo'),
-		readyState: 3,
+		readyState: 1,
 		callback: function() {
 			video = scrawl.video.myvideo;
 			video.api.loop = true;
 			video.api.muted = true;
 			video.api.play();
-			// scrawl.design.mypattern.set({
-			// 	source: 'myvideo'
-			// });
-			// picture.set({
-			// 	source: 'myvideo'
-			// });
 		}
 	});
 
