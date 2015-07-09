@@ -99,16 +99,16 @@ var mycode = function() {
 		targets: scrawl.entity.s_0,
 	}).clone({
 		name: 't_percent_0',
-		targets: scrawl.entity.percent_0,
+		targets: 'percent_0',
 	}).clone({
 		name: 't_percent_40_5_first',
-		targets: scrawl.entity.percent_40_5_first,
+		targets: 'percent_40_5_first',
 	}).clone({
 		name: 't_percent_40_5_second',
-		targets: scrawl.entity.percent_40_5_second,
+		targets: 'percent_40_5_second',
 	}).clone({
 		name: 't_percent_100',
-		targets: scrawl.entity.percent_100,
+		targets: 'percent_100',
 	});
 
 	scrawl.makeAction({
@@ -176,10 +176,9 @@ var mycode = function() {
 		name: 'myTimeline',
 		duration: 2000,
 	}).add(
-		'a_bare_0', 'a_bare_1200_5', 'a_ms_0', 'a_ms_1773_975',
 		'a_s_1_94', 'a_s_1_first', 'a_s_1_second', 'a_s_0',
 		'a_percent_0', 'a_percent_40_5_first', 'a_percent_40_5_second', 'a_percent_100'
-	);
+	).add(['a_bare_0', 'a_bare_1200_5', 'a_ms_0', 'a_ms_1773_975']);
 
 	//animation object
 	scrawl.makeAnimation({

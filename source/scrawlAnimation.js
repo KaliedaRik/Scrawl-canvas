@@ -1000,7 +1000,7 @@ Tweens are animations defined by duration (how long they should run for) and dis
 * If an ending point is defined for an attribute, but no starting point, then the tween will use the object's attribute's current value for the starting point.
 * Individual _easing engines_ can be defined for each attribute in the __engines__ attribute object.
 
-The objects on which the tween will operate are passed to the tween as an array of objects, in the __targets__ attribute
+The objects on which the tween will operate are passed to the tween as an array of objects, in the __targets__ attribute. Strings can also be supplied - the tween factory will search the library for the object; the search is conducted in the following order: entity, spriteanimation, video, cell, element, pad, stack, point, design, force, spring, physics.
 
 * A tween will only run on an object that is not currently being animated by another tween
 * A tween cannot be run if it is already running.
@@ -1038,6 +1038,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Tween = function(items) {
+			var i, iz, temp;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.targets = (my.isa(items.targets, 'arr')) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
@@ -1047,6 +1048,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			this.engines = (my.isa(items.engines, 'obj')) ? items.engines : {};
 			this.end = (my.isa(items.end, 'obj')) ? items.end : {};
 			this.startTime = Date.now();
+			this.currentTime = Date.now();
 			this.duration = items.duration || 0;
 			this.active = false;
 			this.reverse = items.reverse || false;
@@ -1060,6 +1062,50 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			this.killOnComplete = items.killOnComplete || false;
 			this.callback = (my.isa(items.callback, 'fn')) ? items.callback : false;
 			this.order = items.order || 0;
+			for (i = 0, iz = this.targets.length; i < iz; i++) {
+				if (my.isa(this.targets[i], 'str')) {
+					temp = false;
+					if (my.entity[this.targets[i]]) {
+						temp = my.entity[this.targets[i]];
+					}
+					else if (my.spriteanimation && my.spriteanimation[this.targets[i]]) {
+						temp = my.spriteanimation[this.targets[i]];
+					}
+					else if (my.video && my.video[this.targets[i]]) {
+						temp = my.video[this.targets[i]];
+					}
+					else if (my.cell[this.targets[i]]) {
+						temp = my.cell[this.targets[i]];
+					}
+					else if (my.element && my.element[this.targets[i]]) {
+						temp = my.element[this.targets[i]];
+					}
+					else if (my.pad[this.targets[i]]) {
+						temp = my.pad[this.targets[i]];
+					}
+					else if (my.stack && my.stack[this.targets[i]]) {
+						temp = my.stack[this.targets[i]];
+					}
+					else if (my.point && my.point[this.targets[i]]) {
+						temp = my.point[this.targets[i]];
+					}
+					else if (my.design && my.design[this.targets[i]]) {
+						temp = my.design[this.targets[i]];
+					}
+					else if (my.force && my.force[this.targets[i]]) {
+						temp = my.force[this.targets[i]];
+					}
+					else if (my.spring && my.spring[this.targets[i]]) {
+						temp = my.spring[this.targets[i]];
+					}
+					else if (my.physics && my.physics[this.targets[i]]) {
+						temp = my.physics[this.targets[i]];
+					}
+					if (temp) {
+						this.targets[i] = temp;
+					}
+				}
+			}
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
 			return this;
@@ -1148,6 +1194,14 @@ Datetime when the tween starts running
 **/
 			startTime: 0,
 			/**
+Datetime for the current time
+@property currentTime
+@type Number - Date.now()
+@default 0
+@private
+**/
+			currentTime: 0,
+			/**
 Duration of the tween, measured in milliseconds
 @property duration
 @type Number
@@ -1162,6 +1216,14 @@ Flag - when true, tween is running
 @private
 **/
 			active: false,
+			/**
+Flag - when true, tween has been paused (halted)
+@property paused
+@type Boolean
+@default false
+@private
+**/
+			paused: false,
 			/**
 Flag - when true, tween runs in reverse, from end values to start values (for absolute transitions) or applying negative start values (for relative transitions)
 @property reverse
@@ -1235,8 +1297,7 @@ Tween animation function
 @private
 **/
 		my.Tween.prototype.fn = function() {
-			var currentTime,
-				progress,
+			var progress,
 				entity,
 				argSet,
 				keys,
@@ -1247,8 +1308,8 @@ Tween animation function
 				tz,
 				k,
 				kz;
-			currentTime = Date.now();
-			progress = (currentTime - this.startTime) / this.duration;
+			this.currentTime = Date.now();
+			progress = (this.currentTime - this.startTime) / this.duration;
 			keys = Object.keys(this.end);
 			if (this.active) {
 				if (progress < 1) {
@@ -1279,7 +1340,9 @@ Tween animation function
 					}
 				}
 				else {
-					this.halt();
+					//this.halt();
+					this.active = false;
+					my.removeItem(my.animate, this.name);
 					if (this.autoReverse || this.autoReverseAndRun) {
 						this.reverse = (this.reverse) ? false : true;
 					}
@@ -1538,12 +1601,46 @@ Finish running a tween
 		/**
 Stop a tween animation
 @method halt
-@return Always true
+@return this
+@chainable
 **/
 		my.Tween.prototype.halt = function() {
 			this.active = false;
+			this.paused = true;
 			my.removeItem(my.animate, this.name);
-			return true;
+			return this;
+		};
+		/**
+Reset a tween animation to its initial conditions
+@method reset
+@return this
+@chainable
+**/
+		my.Tween.prototype.reset = function() {
+			this.active = true;
+			this.paused = false;
+			this.startTime = Date.now();
+			this.currentTime = Date.now();
+			this.fn();
+			this.active = false;
+			return this;
+		};
+		/**
+Start the tween running from the point at which it was halted
+@method resume
+@return this
+@chainable
+**/
+		my.Tween.prototype.resume = function() {
+			var t0 = this.currentTime - this.startTime;
+			if (this.paused) {
+				this.currentTime = Date.now();
+				this.startTime = this.currentTime - t0;
+				my.pushUnique(my.animate, this.name);
+				this.active = true;
+				this.paused = false;
+			}
+			return this;
 		};
 		/**
 Remove this tween from the scrawl library
@@ -1605,6 +1702,7 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 			this.startTime = 0;
 			this.currentTime = 0;
 			this.active = false;
+			this.paused = false;
 			this.actionsList = [];
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
@@ -1697,6 +1795,9 @@ Add Actions to the timeline - list Actions as one or more arguments to this func
 		my.Timeline.prototype.add = function() {
 			var i, iz,
 				slice = Array.prototype.slice.call(arguments);
+			if (my.isa(slice[0], 'arr')) {
+				slice = slice[0];
+			}
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				my.pushUnique(this.actionsList, slice[i]);
 			}
@@ -1725,9 +1826,16 @@ Start the timeline running from the beginning
 @chainable
 **/
 		my.Timeline.prototype.run = function() {
+			var i, iz, a;
 			if (!this.active) {
+				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+					a = my.animation[this.actionsList[i]];
+					if (a.action) {
+						a.action.reset();
+					}
+				}
 				this.startTime = Date.now();
-				this.currentTime = this.startTime;
+				this.currentTime = Date.now();
 				this.counter = 0;
 				my.pushUnique(my.animate, this.name);
 				this.active = true;
@@ -1741,11 +1849,19 @@ Start the timeline running from the point at which it was halted
 @chainable
 **/
 		my.Timeline.prototype.resume = function() {
-			var t0 = this.currentTime - this.startTime;
-			if (!this.active) {
+			var t0 = this.currentTime - this.startTime,
+				i, iz, a;
+			if (this.paused) {
+				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+					a = my.animation[this.actionsList[i]];
+					if (a.action && a.action.paused) {
+						a.action.resume();
+					}
+				}
 				this.currentTime = Date.now();
 				this.startTime = this.currentTime - t0;
 				my.pushUnique(my.animate, this.name);
+				this.paused = false;
 				this.active = true;
 			}
 			return this;
@@ -1776,7 +1892,8 @@ Function triggered by the animation loop
 				}
 			}
 			if (this.counter >= this.actionsList.length) {
-				this.halt();
+				this.active = false;
+				my.removeItem(my.animate, this.name);
 			}
 		};
 		/**
@@ -1786,7 +1903,36 @@ Stop a Timeline; can be resumed using resume() or started again from the beginni
 @chainable
 **/
 		my.Timeline.prototype.halt = function() {
+			var i, iz, a;
 			this.active = false;
+			this.paused = true;
+			for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+				a = my.animation[this.actionsList[i]];
+				if (a.action && a.action.halt && a.action.active) {
+					a.action.halt();
+				}
+			}
+			my.removeItem(my.animate, this.name);
+			return this;
+		};
+		/**
+Reset a Timeline animation to its initial conditions
+@method reset
+@return this
+@chainable
+**/
+		my.Timeline.prototype.reset = function() {
+			var i, iz, a;
+			this.active = false;
+			this.paused = false;
+			this.startTime = Date.now();
+			this.currentTime = Date.now();
+			for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+				a = my.animation[this.actionsList[i]];
+				if (a.action && a.action.reset) {
+					a.action.reset();
+				}
+			}
 			my.removeItem(my.animate, this.name);
 			return this;
 		};
