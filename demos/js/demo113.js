@@ -9,10 +9,14 @@ var mycode = function() {
 	//hide-end
 
 	//code here
+	scrawl.makeColor({
+		name: 'mycolor'
+	});
 	scrawl.makePhrase({
 		name: 'bare_0',
 		font: '18pt Arial, sans-serif',
 		text: '0',
+		fillStyle: 'mycolor',
 		handleX: 'center',
 		handleY: 'center',
 		startX: '20%',
@@ -110,6 +114,23 @@ var mycode = function() {
 		name: 't_percent_100',
 		targets: 'percent_100',
 	});
+	scrawl.makeTween({
+		name: 't_size',
+		targets: [
+			scrawl.entity.bare_0,
+			scrawl.entity.ms_0,
+			scrawl.entity.ms_1773_975,
+			scrawl.entity.s_1_second,
+			'percent_100'
+			],
+		start: {
+			scale: 1
+		},
+		end: {
+			scale: 1.5
+		},
+		duration: 1500,
+	});
 
 	scrawl.makeAction({
 		name: 'a_bare_0',
@@ -171,6 +192,44 @@ var mycode = function() {
 		time: '100%',
 		action: scrawl.animation.t_percent_100,
 	});
+	scrawl.makeAction({
+		name: 'a_size',
+		time: 450,
+		action: scrawl.animation.t_size,
+	});
+	scrawl.makeAction({
+		name: 'a_toRed',
+		time: 600,
+		action: function() {
+			scrawl.design.mycolor.set({
+				color: 'red'
+			});
+		},
+		reset: function() {
+			scrawl.design.mycolor.set({
+				color: 'black'
+			});
+		},
+		rollback: function() {
+			scrawl.design.mycolor.set({
+				color: 'black'
+			});
+		},
+	});
+	scrawl.makeAction({
+		name: 'a_toBlack',
+		time: 1600,
+		action: function() {
+			scrawl.design.mycolor.set({
+				color: 'black'
+			});
+		},
+		rollback: function() {
+			scrawl.design.mycolor.set({
+				color: 'red'
+			});
+		},
+	});
 
 	scrawl.makeTimeline({
 		name: 'myTimeline',
@@ -178,7 +237,7 @@ var mycode = function() {
 	}).add(
 		'a_s_1_94', 'a_s_1_first', 'a_s_1_second', 'a_s_0',
 		'a_percent_0', 'a_percent_40_5_first', 'a_percent_40_5_second', 'a_percent_100'
-	).add(['a_bare_0', 'a_bare_1200_5', 'a_ms_0', 'a_ms_1773_975']);
+	).add(['a_size', 'a_toRed', 'a_toBlack', 'a_bare_0', 'a_bare_1200_5', 'a_ms_0', 'a_ms_1773_975']);
 
 	//animation object
 	scrawl.makeAnimation({
@@ -202,7 +261,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['phrase', 'animation'],
+	extensions: ['phrase', 'animation', 'color'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

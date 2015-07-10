@@ -1493,21 +1493,7 @@ Run a tween animation
 					}
 				}
 				for (i = 0, iz = this.targets.length; i < iz; i++) {
-					test = true;
-					for (j = 0, jz = activeTweens.length; j < jz; j++) {
-						for (k = 0, kz = activeTweens[j].currentTargets.length; k < kz; k++) {
-							if (this.targets[i].name === activeTweens[j].currentTargets[k].name) {
-								test = false;
-								break;
-							}
-						}
-						if (!test) {
-							break;
-						}
-					}
-					if (test) {
-						this.currentTargets.push(this.targets[i]);
-					}
+					this.currentTargets.push(this.targets[i]);
 				}
 				if (this.currentTargets.length > 0) {
 					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
@@ -1830,7 +1816,7 @@ Start the timeline running from the beginning
 			if (!this.active) {
 				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
 					a = my.animation[this.actionsList[i]];
-					if (a.action) {
+					if (a.action && a.action.reset) {
 						a.action.reset();
 					}
 				}
@@ -1932,6 +1918,9 @@ Reset a Timeline animation to its initial conditions
 				if (a.action && a.action.reset) {
 					a.action.reset();
 				}
+				if (a.reset) {
+					a.reset();
+				}
 			}
 			my.removeItem(my.animate, this.name);
 			return this;
@@ -1979,6 +1968,8 @@ Remove this Timeline from the scrawl library
 			this.time = items.time || 0;
 			this.convertTime();
 			this.action = items.action || false;
+			this.reset = items.reset || false;
+			this.rollback = items.rollback || false;
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
 			return this;
@@ -2019,11 +2010,25 @@ Keyframe time unit value (calculated)
 			timeUnit: 'ms',
 			/**
 Keyframe function to be called
-@property fn
+@property action
 @type Function
 @default false
 **/
-			action: false
+			action: false,
+			/**
+Keyframe function to be called - can be used to set initial conditions for objects in the timeline
+@property reset
+@type Function
+@default false
+**/
+			reset: false,
+			/**
+Keyframe function to be called - can be used to reverse the action function
+@property rollback
+@type Function
+@default false
+**/
+			rollback: false
 		};
 		/**
 Convert a time into its component properties
