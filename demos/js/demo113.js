@@ -9,6 +9,13 @@ var mycode = function() {
 	//hide-end
 
 	//code here
+	var timeline,
+		seekerInput,
+		seekerValue,
+		readSeeker,
+		writeSeeker,
+		stopE;
+
 	scrawl.makeColor({
 		name: 'mycolor'
 	});
@@ -231,13 +238,37 @@ var mycode = function() {
 		},
 	});
 
-	scrawl.makeTimeline({
+	timeline = scrawl.makeTimeline({
 		name: 'myTimeline',
 		duration: 2000,
 	}).add(
 		'a_s_1_94', 'a_s_1_first', 'a_s_1_second', 'a_s_0',
 		'a_percent_0', 'a_percent_40_5_first', 'a_percent_40_5_second', 'a_percent_100'
 	).add(['a_size', 'a_toRed', 'a_toBlack', 'a_bare_0', 'a_bare_1200_5', 'a_ms_0', 'a_ms_1773_975']);
+
+	//event listeners
+	seekerInput = document.getElementById('seeker');
+	seekerInput.value = 0;
+	seekerValue = document.getElementById('slideValue');
+
+	stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
+
+	writeSeeker = function(e) {
+		seekerInput.value = e.detail.currentTime;
+		seekerValue.innerHTML = e.detail.currentTime;
+	};
+	scrawl.addNativeListener('timeline-updated', writeSeeker, document);
+
+	readSeeker = function(e) {
+		stopE(e);
+		timeline.seekTo(e.target.value);
+		seekerValue.innerHTML = e.target.value;
+	};
+	scrawl.addNativeListener(['input', 'change'], readSeeker, seekerInput);
+
 
 	//animation object
 	scrawl.makeAnimation({

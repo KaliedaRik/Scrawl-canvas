@@ -1683,12 +1683,14 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 		my.Timeline = function(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.duration = items.duration || 1000;
+			this.duration = my.xtGet(items.duration, 1000);
 			this.counter = 0;
 			this.startTime = 0;
 			this.currentTime = 0;
 			this.active = false;
 			this.paused = false;
+			this.event = my.xtGet(items.event, 100);
+			this.lastEvent = 0;
 			this.actionsList = [];
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
@@ -1712,7 +1714,24 @@ If no duration is set, Timeline will set the last Action's time as its duration,
 @type Number
 @default 1000
 **/
-			duration: 1000
+			duration: 1000,
+			/**
+Event choke value
+
+A timeline will trigger a __timeupdate__ event on the document object as it runs, with details of the timeline's current state including:
+
+* __name__
+* __currentTime__ (milliseconds)
+
+If the event attribute is set to 0, no timeupdate events are fired as the timeline runs. Otherwise, this value represents the frequency at which the event is fired, with a default value of 100 (milliseconds)
+
+Be aware that the timeline may finish before tweens near the end of the timeline complete their action.
+
+@property event
+@type Number
+@default 1000
+**/
+			event: 100
 		};
 		/**
 Sort the actions based on their timeValue values
@@ -1723,6 +1742,26 @@ Sort the actions based on their timeValue values
 			this.actionsList.sort(function(a, b) {
 				return my.animation[a].timeValue - my.animation[b].timeValue;
 			});
+		};
+		/**
+Make a new timeupdate customEvent object
+@method makeTimeupdateEvent
+@return customEvent object, or null if browser does not support custom events
+**/
+		my.Timeline.prototype.makeTimeupdateEvent = function() {
+			var e = null;
+			if (window.CustomEvent) {
+				e = new CustomEvent('timeline-updated', {
+					detail: {
+						name: this.name,
+						type: 'Timeline',
+						currentTime: this.currentTime - this.startTime
+					},
+					bubbles: true,
+					cancelable: true
+				});
+			}
+			return e;
 		};
 		/**
 Set the duration - only useful for setting Actions with % time strings;
@@ -1773,8 +1812,9 @@ add() and remove() helper function
 			return true;
 		};
 		/**
-Add Actions to the timeline - list Actions as one or more arguments to this function
+Add Actions to the timeline - list Actions as one or more arguments to this function; the first argument may be a string, or an array of strings
 @method add
+@param {String} One or more string arguments
 @return this
 @chainable
 **/
@@ -1791,14 +1831,18 @@ Add Actions to the timeline - list Actions as one or more arguments to this func
 			return this;
 		};
 		/**
-Remove Actions from the timeline - list Actions as one or more arguments to this function
+Remove Actions from the timeline - list Actions as one or more arguments to this function; the first argument may be a string, or an array of strings
 @method remove
+@param {String} One or more string arguments
 @return this
 @chainable
 **/
 		my.Timeline.prototype.remove = function() {
 			var i, iz,
 				slice = Array.prototype.slice.call(arguments);
+			if (my.isa(slice[0], 'arr')) {
+				slice = slice[0];
+			}
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				my.removeItem(this.actionsList, slice[i]);
 			}
@@ -1812,19 +1856,15 @@ Start the timeline running from the beginning
 @chainable
 **/
 		my.Timeline.prototype.run = function() {
-			var i, iz, a;
+			var i, iz, a, e;
 			if (!this.active) {
-				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
-					a = my.animation[this.actionsList[i]];
-					if (a.action && a.action.reset) {
-						a.action.reset();
-					}
-				}
-				this.startTime = Date.now();
-				this.currentTime = Date.now();
-				this.counter = 0;
+				this.reset();
 				my.pushUnique(my.animate, this.name);
 				this.active = true;
+				if (this.event) {
+					e = this.makeTimeupdateEvent();
+					document.dispatchEvent(e);
+				}
 			}
 			return this;
 		};
@@ -1859,7 +1899,7 @@ Function triggered by the animation loop
 @private
 **/
 		my.Timeline.prototype.fn = function() {
-			var i, iz, a;
+			var i, iz, a, e;
 			this.currentTime = Date.now();
 			if (this.counter < this.actionsList.length) {
 				for (i = this.counter, iz = this.actionsList.length; i < iz; i++) {
@@ -1876,6 +1916,11 @@ Function triggered by the animation loop
 						break;
 					}
 				}
+			}
+			if (this.event && this.currentTime >= this.lastEvent + this.event) {
+				e = this.makeTimeupdateEvent();
+				document.dispatchEvent(e);
+				this.lastEvent = this.currentTime;
 			}
 			if (this.counter >= this.actionsList.length) {
 				this.active = false;
@@ -1913,7 +1958,9 @@ Reset a Timeline animation to its initial conditions
 			this.paused = false;
 			this.startTime = Date.now();
 			this.currentTime = Date.now();
-			for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+			this.lastEvent = Date.now();
+			this.counter = 0;
+			for (i = this.actionsList.length - 1, iz = 0; i >= iz; i--) {
 				a = my.animation[this.actionsList[i]];
 				if (a.action && a.action.reset) {
 					a.action.reset();
@@ -1923,6 +1970,72 @@ Reset a Timeline animation to its initial conditions
 				}
 			}
 			my.removeItem(my.animate, this.name);
+			return this;
+		};
+		/**
+Set the timeline ticker to a new value, and move tweens and action functions to that new time
+@method seekTo
+@param {Number} [item] time in milliseconds; can aslo accept strings eg '500ms', '1.23s'
+@return this
+@chainable
+**/
+		my.Timeline.prototype.seekTo = function(item) {
+			var i, iz, a,
+				time, msTime, curTime, deltaTime;
+			if (item && (item.substring || item.toFixed)) {
+				if (this.active) {
+					my.removeItem(my.animate, this.name);
+				}
+				time = my.convertTime(item);
+				if (time) {
+					msTime = time[1];
+					curTime = this.currentTime - this.startTime;
+					deltaTime = curTime - msTime;
+					if (deltaTime) { //no point doing anything if no change is required
+						if (deltaTime > 0) {
+							this.seekBack(deltaTime);
+						}
+						else {
+							this.seekForward(deltaTime);
+						}
+					}
+				}
+				if (this.active) {
+					my.pushUnique(my.animate, this.name);
+				}
+			}
+			return this;
+		};
+		/**
+@method seekForward
+@param {Number} [item] relative time to move forward, in milliseconds
+@return this
+@chainable
+**/
+		my.Timeline.prototype.seekForward = function(item) {
+			if (item.toFixed && item) {
+				//stuff goes here, to avoid doing work when item = 0
+				if (item > 0) {
+					//acts by pushing startTime backwards, thus requires a negative value
+					item = 0 - item;
+				}
+			}
+			return this;
+		};
+		/**
+@method seekBack
+@param {Number} [item] relative time to move back, in milliseconds
+@return this
+@chainable
+**/
+		my.Timeline.prototype.seekBack = function(item) {
+			if (item.toFixed && item) {
+				//stuff goes here, to avoid doing work when item = 0
+				if (item < 0) {
+					//acts by bringing startTime forwards, thus requires a positive value
+					item = 0 - item;
+				}
+			}
 			return this;
 		};
 		/**
@@ -2033,28 +2146,47 @@ Keyframe function to be called - can be used to reverse the action function
 		/**
 Convert a time into its component properties
 @method convertTime
+@return [String timeUnit, Number timeValue]
+@private
+**/
+		my.convertTime = function(item) {
+			var a, timeUnit, timeValue;
+			if (item && (item.substring || item.toFixed)) {
+				if (item.toFixed) {
+					return ['ms', item];
+				}
+				a = item.match(/^\d+\.?\d*(\D*)/);
+				if (a[1].toLowerCase)
+					timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
+				switch (timeUnit) {
+					case 's':
+						timeValue = parseFloat(item) * 1000;
+						break;
+					case '%':
+						timeValue = 0;
+						break;
+					default:
+						timeValue = parseFloat(item);
+				}
+				return [timeUnit, timeValue];
+			}
+			return false;
+		};
+		/**
+Convert a time into its component properties
+@method convertTime
 @return always true
 @private
 **/
 		my.Action.prototype.convertTime = function() {
-			var a;
-			if (this.time.toFixed) {
-				this.timeUnit = 'ms';
-				this.timeValue = this.time;
-				return true;
+			var res = my.convertTime(this.time);
+			if (res) {
+				this.timeUnit = res[0] || 'ms';
+				this.timeValue = res[1] || 0;
 			}
-			a = this.time.match(/^\d+\.?\d*(\D*)/);
-			if (a[1].toLowerCase)
-				this.timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
-			switch (this.timeUnit) {
-				case 's':
-					this.timeValue = parseFloat(this.time) * 1000;
-					break;
-				case '%':
-					this.timeValue = 0;
-					break;
-				default:
-					this.timeValue = parseFloat(this.time);
+			else {
+				this.timeUnit = 'ms';
+				this.timeValue = 0;
 			}
 			return true;
 		};
