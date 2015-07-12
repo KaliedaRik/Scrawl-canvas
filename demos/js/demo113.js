@@ -134,7 +134,7 @@ var mycode = function() {
 			scale: 1
 		},
 		end: {
-			scale: 1.5
+			scale: 1.35
 		},
 		duration: 1500,
 	});
@@ -241,6 +241,7 @@ var mycode = function() {
 	timeline = scrawl.makeTimeline({
 		name: 'myTimeline',
 		duration: 2000,
+		event: 10
 	}).add(
 		'a_s_1_94', 'a_s_1_first', 'a_s_1_second', 'a_s_0',
 		'a_percent_0', 'a_percent_40_5_first', 'a_percent_40_5_second', 'a_percent_100'

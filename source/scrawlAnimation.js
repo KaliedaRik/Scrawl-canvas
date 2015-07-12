@@ -112,6 +112,42 @@ Starts the animation loop
 			my.mergeInto(my.d.Path, my.d.Entity);
 		}
 		/**
+Convert a time into its component properties
+
+Expected values:
+* Number - time value in milliseconds
+* String number+% - will always return a Number time value of 0
+* String number+ms - returns a Number time value in milliseconds
+* String number+s - converts and returns a Number time value in milliseconds
+
+@method convertTime
+@return [String timeUnit, Number timeValue]
+@private
+**/
+		my.convertTime = function(item) {
+			var a, timeUnit, timeValue;
+			if (item && (item.substring || item.toFixed)) {
+				if (item.toFixed) {
+					return ['ms', item];
+				}
+				a = item.match(/^\d+\.?\d*(\D*)/);
+				if (a[1].toLowerCase)
+					timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
+				switch (timeUnit) {
+					case 's':
+						timeValue = parseFloat(item) * 1000;
+						break;
+					case '%':
+						timeValue = 0;
+						break;
+					default:
+						timeValue = parseFloat(item);
+				}
+				return [timeUnit, timeValue];
+			}
+			return false;
+		};
+		/**
 Position constructor hook function
 
 Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a 'velocity'
@@ -1612,6 +1648,30 @@ Reset a tween animation to its initial conditions
 			return this;
 		};
 		/**
+Seek to a different time in the Tween
+
+@method seekTo
+@param {Number} item - time in ms to move forward or back; negative values move backwards
+@return this
+@chainable
+@private
+**/
+		my.Tween.prototype.seekTo = function(item) {
+			var myActive = this.active,
+				myPaused = this.paused;
+			if (item && item.toFixed) {
+				this.active = true;
+				this.paused = false;
+				this.startTime = Date.now();
+				this.currentTime = Date.now();
+				this.startTime -= item;
+				this.fn();
+				this.paused = myPaused;
+				this.active = myActive;
+			}
+			return this;
+		};
+		/**
 Start the tween running from the point at which it was halted
 @method resume
 @return this
@@ -1691,6 +1751,7 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 			this.paused = false;
 			this.event = my.xtGet(items.event, 100);
 			this.lastEvent = 0;
+			this.seeking = false;
 			this.actionsList = [];
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
@@ -1980,62 +2041,187 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 @chainable
 **/
 		my.Timeline.prototype.seekTo = function(item) {
-			var i, iz, a,
-				time, msTime, curTime, deltaTime;
-			if (item && (item.substring || item.toFixed)) {
-				if (this.active) {
-					my.removeItem(my.animate, this.name);
-				}
-				time = my.convertTime(item);
-				if (time) {
-					msTime = time[1];
-					curTime = this.currentTime - this.startTime;
-					deltaTime = curTime - msTime;
-					if (deltaTime) { //no point doing anything if no change is required
-						if (deltaTime > 0) {
-							this.seekBack(deltaTime);
-						}
-						else {
-							this.seekForward(deltaTime);
+			var time, msTime, curTime, deltaTime;
+			if (!this.seeking) {
+				if (item && (item.substring || item.toFixed)) {
+					if (this.active) {
+						my.removeItem(my.animate, this.name);
+					}
+					if (!this.startTime) {
+						this.startTime = this.currentTime = Date.now();
+					}
+					time = my.convertTime(item);
+					if (time) {
+						msTime = time[1];
+						curTime = this.currentTime - this.startTime;
+						deltaTime = msTime - curTime;
+						if (deltaTime) { //no point doing anything if no change is required
+							if (deltaTime < 0) {
+								this.seekBack(deltaTime);
+							}
+							else {
+								this.seekForward(deltaTime);
+							}
 						}
 					}
-				}
-				if (this.active) {
-					my.pushUnique(my.animate, this.name);
+					if (this.active) {
+						my.pushUnique(my.animate, this.name);
+					}
 				}
 			}
 			return this;
 		};
 		/**
 @method seekForward
-@param {Number} [item] relative time to move forward, in milliseconds
+@param {Number} [item] relative time to move forward, in milliseconds. Must be a positive value!
 @return this
 @chainable
 **/
 		my.Timeline.prototype.seekForward = function(item) {
+			var i, iz, a,
+				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
+			//lock action
+			this.seeking = true;
+			if (!this.active) {
+				this.paused = true;
+			}
 			if (item.toFixed && item) {
-				//stuff goes here, to avoid doing work when item = 0
-				if (item > 0) {
-					//acts by pushing startTime backwards, thus requires a negative value
-					item = 0 - item;
+				if (item) {
+					oldCurrent = this.currentTime;
+					newCurrent = oldCurrent + item;
+					for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+						a = my.animation[this.actionsList[i]];
+						actionTimes = this.getActionTimes(a);
+						actionStart = actionTimes[0] + this.startTime;
+						actionEnd = actionTimes[1] + this.startTime;
+						if (actionStart && actionEnd) {
+							if (my.isa(a.action, 'fn')) {
+								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
+									a.action();
+								}
+							}
+							else {
+								if (a.action.type === 'Tween') {
+									if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+										if (!a.action.active) {
+											a.action.run();
+											a.action.halt();
+										}
+										a.action.seekTo(item - (actionStart - oldCurrent));
+										a.action.fn();
+									}
+								}
+								else {
+									//Timeline stuff - TO DO!!!
+									console.log('Timeline', a.name, actionStart, actionEnd);
+								}
+							}
+						}
+					}
+					this.startTime -= item;
 				}
 			}
+			//unlock action
+			this.seeking = false;
 			return this;
 		};
 		/**
+@method getActionTimes
+@param {Object} [item] - Action object
+@return [Number startTime, Number endTime]
+@private
+**/
+		my.Timeline.prototype.getActionTimes = function(item) {
+			var result = [null, null],
+				actionStart, actionEnd;
+			if (item.action) {
+				actionStart = item.timeValue;
+				if (item.action && item.action.type === 'Tween') {
+					result = [actionStart, actionStart + item.action.duration];
+				}
+				else {
+					result = [actionStart, actionStart];
+				}
+			}
+			return result;
+		};
+		/**
 @method seekBack
-@param {Number} [item] relative time to move back, in milliseconds
+@param {Number} [item] relative time to move back, in milliseconds. Must be a negative value!
 @return this
 @chainable
 **/
 		my.Timeline.prototype.seekBack = function(item) {
+			// !!! CURRENTLY A COPY OF SEEKFORWARD !!!
+			// need to:
+			// - determine which actions are going to be affected by the seek
+			// - actions fall into 6 categories (3 scenarios) relative to the current and seek times:
+			//   - action start and end times are before the seek zone - no action
+			//     - action state will be at 1/onComplete, no change
+			//   - action start and end times are after the seek zone - no action
+			//     - action state will be at 0/onCommence, no change
+			//   - action start time before, end time within, the seek zone - action required
+			//     - action state must move to between 0 and 1
+			//   - action start time within, end time after, the seek zone - action required
+			//     - action state must move immediately to 0/onCommence
+			//   - action start and end time are within the seek zone - action required
+			//     - action state must move immediately to 0/onCommence
+			//   - action start and end time are either side of the seek zone - action required
+			//     - action state must move to between 0 and 1
+			// - also actions within the seek zone with rollback() functions will need to trigger them
+			// - timelines within the seek zone will need to stop and reset to initial conditions
+
+			// if: action end time is within seek zone - scenario 1 (commence)
+			// else if: start time is before but end time is not before - scenario 2 (mid tween)
+			// else: do nothing
+			var i, iz, a,
+				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
+			//lock action
+			this.seeking = true;
+			if (!this.active) {
+				this.paused = true;
+			}
 			if (item.toFixed && item) {
-				//stuff goes here, to avoid doing work when item = 0
-				if (item < 0) {
-					//acts by bringing startTime forwards, thus requires a positive value
-					item = 0 - item;
+				if (item) {
+					oldCurrent = this.currentTime;
+					newCurrent = oldCurrent + item;
+					for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+						a = my.animation[this.actionsList[i]];
+						actionTimes = this.getActionTimes(a);
+						actionStart = actionTimes[0] + this.startTime;
+						actionEnd = actionTimes[1] + this.startTime;
+						if (actionStart && actionEnd) {
+							if (my.isa(a.action, 'fn')) {
+								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
+									if (a.rollback) {
+										a.rollback();
+									}
+								}
+							}
+							else {
+								if (a.action.type === 'Tween') {
+									// if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+									if (!a.action.active && actionEnd >= oldCurrent) {
+										a.action.run();
+										a.action.halt();
+									}
+									if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+										a.action.seekTo(item - (actionStart - oldCurrent));
+										a.action.fn();
+									}
+								}
+								else {
+									//Timeline stuff - TO DO!!!
+									console.log('Timeline', a.name, actionStart, actionEnd);
+								}
+							}
+						}
+					}
+					this.startTime -= item;
 				}
 			}
+			//unlock action
+			this.seeking = false;
 			return this;
 		};
 		/**
@@ -2142,35 +2328,6 @@ Keyframe function to be called - can be used to reverse the action function
 @default false
 **/
 			rollback: false
-		};
-		/**
-Convert a time into its component properties
-@method convertTime
-@return [String timeUnit, Number timeValue]
-@private
-**/
-		my.convertTime = function(item) {
-			var a, timeUnit, timeValue;
-			if (item && (item.substring || item.toFixed)) {
-				if (item.toFixed) {
-					return ['ms', item];
-				}
-				a = item.match(/^\d+\.?\d*(\D*)/);
-				if (a[1].toLowerCase)
-					timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
-				switch (timeUnit) {
-					case 's':
-						timeValue = parseFloat(item) * 1000;
-						break;
-					case '%':
-						timeValue = 0;
-						break;
-					default:
-						timeValue = parseFloat(item);
-				}
-				return [timeUnit, timeValue];
-			}
-			return false;
 		};
 		/**
 Convert a time into its component properties
