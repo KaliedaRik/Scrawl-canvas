@@ -1327,6 +1327,25 @@ Lower order animations are run during each frame before higher order ones
 		};
 		my.mergeInto(my.d.Tween, my.d.Base);
 		/**
+Set tween values
+@method set
+@return this
+@chainable
+**/
+		my.Tween.prototype.set = function(items) {
+			var i, iz, a;
+			my.Base.prototype.set.call(this, items);
+			for (i = 0, iz = my.animationnames.length; i < iz; i++) {
+				a = my.animation[my.animationnames[i]];
+				if (a.type === 'Timeline') {
+					if (my.contains(a.actionsList, this.name)) {
+						a.resolve();
+					}
+				}
+			}
+			return this;
+		};
+		/**
 Tween animation function
 @method fn
 @return Always true
@@ -1648,6 +1667,21 @@ Reset a tween animation to its initial conditions
 			return this;
 		};
 		/**
+Complete a tween animation to its final conditions
+@method complete
+@return this
+@chainable
+**/
+		my.Tween.prototype.complete = function() {
+			this.active = true;
+			this.paused = false;
+			this.startTime = Date.now() - this.duration;
+			this.currentTime = Date.now();
+			this.fn();
+			this.active = false;
+			return this;
+		};
+		/**
 Seek to a different time in the Tween
 
 @method seekTo
@@ -1744,6 +1778,7 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.duration = my.xtGet(items.duration, 1000);
+			this.effectiveDuration = 0;
 			this.counter = 0;
 			this.startTime = 0;
 			this.currentTime = 0;
@@ -1825,7 +1860,7 @@ Make a new timeupdate customEvent object
 			return e;
 		};
 		/**
-Set the duration - only useful for setting Actions with % time strings;
+Set the timeline duration (for actions with % time strings) or event choke value;
 @method set
 @param {Object} [items] Key:value Object argument for setting attributes
 @return this
@@ -1835,14 +1870,19 @@ Set the duration - only useful for setting Actions with % time strings;
 			items = my.safeObject(items);
 			if (my.isa(items.duration, 'num')) {
 				this.duration = items.duration;
-				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
-					a = my.animation[this.actionsList[i]];
-					if (a.timeUnit === '%') {
-						a.timeValue = (parseFloat(a.time) / 100) * this.duration;
-					}
-				}
-				this.sortActions();
+				// for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+				// 	a = my.animation[this.actionsList[i]];
+				// 	if (a.timeUnit === '%') {
+				// 		a.timeValue = (parseFloat(a.time) / 100) * this.duration;
+				// 	}
+				// }
+				// this.sortActions();
+				// this.effectiveDuration = this.getTimelineDuration();
 			}
+			if (my.isa(items.event, 'num')) {
+				this.event = items.event;
+			}
+			this.resolve();
 			return this;
 		};
 		/**
@@ -1852,17 +1892,18 @@ add() and remove() helper function
 @private
 **/
 		my.Timeline.prototype.resolve = function() {
-			var i, iz, temp, a;
-			this.sortActions();
-			temp = this.duration;
-			for (i = this.actionsList.length - 1; i >= 0; i--) {
-				a = my.animation[this.actionsList[i]];
-				if (my.contains(['s', 'ms'], a.timeUnit)) {
-					this.duration = a.timeValue;
-					break;
-				}
-			}
-			this.duration = (temp > this.duration) ? temp : this.duration;
+			var i, iz, a;
+			// var i, iz, temp, a;
+			// this.sortActions();
+			// temp = this.duration;
+			// for (i = this.actionsList.length - 1; i >= 0; i--) {
+			// 	a = my.animation[this.actionsList[i]];
+			// 	if (my.contains(['s', 'ms'], a.timeUnit)) {
+			// 		this.duration = a.timeValue;
+			// 		break;
+			// 	}
+			// }
+			// this.duration = (temp > this.duration) ? temp : this.duration;
 			for (i = 0, iz = this.actionsList.length; i < iz; i++) {
 				a = my.animation[this.actionsList[i]];
 				if (a.timeUnit === '%') {
@@ -1870,6 +1911,7 @@ add() and remove() helper function
 				}
 			}
 			this.sortActions();
+			this.effectiveDuration = this.getTimelineDuration();
 			return true;
 		};
 		/**
@@ -2078,6 +2120,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 @chainable
 **/
 		my.Timeline.prototype.seekForward = function(item) {
+			console.log('seekForward', this.name, item);
 			var i, iz, a,
 				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
 			//lock action
@@ -2096,11 +2139,13 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 						actionEnd = actionTimes[1] + this.startTime;
 						if (actionStart && actionEnd) {
 							if (my.isa(a.action, 'fn')) {
+								//raw function action wrapper
 								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
 									a.action();
 								}
 							}
 							else {
+								//tween action wrapper
 								if (a.action.type === 'Tween') {
 									if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
 										if (!a.action.active) {
@@ -2111,9 +2156,22 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 										a.action.fn();
 									}
 								}
+								//timeline action wrapper
 								else {
-									//Timeline stuff - TO DO!!!
-									console.log('Timeline', a.name, actionStart, actionEnd);
+									if (a.skipSeek) {
+										if (a.complete) {
+											a.complete();
+										}
+									}
+									else {
+										if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+											if (!a.action.active) {
+												a.action.run();
+												a.action.halt();
+											}
+											a.action.seekForward(item - (actionStart - oldCurrent));
+										}
+									}
 								}
 							}
 						}
@@ -2136,8 +2194,16 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 				actionStart, actionEnd;
 			if (item.action) {
 				actionStart = item.timeValue;
-				if (item.action && item.action.type === 'Tween') {
-					result = [actionStart, actionStart + item.action.duration];
+				if (item.action) {
+					if (item.action.type === 'Tween') {
+						result = [actionStart, actionStart + item.action.duration];
+					}
+					else if (item.action.type === 'Timeline') {
+						result = [actionStart, this.getTimelineDuration()];
+					}
+					else {
+						result = [actionStart, actionStart];
+					}
 				}
 				else {
 					result = [actionStart, actionStart];
@@ -2146,34 +2212,36 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 			return result;
 		};
 		/**
+@method getTimelineDuration
+@return Number
+@private
+**/
+		my.Timeline.prototype.getTimelineDuration = function() {
+			var i, iz, a, t,
+				d = 0;
+			for (i = 0, iz = iz = this.actionsList.length; i < iz; i++) {
+				a = my.animation[this.actionsList[i]];
+				if (a.action.type === 'Tween') {
+					t = a.timeValue + a.action.duration;
+					d = (t > d) ? t : d;
+				}
+				else if (a.action.type === 'Timeline') {
+					t = a.timeValue + a.action.getTimelineDuration();
+					d = (t > d) ? t : d;
+				}
+			}
+			d = (this.duration > d) ? this.duration : d;
+			console.log('getTimelineDuration', this.name, d);
+			return d;
+		};
+		/**
 @method seekBack
 @param {Number} [item] relative time to move back, in milliseconds. Must be a negative value!
 @return this
 @chainable
 **/
 		my.Timeline.prototype.seekBack = function(item) {
-			// !!! CURRENTLY A COPY OF SEEKFORWARD !!!
-			// need to:
-			// - determine which actions are going to be affected by the seek
-			// - actions fall into 6 categories (3 scenarios) relative to the current and seek times:
-			//   - action start and end times are before the seek zone - no action
-			//     - action state will be at 1/onComplete, no change
-			//   - action start and end times are after the seek zone - no action
-			//     - action state will be at 0/onCommence, no change
-			//   - action start time before, end time within, the seek zone - action required
-			//     - action state must move to between 0 and 1
-			//   - action start time within, end time after, the seek zone - action required
-			//     - action state must move immediately to 0/onCommence
-			//   - action start and end time are within the seek zone - action required
-			//     - action state must move immediately to 0/onCommence
-			//   - action start and end time are either side of the seek zone - action required
-			//     - action state must move to between 0 and 1
-			// - also actions within the seek zone with rollback() functions will need to trigger them
-			// - timelines within the seek zone will need to stop and reset to initial conditions
-
-			// if: action end time is within seek zone - scenario 1 (commence)
-			// else if: start time is before but end time is not before - scenario 2 (mid tween)
-			// else: do nothing
+			console.log('seekBack', this.name, item);
 			var i, iz, a,
 				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
 			//lock action
@@ -2185,13 +2253,15 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 				if (item) {
 					oldCurrent = this.currentTime;
 					newCurrent = oldCurrent + item;
-					for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+					// for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+					for (i = this.actionsList.length - 1; i >= 0; i--) {
 						a = my.animation[this.actionsList[i]];
 						actionTimes = this.getActionTimes(a);
 						actionStart = actionTimes[0] + this.startTime;
 						actionEnd = actionTimes[1] + this.startTime;
 						if (actionStart && actionEnd) {
 							if (my.isa(a.action, 'fn')) {
+								//raw function action wrapper
 								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
 									if (a.rollback) {
 										a.rollback();
@@ -2199,20 +2269,33 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 								}
 							}
 							else {
+								//tween action wrapper
 								if (a.action.type === 'Tween') {
-									// if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
-									if (!a.action.active && actionEnd >= oldCurrent) {
-										a.action.run();
-										a.action.halt();
-									}
 									if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+										if (!a.action.active) {
+											a.action.run();
+											a.action.halt();
+										}
 										a.action.seekTo(item - (actionStart - oldCurrent));
 										a.action.fn();
 									}
 								}
+								//timeline action wrapper
 								else {
-									//Timeline stuff - TO DO!!!
-									console.log('Timeline', a.name, actionStart, actionEnd);
+									if (a.skipSeek) {
+										if (a.rollback) {
+											a.rollback();
+										}
+									}
+									else {
+										if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+											if (!a.action.active) {
+												a.action.run();
+												a.action.halt();
+											}
+											a.action.seekBack(item - (actionStart - oldCurrent));
+										}
+									}
 								}
 							}
 						}
@@ -2266,9 +2349,11 @@ Remove this Timeline from the scrawl library
 			items = my.safeObject(items);
 			this.time = items.time || 0;
 			this.convertTime();
-			this.action = items.action || false;
-			this.reset = items.reset || false;
-			this.rollback = items.rollback || false;
+			this.action = my.xtGet(items.action, false);
+			this.reset = my.xtGet(items.reset, false);
+			this.rollback = my.xtGet(items.rollback, false);
+			this.complete = my.xtGet(items.complete, false);
+			this.skipSeek = my.xtGet(items.skipSeek, false);
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
 			return this;
@@ -2316,18 +2401,41 @@ Keyframe function to be called
 			action: false,
 			/**
 Keyframe function to be called - can be used to set initial conditions for objects in the timeline
+
+Only one action object in a timeline should include a reset function
+
 @property reset
 @type Function
 @default false
 **/
 			reset: false,
 			/**
+Keyframe function to be called - can be used to set final conditions for objects in the timeline
+
+Only one action object in a timeline should include a complete function
+
+@property complete
+@type Function
+@default false
+**/
+			complete: false,
+			/**
 Keyframe function to be called - can be used to reverse the action function
 @property rollback
 @type Function
 @default false
 **/
-			rollback: false
+			rollback: false,
+			/**
+Seek functionality flag
+
+In normal mode - false, default - a seek action will cascade through nested timelines. To prevent this, set the attribute to true; any action reset (seekBack) and complete (seekForward) functions will still be triggered
+
+@property skipSeek
+@type Boolean
+@default false
+**/
+			skipSeek: false
 		};
 		/**
 Convert a time into its component properties
@@ -2353,7 +2461,7 @@ Invoke the associated function
 @return always true
 **/
 		my.Action.prototype.run = function() {
-			var a = ['Tween', 'Animation'];
+			var a = ['Tween', 'Timeline', 'Animation'];
 			if (my.xt(this.action)) {
 				if (my.contains(a, this.action.type)) {
 					this.action.run();
