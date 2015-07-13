@@ -1658,12 +1658,15 @@ Reset a tween animation to its initial conditions
 @chainable
 **/
 		my.Tween.prototype.reset = function() {
-			this.active = true;
+			var t, tz;
 			this.paused = false;
-			this.startTime = Date.now();
-			this.currentTime = Date.now();
-			this.fn();
 			this.active = false;
+			this.startTime = Date.now();
+			this.currentTime = this.startTime;
+			for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
+				this.currentTargets[t].set(this.start);
+				this.currentTargets[t].set(this.onCommence);
+			}
 			return this;
 		};
 		/**
@@ -1692,16 +1695,22 @@ Seek to a different time in the Tween
 **/
 		my.Tween.prototype.seekTo = function(item) {
 			var myActive = this.active,
-				myPaused = this.paused;
-			if (item && item.toFixed) {
-				this.active = true;
-				this.paused = false;
-				this.startTime = Date.now();
-				this.currentTime = Date.now();
-				this.startTime -= item;
-				this.fn();
-				this.paused = myPaused;
-				this.active = myActive;
+				myPaused = this.paused,
+				t, tz;
+			if (item.toFixed) {
+				if (item > 0) {
+					this.currentTime = Date.now();
+					this.startTime = this.currentTime;
+					this.active = true;
+					this.paused = false;
+					this.startTime -= item;
+					this.fn();
+					this.paused = myPaused;
+					this.active = myActive;
+				}
+				else {
+					this.reset();
+				}
 			}
 			return this;
 		};
@@ -1870,14 +1879,6 @@ Set the timeline duration (for actions with % time strings) or event choke value
 			items = my.safeObject(items);
 			if (my.isa(items.duration, 'num')) {
 				this.duration = items.duration;
-				// for (i = 0, iz = this.actionsList.length; i < iz; i++) {
-				// 	a = my.animation[this.actionsList[i]];
-				// 	if (a.timeUnit === '%') {
-				// 		a.timeValue = (parseFloat(a.time) / 100) * this.duration;
-				// 	}
-				// }
-				// this.sortActions();
-				// this.effectiveDuration = this.getTimelineDuration();
 			}
 			if (my.isa(items.event, 'num')) {
 				this.event = items.event;
@@ -1893,17 +1894,6 @@ add() and remove() helper function
 **/
 		my.Timeline.prototype.resolve = function() {
 			var i, iz, a;
-			// var i, iz, temp, a;
-			// this.sortActions();
-			// temp = this.duration;
-			// for (i = this.actionsList.length - 1; i >= 0; i--) {
-			// 	a = my.animation[this.actionsList[i]];
-			// 	if (my.contains(['s', 'ms'], a.timeUnit)) {
-			// 		this.duration = a.timeValue;
-			// 		break;
-			// 	}
-			// }
-			// this.duration = (temp > this.duration) ? temp : this.duration;
 			for (i = 0, iz = this.actionsList.length; i < iz; i++) {
 				a = my.animation[this.actionsList[i]];
 				if (a.timeUnit === '%') {
@@ -2025,7 +2015,7 @@ Function triggered by the animation loop
 				document.dispatchEvent(e);
 				this.lastEvent = this.currentTime;
 			}
-			if (this.counter >= this.actionsList.length) {
+			if (this.currentTime >= this.startTime + this.effectiveDuration) {
 				this.active = false;
 				my.removeItem(my.animate, this.name);
 			}
@@ -2120,7 +2110,6 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 @chainable
 **/
 		my.Timeline.prototype.seekForward = function(item) {
-			console.log('seekForward', this.name, item);
 			var i, iz, a,
 				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
 			//lock action
@@ -2153,7 +2142,6 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 											a.action.halt();
 										}
 										a.action.seekTo(item - (actionStart - oldCurrent));
-										a.action.fn();
 									}
 								}
 								//timeline action wrapper
@@ -2231,7 +2219,6 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 				}
 			}
 			d = (this.duration > d) ? this.duration : d;
-			console.log('getTimelineDuration', this.name, d);
 			return d;
 		};
 		/**
@@ -2241,7 +2228,6 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 @chainable
 **/
 		my.Timeline.prototype.seekBack = function(item) {
-			console.log('seekBack', this.name, item);
 			var i, iz, a,
 				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
 			//lock action
@@ -2253,7 +2239,6 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 				if (item) {
 					oldCurrent = this.currentTime;
 					newCurrent = oldCurrent + item;
-					// for (i = 0, iz = this.actionsList.length; i < iz; i++) {
 					for (i = this.actionsList.length - 1; i >= 0; i--) {
 						a = my.animation[this.actionsList[i]];
 						actionTimes = this.getActionTimes(a);
@@ -2271,16 +2256,23 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 							else {
 								//tween action wrapper
 								if (a.action.type === 'Tween') {
-									if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+									if (!(actionEnd < newCurrent || actionStart > oldCurrent)) {
 										if (!a.action.active) {
 											a.action.run();
 											a.action.halt();
 										}
 										a.action.seekTo(item - (actionStart - oldCurrent));
-										a.action.fn();
 									}
 								}
 								//timeline action wrapper
+
+								// HERE HERE HERE
+
+								// NOT FIRING FOR EFFECTIVE DURATION??!?
+
+								// WHERE ELSE DO WE SET active to false???
+
+								// NEEDS TO BE TRUE FOR THE ENTIRE LENGTH OF effDur !!! 
 								else {
 									if (a.skipSeek) {
 										if (a.rollback) {
@@ -2288,7 +2280,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 										}
 									}
 									else {
-										if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+										if (!(actionEnd < newCurrent || actionStart > oldCurrent)) {
 											if (!a.action.active) {
 												a.action.run();
 												a.action.halt();
