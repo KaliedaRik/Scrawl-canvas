@@ -2153,11 +2153,12 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 									}
 									else {
 										if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
-											if (!a.action.active) {
-												a.action.run();
-												a.action.halt();
-											}
-											a.action.seekForward(item - (actionStart - oldCurrent));
+											// if (!a.action.active) {
+											// 	a.action.run();
+											// 	a.action.halt();
+											// }
+											// a.action.seekForward(item - (actionStart - oldCurrent));
+											a.action.seekForward(item);
 										}
 									}
 								}
@@ -2236,64 +2237,51 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 				this.paused = true;
 			}
 			if (item.toFixed && item) {
-				if (item) {
-					oldCurrent = this.currentTime;
-					newCurrent = oldCurrent + item;
-					for (i = this.actionsList.length - 1; i >= 0; i--) {
-						a = my.animation[this.actionsList[i]];
-						actionTimes = this.getActionTimes(a);
-						actionStart = actionTimes[0] + this.startTime;
-						actionEnd = actionTimes[1] + this.startTime;
-						if (actionStart && actionEnd) {
-							if (my.isa(a.action, 'fn')) {
-								//raw function action wrapper
-								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
+				oldCurrent = this.currentTime;
+				newCurrent = oldCurrent + item;
+				for (i = this.actionsList.length - 1; i >= 0; i--) {
+					a = my.animation[this.actionsList[i]];
+					actionTimes = this.getActionTimes(a);
+					actionStart = actionTimes[0] + this.startTime;
+					actionEnd = actionTimes[1] + this.startTime;
+					if (actionStart && actionEnd) {
+						if (my.isa(a.action, 'fn')) {
+							//raw function action wrapper
+							if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
+								if (a.rollback) {
+									a.rollback();
+								}
+							}
+						}
+						else {
+							//tween action wrapper
+							if (a.action.type === 'Tween') {
+								if (!(actionEnd < newCurrent || actionStart > oldCurrent)) {
+									if (!a.action.active) {
+										a.action.run();
+										a.action.halt();
+									}
+									a.action.seekTo(item - (actionStart - oldCurrent));
+								}
+							}
+							//timeline action wrapper
+							else {
+								if (a.skipSeek) {
+									console.log(a.action.name, 'skipseek');
 									if (a.rollback) {
 										a.rollback();
 									}
 								}
-							}
-							else {
-								//tween action wrapper
-								if (a.action.type === 'Tween') {
-									if (!(actionEnd < newCurrent || actionStart > oldCurrent)) {
-										if (!a.action.active) {
-											a.action.run();
-											a.action.halt();
-										}
-										a.action.seekTo(item - (actionStart - oldCurrent));
-									}
-								}
-								//timeline action wrapper
-
-								// HERE HERE HERE
-
-								// NOT FIRING FOR EFFECTIVE DURATION??!?
-
-								// WHERE ELSE DO WE SET active to false???
-
-								// NEEDS TO BE TRUE FOR THE ENTIRE LENGTH OF effDur !!! 
 								else {
-									if (a.skipSeek) {
-										if (a.rollback) {
-											a.rollback();
-										}
-									}
-									else {
-										if (!(actionEnd < newCurrent || actionStart > oldCurrent)) {
-											if (!a.action.active) {
-												a.action.run();
-												a.action.halt();
-											}
-											a.action.seekBack(item - (actionStart - oldCurrent));
-										}
+									if (!(actionEnd < newCurrent || actionStart > oldCurrent)) {
+										a.action.seekBack(item);
 									}
 								}
 							}
 						}
 					}
-					this.startTime -= item;
 				}
+				this.startTime -= item;
 			}
 			//unlock action
 			this.seeking = false;

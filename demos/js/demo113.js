@@ -307,18 +307,21 @@ var mycode = function() {
 		action: scrawl.animation.mySubTimeline,
 		//skipSeek: true,
 		reset: function() {
+			console.log(this.name, 'reset');
 			scrawl.entity.myblock.set({
 				globalAlpha: 0,
 				roll: 0
 			});
 		},
 		rollback: function() {
+			console.log(this.name, 'rollback');
 			scrawl.entity.myblock.set({
 				globalAlpha: 0,
 				roll: 0
 			});
 		},
 		complete: function() {
+			console.log(this.name, 'complete');
 			scrawl.entity.myblock.set({
 				globalAlpha: 0,
 				roll: 0
