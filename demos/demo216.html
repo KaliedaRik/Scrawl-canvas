@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Demo 214</title>
+  <title>Demo 216</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -34,13 +34,17 @@
     select {
       display: inline;
     }
+    span {
+      color: blue;
+      font-weight: bold;
+    }
   </style>
 
 </head>
 
 <body>
-  <h1><a href="../index.html">Scrawl.js</a> - demonstration 214</h1>
-  <h2>Setting element width and height as a percentage of the stack's dimensions</h2>
+  <h1><a href="../index.html">Scrawl.js</a> - demonstration 216</h1>
+  <h2>Setting element width and height as a value relative to the browser viewport</h2>
   <h3>Extensions: stacks</h3>
   <p>Setting the element's height attribute to 0 or '0%' triggers height:auto.</p>
   <p>Note: For best results, set the margin, padding and borders of stack elements (including pads and stacks) to 0; borders can be recreated with scrawl entities, if required. Otherwise the current implementation of this functionality leads to display discrepancies
@@ -52,12 +56,32 @@
   <!-- this section for the stacks and elements -->
   <div id="mainstack" class="scrawlstack">
     <div id="maincopytext">
-      <h4>Lorem ipsum dolor sit amet.</h4>
-      <p>Consectetur adipiscing elit. Integeras nec odio.</p>
+      <h4>Scrawl feature detection</h4>
       <ul>
-        <li>Lorem ipsum dolor sit amet</li>
-        <li>Consectetur adipiscing elit</li>
-        <li>Integeras nec odio</li>
+        <li>canvas: <span id="detect-canvas"></span>
+        </li>
+        <li>canvasEvenOddWinding: <span id="detect-canvasEvenOddWinding"></span>
+        </li>
+        <li>canvasDashedLine: <span id="detect-canvasDashedLine"></span>
+        </li>
+        <li>canvasGcoSourceIn: <span id="detect-canvasGcoSourceIn"></span>
+        </li>
+        <li>canvasGcoSourceOut: <span id="detect-canvasGcoSourceOut"></span>
+        </li>
+        <li>canvasGcoDestinationAtop: <span id="detect-canvasGcoDestinationAtop"></span>
+        </li>
+        <li>canvasGcoDestinationIn: <span id="detect-canvasGcoDestinationIn"></span>
+        </li>
+        <li>canvasGcoCopy: <span id="detect-canvasGcoCopy"></span>
+        </li>
+        <li>video: <span id="detect-video"></span>
+        </li>
+        <li>videoAutoplay: <span id="detect-videoAutoplay"></span>
+        </li>
+        <li>videoAsCanvasSource: <span id="detect-videoAsCanvasSource"></span>
+        </li>
+        <li>videoForceFullScreen: <span id="detect-videoForceFullScreen"></span>
+        </li>
       </ul>
     </div>
   </div>
@@ -185,11 +209,11 @@
     <p><b>Known browser issues:</b> ???</p>
     <p><b>Result images:</b>
     </p>
-    <img src="img/demopics/demo214.png" alt="image of expected test result" />
+    <img src="img/demopics/demo216.png" alt="image of expected test result" />
   </div>
 
   <script src="../source/scrawlCore.js"></script>
-  <script id="testscript" src="js/demo214.js"></script>
+  <script id="testscript" src="js/demo216.js"></script>
 </body>
 
 </html>

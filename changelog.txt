@@ -33,10 +33,10 @@ Currently known bugs
 
 - Composite operations
 	- Safari(windows) is non-compliant for some global composite operations
-	
-- Collision detection
-	- Chrome and Safari do not accept even-odd winding (Shape and Path sprites) for collision detection
-		- though both display even-odd winding fills correctly
+		- feature detection added to scrawl.device object
+
+- Older browsers with canvas support do not support 'evenodd' winding or dashed strokes
+	- feature detection added to scrawl.device object
 	
 - Sprite ordering
 	- Sprites with the same order value, in the same group, may occasionally flicker when overlapping (Chrome, Opera)
@@ -46,6 +46,27 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+July 2015
+	- reviewed and updated functionality for loading video
+	- fixed Chrome collision/hits bug (not recognising evenodd winding) for Path and Shape entitys
+	- substantial overhaul of Tweens and Timelines
+		- added seekto functionality
+		- enabled nesting of timelines
+		- timeline custom event emitter
+	- added device object to scrawl library
+		- includes feature detection for various canvas irregularities
+			- environment has canvas, css3 3d functionality
+			- canvas evenodd winding
+			- canvas dashed lines
+			- canvas globalCompositeOperations
+			- environment has video functionality, and allows
+				- autoplay
+				- using video as a source for canvas entitys
+				- videos to play in the browser, not forcing them to play fullscreen
+		- holds viewport dimension and position data
+		- objects can be positioned and sized relative to the viewport (replicates css position: fixed)
+			- by setting their pivot value to 'viewport'
+
 150628
 	- minor release version 4.2.2
 	- updated website to production
@@ -96,6 +117,7 @@ February - March 2015
 		- further testing/fixing required on real devices:
 			- particularly important for multitouch events
 			- Android tablet, Android phone, iPad, iPhone, windows touch devices
+
 150127
 	- version 4.1.0 released
 
@@ -109,7 +131,7 @@ February - March 2015
 	- checked all demos, making an effort to include new functionalities where relevant
 	- coded up new Scrawl website demos page
 		- demos display in an iframe
-	- undertool testing of new pages and demos in all relevant browsers
+	- undertook testing of new pages and demos in all relevant browsers
 		- firefox; chrome; IE11 - all work as expected, except:
 			- IE11 may have an issue with entity ordering when dropping an entity from the mouse
 			- Chrome appears to have developed an issue with entity shadows on the fill (but not draw) method

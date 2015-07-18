@@ -2153,11 +2153,6 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 									}
 									else {
 										if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
-											// if (!a.action.active) {
-											// 	a.action.run();
-											// 	a.action.halt();
-											// }
-											// a.action.seekForward(item - (actionStart - oldCurrent));
 											a.action.seekForward(item);
 										}
 									}

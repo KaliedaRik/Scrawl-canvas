@@ -575,7 +575,7 @@ Stamp helper function - perform a 'clip' method draw
 		my.Shape.prototype.clip = function(ctx, cell) {
 			ctx.save();
 			this.doOutline(ctx, cell);
-			ctx.clip();
+			ctx.clip(my.ctx[this.context].get('winding'));
 			return this;
 		};
 		/**
@@ -743,7 +743,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			my.cvx.msFillRule = winding;
 			this.completeOutline(my.cvx, my.group[this.group].cell);
 			for (i = 0, iz = tests.length; i < iz; i += 2) {
-				result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
+				result = my.cvx.isPointInPath(tests[i], tests[i + 1], my.ctx[this.context].get('winding'));
 				if (result) {
 					items.x = tests[i];
 					items.y = tests[i + 1];
