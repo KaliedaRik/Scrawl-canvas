@@ -62,6 +62,12 @@ The core module is the only essential file in Scrawl. It must always be directly
 @module scrawlCore
 **/
 
+window.requestAnimFrame = (function(callback) {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
+
 var scrawl = window.scrawl || (function() {
 	'use strict';
 	var my = {};
@@ -260,6 +266,13 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 	my.init = function() {
 		my.reset();
 		my.device = new my.Device();
+		my.scrollListener = function() {
+			window.requestAnimFrame(function() {
+				my.device.getViewportPosition();
+				my.scrollListener();
+			});
+		};
+		my.scrollListener();
 		my.pageInit();
 		my.setDisplayOffsets('all');
 		my.animationInit();
@@ -276,8 +289,8 @@ event listener for browser resize and scroll actions
 	my.defaultListeners = function() {
 		window.removeEventListener('resize', my.resizePageEvent, false);
 		window.addEventListener('resize', my.resizePageEvent, false);
-		document.removeEventListener('scroll', my.device.getViewportPosition, false);
-		document.addEventListener('scroll', my.device.getViewportPosition, false);
+		// document.removeEventListener('scroll', my.device.getViewportPosition, false);
+		// document.addEventListener('scroll', my.device.getViewportPosition, false);
 	};
 	/**
 function for handling browser resize actions

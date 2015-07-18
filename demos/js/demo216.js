@@ -44,9 +44,7 @@ var mycode = function() {
 		border: '1px solid blue'
 	});
 	bluepara.set({
-		width: '100%',
-		height: '100%',
-		border: '0',
+		width: '40%',
 		backgroundColor: 'pink',
 		viewport: true,
 		startX: 'center',
@@ -183,7 +181,6 @@ var mycode = function() {
 		bluepara.set(itemsBluePara);
 
 		setStatus();
-		updateList();
 	};
 	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
@@ -193,6 +190,7 @@ var mycode = function() {
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
+			updateList();
 			scrawl.render();
 		},
 	});
