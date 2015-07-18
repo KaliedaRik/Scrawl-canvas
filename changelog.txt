@@ -53,19 +53,21 @@ July 2015
 		- added seekto functionality
 		- enabled nesting of timelines
 		- timeline custom event emitter
+			- together, should allow for synchronization of animations, eg with video playback
 	- added device object to scrawl library
 		- includes feature detection for various canvas irregularities
 			- environment has canvas, css3 3d functionality
 			- canvas evenodd winding
 			- canvas dashed lines
 			- canvas globalCompositeOperations
-			- environment has video functionality, and allows
-				- autoplay
-				- using video as a source for canvas entitys
-				- videos to play in the browser, not forcing them to play fullscreen
+		- tests environment for video functionality:
+			- autoplay
+			- using video as a source for canvas entitys
+			- videos to play in the browser, not forcing them to play fullscreen
 		- holds viewport dimension and position data
-		- objects can be positioned and sized relative to the viewport (replicates css position: fixed)
-			- by setting their pivot value to 'viewport'
+	- stack objects (stack, pad, element) can be positioned and sized relative to the viewport 
+		- replicates css position: fixed
+		- achieved by setting their .viewport attribute to true
 
 150628
 	- minor release version 4.2.2
