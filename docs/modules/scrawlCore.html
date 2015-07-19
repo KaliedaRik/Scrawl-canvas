@@ -65,6 +65,8 @@
             
                 <li><a href="../classes/Design.html">Design</a></li>
             
+                <li><a href="../classes/Device.html">Device</a></li>
+            
                 <li><a href="../classes/Element.html">Element</a></li>
             
                 <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
@@ -252,7 +254,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlCore.js.html#l7416"><code>source\scrawlCore.js:7416</code></a>
+            Defined in: <a href="../files/source_scrawlCore.js.html#l7926"><code>source\scrawlCore.js:7926</code></a>
         </div>
     
 
@@ -264,10 +266,10 @@
 <div class="box intro">
     <h1 id="scrawlcore">scrawlCore</h1>
 <h2 id="version-4-2-2-28-june-2015">Version 4.2.2 - 28 June 2015</h2>
-<p>Developed by Rik Roots - <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#114;&#x69;&#107;&#x2e;&#x72;&#111;&#111;&#116;&#115;&#64;&#x67;&#x6d;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#109;">&#114;&#x69;&#107;&#x2e;&#x72;&#111;&#111;&#116;&#115;&#64;&#x67;&#x6d;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#109;</a>, <a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#x72;&#x69;&#107;&#64;&#114;&#x69;&#107;&#x77;&#x65;&#x62;&#x2e;&#111;&#x72;&#x67;&#x2e;&#117;&#x6b;">&#x72;&#x69;&#107;&#64;&#114;&#x69;&#107;&#x77;&#x65;&#x62;&#x2e;&#111;&#x72;&#x67;&#x2e;&#117;&#x6b;</a></p>
+<p>Developed by Rik Roots - <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#114;&#105;&#x6b;&#x2e;&#x72;&#x6f;&#x6f;&#x74;&#x73;&#64;&#103;&#109;&#x61;&#x69;&#108;&#x2e;&#99;&#x6f;&#109;">&#114;&#105;&#x6b;&#x2e;&#x72;&#x6f;&#x6f;&#x74;&#x73;&#64;&#103;&#109;&#x61;&#x69;&#108;&#x2e;&#99;&#x6f;&#109;</a>, <a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#x3a;&#114;&#x69;&#107;&#64;&#x72;&#105;&#107;&#x77;&#x65;&#98;&#46;&#111;&#x72;&#103;&#x2e;&#117;&#x6b;">&#114;&#x69;&#107;&#64;&#x72;&#105;&#107;&#x77;&#x65;&#98;&#46;&#111;&#x72;&#103;&#x2e;&#117;&#x6b;</a></p>
 <p>Scrawl demo website: <a href="http://scrawl.rikweb.org.uk">http://scrawl.rikweb.org.uk</a></p>
 <h2 id="purpose-and-features">Purpose and features</h2>
-<p>The core module is the only essential module in Scrawl. It must always be directly, and completely, loaded into the web page before any additional Scrawl modules are added to it. </p>
+<p>The core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. </p>
 <ul>
 <li><p>Defines the Scrawl scope - <strong>window.scrawl</strong></p>
 </li>
@@ -283,11 +285,11 @@
 </li>
 <li><p>Defines mouse functionality in relation to &lt;canvas&gt; elements</p>
 </li>
-<li><p>Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate modules which need to be loaded into the core</p>
+<li><p>Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core</p>
 </li>
 <li><p>Defines Group objects, used to group entitys together for display and interaction purposes</p>
 </li>
-<li><p>Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their <em>fill</em> and <em>stroke</em> styles; additional Design objects (Pattern, Color) are defined in separate modules</p>
+<li><p>Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their <em>fill</em> and <em>stroke</em> styles; additional Design objects (Pattern, Color) are defined in separate extensions</p>
 </li>
 </ul>
 <h2 id="loading-the-module">Loading the module</h2>
@@ -312,6 +314,12 @@
             <ul class="module-classes">
             
                 <li class="module-class">
+                    <a href="../classes/Animation.html">
+                        Animation
+                    </a>
+                </li>
+            
+                <li class="module-class">
                     <a href="../classes/Base.html">
                         Base
                     </a>
@@ -332,6 +340,12 @@
                 <li class="module-class">
                     <a href="../classes/Design.html">
                         Design
+                    </a>
+                </li>
+            
+                <li class="module-class">
+                    <a href="../classes/Device.html">
+                        Device
                     </a>
                 </li>
             

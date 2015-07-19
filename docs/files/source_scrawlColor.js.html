@@ -65,6 +65,8 @@
             
                 <li><a href="../classes/Design.html">Design</a></li>
             
+                <li><a href="../classes/Device.html">Device</a></li>
+            
                 <li><a href="../classes/Element.html">Element</a></li>
             
                 <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
@@ -524,7 +526,7 @@ Augments Base.get()
 **/
 		my.Color.prototype.get = function(item) {
 			if (!my.xt(item)) {
-				return &#x27;rgba(&#x27; + (this.r || 0) + &#x27;, &#x27; + (this.g || 0) + &#x27;, &#x27; + (this.b || 0) + &#x27;, &#x27; + (this.a || 1) + &#x27;)&#x27;;
+				return &#x27;rgba(&#x27; + (this.r || 0) + &#x27;, &#x27; + (this.g || 0) + &#x27;, &#x27; + (this.b || 0) + &#x27;, &#x27; + my.xtGet(this.a, 1) + &#x27;)&#x27;;
 			}
 			else if (item === &#x27;random&#x27;) {
 				this.generateRandomColor();
@@ -618,6 +620,12 @@ Checks that color channel values are of the permitted form (integer vs float) an
 		};
 		/**
 Augments Base.set()
+
+In addition to setting any native color object attribute, the .set() function also accepts the following keys:
+
+* __random__ (boolean) - when set to true, a random color (within minimum and maximum bounds) will be generated
+* __color__ (string) - any legitimate CSS color string (including color names as defined in the SVGTiny standard)
+
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -629,7 +637,12 @@ Augments Base.set()
 			if (items.random) {
 				this.generateRandomColor(items);
 			}
-			this.checkValues();
+			else if (items.color) {
+				this.convert(items.color);
+			}
+			else {
+				this.checkValues();
+			}
 			return this;
 		};
 		/**

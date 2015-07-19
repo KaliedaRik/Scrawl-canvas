@@ -65,6 +65,8 @@
             
                 <li><a href="../classes/Design.html">Design</a></li>
             
+                <li><a href="../classes/Device.html">Device</a></li>
+            
                 <li><a href="../classes/Element.html">Element</a></li>
             
                 <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
@@ -270,12 +272,6 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-window.requestAnimFrame = (function(callback) {
-	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
-		window.setTimeout(callback, 1000 / 60);
-	};
-})();
-
 /**
 # scrawlAnimation
 
@@ -297,21 +293,14 @@ if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.con
 		/**
 # window.scrawl
 
-scrawlAnimation module adaptions to the Scrawl library object
-
-## New library sections
-
-* scrawl.animation - for Animation and Tween objects
-
-* scrawl.doAnimation - a boolean switch to start/stop the animation loop
-* scrawl.animate - the animation loop function
+scrawlAnimation extension adaptions to the Scrawl library object
 
 ## New default attributes
 
 * Position.delta - default: {x:0,y:0,z:0};
 * Position.deltaPathPlace - default: 0;
 * Position.pathSpeedConstant - default: true;
-* Position.path - default: &#x27;&#x27;;
+* Position.tweenLock - default: false;
 
 * Cell.sourceDelta - default: {x:0, y:0, z:0};
 * Cell.sourceMinWidth - default: 0;
@@ -319,21 +308,14 @@ scrawlAnimation module adaptions to the Scrawl library object
 * Cell.sourceMinHeight - default: 0;
 * Cell.sourceMaxHeight - default: 0;
 
+* PageElement.tweenLock - default: false;
+
 * Design.roll - default: 0;
 * Design.autoUpdate - default: false;
 
 @class window.scrawl_Animation
 **/
 
-		/**
-Starts the animation loop
-@method animationInit
-@private
-**/
-		my.animationInit = function() {
-			my.doAnimation = true;
-			my.animationLoop();
-		};
 		my.d.Position.delta = {
 			x: 0,
 			y: 0,
@@ -341,6 +323,7 @@ Starts the animation loop
 		};
 		my.d.Position.deltaPathPlace = 0;
 		my.d.Position.pathSpeedConstant = true;
+		my.d.Position.tweenLock = false;
 		my.mergeInto(my.d.Cell, my.d.Position);
 		my.mergeInto(my.d.Entity, my.d.Position);
 		if (my.xt(my.d.Block)) {
@@ -361,6 +344,52 @@ Starts the animation loop
 		if (my.xt(my.d.Path)) {
 			my.mergeInto(my.d.Path, my.d.Entity);
 		}
+
+		my.d.PageElement.tweenLock = false;
+		my.mergeInto(my.d.Pad, my.d.PageElement);
+		if (my.xt(my.d.Stack)) {
+			my.mergeInto(my.d.Stack, my.d.PageElement);
+		}
+		if (my.xt(my.d.Element)) {
+			my.mergeInto(my.d.Element, my.d.PageElement);
+		}
+
+		/**
+Convert a time into its component properties
+
+Expected values:
+* Number - time value in milliseconds
+* String number+% - will always return a Number time value of 0
+* String number+ms - returns a Number time value in milliseconds
+* String number+s - converts and returns a Number time value in milliseconds
+
+@method convertTime
+@return [String timeUnit, Number timeValue]
+@private
+**/
+		my.convertTime = function(item) {
+			var a, timeUnit, timeValue;
+			if (item &amp;&amp; (item.substring || item.toFixed)) {
+				if (item.toFixed) {
+					return [&#x27;ms&#x27;, item];
+				}
+				a = item.match(/^\d+\.?\d*(\D*)/);
+				if (a[1].toLowerCase)
+					timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : &#x27;ms&#x27;;
+				switch (timeUnit) {
+					case &#x27;s&#x27;:
+						timeValue = parseFloat(item) * 1000;
+						break;
+					case &#x27;%&#x27;:
+						timeValue = 0;
+						break;
+					default:
+						timeValue = parseFloat(item);
+				}
+				return [timeUnit, timeValue];
+			}
+			return false;
+		};
 		/**
 Position constructor hook function
 
@@ -1006,14 +1035,6 @@ Gradient builder helper function - sorts color attribute Objects by their stop a
 			this.color = color;
 		};
 		/**
-Alias for makeAnimation()
-@method newAnimation
-@deprecated
-**/
-		my.newAnimation = function(items) {
-			return my.makeAnimation(items);
-		};
-		/**
 Alias for makeTween()
 @method newTween
 @deprecated
@@ -1036,15 +1057,6 @@ Alias for makeAction()
 **/
 		my.newAction = function(items) {
 			return my.makeAction(items);
-		};
-		/**
-A __factory__ function to generate new Animation objects
-@method makeAnimation
-@param {Object} items Key:value Object argument for setting attributes
-@return Animation object
-**/
-		my.makeAnimation = function(items) {
-			return new my.Animation(items);
 		};
 		/**
 A __factory__ function to generate new Tween objects
@@ -1073,162 +1085,6 @@ A __factory__ function to generate new Action objects
 		my.makeAction = function(items) {
 			return new my.Action(items);
 		};
-		my.pushUnique(my.sectionlist, &#x27;animation&#x27;);
-		my.pushUnique(my.nameslist, &#x27;animate&#x27;);
-		my.pushUnique(my.nameslist, &#x27;animationnames&#x27;);
-		/**
-Animation flag: set to false to stop animation loop
-@property doAnimation
-@type {Boolean}
-**/
-		my.doAnimation = false;
-		/**
-Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
-@property orderAnimations
-@type {Boolean}
-@default true
-**/
-		my.orderAnimations = true;
-		/**
-The Scrawl animation loop
-
-Animation loop is invoked automatically as part of the initialization process
-
-Scrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the __scrawl.animate__ Array
-
-All animation can be halted by setting the __scrawl.doAnimation__ flag to false
-
-To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnimation_ to true and call __scrawl.animationLoop()
-
-@method animationLoop
-@return Recursively calls itself - never returns
-**/
-		my.animationLoop = function() {
-			var i,
-				iz;
-			if (my.orderAnimations) {
-				my.sortAnimations();
-			}
-			for (i = 0, iz = my.animate.length; i &lt; iz; i++) {
-				if (my.animate[i]) {
-					my.animation[my.animate[i]].fn();
-				}
-			}
-			if (my.doAnimation) {
-				window.requestAnimFrame(function() {
-					my.animationLoop();
-				});
-			}
-		};
-		/**
-Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order
-@method sortAnimations
-@return Nothing
-@private
-**/
-		my.sortAnimations = function() {
-			my.animate.sort(function(a, b) {
-				return my.animation[a].order - my.animation[b].order;
-			});
-		};
-
-		/**
-# Animation
-
-## Instantiation
-
-* scrawl.makeAnimation()
-
-## Purpose
-
-* Defines an animation function to be run by the scrawl.animationLoop() function
-
-## Access
-
-* scrawl.animation.ANIMATIONNAME - for the Animation object
-
-@class Animation
-@constructor
-@extends Base
-@param {Object} [items] Key:value Object argument for setting attributes
-**/
-		my.Animation = function(items) {
-			var delay;
-			my.Base.call(this, items);
-			items = my.safeObject(items);
-			delay = (my.isa(items.delay, &#x27;bool&#x27;)) ? items.delay : false;
-			this.fn = items.fn || function() {};
-			this.order = items.order || 0;
-			my.animation[this.name] = this;
-			my.pushUnique(my.animationnames, this.name);
-			/**
-Pseudo-attribute used to prevent immediate running of animation when first created
-
-_This attribute is not retained by the Animation object_
-@property delay
-@type Boolean
-@default false
-**/
-			if (!delay) {
-				this.run();
-			}
-			return this;
-		};
-		my.Animation.prototype = Object.create(my.Base.prototype);
-		/**
-@property type
-@type String
-@default &#x27;Animation&#x27;
-@final
-**/
-		my.Animation.prototype.type = &#x27;Animation&#x27;;
-		my.Animation.prototype.classname = &#x27;animationnames&#x27;;
-		my.d.Animation = {
-			/**
-Anonymous function for an animation routine
-@property fn
-@type Function
-@default function(){}
-**/
-			fn: function() {},
-			/**
-Lower order animations are run during each frame before higher order ones
-@property order
-@type Number
-@default 0
-**/
-			order: 0,
-		};
-		my.mergeInto(my.d.Animation, my.d.Base);
-		/**
-Run an animation
-@method run
-@return Always true
-**/
-		my.Animation.prototype.run = function() {
-			my.pushUnique(my.animate, this.name);
-			return true;
-		};
-		/**
-Stop an animation
-@method halt
-@return Always true
-**/
-		my.Animation.prototype.halt = function() {
-			my.removeItem(my.animate, this.name);
-			return true;
-		};
-		/**
-Remove this Animation from the scrawl library
-@method kill
-@return Always true
-**/
-		my.Animation.prototype.kill = function() {
-			delete my.animation[this.name];
-			my.removeItem(my.animationnames, this.name);
-			my.removeItem(my.animate, this.name);
-			return true;
-		};
 
 		/**
 # Tween
@@ -1250,7 +1106,7 @@ Tweens are animations defined by duration (how long they should run for) and dis
 * If an ending point is defined for an attribute, but no starting point, then the tween will use the object&#x27;s attribute&#x27;s current value for the starting point.
 * Individual _easing engines_ can be defined for each attribute in the __engines__ attribute object.
 
-The objects on which the tween will operate are passed to the tween as an array of objects, in the __targets__ attribute
+The objects on which the tween will operate are passed to the tween as an array of objects, in the __targets__ attribute. Strings can also be supplied - the tween factory will search the library for the object; the search is conducted in the following order: entity, spriteanimation, video, cell, element, pad, stack, point, design, force, spring, physics.
 
 * A tween will only run on an object that is not currently being animated by another tween
 * A tween cannot be run if it is already running.
@@ -1288,6 +1144,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Tween = function(items) {
+			var i, iz, temp;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.targets = (my.isa(items.targets, &#x27;arr&#x27;)) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
@@ -1297,6 +1154,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			this.engines = (my.isa(items.engines, &#x27;obj&#x27;)) ? items.engines : {};
 			this.end = (my.isa(items.end, &#x27;obj&#x27;)) ? items.end : {};
 			this.startTime = Date.now();
+			this.currentTime = Date.now();
 			this.duration = items.duration || 0;
 			this.active = false;
 			this.reverse = items.reverse || false;
@@ -1307,9 +1165,54 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			this.onCommence = items.onCommence || {};
 			this.onComplete = items.onComplete || {};
 			this.nextTween = items.nextTween || &#x27;&#x27;;
+			this.lockObjects = items.lockObjects || false;
 			this.killOnComplete = items.killOnComplete || false;
 			this.callback = (my.isa(items.callback, &#x27;fn&#x27;)) ? items.callback : false;
 			this.order = items.order || 0;
+			for (i = 0, iz = this.targets.length; i &lt; iz; i++) {
+				if (my.isa(this.targets[i], &#x27;str&#x27;)) {
+					temp = false;
+					if (my.entity[this.targets[i]]) {
+						temp = my.entity[this.targets[i]];
+					}
+					else if (my.spriteanimation &amp;&amp; my.spriteanimation[this.targets[i]]) {
+						temp = my.spriteanimation[this.targets[i]];
+					}
+					else if (my.video &amp;&amp; my.video[this.targets[i]]) {
+						temp = my.video[this.targets[i]];
+					}
+					else if (my.cell[this.targets[i]]) {
+						temp = my.cell[this.targets[i]];
+					}
+					else if (my.element &amp;&amp; my.element[this.targets[i]]) {
+						temp = my.element[this.targets[i]];
+					}
+					else if (my.pad[this.targets[i]]) {
+						temp = my.pad[this.targets[i]];
+					}
+					else if (my.stack &amp;&amp; my.stack[this.targets[i]]) {
+						temp = my.stack[this.targets[i]];
+					}
+					else if (my.point &amp;&amp; my.point[this.targets[i]]) {
+						temp = my.point[this.targets[i]];
+					}
+					else if (my.design &amp;&amp; my.design[this.targets[i]]) {
+						temp = my.design[this.targets[i]];
+					}
+					else if (my.force &amp;&amp; my.force[this.targets[i]]) {
+						temp = my.force[this.targets[i]];
+					}
+					else if (my.spring &amp;&amp; my.spring[this.targets[i]]) {
+						temp = my.spring[this.targets[i]];
+					}
+					else if (my.physics &amp;&amp; my.physics[this.targets[i]]) {
+						temp = my.physics[this.targets[i]];
+					}
+					if (temp) {
+						this.targets[i] = temp;
+					}
+				}
+			}
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
 			return this;
@@ -1398,6 +1301,14 @@ Datetime when the tween starts running
 **/
 			startTime: 0,
 			/**
+Datetime for the current time
+@property currentTime
+@type Number - Date.now()
+@default 0
+@private
+**/
+			currentTime: 0,
+			/**
 Duration of the tween, measured in milliseconds
 @property duration
 @type Number
@@ -1412,6 +1323,14 @@ Flag - when true, tween is running
 @private
 **/
 			active: false,
+			/**
+Flag - when true, tween has been paused (halted)
+@property paused
+@type Boolean
+@default false
+@private
+**/
+			paused: false,
 			/**
 Flag - when true, tween runs in reverse, from end values to start values (for absolute transitions) or applying negative start values (for relative transitions)
 @property reverse
@@ -1463,6 +1382,15 @@ Flag - when true, tween will automatically delete itself when it completes
 **/
 			killOnComplete: false,
 			/**
+Flag - when true, tween will automatically lock the objects it is operating on
+
+Locking an object means that other tweens cannot operate on them
+@property lockObjects
+@type Boolean
+@default false
+**/
+			lockObjects: false,
+			/**
 TWEENNAME Sring of the tween to be run when this tween completes
 @property nextTween
 @type String
@@ -1479,14 +1407,32 @@ Lower order animations are run during each frame before higher order ones
 		};
 		my.mergeInto(my.d.Tween, my.d.Base);
 		/**
+Set tween values
+@method set
+@return this
+@chainable
+**/
+		my.Tween.prototype.set = function(items) {
+			var i, iz, a;
+			my.Base.prototype.set.call(this, items);
+			for (i = 0, iz = my.animationnames.length; i &lt; iz; i++) {
+				a = my.animation[my.animationnames[i]];
+				if (a.type === &#x27;Timeline&#x27;) {
+					if (my.contains(a.actionsList, this.name)) {
+						a.resolve();
+					}
+				}
+			}
+			return this;
+		};
+		/**
 Tween animation function
 @method fn
 @return Always true
 @private
 **/
 		my.Tween.prototype.fn = function() {
-			var currentTime,
-				progress,
+			var progress,
 				entity,
 				argSet,
 				keys,
@@ -1497,8 +1443,8 @@ Tween animation function
 				tz,
 				k,
 				kz;
-			currentTime = Date.now();
-			progress = (currentTime - this.startTime) / this.duration;
+			this.currentTime = Date.now();
+			progress = (this.currentTime - this.startTime) / this.duration;
 			keys = Object.keys(this.end);
 			if (this.active) {
 				if (progress &lt; 1) {
@@ -1529,7 +1475,13 @@ Tween animation function
 					}
 				}
 				else {
-					this.halt();
+					for (t = 0, tz = this.currentTargets.length; t &lt; tz; t++) {
+						if (my.xt(this.currentTargets[t])) {
+							this.currentTargets[t].tweenLock = false;
+						}
+					}
+					this.active = false;
+					my.removeItem(my.animate, this.name);
 					if (this.autoReverse || this.autoReverseAndRun) {
 						this.reverse = (this.reverse) ? false : true;
 					}
@@ -1646,8 +1598,6 @@ Run a tween animation
 **/
 		my.Tween.prototype.run = function() {
 			var test,
-				activeTweens,
-				tw,
 				keys,
 				start,
 				end,
@@ -1668,31 +1618,18 @@ Run a tween animation
 				l,
 				lz;
 			if (!this.active) {
-				activeTweens = [];
 				keys = Object.keys(this.end);
 				this.currentCount = this.currentCount || this.count;
 				this.currentTargets = [];
 				this.initVals = [];
-				for (l = 0, lz = my.animationnames.length; l &lt; lz; l++) {
-					tw = my.animation[my.animationnames[l]];
-					if (tw.type === &#x27;Tween&#x27; &amp;&amp; tw.active &amp;&amp; tw.name !== this.name) {
-						activeTweens.push(tw);
-					}
-				}
 				for (i = 0, iz = this.targets.length; i &lt; iz; i++) {
-					test = true;
-					for (j = 0, jz = activeTweens.length; j &lt; jz; j++) {
-						for (k = 0, kz = activeTweens[j].currentTargets.length; k &lt; kz; k++) {
-							if (this.targets[i].name === activeTweens[j].currentTargets[k].name) {
-								test = false;
-								break;
-							}
-						}
-						if (!test) {
-							break;
+					if (this.lockObjects) {
+						if (!this.targets[i].tweenLock) {
+							this.targets[i].tweenLock = true;
+							this.currentTargets.push(this.targets[i]);
 						}
 					}
-					if (test) {
+					else {
 						this.currentTargets.push(this.targets[i]);
 					}
 				}
@@ -1788,12 +1725,94 @@ Finish running a tween
 		/**
 Stop a tween animation
 @method halt
-@return Always true
+@return this
+@chainable
 **/
 		my.Tween.prototype.halt = function() {
 			this.active = false;
+			this.paused = true;
 			my.removeItem(my.animate, this.name);
-			return true;
+			return this;
+		};
+		/**
+Reset a tween animation to its initial conditions
+@method reset
+@return this
+@chainable
+**/
+		my.Tween.prototype.reset = function() {
+			var t, tz;
+			this.paused = false;
+			this.active = false;
+			this.startTime = Date.now();
+			this.currentTime = this.startTime;
+			for (t = 0, tz = this.currentTargets.length; t &lt; tz; t++) {
+				this.currentTargets[t].set(this.start);
+				this.currentTargets[t].set(this.onCommence);
+			}
+			return this;
+		};
+		/**
+Complete a tween animation to its final conditions
+@method complete
+@return this
+@chainable
+**/
+		my.Tween.prototype.complete = function() {
+			this.active = true;
+			this.paused = false;
+			this.startTime = Date.now() - this.duration;
+			this.currentTime = Date.now();
+			this.fn();
+			this.active = false;
+			return this;
+		};
+		/**
+Seek to a different time in the Tween
+
+@method seekTo
+@param {Number} item - time in ms to move forward or back; negative values move backwards
+@return this
+@chainable
+@private
+**/
+		my.Tween.prototype.seekTo = function(item) {
+			var myActive = this.active,
+				myPaused = this.paused,
+				t, tz;
+			if (item.toFixed) {
+				if (item &gt; 0) {
+					this.currentTime = Date.now();
+					this.startTime = this.currentTime;
+					this.active = true;
+					this.paused = false;
+					this.startTime -= item;
+					this.fn();
+					this.paused = myPaused;
+					this.active = myActive;
+				}
+				else {
+					this.reset();
+				}
+			}
+			return this;
+		};
+		/**
+Start the tween running from the point at which it was halted
+@method resume
+@return this
+@chainable
+**/
+		my.Tween.prototype.resume = function() {
+			var t0 = this.currentTime - this.startTime;
+			if (this.paused) {
+				this.currentTime = Date.now();
+				this.startTime = this.currentTime - t0;
+				my.pushUnique(my.animate, this.name);
+				this.active = true;
+				this.paused = false;
+			}
+			return this;
 		};
 		/**
 Remove this tween from the scrawl library
@@ -1850,11 +1869,16 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 		my.Timeline = function(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.duration = items.duration || 1000;
+			this.duration = my.xtGet(items.duration, 1000);
+			this.effectiveDuration = 0;
 			this.counter = 0;
 			this.startTime = 0;
 			this.currentTime = 0;
 			this.active = false;
+			this.paused = false;
+			this.event = my.xtGet(items.event, 100);
+			this.lastEvent = 0;
+			this.seeking = false;
 			this.actionsList = [];
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
@@ -1878,7 +1902,24 @@ If no duration is set, Timeline will set the last Action&#x27;s time as its dura
 @type Number
 @default 1000
 **/
-			duration: 1000
+			duration: 1000,
+			/**
+Event choke value
+
+A timeline will trigger a __timeupdate__ event on the document object as it runs, with details of the timeline&#x27;s current state including:
+
+* __name__
+* __currentTime__ (milliseconds)
+
+If the event attribute is set to 0, no timeupdate events are fired as the timeline runs. Otherwise, this value represents the frequency at which the event is fired, with a default value of 100 (milliseconds)
+
+Be aware that the timeline may finish before tweens near the end of the timeline complete their action.
+
+@property event
+@type Number
+@default 1000
+**/
+			event: 100
 		};
 		/**
 Sort the actions based on their timeValue values
@@ -1891,7 +1932,38 @@ Sort the actions based on their timeValue values
 			});
 		};
 		/**
-Set the duration - only useful for setting Actions with % time strings;
+Make a new timeupdate customEvent object
+@method makeTimeupdateEvent
+@return customEvent object, or null if browser does not support custom events
+**/
+		my.Timeline.prototype.makeTimeupdateEvent = function() {
+			var e = null;
+			if (window.MSInputMethodContext) {
+				//do IE9-11 stuff
+				e = document.createEvent(&#x27;CustomEvent&#x27;);
+				e.initCustomEvent(&quot;timeline-updated&quot;, true, true, {
+					name: this.name,
+					type: &#x27;Timeline&#x27;,
+					currentTime: this.currentTime - this.startTime
+				});
+			}
+			else {
+				if (window.CustomEvent) {
+					e = new CustomEvent(&#x27;timeline-updated&#x27;, {
+						detail: {
+							name: this.name,
+							type: &#x27;Timeline&#x27;,
+							currentTime: this.currentTime - this.startTime
+						},
+						bubbles: true,
+						cancelable: true
+					});
+				}
+			}
+			return e;
+		};
+		/**
+Set the timeline duration (for actions with % time strings) or event choke value;
 @method set
 @param {Object} [items] Key:value Object argument for setting attributes
 @return this
@@ -1901,14 +1973,11 @@ Set the duration - only useful for setting Actions with % time strings;
 			items = my.safeObject(items);
 			if (my.isa(items.duration, &#x27;num&#x27;)) {
 				this.duration = items.duration;
-				for (i = 0, iz = this.actionsList.length; i &lt; iz; i++) {
-					a = my.animation[this.actionsList[i]];
-					if (a.timeUnit === &#x27;%&#x27;) {
-						a.timeValue = (parseFloat(a.time) / 100) * this.duration;
-					}
-				}
-				this.sortActions();
 			}
+			if (my.isa(items.event, &#x27;num&#x27;)) {
+				this.event = items.event;
+			}
+			this.resolve();
 			return this;
 		};
 		/**
@@ -1918,17 +1987,7 @@ add() and remove() helper function
 @private
 **/
 		my.Timeline.prototype.resolve = function() {
-			var i, iz, temp, a;
-			this.sortActions();
-			temp = this.duration;
-			for (i = this.actionsList.length - 1; i &gt;= 0; i--) {
-				a = my.animation[this.actionsList[i]];
-				if (my.contains([&#x27;s&#x27;, &#x27;ms&#x27;], a.timeUnit)) {
-					this.duration = a.timeValue;
-					break;
-				}
-			}
-			this.duration = (temp &gt; this.duration) ? temp : this.duration;
+			var i, iz, a;
 			for (i = 0, iz = this.actionsList.length; i &lt; iz; i++) {
 				a = my.animation[this.actionsList[i]];
 				if (a.timeUnit === &#x27;%&#x27;) {
@@ -1936,17 +1995,22 @@ add() and remove() helper function
 				}
 			}
 			this.sortActions();
+			this.effectiveDuration = this.getTimelineDuration();
 			return true;
 		};
 		/**
-Add Actions to the timeline - list Actions as one or more arguments to this function
+Add Actions to the timeline - list Actions as one or more arguments to this function; the first argument may be a string, or an array of strings
 @method add
+@param {String} One or more string arguments
 @return this
 @chainable
 **/
 		my.Timeline.prototype.add = function() {
 			var i, iz,
 				slice = Array.prototype.slice.call(arguments);
+			if (my.isa(slice[0], &#x27;arr&#x27;)) {
+				slice = slice[0];
+			}
 			for (i = 0, iz = slice.length; i &lt; iz; i++) {
 				my.pushUnique(this.actionsList, slice[i]);
 			}
@@ -1954,14 +2018,18 @@ Add Actions to the timeline - list Actions as one or more arguments to this func
 			return this;
 		};
 		/**
-Remove Actions from the timeline - list Actions as one or more arguments to this function
+Remove Actions from the timeline - list Actions as one or more arguments to this function; the first argument may be a string, or an array of strings
 @method remove
+@param {String} One or more string arguments
 @return this
 @chainable
 **/
 		my.Timeline.prototype.remove = function() {
 			var i, iz,
 				slice = Array.prototype.slice.call(arguments);
+			if (my.isa(slice[0], &#x27;arr&#x27;)) {
+				slice = slice[0];
+			}
 			for (i = 0, iz = slice.length; i &lt; iz; i++) {
 				my.removeItem(this.actionsList, slice[i]);
 			}
@@ -1975,12 +2043,15 @@ Start the timeline running from the beginning
 @chainable
 **/
 		my.Timeline.prototype.run = function() {
+			var i, iz, a, e;
 			if (!this.active) {
-				this.startTime = Date.now();
-				this.currentTime = this.startTime;
-				this.counter = 0;
+				this.reset();
 				my.pushUnique(my.animate, this.name);
 				this.active = true;
+				if (this.event) {
+					e = this.makeTimeupdateEvent();
+					document.dispatchEvent(e);
+				}
 			}
 			return this;
 		};
@@ -1991,11 +2062,19 @@ Start the timeline running from the point at which it was halted
 @chainable
 **/
 		my.Timeline.prototype.resume = function() {
-			var t0 = this.currentTime - this.startTime;
-			if (!this.active) {
+			var t0 = this.currentTime - this.startTime,
+				i, iz, a;
+			if (this.paused) {
+				for (i = 0, iz = this.actionsList.length; i &lt; iz; i++) {
+					a = my.animation[this.actionsList[i]];
+					if (a.action &amp;&amp; a.action.paused) {
+						a.action.resume();
+					}
+				}
 				this.currentTime = Date.now();
 				this.startTime = this.currentTime - t0;
 				my.pushUnique(my.animate, this.name);
+				this.paused = false;
 				this.active = true;
 			}
 			return this;
@@ -2007,7 +2086,7 @@ Function triggered by the animation loop
 @private
 **/
 		my.Timeline.prototype.fn = function() {
-			var i, iz, a;
+			var i, iz, a, e;
 			this.currentTime = Date.now();
 			if (this.counter &lt; this.actionsList.length) {
 				for (i = this.counter, iz = this.actionsList.length; i &lt; iz; i++) {
@@ -2025,8 +2104,14 @@ Function triggered by the animation loop
 					}
 				}
 			}
-			if (this.counter &gt;= this.actionsList.length) {
-				this.halt();
+			if (this.event &amp;&amp; this.currentTime &gt;= this.lastEvent + this.event) {
+				e = this.makeTimeupdateEvent();
+				document.dispatchEvent(e);
+				this.lastEvent = this.currentTime;
+			}
+			if (this.currentTime &gt;= this.startTime + this.effectiveDuration) {
+				this.active = false;
+				my.removeItem(my.animate, this.name);
 			}
 		};
 		/**
@@ -2036,8 +2121,259 @@ Stop a Timeline; can be resumed using resume() or started again from the beginni
 @chainable
 **/
 		my.Timeline.prototype.halt = function() {
+			var i, iz, a;
 			this.active = false;
+			this.paused = true;
+			for (i = 0, iz = this.actionsList.length; i &lt; iz; i++) {
+				a = my.animation[this.actionsList[i]];
+				if (a.action &amp;&amp; a.action.halt &amp;&amp; a.action.active) {
+					a.action.halt();
+				}
+			}
 			my.removeItem(my.animate, this.name);
+			return this;
+		};
+		/**
+Reset a Timeline animation to its initial conditions
+@method reset
+@return this
+@chainable
+**/
+		my.Timeline.prototype.reset = function() {
+			var i, iz, a;
+			this.active = false;
+			this.paused = false;
+			this.startTime = Date.now();
+			this.currentTime = Date.now();
+			this.lastEvent = Date.now();
+			this.counter = 0;
+			for (i = this.actionsList.length - 1, iz = 0; i &gt;= iz; i--) {
+				a = my.animation[this.actionsList[i]];
+				if (a.action &amp;&amp; a.action.reset) {
+					a.action.reset();
+				}
+				if (a.reset) {
+					a.reset();
+				}
+			}
+			my.removeItem(my.animate, this.name);
+			return this;
+		};
+		/**
+Set the timeline ticker to a new value, and move tweens and action functions to that new time
+@method seekTo
+@param {Number} [item] time in milliseconds; can aslo accept strings eg &#x27;500ms&#x27;, &#x27;1.23s&#x27;
+@return this
+@chainable
+**/
+		my.Timeline.prototype.seekTo = function(item) {
+			var time, msTime, curTime, deltaTime;
+			if (!this.seeking) {
+				if (item &amp;&amp; (item.substring || item.toFixed)) {
+					if (this.active) {
+						my.removeItem(my.animate, this.name);
+					}
+					if (!this.startTime) {
+						this.startTime = this.currentTime = Date.now();
+					}
+					time = my.convertTime(item);
+					if (time) {
+						msTime = time[1];
+						curTime = this.currentTime - this.startTime;
+						deltaTime = msTime - curTime;
+						if (deltaTime) { //no point doing anything if no change is required
+							if (deltaTime &lt; 0) {
+								this.seekBack(deltaTime);
+							}
+							else {
+								this.seekForward(deltaTime);
+							}
+						}
+					}
+					if (this.active) {
+						my.pushUnique(my.animate, this.name);
+					}
+				}
+			}
+			return this;
+		};
+		/**
+@method seekForward
+@param {Number} [item] relative time to move forward, in milliseconds. Must be a positive value!
+@return this
+@chainable
+**/
+		my.Timeline.prototype.seekForward = function(item) {
+			var i, iz, a,
+				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
+			//lock action
+			this.seeking = true;
+			if (!this.active) {
+				this.paused = true;
+			}
+			if (item.toFixed &amp;&amp; item) {
+				if (item) {
+					oldCurrent = this.currentTime;
+					newCurrent = oldCurrent + item;
+					for (i = 0, iz = this.actionsList.length; i &lt; iz; i++) {
+						a = my.animation[this.actionsList[i]];
+						actionTimes = this.getActionTimes(a);
+						actionStart = actionTimes[0] + this.startTime;
+						actionEnd = actionTimes[1] + this.startTime;
+						if (actionStart &amp;&amp; actionEnd) {
+							if (my.isa(a.action, &#x27;fn&#x27;)) {
+								//raw function action wrapper
+								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
+									a.action();
+								}
+							}
+							else {
+								//tween action wrapper
+								if (a.action.type === &#x27;Tween&#x27;) {
+									if (!(actionEnd &lt; oldCurrent || actionStart &gt; newCurrent)) {
+										if (!a.action.active) {
+											a.action.run();
+											a.action.halt();
+										}
+										a.action.seekTo(item - (actionStart - oldCurrent));
+									}
+								}
+								//timeline action wrapper
+								else {
+									if (a.skipSeek) {
+										if (a.complete) {
+											a.complete();
+										}
+									}
+									else {
+										if (!(actionEnd &lt; oldCurrent || actionStart &gt; newCurrent)) {
+											a.action.seekForward(item);
+										}
+									}
+								}
+							}
+						}
+					}
+					this.startTime -= item;
+				}
+			}
+			//unlock action
+			this.seeking = false;
+			return this;
+		};
+		/**
+@method getActionTimes
+@param {Object} [item] - Action object
+@return [Number startTime, Number endTime]
+@private
+**/
+		my.Timeline.prototype.getActionTimes = function(item) {
+			var result = [null, null],
+				actionStart, actionEnd;
+			if (item.action) {
+				actionStart = item.timeValue;
+				if (item.action) {
+					if (item.action.type === &#x27;Tween&#x27;) {
+						result = [actionStart, actionStart + item.action.duration];
+					}
+					else if (item.action.type === &#x27;Timeline&#x27;) {
+						result = [actionStart, this.getTimelineDuration()];
+					}
+					else {
+						result = [actionStart, actionStart];
+					}
+				}
+				else {
+					result = [actionStart, actionStart];
+				}
+			}
+			return result;
+		};
+		/**
+@method getTimelineDuration
+@return Number
+@private
+**/
+		my.Timeline.prototype.getTimelineDuration = function() {
+			var i, iz, a, t,
+				d = 0;
+			for (i = 0, iz = iz = this.actionsList.length; i &lt; iz; i++) {
+				a = my.animation[this.actionsList[i]];
+				if (a.action.type === &#x27;Tween&#x27;) {
+					t = a.timeValue + a.action.duration;
+					d = (t &gt; d) ? t : d;
+				}
+				else if (a.action.type === &#x27;Timeline&#x27;) {
+					t = a.timeValue + a.action.getTimelineDuration();
+					d = (t &gt; d) ? t : d;
+				}
+			}
+			d = (this.duration &gt; d) ? this.duration : d;
+			return d;
+		};
+		/**
+@method seekBack
+@param {Number} [item] relative time to move back, in milliseconds. Must be a negative value!
+@return this
+@chainable
+**/
+		my.Timeline.prototype.seekBack = function(item) {
+			var i, iz, a,
+				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
+			//lock action
+			this.seeking = true;
+			if (!this.active) {
+				this.paused = true;
+			}
+			if (item.toFixed &amp;&amp; item) {
+				oldCurrent = this.currentTime;
+				newCurrent = oldCurrent + item;
+				for (i = this.actionsList.length - 1; i &gt;= 0; i--) {
+					a = my.animation[this.actionsList[i]];
+					actionTimes = this.getActionTimes(a);
+					actionStart = actionTimes[0] + this.startTime;
+					actionEnd = actionTimes[1] + this.startTime;
+					if (actionStart &amp;&amp; actionEnd) {
+						if (my.isa(a.action, &#x27;fn&#x27;)) {
+							//raw function action wrapper
+							if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
+								if (a.rollback) {
+									a.rollback();
+								}
+							}
+						}
+						else {
+							//tween action wrapper
+							if (a.action.type === &#x27;Tween&#x27;) {
+								if (!(actionEnd &lt; newCurrent || actionStart &gt; oldCurrent)) {
+									if (!a.action.active) {
+										a.action.run();
+										a.action.halt();
+									}
+									a.action.seekTo(item - (actionStart - oldCurrent));
+								}
+							}
+							//timeline action wrapper
+							else {
+								if (a.skipSeek) {
+									console.log(a.action.name, &#x27;skipseek&#x27;);
+									if (a.rollback) {
+										a.rollback();
+									}
+								}
+								else {
+									if (!(actionEnd &lt; newCurrent || actionStart &gt; oldCurrent)) {
+										a.action.seekBack(item);
+									}
+								}
+							}
+						}
+					}
+				}
+				this.startTime -= item;
+			}
+			//unlock action
+			this.seeking = false;
 			return this;
 		};
 		/**
@@ -2082,7 +2418,11 @@ Remove this Timeline from the scrawl library
 			items = my.safeObject(items);
 			this.time = items.time || 0;
 			this.convertTime();
-			this.action = items.action || false;
+			this.action = my.xtGet(items.action, false);
+			this.reset = my.xtGet(items.reset, false);
+			this.rollback = my.xtGet(items.rollback, false);
+			this.complete = my.xtGet(items.complete, false);
+			this.skipSeek = my.xtGet(items.skipSeek, false);
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
 			return this;
@@ -2123,11 +2463,48 @@ Keyframe time unit value (calculated)
 			timeUnit: &#x27;ms&#x27;,
 			/**
 Keyframe function to be called
-@property fn
+@property action
 @type Function
 @default false
 **/
-			action: false
+			action: false,
+			/**
+Keyframe function to be called - can be used to set initial conditions for objects in the timeline
+
+Only one action object in a timeline should include a reset function
+
+@property reset
+@type Function
+@default false
+**/
+			reset: false,
+			/**
+Keyframe function to be called - can be used to set final conditions for objects in the timeline
+
+Only one action object in a timeline should include a complete function
+
+@property complete
+@type Function
+@default false
+**/
+			complete: false,
+			/**
+Keyframe function to be called - can be used to reverse the action function
+@property rollback
+@type Function
+@default false
+**/
+			rollback: false,
+			/**
+Seek functionality flag
+
+In normal mode - false, default - a seek action will cascade through nested timelines. To prevent this, set the attribute to true; any action reset (seekBack) and complete (seekForward) functions will still be triggered
+
+@property skipSeek
+@type Boolean
+@default false
+**/
+			skipSeek: false
 		};
 		/**
 Convert a time into its component properties
@@ -2136,24 +2513,14 @@ Convert a time into its component properties
 @private
 **/
 		my.Action.prototype.convertTime = function() {
-			var a;
-			if (this.time.toFixed) {
-				this.timeUnit = &#x27;ms&#x27;;
-				this.timeValue = this.time;
-				return true;
+			var res = my.convertTime(this.time);
+			if (res) {
+				this.timeUnit = res[0] || &#x27;ms&#x27;;
+				this.timeValue = res[1] || 0;
 			}
-			a = this.time.match(/^\d+\.?\d*(\D*)/);
-			if (a[1].toLowerCase)
-				this.timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : &#x27;ms&#x27;;
-			switch (this.timeUnit) {
-				case &#x27;s&#x27;:
-					this.timeValue = parseFloat(this.time) * 1000;
-					break;
-				case &#x27;%&#x27;:
-					this.timeValue = 0;
-					break;
-				default:
-					this.timeValue = parseFloat(this.time);
+			else {
+				this.timeUnit = &#x27;ms&#x27;;
+				this.timeValue = 0;
 			}
 			return true;
 		};
@@ -2163,7 +2530,7 @@ Invoke the associated function
 @return always true
 **/
 		my.Action.prototype.run = function() {
-			var a = [&#x27;Tween&#x27;, &#x27;Animation&#x27;];
+			var a = [&#x27;Tween&#x27;, &#x27;Timeline&#x27;, &#x27;Animation&#x27;];
 			if (my.xt(this.action)) {
 				if (my.contains(a, this.action.type)) {
 					this.action.run();

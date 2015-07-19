@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>PixelateFilter - scrawl-canvas</title>
+    <title>Device - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -246,25 +246,25 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>PixelateFilter Class</h1>
+                        <h1>Device Class</h1>
 <div class="box meta">
     
 
     
         <div class="extends">
-            Extends <a href="../classes/Filter.html" class="crosslink">Filter</a>
+            Extends <a href="../classes/Base.html" class="crosslink">Base</a>
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlFilters.js.html#l1924"><code>source\scrawlFilters.js:1924</code></a>
+            Defined in: <a href="../files/source_scrawlCore.js.html#l2357"><code>source\scrawlCore.js:2357</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/scrawlFilters.html">scrawlFilters</a>
+            Module: <a href="../modules/scrawlCore.html">scrawlCore</a>
         
     
 
@@ -274,18 +274,14 @@
 
 
 <div class="box intro">
-    <h1 id="pixelatefilter">PixelateFilter</h1>
+    <h1 id="device">Device</h1>
 <h2 id="instantiation">Instantiation</h2>
 <ul>
-<li>scrawl.makePixelateFilter()</li>
+<li>This object should never be instantiated by users</li>
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>Adds a pixelate filter effect to an Entity or cell</li>
-</ul>
-<h2 id="access">Access</h2>
-<ul>
-<li>scrawl.filter.FILTERNAME - for the PixelateFilter object</li>
+<li>Wraps the browser&#39;s viewport, and includes basic information about the device</li>
 </ul>
 
 </div>
@@ -293,21 +289,11 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_PixelateFilter" class="method item">
-    <h3 class="name"><code>PixelateFilter</code></h3>
+        <div id="method_Device" class="method item">
+    <h3 class="name"><code>Device</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[items]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -335,7 +321,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1924"><code>source\scrawlFilters.js:1924</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2357"><code>source\scrawlCore.js:2357</code></a>
         
         </p>
 
@@ -349,31 +335,6 @@
         
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[items]</code>
-                        <span class="type">Object</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Key:value Object argument for setting attributes</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -408,8 +369,29 @@
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_add">add</a>
+                            <li class="index-item method private">
+                                <a href="#method_checkCanvas">checkCanvas</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_checkCanvasDashedLine">checkCanvasDashedLine</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_checkCanvasEvenOddWinding">checkCanvasEvenOddWinding</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_checkCanvasGco">checkCanvasGco</a>
 
                                 
                                 
@@ -423,21 +405,56 @@
                             </li>
                         
                             <li class="index-item method inherited">
-                                <a href="#method_cloneImageData">cloneImageData</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
                                 <a href="#method_get">get</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_getAlpha">getAlpha</a>
+                            <li class="index-item method private">
+                                <a href="#method_getDeviceData">getDeviceData</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getImagesDeviceData">getImagesDeviceData</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getStacksDeviceData">getStacksDeviceData</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getViewportDimensions">getViewportDimensions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getViewportPosition">getViewportPosition</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_isLandscape">isLandscape</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_isPortrait">isPortrait</a>
 
                                 
                                 
@@ -474,8 +491,57 @@
 
                     <ul class="index-list properties extends">
                         
-                            <li class="index-item property inherited">
-                                <a href="#property_alpha">alpha</a>
+                            <li class="index-item property">
+                                <a href="#property_canvas">canvas</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_canvasDashedLine">canvasDashedLine</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_canvasEvenOddWinding">canvasEvenOddWinding</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_canvasGcoCopy">canvasGcoCopy</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_canvasGcoDestinationAtop">canvasGcoDestinationAtop</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_canvasGcoDestinationIn">canvasGcoDestinationIn</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_canvasGcoSourceIn">canvasGcoSourceIn</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_canvasGcoSourceOut">canvasGcoSourceOut</a>
 
                                 
                                 
@@ -483,13 +549,6 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_comment">comment</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property inherited">
-                                <a href="#property_composite">composite</a>
 
                                 
                                 
@@ -572,31 +631,19 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
+                    <div id="method_checkCanvas" class="method item private">
+    <h3 class="name"><code>checkCanvas</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>data</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
+        <span class="paren">()</span>
     
 
     
 
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -609,16 +656,16 @@
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/Filter.html#method_add">
-                Filter
-            </a>
             
-            but overwritten in
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1999"><code>source\scrawlFilters.js:1999</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2522"><code>source\scrawlCore.js:2522</code></a>
         
         </p>
 
@@ -629,50 +676,183 @@
     </div>
 
     <div class="description">
-        <p>Add function - takes data, calculates its channels and combines it with data</p>
+        <p>Check if device supports canvas element</p>
 
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">data</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>amended image data object</p>
+</div>
 
                 
-            </div>
-        </div>
+                    <div id="method_checkCanvasDashedLine" class="method item private">
+    <h3 class="name"><code>checkCanvasDashedLine</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2564"><code>source\scrawlCore.js:2564</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check if device supports dashed line functionality</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_checkCanvasEvenOddWinding" class="method item private">
+    <h3 class="name"><code>checkCanvasEvenOddWinding</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2532"><code>source\scrawlCore.js:2532</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check if device supports canvas evenOdd winding</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_checkCanvasGco" class="method item private">
+    <h3 class="name"><code>checkCanvasGco</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2591"><code>source\scrawlCore.js:2591</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check if device supports various global composition operation functionalities</p>
+
+    </div>
+
+    
+
     
 
     
@@ -802,110 +982,6 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_cloneImageData" class="method item inherited">
-    <h3 class="name"><code>cloneImageData</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>original</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_cloneImageData">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l887"><code>source\scrawlFilters.js:887</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>cloneImageData function</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">original</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>cloned image data object; false on error</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_get" class="method item inherited">
     <h3 class="name"><code>get</code></h3>
 
@@ -1022,17 +1098,13 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_getAlpha" class="method item private inherited">
-    <h3 class="name"><code>getAlpha</code></h3>
+                    <div id="method_getDeviceData" class="method item private">
+    <h3 class="name"><code>getDeviceData</code></h3>
 
     
         <span class="paren">()</span>
     
 
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
     
 
     
@@ -1052,12 +1124,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_getAlpha">Filter</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l909"><code>source\scrawlFilters.js:909</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2505"><code>source\scrawlCore.js:2505</code></a>
         
         </p>
 
@@ -1068,24 +1143,354 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>getAlpha function</p>
+        <p>Feature detection</p>
 
     </div>
 
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
 
-            <div class="returns-description">
-                
-                    
-                    <p>numerical strength value, between 0 and 1</p>
+    
+</div>
 
                 
-            </div>
-        </div>
+                    <div id="method_getImagesDeviceData" class="method item private">
+    <h3 class="name"><code>getImagesDeviceData</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2697"><code>source\scrawlCore.js:2697</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Feature detection - hook function</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_getStacksDeviceData" class="method item private">
+    <h3 class="name"><code>getStacksDeviceData</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2691"><code>source\scrawlCore.js:2691</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Feature detection - hook function</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_getViewportDimensions" class="method item private">
+    <h3 class="name"><code>getViewportDimensions</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2661"><code>source\scrawlCore.js:2661</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Determine viewport dimensions</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_getViewportPosition" class="method item private">
+    <h3 class="name"><code>getViewportPosition</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2676"><code>source\scrawlCore.js:2676</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Determine viewport position within the page</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_isLandscape" class="method item private">
+    <h3 class="name"><code>isLandscape</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2703"><code>source\scrawlCore.js:2703</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Determine if viewport is in landscape mode - if width and height arte equal, landscape mode is assumend</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_isPortrait" class="method item private">
+    <h3 class="name"><code>isPortrait</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2711"><code>source\scrawlCore.js:2711</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Determine if viewport is in portrait mode - if width and height arte equal, landscape mode is assumend</p>
+
+    </div>
+
+    
+
     
 
     
@@ -1362,9 +1767,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_alpha" class="property item inherited">
-    <h3 class="name"><code>alpha</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_canvas" class="property item">
+    <h3 class="name"><code>canvas</code></h3>
+    <span class="type">Boolean</span>
 
     
 
@@ -1377,12 +1782,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_alpha">Filter</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l857"><code>source\scrawlFilters.js:857</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2402"><code>source\scrawlCore.js:2402</code></a>
         
         </p>
 
@@ -1392,13 +1800,349 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Filter alpha</p>
-<p>values between 0 (transparent) and 1 (current alpha values); or &#39;0%&#39; and &#39;100%&#39;</p>
+        <p>canvas support</p>
+<p>False if device does not support the canvas element; true otherwise</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> 1</p>
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_canvasDashedLine" class="property item">
+    <h3 class="name"><code>canvasDashedLine</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2465"><code>source\scrawlCore.js:2465</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>canvas dashed line functionality</p>
+<p>False if device does not support the canvas dashed line functionality; true otherwise</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_canvasEvenOddWinding" class="property item">
+    <h3 class="name"><code>canvasEvenOddWinding</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2456"><code>source\scrawlCore.js:2456</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>canvas even-odd winding functionality</p>
+<p>False if device does not support the canvas even-odd winding functionality; true otherwise</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_canvasGcoCopy" class="property item">
+    <h3 class="name"><code>canvasGcoCopy</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2447"><code>source\scrawlCore.js:2447</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>canvas global composite operation support: copy</p>
+<p>False if device incorrectly supports the GCO copy functionality</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_canvasGcoDestinationAtop" class="property item">
+    <h3 class="name"><code>canvasGcoDestinationAtop</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2429"><code>source\scrawlCore.js:2429</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>canvas global composite operation support: destination-atop</p>
+<p>False if device incorrectly supports the GCO destination-atop functionality</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_canvasGcoDestinationIn" class="property item">
+    <h3 class="name"><code>canvasGcoDestinationIn</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2438"><code>source\scrawlCore.js:2438</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>canvas global composite operation support: destination-in</p>
+<p>False if device incorrectly supports the GCO destination-in functionality</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_canvasGcoSourceIn" class="property item">
+    <h3 class="name"><code>canvasGcoSourceIn</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2411"><code>source\scrawlCore.js:2411</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>canvas global composite operation support: source-in</p>
+<p>False if device incorrectly supports the GCO source-in functionality</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_canvasGcoSourceOut" class="property item">
+    <h3 class="name"><code>canvasGcoSourceOut</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2420"><code>source\scrawlCore.js:2420</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>canvas global composite operation support: source-out</p>
+<p>False if device incorrectly supports the GCO source-out functionality</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
     
 
     
@@ -1451,51 +2195,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_composite" class="property item inherited">
-    <h3 class="name"><code>composite</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_composite">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l866"><code>source\scrawlFilters.js:866</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Filter composite operation</p>
-<p>Only the final filter in an array of filters will determine the composite operation to be used on the cell</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> &#x27;source-over&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="property_height" class="property item">
     <h3 class="name"><code>height</code></h3>
     <span class="type">Number</span>
@@ -1519,7 +2218,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1973"><code>source\scrawlFilters.js:1973</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2381"><code>source\scrawlCore.js:2381</code></a>
         
         </p>
 
@@ -1529,12 +2228,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Pixelization height</p>
+        <p>viewport height</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> 5</p>
+        <p><strong>Default:</strong> calculated automatically</p>
     
 
     
@@ -1608,7 +2307,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1981"><code>source\scrawlFilters.js:1981</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2388"><code>source\scrawlCore.js:2388</code></a>
         
         </p>
 
@@ -1618,12 +2317,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Horizontal coordinate from which to begin pexelization</p>
+        <p>viewport offset from the top of the document</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> 0</p>
+        <p><strong>Default:</strong> calculated automatically</p>
     
 
     
@@ -1655,7 +2354,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1989"><code>source\scrawlFilters.js:1989</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2395"><code>source\scrawlCore.js:2395</code></a>
         
         </p>
 
@@ -1665,12 +2364,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Vertical coordinate from which to begin pexelization</p>
+        <p>viewport offset from the left side of the document</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> 0</p>
+        <p><strong>Default:</strong> calculated automatically</p>
     
 
     
@@ -1792,7 +2491,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1956"><code>source\scrawlFilters.js:1956</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2478"><code>source\scrawlCore.js:2478</code></a>
         
         </p>
 
@@ -1806,7 +2505,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;Filter&#x27;</p>
+        <p><strong>Default:</strong> &#x27;Device&#x27;</p>
     
 
     
@@ -1838,7 +2537,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1965"><code>source\scrawlFilters.js:1965</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2374"><code>source\scrawlCore.js:2374</code></a>
         
         </p>
 
@@ -1848,12 +2547,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Pixelization width</p>
+        <p>viewport width</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> 5</p>
+        <p><strong>Default:</strong> calculated automatically</p>
     
 
     
