@@ -64,6 +64,7 @@ var mycode = function() {
 			roll: 0
 		},
 		duration: 3000,
+		lockObjects: true,
 		count: 2,
 		autoReverseAndRun: true
 	}).clone({

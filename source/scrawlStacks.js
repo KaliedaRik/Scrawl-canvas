@@ -1463,7 +1463,6 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				oy = my.device.offsetY - this.displayOffsetY + this.offset.y;
 				dx = (pere2[2]) ? pere2[1].x * this.scale : pere2[1].x;
 				dy = (pere2[3]) ? pere2[1].y * this.scale : pere2[1].y;
-				// console.log(this.name, 'e start', pere2[1].x, pere2[1].y, 'dev offset', my.device.offsetX, my.device.offsetY, 'e offset', this.displayOffsetX, this.displayOffsetY, 'dev-e', ox, oy, 'scaled e start', dx, dy, 'final', ox - dx + 'px', oy - dy + 'px');
 				pere2[0].style.left = ox - dx + 'px';
 				pere2[0].style.top = oy - dy + 'px';
 			}
@@ -1682,6 +1681,9 @@ Calculate the element's display offset values
 				myDisplay;
 			dox = 0;
 			doy = 0;
+			if (this.viewport) {
+				this.setLocalDimensions();
+			}
 			myDisplay = this.getElement();
 			if (myDisplay.offsetParent) {
 				do {
@@ -1767,6 +1769,9 @@ Helper function - set local dimensions (width, height)
 			}
 			else {
 				this.localHeight = parseFloat(this.height) * this.scale;
+			}
+			if (this.viewport) {
+				this.setDimensions();
 			}
 			if (this.type === 'Pad') {
 				this.setCellLocalDimensions();

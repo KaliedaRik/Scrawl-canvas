@@ -41,21 +41,14 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 		/**
 # window.scrawl
 
-scrawlAnimation module adaptions to the Scrawl library object
-
-## New library sections
-
-* scrawl.animation - for Animation and Tween objects
-
-* scrawl.doAnimation - a boolean switch to start/stop the animation loop
-* scrawl.animate - the animation loop function
+scrawlAnimation extension adaptions to the Scrawl library object
 
 ## New default attributes
 
 * Position.delta - default: {x:0,y:0,z:0};
 * Position.deltaPathPlace - default: 0;
 * Position.pathSpeedConstant - default: true;
-* Position.path - default: '';
+* Position.tweenLock - default: false;
 
 * Cell.sourceDelta - default: {x:0, y:0, z:0};
 * Cell.sourceMinWidth - default: 0;
@@ -63,21 +56,14 @@ scrawlAnimation module adaptions to the Scrawl library object
 * Cell.sourceMinHeight - default: 0;
 * Cell.sourceMaxHeight - default: 0;
 
+* PageElement.tweenLock - default: false;
+
 * Design.roll - default: 0;
 * Design.autoUpdate - default: false;
 
 @class window.scrawl_Animation
 **/
 
-		/**
-Starts the animation loop
-@method animationInit
-@private
-**/
-		my.animationInit = function() {
-			my.doAnimation = true;
-			my.animationLoop();
-		};
 		my.d.Position.delta = {
 			x: 0,
 			y: 0,
@@ -85,6 +71,7 @@ Starts the animation loop
 		};
 		my.d.Position.deltaPathPlace = 0;
 		my.d.Position.pathSpeedConstant = true;
+		my.d.Position.tweenLock = false;
 		my.mergeInto(my.d.Cell, my.d.Position);
 		my.mergeInto(my.d.Entity, my.d.Position);
 		if (my.xt(my.d.Block)) {
@@ -105,6 +92,16 @@ Starts the animation loop
 		if (my.xt(my.d.Path)) {
 			my.mergeInto(my.d.Path, my.d.Entity);
 		}
+
+		my.d.PageElement.tweenLock = false;
+		my.mergeInto(my.d.Pad, my.d.PageElement);
+		if (my.xt(my.d.Stack)) {
+			my.mergeInto(my.d.Stack, my.d.PageElement);
+		}
+		if (my.xt(my.d.Element)) {
+			my.mergeInto(my.d.Element, my.d.PageElement);
+		}
+
 		/**
 Convert a time into its component properties
 
@@ -786,14 +783,6 @@ Gradient builder helper function - sorts color attribute Objects by their stop a
 			this.color = color;
 		};
 		/**
-Alias for makeAnimation()
-@method newAnimation
-@deprecated
-**/
-		my.newAnimation = function(items) {
-			return my.makeAnimation(items);
-		};
-		/**
 Alias for makeTween()
 @method newTween
 @deprecated
@@ -816,15 +805,6 @@ Alias for makeAction()
 **/
 		my.newAction = function(items) {
 			return my.makeAction(items);
-		};
-		/**
-A __factory__ function to generate new Animation objects
-@method makeAnimation
-@param {Object} items Key:value Object argument for setting attributes
-@return Animation object
-**/
-		my.makeAnimation = function(items) {
-			return new my.Animation(items);
 		};
 		/**
 A __factory__ function to generate new Tween objects
@@ -852,162 +832,6 @@ A __factory__ function to generate new Action objects
 **/
 		my.makeAction = function(items) {
 			return new my.Action(items);
-		};
-		my.pushUnique(my.sectionlist, 'animation');
-		my.pushUnique(my.nameslist, 'animate');
-		my.pushUnique(my.nameslist, 'animationnames');
-		/**
-Animation flag: set to false to stop animation loop
-@property doAnimation
-@type {Boolean}
-**/
-		my.doAnimation = false;
-		/**
-Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
-@property orderAnimations
-@type {Boolean}
-@default true
-**/
-		my.orderAnimations = true;
-		/**
-The Scrawl animation loop
-
-Animation loop is invoked automatically as part of the initialization process
-
-Scrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the __scrawl.animate__ Array
-
-All animation can be halted by setting the __scrawl.doAnimation__ flag to false
-
-To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnimation_ to true and call __scrawl.animationLoop()
-
-@method animationLoop
-@return Recursively calls itself - never returns
-**/
-		my.animationLoop = function() {
-			var i,
-				iz;
-			if (my.orderAnimations) {
-				my.sortAnimations();
-			}
-			for (i = 0, iz = my.animate.length; i < iz; i++) {
-				if (my.animate[i]) {
-					my.animation[my.animate[i]].fn();
-				}
-			}
-			if (my.doAnimation) {
-				window.requestAnimFrame(function() {
-					my.animationLoop();
-				});
-			}
-		};
-		/**
-Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order
-@method sortAnimations
-@return Nothing
-@private
-**/
-		my.sortAnimations = function() {
-			my.animate.sort(function(a, b) {
-				return my.animation[a].order - my.animation[b].order;
-			});
-		};
-
-		/**
-# Animation
-
-## Instantiation
-
-* scrawl.makeAnimation()
-
-## Purpose
-
-* Defines an animation function to be run by the scrawl.animationLoop() function
-
-## Access
-
-* scrawl.animation.ANIMATIONNAME - for the Animation object
-
-@class Animation
-@constructor
-@extends Base
-@param {Object} [items] Key:value Object argument for setting attributes
-**/
-		my.Animation = function(items) {
-			var delay;
-			my.Base.call(this, items);
-			items = my.safeObject(items);
-			delay = (my.isa(items.delay, 'bool')) ? items.delay : false;
-			this.fn = items.fn || function() {};
-			this.order = items.order || 0;
-			my.animation[this.name] = this;
-			my.pushUnique(my.animationnames, this.name);
-			/**
-Pseudo-attribute used to prevent immediate running of animation when first created
-
-_This attribute is not retained by the Animation object_
-@property delay
-@type Boolean
-@default false
-**/
-			if (!delay) {
-				this.run();
-			}
-			return this;
-		};
-		my.Animation.prototype = Object.create(my.Base.prototype);
-		/**
-@property type
-@type String
-@default 'Animation'
-@final
-**/
-		my.Animation.prototype.type = 'Animation';
-		my.Animation.prototype.classname = 'animationnames';
-		my.d.Animation = {
-			/**
-Anonymous function for an animation routine
-@property fn
-@type Function
-@default function(){}
-**/
-			fn: function() {},
-			/**
-Lower order animations are run during each frame before higher order ones
-@property order
-@type Number
-@default 0
-**/
-			order: 0,
-		};
-		my.mergeInto(my.d.Animation, my.d.Base);
-		/**
-Run an animation
-@method run
-@return Always true
-**/
-		my.Animation.prototype.run = function() {
-			my.pushUnique(my.animate, this.name);
-			return true;
-		};
-		/**
-Stop an animation
-@method halt
-@return Always true
-**/
-		my.Animation.prototype.halt = function() {
-			my.removeItem(my.animate, this.name);
-			return true;
-		};
-		/**
-Remove this Animation from the scrawl library
-@method kill
-@return Always true
-**/
-		my.Animation.prototype.kill = function() {
-			delete my.animation[this.name];
-			my.removeItem(my.animationnames, this.name);
-			my.removeItem(my.animate, this.name);
-			return true;
 		};
 
 		/**
@@ -1089,6 +913,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			this.onCommence = items.onCommence || {};
 			this.onComplete = items.onComplete || {};
 			this.nextTween = items.nextTween || '';
+			this.lockObjects = items.lockObjects || false;
 			this.killOnComplete = items.killOnComplete || false;
 			this.callback = (my.isa(items.callback, 'fn')) ? items.callback : false;
 			this.order = items.order || 0;
@@ -1305,6 +1130,15 @@ Flag - when true, tween will automatically delete itself when it completes
 **/
 			killOnComplete: false,
 			/**
+Flag - when true, tween will automatically lock the objects it is operating on
+
+Locking an object means that other tweens cannot operate on them
+@property lockObjects
+@type Boolean
+@default false
+**/
+			lockObjects: false,
+			/**
 TWEENNAME Sring of the tween to be run when this tween completes
 @property nextTween
 @type String
@@ -1389,7 +1223,11 @@ Tween animation function
 					}
 				}
 				else {
-					//this.halt();
+					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
+						if (my.xt(this.currentTargets[t])) {
+							this.currentTargets[t].tweenLock = false;
+						}
+					}
 					this.active = false;
 					my.removeItem(my.animate, this.name);
 					if (this.autoReverse || this.autoReverseAndRun) {
@@ -1508,8 +1346,6 @@ Run a tween animation
 **/
 		my.Tween.prototype.run = function() {
 			var test,
-				activeTweens,
-				tw,
 				keys,
 				start,
 				end,
@@ -1530,19 +1366,20 @@ Run a tween animation
 				l,
 				lz;
 			if (!this.active) {
-				activeTweens = [];
 				keys = Object.keys(this.end);
 				this.currentCount = this.currentCount || this.count;
 				this.currentTargets = [];
 				this.initVals = [];
-				for (l = 0, lz = my.animationnames.length; l < lz; l++) {
-					tw = my.animation[my.animationnames[l]];
-					if (tw.type === 'Tween' && tw.active && tw.name !== this.name) {
-						activeTweens.push(tw);
-					}
-				}
 				for (i = 0, iz = this.targets.length; i < iz; i++) {
-					this.currentTargets.push(this.targets[i]);
+					if (this.lockObjects) {
+						if (!this.targets[i].tweenLock) {
+							this.targets[i].tweenLock = true;
+							this.currentTargets.push(this.targets[i]);
+						}
+					}
+					else {
+						this.currentTargets.push(this.targets[i]);
+					}
 				}
 				if (this.currentTargets.length > 0) {
 					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {

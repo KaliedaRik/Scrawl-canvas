@@ -46,6 +46,16 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+150719
+	- testing all demos:
+		- Firefox (latest) on Windows 7 			- all PASS
+		- Chrome (latest) on Windows 7 				- 
+		- Opera (latest) on Windows 7 				- 
+		- IE11 (latest) on Windows 7 				- 
+		- IE10 (emulated via IE11) on Windows 7 	- 
+		- IE9 (emulated via IE11) on Windows 7 		- 
+		- Safari(windows) on Windows 7 				- 
+
 July 2015
 	- reviewed and updated functionality for loading video
 	- fixed Chrome collision/hits bug (not recognising evenodd winding) for Path and Shape entitys
@@ -68,6 +78,13 @@ July 2015
 	- stack objects (stack, pad, element) can be positioned and sized relative to the viewport 
 		- replicates css position: fixed
 		- achieved by setting their .viewport attribute to true
+	- moved animation loop back into core
+		- animation extension now handles:
+			- delta animations
+			- cell zoom and parallax effects
+			- timelines, tweens and actions
+		- got rid of the browser change dimensions event listener
+			- now part of a scroll and dimensions animation object
 
 150628
 	- minor release version 4.2.2

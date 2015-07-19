@@ -118,14 +118,14 @@ Array of array object keys used to define the sections of the Scrawl library
 @type {Array}
 @private
 **/
-	my.nameslist = ['objectnames', 'padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'entitynames'];
+	my.nameslist = ['objectnames', 'padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'entitynames', 'animate', 'animationnames'];
 	/**
 Array of objects which define the sections of the Scrawl library
 @property sectionlist
 @type {Array}
 @private
 **/
-	my.sectionlist = ['object', 'pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'entity'];
+	my.sectionlist = ['object', 'pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'entity', 'animation'];
 	/**
 For converting between degrees and radians
 @property radian
@@ -266,40 +266,12 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 	my.init = function() {
 		my.reset();
 		my.device = new my.Device();
-		my.scrollListener = function() {
-			window.requestAnimFrame(function() {
-				my.device.getViewportPosition();
-				my.scrollListener();
-			});
-		};
-		my.scrollListener();
 		my.pageInit();
 		my.setDisplayOffsets('all');
-		my.animationInit();
 		my.physicsInit();
 		my.filtersInit();
-		my.defaultListeners();
+		my.animationInit();
 		return my;
-	};
-	/**
-event listener for browser resize and scroll actions
-@method defaultListeners
-@private
-**/
-	my.defaultListeners = function() {
-		window.removeEventListener('resize', my.resizePageEvent, false);
-		window.addEventListener('resize', my.resizePageEvent, false);
-		// document.removeEventListener('scroll', my.device.getViewportPosition, false);
-		// document.addEventListener('scroll', my.device.getViewportPosition, false);
-	};
-	/**
-function for handling browser resize actions
-@method resizePageEvent
-@private
-**/
-	my.resizePageEvent = function(e) {
-		my.device.getViewportDimensions();
-		my.setDisplayOffsets('all');
 	};
 	/**
 scrawl.init hook function - modified by stacks extension
@@ -311,12 +283,6 @@ scrawl.init hook function - modified by stacks extension
 			my.getCanvases();
 		}
 	};
-	/**
-scrawl.init hook function - modified by animation extension
-@method animationInit
-@private
-**/
-	my.animationInit = function() {};
 	/**
 scrawl.init hook function - modified by physics extension
 @method physicsInit
@@ -2388,19 +2354,6 @@ Restore workspece vector values to their current specified values
 		return true;
 	};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/**
 # Device
 
@@ -2740,9 +2693,7 @@ Feature detection - hook function
 @method getStacksDeviceData
 @private
 **/
-	my.Device.prototype.getStacksDeviceData = function() {
-		console.log('Bad Rik!');
-	};
+	my.Device.prototype.getStacksDeviceData = function() {};
 	/**
 Feature detection - hook function
 @method getImagesDeviceData
@@ -2765,32 +2716,6 @@ Determine if viewport is in portrait mode - if width and height arte equal, land
 	my.Device.prototype.isPortrait = function() {
 		return (this.width < this.height) ? true : false;
 	};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/**
 # Position
@@ -7901,6 +7826,200 @@ End circle radius, in pixels or percentage of entity/cell width
 	my.v = my.makeVector({
 		name: 'scrawl.v'
 	});
+
+	/**
+A __factory__ function to generate new Animation objects
+@method makeAnimation
+@param {Object} items Key:value Object argument for setting attributes
+@return Animation object
+**/
+	my.makeAnimation = function(items) {
+		return new my.Animation(items);
+	};
+	/**
+Alias for makeAnimation()
+@method newAnimation
+@deprecated
+**/
+	my.newAnimation = function(items) {
+		return my.makeAnimation(items);
+	};
+	// my.pushUnique(my.sectionlist, 'animation');
+	// my.pushUnique(my.nameslist, 'animate');
+	// my.pushUnique(my.nameslist, 'animationnames');
+	/**
+Animation flag: set to false to stop animation loop
+@property doAnimation
+@type {Boolean}
+**/
+	my.doAnimation = false;
+	/**
+Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
+@property orderAnimations
+@type {Boolean}
+@default true
+**/
+	my.orderAnimations = true;
+	/**
+The Scrawl animation loop
+
+Animation loop is invoked automatically as part of the initialization process
+
+Scrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the __scrawl.animate__ Array
+
+All animation can be halted by setting the __scrawl.doAnimation__ flag to false
+
+To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnimation_ to true and call __scrawl.animationLoop()
+
+@method animationLoop
+@return Recursively calls itself - never returns
+**/
+	my.animationLoop = function() {
+		var i,
+			iz;
+		if (my.orderAnimations) {
+			my.sortAnimations();
+		}
+		for (i = 0, iz = my.animate.length; i < iz; i++) {
+			if (my.animate[i]) {
+				my.animation[my.animate[i]].fn();
+			}
+		}
+		if (my.doAnimation) {
+			window.requestAnimFrame(function() {
+				my.animationLoop();
+			});
+		}
+	};
+	/**
+Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order
+@method sortAnimations
+@return Nothing
+@private
+**/
+	my.sortAnimations = function() {
+		my.animate.sort(function(a, b) {
+			return my.animation[a].order - my.animation[b].order;
+		});
+	};
+	/**
+Starts the animation loop
+@method animationInit
+@private
+**/
+	my.animationInit = function() {
+		my.makeAnimation({
+			fn: function() {
+				var w = my.device.width,
+					h = my.device.height;
+				my.device.getViewportDimensions();
+				if (w - my.device.width || h - my.device.height) {
+					my.setDisplayOffsets('all');
+				}
+				my.device.getViewportPosition();
+			}
+		});
+		my.doAnimation = true;
+		my.animationLoop();
+	};
+
+	/**
+# Animation
+
+## Instantiation
+
+* scrawl.makeAnimation()
+
+## Purpose
+
+* Defines an animation function to be run by the scrawl.animationLoop() function
+
+## Access
+
+* scrawl.animation.ANIMATIONNAME - for the Animation object
+
+@class Animation
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+	my.Animation = function(items) {
+		var delay;
+		my.Base.call(this, items);
+		items = my.safeObject(items);
+		delay = (my.isa(items.delay, 'bool')) ? items.delay : false;
+		this.fn = items.fn || function() {};
+		this.order = items.order || 0;
+		my.animation[this.name] = this;
+		my.pushUnique(my.animationnames, this.name);
+		/**
+Pseudo-attribute used to prevent immediate running of animation when first created
+
+_This attribute is not retained by the Animation object_
+@property delay
+@type Boolean
+@default false
+**/
+		if (!delay) {
+			this.run();
+		}
+		return this;
+	};
+	my.Animation.prototype = Object.create(my.Base.prototype);
+	/**
+@property type
+@type String
+@default 'Animation'
+@final
+**/
+	my.Animation.prototype.type = 'Animation';
+	my.Animation.prototype.classname = 'animationnames';
+	my.d.Animation = {
+		/**
+Anonymous function for an animation routine
+@property fn
+@type Function
+@default function(){}
+**/
+		fn: function() {},
+		/**
+Lower order animations are run during each frame before higher order ones
+@property order
+@type Number
+@default 0
+**/
+		order: 0,
+	};
+	my.mergeInto(my.d.Animation, my.d.Base);
+	/**
+Run an animation
+@method run
+@return Always true
+**/
+	my.Animation.prototype.run = function() {
+		my.pushUnique(my.animate, this.name);
+		return true;
+	};
+	/**
+Stop an animation
+@method halt
+@return Always true
+**/
+	my.Animation.prototype.halt = function() {
+		my.removeItem(my.animate, this.name);
+		return true;
+	};
+	/**
+Remove this Animation from the scrawl library
+@method kill
+@return Always true
+**/
+	my.Animation.prototype.kill = function() {
+		delete my.animation[this.name];
+		my.removeItem(my.animationnames, this.name);
+		my.removeItem(my.animate, this.name);
+		return true;
+	};
 
 	return my;
 }());
