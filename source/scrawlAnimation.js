@@ -1686,16 +1686,27 @@ Make a new timeupdate customEvent object
 **/
 		my.Timeline.prototype.makeTimeupdateEvent = function() {
 			var e = null;
-			if (window.CustomEvent) {
-				e = new CustomEvent('timeline-updated', {
-					detail: {
-						name: this.name,
-						type: 'Timeline',
-						currentTime: this.currentTime - this.startTime
-					},
-					bubbles: true,
-					cancelable: true
+			if (window.MSInputMethodContext) {
+				//do IE9-11 stuff
+				e = document.createEvent('CustomEvent');
+				e.initCustomEvent("timeline-updated", true, true, {
+					name: this.name,
+					type: 'Timeline',
+					currentTime: this.currentTime - this.startTime
 				});
+			}
+			else {
+				if (window.CustomEvent) {
+					e = new CustomEvent('timeline-updated', {
+						detail: {
+							name: this.name,
+							type: 'Timeline',
+							currentTime: this.currentTime - this.startTime
+						},
+						bubbles: true,
+						cancelable: true
+					});
+				}
 			}
 			return e;
 		};

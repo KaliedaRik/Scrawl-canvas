@@ -38,8 +38,9 @@ Currently known bugs
 - Older browsers with canvas support do not support 'evenodd' winding or dashed strokes
 	- feature detection added to scrawl.device object
 	
-- Sprite ordering
-	- Sprites with the same order value, in the same group, may occasionally flicker when overlapping (Chrome, Opera)
+- Entity ordering
+	- Entitys with the same order value, in the same group, may occasionally flicker when overlapping (Chrome, Opera)
+		- solution: give entitys (and groups) unique order values
 
 - Text along path
 	- The text does not yet take into account any path handle offsets
@@ -48,13 +49,30 @@ CHANGE LOG
 ------------------------------------------------------------------------------------
 150719
 	- testing all demos:
-		- Firefox (latest) on Windows 7 			- all PASS
-		- Chrome (latest) on Windows 7 				- 
-		- Opera (latest) on Windows 7 				- 
-		- IE11 (latest) on Windows 7 				- 
-		- IE10 (emulated via IE11) on Windows 7 	- 
-		- IE9 (emulated via IE11) on Windows 7 		- 
-		- Safari(windows) on Windows 7 				- 
+		- general:
+			- demo110 - reflected bezier curve not creating expected shape (known bug)
+			- demo211 - most browsers do not accurately track mouse position on CSS3 3d transitioned elements
+				- exception is IE11, which works perfectly!
+		beyond the above issues:
+			- Firefox (latest) on Windows 7 			
+				- all PASS
+			- Chrome (latest) on Windows 7 				
+				- demo094 - svg file slow animation (expected) 
+				- all others PASS
+			- IE11 (latest) on Windows 7 				
+				- demo094 - svg file slow animation (expected) 
+				- demo108 - canvas as .ico - known fail
+				- demo112 - video as pattern - known fail
+				- demo113 - timeline event not updating slider until timeline completes
+					- (all works fine the other way round)
+				- demo214 - border and padding discrepancies - known issue
+				- demo216 - works, but not perfect
+				- demo408 - blur filter remains painfully slow
+				- demo410 - matrix filter remains painfully slow
+				- demo413 - sharpen filter remains painfully slow
+				- demo416 - noise filter remains painfully slow
+					- all the above filters are using the 'matrix' algorithm
+				- all others PASS
 
 July 2015
 	- reviewed and updated functionality for loading video
