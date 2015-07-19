@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.2.2 - 28 June 2015
+*	version 4.3.0 - 19 July 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -19,7 +19,7 @@ Scrawl.js is  JavaScript library which adds an API for handling and manipulating
 HTML5 <canvas> elements in the DOM.
 
 The library is extendable - only load the JavaScript that is needed, nothing more. Scrawl core
-is 70kb, much less when gzipped. Extensions can be loaded asynchronously, saving load time.
+is 78kb, much less when gzipped. Extensions can be loaded asynchronously, saving load time.
 
 Scrawl uses the ’2d’ context with each canvas element.
 
@@ -79,26 +79,26 @@ entitys - and vice-versa.
 
 Does not add canvas functionality to those browsers that do not support 
 the HTML5 <canvas> element. Tested in: IE11, and modern versions of 
-Firefox, Chrome, Opera, Safari(Windows).
+Firefox, Chrome, Opera.
 
 http://scrawl.rikweb.org.uk/
 
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 4.2.2 released 28 June 2015
+VERSION 4.3.0 released 19 July 2015
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (72kb)
-		- scrawlAnimation-min.js (22kb)
+		- scrawlCore-min.js (78kb)
+		- scrawlAnimation-min.js (27kb)
 		- scrawlBlock-min.js (4kb)
 		- scrawlCollisions-min.js (12kb)
 		- scrawlColor-min.js (5kb)
 		- scrawlFilters-min.js (26kb)
 		- scrawlImageLoad-min.js (9kb)
-		- scrawlImages-min.js (15kb)
+		- scrawlImages-min.js (39kb)
 		- scrawlPath-min.js (24kb)
 		- scrawlPathFactories-min.js (10kb)
 		- scrawlPhrase-min.js (13kb)
@@ -106,17 +106,17 @@ VERSION 4.2.2 released 28 June 2015
 		- scrawlQuaternion-min.js (6kb)
 		- scrawlSaveLoad-min.js (8kb)
 		- scrawlShape-min.js (9kb)
-		- scrawlStacks-min.js (41kb)
+		- scrawlStacks-min.js (42kb)
 		- scrawlWheel-min.js (6kb)
 
 		Development:
-		- scrawlCore.js (214kb)
-		- scrawlAnimation.js (58kb)
+		- scrawlCore.js (227kb)
+		- scrawlAnimation.js (68kb)
 		- scrawlBlock.js (11kb)
 		- scrawlCollisions.js (27kb)
 		- scrawlColor.js (15kb)
 		- scrawlFilters.js (67kb)
-		- scrawlImages.js (38kb)
+		- scrawlImages.js (63kb)
 		- scrawlImageLoad.js (25kb)
 		- scrawlPath.js (65kb)
 		- scrawlPathFactories.js (25kb)
@@ -125,7 +125,7 @@ VERSION 4.2.2 released 28 June 2015
 		- scrawlQuaternion.js (17kb)
 		- scrawlSaveLoad.js (18kb)
 		- scrawlShape.js (25kb)
-		- scrawlStacks.js (91kb)
+		- scrawlStacks.js (92kb)
 		- scrawlWheel.js (17kb)
 
 		Documentation:
@@ -145,12 +145,18 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 4.3.0 uploaded 19 July 2015
+	- updated video loading functionality
+	- revamped Timeline and Tween functionality
+	- added functionality tests for canvas and video support
+	- added 'viewport' functionality to emulate CSS 'position:fixed' in stacks
+	- various bugfixes 
 Version 4.2.2 uploaded 28 June 2015
 	- minor bugfixes
 Version 4.2.1 uploaded 4 May 2015
 	- nomenclature change: 'module' becomes 'extension'
 	- scrawl.loadModules() deprecated in favour of scrawl.loadExtensions()
-	- monor bugfixes
+	- minor bugfixes
 Version 4.2.0 uploaded 29 March 2015
 	- work to further integrate stacks, canvases, entitys and elements
 		- new elementGroup object

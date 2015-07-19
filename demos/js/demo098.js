@@ -59,6 +59,7 @@ var mycode = function() {
 		},
 		duration: 3000,
 		count: 2,
+		lockObjects: true,
 		autoReverseAndRun: true,
 		onComplete: {
 			startY: 70,

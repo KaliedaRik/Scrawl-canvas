@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.2</em>
+            <em>API Docs for: 4.3.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -64,6 +64,8 @@
                 <li><a href="../classes/Context.html">Context</a></li>
             
                 <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Device.html">Device</a></li>
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
@@ -252,7 +254,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlAnimation.js.html#l47"><code>source\scrawlAnimation.js:47</code></a>
+            Defined in: <a href="../files/source_scrawlAnimation.js.html#l41"><code>source\scrawlAnimation.js:41</code></a>
         </div>
     
 
@@ -269,21 +271,13 @@
 
 <div class="box intro">
     <h1 id="window-scrawl">window.scrawl</h1>
-<p>scrawlAnimation module adaptions to the Scrawl library object</p>
-<h2 id="new-library-sections">New library sections</h2>
-<ul>
-<li><p>scrawl.animation - for Animation and Tween objects</p>
-</li>
-<li><p>scrawl.doAnimation - a boolean switch to start/stop the animation loop</p>
-</li>
-<li>scrawl.animate - the animation loop function</li>
-</ul>
+<p>scrawlAnimation extension adaptions to the Scrawl library object</p>
 <h2 id="new-default-attributes">New default attributes</h2>
 <ul>
 <li>Position.delta - default: {x:0,y:0,z:0};</li>
 <li>Position.deltaPathPlace - default: 0;</li>
 <li>Position.pathSpeedConstant - default: true;</li>
-<li><p>Position.path - default: &#39;&#39;;</p>
+<li><p>Position.tweenLock - default: false;</p>
 </li>
 <li><p>Cell.sourceDelta - default: {x:0, y:0, z:0};</p>
 </li>
@@ -291,6 +285,8 @@
 <li>Cell.sourceMaxWidth - default: 0;</li>
 <li>Cell.sourceMinHeight - default: 0;</li>
 <li><p>Cell.sourceMaxHeight - default: 0;</p>
+</li>
+<li><p>PageElement.tweenLock - default: false;</p>
 </li>
 <li><p>Design.roll - default: 0;</p>
 </li>
@@ -341,20 +337,6 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_animationCellSet">animationCellSet</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_animationInit">animationInit</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_animationLoop">animationLoop</a>
 
                                 
                                 
@@ -417,6 +399,13 @@
                             </li>
                         
                             <li class="index-item method private">
+                                <a href="#method_convertTime">convertTime</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method_Design.sortStops">Design.sortStops</a>
 
                                 
@@ -452,13 +441,6 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_makeAnimation">makeAnimation</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
                                 <a href="#method_makeTimeline">makeTimeline</a>
 
                                 
@@ -474,15 +456,6 @@
                         
                             <li class="index-item method deprecated">
                                 <a href="#method_newAction">newAction</a>
-
-                                
-                                
-                                    <span class="flag deprecated">deprecated</span>
-                                
-                            </li>
-                        
-                            <li class="index-item method deprecated">
-                                <a href="#method_newAnimation">newAnimation</a>
 
                                 
                                 
@@ -543,13 +516,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_sortAnimations">sortAnimations</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -562,20 +528,6 @@
                         
                             <li class="index-item property">
                                 <a href="#property_autoUpdate">autoUpdate</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_doAnimation">doAnimation</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_orderAnimations">orderAnimations</a>
 
                                 
                                 
@@ -636,7 +588,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l348"><code>source\scrawlAnimation.js:348</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l375"><code>source\scrawlAnimation.js:375</code></a>
         
         </p>
 
@@ -693,7 +645,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l332"><code>source\scrawlAnimation.js:332</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l359"><code>source\scrawlAnimation.js:359</code></a>
         
         </p>
 
@@ -751,7 +703,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l365"><code>source\scrawlAnimation.js:365</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l392"><code>source\scrawlAnimation.js:392</code></a>
         
         </p>
 
@@ -768,138 +720,6 @@
 
     
 
-    
-
-    
-</div>
-
-                
-                    <div id="method_animationInit" class="method item private">
-    <h3 class="name"><code>animationInit</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlAnimation.js.html#l78"><code>source\scrawlAnimation.js:78</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Starts the animation loop</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_animationLoop" class="method item">
-    <h3 class="name"><code>animationLoop</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlAnimation.js.html#l842"><code>source\scrawlAnimation.js:842</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The Scrawl animation loop</p>
-<p>Animation loop is invoked automatically as part of the initialization process</p>
-<p>Scrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the <strong>scrawl.animate</strong> Array</p>
-<p>All animation can be halted by setting the <strong>scrawl.doAnimation</strong> flag to false</p>
-<p>To restart animation, either call <strong>scrawl.initialize()</strong>, or set <em>scrawl.doAnimation</em> to true and call __scrawl.animationLoop()</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Recursively calls itself - never returns</p>
-
-                
-            </div>
-        </div>
     
 
     
@@ -940,7 +760,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l187"><code>source\scrawlAnimation.js:187</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l214"><code>source\scrawlAnimation.js:214</code></a>
         
         </p>
 
@@ -997,7 +817,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l134"><code>source\scrawlAnimation.js:134</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l161"><code>source\scrawlAnimation.js:161</code></a>
         
         </p>
 
@@ -1054,7 +874,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l114"><code>source\scrawlAnimation.js:114</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l141"><code>source\scrawlAnimation.js:141</code></a>
         
         </p>
 
@@ -1112,7 +932,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l154"><code>source\scrawlAnimation.js:154</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l181"><code>source\scrawlAnimation.js:181</code></a>
         
         </p>
 
@@ -1183,7 +1003,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l432"><code>source\scrawlAnimation.js:432</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l459"><code>source\scrawlAnimation.js:459</code></a>
         
         </p>
 
@@ -1300,7 +1120,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l554"><code>source\scrawlAnimation.js:554</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l581"><code>source\scrawlAnimation.js:581</code></a>
         
         </p>
 
@@ -1418,7 +1238,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l378"><code>source\scrawlAnimation.js:378</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l405"><code>source\scrawlAnimation.js:405</code></a>
         
         </p>
 
@@ -1535,7 +1355,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l488"><code>source\scrawlAnimation.js:488</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l515"><code>source\scrawlAnimation.js:515</code></a>
         
         </p>
 
@@ -1594,6 +1414,86 @@
 </div>
 
                 
+                    <div id="method_convertTime" class="method item private">
+    <h3 class="name"><code>convertTime</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l105"><code>source\scrawlAnimation.js:105</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Convert a time into its component properties</p>
+<p>Expected values:</p>
+<ul>
+<li>Number - time value in milliseconds</li>
+<li>String number+% - will always return a Number time value of 0</li>
+<li>String number+ms - returns a Number time value in milliseconds</li>
+<li>String number+s - converts and returns a Number time value in milliseconds</li>
+</ul>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>[String timeUnit, Number timeValue]</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_Design.sortStops" class="method item private">
     <h3 class="name"><code>Design.sortStops</code></h3>
 
@@ -1632,7 +1532,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l728"><code>source\scrawlAnimation.js:728</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l755"><code>source\scrawlAnimation.js:755</code></a>
         
         </p>
 
@@ -1721,7 +1621,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l712"><code>source\scrawlAnimation.js:712</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l739"><code>source\scrawlAnimation.js:739</code></a>
         
         </p>
 
@@ -1847,7 +1747,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l678"><code>source\scrawlAnimation.js:678</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l705"><code>source\scrawlAnimation.js:705</code></a>
         
         </p>
 
@@ -1956,7 +1856,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l663"><code>source\scrawlAnimation.js:663</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l690"><code>source\scrawlAnimation.js:690</code></a>
         
         </p>
 
@@ -2065,7 +1965,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l648"><code>source\scrawlAnimation.js:648</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l675"><code>source\scrawlAnimation.js:675</code></a>
         
         </p>
 
@@ -2126,111 +2026,6 @@
 </div>
 
                 
-                    <div id="method_makeAnimation" class="method item">
-    <h3 class="name"><code>makeAnimation</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlAnimation.js.html#l790"><code>source\scrawlAnimation.js:790</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A <strong>factory</strong> function to generate new Animation objects</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Key:value Object argument for setting attributes</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Animation object</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_makeTimeline" class="method item">
     <h3 class="name"><code>makeTimeline</code></h3>
 
@@ -2277,7 +2072,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l808"><code>source\scrawlAnimation.js:808</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l818"><code>source\scrawlAnimation.js:818</code></a>
         
         </p>
 
@@ -2382,7 +2177,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l799"><code>source\scrawlAnimation.js:799</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l809"><code>source\scrawlAnimation.js:809</code></a>
         
         </p>
 
@@ -2475,7 +2270,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l782"><code>source\scrawlAnimation.js:782</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l801"><code>source\scrawlAnimation.js:801</code></a>
         
         </p>
 
@@ -2487,63 +2282,6 @@
 
     <div class="description">
         <p>Alias for makeAction()</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_newAnimation" class="method item deprecated">
-    <h3 class="name"><code>newAnimation</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-        <span class="flag deprecated">deprecated</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlAnimation.js.html#l758"><code>source\scrawlAnimation.js:758</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Alias for makeAnimation()</p>
 
     </div>
 
@@ -2589,7 +2327,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l774"><code>source\scrawlAnimation.js:774</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l793"><code>source\scrawlAnimation.js:793</code></a>
         
         </p>
 
@@ -2646,7 +2384,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l766"><code>source\scrawlAnimation.js:766</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l785"><code>source\scrawlAnimation.js:785</code></a>
         
         </p>
 
@@ -2723,7 +2461,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l278"><code>source\scrawlAnimation.js:278</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l305"><code>source\scrawlAnimation.js:305</code></a>
         
         </p>
 
@@ -2846,7 +2584,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l295"><code>source\scrawlAnimation.js:295</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l322"><code>source\scrawlAnimation.js:322</code></a>
         
         </p>
 
@@ -2954,7 +2692,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l238"><code>source\scrawlAnimation.js:238</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l265"><code>source\scrawlAnimation.js:265</code></a>
         
         </p>
 
@@ -3069,7 +2807,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l200"><code>source\scrawlAnimation.js:200</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l227"><code>source\scrawlAnimation.js:227</code></a>
         
         </p>
 
@@ -3184,7 +2922,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l164"><code>source\scrawlAnimation.js:164</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l191"><code>source\scrawlAnimation.js:191</code></a>
         
         </p>
 
@@ -3245,79 +2983,6 @@
 </div>
 
                 
-                    <div id="method_sortAnimations" class="method item private">
-    <h3 class="name"><code>sortAnimations</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlAnimation.js.html#l873"><code>source\scrawlAnimation.js:873</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Nothing</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
             </div>
         
 
@@ -3349,7 +3014,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l700"><code>source\scrawlAnimation.js:700</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l727"><code>source\scrawlAnimation.js:727</code></a>
         
         </p>
 
@@ -3365,98 +3030,6 @@
 
     
         <p><strong>Default:</strong> false</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_doAnimation" class="property item">
-    <h3 class="name"><code>doAnimation</code></h3>
-    <span class="type">Boolean</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlAnimation.js.html#l829"><code>source\scrawlAnimation.js:829</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Animation flag: set to false to stop animation loop</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_orderAnimations" class="property item">
-    <h3 class="name"><code>orderAnimations</code></h3>
-    <span class="type">Boolean</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlAnimation.js.html#l835"><code>source\scrawlAnimation.js:835</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Animation ordering flag - when set to false, the ordering of animations is skipped; default: true</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> true</p>
     
 
     
@@ -3488,7 +3061,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l693"><code>source\scrawlAnimation.js:693</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l720"><code>source\scrawlAnimation.js:720</code></a>
         
         </p>
 

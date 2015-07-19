@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.2</em>
+            <em>API Docs for: 4.3.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -64,6 +64,8 @@
                 <li><a href="../classes/Context.html">Context</a></li>
             
                 <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Device.html">Device</a></li>
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
@@ -1047,6 +1049,7 @@ _This attribute is not retained by the object_
 Adds a DOM &amp;lt;video&amp;gt; element to the library
 
 * items.element MUST be a reference to the element, and the element MUST be present in the DOM
+* items.readyState is the readystate value (integer between 0 and 4) which must be reached before dimensions are set and any callback function triggered - default: 1 (HAVE_METADATA, loadedmetadata)
 
 @method addVideoByElement
 @param {Object} [items] Key:value Object argument for setting attributes
@@ -1054,7 +1057,9 @@ Adds a DOM &amp;lt;video&amp;gt; element to the library
 @private
 **/
 		my.Video.prototype.addVideoByElement = function(items) {
-			var el = items.element;
+			var el = items.element,
+				listener = [&#x27;loadstart&#x27;, &#x27;loadedmetadata&#x27;, &#x27;loadeddata&#x27;, &#x27;canplay&#x27;, &#x27;canplaythrough&#x27;],
+				readyState = my.xtGet(items.readyState, 1);
 			if (my.xt(el)) {
 				el.id = this.name;
 				this.width = 1;
@@ -1063,14 +1068,19 @@ Adds a DOM &amp;lt;video&amp;gt; element to the library
 				my.asset[this.name] = my.imageFragment.querySelector(&#x27;#&#x27; + this.name);
 				my.pushUnique(my.assetnames, this.name);
 				this.api = my.asset[this.name];
-				if (this.api.readyState &gt; 0) {
+				if (this.api.readyState &gt;= readyState) {
 					this.setIntrinsicDimensions();
+					if (my.isa(items.callback, &#x27;fn&#x27;)) {
+						items.callback();
+					}
 				}
 				else {
-					this.api.addEventListener(&#x27;loadedmetadata&#x27;, this.setIntrinsicDimensions, false);
-				}
-				if (my.isa(items.callback, &#x27;fn&#x27;)) {
-					items.callback();
+					this.api.addEventListener(listener[readyState], function() {
+						this.setIntrinsicDimensions();
+						if (my.isa(items.callback, &#x27;fn&#x27;)) {
+							items.callback();
+						}
+					}, false);
 				}
 				return true;
 			}

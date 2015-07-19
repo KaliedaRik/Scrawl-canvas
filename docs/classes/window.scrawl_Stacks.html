@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.2</em>
+            <em>API Docs for: 4.3.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -64,6 +64,8 @@
                 <li><a href="../classes/Context.html">Context</a></li>
             
                 <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Device.html">Device</a></li>
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
@@ -297,6 +299,7 @@
 <li>PageElement.deltaRotation - default: {n:1,v:{x:0,y:0,z:0}};</li>
 <li>PageElement.rotationTolerance - default: 0.001;</li>
 <li>PageElement.visibility - default: true;</li>
+<li>Device.transform - default: false;</li>
 </ul>
 
 </div>
@@ -385,6 +388,13 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_getStacks">getStacks</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getStacksDeviceData">getStacksDeviceData</a>
 
                                 
                                 
@@ -863,7 +873,21 @@
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_PageElement.viewport">PageElement.viewport</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_PageElement.visibility">PageElement.visibility</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_transform">transform</a>
 
                                 
                                 
@@ -929,7 +953,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l260"><code>source\scrawlStacks.js:260</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l267"><code>source\scrawlStacks.js:267</code></a>
         
         </p>
 
@@ -1064,7 +1088,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1007"><code>source\scrawlStacks.js:1007</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1042"><code>source\scrawlStacks.js:1042</code></a>
         
         </p>
 
@@ -1169,7 +1193,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l332"><code>source\scrawlStacks.js:332</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l339"><code>source\scrawlStacks.js:339</code></a>
         
         </p>
 
@@ -1270,7 +1294,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l433"><code>source\scrawlStacks.js:433</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l440"><code>source\scrawlStacks.js:440</code></a>
         
         </p>
 
@@ -1343,7 +1367,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1730"><code>source\scrawlStacks.js:1730</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1805"><code>source\scrawlStacks.js:1805</code></a>
         
         </p>
 
@@ -1416,7 +1440,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l143"><code>source\scrawlStacks.js:143</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l150"><code>source\scrawlStacks.js:150</code></a>
         
         </p>
 
@@ -1490,7 +1514,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l222"><code>source\scrawlStacks.js:222</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l229"><code>source\scrawlStacks.js:229</code></a>
         
         </p>
 
@@ -1563,7 +1587,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1913"><code>source\scrawlStacks.js:1913</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1988"><code>source\scrawlStacks.js:1988</code></a>
         
         </p>
 
@@ -1640,7 +1664,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l88"><code>source\scrawlStacks.js:88</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l95"><code>source\scrawlStacks.js:95</code></a>
         
         </p>
 
@@ -1669,6 +1693,63 @@
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getStacksDeviceData" class="method item private">
+    <h3 class="name"><code>getStacksDeviceData</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l500"><code>source\scrawlStacks.js:500</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check if device supports CSS3 3d transforms</p>
+
+    </div>
+
+    
+
     
 
     
@@ -1723,7 +1804,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1820"><code>source\scrawlStacks.js:1820</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1895"><code>source\scrawlStacks.js:1895</code></a>
         
         </p>
 
@@ -1830,7 +1911,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1800"><code>source\scrawlStacks.js:1800</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1875"><code>source\scrawlStacks.js:1875</code></a>
         
         </p>
 
@@ -1937,7 +2018,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1780"><code>source\scrawlStacks.js:1780</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1855"><code>source\scrawlStacks.js:1855</code></a>
         
         </p>
 
@@ -2044,7 +2125,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1790"><code>source\scrawlStacks.js:1790</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1865"><code>source\scrawlStacks.js:1865</code></a>
         
         </p>
 
@@ -2151,7 +2232,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1770"><code>source\scrawlStacks.js:1770</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1845"><code>source\scrawlStacks.js:1845</code></a>
         
         </p>
 
@@ -2248,7 +2329,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1844"><code>source\scrawlStacks.js:1844</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1919"><code>source\scrawlStacks.js:1919</code></a>
         
         </p>
 
@@ -2323,7 +2404,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1074"><code>source\scrawlStacks.js:1074</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1109"><code>source\scrawlStacks.js:1109</code></a>
         
         </p>
 
@@ -2404,7 +2485,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l793"><code>source\scrawlStacks.js:793</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l828"><code>source\scrawlStacks.js:828</code></a>
         
         </p>
 
@@ -2500,7 +2581,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1340"><code>source\scrawlStacks.js:1340</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1389"><code>source\scrawlStacks.js:1389</code></a>
         
         </p>
 
@@ -2573,7 +2654,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1299"><code>source\scrawlStacks.js:1299</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1338"><code>source\scrawlStacks.js:1338</code></a>
         
         </p>
 
@@ -2650,7 +2731,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1312"><code>source\scrawlStacks.js:1312</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1351"><code>source\scrawlStacks.js:1351</code></a>
         
         </p>
 
@@ -2726,7 +2807,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1348"><code>source\scrawlStacks.js:1348</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1397"><code>source\scrawlStacks.js:1397</code></a>
         
         </p>
 
@@ -2809,7 +2890,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1288"><code>source\scrawlStacks.js:1288</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1327"><code>source\scrawlStacks.js:1327</code></a>
         
         </p>
 
@@ -2917,7 +2998,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1238"><code>source\scrawlStacks.js:1238</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1275"><code>source\scrawlStacks.js:1275</code></a>
         
         </p>
 
@@ -3032,7 +3113,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l854"><code>source\scrawlStacks.js:854</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l889"><code>source\scrawlStacks.js:889</code></a>
         
         </p>
 
@@ -3140,7 +3221,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1163"><code>source\scrawlStacks.js:1163</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1198"><code>source\scrawlStacks.js:1198</code></a>
         
         </p>
 
@@ -3237,7 +3318,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1609"><code>source\scrawlStacks.js:1609</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1672"><code>source\scrawlStacks.js:1672</code></a>
         
         </p>
 
@@ -3310,7 +3391,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1522"><code>source\scrawlStacks.js:1522</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1585"><code>source\scrawlStacks.js:1585</code></a>
         
         </p>
 
@@ -3383,7 +3464,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1536"><code>source\scrawlStacks.js:1536</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1599"><code>source\scrawlStacks.js:1599</code></a>
         
         </p>
 
@@ -3456,7 +3537,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1547"><code>source\scrawlStacks.js:1547</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1610"><code>source\scrawlStacks.js:1610</code></a>
         
         </p>
 
@@ -3531,7 +3612,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1412"><code>source\scrawlStacks.js:1412</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1475"><code>source\scrawlStacks.js:1475</code></a>
         
         </p>
 
@@ -3606,7 +3687,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1436"><code>source\scrawlStacks.js:1436</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1499"><code>source\scrawlStacks.js:1499</code></a>
         
         </p>
 
@@ -3689,7 +3770,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1115"><code>source\scrawlStacks.js:1115</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1150"><code>source\scrawlStacks.js:1150</code></a>
         
         </p>
 
@@ -3786,7 +3867,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1585"><code>source\scrawlStacks.js:1585</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1648"><code>source\scrawlStacks.js:1648</code></a>
         
         </p>
 
@@ -3869,7 +3950,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1256"><code>source\scrawlStacks.js:1256</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1295"><code>source\scrawlStacks.js:1295</code></a>
         
         </p>
 
@@ -3988,7 +4069,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1220"><code>source\scrawlStacks.js:1220</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1255"><code>source\scrawlStacks.js:1255</code></a>
         
         </p>
 
@@ -4089,7 +4170,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l78"><code>source\scrawlStacks.js:78</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l79"><code>source\scrawlStacks.js:79</code></a>
         
         </p>
 
@@ -4160,7 +4241,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1030"><code>source\scrawlStacks.js:1030</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1065"><code>source\scrawlStacks.js:1065</code></a>
         
         </p>
 
@@ -4267,7 +4348,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l395"><code>source\scrawlStacks.js:395</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l402"><code>source\scrawlStacks.js:402</code></a>
         
         </p>
 
@@ -4364,7 +4445,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l416"><code>source\scrawlStacks.js:416</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l423"><code>source\scrawlStacks.js:423</code></a>
         
         </p>
 
@@ -4437,7 +4518,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1864"><code>source\scrawlStacks.js:1864</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1939"><code>source\scrawlStacks.js:1939</code></a>
         
         </p>
 
@@ -4520,7 +4601,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l973"><code>source\scrawlStacks.js:973</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1008"><code>source\scrawlStacks.js:1008</code></a>
         
         </p>
 
@@ -4627,7 +4708,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1055"><code>source\scrawlStacks.js:1055</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1090"><code>source\scrawlStacks.js:1090</code></a>
         
         </p>
 
@@ -4726,7 +4807,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1706"><code>source\scrawlStacks.js:1706</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1781"><code>source\scrawlStacks.js:1781</code></a>
         
         </p>
 
@@ -4800,7 +4881,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1748"><code>source\scrawlStacks.js:1748</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1823"><code>source\scrawlStacks.js:1823</code></a>
         
         </p>
 
@@ -4883,7 +4964,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l361"><code>source\scrawlStacks.js:361</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l368"><code>source\scrawlStacks.js:368</code></a>
         
         </p>
 
@@ -5002,7 +5083,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l932"><code>source\scrawlStacks.js:932</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l967"><code>source\scrawlStacks.js:967</code></a>
         
         </p>
 
@@ -5101,7 +5182,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1635"><code>source\scrawlStacks.js:1635</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1703"><code>source\scrawlStacks.js:1703</code></a>
         
         </p>
 
@@ -5184,7 +5265,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l917"><code>source\scrawlStacks.js:917</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l952"><code>source\scrawlStacks.js:952</code></a>
         
         </p>
 
@@ -5291,7 +5372,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l958"><code>source\scrawlStacks.js:958</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l993"><code>source\scrawlStacks.js:993</code></a>
         
         </p>
 
@@ -5386,7 +5467,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1892"><code>source\scrawlStacks.js:1892</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1967"><code>source\scrawlStacks.js:1967</code></a>
         
         </p>
 
@@ -5457,7 +5538,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1502"><code>source\scrawlStacks.js:1502</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1565"><code>source\scrawlStacks.js:1565</code></a>
         
         </p>
 
@@ -5540,7 +5621,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l988"><code>source\scrawlStacks.js:988</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1023"><code>source\scrawlStacks.js:1023</code></a>
         
         </p>
 
@@ -5637,7 +5718,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1834"><code>source\scrawlStacks.js:1834</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1909"><code>source\scrawlStacks.js:1909</code></a>
         
         </p>
 
@@ -5706,7 +5787,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l696"><code>source\scrawlStacks.js:696</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l730"><code>source\scrawlStacks.js:730</code></a>
         
         </p>
 
@@ -5775,7 +5856,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l451"><code>source\scrawlStacks.js:451</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l458"><code>source\scrawlStacks.js:458</code></a>
         
         </p>
 
@@ -5872,7 +5953,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l686"><code>source\scrawlStacks.js:686</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l720"><code>source\scrawlStacks.js:720</code></a>
         
         </p>
 
@@ -5920,7 +6001,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l614"><code>source\scrawlStacks.js:614</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l641"><code>source\scrawlStacks.js:641</code></a>
         
         </p>
 
@@ -5967,7 +6048,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l505"><code>source\scrawlStacks.js:505</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l532"><code>source\scrawlStacks.js:532</code></a>
         
         </p>
 
@@ -6017,7 +6098,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l593"><code>source\scrawlStacks.js:593</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l620"><code>source\scrawlStacks.js:620</code></a>
         
         </p>
 
@@ -6064,7 +6145,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l658"><code>source\scrawlStacks.js:658</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l685"><code>source\scrawlStacks.js:685</code></a>
         
         </p>
 
@@ -6111,7 +6192,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l538"><code>source\scrawlStacks.js:538</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l565"><code>source\scrawlStacks.js:565</code></a>
         
         </p>
 
@@ -6155,7 +6236,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l572"><code>source\scrawlStacks.js:572</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l599"><code>source\scrawlStacks.js:599</code></a>
         
         </p>
 
@@ -6202,7 +6283,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l547"><code>source\scrawlStacks.js:547</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l574"><code>source\scrawlStacks.js:574</code></a>
         
         </p>
 
@@ -6253,7 +6334,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l621"><code>source\scrawlStacks.js:621</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l648"><code>source\scrawlStacks.js:648</code></a>
         
         </p>
 
@@ -6301,7 +6382,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l630"><code>source\scrawlStacks.js:630</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l657"><code>source\scrawlStacks.js:657</code></a>
         
         </p>
 
@@ -6348,7 +6429,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l637"><code>source\scrawlStacks.js:637</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l664"><code>source\scrawlStacks.js:664</code></a>
         
         </p>
 
@@ -6395,7 +6476,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l579"><code>source\scrawlStacks.js:579</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l606"><code>source\scrawlStacks.js:606</code></a>
         
         </p>
 
@@ -6442,7 +6523,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l586"><code>source\scrawlStacks.js:586</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l613"><code>source\scrawlStacks.js:613</code></a>
         
         </p>
 
@@ -6489,7 +6570,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l607"><code>source\scrawlStacks.js:607</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l634"><code>source\scrawlStacks.js:634</code></a>
         
         </p>
 
@@ -6536,7 +6617,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l600"><code>source\scrawlStacks.js:600</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l627"><code>source\scrawlStacks.js:627</code></a>
         
         </p>
 
@@ -6583,7 +6664,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l565"><code>source\scrawlStacks.js:565</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l592"><code>source\scrawlStacks.js:592</code></a>
         
         </p>
 
@@ -6630,7 +6711,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l644"><code>source\scrawlStacks.js:644</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l671"><code>source\scrawlStacks.js:671</code></a>
         
         </p>
 
@@ -6677,7 +6758,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l672"><code>source\scrawlStacks.js:672</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l699"><code>source\scrawlStacks.js:699</code></a>
         
         </p>
 
@@ -6724,7 +6805,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l483"><code>source\scrawlStacks.js:483</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l510"><code>source\scrawlStacks.js:510</code></a>
         
         </p>
 
@@ -6780,7 +6861,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l521"><code>source\scrawlStacks.js:521</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l548"><code>source\scrawlStacks.js:548</code></a>
         
         </p>
 
@@ -6800,6 +6881,53 @@
 
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.viewport" class="property item">
+    <h3 class="name"><code>PageElement.viewport</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l713"><code>source\scrawlStacks.js:713</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A flag to determine whether an element uses the browser viewport for its position and dimensions reference</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
     
 
     
@@ -6831,7 +6959,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l679"><code>source\scrawlStacks.js:679</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l706"><code>source\scrawlStacks.js:706</code></a>
         
         </p>
 
@@ -6847,6 +6975,54 @@
 
     
         <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_transform" class="property item">
+    <h3 class="name"><code>transform</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l490"><code>source\scrawlStacks.js:490</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>DOM element css3 3d transform support</p>
+<p>True if the CSS2 3d functionality is supported; false otherwise</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
     
 
     

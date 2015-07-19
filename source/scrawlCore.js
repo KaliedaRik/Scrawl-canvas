@@ -23,7 +23,7 @@
 /**
 # scrawlCore
 
-## Version 4.2.2 - 28 June 2015
+## Version 4.3.0 - 19 July 2015
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -31,7 +31,7 @@ Scrawl demo website: <http://scrawl.rikweb.org.uk>
 
 ## Purpose and features
 
-The core module is the only essential module in Scrawl. It must always be directly, and completely, loaded into the web page before any additional Scrawl modules are added to it. 
+The core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. 
 
 * Defines the Scrawl scope - __window.scrawl__
 
@@ -47,11 +47,11 @@ The core module is the only essential module in Scrawl. It must always be direct
 
 * Defines mouse functionality in relation to &lt;canvas&gt; elements
 
-* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate modules which need to be loaded into the core
+* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core
 
 * Defines Group objects, used to group entitys together for display and interaction purposes
 
-* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate modules
+* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions
 
 ## Loading the module
 
@@ -62,6 +62,12 @@ The core module is the only essential module in Scrawl. It must always be direct
 @module scrawlCore
 **/
 
+window.requestAnimFrame = (function(callback) {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
+
 var scrawl = window.scrawl || (function() {
 	'use strict';
 	var my = {};
@@ -71,7 +77,7 @@ var scrawl = window.scrawl || (function() {
 
 The Scrawl library object. All objects, attributes and functions contained in the library can be accessed by any other JavaScript code running on the web page.
 
-The library will expand and change as additional Scrawl modules load.
+The library will expand and change as Scrawl extensions load.
 
 ## Purpose:
 
@@ -102,24 +108,24 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 4.2.1
+@default 4.3.0
 @final
 **/
-	my.version = '4.2.2';
+	my.version = '4.3.0';
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
 @type {Array}
 @private
 **/
-	my.nameslist = ['objectnames', 'padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'entitynames'];
+	my.nameslist = ['objectnames', 'padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'entitynames', 'animate', 'animationnames'];
 	/**
 Array of objects which define the sections of the Scrawl library
 @property sectionlist
 @type {Array}
 @private
 **/
-	my.sectionlist = ['object', 'pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'entity'];
+	my.sectionlist = ['object', 'pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'entity', 'animation'];
 	/**
 For converting between degrees and radians
 @property radian
@@ -180,7 +186,7 @@ Utility canvas 2d context engine
 **/
 	my.cvx = my.cv.getContext('2d');
 	/**
-Key:value pairs of module alias:filename Strings, used by scrawl.loadModules()
+Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensions()
 @property loadAlias
 @type {Object}
 @private
@@ -220,7 +226,13 @@ Array of loaded extensions arrays (name changed from modules to extensions becau
 **/
 	my.modules = my.extensions;
 	/**
-Key:value pairs of module alias:Array, used by scrawl.loadModules()
+Device object - holds details about the browser environment and viewport
+@property device
+@type {Object}
+**/
+	my.device = null;
+	/**
+Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 @property loadDependencies
 @type {Object}
 @private
@@ -253,53 +265,32 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 **/
 	my.init = function() {
 		my.reset();
+		my.device = new my.Device();
 		my.pageInit();
 		my.setDisplayOffsets('all');
-		my.animationInit();
 		my.physicsInit();
 		my.filtersInit();
-		my.resizePageListener();
+		my.animationInit();
 		return my;
 	};
 	/**
-event listener for browser resize actions
-@method resizePageListener
-@private
-**/
-	my.resizePageListener = function() {
-		window.removeEventListener('resize', my.resizePageEvent, false);
-		window.addEventListener('resize', my.resizePageEvent, false);
-	};
-	/**
-function for handling browser resize actions
-@method resizePageEvent
-@private
-**/
-	my.resizePageEvent = function(e) {
-		my.setDisplayOffsets('all');
-	};
-	/**
-scrawl.init hook function - modified by stacks module
+scrawl.init hook function - modified by stacks extension
 @method pageInit
 @private
 **/
 	my.pageInit = function() {
-		my.getCanvases();
+		if (my.device.canvas) {
+			my.getCanvases();
+		}
 	};
 	/**
-scrawl.init hook function - modified by animation module
-@method animationInit
-@private
-**/
-	my.animationInit = function() {};
-	/**
-scrawl.init hook function - modified by physics module
+scrawl.init hook function - modified by physics extension
 @method physicsInit
 @private
 **/
 	my.physicsInit = function() {};
 	/**
-scrawl.init hook function - modified by filters module
+scrawl.init hook function - modified by filters extension
 @method filtersInit
 @private
 **/
@@ -959,7 +950,7 @@ A __general__ function to reset display offsets for all pads, stacks and element
 
 The argument is an optional String - permitted values include 'stack', 'pad', 'element'; default: 'all'
 
-(This function is replaced by the scrawlStacks module)
+(This function is replaced by the scrawlStacks extension)
 @method setDisplayOffsets
 @param {String} [item] Command string detailing which element types are to be set
 @return The Scrawl library object (scrawl)
@@ -978,7 +969,7 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 	/**
 A __private__ function that searches the DOM for canvas elements and generates Pad/Cell/Context objects for each of them
 
-(This function is replaced by the scrawlStacks module)
+(This function is replaced by the scrawlStacks extension)
 @method getCanvases
 @return True on success; false otherwise
 @private
@@ -1011,7 +1002,7 @@ The argument object should include the following attributes:
 * __parentElement__ - (String) CSS #id of parent element, or the DOM element itself; default: document.body
 * any other legitimate Pad and/or Cell object attribute
 
-(This function is replaced by the scrawlStacks module)
+(This function is replaced by the scrawlStacks extension)
 @method addCanvasToPage
 @param {Object} items Object containing new Cell's parameters
 @return The new Pad object
@@ -1620,7 +1611,7 @@ A __general__ function to delete entity objects
 		return my;
 	};
 	/**
-scrawl.deleteEntity hook function - modified by path module
+scrawl.deleteEntity hook function - modified by path extension
 @method pathDeleteEntity
 @private
 **/
@@ -2304,7 +2295,7 @@ Clone a Scrawl.js object, optionally altering attribute values in the cloned obj
 
 Note that any callback or fn attribute functions will be referenced by the clone, not copied to the clone; these can be overwritten with new anonymous functions by including them in the items argument object
 
-(This function is replaced by the path module)
+(This function is replaced by the path extension)
 
 @method clone
 @param {Object} items Object containing attribute key:value pairs; will overwrite existing values in the cloned, but not the source, Object
@@ -2364,6 +2355,369 @@ Restore workspece vector values to their current specified values
 	};
 
 	/**
+# Device
+
+## Instantiation
+
+* This object should never be instantiated by users
+
+## Purpose
+
+* Wraps the browser's viewport, and includes basic information about the device
+
+@class Device
+@constructor
+@extends Base
+**/
+	my.Device = function() {
+		this.name = 'scrawl_viewport';
+		/**
+viewport width
+@property width
+@type Number
+@default calculated automatically
+**/
+		this.width = null;
+		/**
+viewport height
+@property height
+@type Number
+@default calculated automatically
+**/
+		this.height = null;
+		/**
+viewport offset from the top of the document
+@property offsetX
+@type Number
+@default calculated automatically
+**/
+		this.offsetX = null;
+		/**
+viewport offset from the left side of the document
+@property offsetY
+@type Number
+@default calculated automatically
+**/
+		this.offsetY = null;
+		/**
+canvas support
+
+False if device does not support the canvas element; true otherwise
+@property canvas
+@type Boolean
+@default false
+**/
+		this.canvas = false;
+		/**
+canvas global composite operation support: source-in
+
+False if device incorrectly supports the GCO source-in functionality
+@property canvasGcoSourceIn
+@type Boolean
+@default false
+**/
+		this.canvasGcoSourceIn = false;
+		/**
+canvas global composite operation support: source-out
+
+False if device incorrectly supports the GCO source-out functionality
+@property canvasGcoSourceOut
+@type Boolean
+@default false
+**/
+		this.canvasGcoSourceOut = false;
+		/**
+canvas global composite operation support: destination-atop
+
+False if device incorrectly supports the GCO destination-atop functionality
+@property canvasGcoDestinationAtop
+@type Boolean
+@default false
+**/
+		this.canvasGcoDestinationAtop = false;
+		/**
+canvas global composite operation support: destination-in
+
+False if device incorrectly supports the GCO destination-in functionality
+@property canvasGcoDestinationIn
+@type Boolean
+@default false
+**/
+		this.canvasGcoDestinationIn = false;
+		/**
+canvas global composite operation support: copy
+
+False if device incorrectly supports the GCO copy functionality
+@property canvasGcoCopy
+@type Boolean
+@default false
+**/
+		this.canvasGcoCopy = false;
+		/**
+canvas even-odd winding functionality
+
+False if device does not support the canvas even-odd winding functionality; true otherwise
+@property canvasEvenOddWinding
+@type Boolean
+@default false
+**/
+		this.canvasEvenOddWinding = false;
+		/**
+canvas dashed line functionality
+
+False if device does not support the canvas dashed line functionality; true otherwise
+@property canvasDashedLine
+@type Boolean
+@default false
+**/
+		this.canvasDashedLine = false;
+		this.getDeviceData();
+		return this;
+	};
+	my.Device.prototype = Object.create(my.Base.prototype);
+	/**
+@property type
+@type String
+@default 'Device'
+@final
+**/
+	my.Device.prototype.type = 'Device';
+	my.Device.prototype.classname = 'objectnames';
+	my.d.Device = {
+		width: null,
+		height: null,
+		offsetX: null,
+		offsetY: null,
+		canvas: false,
+		canvasEvenOddWinding: false,
+		canvasDashedLine: false,
+		canvasGcoSourceIn: false,
+		canvasGcoSourceOut: false,
+		canvasGcoDestinationAtop: false,
+		canvasGcoDestinationIn: false,
+		canvasGcoCopy: false,
+		video: false,
+		videoAutoplay: false,
+		videoForceFullScreen: false
+	};
+	my.mergeInto(my.d.Device, my.d.Base);
+
+	/**
+Feature detection
+@method getDeviceData
+@private
+**/
+	my.Device.prototype.getDeviceData = function() {
+		this.checkCanvas();
+		if (this.canvas) {
+			this.checkCanvasEvenOddWinding();
+			this.checkCanvasDashedLine();
+			this.checkCanvasGco();
+		}
+		this.getViewportDimensions();
+		this.getViewportPosition();
+		this.getStacksDeviceData();
+		this.getImagesDeviceData();
+	};
+	/**
+Check if device supports canvas element
+@method checkCanvas
+@private
+**/
+	my.Device.prototype.checkCanvas = function() {
+		var c = document.createElement('canvas'),
+			test = c.getContext('2d');
+		this.canvas = (test) ? true : false;
+	};
+	/**
+Check if device supports canvas evenOdd winding
+@method checkCanvasEvenOddWinding
+@private
+**/
+	my.Device.prototype.checkCanvasEvenOddWinding = function() {
+		var c = document.createElement('canvas'),
+			x = c.getContext('2d'),
+			w = 'evenodd',
+			test;
+		c.width = 10;
+		c.height = 10;
+		x.beginPath();
+		x.moveTo(0, 0);
+		x.lineTo(10, 0);
+		x.lineTo(10, 10);
+		x.lineTo(0, 10);
+		x.lineTo(0, 0);
+		x.moveTo(3, 3);
+		x.lineTo(7, 3);
+		x.lineTo(7, 7);
+		x.lineTo(3, 7);
+		x.lineTo(3, 3);
+		x.moveTo(0, 0);
+		x.closePath();
+		x.mozFillRule = w;
+		x.msFillRule = w;
+		x.fill(w);
+		test = x.getImageData(5, 5, 1, 1);
+		//expecting this pixel to be transparent (0, false)
+		this.canvasEvenOddWinding = (test.data[3]) ? false : true;
+	};
+	/**
+Check if device supports dashed line functionality
+@method checkCanvasDashedLine
+@private
+**/
+	my.Device.prototype.checkCanvasDashedLine = function() {
+		var c = document.createElement('canvas'),
+			x = c.getContext('2d'),
+			d = [5, 5],
+			test;
+		c.width = 10;
+		c.height = 10;
+		x.mozDash = d;
+		x.lineDash = d;
+		try {
+			x.setLineDash(d);
+		}
+		catch (e) {}
+		x.lineWidth = 10;
+		x.beginPath();
+		x.moveTo(0, 5);
+		x.lineTo(10, 5);
+		x.stroke();
+		test = x.getImageData(8, 5, 1, 1);
+		//expecting this pixel to be transparent (0, false)
+		this.canvasDashedLine = (test.data[3]) ? false : true;
+	};
+	/**
+Check if device supports various global composition operation functionalities
+@method checkCanvasGco
+@private
+**/
+	my.Device.prototype.checkCanvasGco = function() {
+		var c = document.createElement('canvas'),
+			x = c.getContext('2d'),
+			test;
+		c.width = 10;
+		c.height = 10;
+
+		// canvasGcoSourceIn
+		x.fillStyle = 'red';
+		x.fillRect(3, 0, 4, 10);
+		x.globalCompositeOperation = 'source-in';
+		x.fillStyle = 'blue';
+		x.fillRect(0, 3, 10, 4);
+		test = x.getImageData(5, 1, 1, 1);
+		//expecting this pixel to be transparent (0, false)
+		this.canvasGcoSourceIn = (test.data[3]) ? false : true;
+		x.globalCompositeOperation = 'source-over';
+		x.clearRect(0, 0, 10, 10);
+
+		// canvasGcoSourceOut
+		x.fillStyle = 'red';
+		x.fillRect(3, 0, 4, 10);
+		x.globalCompositeOperation = 'source-out';
+		x.fillStyle = 'blue';
+		x.fillRect(0, 3, 10, 4);
+		test = x.getImageData(5, 1, 1, 1);
+		//expecting this pixel to be transparent (0, false)
+		this.canvasGcoSourceOut = (test.data[3]) ? false : true;
+		x.globalCompositeOperation = 'source-over';
+		x.clearRect(0, 0, 10, 10);
+
+		// canvasGcoDestinationAtop
+		x.fillStyle = 'red';
+		x.fillRect(3, 0, 4, 10);
+		x.globalCompositeOperation = 'destination-atop';
+		x.fillStyle = 'blue';
+		x.fillRect(0, 3, 10, 4);
+		test = x.getImageData(5, 1, 1, 1);
+		//expecting this pixel to be transparent (0, false)
+		this.canvasGcoDestinationAtop = (test.data[3]) ? false : true;
+		x.globalCompositeOperation = 'source-over';
+		x.clearRect(0, 0, 10, 10);
+
+		// canvasGcoDestinationIn
+		x.fillStyle = 'red';
+		x.fillRect(3, 0, 4, 10);
+		x.globalCompositeOperation = 'destination-in';
+		x.fillStyle = 'blue';
+		x.fillRect(0, 3, 10, 4);
+		test = x.getImageData(5, 1, 1, 1);
+		//expecting this pixel to be transparent (0, false)
+		this.canvasGcoDestinationIn = (test.data[3]) ? false : true;
+		x.globalCompositeOperation = 'source-over';
+		x.clearRect(0, 0, 10, 10);
+
+		// canvasGcoCopy
+		x.fillStyle = 'red';
+		x.fillRect(3, 0, 4, 10);
+		x.globalCompositeOperation = 'copy';
+		x.fillStyle = 'blue';
+		x.fillRect(0, 3, 10, 4);
+		test = x.getImageData(5, 1, 1, 1);
+		//expecting this pixel to be transparent (0, false)
+		this.canvasGcoCopy = (test.data[3]) ? false : true;
+	};
+	/**
+Determine viewport dimensions
+@method getViewportDimensions
+@private
+**/
+	my.Device.prototype.getViewportDimensions = function(e) {
+		if (e) {
+			my.device.width = document.documentElement.clientWidth - 1;
+			my.device.height = document.documentElement.clientHeight - 1;
+			return true;
+		}
+		this.width = document.documentElement.clientWidth - 1;
+		this.height = document.documentElement.clientHeight - 1;
+		return false;
+	};
+	/**
+Determine viewport position within the page
+@method getViewportPosition
+@private
+**/
+	my.Device.prototype.getViewportPosition = function(e) {
+		if (e) {
+			my.device.offsetX = my.xtGet(e.pageX, e.target.offsetX, 0);
+			my.device.offsetY = my.xtGet(e.pageY, e.target.offsetY, 0);
+			return true;
+		}
+		this.offsetX = document.documentElement.scrollLeft || window.pageXOffset;
+		this.offsetY = document.documentElement.scrollTop || window.pageYOffset;
+		return false;
+	};
+	/**
+Feature detection - hook function
+@method getStacksDeviceData
+@private
+**/
+	my.Device.prototype.getStacksDeviceData = function() {};
+	/**
+Feature detection - hook function
+@method getImagesDeviceData
+@private
+**/
+	my.Device.prototype.getImagesDeviceData = function() {};
+	/**
+Determine if viewport is in landscape mode - if width and height arte equal, landscape mode is assumend
+@method isLandscape
+@private
+**/
+	my.Device.prototype.isLandscape = function() {
+		return (this.width < this.height) ? false : true;
+	};
+	/**
+Determine if viewport is in portrait mode - if width and height arte equal, landscape mode is assumend
+@method isPortrait
+@private
+**/
+	my.Device.prototype.isPortrait = function() {
+		return (this.width < this.height) ? true : false;
+	};
+
+	/**
 # Position
 
 ## Instantiation
@@ -2376,7 +2730,7 @@ Restore workspece vector values to their current specified values
 * start coordinates are relative to the top left corner of the object's Cell
 * handle coordinates are relative to the object's start coordinate
 
-Certain Scrawl modules will add functionality to this object, for instance scrawlAnimation adds delta attributes which can be used to automatically update the position of a Scrawl entity.
+Certain Scrawl extensions will add functionality to this object, for instance scrawlAnimation adds delta attributes which can be used to automatically update the position of a Scrawl entity.
 @class Position
 @constructor
 @extends Base
@@ -2541,28 +2895,28 @@ Entity, cell or element height (in pixels)
 **/
 		height: 0
 		/**
-(Added by the path module)
+(Added by the path extension)
 The SPRITENAME of a Shape entity whose path is used to calculate this object's start point
 @property path
 @type String
 @default ''
 **/
 		/**
-(Added by the path module)
+(Added by the path extension)
 A value between 0 and 1 to represent the distance along a Shape object's path, where 0 is the path start and 1 is the path end
 @property pathPlace
 @type Number
 @default 0
 **/
 		/**
-(Added by the path module)
+(Added by the path extension)
 A change value which can be applied to the object's pathPlace attribute
 @property deltaPathPlace
 @type Number
 @default 0
 **/
 		/**
-(Added by the path module)
+(Added by the path extension)
 A flag to determine whether the object will calculate its position along a Shape path in a regular (true), or simple (false), manner
 @property pathSpeedConstant
 @type Boolean
@@ -2571,13 +2925,13 @@ A flag to determine whether the object will calculate its position along a Shape
 	};
 	my.mergeInto(my.d.Position, my.d.Base);
 	/**
-Position constructor hook function - modified by animation module
+Position constructor hook function - modified by animation extension
 @method animationPositionInit
 @private
 **/
 	my.Position.prototype.animationPositionInit = function(items) {};
 	/**
-Position constructor hook function - modified by path module
+Position constructor hook function - modified by path extension
 @method pathPositionInit
 @private
 **/
@@ -2607,7 +2961,7 @@ For 'start' and 'handle', returns a copy of the Vector
 		return (this.animationPositionGet(item) || my.Base.prototype.get.call(this, item));
 	};
 	/**
-Position.get hook function - modified by animation module
+Position.get hook function - modified by animation extension
 @method animationPositionGet
 @private
 **/
@@ -2670,7 +3024,7 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 		return this;
 	};
 	/**
-Position.set hook function - modified by animation module
+Position.set hook function - modified by animation extension
 @method animationPositionSet
 @private
 **/
@@ -2751,7 +3105,7 @@ Adds the value of each attribute supplied in the argument to existing values. Th
 		return this;
 	};
 	/**
-Position.setDelta hook function - modified by path module
+Position.setDelta hook function - modified by path extension
 @method pathPositionSetDelta
 @private
 **/
@@ -2785,7 +3139,7 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 		return clone;
 	};
 	/**
-Position.setDelta hook function - modified by animation module
+Position.setDelta hook function - modified by animation extension
 @method animationPositionClone
 @private
 **/
@@ -2985,7 +3339,7 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 		return false;
 	};
 	/**
-Stamp helper hook function - amended by stacks module
+Stamp helper hook function - amended by stacks extension
 
 @method setStampUsingStacksPivot
 @return this
@@ -3074,7 +3428,7 @@ Stamp helper function - convert string start.y values to numerical values
 
 * supplies DOM elements with basic dimensional, positional and scaling attributes, and methods for manipulating them
 
-The core implementation of this object is a stub that supplies Pad objects with basic mouse position support. The stacks module will substantially modify it to provide CSS3 3d positioning and animation functionality for Stack, Element and Pad objects. 
+The core implementation of this object is a stub that supplies Pad objects with basic mouse position support. The stacks extension will substantially modify it to provide CSS3 3d positioning and animation functionality for Stack, Element and Pad objects. 
 
 @class PageElement
 @constructor
@@ -3179,7 +3533,7 @@ Element CSS position styling attribute
 	};
 	my.mergeInto(my.d.PageElement, my.d.Base);
 	/**
-PageElement constructor hook function - modified by stacks module
+PageElement constructor hook function - modified by stacks extension
 @method stacksPageElementConstructor
 @private
 **/
@@ -3187,7 +3541,7 @@ PageElement constructor hook function - modified by stacks module
 	/**
 Augments Base.get() to retrieve DOM element width and height values
 
-(The stack module replaces this core function rather than augmenting it via a hook function)
+(The stack extension replaces this core function rather than augmenting it via a hook function)
 
 @method get
 @param {String} get Attribute key
@@ -3211,7 +3565,7 @@ Augments Base.get() to retrieve DOM element width and height values
 	/**
 Augments Base.set() to allow the setting of DOM element dimension values
 
-(The stack module replaces this core function rather than augmenting it via a hook function)
+(The stack extension replaces this core function rather than augmenting it via a hook function)
 
 @method set
 @param {Object} items Object consisting of key:value attributes
@@ -3575,7 +3929,7 @@ mousemove event listener function
 		return wrapper;
 	};
 	/**
-mouseTilt hook function - amended by scrawlStacks module
+mouseTilt hook function - amended by scrawlStacks extension
 @method handleMouseTilt
 @param {Object} e window.event
 @return This
@@ -3770,13 +4124,13 @@ Retrieve Pad's visible &lt;canvas&gt; element object
 		return my.canvas[this.display];
 	};
 	/**
-Pad constructor hook function - modified by filters module
+Pad constructor hook function - modified by filters extension
 @method filtersPadInit
 @private
 **/
 	my.Pad.prototype.filtersPadInit = function(items) {};
 	/**
-Pad constructor hook function - modified by stacks module
+Pad constructor hook function - modified by stacks extension
 @method stacksPadInit
 @private
 **/
@@ -3820,14 +4174,14 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 		return this;
 	};
 	/**
-Pad constructor hook function - amended by Stacks module
+Pad constructor hook function - amended by Stacks extension
 @method padStacksConstructor
 @return Nothing
 @private
 **/
 	my.Pad.prototype.padStacksConstructor = function() {};
 	/**
-Pad set hook function - amended by Stacks module
+Pad set hook function - amended by Stacks extension
 @method padStacksSet
 @return Nothing
 @private
@@ -3885,7 +4239,7 @@ By default:
 * the initial base canvas has a compileOrder of 9999 and compiles last
 * the initial display canvas has compiled = false and will not compile
 
-(This function is replaced by the Filters module)
+(This function is replaced by the Filters extension)
 
 @method compile
 @return This
@@ -3913,7 +4267,7 @@ By default, the initial base and display canvases have shown = false:
 * 'show' involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
 * the last action is to copy the base cell onto the display cell
 
-(This function is replaced by the Filters module)
+(This function is replaced by the Filters extension)
 
 @method show
 @return This
@@ -4423,19 +4777,19 @@ Cell constructor hook function - core module
 		});
 	};
 	/**
-Cell constructor hook function - modified by collisions module
+Cell constructor hook function - modified by collisions extension
 @method collisionsCellInit
 @private
 **/
 	my.Cell.prototype.collisionsCellInit = function(items) {};
 	/**
-Cell constructor hook function - modified by filters module
+Cell constructor hook function - modified by filters extension
 @method filtersCellInit
 @private
 **/
 	my.Cell.prototype.filtersCellInit = function(items) {};
 	/**
-Cell constructor hook function - modified by animation module
+Cell constructor hook function - modified by animation extension
 @method animationCellInit
 @private
 **/
@@ -4481,7 +4835,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 		return (this.animationCellGet(item) || my.Position.prototype.get.call(this, item));
 	};
 	/**
-Cell.get hook function - modified by animation module
+Cell.get hook function - modified by animation extension
 @method animationCellGet
 @private
 **/
@@ -4685,7 +5039,7 @@ Augments Cell.set()
 		return this;
 	};
 	/**
-Cell.set hook function - modified by animation module
+Cell.set hook function - modified by animation extension
 @method animationCellSet
 @private
 **/
@@ -5105,7 +5459,7 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 	/**
 Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
 
-(This function is replaced by the Filters module)
+(This function is replaced by the Filters extension)
 @method compile
 @return This
 @chainable
@@ -5173,7 +5527,7 @@ Cell copy helper function
 		return this;
 	};
 	/**
-Cell.prepareToCopyCell hook function - modified by path module
+Cell.prepareToCopyCell hook function - modified by path extension
 @method pathPrepareToCopyCell
 @private
 **/
@@ -5862,7 +6216,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 
 * associates entity objects with a cell object, for stamping/compiling the &lt;canvas&gt; scene
 * groups Entity objects for specific purposes
-* (with collisions module) plays a key role in collision detection between Entitys
+* (with collisions extension) plays a key role in collision detection between Entitys
 
 ## Access
 
@@ -5999,7 +6353,7 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 	/**
 Group constructor hook helper function
 
-(Replaced by Filters module)
+(Replaced by Filters extension)
 @method filtersGroupInit
 @private
 **/
@@ -6007,7 +6361,7 @@ Group constructor hook helper function
 	/**
 Group stamp helper function
 
-(Replaced by Filters module)
+(Replaced by Filters extension)
 @method stampFilter
 @private
 **/
@@ -6248,15 +6602,15 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 * Describes how entitys should be stamped onto a Cell's canvas
 * Provides drag-and-drop functionality
 
-__Scrawl core does not include any entity type constructors.__ Each entity type used on a web page canvas needs to be added to the core by loading its associated module:
+__Scrawl core does not include any entity type constructors.__ Each entity type used on a web page canvas needs to be added to the core by loading its associated extension:
 
-* __Block__ entitys are defined in the _scrawlBlock_ module (alias: block)
-* __Wheel__ entitys are defined in the _scrawlWheel_ module (alias: wheel)
-* __Phrase__ entitys are defined in the _scrawlPhrase_ module (alias: phrase)
-* __Picture__ entitys are defined as part of the _scrawlImages_ module (alias: images)
-* __Path__ entitys are defined in the _scrawlPath_ module (alias: path)
-* __Shape__ entitys are defined in the _scrawlShape_ module (alias: shape)
-* additional factory functions for defining common Path and Shape objects (lines, curves, ovals, triangles, stars, etc) are supplied by the _scrawlPathFactories_ module (alias: factories)
+* __Block__ entitys are defined in the _scrawlBlock_ extension (alias: block)
+* __Wheel__ entitys are defined in the _scrawlWheel_ extension (alias: wheel)
+* __Phrase__ entitys are defined in the _scrawlPhrase_ extension (alias: phrase)
+* __Picture__ entitys are defined as part of the _scrawlImages_ extension (alias: images)
+* __Path__ entitys are defined in the _scrawlPath_ extension (alias: path)
+* __Shape__ entitys are defined in the _scrawlShape_ extension (alias: shape)
+* additional factory functions for defining common Path and Shape objects (lines, curves, ovals, triangles, stars, etc) are supplied by the _scrawlPathFactories_ extension (alias: factories)
 
 @class Entity
 @constructor
@@ -6372,13 +6726,13 @@ Entity radius, in pixels - not supported by all entity objects
 	};
 	my.mergeInto(my.d.Entity, my.d.Position);
 	/**
-Entity constructor hook function - modified by filters module
+Entity constructor hook function - modified by filters extension
 @method filtersEntityInit
 @private
 **/
 	my.Entity.prototype.filtersEntityInit = function(items) {};
 	/**
-Entity constructor hook function - modified by collisions module
+Entity constructor hook function - modified by collisions extension
 @method collisionsEntityConstructor
 @private
 **/
@@ -6398,7 +6752,7 @@ Constructor helper function - register entity object in the scrawl library
 		return this;
 	};
 	/**
-Entity.registerInLibrary hook function - modified by collisions module
+Entity.registerInLibrary hook function - modified by collisions extension
 @method collisionsEntityRegisterInLibrary
 @private
 **/
@@ -6450,7 +6804,7 @@ Allows users to:
 		return this;
 	};
 	/**
-Entity.set hook function - modified by collisions module
+Entity.set hook function - modified by collisions extension
 @method collisionsEntitySet
 @private
 **/
@@ -6486,7 +6840,7 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 		return this;
 	};
 	/**
-Entity.setDelta hook function - modified by collisions module
+Entity.setDelta hook function - modified by collisions extension
 @method collisionsEntitySetDelta
 @private
 **/
@@ -6625,13 +6979,13 @@ Permitted methods include:
 		return this;
 	};
 	/**
-Entity.stamp hook function - modified by path module
+Entity.stamp hook function - modified by path extension
 @method pathStamp
 @private
 **/
 	my.Entity.prototype.pathStamp = function() {};
 	/**
-Entity.stamp hook function - modified by filters module
+Entity.stamp hook function - modified by filters extension
 @method stampFilter
 @private
 **/
@@ -7152,7 +7506,7 @@ Add values to Number attributes
 	/**
 Creates the gradient
 
-_This function is replaced by the animation module_
+_This function is replaced by the animation extension_
 @method update
 @param {String} [entity] SPRITENAME String
 @param {String} [cell] CELLNAME String
@@ -7472,6 +7826,200 @@ End circle radius, in pixels or percentage of entity/cell width
 	my.v = my.makeVector({
 		name: 'scrawl.v'
 	});
+
+	/**
+A __factory__ function to generate new Animation objects
+@method makeAnimation
+@param {Object} items Key:value Object argument for setting attributes
+@return Animation object
+**/
+	my.makeAnimation = function(items) {
+		return new my.Animation(items);
+	};
+	/**
+Alias for makeAnimation()
+@method newAnimation
+@deprecated
+**/
+	my.newAnimation = function(items) {
+		return my.makeAnimation(items);
+	};
+	// my.pushUnique(my.sectionlist, 'animation');
+	// my.pushUnique(my.nameslist, 'animate');
+	// my.pushUnique(my.nameslist, 'animationnames');
+	/**
+Animation flag: set to false to stop animation loop
+@property doAnimation
+@type {Boolean}
+**/
+	my.doAnimation = false;
+	/**
+Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
+@property orderAnimations
+@type {Boolean}
+@default true
+**/
+	my.orderAnimations = true;
+	/**
+The Scrawl animation loop
+
+Animation loop is invoked automatically as part of the initialization process
+
+Scrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the __scrawl.animate__ Array
+
+All animation can be halted by setting the __scrawl.doAnimation__ flag to false
+
+To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnimation_ to true and call __scrawl.animationLoop()
+
+@method animationLoop
+@return Recursively calls itself - never returns
+**/
+	my.animationLoop = function() {
+		var i,
+			iz;
+		if (my.orderAnimations) {
+			my.sortAnimations();
+		}
+		for (i = 0, iz = my.animate.length; i < iz; i++) {
+			if (my.animate[i]) {
+				my.animation[my.animate[i]].fn();
+			}
+		}
+		if (my.doAnimation) {
+			window.requestAnimFrame(function() {
+				my.animationLoop();
+			});
+		}
+	};
+	/**
+Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order
+@method sortAnimations
+@return Nothing
+@private
+**/
+	my.sortAnimations = function() {
+		my.animate.sort(function(a, b) {
+			return my.animation[a].order - my.animation[b].order;
+		});
+	};
+	/**
+Starts the animation loop
+@method animationInit
+@private
+**/
+	my.animationInit = function() {
+		my.makeAnimation({
+			fn: function() {
+				var w = my.device.width,
+					h = my.device.height;
+				my.device.getViewportDimensions();
+				if (w - my.device.width || h - my.device.height) {
+					my.setDisplayOffsets('all');
+				}
+				my.device.getViewportPosition();
+			}
+		});
+		my.doAnimation = true;
+		my.animationLoop();
+	};
+
+	/**
+# Animation
+
+## Instantiation
+
+* scrawl.makeAnimation()
+
+## Purpose
+
+* Defines an animation function to be run by the scrawl.animationLoop() function
+
+## Access
+
+* scrawl.animation.ANIMATIONNAME - for the Animation object
+
+@class Animation
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+	my.Animation = function(items) {
+		var delay;
+		my.Base.call(this, items);
+		items = my.safeObject(items);
+		delay = (my.isa(items.delay, 'bool')) ? items.delay : false;
+		this.fn = items.fn || function() {};
+		this.order = items.order || 0;
+		my.animation[this.name] = this;
+		my.pushUnique(my.animationnames, this.name);
+		/**
+Pseudo-attribute used to prevent immediate running of animation when first created
+
+_This attribute is not retained by the Animation object_
+@property delay
+@type Boolean
+@default false
+**/
+		if (!delay) {
+			this.run();
+		}
+		return this;
+	};
+	my.Animation.prototype = Object.create(my.Base.prototype);
+	/**
+@property type
+@type String
+@default 'Animation'
+@final
+**/
+	my.Animation.prototype.type = 'Animation';
+	my.Animation.prototype.classname = 'animationnames';
+	my.d.Animation = {
+		/**
+Anonymous function for an animation routine
+@property fn
+@type Function
+@default function(){}
+**/
+		fn: function() {},
+		/**
+Lower order animations are run during each frame before higher order ones
+@property order
+@type Number
+@default 0
+**/
+		order: 0,
+	};
+	my.mergeInto(my.d.Animation, my.d.Base);
+	/**
+Run an animation
+@method run
+@return Always true
+**/
+	my.Animation.prototype.run = function() {
+		my.pushUnique(my.animate, this.name);
+		return true;
+	};
+	/**
+Stop an animation
+@method halt
+@return Always true
+**/
+	my.Animation.prototype.halt = function() {
+		my.removeItem(my.animate, this.name);
+		return true;
+	};
+	/**
+Remove this Animation from the scrawl library
+@method kill
+@return Always true
+**/
+	my.Animation.prototype.kill = function() {
+		delete my.animation[this.name];
+		my.removeItem(my.animationnames, this.name);
+		my.removeItem(my.animate, this.name);
+		return true;
+	};
 
 	return my;
 }());

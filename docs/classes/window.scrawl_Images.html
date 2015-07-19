@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.2</em>
+            <em>API Docs for: 4.3.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -64,6 +64,8 @@
                 <li><a href="../classes/Context.html">Context</a></li>
             
                 <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Device.html">Device</a></li>
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
@@ -333,6 +335,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_getImagesDeviceData">getImagesDeviceData</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_getVideoById">getVideoById</a>
 
@@ -463,6 +472,34 @@
                                 
                             </li>
                         
+                            <li class="index-item property">
+                                <a href="#property_video">video</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_videoAsCanvasSource">videoAsCanvasSource</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_videoAutoplay">videoAutoplay</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_videoForceFullScreen">videoForceFullScreen</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -515,7 +552,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l191"><code>source\scrawlImages.js:191</code></a>
+        <a href="../files/source_scrawlImages.js.html#l324"><code>source\scrawlImages.js:324</code></a>
         
         </p>
 
@@ -596,7 +633,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l93"><code>source\scrawlImages.js:93</code></a>
+        <a href="../files/source_scrawlImages.js.html#l226"><code>source\scrawlImages.js:226</code></a>
         
         </p>
 
@@ -920,6 +957,63 @@
 </div>
 
                 
+                    <div id="method_getImagesDeviceData" class="method item private">
+    <h3 class="name"><code>getImagesDeviceData</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImages.js.html#l130"><code>source\scrawlImages.js:130</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check if device supports various video functionalities</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_getVideoById" class="method item">
     <h3 class="name"><code>getVideoById</code></h3>
 
@@ -1155,7 +1249,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l120"><code>source\scrawlImages.js:120</code></a>
+        <a href="../files/source_scrawlImages.js.html#l253"><code>source\scrawlImages.js:253</code></a>
         
         </p>
 
@@ -2026,7 +2120,7 @@
             
         
         
-        <a href="../files/source_scrawlImages.js.html#l150"><code>source\scrawlImages.js:150</code></a>
+        <a href="../files/source_scrawlImages.js.html#l283"><code>source\scrawlImages.js:283</code></a>
         
         </p>
 
@@ -2208,6 +2302,198 @@
 
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_video" class="property item">
+    <h3 class="name"><code>video</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImages.js.html#l93"><code>source\scrawlImages.js:93</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>video support</p>
+<p>False if device does not support the video element; true otherwise</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_videoAsCanvasSource" class="property item">
+    <h3 class="name"><code>videoAsCanvasSource</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImages.js.html#l120"><code>source\scrawlImages.js:120</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>video as canvas source</p>
+<p>False if device does not permit video elements to be used as sources for canvas draw functions</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_videoAutoplay" class="property item">
+    <h3 class="name"><code>videoAutoplay</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImages.js.html#l102"><code>source\scrawlImages.js:102</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>video autoplay support</p>
+<p>False if device does not support video autoplay element; true otherwise</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_videoForceFullScreen" class="property item">
+    <h3 class="name"><code>videoForceFullScreen</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlImages.js.html#l111"><code>source\scrawlImages.js:111</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>video fullscreen restraint</p>
+<p>False if device does not force videos to play in fullscreen mode; true otherwise</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
     
 
     

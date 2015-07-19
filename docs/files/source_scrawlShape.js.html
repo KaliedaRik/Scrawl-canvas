@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.2.2</em>
+            <em>API Docs for: 4.3.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -64,6 +64,8 @@
                 <li><a href="../classes/Context.html">Context</a></li>
             
                 <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Device.html">Device</a></li>
             
                 <li><a href="../classes/Element.html">Element</a></li>
             
@@ -825,7 +827,7 @@ Stamp helper function - perform a &#x27;clip&#x27; method draw
 		my.Shape.prototype.clip = function(ctx, cell) {
 			ctx.save();
 			this.doOutline(ctx, cell);
-			ctx.clip();
+			ctx.clip(my.ctx[this.context].get(&#x27;winding&#x27;));
 			return this;
 		};
 		/**
@@ -993,7 +995,7 @@ Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of v
 			my.cvx.msFillRule = winding;
 			this.completeOutline(my.cvx, my.group[this.group].cell);
 			for (i = 0, iz = tests.length; i &lt; iz; i += 2) {
-				result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
+				result = my.cvx.isPointInPath(tests[i], tests[i + 1], my.ctx[this.context].get(&#x27;winding&#x27;));
 				if (result) {
 					items.x = tests[i];
 					items.y = tests[i + 1];

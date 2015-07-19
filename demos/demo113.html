@@ -5,6 +5,14 @@
   <title>Demo 113</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
+  <style type="text/css">
+    .slideContainer {
+      width: 100%;
+    }
+    #seeker {
+      width: 50%;
+    }
+  </style>
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
@@ -12,7 +20,7 @@
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 113</h1>
   <h2>Timelines and Actions</h2>
-  <h3>Extensions: phrase, animation</h3>
+  <h3>Extensions: phrase, animation, color, block</h3>
 
   <div>
     <button name="button" onclick="scrawl.animation.myTimeline.run();">Run</button>
@@ -32,6 +40,11 @@
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
   <p id="testmessage"></p>
+
+  <div class="slideContainer">Seek to:
+    <input id="seeker" type="range" value="0" min="0" max="5000" step="10" />
+    <span id="slideValue">0</span>ms
+  </div>
 
   <!-- test details block -->
   <div id="testdetails">

@@ -915,7 +915,7 @@ Stamp helper function - perform a 'clip' method draw
 		my.Path.prototype.clip = function(ctx, cell) {
 			if (this.closed) {
 				this.prepareShape(ctx, cell);
-				ctx.clip();
+				ctx.clip(my.ctx[this.context].get('winding'));
 			}
 			return this;
 		};
@@ -1306,7 +1306,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 				my.link[my.point[this.firstPoint].startLink].sketch(my.cvx);
 			}
 			for (i = 0, iz = tests.length; i < iz; i += 2) {
-				result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
+				result = my.cvx.isPointInPath(tests[i], tests[i + 1], my.ctx[this.context].get('winding'));
 				if (result) {
 					break;
 				}

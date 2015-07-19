@@ -46,9 +46,37 @@
     <li>Video won't display in Safari(Windows) browser</li>
   </ul>
 
-  <canvas id="mycanvas" width="1000" height="500"></canvas>
+  <canvas id="mycanvas" width="640" height="360"></canvas>
 
   <p id="testmessage"></p>
+
+  <table>
+    <tr class="t1">
+      <td class="rowlabel">Filter</td>
+      <td>
+        <select id="filter">
+          <option value="myGreyscale">Greyscale</option>
+          <option value="myInvert">Invert</option>
+          <option value="myBrightness">Brightness</option>
+          <option value="mySaturation">Saturation</option>
+          <option value="myThreshold">Threshold</option>
+          <option value="myChannels">Channels</option>
+          <option value="myChannelStep">ChannelStep</option>
+          <option value="myTint">Tint</option>
+          <option value="mySepia">Sepia</option>
+          <option value="myMatrix">Matrix</option>
+          <option value="mySharpen">Sharpen</option>
+          <option value="myPixelate">Pixelate</option>
+          <option value="myBlur">Blur</option>
+          <option value="myLeach">Leach</option>
+          <option value="mySeparate">Separate</option>
+          <option value="myNoise">Noise</option>
+        </select>
+      </td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
 
   <video id="myvideo" crossorigin="anonymous">
     <source src="img/video/typist.webm" type="video/webm" />

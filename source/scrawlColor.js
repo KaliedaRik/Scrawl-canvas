@@ -274,7 +274,7 @@ Augments Base.get()
 **/
 		my.Color.prototype.get = function(item) {
 			if (!my.xt(item)) {
-				return 'rgba(' + (this.r || 0) + ', ' + (this.g || 0) + ', ' + (this.b || 0) + ', ' + (this.a || 1) + ')';
+				return 'rgba(' + (this.r || 0) + ', ' + (this.g || 0) + ', ' + (this.b || 0) + ', ' + my.xtGet(this.a, 1) + ')';
 			}
 			else if (item === 'random') {
 				this.generateRandomColor();
@@ -368,6 +368,12 @@ Checks that color channel values are of the permitted form (integer vs float) an
 		};
 		/**
 Augments Base.set()
+
+In addition to setting any native color object attribute, the .set() function also accepts the following keys:
+
+* __random__ (boolean) - when set to true, a random color (within minimum and maximum bounds) will be generated
+* __color__ (string) - any legitimate CSS color string (including color names as defined in the SVGTiny standard)
+
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -379,7 +385,12 @@ Augments Base.set()
 			if (items.random) {
 				this.generateRandomColor(items);
 			}
-			this.checkValues();
+			else if (items.color) {
+				this.convert(items.color);
+			}
+			else {
+				this.checkValues();
+			}
 			return this;
 		};
 		/**

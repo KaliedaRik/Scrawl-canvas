@@ -71,6 +71,7 @@ scrawlStacks module adaptions to the Scrawl library object
 * PageElement.deltaRotation - default: {n:1,v:{x:0,y:0,z:0}};
 * PageElement.rotationTolerance - default: 0.001;
 * PageElement.visibility - default: true;
+* Device.transform - default: false;
 
 @class window.scrawl_Stacks
 **/
@@ -81,9 +82,15 @@ scrawl.init hook function - modified by stacks module
 @private
 **/
 		my.pageInit = function() {
+			//if (my.device.transform) {
 			my.getStacks();
-			my.getCanvases();
+			//}
+			if (my.device.canvas) {
+				my.getCanvases();
+			}
+			//if (my.device.transform) {
 			my.getElements();
+			//}
 		};
 		/**
 A __private__ function that searches the DOM for elements with class="scrawlstack"; generates Stack objects
@@ -481,6 +488,26 @@ Argument can contain the following (optional) attributes:
 		};
 
 		/**
+DOM element css3 3d transform support
+
+True if the CSS2 3d functionality is supported; false otherwise
+@property transform
+@type Boolean
+@default false
+**/
+		my.d.Device.transform = false;
+
+		/**
+Check if device supports CSS3 3d transforms
+@method getStacksDeviceData
+@private
+**/
+		my.Device.prototype.getStacksDeviceData = function() {
+			var c = document.createElement('div');
+			this.transform = my.xto(c.style.webkitPerspectiveOrigin, c.style.mozPerspectiveOrigin, c.style.msPerspectiveOrigin, c.style.perspectiveOrigin);
+		};
+
+		/**
 The coordinate Vector representing the object's rotation/flip point
 
 PageElement, and all Objects that prototype chain to PageElement, supports the following 'virtual' attributes for this attribute:
@@ -684,6 +711,13 @@ A flag to determine whether an element displays itself
 **/
 		my.d.PageElement.visibility = true;
 		/**
+A flag to determine whether an element uses the browser viewport for its position and dimensions reference
+@property PageElement.viewport
+@type Boolean
+@default false
+**/
+		my.d.PageElement.viewport = false;
+		/**
 Index of mouse vector to use when pivot === 'mouse'
 
 The Pad/Stack/Element.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
@@ -758,6 +792,7 @@ PageElement constructor hook function - modified by stacks module
 			this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
 			this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
 			this.scale = my.xtGet(items.scale, 1);
+			this.viewport = my.xtGet(items.viewport, false);
 			this.visibility = my.xtGet(items.visibility, my.d[this.type].visibility);
 			this.rotation = my.makeQuaternion({
 				name: this.type + '.' + this.name + '.rotation'
@@ -1231,8 +1266,10 @@ Permitted argument values include
 @chainable
 **/
 		my.PageElement.prototype.updateStart = function(item) {
-			my.Position.prototype.updateStart.call(this, item);
-			this.setDisplayOffsets();
+			if (this.delta.x || this.delta.y || this.deltaPathPlace) {
+				my.Position.prototype.updateStart.call(this, item);
+				this.setDisplayOffsets();
+			}
 			return this;
 		};
 		/**
@@ -1250,7 +1287,9 @@ Permitted argument values include
 **/
 		my.PageElement.prototype.revertStart = function(item) {
 			my.Position.prototype.revertStart.call(this, item);
-			this.setDisplayOffsets();
+			if (this.delta.x || this.delta.y || this.deltaPathPlace) {
+				this.setDisplayOffsets();
+			}
 			return this;
 		};
 		/**
@@ -1319,14 +1358,20 @@ Calculates the pixels value of the object's start attribute
 @private
 **/
 		my.PageElement.prototype.getStartValues = function() {
-			var result,
+			var resvec,
+				result,
 				height,
 				width,
+				s,
 				stackname,
 				stack;
 			result = my.v.set(this.start);
 			stackname = my.group[this.group].stack;
-			if (stackname) {
+			if (this.viewport) {
+				height = my.device.height;
+				width = my.device.width;
+			}
+			else if (stackname) {
 				stack = my.stack[stackname];
 				height = stack.localHeight / this.scale;
 				width = stack.localWidth / this.scale;
@@ -1335,7 +1380,11 @@ Calculates the pixels value of the object's start attribute
 				height = this.localHeight / this.scale;
 				width = this.localWidth / this.scale;
 			}
-			return my.Position.prototype.calculatePOV.call(this, result, width, height, false);
+			resvec = my.Position.prototype.calculatePOV.call(this, result, width, height, false);
+			if (this.viewport) {
+				resvec.reverse();
+			}
+			return resvec;
 		};
 		/**
 Calculates the pixels value of the object's handle attribute
@@ -1355,7 +1404,11 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 			var pere = [0, 0, 0, 0, 0, 0, 0],
 				pere2 = [0, 0, 0, 0, 0],
 				g,
-				i;
+				i,
+				ox,
+				oy,
+				dx,
+				dy;
 			g = my.group[this.group];
 			pere2[0] = this.getElement();
 			if (!this.offset.flag) {
@@ -1405,8 +1458,18 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 
 			pere2[0].style.zIndex = pere[2];
 
-			pere2[0].style.left = (pere2[2]) ? ((pere2[1].x * this.scale) + this.offset.x) + 'px' : (pere2[1].x + this.offset.x) + 'px';
-			pere2[0].style.top = (pere2[3]) ? ((pere2[1].y * this.scale) + this.offset.y) + 'px' : (pere2[1].y + this.offset.y) + 'px';
+			if (this.viewport) {
+				ox = my.device.offsetX - this.displayOffsetX + this.offset.x;
+				oy = my.device.offsetY - this.displayOffsetY + this.offset.y;
+				dx = (pere2[2]) ? pere2[1].x * this.scale : pere2[1].x;
+				dy = (pere2[3]) ? pere2[1].y * this.scale : pere2[1].y;
+				pere2[0].style.left = ox - dx + 'px';
+				pere2[0].style.top = oy - dy + 'px';
+			}
+			else {
+				pere2[0].style.left = (pere2[2]) ? ((pere2[1].x * this.scale) + this.offset.x) + 'px' : (pere2[1].x + this.offset.x) + 'px';
+				pere2[0].style.top = (pere2[3]) ? ((pere2[1].y * this.scale) + this.offset.y) + 'px' : (pere2[1].y + this.offset.y) + 'px';
+			}
 			return this;
 		};
 		/**
@@ -1618,11 +1681,16 @@ Calculate the element's display offset values
 				myDisplay;
 			dox = 0;
 			doy = 0;
+			if (this.viewport) {
+				this.setLocalDimensions();
+			}
 			myDisplay = this.getElement();
 			if (myDisplay.offsetParent) {
 				do {
-					dox += myDisplay.offsetLeft;
-					doy += myDisplay.offsetTop;
+					if (!this.viewport || this.name != myDisplay.id) {
+						dox += myDisplay.offsetLeft;
+						doy += myDisplay.offsetTop;
+					}
 					myDisplay = myDisplay.offsetParent;
 				} while (myDisplay.offsetParent);
 			}
@@ -1650,7 +1718,11 @@ Helper function - set local dimensions (width, height)
 				unit,
 				s;
 			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
-			if (parent) {
+			if (this.viewport) {
+				w = my.device.width;
+				h = my.device.height;
+			}
+			else if (parent) {
 				w = parent.localWidth;
 				h = parent.localHeight;
 			}
@@ -1665,7 +1737,7 @@ Helper function - set local dimensions (width, height)
 					this.localWidth = parseFloat(s.getPropertyValue('width'));
 				}
 			}
-			else if (parent && my.isa(this.width, 'str') && w) {
+			else if ((this.viewport || parent) && my.isa(this.width, 'str') && w) {
 				measure = this.width.match(/^-?\d+\.?\d*(\D*)/);
 				unit = measure[1];
 				if (unit === '%') {
@@ -1685,7 +1757,7 @@ Helper function - set local dimensions (width, height)
 					this.localHeight = parseFloat(s.getPropertyValue('height'));
 				}
 			}
-			else if (parent && my.isa(this.height, 'str') && h) {
+			else if ((this.viewport || parent) && my.isa(this.height, 'str') && h) {
 				measure = this.height.match(/^-?\d+\.?\d*(\D*)/);
 				unit = measure[1];
 				if (unit === '%') {
@@ -1697,6 +1769,9 @@ Helper function - set local dimensions (width, height)
 			}
 			else {
 				this.localHeight = parseFloat(this.height) * this.scale;
+			}
+			if (this.viewport) {
+				this.setDimensions();
 			}
 			if (this.type === 'Pad') {
 				this.setCellLocalDimensions();
@@ -1874,12 +1949,12 @@ Pad lockTo helper
 			if (my.xt(this.cells)) {
 				for (i = 0, iz = this.cells.length; i < iz; i++) {
 					cell = my.cell[this.cells[i]];
-					// if (this.lockTo && cell.name === this.base) {
-					// 	cell.set({
-					// 		width: this.localWidth,
-					// 		height: this.localHeight
-					// 	});
-					// }
+					if (this.lockTo && cell.name === this.base) {
+						cell.set({
+							width: this.localWidth,
+							height: this.localHeight
+						});
+					}
 					if (cell.name === this.display) {
 						cell.set({
 							width: this.localWidth,
