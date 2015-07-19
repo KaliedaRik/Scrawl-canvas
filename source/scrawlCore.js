@@ -23,7 +23,7 @@
 /**
 # scrawlCore
 
-## Version 4.2.2 - 28 June 2015
+## Version 4.3.0 - 19 July 2015
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -108,10 +108,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 4.2.1
+@default 4.3.0
 @final
 **/
-	my.version = '4.2.2';
+	my.version = '4.3.0';
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist

@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.2.2 - 28 June 2015
+*	version 4.3.0 - 19 July 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -10,7 +10,7 @@
 
 Currently working on ...
 ------------------------------------------------------------------------------------
-- bugtracking following release of v4.2.2
+- bugtracking following release of v4.3.0
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
@@ -73,6 +73,7 @@ CHANGE LOG
 				- demo416 - noise filter remains painfully slow
 					- all the above filters are using the 'matrix' algorithm
 				- all others PASS
+	- move to version 4.3.0
 
 July 2015
 	- reviewed and updated functionality for loading video
