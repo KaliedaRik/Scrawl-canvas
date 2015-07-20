@@ -1457,6 +1457,7 @@ Finish running a tween
 					}
 				}
 			}
+			this.currentTargets = [];
 			if (this.nextTween) {
 				if (my.xt(my.animation[this.nextTween])) {
 					my.animation[this.nextTween].run();
