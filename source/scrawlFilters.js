@@ -57,6 +57,15 @@ Utility canvases - never displayed
 		my.filterCanvas = document.createElement('canvas');
 		my.filterCanvas.id = 'filterHiddenCanvasElement';
 		my.f.appendChild(my.filterCanvas);
+		my.perspectiveOriginCanvas = document.createElement('canvas');
+		my.perspectiveOriginCanvas.id = 'perspectiveOriginHiddenCanvasElement';
+		my.f.appendChild(my.perspectiveOriginCanvas);
+		my.perspectiveSourceCanvas = document.createElement('canvas');
+		my.perspectiveSourceCanvas.id = 'perspectiveSourceHiddenCanvasElement';
+		my.f.appendChild(my.perspectiveSourceCanvas);
+		my.perspectiveEaselCanvas = document.createElement('canvas');
+		my.perspectiveEaselCanvas.id = 'perspectiveEaselHiddenCanvasElement';
+		my.f.appendChild(my.perspectiveEaselCanvas);
 		/**
 Utility canvas 2d context engine
 @property filterCvx
@@ -64,6 +73,9 @@ Utility canvas 2d context engine
 @private
 **/
 		my.filterCvx = my.filterCanvas.getContext('2d');
+		my.perspectiveOriginCvx = my.perspectiveOriginCanvas.getContext('2d');
+		my.perspectiveSourceCvx = my.perspectiveSourceCanvas.getContext('2d');
+		my.perspectiveEaselCvx = my.perspectiveEaselCanvas.getContext('2d');
 		/**
 Array of FILTERNAME strings, for filters to be applied to the Pad
 @property filters
@@ -316,6 +328,14 @@ Alias for makeNoiseFilter()
 			return my.makeNoiseFilter(items);
 		};
 		/**
+Alias for makePerspectiveCorners()
+@method newPerspectiveCorners
+@deprecated
+**/
+		my.newPerspectiveCorners = function(items) {
+			return my.makePerspectiveCorners(items);
+		};
+		/**
 A __factory__ function to generate new Greyscale filter objects
 @method makeGreyscaleFilter
 @param {Object} items Key:value Object argument for setting attributes
@@ -468,6 +488,15 @@ A __factory__ function to generate new Noise filter objects
 **/
 		my.makeNoiseFilter = function(items) {
 			return new my.NoiseFilter(items);
+		};
+		/**
+A __factory__ function to generate new Perspective (by corners) filter objects
+@method makePerspectiveCornersFilter
+@param {Object} items Key:value Object argument for setting attributes
+@return PerspectiveCornersFilter object
+**/
+		my.makePerspectiveCornersFilter = function(items) {
+			return new my.PerspectiveCornersFilter(items);
 		};
 
 		/**
@@ -2705,6 +2734,546 @@ Add function - takes data, calculates its channels and combines it with data
 				}
 			}
 			return result;
+		};
+		/**
+# PerspectiveCornersFilter
+
+## Instantiation
+
+* scrawl.makePerspectiveCornersFilter()
+
+## Purpose
+
+* Adds a perspective filter effect to an Entity or cell - perspective is set by adjusting the entity or cell's corner coordinates
+
+Note that this filter will override an entity or cell's given dimensions. It should respect positional, roll and scaling attributes.
+
+## Access
+
+* scrawl.filter.FILTERNAME - for the PerspectiveCornersFilter object
+
+@class PerspectiveCornersFilter
+@constructor
+@extends Filter
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.PerspectiveCornersFilter = function(items) {
+			var temp;
+			items = my.safeObject(items);
+			my.Filter.call(this, items);
+			this.cornerDataArrayOrder = my.xtGet(items.cornerDataArrayOrder, ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly']);
+			this.originX = 0;
+			this.originY = 0;
+			this.originWidth = 300;
+			this.originHeight = 150;
+			this.drawLength = 1;
+			this.easelX = 0;
+			this.easelY = 0;
+			this.easelWidth = 300;
+			this.easelHeight = 150;
+			this.interferenceLoops = my.xtGet(items.interferenceLoops, 2);
+			this.interferenceFactor = my.xtGet(items.interferenceFactor, 1.03);
+			this.c = {};
+			this.corners = {};
+			this.updateCornersData(items);
+			my.filter[this.name] = this;
+			my.pushUnique(my.filternames, this.name);
+			return this;
+		};
+		my.PerspectiveCornersFilter.prototype = Object.create(my.Filter.prototype);
+		/**
+@property type
+@type String
+@default 'Filter'
+@final
+**/
+		my.PerspectiveCornersFilter.prototype.type = 'PerspectiveCornersFilter';
+		my.PerspectiveCornersFilter.prototype.classname = 'filternames';
+		my.d.PerspectiveCornersFilter = {
+			/**
+Origin image width
+
+@property originWidth
+@type Number (in px)
+@default 300
+@private
+**/
+			originWidth: 300,
+			/**
+Origin image height
+
+@property originHeight
+@type Number (in px)
+@default 150
+@private
+**/
+			originHeight: 150,
+			/**
+Origin image x coordinate
+
+@property originX
+@type Number (in px)
+@default 0
+@private
+**/
+			originX: 0,
+			/**
+Origin image y coordinate
+
+@property originY
+@type Number (in px)
+@default 150
+@private
+**/
+			originY: 0,
+			/**
+Source dimension (will always be square)
+
+@property drawLength
+@type Number (in px)
+@default 1
+@private
+**/
+			drawLength: 1,
+			/**
+Easel width
+
+@property easelWidth
+@type Number (in px)
+@default 300
+@private
+**/
+			easelWidth: 300,
+			/**
+Easel height
+
+@property easelHeight
+@type Number (in px)
+@default 150
+@private
+**/
+			easelHeight: 150,
+			/**
+Easel x coordinate
+
+@property easelX
+@type Number (in px)
+@default 0
+@private
+**/
+			easelX: 0,
+			/**
+Easel y coordinate
+
+@property easelY
+@type Number (in px)
+@default 150
+@private
+**/
+			easelY: 0,
+			/**
+The number of resize loops to preform to get rid of interference patterns in the final result
+
+@property interferenceLoops
+@type Number
+@default 2
+**/
+			interferenceLoops: 2,
+			/**
+The resize factor used as part of the functionality to rid the final result of interference patterns
+
+@property interferenceFactor
+@type Number
+@default 1.03
+**/
+			interferenceFactor: 1.03,
+			/**
+An Array of String values that specifies the data reference order for updating the corners object, should that data be supplied as a list of Number or percentage String arguments, or an array of Numbers or percentage Strings.
+
+The eight strings (required) are each made up of three letters as follows:
+
+* __t__ for the top corners, or __b__ for the bottom corners
+* __l__ for the left corners, or __r__ for the right corners
+* __x__ for the x (horizontal) position, or __y__ for the y (vertical) position
+
+@property cornerDataArrayOrder
+@type Array
+@default ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly']
+**/
+			cornerDataArrayOrder: ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly'],
+			/**
+Helper object
+
+@property c
+@type Object
+@default {}
+@private
+**/
+			c: {},
+			/**
+The __corners__ object holds the current coordinates for the position of each of the entity or cell's corners. Its eight attributes are each made up of three letters as follows:
+
+* __t__ for the top corners, or __b__ for the bottom corners
+* __l__ for the left corners, or __r__ for the right corners
+* __x__ for the x (horizontal) position, or __y__ for the y (vertical) position
+
+Percentage string values are resolved against the host entity's current cell (as defined in its group attribute) dimensions or, for cells, the cell's pad's base cell dimensions. Alternatively, reference dimensions can be set in the .localWidth and .localHeight attributes
+
+@property corners
+@type Object
+@default {}
+**/
+			corners: {}
+			/**
+An Array of number or percentage String values that specifies new corner positioning data. The ordering of data in the array is specified in the filter's cornerDataArrayOrder attribute.
+
+_This attribute is only used with the filter constructor, and the set() and updateCornersData() functions. It is not retained by the filter_
+
+@property cornerDataArray
+@type Array
+**/
+		};
+		my.mergeInto(my.d.PerspectiveCornersFilter, my.d.Filter);
+		/**
+Set function
+
+@method set
+@param {Object} items - Object with key:value pairs
+@return this
+**/
+		my.PerspectiveCornersFilter.prototype.set = function(items) {
+			my.Filter.prototype.set.call(this, items);
+			if (items.cornerDataArray) {
+				this.updateCornersData(items);
+			}
+			return this;
+		};
+		/**
+Helper function - updates corners object with new corner data
+
+If data is supplied as an items (raw JavaScript) Object, it can include the following corners-related attributes:
+
+* __tlx__ or __topLeftX__
+* __tly__ or __topLeftY__
+* __trx__ or __topRightX__
+* __try__ or __topRightY__
+* __brx__ or __bottomRightX__
+* __bry__ or __bottomRightY__
+* __blx__ or __bottomLeftX__
+* __bly__ or __bottomLeftY__
+
+Corners data can also be supplied for each of the following attributes as an object containing x and y attributes - for instance a Vector object:
+
+* __topLeft__
+* __topRight__
+* __bottomRight__
+* __bottomLeft__
+
+@method updateCornersData
+@param {Object} items - Object with key:value pairs - see the __corners__ object for details of the object's attributes. Alternatively the function can take a list of (eight) Numbers or percentage strings, or an array of (eight) values
+@return this
+@chainable
+**/
+		my.PerspectiveCornersFilter.prototype.updateCornersData = function() {
+			var temp,
+				newData,
+				items,
+				slice = Array.prototype.slice.call(arguments);
+
+			if (Object.prototype.toString.call(slice[0]) === '[object Object]') {
+				items = slice[0];
+				this.cornerDataArrayOrder = my.xtGet(items.cornerDataArrayOrder, this.cornerDataArrayOrder);
+				newData = my.xtGet(items.cornerDataArray, false);
+			}
+			else {
+				if (Array.isArray(slice[0])) {
+					newData = slice[0];
+				}
+				else {
+					newData = slice;
+				}
+			}
+
+			if (newData) {
+				this.corners.tlx = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('tlx')], this.corners.tlx, 0);
+				this.corners.tly = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('tly')], this.corners.tly, 0);
+				this.corners.trx = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('trx')], this.corners.trx, 1);
+				this.corners.try = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('try')], this.corners.try, 0);
+				this.corners.brx = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('brx')], this.corners.brx, 1);
+				this.corners.bry = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('bry')], this.corners.bry, 1);
+				this.corners.blx = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('blx')], this.corners.blx, 0);
+				this.corners.bly = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('bly')], this.corners.bly, 1);
+			}
+			else {
+				temp = my.safeObject(items.topLeft);
+				this.corners.tlx = my.xtGet(temp.x, items.tlx, items.topLeftX, this.corners.tlx, 0);
+				this.corners.tly = my.xtGet(temp.y, items.tly, items.topLeftY, this.corners.tly, 0);
+				temp = my.safeObject(items.topRight);
+				this.corners.trx = my.xtGet(temp.x, items.trx, items.topRightX, this.corners.trx, 1);
+				this.corners.try = my.xtGet(temp.y, items.try, items.topRightY, this.corners.try, 0);
+				temp = my.safeObject(items.bottomRight);
+				this.corners.brx = my.xtGet(temp.x, items.brx, items.bottomRightX, this.corners.brx, 1);
+				this.corners.bry = my.xtGet(temp.y, items.bry, items.bottomRightY, this.corners.bry, 1);
+				temp = my.safeObject(items.bottomLeft);
+				this.corners.blx = my.xtGet(temp.x, items.blx, items.bottomLeftX, this.corners.blx, 0);
+				this.corners.bly = my.xtGet(temp.y, items.bly, items.bottomLeftY, this.corners.bly, 1);
+			}
+			return this;
+		};
+		/**
+Add function - takes data, calculates its deformity and replaces the old data with new
+
+@method add
+@param {Object} data - canvas getImageData object
+@return amended image data object
+**/
+		my.PerspectiveCornersFilter.prototype.add = function(data) {
+			this.setOrigin(data);
+			this.updateCornerPositions(this.originWidth, this.originHeight);
+			this.resizeEasel();
+			this.paint();
+			this.removeInterferencePatterns();
+			return this.getFinalData(data);
+		};
+		/**
+Helper function
+
+Convert percentage String valuse in the .corners object to numerical values; transfer data to the .c object
+@method updateCornerPositions
+@param {Number} w - entity or cell width 
+@param {Number} h - entity or cell height 
+@return always true
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.updateCornerPositions = function(w, h) {
+			var template = ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly'],
+
+				i;
+			w = my.xtGet(w, 300);
+			h = my.xtGet(h, 150);
+
+			for (i = 0; i < 8; i++) {
+				if (my.isa(this.corners[template[i]], 'str')) {
+					if (template[i][2] == 'x') {
+						if (this.corners[template[i]] == 'left') {
+							this.c[template[i]] = 0;
+						}
+						else if (this.corners[template[i]] == 'right') {
+							this.c[template[i]] = w;
+						}
+						else if (this.corners[template[i]] == 'center') {
+							this.c[template[i]] = w / 2;
+						}
+						else {
+							this.c[template[i]] = (parseFloat(this.corners[template[i]]) / 100) * w;
+						}
+					}
+					else {
+						if (this.corners[template[i]] == 'top') {
+							this.c[template[i]] = 0;
+						}
+						else if (this.corners[template[i]] == 'bottom') {
+							this.c[template[i]] = h;
+						}
+						else if (this.corners[template[i]] == 'center') {
+							this.c[template[i]] = h / 2;
+						}
+						else {
+							this.c[template[i]] = (parseFloat(this.corners[template[i]]) / 100) * h;
+						}
+					}
+				}
+				else {
+					this.c[template[i]] = this.corners[template[i]];
+				}
+			}
+			return true;
+		};
+		/**
+Helper function
+
+Extract the portion of canvas to be deformed from the data; initialize the origin canvas with the exised data
+@method setOrigin
+@param data - ImageData Object
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.setOrigin = function(data) {
+			var image,
+				d,
+				left,
+				right,
+				top,
+				bottom,
+				pos,
+				i,
+				iz,
+				j,
+				jz;
+			left = data.width;
+			right = 0;
+			top = data.height;
+			bottom = 0;
+			my.perspectiveOriginCanvas.width = data.width;
+			my.perspectiveOriginCanvas.height = data.height;
+			my.perspectiveOriginCvx.putImageData(data, 0, 0);
+			d = data.data;
+			for (i = 0, iz = data.height; i < iz; i++) {
+				for (j = 0, jz = data.width; j < jz; j++) {
+					pos = (((i * data.width) + j) * 4) + 3;
+					if (d[pos] > 0) {
+						top = (top > i) ? i : top;
+						bottom = (bottom < i) ? i : bottom;
+						left = (left > j) ? j : left;
+						right = (right < j) ? j : right;
+					}
+				}
+			}
+			this.originX = left;
+			this.originY = top;
+			this.originWidth = (right - left);
+			this.originHeight = (bottom - top);
+			image = my.perspectiveOriginCvx.getImageData(this.originX, this.originY, this.originWidth, this.originHeight);
+			my.perspectiveOriginCanvas.width = this.originWidth;
+			my.perspectiveOriginCanvas.height = this.originHeight;
+			my.perspectiveOriginCvx.putImageData(image, 0, 0);
+		};
+		/**
+Helper function
+
+Using the corners data, setup the source and easel canvases, and draw origin image into source canvas
+@method resizeEasel
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.resizeEasel = function() {
+			var myX = [this.c.tlx, this.c.trx, this.c.brx, this.c.blx],
+				myY = [this.c.tly, this.c.try, this.c.bry, this.c.bly],
+				minX = Math.min.apply(Math, myX),
+				minY = Math.min.apply(Math, myY),
+				maxX = Math.max.apply(Math, myX),
+				maxY = Math.max.apply(Math, myY);
+			this.drawLength = Math.ceil(Math.max.apply(Math, [
+				getLength(this.c.tlx, this.c.tly, this.c.trx, this.c.try),
+				getLength(this.c.blx, this.c.bly, this.c.brx, this.c.bry),
+				getLength(this.c.tlx, this.c.tly, this.c.blx, this.c.bly),
+				getLength(this.c.trx, this.c.try, this.c.brx, this.c.bry)
+				]));
+			my.perspectiveSourceCanvas.width = this.drawLength;
+			my.perspectiveSourceCanvas.height = this.drawLength;
+			my.perspectiveSourceCvx.putImageData(my.perspectiveOriginCanvas, 0, 0, this.localWidth, this.localHeight, 0, 0, this.drawLength, this.drawLength);
+			this.easelX = minX;
+			this.easelY = minY;
+			this.easelWidth = maxX - minX;
+			this.easelHeight = maxY - minY;
+			my.perspectiveEaselCanvas.width = this.easelWidth;
+			my.perspectiveEaselCanvas.height = this.easelHeight;
+		};
+
+		/**
+Helper function
+
+@method getPosition
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.getPosition = function(a, b, v) {
+			return ((b - a) * v) + a;
+		};
+		/**
+Helper function
+
+@method getLength
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.getLength = function(xa, ya, xb, yb) {
+			return Math.sqrt(Math.pow(xa - xb, 2) + Math.pow(ya - yb, 2));
+		};
+		/**
+Helper function
+
+@method getAngle
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.getAngle = function(xa, ya, xb, yb) {
+			return Math.atan2(ya - yb, xa - xb);
+		};
+		/**
+Helper function
+
+@method setEasel
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.setEasel = function(x, y, a) {
+			var cos = Math.cos(a),
+				sin = Math.sin(a);
+			my.perspectiveEaselCtx.setTransform(-cos, -sin, sin, -cos, x, y);
+		};
+		/**
+Helper function
+
+@method resetEasel
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.resetEasel = function() {
+			my.perspectiveEaselCtx.setTransform(1, 0, 0, 1, 0, 0);
+		};
+		/**
+Helper function
+
+@method paint
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.paint = function() {
+			var i, iz,
+				sx, sy, ex, ey,
+				len, angle, val;
+
+			for (i = 0; i <= this.drawLength; i++) {
+				val = i / this.drawLength;
+				sx = this.getPosition(this.c.tlx, this.c.blx, val) - this.easelX;
+				sy = this.getPosition(this.c.tly, this.c.bly, val) - this.easelY;
+				ex = this.getPosition(this.c.trx, this.c.brx, val) - this.easelX;
+				ey = this.getPosition(this.c.try, this.c.bry, val) - this.easelY;
+				len = this.getLength(sx, sy, ex, ey);
+				angle = this.getAngle(sx, sy, ex, ey);
+
+				this.setEasel(sx, sy, angle);
+				my.perspectiveEaselCvx.drawImage(my.perspectiveSourceCanvas, 0, i, this.drawLength, 1, 0, 0, len, 1);
+				this.resetEasel();
+			}
+		};
+		/**
+Helper function
+
+The paint algorithm creates interference patterns in the resulting image; this function removes them
+@method removeInterferencePatterns
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.removeInterferencePatterns = function() {
+			var w = this.easelWidth,
+				h = this.easelHeight;
+			for (var i = 0; i < this.interferenceLoops; i++) {
+				w = Math.ceil(w * this.interferenceFactor);
+				h = Math.ceil(h * this.interferenceFactor);
+				my.perspectiveSourceCanvas.width = w;
+				my.perspectiveSourceCanvas.height = h;
+				my.perspectiveSourceCvx.drawImage(my.perspectiveEaselCanvas, 0, 0, this.easelWidth, this.easelHeight, 0, 0, w, h);
+				my.perspectiveEaselCvx.drawImage(my.perspectiveSourceCanvas, 0, 0, w, h, 0, 0, this.easelWidth, this.easelHeight);
+			}
+		};
+		/**
+Helper function
+
+retrieve manipulated data for passing on to the next filter
+@method getFinalData
+@return Data Image Object
+@private
+**/
+		my.PerspectiveCornersFilter.prototype.getFinalData = function(data) {
+			my.perspectiveOriginCanvas.width = data.width;
+			my.perspectiveOriginCanvas.height = data.height;
+			my.prespectiveOriginCvx.globalAlpha = this.getAlpha();
+			my.perspectiveOriginCvx.drawImage(my.perspectiveEaselCanvas, 0, 0, this.easelWidth, this.easelHeight, this.easelX, this.easelY, this.easelWidth, this.easelHeight);
+			my.prespectiveOriginCvx.globalAlpha = 1;
+			return my.perspectiveOriginCvx.getImageData(0, 0, data.width, data.height);
 		};
 
 		return my;

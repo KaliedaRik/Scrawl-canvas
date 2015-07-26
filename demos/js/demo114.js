@@ -24,11 +24,13 @@ var mycode = function() {
 		getAngle,
 		source,
 		sourceCanvas,
+		sourceCtx,
 		sourceImage,
 		easel,
 		easelWidth,
 		easelHeight,
 		easelCtx,
+		easelCanvas,
 		resultImage,
 		resultX,
 		resultY,
@@ -36,6 +38,7 @@ var mycode = function() {
 		setEasel,
 		resetEasel,
 		paint,
+		removeInterferencePatterns,
 		getWheel,
 		dropWheel,
 		stopE;
@@ -52,6 +55,7 @@ var mycode = function() {
 		height: 100,
 		name: 'source'
 	});
+	sourceCtx = scrawl.context.source;
 	sourceCanvas = scrawl.canvas.source;
 
 	easel = scrawl.addNewCell({
@@ -63,6 +67,8 @@ var mycode = function() {
 		name: 'easel'
 	});
 	easelCtx = scrawl.context.easel;
+	easelCanvas = scrawl.canvas.easel;
+
 
 	sourceImage = scrawl.makePicture({
 		name: 'sourceImage',
@@ -165,6 +171,7 @@ var mycode = function() {
 
 		resizeEasel();
 		paint();
+		removeInterferencePatterns();
 	};
 
 	resizeEasel = function() {
@@ -249,6 +256,24 @@ var mycode = function() {
 			setEasel(sx, sy, angle);
 			easelCtx.drawImage(sourceCanvas, 0, i, drawLength, 1, 0, 0, len, 1);
 			resetEasel();
+		}
+	};
+
+	removeInterferencePatterns = function() {
+		var w = easelWidth,
+			h = easelHeight;
+
+		for (i = 0; i < 2; i++) {
+			w = Math.ceil(w * 1.03);
+			h = Math.ceil(h * 1.03);
+
+			source.set({
+				width: w,
+				height: h
+			});
+
+			sourceCtx.drawImage(easelCanvas, 0, 0, easelWidth, easelHeight, 0, 0, w, h);
+			easelCtx.drawImage(sourceCanvas, 0, 0, w, h, 0, 0, easelWidth, easelHeight);
 		}
 	};
 
