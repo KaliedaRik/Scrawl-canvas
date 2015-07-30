@@ -727,7 +727,6 @@ Used only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This
 			callback: false,
 		};
 		my.mergeInto(my.d.Picture, my.d.Entity);
-		my.Picture.prototype.stableAttributes = my.Entity.prototype.stableAttributes.concat(['copy', 'copyX', 'copyY', 'copyWidth', 'copyHeight', 'source', 'url']);
 		/**
 Augments Entity.get()
 @method get

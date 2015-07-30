@@ -230,12 +230,6 @@ Users should never interfere with Text objects, as they are destroyed and recrea
 		};
 		my.mergeInto(my.d.Phrase, my.d.Entity);
 		/**
-Various set, setDelta and update operations will need to check against this array and set the stableData attribute to null when their values are changed
-@property stableAttributes
-@private
-**/
-		my.Phrase.prototype.stableAttributes = my.Entity.prototype.stableAttributes.concat(['backgroundMargin', 'backgroundColor', 'lineHeight', 'family', 'metrics', 'size', 'weight', 'variant', 'style', 'text']);
-		/**
 Augments Entity.set()
 
 Allows users to:

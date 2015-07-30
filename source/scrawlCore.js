@@ -271,12 +271,6 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 		my.physicsInit();
 		my.filtersInit();
 		my.animationInit();
-		my.makeCell({
-			canvas: document.createElement('canvas'),
-			name: 'stableCanvas',
-			width: 1,
-			height: 1
-		});
 		return my;
 	};
 	/**
@@ -2848,28 +2842,7 @@ Positioning helper vector - includes a flag attribute for dirty checking
 		});
 		this.offset.flag = false;
 		/**
-Stable (static) flag - set to true to pre-draw the entity or cell
-
-Useful for pre-rendering more complex entities or cells that are not likely to change much during the display or animation
-
-@property stable
-@type Boolean
-@default false
-**/
-		this.stable = my.xtGet(items.stable, false);
-		/**
-Stable data
-
-@property stableData
-@type ImageData object
-@default null
-@private
-**/
-		this.stableData = null;
-		/**
 Flag used to indicate that perspective manipulation has been enabled for this cell, group or entity
-
-For the sake of efficiency, the __stable__ flag should also be set to true
 
 @property useCorners
 @type Boolean
@@ -2996,8 +2969,6 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 		flipUpend: false,
 		lockX: false,
 		lockY: false,
-		stable: false,
-		stableData: null,
 		useCorners: false,
 		cornersDataArrayOrder: ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly'],
 		corners: {},
@@ -3051,12 +3022,6 @@ A flag to determine whether the object will calculate its position along a Shape
 	};
 	my.mergeInto(my.d.Position, my.d.Base);
 	/**
-Various set, setDelta and update operations will need to check against this array and set the stableData attribute to null when their values are changed
-@property stableAttributes
-@private
-**/
-	my.Position.prototype.stableAttributes = ['scale', 'width', 'height', 'cornersData'];
-	/**
 Position constructor hook function - modified by animation extension
 @method animationPositionInit
 @private
@@ -3108,7 +3073,6 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 @chainable
 **/
 	my.Position.prototype.set = function(items) {
-		var i, iz, keys;
 		items = my.safeObject(items);
 		my.Base.prototype.set.call(this, items);
 		if (my.xto(items.start, items.startX, items.startY)) {
@@ -3121,13 +3085,6 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 			this.updateCorners(items.cornersData);
 		}
 		this.animationPositionSet(items);
-		keys = Object.keys(items);
-		for (i = 0, iz = keys.length; i < iz; i++) {
-			if (my.contains(this.stableAttributes, keys[i])) {
-				this.stableData = null;
-				break;
-			}
-		}
 		return this;
 	};
 	/**
@@ -3195,12 +3152,6 @@ Adds the value of each attribute supplied in the argument to existing values; on
 		}
 		if (items.scale) {
 			this.setDeltaScale(items);
-		}
-		for (i = 0, iz = keys.length; i < iz; i++) {
-			if (my.contains(this.stableAttributes, keys[i])) {
-				this.stableData = null;
-				break;
-			}
 		}
 		return this;
 	};
@@ -5000,12 +4951,6 @@ Display cycle attribute - order in which the cell will show itself (if show attr
 		showOrder: 0
 	};
 	my.mergeInto(my.d.Cell, my.d.Position);
-	/**
-Various set, setDelta and update operations will need to check against this array and set the stableData attribute to null when their values are changed
-@property stableAttributes
-@private
-**/
-	my.Cell.prototype.stableAttributes = my.Position.prototype.stableAttributes.concat(['copy', 'copyX', 'copyY', 'copyWidth', 'copyHeight', 'paste', 'pasteX', 'pasteY', 'pasteWidth', 'pasteHeight', 'backgroundColor']);
 	/**
 Cell constructor hook function - core module
 @method coreCellInit
@@ -7036,12 +6981,6 @@ Entity radius, in pixels - not supported by all entity objects
 	};
 	my.mergeInto(my.d.Entity, my.d.Position);
 	/**
-Various set, setDelta and update operations will need to check against this array and set the stableData attribute to null when their values are changed
-@property stableAttributes
-@private
-**/
-	my.Entity.prototype.stableAttributes = my.Position.prototype.stableAttributes.concat(['method', 'data', 'radius', 'scaleOutline', 'fillStyle', 'winding', 'strokeStyle', 'globalAlpha', 'globalCompositeOperation', 'lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur', 'shadowColor', 'font', 'textAlign', 'textBaseline']);
-	/**
 Entity constructor hook function - modified by filters extension
 @method filtersEntityInit
 @private
@@ -7278,8 +7217,12 @@ Permitted methods include:
 	my.Entity.prototype.stamp = function(method, cell) {
 		var engine,
 			cellname,
+			cellCtx,
+			eCtx,
 			here,
-			that = this;
+			sCanvas,
+			sEngine,
+			data;
 		if (this.visibility) {
 			cell = my.cell[cell] || my.cell[my.group[this.group].cell];
 			cellname = cell.name;
@@ -7291,24 +7234,8 @@ Permitted methods include:
 			else {
 				this.pathStamp();
 			}
-			if (this.stable) {
-				if (!this.stableData) {
-					my.cell.stableCanvas.set({
-						width: cell.actualWidth,
-						height: cell.actualHeight
-					});
-					this.callMethod(my.context.stableCanvas, 'stableCanvas', method);
-					this.stampFilter(my.context.stableCanvas, 'stableCanvas');
-					this.createStableData();
-				}
-				here = this.prepareStamp();
-				this.rotateCell(engine, cellname);
-				engine.drawImage(this.stableData, here.x - this.stableOffset, here.y - this.stableOffset);
-			}
-			else {
-				this.callMethod(engine, cellname, method);
-				this.stampFilter(engine, cellname);
-			}
+			this.callMethod(engine, cellname, method);
+			this.stampFilter(engine, cellname);
 		}
 		return this;
 	};
@@ -7695,62 +7622,6 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			return items;
 		}
 		return false;
-	};
-	/**
-Create stableData object
-
-@method Entity.createStableData
-@return this
-@chainable
-@private
-**/
-	my.Entity.prototype.createStableData = function() {
-		var image,
-			cell,
-			engine,
-			cv,
-			cvx,
-			w,
-			h,
-			data,
-			left,
-			right,
-			top,
-			bottom,
-			pos,
-			i,
-			iz,
-			j,
-			jz;
-		cv = my.canvas.stableCanvas;
-		cvx = my.context.stableCanvas;
-		w = my.cell.stableCanvas.actualWidth;
-		h = my.cell.stableCanvas.actualHeight;
-		image = cvx.getImageData(0, 0, w, h);
-		data = image.data;
-		left = w;
-		right = 0;
-		top = h;
-		bottom = 0;
-		for (i = 0, iz = h; i < iz; i++) {
-			for (j = 0, jz = w; j < jz; j++) {
-				pos = (((i * w) + j) * 4) + 3;
-				if (data[pos] > 0) {
-					top = (top > i) ? i : top;
-					bottom = (bottom < i) ? i : bottom;
-					left = (left > j) ? j : left;
-					right = (right < j) ? j : right;
-				}
-			}
-		}
-		image = cvx.getImageData(left, top, (right - left + 1), (bottom - top + 1));
-		cv.width = image.width;
-		cv.height = image.height;
-		cvx.putImageData(image, 0, 0);
-		this.stableData = document.createElement('img');
-		this.stableData.src = cv.toDataURL();
-		this.stableOffset = (my.ctx[this.context].lineWidth || 0) / 2;
-		return this;
 	};
 
 	/**
