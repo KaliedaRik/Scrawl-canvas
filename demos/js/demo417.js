@@ -9,44 +9,52 @@ var mycode = function() {
 
 	//define variables
 	var filter,
-
-		current_alpha = 1,
-		input_alpha = document.getElementById('alpha'),
-		event_alpha,
-
-		current_strength = 0.3,
-		input_strength = document.getElementById('strength'),
-		event_strength,
-
-		current_roll = 0,
-		input_roll = document.getElementById('roll'),
-		event_roll,
-
-		current_radiusX = 3,
-		input_radiusX = document.getElementById('radiusX'),
-		event_radiusX,
-
-		current_radiusY = 3,
-		input_radiusY = document.getElementById('radiusY'),
-		event_radiusY,
-
+		currentCorners = {
+			tlx: 20,
+			tly: 20,
+			trx: 380,
+			try: 20,
+			brx: 380,
+			bry: 380,
+			blx: 20,
+			bly: 380
+		},
+		currentOther = {
+			interferenceLoops: 2,
+			interferenceFactor: 1.03,
+			alpha: 1
+		},
+		events,
 		stopE;
 
 	//set the initial imput values
-	input_alpha.value = '1';
-	input_strength.value = '0.3';
-	input_roll.value = '0';
-	input_radiusX.value = '3';
-	input_radiusY.value = '3';
+	document.getElementById('tlx_abs').value = '20';
+	document.getElementById('tly_abs').value = '20';
+	document.getElementById('tlx_rel').value = '5';
+	document.getElementById('tly_rel').value = '5';
+	document.getElementById('trx_abs').value = '380';
+	document.getElementById('try_abs').value = '20';
+	document.getElementById('trx_rel').value = '95';
+	document.getElementById('try_rel').value = '5';
+	document.getElementById('blx_abs').value = '20';
+	document.getElementById('bly_abs').value = '380';
+	document.getElementById('blx_rel').value = '5';
+	document.getElementById('bly_rel').value = '95';
+	document.getElementById('brx_abs').value = '380';
+	document.getElementById('bry_abs').value = '380';
+	document.getElementById('brx_rel').value = '95';
+	document.getElementById('bry_rel').value = '95';
+	document.getElementById('i_loop').value = '2';
+	document.getElementById('i_factor').value = '1.03';
+	document.getElementById('alpha').value = '1';
 
 	//define filter
-	filter = scrawl.makeNoiseFilter({
+	filter = scrawl.makePerspectiveCornersFilter({
 		name: 'myfilter',
-		alpha: 1,
-		roll: 0,
-		radiusX: 3,
-		radiusY: 3,
-		strength: 0.3,
+		cornersData: currentCorners,
+		interferenceLoops: 2,
+		interferenceFactor: 1.03,
+		alpha: 1
 	});
 
 	//define entity
@@ -62,6 +70,7 @@ var mycode = function() {
 		filters: ['myfilter'],
 		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
 		url: 'img/carousel/cagedparrot.png',
+		//method: 'none'
 	});
 
 	//event listeners
@@ -70,55 +79,75 @@ var mycode = function() {
 		e.returnValue = false;
 	};
 
-	event_alpha = function(e) {
+	events = function(e) {
 		stopE(e);
-		current_alpha = parseFloat(input_alpha.value);
+		switch (e.target.id) {
+			case 'tlx_abs':
+				currentCorners.tlx = Math.round(e.target.value);
+				break;
+			case 'tly_abs':
+				currentCorners.tly = Math.round(e.target.value);
+				break;
+			case 'tlx_rel':
+				currentCorners.tlx = e.target.value + '%';
+				break;
+			case 'tly_rel':
+				currentCorners.tly = e.target.value + '%';
+				break;
+			case 'trx_abs':
+				currentCorners.trx = Math.round(e.target.value);
+				break;
+			case 'try_abs':
+				currentCorners.try = Math.round(e.target.value);
+				break;
+			case 'trx_rel':
+				currentCorners.trx = e.target.value + '%';
+				break;
+			case 'try_rel':
+				currentCorners.try = e.target.value + '%';
+				break;
+			case 'blx_abs':
+				currentCorners.blx = Math.round(e.target.value);
+				break;
+			case 'bly_abs':
+				currentCorners.bly = Math.round(e.target.value);
+				break;
+			case 'blx_rel':
+				currentCorners.blx = e.target.value + '%';
+				break;
+			case 'bly_rel':
+				currentCorners.bly = e.target.value + '%';
+				break;
+			case 'brx_abs':
+				currentCorners.brx = Math.round(e.target.value);
+				break;
+			case 'bry_abs':
+				currentCorners.bry = Math.round(e.target.value);
+				break;
+			case 'brx_rel':
+				currentCorners.brx = e.target.value + '%';
+				break;
+			case 'bry_rel':
+				currentCorners.bry = e.target.value + '%';
+				break;
+			case 'i_loop':
+				currentOther.interferenceLoops = parseFloat(e.target.value);
+				break;
+			case 'i_factor':
+				currentOther.interferenceFactor = parseFloat(e.target.value);
+				break;
+			case 'alpha':
+				currentOther.alpha = parseFloat(e.target.value);
+				break;
+		}
 		filter.set({
-			alpha: current_alpha,
+			cornersData: currentCorners,
+			interferenceLoops: 2,
+			interferenceFactor: 1.03,
+			alpha: 1
 		});
 	};
-	input_alpha.addEventListener('input', event_alpha, false);
-	input_alpha.addEventListener('change', event_alpha, false);
-
-	event_strength = function(e) {
-		stopE(e);
-		current_strength = parseFloat(input_strength.value);
-		filter.set({
-			strength: current_strength,
-		});
-	};
-	input_strength.addEventListener('input', event_strength, false);
-	input_strength.addEventListener('change', event_strength, false);
-
-	event_roll = function(e) {
-		stopE(e);
-		current_roll = parseFloat(input_roll.value);
-		filter.set({
-			roll: current_roll,
-		});
-	};
-	input_roll.addEventListener('input', event_roll, false);
-	input_roll.addEventListener('change', event_roll, false);
-
-	event_radiusX = function(e) {
-		stopE(e);
-		current_radiusX = parseFloat(input_radiusX.value);
-		filter.set({
-			radiusX: current_radiusX,
-		});
-	};
-	input_radiusX.addEventListener('input', event_radiusX, false);
-	input_radiusX.addEventListener('change', event_radiusX, false);
-
-	event_radiusY = function(e) {
-		stopE(e);
-		current_radiusY = parseFloat(input_radiusY.value);
-		filter.set({
-			radiusY: current_radiusY,
-		});
-	};
-	input_radiusY.addEventListener('input', event_radiusY, false);
-	input_radiusY.addEventListener('change', event_radiusY, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
 	scrawl.makeAnimation({

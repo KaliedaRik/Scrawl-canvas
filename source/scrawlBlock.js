@@ -120,6 +120,7 @@ Block display - width, in pixels
 @property localWidth
 @type Number
 @default 0
+@private
 **/
 			localWidth: 0,
 			/**
@@ -127,6 +128,7 @@ Block display - height, in pixels
 @property localHeight
 @type Number
 @default 0
+@private
 **/
 			localHeight: 0,
 		};

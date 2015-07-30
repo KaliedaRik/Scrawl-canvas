@@ -793,6 +793,12 @@ Set the iterations required for calculating path length and positioning data - h
 		};
 		my.mergeInto(my.d.Path, my.d.Entity);
 		/**
+Various set, setDelta and update operations will need to check against this array and set the stableData attribute to null when their values are changed
+@property stableAttributes
+@private
+**/
+		my.Path.prototype.stableAttributes = my.Entity.prototype.stableAttributes.concat(['precision', 'mark', 'markStart', 'markMid', 'markEnd']);
+		/**
 Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
 @method prepareShape
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element

@@ -328,12 +328,12 @@ Alias for makeNoiseFilter()
 			return my.makeNoiseFilter(items);
 		};
 		/**
-Alias for makePerspectiveCorners()
-@method newPerspectiveCorners
+Alias for makePerspectiveCornersFilter()
+@method newPerspectiveCornersFilter
 @deprecated
 **/
-		my.newPerspectiveCorners = function(items) {
-			return my.makePerspectiveCorners(items);
+		my.newPerspectiveCornersFilter = function(items) {
+			return my.makePerspectiveCornersFilter(items);
 		};
 		/**
 A __factory__ function to generate new Greyscale filter objects
@@ -2925,11 +2925,11 @@ Percentage string values are resolved against the host entity's current cell (as
 **/
 			corners: {}
 			/**
-An Array of number or percentage String values that specifies new corner positioning data. The ordering of data in the array is specified in the filter's cornerDataArrayOrder attribute.
+An Object or Array of number or percentage String values that specifies new corner positioning data. For arrays, the ordering of data in the array is specified in the filter's cornerDataArrayOrder attribute.
 
 _This attribute is only used with the filter constructor, and the set() and updateCornersData() functions. It is not retained by the filter_
 
-@property cornerDataArray
+@property cornersData
 @type Array
 **/
 		};
@@ -2942,10 +2942,11 @@ Set function
 @return this
 **/
 		my.PerspectiveCornersFilter.prototype.set = function(items) {
+
 			my.Filter.prototype.set.call(this, items);
-			if (items.cornerDataArray) {
-				this.updateCornersData(items);
-			}
+			//			if (items.cornerDataArray) {
+			this.updateCornersData(items);
+			//			}
 			return this;
 		};
 		/**
@@ -2983,7 +2984,14 @@ Corners data can also be supplied for each of the following attributes as an obj
 			if (Object.prototype.toString.call(slice[0]) === '[object Object]') {
 				items = slice[0];
 				this.cornerDataArrayOrder = my.xtGet(items.cornerDataArrayOrder, this.cornerDataArrayOrder);
-				newData = my.xtGet(items.cornerDataArray, false);
+				if (items.cornersData) {
+					if (Array.isArray(items.cornersData)) {
+						newData = my.xtGet(items.cornerDataArray, false);
+					}
+					else {
+						items = items.cornersData;
+					}
+				}
 			}
 			else {
 				if (Array.isArray(slice[0])) {
@@ -3018,6 +3026,7 @@ Corners data can also be supplied for each of the following attributes as an obj
 				this.corners.blx = my.xtGet(temp.x, items.blx, items.bottomLeftX, this.corners.blx, 0);
 				this.corners.bly = my.xtGet(temp.y, items.bly, items.bottomLeftY, this.corners.bly, 1);
 			}
+			this.updateCornerPositions(this.originWidth, this.originHeight);
 			return this;
 		};
 		/**
@@ -3029,7 +3038,7 @@ Add function - takes data, calculates its deformity and replaces the old data wi
 **/
 		my.PerspectiveCornersFilter.prototype.add = function(data) {
 			this.setOrigin(data);
-			this.updateCornerPositions(this.originWidth, this.originHeight);
+			//this.updateCornerPositions(this.originWidth, this.originHeight);
 			this.resizeEasel();
 			this.paint();
 			this.removeInterferencePatterns();
@@ -3065,7 +3074,7 @@ Convert percentage String valuse in the .corners object to numerical values; tra
 							this.c[template[i]] = w / 2;
 						}
 						else {
-							this.c[template[i]] = (parseFloat(this.corners[template[i]]) / 100) * w;
+							this.c[template[i]] = Math.floor((parseFloat(this.corners[template[i]]) / 100) * w);
 						}
 					}
 					else {
@@ -3079,7 +3088,7 @@ Convert percentage String valuse in the .corners object to numerical values; tra
 							this.c[template[i]] = h / 2;
 						}
 						else {
-							this.c[template[i]] = (parseFloat(this.corners[template[i]]) / 100) * h;
+							this.c[template[i]] = Math.floor((parseFloat(this.corners[template[i]]) / 100) * h);
 						}
 					}
 				}
@@ -3130,8 +3139,8 @@ Extract the portion of canvas to be deformed from the data; initialize the origi
 			}
 			this.originX = left;
 			this.originY = top;
-			this.originWidth = (right - left);
-			this.originHeight = (bottom - top);
+			this.originWidth = Math.abs(right - left);
+			this.originHeight = Math.abs(bottom - top);
 			image = my.perspectiveOriginCvx.getImageData(this.originX, this.originY, this.originWidth, this.originHeight);
 			my.perspectiveOriginCanvas.width = this.originWidth;
 			my.perspectiveOriginCanvas.height = this.originHeight;
@@ -3152,18 +3161,20 @@ Using the corners data, setup the source and easel canvases, and draw origin ima
 				maxX = Math.max.apply(Math, myX),
 				maxY = Math.max.apply(Math, myY);
 			this.drawLength = Math.ceil(Math.max.apply(Math, [
-				getLength(this.c.tlx, this.c.tly, this.c.trx, this.c.try),
-				getLength(this.c.blx, this.c.bly, this.c.brx, this.c.bry),
-				getLength(this.c.tlx, this.c.tly, this.c.blx, this.c.bly),
-				getLength(this.c.trx, this.c.try, this.c.brx, this.c.bry)
+				this.getLength(this.c.tlx, this.c.tly, this.c.trx, this.c.try),
+				this.getLength(this.c.blx, this.c.bly, this.c.brx, this.c.bry),
+				this.getLength(this.c.tlx, this.c.tly, this.c.blx, this.c.bly),
+				this.getLength(this.c.trx, this.c.try, this.c.brx, this.c.bry)
 				]));
 			my.perspectiveSourceCanvas.width = this.drawLength;
 			my.perspectiveSourceCanvas.height = this.drawLength;
-			my.perspectiveSourceCvx.putImageData(my.perspectiveOriginCanvas, 0, 0, this.localWidth, this.localHeight, 0, 0, this.drawLength, this.drawLength);
+			my.perspectiveSourceCvx.drawImage(my.perspectiveOriginCanvas, 0, 0, this.originWidth, this.originHeight, 0, 0, this.drawLength, this.drawLength);
 			this.easelX = minX;
 			this.easelY = minY;
 			this.easelWidth = maxX - minX;
 			this.easelHeight = maxY - minY;
+			this.easelWidth = (this.easelWidth < 1) ? 1 : this.easelWidth;
+			this.easelHeight = (this.easelHeight < 1) ? 1 : this.easelHeight;
 			my.perspectiveEaselCanvas.width = this.easelWidth;
 			my.perspectiveEaselCanvas.height = this.easelHeight;
 		};
@@ -3204,7 +3215,7 @@ Helper function
 		my.PerspectiveCornersFilter.prototype.setEasel = function(x, y, a) {
 			var cos = Math.cos(a),
 				sin = Math.sin(a);
-			my.perspectiveEaselCtx.setTransform(-cos, -sin, sin, -cos, x, y);
+			my.perspectiveEaselCvx.setTransform(-cos, -sin, sin, -cos, x, y);
 		};
 		/**
 Helper function
@@ -3213,7 +3224,7 @@ Helper function
 @private
 **/
 		my.PerspectiveCornersFilter.prototype.resetEasel = function() {
-			my.perspectiveEaselCtx.setTransform(1, 0, 0, 1, 0, 0);
+			my.perspectiveEaselCvx.setTransform(1, 0, 0, 1, 0, 0);
 		};
 		/**
 Helper function
@@ -3270,9 +3281,9 @@ retrieve manipulated data for passing on to the next filter
 		my.PerspectiveCornersFilter.prototype.getFinalData = function(data) {
 			my.perspectiveOriginCanvas.width = data.width;
 			my.perspectiveOriginCanvas.height = data.height;
-			my.prespectiveOriginCvx.globalAlpha = this.getAlpha();
+			my.perspectiveOriginCvx.globalAlpha = this.getAlpha();
 			my.perspectiveOriginCvx.drawImage(my.perspectiveEaselCanvas, 0, 0, this.easelWidth, this.easelHeight, this.easelX, this.easelY, this.easelWidth, this.easelHeight);
-			my.prespectiveOriginCvx.globalAlpha = 1;
+			my.perspectiveOriginCvx.globalAlpha = 1;
 			return my.perspectiveOriginCvx.getImageData(0, 0, data.width, data.height);
 		};
 

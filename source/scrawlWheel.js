@@ -171,6 +171,12 @@ Collision calculation value - collision radius, from start vector
 		};
 		my.mergeInto(my.d.Wheel, my.d.Entity);
 		/**
+Various set, setDelta and update operations will need to check against this array and set the stableData attribute to null when their values are changed
+@property stableAttributes
+@private
+**/
+		my.Wheel.prototype.stableAttributes = my.Entity.prototype.stableAttributes.concat(['includeCenter', 'closed', 'clockwise', 'endAngle', 'startAngle']);
+		/**
 Augments Entity.set()
 @method set
 @param {Object} items Object consisting of key:value attributes
