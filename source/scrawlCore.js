@@ -2842,97 +2842,6 @@ Positioning helper vector - includes a flag attribute for dirty checking
 		});
 		this.offset.flag = false;
 		/**
-Flag used to indicate that perspective manipulation has been enabled for this cell, group or entity
-
-@property useCorners
-@type Boolean
-@default false
-**/
-		this.useCorners = my.xtGet(items.useCorners, false);
-		/**
-The __corners__ object holds the current coordinates for the position of each of the entity or cell's corners. Its eight attributes are each made up of three letters as follows:
-
-* __t__ for the top corners, or __b__ for the bottom corners
-* __l__ for the left corners, or __r__ for the right corners
-* __x__ for the x (horizontal) position, or __y__ for the y (vertical) position
-
-Percentage string values are resolved against the host entity's current cell (as defined in its group attribute) dimensions or, for cells, the cell's pad's base cell dimensions. Alternatively, reference dimensions can be set in the .localWidth and .localHeight attributes
-
-@property corners
-@type Object
-@default {}
-**/
-		this.corners = {
-			tlx: null,
-			tly: null,
-			trx: null,
-			try: null,
-			brx: null,
-			bry: null,
-			blx: null,
-			bly: null
-		};
-		/**
-corners object helper array
-
-Perspective manipulation of the entity, group or cell by means of setting its corner positions
-
-@property c
-@type Object
-@default {}
-**/
-		this.c = {
-			tlx: null,
-			tly: null,
-			trx: null,
-			try: null,
-			brx: null,
-			bry: null,
-			blx: null,
-			bly: null
-		};
-		/**
-An Array of String values that specifies the data reference order for updating the corners object, should that data be supplied as a list of Number or percentage String arguments, or an array of Numbers or percentage Strings.
-
-The eight strings (required) are each made up of three letters as follows:
-
-* __t__ for the top corners, or __b__ for the bottom corners
-* __l__ for the left corners, or __r__ for the right corners
-* __x__ for the x (horizontal) position, or __y__ for the y (vertical) position
-
-@property cornersDataArrayOrder
-@type Object
-@default ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly']
-**/
-		this.cornersDataArrayOrder = my.xtGet(items.cornersDataArrayOrder, ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly']);
-		if (items.cornersData) {
-			this.updateCorners(items.cornersData);
-		}
-		/**
-An Object or Array of number or percentage String values that specifies new corner positioning data. For arrays, the ordering of data in the array is specified in the filter's cornerDataArrayOrder attribute.
-
-_This attribute is only used with the constructor, and the set() and updateCornersData() functions. It is not retained by the object_
-
-@property cornersData
-@type Array, or Object
-**/
-		/**
-The number of resize loops to preform to get rid of interference patterns in the final result
-
-@property cornersInterferenceLoops
-@type Number
-@default 2
-**/
-		this.cornersInterferenceLoops = 2;
-		/**
-The resize factor used as part of the functionality to rid the final result of interference patterns
-
-@property cornersInterferenceFactor
-@type Number
-@default 1.03
-**/
-		this.cornersInterferenceFactor = 1.03;
-		/**
 Index of mouse vector to use when pivot === 'mouse'
 
 The Pad.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
@@ -2969,12 +2878,6 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 		flipUpend: false,
 		lockX: false,
 		lockY: false,
-		useCorners: false,
-		cornersDataArrayOrder: ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly'],
-		corners: {},
-		c: {},
-		cornersInterferenceLoops: 2,
-		cornersInterferenceFactor: 1.03,
 		roll: 0,
 		mouseIndex: 'mouse',
 		/**
@@ -3080,9 +2983,6 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 		}
 		if (my.xto(items.handle, items.handleX, items.handleY)) {
 			this.setHandle(items);
-		}
-		if (items.cornersData) {
-			this.updateCorners(items.cornersData);
 		}
 		this.animationPositionSet(items);
 		return this;
@@ -3236,27 +3136,6 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 			name: clone.type + '.' + clone.name + '.handle'
 		});
 		clone = this.animationPositionClone(clone, items);
-		temp = my.safeObject(items.cornersData);
-		clone.corners = {
-			tlx: my.xtGet(temp.x, clone.corners.tlx),
-			tly: my.xtGet(temp.x, clone.corners.tly),
-			trx: my.xtGet(temp.x, clone.corners.trx),
-			try: my.xtGet(temp.x, clone.corners.try),
-			brx: my.xtGet(temp.x, clone.corners.brx),
-			bry: my.xtGet(temp.x, clone.corners.bry),
-			blx: my.xtGet(temp.x, clone.corners.blx),
-			bly: my.xtGet(temp.x, clone.corners.bly)
-		};
-		clone.c = {
-			tlx: null,
-			tly: null,
-			trx: null,
-			try: null,
-			brx: null,
-			bry: null,
-			blx: null,
-			bly: null
-		};
 		return clone;
 	};
 	/**
@@ -3266,140 +3145,6 @@ Position.setDelta hook function - modified by animation extension
 **/
 	my.Position.prototype.animationPositionClone = function(a, items) {
 		return a;
-	};
-	/**
-Helper function - updates corners object with new corner data
-
-If data is supplied as an items (raw JavaScript) Object, it can include the following corners-related attributes:
-
-* __tlx__ or __topLeftX__
-* __tly__ or __topLeftY__
-* __trx__ or __topRightX__
-* __try__ or __topRightY__
-* __brx__ or __bottomRightX__
-* __bry__ or __bottomRightY__
-* __blx__ or __bottomLeftX__
-* __bly__ or __bottomLeftY__
-
-Corners data can also be supplied for each of the following attributes as an object containing x and y attributes - for instance a Vector object:
-
-* __topLeft__
-* __topRight__
-* __bottomRight__
-* __bottomLeft__
-
-@method updateCornersData
-@param {Object} items - Object with key:value pairs - see the __corners__ object for details of the object's attributes. Alternatively the function can take a list of (eight) Numbers or percentage strings, or an array of (eight) values
-@return this
-@chainable
-**/
-	my.Position.prototype.updateCornersData = function() {
-		var temp,
-			newData,
-			items,
-			slice = Array.prototype.slice.call(arguments);
-
-		if (Object.prototype.toString.call(slice[0]) === '[object Object]') {
-			items = slice[0];
-			this.cornerDataArrayOrder = my.xtGet(items.cornerDataArrayOrder, this.cornerDataArrayOrder);
-			if (items.cornersData) {
-				if (Array.isArray(items.cornersData)) {
-					newData = my.xtGet(items.cornerDataArray, false);
-				}
-				else {
-					items = items.cornersData;
-				}
-			}
-		}
-		else {
-			if (Array.isArray(slice[0])) {
-				newData = slice[0];
-			}
-			else {
-				newData = slice;
-			}
-		}
-
-		if (newData) {
-			this.corners.tlx = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('tlx')], this.corners.tlx, 0);
-			this.corners.tly = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('tly')], this.corners.tly, 0);
-			this.corners.trx = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('trx')], this.corners.trx, 1);
-			this.corners.try = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('try')], this.corners.try, 0);
-			this.corners.brx = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('brx')], this.corners.brx, 1);
-			this.corners.bry = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('bry')], this.corners.bry, 1);
-			this.corners.blx = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('blx')], this.corners.blx, 0);
-			this.corners.bly = my.xtGet(newData[this.cornerDataArrayOrder.indexOf('bly')], this.corners.bly, 1);
-		}
-		else {
-			temp = my.safeObject(items.topLeft);
-			this.corners.tlx = my.xtGet(temp.x, items.tlx, items.topLeftX, this.corners.tlx, 0);
-			this.corners.tly = my.xtGet(temp.y, items.tly, items.topLeftY, this.corners.tly, 0);
-			temp = my.safeObject(items.topRight);
-			this.corners.trx = my.xtGet(temp.x, items.trx, items.topRightX, this.corners.trx, 1);
-			this.corners.try = my.xtGet(temp.y, items.try, items.topRightY, this.corners.try, 0);
-			temp = my.safeObject(items.bottomRight);
-			this.corners.brx = my.xtGet(temp.x, items.brx, items.bottomRightX, this.corners.brx, 1);
-			this.corners.bry = my.xtGet(temp.y, items.bry, items.bottomRightY, this.corners.bry, 1);
-			temp = my.safeObject(items.bottomLeft);
-			this.corners.blx = my.xtGet(temp.x, items.blx, items.bottomLeftX, this.corners.blx, 0);
-			this.corners.bly = my.xtGet(temp.y, items.bly, items.bottomLeftY, this.corners.bly, 1);
-		}
-		this.updateCornerPositions(this.originWidth, this.originHeight);
-		return this;
-	};
-	/**
-Helper function
-
-Convert percentage String valuse in the .corners object to numerical values; transfer data to the .c object
-@method updateCornerPositions
-@param {Number} w - entity or cell width 
-@param {Number} h - entity or cell height 
-@return always true
-@private
-**/
-	my.Position.prototype.updateCornerPositions = function(w, h) {
-		var template = ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly'],
-
-			i;
-		w = my.xtGet(w, 300);
-		h = my.xtGet(h, 150);
-
-		for (i = 0; i < 8; i++) {
-			if (my.isa(this.corners[template[i]], 'str')) {
-				if (template[i][2] == 'x') {
-					if (this.corners[template[i]] == 'left') {
-						this.c[template[i]] = 0;
-					}
-					else if (this.corners[template[i]] == 'right') {
-						this.c[template[i]] = w;
-					}
-					else if (this.corners[template[i]] == 'center') {
-						this.c[template[i]] = w / 2;
-					}
-					else {
-						this.c[template[i]] = Math.floor((parseFloat(this.corners[template[i]]) / 100) * w);
-					}
-				}
-				else {
-					if (this.corners[template[i]] == 'top') {
-						this.c[template[i]] = 0;
-					}
-					else if (this.corners[template[i]] == 'bottom') {
-						this.c[template[i]] = h;
-					}
-					else if (this.corners[template[i]] == 'center') {
-						this.c[template[i]] = h / 2;
-					}
-					else {
-						this.c[template[i]] = Math.floor((parseFloat(this.corners[template[i]]) / 100) * h);
-					}
-				}
-			}
-			else {
-				this.c[template[i]] = this.corners[template[i]];
-			}
-		}
-		return true;
 	};
 	/**
 Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object's handle attribute, where the object's frame of reference is its top-left corner
