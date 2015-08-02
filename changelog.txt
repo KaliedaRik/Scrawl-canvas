@@ -47,6 +47,52 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+July - August 2015
+	- Experiments in perspective
+		- work being carried out in new 'perspectives' git branch
+		- added a new Extension - scrawl.perspective.js, alias 'perspective'
+			- currently defines two objects
+				- PerspectivePoint - for defining the attributes of a corner point
+				- PerspectiveCornersCell - actually a new Entity
+					- a bit different from the other Entitys
+						- positioning is by means of corner points, not a single start Vector attribute
+						- doesn't understand, or care about, the handle Vector attribute
+						- doesn't take into account roll or scale attributes
+							- these can be simulated by positioning the corner points appropriately
+						- doesn't have a context object, and only takes account of the following context attributes:
+							- globalAlpha, globalCompositeOperation
+							- lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit
+							- strokeStyle
+							- shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor
+						- can in theory detect collisions on its shape, but:
+							- doesn't yet have a set of collision points
+								- probably restrict these to its corner points
+								- but as it uses a canvas (not Entity) path for its outline, could set collision points along that
+							- no work done (yet) on drag-and-drop functionality
+					- takes as its source either:
+						- an image element - tested in new Demo114
+						- a video - NOT YET TESTED
+						- another cell (canvas element) - NOT YET TESTED
+					- using four perspective points, deforms the image to mimic a perspective view
+					- understands all the current Entity methods (draw, fill, drawFill, etc)
+					- can take raw data to define the position of its corner points on the host cell (NOT FULLY TESTED YET)
+						- data can be absolute (numbers) or relative to the host cell (percentage strings, 'top', 'center', etc)
+					- can use other entities as pivots for its corner points
+						- tested in new Demo114
+					- can use paths to calculate the positions of its corner points (NOT TESTED YET)
+					- can be locked to DOM elements within a scrawl stack
+						- will act like a background to the element, and follow its CSS3 3d transformations
+						- tested in new Demo217
+		- TODO:
+			- consider further positioning issues
+				- in particular relating to drag-and-drop
+				- adding/accounting for handle Vector attribute
+			- test new Entity in as many different scenarios as possible
+				- to see what current Scrawl, Group and Entity functionality breaks when applied to PerspectiveCornersCell
+			- test in various browser environments
+				- developed in Firefox
+				- not yet tested in any other browser or device
+
 150719
 	- testing all demos:
 		- general:

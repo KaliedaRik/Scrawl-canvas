@@ -207,6 +207,7 @@ Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensio
 		physics: 'scrawlPhysics',
 		saveload: 'scrawlSaveLoad',
 		stacks: 'scrawlStacks',
+		perspective: 'scrawlPerspective',
 		quaternion: 'scrawlQuaternion',
 		imageload: 'scrawlImageLoad'
 	};
@@ -253,6 +254,7 @@ Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 		physics: ['quaternion'],
 		saveload: [],
 		stacks: ['quaternion'],
+		perspective: ['quaternion', 'path'],
 		quaternion: []
 	};
 	/**
@@ -328,6 +330,7 @@ Scrawl currently supports the following extensions:
 * __scrawlPath.js__ - alias __path__ - adds _Path_ (SVGTiny path data) entitys to the core
 * __scrawlPathFactories.js__ - alias __factories__ - adds user-friendly Path and Shape factory functions (for lines, quadratic and bezier curves, ellipses, round-corner rectangles, regular shapes such as stars, triangles, etc) to the core
 * __scrawlPhrase.js__ - alias __phrase__ - adds _Phrase_ (single and multiline text) entitys to the core
+* __scrawlPerspective.js__ - alias __perspective__ - adds _Perspective_ functionality to the core (experimental)
 * __scrawlPhysics.js__ - alias __physics__ - adds a physics engine to the core (experimental)
 * __scrawlSaveLoad.js__ - alias __saveload__ - adds JSON object save and load functionality to the core (experimental)
 * __scrawlShape.js__ - alias __shape__ - adds _Shape_ (path-like shapes) entitys to the core
@@ -4620,7 +4623,7 @@ Composition method to be used when copying this Cell's &lt;canvas&gt; element to
 * 'copy'
 * 'xor'
 
-_Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers_
+_Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers. The scrawl.device object includes details of which operations the browser supports._
 @property globalCompositeOperation
 @type String
 @default 'source-over'

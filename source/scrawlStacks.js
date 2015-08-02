@@ -718,6 +718,71 @@ A flag to determine whether an element uses the browser viewport for its positio
 **/
 		my.d.PageElement.viewport = false;
 		/**
+A flag to tell scrawl to add corner trackers to the element
+
+Corner trackers can be used by the PerspectiveCornersCell entity to bind its corners to a DOM element within a stack
+@property PageElement.includeCornerTrackers
+@type Boolean
+@default false
+**/
+		my.d.PageElement.includeCornerTrackers = false;
+		/**
+Corner tracker vector
+@property PageElement.topLeft
+@type Vector
+@default false
+**/
+		my.d.PageElement.topLeft = false;
+		/**
+Corner tracker vector
+@property PageElement.topRight
+@type Vector
+@default false
+**/
+		my.d.PageElement.topRight = false;
+		/**
+Corner tracker vector
+@property PageElement.bottomRight
+@type Vector
+@default false
+**/
+		my.d.PageElement.bottomRight = false;
+		/**
+Corner tracker vector
+@property PageElement.bottomLeft
+@type Vector
+@default false
+**/
+		my.d.PageElement.bottomLeft = false;
+		/**
+Corner tracker div element
+@property PageElement.topLeftDiv
+@type DOM element object
+@default false
+**/
+		my.d.PageElement.topLeftDiv = false;
+		/**
+Corner tracker div element
+@property PageElement.topRightDiv
+@type DOM element object
+@default false
+**/
+		my.d.PageElement.topRightDiv = false;
+		/**
+Corner tracker div element
+@property PageElement.bottomRightDiv
+@type DOM element object
+@default false
+**/
+		my.d.PageElement.bottomRightDiv = false;
+		/**
+Corner tracker div element
+@property PageElement.bottomLeftDiv
+@type DOM element object
+@default false
+**/
+		my.d.PageElement.bottomLeftDiv = false;
+		/**
 Index of mouse vector to use when pivot === 'mouse'
 
 The Pad/Stack/Element.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
@@ -822,8 +887,78 @@ PageElement constructor hook function - modified by stacks module
 			this.offset = my.makeVector({
 				name: this.type + '.' + this.name + '.offset'
 			});
+			this.includeCornerTrackers = my.xtGet(items.includeCornerTrackers, false);
+			if (this.includeCornerTrackers) {
+				this.addCornerTrackers();
+			}
 			this.mouseIndex = my.xtGet(items.mouseIndex, 'mouse');
 			this.offset.flag = false;
+		};
+		/**
+@method addCornerTrackers
+@return This
+@chainable
+@private
+**/
+		my.PageElement.prototype.addCornerTrackers = function() {
+			var corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+				temp,
+				el = this.getElement(),
+				i;
+			for (i = 0; i < 4; i++) {
+				this[corners[i]] = my.makeVector();
+				temp = document.createElement('div');
+				temp.id = this.name + '_' + corners[i];
+				temp.style.width = 0;
+				temp.style.height = 0;
+				temp.style.margin = 0;
+				temp.style.border = 0;
+				temp.style.padding = 0;
+				temp.style.position = 'absolute';
+				switch (corners[i]) {
+					case 'topLeft':
+						temp.style.top = 0;
+						temp.style.left = 0;
+						break;
+					case 'topRight':
+						temp.style.top = 0;
+						temp.style.right = 0;
+						break;
+					case 'bottomRight':
+						temp.style.bottom = 0;
+						temp.style.right = 0;
+						break;
+					case 'bottomLeft':
+						temp.style.bottom = 0;
+						temp.style.left = 0;
+						break;
+				}
+				el.appendChild(temp);
+				this[corners[i] + 'Div'] = temp;
+			}
+			this.updateCornerTrackers();
+			return this;
+		};
+		/**
+@method updateCornerTrackers
+@return This
+@chainable
+@private
+**/
+		my.PageElement.prototype.updateCornerTrackers = function() {
+			var corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+				temp,
+				stack = my.stack[my.group[this.group].stack],
+				el = this.getElement(),
+				i;
+			for (i = 0; i < 4; i++) {
+				if (this[corners[i]] && this[corners[i] + 'Div']) {
+					temp = this[corners[i] + 'Div'].getBoundingClientRect();
+					this[corners[i]].x = temp.left + my.device.offsetX - stack.displayOffsetX - parseFloat(el.style.borderLeftWidth);
+					this[corners[i]].y = temp.top + my.device.offsetY - stack.displayOffsetY - parseFloat(el.style.borderTopWidth);
+				}
+			}
+			return this;
 		};
 		/**
 Augments Base.get() to retrieve DOM element width and height values, and stack-related attributes
@@ -920,6 +1055,12 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			}
 			if (my.xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
 				this.setDeltaRotation(items);
+			}
+			if (my.xt(items.includeCornerTrackers)) {
+				this.includeCornerTrackers = items.includeCornerTrackers;
+				if (this.includeCornerTrackers && !this.topLeftDiv) {
+					this.addCornerTrackers();
+				}
 			}
 			if (my.xto(items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				if (my.group[this.group] && my.group[this.group].checkEqualDimensions()) {
@@ -1470,6 +1611,9 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				pere2[0].style.left = (pere2[2]) ? ((pere2[1].x * this.scale) + this.offset.x) + 'px' : (pere2[1].x + this.offset.x) + 'px';
 				pere2[0].style.top = (pere2[3]) ? ((pere2[1].y * this.scale) + this.offset.y) + 'px' : (pere2[1].y + this.offset.y) + 'px';
 			}
+
+			this.updateCornerTrackers();
+
 			return this;
 		};
 		/**
