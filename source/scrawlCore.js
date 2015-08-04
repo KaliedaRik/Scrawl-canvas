@@ -198,7 +198,6 @@ Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensio
 		path: 'scrawlPath',
 		shape: 'scrawlShape',
 		images: 'scrawlImages',
-		frame: 'scrawlFrame',
 		animation: 'scrawlAnimation',
 		collisions: 'scrawlCollisions',
 		factories: 'scrawlPathFactories',
@@ -207,7 +206,7 @@ Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensio
 		physics: 'scrawlPhysics',
 		saveload: 'scrawlSaveLoad',
 		stacks: 'scrawlStacks',
-		perspective: 'scrawlPerspective',
+		frame: 'scrawlFrame',
 		quaternion: 'scrawlQuaternion',
 		imageload: 'scrawlImageLoad'
 	};
@@ -245,7 +244,7 @@ Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 		path: [],
 		shape: [],
 		images: ['imageload'],
-		frame: ['imageload'],
+		imageload: [],
 		animation: [],
 		collisions: [],
 		factories: [],
@@ -254,7 +253,7 @@ Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 		physics: ['quaternion'],
 		saveload: [],
 		stacks: ['quaternion'],
-		perspective: ['quaternion', 'path'],
+		frame: [],
 		quaternion: []
 	};
 	/**

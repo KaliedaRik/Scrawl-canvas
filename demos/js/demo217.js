@@ -55,13 +55,7 @@ var mycode = function() {
 
 	//style the stack elements
 	mydiv.set({
-		startX: 300,
-		startY: 200,
-		handleX: 225,
-		handleY: 150,
-		width: 450,
-		height: 300,
-		border: '1px solid blue',
+		border: '0',
 		padding: '10px',
 		color: 'white',
 		textShadow: '0 0 4px black',
@@ -69,10 +63,16 @@ var mycode = function() {
 	});
 
 	//build entity
-	swan = scrawl.makePerspectiveCornersCell({
+	swan = scrawl.makeFrame({
 		name: 'swan',
-		lockTo: 'mydiv',
-		source: 'swan'
+		lockFrameTo: 'mydiv',
+		source: 'swan',
+		startX: 300,
+		startY: 200,
+		handleX: 225,
+		handleY: 150,
+		width: 450,
+		height: 300
 	});
 
 
@@ -141,8 +141,8 @@ var mycode = function() {
 				items.startY = currentStartY;
 				items.handleX = currentHandleX;
 				items.handleY = currentHandleY;
-				mydiv.set(items);
-				swan.redraw = true;
+				swan.set(items);
+				// swan.redraw = true;
 			}
 		}
 	};
@@ -167,7 +167,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['stacks', 'perspective', 'images'],
+	extensions: ['stacks', 'frame', 'images'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

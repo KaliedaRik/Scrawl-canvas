@@ -21,84 +21,84 @@
 //---------------------------------------------------------------------------------
 
 /**
-# scrawlPerspective
+# scrawlFrame
 
 ## Purpose and features
 
-The Perspective module adds PerspectiveCell entitys to the core module
+The Frame module adds PerspectiveCell entitys to the core module
 
 * ...
 
-@module scrawlPerspective
+@module scrawlFrame
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'perspective')) {
+if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'frame')) {
 	var scrawl = (function(my) {
 		'use strict';
 		/**
 # window.scrawl
 
-scrawlPerspective module adaptions to the Scrawl library object
+scrawlFrame module adaptions to the Scrawl library object
 
-@class window.scrawl_Perspective
+@class window.scrawl_Frame
 **/
 
 		/**
-Alias for makePerspectivePoint()
-@method newPerspectivePoint
+Alias for makeFramePoint()
+@method newFramePoint
 @deprecated
 **/
-		my.newPerspectivePoint = function(items) {
-			return new my.PerspectivePoint(items);
+		my.newFramePoint = function(items) {
+			return new my.FramePoint(items);
 		};
 		/**
-A __factory__ function to generate new PerspectivePoint entitys
-@method makePerspectivePoint
+A __factory__ function to generate new FramePoint entitys
+@method makeFramePoint
 @param {Object} items Key:value Object argument for setting attributes
-@return PerspectivePoint object
+@return FramePoint object
 **/
-		my.makePerspectivePoint = function(items) {
-			return new my.PerspectivePoint(items);
+		my.makeFramePoint = function(items) {
+			return new my.FramePoint(items);
 		};
 		/**
-Alias for makePerspectiveCornersCell()
-@method newPerspectiveCornersCell
+Alias for makeFrame()
+@method newFrame
 @deprecated
 **/
-		my.newPerspectiveCornersCell = function(items) {
-			return new my.PerspectiveCornersCell(items);
+		my.newFrame = function(items) {
+			return new my.Frame(items);
 		};
 		/**
-A __factory__ function to generate new PerspectiveCornersCell entitys
-@method makePerspectiveCornersCell
+A __factory__ function to generate new Frame entitys
+@method makeFrame
 @param {Object} items Key:value Object argument for setting attributes
-@return PerspectiveCell object
+@return Frame object
 **/
-		my.makePerspectiveCornersCell = function(items) {
-			return new my.PerspectiveCornersCell(items);
+		my.makeFrame = function(items) {
+			return new my.Frame(items);
 		};
 
 		/**
-# PerspectivePoint
+# FramePoint
 
 ## Instantiation
 
-* scrawl.makePerspectivePoint()
+* scrawl.makeFramePoint()
 
 ## Purpose
 
-* ...
+* Defines the corner points for a Frame entity
 
 ## Access
 
 * none - like Vectors, only stored locally
 
-@class PerspectivePoint
+@class FramePoint
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-		my.PerspectivePoint = function PerspectivePoint(items) {
+		my.FramePoint = function FramePoint(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.host = my.xtGet(items.host, false);
@@ -121,15 +121,15 @@ A __factory__ function to generate new PerspectiveCornersCell entitys
 			this.setReference();
 			this.setLocal();
 		};
-		my.PerspectivePoint.prototype = Object.create(my.Base.prototype);
+		my.FramePoint.prototype = Object.create(my.Base.prototype);
 		/**
 @property type
 @type String
-@default 'PerspectivePoint'
+@default 'FramePoint'
 @final
 **/
-		my.PerspectivePoint.prototype.type = 'PerspectivePoint';
-		my.d.PerspectivePoint = {
+		my.FramePoint.prototype.type = 'FramePoint';
+		my.d.FramePoint = {
 			host: false,
 			data: false,
 			reference: false,
@@ -152,13 +152,13 @@ A __factory__ function to generate new PerspectiveCornersCell entitys
 				}
 			}
 		};
-		my.mergeInto(my.d.PerspectivePoint, my.d.Base);
+		my.mergeInto(my.d.FramePoint, my.d.Base);
 		/**
 @method get
 @param {String} item Name of attribute to return
 @return attribute
 **/
-		my.PerspectivePoint.prototype.get = function(item) {
+		my.FramePoint.prototype.get = function(item) {
 			if (!item) {
 				this.work.local.set(this.local);
 				return this.work.local;
@@ -173,7 +173,7 @@ A __factory__ function to generate new PerspectiveCornersCell entitys
 @return This
 @chainable
 **/
-		my.PerspectivePoint.prototype.set = function(items) {
+		my.FramePoint.prototype.set = function(items) {
 			this.host = my.xtGet(items.host, this.host);
 			this.data = my.xtGet(items.data, this.data);
 			this.pivot = my.xtGet(items.pivot, this.pivot);
@@ -192,7 +192,7 @@ A __factory__ function to generate new PerspectiveCornersCell entitys
 @chainable
 @private
 **/
-		my.PerspectivePoint.prototype.setReference = function() {
+		my.FramePoint.prototype.setReference = function() {
 			if (this.data) {
 				this.reference = 'data';
 			}
@@ -239,7 +239,7 @@ A __factory__ function to generate new PerspectiveCornersCell entitys
 @chainable
 @private
 **/
-		my.PerspectivePoint.prototype.setLocal = function() {
+		my.FramePoint.prototype.setLocal = function() {
 			if (this.reference === 'data') {
 				this.setLocalFromData();
 			}
@@ -270,7 +270,7 @@ Data should always be an array in the form [x, y, z]
 @chainable
 @private
 **/
-		my.PerspectivePoint.prototype.setLocalFromData = function() {
+		my.FramePoint.prototype.setLocalFromData = function() {
 			var cell = my.cell[my.group[my.entity[this.host].group].cell];
 			if (Array.isArray(this.data)) {
 				this.local.x = (this.data[0].toFixed) ? this.data[0] : this.setLocalFromDataString(this.data[0], cell.actualWidth);
@@ -286,7 +286,7 @@ Data should always be an array in the form [x, y, z]
 @chainable
 @private
 **/
-		my.PerspectivePoint.prototype.setLocalFromDataString = function(item, dimension) {
+		my.FramePoint.prototype.setLocalFromDataString = function(item, dimension) {
 			switch (item) {
 				case 'top':
 				case 'left':
@@ -306,16 +306,16 @@ Data should always be an array in the form [x, y, z]
 @chainable
 @private
 **/
-		my.PerspectivePoint.prototype.setLocalFromPath = function() {
+		my.FramePoint.prototype.setLocalFromPath = function() {
 			return this;
 		};
 
 		/**
-# PerspectiveCornersCell
+# Frame
 
 ## Instantiation
 
-* scrawl.makePerspectiveCornersCell()
+* scrawl.Frame()
 
 ## Purpose
 
@@ -323,14 +323,14 @@ Data should always be an array in the form [x, y, z]
 
 ## Access
 
-* scrawl.entity.PERSPECTIVECORNERSCELLNAME - for the PerspectiveCornersCell entity object
+* scrawl.entity.FRAMENAME - for the Frame entity object
 
-@class PerspectiveCornersCell
+@class Frame
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-		my.PerspectiveCornersCell = function PerspectiveCornersCell(items) {
+		my.Frame = function Frame(items) {
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 
@@ -382,7 +382,7 @@ Data should always be an array in the form [x, y, z]
 			my.Entity.prototype.registerInLibrary.call(this, items);
 			my.pushUnique(my.group[this.group].entitys, this.name);
 
-			this.lockTo = my.xtGet(items.lockTo, false);
+			this.lockFrameTo = my.xtGet(items.lockFrameTo, false);
 
 			this.setCorners(items);
 			this.setEngine(this);
@@ -391,16 +391,16 @@ Data should always be an array in the form [x, y, z]
 
 			return this;
 		};
-		my.PerspectiveCornersCell.prototype = Object.create(my.Base.prototype);
+		my.Frame.prototype = Object.create(my.Base.prototype);
 		/**
 @property type
 @type String
-@default 'PerspectiveCornersCell'
+@default 'Frame'
 @final
 **/
-		my.PerspectiveCornersCell.prototype.type = 'PerspectiveCornersCell';
-		my.PerspectiveCornersCell.prototype.classname = 'entitynames';
-		my.d.PerspectiveCornersCell = {
+		my.Frame.prototype.type = 'Frame';
+		my.Frame.prototype.classname = 'entitynames';
+		my.d.Frame = {
 			topLeft: false,
 			topRight: false,
 			bottomRight: false,
@@ -413,7 +413,7 @@ Data should always be an array in the form [x, y, z]
 			method: 'fill',
 			visibility: true,
 			order: 0,
-			lockTo: false,
+			lockFrameTo: false,
 			globalAlpha: 1,
 			globalCompositeOperation: 'source-over',
 			lineWidth: 1,
@@ -439,13 +439,13 @@ Data should always be an array in the form [x, y, z]
 				start: false
 			}
 		};
-		my.mergeInto(my.d.PerspectiveCornersCell, my.d.Base);
+		my.mergeInto(my.d.Frame, my.d.Base);
 		/**
-PerspectiveCornersCell.registerInLibrary hook function - modified by collisions extension
+Frame.registerInLibrary hook function - modified by collisions extension
 @method collisionsEntityRegisterInLibrary
 @private
 **/
-		my.PerspectiveCornersCell.prototype.collisionsEntityRegisterInLibrary = function(items) {
+		my.Frame.prototype.collisionsEntityRegisterInLibrary = function(items) {
 			return my.Entity.prototype.collisionsEntityRegisterInLibrary.call(this, items);
 		};
 		/**
@@ -455,7 +455,7 @@ Augments Base.set()
 @return This
 @chainable
 **/
-		my.PerspectiveCornersCell.prototype.set = function(items) {
+		my.Frame.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
 			this.setCorners(items);
 			this.setEngine(items);
@@ -469,7 +469,7 @@ Augments Base.set()
 @chainable
 @private
 **/
-		my.PerspectiveCornersCell.prototype.setCorners = function(items) {
+		my.Frame.prototype.setCorners = function(items) {
 			var i,
 				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
 				cornersX = ['tlx', 'trx', 'brx', 'blx'],
@@ -480,7 +480,7 @@ Augments Base.set()
 			for (i = 0; i < 4; i++) {
 				temp = {};
 				if (!this[corners[i]]) {
-					this[corners[i]] = my.makePerspectivePoint({
+					this[corners[i]] = my.makeFramePoint({
 						name: this.name + '_' + corners[i],
 						host: this.name,
 					});
@@ -492,8 +492,8 @@ Augments Base.set()
 					];
 					this[corners[i]].set(temp);
 				}
-				else if (items.lockTo) {
-					temp.lock = items.lockTo;
+				else if (items.lockFrameTo) {
+					temp.lock = items.lockFrameTo;
 					this[corners[i]].set(temp);
 				}
 				else {
@@ -505,8 +505,8 @@ Augments Base.set()
 					this[corners[i]].set(temp);
 				}
 			}
-			if (items.lockTo) {
-				this.lockOn();
+			if (items.lockFrameTo || this.lockFrameTo) {
+				this.lockOn(items);
 			}
 			return this;
 		};
@@ -514,7 +514,7 @@ Augments Base.set()
 @method setEngine
 @private
 **/
-		my.PerspectiveCornersCell.prototype.setEngine = function(items) {
+		my.Frame.prototype.setEngine = function(items) {
 			var design, strokeStyle;
 			if (items.lineWidth) {
 				this.engine.lineWidth = items.lineWidth;
@@ -571,7 +571,7 @@ Augments Base.set()
 @method setDestinationEngine
 @private
 **/
-		my.PerspectiveCornersCell.prototype.setDestinationEngine = function(ctx, cell) {
+		my.Frame.prototype.setDestinationEngine = function(ctx, cell) {
 			var design, strokeStyle,
 				record = my.ctx[cell];
 			if (record.lineWidth != this.lineWidth) {
@@ -640,11 +640,15 @@ Augments Base.set()
 @method lockOn
 @private
 **/
-		my.PerspectiveCornersCell.prototype.lockOn = function() {
-			var el = my.xtGet(my.safeObject(my.stack)[this.lockTo], my.safeObject(my.pad)[this.lockTo], my.safeObject(my.element)[this.lockTo], false),
+		my.Frame.prototype.lockOn = function(items) {
+			var el = my.xtGet(my.safeObject(my.stack)[this.lockFrameTo], my.safeObject(my.pad)[this.lockFrameTo], my.safeObject(my.element)[this.lockFrameTo], false),
 				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
 				i;
 			if (el) {
+				if (!el.topLeft) {
+					el.addCornerTrackers();
+				}
+				el.set(items);
 				for (i = 0; i < 4; i++) {
 					this[corners[i]].local = el[corners[i]];
 				}
@@ -654,7 +658,7 @@ Augments Base.set()
 @method forceStamp
 @private
 **/
-		my.PerspectiveCornersCell.prototype.forceStamp = function(method, cell) {
+		my.Frame.prototype.forceStamp = function(method, cell) {
 			var temp = this.visibility;
 			this.visibility = true;
 			this.stamp(method, cell);
@@ -665,7 +669,7 @@ Augments Base.set()
 @method stamp
 @private
 **/
-		my.PerspectiveCornersCell.prototype.stamp = function(method, cell) {
+		my.Frame.prototype.stamp = function(method, cell) {
 			var dCell = (cell) ? cell : my.group[this.group].cell,
 				dCtx = my.context[dCell],
 				dMethod = (method) ? method : this.method;
@@ -681,7 +685,7 @@ Augments Base.set()
 @method redrawCanvas
 @private
 **/
-		my.PerspectiveCornersCell.prototype.redrawCanvas = function() {
+		my.Frame.prototype.redrawCanvas = function() {
 			var tlx = this.topLeft.local.x,
 				tly = this.topLeft.local.y,
 				trx = this.topRight.local.x,
@@ -745,28 +749,28 @@ Augments Base.set()
 @method getPosition
 @private
 **/
-		my.PerspectiveCornersCell.prototype.getPosition = function(a, b, v) {
+		my.Frame.prototype.getPosition = function(a, b, v) {
 			return ((b - a) * v) + a;
 		};
 		/**
 @method getLength
 @private
 **/
-		my.PerspectiveCornersCell.prototype.getLength = function(xa, ya, xb, yb) {
+		my.Frame.prototype.getLength = function(xa, ya, xb, yb) {
 			return Math.sqrt(Math.pow(xa - xb, 2) + Math.pow(ya - yb, 2));
 		};
 		/**
 @method getAngle
 @private
 **/
-		my.PerspectiveCornersCell.prototype.getAngle = function(xa, ya, xb, yb) {
+		my.Frame.prototype.getAngle = function(xa, ya, xb, yb) {
 			return Math.atan2(ya - yb, xa - xb);
 		};
 		/**
 @method setEasel
 @private
 **/
-		my.PerspectiveCornersCell.prototype.setEasel = function(x, y, a) {
+		my.Frame.prototype.setEasel = function(x, y, a) {
 			var cos = Math.cos(a),
 				sin = Math.sin(a);
 			this.engine.setTransform(-cos, -sin, sin, -cos, x, y);
@@ -775,7 +779,7 @@ Augments Base.set()
 @method resetEasel
 @private
 **/
-		my.PerspectiveCornersCell.prototype.resetEasel = function() {
+		my.Frame.prototype.resetEasel = function() {
 			this.engine.setTransform(1, 0, 0, 1, 0, 0);
 		};
 		/**
@@ -787,7 +791,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @chainable
 @private
 **/
-		my.PerspectiveCornersCell.prototype.clearShadow = function(ctx, cell) {
+		my.Frame.prototype.clearShadow = function(ctx, cell) {
 			if (this.shadowOffsetX || this.shadowOffsetY || this.shadowBlur) {
 				cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
 				cell.clearShadow();
@@ -798,7 +802,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @method prepareStamp
 @private
 **/
-		my.PerspectiveCornersCell.prototype.prepareStamp = function(ctx, cell) {
+		my.Frame.prototype.prepareStamp = function(ctx, cell) {
 			this.setDestinationEngine(ctx, cell);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 		};
@@ -806,7 +810,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @method drawPath
 @private
 **/
-		my.PerspectiveCornersCell.prototype.drawPath = function(ctx, cell) {
+		my.Frame.prototype.drawPath = function(ctx, cell) {
 			ctx.beginPath();
 			ctx.moveTo(this.topLeft.local.x, this.topLeft.local.y);
 			ctx.lineTo(this.topRight.local.x, this.topRight.local.y);
@@ -819,14 +823,14 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @method drawImage
 @private
 **/
-		my.PerspectiveCornersCell.prototype.drawImage = function(ctx, cell) {
+		my.Frame.prototype.drawImage = function(ctx, cell) {
 			ctx.drawImage(this.cell, this.start.x, this.start.y);
 			return this;
 		};
 		/**
 @method clip
 **/
-		my.PerspectiveCornersCell.prototype.clip = function(ctx, cell) {
+		my.Frame.prototype.clip = function(ctx, cell) {
 			this.prepareStamp(ctx, cell);
 			this.drawPath(ctx, cell);
 			ctx.clip();
@@ -835,7 +839,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method clear
 **/
-		my.PerspectiveCornersCell.prototype.clear = function(ctx, cell) {
+		my.Frame.prototype.clear = function(ctx, cell) {
 			this.prepareStamp(ctx, cell);
 			this.drawPath(ctx, cell);
 			ctx.globalCompositeOperation = 'destination-out';
@@ -851,7 +855,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method clearWithBackground
 **/
-		my.PerspectiveCornersCell.prototype.clearWithBackground = function(ctx, cell) {
+		my.Frame.prototype.clearWithBackground = function(ctx, cell) {
 			var color = my.cell[cell].get('backgroundColor');
 			this.prepareStamp(ctx, cell);
 			this.drawPath(ctx, cell);
@@ -868,7 +872,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method draw
 **/
-		my.PerspectiveCornersCell.prototype.draw = function(ctx, cell) {
+		my.Frame.prototype.draw = function(ctx, cell) {
 			this.prepareStamp(ctx, cell);
 			this.drawPath(ctx, cell);
 			ctx.stroke();
@@ -877,7 +881,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method fill
 **/
-		my.PerspectiveCornersCell.prototype.fill = function(ctx, cell) {
+		my.Frame.prototype.fill = function(ctx, cell) {
 			this.prepareStamp(ctx, cell);
 			this.drawImage(ctx, cell);
 			return this;
@@ -885,7 +889,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method drawFill
 **/
-		my.PerspectiveCornersCell.prototype.drawFill = function(ctx, cell) {
+		my.Frame.prototype.drawFill = function(ctx, cell) {
 			this.prepareStamp(ctx, cell);
 			this.drawPath(ctx, cell);
 			ctx.stroke();
@@ -896,7 +900,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method fillDraw
 **/
-		my.PerspectiveCornersCell.prototype.fillDraw = function(ctx, cell) {
+		my.Frame.prototype.fillDraw = function(ctx, cell) {
 			this.prepareStamp(ctx, cell);
 			this.drawImage(ctx, cell);
 			this.drawPath(ctx, cell);
@@ -907,7 +911,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method sinkInto
 **/
-		my.PerspectiveCornersCell.prototype.sinkInto = function(ctx, cell) {
+		my.Frame.prototype.sinkInto = function(ctx, cell) {
 			this.prepareStamp(ctx, cell);
 			this.drawImage(ctx, cell);
 			this.drawPath(ctx, cell);
@@ -917,7 +921,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method floatOver
 **/
-		my.PerspectiveCornersCell.prototype.floatOver = function(ctx, cell) {
+		my.Frame.prototype.floatOver = function(ctx, cell) {
 			this.prepareStamp(ctx, cell);
 			this.drawPath(ctx, cell);
 			ctx.stroke();
@@ -927,13 +931,13 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		/**
 @method none
 **/
-		my.PerspectiveCornersCell.prototype.none = function(ctx, cell) {
+		my.Frame.prototype.none = function(ctx, cell) {
 			return this;
 		};
 		/**
 @method checkHit
 **/
-		my.PerspectiveCornersCell.prototype.checkHit = function(items) {
+		my.Frame.prototype.checkHit = function(items) {
 			items = my.safeObject(items);
 			var tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
 				result = false;

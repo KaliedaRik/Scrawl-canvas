@@ -48,7 +48,7 @@ var mycode = function() {
 		startY: 550
 	});
 
-	test = scrawl.makePerspectiveCornersCell({
+	test = scrawl.makeFrame({
 		name: 'test',
 		topLeftPivot: 'topLeft',
 		topRightPivot: 'topRight',
@@ -106,7 +106,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'wheel', 'perspective'],
+	extensions: ['images', 'wheel', 'frame'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

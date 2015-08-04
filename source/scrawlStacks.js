@@ -947,15 +947,19 @@ PageElement constructor hook function - modified by stacks module
 **/
 		my.PageElement.prototype.updateCornerTrackers = function() {
 			var corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
-				temp,
+				temp, left, top,
 				stack = my.stack[my.group[this.group].stack],
 				el = this.getElement(),
 				i;
 			for (i = 0; i < 4; i++) {
 				if (this[corners[i]] && this[corners[i] + 'Div']) {
 					temp = this[corners[i] + 'Div'].getBoundingClientRect();
-					this[corners[i]].x = temp.left + my.device.offsetX - stack.displayOffsetX - parseFloat(el.style.borderLeftWidth);
-					this[corners[i]].y = temp.top + my.device.offsetY - stack.displayOffsetY - parseFloat(el.style.borderTopWidth);
+					left = parseFloat(el.style.borderLeftWidth);
+					left = isNaN(left) ? 0 : left;
+					top = parseFloat(el.style.borderTopWidth);
+					top = isNaN(top) ? 0 : top;
+					this[corners[i]].x = temp.left + my.device.offsetX - stack.displayOffsetX - left;
+					this[corners[i]].y = temp.top + my.device.offsetY - stack.displayOffsetY - top;
 				}
 			}
 			return this;
