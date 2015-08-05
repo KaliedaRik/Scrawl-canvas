@@ -383,6 +383,7 @@ Data should always be an array in the form [x, y, z]
 			my.pushUnique(my.group[this.group].entitys, this.name);
 
 			this.lockFrameTo = my.xtGet(items.lockFrameTo, false);
+			this.lockElementAttributes = {};
 
 			this.setCorners(items);
 			this.setEngine(this);
@@ -414,6 +415,7 @@ Data should always be an array in the form [x, y, z]
 			visibility: true,
 			order: 0,
 			lockFrameTo: false,
+			lockElementAttributes: false,
 			globalAlpha: 1,
 			globalCompositeOperation: 'source-over',
 			lineWidth: 1,
@@ -461,6 +463,19 @@ Augments Base.set()
 			this.setEngine(items);
 			this.redraw = true;
 			return this;
+		};
+		/**
+Augments Base.clone()
+@method clone
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.Frame.prototype.clone = function(items) {
+			var c = my.Base.prototype.clone.call(this, items);
+			c.setLockElementAttributes(my.mergeOver(this.lockElementAttributes, my.safeObject(items)));
+			c.setCorners(items);
+			return c;
 		};
 		/**
 @method setCorners
@@ -648,11 +663,27 @@ Augments Base.set()
 				if (!el.topLeft) {
 					el.addCornerTrackers();
 				}
-				el.set(items);
+				this.setLockElementAttributes(items);
+				el.set(this.lockElementAttributes);
 				for (i = 0; i < 4; i++) {
 					this[corners[i]].local = el[corners[i]];
 				}
 			}
+		};
+		/**
+@method setLockElementAttributes
+@private
+**/
+		my.Frame.prototype.setLockElementAttributes = function(items) {
+			var keys = Object.keys(items),
+				whitelist = ['startX', 'startY', 'handleX', 'handleY', 'deltaStartX', 'deltaStartY', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant'],
+				i, iz;
+			for (i = 0, iz = keys.length; i < iz; i++) {
+				if (my.contains(whitelist, keys[i])) {
+					this.lockElementAttributes[keys[i]] = items[keys[i]];
+				}
+			}
+			return this;
 		};
 		/**
 @method forceStamp

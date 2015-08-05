@@ -27,8 +27,11 @@ var mycode = function() {
 		border: '0'
 	});
 
-	//style the stack elements - Scrawl does not include an internal method of cloning DOM elements
-	scrawl.element.mydiv1.set({
+	//build entitys
+	scrawl.makeFrame({
+		name: 'lockedSwan',
+		lockFrameTo: 'mydiv1',
+		source: 'swan',
 		startX: 50,
 		startY: 50,
 		width: 250,
@@ -36,24 +39,9 @@ var mycode = function() {
 		pitch: 20,
 		yaw: 30,
 		includeCornerTrackers: true
-	});
-	scrawl.element.mydiv2.set({
-		startX: 350,
-		startY: 50,
-		width: 250,
-		height: 175,
-		pitch: 20,
-		yaw: 30,
-		includeCornerTrackers: true
-	});
-
-	//build entitys
-	scrawl.makeFrame({
-		name: 'lockedSwan',
-		lockFrameTo: 'mydiv1',
-		source: 'swan'
 	}).clone({
 		lockFrameTo: 'mydiv2',
+		startX: 350
 	});
 
 	scrawl.makeFrame({

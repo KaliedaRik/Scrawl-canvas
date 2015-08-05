@@ -55,7 +55,6 @@ var mycode = function() {
 
 	//style the stack elements
 	mydiv.set({
-		border: '0',
 		padding: '10px',
 		color: 'white',
 		textShadow: '0 0 4px black',

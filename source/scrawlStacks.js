@@ -1062,7 +1062,7 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			}
 			if (my.xt(items.includeCornerTrackers)) {
 				this.includeCornerTrackers = items.includeCornerTrackers;
-				if (this.includeCornerTrackers && !this.topLeftDiv) {
+				if (!this.topLeftDiv) {
 					this.addCornerTrackers();
 				}
 			}
