@@ -7,11 +7,6 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
-	var events,
-		stopE,
-		here;
-
 	// import images
 	scrawl.getImagesByClass('demo218');
 

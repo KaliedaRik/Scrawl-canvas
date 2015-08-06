@@ -658,7 +658,17 @@ Augments Base.clone()
 		my.Frame.prototype.lockOn = function(items) {
 			var el = my.xtGet(my.safeObject(my.stack)[this.lockFrameTo], my.safeObject(my.pad)[this.lockFrameTo], my.safeObject(my.element)[this.lockFrameTo], false),
 				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+				parent, temp,
 				i;
+			if (!el) {
+				temp = document.createElement('div');
+				temp.id = this.lockFrameTo;
+				parent = my.pad[my.cell[my.group[this.group].cell].pad].group;
+				if (parent) {
+					document.body.appendChild(temp);
+					el = my.stack[parent].addElementById(this.lockFrameTo);
+				}
+			}
 			if (el) {
 				if (!el.topLeft) {
 					el.addCornerTrackers();

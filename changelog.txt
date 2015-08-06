@@ -47,6 +47,43 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+to 150806
+	- integrated perspective experiments into scrawl
+		- changed extension name to 'scrawlFrame.js' alias 'frame'
+		- changed entity name to 'Frame'
+			- created with scrawl.makeFrame() factory function
+		- changed corners object name to FramePoint
+		- added cloning functionality to Frame entity
+		- added functionality to allow attributes of underlying 'lockFrameTo' element to be set via the Frame.set() function
+		- underlying frame element can be created as part of the Frame construction process
+			- if the 'lockFrameTo' element doesn't already exist, it will be generated automatically
+			- tested in demo218
+	- TODO
+		- add in copyXYWH functionality to allow frame to display just a portion of its image/video/cell
+			- remember to check for bounds - can't copy if ref points < 0 or > width/height of source
+		- new demo (306?) - flag in breeze
+			- to test copy functionality, and that Frames will use physics particles as pivots
+		- add in collision functionality
+			- treat in a similar manner to Block entitys (edge, corner, center collision points)
+		- testing filters functionality
+			- amend demo101 to add a Frame
+		- need demos for path functionality
+			- that individual corners can be made to track separate paths
+			- that 'lockFrameTo' elements can follow a path
+		- add in drag/drop functionality
+			- only for 'lockFrameTo' Frames?
+				- experiment with drag/drop for basic Frames, but not required functionality
+		- add test to make sure Frame GCO and globalAlpha settings are respected
+		- possibly experiment with adding emulation for backfaceVisibility = false ???
+		- investigate best methods for ease of integrating Frame updating as part of a timeline animation 
+			- use case: personalized video
+				- need to keep Frame (and all other) updates in sync with video playback speeds
+				- also need to work out methods of getting corner point data from Adobe
+		- start thinking about spline functionality
+			- can it be built on top of Frames?
+		- ALL FRAME FUNCTIONALITY NEEDS PROPER DOCUMENTATION
+			- and needs to be added to the tutorial page
+
 July - August 2015
 	- Experiments in perspective
 		- work being carried out in new 'perspectives' git branch
