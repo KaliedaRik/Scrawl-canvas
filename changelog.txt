@@ -123,7 +123,7 @@ July - August 2015
 		- TODO:
 			- consider further positioning issues
 				- in particular relating to drag-and-drop
-				- adding/accounting for handle Vector attribute
+				- adding/accounting for handle Vector attribute - DONE
 			- test new Entity in as many different scenarios as possible
 				- to see what current Scrawl, Group and Entity functionality breaks when applied to PerspectiveCornersCell
 			- test in various browser environments

@@ -387,6 +387,7 @@ Data should always be an array in the form [x, y, z]
 
 			this.setCorners(items);
 			this.setEngine(this);
+			this.filtersEntityInit(items);
 
 			this.redraw = true;
 
@@ -433,6 +434,14 @@ Data should always be an array in the form [x, y, z]
 			sourceType: false,
 			cell: false,
 			engine: false,
+			filters: [],
+			filterOnStroke: false,
+			pivot: false,
+			mouseIndex: 'mouse',
+			flipReverse: false,
+			flipUpend: false,
+			lockX: false,
+			lockY: false,
 			group: false,
 			redraw: false,
 			interferenceLoops: 2,
@@ -658,15 +667,19 @@ Augments Base.clone()
 		my.Frame.prototype.lockOn = function(items) {
 			var el = my.xtGet(my.safeObject(my.stack)[this.lockFrameTo], my.safeObject(my.pad)[this.lockFrameTo], my.safeObject(my.element)[this.lockFrameTo], false),
 				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
-				parent, temp,
+				parent, stack, temp,
 				i;
 			if (!el) {
 				temp = document.createElement('div');
 				temp.id = this.lockFrameTo;
 				parent = my.pad[my.cell[my.group[this.group].cell].pad].group;
 				if (parent) {
+					stack = my.stack[parent];
 					document.body.appendChild(temp);
-					el = my.stack[parent].addElementById(this.lockFrameTo);
+					el = stack.addElementById(this.lockFrameTo);
+					el.set({
+						translateZ: stack.get('translateZ') - 1
+					});
 				}
 			}
 			if (el) {
@@ -686,7 +699,7 @@ Augments Base.clone()
 **/
 		my.Frame.prototype.setLockElementAttributes = function(items) {
 			var keys = Object.keys(items),
-				whitelist = ['startX', 'startY', 'handleX', 'handleY', 'deltaStartX', 'deltaStartY', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant'],
+				whitelist = ['start', 'startX', 'startY', 'handle', 'handleX', 'handleY', 'deltaStart', 'deltaStartX', 'deltaStartY', 'deltaHandle', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'deltaPitch', 'deltaYaw', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant', 'translate', 'translateX', 'translateY', 'translateZ', 'mouseIndex'],
 				i, iz;
 			for (i = 0, iz = keys.length; i < iz; i++) {
 				if (my.contains(whitelist, keys[i])) {
@@ -719,8 +732,33 @@ Augments Base.clone()
 					this.redrawCanvas();
 				}
 				this[dMethod](dCtx, dCell);
+				this.stampFilter(dCtx, dCell);
 			}
 			return this;
+		};
+		/**
+Entity constructor hook function - modified by filters module
+@method filtersEntityInit
+@private
+**/
+		my.Frame.prototype.filtersEntityInit = function(items) {
+			my.Entity.prototype.filtersEntityInit.call(this, items);
+		};
+		/**
+Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
+@method stampFilter
+@private
+**/
+		my.Frame.prototype.stampFilter = function(engine, cell, force) {
+			my.Entity.prototype.stampFilter.call(this, engine, cell, force);
+		};
+		/**
+Entity.stamp hook helper function
+@method stampFilterDefault
+@private
+**/
+		my.Frame.prototype.stampFilterDefault = function(engine, cell, force) {
+			return my.Entity.prototype.stampFilterDefault.call(this, engine, cell, force);
 		};
 		/**
 @method redrawCanvas

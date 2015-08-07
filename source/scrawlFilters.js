@@ -328,14 +328,6 @@ Alias for makeNoiseFilter()
 			return my.makeNoiseFilter(items);
 		};
 		/**
-Alias for makePerspectiveCornersFilter()
-@method newPerspectiveCornersFilter
-@deprecated
-**/
-		my.newPerspectiveCornersFilter = function(items) {
-			return my.makePerspectiveCornersFilter(items);
-		};
-		/**
 A __factory__ function to generate new Greyscale filter objects
 @method makeGreyscaleFilter
 @param {Object} items Key:value Object argument for setting attributes
@@ -488,15 +480,6 @@ A __factory__ function to generate new Noise filter objects
 **/
 		my.makeNoiseFilter = function(items) {
 			return new my.NoiseFilter(items);
-		};
-		/**
-A __factory__ function to generate new Perspective (by corners) filter objects
-@method makePerspectiveCornersFilter
-@param {Object} items Key:value Object argument for setting attributes
-@return PerspectiveCornersFilter object
-**/
-		my.makePerspectiveCornersFilter = function(items) {
-			return new my.PerspectiveCornersFilter(items);
 		};
 
 		/**

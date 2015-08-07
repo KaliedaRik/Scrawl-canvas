@@ -38,17 +38,19 @@
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 101</h1>
   <h2>Filters</h2>
-  <h3>Extensions: images, animation, block, filters, wheel, phrase, path, shape, factories</h3>
+  <h3>Extensions: images, animation, block, filters, wheel, phrase, path, shape, factories, stacks, frame</h3>
   <p>Move mouse pointer over canvas.</p>
 
   <img src="img/runningcat.png" id="runningcat" class="demo101" />
   <img src="img/flower01.jpg" id="flower" class="demo101" />
-  <canvas id="mycanvas" width="600" height="300"></canvas>
-  <canvas id="tempcanvas" width="600" height="300"></canvas>
+  <img id="swan" src="img/carousel/swan.png" class="demo101" />
+  <div id="mystack" class="scrawlstack">
+    <canvas id="mycanvas" width="600" height="300"></canvas>
+  </div>
 
   <p id="testmessage"></p>
 
-  <table>
+  <table style="transform: translateZ(1px)">
     <tr class="t1">
       <td class="rowlabel">Entity</td>
       <td>
@@ -59,6 +61,7 @@
           <option value="shapy">Shape</option>
           <option value="pathy">Path</option>
           <option value="piccy">Picture</option>
+          <option value="framy">Frame</option>
         </select>
       </td>
       <td class="rowlabel">Filter</td>
