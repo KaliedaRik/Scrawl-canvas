@@ -194,7 +194,7 @@ Augments Entity.setDelta()
 **/
 		my.Wheel.prototype.setDelta = function(items) {
 			my.Entity.prototype.setDelta.call(this, items);
-			items = (my.isa(items, 'obj')) ? items : {};
+			items = my.safeObject(items);
 			if (my.xt(items.radius)) {
 				this.radius += items.radius;
 				this.width = this.radius * 2;
@@ -496,7 +496,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				my.workcols.v1.y = 0;
 				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
 				for (i = 0, iz = p.length; i < iz; i++) {
-					if (my.isa(p[i], 'num') && p[i] > 1) {
+					if (p[i].toFixed && p[i] > 1) {
 						my.workcols.v2.set(my.workcols.v1);
 						r = 360 / Math.floor(p[i]);
 						for (j = 0; j < p[i]; j++) {
@@ -505,7 +505,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 							this.collisionVectors.push(my.workcols.v2.y);
 						}
 					}
-					else if (my.isa(p[i], 'str')) {
+					else if (p[i].substring) {
 						my.workcols.v2.set(my.workcols.v1);
 						switch (p[i]) {
 							case 'start':
@@ -557,7 +557,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 								break;
 						}
 					}
-					else if (my.isa(p[i], 'vector')) {
+					else if (my.isa_vector(p[i])) {
 						this.collisionVectors.push(p[i].x);
 						this.collisionVectors.push(p[i].y);
 					}

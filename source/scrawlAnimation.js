@@ -203,7 +203,7 @@ Be aware that this is different to the Position.setDelta() function inherited by
 		my.Position.prototype.setDeltaAttribute = function(items) {
 			var temp;
 			items = my.safeObject(items);
-			if (!my.isa(this.delta, 'vector')) {
+			if (!my.isa_vector(this.delta)) {
 				this.delta = my.makeVector(items.delta || this.delta);
 			}
 			temp = my.safeObject(items.delta);
@@ -240,10 +240,10 @@ Permitted argument values include
 		my.Position.prototype.updateStart = function(item) {
 			switch (item) {
 				case 'x':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
 					break;
 				case 'y':
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
 					break;
 				case 'path':
 					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
@@ -254,8 +254,8 @@ Permitted argument values include
 					this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
 						action: 'loop'
 					});
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
 			}
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
@@ -278,10 +278,10 @@ Permitted argument values include
 		my.Position.prototype.revertStart = function(item) {
 			switch (item) {
 				case 'x':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
 					break;
 				case 'y':
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
 					break;
 				case 'path':
 					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
@@ -294,8 +294,8 @@ Permitted argument values include
 						action: 'loop',
 						operation: '-'
 					});
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
 			}
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
@@ -312,7 +312,7 @@ Swaps the values of an attribute between two objects
 **/
 		my.Position.prototype.exchange = function(obj, item) {
 			var temp;
-			if (my.isa(obj, 'obj')) {
+			if (my.isa_obj(obj)) {
 				temp = this[item] || this.get(item);
 				this[item] = obj[item] || obj.get(item);
 				obj[item] = temp;
@@ -329,22 +329,22 @@ Changes the sign (+/-) of specified attribute values
 		my.Position.prototype.reverse = function(item) {
 			switch (item) {
 				case 'deltaX':
-					this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
+					this.delta.x = (this.delta.x.toFixed) ? -this.delta.x : my.reversePercentage(this.delta.x);
 					break;
 				case 'deltaY':
-					this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
+					this.delta.y = (this.delta.y.toFixed) ? -this.delta.y : my.reversePercentage(this.delta.y);
 					break;
 				case 'delta':
-					this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
-					this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
+					this.delta.x = (this.delta.x.toFixed) ? -this.delta.x : my.reversePercentage(this.delta.x);
+					this.delta.y = (this.delta.y.toFixed) ? -this.delta.y : my.reversePercentage(this.delta.y);
 					break;
 				case 'deltaPathPlace':
 					this.deltaPathPlace = -this.deltaPathPlace;
 					break;
 				default:
 					this.deltaPathPlace = -this.deltaPathPlace;
-					this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
-					this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
+					this.delta.x = (this.delta.x.toFixed) ? -this.delta.x : my.reversePercentage(this.delta.x);
+					this.delta.y = (this.delta.y.toFixed) ? -this.delta.y : my.reversePercentage(this.delta.y);
 			}
 			return this;
 		};
@@ -420,21 +420,21 @@ Permitted argument values include
 		my.Cell.prototype.updateStart = function(item) {
 			switch (item) {
 				case 'x':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+					this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
 					break;
 				case 'y':
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+					this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
 					break;
 				case 'start':
 				case 'paste':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
 					break;
 				case 'copy':
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
+					this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
 					break;
 				case 'path':
 					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
@@ -447,10 +447,10 @@ Permitted argument values include
 							action: 'loop'
 						});
 					}
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+					this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
 			}
 			this.setCopy();
 			this.setPaste();
@@ -474,21 +474,21 @@ Permitted argument values include
 		my.Cell.prototype.revertStart = function(item) {
 			switch (item) {
 				case 'x':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
+					this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
 					break;
 				case 'y':
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
+					this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
 					break;
 				case 'start':
 				case 'paste':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
 					break;
 				case 'copy':
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
+					this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
 					break;
 				case 'path':
 					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
@@ -503,10 +503,10 @@ Permitted argument values include
 							operation: '-'
 						});
 					}
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
+					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
+					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
+					this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
+					this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
 			}
 			this.setCopy();
 			this.setPaste();
@@ -534,7 +534,7 @@ Zooms one cell in relation to another cell
 				myH,
 				myX,
 				myY;
-			if (my.isa(item, 'num')) {
+			if (item.toFixed) {
 				sWidth = this.copyWidth;
 				sHeight = this.copyHeight;
 				aWidth = this.actualWidth;
@@ -895,12 +895,12 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			var i, iz, temp;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.targets = (my.isa(items.targets, 'arr')) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
+			this.targets = (my.isa_arr(items.targets)) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
 			this.currentTargets = [];
 			this.initVals = [];
-			this.start = (my.isa(items.start, 'obj')) ? items.start : {};
-			this.engines = (my.isa(items.engines, 'obj')) ? items.engines : {};
-			this.end = (my.isa(items.end, 'obj')) ? items.end : {};
+			this.start = (my.isa_obj(items.start)) ? items.start : {};
+			this.engines = (my.isa_obj(items.engines)) ? items.engines : {};
+			this.end = (my.isa_obj(items.end)) ? items.end : {};
 			this.startTime = Date.now();
 			this.currentTime = Date.now();
 			this.duration = items.duration || 0;
@@ -915,10 +915,10 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			this.nextTween = items.nextTween || '';
 			this.lockObjects = items.lockObjects || false;
 			this.killOnComplete = items.killOnComplete || false;
-			this.callback = (my.isa(items.callback, 'fn')) ? items.callback : false;
+			this.callback = (my.isa_fn(items.callback)) ? items.callback : false;
 			this.order = items.order || 0;
 			for (i = 0, iz = this.targets.length; i < iz; i++) {
-				if (my.isa(this.targets[i], 'str')) {
+				if (this.targets[i].substring) {
 					temp = false;
 					if (my.entity[this.targets[i]]) {
 						temp = my.entity[this.targets[i]];
@@ -1203,7 +1203,7 @@ Tween animation function
 							for (k = 0, kz = keys.length; k < kz; k++) {
 								temp = this.initVals[t][keys[k]];
 								unit = 0;
-								if (my.isa(temp.change, 'str')) {
+								if (temp.change.substring) {
 									measure = temp.change.match(/^-?\d+\.?\d*(\D*)/);
 									unit = measure[1];
 									if (!my.xt(unit)) {
@@ -1234,7 +1234,7 @@ Tween animation function
 						this.reverse = (this.reverse) ? false : true;
 					}
 					if (this.autoReverseAndRun) {
-						if (my.isa(this.currentCount, 'num')) {
+						if (this.currentCount.toFixed) {
 							this.currentCount--;
 							if (this.currentCount > 0) {
 								this.run();
@@ -1247,7 +1247,7 @@ Tween animation function
 							this.run();
 						}
 					}
-					else if (my.isa(this.count, 'bool') && this.count) {
+					else if (my.isa_bool(this.count) && this.count) {
 						this.run();
 					}
 					else {
@@ -1398,7 +1398,7 @@ Run a tween animation
 								end = this.end[keys[m]];
 								temp = parseFloat(end) - parseFloat(start);
 								unit = 0;
-								if (my.isa(end, 'str')) {
+								if (end.substring) {
 									measure = end.match(/^-?\d+\.?\d*(\D*)/);
 									unit = measure[1];
 									if (!my.xt(unit)) {
@@ -1720,10 +1720,10 @@ Set the timeline duration (for actions with % time strings) or event choke value
 		my.Timeline.prototype.set = function(items) {
 			var i, iz, a;
 			items = my.safeObject(items);
-			if (my.isa(items.duration, 'num')) {
+			if (items.duration.toFixed) {
 				this.duration = items.duration;
 			}
-			if (my.isa(items.event, 'num')) {
+			if (items.event.toFixed) {
 				this.event = items.event;
 			}
 			this.resolve();
@@ -1757,7 +1757,7 @@ Add Actions to the timeline - list Actions as one or more arguments to this func
 		my.Timeline.prototype.add = function() {
 			var i, iz,
 				slice = Array.prototype.slice.call(arguments);
-			if (my.isa(slice[0], 'arr')) {
+			if (my.isa_arr(slice[0])) {
 				slice = slice[0];
 			}
 			for (i = 0, iz = slice.length; i < iz; i++) {
@@ -1776,7 +1776,7 @@ Remove Actions from the timeline - list Actions as one or more arguments to this
 		my.Timeline.prototype.remove = function() {
 			var i, iz,
 				slice = Array.prototype.slice.call(arguments);
-			if (my.isa(slice[0], 'arr')) {
+			if (my.isa_arr(slice[0])) {
 				slice = slice[0];
 			}
 			for (i = 0, iz = slice.length; i < iz; i++) {
@@ -1970,7 +1970,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 						actionStart = actionTimes[0] + this.startTime;
 						actionEnd = actionTimes[1] + this.startTime;
 						if (actionStart && actionEnd) {
-							if (my.isa(a.action, 'fn')) {
+							if (my.isa_fn(a.action)) {
 								//raw function action wrapper
 								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
 									a.action();
@@ -2083,7 +2083,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 					actionStart = actionTimes[0] + this.startTime;
 					actionEnd = actionTimes[1] + this.startTime;
 					if (actionStart && actionEnd) {
-						if (my.isa(a.action, 'fn')) {
+						if (my.isa_fn(a.action)) {
 							//raw function action wrapper
 							if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
 								if (a.rollback) {

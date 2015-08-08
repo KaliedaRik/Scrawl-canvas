@@ -926,7 +926,7 @@ getAlpha function
 @private
 **/
 		my.Filter.prototype.getAlpha = function() {
-			var a = (my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) / 100 : this.alpha;
+			var a = (this.alpha.substring) ? parseFloat(this.alpha) / 100 : this.alpha;
 			if (a >= 0 && a <= 1) {
 				return a;
 			}
@@ -1128,7 +1128,7 @@ Add function - takes data, calculates its brightness and replaces the old color 
 				i,
 				iz;
 			alpha = this.getAlpha();
-			brightness = (my.isa(this.brightness, 'str')) ? parseFloat(this.brightness) / 100 : this.brightness;
+			brightness = (this.brightness.substring) ? parseFloat(this.brightness) / 100 : this.brightness;
 			d = data.data;
 			brightness = (brightness < 0) ? 0 : brightness;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
@@ -1205,7 +1205,7 @@ Add function - takes data, calculates its saturation and replaces the old color 
 				i,
 				iz;
 			alpha = this.getAlpha();
-			saturation = (my.isa(this.saturation, 'str')) ? parseFloat(this.saturation) / 100 : this.saturation;
+			saturation = (this.saturation.substring) ? parseFloat(this.saturation) / 100 : this.saturation;
 			d = data.data;
 			saturation = (saturation < 0) ? 0 : saturation;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
@@ -1282,7 +1282,7 @@ Add function - takes data, calculates its threshold and combines it with data
 				i,
 				iz;
 			alpha = this.getAlpha();
-			threshold = (my.isa(this.threshold, 'str')) ? parseFloat(this.threshold) / 100 : this.threshold;
+			threshold = (this.threshold.substring) ? parseFloat(this.threshold) / 100 : this.threshold;
 			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold > 0.5) ? 1 : 0);
 			threshold *= 255;
 			data = my.GreyscaleFilter.prototype.add.call(this, data);
@@ -1381,9 +1381,9 @@ Add function - takes data, calculates its channels and combines it with data
 				i,
 				iz;
 			alpha = this.getAlpha();
-			red = (my.isa(this.red, 'str')) ? parseFloat(this.red) / 100 : this.red;
-			green = (my.isa(this.green, 'str')) ? parseFloat(this.green) / 100 : this.green;
-			blue = (my.isa(this.blue, 'str')) ? parseFloat(this.blue) / 100 : this.blue;
+			red = (this.red.substring) ? parseFloat(this.red) / 100 : this.red;
+			green = (this.green.substring) ? parseFloat(this.green) / 100 : this.green;
+			blue = (this.blue.substring) ? parseFloat(this.blue) / 100 : this.blue;
 			d = data.data;
 			red = (red < 0) ? 0 : red;
 			green = (green < 0) ? 0 : green;
@@ -1635,15 +1635,15 @@ Add function - takes data, calculates its channels and combines it with data
 				i,
 				iz;
 			alpha = this.getAlpha();
-			rr = (my.isa(this.redInRed, 'str')) ? parseFloat(this.redInRed) / 100 : this.redInRed;
-			rg = (my.isa(this.redInGreen, 'str')) ? parseFloat(this.redInGreen) / 100 : this.redInGreen;
-			rb = (my.isa(this.redInBlue, 'str')) ? parseFloat(this.redInBlue) / 100 : this.redInBlue;
-			gr = (my.isa(this.greenInRed, 'str')) ? parseFloat(this.greenInRed) / 100 : this.greenInRed;
-			gg = (my.isa(this.greenInGreen, 'str')) ? parseFloat(this.greenInGreen) / 100 : this.greenInGreen;
-			gb = (my.isa(this.greenInBlue, 'str')) ? parseFloat(this.greenInBlue) / 100 : this.greenInBlue;
-			br = (my.isa(this.blueInRed, 'str')) ? parseFloat(this.blueInRed) / 100 : this.blueInRed;
-			bg = (my.isa(this.blueInGreen, 'str')) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen;
-			bb = (my.isa(this.blueInBlue, 'str')) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue;
+			rr = (this.redInRed.substring) ? parseFloat(this.redInRed) / 100 : this.redInRed;
+			rg = (this.redInGreen.substring) ? parseFloat(this.redInGreen) / 100 : this.redInGreen;
+			rb = (this.redInBlue.substring) ? parseFloat(this.redInBlue) / 100 : this.redInBlue;
+			gr = (this.greenInRed.substring) ? parseFloat(this.greenInRed) / 100 : this.greenInRed;
+			gg = (this.greenInGreen.substring) ? parseFloat(this.greenInGreen) / 100 : this.greenInGreen;
+			gb = (this.greenInBlue.substring) ? parseFloat(this.greenInBlue) / 100 : this.greenInBlue;
+			br = (this.blueInRed.substring) ? parseFloat(this.blueInRed) / 100 : this.blueInRed;
+			bg = (this.blueInGreen.substring) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen;
+			bb = (this.blueInBlue.substring) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue;
 			d = data.data;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3] !== 0) {
@@ -1782,19 +1782,19 @@ SetFilter builds the matrix from width, height and data attributes already suppl
 				k,
 				reqLen,
 				counter = 0;
-			if (!this.height && this.width && my.isa(this.width, 'num') && this.width >= 1) {
+			if (!this.height && this.width && this.width.toFixed && this.width >= 1) {
 				this.width = Math.floor(this.width);
 				reqLen = Math.ceil(this.data.length / this.width);
 				this.height = reqLen;
 				reqLen = this.width * this.height;
 			}
-			else if (!this.width && this.height && my.isa(this.height, 'num') && this.height >= 1) {
+			else if (!this.width && this.height && this.height.toFixed && this.height >= 1) {
 				this.height = Math.floor(this.height);
 				reqLen = Math.ceil(this.data.length / this.height);
 				this.width = reqLen;
 				reqLen = this.width * this.height;
 			}
-			else if (this.width && my.isa(this.width, 'num') && this.width >= 1 && this.height && my.isa(this.height, 'num') && this.height >= 1) {
+			else if (this.width && this.width.toFixed && this.width >= 1 && this.height && this.height.toFixed && this.height >= 1) {
 				this.width = Math.round(this.width);
 				this.height = Math.round(this.height);
 				reqLen = this.width * this.height;
@@ -2121,7 +2121,7 @@ Add function - takes data, calculates its channels and combines it with data
 			this.skip = my.xtGet(items.skip, 1);
 			this.cells = (my.xt(items.cells)) ? items.cells : false;
 			this.includeInvisiblePoints = my.xtGet(items.includeInvisiblePoints, false);
-			if (!my.isa(this.cells, 'arr')) {
+			if (!my.isa_arr(this.cells)) {
 				this.cells = this.getBrush();
 			}
 			my.filter[this.name] = this;
@@ -2180,7 +2180,7 @@ Set attribute values.
 **/
 		my.BlurFilter.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
-			if (!my.isa(items.cells, 'arr')) {
+			if (!my.isa_arr(items.cells)) {
 				this.cells = this.getBrush();
 			}
 		};
@@ -2595,7 +2595,7 @@ Add function - takes data, calculates its channels and combines it with data
 			this.roll = my.xtGet(items.roll, 2);
 			this.cells = (my.xt(items.cells)) ? items.cells : false;
 			this.strength = my.xtGet(items.strength, 0.3);
-			if (!my.isa(this.cells, 'arr')) {
+			if (!my.isa_arr(this.cells)) {
 				this.cells = this.getBrush();
 			}
 			my.filter[this.name] = this;

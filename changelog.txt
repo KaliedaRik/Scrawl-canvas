@@ -47,6 +47,9 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+150808
+	- refactoring code for efficiency gains
+
 to 150806
 	- integrated perspective experiments into scrawl
 		- changed extension name to 'scrawlFrame.js' alias 'frame'

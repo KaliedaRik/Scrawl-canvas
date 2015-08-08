@@ -58,11 +58,11 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 				b, //existing object settings
 				c, //defaults
 				k; //a keys
-			if (my.isa(item, 'str')) {
+			if (item.substring) {
 				item = [item];
 			}
 			for (var i = 0, z = item.length; i < z; i++) {
-				if (my.isa(item[i], 'str')) {
+				if (item[i].substring) {
 					a = JSON.parse(item[i]);
 					if (my.xt(a.type)) {
 						type = a.type.toLowerCase();

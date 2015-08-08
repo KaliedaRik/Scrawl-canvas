@@ -872,7 +872,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 **/
 		my.Frame.prototype.clearShadow = function(ctx, cell) {
 			if (this.shadowOffsetX || this.shadowOffsetY || this.shadowBlur) {
-				cell = (my.isa(cell, 'str')) ? my.cell[cell] : cell;
+				cell = (cell.substring) ? my.cell[cell] : cell;
 				cell.clearShadow();
 			}
 			return this;

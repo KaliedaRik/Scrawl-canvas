@@ -378,7 +378,7 @@ Adds a DOM &lt;img&gt; element to the library
 			my.imageFragment.appendChild(el);
 			my.asset[this.name] = el;
 			my.pushUnique(my.assetnames, this.name);
-			if (my.isa(items.callback, 'fn')) {
+			if (my.isa_fn(items.callback)) {
 				items.callback();
 			}
 			return true;
@@ -394,7 +394,7 @@ Import an image using the supplied url string
 		my.Image.prototype.addImageByUrl = function(items) {
 			var el,
 				that = this;
-			if (my.isa(items.url, 'str')) {
+			if (items.url.substring) {
 				el = document.createElement('img');
 				el.id = this.name;
 				el.onload = function() {
@@ -422,7 +422,7 @@ Import an image using the supplied url string
 							}
 						}
 					}
-					if (my.isa(items.callback, 'fn')) {
+					if (my.isa_fn(items.callback)) {
 						items.callback();
 					}
 				};
@@ -464,7 +464,7 @@ Creates a new &lt;img&gt; element from an existing cell's current display - uses
 		my.Image.prototype.createImageFromCell = function(cell, name) {
 			var data,
 				canvas;
-			if (my.isa(cell, 'str')) {
+			if (cell.substring) {
 				canvas = my.canvas[cell];
 				cell = my.cell[cell];
 				if (my.xt(canvas)) {
@@ -523,11 +523,11 @@ SpriteAnimation attributes can also be set and retrieved directly using Picture.
 			items = my.safeObject(items);
 			my.Base.call(this, items);
 			this.frames = (my.xt(items.frames)) ? [].concat(items.frames) : [];
-			this.currentFrame = items.currentFrame || 0;
-			this.speed = (my.isa(items.speed, 'num')) ? items.speed : 1;
-			this.loop = (my.isa(items.loop, 'str')) ? items.loop : 'end';
-			this.running = (my.isa(items.running, 'str')) ? items.running : 'complete';
-			this.lastCalled = (my.xt(items.lastCalled)) ? items.lastCalled : Date.now();
+			this.currentFrame = my.xtGet(items.currentFrame, 0);
+			this.speed = my.xtGet(items.speed, 1);
+			this.loop = my.xtGet(items.loop, 'end');
+			this.running = my.xtGet(items.running, 'complete');
+			this.lastCalled = my.xtGet(items.lastCalled, Date.now());
 			my.spriteanimation[this.name] = this;
 			my.pushUnique(my.spriteanimationnames, this.name);
 			return this;
@@ -818,14 +818,14 @@ Adds a DOM &lt;video&gt; element to the library
 				this.api = my.asset[this.name];
 				if (this.api.readyState >= readyState) {
 					this.setIntrinsicDimensions();
-					if (my.isa(items.callback, 'fn')) {
+					if (my.isa_fn(items.callback)) {
 						items.callback();
 					}
 				}
 				else {
 					this.api.addEventListener(listener[readyState], function() {
 						this.setIntrinsicDimensions();
-						if (my.isa(items.callback, 'fn')) {
+						if (my.isa_fn(items.callback)) {
 							items.callback();
 						}
 					}, false);

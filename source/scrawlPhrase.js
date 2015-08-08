@@ -1000,8 +1000,8 @@ Permitted methods include:
 				i,
 				iz;
 			p = my.entity[this.phrase];
-			method = (my.isa(method, 'str')) ? method : p.method;
-			cell = (my.isa(cell, 'str') && my.cell[cell]) ? cell : my.cell[my.group[p.group].cell];
+			method = (method.substring) ? method : p.method;
+			cell = (cell.substring && my.cell[cell]) ? cell : my.cell[my.group[p.group].cell];
 			engine = my.context[cell];
 			cell = my.cell[cell];
 			pathLength = my.entity[p.path].getPerimeterLength();
@@ -1028,28 +1028,7 @@ Permitted methods include:
 					engine.translate(x, y);
 					engine.rotate(r);
 					engine.translate(-x, -y);
-					switch (method) {
-						case 'draw':
-							this.draw(engine, cell, x, y);
-							break;
-						case 'fill':
-							this.fill(engine, cell, x, y);
-							break;
-						case 'drawFill':
-							this.drawFill(engine, cell, x, y, p);
-							break;
-						case 'fillDraw':
-							this.fillDraw(engine, cell, x, y, p);
-							break;
-						case 'sinkInto':
-							this.sinkInto(engine, cell, x, y);
-							break;
-						case 'floatOver':
-							this.floatOver(engine, cell, x, y);
-							break;
-						default:
-							//do nothing
-					}
+					this[method](engine, cell, x, y, p);
 					pos += (this.glyphWidths[i] / width) * ratio;
 					if (!my.isBetween(pos, 0, 1, true)) {
 						pos += (pos > 0.5) ? -1 : 1;

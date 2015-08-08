@@ -169,13 +169,13 @@ Augments Entity.set() - sets the local dimensions
 **/
 		my.Block.prototype.setLocalDimensions = function() {
 			var cell = my.cell[my.group[this.group].cell];
-			if (my.isa(this.width, 'str')) {
+			if (this.width.substring) {
 				this.localWidth = (parseFloat(this.width) / 100) * cell.actualWidth * this.scale;
 			}
 			else {
 				this.localWidth = this.width * this.scale || 0;
 			}
-			if (my.isa(this.height, 'str')) {
+			if (this.height.substring) {
 				this.localHeight = (parseFloat(this.height) / 100) * cell.actualHeight * this.scale;
 			}
 			else {

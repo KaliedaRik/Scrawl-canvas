@@ -193,7 +193,7 @@ Add a quaternion to this quaternion
 @chainable
 **/
 		my.Quaternion.prototype.quaternionAdd = function(item) {
-			if (my.isa(item, 'quaternion')) {
+			if (my.isa_quaternion(item)) {
 				this.n += item.n || 0;
 				this.v.x += item.v.x || 0;
 				this.v.y += item.v.y || 0;
@@ -210,7 +210,7 @@ Subtract a quaternion from this quaternion
 @chainable
 **/
 		my.Quaternion.prototype.quaternionSubtract = function(item) {
-			if (my.isa(item, 'quaternion')) {
+			if (my.isa_quaternion(item)) {
 				this.n -= item.n || 0;
 				this.v.x -= item.v.x || 0;
 				this.v.y -= item.v.y || 0;
@@ -226,7 +226,7 @@ Multiply quaternion by a scalar value
 @return This
 **/
 		my.Quaternion.prototype.scalarMultiply = function(item) {
-			if (my.isa(item, 'num')) {
+			if (item.toFixed) {
 				this.n *= item;
 				this.v.x *= item;
 				this.v.y *= item;
@@ -243,7 +243,7 @@ Divide quaternion by a scalar value
 @chainable
 **/
 		my.Quaternion.prototype.scalarDivide = function(item) {
-			if (my.isa(item, 'num') && item !== 0) {
+			if (item.toFixed && item !== 0) {
 				this.n /= item;
 				this.v.x /= item;
 				this.v.y /= item;
@@ -289,10 +289,10 @@ Argument can also be either an existing Quaternion object, or an existing Vector
 				v;
 			items = my.safeObject(items);
 			//var x, y, z, n, v;
-			if (my.isa(items, 'quaternion')) {
+			if (my.isa_quaternion(items)) {
 				return this.setFromQuaternion(items);
 			}
-			if (my.isa(items, 'vector')) {
+			if (my.isa_vector(items)) {
 				return this.setFromVector(items);
 			}
 			if (my.xto(items.pitch, items.yaw, items.roll)) {
@@ -303,10 +303,10 @@ Argument can also be either an existing Quaternion object, or an existing Vector
 			x = (v) ? (v.x || 0) : items.x;
 			y = (v) ? (v.y || 0) : items.y;
 			z = (v) ? (v.z || 0) : items.z;
-			this.n = (my.isa(n, 'num')) ? n : this.n;
-			this.v.x = (my.isa(x, 'num')) ? x : this.v.x;
-			this.v.y = (my.isa(y, 'num')) ? y : this.v.y;
-			this.v.z = (my.isa(z, 'num')) ? z : this.v.z;
+			this.n = (n.toFixed) ? n : this.n;
+			this.v.x = (x.toFixed) ? x : this.v.x;
+			this.v.y = (y.toFixed) ? y : this.v.y;
+			this.v.z = (z.toFixed) ? z : this.v.z;
 			return this;
 		};
 		/**
@@ -317,7 +317,7 @@ Set the values for this quaternion based on the values of the argument quaternio
 @chainable
 **/
 		my.Quaternion.prototype.setFromQuaternion = function(item) {
-			if (my.isa(item, 'quaternion')) {
+			if (my.isa_quaternion(item)) {
 				this.n = item.n;
 				this.v.x = item.v.x;
 				this.v.y = item.v.y;
@@ -334,7 +334,7 @@ Set the values for this quaternion based on the values of the reference vector
 @chainable
 **/
 		my.Quaternion.prototype.setFromVector = function(item) {
-			if (my.isa(item, 'vector')) {
+			if (my.isa_vector(item)) {
 				this.n = 0;
 				this.v.x = item.x;
 				this.v.y = item.y;
@@ -361,7 +361,7 @@ _Quaternion multiplication is not comutative - arithmetic is this*item, not item
 				y2,
 				z2,
 				n2;
-			if (my.isa(item, 'quaternion')) {
+			if (my.isa_quaternion(item)) {
 				n1 = this.n;
 				x1 = this.v.x;
 				y1 = this.v.y;
@@ -395,7 +395,7 @@ _Quaternion multiplication is not comutative - arithmetic is this*item, not item
 				x2,
 				y2,
 				z2;
-			if (my.isa(item, 'vector')) {
+			if (my.isa_vector(item)) {
 				n1 = this.n;
 				x1 = this.v.x;
 				y1 = this.v.y;
@@ -444,7 +444,7 @@ _Quaternion multiplication is not comutative - arithmetic is item (representing 
 @chainable
 **/
 		my.Quaternion.prototype.quaternionRotate = function(item) {
-			if (my.isa(item, 'quaternion')) {
+			if (my.isa_quaternion(item)) {
 				my.workquat.q4.set(item);
 				my.workquat.q5.set(this);
 				return this.set(my.workquat.q4.quaternionMultiply(my.workquat.q5));
@@ -458,7 +458,7 @@ Rotate a Vector by this quaternion
 @return Vector (amended argument); false on failure
 **/
 		my.Quaternion.prototype.vectorRotate = function(item) {
-			if (my.isa(item, 'vector')) {
+			if (my.isa_vector(item)) {
 				return item.rotate3d(this);
 			}
 			return false;
