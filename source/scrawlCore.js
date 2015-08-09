@@ -1440,6 +1440,33 @@ Remove event listeners from the element
 		return true;
 	};
 	/**
+A __utility__ function for performing bucket sorts on scrawl string arrays eg Group.entitys
+@method bucketSort
+@param {String} section scrawl library section name
+@param {String} attribute on which sort will be performed
+@param {Array} a array to be sorted
+@return sorted array
+@private
+**/
+	my.bucketSort = function(section, attribute, a) {
+		var b, i, iz, o, f;
+		b = [[]];
+		for (i = 0, iz = a.length; i < iz; i++) {
+			o = Math.floor(my[section][a[i]][attribute]);
+			if (!b[o]) {
+				b[o] = [];
+			}
+			b[o].push(a[i]);
+		}
+		f = [];
+		for (i = 0, iz = b.length; i < iz; i++) {
+			if (b[i]) {
+				f.push(b[i]);
+			}
+		}
+		return [].concat.apply([], f);
+	};
+	/**
 A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects - see Pad.addNewCell() for more details
 @method addNewCell
 @param {Object} data Initial attribute values for new object
@@ -4063,7 +4090,11 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 				this.addMouseMove();
 			}
 
-			// return this mouseArray
+			// compile and show arrays
+			this.cellsCompileOrder = [].concat(this.cells);
+			this.cellsShowOrder = [].concat(this.cells);
+			this.resortCompile = true;
+			this.resortShow = true;
 			return this;
 		}
 
@@ -4166,9 +4197,13 @@ Display function sorting routine - cells are sorted according to their compileOr
 @private
 **/
 	my.Pad.prototype.sortCellsCompile = function() {
-		this.cells.sort(function(a, b) {
-			return my.cell[a].compileOrder - my.cell[b].compileOrder;
-		});
+		// this.cells.sort(function(a, b) {
+		// 	return my.cell[a].compileOrder - my.cell[b].compileOrder;
+		// });
+		if (this.resortCompile) {
+			this.resortCompile = false;
+			this.cellsCompileOrder = my.bucketSort('cell', 'compileOrder', this.cellsCompileOrder);
+		}
 	};
 	/**
 Display function sorting routine - cells are sorted according to their showOrder attribute value, in ascending order
@@ -4177,9 +4212,13 @@ Display function sorting routine - cells are sorted according to their showOrder
 @private
 **/
 	my.Pad.prototype.sortCellsShow = function() {
-		this.cells.sort(function(a, b) {
-			return my.cell[a].showOrder - my.cell[b].showOrder;
-		});
+		// this.cells.sort(function(a, b) {
+		// 	return my.cell[a].showOrder - my.cell[b].showOrder;
+		// });
+		if (this.resortShow) {
+			this.resortShow = false;
+			this.cellsShowOrder = my.bucketSort('cell', 'showOrder', this.cellsShowOrder);
+		}
 	};
 	/**
 Display function - requests Cells to clear their &lt;canvas&gt; element
@@ -4222,8 +4261,8 @@ By default:
 			i,
 			iz;
 		this.sortCellsCompile();
-		for (i = 0, iz = this.cells.length; i < iz; i++) {
-			cell = my.cell[this.cells[i]];
+		for (i = 0, iz = this.cellsCompileOrder.length; i < iz; i++) {
+			cell = my.cell[this.cellsCompileOrder[i]];
 			if (cell.rendered && cell.compiled) {
 				cell.compile();
 			}
@@ -4254,8 +4293,8 @@ By default, the initial base and display canvases have shown = false:
 		display = my.cell[this.display];
 		base = my.cell[this.base];
 		this.sortCellsShow();
-		for (i = 0, iz = this.cells.length; i < iz; i++) {
-			cell = my.cell[this.cells[i]];
+		for (i = 0, iz = this.cellsShowOrder.length; i < iz; i++) {
+			cell = my.cell[this.cellsShowOrder[i]];
 			if (cell.rendered && cell.shown) {
 				base.copyCellToSelf(cell);
 			}
@@ -4307,6 +4346,10 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 			data.canvas = canvas;
 			cell = my.makeCell(data);
 			my.pushUnique(this.cells, cell.name);
+			my.pushUnique(this.cellsCompileOrder, cell.name);
+			my.pushUnique(this.cellsShowOrder, cell.name);
+			this.resortCompile = true;
+			this.resortShow = true;
 			return cell;
 		}
 		return false;
@@ -4328,9 +4371,13 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
 			if (my.cell[slice[i]]) {
-				this.cells.push(slice[i]);
+				my.pushUnique(this.cells, slice[i]);
+				my.pushUnique(this.cellsCompileOrder, slice[i]);
+				my.pushUnique(this.cellsShowOrder, slice[i]);
 			}
 		}
+		this.resortCompile = true;
+		this.resortShow = true;
 		return this;
 	};
 	/**
@@ -4345,6 +4392,8 @@ _Note: does not delete the canvas, or the Cell object, from the scrawl library_
 	my.Pad.prototype.deleteCell = function(cell) {
 		if (cell.substring) {
 			my.removeItem(this.cells, cell);
+			my.removeItem(this.cellsCompileOrder, cell);
+			my.removeItem(this.cellsShowOrder, cell);
 			if (this.display === cell) {
 				this.display = this.current;
 			}
@@ -4354,6 +4403,8 @@ _Note: does not delete the canvas, or the Cell object, from the scrawl library_
 			if (this.current === cell) {
 				this.current = this.base;
 			}
+			this.resortCompile = true;
+			this.resortShow = true;
 			return this;
 		}
 		return this;
@@ -4743,6 +4794,7 @@ Cell constructor hook function - core module
 		this.globalCompositeOperation = my.xtGet(items.globalCompositeOperation, 'source-over');
 		this.globalAlpha = my.xtGet(items.globalAlpha, 1);
 		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
+		this.sortGroups = true;
 		my.makeGroup({
 			name: this.name,
 			cell: this.name
@@ -4861,6 +4913,12 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 		}
 		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
 			this.offset.flag = false;
+		}
+		if (my.xt(items.compileOrder)) {
+			my.pad[this.pad].resortCompile = true;
+		}
+		if (my.xt(items.showOrder)) {
+			my.pad[this.pad].resortShow = true;
 		}
 		return this;
 	};
@@ -5416,6 +5474,18 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 		return this;
 	};
 	/**
+groupSort
+@method groupSort
+@return nothing
+@private
+**/
+	my.Cell.prototype.groupSort = function() {
+		if (this.sortGroups) {
+			this.sortGroups = false;
+			this.groups = my.bucketSort('group', 'order', this.groups);
+		}
+	};
+	/**
 Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
 
 (This function is replaced by the Filters extension)
@@ -5427,9 +5497,10 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 		var group,
 			i,
 			iz;
-		this.groups.sort(function(a, b) {
-			return my.group[a].order - my.group[b].order;
-		});
+		// this.groups.sort(function(a, b) {
+		// 	return my.group[a].order - my.group[b].order;
+		// });
+		this.groupSort();
 		for (i = 0, iz = this.groups.length; i < iz; i++) {
 			group = my.group[this.groups[i]];
 			if (group.get('visibility')) {
@@ -6255,7 +6326,23 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 	};
 	my.mergeInto(my.d.Group, my.d.Base);
 	/**
+set
+@method set
+@param {Object} items Object containing attribute key:value pairs
+@return This
+@chainable
+**/
+	my.Group.prototype.set = function(items) {
+		my.Base.prototype.set.call(this, items);
+		if (my.xt(items.order)) {
+			my.cell[this.cell].sortGroups = true;
+		}
+		return this;
+	};
+	/**
 Entity sorting routine - entitys are sorted according to their entity.order attribute value, in ascending order
+
+Order values are treated as integers. The sort routine is a form of bucket sort, and should be stable (entitys with equal order values should not be swapped)
 @method sortEntitys
 @return Nothing
 @private
@@ -6263,9 +6350,7 @@ Entity sorting routine - entitys are sorted according to their entity.order attr
 	my.Group.prototype.sortEntitys = function() {
 		if (this.entitySort && this.resort) {
 			this.resort = false;
-			this.entitys.sort(function(a, b) {
-				return my.entity[a].order - my.entity[b].order;
-			});
+			this.entitys = my.bucketSort('entity', 'order', this.entitys);
 		}
 	};
 	/**
@@ -6761,6 +6846,9 @@ Allows users to:
 		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale)) {
 			this.offset.flag = false;
 		}
+		if (my.xt(items.order)) {
+			my.group[this.group].resort = true;
+		}
 		return this;
 	};
 	/**
@@ -7192,7 +7280,8 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		this.oldPivot = this.pivot;
 		this.mouseIndex = my.xtGet(items.id || 'mouse');
 		this.pivot = 'mouse';
-		this.order += this.order + 9999;
+		this.order += 9999;
+		my.group[this.group].resort = true;
 		return this;
 	};
 	/**
@@ -7212,6 +7301,7 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 		this.oldX = null;
 		this.oldY = null;
 		this.mouseIndex = null;
+		my.group[this.group].resort = true;
 		return this;
 	};
 	/**
@@ -7759,6 +7849,7 @@ Animation ordering flag - when set to false, the ordering of animations is skipp
 @default true
 **/
 	my.orderAnimations = true;
+	my.resortAnimations = true;
 	/**
 The Scrawl animation loop
 
@@ -7797,9 +7888,13 @@ Animation sorting routine - animation objects are sorted according to their anim
 @private
 **/
 	my.sortAnimations = function() {
-		my.animate.sort(function(a, b) {
-			return my.animation[a].order - my.animation[b].order;
-		});
+		if (my.resortAnimations) {
+			my.resortAnimations = false;
+			my.animate = my.bucketSort('animation', 'order', my.animate);
+		}
+		// my.animate.sort(function(a, b) {
+		// 	return my.animation[a].order - my.animation[b].order;
+		// });
 	};
 	/**
 Starts the animation loop
@@ -7851,6 +7946,7 @@ Starts the animation loop
 		this.order = items.order || 0;
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
+		my.resortAnimations = true;
 		/**
 Pseudo-attribute used to prevent immediate running of animation when first created
 
@@ -7917,6 +8013,7 @@ Remove this Animation from the scrawl library
 		delete my.animation[this.name];
 		my.removeItem(my.animationnames, this.name);
 		my.removeItem(my.animate, this.name);
+		my.resortAnimations = true;
 		return true;
 	};
 

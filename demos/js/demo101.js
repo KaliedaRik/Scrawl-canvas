@@ -127,6 +127,7 @@ var mycode = function() {
 		copyY: 50,
 		copyWidth: 600,
 		copyHeight: 300,
+		order: 0,
 		source: 'flower'
 	});
 	blocky = scrawl.makeBlock({
@@ -138,6 +139,7 @@ var mycode = function() {
 		handleY: 'center',
 		pivot: 'mouse',
 		visibility: false,
+		order: 5,
 		filters: [current_filter]
 	});
 	wheely = scrawl.makeWheel({
@@ -149,6 +151,7 @@ var mycode = function() {
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
+		order: 2,
 		filters: [current_filter]
 	});
 	scrawl.makeQuadratic({
@@ -171,6 +174,7 @@ var mycode = function() {
 		pathPlace: 0,
 		textAlongPath: 'glyph',
 		visibility: false,
+		order: 2,
 		filters: [current_filter]
 	});
 	pathy = scrawl.makeRegularShape({
@@ -182,6 +186,7 @@ var mycode = function() {
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
+		order: 5,
 		filters: [current_filter]
 	});
 	shapy = scrawl.makeRegularShape({
@@ -196,6 +201,7 @@ var mycode = function() {
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
+		order: 2,
 		filters: [current_filter]
 	});
 	scrawl.makeSpriteAnimation({
@@ -263,6 +269,7 @@ var mycode = function() {
 		animation: 'animatedCat',
 		pivot: 'mouse',
 		visibility: false,
+		order: 17,
 		filters: [current_filter]
 	});
 	framy = scrawl.makeFrame({
@@ -278,6 +285,7 @@ var mycode = function() {
 		visibility: false,
 		lockFrameTo: 'myframe',
 		includeCornerTrackers: true,
+		order: 5,
 		filters: [current_filter]
 	});
 

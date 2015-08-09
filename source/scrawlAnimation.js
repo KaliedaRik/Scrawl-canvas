@@ -963,6 +963,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			}
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
+			my.resortAnimations = true;
 			return this;
 		};
 		my.Tween.prototype = Object.create(my.Base.prototype);
@@ -1170,6 +1171,9 @@ Set tween values
 						a.resolve();
 					}
 				}
+			}
+			if (my.xt(items.order)) {
+				my.resortAnimations = true;
 			}
 			return this;
 		};
@@ -1581,6 +1585,7 @@ Remove this tween from the scrawl library
 			my.removeItem(my.animate, this.name);
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
+			my.resortAnimations = true;
 			return true;
 		};
 
@@ -1619,6 +1624,7 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.duration = my.xtGet(items.duration, 1000);
+			this.order = my.xtGet(items.order, 0);
 			this.effectiveDuration = 0;
 			this.counter = 0;
 			this.startTime = 0;
@@ -1676,9 +1682,10 @@ Sort the actions based on their timeValue values
 @return nothing
 **/
 		my.Timeline.prototype.sortActions = function() {
-			this.actionsList.sort(function(a, b) {
-				return my.animation[a].timeValue - my.animation[b].timeValue;
-			});
+			this.actionsList = my.bucketSort('animation', 'timeValue', this.actionsList);
+			// this.actionsList.sort(function(a, b) {
+			// 	return my.animation[a].timeValue - my.animation[b].timeValue;
+			// });
 		};
 		/**
 Make a new timeupdate customEvent object
@@ -1725,6 +1732,9 @@ Set the timeline duration (for actions with % time strings) or event choke value
 			}
 			if (items.event.toFixed) {
 				this.event = items.event;
+			}
+			if (my.xt(items.order)) {
+				my.resortAnimations = true;
 			}
 			this.resolve();
 			return this;
@@ -2105,7 +2115,6 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 							//timeline action wrapper
 							else {
 								if (a.skipSeek) {
-									console.log(a.action.name, 'skipseek');
 									if (a.rollback) {
 										a.rollback();
 									}
@@ -2166,6 +2175,7 @@ Remove this Timeline from the scrawl library
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.time = items.time || 0;
+			this.order = my.xtGet(items.order, 0);
 			this.convertTime();
 			this.action = my.xtGet(items.action, false);
 			this.reset = my.xtGet(items.reset, false);
@@ -2174,6 +2184,7 @@ Remove this Timeline from the scrawl library
 			this.skipSeek = my.xtGet(items.skipSeek, false);
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
+			my.resortAnimations = true;
 			return this;
 		};
 		my.Action.prototype = Object.create(my.Base.prototype);
@@ -2299,6 +2310,7 @@ Remove this Action from the scrawl library
 		my.Action.prototype.kill = function() {
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
+			my.resortAnimations = true;
 			return true;
 		};
 

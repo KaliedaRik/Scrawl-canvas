@@ -28,7 +28,7 @@ Topics that I want|need to look at (in no particular order) ...
 	
 Currently known bugs
 ------------------------------------------------------------------------------------
-- tracking of touch/pointer events 
+- tracking of touch/pointer events
 	- on mobile is less than satisfactory
 
 - Composite operations
