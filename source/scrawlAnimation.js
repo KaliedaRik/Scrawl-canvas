@@ -139,6 +139,24 @@ Expected values:
 			return false;
 		};
 		/**
+A __utility__ function that adds two numbers between 0 and 1, keeping them within bounds
+
+@method addWithinBounds
+@param {Number} a first number
+@param {Number} b second number
+@return result of calculation
+**/
+		my.addWithinBounds = function(a, b) {
+			var result = a + b;
+			if (result > 1) {
+				return result - 1;
+			}
+			if (result < 0) {
+				return result + 1;
+			}
+			return result;
+		};
+		/**
 Position constructor hook function
 
 Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a 'velocity'
@@ -246,16 +264,18 @@ Permitted argument values include
 					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
 					break;
 				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
-						action: 'loop'
-					});
+					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace);
 					break;
 				default:
-					this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
-						action: 'loop'
-					});
-					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+					if (this.deltaPathPlace) {
+						this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace);
+					}
+					if (this.delta.x) {
+						this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x);
+					}
+					if (this.delta.y) {
+						this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y);
+					}
 			}
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
@@ -284,18 +304,18 @@ Permitted argument values include
 					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
 					break;
 				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
-						action: 'loop',
-						operation: '-'
-					});
+					this.pathPlace = my.addWithinBounds(this.pathPlace, -this.deltaPathPlace);
 					break;
 				default:
-					this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
-						action: 'loop',
-						operation: '-'
-					});
-					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
+					if (this.deltaPathPlace) {
+						this.pathPlace = my.addWithinBounds(this.pathPlace, -this.deltaPathPlace);
+					}
+					if (this.delta.x) {
+						this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x);
+					}
+					if (this.delta.y) {
+						this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y);
+					}
 			}
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
@@ -420,37 +440,57 @@ Permitted argument values include
 		my.Cell.prototype.updateStart = function(item) {
 			switch (item) {
 				case 'x':
-					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
+					if (this.delta.x) {
+						this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x);
+					}
+					if (this.copyDelta.x) {
+						this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x);
+					}
 					break;
 				case 'y':
-					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
+					if (this.delta.y) {
+						this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y);
+					}
+					if (this.copyDelta.y) {
+						this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y);
+					}
 					break;
 				case 'start':
 				case 'paste':
-					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
+					if (this.delta.x) {
+						this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x);
+					}
+					if (this.delta.y) {
+						this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y);
+					}
 					break;
 				case 'copy':
-					this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
+					if (this.copyDelta.x) {
+						this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x);
+					}
+					if (this.copyDelta.y) {
+						this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y);
+					}
 					break;
 				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
-						action: 'loop'
-					});
+					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace);
 					break;
 				default:
-					if (my.xt(this.pathPlace)) {
-						this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
-							action: 'loop'
-						});
+					if (this.deltaPathPlace) {
+						this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace);
 					}
-					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
+					if (this.delta.x) {
+						this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x);
+					}
+					if (this.delta.y) {
+						this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y);
+					}
+					if (this.copyDelta.x) {
+						this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x);
+					}
+					if (this.copyDelta.y) {
+						this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y);
+					}
 			}
 			this.setCopy();
 			this.setPaste();
@@ -474,39 +514,57 @@ Permitted argument values include
 		my.Cell.prototype.revertStart = function(item) {
 			switch (item) {
 				case 'x':
-					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
+					if (this.delta.x) {
+						this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x);
+					}
+					if (this.copyDelta.x) {
+						this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x);
+					}
 					break;
 				case 'y':
-					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
+					if (this.delta.y) {
+						this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y);
+					}
+					if (this.copyDelta.y) {
+						this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y);
+					}
 					break;
 				case 'start':
 				case 'paste':
-					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
+					if (this.delta.x) {
+						this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x);
+					}
+					if (this.delta.y) {
+						this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y);
+					}
 					break;
 				case 'copy':
-					this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
+					if (this.copyDelta.x) {
+						this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x);
+					}
+					if (this.copyDelta.y) {
+						this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y);
+					}
 					break;
 				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
-						action: 'loop',
-						operation: '-'
-					});
+					this.pathPlace = my.addWithinBounds(this.pathPlace, -this.deltaPathPlace);
 					break;
 				default:
-					if (my.xt(this.pathPlace)) {
-						this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
-							action: 'loop',
-							operation: '-'
-						});
+					if (this.deltaPathPlace) {
+						this.pathPlace = my.addWithinBounds(this.pathPlace, -this.deltaPathPlace);
 					}
-					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
+					if (this.delta.x) {
+						this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x);
+					}
+					if (this.delta.y) {
+						this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y);
+					}
+					if (this.copyDelta.x) {
+						this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x);
+					}
+					if (this.copyDelta.y) {
+						this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y);
+					}
 			}
 			this.setCopy();
 			this.setPaste();

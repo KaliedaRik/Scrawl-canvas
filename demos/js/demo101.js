@@ -37,7 +37,7 @@ var mycode = function() {
 	scrawl.stack.mystack.set({
 		width: 600,
 		height: 300,
-		perspectiveZ: 1000
+		perspectiveZ: 800
 	});
 
 	//define filters
@@ -278,10 +278,10 @@ var mycode = function() {
 		width: 200,
 		height: 100,
 		pitch: 30,
-		yaw: 30,
+		yaw: 60,
 		source: 'swan',
 		pivot: 'mouse',
-		method: 'none',
+		method: 'draw',
 		visibility: false,
 		lockFrameTo: 'myframe',
 		includeCornerTrackers: true,
@@ -341,7 +341,6 @@ var mycode = function() {
 
 	scrawl.addListener(['down', 'move'], function(e) {
 		if (e) {
-			e.stopPropagation();
 			e.preventDefault();
 			here = myPad.getMouse();
 			current_entity.set({
@@ -352,7 +351,6 @@ var mycode = function() {
 	}, scrawl.canvas.mycanvas);
 	scrawl.addListener(['up', 'leave'], function(e) {
 		if (e) {
-			e.stopPropagation();
 			e.preventDefault();
 			current_entity.set({
 				mouseIndex: '',

@@ -777,8 +777,8 @@ Entity.stamp hook helper function
 				ymin = Math.min.apply(Math, [tly, tryy, bry, bly]),
 				xmax = Math.max.apply(Math, [tlx, trx, brx, blx]),
 				ymax = Math.max.apply(Math, [tly, tryy, bry, bly]),
-				width = xmax - xmin,
-				height = ymax - ymin,
+				width = xmax - xmin || 1,
+				height = ymax - ymin || 1,
 				dim = Math.max.apply(Math, [width, height]),
 				maxDim = Math.ceil(dim),
 				minDim = Math.floor(dim),
@@ -791,7 +791,7 @@ Entity.stamp hook helper function
 			this.localHeight = height;
 			this.start.x = xmin;
 			this.start.y = ymin;
-			if (src) {
+			if (src && my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
 				this.cell.width = Math.ceil(width);
 				this.cell.height = Math.ceil(height);
 				my.cv.width = maxDim;

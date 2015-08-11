@@ -1833,7 +1833,7 @@ Normalize the Vector to a unit vector
 		if (val > 0) {
 			this.x /= val;
 			this.y /= val;
-			// this.z /= val;
+			this.z /= val;
 		}
 		return this;
 	};
@@ -1858,9 +1858,10 @@ Set attributes to new values
 **/
 	my.Vector.prototype.set = function(items) {
 		items = my.safeObject(items);
-		this.x = (my.xtGet(items.x, this.x));
-		this.y = (my.xtGet(items.y, this.y));
-		// this.z = (my.xtGet(items.z, this.z));
+		var get = my.xtGet;
+		this.x = (get(items.x, this.x));
+		this.y = (get(items.y, this.y));
+		this.z = (get(items.z, this.z));
 		return this;
 	};
 	/**
@@ -1871,8 +1872,7 @@ Compare two Vector objects for equality
 **/
 	my.Vector.prototype.isEqual = function(item) {
 		if (my.isa_vector(item)) {
-			// if (this.x === item.x && this.y === item.y && this.z === item.z) {
-			if (this.x === item.x && this.y === item.y) {
+			if (this.x === item.x && this.y === item.y && this.z === item.z) {
 				return true;
 			}
 		}
@@ -1886,8 +1886,7 @@ Comparea vector-like object to this one for equality
 **/
 	my.Vector.prototype.isLike = function(item) {
 		if (my.isa_obj(item)) {
-			// if (this.x === item.x && this.y === item.y && this.z === item.z) {
-			if (this.x === item.x && this.y === item.y) {
+			if (this.x === item.x && this.y === item.y && this.z === item.z) {
 				return true;
 			}
 		}
@@ -1926,7 +1925,7 @@ Add a Vector to this Vector
 		item = my.safeObject(item);
 		this.x += item.x || 0;
 		this.y += item.y || 0;
-		// this.z += item.z || 0;
+		this.z += item.z || 0;
 		return this;
 	};
 	/**
@@ -1940,7 +1939,7 @@ Subtract a Vector from this Vector
 		item = my.safeObject(item);
 		this.x -= item.x || 0;
 		this.y -= item.y || 0;
-		// this.z -= item.z || 0;
+		this.z -= item.z || 0;
 		return this;
 	};
 	/**
@@ -1954,7 +1953,7 @@ Multiply a Vector with this Vector
 		item = my.safeObject(item);
 		this.x *= item.x || 1;
 		this.y *= item.y || 1;
-		// this.z *= item.z || 1;
+		this.z *= item.z || 1;
 		return this;
 	};
 	/**
@@ -1968,7 +1967,7 @@ Divide a Vector into this Vector
 		item = my.safeObject(item);
 		this.x /= ((item.x || 0) !== 0) ? item.x : 1;
 		this.y /= ((item.y || 0) !== 0) ? item.y : 1;
-		// this.z /= ((item.z || 0) !== 0) ? item.z : 1;
+		this.z /= ((item.z || 0) !== 0) ? item.z : 1;
 		return this;
 	};
 	/**
@@ -1982,7 +1981,7 @@ Multiply this Vector by a scalar value
 		if (item.toFixed) {
 			this.x *= item;
 			this.y *= item;
-			// this.z *= item;
+			this.z *= item;
 			return this;
 		}
 		return this;
@@ -1998,7 +1997,7 @@ Divide this Vector by a scalar value
 		if ((item.toFixed) && item !== 0) {
 			this.x /= item;
 			this.y /= item;
-			// this.z /= item;
+			this.z /= item;
 			return this;
 		}
 		return this;
@@ -2009,8 +2008,7 @@ Retrieve Vector's magnitude value
 @return Magnitude value
 **/
 	my.Vector.prototype.getMagnitude = function() {
-		// return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
-		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+		return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
 	};
 	/**
 Check to see if Vector is a zero vector
@@ -2018,8 +2016,7 @@ Check to see if Vector is a zero vector
 @return True if Vector is non-zero; false otherwise
 **/
 	my.Vector.prototype.checkNotZero = function() {
-		// return (this.x || this.y || this.z) ? true : false;
-		return (this.x || this.y) ? true : false;
+		return (this.x || this.y || this.z) ? true : false;
 	};
 	/**
 Return a clone of this Vector
@@ -2159,12 +2156,14 @@ Rotate a Vector object by a Quaternion rotation
 	my.Vector.prototype.rotate3d = function(item, mag) {
 		var q1,
 			q2,
-			q3;
+			q3,
+			w;
 		if (my.isa_quaternion(item)) {
+			w = my.workquat;
 			mag = (mag.toFixed) ? mag : this.getMagnitude();
-			q1 = my.workquat.q1.set(item);
-			q2 = my.workquat.q2.set(this);
-			q3 = my.workquat.q3.set(item).conjugate();
+			q1 = w.q1.set(item);
+			q2 = w.q2.set(this);
+			q3 = w.q3.set(item).conjugate();
 			q1.quaternionMultiply(q2);
 			q1.quaternionMultiply(q3);
 			this.set(q1.v).setMagnitudeTo(mag);
@@ -2282,8 +2281,10 @@ An attribute value will only be set if the object already has a default value fo
     box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.set = function(items) {
+		var d = my.d[this.type],
+			xt = my.xt;
 		for (var i in items) {
-			if (my.xt(my.d[this.type][i])) {
+			if (xt(d[i])) {
 				this[i] = items[i];
 			}
 		}
@@ -2663,9 +2664,11 @@ Determine viewport dimensions
 @private
 **/
 	my.Device.prototype.getViewportDimensions = function(e) {
+		var d;
 		if (e) {
-			my.device.width = document.documentElement.clientWidth - 1;
-			my.device.height = document.documentElement.clientHeight - 1;
+			d = my.device;
+			d.width = document.documentElement.clientWidth - 1;
+			d.height = document.documentElement.clientHeight - 1;
 			return true;
 		}
 		this.width = document.documentElement.clientWidth - 1;
@@ -2678,9 +2681,12 @@ Determine viewport position within the page
 @private
 **/
 	my.Device.prototype.getViewportPosition = function(e) {
+		var d, get;
 		if (e) {
-			my.device.offsetX = my.xtGet(e.pageX, e.target.offsetX, 0);
-			my.device.offsetY = my.xtGet(e.pageY, e.target.offsetY, 0);
+			d = my.device;
+			get = my.xtGet;
+			d.offsetX = get(e.pageX, e.target.offsetX, 0);
+			d.offsetY = get(e.pageY, e.target.offsetY, 0);
 			return true;
 		}
 		this.offsetX = document.documentElement.scrollLeft || window.pageXOffset;
@@ -2736,8 +2742,12 @@ Certain Scrawl extensions will add functionality to this object, for instance sc
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 	my.Position = function(items) {
+		var so = my.safeObject,
+			d = my.d[this.type],
+			get = my.xtGet,
+			vec = my.makeVector;
 		my.Base.call(this, items);
-		items = my.safeObject(items);
+		items = so(items);
 		/**
 The coordinate Vector representing the object's rotation/flip point
 
@@ -2749,13 +2759,13 @@ SubScrawl, and all Objects that prototype chain to Subscrawl, supports the follo
 @property start
 @type Vector
 **/
-		var temp = my.safeObject(items.start);
-		this.start = my.makeVector({
-			x: my.xtGet(items.startX, temp.x, 0),
-			y: my.xtGet(items.startY, temp.y, 0),
+		var temp = so(items.start);
+		this.start = vec({
+			x: get(items.startX, temp.x, 0),
+			y: get(items.startY, temp.y, 0),
 			name: this.type + '.' + this.name + '.start'
 		});
-		this.work.start = my.makeVector({
+		this.work.start = vec({
 			name: this.type + '.' + this.name + '.work.start'
 		});
 		/**
@@ -2771,13 +2781,13 @@ Where values are Numbers, handle can be treated like any other Vector
 @property handle
 @type Object
 **/
-		temp = my.safeObject(items.handle);
-		this.handle = my.makeVector({
-			x: my.xtGet(items.handleX, temp.x, 0),
-			y: my.xtGet(items.handleY, temp.y, 0),
+		temp = so(items.handle);
+		this.handle = vec({
+			x: get(items.handleX, temp.x, 0),
+			y: get(items.handleY, temp.y, 0),
 			name: this.type + '.' + this.name + '.handle'
 		});
-		this.work.handle = my.makeVector({
+		this.work.handle = vec({
 			name: this.type + '.' + this.name + '.work.handle'
 		});
 		/**
@@ -2786,49 +2796,49 @@ The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting t
 @type String
 @default null
 **/
-		this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
+		this.pivot = get(items.pivot, d.pivot);
 		/**
 The object's scale value - larger values increase the object's size
 @property scale
 @type Number
 @default 1
 **/
-		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
+		this.scale = get(items.scale, d.scale);
 		/**
 Current rotation of the entity, cell or element (in degrees)
 @property roll
 @type Number
 @default 0
 **/
-		this.roll = my.xtGet(items.roll, my.d[this.type].roll);
+		this.roll = get(items.roll, d.roll);
 		/**
 Reflection flag; set to true to flip entity, cell or element along the Y axis
 @property flipReverse
 @type Boolean
 @default false
 **/
-		this.flipReverse = my.xtGet(items.flipReverse, my.d[this.type].flipReverse);
+		this.flipReverse = get(items.flipReverse, d.flipReverse);
 		/**
 Reflection flag; set to true to flip entity, cell or element along the X axis
 @property flipUpend
 @type Boolean
 @default false
 **/
-		this.flipUpend = my.xtGet(items.flipUpend, my.d[this.type].flipUpend);
+		this.flipUpend = get(items.flipUpend, d.flipUpend);
 		/**
 Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis
 @property lockX
 @type Boolean
 @default false
 **/
-		this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
+		this.lockX = get(items.lockX, d.lockX);
 		/**
 Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis
 @property lockY
 @type Boolean
 @default false
 **/
-		this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
+		this.lockY = get(items.lockY, d.lockY);
 		/**
 Positioning helper vector - includes a flag attribute for dirty checking
 @property offset
@@ -2836,7 +2846,7 @@ Positioning helper vector - includes a flag attribute for dirty checking
 @default zero vector
 @private
 **/
-		this.offset = my.makeVector({
+		this.offset = vec({
 			name: this.type + '.' + this.name + '.offset'
 		});
 		this.offset.flag = false;
@@ -2848,7 +2858,7 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 @type String
 @default 'mouse'
 **/
-		this.mouseIndex = my.xtGet(items.mouseIndex, 'mouse');
+		this.mouseIndex = get(items.mouseIndex, 'mouse');
 		this.animationPositionInit(items);
 		this.pathPositionInit(items);
 		return this;
@@ -2975,12 +2985,13 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 @chainable
 **/
 	my.Position.prototype.set = function(items) {
+		var xto = my.xto;
 		items = my.safeObject(items);
 		my.Base.prototype.set.call(this, items);
-		if (my.xto(items.start, items.startX, items.startY)) {
+		if (xto(items.start, items.startX, items.startY)) {
 			this.setStart(items);
 		}
-		if (my.xto(items.handle, items.handleX, items.handleY)) {
+		if (xto(items.handle, items.handleX, items.handleY)) {
 			this.setHandle(items);
 		}
 		this.animationPositionSet(items);
@@ -2994,14 +3005,16 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 @chainable
 **/
 	my.Position.prototype.setStart = function(items) {
-		var temp;
-		items = my.safeObject(items);
+		var temp,
+			so = my.safeObject,
+			get = my.xtGet;
+		items = so(items);
 		if (!my.isa_vector(this.start)) {
 			this.start = my.makeVector(items.start || this.start);
 		}
-		temp = my.safeObject(items.start);
-		this.start.x = my.xtGet(items.startX, temp.x, this.start.x);
-		this.start.y = my.xtGet(items.startY, temp.y, this.start.y);
+		temp = so(items.start);
+		this.start.x = get(items.startX, temp.x, this.start.x);
+		this.start.y = get(items.startY, temp.y, this.start.y);
 		return this;
 	};
 	/**
@@ -3012,14 +3025,16 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 @chainable
 **/
 	my.Position.prototype.setHandle = function(items) {
-		var temp;
-		items = my.safeObject(items);
+		var temp,
+			so = my.safeObject,
+			get = my.xtGet;
+		items = so(items);
 		if (!my.isa_vector(this.handle)) {
 			this.handle = my.makeVector(items.handle || this.handle);
 		}
-		temp = my.safeObject(items.handle);
-		this.handle.x = my.xtGet(items.handleX, temp.x, this.handle.x);
-		this.handle.y = my.xtGet(items.handleY, temp.y, this.handle.y);
+		temp = so(items.handle);
+		this.handle.x = get(items.handleX, temp.x, this.handle.x);
+		this.handle.y = get(items.handleY, temp.y, this.handle.y);
 		return this;
 	};
 	/**
@@ -3041,12 +3056,13 @@ Adds the value of each attribute supplied in the argument to existing values; on
 @chainable
 **/
 	my.Position.prototype.setDelta = function(items) {
+		var xto = my.xto;
 		items = my.safeObject(items);
-		if (my.xto(items.start, items.startX, items.startY)) {
+		if (xto(items.start, items.startX, items.startY)) {
 			this.setDeltaStart(items);
 		}
 		my.Position.prototype.pathPositionSetDelta.call(this, items);
-		if (my.xto(items.handle, items.handleX, items.handleY)) {
+		if (xto(items.handle, items.handleX, items.handleY)) {
 			this.setDeltaHandle(items);
 		}
 		if (items.scale) {
@@ -3064,13 +3080,16 @@ Adds the value of each attribute supplied in the argument to existing values; Th
 	my.Position.prototype.setDeltaStart = function(items) {
 		var temp,
 			x,
-			y;
-		items = my.safeObject(items);
-		temp = my.safeObject(items.start);
-		x = my.xtGet(items.startX, temp.x, 0);
-		y = my.xtGet(items.startY, temp.y, 0);
-		this.start.x = (this.start.x.toFixed) ? this.start.x + x : my.addPercentages(this.start.x, x);
-		this.start.y = (this.start.y.toFixed) ? this.start.y + y : my.addPercentages(this.start.y, y);
+			y,
+			so = my.safeObject,
+			get = my.xtGet,
+			perc = my.addPercentages;
+		items = so(items);
+		temp = so(items.start);
+		x = get(items.startX, temp.x, 0);
+		y = get(items.startY, temp.y, 0);
+		this.start.x = (this.start.x.toFixed) ? this.start.x + x : perc(this.start.x, x);
+		this.start.y = (this.start.y.toFixed) ? this.start.y + y : perc(this.start.y, y);
 	};
 	/**
 Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY
@@ -3082,13 +3101,16 @@ Adds the value of each attribute supplied in the argument to existing values. Th
 	my.Position.prototype.setDeltaHandle = function(items) {
 		var temp,
 			x,
-			y;
-		items = my.safeObject(items);
-		temp = my.safeObject(items.handle);
-		x = my.xtGet(items.handleX, temp.x, 0);
-		y = my.xtGet(items.handleY, temp.y, 0);
-		this.handle.x = (this.handle.x.toFixed) ? this.handle.x + x : my.addPercentages(this.handle.x, x);
-		this.handle.y = (this.handle.y.toFixed) ? this.handle.y + y : my.addPercentages(this.handle.y, y);
+			y,
+			so = my.safeObject,
+			get = my.xtGet,
+			perc = my.addPercentages;
+		items = so(items);
+		temp = so(items.handle);
+		x = get(items.handleX, temp.x, 0);
+		y = get(items.handleY, temp.y, 0);
+		this.handle.x = (this.handle.x.toFixed) ? this.handle.x + x : perc(this.handle.x, x);
+		this.handle.y = (this.handle.y.toFixed) ? this.handle.y + y : perc(this.handle.y, y);
 		return this;
 	};
 	/**
@@ -3119,19 +3141,22 @@ Augments Base.clone(), to allow users to set the start and handle attributes usi
 **/
 	my.Position.prototype.clone = function(items) {
 		var temp,
-			clone;
-		items = my.safeObject(items);
+			clone,
+			so = my.safeObject,
+			vec = my.makeVector,
+			get = my.xtGet;
+		items = so(items);
 		clone = my.Base.prototype.clone.call(this, items);
-		temp = my.safeObject(items.start);
-		clone.start = my.makeVector({
-			x: my.xtGet(items.startX, temp.x, clone.start.x),
-			y: my.xtGet(items.startY, temp.y, clone.start.y),
+		temp = so(items.start);
+		clone.start = vec({
+			x: get(items.startX, temp.x, clone.start.x),
+			y: get(items.startY, temp.y, clone.start.y),
 			name: clone.type + '.' + clone.name + '.start'
 		});
-		temp = my.safeObject(items.handle);
-		clone.handle = my.makeVector({
-			x: my.xtGet(items.handleX, temp.x, clone.handle.x),
-			y: my.xtGet(items.handleY, temp.y, clone.handle.y),
+		temp = so(items.handle);
+		clone.handle = vec({
+			x: get(items.handleX, temp.x, clone.handle.x),
+			y: get(items.handleY, temp.y, clone.handle.y),
 			name: clone.type + '.' + clone.name + '.handle'
 		});
 		clone = this.animationPositionClone(clone, items);
@@ -3204,8 +3229,9 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 **/
 	my.Position.prototype.calculatePOV = function(result, width, height, centered) {
 		var stat_horizontal = ['left', 'center', 'right'],
-			stat_vertical = ['top', 'center', 'bottom'];
-		if ((result.x.substring) && !my.contains(stat_horizontal, result.x)) {
+			stat_vertical = ['top', 'center', 'bottom'],
+			cont = my.contains;
+		if ((result.x.substring) && !cont(stat_horizontal, result.x)) {
 			result.x = (centered) ? ((parseFloat(result.x) / 100) * width) - (width / 2) : (parseFloat(result.x) / 100) * width;
 		}
 		else {
@@ -3221,7 +3247,7 @@ Position.getOffsetStartVector() helper function. Calculates the pixel values for
 					break;
 			}
 		}
-		if ((result.y.substring) && !my.contains(stat_vertical, result.y)) {
+		if ((result.y.substring) && !cont(stat_vertical, result.y)) {
 			result.y = (centered) ? ((parseFloat(result.y) / 100) * height) - (height / 2) : (parseFloat(result.y) / 100) * height;
 		}
 		else {
@@ -3249,10 +3275,12 @@ Calculates the pixel values of the object's handle attribute
 	my.Position.prototype.getOffsetStartVector = function() {
 		var scaleX,
 			scaleY,
-			handle;
+			handle,
+			h = this.handle,
+			s = this.scale;
 		this.resetWork();
-		scaleX = (this.handle.x.substring) ? this.scale : 1;
-		scaleY = (this.handle.y.substring) ? this.scale : 1;
+		scaleX = (h.x.substring) ? s : 1;
+		scaleY = (h.y.substring) ? s : 1;
 		handle = this.getPivotOffsetVector();
 		handle.x *= scaleX;
 		handle.y *= scaleY;
@@ -3274,29 +3302,32 @@ Takes into account lock flag settings
 			entity,
 			mouse,
 			x, y,
-			pad;
+			pad,
+			lockX = this.lockX,
+			lockY = this.lockY,
+			start = this.start;
 		if (my.xt(my.pointnames)) {
 			pivot = my.point[this.pivot];
 			if (pivot) {
 				entity = my.entity[pivot.entity];
 				vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.start);
-				this.start.x = (!this.lockX) ? vector.x : this.start.x;
-				this.start.y = (!this.lockY) ? vector.y : this.start.y;
+				start.x = (!lockX) ? vector.x : start.x;
+				start.y = (!lockY) ? vector.y : start.y;
 				return this;
 			}
 		}
 		pivot = my.entity[this.pivot];
 		if (pivot) {
 			vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.start;
-			this.start.x = (!this.lockX) ? vector.x : this.start.x;
-			this.start.y = (!this.lockY) ? vector.y : this.start.y;
+			start.x = (!lockX) ? vector.x : start.x;
+			start.y = (!lockY) ? vector.y : start.y;
 			return this;
 		}
 		if (this.pivot === 'mouse') {
 			cell = my.cell[cell];
 			pad = my.pad[cell.pad];
-			x = (this.start.x.substring) ? this.convertX(this.start.x, cell) : this.start.x;
-			y = (this.start.y.substring) ? this.convertY(this.start.y, cell) : this.start.y;
+			x = (start.x.substring) ? this.convertX(start.x, cell) : start.x;
+			y = (start.y.substring) ? this.convertY(start.y, cell) : start.y;
 			x = (isNaN(x)) ? 0 : x;
 			y = (isNaN(y)) ? 0 : y;
 			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
@@ -3304,8 +3335,8 @@ Takes into account lock flag settings
 				this.oldX = x;
 				this.oldY = y;
 			}
-			this.start.x = (!this.lockX) ? x + mouse.x - this.oldX : x;
-			this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
+			start.x = (!lockX) ? x + mouse.x - this.oldX : x;
+			start.y = (!lockY) ? y + mouse.y - this.oldY : y;
 			this.oldX = mouse.x;
 			this.oldY = mouse.y;
 		}
@@ -3435,6 +3466,8 @@ The core implementation of this object is a stub that supplies Pad objects with 
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 	my.PageElement = function(items) {
+		var get = my.xtGet,
+		d = my.d[this.type];
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		/**
@@ -3443,21 +3476,21 @@ DOM element width
 @type Number
 @default 300
 **/
-		this.width = my.xtGet(items.width, my.d[this.type].width);
+		this.width = get(items.width, d.width);
 		/**
 DOM element height
 @property height
 @type Number
 @default 150
 **/
-		this.height = my.xtGet(items.height, my.d[this.type].height);
+		this.height = get(items.height, d.height);
 		/**
 The object's scale value - larger values increase the object's size
 @property scale
 @type Number
 @default 1
 **/
-		this.scale = my.xtGet(items.scale, my.d[this.type].scale);
+		this.scale = get(items.scale, d.scale);
 		this.setLocalDimensions();
 		this.stacksPageElementConstructor(items);
 		/**
@@ -3548,15 +3581,17 @@ Augments Base.get() to retrieve DOM element width and height values
 **/
 	my.PageElement.prototype.get = function(item) {
 		var element = this.getElement(),
-			stat_pageElementGet = ['width', 'height', 'position'];
+			stat_pageElementGet = ['width', 'height', 'position'],
+			get = my.xtGet,
+			d = my.d[this.type];
 		if (my.contains(stat_pageElementGet, item)) {
 			switch (item) {
 				case 'width':
-					return my.xtGet(this.localWidth, parseFloat(element.width), my.d[this.type].width);
+					return get(this.localWidth, parseFloat(element.width), d.width);
 				case 'height':
-					return my.xtGet(this.localHeight, parseFloat(element.height), my.d[this.type].height);
+					return get(this.localHeight, parseFloat(element.height), d.height);
 				case 'position':
-					return my.xtGet(this.position, element.style.position);
+					return get(this.position, element.style.position);
 			}
 		}
 		return my.Base.prototype.get.call(this, item);
@@ -3572,27 +3607,29 @@ Augments Base.set() to allow the setting of DOM element dimension values
 @chainable
 **/
 	my.PageElement.prototype.set = function(items) {
+		var xt = my.xt,
+			xto = my.xto;
 		items = my.safeObject(items);
 		my.Base.prototype.set.call(this, items);
-		if (my.xto(items.width, items.height, items.scale)) {
+		if (xto(items.width, items.height, items.scale)) {
 			this.setLocalDimensions();
 			this.setDimensions();
 			this.setDisplayOffsets();
 		}
-		if (my.xt(items.position)) {
+		if (xt(items.position)) {
 			this.position = items.position;
 		}
-		if (my.xt(items.pivot)) {
+		if (xt(items.pivot)) {
 			this.pivot = items.pivot;
 			if (!this.pivot) {
 				delete this.oldX;
 				delete this.oldY;
 			}
 		}
-		if (my.xt(items.mouse)) {
+		if (xt(items.mouse)) {
 			this.initMouse(items.mouse);
 		}
-		if (my.xto(items.title, items.comment)) {
+		if (xto(items.title, items.comment)) {
 			this.setAccessibility(items);
 		}
 		return this;
@@ -3605,14 +3642,15 @@ Handles the setting of DOM element title and data-comment attributes
 @chainable
 **/
 	my.PageElement.prototype.setAccessibility = function(items) {
-		var element;
+		var element,
+			xt = my.xt;
 		items = my.safeObject(items);
 		element = this.getElement();
-		if (my.xt(items.title)) {
+		if (xt(items.title)) {
 			this.title = items.title;
 			element.title = this.title;
 		}
-		if (my.xt(items.comment)) {
+		if (xt(items.comment)) {
 			this.comment = items.comment;
 			element.setAttribute('data-comment', this.comment);
 		}
@@ -3661,8 +3699,9 @@ Helper function - set local dimensions (width, height)
 @private
 **/
 	my.PageElement.prototype.setLocalDimensions = function() {
-		this.localWidth = this.width * this.scale;
-		this.localHeight = this.height * this.scale;
+		var scale = this.scale;
+		this.localWidth = this.width * scale;
+		this.localHeight = this.height * scale;
 		return this;
 	};
 	/**
@@ -3776,11 +3815,18 @@ mousemove event listener function
 @private
 **/
 	my.PageElement.prototype.handleMouseMove = function(e) {
-		var mouseX, mouseY, maxX, maxY, wrapper, i, iz, j, jz, el, touches, newActive, id, altEl, altWrapper;
+		var mouseX, mouseY, maxX, maxY, wrapper, i, iz, j, jz, el, touches, newActive, id, altEl, altWrapper,
+			pad = my.pad,
+			stack = my.stack,
+			element = my.element,
+			al = my.activeListeners,
+			xt = my.xt,
+			vec = my.makeVector,
+			id2 = this.id;
 
-		if (my.xt(this.id)) {
+		if (xt(id2)) {
 			//invoked directly by DOM listeners
-			wrapper = my.pad[this.id] || my.stack[this.id] || my.element[this.id] || false;
+			wrapper = pad[id2] || stack[id2] || element[id2] || false;
 			el = this;
 		}
 		else {
@@ -3799,16 +3845,16 @@ mousemove event listener function
 
 				//get rid of existing mouse vectors for a start - else things get very messy very quickly
 				if (e.type === 'touchstart') {
-					for (j = 0, jz = my.activeListeners.length; j < jz; j++) {
-						altWrapper = my.pad[my.activeListeners[j]] || my.stack[my.activeListeners[j]] || my.element[my.activeListeners[j]] || false;
+					for (j = 0, jz = al.length; j < jz; j++) {
+						altWrapper = pad[al[j]] || stack[al[j]] || element[al[j]] || false;
 						if (altWrapper) {
 							delete altWrapper.mice[id];
 						}
 					}
 				}
 				//determine if a vector already exists for this touch
-				if (!my.xt(wrapper.mice[id])) {
-					wrapper.mice[id] = my.makeVector({
+				if (!xt(wrapper.mice[id])) {
+					wrapper.mice[id] = vec({
 						name: wrapper.type + '.' + wrapper.name + '.t.' + id
 					});
 					wrapper.mice[id].active = null;
@@ -3829,9 +3875,9 @@ mousemove event listener function
 
 				//touchmove doesn't propogate beyond its triggering element
 				if (e.type === 'touchmove') {
-					for (j = 0, jz = my.activeListeners.length; j < jz; j++) {
-						if (this.name !== my.activeListeners[j]) {
-							altEl = my.canvas[my.activeListeners[j]] || my.stk[my.activeListeners[j]] || my.elm[my.activeListeners[j]] || false;
+					for (j = 0, jz = al.length; j < jz; j++) {
+						if (this.name !== al[j]) {
+							altEl = my.canvas[al[j]] || my.stk[al[j]] || my.elm[al[j]] || false;
 							if (altEl) {
 								my.triggerTouchFollow(e, altEl);
 							}
@@ -3873,8 +3919,8 @@ mousemove event listener function
 			id = (e.pointerType !== 'touch') ? e.pointerType : 'p' + e.pointerId;
 
 			//determine if a vector already exists for this pointer
-			if (!my.xt(wrapper.mice[id])) {
-				wrapper.mice[id] = my.makeVector({
+			if (!xt(wrapper.mice[id])) {
+				wrapper.mice[id] = vec({
 					name: wrapper.type + '.' + wrapper.name + '.p.' + id
 				});
 				wrapper.mice[id].active = null;
@@ -3895,8 +3941,8 @@ mousemove event listener function
 		}
 		//mouse/pen event
 		else {
-			if (!my.xt(wrapper.mice.mouse)) {
-				wrapper.mice.mouse = my.makeVector({
+			if (!xt(wrapper.mice.mouse)) {
+				wrapper.mice.mouse = vec({
 					name: wrapper.type + '.' + wrapper.name + '.ui.mouse'
 				});
 				wrapper.mice.mouse.active = null;
@@ -3994,16 +4040,20 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 	my.Pad = function(items) {
 		var display,
 			base,
-			canvas;
+			canvas,
+			get = my.xtGet,
+			d = my.d.Pad,
+			pu = my.pushUnique,
+			makeCell = my.makeCell;
 		items = my.safeObject(items);
 
 		// only proceed if a canvas element has been supplied as the value of items.canvasElement 
 		if (my.isa_canvas(items.canvasElement)) {
 
 			// enhance/amend the items object with essdential data - name, width, height
-			items.width = my.xtGet(items.width, items.canvasElement.width, my.d.Pad.width);
-			items.height = my.xtGet(items.height, items.canvasElement.height, my.d.Pad.height);
-			items.name = my.xtGet(items.name, items.canvasElement.id, items.canvasElement.name, 'Pad');
+			items.width = get(items.width, items.canvasElement.width, d.width);
+			items.height = get(items.height, items.canvasElement.height, d.height);
+			items.name = get(items.name, items.canvasElement.id, items.canvasElement.name, 'Pad');
 
 			// go up the line to populate this Pad with data
 			my.PageElement.call(this, items);
@@ -4016,7 +4066,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 
 			// register this Pad in library
 			my.pad[this.name] = this;
-			my.pushUnique(my.padnames, this.name);
+			pu(my.padnames, this.name);
 
 			/**
 Array of CELLNAME Strings associated with this Pad
@@ -4028,7 +4078,7 @@ Array of CELLNAME Strings associated with this Pad
 			this.cells = [];
 
 			// create a wrapper for the display canvas element
-			display = my.makeCell({
+			display = makeCell({
 				name: this.name,
 				pad: this.name,
 				canvas: items.canvasElement,
@@ -4037,7 +4087,7 @@ Array of CELLNAME Strings associated with this Pad
 				width: this.localWidth,
 				height: this.localHeight
 			});
-			my.pushUnique(this.cells, display.name);
+			pu(this.cells, display.name);
 			/**
 Pad's display (visible) &lt;canvas&gt; element - CELLNAME
 @property display
@@ -4051,7 +4101,7 @@ Pad's display (visible) &lt;canvas&gt; element - CELLNAME
 			canvas.setAttribute('id', this.name + '_base');
 
 			// create a wrapper for the base canvas element
-			base = my.makeCell({
+			base = makeCell({
 				name: this.name + '_base',
 				pad: this.name,
 				canvas: canvas,
@@ -4060,7 +4110,7 @@ Pad's display (visible) &lt;canvas&gt; element - CELLNAME
 				width: '100%',
 				height: '100%'
 			});
-			my.pushUnique(this.cells, base.name);
+			pu(this.cells, base.name);
 			/**
 Pad's base (hidden) &lt;canvas&gt; element - CELLNAME
 @property base
@@ -4085,7 +4135,7 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 			this.setAccessibility(items);
 			this.filtersPadInit();
 			this.padStacksConstructor(items);
-			this.interactive = my.xtGet(items.interactive, true);
+			this.interactive = get(items.interactive, true);
 			if (this.interactive) {
 				this.addMouseMove();
 			}
@@ -4148,12 +4198,14 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 **/
 	my.Pad.prototype.set = function(items) {
 		var base,
-			display;
+			display,
+			cell = my.cell,
+			xto = my.xto;
 		my.PageElement.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		display = my.cell[this.display];
-		base = my.cell[this.base];
-		if (my.xto(items.scale, items.width, items.height)) {
+		display = cell[this.display];
+		base = cell[this.base];
+		if (xto(items.scale, items.width, items.height)) {
 			display.set({
 				pasteWidth: (items.width) ? this.localWidth : display.pasteWidth,
 				pasteHeight: (items.height) ? this.localHeight : display.pasteHeight,
@@ -4164,10 +4216,10 @@ Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and g
 			});
 		}
 		this.padStacksSet(items);
-		if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.width, items.height)) {
+		if (xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.width, items.height)) {
 			this.setDisplayOffsets();
 		}
-		if (my.xto(items.backgroundColor, items.globalAlpha, items.globalCompositeOperation)) {
+		if (xto(items.backgroundColor, items.globalAlpha, items.globalCompositeOperation)) {
 			base.set({
 				backgroundColor: items.backgroundColor || base.backgroundColor,
 				globalAlpha: items.globalAlpha || base.globalAlpha,
@@ -4197,9 +4249,6 @@ Display function sorting routine - cells are sorted according to their compileOr
 @private
 **/
 	my.Pad.prototype.sortCellsCompile = function() {
-		// this.cells.sort(function(a, b) {
-		// 	return my.cell[a].compileOrder - my.cell[b].compileOrder;
-		// });
 		if (this.resortCompile) {
 			this.resortCompile = false;
 			this.cellsCompileOrder = my.bucketSort('cell', 'compileOrder', this.cellsCompileOrder);
@@ -4212,9 +4261,6 @@ Display function sorting routine - cells are sorted according to their showOrder
 @private
 **/
 	my.Pad.prototype.sortCellsShow = function() {
-		// this.cells.sort(function(a, b) {
-		// 	return my.cell[a].showOrder - my.cell[b].showOrder;
-		// });
 		if (this.resortShow) {
 			this.resortShow = false;
 			this.cellsShowOrder = my.bucketSort('cell', 'showOrder', this.cellsShowOrder);
@@ -4230,13 +4276,15 @@ Cells with cleared = true will clear theid displays in preparation for compile/s
 @chainable
 **/
 	my.Pad.prototype.clear = function() {
-		var cell,
+		var current,
+			cells = this.cells,
+			cell = my.cell,
 			i,
 			iz;
-		for (i = 0, iz = this.cells.length; i < iz; i++) {
-			cell = my.cell[this.cells[i]];
-			if (cell.rendered && cell.cleared) {
-				cell.clear();
+		for (i = 0, iz = cells.length; i < iz; i++) {
+			current = cell[cells[i]];
+			if (current.rendered && current.cleared) {
+				current.clear();
 			}
 		}
 		return this;
@@ -4257,14 +4305,16 @@ By default:
 @chainable
 **/
 	my.Pad.prototype.compile = function() {
-		var cell,
+		var cell = my.cell,
+			cells = this.cellsCompileOrder,
+			current,
 			i,
 			iz;
 		this.sortCellsCompile();
-		for (i = 0, iz = this.cellsCompileOrder.length; i < iz; i++) {
-			cell = my.cell[this.cellsCompileOrder[i]];
-			if (cell.rendered && cell.compiled) {
-				cell.compile();
+		for (i = 0, iz = cells.length; i < iz; i++) {
+			current = cell[cells[i]];
+			if (current.rendered && current.compiled) {
+				current.compile();
 			}
 		}
 		return this;
@@ -4288,13 +4338,15 @@ By default, the initial base and display canvases have shown = false:
 		var display,
 			base,
 			cell,
+			cells = my.cell,
+			order = this.cellsShowOrder,
 			i,
 			iz;
-		display = my.cell[this.display];
-		base = my.cell[this.base];
+		display = cells[this.display];
+		base = cells[this.base];
 		this.sortCellsShow();
-		for (i = 0, iz = this.cellsShowOrder.length; i < iz; i++) {
-			cell = my.cell[this.cellsShowOrder[i]];
+		for (i = 0, iz = order.length; i < iz; i++) {
+			cell = cells[order[i]];
 			if (cell.rendered && cell.shown) {
 				base.copyCellToSelf(cell);
 			}
@@ -4333,7 +4385,8 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 **/
 	my.Pad.prototype.addNewCell = function(data) {
 		var canvas,
-			cell;
+			cell,
+			pu = my.pushUnique;
 		data = my.safeObject(data);
 		if (data.name.substring) {
 			data.width = Math.round(data.width) || this.width;
@@ -4345,9 +4398,9 @@ Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and ad
 			data.pad = this.name;
 			data.canvas = canvas;
 			cell = my.makeCell(data);
-			my.pushUnique(this.cells, cell.name);
-			my.pushUnique(this.cellsCompileOrder, cell.name);
-			my.pushUnique(this.cellsShowOrder, cell.name);
+			pu(this.cells, cell.name);
+			pu(this.cellsCompileOrder, cell.name);
+			pu(this.cellsShowOrder, cell.name);
 			this.resortCompile = true;
 			this.resortShow = true;
 			return cell;
@@ -4364,16 +4417,17 @@ Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this P
 	my.Pad.prototype.addCells = function() {
 		var slice,
 			i,
-			iz;
+			iz,
+			pu = my.pushUnique;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
 			slice = slice[0];
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
 			if (my.cell[slice[i]]) {
-				my.pushUnique(this.cells, slice[i]);
-				my.pushUnique(this.cellsCompileOrder, slice[i]);
-				my.pushUnique(this.cellsShowOrder, slice[i]);
+				pu(this.cells, slice[i]);
+				pu(this.cellsCompileOrder, slice[i]);
+				pu(this.cellsShowOrder, slice[i]);
 			}
 		}
 		this.resortCompile = true;
@@ -4390,10 +4444,11 @@ _Note: does not delete the canvas, or the Cell object, from the scrawl library_
 @chainable
 **/
 	my.Pad.prototype.deleteCell = function(cell) {
+		var ri = my.removeItem;
 		if (cell.substring) {
-			my.removeItem(this.cells, cell);
-			my.removeItem(this.cellsCompileOrder, cell);
-			my.removeItem(this.cellsShowOrder, cell);
+			ri(this.cells, cell);
+			ri(this.cellsCompileOrder, cell);
+			ri(this.cellsShowOrder, cell);
 			if (this.display === cell) {
 				this.display = this.current;
 			}
@@ -4437,14 +4492,15 @@ Augments PageElement.setAccessibility(); handles the setting of &lt;canvas&gt; e
 @chainable
 **/
 	my.Pad.prototype.setAccessibility = function(items) {
-		var element;
+		var element,
+			xt = my.xt;
 		items = my.safeObject(items);
 		element = this.getElement();
-		if (my.xt(items.title)) {
+		if (xt(items.title)) {
 			this.title = items.title;
 			element.title = this.title;
 		}
-		if (my.xt(items.comment)) {
+		if (xt(items.comment)) {
 			this.comment = items.comment;
 			element.setAttribute('data-comment', this.comment);
 			element.innerHTML = '<p>' + this.comment + '</p>';
@@ -4726,25 +4782,32 @@ Cell constructor hook function - core module
 **/
 	my.Cell.prototype.coreCellInit = function(items) {
 		var temp,
-			context;
+			context,
+			d = my.d.Cell,
+			xt = my.xt,
+			xto = my.xto,
+			get = my.xtGet,
+			vec = my.makeVector,
+			canvas;
 		my.Position.call(this, items); //handles items.start, items.startX, items.startY
 		my.Base.prototype.set.call(this, items);
 		my.canvas[this.name] = items.canvas;
+		canvas = my.canvas[this.name];
 		my.context[this.name] = items.canvas.getContext('2d');
 		my.cell[this.name] = this;
 		my.pushUnique(my.cellnames, this.name);
-		this.pad = my.xtGet(items.pad, false);
+		this.pad = get(items.pad, false);
 		temp = my.safeObject(items.copy);
-		this.copy = my.makeVector({
-			x: my.xtGet(items.copyX, temp.x, 0),
-			y: my.xtGet(items.copyY, temp.y, 0),
+		this.copy = vec({
+			x: get(items.copyX, temp.x, 0),
+			y: get(items.copyY, temp.y, 0),
 			name: this.type + '.' + this.name + '.copy'
 		});
-		this.work.copy = my.makeVector({
+		this.work.copy = vec({
 			name: this.type + '.' + this.name + '.work.copy'
 		});
-		this.actualWidth = my.canvas[this.name].width;
-		this.actualHeight = my.canvas[this.name].height;
+		this.actualWidth = canvas.width;
+		this.actualHeight = canvas.height;
 		this.copyWidth = this.actualWidth;
 		this.copyHeight = this.actualHeight;
 		this.copyData = {
@@ -4762,15 +4825,15 @@ Cell constructor hook function - core module
 		this.pasteWidth = this.actualWidth;
 		this.pasteHeight = this.actualHeight;
 		this.setDimensions(items);
-		if (my.xto(items.pasteX, items.pasteY)) {
-			this.start.x = my.xtGet(items.pasteX, this.start.x);
-			this.start.y = my.xtGet(items.pasteY, this.start.y);
+		if (xto(items.pasteX, items.pasteY)) {
+			this.start.x = get(items.pasteX, this.start.x);
+			this.start.y = get(items.pasteY, this.start.y);
 		}
-		if (my.xto(items.copyWidth, items.copyHeight, items.pasteWidth, items.pasteHeight, items.width, items.height)) {
-			this.copyWidth = my.xtGet(items.copyWidth, items.width, this.copyWidth);
-			this.copyHeight = my.xtGet(items.copyHeight, items.height, this.copyHeight);
-			this.pasteWidth = my.xtGet(items.pasteWidth, items.width, this.pasteWidth);
-			this.pasteHeight = my.xtGet(items.pasteHeight, items.height, this.pasteHeight);
+		if (xto(items.copyWidth, items.copyHeight, items.pasteWidth, items.pasteHeight, items.width, items.height)) {
+			this.copyWidth = get(items.copyWidth, items.width, this.copyWidth);
+			this.copyHeight = get(items.copyHeight, items.height, this.copyHeight);
+			this.pasteWidth = get(items.pasteWidth, items.width, this.pasteWidth);
+			this.pasteHeight = get(items.pasteHeight, items.height, this.pasteHeight);
 		}
 		this.setCopy();
 		this.setPaste();
@@ -4779,21 +4842,21 @@ Cell constructor hook function - core module
 			cell: my.context[this.name]
 		});
 		this.context = context.name;
-		this.flipUpend = my.xtGet(items.flipUpend, my.d.Cell.flipUpend);
-		this.flipReverse = my.xtGet(items.flipReverse, my.d.Cell.flipReverse);
-		this.lockX = my.xtGet(items.lockX, my.d.Cell.lockX);
-		this.lockY = my.xtGet(items.lockY, my.d.Cell.lockY);
-		this.roll = my.xtGet(items.roll, my.d.Cell.roll);
-		this.rendered = my.xtGet(items.rendered, true);
-		this.cleared = my.xtGet(items.cleared, true);
-		this.compiled = my.xtGet(items.compiled, true);
-		this.shown = my.xtGet(items.shown, true);
-		this.compileOrder = my.xtGet(items.compileOrder, 0);
-		this.showOrder = my.xtGet(items.showOrder, 0);
-		this.backgroundColor = my.xtGet(items.backgroundColor, 'rgba(0,0,0,0)');
-		this.globalCompositeOperation = my.xtGet(items.globalCompositeOperation, 'source-over');
-		this.globalAlpha = my.xtGet(items.globalAlpha, 1);
-		this.groups = (my.xt(items.groups)) ? [].concat(items.groups) : []; //must be set
+		this.flipUpend = get(items.flipUpend, d.flipUpend);
+		this.flipReverse = get(items.flipReverse, d.flipReverse);
+		this.lockX = get(items.lockX, d.lockX);
+		this.lockY = get(items.lockY, d.lockY);
+		this.roll = get(items.roll, d.roll);
+		this.rendered = get(items.rendered, true);
+		this.cleared = get(items.cleared, true);
+		this.compiled = get(items.compiled, true);
+		this.shown = get(items.shown, true);
+		this.compileOrder = get(items.compileOrder, 0);
+		this.showOrder = get(items.showOrder, 0);
+		this.backgroundColor = get(items.backgroundColor, 'rgba(0,0,0,0)');
+		this.globalCompositeOperation = get(items.globalCompositeOperation, 'source-over');
+		this.globalAlpha = get(items.globalAlpha, 1);
+		this.groups = (xt(items.groups)) ? [].concat(items.groups) : []; //must be set
 		this.sortGroups = true;
 		my.makeGroup({
 			name: this.name,
@@ -4827,8 +4890,9 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 	my.Cell.prototype.get = function(item) {
 		var stat1 = ['pasteX', 'pasteY', 'copyX', 'copyY'],
 			stat2 = ['paste', 'copy'],
-			stat3 = ['width', 'height'];
-		if (my.contains(stat1, item)) {
+			stat3 = ['width', 'height'],
+			contains = my.contains;
+		if (contains(stat1, item)) {
 			switch (item) {
 				case 'pasteX':
 					return this.start.x;
@@ -4840,7 +4904,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 					return this.copy.y;
 			}
 		}
-		if (my.contains(stat2, item)) {
+		if (contains(stat2, item)) {
 			switch (item) {
 				case 'paste':
 					return this.start.getVector();
@@ -4848,7 +4912,7 @@ Augments Position.get(), to allow users to get values for sourceX, sourceY, star
 					return this.copy.getVector();
 			}
 		}
-		if (my.contains(stat3, item)) {
+		if (contains(stat3, item)) {
 			switch (item) {
 				case 'width':
 					return this.actualWidth;
@@ -4874,50 +4938,52 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 @chainable
 **/
 	my.Cell.prototype.set = function(items) {
+		var xt = my.xt,
+			xto = my.xto;
 		my.Position.prototype.set.call(this, items);
 		items = my.safeObject(items);
-		if (my.xto(items.paste, items.pasteX, items.pasteY)) {
+		if (xto(items.paste, items.pasteX, items.pasteY)) {
 			this.setPasteVector(items, false);
 		}
-		if (my.xto(items.copy, items.copyX, items.copyY)) {
+		if (xto(items.copy, items.copyX, items.copyY)) {
 			this.setCopyVector(items, false);
 		}
-		if (my.xto(items.copyWidth, items.width)) {
+		if (xto(items.copyWidth, items.width)) {
 			this.setCopyWidth(items, false);
 		}
-		if (my.xto(items.copyHeight, items.height)) {
+		if (xto(items.copyHeight, items.height)) {
 			this.setCopyHeight(items, false);
 		}
-		if (my.xto(items.pasteWidth, items.width)) {
+		if (xto(items.pasteWidth, items.width)) {
 			this.setPasteWidth(items, false);
 		}
-		if (my.xto(items.pasteHeight, items.height)) {
+		if (xto(items.pasteHeight, items.height)) {
 			this.setPasteHeight(items, false);
 		}
-		if (my.xto(items.actualWidth, items.width)) {
+		if (xto(items.actualWidth, items.width)) {
 			this.setActualWidth(items, false);
 		}
-		if (my.xto(items.actualHeight, items.height)) {
+		if (xto(items.actualHeight, items.height)) {
 			this.setActualHeight(items, false);
 		}
-		if (my.xto(items.actualWidth, items.actualHeight, items.width, items.height)) {
+		if (xto(items.actualWidth, items.actualHeight, items.width, items.height)) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
 		}
 		this.animationCellSet(items);
-		if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale)) {
+		if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale)) {
 			this.setCopy();
 		}
-		if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+		if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 			this.setPaste();
 		}
-		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
+		if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
 			this.offset.flag = false;
 		}
-		if (my.xt(items.compileOrder)) {
+		if (xt(items.compileOrder)) {
 			my.pad[this.pad].resortCompile = true;
 		}
-		if (my.xt(items.showOrder)) {
+		if (xt(items.showOrder)) {
 			my.pad[this.pad].resortShow = true;
 		}
 		return this;
@@ -4931,9 +4997,10 @@ Augments Cell.set()
 @chainable
 **/
 	my.Cell.prototype.setActualHeight = function(items, recalc) {
+		var get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		this.actualHeight = my.xtGet(items.actualHeight, items.height, this.actualHeight);
+		recalc = get(recalc, true);
+		this.actualHeight = get(items.actualHeight, items.height, this.actualHeight);
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
@@ -4950,9 +5017,10 @@ Augments Cell.set()
 @chainable
 **/
 	my.Cell.prototype.setActualWidth = function(items, recalc) {
+		var get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		this.actualWidth = my.xtGet(items.actualWidth, items.width, this.actualWidth);
+		recalc = get(recalc, true);
+		this.actualWidth = get(items.actualWidth, items.width, this.actualWidth);
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
@@ -4969,9 +5037,10 @@ Augments Cell.set()
 @chainable
 **/
 	my.Cell.prototype.setPasteHeight = function(items, recalc) {
+		var get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		this.pasteHeight = my.xtGet(items.pasteHeight, items.height, this.pasteHeight);
+		recalc = get(recalc, true);
+		this.pasteHeight = get(items.pasteHeight, items.height, this.pasteHeight);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -4986,9 +5055,10 @@ Augments Cell.set()
 @chainable
 **/
 	my.Cell.prototype.setPasteWidth = function(items, recalc) {
+		var get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		this.pasteWidth = my.xtGet(items.pasteWidth, items.width, this.pasteWidth);
+		recalc = get(recalc, true);
+		this.pasteWidth = get(items.pasteWidth, items.width, this.pasteWidth);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -5003,9 +5073,10 @@ Augments Cell.set()
 @chainable
 **/
 	my.Cell.prototype.setCopyHeight = function(items, recalc) {
+		var get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		this.copyHeight = my.xtGet(items.copyHeight, items.height, this.copyHeight);
+		recalc = get(recalc, true);
+		this.copyHeight = get(items.copyHeight, items.height, this.copyHeight);
 		if (recalc) {
 			this.setCopy();
 		}
@@ -5020,9 +5091,10 @@ Augments Cell.set()
 @chainable
 **/
 	my.Cell.prototype.setCopyWidth = function(items, recalc) {
+		var get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		this.copyWidth = my.xtGet(items.copyWidth, items.width, this.copyWidth);
+		recalc = get(recalc, true);
+		this.copyWidth = get(items.copyWidth, items.width, this.copyWidth);
 		if (recalc) {
 			this.setCopy();
 		}
@@ -5037,12 +5109,15 @@ Augments Cell.set()
 @chainable
 **/
 	my.Cell.prototype.setPasteVector = function(items, recalc) {
-		var temp;
-		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		temp = my.safeObject(items.paste);
-		this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
-		this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
+		var get = my.xtGet,
+		so = my.safeObject,
+		start = this.start,
+		temp;
+		items = so(items);
+		recalc = get(recalc, true);
+		temp = so(items.paste);
+		start.x = get(items.pasteX, temp.x, start.x);
+		start.y = get(items.pasteY, temp.y, start.y);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -5057,12 +5132,15 @@ Augments Cell.set()
 @chainable
 **/
 	my.Cell.prototype.setCopyVector = function(items, recalc) {
-		var temp;
-		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		temp = my.safeObject(items.copy);
-		this.copy.x = my.xtGet(items.copyX, temp.x, this.copy.x);
-		this.copy.y = my.xtGet(items.copyY, temp.y, this.copy.y);
+		var get = my.xtGet,
+		so = my.safeObject,
+		copy = this.copy,
+		temp;
+		items = so(items);
+		recalc = get(recalc, true);
+		temp = so(items.copy);
+		copy.x = get(items.copyX, temp.x, copy.x);
+		copy.y = get(items.copyY, temp.y, copy.y);
 		if (recalc) {
 			this.setCopy();
 		}
@@ -5084,49 +5162,51 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 @chainable
 **/
 	my.Cell.prototype.setDelta = function(items) {
+		var xt = my.xt,
+			xto = my.xto;
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
-		if (my.xto(items.copy, items.copyX, items.copyY)) {
+		if (xto(items.copy, items.copyX, items.copyY)) {
 			this.setDeltaCopy(items, false);
 		}
-		if (my.xto(items.paste, items.pasteX, items.pasteY)) {
+		if (xto(items.paste, items.pasteX, items.pasteY)) {
 			this.setDeltaPaste(items, false);
 		}
-		if (my.xt(items.copyWidth)) {
+		if (xt(items.copyWidth)) {
 			this.setDeltaCopyWidth(items, false);
 		}
-		if (my.xt(items.copyHeight)) {
+		if (xt(items.copyHeight)) {
 			this.setDeltaCopyHeight(items, false);
 		}
-		if (my.xto(items.pasteWidth, items.width)) {
+		if (xto(items.pasteWidth, items.width)) {
 			this.setDeltaPasteWidth(items, false);
 		}
-		if (my.xto(items.pasteHeight, items.height)) {
+		if (xto(items.pasteHeight, items.height)) {
 			this.setDeltaPasteHeight(items, false);
 		}
-		if (my.xto(items.actualWidth, items.width)) {
+		if (xto(items.actualWidth, items.width)) {
 			this.setDeltaActualWidth(items, false);
 		}
-		if (my.xto(items.actualHeight, items.height)) {
+		if (xto(items.actualHeight, items.height)) {
 			this.setDeltaActualHeight(items, false);
 		}
-		if (my.xt(items.roll)) {
+		if (xt(items.roll)) {
 			this.setDeltaRoll(items);
 		}
-		if (my.xt(items.globalAlpha)) {
+		if (xt(items.globalAlpha)) {
 			this.setDeltaGlobalAlpha(items);
 		}
-		if (my.xto(items.actualWidth, items.width, items.actualHeight, items.height)) {
+		if (xto(items.actualWidth, items.width, items.actualHeight, items.height)) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
 		}
-		if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale)) {
+		if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale)) {
 			this.setCopy();
 		}
-		if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+		if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 			this.setPaste();
 		}
-		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
+		if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
 			this.offset.flag = false;
 		}
 		return this;
@@ -5170,10 +5250,11 @@ Augments Cell.setDelta
 @chainable
 **/
 	my.Cell.prototype.setDeltaActualHeight = function(items, recalc) {
-		var height;
+		var height,
+			get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		height = my.xtGet(items.actualHeight, items.height);
+		recalc = get(recalc, true);
+		height = get(items.actualHeight, items.height);
 		this.actualHeight = (height.toFixed) ? this.actualHeight + height : this.actualHeight;
 		if (recalc) {
 			this.setDimensions(items);
@@ -5192,10 +5273,11 @@ Augments Cell.setDelta
 @chainable
 **/
 	my.Cell.prototype.setDeltaActualWidth = function(items, recalc) {
-		var width;
+		var width,
+			get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		width = my.xtGet(items.actualWidth, items.width);
+		recalc = get(recalc, true);
+		width = get(items.actualWidth, items.width);
 		this.actualWidth = (width.toFixed) ? this.actualWidth + width : this.actualWidth;
 		if (recalc) {
 			this.setDimensions(items);
@@ -5214,10 +5296,11 @@ Augments Cell.setDelta
 @chainable
 **/
 	my.Cell.prototype.setDeltaPasteHeight = function(items, recalc) {
-		var height;
+		var height,
+			get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		height = my.xtGet(items.pasteHeight, items.height);
+		recalc = get(recalc, true);
+		height = get(items.pasteHeight, items.height);
 		this.pasteHeight = (this.pasteHeight.toFixed) ? this.pasteHeight + height : my.addPercentages(this.pasteHeight, height);
 		if (recalc) {
 			this.setPaste();
@@ -5254,10 +5337,11 @@ Augments Cell.setDelta
 @chainable
 **/
 	my.Cell.prototype.setDeltaPasteWidth = function(items, recalc) {
-		var width;
+		var width,
+			get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
-		width = my.xtGet(items.pasteWidth, items.width);
+		recalc = get(recalc, true);
+		width = get(items.pasteWidth, items.width);
 		this.pasteWidth = (this.pasteWidth.toFixed) ? this.pasteWidth + width : my.addPercentages(this.pasteWidth, width);
 		if (recalc) {
 			this.setPaste();
@@ -5295,15 +5379,19 @@ Augments Cell.setDelta
 **/
 	my.Cell.prototype.setDeltaPaste = function(items, recalc) {
 		var temp,
+			so = my.safeObject,
+			get = my.xtGet,
+			perc = my.addPercentages,
+			start = this.start,
 			x,
 			y;
-		items = my.safeObject(items);
+		items = so(items);
 		recalc = my.xtGet(recalc, true);
-		temp = my.safeObject(items.paste);
-		x = my.xtGet(items.pasteX, temp.x, 0);
-		y = my.xtGet(items.pasteY, temp.y, 0);
-		this.start.x = (this.start.x.toFixed) ? this.start.x + x : my.addPercentages(this.start.x, x);
-		this.start.y = (this.start.y.toFixed) ? this.start.y + y : my.addPercentages(this.start.y, y);
+		temp = so(items.paste);
+		x = get(items.pasteX, temp.x, 0);
+		y = get(items.pasteY, temp.y, 0);
+		start.x = (this.start.x.toFixed) ? start.x + x : perc(start.x, x);
+		start.y = (this.start.y.toFixed) ? start.y + y : perc(start.y, y);
 		if (recalc) {
 			this.setPaste();
 		}
@@ -5321,15 +5409,19 @@ Augments Cell.setDelta
 **/
 	my.Cell.prototype.setDeltaCopy = function(items, recalc) {
 		var temp,
+			so = my.safeObject,
+			get = my.xtGet,
+			perc = my.addPercentages,
+			copy = this.copy,
 			x,
 			y;
-		items = my.safeObject(items);
-		temp = my.safeObject(items.copy);
-		recalc = my.xtGet(recalc, true);
-		x = my.xtGet(items.copyX, temp.x, 0);
-		y = my.xtGet(items.copyY, temp.y, 0);
-		this.copy.x = (x.toFixed) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
-		this.copy.y = (y.toFixed) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
+		items = so(items);
+		temp = so(items.copy);
+		recalc = get(recalc, true);
+		x = get(items.copyX, temp.x, 0);
+		y = get(items.copyY, temp.y, 0);
+		copy.x = (x.toFixed) ? copy.x + x : perc(copy.x, x);
+		copy.y = (y.toFixed) ? copy.y + y : perc(copy.y, y);
 		if (recalc) {
 			this.setCopy();
 		}
@@ -5349,109 +5441,108 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 			changes,
 			cName,
 			eName,
+			ctx = my.ctx,
+			action = this.setEngineActions,
 			stat1 = ['Gradient', 'RadialGradient', 'Pattern'];
 		if (!entity.fastStamp) {
-			cellContext = my.ctx[this.context];
-			entityContext = my.ctx[entity.context];
+			cellContext = ctx[this.context];
+			entityContext = ctx[entity.context];
 			changes = entityContext.getChanges(entity, cellContext);
 			if (Object.keys(changes).length > 0) {
 				cellEngine = my.context[this.name];
 				eName = entity.name;
 				cName = this.name;
 				for (var item in changes) {
-					this['setEngine_' + item](changes[item], cellEngine, stat1, eName, cName);
+					action[item](changes[item], cellEngine, stat1, eName, cName);
 					cellContext[item] = changes[item];
 				}
 			}
 		}
 		return entity;
 	};
-	my.Cell.prototype.setEngine_fillStyle = function(item, e, s, entity, cell) {
-		var design, fillStyle;
-		if (my.xt(my.design[item])) {
-			design = my.design[item];
-			if (my.contains(s, design.type)) {
-				design.update(entity, cell);
+	my.Cell.prototype.setEngineActions = {
+		fillStyle: function(item, e, s, entity, cell) {
+			var design, fillStyle;
+			if (my.xt(my.design[item])) {
+				design = my.design[item];
+				if (my.contains(s, design.type)) {
+					design.update(entity, cell);
+				}
+				fillStyle = design.getData();
 			}
-			fillStyle = design.getData();
-		}
-		else {
-			fillStyle = item;
-		}
-		e.fillStyle = fillStyle;
-	};
-	my.Cell.prototype.setEngine_font = function(item, e) {
-		e.font = item;
-	};
-	my.Cell.prototype.setEngine_globalAlpha = function(item, e) {
-		e.globalAlpha = item;
-	};
-	my.Cell.prototype.setEngine_globalCompositeOperation = function(item, e) {
-		e.globalCompositeOperation = item;
-	};
-	my.Cell.prototype.setEngine_lineCap = function(item, e) {
-		e.lineCap = item;
-	};
-	my.Cell.prototype.setEngine_lineDash = function(item, engine) {
-		engine.mozDash = item;
-		engine.lineDash = item;
-		try {
-			engine.setLineDash(item);
-		}
-		catch (e) {}
-	};
-	my.Cell.prototype.setEngine_lineDashOffset = function(item, e) {
-		e.mozDashOffset = item;
-		e.lineDashOffset = item;
-	};
-	my.Cell.prototype.setEngine_lineJoin = function(item, e) {
-		e.lineJoin = item;
-	};
-	my.Cell.prototype.setEngine_lineWidth = function(item, e) {
-		e.lineWidth = item;
-	};
-	my.Cell.prototype.setEngine_shadowBlur = function(item, e) {
-		e.shadowBlur = item;
-	};
-	my.Cell.prototype.setEngine_shadowColor = function(item, e) {
-		e.shadowColor = item;
-	};
-	my.Cell.prototype.setEngine_shadowOffsetX = function(item, e) {
-		e.shadowOffsetX = item;
-	};
-	my.Cell.prototype.setEngine_shadowOffsetY = function(item, e) {
-		e.shadowOffsetY = item;
-	};
-	my.Cell.prototype.setEngine_strokeStyle = function(item, e, s, entity, cell) {
-		var design, strokeStyle;
-		if (my.xt(my.design[item])) {
-			design = my.design[item];
-			if (my.contains(s, design.type)) {
-				design.update(entity, cell);
+			else {
+				fillStyle = item;
 			}
-			strokeStyle = design.getData();
+			e.fillStyle = fillStyle;
+		},
+		font: function(item, e) {
+			e.font = item;
+		},
+		globalAlpha: function(item, e) {
+			e.globalAlpha = item;
+		},
+		globalCompositeOperation: function(item, e) {
+			e.globalCompositeOperation = item;
+		},
+		lineCap: function(item, e) {
+			e.lineCap = item;
+		},
+		lineDash: function(item, e) {
+			e.mozDash = item;
+			e.lineDash = item;
+			if (e.setLineDash) {
+				e.setLineDash(item);
+			}
+		},
+		lineDashOffset: function(item, e) {
+			e.mozDashOffset = item;
+			e.lineDashOffset = item;
+		},
+		lineJoin: function(item, e) {
+			e.lineJoin = item;
+		},
+		lineWidth: function(item, e) {
+			e.lineWidth = item;
+		},
+		shadowBlur: function(item, e) {
+			e.shadowBlur = item;
+		},
+		shadowColor: function(item, e) {
+			e.shadowColor = item;
+		},
+		shadowOffsetX: function(item, e) {
+			e.shadowOffsetX = item;
+		},
+		shadowOffsetY: function(item, e) {
+			e.shadowOffsetY = item;
+		},
+		strokeStyle: function(item, e, s, entity, cell) {
+			var design, strokeStyle;
+			if (my.xt(my.design[item])) {
+				design = my.design[item];
+				if (my.contains(s, design.type)) {
+					design.update(entity, cell);
+				}
+				strokeStyle = design.getData();
+			}
+			else {
+				strokeStyle = item;
+			}
+			e.strokeStyle = strokeStyle;
+		},
+		miterLimit: function(item, e) {
+			e.miterLimit = item;
+		},
+		textAlign: function(item, e) {
+			e.textAlign = item;
+		},
+		textBaseline: function(item, e) {
+			e.textBaseline = item;
+		},
+		winding: function(item, e) {
+			e.mozFillRule = item;
+			e.msFillRule = item;
 		}
-		else {
-			strokeStyle = item;
-		}
-		e.strokeStyle = strokeStyle;
-	};
-	my.Cell.prototype.setEngine_miterLimit = function(item, e) {
-		e.miterLimit = item;
-	};
-	my.Cell.prototype.setEngine_textAlign = function(item, e) {
-		e.textAlign = item;
-	};
-	my.Cell.prototype.setEngine_textBaseline = function(item, e) {
-		e.textBaseline = item;
-	};
-	my.Cell.prototype.setEngine_winding = function(item, e) {
-		e.mozFillRule = item;
-		e.msFillRule = item;
-	};
-	my.Cell.prototype.setEngine_winding = function(item, e) {
-		e.mozFillRule = item;
-		e.msFillRule = item;
 	};
 	/**
 Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
@@ -5461,15 +5552,18 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 **/
 	my.Cell.prototype.clear = function() {
 		var cellContext,
+			w = this.actualWidth,
+			h = this.actualHeight,
+			b = this.backgroundColor,
 			cellEngine;
 		cellEngine = my.context[this.name];
 		cellContext = my.ctx[this.context];
 		cellEngine.setTransform(1, 0, 0, 1, 0, 0);
-		cellEngine.clearRect(0, 0, this.actualWidth, this.actualHeight);
-		if (this.backgroundColor !== 'rgba(0,0,0,0)') {
-			cellEngine.fillStyle = this.backgroundColor;
-			cellEngine.fillRect(0, 0, this.actualWidth, this.actualHeight);
-			cellContext.fillStyle = this.backgroundColor;
+		cellEngine.clearRect(0, 0, w, h);
+		if (b !== 'rgba(0,0,0,0)') {
+			cellEngine.fillStyle = b;
+			cellEngine.fillRect(0, 0, w, h);
+			cellContext.fillStyle = b;
 		}
 		return this;
 	};
@@ -5497,9 +5591,6 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 		var group,
 			i,
 			iz;
-		// this.groups.sort(function(a, b) {
-		// 	return my.group[a].order - my.group[b].order;
-		// });
 		this.groupSort();
 		for (i = 0, iz = this.groups.length; i < iz; i++) {
 			group = my.group[this.groups[i]];
@@ -5523,10 +5614,14 @@ Cell copy helper function
 			rotation = (this.addPathRoll) ? this.roll + this.pathRoll : this.roll,
 			cos,
 			sin;
-		rotation *= 0.01745329251;
-		cos = Math.cos(rotation);
-		sin = Math.sin(rotation);
-		engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), this.pasteData.x, this.pasteData.y);
+		if (rotation) {
+			rotation *= 0.01745329251;
+			cos = Math.cos(rotation);
+			sin = Math.sin(rotation);
+			engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), this.pasteData.x, this.pasteData.y);
+			return this;
+		}
+		engine.setTransform(reverse, 0, 0, upend, this.pasteData.x, this.pasteData.y);
 		return this;
 	};
 	/**
@@ -5538,12 +5633,14 @@ Cell copy helper function
 @private
 **/
 	my.Cell.prototype.prepareToCopyCell = function(engine) {
+		var os = this.offset,
+			data = this.pasteData;
 		this.resetWork();
-		if (!this.offset.flag) {
-			this.offset.set(this.calculatePOV(this.work.handle, this.pasteData.w, this.pasteData.h, false)).reverse();
-			this.offset.flag = true;
-			this.offset.x = Math.floor(this.offset.x);
-			this.offset.y = Math.floor(this.offset.y);
+		if (!os.flag) {
+			os.set(this.calculatePOV(this.work.handle, data.w, data.h, false)).reverse();
+			os.flag = true;
+			os.x = Math.floor(os.x);
+			os.y = Math.floor(os.y);
 		}
 		if (this.pivot) {
 			this.setStampUsingPivot(my.pad[this.pad].base);
@@ -5569,32 +5666,42 @@ Cell.setCopy update copyData object values
 @private
 **/
 	my.Cell.prototype.setCopy = function() {
-		this.copyData.x = (this.copy.x.substring) ? this.convertX(this.copy.x, this.actualWidth) : this.copy.x;
-		this.copyData.y = (this.copy.y.substring) ? this.convertY(this.copy.y, this.actualHeight) : this.copy.y;
-		if (!my.isBetween(this.copyData.x, 0, this.actualWidth - 1, true)) {
-			this.copyData.x = (this.copyData.x < 0) ? 0 : this.actualWidth - 1;
+		var bet = my.isBetween,
+			data = this.copyData,
+			copy = this.copy,
+			convx = this.convertX,
+			convy = this.convertY,
+			floor = Math.floor,
+			cw = this.copyWidth,
+			ch = this.copyHeight,
+			aw = this.actualWidth,
+			ah = this.actualHeight;
+		data.x = (copy.x.substring) ? convx(copy.x, aw) : copy.x;
+		data.y = (copy.y.substring) ? convy(copy.y, ah) : copy.y;
+		if (!bet(data.x, 0, aw - 1, true)) {
+			data.x = (data.x < 0) ? 0 : aw - 1;
 		}
-		if (!my.isBetween(this.copyData.y, 0, this.actualHeight - 1, true)) {
-			this.copyData.y = (this.copyData.y < 0) ? 0 : this.actualHeight - 1;
+		if (!bet(data.y, 0, ah - 1, true)) {
+			data.y = (data.y < 0) ? 0 : ah - 1;
 		}
-		this.copyData.w = (this.copyWidth.substring) ? this.convertX(this.copyWidth, this.actualWidth) : this.copyWidth;
-		this.copyData.h = (this.copyHeight.substring) ? this.convertY(this.copyHeight, this.actualHeight) : this.copyHeight;
-		if (!my.isBetween(this.copyData.w, 1, this.actualWidth, true)) {
-			this.copyData.w = (this.copyData.w < 1) ? 1 : this.actualWidth;
+		data.w = (cw.substring) ? convx(cw, aw) : cw;
+		data.h = (ch.substring) ? convy(ch, ah) : ch;
+		if (!bet(data.w, 1, aw, true)) {
+			data.w = (data.w < 1) ? 1 : aw;
 		}
-		if (!my.isBetween(this.copyData.h, 1, this.actualHeight, true)) {
-			this.copyData.h = (this.copyData.h < 1) ? 1 : this.actualHeight;
+		if (!bet(data.h, 1, ah, true)) {
+			data.h = (data.h < 1) ? 1 : ah;
 		}
-		if (this.copyData.x + this.copyData.w > this.actualWidth) {
-			this.copyData.x = this.actualWidth - this.copyData.w;
+		if (data.x + data.w > aw) {
+			data.x = aw - data.w;
 		}
-		if (this.copyData.y + this.copyData.h > this.actualHeight) {
-			this.copyData.y = this.actualHeight - this.copyData.h;
+		if (data.y + data.h > ah) {
+			data.y = ah - data.h;
 		}
-		this.copyData.x = Math.floor(this.copyData.x);
-		this.copyData.y = Math.floor(this.copyData.y);
-		this.copyData.w = Math.floor(this.copyData.w);
-		this.copyData.h = Math.floor(this.copyData.h);
+		data.x = floor(data.x);
+		data.y = floor(data.y);
+		data.w = floor(data.w);
+		data.h = floor(data.h);
 		return this;
 	};
 	/**
@@ -5604,47 +5711,53 @@ Cell.setPaste update pasteData object values
 @private
 **/
 	my.Cell.prototype.setPaste = function() {
-		var pad = my.safeObject(my.pad[this.pad]),
-			display = my.safeObject(my.cell[pad.display]),
-			base = my.safeObject(my.cell[pad.base]),
+		var so = my.safeObject,
+			pad = so(my.pad[this.pad]),
+			display = so(my.cell[pad.display]),
+			base = so(my.cell[pad.base]),
 			stack = (my.xt(pad.group)) ? true : false,
 			isBase = (this.name === pad.base) ? true : false,
-			width, height;
+			width, height,
+			floor = Math.floor,
+			convx = this.convertX,
+			convy = this.convertY,
+			scale = this.scale,
+			data = this.pasteData;
 		if (my.xta(display, base)) {
 			width = (this.name === pad.base) ? display.actualWidth : base.actualWidth;
 			height = (this.name === pad.base) ? display.actualHeight : base.actualHeight;
-			this.pasteData.x = this.start.x;
-			if (this.pasteData.x.substring) {
-				this.pasteData.x = this.convertX(this.pasteData.x, width);
+			data.x = this.start.x;
+			if (data.x.substring) {
+				data.x = convx(data.x, width);
 			}
-			this.pasteData.y = this.start.y;
-			if (this.pasteData.y.substring) {
-				this.pasteData.y = this.convertY(this.pasteData.y, height);
+			data.y = this.start.y;
+			if (data.y.substring) {
+				data.y = convy(data.y, height);
 			}
-			this.pasteData.w = this.pasteWidth;
-			if (this.pasteData.w.substring) {
-				this.pasteData.w = this.convertX(this.pasteData.w, width);
-			}
-			if (!isBase || !stack) {
-				this.pasteData.w *= this.scale;
-			}
-			this.pasteData.h = this.pasteHeight;
-			if (this.pasteData.h.substring) {
-				this.pasteData.h = this.convertY(this.pasteData.h, height);
+			data.w = this.pasteWidth;
+			if (data.w.substring) {
+				data.w = convx(data.w, width);
 			}
 			if (!isBase || !stack) {
-				this.pasteData.h *= this.scale;
+				data.w *= scale;
 			}
-			if (this.pasteData.w < 1) {
-				this.pasteData.w = 1;
+			data.h = this.pasteHeight;
+			if (data.h.substring) {
+				data.h = convy(data.h, height);
 			}
-			if (this.pasteData.h < 1) {
-				this.pasteData.h = 1;
+			if (!isBase || !stack) {
+				data.h *= scale;
 			}
-			this.pasteData.x = Math.floor(this.pasteData.x);
-			this.pasteData.y = Math.floor(this.pasteData.y);
-			this.pasteData.w = Math.floor(this.pasteData.w);
-			this.pasteData.h = Math.floor(this.pasteData.h);
+			if (data.w < 1) {
+				data.w = 1;
+			}
+			if (data.h < 1) {
+				data.h = 1;
+			}
+			data.x = floor(data.x);
+			data.y = floor(data.y);
+			data.w = floor(data.w);
+			data.h = floor(data.h);
 		}
 		return this;
 	};
@@ -5660,9 +5773,13 @@ Cell copy helper function
 		var destinationContext,
 			destinationEngine,
 			sourceEngine,
-			sourceCanvas;
+			sourceCanvas,
+			copy, paste, offset;
 		cell = (cell.substring) ? my.cell[cell] : cell;
 		if (my.xt(cell)) {
+			copy = cell.copyData;
+			paste = cell.pasteData;
+			offset = cell.offset;
 			destinationEngine = my.context[this.name];
 			destinationContext = my.ctx[this.name];
 			sourceEngine = my.context[cell.name];
@@ -5677,7 +5794,7 @@ Cell copy helper function
 			}
 			sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
 			cell.prepareToCopyCell(destinationEngine);
-			destinationEngine.drawImage(sourceCanvas, cell.copyData.x, cell.copyData.y, cell.copyData.w, cell.copyData.h, cell.offset.x, cell.offset.y, cell.pasteData.w, cell.pasteData.h);
+			destinationEngine.drawImage(sourceCanvas, copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h);
 		}
 		return this;
 	};
@@ -5851,15 +5968,16 @@ Default values are:
 	my.Cell.prototype.getImageData = function(dimensions) {
 		var x,
 			y,
+			get = my.xtGet,
 			width,
 			height,
 			label;
 		dimensions = my.safeObject(dimensions);
 		label = (dimensions.name.substring) ? this.name + '_' + dimensions.name : this.name + '_imageData';
-		x = my.xtGet(dimensions.x, 0);
-		y = my.xtGet(dimensions.y, 0);
-		width = my.xtGet(dimensions.width, this.actualWidth);
-		height = my.xtGet(dimensions.height, this.actualHeight);
+		x = get(dimensions.x, 0);
+		y = get(dimensions.y, 0);
+		width = get(dimensions.width, this.actualWidth);
+		height = get(dimensions.height, this.actualHeight);
 		my.imageData[label] = my.context[this.name].getImageData(x, y, width, height);
 		return label;
 	};
@@ -6104,25 +6222,27 @@ Adds the value of each attribute supplied in the argument to existing values; on
 @private
 **/
 	my.Context.prototype.setDelta = function(items) {
+		var xt = my.xt,
+			d = my.d.Context;
 		items = my.safeObject(items);
-		if (my.xt(items.lineDashOffset)) {
-			if (!my.xt(this.lineDashOffset)) {
-				this.lineDashOffset = my.d.Context.lineDashOffset;
+		if (xt(items.lineDashOffset)) {
+			if (!xt(this.lineDashOffset)) {
+				this.lineDashOffset = d.lineDashOffset + items.lineDashOffset;
 			}
 			this.lineDashOffset += items.lineDashOffset;
 		}
-		if (my.xt(items.lineWidth)) {
-			if (!my.xt(this.lineWidth)) {
-				this.lineWidth = my.d.Context.lineWidth;
+		if (xt(items.lineWidth)) {
+			if (!xt(this.lineWidth)) {
+				this.lineWidth = d.lineWidth + items.lineWidth;
 			}
 			this.lineWidth += items.lineWidth;
 			if (this.lineWidth < 0) {
 				this.lineWidth = 0;
 			}
 		}
-		if (my.xt(items.globalAlpha)) {
-			if (!my.xt(this.globalAlpha)) {
-				this.globalAlpha = my.d.Context.globalAlpha;
+		if (xt(items.globalAlpha)) {
+			if (!xt(this.globalAlpha)) {
+				this.globalAlpha = d.globalAlpha + items.globalAlpha;
 			}
 			this.globalAlpha += items.globalAlpha;
 			if (!my.isBetween(this.globalAlpha, 0, 1, true)) {
@@ -6142,12 +6262,14 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @private
 **/
 	my.Context.prototype.getContextFromEngine = function(ctx) {
-		for (var i = 0, iz = my.contextKeys.length; i < iz; i++) {
-			this[my.contextKeys[i]] = ctx[my.contextKeys[i]];
+		var keys = my.contextKeys,
+			get = my.xtGet;
+		for (var i = 0, iz = keys.length; i < iz; i++) {
+			this[keys[i]] = ctx[keys[i]];
 		}
-		this.winding = my.xtGet(ctx.mozFillRule, ctx.msFillRule, 'nonzero');
+		this.winding = get(ctx.mozFillRule, ctx.msFillRule, 'nonzero');
 		this.lineDash = (my.xt(ctx.lineDash)) ? ctx.lineDash : [];
-		this.lineDashOffset = my.xtGet(ctx.mozDashOffset, ctx.lineDashOffset, 0);
+		this.lineDashOffset = get(ctx.mozDashOffset, ctx.lineDashOffset, 0);
 		return this;
 	};
 	/**
@@ -6155,18 +6277,16 @@ Interrogates a &lt;canvas&gt; element's context engine and returns an object of 
 @private
 **/
 	my.Context.prototype.getNonDefaultAttributes = function() {
-		var keys = Object.keys(this),
+		var d = my.d.Context,
+			xt = my.xt,
+			keys = my.contextKeys,
+			i, iz,
 			result = {};
-		my.removeItem(keys, 'name');
-		my.removeItem(keys, 'timestamp');
-		my.removeItem(keys, 'comment');
-		my.removeItem(keys, 'title');
-		my.removeItem(keys, 'work');
-		for (var i = 0, iz = keys.length; i < iz; i++) {
-			if (keys[i] === 'lineDash' && this.lineDash.length > 0) {
+		for (i = 0, iz = keys.length; i < iz; i++) {
+			if (keys[i] === 'lineDash' && this.lineDash && this.lineDash.length > 0) {
 				result.lineDash = this.lineDash;
 			}
-			else if (this[keys[i]] != my.d.Context[keys[i]]) {
+			else if (xt(this[keys[i]]) && this[keys[i]] != d[keys[i]]) {
 				result[keys[i]] = this[keys[i]];
 			}
 		}
@@ -6188,13 +6308,15 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 			e = this.getNonDefaultAttributes(),
 			ea = Object.keys(e),
 			d, color,
+			df = my.d.Context,
 			result = {},
+			contains = my.contains,
 			i, iz;
 
 		//step 1 - need to set any non-default values in c that are default in e back to their default values
 		for (i = 0, iz = ca.length; i < iz; i++) {
-			if (!my.contains(ea, ca[i])) {
-				result[ca[i]] = my.d.Context[ca[i]];
+			if (!contains(ea, ca[i])) {
+				result[ca[i]] = df[ca[i]];
 			}
 		}
 
@@ -6208,7 +6330,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 			else if (e[ea[i]] != c[ea[i]]) {
 				result[ea[i]] = e[ea[i]];
 			}
-			else if (my.contains(['fillStyle', 'strokeStyle', 'shadowColor'], ea[i])) {
+			else if (contains(['fillStyle', 'strokeStyle', 'shadowColor'], ea[i])) {
 				d = my.design[e[ea[i]]];
 				if (d && d.type === 'Color') {
 					color = d.getData();
@@ -6248,6 +6370,8 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 	my.Group = function(items) {
+		var get = my.xtGet,
+		pu = my.pushUnique;
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		/**
@@ -6270,7 +6394,7 @@ Group order value - lower order Groups are drawn on &lt;canvas&gt; elements befo
 @type Number
 @default 0
 **/
-		this.order = my.xtGet(items.order, 0);
+		this.order = get(items.order, 0);
 		/**
 Resort flag
 @property resort
@@ -6285,25 +6409,25 @@ Visibility flag - Group entitys will (in general) not be drawn on a &lt;canvas&g
 @type Boolean
 @default true
 **/
-		this.visibility = my.xtGet(items.visibility, true);
+		this.visibility = get(items.visibility, true);
 		/**
 Sorting flag - when set to true, Groups will sort their constituent entity object according to their entity.order attribute for each iteration of the display cycle
 @property entitySort
 @type Boolean
 @default true
 **/
-		this.entitySort = my.xtGet(items.entitySort, true);
+		this.entitySort = get(items.entitySort, true);
 		/**
 Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked entity is to the current reference entity or mouse coordinate; when set to 0, this collision check step is skipped and all entitys move on to the next step
 @property regionRadius
 @type Number
 @default 0
 **/
-		this.regionRadius = my.xtGet(items.regionRadius, 0);
+		this.regionRadius = get(items.regionRadius, 0);
 		my.group[this.name] = this;
 		this.filtersGroupInit(items);
-		my.pushUnique(my.groupnames, this.name);
-		my.pushUnique(my.cell[this.cell].groups, this.name);
+		pu(my.groupnames, this.name);
+		pu(my.cell[this.cell].groups, this.name);
 		return this;
 	};
 	my.Group.prototype = Object.create(my.Base.prototype);
@@ -6378,12 +6502,14 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 **/
 	my.Group.prototype.stamp = function(method, cell) {
 		var entity,
+			entitys = this.entitys,
+			e = my.entity,
 			i,
 			iz;
 		if (this.visibility) {
 			this.sortEntitys();
-			for (i = 0, iz = this.entitys.length; i < iz; i++) {
-				entity = my.entity[this.entitys[i]];
+			for (i = 0, iz = entitys.length; i < iz; i++) {
+				entity = e[entitys[i]];
 				if (entity) {
 					entity.group = this.name;
 					entity.stamp(method, cell);
@@ -6418,6 +6544,8 @@ Add entitys to the Group
 **/
 	my.Group.prototype.addEntitysToGroup = function() {
 		var slice,
+			pu = my.pushUnique,
+			entitys = this.entitys,
 			i,
 			iz,
 			e;
@@ -6429,11 +6557,11 @@ Add entitys to the Group
 			e = slice[i];
 			if (my.xt(e)) {
 				if (e.substring) {
-					my.pushUnique(this.entitys, e);
+					pu(entitys, e);
 				}
 				else {
 					if (my.xt(e.name)) {
-						my.pushUnique(this.entitys, e.name);
+						pu(entitys, e.name);
 					}
 				}
 			}
@@ -6450,6 +6578,8 @@ Remove entitys from the Group
 **/
 	my.Group.prototype.removeEntitysFromGroup = function() {
 		var slice,
+			ri = my.removeItem,
+			entitys = this.entitys,
 			i,
 			iz,
 			e;
@@ -6461,11 +6591,11 @@ Remove entitys from the Group
 			e = slice[i];
 			if (my.xt(e)) {
 				if (e.substring) {
-					my.removeItem(this.entitys, e);
+					ri(entitys, e);
 				}
 				else {
 					if (my.xt(e.name)) {
-						my.removeItem(this.entitys, e.name);
+						ri(entitys, e.name);
 					}
 				}
 			}
@@ -6483,15 +6613,17 @@ The following entity attributes can be amended by this function: startX, startY,
 @chainable
 **/
 	my.Group.prototype.updateEntitysBy = function(items) {
-		var i,
+		var entitys = this.entitys,
+			get = my.xtGet,
+			i,
 			iz;
 		items = my.safeObject(items);
-		for (i = 0, iz = this.entitys.length; i < iz; i++) {
-			my.entity[this.entitys[i]].setDelta({
-				startX: my.xtGet(items.x, items.startX, 0),
-				startY: my.xtGet(items.y, items.startY, 0),
-				scale: my.xtGet(items.scale, 0),
-				roll: my.xtGet(items.roll, 0)
+		for (i = 0, iz = entitys.length; i < iz; i++) {
+			my.entity[entitys[i]].setDelta({
+				startX: get(items.x, items.startX, 0),
+				startY: get(items.y, items.startY, 0),
+				scale: get(items.scale, 0),
+				roll: get(items.roll, 0)
 			});
 		}
 		return this;
@@ -6504,10 +6636,11 @@ Ask all entitys in the Group to perform a set() operation
 @chainable
 **/
 	my.Group.prototype.setEntitysTo = function(items) {
-		var i,
+		var entitys = this.entitys,
+			i,
 			iz;
-		for (i = 0, iz = this.entitys.length; i < iz; i++) {
-			my.entity[this.entitys[i]].set(items);
+		for (i = 0, iz = entitys.length; i < iz; i++) {
+			my.entity[entitys[i]].set(items);
 		}
 		return this;
 	};
@@ -6524,7 +6657,10 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 		var pivot,
 			pivotVector,
 			entity,
+			entitys = this.entitys,
+			e = my.entity,
 			entityVector,
+			v = my.v.set,
 			i,
 			iz,
 			arg = {
@@ -6534,12 +6670,12 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 			};
 		item = (item.substring) ? item : false;
 		if (item) {
-			pivot = my.entity[item] || my.point[item] || false;
+			pivot = e[item] || my.point[item] || false;
 			if (pivot) {
 				pivotVector = (pivot.type === 'Point') ? pivot.local : pivot.start;
-				for (i = 0, iz = this.entitys.length; i < iz; i++) {
-					entity = my.entity[this.entitys[i]];
-					entityVector = my.v.set(entity.start);
+				for (i = 0, iz = entitys.length; i < iz; i++) {
+					entity = e[entitys[i]];
+					entityVector = v(entity.start);
 					entityVector.vectorSubtract(pivotVector);
 					arg.pivot = item;
 					arg.handleX = -entityVector.x;
@@ -6559,18 +6695,21 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 	my.Group.prototype.getEntityAt = function(items) {
 		var entity,
 			vector,
+			entitys = this.entitys,
+			e = my.entity,
+			rad = this.regionRadius,
 			coordinate,
 			i;
 		items = my.safeObject(items);
 		coordinate = my.v.set(items);
 		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
 		this.sortEntitys();
-		for (i = this.entitys.length - 1; i >= 0; i--) {
-			entity = my.entity[this.entitys[i]];
-			if (this.regionRadius) {
+		for (i = entitys.length - 1; i >= 0; i--) {
+			entity = e[entitys[i]];
+			if (rad) {
 				entity.resetWork();
 				vector = entity.work.start.vectorSubtract(coordinate);
-				if (vector.getMagnitude() > this.regionRadius) {
+				if (vector.getMagnitude() > rad) {
 					continue;
 				}
 			}
@@ -6588,11 +6727,13 @@ Check all entitys in the Group to see which one(s) are associated with a particu
 **/
 	my.Group.prototype.getEntitysByMouseIndex = function(item) {
 		var result = [],
+			entitys = this.entitys,
+			e = my.entity,
 			i, iz,
 			entity;
 		if (item.substring) {
-			for (i = 0, iz = this.entitys.length; i < iz; i++) {
-				entity = my.entity[this.entitys[i]];
+			for (i = 0, iz = entitys.length; i < iz; i++) {
+				entity = e[entitys[i]];
 				if (entity.mouseIndex === item) {
 					result.push(entity);
 				}
@@ -6611,18 +6752,21 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 			vector,
 			coordinate,
 			results,
+			entitys = this.entitys,
+			e = my.entity,
+			rad = this.regionRadius,
 			i;
 		items = my.safeObject(items);
 		coordinate = my.v.set(items);
 		results = [];
 		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
 		this.sortEntitys();
-		for (i = this.entitys.length - 1; i >= 0; i--) {
-			entity = my.entity[this.entitys[i]];
-			if (this.regionRadius) {
+		for (i = entitys.length - 1; i >= 0; i--) {
+			entity = e[entitys[i]];
+			if (rad) {
 				entity.resetWork();
 				vector = entity.work.start.vectorSubtract(coordinate);
-				if (vector.getMagnitude() > this.regionRadius) {
+				if (vector.getMagnitude() > rad) {
 					continue;
 				}
 			}
@@ -6664,6 +6808,7 @@ __Scrawl core does not include any entity type constructors.__ Each entity type 
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 	my.Entity = function(items) {
+		var get = my.xtGet;
 		items = my.safeObject(items);
 		my.Position.call(this, items);
 		items.name = this.name;
@@ -6691,28 +6836,28 @@ Display cycle flag; if set to true, entity will not change the &lt;canvas&gt; el
 @type Boolean
 @default false
 **/
-		this.fastStamp = my.xtGet(items.fastStamp, false);
+		this.fastStamp = get(items.fastStamp, false);
 		/**
 Scaling flag; set to true to ensure lineWidth scales in line with the scale attribute value
 @property scaleOutline
 @type Boolean
 @default true
 **/
-		this.scaleOutline = my.xtGet(items.scaleOutline, true);
+		this.scaleOutline = get(items.scaleOutline, true);
 		/**
 Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys
 @property order
 @type Number
 @default 0
 **/
-		this.order = my.xtGet(items.order, 0);
+		this.order = get(items.order, 0);
 		/**
 Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
 @property visibility
 @type Boolean
 @default true
 **/
-		this.visibility = my.xtGet(items.visibility, true);
+		this.visibility = get(items.visibility, true);
 		/**
 Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
 
@@ -6732,7 +6877,7 @@ _Note: not all entitys support all of these operations_
 @type String
 @default 'fill'
 **/
-		this.method = my.xtGet(items.method, my.d[this.type].method);
+		this.method = get(items.method, my.d[this.type].method);
 		this.collisionsEntityConstructor(items);
 		this.filtersEntityInit(items);
 		return this;
@@ -6811,12 +6956,13 @@ Allows users to retrieve a entity's Context object's values via the entity
 @return Attribute value
 **/
 	my.Entity.prototype.get = function(item) {
+		var xt = my.xt;
 		//retrieve title, comment, timestamp - which might otherwise be returned with the context object's values
-		if (my.xt(my.d.Base[item])) {
+		if (xt(my.d.Base[item])) {
 			return my.Base.prototype.get.call(this, item);
 		}
 		//context attributes
-		if (my.xt(my.d.Context[item])) {
+		if (xt(my.d.Context[item])) {
 			return my.ctx[this.context].get(item);
 		}
 		//entity attributes
@@ -6867,21 +7013,23 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 @chainable
 **/
 	my.Entity.prototype.setDelta = function(items) {
+		var xt = my.xt,
+			xto = my.xto;
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
-		if (my.xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
+		if (xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
 			my.ctx[this.context].setDelta(items);
 		}
-		if (my.xt(items.roll)) {
+		if (xt(items.roll)) {
 			this.roll += items.roll || 0;
 		}
-		if (my.xt(items.width)) {
+		if (xt(items.width)) {
 			this.width = (this.width.toFixed) ? this.width + items.width : my.addPercentages(this.width, items.width);
 		}
-		if (my.xt(items.height)) {
+		if (xt(items.height)) {
 			this.height = (this.height.toFixed) ? this.height + items.height : my.addPercentages(this.height, items.height);
 		}
-		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.pasteWidth, items.pasteHeight, items.radius, items.scale)) {
+		if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.pasteWidth, items.pasteHeight, items.radius, items.scale)) {
 			this.offset.flag = false;
 		}
 		this.collisionsEntitySetDelta(items);
@@ -6980,11 +7128,12 @@ Stamp helper function - get handle offset values
 @private
 **/
 	my.Entity.prototype.prepareStamp = function() {
-		if (!this.offset.flag) {
-			this.offset.set(this.getOffsetStartVector());
-			this.offset.flag = true;
+		var offset = this.offset;
+		if (!offset.flag) {
+			offset.set(this.getOffsetStartVector());
+			offset.flag = true;
 		}
-		return this.offset;
+		return offset;
 	};
 	/**
 Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true
@@ -7061,16 +7210,20 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 			sin,
 			x = this.start.x,
 			y = this.start.y;
-		rotation *= 0.01745329251;
-		cos = Math.cos(rotation);
-		sin = Math.sin(rotation);
 		if (x.substring) {
 			x = this.convertX(x, cell);
 		}
 		if (y.substring) {
 			y = this.convertY(y, cell);
 		}
-		ctx.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);
+		if (rotation) {
+			rotation *= 0.01745329251;
+			cos = Math.cos(rotation);
+			sin = Math.sin(rotation);
+			ctx.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);
+			return this;
+		}
+		ctx.setTransform(reverse, 0, 0, upend, x, y);
 		return this;
 	};
 	/**
@@ -7083,9 +7236,10 @@ Entity.getStartValues
 			result = {
 				x: 0,
 				y: 0
-			};
-		result.x = (this.start.x.substring) ? this.convertX(this.start.x, cell) : this.start.x;
-		result.y = (this.start.y.substring) ? this.convertY(this.start.y, cell) : this.start.y;
+			},
+			start = this.start;
+		result.x = (start.x.substring) ? this.convertX(start.x, cell) : start.x;
+		result.y = (start.y.substring) ? this.convertY(start.y, cell) : start.y;
 		return result;
 	};
 	/**
@@ -7325,7 +7479,11 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			i,
 			iz,
 			width,
-			height;
+			height,
+			lw = this.localWidth,
+			lh = this.localHeight,
+			scale = this.scale,
+			cvx = my.cvx;
 		items = my.safeObject(items);
 		if (my.xt(items.tests)) {
 			tests = items.tests;
@@ -7335,14 +7493,14 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			tests.push(items.x || 0);
 			tests.push(items.y || 0);
 		}
-		this.rotateCell(my.cvx, this.getEntityCell().name);
+		this.rotateCell(cvx, this.getEntityCell().name);
 		here = this.prepareStamp();
-		width = (this.localWidth) ? this.localWidth : this.width * this.scale;
-		height = (this.localHeight) ? this.localHeight : this.height * this.scale;
-		my.cvx.beginPath();
-		my.cvx.rect(here.x, here.y, width, height);
+		width = (lw) ? lw : this.width * scale;
+		height = (lh) ? lh : this.height * scale;
+		cvx.beginPath();
+		cvx.rect(here.x, here.y, width, height);
 		for (i = 0, iz = tests.length; i < iz; i += 2) {
-			result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
+			result = cvx.isPointInPath(tests[i], tests[i + 1]);
 			if (result) {
 				break;
 			}
@@ -7463,15 +7621,16 @@ Add values to Number attributes
 @chainable
 **/
 	my.Design.prototype.setDelta = function(items) {
-		var temp;
+		var temp,
+			perc = my.addPercentages;
 		items = my.safeObject(items);
 		if (items.startX) {
 			temp = this.get('startX');
-			this.startX = (items.startX.substring) ? my.addPercentages(temp, items.startX) : temp + items.startX;
+			this.startX = (items.startX.substring) ? perc(temp, items.startX) : temp + items.startX;
 		}
 		if (items.startY) {
 			temp = this.get('startY');
-			this.startY = (items.startY.substring) ? my.addPercentages(temp, items.startY) : temp + items.startY;
+			this.startY = (items.startY.substring) ? perc(temp, items.startY) : temp + items.startY;
 		}
 		if (items.startRadius) {
 			temp = this.get('startRadius');
@@ -7479,11 +7638,11 @@ Add values to Number attributes
 		}
 		if (items.endX) {
 			temp = this.get('endX');
-			this.endX = (items.endX.substring) ? my.addPercentages(temp, items.endX) : temp + items.endX;
+			this.endX = (items.endX.substring) ? perc(temp, items.endX) : temp + items.endX;
 		}
 		if (items.endY) {
 			temp = this.get('endY');
-			this.endY = (items.endY.substring) ? my.addPercentages(temp, items.endY) : temp + items.endY;
+			this.endY = (items.endY.substring) ? perc(temp, items.endY) : temp + items.endY;
 		}
 		if (items.endRadius) {
 			temp = this.get('endRadius');
@@ -7530,6 +7689,8 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 **/
 	my.Design.prototype.makeGradient = function(entity, cell) {
 		var ctx,
+			c = my.cell,
+			xt = my.xt,
 			g,
 			x,
 			y,
@@ -7546,16 +7707,17 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 			temp,
 			w,
 			h,
-			r;
+			r,
+			v = my.v;
 		entity = my.entity[entity] || false;
-		if (my.xt(cell)) {
-			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[this.get('cell')];
+		if (xt(cell)) {
+			cell = (c[cell]) ? c[cell] : c[this.get('cell')];
 		}
 		else if (entity) {
-			cell = my.cell[entity.group];
+			cell = c[entity.group];
 		}
 		else {
-			cell = my.cell[this.get('cell')];
+			cell = c[this.get('cell')];
 		}
 		ctx = my.context[cell.name];
 		//in all cases, the canvas origin will have been translated to the current entity's start
@@ -7581,21 +7743,21 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 					x = -temp.x;
 					y = -temp.y;
 			}
-			w = (my.xt(entity.localWidth)) ? entity.localWidth : entity.width * entity.scale;
-			h = (my.xt(entity.localHeight)) ? entity.localHeight : entity.height * entity.scale;
-			sx = (my.xt(this.startX)) ? this.startX : 0;
+			w = (xt(entity.localWidth)) ? entity.localWidth : entity.width * entity.scale;
+			h = (xt(entity.localHeight)) ? entity.localHeight : entity.height * entity.scale;
+			sx = (xt(this.startX)) ? this.startX : 0;
 			if (sx.substring) {
 				sx = (parseFloat(sx) / 100) * w;
 			}
-			sy = (my.xt(this.startY)) ? this.startY : 0;
+			sy = (xt(this.startY)) ? this.startY : 0;
 			if (sy.substring) {
 				sy = (parseFloat(sy) / 100) * h;
 			}
-			ex = (my.xt(this.endX)) ? this.endX : w;
+			ex = (xt(this.endX)) ? this.endX : w;
 			if (ex.substring) {
 				ex = (parseFloat(ex) / 100) * w;
 			}
-			ey = (my.xt(this.endY)) ? this.endY : h;
+			ey = (xt(this.endY)) ? this.endY : h;
 			if (ey.substring) {
 				ey = (parseFloat(ey) / 100) * h;
 			}
@@ -7603,11 +7765,11 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 				g = ctx.createLinearGradient(sx - x, sy - y, ex - x, ey - y);
 			}
 			else {
-				sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
+				sr = (xt(this.startRadius)) ? this.startRadius : 0;
 				if (sr.substring) {
 					sr = (parseFloat(sr) / 100) * w;
 				}
-				er = (my.xt(this.endRadius)) ? this.endRadius : w;
+				er = (xt(this.endRadius)) ? this.endRadius : w;
 				if (er.substring) {
 					er = (parseFloat(er) / 100) * w;
 				}
@@ -7623,19 +7785,19 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 			if (y.substring) {
 				y = entity.convertY(y, cell.name);
 			}
-			sx = (my.xt(this.startX)) ? this.startX : 0;
+			sx = (xt(this.startX)) ? this.startX : 0;
 			if (sx.substring) {
 				sx = entity.convertX(sx, cell.name);
 			}
-			sy = (my.xt(this.startY)) ? this.startY : 0;
+			sy = (xt(this.startY)) ? this.startY : 0;
 			if (sy.substring) {
 				sy = entity.convertY(sy, cell.name);
 			}
-			ex = (my.xt(this.endX)) ? this.endX : cell.actualWidth;
+			ex = (xt(this.endX)) ? this.endX : cell.actualWidth;
 			if (ex.substring) {
 				ex = entity.convertX(ex, cell.name);
 			}
-			ey = (my.xt(this.endY)) ? this.endY : cell.actualWidth;
+			ey = (xt(this.endY)) ? this.endY : cell.actualWidth;
 			if (ey.substring) {
 				ey = entity.convertY(ey, cell.name);
 			}
@@ -7654,30 +7816,30 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 				r = -entity.roll;
 			}
 			if (entity.roll) {
-				my.v.set({
+				v.set({
 					x: fsx,
 					y: fsy,
 					z: 0
 				}).rotate(r);
-				fsx = my.v.x;
-				fsy = my.v.y;
-				my.v.set({
+				fsx = v.x;
+				fsy = v.y;
+				v.set({
 					x: fex,
 					y: fey,
 					z: 0
 				}).rotate(r);
-				fex = my.v.x;
-				fey = my.v.y;
+				fex = v.x;
+				fey = v.y;
 			}
 			if (this.type === 'Gradient') {
 				g = ctx.createLinearGradient(fsx, fsy, fex, fey);
 			}
 			else {
-				sr = (my.xt(this.startRadius)) ? this.startRadius : 0;
+				sr = (xt(this.startRadius)) ? this.startRadius : 0;
 				if (sr.substring) {
 					sr = (parseFloat(sr) / 100) * cell.actualWidth;
 				}
-				er = (my.xt(this.endRadius)) ? this.endRadius : cell.actualWidth;
+				er = (xt(this.endRadius)) ? this.endRadius : cell.actualWidth;
 				if (er.substring) {
 					er = (parseFloat(er) / 100) * cell.actualWidth;
 				}
@@ -7695,13 +7857,13 @@ Design.update() helper function - applies color attribute objects to the gradien
 @chainable
 **/
 	my.Design.prototype.applyStops = function() {
-		var color,
+		var color = this.get('color'),
 			i,
-			iz;
-		color = this.get('color');
-		if (my.dsn[this.name]) {
+			iz,
+			dsn = my.dsn[this.name];
+		if (dsn) {
 			for (i = 0, iz = color.length; i < iz; i++) {
-				my.dsn[this.name].addColorStop(color[i].stop, color[i].color);
+				dsn.addColorStop(color[i].stop, color[i].color);
 			}
 		}
 		return this;
@@ -7866,13 +8028,15 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 **/
 	my.animationLoop = function() {
 		var i,
-			iz;
+			iz,
+			animate = my.animate,
+			animation = my.animation;
 		if (my.orderAnimations) {
 			my.sortAnimations();
 		}
-		for (i = 0, iz = my.animate.length; i < iz; i++) {
-			if (my.animate[i]) {
-				my.animation[my.animate[i]].fn();
+		for (i = 0, iz = animate.length; i < iz; i++) {
+			if (animate[i]) {
+				animation[animate[i]].fn();
 			}
 		}
 		if (my.doAnimation) {
@@ -7892,9 +8056,6 @@ Animation sorting routine - animation objects are sorted according to their anim
 			my.resortAnimations = false;
 			my.animate = my.bucketSort('animation', 'order', my.animate);
 		}
-		// my.animate.sort(function(a, b) {
-		// 	return my.animation[a].order - my.animation[b].order;
-		// });
 	};
 	/**
 Starts the animation loop
@@ -7904,13 +8065,14 @@ Starts the animation loop
 	my.animationInit = function() {
 		my.makeAnimation({
 			fn: function() {
-				var w = my.device.width,
-					h = my.device.height;
-				my.device.getViewportDimensions();
-				if (w - my.device.width || h - my.device.height) {
+				var dev = my.device,
+					w = dev.width,
+					h = dev.height;
+				dev.getViewportDimensions();
+				if (w - dev.width || h - dev.height) {
 					my.setDisplayOffsets('all');
 				}
-				my.device.getViewportPosition();
+				dev.getViewportPosition();
 			}
 		});
 		my.doAnimation = true;
