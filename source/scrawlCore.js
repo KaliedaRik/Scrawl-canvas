@@ -616,85 +616,6 @@ A __utility__ function that checks to see if a number is between two other numbe
 		}
 	};
 	/**
-A __utility__ function that adds two numbers, keeping them within bounds
-
-The argument object can take the following attributes:
-
-* __min__ - Number - minimum bound; default 0
-* __max__ - Number - maximum bound; default 1
-* __action__ - String - 'bounce', 'loop', 'stick' (default)
-* __operation__ - String - 'add' or '+' (default), 'subtract' or '-', 'multiply' or '*', 'divide' or '/'
-
-The action attribute refers to the action taken when the result of the operation falls beyond the set bounds:
-
-* __bounce__ - the value is reversed eg 3 + 4 (max bound: 5) = 3 
-* __loop__ - 'clock' calculation eg 3 + 4 (min bound: 0; max bound: 5) = 1 
-* __stick__ - maximum or minimum value is applied eg 3 + 4 (max bound: 5) = 5 
-
-@method addWithinBounds
-@param {Number} a first number
-@param {Number} b second number (order is important for subtraction or division)
-@param {Object} object consisting of key:value pairs
-@return result of calculation
-**/
-	my.addWithinBounds = function(a, b, items) {
-		var min,
-			max,
-			count,
-			action,
-			operation,
-			result,
-			check;
-		items = my.safeObject(items);
-		a = my.xtGet(a, 0);
-		b = my.xtGet(b, 0);
-		min = my.xtGet(items.min, 0);
-		max = my.xtGet(items.max, 1);
-		action = my.xtGet(items.action, 'stick');
-		operation = my.xtGet(items.operation, 'add');
-		count = 20;
-		result = 0;
-		check = false;
-
-		if (b === 0 && (operation === 'divide' || operation === '/')) {
-			return false;
-		}
-
-		switch (operation) {
-			case 'subtract':
-			case '-':
-				result = a - b;
-				break;
-			case 'multiply':
-			case '*':
-				result = a * b;
-				break;
-			case 'divide':
-			case '/':
-				result = a / b;
-				break;
-			default:
-				result = a + b;
-		}
-
-		while (!my.isBetween(result, min, max, true) && count > 0) {
-			check = (result < (min + max) / 2) ? true : false;
-			switch (action) {
-				case 'bounce':
-					result = (check) ? min + (-result + min) : max + (-result + max);
-					break;
-				case 'loop':
-					result = (check) ? (max - min) + result : (min - max) + result;
-					break;
-				default:
-					result = (check) ? min : max;
-			}
-			count--;
-		}
-
-		return (count > 0) ? result : false;
-	};
-	/**
 A __utility__ function for variable type checking
 
 Valid identifier Strings include:
@@ -3326,10 +3247,12 @@ Takes into account lock flag settings
 		if (this.pivot === 'mouse') {
 			cell = my.cell[cell];
 			pad = my.pad[cell.pad];
-			x = (start.x.substring) ? this.convertX(start.x, cell) : start.x;
-			y = (start.y.substring) ? this.convertY(start.y, cell) : start.y;
-			x = (isNaN(x)) ? 0 : x;
-			y = (isNaN(y)) ? 0 : y;
+			// x = (start.x.substring) ? this.convertX(start.x, cell) : start.x;
+			// y = (start.y.substring) ? this.convertY(start.y, cell) : start.y;
+			// x = (isNaN(x)) ? 0 : x;
+			// y = (isNaN(y)) ? 0 : y;
+			x = (start.x.substring) ? this.simpleConvertX(start.x, cell) : start.x;
+			y = (start.y.substring) ? this.simpleConvertY(start.y, cell) : start.y;
 			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
 			if (this.oldX == null && this.oldY == null) { //jshint ignore:line
 				this.oldX = x;
@@ -3445,6 +3368,74 @@ Stamp helper function - convert string start.y values to numerical values
 			}
 		}
 		return result * height;
+	};
+	/**
+Stamp helper function - convert string start.x values to numerical values
+@method simpleConvertX
+@param {String} x coordinate String
+@param {Object} cell object
+@return Number - x value
+@private
+**/
+	my.Position.prototype.simpleConvertX = function(x, cell) {
+		var width = cell.actualWidth,
+			result = parseFloat(x) / 100;
+		if (isNaN(result)) {
+			switch (x) {
+				case 'right':
+					return width;
+				case 'center':
+					return width / 2;
+				default:
+					return 0;
+			}
+		}
+		return result * width;
+	};
+	/**
+Stamp helper function - convert string start.y values to numerical values
+@method simpleConvertY
+@param {String} y coordinate String
+@param {Object} cell object
+@return Number - y value
+@private
+**/
+	my.Position.prototype.simpleConvertY = function(y, cell) {
+		var height = cell.actualHeight,
+			result = parseFloat(y) / 100;
+		if (isNaN(result)) {
+			switch (y) {
+				case 'bottom':
+					return height;
+				case 'center':
+					return height / 2;
+				default:
+					return 0;
+			}
+		}
+		return result * height;
+	};
+	/**
+Stamp helper function - convert string percentage values to numerical values
+@method numberConvert
+@param {String} val coordinate String
+@param {Number} dim dimension value
+@return Number - value
+@private
+**/
+	my.Position.prototype.numberConvert = function(val, dim) {
+		var result = parseFloat(val) / 100;
+		if (isNaN(result)) {
+			switch (val) {
+				case 'right':
+					return dim;
+				case 'center':
+					return dim / 2;
+				default:
+					return 0;
+			}
+		}
+		return result * dim;
 	};
 
 	/**
@@ -5595,7 +5586,7 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 		for (i = 0, iz = this.groups.length; i < iz; i++) {
 			group = my.group[this.groups[i]];
 			if (group.get('visibility')) {
-				group.stamp(false, this.name);
+				group.stamp(false, this.name, this);
 			}
 		}
 		return this;
@@ -6485,10 +6476,13 @@ Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &
 @return This
 @chainable
 **/
-	my.Group.prototype.forceStamp = function(method, cell) {
+	// my.Group.prototype.forceStamp = function(method, cell) {
+	my.Group.prototype.forceStamp = function(method, cellname, cell) {
+		console.log(this.name, 'forceStamp', method, cellname, cell);
 		var visibility = this.visibility;
 		this.visibility = true;
-		this.stamp(method, cell);
+		// this.stamp(method, cell);
+		this.stamp(method, cellname, cell);
 		this.visibility = visibility;
 		return this;
 	};
@@ -6500,7 +6494,8 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 @return This
 @chainable
 **/
-	my.Group.prototype.stamp = function(method, cell) {
+	// my.Group.prototype.stamp = function(method, cell) {
+	my.Group.prototype.stamp = function(method, cellname, cell) {
 		var entity,
 			entitys = this.entitys,
 			e = my.entity,
@@ -6508,11 +6503,12 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 			iz;
 		if (this.visibility) {
 			this.sortEntitys();
+			cell = (my.xt(cell)) ? cell : my.cell[cellname];
 			for (i = 0, iz = entitys.length; i < iz; i++) {
 				entity = e[entitys[i]];
 				if (entity) {
 					entity.group = this.name;
-					entity.stamp(method, cell);
+					entity.stamp(method, cellname, cell);
 				}
 			}
 			this.stampFilter(my.context[this.cell], this.cell);
@@ -7113,10 +7109,12 @@ Permitted methods include:
 @return This
 @chainable
 **/
-	my.Entity.prototype.forceStamp = function(method, cell) {
+	// my.Entity.prototype.forceStamp = function(method, cell) {
+	my.Entity.prototype.forceStamp = function(method, cellname, cell) {
 		var visibility = this.visibility;
 		this.visibility = true;
-		this.stamp(method, cell);
+		// this.stamp(method, cell);
+		this.stamp(method, cellname, cell);
 		this.visibility = visibility;
 		return this;
 	};
@@ -7156,9 +7154,10 @@ Permitted methods include:
 @return This
 @chainable
 **/
-	my.Entity.prototype.stamp = function(method, cell) {
+	// my.Entity.prototype.stamp = function(method, cell) {
+	my.Entity.prototype.stamp = function(method, cellname, cell) {
 		var engine,
-			cellname,
+			// cellname,
 			cellCtx,
 			eCtx,
 			here,
@@ -7166,8 +7165,11 @@ Permitted methods include:
 			sEngine,
 			data;
 		if (this.visibility) {
-			cell = my.cell[cell] || my.cell[my.group[this.group].cell];
-			cellname = cell.name;
+			// cell = my.cell[cell] || my.cell[my.group[this.group].cell];
+			// cellname = cell.name;
+			if (!cell) {
+				cell = my.cell[cellname] || my.cell[my.group[this.group].cell];
+			}
 			engine = my.context[cellname];
 			method = method || this.method;
 			if (this.pivot) {
@@ -7176,8 +7178,10 @@ Permitted methods include:
 			else {
 				this.pathStamp();
 			}
-			this[method](engine, cellname);
-			this.stampFilter(engine, cellname);
+			// this[method](engine, cellname);
+			// this.stampFilter(engine, cellname);
+			this[method](engine, cellname, cell);
+			this.stampFilter(engine, cellname, cell);
 		}
 		return this;
 	};
@@ -7211,10 +7215,12 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 			x = this.start.x,
 			y = this.start.y;
 		if (x.substring) {
-			x = this.convertX(x, cell);
+			// x = this.convertX(x, cell);
+			x = this.simpleConvertX(x, cell);
 		}
 		if (y.substring) {
-			y = this.convertY(y, cell);
+			// y = this.convertY(y, cell);
+			y = this.simpleConvertY(y, cell);
 		}
 		if (rotation) {
 			rotation *= 0.01745329251;
@@ -7231,15 +7237,18 @@ Entity.getStartValues
 @method getStartValues
 @private
 **/
-	my.Entity.prototype.getStartValues = function() {
-		var cell = this.getEntityCell(),
-			result = {
+	my.Entity.prototype.getStartValues = function(cell) {
+		// var cell = this.getEntityCell(),
+		// 	result = {
+		var result = {
 				x: 0,
 				y: 0
 			},
 			start = this.start;
-		result.x = (start.x.substring) ? this.convertX(start.x, cell) : start.x;
-		result.y = (start.y.substring) ? this.convertY(start.y, cell) : start.y;
+		// result.x = (start.x.substring) ? this.convertX(start.x, cell) : start.x;
+		// result.y = (start.y.substring) ? this.convertY(start.y, cell) : start.y;
+		result.x = (start.x.substring) ? this.simpleConvertX(start.x, cell) : start.x;
+		result.y = (start.y.substring) ? this.simpleConvertY(start.y, cell) : start.y;
 		return result;
 	};
 	/**
@@ -7253,7 +7262,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.clear = function(ctx, cell) {
+	my.Entity.prototype.clear = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7267,7 +7276,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.clearWithBackground = function(ctx, cell) {
+	my.Entity.prototype.clearWithBackground = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7281,7 +7290,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.draw = function(ctx, cell) {
+	my.Entity.prototype.draw = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7295,7 +7304,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.fill = function(ctx, cell) {
+	my.Entity.prototype.fill = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7309,7 +7318,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.drawFill = function(ctx, cell) {
+	my.Entity.prototype.drawFill = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7323,7 +7332,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.fillDraw = function(ctx, cell) {
+	my.Entity.prototype.fillDraw = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7337,7 +7346,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.sinkInto = function(ctx, cell) {
+	my.Entity.prototype.sinkInto = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7351,7 +7360,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.floatOver = function(ctx, cell) {
+	my.Entity.prototype.floatOver = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7365,7 +7374,7 @@ _Note: not supported by this entity_
 @chainable
 @private
 **/
-	my.Entity.prototype.clip = function(ctx, cell) {
+	my.Entity.prototype.clip = function(ctx, cellname, cell) {
 		return this;
 	};
 	/**
@@ -7377,8 +7386,9 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 @chainable
 @private
 **/
-	my.Entity.prototype.none = function(ctx, cell) {
-		my.cell[cell].setEngine(this);
+	my.Entity.prototype.none = function(ctx, cellname, cell) {
+		// my.cell[cell].setEngine(this);
+		cell.setEngine(this);
 		return this;
 	};
 	/**

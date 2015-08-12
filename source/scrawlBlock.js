@@ -95,11 +95,13 @@ A __factory__ function to generate new Block entitys
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Block = function Block(items) {
+			var get = my.xtGet,
+			d = my.d.Block;
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
-			this.width = my.xtGet(items.width, my.d.Block.width);
-			this.height = my.xtGet(items.height, my.d.Block.height);
+			this.width = get(items.width, d.width);
+			this.height = get(items.height, d.height);
 			this.setLocalDimensions();
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
@@ -192,7 +194,7 @@ Stamp helper function - perform a 'clip' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.clip = function(ctx, cell) {
+		my.Block.prototype.clip = function(ctx, cellname, cell) {
 			var here = this.prepareStamp();
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
@@ -209,9 +211,9 @@ Stamp helper function - perform a 'clear' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.clear = function(ctx, cell) {
+		my.Block.prototype.clear = function(ctx, cellname, cell) {
 			var here = this.prepareStamp();
-			my.cell[cell].setToClearShape();
+			cell.setToClearShape();
 			this.rotateCell(ctx, cell);
 			ctx.clearRect(here.x, here.y, this.localWidth, this.localHeight);
 			return this;
@@ -225,10 +227,9 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.clearWithBackground = function(ctx, cell) {
-			var myCell = my.cell[cell],
-				bg = myCell.get('backgroundColor'),
-				myCellCtx = my.ctx[cell],
+		my.Block.prototype.clearWithBackground = function(ctx, cellname, cell) {
+			var bg = cell.get('backgroundColor'),
+				myCellCtx = my.ctx[cellname],
 				fillStyle = myCellCtx.get('fillStyle'),
 				strokeStyle = myCellCtx.get('strokeStyle'),
 				globalAlpha = myCellCtx.get('globalAlpha'),
@@ -253,9 +254,9 @@ Stamp helper function - perform a 'draw' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.draw = function(ctx, cell) {
+		my.Block.prototype.draw = function(ctx, cellname, cell) {
 			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 			return this;
@@ -269,9 +270,9 @@ Stamp helper function - perform a 'fill' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.fill = function(ctx, cell) {
+		my.Block.prototype.fill = function(ctx, cellname, cell) {
 			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 			return this;
@@ -285,9 +286,9 @@ Stamp helper function - perform a 'drawFill' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.drawFill = function(ctx, cell) {
+		my.Block.prototype.drawFill = function(ctx, cellname, cell) {
 			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 			this.clearShadow(ctx, cell);
@@ -303,9 +304,9 @@ Stamp helper function - perform a 'fillDraw' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.fillDraw = function(ctx, cell) {
+		my.Block.prototype.fillDraw = function(ctx, cellname, cell) {
 			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 			this.clearShadow(ctx, cell);
@@ -321,9 +322,9 @@ Stamp helper function - perform a 'sinkInto' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.sinkInto = function(ctx, cell) {
+		my.Block.prototype.sinkInto = function(ctx, cellname, cell) {
 			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -338,9 +339,9 @@ Stamp helper function - perform a 'floatOver' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.floatOver = function(ctx, cell) {
+		my.Block.prototype.floatOver = function(ctx, cellname, cell) {
 			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -355,7 +356,7 @@ Stamp helper function - perform a 'none' method draw
 @chainable
 @private
 **/
-		my.Block.prototype.none = function(ctx, cell) {
+		my.Block.prototype.none = function(ctx, cellname, cell) {
 			this.prepareStamp();
 			return this;
 		};

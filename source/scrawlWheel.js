@@ -95,16 +95,18 @@ A __factory__ function to generate new Wheel entitys
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Wheel = function Wheel(items) {
+			var get = my.xtGet,
+			d = my.d.Wheel;
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
-			this.radius = my.xtGet(items.radius, my.d.Wheel.radius);
+			this.radius = get(items.radius, d.radius);
 			this.width = this.radius * 2;
 			this.height = this.width;
-			this.checkHitUsingRadius = my.xtGet(items.checkHitUsingRadius, my.d.Wheel.checkHitUsingRadius);
-			this.closed = my.xtGet(items.closed, my.d.Wheel.closed);
-			this.includeCenter = my.xtGet(items.includeCenter, my.d.Wheel.includeCenter);
-			this.clockwise = my.xtGet(items.clockwise, my.d.Wheel.clockwise);
+			this.checkHitUsingRadius = get(items.checkHitUsingRadius, d.checkHitUsingRadius);
+			this.closed = get(items.closed, d.closed);
+			this.includeCenter = get(items.includeCenter, d.includeCenter);
+			this.clockwise = get(items.clockwise, d.clockwise);
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
@@ -193,17 +195,18 @@ Augments Entity.setDelta()
 @chainable
 **/
 		my.Wheel.prototype.setDelta = function(items) {
+			var xt = my.xt;
 			my.Entity.prototype.setDelta.call(this, items);
 			items = my.safeObject(items);
-			if (my.xt(items.radius)) {
+			if (xt(items.radius)) {
 				this.radius += items.radius;
 				this.width = this.radius * 2;
 				this.height = this.width;
 			}
-			if (my.xt(items.startAngle)) {
+			if (xt(items.startAngle)) {
 				this.startAngle = this.get('startAngle') + items.startAngle;
 			}
-			if (my.xt(items.endAngle)) {
+			if (xt(items.endAngle)) {
 				this.endAngle = this.get('endAngle') + items.endAngle;
 			}
 			return this;
@@ -230,7 +233,9 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				iz,
 				tests,
 				result,
-				testRadius;
+				testRadius,
+				cvx = my.cvx,
+				v1 = my.workwheel.v1;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)];
 			result = false;
@@ -238,13 +243,13 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				testRadius = (this.checkHitRadius) ? this.checkHitRadius : this.radius * this.scale;
 				for (i = 0, iz = tests.length; i < iz; i += 2) {
 					this.resetWork();
-					my.workwheel.v1.x = tests[i];
-					my.workwheel.v1.y = tests[i + 1];
-					my.workwheel.v1.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
-					my.workwheel.v1.x = (this.flipReverse) ? -my.workwheel.v1.x : my.workwheel.v1.x;
-					my.workwheel.v1.y = (this.flipUpend) ? -my.workwheel.v1.y : my.workwheel.v1.y;
-					my.workwheel.v1.vectorAdd(this.getPivotOffsetVector(this.handle));
-					result = (my.workwheel.v1.getMagnitude() <= testRadius) ? true : false;
+					v1.x = tests[i];
+					v1.y = tests[i + 1];
+					v1.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
+					v1.x = (this.flipReverse) ? -v1.x : v1.x;
+					v1.y = (this.flipUpend) ? -v1.y : v1.y;
+					v1.vectorAdd(this.getPivotOffsetVector(this.handle));
+					result = (v1.getMagnitude() <= testRadius) ? true : false;
 					if (result) {
 						items.x = tests[i];
 						items.y = tests[i + 1];
@@ -253,9 +258,9 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				}
 			}
 			else {
-				this.buildPath(my.cvx);
+				this.buildPath(cvx);
 				for (i = 0, iz = tests.length; i < iz; i += 2) {
-					result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
+					result = cvx.isPointInPath(tests[i], tests[i + 1]);
 					if (result) {
 						items.x = tests[i];
 						items.y = tests[i + 1];
@@ -310,7 +315,7 @@ Stamp helper function - perform a 'clip' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.clip = function(ctx, cell) {
+		my.Wheel.prototype.clip = function(ctx, cellname, cell) {
 			this.buildPath(ctx, cell);
 			ctx.clip();
 			return this;
@@ -324,12 +329,12 @@ Stamp helper function - perform a 'clear' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.clear = function(ctx, cell) {
+		my.Wheel.prototype.clear = function(ctx, cellname, cell) {
 			ctx.globalCompositeOperation = 'destination-out';
 			this.buildPath(ctx, cell);
 			ctx.stroke();
 			ctx.fill();
-			ctx.globalCompositeOperation = my.ctx[cell].get('globalCompositeOperation');
+			ctx.globalCompositeOperation = my.ctx[cellname].get('globalCompositeOperation');
 			return this;
 		};
 		/**
@@ -341,16 +346,16 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.clearWithBackground = function(ctx, cell) {
+		my.Wheel.prototype.clearWithBackground = function(ctx, cellname, cell) {
 			var myCell,
 				bc,
 				myCellCtx,
 				fillStyle,
 				strokeStyle,
 				globalAlpha;
-			myCell = my.cell[cell];
+			myCell = cell;
 			bc = myCell.get('backgroundColor');
-			myCellCtx = my.ctx[cell];
+			myCellCtx = my.ctx[cellname];
 			fillStyle = myCellCtx.get('fillStyle');
 			strokeStyle = myCellCtx.get('strokeStyle');
 			globalAlpha = myCellCtx.get('globalAlpha');
@@ -374,8 +379,8 @@ Stamp helper function - perform a 'draw' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.draw = function(ctx, cell) {
-			my.cell[cell].setEngine(this);
+		my.Wheel.prototype.draw = function(ctx, cellname, cell) {
+			cell.setEngine(this);
 			this.buildPath(ctx, cell);
 			ctx.stroke();
 			return this;
@@ -389,8 +394,8 @@ Stamp helper function - perform a 'fill' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.fill = function(ctx, cell) {
-			my.cell[cell].setEngine(this);
+		my.Wheel.prototype.fill = function(ctx, cellname, cell) {
+			cell.setEngine(this);
 			this.buildPath(ctx, cell);
 			ctx.fill();
 			return this;
@@ -404,8 +409,8 @@ Stamp helper function - perform a 'drawFill' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.drawFill = function(ctx, cell) {
-			my.cell[cell].setEngine(this);
+		my.Wheel.prototype.drawFill = function(ctx, cellname, cell) {
+			cell.setEngine(this);
 			this.buildPath(ctx, cell);
 			ctx.stroke();
 			this.clearShadow(ctx, cell);
@@ -421,8 +426,8 @@ Stamp helper function - perform a 'fillDraw' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.fillDraw = function(ctx, cell) {
-			my.cell[cell].setEngine(this);
+		my.Wheel.prototype.fillDraw = function(ctx, cellname, cell) {
+			cell.setEngine(this);
 			this.buildPath(ctx, cell);
 			ctx.fill();
 			this.clearShadow(ctx, cell);
@@ -438,8 +443,8 @@ Stamp helper function - perform a 'sinkInto' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.sinkInto = function(ctx, cell) {
-			my.cell[cell].setEngine(this);
+		my.Wheel.prototype.sinkInto = function(ctx, cellname, cell) {
+			cell.setEngine(this);
 			this.buildPath(ctx, cell);
 			ctx.fill();
 			ctx.stroke();
@@ -454,8 +459,8 @@ Stamp helper function - perform a 'floatOver' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.floatOver = function(ctx, cell) {
-			my.cell[cell].setEngine(this);
+		my.Wheel.prototype.floatOver = function(ctx, cellname, cell) {
+			cell.setEngine(this);
 			this.buildPath(ctx, cell);
 			ctx.stroke();
 			ctx.fill();
@@ -470,7 +475,7 @@ Stamp helper function - perform a 'none' method draw
 @chainable
 @private
 **/
-		my.Wheel.prototype.none = function(ctx, cell) {
+		my.Wheel.prototype.none = function(ctx, cellname, cell) {
 			this.buildPath(ctx, cell);
 			return this;
 		};
@@ -489,67 +494,70 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				r,
 				i,
 				iz,
-				j;
+				j,
+				v1, v2;
 			if (my.xt(my.workcols)) {
+				v1 = my.workcols.v1;
+				v2 = my.workcols.v2;
 				this.collisionVectors.length = 0;
-				my.workcols.v1.x = this.radius;
-				my.workcols.v1.y = 0;
+				v1.x = this.radius;
+				v1.y = 0;
 				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
 				for (i = 0, iz = p.length; i < iz; i++) {
 					if (p[i].toFixed && p[i] > 1) {
-						my.workcols.v2.set(my.workcols.v1);
+						v2.set(v1);
 						r = 360 / Math.floor(p[i]);
 						for (j = 0; j < p[i]; j++) {
-							my.workcols.v2.rotate(r);
-							this.collisionVectors.push(my.workcols.v2.x);
-							this.collisionVectors.push(my.workcols.v2.y);
+							v2.rotate(r);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
 						}
 					}
 					else if (p[i].substring) {
-						my.workcols.v2.set(my.workcols.v1);
+						v2.set(v1);
 						switch (p[i]) {
 							case 'start':
 								this.collisionVectors.push(0);
 								this.collisionVectors.push(0);
 								break;
 							case 'N':
-								my.workcols.v2.rotate(-90);
-								this.collisionVectors.push(my.workcols.v2.x);
-								this.collisionVectors.push(my.workcols.v2.y);
+								v2.rotate(-90);
+								this.collisionVectors.push(v2.x);
+								this.collisionVectors.push(v2.y);
 								break;
 							case 'NE':
-								my.workcols.v2.rotate(-45);
-								this.collisionVectors.push(my.workcols.v2.x);
-								this.collisionVectors.push(my.workcols.v2.y);
+								v2.rotate(-45);
+								this.collisionVectors.push(v2.x);
+								this.collisionVectors.push(v2.y);
 								break;
 							case 'E':
-								this.collisionVectors.push(my.workcols.v2.x);
-								this.collisionVectors.push(my.workcols.v2.y);
+								this.collisionVectors.push(v2.x);
+								this.collisionVectors.push(m.v2.y);
 								break;
 							case 'SE':
-								my.workcols.v2.rotate(45);
-								this.collisionVectors.push(my.workcols.v2.x);
-								this.collisionVectors.push(my.workcols.v2.y);
+								v2.rotate(45);
+								this.collisionVectors.push(v2.x);
+								this.collisionVectors.push(v2.y);
 								break;
 							case 'S':
-								my.workcols.v2.rotate(90);
-								this.collisionVectors.push(my.workcols.v2.x);
-								this.collisionVectors.push(my.workcols.v2.y);
+								v2.rotate(90);
+								this.collisionVectors.push(v2.x);
+								this.collisionVectors.push(v2.y);
 								break;
 							case 'SW':
-								my.workcols.v2.rotate(135);
-								this.collisionVectors.push(my.workcols.v2.x);
-								this.collisionVectors.push(my.workcols.v2.y);
+								v2.rotate(135);
+								this.collisionVectors.push(v2.x);
+								this.collisionVectors.push(v2.y);
 								break;
 							case 'W':
-								my.workcols.v2.rotate(180);
-								this.collisionVectors.push(my.workcols.v2.x);
-								this.collisionVectors.push(my.workcols.v2.y);
+								m.v2.rotate(180);
+								this.collisionVectors.push(v2.x);
+								this.collisionVectors.push(v2.y);
 								break;
 							case 'NW':
-								my.workcols.v2.rotate(-135);
-								this.collisionVectors.push(my.workcols.v2.x);
-								this.collisionVectors.push(my.workcols.v2.y);
+								v2.rotate(-135);
+								this.collisionVectors.push(v2.x);
+								this.collisionVectors.push(v2.y);
 								break;
 							case 'center':
 								this.collisionVectors.push(0);

@@ -165,16 +165,20 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 @private
 **/
 		my.Position.prototype.animationPositionInit = function(items) {
-			var temp = my.safeObject(items.delta);
-			this.delta = my.makeVector({
-				x: my.xtGet(items.deltaX, temp.x, 0),
-				y: my.xtGet(items.deltaY, temp.y, 0),
+			var temp = my.safeObject(items.delta),
+				vec = my.makeVector,
+				get = my.xtGet,
+				d = my.d[this.type];
+			this.delta = vec({
+				name: this.type + '.' + this.name + '.delta',
+				x: get(items.deltaX, temp.x, 0),
+				y: get(items.deltaY, temp.y, 0)
 			});
-			this.work.delta = my.makeVector({
+			this.work.delta = vec({
 				name: this.type + '.' + this.name + '.work.delta'
 			});
-			this.pathSpeedConstant = my.xtGet(items.pathSpeedConstant, my.d[this.type].pathSpeedConstant);
-			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, my.d[this.type].deltaPathPlace);
+			this.pathSpeedConstant = get(items.pathSpeedConstant, d.pathSpeedConstant);
+			this.deltaPathPlace = get(items.deltaPathPlace, d.deltaPathPlace);
 		};
 		/**
 Position.get hook function - modified by animation module
@@ -219,14 +223,16 @@ Be aware that this is different to the Position.setDelta() function inherited by
 @chainable
 **/
 		my.Position.prototype.setDeltaAttribute = function(items) {
-			var temp;
-			items = my.safeObject(items);
+			var temp,
+				so = my.safeObject,
+				get = my.xtGet;
+			items = so(items);
 			if (!my.isa_vector(this.delta)) {
 				this.delta = my.makeVector(items.delta || this.delta);
 			}
-			temp = my.safeObject(items.delta);
-			this.delta.x = my.xtGet(items.deltaX, temp.x, this.delta.x);
-			this.delta.y = my.xtGet(items.deltaY, temp.y, this.delta.y);
+			temp = so(items.delta);
+			this.delta.x = get(items.deltaX, temp.x, this.delta.x);
+			this.delta.y = get(items.deltaY, temp.y, this.delta.y);
 			return this;
 		};
 		/**
@@ -235,10 +241,11 @@ Position.clone hook function - modified by animation module
 @private
 **/
 		my.Position.prototype.animationPositionClone = function(a, items) {
-			var temp = my.safeObject(items.delta);
+			var temp = my.safeObject(items.delta),
+				get = my.xtGet;
 			a.delta = my.makeVector({
-				x: my.xtGet(items.deltaX, temp.x, a.delta.x),
-				y: my.xtGet(items.deltaY, temp.y, a.delta.y),
+				x: get(items.deltaX, temp.x, a.delta.x),
+				y: get(items.deltaY, temp.y, a.delta.y),
 			});
 			return a;
 		};
@@ -256,31 +263,40 @@ Permitted argument values include
 @chainable
 **/
 		my.Position.prototype.updateStart = function(item) {
-			switch (item) {
-				case 'x':
-					this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					break;
-				case 'y':
-					this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					break;
-				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace);
-					break;
-				default:
-					if (this.deltaPathPlace) {
-						this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace);
-					}
-					if (this.delta.x) {
-						this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x);
-					}
-					if (this.delta.y) {
-						this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y);
-					}
-			}
+			item = my.xtGet(item, 'all');
+			this.updateStartActions[item](my.addPercentages, this.start, this.delta, my.addWithinBounds);
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
 			}
 			return this;
+		};
+		/**
+updateStart helper object
+
+@method Position.updateStartActions
+@private
+**/
+		my.Position.prototype.updateStartActions = {
+			x: function(perc, start, delta, add) {
+				start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+			},
+			y: function(perc, start, delta, add) {
+				start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+			},
+			path: function(perc, start, delta, add) {
+				this.pathPlace = add(this.pathPlace, this.deltaPathPlace);
+			},
+			all: function(perc, start, delta, add) {
+				if (this.deltaPathPlace) {
+					this.pathPlace = add(this.pathPlace, this.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+			}
 		};
 		/**
 Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
@@ -296,31 +312,40 @@ Permitted argument values include
 @chainable
 **/
 		my.Position.prototype.revertStart = function(item) {
-			switch (item) {
-				case 'x':
-					this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
-					break;
-				case 'y':
-					this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
-					break;
-				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, -this.deltaPathPlace);
-					break;
-				default:
-					if (this.deltaPathPlace) {
-						this.pathPlace = my.addWithinBounds(this.pathPlace, -this.deltaPathPlace);
-					}
-					if (this.delta.x) {
-						this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x);
-					}
-					if (this.delta.y) {
-						this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y);
-					}
-			}
+			item = my.xtGet(item, 'all');
+			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, my.addWithinBounds);
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
 			}
 			return this;
+		};
+		/**
+revertStart helper object
+
+@method Position.revertStartActions
+@private
+**/
+		my.Position.prototype.revertStartActions = {
+			x: function(perc, start, delta, add) {
+				start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+			},
+			y: function(perc, start, delta, add) {
+				start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+			},
+			path: function(perc, start, delta, add) {
+				this.pathPlace = add(this.pathPlace, -this.deltaPathPlace);
+			},
+			all: function(perc, start, delta, add) {
+				if (this.deltaPathPlace) {
+					this.pathPlace = add(this.pathPlace, -this.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+			}
 		};
 		/**
 Swaps the values of an attribute between two objects
@@ -347,26 +372,34 @@ Changes the sign (+/-) of specified attribute values
 @chainable
 **/
 		my.Position.prototype.reverse = function(item) {
-			switch (item) {
-				case 'deltaX':
-					this.delta.x = (this.delta.x.toFixed) ? -this.delta.x : my.reversePercentage(this.delta.x);
-					break;
-				case 'deltaY':
-					this.delta.y = (this.delta.y.toFixed) ? -this.delta.y : my.reversePercentage(this.delta.y);
-					break;
-				case 'delta':
-					this.delta.x = (this.delta.x.toFixed) ? -this.delta.x : my.reversePercentage(this.delta.x);
-					this.delta.y = (this.delta.y.toFixed) ? -this.delta.y : my.reversePercentage(this.delta.y);
-					break;
-				case 'deltaPathPlace':
-					this.deltaPathPlace = -this.deltaPathPlace;
-					break;
-				default:
-					this.deltaPathPlace = -this.deltaPathPlace;
-					this.delta.x = (this.delta.x.toFixed) ? -this.delta.x : my.reversePercentage(this.delta.x);
-					this.delta.y = (this.delta.y.toFixed) ? -this.delta.y : my.reversePercentage(this.delta.y);
-			}
+			item = my.xtGet(item, 'all');
+			this.reverseActions[item](this.delta, my.reversePercentage);
 			return this;
+		};
+		/**
+reverse helper object
+@method Position.reverseActions
+@private
+**/
+		my.Position.prototype.reverseActions = {
+			deltaX: function(delta, perc) {
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+			},
+			deltaY: function(delta, perc) {
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			},
+			delta: function(delta, perc) {
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			},
+			deltaPathPlace: function(delta, perc) {
+				this.deltaPathPlace = -this.deltaPathPlace;
+			},
+			all: function(delta, perc) {
+				this.deltaPathPlace = -this.deltaPathPlace;
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			}
 		};
 		my.d.Cell.copyDelta = {
 			x: 0,
@@ -385,10 +418,11 @@ Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to 
 @private
 **/
 		my.Cell.prototype.animationCellInit = function(items) {
-			var temp = my.safeObject(items.copyDelta);
+			var temp = my.safeObject(items.copyDelta),
+				get = my.xtGet;
 			this.copyDelta = my.makeVector({
-				x: my.xtGet(items.copyDeltaX, temp.x, 0),
-				y: my.xtGet(items.copyDeltaY, temp.y, 0),
+				x: get(items.copyDeltaX, temp.x, 0),
+				y: get(items.copyDeltaY, temp.y, 0),
 			});
 			this.work.copyDelta = my.makeVector();
 		};
@@ -415,11 +449,12 @@ Cell.set hook function - modified by animation module
 @private
 **/
 		my.Cell.prototype.animationCellSet = function(items) {
-			var temp;
+			var temp,
+				get = my.xtGet;
 			if (my.xto(items.copyDelta, items.copyDeltaX, items.copyDeltaY)) {
 				temp = my.safeObject(items.copyDelta);
-				this.copyDelta.x = my.xtGet(items.copyDeltaX, temp.x, this.copyDelta.x);
-				this.copyDelta.y = my.xtGet(items.copyDeltaY, temp.y, this.copyDelta.y);
+				this.copyDelta.x = get(items.copyDeltaX, temp.x, this.copyDelta.x);
+				this.copyDelta.y = get(items.copyDeltaY, temp.y, this.copyDelta.y);
 			}
 		};
 		/**
@@ -438,63 +473,79 @@ Permitted argument values include
 @chainable
 **/
 		my.Cell.prototype.updateStart = function(item) {
-			switch (item) {
-				case 'x':
-					if (this.delta.x) {
-						this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x);
-					}
-					if (this.copyDelta.x) {
-						this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x);
-					}
-					break;
-				case 'y':
-					if (this.delta.y) {
-						this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y);
-					}
-					if (this.copyDelta.y) {
-						this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y);
-					}
-					break;
-				case 'start':
-				case 'paste':
-					if (this.delta.x) {
-						this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x);
-					}
-					if (this.delta.y) {
-						this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y);
-					}
-					break;
-				case 'copy':
-					if (this.copyDelta.x) {
-						this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x);
-					}
-					if (this.copyDelta.y) {
-						this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y);
-					}
-					break;
-				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace);
-					break;
-				default:
-					if (this.deltaPathPlace) {
-						this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace);
-					}
-					if (this.delta.x) {
-						this.start.x = (this.start.x.toFixed) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x);
-					}
-					if (this.delta.y) {
-						this.start.y = (this.start.y.toFixed) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y);
-					}
-					if (this.copyDelta.x) {
-						this.copy.x = (this.copy.x.toFixed) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x);
-					}
-					if (this.copyDelta.y) {
-						this.copy.y = (this.copy.y.toFixed) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y);
-					}
-			}
+			item = my.xtGet(item, 'all');
+			this.updateStartActions[item](my.addPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds);
 			this.setCopy();
 			this.setPaste();
 			return this;
+		};
+		/**
+updateStart helper object
+
+@method Cell.updateStartActions
+@private
+**/
+		my.Cell.prototype.updateStartActions = {
+			x: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x + copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+			},
+			y: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y + copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			},
+			start: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+			},
+			paste: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+			},
+			copy: function(perc, start, delta, copy, copyDelta, add) {
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x + copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y + copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			},
+			path: function(perc, start, delta, copy, copyDelta, add) {
+				this.pathPlace = add(this.pathPlace, this.deltaPathPlace);
+			},
+			all: function(perc, start, delta, copy, copyDelta, add) {
+				if (this.deltaPathPlace) {
+					this.pathPlace = add(this.pathPlace, this.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x + copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y + copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			}
 		};
 		/**
 Subtracts delta values from the start vector; subtracts sourceDelta values from the source vector; subtracts deltaPathPlace to pathPlace
@@ -512,63 +563,78 @@ Permitted argument values include
 @chainable
 **/
 		my.Cell.prototype.revertStart = function(item) {
-			switch (item) {
-				case 'x':
-					if (this.delta.x) {
-						this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x);
-					}
-					if (this.copyDelta.x) {
-						this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x);
-					}
-					break;
-				case 'y':
-					if (this.delta.y) {
-						this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y);
-					}
-					if (this.copyDelta.y) {
-						this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y);
-					}
-					break;
-				case 'start':
-				case 'paste':
-					if (this.delta.x) {
-						this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x);
-					}
-					if (this.delta.y) {
-						this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y);
-					}
-					break;
-				case 'copy':
-					if (this.copyDelta.x) {
-						this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x);
-					}
-					if (this.copyDelta.y) {
-						this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y);
-					}
-					break;
-				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, -this.deltaPathPlace);
-					break;
-				default:
-					if (this.deltaPathPlace) {
-						this.pathPlace = my.addWithinBounds(this.pathPlace, -this.deltaPathPlace);
-					}
-					if (this.delta.x) {
-						this.start.x = (this.start.x.toFixed) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x);
-					}
-					if (this.delta.y) {
-						this.start.y = (this.start.y.toFixed) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y);
-					}
-					if (this.copyDelta.x) {
-						this.copy.x = (this.copy.x.toFixed) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x);
-					}
-					if (this.copyDelta.y) {
-						this.copy.y = (this.copy.y.toFixed) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y);
-					}
-			}
+			item = my.xtGet(item, 'all');
+			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds);
 			this.setCopy();
 			this.setPaste();
 			return this;
+		};
+		/**
+revertStart helper object
+@method Cell.revertStartActions
+@private
+**/
+		my.Cell.prototype.revertStartActions = {
+			x: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x - copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+			},
+			y: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y - copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			},
+			start: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+			},
+			paste: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+			},
+			copy: function(perc, start, delta, copy, copyDelta, add) {
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x - copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y - copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			},
+			path: function(perc, start, delta, copy, copyDelta, add) {
+				this.pathPlace = add(this.pathPlace, -this.deltaPathPlace);
+			},
+			all: function(perc, start, delta, copy, copyDelta, add) {
+				if (this.deltaPathPlace) {
+					this.pathPlace = add(this.pathPlace, -this.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x - copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y - copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			}
 		};
 		/**
 Zooms one cell in relation to another cell
@@ -665,7 +731,9 @@ _Note that this function is only effective in achieving a parallax effect if the
 				height,
 				width,
 				ctx,
-				c;
+				c,
+				cv = my.cv,
+				cvx = my.cvx;
 			items = my.safeObject(items);
 			if (my.contains(stat, items.edge)) {
 				myShift = my.xtGet(items.shiftCopy, false);
@@ -673,8 +741,8 @@ _Note that this function is only effective in achieving a parallax effect if the
 				width = this.actualWidth;
 				ctx = my.context[this.name];
 				c = my.canvas[this.name];
-				my.cv.width = width;
-				my.cv.height = height;
+				cv.width = width;
+				cv.height = height;
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				switch (items.edge) {
 					case 'horizontal':
@@ -702,28 +770,28 @@ _Note that this function is only effective in achieving a parallax effect if the
 				}
 				switch (myEdge) {
 					case 'top':
-						my.cvx.drawImage(c, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
-						my.cvx.drawImage(c, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
+						cvx.drawImage(c, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
+						cvx.drawImage(c, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
 						this.copy.y -= (myShift) ? myStrip : 0;
 						break;
 					case 'bottom':
-						my.cvx.drawImage(c, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
-						my.cvx.drawImage(c, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
+						cvx.drawImage(c, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
+						cvx.drawImage(c, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
 						this.copy.y += (myShift) ? myStrip : 0;
 						break;
 					case 'left':
-						my.cvx.drawImage(c, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
-						my.cvx.drawImage(c, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
+						cvx.drawImage(c, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
+						cvx.drawImage(c, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
 						this.copy.x -= (myShift) ? myStrip : 0;
 						break;
 					case 'right':
-						my.cvx.drawImage(c, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
-						my.cvx.drawImage(c, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
+						cvx.drawImage(c, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
+						cvx.drawImage(c, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
 						this.copy.x += (myShift) ? myStrip : 0;
 						break;
 				}
 				ctx.clearRect(0, 0, width, height);
-				ctx.drawImage(my.cv, 0, 0, width, height);
+				ctx.drawImage(cv, 0, 0, width, height);
 				if (myShift) {
 					this.setCopy();
 				}
@@ -740,8 +808,10 @@ Each entity will add their delta values to their start Vector, and/or add deltaP
 @chainable
 **/
 		my.Group.prototype.updateStart = function(item) {
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].updateStart(item);
+			var entitys = this.entitys,
+				e = my.entity;
+			for (var i = 0, iz = entitys.length; i < iz; i++) {
+				e[entitys[i]].updateStart(item);
 			}
 			return this;
 		};
@@ -755,8 +825,10 @@ Each entity will subtract their delta values to their start Vector, and/or subtr
 @chainable
 **/
 		my.Group.prototype.revertStart = function(item) {
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].revertStart(item);
+			var entitys = this.entitys,
+				e = my.entity;
+			for (var i = 0, iz = entitys.length; i < iz; i++) {
+				e[entitys[i]].revertStart(item);
 			}
 			return this;
 		};
@@ -770,8 +842,10 @@ Each entity will change the sign (+/-) of specified attribute values
 @chainable
 **/
 		my.Group.prototype.reverse = function(item) {
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].reverse(item);
+			var entitys = this.entitys,
+				e = my.entity;
+			for (var i = 0, iz = entitys.length; i < iz; i++) {
+				e[entitys[i]].reverse(item);
 			}
 			return this;
 		};
@@ -1220,12 +1294,15 @@ Set tween values
 @chainable
 **/
 		my.Tween.prototype.set = function(items) {
-			var i, iz, a;
+			var i, iz, a,
+				animationnames = my.animationnames,
+				animation = my.animation,
+				contains = my.contains;
 			my.Base.prototype.set.call(this, items);
-			for (i = 0, iz = my.animationnames.length; i < iz; i++) {
-				a = my.animation[my.animationnames[i]];
+			for (i = 0, iz = animationnames.length; i < iz; i++) {
+				a = animation[animationnames[i]];
 				if (a.type === 'Timeline') {
-					if (my.contains(a.actionsList, this.name)) {
+					if (contains(a.actionsList, this.name)) {
 						a.resolve();
 					}
 				}
@@ -1252,15 +1329,19 @@ Tween animation function
 				t,
 				tz,
 				k,
-				kz;
+				kz,
+				xt = my.xt,
+				currentTargets = this.currentTargets,
+				engine = this.engine,
+				engines = this.engines;
 			this.currentTime = Date.now();
 			progress = (this.currentTime - this.startTime) / this.duration;
 			keys = Object.keys(this.end);
 			if (this.active) {
 				if (progress < 1) {
-					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
-						entity = this.currentTargets[t];
-						if (my.xt(entity)) {
+					for (t = 0, tz = currentTargets.length; t < tz; t++) {
+						entity = currentTargets[t];
+						if (xt(entity)) {
 							argSet = {};
 							for (k = 0, kz = keys.length; k < kz; k++) {
 								temp = this.initVals[t][keys[k]];
@@ -1268,15 +1349,15 @@ Tween animation function
 								if (temp.change.substring) {
 									measure = temp.change.match(/^-?\d+\.?\d*(\D*)/);
 									unit = measure[1];
-									if (!my.xt(unit)) {
+									if (!xt(unit)) {
 										unit = '%';
 									}
 								}
-								argSet[keys[k]] = this.engine(
+								argSet[keys[k]] = engine(
 									parseFloat(temp.start),
 									parseFloat(temp.change),
 									progress,
-									this.engines[keys[k]],
+									engines[keys[k]],
 									this.reverse);
 								argSet[keys[k]] = argSet[keys[k]] + unit;
 							}
@@ -1285,9 +1366,9 @@ Tween animation function
 					}
 				}
 				else {
-					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
-						if (my.xt(this.currentTargets[t])) {
-							this.currentTargets[t].tweenLock = false;
+					for (t = 0, tz = currentTargets.length; t < tz; t++) {
+						if (xt(currentTargets[t])) {
+							currentTargets[t].tweenLock = false;
 						}
 					}
 					this.active = false;
@@ -1331,74 +1412,76 @@ Tween engines
 @private
 **/
 		my.Tween.prototype.engine = function(start, change, position, engine, reverse) {
-			var temp;
-			engine = my.xtGet(engine, 'x');
-			if (engine.length < 4) {
-				switch (engine) {
-					case 'out':
-						temp = 1 - position;
-						return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
-					case 'in':
-						return start + (Math.sin((position * 90) * my.radian) * change);
-					default:
-						return start + (position * change);
-				}
-			}
-			if (engine[4] == 'I') {
-				switch (engine) {
-					case 'easeIn': //OPPOSITE of Flash easeIn - slow at end, not start
-						temp = 1 - position;
-						return (start + change) + ((temp * temp) * -change);
-					case 'easeIn3':
-						temp = 1 - position;
-						return (start + change) + ((temp * temp * temp) * -change);
-					case 'easeIn4':
-						temp = 1 - position;
-						return (start + change) + ((temp * temp * temp * temp) * -change);
-					case 'easeIn5':
-						temp = 1 - position;
-						return (start + change) + ((temp * temp * temp * temp * temp) * -change);
-					default:
-						return start + (position * change);
-				}
-			}
-			if (engine.length > 8) {
-				switch (engine) {
-					case 'easeOutIn':
-						temp = 1 - position;
-						return (position < 0.5) ?
-							start + ((position * position) * change * 2) :
-							(start + change) + ((temp * temp) * -change * 2);
-					case 'easeOutIn3':
-						temp = 1 - position;
-						return (position < 0.5) ?
-							start + ((position * position * position) * change * 4) :
-							(start + change) + ((temp * temp * temp) * -change * 4);
-					case 'easeOutIn4':
-						temp = 1 - position;
-						return (position < 0.5) ?
-							start + ((position * position * position * position) * change * 8) :
-							(start + change) + ((temp * temp * temp * temp) * -change * 8);
-					case 'easeOutIn5':
-						temp = 1 - position;
-						return (position < 0.5) ?
-							start + ((position * position * position * position * position) * change * 16) :
-							(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
-					default:
-						return start + (position * change);
-				}
-			}
-			switch (engine) {
-				case 'easeOut': //OPPOSITE of Flash easeOut - slow at start, not end
-					return start + ((position * position) * change);
-				case 'easeOut3':
-					return start + ((position * position * position) * change);
-				case 'easeOut4':
-					return start + ((position * position * position * position) * change);
-				case 'easeOut5':
-					return start + ((position * position * position * position * position) * change);
-				default:
-					return start + (position * change);
+			engine = my.xtGet(engine, 'linear');
+			return my.Tween.prototype.engineActions[engine](start, change, position, reverse);
+		};
+		/**
+Tween engine helper object
+@method engineActions
+@private
+**/
+		my.Tween.prototype.engineActions = {
+			out: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
+			},
+			in : function(start, change, position, reverse) {
+				return start + (Math.sin((position * 90) * my.radian) * change);
+			},
+			easeIn: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp) * -change);
+			},
+			easeIn3: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp) * -change);
+			},
+			easeIn4: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp * temp) * -change);
+			},
+			easeIn5: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp * temp * temp) * -change);
+			},
+			easeOutIn: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position) * change * 2) :
+					(start + change) + ((temp * temp) * -change * 2);
+			},
+			easeOutIn3: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position) * change * 4) :
+					(start + change) + ((temp * temp * temp) * -change * 4);
+			},
+			easeOutIn4: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position * position) * change * 8) :
+					(start + change) + ((temp * temp * temp * temp) * -change * 8);
+			},
+			easeOutIn5: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position * position * position) * change * 16) :
+					(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
+			},
+			easeOut: function(start, change, position, reverse) {
+				return start + ((position * position) * change);
+			},
+			easeOut3: function(start, change, position, reverse) {
+				return start + ((position * position * position) * change);
+			},
+			easeOut4: function(start, change, position, reverse) {
+				return start + ((position * position * position * position) * change);
+			},
+			easeOut5: function(start, change, position, reverse) {
+				return start + ((position * position * position * position * position) * change);
+			},
+			linear: function(start, change, position, reverse) {
+				return start + (position * change);
 			}
 		};
 		/**
@@ -1741,9 +1824,6 @@ Sort the actions based on their timeValue values
 **/
 		my.Timeline.prototype.sortActions = function() {
 			this.actionsList = my.bucketSort('animation', 'timeValue', this.actionsList);
-			// this.actionsList.sort(function(a, b) {
-			// 	return my.animation[a].timeValue - my.animation[b].timeValue;
-			// });
 		};
 		/**
 Make a new timeupdate customEvent object

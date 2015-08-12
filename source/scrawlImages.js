@@ -238,10 +238,11 @@ If no name attribute is supplied in the argument object, the new Picture entity 
 		my.Entity.prototype.convertToPicture = function(items) {
 			var image,
 				cell,
-				engine;
+				engine,
+				cellname = my.group[this.group].cell;
 			items = my.safeObject(items);
-			cell = my.cell[my.group[this.group].cell];
-			engine = my.context[my.group[this.group].cell];
+			cell = my.cell[cellname];
+			engine = my.context[cellname];
 			image = my.prepareConvert(cell, engine, this);
 			items.name = items.name || this.name + '_picture';
 			items.group = items.group || this.group;
@@ -328,10 +329,11 @@ Helper function for convert functions
 @private
 **/
 		my.doConvert = function(image, items) {
-			my.imageCanvas.width = image.width;
-			my.imageCanvas.height = image.height;
+			var cv = my.imageCanvas;
+			cv.width = image.width;
+			cv.height = image.height;
 			my.imageCvx.putImageData(image, 0, 0);
-			items.url = my.imageCanvas.toDataURL();
+			items.url = cv.toDataURL();
 			items.width = image.width;
 			items.height = image.height;
 			image = my.makeImage(items);
@@ -563,8 +565,10 @@ Alias for Pattern.makeDesign()
 		my.Picture = function(items) {
 			var temp,
 				tempV,
-				src;
-			if (my.isa(items, 'obj') && my.xt(items.url) && !my.xt(items.dynamic)) {
+				src,
+				get = my.xtGet,
+				xt = my.xt;
+			if (my.isa(items, 'obj') && xt(items.url) && !xt(items.dynamic)) {
 				items.dynamic = true;
 				temp = my.makeImage(items);
 				items.source = temp.name;
@@ -572,25 +576,25 @@ Alias for Pattern.makeDesign()
 			}
 			else {
 				items = my.safeObject(items);
-				if (my.xt(items.source)) {
-					src = my.xtGet(my.image[items.source], my.video[items.source], my.cell[items.source], false);
+				if (xt(items.source)) {
+					src = get(my.image[items.source], my.video[items.source], my.cell[items.source], false);
 					if (src) {
 						my.Entity.call(this, items);
 						tempV = my.safeObject(items.paste);
 						//start vector already set by the Entity call
-						this.start.x = my.xtGet(items.pasteX, tempV.x, this.start.x);
-						this.start.y = my.xtGet(items.pasteY, tempV.y, this.start.y);
+						this.start.x = get(items.pasteX, tempV.x, this.start.x);
+						this.start.y = get(items.pasteY, tempV.y, this.start.y);
 						this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');
 						this.copyHeight = my.xtGetTrue(items.copyHeight, src.actualHeight, src.height, '100%');
-						this.width = my.xtGet(items.pasteWidth, items.width, this.copyWidth);
-						this.height = my.xtGet(items.pasteHeight, items.height, this.copyHeight);
+						this.width = get(items.pasteWidth, items.width, this.copyWidth);
+						this.height = get(items.pasteHeight, items.height, this.copyHeight);
 						my.Position.prototype.set.call(this, items);
 						this.source = items.source;
 						this.imageType = this.sourceImage();
 						tempV = my.safeObject(items.copy);
 						this.copy = my.makeVector({
-							x: my.xtGet(items.copyX, tempV.x, 0),
-							y: my.xtGet(items.copyY, tempV.y, 0),
+							x: get(items.copyX, tempV.x, 0),
+							y: get(items.copyY, tempV.y, 0),
 							name: this.type + '.' + this.name + '.copy'
 						});
 						this.work.copy = my.makeVector({
@@ -749,37 +753,40 @@ Augments Entity.set()
 @chainable
 **/
 		my.Picture.prototype.set = function(items) {
-			var temp;
+			var temp,
+				xt = my.xt,
+				xto = my.xto,
+				get = my.xtGet;
 			my.Entity.prototype.set.call(this, items);
-			if (my.xto(items.paste, items.pasteX, items.pasteY)) {
+			if (xto(items.paste, items.pasteX, items.pasteY)) {
 				temp = my.safeObject(items.paste);
-				this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
-				this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
+				this.start.x = get(items.pasteX, temp.x, this.start.x);
+				this.start.y = get(items.pasteY, temp.y, this.start.y);
 			}
-			if (my.xt(items.pasteWidth)) {
-				this.width = my.xtGet(items.pasteWidth, this.width);
+			if (xt(items.pasteWidth)) {
+				this.width = get(items.pasteWidth, this.width);
 			}
-			if (my.xt(items.pasteHeight)) {
-				this.height = my.xtGet(items.pasteHeight, this.height);
+			if (xt(items.pasteHeight)) {
+				this.height = get(items.pasteHeight, this.height);
 			}
-			if (my.xto(items.copy, items.copyX, items.copyY)) {
+			if (xto(items.copy, items.copyX, items.copyY)) {
 				temp = my.safeObject(items.copy);
-				this.copy.x = my.xtGet(items.copyX, temp.x, this.copy.x);
-				this.copy.y = my.xtGet(items.copyY, temp.y, this.copy.y);
+				this.copy.x = get(items.copyX, temp.x, this.copy.x);
+				this.copy.y = get(items.copyY, temp.y, this.copy.y);
 			}
-			if (my.xt(items.copyWidth)) {
-				this.copyWidth = my.xtGet(items.copyWidth, this.copyWidth);
+			if (xt(items.copyWidth)) {
+				this.copyWidth = get(items.copyWidth, this.copyWidth);
 			}
-			if (my.xt(items.copyHeight)) {
-				this.copyHeight = my.xtGet(items.copyHeight, this.copyHeight);
+			if (xt(items.copyHeight)) {
+				this.copyHeight = get(items.copyHeight, this.copyHeight);
 			}
-			if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
-			if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
+			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
 				this.setCopy();
 			}
-			if (my.xt(this.animation)) {
+			if (xt(this.animation)) {
 				my.spriteanimation[this.animation].set(items);
 			}
 			return this;
@@ -796,43 +803,49 @@ Augments Entity.setDelta()
 				x,
 				y,
 				w,
-				h;
+				h,
+				perc = my.addPercentages,
+				start = this.start,
+				copy = this.copy,
+				xto = my.xto,
+				get = my.xtGet,
+				so = my.safeObject;
 			my.Entity.prototype.setDelta.call(this, items);
-			items = my.safeObject(items);
-			if (my.xto(items.paste, items.pasteX, items.pasteY)) {
-				temp = my.safeObject(items.paste);
-				x = my.xtGet(items.pasteX, temp.x, 0);
-				y = my.xtGet(items.pasteY, temp.y, 0);
-				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
-				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
+			items = so(items);
+			if (xto(items.paste, items.pasteX, items.pasteY)) {
+				temp = so(items.paste);
+				x = get(items.pasteX, temp.x, 0);
+				y = get(items.pasteY, temp.y, 0);
+				start.x = (start.x.toFixed) ? start.x + x : perc(start.x, x);
+				start.y = (start.y.toFixed) ? start.y + y : perc(start.y, y);
 			}
-			if (my.xto(items.pasteWidth, items.width)) {
-				w = my.xtGet(items.pasteWidth, items.width);
-				this.width = (my.isa(this.width, 'num')) ? this.width + w : my.addPercentages(this.width, w);
+			if (xto(items.pasteWidth, items.width)) {
+				w = get(items.pasteWidth, items.width);
+				this.width = (this.width.toFixed) ? this.width + w : perc(this.width, w);
 			}
-			if (my.xto(items.pasteHeight, items.height)) {
-				h = my.xtGet(items.pasteHeight, items.height);
-				this.height = (my.isa(this.height, 'num')) ? this.height + h : my.addPercentages(this.height, h);
+			if (xto(items.pasteHeight, items.height)) {
+				h = get(items.pasteHeight, items.height);
+				this.height = (this.height.toFixed) ? this.height + h : perc(this.height, h);
 			}
-			if (my.xto(items.copy, items.copyX, items.copyY)) {
-				temp = my.safeObject(items.copy);
-				x = my.xtGet(items.copyX, temp.x, 0);
-				y = my.xtGet(items.copyY, temp.y, 0);
-				this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
-				this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
+			if (xto(items.copy, items.copyX, items.copyY)) {
+				temp = so(items.copy);
+				x = get(items.copyX, temp.x, 0);
+				y = get(items.copyY, temp.y, 0);
+				copy.x = (copy.x.toFixed) ? copy.x + x : perc(copy.x, x);
+				copy.y = (copy.y.toFixed) ? copy.y + y : perc(copy.y, y);
 			}
-			if (my.xto(items.copyWidth, items.width)) {
-				w = my.xtGet(items.copyWidth, items.width);
-				this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + w : my.addPercentages(this.copyWidth, w);
+			if (xto(items.copyWidth, items.width)) {
+				w = get(items.copyWidth, items.width);
+				this.copyWidth = (this.copyWidth.toFixed) ? this.copyWidth + w : perc(this.copyWidth, w);
 			}
-			if (my.xto(items.copyHeight, items.height)) {
-				h = my.xtGet(items.copyHeight, items.height);
-				this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + h : my.addPercentages(this.copyHeight, h);
+			if (xto(items.copyHeight, items.height)) {
+				h = get(items.copyHeight, items.height);
+				this.copyHeight = (this.copyHeight.toFixed) ? this.copyHeight + h : perc(this.copyHeight, h);
 			}
-			if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
-			if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
+			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
 				this.setCopy();
 			}
 			return this;
@@ -845,50 +858,65 @@ Picture.setCopy update copyData object values
 **/
 		my.Picture.prototype.setCopy = function() {
 			var w,
-				h;
+				h,
+				perc = this.numberConvert,
+				src = this.source,
+				copy = this.copy,
+				copyData = this.copyData,
+				between = my.isBetween;
 			switch (this.imageType) {
 				case 'canvas':
-					w = my.cell[this.source].actualWidth;
-					h = my.cell[this.source].actualHeight;
+					w = my.cell[src].actualWidth;
+					h = my.cell[src].actualHeight;
 					break;
 				case 'video':
-					w = my.video[this.source].width;
-					h = my.video[this.source].height;
+					w = my.video[src].width;
+					h = my.video[src].height;
 					break;
 				case 'img':
-					w = my.image[this.source].width;
-					h = my.image[this.source].height;
+					w = my.image[src].width;
+					h = my.image[src].height;
 					break;
 				default:
 					//do nothing for animations
 			}
 			if (this.imageType !== 'animation') {
-				this.copyData.x = (my.isa(this.copy.x, 'str')) ? this.convertX(this.copy.x, w) : this.copy.x;
-				this.copyData.y = (my.isa(this.copy.y, 'str')) ? this.convertY(this.copy.y, h) : this.copy.y;
-				if (!my.isBetween(this.copyData.x, 0, w - 1, true)) {
-					this.copyData.x = (this.copyData.x < 0) ? 0 : w - 1;
+				copyData.x = (copy.x.substring) ? perc(copy.x, w) : copy.x;
+				copyData.y = (copy.y.substring) ? perc(copy.y, h) : copy.y;
+				if (!between(copyData.x, 0, w - 1, true)) {
+					copyData.x = (copyData.x < 0) ? 0 : w - 1;
 				}
-				if (!my.isBetween(this.copyData.y, 0, h - 1, true)) {
-					this.copyData.y = (this.copyData.y < 0) ? 0 : h - 1;
+				if (!between(copyData.y, 0, h - 1, true)) {
+					copyData.y = (copyData.y < 0) ? 0 : h - 1;
 				}
-				this.copyData.w = (my.isa(this.copyWidth, 'str')) ? this.convertX(this.copyWidth, w) : this.copyWidth;
-				this.copyData.h = (my.isa(this.copyHeight, 'str')) ? this.convertY(this.copyHeight, h) : this.copyHeight;
-				if (!my.isBetween(this.copyData.w, 1, w, true)) {
-					this.copyData.w = (this.copyData.w < 1) ? 1 : w;
+				copyData.w = (this.copyWidth.substring) ? perc(this.copyWidth, w) : this.copyWidth;
+				copyData.h = (this.copyHeight.substring) ? perc(this.copyHeight, h) : this.copyHeight;
+				if (!between(copyData.w, 1, w, true)) {
+					copyData.w = (copyData.w < 1) ? 1 : w;
 				}
-				if (!my.isBetween(this.copyData.h, 1, h, true)) {
-					this.copyData.h = (this.copyData.h < 1) ? 1 : h;
+				if (!between(copyData.h, 1, h, true)) {
+					copyData.h = (copyData.h < 1) ? 1 : h;
 				}
-				if (this.copyData.x + this.copyData.w > w) {
-					this.copyData.x = w - this.copyData.w;
+				if (copyData.x + copyData.w > w) {
+					copyData.x = w - copyData.w;
 				}
-				if (this.copyData.y + this.copyData.h > h) {
-					this.copyData.y = h - this.copyData.h;
+				if (copyData.y + copyData.h > h) {
+					copyData.y = h - copyData.h;
 				}
 			}
 			this.imageData = false;
 			return this;
 		};
+
+
+
+
+		//HERE - but haven't done patterns
+
+
+
+
+
 		/**
 Picture.setPaste update pasteData object values
 @method setPaste
