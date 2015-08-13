@@ -609,7 +609,7 @@ A __utility__ function that checks to see if a number is between two other numbe
 			return false;
 		}
 		else {
-			if ((no > a && no < b) || (no === a && no === b)) {
+			if (no > a && no < b) {
 				return true;
 			}
 			return false;
@@ -775,6 +775,7 @@ A __utility__ function for variable type checking
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
+			console.log('xta array supplied');
 			slice = slice[0];
 		}
 		if (slice.length > 0) {
@@ -804,6 +805,7 @@ A __utility__ function for variable type checking
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
+			console.log('xto array supplied');
 			slice = slice[0];
 		}
 		if (slice.length > 0) {
@@ -849,9 +851,11 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 **/
 	my.setDisplayOffsets = function() {
 		var i,
-			iz;
-		for (i = 0, iz = my.padnames.length; i < iz; i++) {
-			my.pad[my.padnames[i]].setDisplayOffsets();
+			iz,
+			padnames = my.padnames,
+			pad = my.pad;
+		for (i = 0, iz = padnames.length; i < iz; i++) {
+			pad[padnames[i]].setDisplayOffsets();
 		}
 		return my;
 	};
@@ -912,13 +916,14 @@ The argument object should include the following attributes:
 	my.addCanvasToPage = function(items) {
 		var parent,
 			canvas,
-			pad;
+			pad,
+			get = my.xtGet;
 		items = my.safeObject(items);
 		parent = document.getElementById(items.parentElement) || document.body;
 		canvas = document.createElement('canvas');
 		parent.appendChild(canvas);
-		items.width = my.xtGet(items.width, 300);
-		items.height = my.xtGet(items.height, 150);
+		items.width = get(items.width, 300);
+		items.height = get(items.height, 150);
 		items.canvasElement = canvas;
 		pad = new my.Pad(items);
 		my.setDisplayOffsets();
@@ -933,11 +938,12 @@ A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&
 **/
 	my.clear = function(pads) {
 		var padnames,
+			pad = my.pad,
 			i,
 			iz;
-		padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		padnames = (pads) ? [].concat(pads) : my.padnames;
 		for (i = 0, iz = padnames.length; i < iz; i++) {
-			my.pad[padnames[i]].clear();
+			pad[padnames[i]].clear();
 		}
 		return my;
 	};
@@ -950,11 +956,12 @@ A __display__ function to ask Pads to get their Cells to compile their scenes
 **/
 	my.compile = function(pads) {
 		var padnames,
+			pad = my.pad,
 			i,
 			iz;
-		padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		padnames = (pads) ? [].concat(pads) : my.padnames;
 		for (i = 0, iz = padnames.length; i < iz; i++) {
-			my.pad[padnames[i]].compile();
+			pad[padnames[i]].compile();
 		}
 		return my;
 	};
@@ -967,11 +974,12 @@ A __display__ function to ask Pads to show the results of their latest display c
 **/
 	my.show = function(pads) {
 		var padnames,
+			pad = my.pad,
 			i,
 			iz;
-		padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		padnames = (pads) ? [].concat(pads) : my.padnames;
 		for (i = 0, iz = padnames.length; i < iz; i++) {
-			my.pad[padnames[i]].show();
+			pad[padnames[i]].show();
 		}
 		return my;
 	};
@@ -984,11 +992,12 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 **/
 	my.render = function(pads) {
 		var padnames,
+			pad = my.pad,
 			i,
 			iz;
-		padnames = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+		padnames = (pads) ? [].concat(pads) : my.padnames;
 		for (i = 0, iz = padnames.length; i < iz; i++) {
-			my.pad[padnames[i]].render();
+			pad[padnames[i]].render();
 		}
 		return my;
 	};
@@ -1410,7 +1419,10 @@ A __general__ function which deletes Cell objects and their associated paraphina
 			i,
 			iz,
 			j,
-			jz;
+			jz,
+			group = my.group,
+			groupnames = my.groupnames,
+			ri = my.removeItem;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
 			slice = slice[0];
@@ -1419,18 +1431,18 @@ A __general__ function which deletes Cell objects and their associated paraphina
 			for (j = 0, jz = my.padnames.length; j < jz; j++) {
 				my.pad[my.padnames[j]].deleteCell(c[i]);
 			}
-			delete my.group[slice[i]];
-			delete my.group[slice[i] + '_field'];
-			delete my.group[slice[i] + '_fence'];
-			my.removeItem(my.groupnames, slice[i]);
-			my.removeItem(my.groupnames, slice[i] + '_field');
-			my.removeItem(my.groupnames, slice[i] + '_fence');
+			delete group[slice[i]];
+			delete group[slice[i] + '_field'];
+			delete group[slice[i] + '_fence'];
+			ri(groupnames, slice[i]);
+			ri(groupnames, slice[i] + '_field');
+			ri(groupnames, slice[i] + '_fence');
 			delete my.context[slice[i]];
 			delete my.canvas[slice[i]];
 			delete my.ctx[my.cell[slice[i]].context];
-			my.removeItem(my.ctxnames, my.cell[slice[i]].context);
+			ri(my.ctxnames, my.cell[slice[i]].context);
 			delete my.cell[slice[i]];
-			my.removeItem(my.cellnames, slice[i]);
+			ri(my.cellnames, slice[i]);
 		}
 		return my;
 	};
@@ -1505,7 +1517,8 @@ A __general__ function to delete entity objects
 			j,
 			jz,
 			entityName,
-			contextName;
+			contextName,
+			ri = my.removeItem;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
 			slice = slice[0];
@@ -1515,12 +1528,12 @@ A __general__ function to delete entity objects
 			if (entityName) {
 				my.pathDeleteEntity(entityName);
 				contextName = entityName.context;
-				my.removeItem(my.ctxnames, contextName);
+				ri(my.ctxnames, contextName);
 				delete my.ctx[contextName];
-				my.removeItem(my.entitynames, slice[i]);
+				ri(my.entitynames, slice[i]);
 				delete my.entity[slice[i]];
 				for (j = 0, jz = my.groupnames.length; j < jz; j++) {
-					my.removeItem(my.group[my.groupnames[j]].entitys, slice[i]);
+					ri(my.group[my.groupnames[j]].entitys, slice[i]);
 				}
 			}
 		}
@@ -2479,7 +2492,6 @@ Check if device supports canvas evenOdd winding
 		x.msFillRule = w;
 		x.fill(w);
 		test = x.getImageData(5, 5, 1, 1);
-		//expecting this pixel to be transparent (0, false)
 		this.canvasEvenOddWinding = (test.data[3]) ? false : true;
 	};
 	/**
@@ -2506,7 +2518,6 @@ Check if device supports dashed line functionality
 		x.lineTo(10, 5);
 		x.stroke();
 		test = x.getImageData(8, 5, 1, 1);
-		//expecting this pixel to be transparent (0, false)
 		this.canvasDashedLine = (test.data[3]) ? false : true;
 	};
 	/**
@@ -2528,7 +2539,6 @@ Check if device supports various global composition operation functionalities
 		x.fillStyle = 'blue';
 		x.fillRect(0, 3, 10, 4);
 		test = x.getImageData(5, 1, 1, 1);
-		//expecting this pixel to be transparent (0, false)
 		this.canvasGcoSourceIn = (test.data[3]) ? false : true;
 		x.globalCompositeOperation = 'source-over';
 		x.clearRect(0, 0, 10, 10);
@@ -2540,7 +2550,6 @@ Check if device supports various global composition operation functionalities
 		x.fillStyle = 'blue';
 		x.fillRect(0, 3, 10, 4);
 		test = x.getImageData(5, 1, 1, 1);
-		//expecting this pixel to be transparent (0, false)
 		this.canvasGcoSourceOut = (test.data[3]) ? false : true;
 		x.globalCompositeOperation = 'source-over';
 		x.clearRect(0, 0, 10, 10);
@@ -2552,7 +2561,6 @@ Check if device supports various global composition operation functionalities
 		x.fillStyle = 'blue';
 		x.fillRect(0, 3, 10, 4);
 		test = x.getImageData(5, 1, 1, 1);
-		//expecting this pixel to be transparent (0, false)
 		this.canvasGcoDestinationAtop = (test.data[3]) ? false : true;
 		x.globalCompositeOperation = 'source-over';
 		x.clearRect(0, 0, 10, 10);
@@ -2564,7 +2572,6 @@ Check if device supports various global composition operation functionalities
 		x.fillStyle = 'blue';
 		x.fillRect(0, 3, 10, 4);
 		test = x.getImageData(5, 1, 1, 1);
-		//expecting this pixel to be transparent (0, false)
 		this.canvasGcoDestinationIn = (test.data[3]) ? false : true;
 		x.globalCompositeOperation = 'source-over';
 		x.clearRect(0, 0, 10, 10);
@@ -2576,7 +2583,6 @@ Check if device supports various global composition operation functionalities
 		x.fillStyle = 'blue';
 		x.fillRect(0, 3, 10, 4);
 		test = x.getImageData(5, 1, 1, 1);
-		//expecting this pixel to be transparent (0, false)
 		this.canvasGcoCopy = (test.data[3]) ? false : true;
 	};
 	/**
@@ -3247,12 +3253,8 @@ Takes into account lock flag settings
 		if (this.pivot === 'mouse') {
 			cell = my.cell[cell];
 			pad = my.pad[cell.pad];
-			// x = (start.x.substring) ? this.convertX(start.x, cell) : start.x;
-			// y = (start.y.substring) ? this.convertY(start.y, cell) : start.y;
-			// x = (isNaN(x)) ? 0 : x;
-			// y = (isNaN(y)) ? 0 : y;
-			x = (start.x.substring) ? this.simpleConvertX(start.x, cell) : start.x;
-			y = (start.y.substring) ? this.simpleConvertY(start.y, cell) : start.y;
+			x = (start.x.substring) ? this.numberConvert(start.x, cell.actualWidth) : start.x;
+			y = (start.y.substring) ? this.numberConvert(start.y, cell.actualHeight) : start.y;
 			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
 			if (this.oldX == null && this.oldY == null) { //jshint ignore:line
 				this.oldX = x;
@@ -3309,6 +3311,7 @@ Stamp helper function - convert string start.x values to numerical values
 @private
 **/
 	my.Position.prototype.convertX = function(x, cell) {
+		console.log('convertX deprecation alert', this.name);
 		var width,
 			result;
 		switch (typeof cell) {
@@ -3344,6 +3347,7 @@ Stamp helper function - convert string start.y values to numerical values
 @private
 **/
 	my.Position.prototype.convertY = function(y, cell) {
+		console.log('convertY deprecation alert', this.name);
 		var height,
 			result;
 		switch (typeof cell) {
@@ -3377,21 +3381,21 @@ Stamp helper function - convert string start.x values to numerical values
 @return Number - x value
 @private
 **/
-	my.Position.prototype.simpleConvertX = function(x, cell) {
-		var width = cell.actualWidth,
-			result = parseFloat(x) / 100;
-		if (isNaN(result)) {
-			switch (x) {
-				case 'right':
-					return width;
-				case 'center':
-					return width / 2;
-				default:
-					return 0;
-			}
-		}
-		return result * width;
-	};
+	// my.Position.prototype.simpleConvertX = function(x, cell) {
+	// 	var width = cell.actualWidth,
+	// 		result = parseFloat(x) / 100;
+	// 	if (isNaN(result)) {
+	// 		switch (x) {
+	// 			case 'right':
+	// 				return width;
+	// 			case 'center':
+	// 				return width / 2;
+	// 			default:
+	// 				return 0;
+	// 		}
+	// 	}
+	// 	return result * width;
+	// };
 	/**
 Stamp helper function - convert string start.y values to numerical values
 @method simpleConvertY
@@ -3400,21 +3404,21 @@ Stamp helper function - convert string start.y values to numerical values
 @return Number - y value
 @private
 **/
-	my.Position.prototype.simpleConvertY = function(y, cell) {
-		var height = cell.actualHeight,
-			result = parseFloat(y) / 100;
-		if (isNaN(result)) {
-			switch (y) {
-				case 'bottom':
-					return height;
-				case 'center':
-					return height / 2;
-				default:
-					return 0;
-			}
-		}
-		return result * height;
-	};
+	// my.Position.prototype.simpleConvertY = function(y, cell) {
+	// 	var height = cell.actualHeight,
+	// 		result = parseFloat(y) / 100;
+	// 	if (isNaN(result)) {
+	// 		switch (y) {
+	// 			case 'bottom':
+	// 				return height;
+	// 			case 'center':
+	// 				return height / 2;
+	// 			default:
+	// 				return 0;
+	// 		}
+	// 	}
+	// 	return result * height;
+	// };
 	/**
 Stamp helper function - convert string percentage values to numerical values
 @method numberConvert
@@ -3428,6 +3432,7 @@ Stamp helper function - convert string percentage values to numerical values
 		if (isNaN(result)) {
 			switch (val) {
 				case 'right':
+				case 'bottom':
 					return dim;
 				case 'center':
 					return dim / 2;
@@ -4037,25 +4042,15 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			pu = my.pushUnique,
 			makeCell = my.makeCell;
 		items = my.safeObject(items);
-
-		// only proceed if a canvas element has been supplied as the value of items.canvasElement 
 		if (my.isa_canvas(items.canvasElement)) {
-
-			// enhance/amend the items object with essdential data - name, width, height
 			items.width = get(items.width, items.canvasElement.width, d.width);
 			items.height = get(items.height, items.canvasElement.height, d.height);
 			items.name = get(items.name, items.canvasElement.id, items.canvasElement.name, 'Pad');
-
-			// go up the line to populate this Pad with data
 			my.PageElement.call(this, items);
-
-			//amend name if necessary, and set canvas element id
 			if (this.name.match(/___/)) {
 				this.name = this.name.replace(/___/g, '_');
 			}
 			items.canvasElement.id = this.name;
-
-			// register this Pad in library
 			my.pad[this.name] = this;
 			pu(my.padnames, this.name);
 
@@ -4065,10 +4060,7 @@ Array of CELLNAME Strings associated with this Pad
 @type Array
 @default []
 **/
-			// prepare for cell creation
 			this.cells = [];
-
-			// create a wrapper for the display canvas element
 			display = makeCell({
 				name: this.name,
 				pad: this.name,
@@ -4086,12 +4078,8 @@ Pad's display (visible) &lt;canvas&gt; element - CELLNAME
 @default ''
 **/
 			this.display = display.name;
-
-			// create a new canvas element to act as the base
 			canvas = items.canvasElement.cloneNode(true);
 			canvas.setAttribute('id', this.name + '_base');
-
-			// create a wrapper for the base canvas element
 			base = makeCell({
 				name: this.name + '_base',
 				pad: this.name,
@@ -4120,8 +4108,6 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 @deprecated
 **/
 			this.current = base.name;
-
-			// finalise stuff for this Pad
 			this.setDisplayOffsets();
 			this.setAccessibility(items);
 			this.filtersPadInit();
@@ -4130,16 +4116,12 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 			if (this.interactive) {
 				this.addMouseMove();
 			}
-
-			// compile and show arrays
 			this.cellsCompileOrder = [].concat(this.cells);
 			this.cellsShowOrder = [].concat(this.cells);
 			this.resortCompile = true;
 			this.resortShow = true;
 			return this;
 		}
-
-		// on failure, return false
 		return false;
 	};
 	my.Pad.prototype = Object.create(my.PageElement.prototype);
@@ -6303,15 +6285,11 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 			result = {},
 			contains = my.contains,
 			i, iz;
-
-		//step 1 - need to set any non-default values in c that are default in e back to their default values
 		for (i = 0, iz = ca.length; i < iz; i++) {
 			if (!contains(ea, ca[i])) {
 				result[ca[i]] = df[ca[i]];
 			}
 		}
-
-		//step 2 - need to check to see if c differs from e
 		for (i = 0, iz = ea.length; i < iz; i++) {
 			if (ea[i] === 'lineWidth' && entity.scaleOutline) {
 				if (e.lineWidth * entity.scale !== c.lineWidth) {
@@ -6476,12 +6454,10 @@ Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &
 @return This
 @chainable
 **/
-	// my.Group.prototype.forceStamp = function(method, cell) {
 	my.Group.prototype.forceStamp = function(method, cellname, cell) {
 		console.log(this.name, 'forceStamp', method, cellname, cell);
 		var visibility = this.visibility;
 		this.visibility = true;
-		// this.stamp(method, cell);
 		this.stamp(method, cellname, cell);
 		this.visibility = visibility;
 		return this;
@@ -6494,7 +6470,6 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 @return This
 @chainable
 **/
-	// my.Group.prototype.stamp = function(method, cell) {
 	my.Group.prototype.stamp = function(method, cellname, cell) {
 		var entity,
 			entitys = this.entitys,
@@ -6953,15 +6928,12 @@ Allows users to retrieve a entity's Context object's values via the entity
 **/
 	my.Entity.prototype.get = function(item) {
 		var xt = my.xt;
-		//retrieve title, comment, timestamp - which might otherwise be returned with the context object's values
 		if (xt(my.d.Base[item])) {
 			return my.Base.prototype.get.call(this, item);
 		}
-		//context attributes
 		if (xt(my.d.Context[item])) {
 			return my.ctx[this.context].get(item);
 		}
-		//entity attributes
 		return my.Position.prototype.get.call(this, item);
 	};
 	/**
@@ -7109,11 +7081,9 @@ Permitted methods include:
 @return This
 @chainable
 **/
-	// my.Entity.prototype.forceStamp = function(method, cell) {
 	my.Entity.prototype.forceStamp = function(method, cellname, cell) {
 		var visibility = this.visibility;
 		this.visibility = true;
-		// this.stamp(method, cell);
 		this.stamp(method, cellname, cell);
 		this.visibility = visibility;
 		return this;
@@ -7154,10 +7124,8 @@ Permitted methods include:
 @return This
 @chainable
 **/
-	// my.Entity.prototype.stamp = function(method, cell) {
 	my.Entity.prototype.stamp = function(method, cellname, cell) {
 		var engine,
-			// cellname,
 			cellCtx,
 			eCtx,
 			here,
@@ -7165,10 +7133,9 @@ Permitted methods include:
 			sEngine,
 			data;
 		if (this.visibility) {
-			// cell = my.cell[cell] || my.cell[my.group[this.group].cell];
-			// cellname = cell.name;
 			if (!cell) {
 				cell = my.cell[cellname] || my.cell[my.group[this.group].cell];
+				cellname = cell.name;
 			}
 			engine = my.context[cellname];
 			method = method || this.method;
@@ -7178,8 +7145,6 @@ Permitted methods include:
 			else {
 				this.pathStamp();
 			}
-			// this[method](engine, cellname);
-			// this.stampFilter(engine, cellname);
 			this[method](engine, cellname, cell);
 			this.stampFilter(engine, cellname, cell);
 		}
@@ -7215,12 +7180,10 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 			x = this.start.x,
 			y = this.start.y;
 		if (x.substring) {
-			// x = this.convertX(x, cell);
-			x = this.simpleConvertX(x, cell);
+			x = this.numberConvert(x, cell.actualWidth);
 		}
 		if (y.substring) {
-			// y = this.convertY(y, cell);
-			y = this.simpleConvertY(y, cell);
+			y = this.numberConvert(y, cell.actualHeight);
 		}
 		if (rotation) {
 			rotation *= 0.01745329251;
@@ -7238,17 +7201,13 @@ Entity.getStartValues
 @private
 **/
 	my.Entity.prototype.getStartValues = function(cell) {
-		// var cell = this.getEntityCell(),
-		// 	result = {
 		var result = {
 				x: 0,
 				y: 0
 			},
 			start = this.start;
-		// result.x = (start.x.substring) ? this.convertX(start.x, cell) : start.x;
-		// result.y = (start.y.substring) ? this.convertY(start.y, cell) : start.y;
-		result.x = (start.x.substring) ? this.simpleConvertX(start.x, cell) : start.x;
-		result.y = (start.y.substring) ? this.simpleConvertY(start.y, cell) : start.y;
+		result.x = (start.x.substring) ? this.numberConvert(start.x, cell.actualWidth) : start.x;
+		result.y = (start.y.substring) ? this.numberConvert(start.y, cell.actualHeight) : start.y;
 		return result;
 	};
 	/**
@@ -7387,7 +7346,6 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 @private
 **/
 	my.Entity.prototype.none = function(ctx, cellname, cell) {
-		// my.cell[cell].setEngine(this);
 		cell.setEngine(this);
 		return this;
 	};

@@ -78,6 +78,7 @@ A __general__ function which asks Cell objects to generate field collision table
 **/
 		my.buildFields = function(items) {
 			var cells,
+				cell = my.cell,
 				i,
 				iz;
 			cells = (my.xt(items)) ? [].concat(items) : [my.pad[my.currentPad].current];
@@ -85,7 +86,7 @@ A __general__ function which asks Cell objects to generate field collision table
 				cells = my.cellnames;
 			}
 			for (i = 0, iz = cells.length; i < iz; i++) {
-				my.cell[cells[i]].buildField();
+				cell[cells[i]].buildField();
 			}
 			return true;
 		};
@@ -97,8 +98,10 @@ Orders all Cell objects associated with this Pad to (re)create their field colli
 @chainable
 **/
 		my.Pad.prototype.buildFields = function() {
-			for (var i = 0, iz = this.cells.length; i < iz; i++) {
-				my.cell[this.cells[i]].buildField();
+			var cell = my.cell,
+				cells = this.cells;
+			for (var i = 0, iz = cells.length; i < iz; i++) {
+				cell[cells[i]].buildField();
 			}
 			return this;
 		};
@@ -223,7 +226,9 @@ Test will return:
 				coords,
 				pos,
 				d,
-				fieldLabel;
+				fieldLabel,
+				between = my.isBetween,
+				temp;
 			items = my.safeObject(items);
 			myChannel = items.channel || 'anycolor';
 			myTest = items.test || 0;
@@ -233,50 +238,65 @@ Test will return:
 			for (i = 0, iz = coords.length; i < iz; i += 2) {
 				x = Math.round(coords[i]);
 				y = Math.round(coords[i + 1]);
-				if (!my.isBetween(x, 0, d.width, true) || !my.isBetween(y, 0, d.height, true)) {
+				if (!between(x, 0, d.width, true) || !between(y, 0, d.height, true)) {
 					return false;
 				}
 				else {
 					pos = ((y * d.width) + x) * 4;
-					switch (myChannel) {
-						case 'red':
-							if (d.data[pos] <= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
-							break;
-						case 'green':
-							if (d.data[pos + 1] <= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
-							break;
-						case 'blue':
-							if (d.data[pos + 2] <= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
-							break;
-						case 'alpha':
-							if (d.data[pos + 3] <= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
-							break;
-						default:
-							if (d.data[pos] <= myTest || d.data[pos + 1] <= myTest || d.data[pos + 2] <= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
+					temp = this.checkFieldAtActions[myChannel](d.data, pos, myTest, items, x, y);
+					if (temp) {
+						return temp;
 					}
 				}
 			}
 			return true;
+		};
+		/**
+checkFieldAt helper object
+@method Cell.checkFieldAtActions
+@private
+**/
+		my.Cell.prototype.checkFieldAtActions = {
+			red: function(data, pos, test, items, x, y) {
+				if (data[pos] <= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			},
+			green: function(data, pos, test, items, x, y) {
+				if (data[pos + 1] <= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			},
+			blue: function(data, pos, test, items, x, y) {
+				if (data[pos + 2] <= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			},
+			alpha: function(data, pos, test, items, x, y) {
+				if (data[pos + 3] <= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			},
+			anycolor: function(data, pos, test, items, x, y) {
+				if (data[pos] <= test || data[pos + 1] <= test || data[pos + 2] <= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			}
 		};
 
 		/**
@@ -285,24 +305,28 @@ Check all entitys in the Group to see if they are colliding with the supplied en
 @param {String} entity SPRITENAME String of the reference entity; alternatively the entity Object itself can be passed as the argument
 @return Array of visible entity Objects currently colliding with the reference entity
 **/
-		my.Group.prototype.getEntitysCollidingWith = function(entity) {
+		my.Group.prototype.getEntitysCollidingWith = function(e) {
 			var i,
 				iz,
 				homeTemp,
 				awayTemp,
+				entity = my.entity,
+				entitys = this.entitys,
+				cp,
 				hits = [],
 				arg = {
 					tests: []
 				},
 				types = ['Block', 'Phrase', 'Picture', 'Path', 'Shape', 'Wheel'];
-			homeTemp = (my.isa(entity, 'str')) ? my.entity[entity] : entity;
+			homeTemp = (e.substring) ? entity[e] : e;
+			cp = homeTemp.getCollisionPoints();
 			if (my.contains(types, homeTemp.type)) {
 				hits.length = 0;
-				for (i = 0, iz = this.entitys.length; i < iz; i++) {
-					awayTemp = my.entity[this.entitys[i]];
+				for (i = 0, iz = entitys.length; i < iz; i++) {
+					awayTemp = entity[entitys[i]];
 					if (homeTemp.name !== awayTemp.name) {
 						if (awayTemp.visibility) {
-							arg.tests = homeTemp.getCollisionPoints();
+							arg.tests = cp;
 							if (awayTemp.checkHit(arg)) {
 								hits.push(awayTemp);
 								continue;
@@ -332,33 +356,43 @@ Check all entitys in the Group against each other to see if they are in collisio
 				hits = [],
 				homeTemp,
 				awayTemp,
+				entity = my.entity,
+				entitys = this.entitys,
+				regionRadius = this.regionRadius,
+				v1 = my.workcols.v1,
+				v2 = my.workcols.v2,
 				ts1,
 				ts2,
 				tresult,
+				cp = {},
 				arg = {
 					tests: []
 				};
 			hits.length = 0;
-			for (k = 0, kz = this.entitys.length; k < kz; k++) {
-				homeTemp = my.entity[this.entitys[k]];
+			for (k = 0, kz = entitys.length; k < kz; k++) {
+				homeTemp = entity[entitys[k]];
+				cp[homeTemp.name] = homeTemp.getCollisionPoints();
+			}
+			for (k = 0, kz = entitys.length; k < kz; k++) {
+				homeTemp = entity[entitys[k]];
 				if (homeTemp.visibility) {
-					for (j = k + 1, jz = this.entitys.length; j < jz; j++) {
-						awayTemp = my.entity[this.entitys[j]];
+					for (j = k + 1, jz = entitys.length; j < jz; j++) {
+						awayTemp = entity[entitys[j]];
 						if (awayTemp.visibility) {
-							if (this.regionRadius) {
-								ts1 = my.workcols.v1.set(homeTemp.start);
-								ts2 = my.workcols.v2.set(awayTemp.start);
+							if (regionRadius) {
+								ts1 = v1.set(homeTemp.start);
+								ts2 = v2.set(awayTemp.start);
 								tresult = ts1.vectorSubtract(ts2).getMagnitude();
-								if (tresult > this.regionRadius) {
+								if (tresult > regionRadius) {
 									continue;
 								}
 							}
-							arg.tests = homeTemp.getCollisionPoints();
+							arg.tests = cp[homeTemp.name];
 							if (awayTemp.checkHit(arg)) {
 								hits.push([homeTemp.name, awayTemp.name]);
 								continue;
 							}
-							arg.tests = awayTemp.getCollisionPoints();
+							arg.tests = cp[awayTemp.name];
 							if (homeTemp.checkHit(arg)) {
 								hits.push([homeTemp.name, awayTemp.name]);
 								continue;
@@ -383,14 +417,22 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 				hits = [],
 				thisTemp,
 				gTemp,
+				xt = my.xt,
+				entity = my.entity,
+				homeentitys = this.entitys,
+				awayentitys,
+				v1 = my.workcols.v1,
+				v2 = my.workcols.v2,
+				regionRadius = this.regionRadius,
 				arg = {
 					tests: []
 				},
 				ts1,
 				ts2,
+				cp = {},
 				tresult;
-			if (my.xt(g)) {
-				if (my.isa(g, 'str')) {
+			if (xt(g)) {
+				if (g.substring) {
 					if (my.group[g]) {
 						g = my.group[g];
 					}
@@ -399,31 +441,40 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 					}
 				}
 				else {
-					if (!my.xt(g.type) || g.type !== 'Group') {
+					if (!xt(g.type) || g.type !== 'Group') {
 						return false;
 					}
 				}
+				awayentitys = g.entitys;
 				hits.length = 0;
-				for (k = 0, kz = this.entitys.length; k < kz; k++) {
-					thisTemp = my.entity[this.entitys[k]];
+				for (k = 0, kz = homeentitys.length; k < kz; k++) {
+					thisTemp = entity[homeentitys[k]];
+					cp[thisTemp.name] = thisTemp.getCollisionPoints();
+				}
+				for (k = 0, kz = awayentitys.length; k < kz; k++) {
+					thisTemp = entity[thisTemp[k]];
+					cp[thisTemp.name] = awayTemp.getCollisionPoints();
+				}
+				for (k = 0, kz = homeentitys.length; k < kz; k++) {
+					thisTemp = entity[homeentitys[k]];
 					if (thisTemp.visibility) {
-						for (j = 0, jz = g.entitys.length; j < jz; j++) {
-							gTemp = my.entity[g.entitys[j]];
+						for (j = 0, jz = awayentitys.length; j < jz; j++) {
+							gTemp = entity[awayentitys[j]];
 							if (gTemp.visibility) {
-								if (this.regionRadius) {
-									ts1 = my.workcols.v1.set(thisTemp.start);
-									ts2 = my.workcols.v2.set(gTemp.start);
+								if (regionRadius) {
+									ts1 = v1.set(thisTemp.start);
+									ts2 = v2.set(gTemp.start);
 									tresult = ts1.vectorSubtract(ts2).getMagnitude();
-									if (tresult > this.regionRadius) {
+									if (tresult > regionRadius) {
 										continue;
 									}
 								}
-								arg.tests = thisTemp.getCollisionPoints();
+								arg.tests = cp[thisTemp.name];
 								if (gTemp.checkHit(arg)) {
 									hits.push([thisTemp.name, gTemp.name]);
 									continue;
 								}
-								arg.tests = gTemp.getCollisionPoints();
+								arg.tests = cp[gTemp.name];
 								if (thisTemp.checkHit(arg)) {
 									hits.push([thisTemp.name, gTemp.name]);
 									continue;
@@ -449,14 +500,17 @@ An Array of Arrays is returned, with each constituent array consisting of the th
 		my.Group.prototype.getFieldEntityHits = function(cell) {
 			var j,
 				jz,
+				entity = my.entity,
+				entitys = this.entitys,
+				bool = my.isa_bool,
 				hits = [],
 				result;
 			cell = (my.xt(cell)) ? cell : this.cell;
 			hits.length = 0;
-			for (j = 0, jz = this.entitys.length; j < jz; j++) {
-				result = my.entity[this.entitys[j]].checkField(cell);
-				if (!my.isa(result, 'bool')) {
-					hits.push([this.entitys[j], result]);
+			for (j = 0, jz = entitys.length; j < jz; j++) {
+				result = entity[entitys[j]].checkField(cell);
+				if (!bool(result)) {
+					hits.push([entitys[j], result]);
 				}
 			}
 			return hits;

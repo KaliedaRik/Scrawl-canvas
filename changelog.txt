@@ -38,17 +38,15 @@ Currently known bugs
 - Older browsers with canvas support do not support 'evenodd' winding or dashed strokes
 	- feature detection added to scrawl.device object
 	
-- Entity ordering
-	- Entitys with the same order value, in the same group, may occasionally flicker when overlapping (Chrome, Opera)
-		- solution: give entitys (and groups) unique order values
-
 - Text along path
 	- The text does not yet take into account any path handle offsets
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
-150808
+to 150812
 	- refactoring code for efficiency gains
+	- fixed entity ordering bug on chrome/opera
+		- implemented a stable bucket sort algorithm; refactored sorting
 
 to 150806
 	- integrated perspective experiments into scrawl

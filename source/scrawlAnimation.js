@@ -264,7 +264,7 @@ Permitted argument values include
 **/
 		my.Position.prototype.updateStart = function(item) {
 			item = my.xtGet(item, 'all');
-			this.updateStartActions[item](my.addPercentages, this.start, this.delta, my.addWithinBounds);
+			this.updateStartActions[item](my.addPercentages, this.start, this.delta, my.addWithinBounds, this);
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
 			}
@@ -283,12 +283,12 @@ updateStart helper object
 			y: function(perc, start, delta, add) {
 				start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
 			},
-			path: function(perc, start, delta, add) {
-				this.pathPlace = add(this.pathPlace, this.deltaPathPlace);
+			path: function(perc, start, delta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
 			},
-			all: function(perc, start, delta, add) {
-				if (this.deltaPathPlace) {
-					this.pathPlace = add(this.pathPlace, this.deltaPathPlace);
+			all: function(perc, start, delta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
 				}
 				if (delta.x) {
 					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
@@ -313,7 +313,7 @@ Permitted argument values include
 **/
 		my.Position.prototype.revertStart = function(item) {
 			item = my.xtGet(item, 'all');
-			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, my.addWithinBounds);
+			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, my.addWithinBounds, this);
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
 			}
@@ -332,12 +332,12 @@ revertStart helper object
 			y: function(perc, start, delta, add) {
 				start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
 			},
-			path: function(perc, start, delta, add) {
-				this.pathPlace = add(this.pathPlace, -this.deltaPathPlace);
+			path: function(perc, start, delta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
 			},
-			all: function(perc, start, delta, add) {
-				if (this.deltaPathPlace) {
-					this.pathPlace = add(this.pathPlace, -this.deltaPathPlace);
+			all: function(perc, start, delta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
 				}
 				if (delta.x) {
 					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
@@ -373,7 +373,7 @@ Changes the sign (+/-) of specified attribute values
 **/
 		my.Position.prototype.reverse = function(item) {
 			item = my.xtGet(item, 'all');
-			this.reverseActions[item](this.delta, my.reversePercentage);
+			this.reverseActions[item](this.delta, my.reversePercentage, this);
 			return this;
 		};
 		/**
@@ -392,11 +392,11 @@ reverse helper object
 				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
 				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
 			},
-			deltaPathPlace: function(delta, perc) {
-				this.deltaPathPlace = -this.deltaPathPlace;
+			deltaPathPlace: function(delta, perc, obj) {
+				obj.deltaPathPlace = -obj.deltaPathPlace;
 			},
-			all: function(delta, perc) {
-				this.deltaPathPlace = -this.deltaPathPlace;
+			all: function(delta, perc, obj) {
+				obj.deltaPathPlace = -obj.deltaPathPlace;
 				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
 				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
 			}
@@ -474,7 +474,7 @@ Permitted argument values include
 **/
 		my.Cell.prototype.updateStart = function(item) {
 			item = my.xtGet(item, 'all');
-			this.updateStartActions[item](my.addPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds);
+			this.updateStartActions[item](my.addPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds, this);
 			this.setCopy();
 			this.setPaste();
 			return this;
@@ -526,12 +526,12 @@ updateStart helper object
 					copy.y = (copy.y.toFixed) ? copy.y + copyDelta.y : perc(copy.y, copyDelta.y);
 				}
 			},
-			path: function(perc, start, delta, copy, copyDelta, add) {
-				this.pathPlace = add(this.pathPlace, this.deltaPathPlace);
+			path: function(perc, start, delta, copy, copyDelta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
 			},
-			all: function(perc, start, delta, copy, copyDelta, add) {
-				if (this.deltaPathPlace) {
-					this.pathPlace = add(this.pathPlace, this.deltaPathPlace);
+			all: function(perc, start, delta, copy, copyDelta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
 				}
 				if (delta.x) {
 					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
@@ -564,7 +564,7 @@ Permitted argument values include
 **/
 		my.Cell.prototype.revertStart = function(item) {
 			item = my.xtGet(item, 'all');
-			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds);
+			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds, this);
 			this.setCopy();
 			this.setPaste();
 			return this;
@@ -615,12 +615,12 @@ revertStart helper object
 					copy.y = (copy.y.toFixed) ? copy.y - copyDelta.y : perc(copy.y, copyDelta.y);
 				}
 			},
-			path: function(perc, start, delta, copy, copyDelta, add) {
-				this.pathPlace = add(this.pathPlace, -this.deltaPathPlace);
+			path: function(perc, start, delta, copy, copyDelta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
 			},
-			all: function(perc, start, delta, copy, copyDelta, add) {
-				if (this.deltaPathPlace) {
-					this.pathPlace = add(this.pathPlace, -this.deltaPathPlace);
+			all: function(perc, start, delta, copy, copyDelta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
 				}
 				if (delta.x) {
 					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);

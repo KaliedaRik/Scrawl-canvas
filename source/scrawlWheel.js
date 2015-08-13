@@ -532,7 +532,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 								break;
 							case 'E':
 								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(m.v2.y);
+								this.collisionVectors.push(v2.y);
 								break;
 							case 'SE':
 								v2.rotate(45);
@@ -550,7 +550,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 								this.collisionVectors.push(v2.y);
 								break;
 							case 'W':
-								m.v2.rotate(180);
+								v2.rotate(180);
 								this.collisionVectors.push(v2.x);
 								this.collisionVectors.push(v2.y);
 								break;
