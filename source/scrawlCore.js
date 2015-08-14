@@ -680,6 +680,9 @@ Valid identifier Strings include:
 	my.isa_num = function(item) {
 		return (item.toFixed) ? true : false;
 	};
+	my.isa_realnum = function(item) {
+		return (item.toFixed && !isNaN(item) && isFinite(item)) ? true : false;
+	};
 	my.isa_obj = function(item) {
 		return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 	};

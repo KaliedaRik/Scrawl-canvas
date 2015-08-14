@@ -105,13 +105,16 @@ A __factory__ function to generate new Phrase entitys
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
+			console.log(this.name, 'constructor');
 			this.registerInLibrary();
 			this.texts = [];
 			this.lineHeight = my.xtGet(items.lineHeight, my.d.Phrase.lineHeight);
 			if (items.font) {
 				this.checkFont(items.font);
 			}
-			this.constructFont();
+			else {
+				this.constructFont();
+			}
 			this.size = this.get('size');
 			this.multiline(items);
 			this.getMetrics();
@@ -242,17 +245,20 @@ Allows users to:
 @chainable
 **/
 		my.Phrase.prototype.set = function(items) {
+			console.log(this.name, 'set');
 			my.Entity.prototype.set.call(this, items);
 			items = my.safeObject(items);
 			this.lineHeight = my.xtGet(items.lineHeight, this.lineHeight);
+			if (items.text || items.size || items.scale) {
+				this.offset.flag = false;
+			}
 			if (items.font) {
 				this.checkFont(items.font);
 				this.offset.flag = false;
 			}
-			if (items.text || items.size || items.scale) {
-				this.offset.flag = false;
+			else {
+				this.constructFont();
 			}
-			this.constructFont();
 			this.size = this.get('size');
 			this.multiline(items);
 			this.getMetrics();
@@ -266,6 +272,7 @@ Augments Entity.detDelta()
 @chainable
 **/
 		my.Phrase.prototype.setDelta = function(items) {
+			console.log(this.name, 'setDelta');
 			my.Entity.prototype.setDelta.call(this, items);
 			if (items.text) {
 				this.offset.flag = false;
@@ -285,6 +292,7 @@ Augments Entity.clone()
 @chainable
 **/
 		my.Phrase.prototype.clone = function(items) {
+			console.log(this.name, 'clone');
 			items.texts = [];
 			return my.Entity.prototype.clone.call(this, items);
 		};
@@ -297,8 +305,13 @@ Helper function - creates Text objects for each line of text in a multiline Phra
 @private
 **/
 		my.Phrase.prototype.multiline = function(items) {
+			console.log(this.name, 'multiline');
 			var text,
 				textArray,
+				textnames = my.textnames,
+				texts = this.texts,
+				ri = my.removeItem,
+				T = my.Text,
 				i,
 				iz,
 				j,
@@ -306,18 +319,18 @@ Helper function - creates Text objects for each line of text in a multiline Phra
 			items = JSON.parse(JSON.stringify(items));
 			text = '' + (items.text || this.get('text'));
 			textArray = text.split('\n');
-			if (my.xt(this.texts)) {
-				for (i = 0, iz = this.texts.length; i < iz; i++) {
-					delete my.text[this.texts[i]];
-					my.removeItem(my.textnames, this.texts[i]);
+			if (my.xt(texts)) {
+				for (i = 0, iz = texts.length; i < iz; i++) {
+					delete my.text[texts[i]];
+					ri(textnames, texts[i]);
 				}
 			}
-			this.texts.length = 0;
+			texts.length = 0;
 			items.phrase = this.name;
 			for (j = 0, jz = textArray.length; j < jz; j++) {
 				items.text = textArray[j];
 				if (items.text.length > 0) {
-					new my.Text(items);
+					new T(items);
 				}
 			}
 			this.text = text;
@@ -332,10 +345,11 @@ Helper function - checks to see if font needs to be (re)constructed from its par
 @private
 **/
 		my.Phrase.prototype.checkFont = function(item) {
+			console.log(this.name, 'checkFont');
 			if (my.xt(item)) {
 				this.deconstructFont();
 			}
-			this.constructFont();
+			//this.constructFont();
 			return this;
 		};
 		/**
@@ -347,6 +361,7 @@ Helper function - creates font-related attributes from entity's Context object's
 @private
 **/
 		my.Phrase.prototype.deconstructFont = function() {
+			console.log(this.name, 'deconstructFont');
 			var i,
 				iz,
 				myFont,
@@ -457,13 +472,14 @@ Helper function - creates font-related attributes from entity's Context object's
 				myFamily = 'Verdana, Geneva, sans-serif';
 			}
 			family = myFamily;
-			arg.style = style;
-			arg.variant = variant;
-			arg.weight = weight;
-			arg.size = size;
-			arg.metrics = metrics;
-			arg.family = family;
-			this.set(arg);
+			this.style = style;
+			this.variant = variant;
+			this.weight = weight;
+			this.size = size;
+			this.metrics = metrics;
+			this.constructFont();
+			//arg.family = family;
+			//this.set(arg);
 			return this;
 		};
 		/**
@@ -475,20 +491,23 @@ Helper function - creates entity's Context object's phrase attribute from other 
 @private
 **/
 		my.Phrase.prototype.constructFont = function() {
+			console.log(this.name, 'constructFont');
 			var myFont,
 				style,
 				variant,
 				weight,
 				size,
 				metrics,
-				family;
+				family,
+				get = my.xtGet,
+				d = my.d.Phrase;
 			myFont = '';
-			style = this.get('style');
-			variant = this.get('variant');
-			weight = this.get('weight');
-			size = this.get('size');
-			metrics = this.get('metrics');
-			family = this.get('family');
+			style = get(this.style, d.style);
+			variant = get(this.variant, d.variant);
+			weight = get(this.weight, d.weight);
+			size = get(this.size, d.size);
+			metrics = get(this.metrics, d.metrics);
+			family = get(this.family, d.family);
 			if (style !== 'normal') {
 				myFont += style + ' ';
 			}
@@ -503,6 +522,30 @@ Helper function - creates entity's Context object's phrase attribute from other 
 			my.ctx[this.context].font = myFont;
 			return this;
 		};
+
+
+
+
+
+
+
+
+
+		// HERE HERE HERE!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		/**
 Augments Entity.stamp()
 @method stamp

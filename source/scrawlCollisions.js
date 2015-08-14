@@ -452,8 +452,8 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 					cp[thisTemp.name] = thisTemp.getCollisionPoints();
 				}
 				for (k = 0, kz = awayentitys.length; k < kz; k++) {
-					thisTemp = entity[thisTemp[k]];
-					cp[thisTemp.name] = awayTemp.getCollisionPoints();
+					thisTemp = entity[awayentitys[k]];
+					cp[thisTemp.name] = thisTemp.getCollisionPoints();
 				}
 				for (k = 0, kz = homeentitys.length; k < kz; k++) {
 					thisTemp = entity[homeentitys[k]];
@@ -547,8 +547,10 @@ Recalculate the current collision point positions for all entitys in the group
 @chainable
 **/
 		my.Group.prototype.resetCollisionPoints = function() {
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].resetCollisionPoints();
+			var entity = my.entity,
+				entitys = this.entitys;
+			for (var i = 0, iz = entitys.length; i < iz; i++) {
+				entity[entitys[i]].resetCollisionPoints();
 			}
 			return this;
 		};
@@ -558,10 +560,11 @@ Entity constructor hook function - modified by collisions module
 @private
 **/
 		my.Entity.prototype.collisionsEntityConstructor = function(items) {
-			if (my.xt(items.field)) {
+			var xt = my.xt;
+			if (xt(items.field)) {
 				this.addEntityToCellFields();
 			}
-			if (my.xt(items.fence)) {
+			if (xt(items.fence)) {
 				this.addEntityToCellFences();
 			}
 		};
@@ -582,20 +585,22 @@ Entity.set hook function - modified by collisions module
 @private
 **/
 		my.Entity.prototype.collisionsEntitySet = function(items) {
-			if (my.xt(items.collisionPoints)) {
+			var xt = my.xt,
+				xto = my.xto;
+			if (xt(items.collisionPoints)) {
 				this.parseCollisionPoints();
 			}
-			if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
+			if (xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
 				this.collisionArray.length = 0;
 			}
-			if (my.xto(items.collisionPoints, items.width, items.height, items.radius, items.pasteWidth, items.pasteHeight)) {
+			if (xto(items.collisionPoints, items.width, items.height, items.radius, items.pasteWidth, items.pasteHeight)) {
 				this.collisionVectors.length = 0;
 			}
-			if (my.xto(items.field, items.fence)) {
-				if (my.xt(items.field)) {
+			if (xto(items.field, items.fence)) {
+				if (xt(items.field)) {
 					this.addEntityToCellFields();
 				}
-				if (my.xt(items.fence)) {
+				if (xt(items.fence)) {
 					this.addEntityToCellFences();
 				}
 			}
@@ -622,10 +627,11 @@ Entity.setDelta hook function - modified by collisions module
 @private
 **/
 		my.Entity.prototype.collisionsEntitySetDelta = function(items) {
-			if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
+			var xto = my.xto;
+			if (xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
 				this.collisionArray.length = 0;
 			}
-			if (my.xto(items.width, items.height, items.radius, items.pasteWidth, items.pasteHeight)) {
+			if (xto(items.width, items.height, items.radius, items.pasteWidth, items.pasteHeight)) {
 				this.collisionVectors.length = 0;
 			}
 		};
@@ -638,11 +644,13 @@ Add this entity to a (range of) Cell object field groups
 **/
 		my.Entity.prototype.addEntityToCellFields = function(cells) {
 			var i,
-				iz;
+				iz,
+				cell = my.cell,
+				group = my.group;
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (i = 0, iz = cells.length; i < iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + '_field'].addEntitysToGroup(this.name);
+				if (cell[cells[i]]) {
+					group[cells[i] + '_field'].addEntitysToGroup(this.name);
 				}
 			}
 			return this;
@@ -656,11 +664,13 @@ Add this entity to a (range of) Cell object fence groups
 **/
 		my.Entity.prototype.addEntityToCellFences = function(cells) {
 			var i,
-				iz;
+				iz,
+				cell = my.cell,
+				group = my.group;
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (i = 0, iz = cells.length; i < iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + '_fence'].addEntitysToGroup(this.name);
+				if (cell[cells[i]]) {
+					group[cells[i] + '_fence'].addEntitysToGroup(this.name);
 				}
 			}
 			return this;
@@ -674,11 +684,13 @@ Remove this entity from a (range of) Cell object field groups
 **/
 		my.Entity.prototype.removeEntityFromCellFields = function(cells) {
 			var i,
-				iz;
+				iz,
+				cell = my.cell,
+				group = my.group;
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (i = 0, iz = cells.length; i < iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + '_field'].removeEntitysFromGroup(this.name);
+				if (cell[cells[i]]) {
+					group[cells[i] + '_field'].removeEntitysFromGroup(this.name);
 				}
 			}
 			return this;
@@ -692,11 +704,13 @@ Remove this entity from a (range of) Cell object fence groups
 **/
 		my.Entity.prototype.removeEntityFromCellFences = function(cells) {
 			var i,
-				iz;
+				iz,
+				cell = my.cell,
+				group = my.group;
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (i = 0, iz = cells.length; i < iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + '_fence'].removeEntitysFromGroup(this.name);
+				if (cell[cells[i]]) {
+					group[cells[i] + '_fence'].removeEntitysFromGroup(this.name);
 				}
 			}
 			return this;
@@ -726,29 +740,32 @@ Calculate the current positions of this entity's collision Vectors, taking into 
 **/
 		my.Entity.prototype.getCollisionPoints = function() {
 			var i,
-				iz;
-			if (this.collisionVectors.length === 0) {
+				iz,
+				v = my.v,
+				collisionVectors = this.collisionVectors,
+				collisionArray = this.collisionArray;
+			if (collisionVectors.length === 0) {
 				if (my.xt(this.collisionPoints)) {
 					this.buildCollisionVectors();
-					this.collisionArray.length = 0;
+					collisionArray.length = 0;
 				}
 			}
-			if (this.collisionArray.length === 0) {
-				for (i = 0, iz = this.collisionVectors.length; i < iz; i += 2) {
-					my.v.x = (this.flipReverse) ? -this.collisionVectors[i] : this.collisionVectors[i];
-					my.v.y = (this.flipReverse) ? -this.collisionVectors[i + 1] : this.collisionVectors[i + 1];
+			if (collisionArray.length === 0) {
+				for (i = 0, iz = collisionVectors.length; i < iz; i += 2) {
+					v.x = (this.flipReverse) ? -collisionVectors[i] : collisionVectors[i];
+					v.y = (this.flipUpend) ? -collisionVectors[i + 1] : collisionVectors[i + 1];
 					if (this.roll) {
-						my.v.rotate(this.roll);
+						v.rotate(this.roll);
 					}
 					if (this.scale !== 1) {
-						my.v.scalarMultiply(this.scale);
+						v.scalarMultiply(this.scale);
 					}
-					my.v.vectorAdd(this.start);
-					this.collisionArray.push(my.v.x);
-					this.collisionArray.push(my.v.y);
+					v.vectorAdd(this.start);
+					collisionArray.push(v.x);
+					collisionArray.push(v.y);
 				}
 			}
-			return this.collisionArray;
+			return collisionArray;
 		};
 		/**
 Collision detection helper function
@@ -765,13 +782,16 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				iz,
 				o,
 				w,
-				h;
+				h,
+				xt = my.xt,
+				collisionVectors = this.collisionVectors,
+				collisionPoints = this.collisionPoints;
 			o = this.getOffsetStartVector().reverse();
-			if (my.xt(this.localWidth)) {
+			if (xt(this.localWidth)) {
 				w = this.localWidth / this.scale || 0;
 				h = this.localHeight / this.scale || 0;
 			}
-			else if (my.xt(this.pasteData)) {
+			else if (xt(this.pasteData)) {
 				w = this.pasteData.w / this.scale || 0;
 				h = this.pasteData.h / this.scale || 0;
 			}
@@ -780,54 +800,54 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				h = this.height || 0;
 			}
 			this.collisionVectors.length = 0;
-			for (i = 0, iz = this.collisionPoints.length; i < iz; i++) {
-				if (my.isa(this.collisionPoints[i], 'str')) {
-					switch (this.collisionPoints[i]) {
+			for (i = 0, iz = collisionPoints.length; i < iz; i++) {
+				if (collisionPoints[i].substring) {
+					switch (collisionPoints[i]) {
 						case 'start':
-							this.collisionVectors.push(0);
-							this.collisionVectors.push(0);
+							collisionVectors.push(0);
+							collisionVectors.push(0);
 							break;
 						case 'N':
-							this.collisionVectors.push((w / 2) - o.x);
-							this.collisionVectors.push(-o.y);
+							collisionVectors.push((w / 2) - o.x);
+							collisionVectors.push(-o.y);
 							break;
 						case 'NE':
-							this.collisionVectors.push(w - o.x);
-							this.collisionVectors.push(-o.y);
+							collisionVectors.push(w - o.x);
+							collisionVectors.push(-o.y);
 							break;
 						case 'E':
-							this.collisionVectors.push(w - o.x);
-							this.collisionVectors.push((h / 2) - o.y);
+							collisionVectors.push(w - o.x);
+							collisionVectors.push((h / 2) - o.y);
 							break;
 						case 'SE':
-							this.collisionVectors.push(w - o.x);
-							this.collisionVectors.push(h - o.y);
+							collisionVectors.push(w - o.x);
+							collisionVectors.push(h - o.y);
 							break;
 						case 'S':
-							this.collisionVectors.push((w / 2) - o.x);
-							this.collisionVectors.push(h - o.y);
+							collisionVectors.push((w / 2) - o.x);
+							collisionVectors.push(h - o.y);
 							break;
 						case 'SW':
-							this.collisionVectors.push(-o.x);
-							this.collisionVectors.push(h - o.y);
+							collisionVectors.push(-o.x);
+							collisionVectors.push(h - o.y);
 							break;
 						case 'W':
-							this.collisionVectors.push(-o.x);
-							this.collisionVectors.push((h / 2) - o.y);
+							collisionVectors.push(-o.x);
+							collisionVectors.push((h / 2) - o.y);
 							break;
 						case 'NW':
-							this.collisionVectors.push(-o.x);
-							this.collisionVectors.push(-o.y);
+							collisionVectors.push(-o.x);
+							collisionVectors.push(-o.y);
 							break;
 						case 'center':
-							this.collisionVectors.push((w / 2) - o.x);
-							this.collisionVectors.push((h / 2) - o.y);
+							collisionVectors.push((w / 2) - o.x);
+							collisionVectors.push((h / 2) - o.y);
 							break;
 					}
 				}
-				else if (my.isa(this.collisionPoints[i], 'vector')) {
-					this.collisionVectors.push(this.collisionPoints[i].x);
-					this.collisionVectors.push(this.collisionPoints[i].y);
+				else if (my.isa_vector(collisionPoints[i])) {
+					collisionVectors.push(collisionPoints[i].x);
+					collisionVectors.push(collisionPoints[i].y);
 				}
 			}
 			return this;
@@ -847,100 +867,105 @@ Parses user input for the collisionPoint attribute
 				iz,
 				j,
 				jz,
-				myItems = [];
-			this.collisionPoints = (my.isa(this.collisionPoints, 'arr')) ? this.collisionPoints : [this.collisionPoints];
-			myItems.length = 0;
-			for (j = 0, jz = this.collisionPoints.length; j < jz; j++) {
-				myItems.push(this.collisionPoints[j]);
-			}
-			this.collisionPoints.length = 0;
-			if (my.xt(myItems)) {
-				for (i = 0, iz = myItems.length; i < iz; i++) {
-					if (my.isa(myItems[i], 'str')) {
-						switch (myItems[i].toLowerCase()) {
-							case 'all':
-								my.pushUnique(this.collisionPoints, 'N');
-								my.pushUnique(this.collisionPoints, 'NE');
-								my.pushUnique(this.collisionPoints, 'E');
-								my.pushUnique(this.collisionPoints, 'SE');
-								my.pushUnique(this.collisionPoints, 'S');
-								my.pushUnique(this.collisionPoints, 'SW');
-								my.pushUnique(this.collisionPoints, 'W');
-								my.pushUnique(this.collisionPoints, 'NW');
-								my.pushUnique(this.collisionPoints, 'start');
-								my.pushUnique(this.collisionPoints, 'center');
-								break;
-							case 'corners':
-								my.pushUnique(this.collisionPoints, 'NE');
-								my.pushUnique(this.collisionPoints, 'SE');
-								my.pushUnique(this.collisionPoints, 'SW');
-								my.pushUnique(this.collisionPoints, 'NW');
-								break;
-							case 'edges':
-								my.pushUnique(this.collisionPoints, 'N');
-								my.pushUnique(this.collisionPoints, 'E');
-								my.pushUnique(this.collisionPoints, 'S');
-								my.pushUnique(this.collisionPoints, 'W');
-								break;
-							case 'perimeter':
-								my.pushUnique(this.collisionPoints, 'N');
-								my.pushUnique(this.collisionPoints, 'NE');
-								my.pushUnique(this.collisionPoints, 'E');
-								my.pushUnique(this.collisionPoints, 'SE');
-								my.pushUnique(this.collisionPoints, 'S');
-								my.pushUnique(this.collisionPoints, 'SW');
-								my.pushUnique(this.collisionPoints, 'W');
-								my.pushUnique(this.collisionPoints, 'NW');
-								break;
-							case 'north':
-							case 'n':
-								my.pushUnique(this.collisionPoints, 'N');
-								break;
-							case 'northeast':
-							case 'ne':
-								my.pushUnique(this.collisionPoints, 'NE');
-								break;
-							case 'east':
-							case 'e':
-								my.pushUnique(this.collisionPoints, 'E');
-								break;
-							case 'southeast':
-							case 'se':
-								my.pushUnique(this.collisionPoints, 'SE');
-								break;
-							case 'south':
-							case 's':
-								my.pushUnique(this.collisionPoints, 'S');
-								break;
-							case 'southwest':
-							case 'sw':
-								my.pushUnique(this.collisionPoints, 'SW');
-								break;
-							case 'west':
-							case 'w':
-								my.pushUnique(this.collisionPoints, 'W');
-								break;
-							case 'northwest':
-							case 'nw':
-								my.pushUnique(this.collisionPoints, 'NW');
-								break;
-							case 'start':
-								my.pushUnique(this.collisionPoints, 'start');
-								break;
-							case 'center':
-								my.pushUnique(this.collisionPoints, 'center');
-								break;
+				myItems = [],
+				collisionPoints,
+				pu = my.pushUnique;
+			if (this.collisionPoints) {
+				this.collisionPoints = (Array.isArray(this.collisionPoints)) ? this.collisionPoints : [this.collisionPoints];
+				collisionPoints = this.collisionPoints;
+				myItems.length = 0;
+				for (j = 0, jz = collisionPoints.length; j < jz; j++) {
+					myItems.push(collisionPoints[j]);
+				}
+				collisionPoints.length = 0;
+				if (my.xt(myItems)) {
+					for (i = 0, iz = myItems.length; i < iz; i++) {
+						if (myItems[i].substring) {
+							switch (myItems[i].toLowerCase()) {
+								case 'all':
+									pu(collisionPoints, 'N');
+									pu(collisionPoints, 'NE');
+									pu(collisionPoints, 'E');
+									pu(collisionPoints, 'SE');
+									pu(collisionPoints, 'S');
+									pu(collisionPoints, 'SW');
+									pu(collisionPoints, 'W');
+									pu(collisionPoints, 'NW');
+									pu(collisionPoints, 'start');
+									pu(collisionPoints, 'center');
+									break;
+								case 'corners':
+									pu(collisionPoints, 'NE');
+									pu(collisionPoints, 'SE');
+									pu(collisionPoints, 'SW');
+									pu(collisionPoints, 'NW');
+									break;
+								case 'edges':
+									pu(collisionPoints, 'N');
+									pu(collisionPoints, 'E');
+									pu(collisionPoints, 'S');
+									pu(collisionPoints, 'W');
+									break;
+								case 'perimeter':
+									pu(collisionPoints, 'N');
+									pu(collisionPoints, 'NE');
+									pu(collisionPoints, 'E');
+									pu(collisionPoints, 'SE');
+									pu(collisionPoints, 'S');
+									pu(collisionPoints, 'SW');
+									pu(collisionPoints, 'W');
+									pu(collisionPoints, 'NW');
+									break;
+								case 'north':
+								case 'n':
+									pu(collisionPoints, 'N');
+									break;
+								case 'northeast':
+								case 'ne':
+									pu(collisionPoints, 'NE');
+									break;
+								case 'east':
+								case 'e':
+									pu(collisionPoints, 'E');
+									break;
+								case 'southeast':
+								case 'se':
+									pu(collisionPoints, 'SE');
+									break;
+								case 'south':
+								case 's':
+									pu(collisionPoints, 'S');
+									break;
+								case 'southwest':
+								case 'sw':
+									pu(collisionPoints, 'SW');
+									break;
+								case 'west':
+								case 'w':
+									pu(collisionPoints, 'W');
+									break;
+								case 'northwest':
+								case 'nw':
+									pu(collisionPoints, 'NW');
+									break;
+								case 'start':
+									pu(collisionPoints, 'start');
+									break;
+								case 'center':
+									pu(collisionPoints, 'center');
+									break;
+							}
 						}
-					}
-					else if (my.isa(myItems[i], 'num')) {
-						this.collisionPoints.push(myItems[i]);
-					}
-					else if (my.isa(myItems[i], 'vector')) {
-						this.collisionPoints.push(myItems[i]);
+						else if (myItems[i].toFixed) {
+							collisionPoints.push(myItems[i]);
+						}
+						else if (my.isa_vector(myItems[i])) {
+							collisionPoints.push(myItems[i]);
+						}
 					}
 				}
 			}
-			return this.collisionPoints;
+			return (collisionPoints) ? collisionPoints : [];
 		};
 
 		return my;

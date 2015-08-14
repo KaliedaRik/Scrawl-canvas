@@ -291,11 +291,12 @@ Augments Base.clone()
 @return Cloned Color object
 **/
 		my.Color.prototype.clone = function(items) {
-			var a = this.parse(),
-				b = my.mergeOver(a, ((my.isa(items, 'obj')) ? items : {})),
-				c = my.makeColor(b);
+			var a, b, c;
 			items = my.safeObject(items);
-			if (my.xt(items.random) && items.random) {
+			a = this.parse();
+			b = my.mergeOver(a, items);
+			c = my.makeColor(b);
+			if (items.random) {
 				delete c.r;
 				delete c.g;
 				delete c.b;
@@ -328,19 +329,21 @@ Argument can include preset color channel values (0-255, 0-1 for alpha): {r:Numb
 @private
 **/
 		my.Color.prototype.generateRandomColor = function(items) {
-			var rMax = this.get('rMax'),
-				gMax = this.get('gMax'),
-				bMax = this.get('bMax'),
-				aMax = this.get('aMax'),
-				rMin = this.get('rMin'),
-				gMin = this.get('gMin'),
-				bMin = this.get('bMin'),
-				aMin = this.get('aMin');
+			var rMax, gMax, bMax, aMax, rMin, gMin, bMin, aMin,
+				get = my.xtGet;
 			items = my.safeObject(items);
-			this.r = items.r || Math.round((Math.random() * (rMax - rMin)) + rMin);
-			this.g = items.g || Math.round((Math.random() * (gMax - gMin)) + gMin);
-			this.b = items.b || Math.round((Math.random() * (bMax - bMin)) + bMin);
-			this.a = items.a || (Math.random() * (aMax - aMin)) + aMin;
+			this.rMax = get(items.rMax, this.rMax, 255);
+			this.gMax = get(items.gMax, this.gMax, 255);
+			this.bMax = get(items.bMax, this.bMax, 255);
+			this.aMax = get(items.aMax, this.aMax, 1);
+			this.rMin = get(items.rMin, this.rMin, 0);
+			this.gMin = get(items.gMin, this.gMin, 0);
+			this.bMin = get(items.bMin, this.bMin, 0);
+			this.aMin = get(items.aMin, this.aMin, 0);
+			this.r = items.r || Math.round((Math.random() * (this.rMax - this.rMin)) + this.rMin);
+			this.g = items.g || Math.round((Math.random() * (this.gMax - this.gMin)) + this.gMin);
+			this.b = items.b || Math.round((Math.random() * (this.bMax - this.bMin)) + this.bMin);
+			this.a = items.a || (Math.random() * (this.aMax - this.aMin)) + this.aMin;
 			this.checkValues();
 			return this;
 		};
@@ -356,14 +359,10 @@ Checks that color channel values are of the permitted form (integer vs float) an
 				g = Math.floor(this.g) || 0,
 				b = Math.floor(this.b) || 0,
 				a = this.a || 1;
-			r = (r > 255) ? 255 : ((r < 0) ? 0 : r);
-			g = (g > 255) ? 255 : ((g < 0) ? 0 : g);
-			b = (b > 255) ? 255 : ((b < 0) ? 0 : b);
-			a = (a > 1) ? 1 : ((a < 0) ? 0 : a);
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			this.a = a;
+			this.r = (r > 255) ? 255 : ((r < 0) ? 0 : r);
+			this.g = (g > 255) ? 255 : ((g < 0) ? 0 : g);
+			this.b = (b > 255) ? 255 : ((b < 0) ? 0 : b);
+			this.a = (a > 1) ? 1 : ((a < 0) ? 0 : a);
 			return this;
 		};
 		/**
@@ -404,40 +403,31 @@ Update the current color, taking into account shift and bounce attribute values
 				iz,
 				list = ['r', 'g', 'b', 'a'],
 				col,
-				res,
-				sft,
 				shift,
 				min,
 				max,
-				bounce;
-			res = [];
-			sft = [];
+				bounce,
+				between = my.isBetween;
 			for (i = 0, iz = list.length; i < iz; i++) {
-				col = this.get(list[i]);
-				shift = this.get(list[i] + 'Shift');
-				min = this.get(list[i] + 'Min');
-				max = this.get(list[i] + 'Max');
-				bounce = this.get(list[i] + 'Bounce');
-				if (!my.isBetween((col + shift), max, min, true)) {
-					if (bounce) {
-						shift = -shift;
+				col = this[list[i]];
+				shift = this[list[i] + 'Shift'];
+				min = this[list[i] + 'Min'];
+				max = this[list[i] + 'Max'];
+				bounce = this[list[i] + 'Bounce'];
+				if (shift) {
+					if (!between((col + shift), max, min, true)) {
+						if (bounce) {
+							shift = -shift;
+						}
+						else {
+							col = (col > (max + min) / 2) ? max : min;
+							shift = 0;
+						}
 					}
-					else {
-						col = (col > (max + min) / 2) ? max : min;
-						shift = 0;
-					}
+					this[list[i]] = col + shift;
+					this[list[i] + 'Shift'] = shift;
 				}
-				res[i] = col + shift;
-				sft[i] = shift;
 			}
-			this.r = res[0];
-			this.g = res[1];
-			this.b = res[2];
-			this.a = res[3];
-			this.rShift = sft[0];
-			this.gShift = sft[1];
-			this.bShift = sft[2];
-			this.aShift = sft[3];
 			return this;
 		};
 		/**
