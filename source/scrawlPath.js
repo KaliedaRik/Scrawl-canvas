@@ -1706,7 +1706,7 @@ Set Point.fixed attribute
 			}
 			else {
 				x = (isa_obj(items) && xt(items.x)) ? items.x : (items.toFixed) ? items : 0;
-				y = (isa_obj(items) && xt(items.y)) ? items.y : (y.toFixed) ? y : 0;
+				y = (isa_obj(items) && xt(items.y)) ? items.y : (y && y.toFixed) ? y : 0;
 				loc.x = x;
 				loc.y = y;
 				this.fixed = true;
