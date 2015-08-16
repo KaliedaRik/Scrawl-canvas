@@ -2097,7 +2097,7 @@ Rotate a Vector object by a Quaternion rotation
 			w;
 		if (my.isa_quaternion(item)) {
 			w = my.workquat;
-			mag = (mag.toFixed) ? mag : this.getMagnitude();
+			mag = (mag && mag.toFixed) ? mag : this.getMagnitude();
 			q1 = w.q1.set(item);
 			q2 = w.q2.set(this);
 			q3 = w.q3.set(item).conjugate();
@@ -3256,17 +3256,19 @@ Takes into account lock flag settings
 		if (this.pivot === 'mouse') {
 			cell = my.cell[cell];
 			pad = my.pad[cell.pad];
-			x = (start.x.substring) ? this.numberConvert(start.x, cell.actualWidth) : start.x;
-			y = (start.y.substring) ? this.numberConvert(start.y, cell.actualHeight) : start.y;
 			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
-			if (this.oldX == null && this.oldY == null) { //jshint ignore:line
-				this.oldX = x;
-				this.oldY = y;
+			if (mouse) {
+				x = (start.x.substring) ? this.numberConvert(start.x, cell.actualWidth) : start.x;
+				y = (start.y.substring) ? this.numberConvert(start.y, cell.actualHeight) : start.y;
+				if (this.oldX == null && this.oldY == null) { //jshint ignore:line
+					this.oldX = x;
+					this.oldY = y;
+				}
+				start.x = (!lockX) ? x + mouse.x - this.oldX : x;
+				start.y = (!lockY) ? y + mouse.y - this.oldY : y;
+				this.oldX = mouse.x;
+				this.oldY = mouse.y;
 			}
-			start.x = (!lockX) ? x + mouse.x - this.oldX : x;
-			start.y = (!lockY) ? y + mouse.y - this.oldY : y;
-			this.oldX = mouse.x;
-			this.oldY = mouse.y;
 		}
 		return this.setStampUsingStacksPivot();
 	};
@@ -5824,10 +5826,49 @@ Entity stamp helper function
 @private
 **/
 	my.Cell.prototype.clearShadow = function() {
-		var context,
-			engine;
-		engine = my.context[this.name];
-		context = my.ctx[this.context];
+		// var context,
+		// 	engine;
+		// engine = my.context[this.name];
+		// context = my.ctx[this.context];
+		// engine.shadowOffsetX = 0.0;
+		// engine.shadowOffsetY = 0.0;
+		// engine.shadowBlur = 0.0;
+		// context.shadowOffsetX = 0.0;
+		// context.shadowOffsetY = 0.0;
+		// context.shadowBlur = 0.0;
+		// return this;
+	};
+	/**
+Entity stamp helper function
+@method restoreShadow
+@return This
+@chainable
+@private
+**/
+	my.Cell.prototype.restoreShadow = function(entitycontext) {
+		// var cellContext,
+		// 	entityContext,
+		// 	engine;
+		// engine = my.context[this.name];
+		// cellContext = my.ctx[this.context];
+		// entityContext = my.ctx[entitycontext];
+		// engine.shadowOffsetX = entityContext.shadowOffsetX;
+		// engine.shadowOffsetY = entityContext.shadowOffsetY;
+		// engine.shadowBlur = entityContext.shadowBlur;
+		// cellContext.shadowOffsetX = entityContext.shadowOffsetX;
+		// cellContext.shadowOffsetY = entityContext.shadowOffsetY;
+		// cellContext.shadowBlur = entityContext.shadowBlur;
+		// return this;
+	};
+	/**
+Entity stamp helper function
+@method clearShadow
+@return This
+@chainable
+@private
+**/
+	my.Cell.prototype.clearShadow = function(engine) {
+		var context = my.ctx[this.context];
 		engine.shadowOffsetX = 0.0;
 		engine.shadowOffsetY = 0.0;
 		engine.shadowBlur = 0.0;
@@ -5843,13 +5884,10 @@ Entity stamp helper function
 @chainable
 @private
 **/
-	my.Cell.prototype.restoreShadow = function(entitycontext) {
-		var cellContext,
-			entityContext,
-			engine;
-		engine = my.context[this.name];
-		cellContext = my.ctx[this.context];
-		entityContext = my.ctx[entitycontext];
+	my.Cell.prototype.restoreShadow = function(engine, entitycontext) {
+		var ctx = my.ctx,
+			cellContext = ctx[this.context],
+			entityContext = ctx[entitycontext];
 		engine.shadowOffsetX = entityContext.shadowOffsetX;
 		engine.shadowOffsetY = entityContext.shadowOffsetY;
 		engine.shadowBlur = entityContext.shadowBlur;
@@ -7364,8 +7402,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 	my.Entity.prototype.clearShadow = function(ctx, cell) {
 		var context = my.ctx[this.context];
 		if (context.shadowOffsetX || context.shadowOffsetY || context.shadowBlur) {
-			cell = (cell.substring) ? my.cell[cell] : cell;
-			cell.clearShadow();
+			cell.clearShadow(ctx);
 		}
 		return this;
 	};
@@ -7381,8 +7418,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (P
 	my.Entity.prototype.restoreShadow = function(ctx, cell) {
 		var context = my.ctx[this.context];
 		if (context.shadowOffsetX || context.shadowOffsetY || context.shadowBlur) {
-			cell = (cell.substring) ? my.cell[cell] : cell;
-			cell.restoreShadow(this.context);
+			cell.restoreShadow(ctx, this.context);
 		}
 		return this;
 	};

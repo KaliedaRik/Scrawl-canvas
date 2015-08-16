@@ -99,6 +99,7 @@ Additional factory functions to instantiate Shape objects are available in the _
 			my.Position.prototype.set.call(this, items);
 			this.isLine = (my.isa_bool(items.isLine)) ? items.isLine : true;
 			this.dataSet = (my.xt(this.data)) ? this.buildDataSet(this.data) : '';
+			this.winding = my.xtGet(items.winding, 'nonzero');
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
@@ -137,6 +138,13 @@ Shape entity default method attribute is 'draw', not 'fill'
 @default 'draw'
 **/
 			method: 'draw',
+			/**
+Winding value
+@property winding
+@type String
+@default 'non-zero'
+**/
+			winding: 'nonzero'
 		};
 		my.mergeInto(my.d.Shape, my.d.Entity);
 		/**
@@ -332,7 +340,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 @private
 **/
 		my.Shape.prototype.doOutline = function(ctx, cell) {
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			if (!this.dataSet && this.data) {
 				this.buildDataSet(this.data);
 			}
@@ -576,10 +584,10 @@ Stamp helper function - perform a 'clip' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.clip = function(ctx, cell) {
+		my.Shape.prototype.clip = function(ctx, cellname, cell) {
 			ctx.save();
 			this.doOutline(ctx, cell);
-			ctx.clip(my.ctx[this.context].get('winding'));
+			ctx.clip(this.winding);
 			return this;
 		};
 		/**
@@ -591,9 +599,8 @@ Stamp helper function - perform a 'clear' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.clear = function(ctx, cell) {
-			cell = my.cell[cell];
-			this.clip(ctx, cell);
+		my.Shape.prototype.clear = function(ctx, cellname, cell) {
+			this.clip(ctx, cellname, cell);
 			ctx.clearRect(0, 0, cell.get('actualWidth'), cell.get('.actualHeight'));
 			ctx.restore();
 			return this;
@@ -607,12 +614,11 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.clearWithBackground = function(ctx, cell) {
-			cell = my.cell[cell];
-			this.clip(ctx, cell);
-			ctx.fillStyle = c.backgroundColor;
-			ctx.fillRect(0, 0, cell.get('actualWidth'), cell.get('actualHeight'));
-			ctx.fillStyle = my.ctx[cell].get('fillStyle');
+		my.Shape.prototype.clearWithBackground = function(ctx, cellname, cell) {
+			this.clip(ctx, cellname, cell);
+			ctx.fillStyle = cell.backgroundColor;
+			ctx.fillRect(0, 0, cellactualWidth, cell.actualHeight);
+			ctx.fillStyle = my.ctx[cellname].get('fillStyle');
 			ctx.restore();
 			return this;
 		};
@@ -625,7 +631,7 @@ Stamp helper function - perform a 'draw' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.draw = function(ctx, cell) {
+		my.Shape.prototype.draw = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
 			ctx.stroke();
 			return this;
@@ -639,9 +645,9 @@ Stamp helper function - perform a 'fill' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.fill = function(ctx, cell) {
+		my.Shape.prototype.fill = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
-			ctx.fill(my.ctx[this.context].get('winding'));
+			ctx.fill(this.winding);
 			return this;
 		};
 		/**
@@ -653,11 +659,11 @@ Stamp helper function - perform a 'drawFill' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.drawFill = function(ctx, cell) {
+		my.Shape.prototype.drawFill = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
 			ctx.stroke();
 			this.clearShadow(ctx, cell);
-			ctx.fill(my.ctx[this.context].get('winding'));
+			ctx.fill(this.winding);
 			return this;
 		};
 		/**
@@ -669,9 +675,10 @@ Stamp helper function - perform a 'fillDraw' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.fillDraw = function(ctx, cell) {
+		my.Shape.prototype.fillDraw = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
-			ctx.fill(my.ctx[this.context].get('winding'));
+			console.log(this.winding);
+			ctx.fill(this.winding);
 			this.clearShadow(ctx, cell);
 			ctx.stroke();
 			return this;
@@ -685,9 +692,9 @@ Stamp helper function - perform a 'sinkInto' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.sinkInto = function(ctx, cell) {
+		my.Shape.prototype.sinkInto = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
-			ctx.fill(my.ctx[this.context].get('winding'));
+			ctx.fill(this.winding);
 			ctx.stroke();
 			return this;
 		};
@@ -700,10 +707,10 @@ Stamp helper function - perform a 'floatOver' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.floatOver = function(ctx, cell) {
+		my.Shape.prototype.floatOver = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
 			ctx.stroke();
-			ctx.fill(my.ctx[this.context].get('winding'));
+			ctx.fill(this.winding);
 			return this;
 		};
 		/**
@@ -715,7 +722,7 @@ Stamp helper function - perform a 'none' method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.none = function(ctx, cell) {
+		my.Shape.prototype.none = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
 			return this;
 		};
@@ -736,18 +743,17 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 		my.Shape.prototype.checkHit = function(items) {
 			var tests,
 				result,
-				winding,
 				i,
-				iz;
+				iz,
+				cvx = my.cvx;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
 			result = false;
-			winding = my.ctx[this.context].winding;
-			my.cvx.mozFillRule = winding;
-			my.cvx.msFillRule = winding;
-			this.completeOutline(my.cvx, my.group[this.group].cell);
+			cvx.mozFillRule = this.winding;
+			cvx.msFillRule = this.winding;
+			this.completeOutline(cvx, my.group[this.group].cell);
 			for (i = 0, iz = tests.length; i < iz; i += 2) {
-				result = my.cvx.isPointInPath(tests[i], tests[i + 1], my.ctx[this.context].get('winding'));
+				result = cvx.isPointInPath(tests[i], tests[i + 1], this.winding);
 				if (result) {
 					items.x = tests[i];
 					items.y = tests[i + 1];

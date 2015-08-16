@@ -82,15 +82,11 @@ scrawl.init hook function - modified by stacks module
 @private
 **/
 		my.pageInit = function() {
-			//if (my.device.transform) {
 			my.getStacks();
-			//}
 			if (my.device.canvas) {
 				my.getCanvases();
 			}
-			//if (my.device.transform) {
 			my.getElements();
-			//}
 		};
 		/**
 A __private__ function that searches the DOM for elements with class="scrawlstack"; generates Stack objects
@@ -106,7 +102,12 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 				s,
 				stacks,
 				myStack,
-				myCanvas;
+				myCanvas,
+				makeStack = my.makeStack,
+				makeElement = my.makeElement,
+				stk = my.stk,
+				elm = my.elm,
+				element = my.element;
 			s = document.getElementsByClassName("scrawlstack");
 			stacks = [];
 			if (s.length > 0) {
@@ -114,25 +115,25 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 					stacks.push(s[i]);
 				}
 				for (i = 0, iz = s.length; i < iz; i++) {
-					myStack = my.makeStack({
+					myStack = makeStack({
 						stackElement: stacks[i]
 					});
-					for (j = 0, jz = my.stk[myStack.name].children.length; j < jz; j++) {
-						my.stk[myStack.name].children[j].style.position = 'absolute';
-						if (my.stk[myStack.name].children[j].tagName !== 'CANVAS') {
-							my.makeElement({
-								domElement: my.stk[myStack.name].children[j],
+					for (j = 0, jz = stk[myStack.name].children.length; j < jz; j++) {
+						stk[myStack.name].children[j].style.position = 'absolute';
+						if (stk[myStack.name].children[j].tagName !== 'CANVAS') {
+							makeElement({
+								domElement: stk[myStack.name].children[j],
 								group: myStack.name
 							});
 						}
 						else {
-							my.stk[myStack.name].children[j].className += ' stack:' + myStack.name;
+							stk[myStack.name].children[j].className += ' stack:' + myStack.name;
 						}
 					}
-					if (my.element[myStack.name]) {
-						myStack.group = my.element[myStack.name].group;
-						delete my.element[myStack.name];
-						delete my.elm[myStack.name];
+					if (element[myStack.name]) {
+						myStack.group = element[myStack.name].group;
+						delete element[myStack.name];
+						delete elm[myStack.name];
 						my.removeItem(my.elementnames, myStack.name);
 					}
 					if (stacks[i].className.match(/withcanvas/)) {
@@ -140,7 +141,7 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 						myCanvas.style.position = 'absolute';
 						myCanvas.id = myStack.name + '_canvas';
 						myCanvas.className = 'lockTo:' + myStack.name;
-						my.stk[myStack.name].appendChild(myCanvas);
+						stk[myStack.name].appendChild(myCanvas);
 					}
 				}
 				return true;
@@ -238,7 +239,13 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 				s,
 				el,
 				myName,
-				myStack;
+				myStack,
+				cont = my.contains,
+				get = my.xtGet,
+				elementnames = my.elementnames,
+				stacknames = my.stacknames,
+				stk = my.stk,
+				makeElement = my.makeElement;
 			s = document.getElementsByClassName("scrawl");
 			el = [];
 			if (s.length > 0) {
@@ -246,13 +253,13 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 					el.push(s[i]);
 				}
 				for (i = 0, iz = s.length; i < iz; i++) {
-					myName = my.xtGet(el.id, el.name, false);
-					if (!my.contains(my.elementnames, myName)) {
+					myName = get(el.id, el.name, false);
+					if (!cont(elementnames, myName)) {
 						if (el[i].className.indexOf('stack:') !== -1) {
 							myStack = el[i].className.match(/stack:(\w+)/);
-							if (my.contains(my.stacknames, myStack[1])) {
-								my.stk[myStack[1]].appendChild(el[i]);
-								my.makeElement({
+							if (cont(stacknames, myStack[1])) {
+								stk[myStack[1]].appendChild(el[i]);
+								makeElement({
 									domElement: el[i],
 									group: myStack[1],
 								});
@@ -297,18 +304,21 @@ The argument object should include the following attributes:
 			var myParent,
 				myCanvas,
 				myStk,
-				stackParent;
+				stackParent,
+				xt = my.xt,
+				get = my.xtGet,
+				round = Math.round;
 			items = my.safeObject(items);
-			items.width = my.xtGet(items.width, 300);
-			items.height = my.xtGet(items.height, 150);
-			if (my.xt(items.stackName)) {
+			items.width = get(items.width, 300);
+			items.height = get(items.height, 150);
+			if (xt(items.stackName)) {
 				myStk = my.stack[items.stackName];
 				if (!myStk) {
-					if (!my.xt(items.parentElement)) {
+					if (!xt(items.parentElement)) {
 						stackParent = document.body;
 					}
 					else {
-						stackParent = (my.isa(items.parentElement, 'str')) ? document.getElementById(items.parentElement) : items.parentElement;
+						stackParent = (items.parentElement.substring) ? document.getElementById(items.parentElement) : items.parentElement;
 					}
 					myStk = my.addStackToPage({
 						stackName: items.stackName,
@@ -322,14 +332,14 @@ The argument object should include the following attributes:
 				items.parentElement = myStk.name;
 			}
 			myParent = document.getElementById(items.parentElement) || document.body;
-			if (my.isa(items.width, 'str')) {
-				items.width = Math.round((parseFloat(items.width) / 100) * parseFloat(myParent.style.width));
+			if (items.width.substring) {
+				items.width = round((parseFloat(items.width) / 100) * parseFloat(myParent.style.width));
 			}
-			if (my.isa(items.height, 'str')) {
-				items.height = Math.round((parseFloat(items.height) / 100) * parseFloat(myParent.style.height));
+			if (items.height.substring) {
+				items.height = round((parseFloat(items.height) / 100) * parseFloat(myParent.style.height));
 			}
 			myCanvas = document.createElement('canvas');
-			myCanvas.style.position = my.xtGet(items.position, 'absolute');
+			myCanvas.style.position = get(items.position, 'absolute');
 			myParent.appendChild(myCanvas);
 			items.canvasElement = myCanvas;
 			var myPad = new my.Pad(items);
@@ -350,13 +360,14 @@ The argument object should include the following attributes:
 **/
 		my.addStackToPage = function(items) {
 			var myElement,
-				myStack;
-			if (my.isa(items.stackName, 'str') && my.xt(items.parentElement)) {
-				items.parentElement = (my.isa(items.parentElement, 'str')) ? document.getElementById(items.parentElement) : items.parentElement;
+				myStack,
+				get = my.xtGet;
+			if (items.stackName.substring && my.xt(items.parentElement)) {
+				items.parentElement = (items.parentElement.substring) ? document.getElementById(items.parentElement) : items.parentElement;
 				myElement = document.createElement('div');
 				myElement.id = items.stackName;
-				myElement.style.width = my.xtGet(items.width, 300) + 'px';
-				myElement.style.height = my.xtGet(items.height, 150) + 'px';
+				myElement.style.width = get(items.width, 300) + 'px';
+				myElement.style.height = get(items.height, 150) + 'px';
 				items.parentElement.appendChild(myElement);
 				items.stackElement = myElement;
 				myStack = my.makeStack(items);
@@ -380,21 +391,27 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 **/
 		my.setDisplayOffsets = function(item) {
 			var i,
-				iz;
+				iz,
+				s = my.stack,
+				sn = my.stacknames,
+				p = my.pad,
+				pn = my.padnames,
+				e = my.element,
+				en = my.elementnames;
 			item = (my.xt(item)) ? item : 'all';
 			if (item === 'stack' || item === 'all') {
-				for (i = 0, iz = my.stacknames.length; i < iz; i++) {
-					my.stack[my.stacknames[i]].setDisplayOffsets();
+				for (i = 0, iz = sn.length; i < iz; i++) {
+					s[sn[i]].setDisplayOffsets();
 				}
 			}
 			if (item === 'pad' || item === 'all') {
-				for (i = 0, iz = my.padnames.length; i < iz; i++) {
-					my.pad[my.padnames[i]].setDisplayOffsets();
+				for (i = 0, iz = pn.length; i < iz; i++) {
+					p[pn[i]].setDisplayOffsets();
 				}
 			}
 			if (item === 'element' || item === 'all') {
-				for (i = 0, iz = my.elementnames.length; i < iz; i++) {
-					my.element[my.elementnames[i]].setDisplayOffsets();
+				for (i = 0, iz = en.length; i < iz; i++) {
+					e[en[i]].setDisplayOffsets();
 				}
 			}
 			return true;
@@ -412,11 +429,12 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 		my.render = function(pads) {
 			var i,
 				iz,
-				p;
+				p,
+				pad = my.pad;
 			my.renderElements();
 			p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
 			for (i = 0, iz = p.length; i < iz; i++) {
-				my.pad[p[i]].render();
+				pad[p[i]].render();
 			}
 			return my;
 		};
@@ -428,9 +446,11 @@ A __display__ function to move DOM elements within a Stack
 		my.renderElements = function() {
 			var i,
 				iz,
-				s;
-			for (i = 0, iz = my.stacknames.length; i < iz; i++) {
-				s = my.stack[my.stacknames[i]];
+				s,
+				stack = my.stack,
+				stacknames = my.stacknames;
+			for (i = 0, iz = stacknames.length; i < iz; i++) {
+				s = stack[stacknames[i]];
 				if (!s.group) {
 					s.render();
 				}
@@ -445,9 +465,11 @@ A __display__ function to initialize DOM elements with their existing values
 		my.domInit = function() {
 			var i,
 				iz,
-				s;
-			for (i = 0, iz = my.stacknames.length; i < iz; i++) {
-				s = my.stack[my.stacknames[i]];
+				s,
+				stack = my.stack,
+				stacknames = my.stacknames;
+			for (i = 0, iz = stacknames.length; i < iz; i++) {
+				s = stack[stacknames[i]];
 				if (!s.group) {
 					s.domInit();
 				}
@@ -471,14 +493,17 @@ Argument can contain the following (optional) attributes:
 		my.update = function(items) {
 			var i,
 				iz,
-				s;
+				s,
+				stack = my.stack,
+				stacknames = my.stacknames,
+				group = my.group;
 			items = my.safeObject(items);
-			if (my.isa(items.group, 'str') && my.group[items.group] && my.group[items.group].type === 'ElementGroup') {
-				my.group[items.group].update(items);
+			if (items.group.substring && group[items.group] && group[items.group].type === 'ElementGroup') {
+				group[items.group].update(items);
 			}
 			else {
-				for (i = 0, iz = my.stacknames.length; i < iz; i++) {
-					s = my.stack[my.stacknames[i]];
+				for (i = 0, iz = stacknames.length; i < iz; i++) {
+					s = stack[stacknames[i]];
 					if (!s.group) {
 						s.update(items);
 					}
@@ -798,100 +823,105 @@ PageElement constructor hook function - modified by stacks module
 @private
 **/
 		my.PageElement.prototype.stacksPageElementConstructor = function(items) {
-			var temp = my.safeObject(items.start);
-			this.start = my.makeVector({
+			var temp = my.safeObject(items.start),
+				so = my.safeObject,
+				vec = my.makeVector,
+				get = my.xtGet,
+				quat = my.makeQuaternion,
+				d = my.d[this.type];
+			this.start = vec({
 				name: this.type + '.' + this.name + '.start',
-				x: my.xtGet(items.startX, temp.x, 0),
-				y: my.xtGet(items.startY, temp.y, 0)
+				x: get(items.startX, temp.x, 0),
+				y: get(items.startY, temp.y, 0)
 			});
 			this.correctStart();
-			this.work.start = my.makeVector({
+			this.work.start = vec({
 				name: this.type + '.' + this.name + '.work.start'
 			});
-			temp = my.safeObject(items.delta);
-			this.delta = my.makeVector({
+			temp = so(items.delta);
+			this.delta = vec({
 				name: this.type + '.' + this.name + '.delta',
-				x: my.xtGet(items.deltaX, temp.x, 0),
-				y: my.xtGet(items.deltaY, temp.y, 0)
+				x: get(items.deltaX, temp.x, 0),
+				y: get(items.deltaY, temp.y, 0)
 			});
-			this.work.delta = my.makeVector({
+			this.work.delta = vec({
 				name: this.type + '.' + this.name + '.work.delta'
 			});
-			temp = my.safeObject(items.handle);
-			this.handle = my.makeVector({
+			temp = so(items.handle);
+			this.handle = vec({
 				name: this.type + '.' + this.name + '.handle',
-				x: my.xtGet(items.handleX, temp.x, 0),
-				y: my.xtGet(items.handleY, temp.y, 0)
+				x: get(items.handleX, temp.x, 0),
+				y: get(items.handleY, temp.y, 0)
 			});
-			this.work.handle = my.makeVector({
+			this.work.handle = vec({
 				name: this.type + '.' + this.name + '.work.handle'
 			});
-			temp = my.safeObject(items.translate);
-			this.translate = my.makeVector({
+			temp = so(items.translate);
+			this.translate = vec({
 				name: this.type + '.' + this.name + '.translate',
-				x: my.xtGet(items.translateX, temp.x, 0),
-				y: my.xtGet(items.translateY, temp.y, 0),
-				z: my.xtGet(items.translateZ, temp.z, 0)
+				x: get(items.translateX, temp.x, 0),
+				y: get(items.translateY, temp.y, 0),
+				z: get(items.translateZ, temp.z, 0)
 			});
-			this.work.translate = my.makeVector({
+			this.work.translate = vec({
 				name: this.type + '.' + this.name + '.work.translate'
 			});
-			temp = my.safeObject(items.deltaTranslate);
-			this.deltaTranslate = my.makeVector({
+			temp = so(items.deltaTranslate);
+			this.deltaTranslate = vec({
 				name: this.type + '.' + this.name + '.deltaTranslate',
-				x: my.xtGet(items.deltaTranslateX, temp.x, 0),
-				y: my.xtGet(items.deltaTranslateY, temp.y, 0),
-				z: my.xtGet(items.deltaTranslateZ, temp.z, 0)
+				x: get(items.deltaTranslateX, temp.x, 0),
+				y: get(items.deltaTranslateY, temp.y, 0),
+				z: get(items.deltaTranslateZ, temp.z, 0)
 			});
-			this.work.deltaTranslate = my.makeVector({
+			this.work.deltaTranslate = vec({
 				name: this.type + '.' + this.name + '.work.deltaTranslate'
 			});
-			this.pivot = my.xtGet(items.pivot, my.d[this.type].pivot);
-			this.path = my.xtGet(items.path, my.d[this.type].path);
-			this.pathRoll = my.xtGet(items.pathRoll, my.d[this.type].pathRoll);
-			this.addPathRoll = my.xtGet(items.addPathRoll, my.d[this.type].addPathRoll);
-			this.pathSpeedConstant = my.xtGet(items.pathSpeedConstant, my.d[this.type].pathSpeedConstant);
-			this.pathPlace = my.xtGet(items.pathPlace, my.d[this.type].pathPlace);
-			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, my.d[this.type].deltaPathPlace);
-			this.lockX = my.xtGet(items.lockX, my.d[this.type].lockX);
-			this.lockY = my.xtGet(items.lockY, my.d[this.type].lockY);
-			this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
-			this.scale = my.xtGet(items.scale, 1);
-			this.viewport = my.xtGet(items.viewport, false);
-			this.visibility = my.xtGet(items.visibility, my.d[this.type].visibility);
-			this.rotation = my.makeQuaternion({
+			this.pivot = get(items.pivot, d.pivot);
+			this.path = get(items.path, d.path);
+			this.pathRoll = get(items.pathRoll, d.pathRoll);
+			this.addPathRoll = get(items.addPathRoll, d.addPathRoll);
+			this.pathSpeedConstant = get(items.pathSpeedConstant, d.pathSpeedConstant);
+			this.pathPlace = get(items.pathPlace, d.pathPlace);
+			this.deltaPathPlace = get(items.deltaPathPlace, d.deltaPathPlace);
+			this.lockX = get(items.lockX, d.lockX);
+			this.lockY = get(items.lockY, d.lockY);
+			this.lockTo = get(items.lockTo, d.lockTo);
+			this.scale = get(items.scale, 1);
+			this.viewport = get(items.viewport, false);
+			this.visibility = get(items.visibility, d.visibility);
+			this.rotation = quat({
 				name: this.type + '.' + this.name + '.rotation'
 			}).setFromEuler({
 				pitch: items.pitch || 0,
 				yaw: items.yaw || 0,
 				roll: items.roll || 0,
 			});
-			this.work.rotation = my.makeQuaternion({
+			this.work.rotation = quat({
 				name: this.type + '.' + this.name + '.work.rotation'
 			});
-			this.deltaRotation = my.makeQuaternion({
+			this.deltaRotation = quat({
 				name: this.type + '.' + this.name + '.deltaRotation'
 			}).setFromEuler({
 				pitch: items.deltaPitch || 0,
 				yaw: items.deltaYaw || 0,
 				roll: items.deltaRoll || 0,
 			});
-			this.work.deltaRotation = my.makeQuaternion({
+			this.work.deltaRotation = quat({
 				name: this.type + '.' + this.name + '.work.deltaRotation'
 			});
-			this.rotationTolerance = my.xtGet(items.rotationTolerance, my.d[this.type].rotationTolerance);
-			this.group = my.xtGet(items.group, false);
+			this.rotationTolerance = get(items.rotationTolerance, d.rotationTolerance);
+			this.group = get(items.group, false);
 			if (this.group) {
 				my.group[this.group].addElementsToGroup(this.name);
 			}
-			this.offset = my.makeVector({
+			this.offset = vec({
 				name: this.type + '.' + this.name + '.offset'
 			});
-			this.includeCornerTrackers = my.xtGet(items.includeCornerTrackers, false);
+			this.includeCornerTrackers = get(items.includeCornerTrackers, false);
 			if (this.includeCornerTrackers) {
 				this.addCornerTrackers();
 			}
-			this.mouseIndex = my.xtGet(items.mouseIndex, 'mouse');
+			this.mouseIndex = get(items.mouseIndex, 'mouse');
 			this.offset.flag = false;
 		};
 		/**
@@ -949,6 +979,7 @@ PageElement constructor hook function - modified by stacks module
 			var corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
 				temp, left, top,
 				stack = my.stack[my.group[this.group].stack],
+				device = my.device,
 				el = this.getElement(),
 				i;
 			for (i = 0; i < 4; i++) {
@@ -958,8 +989,8 @@ PageElement constructor hook function - modified by stacks module
 					left = isNaN(left) ? 0 : left;
 					top = parseFloat(el.style.borderTopWidth);
 					top = isNaN(top) ? 0 : top;
-					this[corners[i]].x = temp.left + my.device.offsetX - stack.displayOffsetX - left;
-					this[corners[i]].y = temp.top + my.device.offsetY - stack.displayOffsetY - top;
+					this[corners[i]].x = temp.left + device.offsetX - stack.displayOffsetX - left;
+					this[corners[i]].y = temp.top + device.offsetY - stack.displayOffsetY - top;
 				}
 			}
 			return this;
@@ -976,9 +1007,10 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 		my.PageElement.prototype.get = function(item) {
 			var stat1 = ['width', 'height'],
 				stat2 = ['startX', 'startY', 'handleX', 'handleY', 'deltaX', 'deltaY', 'translateX', 'translateY', 'translateZ'],
-				el;
+				el,
+				cont = my.contains;
 			el = this.getElement();
-			if (my.contains(stat1, item)) {
+			if (cont(stat1, item)) {
 				switch (this.type) {
 					case 'Pad':
 						if ('width' === item) {
@@ -997,7 +1029,7 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 						}
 				}
 			}
-			if (my.contains(stat2, item)) {
+			if (cont(stat2, item)) {
 				switch (item) {
 					case 'startX':
 						return this.start.x;
@@ -1036,59 +1068,61 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 @chainable
 **/
 		my.PageElement.prototype.set = function(items) {
+			var xt = my.xt,
+				xto = my.xto;
 			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
-			if (my.xto(items.start, items.startX, items.startY)) {
+			if (xto(items.start, items.startX, items.startY)) {
 				my.Position.prototype.setStart.call(this, items);
 			}
 			this.correctStart();
-			if (my.xto(items.handle, items.handleX, items.handleY)) {
+			if (xto(items.handle, items.handleX, items.handleY)) {
 				my.Position.prototype.setHandle.call(this, items);
 			}
-			if (my.xto(items.delta, items.deltaX, items.deltaY)) {
+			if (xto(items.delta, items.deltaX, items.deltaY)) {
 				my.Position.prototype.setDeltaAttribute.call(this, items);
 			}
-			if (my.xto(items.translate, items.translateX, items.translateY, items.translateZ)) {
+			if (xto(items.translate, items.translateX, items.translateY, items.translateZ)) {
 				this.setTranslate(items);
 			}
-			if (my.xto(items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ)) {
+			if (xto(items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY, items.deltaTranslateZ)) {
 				this.setDeltaTranslate(items);
 			}
-			if (my.xto(items.pitch, items.yaw, items.roll)) {
+			if (xto(items.pitch, items.yaw, items.roll)) {
 				this.setRotation(items);
 			}
-			if (my.xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
+			if (xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
 				this.setDeltaRotation(items);
 			}
-			if (my.xt(items.includeCornerTrackers)) {
+			if (xt(items.includeCornerTrackers)) {
 				this.includeCornerTrackers = items.includeCornerTrackers;
 				if (!this.topLeftDiv) {
 					this.addCornerTrackers();
 				}
 			}
-			if (my.xto(items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
+			if (xto(items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				if (my.group[this.group] && my.group[this.group].checkEqualDimensions()) {
 					my.group[this.group].recalculateDimensions = true;
 				}
 				this.setLocalDimensions();
 				this.setDimensions();
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
+			if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				this.offset.flag = false;
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
+			if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				this.setDisplayOffsets();
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle)) {
+			if (xto(items.handleX, items.handleY, items.handle)) {
 				this.setTransformOrigin();
 			}
-			if (my.xt(items.group)) {
+			if (xt(items.group)) {
 				this.setGroupAttribute(items);
 			}
-			if (my.xt(items.pivot)) {
+			if (xt(items.pivot)) {
 				this.setPivotAttribute(items);
 			}
-			if (my.xto(items.title, items.comment)) {
+			if (xto(items.title, items.comment)) {
 				this.setAccessibility(items);
 			}
 			this.setStyles(items);
@@ -1119,15 +1153,18 @@ Augments PageElement.set()
 		my.PageElement.prototype.setGroupAttribute = function(items) {
 			var temp,
 				i,
-				iz;
-			for (i = 0, iz = my.groupnames.length; i < iz; i++) {
-				temp = my.group[my.groupnames[i]];
+				iz,
+				group = my.group,
+				groupnames = my.groupnames,
+				cont = my.contains;
+			for (i = 0, iz = groupnames.length; i < iz; i++) {
+				temp = group[groupnames[i]];
 				if (temp.type === 'ElementGroup') {
-					if (my.groupnames[i] === items.group) {
+					if (groupnames[i] === items.group) {
 						temp.addElementsToGroup(this.name);
 					}
 					else {
-						if (my.contains(temp.elements, this.name)) {
+						if (cont(temp.elements, this.name)) {
 							temp.removeElementsFromGroup(this.name);
 						}
 					}
@@ -1173,15 +1210,18 @@ Augments PageElement.set()
 @chainable
 **/
 		my.PageElement.prototype.setTranslate = function(items) {
-			var temp;
+			var temp,
+				get = my.xtGet,
+				t;
 			items = my.safeObject(items);
 			if (!this.translate.type || this.translate.type !== 'Vector') {
 				this.translate = my.makeVector(items.translate || this.translate);
 			}
 			temp = my.safeObject(items.translate);
-			this.translate.x = my.xtGet(items.translateX, temp.x, this.translate.x);
-			this.translate.y = my.xtGet(items.translateY, temp.y, this.translate.y);
-			this.translate.z = my.xtGet(items.translateZ, temp.z, this.translate.z);
+			t = this.translate;
+			t.x = get(items.translateX, temp.x, t.x);
+			t.y = get(items.translateY, temp.y, t.y);
+			t.z = get(items.translateZ, temp.z, t.z);
 			return this;
 		};
 		/**
@@ -1193,7 +1233,7 @@ Add a CSS class to the DOM element
 **/
 		my.PageElement.prototype.addClass = function(item) {
 			var el;
-			if (my.isa(item, 'str')) {
+			if (item.substring) {
 				el = this.getElement();
 				if (0 === el.className.length) {
 					el.className = item;
@@ -1220,7 +1260,7 @@ Remove a CSS class from the DOM element
 				eClass,
 				search,
 				i, iz;
-			if (my.isa(item, 'str')) {
+			if (item.substring) {
 				el = this.getElement();
 				eClass = el.className;
 				classes = item.split();
@@ -1240,15 +1280,18 @@ Augments PageElement.set()
 @chainable
 **/
 		my.PageElement.prototype.setDeltaTranslate = function(items) {
-			var temp;
+			var temp,
+				get = my.xtGet,
+				t;
 			items = my.safeObject(items);
 			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
 				this.deltaTranslate = my.makeVector(items.deltaTranslate || this.deltaTranslate);
 			}
 			temp = my.safeObject(items.deltaTranslate);
-			this.deltaTranslate.x = my.xtGet(items.deltaTranslateX, temp.x, this.deltaTranslate.x);
-			this.deltaTranslate.y = my.xtGet(items.deltaTranslateY, temp.y, this.deltaTranslate.y);
-			this.deltaTranslate.z = my.xtGet(items.deltaTranslateZ, temp.z, this.deltaTranslate.z);
+			t = this.deltaTranslate;
+			t.x = get(items.deltaTranslateX, temp.x, t.x);
+			t.y = get(items.deltaTranslateY, temp.y, t.y);
+			t.z = get(items.deltaTranslateZ, temp.z, t.z);
 			return this;
 		};
 		/**
@@ -1260,8 +1303,9 @@ Constructor / set helper function
 **/
 		my.PageElement.prototype.correctStart = function() {
 			var stat1 = ['left', 'center', 'right'],
-				stat2 = ['top', 'center', 'bottom'];
-			if (my.contains(stat1, this.start.x)) {
+				stat2 = ['top', 'center', 'bottom'],
+				cont = my.contains;
+			if (cont(stat1, this.start.x)) {
 				switch (this.start.x) {
 					case 'left':
 						this.start.x = '0%';
@@ -1274,7 +1318,7 @@ Constructor / set helper function
 						break;
 				}
 			}
-			if (my.contains(stat2, this.start.y)) {
+			if (cont(stat2, this.start.y)) {
 				switch (this.start.y) {
 					case 'top':
 						this.start.y = '0%';
@@ -1306,14 +1350,15 @@ Handles the setting of many CSS attributes
 				i,
 				iz,
 				firstLetter,
-				remainder;
+				remainder,
+				cont = my.contains;
 			items = my.safeObject(items);
 			el = this.getElement();
 			k = Object.keys(items);
 			for (i = 0, iz = k.length; i < iz; i++) {
 				if (k[i] === 'visibility') {
-					if (my.isa(items.visibility, 'str')) {
-						this.visibility = (!my.contains(stat, items.visibility)) ? true : false;
+					if (items.visibility.substring) {
+						this.visibility = (!cont(stat, items.visibility)) ? true : false;
 					}
 					else {
 						this.visibility = (items.visibility) ? true : false;
@@ -1325,7 +1370,7 @@ Handles the setting of many CSS attributes
 						el.style.display = (this.visibility) ? 'block' : 'none';
 					}
 				}
-				else if (my.contains(my.xcss, k[i])) {
+				else if (cont(my.xcss, k[i])) {
 					firstLetter = k[i][0].toUpperCase;
 					remainder = k[i].substr(1);
 					el.style['webkit' + firstLetter + remainder] = items[k[i]];
@@ -1334,7 +1379,7 @@ Handles the setting of many CSS attributes
 					el.style['o' + firstLetter + remainder] = items[k[i]];
 					el.style[k[i]] = items[k[i]];
 				}
-				else if (my.contains(my.css, k[i])) {
+				else if (cont(my.css, k[i])) {
 					el.style[k[i]] = items[k[i]];
 				}
 			}
@@ -1348,49 +1393,55 @@ Adds the value of each attribute supplied in the argument to existing values; on
 @chainable
 **/
 		my.PageElement.prototype.setDelta = function(items) {
-			var temp;
+			var temp,
+				xto = my.xto,
+				translate = this.translate,
+				deltaTranslate = this.deltaTranslate,
+				q1 = my.workquat.q1,
+				group;
 			my.Position.prototype.setDelta.call(this, items);
 			items = my.safeObject(items);
-			if (my.xto(items.translate, items.translateX, items.translateY)) {
+			if (xto(items.translate, items.translateX, items.translateY)) {
 				temp = my.safeObject(items.translate);
-				this.translate.x += my.xtGet(items.translateX, temp.x, 0);
-				this.translate.y += my.xtGet(items.translateY, temp.y, 0);
-				this.translate.z += my.xtGet(items.translateZ, temp.z, 0);
+				translate.x += my.xtGet(items.translateX, temp.x, 0);
+				translate.y += my.xtGet(items.translateY, temp.y, 0);
+				translate.z += my.xtGet(items.translateZ, temp.z, 0);
 			}
-			if (my.xto(items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY)) {
-				temp = (my.isa(items.deltaTranslate, 'obj')) ? items.deltaTranslate : {};
-				this.deltaTranslate.x += my.xtGet(items.deltaTranslateX, temp.x, 0);
-				this.deltaTranslate.y += my.xtGet(items.deltaTranslateY, temp.y, 0);
-				this.deltaTranslate.z += my.xtGet(tems.deltaTranslateZ, temp.z, 0);
+			if (xto(items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY)) {
+				temp = (my.isa_obj(items.deltaTranslate)) ? items.deltaTranslate : {};
+				deltaTranslate.x += my.xtGet(items.deltaTranslateX, temp.x, 0);
+				deltaTranslate.y += my.xtGet(items.deltaTranslateY, temp.y, 0);
+				deltaTranslate.z += my.xtGet(tems.deltaTranslateZ, temp.z, 0);
 			}
-			if (my.xto(items.pitch, items.yaw, items.roll)) {
-				temp = my.workquat.q1.setFromEuler({
+			if (xto(items.pitch, items.yaw, items.roll)) {
+				temp = q1.setFromEuler({
 					pitch: items.pitch || 0,
 					yaw: items.yaw || 0,
 					roll: items.roll || 0,
 				});
 				this.rotation.quaternionMultiply(temp);
 			}
-			if (my.xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
-				temp = my.workquat.q1.setFromEuler({
+			if (xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
+				temp = q1.setFromEuler({
 					pitch: items.deltaPitch || 0,
 					yaw: items.deltaYaw || 0,
 					roll: items.deltaRoll || 0,
 				});
 				this.deltaRotation.quaternionMultiply(temp);
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
+			if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
 				this.offset.flag = false;
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start)) {
+			if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start)) {
 				this.setDisplayOffsets();
 			}
-			if (my.xto(items.handleX, items.handleY, items.handle)) {
+			if (xto(items.handleX, items.handleY, items.handle)) {
 				this.setTransformOrigin();
 			}
-			if (my.xto(items.width, items.height, items.scale)) {
-				if (my.group[this.group] && my.group[this.group].checkEqualDimensions()) {
-					my.group[this.group].recalculateDimensions = true;
+			if (xto(items.width, items.height, items.scale)) {
+				group = my.group[this.group];
+				if (group && group.checkEqualDimensions()) {
+					group.recalculateDimensions = true;
 				}
 				this.setLocalDimensions();
 				this.setDimensions();
@@ -1454,18 +1505,20 @@ Argument can contain the following (optional) attributes:
 @chainable
 **/
 		my.PageElement.prototype.update3d = function(items) {
+			var rotation = this.rotation,
+				translate = this.translate;
 			items = my.safeObject(items);
-			if (my.isa(items.quaternion, 'quaternion')) {
-				this.rotation.set(this.deltaRotation); //deltaRotation represents the initial, world rotation of the element
-				this.rotation.quaternionRotate(items.quaternion); //quaternion is the local amount we want to rotate the element by
-				this.translate.zero();
-				this.translate.vectorAdd(this.deltaTranslate);
-				this.translate.rotate3d(items.quaternion, items.distance);
+			if (my.isa_quaternion(items.quaternion)) {
+				rotation.set(this.deltaRotation); //deltaRotation represents the initial, world rotation of the element
+				rotation.quaternionRotate(items.quaternion); //quaternion is the local amount we want to rotate the element by
+				translate.zero();
+				translate.vectorAdd(this.deltaTranslate);
+				translate.rotate3d(items.quaternion, items.distance);
 			}
 			else {
 				//opposite to above; rotation is the world rotation, deltaRotation the local rotation to be applied
-				this.rotation.quaternionRotate(this.deltaRotation);
-				this.translate.vectorAdd(this.deltaTranslate);
+				rotation.quaternionRotate(this.deltaRotation);
+				translate.vectorAdd(this.deltaTranslate);
 			}
 			return this;
 		};
@@ -1509,12 +1562,13 @@ Calculates the pixels value of the object's start attribute
 				width,
 				s,
 				stackname,
-				stack;
+				stack,
+				device = my.device;
 			result = my.v.set(this.start);
 			stackname = my.group[this.group].stack;
 			if (this.viewport) {
-				height = my.device.height;
-				width = my.device.width;
+				height = device.height;
+				width = device.width;
 			}
 			else if (stackname) {
 				stack = my.stack[stackname];
@@ -1553,20 +1607,30 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				ox,
 				oy,
 				dx,
-				dy;
+				dy,
+				offset = this.offset,
+				start = this.start,
+				device,
+				round = Math.round,
+				rotation = this.rotation,
+				v = rotation.v,
+				scale = this.scale,
+				style,
+				translate = this.translate;
 			g = my.group[this.group];
 			pere2[0] = this.getElement();
-			if (!this.offset.flag) {
-				this.offset.set(this.getOffsetStartVector());
-				this.offset.flag = true;
+			style = pere2[0].style;
+			if (!offset.flag) {
+				offset.set(this.getOffsetStartVector());
+				offset.flag = true;
 			}
 			if (this.path) {
 				this.setStampUsingPath();
-				pere2[1] = this.start;
+				pere2[1] = start;
 			}
 			else if (this.pivot) {
 				this.setStampUsingPivot();
-				pere2[1] = this.start;
+				pere2[1] = start;
 			}
 			else {
 				pere2[1] = this.getStartValues();
@@ -1576,20 +1640,20 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				this.setDimensions();
 			}
 			this.updateStart();
-			pere2[2] = (my.isa(this.start.x, 'str')) ? true : false;
-			pere2[3] = (my.isa(this.start.y, 'str')) ? true : false;
+			pere2[2] = (start.x.substring) ? true : false;
+			pere2[3] = (start.y.substring) ? true : false;
 
-			if (this.rotation.getMagnitude() !== 1) {
-				this.rotation.normalize();
+			if (rotation.getMagnitude() !== 1) {
+				rotation.normalize();
 			}
 
-			pere[0] = Math.round(this.translate.x * this.scale);
-			pere[1] = Math.round(this.translate.y * this.scale);
-			pere[2] = Math.round(this.translate.z * this.scale);
-			pere[3] = this.rotation.v.x;
-			pere[4] = this.rotation.v.y;
-			pere[5] = this.rotation.v.z;
-			pere[6] = this.rotation.getAngle(false);
+			pere[0] = round(translate.x * scale);
+			pere[1] = round(translate.y * scale);
+			pere[2] = round(translate.z * scale);
+			pere[3] = v.x;
+			pere[4] = v.y;
+			pere[5] = v.z;
+			pere[6] = rotation.getAngle(false);
 
 			for (i = 0; i < 7; i++) {
 				if (pere[i] < 0.000001 && pere[i] > -0.000001) {
@@ -1598,22 +1662,23 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 			}
 
 			pere2[4] = 'translate3d(' + pere[0] + 'px,' + pere[1] + 'px,' + pere[2] + 'px) rotate3d(' + pere[3] + ',' + pere[4] + ',' + pere[5] + ',' + pere[6] + 'rad)';
-			pere2[0].style.webkitTransform = pere2[4];
-			pere2[0].style.transform = pere2[4];
+			style.webkitTransform = pere2[4];
+			style.transform = pere2[4];
 
-			pere2[0].style.zIndex = pere[2];
+			style.zIndex = pere[2];
 
 			if (this.viewport) {
-				ox = my.device.offsetX - this.displayOffsetX + this.offset.x;
-				oy = my.device.offsetY - this.displayOffsetY + this.offset.y;
-				dx = (pere2[2]) ? pere2[1].x * this.scale : pere2[1].x;
-				dy = (pere2[3]) ? pere2[1].y * this.scale : pere2[1].y;
-				pere2[0].style.left = ox - dx + 'px';
-				pere2[0].style.top = oy - dy + 'px';
+				device = my.device;
+				ox = device.offsetX - this.displayOffsetX + offset.x;
+				oy = device.offsetY - this.displayOffsetY + offset.y;
+				dx = (pere2[2]) ? pere2[1].x * scale : pere2[1].x;
+				dy = (pere2[3]) ? pere2[1].y * scale : pere2[1].y;
+				style.left = ox - dx + 'px';
+				style.top = oy - dy + 'px';
 			}
 			else {
-				pere2[0].style.left = (pere2[2]) ? ((pere2[1].x * this.scale) + this.offset.x) + 'px' : (pere2[1].x + this.offset.x) + 'px';
-				pere2[0].style.top = (pere2[3]) ? ((pere2[1].y * this.scale) + this.offset.y) + 'px' : (pere2[1].y + this.offset.y) + 'px';
+				style.left = (pere2[2]) ? ((pere2[1].x * scale) + offset.x) + 'px' : (pere2[1].x + offset.x) + 'px';
+				style.top = (pere2[3]) ? ((pere2[1].y * scale) + offset.y) + 'px' : (pere2[1].y + offset.y) + 'px';
 			}
 
 			this.updateCornerTrackers();
@@ -1629,11 +1694,13 @@ Calculate start Vector in reference to a Shape entity object's path
 **/
 		my.PageElement.prototype.setStampUsingPath = function() {
 			var here,
-				angles;
-			if (my.entity[this.path] && my.entity[this.path].type === 'Path') {
-				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
-				this.start.x = (!this.lockX) ? here.x : this.start.x;
-				this.start.y = (!this.lockY) ? here.y : this.start.y;
+				angles,
+				e = my.entity[this.path],
+				start = this.start;
+			if (e && e.type === 'Path') {
+				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+				start.x = (!this.lockX) ? here.x : start.x;
+				start.y = (!this.lockY) ? here.y : start.y;
 				this.pathRoll = here.r || 0;
 				if (this.addPathRoll && this.pathRoll) {
 					angles = this.rotation.getEulerAngles();
@@ -1657,39 +1724,49 @@ Calculate start Vector in reference to a entity or Point object's position
 				myP,
 				myPVector,
 				pEntity,
-				x, y;
-			if (my.point && my.point[this.pivot]) {
+				x, y,
+				start = this.start;
+			// if (my.point && my.point[this.pivot]) {
+			// 	myP = my.point[this.pivot];
+			if (my.point) {
 				myP = my.point[this.pivot];
-				pEntity = my.entity[myP.entity];
-				myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.start);
-				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
-				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
-				return this;
+				if (myP) {
+					pEntity = my.entity[myP.entity];
+					myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.start);
+					start.x = (!this.lockX) ? myPVector.x : start.x;
+					start.y = (!this.lockY) ? myPVector.y : start.y;
+					return this;
+				}
 			}
-			if (my.entity[this.pivot]) {
-				myP = my.entity[this.pivot];
+			// if (my.entity[this.pivot]) {
+			// 	myP = my.entity[this.pivot];
+			myP = my.entity[this.pivot];
+			if (myP) {
 				myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.get('start');
-				this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
-				this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+				start.x = (!this.lockX) ? myPVector.x : start.x;
+				start.y = (!this.lockY) ? myPVector.y : start.y;
 				return this;
 			}
-			if (my.pad[this.pivot]) {
-				this.setStampUsingDomElement(my.pad[this.pivot]);
+			myP = my.pad[this.pivot];
+			if (myP) {
+				this.setStampUsingDomElement(myP);
 				return this;
 			}
-			if (my.element[this.pivot]) {
-				this.setStampUsingDomElement(my.element[this.pivot]);
+			myP = my.element[this.pivot];
+			if (myP) {
+				this.setStampUsingDomElement(myP);
 				return this;
 			}
-			if (my.stack[this.pivot]) {
-				this.setStampUsingDomElement(my.stack[this.pivot]);
+			myP = my.stack[this.pivot];
+			if (myP) {
+				this.setStampUsingDomElement(myP);
 				return this;
 			}
 			if (this.pivot === 'mouse') {
 				if (this.group) {
 					stack = my.stack[my.group[this.group].stack];
-					x = (this.start.x.substring) ? my.Position.prototype.convertX.call(this, this.start.x, stack.localWidth) : this.start.x;
-					y = (this.start.y.substring) ? my.Position.prototype.convertY.call(this, this.start.y, stack.localHeight) : this.start.y;
+					x = (start.x.substring) ? my.Position.prototype.convertX.call(this, start.x, stack.localWidth) : start.x;
+					y = (start.y.substring) ? my.Position.prototype.convertY.call(this, start.y, stack.localHeight) : start.y;
 					x = (isNaN(x)) ? 0 : x;
 					y = (isNaN(y)) ? 0 : y;
 					mouse = stack.mice[this.mouseIndex] || {};
@@ -1702,8 +1779,8 @@ Calculate start Vector in reference to a entity or Point object's position
 						this.oldX = x;
 						this.oldY = y;
 					}
-					this.start.x = (!this.lockX) ? x + mouse.x - this.oldX : x;
-					this.start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
+					start.x = (!this.lockX) ? x + mouse.x - this.oldX : x;
+					start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
 					this.oldX = mouse.x;
 					this.oldY = mouse.y;
 				}
@@ -1717,16 +1794,19 @@ Stamp helper hook function - amended by stacks module
 @return this
 **/
 		my.Position.prototype.setStampUsingStacksPivot = function() {
-			if (my.pad[this.pivot]) {
-				this.setStampUsingDomElement(my.pad[this.pivot]);
+			var myP = my.pad[this.pivot];
+			if (myP) {
+				this.setStampUsingDomElement(myP);
 				return this;
 			}
-			if (my.element[this.pivot]) {
-				this.setStampUsingDomElement(my.element[this.pivot]);
+			myP = my.element[this.pivot];
+			if (myP) {
+				this.setStampUsingDomElement(myP);
 				return this;
 			}
-			if (my.stack[this.pivot]) {
-				this.setStampUsingDomElement(my.stack[this.pivot]);
+			myP = my.stack[this.pivot];
+			if (myP) {
+				this.setStampUsingDomElement(myP);
 				return this;
 			}
 		};
@@ -1751,9 +1831,10 @@ setStampUsingPivot helper function
 @private
 **/
 		my.PageElement.prototype.setStampUsingDomElementPivot = function(e) {
-			var myPVector = e.getStartValues();
-			this.start.x = (!this.lockX) ? myPVector.x : this.start.x;
-			this.start.y = (!this.lockY) ? myPVector.y : this.start.y;
+			var myPVector = e.getStartValues(),
+				start = this.start;
+			start.x = (!this.lockX) ? myPVector.x : start.x;
+			start.y = (!this.lockY) ? myPVector.y : start.y;
 		};
 		/**
 setStampUsingPivot helper function
@@ -1803,17 +1884,23 @@ Set the transform origin style attribute
 			var el,
 				t,
 				x,
-				y;
+				y,
+				handle,
+				scale,
+				style;
 			el = this.getElement();
 			if (el) {
-				x = (my.isa(this.handle.x, 'str')) ? this.handle.x : (this.handle.x * this.scale) + 'px';
-				y = (my.isa(this.handle.y, 'str')) ? this.handle.y : (this.handle.y * this.scale) + 'px';
+				style = el.style;
+				handle = this.handle;
+				scale = this.scale;
+				x = (handle.x.substring) ? handle.x : (handle.x * scale) + 'px';
+				y = (handle.y.substring) ? handle.y : (handle.y * scale) + 'px';
 				t = x + ' ' + y;
-				el.style.mozTransformOrigin = t;
-				el.style.webkitTransformOrigin = t;
-				el.style.msTransformOrigin = t;
-				el.style.oTransformOrigin = t;
-				el.style.transformOrigin = t;
+				style.mozTransformOrigin = t;
+				style.webkitTransformOrigin = t;
+				style.msTransformOrigin = t;
+				style.oTransformOrigin = t;
+				style.transformOrigin = t;
 			}
 			return this;
 		};
@@ -1826,7 +1913,8 @@ Calculate the element's display offset values
 		my.PageElement.prototype.setDisplayOffsets = function() {
 			var dox,
 				doy,
-				myDisplay;
+				myDisplay,
+				offset = this.offset;
 			dox = 0;
 			doy = 0;
 			if (this.viewport) {
@@ -1842,8 +1930,8 @@ Calculate the element's display offset values
 					myDisplay = myDisplay.offsetParent;
 				} while (myDisplay.offsetParent);
 			}
-			this.offset.set(this.getOffsetStartVector());
-			this.offset.flag = true;
+			offset.set(this.getOffsetStartVector());
+			offset.flag = true;
 			this.displayOffsetX = dox;
 			this.displayOffsetY = doy;
 			return this;
@@ -1864,7 +1952,9 @@ Helper function - set local dimensions (width, height)
 				el,
 				measure,
 				unit,
-				s;
+				s,
+				style,
+				scale = this.scale;
 			parent = (my.xt(my.group[this.group])) ? my.stack[my.group[this.group].stack] : false;
 			if (this.viewport) {
 				w = my.device.width;
@@ -1876,12 +1966,13 @@ Helper function - set local dimensions (width, height)
 			}
 			el = this.getElement();
 			if (el) {
+				style = el.style;
 				s = window.getComputedStyle(el, null);
 			}
 			wVal = parseFloat(this.width);
 			if (wVal === 0 || isNaN(wVal)) {
 				if (el) {
-					el.style.width = 'auto';
+					style.width = 'auto';
 					this.localWidth = parseFloat(s.getPropertyValue('width'));
 				}
 			}
@@ -1889,19 +1980,19 @@ Helper function - set local dimensions (width, height)
 				measure = this.width.match(/^-?\d+\.?\d*(\D*)/);
 				unit = measure[1];
 				if (unit === '%') {
-					this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
+					this.localWidth = ((parseFloat(this.width) / 100) * w) * scale;
 				}
 				else {
-					this.localWidth = parseFloat(this.width) * this.scale;
+					this.localWidth = parseFloat(this.width) * scale;
 				}
 			}
 			else {
-				this.localWidth = parseFloat(this.width) * this.scale;
+				this.localWidth = parseFloat(this.width) * scale;
 			}
 			hVal = parseFloat(this.height);
 			if (hVal === 0 || isNaN(hVal)) {
 				if (el) {
-					el.style.height = 'auto';
+					style.height = 'auto';
 					this.localHeight = parseFloat(s.getPropertyValue('height'));
 				}
 			}
@@ -1909,14 +2000,14 @@ Helper function - set local dimensions (width, height)
 				measure = this.height.match(/^-?\d+\.?\d*(\D*)/);
 				unit = measure[1];
 				if (unit === '%') {
-					this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
+					this.localHeight = ((parseFloat(this.height) / 100) * h) * scale;
 				}
 				else {
-					this.localHeight = parseFloat(this.height) * this.scale;
+					this.localHeight = parseFloat(this.height) * scale;
 				}
 			}
 			else {
-				this.localHeight = parseFloat(this.height) * this.scale;
+				this.localHeight = parseFloat(this.height) * scale;
 			}
 			if (this.viewport) {
 				this.setDimensions();
@@ -1939,14 +2030,16 @@ Overwritesa core setDimensions()
 			var h,
 				w,
 				group,
-				el;
+				el,
+				style;
 			el = this.getElement();
 			if (el) {
+				style = el.style;
 				group = my.group[this.group];
 				w = (group && group.equalWidth) ? group.currentWidth : this.localWidth;
 				h = (group && group.equalHeight) ? group.currentHeight : this.localHeight;
-				el.style.width = w + 'px';
-				el.style.height = h + 'px';
+				style.width = w + 'px';
+				style.height = h + 'px';
 			}
 			return this;
 		};
@@ -1957,13 +2050,16 @@ Reinitialize element with existing values
 @chainable
 **/
 		my.PageElement.prototype.domInitialize = function() {
+			var start = this.start,
+				handle = this.handle,
+				d = my.d[this.type];
 			this.set({
-				startX: this.start.x || 0,
-				startY: this.start.y || 0,
-				handleX: this.handle.x || 0,
-				handleY: this.handle.y || 0,
-				width: this.width || my.d[this.type].width,
-				height: this.height || my.d[this.type].height,
+				startX: start.x || 0,
+				startY: start.y || 0,
+				handleX: handle.x || 0,
+				handleY: handle.y || 0,
+				width: this.width || d.width,
+				height: this.height || d.height,
 				scale: this.scale || 1
 			});
 			return this;
@@ -2071,6 +2167,7 @@ Pad set hook function - amended by Stacks module
 @private
 **/
 		my.Pad.prototype.padStacksSet = function(items) {
+			var c;
 			items = my.safeObject(items);
 			if (this.lockTo) {
 				if (my.xto(items.width, items.height, items.scale)) {
@@ -2078,10 +2175,11 @@ Pad set hook function - amended by Stacks module
 				}
 			}
 			if (this.group) {
-				my.canvas[this.name].style.margin = '0';
-				my.canvas[this.name].style.webkitBoxSizing = 'border-box';
-				my.canvas[this.name].style.mozBoxSizing = 'border-box';
-				my.canvas[this.name].style.boxSizing = 'border-box';
+				c = my.canvas[this.name].style;
+				c.margin = '0';
+				c.webkitBoxSizing = 'border-box';
+				c.mozBoxSizing = 'border-box';
+				c.boxSizing = 'border-box';
 			}
 		};
 		/**
@@ -2093,18 +2191,20 @@ Pad lockTo helper
 		my.Pad.prototype.setCellLocalDimensions = function() {
 			var i,
 				iz,
-				cell;
-			if (my.xt(this.cells)) {
-				for (i = 0, iz = this.cells.length; i < iz; i++) {
-					cell = my.cell[this.cells[i]];
-					if (this.lockTo && cell.name === this.base) {
-						cell.set({
+				c,
+				cell = my.cell,
+				cells = this.cells;
+			if (my.xt(cells)) {
+				for (i = 0, iz = cells.length; i < iz; i++) {
+					c = cell[cells[i]];
+					if (this.lockTo && c.name === this.base) {
+						c.set({
 							width: this.localWidth,
 							height: this.localHeight
 						});
 					}
-					if (cell.name === this.display) {
-						cell.set({
+					if (c.name === this.display) {
+						c.set({
 							width: this.localWidth,
 							height: this.localHeight
 						});
@@ -2125,10 +2225,10 @@ Stamp helper hook function - amended by stacks module
 			if (myP) {
 				myPVector = myP.getStartValues();
 				if (!this.lockX) {
-					this.start.x = (my.isa(myP.start.x, 'str')) ? myPVector.x * myP.scale : myPVector.x;
+					this.start.x = (myP.start.x.substring) ? myPVector.x * myP.scale : myPVector.x;
 				}
 				if (!this.lockY) {
-					this.start.y = (my.isa(myP.start.y, 'str')) ? myPVector.y * myP.scale : myPVector.y;
+					this.start.y = (myP.start.y.substring) ? myPVector.y * myP.scale : myPVector.y;
 				}
 				return this;
 			}
@@ -2145,19 +2245,20 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 **/
 		my.Position.prototype.getPivotOffsetVector = function() {
 			var height,
-				width;
+				width,
+				scale = this.scale;
 			switch (this.type) {
 				case 'Block':
 				case 'Pad':
 				case 'Stack':
 				case 'Element':
-					height = (this.localHeight / this.scale) || this.get('height');
-					width = (this.localWidth / this.scale) || this.get('width');
+					height = (this.localHeight / scale) || this.get('height');
+					width = (this.localWidth / scale) || this.get('width');
 					break;
 				case 'Picture':
 				case 'Cell':
-					height = (this.pasteData.h / this.scale) || this.get('height');
-					width = (this.pasteData.w / this.scale) || this.get('width');
+					height = (this.pasteData.h / scale) || this.get('height');
+					width = (this.pasteData.w / scale) || this.get('width');
 					break;
 				default:
 					height = this.height || this.get('height');
@@ -2187,53 +2288,59 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Stack = function(items) {
-			var temp;
+			var temp,
+				vec = my.makeVector,
+				name,
+				style,
+				get = my.xtGet;
 			items = my.safeObject(items);
 			if (my.xt(items.stackElement)) {
-				items.width = my.xtGet(items.width, items.stackElement.style.width, my.d.Stack.width);
-				items.height = my.xtGet(items.height, items.stackElement.style.height, my.d.Stack.height);
-				items.name = my.xtGet(items.stackName, items.name, items.stackElement.id, items.stackElement.name, 'Stack');
+				items.width = get(items.width, items.stackElement.style.width, my.d.Stack.width);
+				items.height = get(items.height, items.stackElement.style.height, my.d.Stack.height);
+				items.name = get(items.stackName, items.name, items.stackElement.id, items.stackElement.name, 'Stack');
 				my.PageElement.call(this, items);
 				if (this.name.match(/~~~/)) {
 					this.name = this.name.replace(/~~~/g, '_');
 				}
-				items.stackElement.id = this.name;
+				name = this.name;
+				items.stackElement.id = name;
 				items.stackElement.style.position = 'relative';
-				my.stack[this.name] = this;
-				my.stk[this.name] = items.stackElement;
-				my.pushUnique(my.stacknames, this.name);
+				my.stack[name] = this;
+				my.stk[name] = items.stackElement;
+				my.pushUnique(my.stacknames, name);
 				this.setDisplayOffsets();
 				this.setAccessibility(items);
 				temp = my.safeObject(items.perspective);
-				this.perspective = my.makeVector({
-					name: this.type + '.' + this.name + '.perspective',
-					x: my.xtGet(items.perspectiveX, temp.x, 'center'),
-					y: my.xtGet(items.perspectiveY, temp.y, 'center'),
-					z: my.xtGet(items.perspectiveZ, temp.z, 0)
+				this.perspective = vec({
+					name: this.type + '.' + name + '.perspective',
+					x: get(items.perspectiveX, temp.x, 'center'),
+					y: get(items.perspectiveY, temp.y, 'center'),
+					z: get(items.perspectiveZ, temp.z, 0)
 				});
-				this.work.perspective = my.makeVector({
-					name: this.type + '.' + this.name + '.work.perspective'
+				this.work.perspective = vec({
+					name: this.type + '.' + name + '.work.perspective'
 				});
-				this.groups = [this.name];
+				this.groups = [name];
 				my.makeElementGroup({
-					name: this.name,
-					stack: this.name
+					name: name,
+					stack: name
 				});
-				this.group = my.xtGet(items.group, false);
+				this.group = get(items.group, false);
 				if (this.group) {
-					my.group[this.group].addElementsToGroup(this.name);
+					my.group[this.group].addElementsToGroup(name);
 				}
 				this.setStyles(items);
 				this.setPerspective();
 				this.setTransformOrigin();
 				if (this.group) {
-					my.stk[this.name].style.margin = '0';
-					my.stk[this.name].style.webkitBoxSizing = 'border-box';
-					my.stk[this.name].style.mozBoxSizing = 'border-box';
-					my.stk[this.name].style.boxSizing = 'border-box';
+					style = my.stk[name].style;
+					style.margin = '0';
+					style.webkitBoxSizing = 'border-box';
+					style.mozBoxSizing = 'border-box';
+					style.boxSizing = 'border-box';
 					items.stackElement.style.position = 'absolute';
 				}
-				this.interactive = my.xtGet(items.interactive, true);
+				this.interactive = get(items.interactive, true);
 				if (this.interactive) {
 					this.addMouseMove();
 				}
@@ -2304,24 +2411,31 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 			var temp,
 				g,
 				i,
-				iz;
-			items = my.safeObject(items);
+				iz,
+				perspective,
+				so = my.safeObject,
+				get = my.xtGet,
+				xto = my.xto,
+				group = my.group,
+				groupnames = my.groupnames;
+			items = so(items);
 			my.PageElement.prototype.set.call(this, items);
-			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
+			if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
 					this.perspective = my.makeVector(items.perspective || this.perspective);
 				}
-				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
-					temp = my.safeObject(items.perspective);
-					this.perspective.x = my.xtGet(items.perspectiveX, temp.x, this.perspective.x);
-					this.perspective.y = my.xtGet(items.perspectiveY, temp.y, this.perspective.y);
-					this.perspective.z = my.xtGet(items.perspectiveZ, temp.z, this.perspective.z);
+				if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
+					perspective = this.perspective;
+					temp = so(items.perspective);
+					perspective.x = get(items.perspectiveX, temp.x, perspective.x);
+					perspective.y = get(items.perspectiveY, temp.y, perspective.y);
+					perspective.z = get(items.perspectiveZ, temp.z, perspective.z);
 				}
 				this.setPerspective();
 			}
-			if (my.xto(items.width, items.height, items.scale)) {
-				for (i = 0, iz = my.groupnames.length; i < iz; i++) {
-					g = my.group[my.groupnames[i]];
+			if (xto(items.width, items.height, items.scale)) {
+				for (i = 0, iz = groupnames.length; i < iz; i++) {
+					g = group[groupnames[i]];
 					if (g.type === 'ElementGroup') {
 						if (g.stack === this.name) {
 							g.updateDimensions();
@@ -2343,23 +2457,30 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 			var temp,
 				g,
 				i,
-				iz;
-			items = my.safeObject(items);
+				iz,
+				perspective,
+				so = my.safeObject,
+				get = my.xtGet,
+				xto = my.xto,
+				group = my.group,
+				groupnames = my.groupnames;
+			items = so(items);
 			my.PageElement.prototype.setDelta.call(this, items);
-			if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
+			if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
 				if (!this.perspective.type || this.perspective.type !== 'Vector') {
 					this.perspective = my.makeVector(items.perspective || this.perspective);
 				}
-				if (my.xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
-					temp = my.safeObject(items.perspective);
-					this.perspective.x += my.xtGet(items.perspectiveX, temp.x, 0);
-					this.perspective.y += my.xtGet(items.perspectiveY, temp.y, 0);
-					this.perspective.z += my.xtGet(items.perspectiveZ, temp.z, 0);
+				if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
+					perspective = this.perspective;
+					temp = so(items.perspective);
+					perspective.x += get(items.perspectiveX, temp.x, 0);
+					perspective.y += get(items.perspectiveY, temp.y, 0);
+					perspective.z += get(items.perspectiveZ, temp.z, 0);
 				}
 				this.setPerspective();
 			}
-			for (i = 0, iz = my.groupnames.length; i < iz; i++) {
-				g = my.group[my.groupnames[i]];
+			for (i = 0, iz = groupnames.length; i < iz; i++) {
+				g = group[groupnames[i]];
 				if (g.type === 'ElementGroup') {
 					if (g.stack === this.name) {
 						g.updateDimensions();
@@ -2419,7 +2540,7 @@ _Replaces PageElement.setLocalDimensions
 				}
 			}
 			else {
-				if (parent && my.isa(this.width, 'str') && w) {
+				if (parent && this.width.substring && w) {
 					this.localWidth = ((parseFloat(this.width) / 100) * w) * this.scale;
 				}
 				else {
@@ -2439,7 +2560,7 @@ _Replaces PageElement.setLocalDimensions
 				}
 			}
 			else {
-				if (parent && my.isa(this.height, 'str') && h) {
+				if (parent && this.height.substring && h) {
 					this.localHeight = ((parseFloat(this.height) / 100) * h) * this.scale;
 				}
 				else {
@@ -2455,7 +2576,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 @return Element wrapper object on success; false otherwise
 **/
 		my.Stack.prototype.addElementById = function(item) {
-			if (my.isa(item, 'str')) {
+			if (item.substring) {
 				var myElement = my.makeElement({
 					domElement: document.getElementById(item),
 					group: this.name,
@@ -2479,7 +2600,7 @@ Import elements into the stack DOM object, and create element object wrappers fo
 				thisElement,
 				i,
 				iz;
-			if (my.isa(item, 'str')) {
+			if (item.substring) {
 				myArray = document.getElementsByClassName(item);
 				for (i = 0, iz = myArray.length; i < iz; i++) {
 					thisElement = myArray[i];
@@ -2505,8 +2626,10 @@ Move DOM elements within a Stack, via the Stack's groups
 @return Always true
 **/
 		my.Stack.prototype.render = function() {
-			for (var i = 0, iz = this.groups.length; i < iz; i++) {
-				my.group[this.groups[i]].render();
+			var group = my.group,
+				groups = this.groups;
+			for (var i = 0, iz = groups.length; i < iz; i++) {
+				group[groups[i]].render();
 			}
 			return true;
 		};
@@ -2516,8 +2639,10 @@ Reinitialize element with existing values
 @return Always true
 **/
 		my.Stack.prototype.domInit = function() {
-			for (var i = 0, iz = this.groups.length; i < iz; i++) {
-				my.group[this.groups[i]].domInit();
+			var group = my.group,
+				groups = this.groups;
+			for (var i = 0, iz = groups.length; i < iz; i++) {
+				group[groups[i]].domInit();
 			}
 			return true;
 		};
@@ -2527,8 +2652,10 @@ Update element 3d transitions, via the Stack's groups
 @return Always true
 **/
 		my.Stack.prototype.update = function() {
-			for (var i = 0, iz = this.groups.length; i < iz; i++) {
-				my.group[this.groups[i]].update();
+			var group = my.group,
+				groups = this.groups;
+			for (var i = 0, iz = groups.length; i < iz; i++) {
+				group[groups[i]].update();
 			}
 			return true;
 		};
@@ -2554,21 +2681,24 @@ Calculates the pixels value of the object's perspective attribute
 			var sx,
 				sy,
 				myH,
-				el;
+				el,
+				perspective = this.perspective,
+				style;
 			this.resetWork();
-			sx = (my.isa(this.perspective.x, 'str')) ? this.scale : 1;
-			sy = (my.isa(this.perspective.y, 'str')) ? this.scale : 1;
+			sx = (perspective.x.substring) ? this.scale : 1;
+			sy = (perspective.y.substring) ? this.scale : 1;
 			myH = this.parsePerspective();
 			el = this.getElement();
+			style = el.style;
 			myH.x *= sx;
 			myH.y *= sy;
 			//myH.z *= sx;
-			el.style.mozPerspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
-			el.style.webkitPerspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
-			el.style.perspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
-			el.style.mozPerspective = myH.z + 'px';
-			el.style.webkitPerspective = myH.z + 'px';
-			el.style.perspective = myH.z + 'px';
+			style.mozPerspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
+			style.webkitPerspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
+			style.perspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
+			style.mozPerspective = myH.z + 'px';
+			style.webkitPerspective = myH.z + 'px';
+			style.perspective = myH.z + 'px';
 		};
 
 		my.pushUnique(my.sectionlist, 'element');
@@ -2606,11 +2736,13 @@ Get dimensions of Stack
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Element = function(items) {
+			var get = my.xtGet,
+			style;
 			items = my.safeObject(items);
 			if (my.xt(items.domElement)) {
-				items.width = my.xtGet(items.width, items.domElement.style.width, my.d.Stack.width);
-				items.height = my.xtGet(items.height, items.domElement.style.height, my.d.Stack.height);
-				items.name = my.xtGet(items.elementName, items.name, items.domElement.id, items.domElement.name, 'Element');
+				items.width = get(items.width, items.domElement.style.width, my.d.Stack.width);
+				items.height = get(items.height, items.domElement.style.height, my.d.Stack.height);
+				items.name = get(items.elementName, items.name, items.domElement.id, items.domElement.name, 'Element');
 				my.PageElement.call(this, items);
 				if (this.name.match(/~~~/)) {
 					this.name = this.name.replace(/~~~/g, '_');
@@ -2624,12 +2756,13 @@ Get dimensions of Stack
 				this.setStyles(items);
 				this.setTransformOrigin();
 				if (this.group) {
-					my.elm[this.name].style.margin = '0';
-					my.elm[this.name].style.webkitBoxSizing = 'border-box';
-					my.elm[this.name].style.mozBoxSizing = 'border-box';
-					my.elm[this.name].style.boxSizing = 'border-box';
+					style = my.elm[this.name].style;
+					style.margin = '0';
+					style.webkitBoxSizing = 'border-box';
+					style.mozBoxSizing = 'border-box';
+					style.boxSizing = 'border-box';
 				}
-				this.interactive = my.xtGet(items.interactive, false);
+				this.interactive = get(items.interactive, false);
 				if (this.interactive) {
 					this.addMouseMove();
 				}
@@ -2689,20 +2822,23 @@ Return the DOM element wrapped by this object
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.ElementGroup = function(items) {
+			var xt = my.xt,
+				get = my.xtGet,
+				pu = my.pushUnique;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
-			this.entitys = (my.xt(items.entitys)) ? [].concat(items.entitys) : [];
-			this.elements = (my.xt(items.elements)) ? [].concat(items.elements) : [];
+			this.entitys = (xt(items.entitys)) ? [].concat(items.entitys) : [];
+			this.elements = (xt(items.elements)) ? [].concat(items.elements) : [];
 			this.stack = items.stack || false;
-			this.equalWidth = my.xtGet(items.equalWidth, false);
-			this.equalHeight = my.xtGet(items.equalHeight, false);
+			this.equalWidth = get(items.equalWidth, false);
+			this.equalHeight = get(items.equalHeight, false);
 			this.currentWidth = 0;
 			this.currentHeight = 0;
 			if (this.stack) {
-				my.pushUnique(my.stack[this.stack].groups, this.name);
+				pu(my.stack[this.stack].groups, this.name);
 			}
 			my.group[this.name] = this;
-			my.pushUnique(my.groupnames, this.name);
+			pu(my.groupnames, this.name);
 			return this;
 		};
 		my.ElementGroup.prototype = Object.create(my.Base.prototype);
@@ -2784,11 +2920,13 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 		my.ElementGroup.prototype.stamp = function() {
 			var i,
 				iz,
-				stack;
+				stack,
+				entity = my.entity,
+				entitys = this.entitys;
 			stack = my.stack[this.stack];
-			for (i = 0, iz = this.entitys.length; i < iz; i++) {
+			for (i = 0, iz = entitys.length; i < iz; i++) {
 				//PROBABLY NEED TO amend the varous stamping routines to accommodate using a Stack's data instead of Cell data
-				my.entity[this.entitys[i]].stamp('none', stack);
+				entity[entitys[i]].stamp('none', stack);
 			}
 			return this;
 		};
@@ -2804,11 +2942,14 @@ Get collective dimensions of ElementGroup elements
 					width: 0,
 					height: 0
 				},
-				i, iz;
-			for (i = 0, iz = this.elements.length; i < iz; i++) {
-				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				i, iz,
+				elements = this.elements,
+				style;
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				if (el.visibility) {
 					e = el.getElement();
+					style = e.style;
 					switch (el.type) {
 						case 'Stack':
 							temp = el.getStackDimensions();
@@ -2816,9 +2957,9 @@ Get collective dimensions of ElementGroup elements
 							result.height = (temp.height > result.height) ? temp.height : result.height;
 							break;
 						default:
-							temp = parseFloat(e.style.left) + el.localWidth - el.offset.x;
+							temp = parseFloat(style.left) + el.localWidth - el.offset.x;
 							result.width = (temp > result.width) ? temp : result.width;
-							temp = parseFloat(e.style.top) + el.localHeight - el.offset.y;
+							temp = parseFloat(style.top) + el.localHeight - el.offset.y;
 							result.height = (temp > result.height) ? temp : result.height;
 					}
 				}
@@ -2836,10 +2977,12 @@ Tell the Group to ask its constituent elements to render
 				iz,
 				w,
 				h,
-				el;
+				el,
+				elements = this.elements,
+				group = my.group;
 			if (this.recalculateDimensions) {
-				for (i = 0, iz = this.elements.length; i < iz; i++) {
-					el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				for (i = 0, iz = elements.length; i < iz; i++) {
+					el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 					el.setLocalDimensions();
 				}
 				this.recalculateDimensions = false;
@@ -2847,9 +2990,8 @@ Tell the Group to ask its constituent elements to render
 			if (this.checkEqualDimensions()) {
 				this.currentWidth = 0;
 				this.currentHeight = 0;
-				for (i = 0, iz = this.elements.length; i < iz; i++) {
-					el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
-					//el.group = this.name;
+				for (i = 0, iz = elements.length; i < iz; i++) {
+					el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 					if (el.localWidth > this.currentWidth) {
 						this.currentWidth = el.localWidth;
 					}
@@ -2858,11 +3000,11 @@ Tell the Group to ask its constituent elements to render
 					}
 				}
 			}
-			for (i = 0, iz = this.elements.length; i < iz; i++) {
-				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				el.renderElement();
 				if (el.type === 'Stack') {
-					my.group[el.name].render();
+					group[el.name].render();
 				}
 			}
 			return this;
@@ -2876,12 +3018,14 @@ Reinitialize group elements with existing values
 		my.ElementGroup.prototype.domInit = function() {
 			var i,
 				iz,
-				el;
-			for (i = 0, iz = this.elements.length; i < iz; i++) {
-				el = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				el,
+				elements = this.elements,
+				group = my.group;
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				el.domInitialize();
 				if (el.type === 'Stack') {
-					my.group[el.name].domInit();
+					group[el.name].domInit();
 				}
 			}
 			return this;
@@ -2902,12 +3046,14 @@ Argument can contain the following (optional) attributes:
 		my.ElementGroup.prototype.update = function(items) {
 			var i,
 				iz,
-				temp;
-			for (i = 0, iz = this.elements.length; i < iz; i++) {
-				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				temp,
+				elements = this.elements,
+				group = my.group;
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				temp = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				temp.update3d(items);
 				if (temp.type === 'Stack') {
-					my.group[temp.name].update(items);
+					group[temp.name].update(items);
 				}
 			}
 			return this;
@@ -2930,10 +3076,12 @@ Add elements to the Group
 **/
 		my.ElementGroup.prototype.addElementsToGroup = function(item) {
 			var i,
-				iz;
+				iz,
+				elements = this.elements,
+				pu = my.pushUnique;
 			item = (my.xt(item)) ? [].concat(item) : [];
 			for (i = 0, iz = item.length; i < iz; i++) {
-				my.pushUnique(this.elements, item[i]);
+				pu(elements, item[i]);
 			}
 			return this;
 		};
@@ -2946,10 +3094,12 @@ Remove elements from the Group
 **/
 		my.ElementGroup.prototype.removeElementsFromGroup = function(item) {
 			var i,
-				iz;
+				iz,
+				elements = this.elements,
+				ri = my.removeItem;
 			item = (my.xt(item)) ? [].concat(item) : [];
 			for (i = 0, iz = item.length; i < iz; i++) {
-				my.removeItem(this.elements, item[i]);
+				ri(elements, item[i]);
 			}
 			return this;
 		};
@@ -2962,10 +3112,12 @@ Add entitys to the Group
 **/
 		my.ElementGroup.prototype.addEntitysToGroup = function(item) {
 			var i,
-				iz;
+				iz,
+				entitys = this.entitys,
+				pu = my.pushUnique;
 			item = (my.xt(item)) ? [].concat(item) : [];
 			for (i = 0, iz = item.length; i < iz; i++) {
-				my.pushUnique(this.entitys, item[i]);
+				pu(entitys, item[i]);
 			}
 			return this;
 		};
@@ -2978,10 +3130,12 @@ Remove entitys from the Group
 **/
 		my.ElementGroup.prototype.removeEntitysFromGroup = function(item) {
 			var i,
-				iz;
+				iz,
+				entitys = this.entitys,
+				ri = my.removeItem;
 			item = (my.xt(item)) ? [].concat(item) : [];
 			for (i = 0, iz = item.length; i < iz; i++) {
-				my.removeItem(this.entitys, item[i]);
+				ri(entitys, item[i]);
 			}
 			return this;
 		};
@@ -2996,10 +3150,11 @@ Ask all elements in the Group to perform a setDelta() operation
 		my.ElementGroup.prototype.updateElementsBy = function(items) {
 			var i,
 				iz,
-				temp;
+				temp,
+				elements = this.elements;
 			items = my.safeObject(items);
-			for (i = 0, iz = this.elements.length; i < iz; i++) {
-				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				temp = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				temp.setDelta(items);
 			}
 			return this;
@@ -3014,10 +3169,12 @@ Ask all entitys in the Group to perform a setDelta() operation
 **/
 		my.ElementGroup.prototype.updateEntitysBy = function(items) {
 			var i,
-				iz;
+				iz,
+				entitys = this.entitys,
+				entity = my.entity;
 			items = my.safeObject(items);
-			for (i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].setDelta(items);
+			for (i = 0, iz = entitys.length; i < iz; i++) {
+				entity[entitys[i]].setDelta(items);
 			}
 			return this;
 		};
@@ -3044,9 +3201,10 @@ Ask all elements in the Group to perform a set() operation
 		my.ElementGroup.prototype.setElementsTo = function(items) {
 			var i,
 				iz,
-				temp;
-			for (i = 0, iz = this.elements.length; i < iz; i++) {
-				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				temp,
+				elements = this.elements;
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				temp = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				temp.set(items);
 			}
 			return this;
@@ -3061,9 +3219,10 @@ Ask all elements in the Group to perform a dimension update operation
 		my.ElementGroup.prototype.updateDimensions = function() {
 			var i,
 				iz,
-				temp;
-			for (i = 0, iz = this.elements.length; i < iz; i++) {
-				temp = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+				temp,
+				elements = this.elements;
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				temp = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				temp.setLocalDimensions();
 				temp.setDimensions();
 				temp.offset.flag = false;
@@ -3081,8 +3240,10 @@ Ask all entitys in the Group to perform a set() operation
 @chainable
 **/
 		my.ElementGroup.prototype.setEntitysTo = function(items) {
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].set(items);
+			var entitys = this.entitys,
+				entity = my.entity;
+			for (var i = 0, iz = entitys.length; i < iz; i++) {
+				entity[entitys[i]].set(items);
 			}
 			return this;
 		};
@@ -3118,16 +3279,18 @@ This has the effect of turning a set of disparate eelements into a single, coord
 					pivot: '',
 					handleX: 0,
 					handleY: 0
-				};
-			item = (my.isa(item, 'str')) ? item : false;
+				},
+				v = my.v,
+				elements = this.elements;
+			item = (item.substring) ? item : false;
 			if (item) {
 				p = my.stack[item] || my.pad[item] || my.element[item] || my.entity[item] || my.point[item] || false;
 				if (p) {
 					pStart = (p.type === 'Point') ? p.local : p.start;
-					for (i = 0, iz = this.elements.length; i < iz; i++) {
-						element = my.stack[this.elements[i]] || my.pad[this.elements[i]] || my.element[this.elements[i]] || false;
+					for (i = 0, iz = elements.length; i < iz; i++) {
+						element = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 						if (element) {
-							sv = my.v.set(element.start);
+							sv = v.set(element.start);
 							sv.vectorSubtract(pStart);
 							arg.pivot = item;
 							arg.handleX = -sv.x;

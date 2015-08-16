@@ -138,21 +138,22 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 **/
 		my.getImagesByClass = function(classtag, kill) {
 			var s,
-				i;
+				i,
+				mi = my.makeImage;
 			kill = my.xtGet(kill, true);
 			if (classtag) {
 				s = document.getElementsByClassName(classtag);
 				if (s.length > 0) {
 					for (i = s.length; i > 0; i--) {
 						if (s[i - 1].width && s[i - 1].height) {
-							my.makeImage({
+							mi({
 								element: s[i - 1],
 								removeImageFromDOM: kill,
 								crossOrigin: 'anonymous'
 							});
 						}
 						else {
-							my.makeImage({
+							mi({
 								url: s[i - 1].src,
 								name: s[i - 1].id,
 								removeImageFromDOM: kill,
@@ -173,19 +174,20 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 @return true if image is identified; false otherwise
 **/
 		my.getImageById = function(idtag, kill) {
-			var myImg;
+			var myImg,
+				mi = my.makeImage;
 			kill = my.xtGet(kill, true);
 			if (idtag) {
 				myImg = document.getElementById(idtag);
 				if (myImg.width && myImg.height) {
-					my.makeImage({
+					mi({
 						element: myImg,
 						removeImageFromDOM: kill,
 						crossOrigin: 'anonymous'
 					});
 				}
 				else {
-					my.makeImage({
+					mi({
 						url: myImg.src,
 						name: myImg.id,
 						removeImageFromDOM: kill,
@@ -256,31 +258,33 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Image = function(items) {
-			var tempname;
+			var tempname,
+				xt = my.xt,
+				get = my.xtGet;
 			items = my.safeObject(items);
 			this.width = 0;
 			this.height = 0;
 			if (my.xto(items.element, items.data, items.url)) {
-				if (my.xt(items.element)) {
-					items.name = my.xtGet(items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '');
+				if (xt(items.element)) {
+					items.name = get(items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '');
 				}
-				else if (my.xt(items.data)) {
-					items.name = my.xtGet(items.name, '');
+				else if (xt(items.data)) {
+					items.name = get(items.name, '');
 				}
-				else if (my.xt(items.url)) {
+				else if (xt(items.url)) {
 					tempname = items.url.substr(0, 128);
-					items.name = my.xtGet(items.name, tempname, '');
+					items.name = get(items.name, tempname, '');
 				}
 				my.Base.call(this, items);
 				my.image[this.name] = this;
 				my.pushUnique(my.imagenames, this.name);
-				if (my.xt(items.element)) {
+				if (xt(items.element)) {
 					this.addImageByElement(items);
 				}
-				else if (my.xt(items.data)) {
+				else if (xt(items.data)) {
 					this.addImageByData(items);
 				}
-				else if (my.xt(items.url)) {
+				else if (xt(items.url)) {
 					this.addImageByUrl(items);
 				}
 				return this;
@@ -365,7 +369,8 @@ Adds a DOM &lt;img&gt; element to the library
 **/
 		my.Image.prototype.addImageByElement = function(items) {
 			var el,
-				kill = my.xtGet(items.removeImageFromDOM, true);
+				kill = my.xtGet(items.removeImageFromDOM, true),
+				getTrue = my.xtGetTrue;
 			if (kill) {
 				el = items.element;
 			}
@@ -373,8 +378,8 @@ Adds a DOM &lt;img&gt; element to the library
 				el = items.element.cloneNode();
 			}
 			el.id = this.name;
-			this.width = parseFloat(my.xtGetTrue(el.offsetWidth, el.width, el.style.width, 1));
-			this.height = parseFloat(my.xtGetTrue(el.offsetHeight, el.height, el.style.height, 1));
+			this.width = parseFloat(getTrue(el.offsetWidth, el.width, el.style.width, 1));
+			this.height = parseFloat(getTrue(el.offsetHeight, el.height, el.style.height, 1));
 			my.imageFragment.appendChild(el);
 			my.asset[this.name] = el;
 			my.pushUnique(my.assetnames, this.name);
@@ -398,23 +403,27 @@ Import an image using the supplied url string
 				el = document.createElement('img');
 				el.id = this.name;
 				el.onload = function() {
-					var entity, design, i, iz, temp;
+					var entity, design, i, iz, temp,
+						d = my.design,
+						dnames = my.designnames,
+						e = my.entity,
+						enames = my.entitynames;
 					that.width = el.width;
 					that.height = el.height;
 					my.imageFragment.appendChild(el);
 					temp = '#' + that.name;
 					my.asset[that.name] = my.imageFragment.querySelector(temp);
 					my.pushUnique(my.assetnames, that.name);
-					for (i = 0, iz = my.entitynames.length; i < iz; i++) {
-						entity = my.entity[my.entitynames[i]];
+					for (i = 0, iz = enames.length; i < iz; i++) {
+						entity = e[enames[i]];
 						if (entity.type === 'Picture') {
 							if (entity.source === that.name) {
 								entity.setCopy();
 							}
 						}
 					}
-					for (i = 0, iz = my.designnames.length; i < iz; i++) {
-						design = my.design[my.designnames[i]];
+					for (i = 0, iz = dnames.length; i < iz; i++) {
+						design = d[dnames[i]];
 						if (design.type === 'Pattern') {
 							if (design.source === that.name) {
 								design.sourceType = 'image';
@@ -441,13 +450,15 @@ Creates a new &lt;img&gt; element from a canvas ImageData object - uses Image.ad
 @private
 **/
 		my.Image.prototype.addImageByData = function(items) {
-			var data;
+			var data,
+				canvas = my.imageCanvas,
+				cvx = my.imageCvx;
 			if (my.xt(items.data)) {
 				data = items.data;
-				my.imageCanvas.width = data.width;
-				my.imageCanvas.height = data.height;
-				my.imageCvx.putImageData(data, 0, 0);
-				items.url = my.imageCanvas.toDataURL('image/png');
+				canvas.width = data.width;
+				canvas.height = data.height;
+				cvx.putImageData(data, 0, 0);
+				items.url = canvas.toDataURL('image/png');
 				delete items.data;
 				return this.addImageByUrl(items);
 			}
@@ -520,14 +531,15 @@ SpriteAnimation attributes can also be set and retrieved directly using Picture.
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.SpriteAnimation = function(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
 			this.frames = (my.xt(items.frames)) ? [].concat(items.frames) : [];
-			this.currentFrame = my.xtGet(items.currentFrame, 0);
-			this.speed = my.xtGet(items.speed, 1);
-			this.loop = my.xtGet(items.loop, 'end');
-			this.running = my.xtGet(items.running, 'complete');
-			this.lastCalled = my.xtGet(items.lastCalled, Date.now());
+			this.currentFrame = get(items.currentFrame, 0);
+			this.speed = get(items.speed, 1);
+			this.loop = get(items.loop, 'end');
+			this.running = get(items.running, 'complete');
+			this.lastCalled = get(items.lastCalled, Date.now());
 			my.spriteanimation[this.name] = this;
 			my.pushUnique(my.spriteanimationnames, this.name);
 			return this;
@@ -664,47 +676,57 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 						break;
 					case 'forward':
 						if (changeFrame) {
-							switch (this.loop) {
-								case 'pause':
-									break;
-								case 'end':
-									this.running = (this.currentFrame + 1 >= this.frames.length) ? 'complete' : this.running;
-									this.currentFrame = (this.currentFrame + 1 >= this.frames.length) ? this.currentFrame : this.currentFrame + 1;
-									break;
-								case 'loop':
-									this.currentFrame = (this.currentFrame + 1 >= this.frames.length) ? 0 : this.currentFrame + 1;
-									break;
-								case 'reverse':
-									this.running = (this.currentFrame + 1 >= this.frames.length) ? 'backward' : 'forward';
-									this.currentFrame = (this.currentFrame + 1 >= this.frames.length) ? this.currentFrame : this.currentFrame + 1;
-									break;
-							}
+							this.getDataForward[this.loop](this);
 							this.lastCalled = Date.now();
 						}
 						break;
 					case 'backward':
 						if (changeFrame) {
-							switch (this.loop) {
-								case 'pause':
-									break;
-								case 'end':
-									this.running = (this.currentFrame - 1 <= 0) ? 'complete' : this.running;
-									this.currentFrame = (this.currentFrame - 1 <= 0) ? this.currentFrame : this.currentFrame - 1;
-									break;
-								case 'loop':
-									this.currentFrame = (this.currentFrame - 1 <= 0) ? this.frames.length - 1 : this.currentFrame - 1;
-									break;
-								case 'reverse':
-									this.running = (this.currentFrame - 1 <= 0) ? 'forward' : 'backward';
-									this.currentFrame = (this.currentFrame - 1 <= 0) ? this.currentFrame : this.currentFrame - 1;
-									break;
-							}
+							this.getDataBackward[this.loop](this);
 							this.lastCalled = Date.now();
 						}
 						break;
 				}
 			}
 			return this.frames[this.currentFrame];
+		};
+		/**
+getData helper object
+@method getDataForward
+@private
+**/
+		my.SpriteAnimation.prototype.getDataForward = {
+			end: function(a) {
+				a.running = (a.currentFrame + 1 >= a.frames.length) ? 'complete' : a.running;
+				a.currentFrame = (a.currentFrame + 1 >= a.frames.length) ? a.currentFrame : a.currentFrame + 1;
+			},
+			loop: function(a) {
+				a.currentFrame = (a.currentFrame + 1 >= a.frames.length) ? 0 : a.currentFrame + 1;
+			},
+			reverse: function(a) {
+				a.running = (a.currentFrame + 1 >= a.frames.length) ? 'backward' : 'forward';
+				a.currentFrame = (a.currentFrame + 1 >= a.frames.length) ? a.currentFrame : a.currentFrame + 1;
+			},
+			pause: function(a) {}
+		};
+		/**
+getData helper object
+@method getDataBackward
+@private
+**/
+		my.SpriteAnimation.prototype.getDataBackward = {
+			end: function(a) {
+				a.running = (a.currentFrame - 1 <= 0) ? 'complete' : a.running;
+				a.currentFrame = (a.currentFrame - 1 <= 0) ? a.currentFrame : a.currentFrame - 1;
+			},
+			loop: function(a) {
+				a.currentFrame = (a.currentFrame - 1 <= 0) ? a.frames.length - 1 : a.currentFrame - 1;
+			},
+			reverse: function(a) {
+				a.running = (a.currentFrame - 1 <= 0) ? 'forward' : 'backward';
+				a.currentFrame = (a.currentFrame - 1 <= 0) ? a.currentFrame : a.currentFrame - 1;
+			},
+			pause: function(a) {}
 		};
 
 		/**
@@ -731,17 +753,19 @@ Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, cop
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Video = function(items) {
-			var tempname;
+			var tempname,
+				xt = my.xt,
+				get = my.xtGet;
 			items = my.safeObject(items);
 			this.width = 0;
 			this.height = 0;
-			if (my.xt(items.element)) {
-				if (my.xt(items.element)) {
-					items.name = my.xtGet(items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '');
+			if (xt(items.element)) {
+				if (xt(items.element)) {
+					items.name = get(items.name, items.element.getAttribute('id'), items.element.getAttribute('name'), '');
 				}
-				else if (my.xt(items.url)) {
+				else if (xt(items.url)) {
 					tempname = items.url.substr(0, 128);
-					items.name = my.xtGet(items.name, tempname, '');
+					items.name = get(items.name, tempname, '');
 				}
 				my.Base.call(this, items);
 				my.video[this.name] = this;
@@ -846,7 +870,9 @@ Video constructor helper function
 				api,
 				wrapper,
 				i,
-				iz;
+				iz,
+				e = my.entity,
+				enames = my.entitynames;
 			if (my.xt(this.api)) {
 				//this = scrawl wrapper
 				api = this.api;
@@ -859,8 +885,8 @@ Video constructor helper function
 			}
 			wrapper.width = api.videoWidth;
 			wrapper.height = api.videoHeight;
-			for (i = 0, iz = my.entitynames.length; i < iz; i++) {
-				ent = my.entity[my.entitynames[i]];
+			for (i = 0, iz = enames.length; i < iz; i++) {
+				ent = e[enames[i]];
 				if (ent.type === 'Picture') {
 					ent.setCopy();
 				}

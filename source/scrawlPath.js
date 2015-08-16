@@ -681,6 +681,7 @@ Additional factory functions to instantiate Path objects are available in the __
 			this.linkDurations = [];
 			this.pointList = [];
 			this.perimeterLength = 0;
+			this.winding = my.xtGet(items.winding, 'nonzero');
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
@@ -791,6 +792,13 @@ Path entity default method attribute is 'draw', not 'fill'
 @default 'draw'
 **/
 			method: 'draw',
+			/**
+Winding value
+@property winding
+@type String
+@default 'non-zero'
+**/
+			winding: 'nonzero',
 			/**
 Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure entitys will follow the path more accurately
 @property precision
@@ -925,7 +933,7 @@ Stamp helper function - perform a 'clip' method draw
 		my.Path.prototype.clip = function(ctx, cellname, cell) {
 			if (this.closed) {
 				this.prepareShape(ctx, cell);
-				ctx.clip(my.ctx[this.context].get('winding'));
+				ctx.clip(this.winding);
 			}
 			return this;
 		};
@@ -942,7 +950,7 @@ Stamp helper function - perform a 'clear' method draw
 			this.prepareShape(ctx, cell);
 			ctx.globalCompositeOperation = 'destination-out';
 			ctx.stroke();
-			ctx.fill(my.ctx[this.context].get('winding'));
+			ctx.fill(this.winding);
 			ctx.globalCompositeOperation = my.ctx[cell].get('globalCompositeOperation');
 			return this;
 		};
@@ -972,7 +980,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 			ctx.strokeStyle = background;
 			ctx.globalAlpha = 1;
 			ctx.stroke();
-			ctx.fill(my.ctx[this.context].get('winding'));
+			ctx.fill(this.winding);
 			ctx.fillStyle = fill;
 			ctx.strokeStyle = stroke;
 			ctx.globalAlpha = alpha;
@@ -990,7 +998,7 @@ Stamp helper function - perform a 'fill' method draw
 		my.Path.prototype.fill = function(ctx, cellname, cell) {
 			if (this.get('closed')) {
 				this.prepareShape(ctx, cell);
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 				this.addMarks(ctx, cell);
 			}
 			return this;
@@ -1024,7 +1032,7 @@ Stamp helper function - perform a 'drawFill' method draw
 			ctx.stroke();
 			if (this.get('closed')) {
 				this.clearShadow(ctx, cell);
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 			}
 			this.addMarks(ctx, cell);
 			return this;
@@ -1041,7 +1049,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 		my.Path.prototype.fillDraw = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			if (this.get('closed')) {
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 				this.clearShadow(ctx, cell);
 			}
 			ctx.stroke();
@@ -1060,7 +1068,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 		my.Path.prototype.sinkInto = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			if (this.get('closed')) {
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 			}
 			ctx.stroke();
 			this.addMarks(ctx, cell);
@@ -1079,7 +1087,7 @@ Stamp helper function - perform a 'floatOver' method draw
 			this.prepareShape(ctx, cell);
 			ctx.stroke();
 			if (this.get('closed')) {
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 			}
 			this.addMarks(ctx, cell);
 			return this;
@@ -1303,7 +1311,6 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 				tests,
 				result,
 				here,
-				winding,
 				returnCoord = {
 					x: 0,
 					y: 0
@@ -1312,9 +1319,8 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
 			result = false;
-			winding = my.ctx[this.context].winding;
-			cvx.mozFillRule = winding;
-			cvx.msFillRule = winding;
+			cvx.mozFillRule = this.winding;
+			cvx.msFillRule = this.winding;
 			if (this.firstPoint) {
 				here = this.prepareStamp();
 				this.rotateCell(cvx, my.group[this.group].cell);
@@ -1323,7 +1329,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 				my.link[my.point[this.firstPoint].startLink].sketch(cvx);
 			}
 			for (i = 0, iz = tests.length; i < iz; i += 2) {
-				result = cvx.isPointInPath(tests[i], tests[i + 1], winding);
+				result = cvx.isPointInPath(tests[i], tests[i + 1], this.winding);
 				if (result) {
 					break;
 				}
@@ -1438,13 +1444,13 @@ Path creation factories will all create Point objects automatically as part of t
 			this.entity = get(items.entity, '');
 			e = my.entity[this.entity];
 			this.local = vec({
+				name: this.type + '.' + this.name + '.local',
 				x: get(items.startX, items.currentX, local.x, 0),
-				y: get(items.startY, items.currentY, local.y, 0),
+				y: get(items.startY, items.currentY, local.y, 0)
 			});
 			this.work.local = vec({
 				name: this.type + '.' + this.name + '.work.local'
 			});
-			this.work.local.name = this.type + '.' + this.name + '.work.local';
 			this.startLink = get(items.startLink, '');
 			this.fixed = get(items.fixed, false);
 			if (my.xto(items.angle, items.distance)) {

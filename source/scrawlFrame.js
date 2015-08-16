@@ -99,22 +99,24 @@ A __factory__ function to generate new Frame entitys
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.FramePoint = function FramePoint(items) {
+			var get = my.xtGet,
+			vec = my.makeVector;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.host = my.xtGet(items.host, false);
-			this.data = my.xtGet(items.data, false);
-			this.reference = my.xtGet(items.reference, false);
-			this.lock = my.xtGet(items.lock, false);
-			this.pivot = my.xtGet(items.pivot, false);
-			this.path = my.xtGet(items.path, false);
-			this.pathPlace = my.xtGet(items.pathPlace, false);
-			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, false);
-			this.pathSpeedConstant = my.xtGet(items.pathSpeedConstant, false);
-			this.local = my.makeVector({
+			this.host = get(items.host, false);
+			this.data = get(items.data, false);
+			this.reference = get(items.reference, false);
+			this.lock = get(items.lock, false);
+			this.pivot = get(items.pivot, false);
+			this.path = get(items.path, false);
+			this.pathPlace = get(items.pathPlace, false);
+			this.deltaPathPlace = get(items.deltaPathPlace, false);
+			this.pathSpeedConstant = get(items.pathSpeedConstant, false);
+			this.local = vec({
 				name: this.name + '_local'
 			});
 			this.work = {
-				local: my.makeVector({
+				local: vec({
 					name: this.name + '_work.local'
 				})
 			};
@@ -174,14 +176,15 @@ A __factory__ function to generate new Frame entitys
 @chainable
 **/
 		my.FramePoint.prototype.set = function(items) {
-			this.host = my.xtGet(items.host, this.host);
-			this.data = my.xtGet(items.data, this.data);
-			this.pivot = my.xtGet(items.pivot, this.pivot);
-			this.path = my.xtGet(items.path, this.path);
-			this.lock = my.xtGet(items.lock, this.lock);
-			this.pathPlace = my.xtGet(items.pathPlace, this.pathPlace);
-			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, this.deltaPathPlace);
-			this.pathSpeedConstant = my.xtGet(items.pathSpeedConstant, this.pathSpeedConstant);
+			var get = my.xtGet;
+			this.host = get(items.host, this.host);
+			this.data = get(items.data, this.data);
+			this.pivot = get(items.pivot, this.pivot);
+			this.path = get(items.path, this.path);
+			this.lock = get(items.lock, this.lock);
+			this.pathPlace = get(items.pathPlace, this.pathPlace);
+			this.deltaPathPlace = get(items.deltaPathPlace, this.deltaPathPlace);
+			this.pathSpeedConstant = get(items.pathSpeedConstant, this.pathSpeedConstant);
 			this.setReference();
 			this.setLocal();
 			return this;
@@ -271,10 +274,13 @@ Data should always be an array in the form [x, y, z]
 @private
 **/
 		my.FramePoint.prototype.setLocalFromData = function() {
-			var cell = my.cell[my.group[my.entity[this.host].group].cell];
+			var cell = my.cell[my.group[my.entity[this.host].group].cell],
+				local = this.local,
+				data = this.data,
+				setlocal = this.setLocalFromDataString;
 			if (Array.isArray(this.data)) {
-				this.local.x = (this.data[0].toFixed) ? this.data[0] : this.setLocalFromDataString(this.data[0], cell.actualWidth);
-				this.local.y = (this.data[1].toFixed) ? this.data[1] : this.setLocalFromDataString(this.data[1], cell.actualHeight);
+				local.x = (data[0].toFixed) ? data[0] : setlocal(data[0], cell.actualWidth);
+				local.y = (data[1].toFixed) ? data[1] : setlocal(data[1], cell.actualHeight);
 			}
 			return this;
 		};
@@ -331,6 +337,8 @@ Data should always be an array in the form [x, y, z]
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Frame = function Frame(items) {
+			var vec = my.makeVector,
+				get = my.xtGet;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 
@@ -345,44 +353,44 @@ Data should always be an array in the form [x, y, z]
 			this.height = 1;
 			this.localWidth = 1;
 			this.localHeight = 1;
-			this.start = my.makeVector();
+			this.start = vec();
 			this.work = {
-				start: my.makeVector()
+				start: vec()
 			};
 
-			this.source = my.xtGet(items.source, false);
+			this.source = get(items.source, false);
 			this.sourceType = false;
 			this.cell = document.createElement('canvas');
 			this.engine = this.cell.getContext('2d');
 
-			this.interferenceLoops = my.xtGet(items.interferenceLoops, 2);
-			this.interferenceFactor = my.xtGet(items.interferenceFactor, 1.03);
+			this.interferenceLoops = get(items.interferenceLoops, 2);
+			this.interferenceFactor = get(items.interferenceFactor, 1.03);
 
-			this.method = my.xtGet(items.method, 'fill');
-			this.visibility = my.xtGet(items.visibility, true);
-			this.order = my.xtGet(items.order, 0);
+			this.method = get(items.method, 'fill');
+			this.visibility = get(items.visibility, true);
+			this.order = get(items.order, 0);
 
-			this.globalAlpha = my.xtGet(items.globalAlpha, 1);
-			this.globalCompositeOperation = my.xtGet(items.globalCompositeOperation, 'source-over');
+			this.globalAlpha = get(items.globalAlpha, 1);
+			this.globalCompositeOperation = get(items.globalCompositeOperation, 'source-over');
 
-			this.lineWidth = my.xtGet(items.lineWidth, 1);
-			this.lineCap = my.xtGet(items.lineCap, 'butt');
-			this.lineJoin = my.xtGet(items.lineJoin, 'miter');
-			this.lineDash = my.xtGet(items.lineDash, []);
-			this.lineDashOffset = my.xtGet(items.lineDashOffset, 0);
-			this.miterLimit = my.xtGet(items.miterLimit, 10);
-			this.strokeStyle = my.xtGet(items.strokeStyle, '#000000');
-			this.shadowOffsetX = my.xtGet(items.shadowOffsetX, 0);
-			this.shadowOffsetY = my.xtGet(items.shadowOffsetY, 0);
-			this.shadowBlur = my.xtGet(items.shadowBlur, 0);
-			this.shadowColor = my.xtGet(items.shadowColor, '#000000');
+			this.lineWidth = get(items.lineWidth, 1);
+			this.lineCap = get(items.lineCap, 'butt');
+			this.lineJoin = get(items.lineJoin, 'miter');
+			this.lineDash = get(items.lineDash, []);
+			this.lineDashOffset = get(items.lineDashOffset, 0);
+			this.miterLimit = get(items.miterLimit, 10);
+			this.strokeStyle = get(items.strokeStyle, '#000000');
+			this.shadowOffsetX = get(items.shadowOffsetX, 0);
+			this.shadowOffsetY = get(items.shadowOffsetY, 0);
+			this.shadowBlur = get(items.shadowBlur, 0);
+			this.shadowColor = get(items.shadowColor, '#000000');
 
 			this.group = my.Entity.prototype.getGroup.call(this, items);
 
 			my.Entity.prototype.registerInLibrary.call(this, items);
 			my.pushUnique(my.group[this.group].entitys, this.name);
 
-			this.lockFrameTo = my.xtGet(items.lockFrameTo, false);
+			this.lockFrameTo = get(items.lockFrameTo, false);
 			this.lockElementAttributes = {};
 
 			this.setCorners(items);
@@ -498,35 +506,40 @@ Augments Base.clone()
 				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
 				cornersX = ['tlx', 'trx', 'brx', 'blx'],
 				cornersY = ['tly', 'try', 'bry', 'bly'],
-				temp;
+				corner,
+				temp,
+				makeFramePoint = my.makeFramePoint,
+				get = my.xtGet,
+				order = this.cornersDataArrayOrder;
 
 			items = my.safeObject(items);
 			for (i = 0; i < 4; i++) {
 				temp = {};
-				if (!this[corners[i]]) {
-					this[corners[i]] = my.makeFramePoint({
-						name: this.name + '_' + corners[i],
+				corner = corners[i];
+				if (!this[corner]) {
+					this[corner] = makeFramePoint({
+						name: this.name + '_' + corner,
 						host: this.name,
 					});
 				}
 				if (items.cornersData && Array.isArray(items.cornersData)) {
 					temp.data = [
-						my.xtGet(items.cornersData[this.cornersDataArrayOrder.indexOf(cornersX[i])], this[corners[i]].local.x, 0),
-						my.xtGet(items.cornersData[this.cornersDataArrayOrder.indexOf(cornersY[i])], this[corners[i]].local.y, 0)
+						get(items.cornersData[order.indexOf(cornersX[i])], this[corner].local.x, 0),
+						get(items.cornersData[order.indexOf(cornersY[i])], this[corner].local.y, 0)
 					];
-					this[corners[i]].set(temp);
+					this[corner].set(temp);
 				}
 				else if (items.lockFrameTo) {
 					temp.lock = items.lockFrameTo;
-					this[corners[i]].set(temp);
+					this[corner].set(temp);
 				}
 				else {
-					temp.path = my.xtGet(items[corners[i] + 'Path'], this[corners[i]].path);
-					temp.pathPlace = my.xtGet(items[corners[i] + 'PathPlace'], this[corners[i]].pathPlace);
-					temp.deltaPathPlace = my.xtGet(items[corners[i] + 'DeltaPathPlace'], this[corners[i]].deltaPathPlace);
-					temp.pathSpeedConstant = my.xtGet(items[corners[i] + 'PathSpeedConstant'], this[corners[i]].pathSpeedConstant);
-					temp.pivot = my.xtGet(items[corners[i] + 'Pivot'], this[corners[i]].pivot);
-					this[corners[i]].set(temp);
+					temp.path = get(items[corner + 'Path'], this[corner].path);
+					temp.pathPlace = get(items[corner + 'PathPlace'], this[corner].pathPlace);
+					temp.deltaPathPlace = get(items[corner + 'DeltaPathPlace'], this[corner].deltaPathPlace);
+					temp.pathSpeedConstant = get(items[corner + 'PathSpeedConstant'], this[corner].pathSpeedConstant);
+					temp.pivot = get(items[corner + 'Pivot'], this[corner].pivot);
+					this[corner].set(temp);
 				}
 			}
 			if (items.lockFrameTo || this.lockFrameTo) {
@@ -539,46 +552,46 @@ Augments Base.clone()
 @private
 **/
 		my.Frame.prototype.setEngine = function(items) {
-			var design, strokeStyle;
+			var design, strokeStyle,
+				e = this.engine;
 			if (items.lineWidth) {
-				this.engine.lineWidth = items.lineWidth;
+				e.lineWidth = items.lineWidth;
 			}
 			if (items.lineCap) {
-				this.engine.lineCap = items.lineCap;
+				e.lineCap = items.lineCap;
 			}
 			if (items.lineJoin) {
-				this.engine.lineJoin = items.lineJoin;
+				e.lineJoin = items.lineJoin;
 			}
 			if (items.lineDash) {
-				this.engine.mozDash = items.lineDash;
-				this.engine.lineDash = items.lineDash;
-				try {
-					this.engine.setLineDash(items.lineDash);
+				e.mozDash = items.lineDash;
+				e.lineDash = items.lineDash;
+				if (e.setLineDash) {
+					e.setLineDash(items.lineDash);
 				}
-				catch (e) {}
 			}
 			if (items.lineDashOffset) {
-				this.engine.mozDashOffset = items.lineDashOffset;
-				this.engine.lineDashOffset = items.lineDashOffset;
+				e.mozDashOffset = items.lineDashOffset;
+				e.lineDashOffset = items.lineDashOffset;
 			}
 			if (items.miterLimit) {
-				this.engine.miterLimit = items.miterLimit;
+				e.miterLimit = items.miterLimit;
 			}
 			if (items.shadowOffsetX) {
-				this.engine.shadowOffsetX = items.shadowOffsetX;
+				e.shadowOffsetX = items.shadowOffsetX;
 			}
 			if (items.shadowOffsetY) {
-				this.engine.shadowOffsetY = items.shadowOffsetY;
+				e.shadowOffsetY = items.shadowOffsetY;
 			}
 			if (items.shadowBlur) {
-				this.engine.shadowBlur = items.shadowBlur;
+				e.shadowBlur = items.shadowBlur;
 			}
 			if (items.shadowColor) {
-				this.engine.shadowColor = items.shadowColor;
+				e.shadowColor = items.shadowColor;
 			}
 			if (items.strokeStyle) {
-				if (my.xt(my.design[items.strokeStyle])) {
-					design = my.design[items.strokeStyle];
+				design = my.design[items.strokeStyle];
+				if (my.xt(design)) {
 					if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], design.type)) {
 						design.update(this.name, my.group[this.group].cell);
 					}
@@ -595,9 +608,9 @@ Augments Base.clone()
 @method setDestinationEngine
 @private
 **/
-		my.Frame.prototype.setDestinationEngine = function(ctx, cell) {
+		my.Frame.prototype.setDestinationEngine = function(ctx, cellname, cell) {
 			var design, strokeStyle,
-				record = my.ctx[cell];
+				record = my.ctx[cellname];
 			if (record.lineWidth != this.lineWidth) {
 				ctx.lineWidth = this.lineWidth;
 				record.lineWidth = this.lineWidth;
@@ -613,10 +626,9 @@ Augments Base.clone()
 			if (record.lineDash != this.lineDash) {
 				ctx.mozDash = this.lineDash;
 				ctx.lineDash = this.lineDash;
-				try {
+				if (ctx.setLineDash) {
 					ctx.setLineDash(this.lineDash);
 				}
-				catch (e) {}
 				record.lineDash = this.lineDash;
 			}
 			if (record.lineDashOffset != this.lineDashOffset) {
@@ -665,18 +677,21 @@ Augments Base.clone()
 @private
 **/
 		my.Frame.prototype.lockOn = function(items) {
-			var el = my.xtGet(my.safeObject(my.stack)[this.lockFrameTo], my.safeObject(my.pad)[this.lockFrameTo], my.safeObject(my.element)[this.lockFrameTo], false),
+			var so = my.safeObject,
+				lockFrameTo = this.lockFrameTo,
+				el = my.xtGet(so(my.stack)[lockFrameTo], so(my.pad)[lockFrameTo], so(my.element)[lockFrameTo], false),
 				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+				corner,
 				parent, stack, temp,
 				i;
 			if (!el) {
 				temp = document.createElement('div');
-				temp.id = this.lockFrameTo;
+				temp.id = lockFrameTo;
 				parent = my.pad[my.cell[my.group[this.group].cell].pad].group;
 				if (parent) {
 					stack = my.stack[parent];
 					document.body.appendChild(temp);
-					el = stack.addElementById(this.lockFrameTo);
+					el = stack.addElementById(lockFrameTo);
 					el.set({
 						translateZ: stack.get('translateZ') - 1
 					});
@@ -689,7 +704,8 @@ Augments Base.clone()
 				this.setLockElementAttributes(items);
 				el.set(this.lockElementAttributes);
 				for (i = 0; i < 4; i++) {
-					this[corners[i]].local = el[corners[i]];
+					corner = corners[i];
+					this[corner].local = el[corner];
 				}
 			}
 		};
@@ -699,11 +715,15 @@ Augments Base.clone()
 **/
 		my.Frame.prototype.setLockElementAttributes = function(items) {
 			var keys = Object.keys(items),
+				key,
 				whitelist = ['start', 'startX', 'startY', 'handle', 'handleX', 'handleY', 'deltaStart', 'deltaStartX', 'deltaStartY', 'deltaHandle', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'deltaPitch', 'deltaYaw', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant', 'translate', 'translateX', 'translateY', 'translateZ', 'mouseIndex'],
-				i, iz;
+				i, iz,
+				cont = my.contains,
+				lea = this.lockElementAttributes;
 			for (i = 0, iz = keys.length; i < iz; i++) {
-				if (my.contains(whitelist, keys[i])) {
-					this.lockElementAttributes[keys[i]] = items[keys[i]];
+				key = keys[i];
+				if (cont(whitelist, key)) {
+					lea[key] = items[key];
 				}
 			}
 			return this;
@@ -712,7 +732,7 @@ Augments Base.clone()
 @method forceStamp
 @private
 **/
-		my.Frame.prototype.forceStamp = function(method, cell) {
+		my.Frame.prototype.forceStamp = function(method, cellname, cell) {
 			var temp = this.visibility;
 			this.visibility = true;
 			this.stamp(method, cell);
@@ -723,16 +743,17 @@ Augments Base.clone()
 @method stamp
 @private
 **/
-		my.Frame.prototype.stamp = function(method, cell) {
+		my.Frame.prototype.stamp = function(method, cellname, cell) {
 			var dCell = (cell) ? cell : my.group[this.group].cell,
-				dCtx = my.context[dCell],
+				dName = dCell.name,
+				dCtx = my.context[dName],
 				dMethod = (method) ? method : this.method;
 			if (this.visibility) {
 				if (this.redraw) {
 					this.redrawCanvas();
 				}
-				this[dMethod](dCtx, dCell);
-				this.stampFilter(dCtx, dCell);
+				this[dMethod](dCtx, dName, dCell);
+				this.stampFilter(dCtx, dName, dCell);
 			}
 			return this;
 		};
@@ -749,16 +770,16 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 @method stampFilter
 @private
 **/
-		my.Frame.prototype.stampFilter = function(engine, cell, force) {
-			my.Entity.prototype.stampFilter.call(this, engine, cell, force);
+		my.Frame.prototype.stampFilter = function(engine, cellname, cell) {
+			my.Entity.prototype.stampFilter.call(this, engine, cellname, cell);
 		};
 		/**
 Entity.stamp hook helper function
 @method stampFilterDefault
 @private
 **/
-		my.Frame.prototype.stampFilterDefault = function(engine, cell, force) {
-			return my.Entity.prototype.stampFilterDefault.call(this, engine, cell, force);
+		my.Frame.prototype.stampFilterDefault = function(entity, engine, cellname, cell) {
+			return my.Entity.prototype.stampFilterDefault.call(this, entity, engine, cellname, cell);
 		};
 		/**
 @method redrawCanvas
@@ -773,17 +794,26 @@ Entity.stamp hook helper function
 				bry = this.bottomRight.local.y,
 				blx = this.bottomLeft.local.x,
 				bly = this.bottomLeft.local.y,
-				xmin = Math.min.apply(Math, [tlx, trx, brx, blx]),
-				ymin = Math.min.apply(Math, [tly, tryy, bry, bly]),
-				xmax = Math.max.apply(Math, [tlx, trx, brx, blx]),
-				ymax = Math.max.apply(Math, [tly, tryy, bry, bly]),
+				min = Math.min,
+				max = Math.max,
+				ceil = Math.ceil,
+				floor = Math.floor,
+				xmin = min.apply(Math, [tlx, trx, brx, blx]),
+				ymin = min.apply(Math, [tly, tryy, bry, bly]),
+				xmax = max.apply(Math, [tlx, trx, brx, blx]),
+				ymax = max.apply(Math, [tly, tryy, bry, bly]),
 				width = xmax - xmin || 1,
 				height = ymax - ymin || 1,
-				dim = Math.max.apply(Math, [width, height]),
-				maxDim = Math.ceil(dim),
-				minDim = Math.floor(dim),
+				dim = max.apply(Math, [width, height]),
+				maxDim = ceil(dim),
+				minDim = floor(dim),
 				src = my.xtGet(my.asset[this.source], my.canvas[this.source], false), //must be an image, canvas or video
-				i, sx, sy, ex, ey, len, angle, val, fw, fh;
+				i, sx, sy, ex, ey, len, angle, val, fw, fh,
+				cv = my.cv,
+				cvx = my.cvx,
+				getPos = this.getPosition,
+				iFac = this.interferenceFactor,
+				cell = this.cell;
 
 			this.width = width;
 			this.localWidth = width;
@@ -792,33 +822,33 @@ Entity.stamp hook helper function
 			this.start.x = xmin;
 			this.start.y = ymin;
 			if (src && my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
-				this.cell.width = Math.ceil(width);
-				this.cell.height = Math.ceil(height);
-				my.cv.width = maxDim;
-				my.cv.height = maxDim;
-				my.cvx.drawImage(src, 0, 0, src.width, src.height, 0, 0, minDim, minDim);
+				cell.width = ceil(width);
+				cell.height = ceil(height);
+				cv.width = maxDim;
+				cv.height = maxDim;
+				cvx.drawImage(src, 0, 0, src.width, src.height, 0, 0, minDim, minDim);
 				for (i = 0; i <= minDim; i++) {
 					val = i / minDim;
-					sx = this.getPosition(tlx, blx, val) - xmin;
-					sy = this.getPosition(tly, bly, val) - ymin;
-					ex = this.getPosition(trx, brx, val) - xmin;
-					ey = this.getPosition(tryy, bry, val) - ymin;
+					sx = getPos(tlx, blx, val) - xmin;
+					sy = getPos(tly, bly, val) - ymin;
+					ex = getPos(trx, brx, val) - xmin;
+					ey = getPos(tryy, bry, val) - ymin;
 					len = this.getLength(sx, sy, ex, ey);
 					angle = this.getAngle(sx, sy, ex, ey);
 
 					this.setEasel(sx, sy, angle);
-					this.engine.drawImage(my.cv, 0, i, minDim, 1, 0, 0, len, 1);
+					this.engine.drawImage(cv, 0, i, minDim, 1, 0, 0, len, 1);
 					this.resetEasel();
 				}
-				fw = Math.ceil(width);
-				fh = Math.ceil(height);
+				fw = ceil(width);
+				fh = ceil(height);
 				for (i = 0; i < this.interferenceLoops; i++) {
-					fw = Math.ceil(fw * this.interferenceFactor);
-					fh = Math.ceil(fh * this.interferenceFactor);
-					my.cv.width = fw;
-					my.cv.height = fh;
-					my.cvx.drawImage(this.cell, 0, 0, this.cell.width, this.cell.height, 0, 0, fw, fh);
-					this.engine.drawImage(my.cv, 0, 0, fw, fh, 0, 0, this.cell.width, this.cell.height);
+					fw = ceil(fw * iFac);
+					fh = ceil(fh * iFac);
+					cv.width = fw;
+					cv.height = fh;
+					cvx.drawImage(cell, 0, 0, cell.width, cell.height, 0, 0, fw, fh);
+					this.engine.drawImage(cv, 0, 0, fw, fh, 0, 0, cell.width, cell.height);
 				}
 				this.redraw = false;
 			}
@@ -870,9 +900,9 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @chainable
 @private
 **/
-		my.Frame.prototype.clearShadow = function(ctx, cell) {
+		my.Frame.prototype.clearShadow = function(ctx, cellname, cell) {
 			if (this.shadowOffsetX || this.shadowOffsetY || this.shadowBlur) {
-				cell = (cell.substring) ? my.cell[cell] : cell;
+				// cell = (cell.substring) ? my.cell[cell] : cell;
 				cell.clearShadow();
 			}
 			return this;
@@ -881,20 +911,24 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @method prepareStamp
 @private
 **/
-		my.Frame.prototype.prepareStamp = function(ctx, cell) {
-			this.setDestinationEngine(ctx, cell);
+		my.Frame.prototype.prepareStamp = function(ctx, cellname, cell) {
+			this.setDestinationEngine(ctx, cellname, cell);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 		};
 		/**
 @method drawPath
 @private
 **/
-		my.Frame.prototype.drawPath = function(ctx, cell) {
+		my.Frame.prototype.drawPath = function(ctx, cellname, cell) {
+			var tl = this.topLeft.local,
+				tr = this.topRight.local,
+				br = this.bottomRight.local,
+				bl = this.bottomLeft.local;
 			ctx.beginPath();
-			ctx.moveTo(this.topLeft.local.x, this.topLeft.local.y);
-			ctx.lineTo(this.topRight.local.x, this.topRight.local.y);
-			ctx.lineTo(this.bottomRight.local.x, this.bottomRight.local.y);
-			ctx.lineTo(this.bottomLeft.local.x, this.bottomLeft.local.y);
+			ctx.moveTo(tl.x, tl.y);
+			ctx.lineTo(tr.x, tr.y);
+			ctx.lineTo(br.x, br.y);
+			ctx.lineTo(bl.x, bl.y);
 			ctx.closePath();
 			return this;
 		};
@@ -902,115 +936,119 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @method drawImage
 @private
 **/
-		my.Frame.prototype.drawImage = function(ctx, cell) {
+		my.Frame.prototype.drawImage = function(ctx, cellname, cell) {
 			ctx.drawImage(this.cell, this.start.x, this.start.y);
 			return this;
 		};
 		/**
 @method clip
 **/
-		my.Frame.prototype.clip = function(ctx, cell) {
-			this.prepareStamp(ctx, cell);
-			this.drawPath(ctx, cell);
+		my.Frame.prototype.clip = function(ctx, cellname, cell) {
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
 			ctx.clip();
 			return this;
 		};
 		/**
 @method clear
 **/
-		my.Frame.prototype.clear = function(ctx, cell) {
-			this.prepareStamp(ctx, cell);
-			this.drawPath(ctx, cell);
+		my.Frame.prototype.clear = function(ctx, cellname, cell) {
+			var engine = my.ctx[cellname];
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
 			ctx.globalCompositeOperation = 'destination-out';
 			ctx.fillStyle = '#000000';
 			ctx.strokeStyle = '#000000';
 			ctx.fill();
 			ctx.stroke();
-			ctx.fillStyle = my.ctx[cell].get('fillStyle');
-			ctx.strokeStyle = my.ctx[cell].get('strokeStyle');
-			ctx.globalCompositeOperation = my.ctx[cell].get('globalCompositeOperation');
+			ctx.fillStyle = engine.get('fillStyle');
+			ctx.strokeStyle = engine.get('strokeStyle');
+			ctx.globalCompositeOperation = engine.get('globalCompositeOperation');
 			return this;
 		};
 		/**
 @method clearWithBackground
 **/
-		my.Frame.prototype.clearWithBackground = function(ctx, cell) {
-			var color = my.cell[cell].get('backgroundColor');
-			this.prepareStamp(ctx, cell);
-			this.drawPath(ctx, cell);
+		my.Frame.prototype.clearWithBackground = function(ctx, cellname, cell) {
+			var engine = my.ctx[cellname],
+				color = my.cell[cellname].get('backgroundColor');
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
 			ctx.globalCompositeOperation = 'destination-out';
 			ctx.fillStyle = color;
 			ctx.strokeStyle = color;
 			ctx.fill();
 			ctx.stroke();
-			ctx.fillStyle = my.ctx[cell].get('fillStyle');
-			ctx.strokeStyle = my.ctx[cell].get('strokeStyle');
-			ctx.globalCompositeOperation = my.ctx[cell].get('globalCompositeOperation');
+			ctx.fillStyle = engine.get('fillStyle');
+			ctx.strokeStyle = engine.get('strokeStyle');
+			ctx.globalCompositeOperation = engine.get('globalCompositeOperation');
 			return this;
 		};
 		/**
 @method draw
 **/
-		my.Frame.prototype.draw = function(ctx, cell) {
-			this.prepareStamp(ctx, cell);
-			this.drawPath(ctx, cell);
+		my.Frame.prototype.draw = function(ctx, cellname, cell) {
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
 			ctx.stroke();
 			return this;
 		};
 		/**
 @method fill
 **/
-		my.Frame.prototype.fill = function(ctx, cell) {
-			this.prepareStamp(ctx, cell);
-			this.drawImage(ctx, cell);
+		my.Frame.prototype.fill = function(ctx, cellname, cell) {
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawImage(ctx, cellname, cell);
 			return this;
 		};
 		/**
 @method drawFill
 **/
-		my.Frame.prototype.drawFill = function(ctx, cell) {
-			this.prepareStamp(ctx, cell);
-			this.drawPath(ctx, cell);
+		my.Frame.prototype.drawFill = function(ctx, cellname, cell) {
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
 			ctx.stroke();
-			this.clearShadow(ctx, cell);
-			this.drawImage(ctx, cell);
+			this.clearShadow(ctx, cellname, cell);
+			this.drawImage(ctx, cellname, cell);
 			return this;
 		};
 		/**
 @method fillDraw
 **/
-		my.Frame.prototype.fillDraw = function(ctx, cell) {
-			this.prepareStamp(ctx, cell);
-			this.drawImage(ctx, cell);
-			this.drawPath(ctx, cell);
-			this.clearShadow(ctx, cell);
+		my.Frame.prototype.fillDraw = function(ctx, cellname, cell) {
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawImage(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
+			this.clearShadow(ctx, cellname, cell);
 			ctx.stroke();
 			return this;
 		};
 		/**
 @method sinkInto
 **/
-		my.Frame.prototype.sinkInto = function(ctx, cell) {
-			this.prepareStamp(ctx, cell);
-			this.drawImage(ctx, cell);
-			this.drawPath(ctx, cell);
+		my.Frame.prototype.sinkInto = function(ctx, cellname, cell) {
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawImage(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
 			ctx.stroke();
 			return this;
 		};
 		/**
 @method floatOver
 **/
-		my.Frame.prototype.floatOver = function(ctx, cell) {
-			this.prepareStamp(ctx, cell);
-			this.drawPath(ctx, cell);
+		my.Frame.prototype.floatOver = function(ctx, cellname, cell) {
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
 			ctx.stroke();
-			this.drawImage(ctx, cell);
+			this.drawImage(ctx, cellname, cell);
 			return this;
 		};
 		/**
 @method none
 **/
-		my.Frame.prototype.none = function(ctx, cell) {
+		my.Frame.prototype.none = function(ctx, cellname, cell) {
+			this.prepareStamp(ctx, cellname, cell);
+			this.drawPath(ctx, cellname, cell);
 			return this;
 		};
 		/**
@@ -1019,11 +1057,12 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 		my.Frame.prototype.checkHit = function(items) {
 			items = my.safeObject(items);
 			var tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
-				result = false;
-			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-			this.drawPath(my.cvx);
+				result = false,
+				cvx = my.cvx;
+			cvx.setTransform(1, 0, 0, 1, 0, 0);
+			this.drawPath(cvx);
 			for (i = 0, iz = tests.length; i < iz; i += 2) {
-				result = my.cvx.isPointInPath(tests[i], tests[i + 1]);
+				result = cvx.isPointInPath(tests[i], tests[i + 1]);
 				if (result) {
 					items.x = tests[i];
 					items.y = tests[i + 1];
@@ -1032,6 +1071,16 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 			}
 			return (result) ? items : false;
 		};
+
+		/**
+reciprocal assignment - also occurs in scrawlFilters as there's no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first
+@method stampFilterActions
+@private
+**/
+		if (my.Entity.prototype.stampFilterActions) {
+			my.Frame.prototype.stampFilterActions = my.Entity.prototype.stampFilterActions;
+		}
+
 
 		return my;
 	}(scrawl));

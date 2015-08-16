@@ -99,11 +99,13 @@ A __general__ function to undertake a round of calculations for Spring objects
 				iz,
 				j,
 				jz,
-				s = [];
-			if (my.springnames.length > 0) {
-				items = (my.isa(items, 'arr')) ? items : my.springnames;
+				s = [],
+				spring = my.spring,
+				springnames = my.springnames;
+			if (springnames.length > 0) {
+				items = (Array.isArray(items)) ? items : springnames;
 				for (i = 0, iz = items.length; i < iz; i++) {
-					s.push((my.isa(items[i], 'obj')) ? items[i] : ((my.isa(items[i], 'str')) ? my.spring[items[i]] : false));
+					s.push((my.isa_obj(items[i])) ? items[i] : (items[i].substring) ? spring[items[i]] : false);
 				}
 				for (j = 0, jz = s.length; j < jz; j++) {
 					if (s[j]) {
@@ -218,26 +220,30 @@ A __factory__ function to generate new Force objects
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Particle = function(items) {
+			var vec = my.makeVector,
+				d = my.d.Particle,
+				r;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.place = my.makeVector();
-			this.work.place = my.makeVector();
-			this.velocity = my.makeVector();
-			this.work.velocity = my.makeVector();
+			this.place = vec();
+			this.work.place = vec();
+			this.velocity = vec();
+			this.work.velocity = vec();
 			this.set(items);
-			this.priorPlace = my.makeVector(this.place);
+			this.priorPlace = vec(this.place);
 			this.engine = items.engine || 'euler';
 			this.userVar = items.userVar || {};
-			this.mobile = (my.isa(items.mobile, 'bool')) ? items.mobile : true;
+			this.mobile = (my.isa_bool(items.mobile)) ? items.mobile : true;
 			this.forces = items.forces || [];
 			this.springs = items.springs || [];
-			this.mass = items.mass || my.d.Particle.mass;
-			this.elasticity = items.elasticity || my.d.Particle.elasticity;
-			this.radius = items.radius || my.d.Particle.radius;
+			this.mass = items.mass || d.mass;
+			this.elasticity = items.elasticity || d.elasticity;
+			this.radius = items.radius || d.radius;
 			if (items.radius || items.area) {
-				this.area = items.area || 2 * Math.PI * this.get('radius') * this.get('radius') || my.d.Particle.area;
+				r = this.radius;
+				this.area = items.area || 2 * Math.PI * r * r || d.area;
 			}
-			this.load = my.makeVector();
+			this.load = vec();
 			my.entity[this.name] = this;
 			my.pushUnique(my.entitynames, this.name);
 			this.group = my.Entity.prototype.getGroup.call(this, items);
@@ -387,24 +393,32 @@ Allows users to set the Particle's position and velocity attributes using startX
 @chainable
 **/
 		my.Particle.prototype.set = function(items) {
-			var temp;
-			items = my.safeObject(items);
+			var temp,
+				xto = my.xto,
+				vec = my.makeVector,
+				get = my.xtGet,
+				velocity,
+				place,
+				so = my.safeObject;
+			items = so(items);
 			my.Base.prototype.set.call(this, items);
 			if (!this.place.type || this.place.type !== 'Vector') {
-				this.place = my.makeVector(items.place || this.place);
+				this.place = vec(items.place || this.place);
 			}
-			if (my.xto(items.start, items.startX, items.startY)) {
-				temp = my.safeObject(items.start);
-				this.place.x = my.xtGet(items.startX, temp.x, this.place.x);
-				this.place.y = my.xtGet(items.startY, temp.y, this.place.y);
+			if (xto(items.start, items.startX, items.startY)) {
+				temp = so(items.start);
+				place = this.place;
+				place.x = get(items.startX, temp.x, place.x);
+				place.y = get(items.startY, temp.y, place.y);
 			}
 			if (!this.velocity.type || this.velocity.type !== 'Vector') {
-				this.velocity = my.makeVector(items.velocity || this.velocity);
+				this.velocity = vec(items.velocity || this.velocity);
 			}
-			if (my.xto(items.delta, items.deltaX, items.deltaY, items.velocity)) {
-				temp = my.safeObject(items.delta);
-				this.velocity.x = my.xtGet(items.deltaX, temp.x, this.velocity.x);
-				this.velocity.y = my.xtGet(items.deltaY, temp.y, this.velocity.y);
+			if (xto(items.delta, items.deltaX, items.deltaY, items.velocity)) {
+				temp = so(items.delta);
+				velocity = this.velocity;
+				velocity.x = get(items.deltaX, temp.x, velocity.x);
+				velocity.y = get(items.deltaY, temp.y, velocity.y);
 			}
 			return this;
 		};
@@ -452,20 +466,29 @@ Undertake a calculation cycle iteration
 @chainable
 **/
 		my.Particle.prototype.stamp = function() {
+			var actions = this.stampActions;
 			if (this.mobile) {
 				this.calculateLoads();
-				switch (this.engine) {
-					case 'improvedEuler':
-						this.updateImprovedEuler();
-						break;
-					case 'rungeKutter':
-						this.updateRungeKutter();
-						break;
-					default:
-						this.updateEuler();
-				}
+				actions[this.engine](this);
 			}
 			return this;
+		};
+		/**
+stamp helper object
+@method stampActions
+@return This
+@chainable
+**/
+		my.Particle.prototype.stampActions = {
+			improvedEuler: function(item) {
+				item.updateImprovedEuler();
+			},
+			rungeKutter: function(item) {
+				item.updateRungeKutter();
+			},
+			euler: function(item) {
+				item.updateEuler();
+			}
 		};
 		/**
 Alias for Particle.stamp()
@@ -494,22 +517,30 @@ Calculate the loads (via forces) acting on the particle for this calculation cyc
 **/
 		my.Particle.prototype.calculateLoads = function() {
 			var i,
-				iz;
-			this.load.zero();
-			for (i = 0, iz = this.forces.length; i < iz; i++) {
-				if (my.isa(this.forces[i], 'str') && my.force[this.forces[i]]) {
-					my.force[this.forces[i]].run(this);
+				iz,
+				force = my.force,
+				forces = this.forces,
+				spring = my.spring,
+				springs = this.springs,
+				load = this.load,
+				temp;
+			load.zero();
+			for (i = 0, iz = forces.length; i < iz; i++) {
+				temp = forces[i];
+				if (temp.substring && force[temp]) {
+					force[temp].run(this);
 				}
 				else {
-					this.forces[i](this);
+					temp(this);
 				}
 			}
-			for (i = 0, iz = this.springs.length; i < iz; i++) {
-				if (my.spring[this.springs[i]].start === this.name) {
-					this.load.vectorAdd(my.spring[this.springs[i]].force);
+			for (i = 0, iz = springs.length; i < iz; i++) {
+				temp = spring[springs[i]];
+				if (temp.start === this.name) {
+					load.vectorAdd(temp.force);
 				}
-				else if (my.spring[this.springs[i]].end === this.name) {
-					this.load.vectorSubtract(my.spring[this.springs[i]].force);
+				else if (temp.end === this.name) {
+					load.vectorSubtract(temp.force);
 				}
 			}
 			return this;
@@ -522,12 +553,15 @@ Calculation cycle engine
 @private
 **/
 		my.Particle.prototype.updateEuler = function() {
+			var dtime = my.physics.deltaTime,
+				v1 = my.workphys.v1,
+				vel = this.work.velocity;
 			this.resetWork();
-			my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-			this.work.velocity.vectorAdd(my.workphys.v1);
-			this.velocity.set(this.work.velocity);
+			v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime);
+			vel.vectorAdd(v1);
+			this.velocity.set(vel);
 			this.priorPlace.set(this.place);
-			this.place.vectorAdd(this.work.velocity.scalarMultiply(my.physics.deltaTime));
+			this.place.vectorAdd(vel.scalarMultiply(dtime));
 			return this;
 		};
 		/**
@@ -540,15 +574,18 @@ Calculation cycle engine
 		my.Particle.prototype.updateImprovedEuler = function() {
 			var v1,
 				v2,
-				v3;
+				v3,
+				w = this.work.velocity,
+				wp = my.workphys,
+				dtime = my.physics.deltaTime;
 			this.resetWork();
-			v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-			v2 = my.workphys.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
+			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime);
+			v2 = wp.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(dtime);
 			v3 = v1.vectorAdd(v2).scalarDivide(2);
-			this.work.velocity.vectorAdd(v3);
-			this.velocity.set(this.work.velocity);
+			w.vectorAdd(v3);
+			this.velocity.set(w);
 			this.priorPlace.set(this.place);
-			this.place.vectorAdd(this.work.velocity.scalarMultiply(my.physics.deltaTime));
+			this.place.vectorAdd(w.scalarMultiply(dtime));
 			return this;
 		};
 		/**
@@ -563,20 +600,23 @@ Calculation cycle engine
 				v2,
 				v3,
 				v4,
-				v5;
+				v5,
+				w = this.work.velocity,
+				wp = my.workphys,
+				dtime = my.physics.deltaTime;
 			this.resetWork();
-			v1 = my.workphys.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2);
-			v2 = my.workphys.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime).scalarDivide(2);
-			v3 = my.workphys.v3.set(this.load).vectorAdd(v2).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-			v4 = my.workphys.v4.set(this.load).vectorAdd(v3).scalarDivide(this.mass).scalarMultiply(my.physics.deltaTime);
-			v5 = my.workphys.v5;
+			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime).scalarDivide(2);
+			v2 = wp.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(dtime).scalarDivide(2);
+			v3 = wp.v3.set(this.load).vectorAdd(v2).scalarDivide(this.mass).scalarMultiply(dtime);
+			v4 = wp.v4.set(this.load).vectorAdd(v3).scalarDivide(this.mass).scalarMultiply(dtime);
+			v5 = wp.v5;
 			v2.scalarMultiply(2);
 			v3.scalarMultiply(2);
 			v5.set(v1).vectorAdd(v2).vectorAdd(v3).vectorAdd(v4).scalarDivide(6);
-			this.work.velocity.vectorAdd(v5);
-			this.velocity.set(this.work.velocity);
+			w.vectorAdd(v5);
+			this.velocity.set(w);
 			this.priorPlace.set(this.place);
-			this.place.vectorAdd(this.work.velocity.scalarMultiply(my.physics.deltaTime));
+			this.place.vectorAdd(w.scalarMultiply(dtime));
 			return this;
 		};
 		/**
@@ -590,12 +630,13 @@ Calculation cycle engine - linear particle collisions
 			var normal,
 				relVelocity,
 				impactScalar,
-				impact;
+				impact,
+				wp = my.workphys;
 			this.resetWork();
-			normal = my.workphys.v1.set(this.place).vectorSubtract(b.place).normalize();
-			relVelocity = my.workphys.v2.set(this.velocity).vectorSubtract(b.velocity);
+			normal = wp.v1.set(this.place).vectorSubtract(b.place).normalize();
+			relVelocity = wp.v2.set(this.velocity).vectorSubtract(b.velocity);
 			impactScalar = relVelocity.getDotProduct(normal);
-			impact = my.workphys.v3;
+			impact = wp.v3;
 			impactScalar = -impactScalar * (1 + ((this.elasticity + b.elasticity) / 2));
 			impactScalar /= ((1 / this.mass) + (1 / b.mass));
 			impact.set(normal).scalarMultiply(impactScalar);
@@ -618,24 +659,27 @@ Argument can be either a PARTICLENAME String, or an Object which includes an __e
 				arg = {
 					start: null,
 					end: null
-				};
-			if (my.isa(items, 'str') && my.entity[items]) {
+				},
+				e = my.entity,
+				pu = my.pushUnique,
+				makeSpring = my.makeSpring;
+			if (items.substring && e[items]) {
 				end = items;
 				arg.start = this.name;
 				arg.end = items;
-				mySpring = my.makeSpring(arg);
+				mySpring = makeSpring(arg);
 			}
 			else {
 				items = my.safeObject(items);
 				end = items.end || false;
-				if (end && my.entity[end]) {
+				if (end && e[end]) {
 					items.start = this.name;
-					mySpring = my.makeSpring(items);
+					mySpring = makeSpring(items);
 				}
 			}
 			if (mySpring) {
-				my.pushUnique(this.springs, mySpring.name);
-				my.pushUnique(my.entity[end].springs, mySpring.name);
+				pu(this.springs, mySpring.name);
+				pu(e[end].springs, mySpring.name);
 			}
 			return this;
 		};
@@ -648,10 +692,11 @@ Delete all springs associated with this Particle
 		my.Particle.prototype.removeSprings = function() {
 			var i,
 				iz,
-				temp;
+				temp,
+				spring = my.spring;
 			temp = this.springs.slice(0);
 			for (i = 0, iz = temp.length; i < iz; i++) {
-				my.spring[temp[i]].kill();
+				spring[temp[i]].kill();
 			}
 			return this;
 		};
@@ -666,16 +711,18 @@ Delete a named Spring object from this Particle
 			var i,
 				iz,
 				temp = [],
-				s;
+				s,
+				spring = my.spring,
+				springs = this.springs;
 			if (my.xt(item) && my.entity[item]) {
-				for (i = 0, iz = this.springs.length; i < iz; i++) {
-					s = my.spring[this.springs[i]];
+				for (i = 0, iz = springs.length; i < iz; i++) {
+					s = spring[springs[i]];
 					if (s.start === this.name || s.end === this.name) {
-						temp.push(this.springs[i]);
+						temp.push(springs[i]);
 					}
 				}
 				for (i = 0, iz = temp.length; i < iz; i++) {
-					my.spring[temp[i]].kill();
+					spring[temp[i]].kill();
 				}
 			}
 			return this;
@@ -717,11 +764,13 @@ Delete a named Spring object from this Particle
 		my.Spring = function Spring(items) {
 			var b1,
 				b2,
-				r;
+				r,
+				vec = my.makeVector,
+				e = my.entity;
 			items = my.safeObject(items);
 			if (my.xta(items.start, items.end)) {
-				b1 = my.entity[items.start];
-				b2 = my.entity[items.end];
+				b1 = e[items.start];
+				b2 = e[items.end];
 				my.Base.call(this, items);
 				this.start = items.start;
 				this.end = items.end;
@@ -736,8 +785,8 @@ Delete a named Spring object from this Particle
 					this.restLength = r.getMagnitude();
 				}
 				this.currentLength = items.currentLength || this.restLength;
-				this.force = my.makeVector();
-				this.work.force = my.makeVector();
+				this.force = vec();
+				this.work.force = vec();
 				my.spring[this.name] = this;
 				my.pushUnique(my.springnames, this.name);
 				return this;
@@ -826,11 +875,13 @@ Calculate the force exerted by the spring for this calculation cycle iteration
 			var vr,
 				r,
 				r_norm,
-				r_norm2;
-			vr = my.workphys.v1.set(my.entity[this.end].velocity).vectorSubtract(my.entity[this.start].velocity);
-			r = my.workphys.v2.set(my.entity[this.end].place).vectorSubtract(my.entity[this.start].place);
-			r_norm = my.workphys.v3.set(r).normalize();
-			r_norm2 = my.workphys.v4.set(r_norm);
+				r_norm2,
+				wp = my.workphys,
+				e = my.entity;
+			vr = wp.v1.set(e[this.end].velocity).vectorSubtract(e[this.start].velocity);
+			r = wp.v2.set(e[this.end].place).vectorSubtract(e[this.start].place);
+			r_norm = wp.v3.set(r).normalize();
+			r_norm2 = wp.v4.set(r_norm);
 			this.force.set(r_norm.scalarMultiply(this.springConstant * (r.getMagnitude() - this.restLength)).vectorAdd(vr.vectorMultiply(r_norm2).scalarMultiply(this.damperConstant).vectorMultiply(r_norm2)));
 			return this;
 		};
@@ -840,10 +891,12 @@ Remove this Spring from its Particle objects, and from the scrawl library
 @return Always true
 **/
 		my.Spring.prototype.kill = function() {
-			my.removeItem(my.entity[this.start].springs, this.name);
-			my.removeItem(my.entity[this.end].springs, this.name);
+			var ri = my.removeItem,
+				e = my.entity;
+			ri(e[this.start].springs, this.name);
+			ri(e[this.end].springs, this.name);
 			delete my.spring[this.name];
-			my.removeItem(my.springnames, this.name);
+			ri(my.springnames, this.name);
 			return true;
 		};
 
