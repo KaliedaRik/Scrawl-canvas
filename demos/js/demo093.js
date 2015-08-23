@@ -40,7 +40,6 @@ var mycode = function() {
 		filters: ['sat'],
 		filterOnStroke: true,
 	});
-	filterEntitys = scrawl.group.ripples.entitys;
 
 	//define entitys
 	scrawl.makePicture({
@@ -82,6 +81,7 @@ var mycode = function() {
 	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
+			filterEntitys = scrawl.group.ripples.entitys;
 			for (var i = 0, z = filterEntitys.length; i < z; i++) {
 				currentEntity = scrawl.entity[filterEntitys[i]];
 				currentEntity.setDelta({

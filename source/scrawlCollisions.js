@@ -784,9 +784,15 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				w,
 				h,
 				xt = my.xt,
+				v = my.v,
 				collisionVectors = this.collisionVectors,
-				collisionPoints = this.collisionPoints;
-			o = this.getOffsetStartVector().reverse();
+				collisionPoints = this.collisionPoints,
+				handle = this.currentHandle;
+			// o = this.getOffsetStartVector().reverse();
+			if (!handle.flag) {
+				this.updateCurrentHandle();
+			}
+			o = v.set(handle).reverse();
 			if (xt(this.localWidth)) {
 				w = this.localWidth / this.scale || 0;
 				h = this.localHeight / this.scale || 0;

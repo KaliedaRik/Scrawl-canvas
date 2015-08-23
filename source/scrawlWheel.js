@@ -209,6 +209,9 @@ Augments Entity.setDelta()
 			if (xt(items.endAngle)) {
 				this.endAngle = this.get('endAngle') + items.endAngle;
 			}
+			if (my.xto(items.radius, items.scale, items.lineWidth)) {
+				this.maxDimensions = null;
+			}
 			return this;
 		};
 		/**
@@ -235,20 +238,25 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				result,
 				testRadius,
 				cvx = my.cvx,
-				v1 = my.workwheel.v1;
+				v1 = my.workwheel.v1,
+				handle;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)];
 			result = false;
 			if (this.checkHitUsingRadius) {
 				testRadius = (this.checkHitRadius) ? this.checkHitRadius : this.radius * this.scale;
+				handle = this.currentHandle;
+				if (!handle.flag) {
+					this.updateCurrentHandle();
+				}
 				for (i = 0, iz = tests.length; i < iz; i += 2) {
 					this.resetWork();
 					v1.x = tests[i];
 					v1.y = tests[i + 1];
-					v1.vectorSubtract(this.work.start).scalarDivide(this.scale).rotate(-this.roll);
+					v1.vectorSubtract(this.currentStart).scalarDivide(this.scale).rotate(-this.roll);
 					v1.x = (this.flipReverse) ? -v1.x : v1.x;
 					v1.y = (this.flipUpend) ? -v1.y : v1.y;
-					v1.vectorAdd(this.getPivotOffsetVector(this.handle));
+					v1.vectorAdd(handle);
 					result = (v1.getMagnitude() <= testRadius) ? true : false;
 					if (result) {
 						items.x = tests[i];
@@ -271,15 +279,6 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 			return (result) ? items : false;
 		};
 		/**
-Position.getOffsetStartVector() helper function
-@method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity drawing should start
-@private
-**/
-		my.Wheel.prototype.getPivotOffsetVector = function() {
-			return this.getCenteredPivotOffsetVector();
-		};
-		/**
 Stamp helper function - define the entity's path on the &lt;canvas&gt; element's context engine
 @method buildPath
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -289,12 +288,9 @@ Stamp helper function - define the entity's path on the &lt;canvas&gt; element's
 @private
 **/
 		my.Wheel.prototype.buildPath = function(ctx, cell) {
-			var here,
-				startAngle,
-				endAngle;
-			here = this.prepareStamp();
-			startAngle = this.startAngle || 0;
-			endAngle = this.endAngle || 360;
+			var here = this.currentHandle,
+				startAngle = this.startAngle || 0,
+				endAngle = this.endAngle || 360;
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
 			ctx.arc(here.x, here.y, (this.radius * this.scale), (startAngle * my.radian), (endAngle * my.radian), this.clockwise);
@@ -572,6 +568,79 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				}
 			}
 			return this;
+		};
+
+		/**
+Calculate the box position of the entity
+
+Returns an object with the following attributes:
+
+* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+
+@method getMaxDimensions
+@param {Object} cell object
+@param {Object} entity object
+@return dimensions object
+@private
+**/
+		my.Wheel.prototype.getMaxDimensions = function(cell) {
+			// if(!this.maxDimensions){
+			console.log(this.name, 'getMaxDimensions');
+			// var x = this.start.x,
+			// 	y = this.start.y,
+			var x = this.currentStart.x,
+				y = this.currentStart.y,
+				rad = (this.radius * this.scale),
+				// o = this.offset,
+				o = this.currentHandle,
+				hx = (this.flipReverse) ? -o.x : o.x,
+				hy = (this.flipUpend) ? -o.y : o.y,
+				w = cell.actualWidth,
+				h = cell.actualHeight,
+				conv = this.numberConvert,
+				line = my.ctx[this.context].lineWidth || 0,
+				ceil = Math.ceil,
+				floor = Math.floor,
+				t, l, b, r,
+				v = my.v;
+			if (x.substring) {
+				x = conv(x, w);
+			}
+			if (y.substring) {
+				y = conv(y, h);
+			}
+			v.set({
+				x: hx,
+				y: hy
+			}).rotate(this.roll).vectorAdd({
+				x: x,
+				y: y
+			});
+			t = floor(v.y) - line - rad;
+			t = (t < 0) ? 0 : t;
+			b = ceil(v.y) + line + rad;
+			b = (b > h) ? h : b;
+			l = floor(v.x) - line - rad;
+			l = (l < 0) ? 0 : l;
+			r = ceil(v.x) + line + rad;
+			r = (r > w) ? w : r;
+			this.maxDimensions = {
+				top: t,
+				left: l,
+				bottom: b,
+				right: r
+			};
+			return {
+				top: t,
+				left: l,
+				bottom: b,
+				right: r
+			};
+			// }
+			// return this.maxDimensions;
 		};
 
 		return my;

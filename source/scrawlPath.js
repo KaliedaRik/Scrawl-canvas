@@ -160,7 +160,8 @@ Cell.prepareToCopyCell hook function - modified by path module
 		my.Cell.prototype.pathPrepareToCopyCell = function() {
 			var here,
 				e = my.entity[this.path],
-				start = this.start;
+				// start = this.start;
+				start = this.currentStart;
 			if (e && e.type === 'Path') {
 				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 				start.x = (!this.lockX) ? here.x : start.x;
@@ -176,7 +177,8 @@ Entity.stamp hook function - modified by path module
 		my.Entity.prototype.pathStamp = function(method, cell) {
 			var here,
 				e = my.entity[this.path],
-				start = this.start;
+				// start = this.start;
+				start = this.currentStart;
 			if (e && e.type === 'Path') {
 				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
 				start.x = (!this.lockX) ? here.x : start.x;
@@ -289,7 +291,8 @@ A __factory__ function to generate new Path entitys
 			v = 0;
 			myPivot = get(my.point[items.pivot], my.entity[items.pivot], false);
 			if (myPivot) {
-				temp = get(myPivot.local, myPivot.place, myPivot.start, false);
+				// temp = get(myPivot.local, myPivot.place, myPivot.start, false);
+				temp = get(myPivot.local, myPivot.place, myPivot.currentStart, false);
 				temp = so(temp);
 				items.startX = get(temp.x, 0);
 				items.startY = get(temp.y, 0);
@@ -821,22 +824,13 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 			var here;
 			cell.setEngine(this);
 			if (this.firstPoint) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				ctx.translate(here.x, here.y);
 				ctx.beginPath();
 				my.link[my.point[this.firstPoint].startLink].sketch(ctx);
 			}
 			return this;
-		};
-		/**
-Augments Position.getPivotOffsetVector()
-@method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity drawing should start
-@private
-**/
-		my.Path.prototype.getPivotOffsetVector = function() {
-			return (this.isLine) ? my.Entity.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
 		};
 		/**
 Display helper function
@@ -1246,7 +1240,7 @@ Calculate coordinates of point at given distance along the Shape entity's path
 					else {
 						linkVal = ((val - durations[i - 1]) / (durations[i] - durations[i - 1]));
 					}
-					linkVal = (linkVal < 0) ? 0 : ((linkVal > 1) ? 1 : linkVal);
+					linkVal = (linkVal <= 0) ? 0.00000005 : ((linkVal >= 1) ? 1 - 0.00000005 : linkVal);
 					bVal = (linkVal - 0.0000001 < 0) ? 0 : linkVal - 0.0000001;
 					aVal = (linkVal + 0.0000001 > 1) ? 1 : linkVal + 0.0000001;
 					if (steady) {
@@ -1322,7 +1316,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			cvx.mozFillRule = this.winding;
 			cvx.msFillRule = this.winding;
 			if (this.firstPoint) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				this.rotateCell(cvx, my.group[this.group].cell);
 				cvx.translate(here.x, here.y);
 				cvx.beginPath();
@@ -1658,7 +1652,8 @@ Return object has the following attributes:
 							vec.set(myPivot.get('place'));
 						}
 						else {
-							vec.set(myPivot.start);
+							// vec.set(myPivot.start);
+							vec.set(myPivot.currentStart);
 						}
 					}
 				}
@@ -1666,7 +1661,8 @@ Return object has the following attributes:
 					vec.scalarMultiply(scale || 1);
 				}
 				else {
-					vec.vectorSubtract(s.start || my.o);
+					// vec.vectorSubtract(s.start || my.o);
+					vec.vectorSubtract(s.currentStart || my.o);
 					vec.scalarMultiply(scale || 1);
 					vec.rotate(-s.roll);
 				}
@@ -1988,18 +1984,18 @@ Position calculation helper function
 				},
 				work = my.worklink,
 				pol = this.pointOnLine,
-				vec = work.v1;
-			val = (my.isa(val, 'num')) ? val : 1;
+				vec = work.v1.zero();
+			val = (my.xt(val) && val.toFixed) ? val : 1;
 			this.getPointCoordinates();
 			switch (this.species) {
 				case 'line':
 					vec.set(pol(work.start, work.end, val));
-					break;
+					return vec;
 				case 'quadratic':
 					mid2 = pol(work.control1, work.end, val);
 					mid1 = pol(work.start, work.control1, val);
 					vec.set(pol(mid1, mid2, val));
-					break;
+					return vec;
 				case 'bezier':
 					fst3 = pol(work.control2, work.end, val);
 					fst2 = pol(work.control1, work.control2, val);
@@ -2007,11 +2003,9 @@ Position calculation helper function
 					sec2 = pol(fst2, fst3, val);
 					sec1 = pol(fst1, fst2, val);
 					vec.set(pol(sec1, sec2, val));
-					break;
-				default:
-					vec.set(result);
+					return vec;
 			}
-			return vec;
+			return result;
 		};
 		/**
 Position calculation helper function
@@ -2024,8 +2018,8 @@ Position calculation helper function
 			var entity,
 				result;
 			entity = my.entity[this.entity];
-			if (val.toFixed) {
-				result = this.getLocalPositionOnLink(val);
+			result = this.getLocalPositionOnLink(val);
+			if (result) {
 				return result.rotate(entity.roll).vectorAdd(entity.getStartValues());
 			}
 			return false;
@@ -2046,7 +2040,7 @@ Position calculation helper function
 				pcl = this.positionsCumulativeLength,
 				v1 = my.worklink.v1,
 				v2 = my.worklink.v2;
-			val = (val.toFixed) ? val : 1;
+			val = (my.xt(val) && val.toFixed) ? val : 1;
 			precision = my.entity[this.entity].get('precision');
 			distance = this.length * val;
 			distance = (distance > pcl[precision]) ? pcl[precision] : ((distance < 0) ? 0 : distance);
@@ -2075,8 +2069,11 @@ Position calculation helper function
 				result;
 			entity = my.entity[this.entity];
 			result = this.getLocalSteadyPositionOnLink(val);
-			result.rotate(entity.roll).vectorAdd(entity.getStartValues());
-			return result;
+			if (result) {
+				result.rotate(entity.roll).vectorAdd(entity.getStartValues());
+				return result;
+			}
+			return false;
 		};
 		/**
 Returns length of Link, in pixels

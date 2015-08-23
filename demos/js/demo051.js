@@ -21,7 +21,6 @@ var mycode = function() {
 
 	//reconfigure the base cell
 	myCell.set({
-		usePadDimensions: false,
 		width: 130,
 		height: 130,
 		pasteX: 750 / 2,
@@ -32,6 +31,9 @@ var mycode = function() {
 		deltaY: 2,
 		flipReverse: true,
 		flipUpend: true,
+		cleared: false,
+		compiled: false,
+		resolve: true
 	});
 
 	//build entity
@@ -58,8 +60,6 @@ var mycode = function() {
 		radius: 8,
 		fillStyle: 'red',
 	}).stamp();
-	myCell.compile();
-
 
 	//animation object
 	scrawl.makeAnimation({
@@ -71,9 +71,9 @@ var mycode = function() {
 			if (!scrawl.isBetween(myCell.start.y, yMax, yMin, true)) {
 				myCell.delta.y = -myCell.delta.y;
 			}
-			myCell.updateStart();
-			myCell.set({
-				roll: myCell.roll + deltaRoll,
+			myCell.updateStart('start');
+			myCell.setDelta({
+				roll: deltaRoll
 			});
 
 			scrawl.render();

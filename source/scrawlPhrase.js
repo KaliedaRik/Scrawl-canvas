@@ -343,7 +343,6 @@ Helper function - checks to see if font needs to be (re)constructed from its par
 			if (my.xt(item)) {
 				this.deconstructFont();
 			}
-			//this.constructFont();
 			return this;
 		};
 		/**
@@ -546,7 +545,7 @@ Stamp helper function - perform a 'clear' method draw
 		my.Phrase.prototype.clear = function(ctx, cellname, cell) {
 			var i, iz, tX, tY,
 				o = this.getOffset(),
-				here = this.prepareStamp(),
+				here = this.currentHandle,
 				textY = this.size * this.lineHeight * this.scale,
 				t = my.text,
 				ts = this.texts;
@@ -573,7 +572,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 		my.Phrase.prototype.clearWithBackground = function(ctx, cellname, cell) {
 			var i, iz, tX, tY,
 				o = this.getOffset(),
-				here = this.prepareStamp(),
+				here = this.currentHandle,
 				textY = this.size * this.lineHeight * this.scale,
 				t = my.text,
 				ts = this.texts;
@@ -598,7 +597,7 @@ Stamp helper function - perform a 'draw' method draw
 		my.Phrase.prototype.draw = function(ctx, cellname, cell) {
 			var i, iz, tX, tY,
 				o = this.getOffset(),
-				here = this.prepareStamp(),
+				here = this.currentHandle,
 				textY = this.size * this.lineHeight * this.scale,
 				t = my.text,
 				ts = this.texts;
@@ -626,7 +625,7 @@ Stamp helper function - perform a 'fill' method draw
 		my.Phrase.prototype.fill = function(ctx, cellname, cell) {
 			var i, iz, tX, tY,
 				o = this.getOffset(),
-				here = this.prepareStamp(),
+				here = this.currentHandle,
 				textY = this.size * this.lineHeight * this.scale,
 				t = my.text,
 				ts = this.texts;
@@ -654,7 +653,7 @@ Stamp helper function - perform a 'drawFill' method draw
 		my.Phrase.prototype.drawFill = function(ctx, cellname, cell) {
 			var i, iz, tX, tY,
 				o = this.getOffset(),
-				here = this.prepareStamp(),
+				here = this.currentHandle,
 				textY = this.size * this.lineHeight * this.scale,
 				t = my.text,
 				ts = this.texts;
@@ -682,7 +681,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 		my.Phrase.prototype.fillDraw = function(ctx, cellname, cell) {
 			var i, iz, tX, tY,
 				o = this.getOffset(),
-				here = this.prepareStamp(),
+				here = this.currentHandle,
 				textY = this.size * this.lineHeight * this.scale,
 				t = my.text,
 				ts = this.texts;
@@ -710,7 +709,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 		my.Phrase.prototype.sinkInto = function(ctx, cellname, cell) {
 			var i, iz, tX, tY,
 				o = this.getOffset(),
-				here = this.prepareStamp(),
+				here = this.currentHandle,
 				textY = this.size * this.lineHeight * this.scale,
 				t = my.text,
 				ts = this.texts;
@@ -738,7 +737,7 @@ Stamp helper function - perform a 'floatOver' method draw
 		my.Phrase.prototype.floatOver = function(ctx, cellname, cell) {
 			var i, iz, tX, tY,
 				o = this.getOffset(),
-				here = this.prepareStamp(),
+				here = this.currentHandle,
 				textY = this.size * this.lineHeight * this.scale,
 				t = my.text,
 				ts = this.texts;
@@ -764,7 +763,6 @@ Stamp helper function - perform a 'none' method draw
 @private
 **/
 		my.Phrase.prototype.none = function(ctx, cellname, cell) {
-			this.prepareStamp();
 			return this;
 		};
 		/**

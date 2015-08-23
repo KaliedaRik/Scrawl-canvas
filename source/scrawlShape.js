@@ -164,15 +164,6 @@ Augments Entity.set()
 			return this;
 		};
 		/**
-Augments Position.getPivotOffsetVector()
-@method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity drawing should start
-@private
-**/
-		my.Shape.prototype.getPivotOffsetVector = function() {
-			return (this.isLine) ? my.Entity.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
-		};
-		/**
 Constructor, clone and set helper function
 
 Create native path data from data attribute String
@@ -371,7 +362,6 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 				tempY;
 			var myshape = {
 				M: function(item) {
-					console.log(d.c, d.p, currentX, reflectX, item.scale);
 					currentX = d.p[0];
 					currentY = d.p[1];
 					reflectX = currentX;
@@ -407,8 +397,8 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 				},
 				L: function(item) {
 					for (k = 0, kz = d.p.length; k < kz; k += 2) {
-						currentX += d.p[k];
-						currentY += d.p[k + 1];
+						currentX = d.p[k];
+						currentY = d.p[k + 1];
 						reflectX = currentX;
 						reflectY = currentY;
 						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
@@ -557,7 +547,7 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 				}
 			};
 			if (this.dataSet) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				currentX = 0;
 				currentY = 0;
 				reflectX = 0;
@@ -677,7 +667,6 @@ Stamp helper function - perform a 'fillDraw' method draw
 **/
 		my.Shape.prototype.fillDraw = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
-			console.log(this.winding);
 			ctx.fill(this.winding);
 			this.clearShadow(ctx, cell);
 			ctx.stroke();

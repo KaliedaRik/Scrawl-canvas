@@ -1001,7 +1001,7 @@ Stamp helper function - perform a 'clip' method draw
 @private
 **/
 		my.Picture.prototype.clip = function(ctx, cellname, cell) {
-			var here = this.prepareStamp(),
+			var here = this.currentHandle,
 				pasteData = this.pasteData;
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
@@ -1019,7 +1019,6 @@ Stamp helper function - perform a 'none' method draw
 @private
 **/
 		my.Picture.prototype.none = function(ctx, cellname, cell) {
-			this.prepareStamp();
 			return this;
 		};
 		/**
@@ -1032,7 +1031,7 @@ Stamp helper function - perform a 'clear' method draw
 @private
 **/
 		my.Picture.prototype.clear = function(ctx, cellname, cell) {
-			var here = this.prepareStamp(),
+			var here = this.currentHandle,
 				pasteData = this.pasteData;
 			this.rotateCell(ctx, cell);
 			ctx.clearRect(here.x, here.y, pasteData.w, pasteData.h);
@@ -1048,7 +1047,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @private
 **/
 		my.Picture.prototype.clearWithBackground = function(ctx, cellname, cell) {
-			var here = this.prepareStamp(),
+			var here = this.currentHandle,
 				pasteData = this.pasteData,
 				myctx = my.ctx[cellname];
 			this.rotateCell(ctx, cell);
@@ -1072,7 +1071,7 @@ Stamp helper function - perform a 'draw' method draw
 @private
 **/
 		my.Picture.prototype.draw = function(ctx, cellname, cell) {
-			var here = this.prepareStamp(),
+			var here = this.currentHandle,
 				pasteData = this.pasteData;
 			this.rotateCell(ctx, cell);
 			cell.setEngine(this);
@@ -1094,7 +1093,7 @@ Stamp helper function - perform a 'fill' method draw
 				cd = this.copyData,
 				pd = this.pasteData;
 			if (data) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
 				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
@@ -1116,7 +1115,7 @@ Stamp helper function - perform a 'drawFill' method draw
 				cd = this.copyData,
 				pd = this.pasteData;
 			if (data) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
 				ctx.strokeRect(here.x, here.y, pd.w, pd.h);
@@ -1140,7 +1139,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 				cd = this.copyData,
 				pd = this.pasteData;
 			if (data) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
 				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
@@ -1164,7 +1163,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 				cd = this.copyData,
 				pd = this.pasteData;
 			if (data) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
 				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
@@ -1187,7 +1186,7 @@ Stamp helper function - perform a 'floatOver' method draw
 				cd = this.copyData,
 				pd = this.pasteData;
 			if (data) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
 				ctx.strokeRect(here.x, here.y, pd.w, pd.h);
@@ -1281,7 +1280,8 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 			v1.vectorSubtract(pd).rotate(-this.roll);
 			v1.x = (this.flipReverse) ? -v1.x : v1.x;
 			v1.y = (this.flipUpend) ? -v1.y : v1.y;
-			v1.vectorSubtract(this.getPivotOffsetVector(this.handle));
+			// v1.vectorSubtract(this.getPivotOffsetVector(this.handle));
+			v1.vectorSubtract(this.currentHandle);
 			v1.x = Math.round(v1.x * (cd.w / pd.w));
 			v1.y = Math.round(v1.y * (cd.h / pd.h));
 			if (!this.imageData) {

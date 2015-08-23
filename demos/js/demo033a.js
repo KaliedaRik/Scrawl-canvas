@@ -28,6 +28,7 @@ var mycode = function() {
 		maxY = 595,
 		bunnyPos = [],
 		bunny,
+		start,
 		addBunnies,
 		moveBunnies;
 
@@ -43,6 +44,7 @@ var mycode = function() {
 		collisionPoints: 'center',
 		fastStamp: true, //essential if speed gains are to be realised
 	});
+	start = bunny.currentStart;
 
 	//event listener
 	addBunnies = function(e) {
@@ -59,21 +61,22 @@ var mycode = function() {
 
 	//animation (display loop) function
 	moveBunnies = function() {
-		var temp;
+		var temp, b, i, iz;
 		pad.clear();
-		for (var i = 0, z = bunnyPos.length; i < z; i++) {
-			temp = bunnyPos[i].x + bunnyPos[i].dx;
+		for (i = 0, iz = bunnyPos.length; i < iz; i++) {
+			b = bunnyPos[i];
+			temp = b.x + b.dx;
 			if (temp < minX || temp > maxX) {
-				bunnyPos[i].dx = -bunnyPos[i].dx;
+				b.dx = -b.dx;
 			}
-			temp = bunnyPos[i].y + bunnyPos[i].dy;
+			b.x += b.dx;
+			start.x = b.x;
+			temp = b.y + b.dy;
 			if (temp < minY || temp > maxY) {
-				bunnyPos[i].dy = -bunnyPos[i].dy;
+				b.dy = -b.dy;
 			}
-			bunnyPos[i].x += bunnyPos[i].dx;
-			bunnyPos[i].y += bunnyPos[i].dy;
-			bunny.start.x = bunnyPos[i].x;
-			bunny.start.y = bunnyPos[i].y;
+			b.y += b.dy;
+			start.y = b.y;
 			bunny.stamp();
 		}
 		pad.show();

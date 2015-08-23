@@ -265,6 +265,7 @@ Permitted argument values include
 		my.Position.prototype.updateStart = function(item) {
 			item = my.xtGet(item, 'all');
 			this.updateStartActions[item](my.addPercentages, this.start, this.delta, my.addWithinBounds, this);
+			this.currentStart.flag = false;
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
 			}
@@ -314,6 +315,7 @@ Permitted argument values include
 		my.Position.prototype.revertStart = function(item) {
 			item = my.xtGet(item, 'all');
 			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, my.addWithinBounds, this);
+			this.currentStart.flag = false;
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
 			}
@@ -401,6 +403,9 @@ reverse helper object
 				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
 			}
 		};
+		my.PageElement.prototype.updateStartActions = my.Position.prototype.updateStartActions;
+		my.PageElement.prototype.revertStartActions = my.Position.prototype.revertStartActions;
+		my.PageElement.prototype.reverseActions = my.Position.prototype.reverseActions;
 		my.d.Cell.copyDelta = {
 			x: 0,
 			y: 0,
@@ -475,8 +480,7 @@ Permitted argument values include
 		my.Cell.prototype.updateStart = function(item) {
 			item = my.xtGet(item, 'all');
 			this.updateStartActions[item](my.addPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds, this);
-			this.setCopy();
-			this.setPaste();
+			this.currentStart.flag = false;
 			return this;
 		};
 		/**
@@ -565,8 +569,7 @@ Permitted argument values include
 		my.Cell.prototype.revertStart = function(item) {
 			item = my.xtGet(item, 'all');
 			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds, this);
-			this.setCopy();
-			this.setPaste();
+			this.currentStart.flag = false;
 			return this;
 		};
 		/**

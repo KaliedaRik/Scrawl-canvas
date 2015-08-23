@@ -651,7 +651,7 @@ Valid identifier Strings include:
 		return false;
 	};
 	my.isa_str = function(item) {
-		return (item.substring) ? true : false;
+		return (item && item.substring) ? true : false;
 	};
 	my.isa_fn = function(item) {
 		return (typeof item === 'function') ? true : false;
@@ -669,28 +669,28 @@ Valid identifier Strings include:
 		return (Object.prototype.toString.call(item) === '[object Date]') ? true : false;
 	};
 	my.isa_dom = function(item) {
-		return (item.querySelector && item.dispatchEvent) ? true : false;
+		return (item && item.querySelector && item.dispatchEvent) ? true : false;
 	};
 	my.isa_event = function(item) {
-		return (item.preventDefault && item.initEvent) ? true : false;
+		return (item && item.preventDefault && item.initEvent) ? true : false;
 	};
 	my.isa_img = function(item) {
 		return (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
 	};
 	my.isa_num = function(item) {
-		return (item.toFixed) ? true : false;
+		return (item && item.toFixed) ? true : false;
 	};
 	my.isa_realnum = function(item) {
-		return (item.toFixed && !isNaN(item) && isFinite(item)) ? true : false;
+		return (item && item.toFixed && !isNaN(item) && isFinite(item)) ? true : false;
 	};
 	my.isa_obj = function(item) {
 		return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 	};
 	my.isa_quaternion = function(item) {
-		return (item.type && item.type === 'Quaternion') ? true : false;
+		return (item && item.type && item.type === 'Quaternion') ? true : false;
 	};
 	my.isa_vector = function(item) {
-		return (item.type && item.type === 'Vector') ? true : false;
+		return (item && item.type && item.type === 'Vector') ? true : false;
 	};
 	my.isa_video = function(item) {
 		return (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
@@ -778,7 +778,6 @@ A __utility__ function for variable type checking
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('xta array supplied');
 			slice = slice[0];
 		}
 		if (slice.length > 0) {
@@ -808,7 +807,6 @@ A __utility__ function for variable type checking
 			iz;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
-			console.log('xto array supplied');
 			slice = slice[0];
 		}
 		if (slice.length > 0) {
@@ -1407,7 +1405,7 @@ A __general__ function which passes on requests to Pads to generate new &lt;canv
 @return New Cell object
 **/
 	my.addNewCell = function(data, pad) {
-		pad = (pad.substring) ? pad : my.currentPad;
+		pad = (pad && pad.substring) ? pad : my.currentPad;
 		return my.pad[pad].addNewCell(data);
 	};
 	/**
@@ -2695,6 +2693,10 @@ SubScrawl, and all Objects that prototype chain to Subscrawl, supports the follo
 			y: get(items.startY, temp.y, 0),
 			name: this.type + '.' + this.name + '.start'
 		});
+		this.currentStart = vec({
+			name: this.type + '.' + this.name + '.current.start'
+		});
+		this.currentStart.flag = false;
 		this.work.start = vec({
 			name: this.type + '.' + this.name + '.work.start'
 		});
@@ -2717,9 +2719,26 @@ Where values are Numbers, handle can be treated like any other Vector
 			y: get(items.handleY, temp.y, 0),
 			name: this.type + '.' + this.name + '.handle'
 		});
+		this.currentHandle = vec({
+			name: this.type + '.' + this.name + '.current.handle'
+		});
+		this.currentHandle.flag = false;
 		this.work.handle = vec({
 			name: this.type + '.' + this.name + '.work.handle'
 		});
+		/**
+An object with the following attributes:
+
+* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+@property maxDimensions
+@type Object
+@default null
+@private
+**/
+		this.maxDimensions = null;
 		/**
 The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point
 @property pivot
@@ -2770,17 +2789,6 @@ Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axi
 **/
 		this.lockY = get(items.lockY, d.lockY);
 		/**
-Positioning helper vector - includes a flag attribute for dirty checking
-@property offset
-@type Vector
-@default zero vector
-@private
-**/
-		this.offset = vec({
-			name: this.type + '.' + this.name + '.offset'
-		});
-		this.offset.flag = false;
-		/**
 Index of mouse vector to use when pivot === 'mouse'
 
 The Pad.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
@@ -2807,10 +2815,19 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 			x: 0,
 			y: 0
 		},
+		currentStart: {
+			x: 0,
+			y: 0
+		},
 		handle: {
 			x: 0,
 			y: 0
 		},
+		currentHandle: {
+			x: 0,
+			y: 0
+		},
+		maxDimensions: null,
 		pivot: null,
 		scale: 1,
 		flipReverse: false,
@@ -2924,6 +2941,12 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 		if (xto(items.handle, items.handleX, items.handleY)) {
 			this.setHandle(items);
 		}
+		if (xto(items.flipUpend, items.flipReverse, items.scale, items.width, items.height, items.roll)) {
+			this.maxDimensions = null;
+			if (xto(items.scale, items.width, items.height)) {
+				this.currentHandle.flag = false;
+			}
+		}
 		this.animationPositionSet(items);
 		return this;
 	};
@@ -2937,14 +2960,24 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 	my.Position.prototype.setStart = function(items) {
 		var temp,
 			so = my.safeObject,
-			get = my.xtGet;
+			get = my.xtGet,
+			vec = my.makeVector,
+			isvec = my.isa_vector;
 		items = so(items);
-		if (!my.isa_vector(this.start)) {
-			this.start = my.makeVector(items.start || this.start);
+		if (!isvec(this.start)) {
+			this.start = vec(items.start || this.start);
+			this.start.name = this.type + '.' + this.name + '.start';
 		}
 		temp = so(items.start);
 		this.start.x = get(items.startX, temp.x, this.start.x);
 		this.start.y = get(items.startY, temp.y, this.start.y);
+		if (!isvec(this.currentStart)) {
+			this.currentStart = vec({
+				name: this.type + '.' + this.name + '.current.start'
+			});
+		}
+		this.currentStart.flag = false;
+		this.maxDimensions = null;
 		return this;
 	};
 	/**
@@ -2957,14 +2990,24 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 	my.Position.prototype.setHandle = function(items) {
 		var temp,
 			so = my.safeObject,
-			get = my.xtGet;
+			get = my.xtGet,
+			vec = my.makeVector,
+			isvec = my.isa_vector;
 		items = so(items);
-		if (!my.isa_vector(this.handle)) {
-			this.handle = my.makeVector(items.handle || this.handle);
+		if (!isvec(this.handle)) {
+			this.handle = vec(items.handle || this.handle);
+			this.handle.name = this.type + '.' + this.name + '.handle';
 		}
 		temp = so(items.handle);
 		this.handle.x = get(items.handleX, temp.x, this.handle.x);
 		this.handle.y = get(items.handleY, temp.y, this.handle.y);
+		if (!isvec(this.currentHandle)) {
+			this.currentHandle = vec({
+				name: this.type + '.' + this.name + '.current.handle'
+			});
+		}
+		this.currentHandle.flag = false;
+		this.maxDimensions = null;
 		return this;
 	};
 	/**
@@ -2995,8 +3038,23 @@ Adds the value of each attribute supplied in the argument to existing values; on
 		if (xto(items.handle, items.handleX, items.handleY)) {
 			this.setDeltaHandle(items);
 		}
-		if (items.scale) {
-			this.setDeltaScale(items);
+		if (xto(items.scale, items.width, items.height, items.roll)) {
+			if (items.scale) {
+				this.setDeltaScale(items);
+			}
+			if (items.roll) {
+				this.setDeltaRoll(items);
+			}
+			if (items.width) {
+				this.setDeltaWidth(items);
+			}
+			if (items.height) {
+				this.setDeltaHeight(items);
+			}
+			this.maxDimensions = null;
+			if (xto(items.scale, items.width, items.height)) {
+				this.currentHandle.flag = false;
+			}
 		}
 		return this;
 	};
@@ -3020,6 +3078,8 @@ Adds the value of each attribute supplied in the argument to existing values; Th
 		y = get(items.startY, temp.y, 0);
 		this.start.x = (this.start.x.toFixed) ? this.start.x + x : perc(this.start.x, x);
 		this.start.y = (this.start.y.toFixed) ? this.start.y + y : perc(this.start.y, y);
+		this.currentStart.flag = false;
+		return this;
 	};
 	/**
 Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY
@@ -3041,6 +3101,7 @@ Adds the value of each attribute supplied in the argument to existing values. Th
 		y = get(items.handleY, temp.y, 0);
 		this.handle.x = (this.handle.x.toFixed) ? this.handle.x + x : perc(this.handle.x, x);
 		this.handle.y = (this.handle.y.toFixed) ? this.handle.y + y : perc(this.handle.y, y);
+		this.currentHandle.flag = false;
 		return this;
 	};
 	/**
@@ -3053,6 +3114,46 @@ Adds the value of each attribute supplied in the argument to existing values. Th
 	my.Position.prototype.setDeltaScale = function(items) {
 		items = my.safeObject(items);
 		this.scale += items.scale || 0;
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values. This function accepts roll
+@method setDeltaRoll
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Position.prototype.setDeltaRoll = function(items) {
+		items = my.safeObject(items);
+		this.roll += items.roll || 0;
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values. This function accepts width
+@method setDeltaWidth
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Position.prototype.setDeltaWidth = function(items) {
+		var w;
+		items = my.safeObject(items);
+		w = items.width || 0;
+		this.width = (this.width.toFixed) ? this.width + w : my.addPercentages(this.width, w);
+		return this;
+	};
+	/**
+Adds the value of each attribute supplied in the argument to existing values. This function accepts height
+@method setDeltaHeight
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Position.prototype.setDeltaHeight = function(items) {
+		var h;
+		items = my.safeObject(items);
+		h = items.height || 0;
+		this.height = (this.height.toFixed) ? this.height + h : my.addPercentages(this.height, h);
 		return this;
 	};
 	/**
@@ -3101,120 +3202,172 @@ Position.setDelta hook function - modified by animation extension
 		return a;
 	};
 	/**
-Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object's handle attribute, where the object's frame of reference is its top-left corner
+updateCurrentHandle helper object
 
-* doesn't take into account the object's scaling or orientation
-* (badly named function - getPivotOffsetVector has nothing to do with pivots)
-
-@method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
+@method getReferenceDimensions
+@param {Object} reference object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)
+@return Object with attributes {w: width, h: height, c: centered}
 @private
 **/
-	my.Position.prototype.getPivotOffsetVector = function() {
-		var height,
-			width;
-		switch (this.type) {
-			case 'Block':
-				height = (this.localHeight / this.scale) || this.get('height');
-				width = (this.localWidth / this.scale) || this.get('width');
-				break;
-			case 'Picture':
-			case 'Cell':
-				height = (this.pasteData.h / this.scale) || this.get('height');
-				width = (this.pasteData.w / this.scale) || this.get('width');
-				break;
-			default:
-				height = this.height || this.get('height');
-				width = this.width || this.get('width');
+	my.Position.prototype.getReferenceDimensions = {
+		Stack: function(reference) {
+			return {
+				w: reference.width,
+				h: reference.height,
+				c: false
+			};
+		},
+		Pad: function(reference) {
+			return {
+				w: reference.width,
+				h: reference.height,
+				c: false
+			};
+		},
+		Element: function(reference) {
+			return {
+				w: reference.width,
+				h: reference.height,
+				c: false
+			};
+		},
+		Cell: function(reference) {
+			var scale = reference.scale,
+				data = reference.pasteData;
+			return {
+				w: data.w / scale,
+				h: data.h / scale,
+				c: false
+			};
+		},
+		Block: function(reference) {
+			var scale = reference.scale;
+			return {
+				w: reference.localWidth / scale,
+				h: reference.localHeight / scale,
+				c: false
+			};
+		},
+		Wheel: function(reference) {
+			return {
+				w: reference.width,
+				h: reference.height,
+				c: true
+			};
+		},
+		Phrase: function(reference) {
+			return {
+				w: reference.width,
+				h: reference.height,
+				c: false
+			};
+		},
+		Picture: function(reference) {
+			var scale = reference.scale,
+				data = reference.pasteData;
+			return {
+				w: data.w / scale,
+				h: data.h / scale,
+				c: false
+			};
+		},
+		Path: function(reference) {
+			return {
+				w: reference.width,
+				h: reference.height,
+				c: (reference.isLine) ? false : true
+			};
+		},
+		Shape: function(reference) {
+			return {
+				w: reference.width,
+				h: reference.height,
+				c: (reference.isLine) ? false : true
+			};
+		},
+		Frame: function(reference) {
+			return {
+				w: reference.width,
+				h: reference.height,
+				c: false
+			};
 		}
-		return my.Position.prototype.calculatePOV.call(this, this.work.handle, width, height, false);
 	};
 	/**
-Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object's handle attribute, where the object's frame of reference is its center
+Convert handle percentage values to numerical values, stored in currentHandle
 
-* doesn't take into account the object's scaling or orientation
-* (badly named function - getPivotOffsetVector has nothing to do with pivots)
-
-@method getCenteredPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
+@method updateCurrentHandle
+@return This
+@chainable
 @private
 **/
-	my.Position.prototype.getCenteredPivotOffsetVector = function() {
-		var height,
-			width;
-		height = this.localHeight / this.scale || this.height || this.get('height');
-		width = this.localWidth / this.scale || this.width || this.get('width');
-		return my.Position.prototype.calculatePOV.call(this, this.work.handle, width, height, true);
-	};
-	/**
-Position.getOffsetStartVector() helper function. Calculates the pixel values for the object's handle attribute
-
-@method calculatePOV
-@param {Vector} result - object's handle vector
-@param {Number} width - object's width (pixels)
-@param {Number} height - object's height (pixels)
-@param {Boolean} centered - true if object's frame of reference is its center point; false otherwise
-@return A Vector of calculated offset values
-@private
-**/
-	my.Position.prototype.calculatePOV = function(result, width, height, centered) {
-		var stat_horizontal = ['left', 'center', 'right'],
-			stat_vertical = ['top', 'center', 'bottom'],
+	my.Position.prototype.updateCurrentHandle = function() {
+		var dims, cont, conv, handle, test, testx, testy, currentHandle, scale;
+		if (!this.currentHandle.flag) {
+			dims = this.getReferenceDimensions[this.type](this);
 			cont = my.contains;
-		if ((result.x.substring) && !cont(stat_horizontal, result.x)) {
-			result.x = (centered) ? ((parseFloat(result.x) / 100) * width) - (width / 2) : (parseFloat(result.x) / 100) * width;
-		}
-		else {
-			switch (result.x) {
-				case 'left':
-					result.x = (centered) ? -(width / 2) : 0;
-					break;
-				case 'center':
-					result.x = (centered) ? 0 : width / 2;
-					break;
-				case 'right':
-					result.x = (centered) ? width / 2 : width;
-					break;
+			conv = this.numberConvert;
+			handle = this.handle;
+			test = ['top', 'bottom', 'left', 'right', 'center'];
+			testx = handle.x.substring;
+			testy = handle.y.substring;
+			currentHandle = this.currentHandle;
+			scale = this.scale || 1;
+			currentHandle.x = (testx) ? conv(handle.x, dims.w) : handle.x;
+			currentHandle.y = (testy) ? conv(handle.y, dims.h) : handle.y;
+			if (dims.c) {
+				if (cont(test, handle.x)) {
+					currentHandle.x -= (dims.w / 2);
+				}
+				if (cont(test, handle.y)) {
+					currentHandle.y -= (dims.h / 2);
+				}
 			}
-		}
-		if ((result.y.substring) && !cont(stat_vertical, result.y)) {
-			result.y = (centered) ? ((parseFloat(result.y) / 100) * height) - (height / 2) : (parseFloat(result.y) / 100) * height;
-		}
-		else {
-			switch (result.y) {
-				case 'top':
-					result.y = (centered) ? -(height / 2) : 0;
-					break;
-				case 'center':
-					result.y = (centered) ? 0 : height / 2;
-					break;
-				case 'bottom':
-					result.y = (centered) ? height / 2 : height;
-					break;
+			if (testx) {
+				currentHandle.x *= scale;
 			}
+			if (testy) {
+				currentHandle.y *= scale;
+			}
+			if (isNaN(currentHandle.x)) {
+				console.log('#4 currentHandleX is NaN', scale, dims.w, currentHandle.x);
+				currentHandle.x = 0;
+			}
+			if (isNaN(currentHandle.y)) {
+				currentHandle.y = 0;
+			}
+			currentHandle.reverse();
+			currentHandle.flag = true;
 		}
-		result.x = (isNaN(result.x)) ? 0 : result.x;
-		result.y = (isNaN(result.y)) ? 0 : result.y;
-		return result;
+		return this;
 	};
 	/**
-Calculates the pixel values of the object's handle attribute
-@method getOffsetStartVector
-@return Final offset values (as a Vector) to determine where entity, cell or element drawing should start
+Convert start percentage values to numerical values, stored in currentStart
+
+@method updateCurrentStart
+@param {Object} reference object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)
+@return This
+@chainable
+@private
 **/
-	my.Position.prototype.getOffsetStartVector = function() {
-		var scaleX,
-			scaleY,
-			handle,
-			h = this.handle,
-			s = this.scale;
-		this.resetWork();
-		scaleX = (h.x.substring) ? s : 1;
-		scaleY = (h.y.substring) ? s : 1;
-		handle = this.getPivotOffsetVector();
-		handle.x *= scaleX;
-		handle.y *= scaleY;
-		return handle.reverse();
+	my.Position.prototype.updateCurrentStart = function(reference) {
+		var dims, conv, start, currentStart;
+		if (!this.currentStart.flag) {
+			dims = this.getReferenceDimensions[reference.type](reference);
+			conv = this.numberConvert;
+			start = this.start;
+			currentStart = this.currentStart;
+			currentStart.x = (start.x.substring) ? conv(start.x, dims.w) : start.x;
+			currentStart.y = (start.y.substring) ? conv(start.y, dims.h) : start.y;
+			if (isNaN(currentStart.x)) {
+				currentStart.x = 0;
+			}
+			if (isNaN(currentStart.y)) {
+				currentStart.y = 0;
+			}
+			currentStart.flag = true;
+		}
+		return this;
 	};
 	/**
 Stamp helper function - set this entity, cell or element start values to its pivot entity/point start value, or to the current mouse coordinates
@@ -3231,16 +3384,15 @@ Takes into account lock flag settings
 			vector,
 			entity,
 			mouse,
-			x, y,
 			pad,
 			lockX = this.lockX,
 			lockY = this.lockY,
-			start = this.start;
+			start = this.currentStart;
 		if (my.xt(my.pointnames)) {
 			pivot = my.point[this.pivot];
 			if (pivot) {
 				entity = my.entity[pivot.entity];
-				vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.start);
+				vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.currentStart);
 				start.x = (!lockX) ? vector.x : start.x;
 				start.y = (!lockY) ? vector.y : start.y;
 				return this;
@@ -3248,7 +3400,7 @@ Takes into account lock flag settings
 		}
 		pivot = my.entity[this.pivot];
 		if (pivot) {
-			vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.start;
+			vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.currentStart;
 			start.x = (!lockX) ? vector.x : start.x;
 			start.y = (!lockY) ? vector.y : start.y;
 			return this;
@@ -3258,14 +3410,12 @@ Takes into account lock flag settings
 			pad = my.pad[cell.pad];
 			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
 			if (mouse) {
-				x = (start.x.substring) ? this.numberConvert(start.x, cell.actualWidth) : start.x;
-				y = (start.y.substring) ? this.numberConvert(start.y, cell.actualHeight) : start.y;
 				if (this.oldX == null && this.oldY == null) { //jshint ignore:line
-					this.oldX = x;
-					this.oldY = y;
+					this.oldX = start.x;
+					this.oldY = start.y;
 				}
-				start.x = (!lockX) ? x + mouse.x - this.oldX : x;
-				start.y = (!lockY) ? y + mouse.y - this.oldY : y;
+				start.x = (!lockX) ? start.x + mouse.x - this.oldX : start.x;
+				start.y = (!lockY) ? start.y + mouse.y - this.oldY : start.y;
 				this.oldX = mouse.x;
 				this.oldY = mouse.y;
 			}
@@ -3307,123 +3457,6 @@ Stamp helper hook function - amended by stacks extension
 	my.Position.prototype.setStampUsingStacksPivot = function() {
 		return this;
 	};
-	/**
-Stamp helper function - convert string start.x values to numerical values
-@method convertX
-@param {String} x coordinate String
-@param {String} cell reference cell name String; or alternatively DOM canvas object
-@return Number - x value
-@private
-**/
-	my.Position.prototype.convertX = function(x, cell) {
-		console.log('convertX deprecation alert', this.name);
-		var width,
-			result;
-		switch (typeof cell) {
-			case 'string':
-				width = scrawl.cell[cell].actualWidth;
-				break;
-			case 'number':
-				width = cell;
-				break;
-			default:
-				width = cell.actualWidth;
-		}
-
-		result = parseFloat(x) / 100;
-		if (isNaN(result)) {
-			switch (x) {
-				case 'right':
-					return width;
-				case 'center':
-					return width / 2;
-				default:
-					return 0;
-			}
-		}
-		return result * width;
-	};
-	/**
-Stamp helper function - convert string start.y values to numerical values
-@method convertY
-@param {String} y coordinate String
-@param {String} cell reference cell name String
-@return Number - y value
-@private
-**/
-	my.Position.prototype.convertY = function(y, cell) {
-		console.log('convertY deprecation alert', this.name);
-		var height,
-			result;
-		switch (typeof cell) {
-			case 'string':
-				height = scrawl.cell[cell].actualHeight;
-				break;
-			case 'number':
-				height = cell;
-				break;
-			default:
-				height = cell.actualHeight;
-		}
-		result = parseFloat(y) / 100;
-		if (isNaN(result)) {
-			switch (y) {
-				case 'bottom':
-					return height;
-				case 'center':
-					return height / 2;
-				default:
-					return 0;
-			}
-		}
-		return result * height;
-	};
-	/**
-Stamp helper function - convert string start.x values to numerical values
-@method simpleConvertX
-@param {String} x coordinate String
-@param {Object} cell object
-@return Number - x value
-@private
-**/
-	// my.Position.prototype.simpleConvertX = function(x, cell) {
-	// 	var width = cell.actualWidth,
-	// 		result = parseFloat(x) / 100;
-	// 	if (isNaN(result)) {
-	// 		switch (x) {
-	// 			case 'right':
-	// 				return width;
-	// 			case 'center':
-	// 				return width / 2;
-	// 			default:
-	// 				return 0;
-	// 		}
-	// 	}
-	// 	return result * width;
-	// };
-	/**
-Stamp helper function - convert string start.y values to numerical values
-@method simpleConvertY
-@param {String} y coordinate String
-@param {Object} cell object
-@return Number - y value
-@private
-**/
-	// my.Position.prototype.simpleConvertY = function(y, cell) {
-	// 	var height = cell.actualHeight,
-	// 		result = parseFloat(y) / 100;
-	// 	if (isNaN(result)) {
-	// 		switch (y) {
-	// 			case 'bottom':
-	// 				return height;
-	// 			case 'center':
-	// 				return height / 2;
-	// 			default:
-	// 				return 0;
-	// 		}
-	// 	}
-	// 	return result * height;
-	// };
 	/**
 Stamp helper function - convert string percentage values to numerical values
 @method numberConvert
@@ -4813,8 +4846,6 @@ Cell constructor hook function - core module
 			this.pasteWidth = get(items.pasteWidth, items.width, this.pasteWidth);
 			this.pasteHeight = get(items.pasteHeight, items.height, this.pasteHeight);
 		}
-		this.setCopy();
-		this.setPaste();
 		context = my.makeContext({
 			name: this.name,
 			cell: my.context[this.name]
@@ -4840,6 +4871,8 @@ Cell constructor hook function - core module
 			name: this.name,
 			cell: this.name
 		});
+		this.setCopy();
+		this.setPaste();
 	};
 	/**
 Cell constructor hook function - modified by collisions extension
@@ -4910,6 +4943,9 @@ Cell.get hook function - modified by animation extension
 	};
 	/**
 Augments Position.set(), to allow users to set the start, handle, and source attributes using startX, startY, targetX, targetY, handleX, handleY, sourceX, sourceY.
+
+Note - setting the argument attribute __resolve__ to true will force a recalculation of the cell's copy and passte data; this is useful in particular for cells that do not undertake a full display cycle (when their cleared or compiled attributes have been set to false)
+
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -4924,13 +4960,13 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 			this.setPasteVector(items, false);
 		}
 		if (xto(items.copy, items.copyX, items.copyY)) {
-			this.setCopyVector(items, false);
+			this.setCopyVector(items);
 		}
 		if (xto(items.copyWidth, items.width)) {
-			this.setCopyWidth(items, false);
+			this.setCopyWidth(items);
 		}
 		if (xto(items.copyHeight, items.height)) {
-			this.setCopyHeight(items, false);
+			this.setCopyHeight(items);
 		}
 		if (xto(items.pasteWidth, items.width)) {
 			this.setPasteWidth(items, false);
@@ -4948,22 +4984,60 @@ Augments Position.set(), to allow users to set the start, handle, and source att
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
 		}
+		if (xto(items.actualWidth, items.actualHeight, items.pasteWidth, items.pasteHeight, items.width, items.height, items.handle, items.handleX, items.handleY, items.scale)) {
+			this.setDirtyHandles();
+		}
+		if (xto(items.handle, items.handleX, items.handleY, items.scale)) {
+			this.setDirtyHandles();
+		}
+		if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY)) {
+			this.setDirtyStarts();
+		}
 		this.animationCellSet(items);
-		if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale)) {
-			this.setCopy();
-		}
-		if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
-			this.setPaste();
-		}
-		if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
-			this.offset.flag = false;
-		}
 		if (xt(items.compileOrder)) {
 			my.pad[this.pad].resortCompile = true;
 		}
 		if (xt(items.showOrder)) {
 			my.pad[this.pad].resortShow = true;
 		}
+		if (items.resolve) {
+			this.setCopy();
+			this.setPaste();
+		}
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setDirtyStarts
+@return This
+@chainable
+@private
+**/
+	my.Cell.prototype.setDirtyStarts = function() {
+		var group = my.group,
+			groups = this.groups,
+			i, iz;
+		for (i = 0, iz = groups.length; i < iz; i++) {
+			group[groups[i]].setDirtyStarts();
+		}
+		this.currentStart.flag = false;
+		return this;
+	};
+	/**
+Augments Cell.set()
+@method setDirtyHandles
+@return This
+@chainable
+@private
+**/
+	my.Cell.prototype.setDirtyHandles = function() {
+		var group = my.group,
+			groups = this.groups,
+			i, iz;
+		for (i = 0, iz = groups.length; i < iz; i++) {
+			group[groups[i]].setDirtyHandles();
+		}
+		this.currentHandle.flag = false;
 		return this;
 	};
 	/**
@@ -4982,7 +5056,7 @@ Augments Cell.set()
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
-			this.offset.flag = false;
+			this.setDirtyHandles();
 		}
 		return this;
 	};
@@ -5002,7 +5076,7 @@ Augments Cell.set()
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
-			this.offset.flag = false;
+			this.setDirtyHandles();
 		}
 		return this;
 	};
@@ -5020,7 +5094,7 @@ Augments Cell.set()
 		recalc = get(recalc, true);
 		this.pasteHeight = get(items.pasteHeight, items.height, this.pasteHeight);
 		if (recalc) {
-			this.setPaste();
+			this.setDirtyHandles();
 		}
 		return this;
 	};
@@ -5038,7 +5112,7 @@ Augments Cell.set()
 		recalc = get(recalc, true);
 		this.pasteWidth = get(items.pasteWidth, items.width, this.pasteWidth);
 		if (recalc) {
-			this.setPaste();
+			this.setDirtyHandles();
 		}
 		return this;
 	};
@@ -5050,14 +5124,10 @@ Augments Cell.set()
 @return This
 @chainable
 **/
-	my.Cell.prototype.setCopyHeight = function(items, recalc) {
+	my.Cell.prototype.setCopyHeight = function(items) {
 		var get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = get(recalc, true);
 		this.copyHeight = get(items.copyHeight, items.height, this.copyHeight);
-		if (recalc) {
-			this.setCopy();
-		}
 		return this;
 	};
 	/**
@@ -5068,14 +5138,10 @@ Augments Cell.set()
 @return This
 @chainable
 **/
-	my.Cell.prototype.setCopyWidth = function(items, recalc) {
+	my.Cell.prototype.setCopyWidth = function(items) {
 		var get = my.xtGet;
 		items = my.safeObject(items);
-		recalc = get(recalc, true);
 		this.copyWidth = get(items.copyWidth, items.width, this.copyWidth);
-		if (recalc) {
-			this.setCopy();
-		}
 		return this;
 	};
 	/**
@@ -5097,7 +5163,7 @@ Augments Cell.set()
 		start.x = get(items.pasteX, temp.x, start.x);
 		start.y = get(items.pasteY, temp.y, start.y);
 		if (recalc) {
-			this.setPaste();
+			this.setDirtyStarts();
 		}
 		return this;
 	};
@@ -5109,19 +5175,15 @@ Augments Cell.set()
 @return This
 @chainable
 **/
-	my.Cell.prototype.setCopyVector = function(items, recalc) {
+	my.Cell.prototype.setCopyVector = function(items) {
 		var get = my.xtGet,
 		so = my.safeObject,
 		copy = this.copy,
 		temp;
 		items = so(items);
-		recalc = get(recalc, true);
 		temp = so(items.copy);
 		copy.x = get(items.copyX, temp.x, copy.x);
 		copy.y = get(items.copyY, temp.y, copy.y);
-		if (recalc) {
-			this.setCopy();
-		}
 		return this;
 	};
 	/**
@@ -5134,6 +5196,9 @@ Cell.set hook function - modified by animation extension
 Adds the value of each attribute supplied in the argument to existing values
 
 Augments Position.setDelta to allow changes to be made using attributes: source, sourceX, sourceY, sourceWidth, sourceHeight, start, startX, startY, target, targetX, targetY, targetWidth, targetHeight, globalAlpha
+
+Note - setting the argument attribute __resolve__ to true will force a recalculation of the cell's copy and passte data; this is useful in particular for cells that do not undertake a full display cycle (when their cleared or compiled attributes have been set to false)
+
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
 @return This
@@ -5145,16 +5210,16 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
 		if (xto(items.copy, items.copyX, items.copyY)) {
-			this.setDeltaCopy(items, false);
+			this.setDeltaCopy(items);
 		}
 		if (xto(items.paste, items.pasteX, items.pasteY)) {
 			this.setDeltaPaste(items, false);
 		}
 		if (xt(items.copyWidth)) {
-			this.setDeltaCopyWidth(items, false);
+			this.setDeltaCopyWidth(items);
 		}
 		if (xt(items.copyHeight)) {
-			this.setDeltaCopyHeight(items, false);
+			this.setDeltaCopyHeight(items);
 		}
 		if (xto(items.pasteWidth, items.width)) {
 			this.setDeltaPasteWidth(items, false);
@@ -5178,14 +5243,15 @@ Augments Position.setDelta to allow changes to be made using attributes: source,
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
 		}
-		if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height, items.scale)) {
+		if (xto(items.actualWidth, items.actualHeight, items.pasteWidth, items.pasteHeight, items.width, items.height, items.handle, items.handleX, items.handleY, items.scale)) {
+			this.setDirtyHandles();
+		}
+		if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY)) {
+			this.setDirtyStarts();
+		}
+		if (items.resolve) {
 			this.setCopy();
-		}
-		if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 			this.setPaste();
-		}
-		if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.actualWidth, items.actualHeight, items.scale)) {
-			this.offset.flag = false;
 		}
 		return this;
 	};
@@ -5237,6 +5303,7 @@ Augments Cell.setDelta
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
+			this.setDirtyHandles();
 		}
 		return this;
 	};
@@ -5260,6 +5327,7 @@ Augments Cell.setDelta
 		if (recalc) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
+			this.setDirtyHandles();
 		}
 		return this;
 	};
@@ -5281,7 +5349,7 @@ Augments Cell.setDelta
 		height = get(items.pasteHeight, items.height);
 		this.pasteHeight = (this.pasteHeight.toFixed) ? this.pasteHeight + height : my.addPercentages(this.pasteHeight, height);
 		if (recalc) {
-			this.setPaste();
+			this.setDirtyHandles();
 		}
 		return this;
 	};
@@ -5295,13 +5363,9 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	my.Cell.prototype.setDeltaCopyHeight = function(items, recalc) {
+	my.Cell.prototype.setDeltaCopyHeight = function(items) {
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
 		this.copyHeight = (this.copyHeight.toFixed) ? this.copyHeight + items.copyHeight : my.addPercentages(this.copyHeight, items.copyHeight);
-		if (recalc) {
-			this.setCopy();
-		}
 		return this;
 	};
 	/**
@@ -5322,7 +5386,7 @@ Augments Cell.setDelta
 		width = get(items.pasteWidth, items.width);
 		this.pasteWidth = (this.pasteWidth.toFixed) ? this.pasteWidth + width : my.addPercentages(this.pasteWidth, width);
 		if (recalc) {
-			this.setPaste();
+			this.setDirtyHandles();
 		}
 		return this;
 	};
@@ -5336,13 +5400,9 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	my.Cell.prototype.setDeltaCopyWidth = function(items, recalc) {
+	my.Cell.prototype.setDeltaCopyWidth = function(items) {
 		items = my.safeObject(items);
-		recalc = my.xtGet(recalc, true);
 		this.copyWidth = (this.copyWidth.toFixed) ? this.copyWidth + items.copyWidth : my.addPercentages(this.copyWidth, items.copyWidth);
-		if (recalc) {
-			this.setCopy();
-		}
 		return this;
 	};
 	/**
@@ -5371,7 +5431,7 @@ Augments Cell.setDelta
 		start.x = (this.start.x.toFixed) ? start.x + x : perc(start.x, x);
 		start.y = (this.start.y.toFixed) ? start.y + y : perc(start.y, y);
 		if (recalc) {
-			this.setPaste();
+			this.setDirtyStarts();
 		}
 		return this;
 	};
@@ -5385,7 +5445,7 @@ Augments Cell.setDelta
 @return This
 @chainable
 **/
-	my.Cell.prototype.setDeltaCopy = function(items, recalc) {
+	my.Cell.prototype.setDeltaCopy = function(items) {
 		var temp,
 			so = my.safeObject,
 			get = my.xtGet,
@@ -5395,14 +5455,10 @@ Augments Cell.setDelta
 			y;
 		items = so(items);
 		temp = so(items.copy);
-		recalc = get(recalc, true);
 		x = get(items.copyX, temp.x, 0);
 		y = get(items.copyY, temp.y, 0);
 		copy.x = (x.toFixed) ? copy.x + x : perc(copy.x, x);
 		copy.y = (y.toFixed) ? copy.y + y : perc(copy.y, y);
-		if (recalc) {
-			this.setCopy();
-		}
 		return this;
 	};
 	/**
@@ -5523,6 +5579,18 @@ Set the Cell's &lt;canvas&gt; element's context engine to the specification supp
 		}
 	};
 	/**
+groupSort
+@method groupSort
+@return nothing
+@private
+**/
+	my.Cell.prototype.groupSort = function() {
+		if (this.sortGroups) {
+			this.sortGroups = false;
+			this.groups = my.bucketSort('group', 'order', this.groups);
+		}
+	};
+	/**
 Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 @method clear
 @return This
@@ -5544,18 +5612,6 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 			cellContext.fillStyle = b;
 		}
 		return this;
-	};
-	/**
-groupSort
-@method groupSort
-@return nothing
-@private
-**/
-	my.Cell.prototype.groupSort = function() {
-		if (this.sortGroups) {
-			this.sortGroups = false;
-			this.groups = my.bucketSort('group', 'order', this.groups);
-		}
 	};
 	/**
 Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
@@ -5589,17 +5645,18 @@ Cell copy helper function
 	my.Cell.prototype.rotateDestination = function(engine) {
 		var reverse = (this.flipReverse) ? -1 : 1,
 			upend = (this.flipUpend) ? -1 : 1,
-			rotation = (this.addPathRoll) ? this.roll + this.pathRoll : this.roll,
 			cos,
-			sin;
+			sin,
+			rotation = (this.addPathRoll) ? this.roll + this.pathRoll : this.roll,
+			data = this.pasteData;
 		if (rotation) {
 			rotation *= 0.01745329251;
 			cos = Math.cos(rotation);
 			sin = Math.sin(rotation);
-			engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), this.pasteData.x, this.pasteData.y);
+			engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), data.x, data.y);
 			return this;
 		}
-		engine.setTransform(reverse, 0, 0, upend, this.pasteData.x, this.pasteData.y);
+		engine.setTransform(reverse, 0, 0, upend, data.x, data.y);
 		return this;
 	};
 	/**
@@ -5611,15 +5668,7 @@ Cell copy helper function
 @private
 **/
 	my.Cell.prototype.prepareToCopyCell = function(engine) {
-		var os = this.offset,
-			data = this.pasteData;
-		this.resetWork();
-		if (!os.flag) {
-			os.set(this.calculatePOV(this.work.handle, data.w, data.h, false)).reverse();
-			os.flag = true;
-			os.x = Math.floor(os.x);
-			os.y = Math.floor(os.y);
-		}
+		var data = this.pasteData;
 		if (this.pivot) {
 			this.setStampUsingPivot(my.pad[this.pad].base);
 		}
@@ -5647,23 +5696,22 @@ Cell.setCopy update copyData object values
 		var bet = my.isBetween,
 			data = this.copyData,
 			copy = this.copy,
-			convx = this.convertX,
-			convy = this.convertY,
+			conv = this.numberConvert,
 			floor = Math.floor,
 			cw = this.copyWidth,
 			ch = this.copyHeight,
 			aw = this.actualWidth,
 			ah = this.actualHeight;
-		data.x = (copy.x.substring) ? convx(copy.x, aw) : copy.x;
-		data.y = (copy.y.substring) ? convy(copy.y, ah) : copy.y;
+		data.x = (copy.x.substring) ? conv(copy.x, aw) : copy.x;
+		data.y = (copy.y.substring) ? conv(copy.y, ah) : copy.y;
 		if (!bet(data.x, 0, aw - 1, true)) {
 			data.x = (data.x < 0) ? 0 : aw - 1;
 		}
 		if (!bet(data.y, 0, ah - 1, true)) {
 			data.y = (data.y < 0) ? 0 : ah - 1;
 		}
-		data.w = (cw.substring) ? convx(cw, aw) : cw;
-		data.h = (ch.substring) ? convy(ch, ah) : ch;
+		data.w = (cw.substring) ? conv(cw, aw) : cw;
+		data.h = (ch.substring) ? conv(ch, ah) : ch;
 		if (!bet(data.w, 1, aw, true)) {
 			data.w = (data.w < 1) ? 1 : aw;
 		}
@@ -5683,6 +5731,38 @@ Cell.setCopy update copyData object values
 		return this;
 	};
 	/**
+Cell.setPaste helper function
+@method setReference
+@private
+**/
+	my.Cell.prototype.setReference = function() {
+		var so = my.safeObject,
+			cell = my.cell,
+			pad = so(my.pad[this.pad]),
+			display = so(cell[pad.display]),
+			base = so(cell[pad.base]),
+			stack = (my.xt(pad.group)) ? true : false,
+			isBase = (this.name === pad.base) ? true : false,
+			isFirstCellInPad = (!pad.display) ? true : false;
+		if (isFirstCellInPad) {
+			this.reference = pad;
+		}
+		else if (isBase) {
+			this.reference = display;
+		}
+		else if (display) {
+			if (stack) {
+				this.reference = my.stack[pad.group];
+			}
+			else {
+				this.reference = display;
+			}
+		}
+		else {
+			this.reference = base;
+		}
+	};
+	/**
 Cell.setPaste update pasteData object values
 @method setPaste
 @chainable
@@ -5690,38 +5770,39 @@ Cell.setPaste update pasteData object values
 **/
 	my.Cell.prototype.setPaste = function() {
 		var so = my.safeObject,
+			cell = my.cell,
 			pad = so(my.pad[this.pad]),
-			display = so(my.cell[pad.display]),
-			base = so(my.cell[pad.base]),
+			display = so(cell[pad.display]),
+			base = so(cell[pad.base]),
 			stack = (my.xt(pad.group)) ? true : false,
 			isBase = (this.name === pad.base) ? true : false,
 			width, height,
 			floor = Math.floor,
-			convx = this.convertX,
-			convy = this.convertY,
+			conv = this.numberConvert,
 			scale = this.scale,
-			data = this.pasteData;
+			data = this.pasteData,
+			start = this.currentStart;
 		if (my.xta(display, base)) {
 			width = (this.name === pad.base) ? display.actualWidth : base.actualWidth;
 			height = (this.name === pad.base) ? display.actualHeight : base.actualHeight;
-			data.x = this.start.x;
-			if (data.x.substring) {
-				data.x = convx(data.x, width);
+			if (!start.flag) {
+				if (!this.reference) {
+					this.setReference();
+				}
+				this.updateCurrentStart(this.reference);
 			}
-			data.y = this.start.y;
-			if (data.y.substring) {
-				data.y = convy(data.y, height);
-			}
+			data.x = start.x;
+			data.y = start.y;
 			data.w = this.pasteWidth;
 			if (data.w.substring) {
-				data.w = convx(data.w, width);
+				data.w = conv(data.w, width);
 			}
 			if (!isBase || !stack) {
 				data.w *= scale;
 			}
 			data.h = this.pasteHeight;
 			if (data.h.substring) {
-				data.h = convy(data.h, height);
+				data.h = conv(data.h, height);
 			}
 			if (!isBase || !stack) {
 				data.h *= scale;
@@ -5755,9 +5836,6 @@ Cell copy helper function
 			copy, paste, offset;
 		cell = (cell.substring) ? my.cell[cell] : cell;
 		if (my.xt(cell)) {
-			copy = cell.copyData;
-			paste = cell.pasteData;
-			offset = cell.offset;
 			destinationEngine = my.context[this.name];
 			destinationContext = my.ctx[this.name];
 			sourceEngine = my.context[cell.name];
@@ -5771,94 +5849,16 @@ Cell copy helper function
 				destinationContext.globalCompositeOperation = cell.globalCompositeOperation;
 			}
 			sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
+			offset = cell.currentHandle;
+			if (!offset.flag) {
+				cell.updateCurrentHandle();
+			}
 			cell.prepareToCopyCell(destinationEngine);
+			copy = cell.copyData;
+			paste = cell.pasteData;
 			destinationEngine.drawImage(sourceCanvas, copy.x, copy.y, copy.w, copy.h, offset.x, offset.y, paste.w, paste.h);
 		}
 		return this;
-	};
-	/**
-Cell stamp helper function - convert string percent values to numerical values
-@method convertX
-@param {String} x coordinate String
-@param {String} w reference width
-@return Number - x value
-@private
-**/
-	my.Cell.prototype.convertX = function(x, w) {
-		switch (x) {
-			case 'left':
-				return 0;
-			case 'right':
-				return w;
-			case 'center':
-				return w / 2;
-			default:
-				x = parseFloat(x) / 100;
-				return (isNaN(x)) ? 0 : x * w;
-		}
-	};
-	/**
-Cell stamp helper function - convert string percent values to numerical values
-@method convertY
-@param {String} y coordinate String
-@param {String} h reference height
-@return Number - y value
-@private
-**/
-	my.Cell.prototype.convertY = function(y, h) {
-		switch (y) {
-			case 'top':
-				return 0;
-			case 'bottom':
-				return h;
-			case 'center':
-				return h / 2;
-			default:
-				y = parseFloat(y) / 100;
-				return (isNaN(y)) ? 0 : y * h;
-		}
-	};
-	/**
-Entity stamp helper function
-@method clearShadow
-@return This
-@chainable
-@private
-**/
-	my.Cell.prototype.clearShadow = function() {
-		// var context,
-		// 	engine;
-		// engine = my.context[this.name];
-		// context = my.ctx[this.context];
-		// engine.shadowOffsetX = 0.0;
-		// engine.shadowOffsetY = 0.0;
-		// engine.shadowBlur = 0.0;
-		// context.shadowOffsetX = 0.0;
-		// context.shadowOffsetY = 0.0;
-		// context.shadowBlur = 0.0;
-		// return this;
-	};
-	/**
-Entity stamp helper function
-@method restoreShadow
-@return This
-@chainable
-@private
-**/
-	my.Cell.prototype.restoreShadow = function(entitycontext) {
-		// var cellContext,
-		// 	entityContext,
-		// 	engine;
-		// engine = my.context[this.name];
-		// cellContext = my.ctx[this.context];
-		// entityContext = my.ctx[entitycontext];
-		// engine.shadowOffsetX = entityContext.shadowOffsetX;
-		// engine.shadowOffsetY = entityContext.shadowOffsetY;
-		// engine.shadowBlur = entityContext.shadowBlur;
-		// cellContext.shadowOffsetX = entityContext.shadowOffsetX;
-		// cellContext.shadowOffsetY = entityContext.shadowOffsetY;
-		// cellContext.shadowBlur = entityContext.shadowBlur;
-		// return this;
 	};
 	/**
 Entity stamp helper function
@@ -5987,7 +5987,7 @@ Default values are:
 			height,
 			label;
 		dimensions = my.safeObject(dimensions);
-		label = (dimensions.name.substring) ? this.name + '_' + dimensions.name : this.name + '_imageData';
+		label = (dimensions.name && dimensions.name.substring) ? this.name + '_' + dimensions.name : this.name + '_imageData';
 		x = get(dimensions.x, 0);
 		y = get(dimensions.y, 0);
 		width = get(dimensions.width, this.actualWidth);
@@ -6496,7 +6496,6 @@ Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &
 @chainable
 **/
 	my.Group.prototype.forceStamp = function(method, cellname, cell) {
-		console.log(this.name, 'forceStamp', method, cellname, cell);
 		var visibility = this.visibility;
 		this.visibility = true;
 		this.stamp(method, cellname, cell);
@@ -6513,12 +6512,13 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 **/
 	my.Group.prototype.stamp = function(method, cellname, cell) {
 		var entity,
-			entitys = this.entitys,
+			entitys,
 			e = my.entity,
 			i,
 			iz;
 		if (this.visibility) {
 			this.sortEntitys();
+			entitys = this.entitys;
 			cell = (my.xt(cell)) ? cell : my.cell[cellname];
 			for (i = 0, iz = entitys.length; i < iz; i++) {
 				entity = e[entitys[i]];
@@ -6527,7 +6527,6 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 					entity.stamp(method, cellname, cell);
 				}
 			}
-			this.stampFilter(my.context[this.cell], this.cell);
 		}
 		return this;
 	};
@@ -6539,14 +6538,6 @@ Group constructor hook helper function
 @private
 **/
 	my.Group.prototype.filtersGroupInit = function() {};
-	/**
-Group stamp helper function
-
-(Replaced by Filters extension)
-@method stampFilter
-@private
-**/
-	my.Group.prototype.stampFilter = function() {};
 	/**
 Add entitys to the Group
 @method addEntitysToGroup
@@ -6672,7 +6663,7 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 			entitys = this.entitys,
 			e = my.entity,
 			entityVector,
-			v = my.v.set,
+			v = my.v,
 			i,
 			iz,
 			arg = {
@@ -6687,7 +6678,7 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 				pivotVector = (pivot.type === 'Point') ? pivot.local : pivot.start;
 				for (i = 0, iz = entitys.length; i < iz; i++) {
 					entity = e[entitys[i]];
-					entityVector = v(entity.start);
+					entityVector = v.set(entity.start);
 					entityVector.vectorSubtract(pivotVector);
 					arg.pivot = item;
 					arg.handleX = -entityVector.x;
@@ -6787,6 +6778,38 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 			}
 		}
 		return (results.length > 0) ? results : false;
+	};
+	/**
+Augments Group.set()
+@method setDirtyStarts
+@return This
+@chainable
+@private
+**/
+	my.Group.prototype.setDirtyStarts = function() {
+		var entity = my.entity,
+			entitys = this.entitys,
+			i, iz;
+		for (i = 0, iz = entitys.length; i < iz; i++) {
+			entity[entitys[i]].currentStart.flag = false;
+		}
+		return this;
+	};
+	/**
+Augments Group.set()
+@method setDirtyHandles
+@return This
+@chainable
+@private
+**/
+	my.Group.prototype.setDirtyHandles = function() {
+		var entity = my.entity,
+			entitys = this.entitys,
+			i, iz;
+		for (i = 0, iz = entitys.length; i < iz; i++) {
+			entity[entitys[i]].currentHandle.flag = false;
+		}
+		return this;
 	};
 
 	/**
@@ -6989,20 +7012,23 @@ Allows users to:
 @chainable
 **/
 	my.Entity.prototype.set = function(items) {
+		var group = my.group,
+			xt = my.xt,
+			xto = my.xto;
 		my.Position.prototype.set.call(this, items);
 		my.ctx[this.context].set(items);
 		items = my.safeObject(items);
-		if (my.xt(items.group) && items.group !== this.group) {
-			my.group[this.group].removeEntitysFromGroup(this.name);
+		if (xt(items.group) && items.group !== this.group) {
+			group[this.group].removeEntitysFromGroup(this.name);
 			this.group = this.getGroup(items.group);
-			my.group[this.group].addEntitysToGroup(this.name);
+			group[this.group].addEntitysToGroup(this.name);
 		}
 		this.collisionsEntitySet(items);
-		if (my.xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.radius, items.scale)) {
-			this.offset.flag = false;
+		if (xt(items.order)) {
+			group[this.group].resort = true;
 		}
-		if (my.xt(items.order)) {
-			my.group[this.group].resort = true;
+		if (xt(items.lineWidth)) {
+			this.maxDimensions = null;
 		}
 		return this;
 	};
@@ -7028,18 +7054,9 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 		items = my.safeObject(items);
 		if (xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
 			my.ctx[this.context].setDelta(items);
-		}
-		if (xt(items.roll)) {
-			this.roll += items.roll || 0;
-		}
-		if (xt(items.width)) {
-			this.width = (this.width.toFixed) ? this.width + items.width : my.addPercentages(this.width, items.width);
-		}
-		if (xt(items.height)) {
-			this.height = (this.height.toFixed) ? this.height + items.height : my.addPercentages(this.height, items.height);
-		}
-		if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.pasteWidth, items.pasteHeight, items.radius, items.scale)) {
-			this.offset.flag = false;
+			if (xt(items.lineWidth)) {
+				this.maxDimensions = null;
+			}
 		}
 		this.collisionsEntitySetDelta(items);
 		return this;
@@ -7130,21 +7147,6 @@ Permitted methods include:
 		return this;
 	};
 	/**
-Stamp helper function - get handle offset values
-@method prepareStamp
-@return This
-@chainable
-@private
-**/
-	my.Entity.prototype.prepareStamp = function() {
-		var offset = this.offset;
-		if (!offset.flag) {
-			offset.set(this.getOffsetStartVector());
-			offset.flag = true;
-		}
-		return offset;
-	};
-	/**
 Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true
 
 Permitted methods include:
@@ -7180,6 +7182,12 @@ Permitted methods include:
 			}
 			engine = my.context[cellname];
 			method = method || this.method;
+			if (!this.currentStart.flag) {
+				this.updateCurrentStart(cell);
+			}
+			if (!this.currentHandle.flag) {
+				this.updateCurrentHandle();
+			}
 			if (this.pivot) {
 				this.setStampUsingPivot(cellname);
 			}
@@ -7218,22 +7226,15 @@ Stamp helper function - rotate and position canvas ready for drawing entity
 			rotation = (this.addPathRoll) ? this.roll + this.pathRoll : this.roll,
 			cos,
 			sin,
-			x = this.start.x,
-			y = this.start.y;
-		if (x.substring) {
-			x = this.numberConvert(x, cell.actualWidth);
-		}
-		if (y.substring) {
-			y = this.numberConvert(y, cell.actualHeight);
-		}
+			start = this.currentStart;
 		if (rotation) {
 			rotation *= 0.01745329251;
 			cos = Math.cos(rotation);
 			sin = Math.sin(rotation);
-			ctx.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);
+			ctx.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), start.x, start.y);
 			return this;
 		}
-		ctx.setTransform(reverse, 0, 0, upend, x, y);
+		ctx.setTransform(reverse, 0, 0, upend, start.x, start.y);
 		return this;
 	};
 	/**
@@ -7241,15 +7242,12 @@ Entity.getStartValues
 @method getStartValues
 @private
 **/
-	my.Entity.prototype.getStartValues = function(cell) {
-		var result = {
-				x: 0,
-				y: 0
-			},
-			start = this.start;
-		result.x = (start.x.substring) ? this.numberConvert(start.x, cell.actualWidth) : start.x;
-		result.y = (start.y.substring) ? this.numberConvert(start.y, cell.actualHeight) : start.y;
-		return result;
+	my.Entity.prototype.getStartValues = function() {
+		var start = this.currentStart;
+		return {
+			x: start.x,
+			y: start.y
+		};
 	};
 	/**
 Stamp helper function - perform a 'clear' method draw
@@ -7482,6 +7480,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 	my.Entity.prototype.checkHit = function(items) {
 		var tests = [],
 			here,
+			handle = this.currentHandle,
 			result,
 			i,
 			iz,
@@ -7501,7 +7500,10 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			tests.push(items.y || 0);
 		}
 		this.rotateCell(cvx, this.getEntityCell().name);
-		here = this.prepareStamp();
+		if (!handle.flag) {
+			this.updateCurrentHandle();
+		}
+		here = handle;
 		width = (lw) ? lw : this.width * scale;
 		height = (lh) ? lh : this.height * scale;
 		cvx.beginPath();
@@ -7697,6 +7699,9 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 	my.Design.prototype.makeGradient = function(entity, cell) {
 		var ctx,
 			c = my.cell,
+			conv,
+			cw,
+			ch,
 			xt = my.xt,
 			g,
 			x,
@@ -7784,36 +7789,39 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 			}
 		}
 		else {
+			conv = entity.numberConvert;
+			cw = cell.actualWidth;
+			ch = cell.actualHeight;
 			x = entity.start.x;
 			if (x.substring) {
-				x = entity.convertX(x, cell.name);
+				x = conv(x, cw);
 			}
 			y = entity.start.y;
 			if (y.substring) {
-				y = entity.convertY(y, cell.name);
+				y = conv(y, ch);
 			}
 			sx = (xt(this.startX)) ? this.startX : 0;
 			if (sx.substring) {
-				sx = entity.convertX(sx, cell.name);
+				sx = conv(sx, cw);
 			}
 			sy = (xt(this.startY)) ? this.startY : 0;
 			if (sy.substring) {
-				sy = entity.convertY(sy, cell.name);
+				sy = conv(sy, ch);
 			}
-			ex = (xt(this.endX)) ? this.endX : cell.actualWidth;
+			ex = (xt(this.endX)) ? this.endX : cw;
 			if (ex.substring) {
-				ex = entity.convertX(ex, cell.name);
+				ex = conv(ex, cw);
 			}
-			ey = (xt(this.endY)) ? this.endY : cell.actualWidth;
+			ey = (xt(this.endY)) ? this.endY : ch;
 			if (ey.substring) {
-				ey = entity.convertY(ey, cell.name);
+				ey = conv(ey, ch);
 			}
-			x = (entity.flipReverse) ? cell.actualWidth - x : x;
-			y = (entity.flipUpend) ? cell.actualHeight - y : y;
-			sx = (entity.flipReverse) ? cell.actualWidth - sx : sx;
-			sy = (entity.flipUpend) ? cell.actualHeight - sy : sy;
-			ex = (entity.flipReverse) ? cell.actualWidth - ex : ex;
-			ey = (entity.flipUpend) ? cell.actualHeight - ey : ey;
+			x = (entity.flipReverse) ? cw - x : x;
+			y = (entity.flipUpend) ? ch - y : y;
+			sx = (entity.flipReverse) ? cw - sx : sx;
+			sy = (entity.flipUpend) ? ch - sy : sy;
+			ex = (entity.flipReverse) ? cw - ex : ex;
+			ey = (entity.flipUpend) ? ch - ey : ey;
 			fsx = sx - x;
 			fsy = sy - y;
 			fex = ex - x;

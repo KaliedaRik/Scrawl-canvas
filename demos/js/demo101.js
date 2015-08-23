@@ -147,10 +147,16 @@ var mycode = function() {
 		startAngle: 20,
 		endAngle: 340,
 		includeCenter: true,
-		roll: 90,
 		method: 'draw',
 		pivot: 'mouse',
+		// startX: 100,
+		// startY: 100,
+		// handleX: -50,
+		// handleY: -50,
+		// flipReverse: false,
+		// flipUpend: true,
 		visibility: false,
+		roll: 90,
 		order: 2,
 		filters: [current_filter]
 	});

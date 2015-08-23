@@ -195,7 +195,7 @@ Stamp helper function - perform a 'clip' method draw
 @private
 **/
 		my.Block.prototype.clip = function(ctx, cellname, cell) {
-			var here = this.prepareStamp();
+			var here = this.currentHandle;
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
 			ctx.rect(here.x, here.y, this.localWidth, this.localHeight);
@@ -212,7 +212,7 @@ Stamp helper function - perform a 'clear' method draw
 @private
 **/
 		my.Block.prototype.clear = function(ctx, cellname, cell) {
-			var here = this.prepareStamp();
+			var here = this.currentHandle;
 			cell.setToClearShape();
 			this.rotateCell(ctx, cell);
 			ctx.clearRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -233,7 +233,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 				fillStyle = myCellCtx.get('fillStyle'),
 				strokeStyle = myCellCtx.get('strokeStyle'),
 				globalAlpha = myCellCtx.get('globalAlpha'),
-				here = this.prepareStamp();
+				here = this.currentHandle;
 			this.rotateCell(ctx, cell);
 			ctx.fillStyle = bg;
 			ctx.strokeStyle = bg;
@@ -255,7 +255,7 @@ Stamp helper function - perform a 'draw' method draw
 @private
 **/
 		my.Block.prototype.draw = function(ctx, cellname, cell) {
-			var here = this.prepareStamp();
+			var here = this.currentHandle;
 			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -271,7 +271,7 @@ Stamp helper function - perform a 'fill' method draw
 @private
 **/
 		my.Block.prototype.fill = function(ctx, cellname, cell) {
-			var here = this.prepareStamp();
+			var here = this.currentHandle;
 			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -287,7 +287,7 @@ Stamp helper function - perform a 'drawFill' method draw
 @private
 **/
 		my.Block.prototype.drawFill = function(ctx, cellname, cell) {
-			var here = this.prepareStamp();
+			var here = this.currentHandle;
 			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -305,7 +305,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 @private
 **/
 		my.Block.prototype.fillDraw = function(ctx, cellname, cell) {
-			var here = this.prepareStamp();
+			var here = this.currentHandle;
 			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -323,7 +323,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 @private
 **/
 		my.Block.prototype.sinkInto = function(ctx, cellname, cell) {
-			var here = this.prepareStamp();
+			var here = this.currentHandle;
 			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -340,7 +340,7 @@ Stamp helper function - perform a 'floatOver' method draw
 @private
 **/
 		my.Block.prototype.floatOver = function(ctx, cellname, cell) {
-			var here = this.prepareStamp();
+			var here = this.currentHandle;
 			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -357,7 +357,6 @@ Stamp helper function - perform a 'none' method draw
 @private
 **/
 		my.Block.prototype.none = function(ctx, cellname, cell) {
-			this.prepareStamp();
 			return this;
 		};
 

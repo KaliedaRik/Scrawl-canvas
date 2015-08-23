@@ -554,14 +554,7 @@ By default, the initial base and display canvases have shown = false:
 				}
 			}
 			for (i = 0, iz = filters.length; i < iz; i++) {
-				temp = e[filters[i]];
-				if (xt(temp)) {
-					temp.stampFilter(context[b.name], b.name, true);
-				}
-				temp = g[filters[i]];
-				if (xt(temp)) {
-					temp.stampFilter(context[b.name], b.name, true);
-				}
+				e[filters[i]].stampFilter(context[b.name], b.name, b, true);
 			}
 			d.copyCellToSelf(b, true);
 			return this;
@@ -583,8 +576,7 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 				filters = this.filters,
 				xt = my.xt,
 				ctx = my.context[this.name],
-				e = my.entity,
-				temp1, temp2;
+				e = my.entity;
 			filters.length = 0;
 			this.groupSort();
 			for (i = 0, iz = groups.length; i < iz; i++) {
@@ -594,92 +586,9 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 				}
 			}
 			for (i = 0, iz = filters.length; i < iz; i++) {
-				temp1 = e[filters[i]];
-				temp2 = group[filters[i]];
-				if (xt(temp1)) {
-					temp1.stampFilter(ctx, this.name, true);
-				}
-				else if (xt(temp2)) {
-					temp2.stampFilter(ctx, this.name, true);
-				}
+				e[filters[i]].stampFilter(ctx, this.name, this, true);
 			}
 			return true;
-		};
-		/**
-Group.stamp hook function - add a filter to a group of Entitys, and any background detail enclosed by them
-@method stampFilter
-@private
-**/
-		my.Group.prototype.stampFilter = function(engine, cellname, cell) {
-			var imageData,
-				canvas,
-				composite,
-				localComposite = 'source-over',
-				e,
-				eStroke,
-				i,
-				iz,
-				cv = my.cv,
-				cvx = my.cvx,
-				fc = my.filterCanvas,
-				fcx = my.filterCvx,
-				entity = my.entity,
-				entitys = this.entitys,
-				p = my.pad,
-				c = my.cell,
-				tc = this.cell,
-				f = my.filter,
-				filters = this.filters,
-				xt = my.xt,
-				filterLevel = this.filterLevel,
-				temp,
-				action = this.stampFilterActions;
-			if (filters.length > 0) {
-				canvas = my.canvas[cell];
-				cv.width = canvas.width;
-				cv.height = canvas.height;
-				fc.width = canvas.width;
-				fc.height = canvas.height;
-				fcx.clearRect(0, 0, canvas.width, canvas.height);
-				for (i = 0, iz = entitys.length; i < iz; i++) {
-					e = entity[entitys[i]];
-					eStroke = e.filterOnStroke;
-					e.filterOnStroke = this.filterOnStroke;
-					cvx.save();
-					imageData = action[e.type](e, engine, cellname, cell);
-					e.filterOnStroke = eStroke;
-					fcx.putImageData(imageData, 0, 0);
-					cvx.restore();
-				}
-				imageData = fcx.getImageData(0, 0, canvas.width, canvas.height);
-				if (imageData) {
-					for (i = 0, iz = filters.length; i < iz; i++) {
-						temp = f[filters[i]];
-						if (filterLevel === 'pad' && !force) {
-							p[c[tc].pad].filters.push(this.name);
-						}
-						else if (filterLevel === 'cell' && !force) {
-							c[tc].filters.push(this.name);
-						}
-						else if (temp) {
-							imageData = temp.add(imageData);
-							localComposite = (xt(temp.operation)) ? temp.operation : localComposite;
-						}
-					}
-				}
-				cvx.putImageData(imageData, 0, 0);
-				if (engine.globalCompositeOperation !== localComposite) {
-					composite = engine.globalCompositeOperation;
-					engine.globalCompositeOperation = localComposite;
-					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.drawImage(cv, 0, 0, canvas.width, canvas.height);
-					engine.globalCompositeOperation = composite;
-				}
-				else {
-					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.drawImage(cv, 0, 0, canvas.width, canvas.height);
-				}
-			}
 		};
 		/**
 Entity.stampFilter helper object
@@ -693,8 +602,8 @@ Entity.stampFilter helper object
 			Picture: function(entity, engine, cellname, cell) {
 				return entity.stampFilterPicture(entity, engine, cellname, cell);
 			},
-			Wheel: function(entity, engine, cellname, cell) {
-				return entity.stampFilterWheel(entity, engine, cellname, cell);
+			Wheel: function(entity, engine, cellname, cell, filterOnStroke) {
+				return entity.stampFilterWheel(entity, engine, cellname, cell, filterOnStroke);
 			},
 			Block: function(entity, engine, cellname, cell) {
 				return entity.stampFilterDefault(entity, engine, cellname, cell);
@@ -710,12 +619,6 @@ Entity.stampFilter helper object
 			}
 		};
 		/**
-Group.stampFilter helper object
-@method stampFilterActions
-@private
-**/
-		my.Group.prototype.stampFilterActions = my.Entity.prototype.stampFilterActions;
-		/**
 reciprocal assignment - also occurs in scrawlFrame as there's no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first
 @method stampFilterActions
 @private
@@ -724,13 +627,112 @@ reciprocal assignment - also occurs in scrawlFrame as there's no way to tell whi
 			my.Frame.prototype.stampFilterActions = my.Entity.prototype.stampFilterActions;
 		}
 		/**
+Entity.stampFilterDimensions helper object
+@method stampFilterDimensionsActions
+@private
+**/
+		my.Entity.prototype.stampFilterDimensionsActions = {
+			Phrase: function(cell, entity) {
+				return {
+					top: 0,
+					left: 0,
+					bottom: cell.actualHeight,
+					right: cell.actualWidth
+				};
+			},
+			Picture: function(cell, entity) {
+				return {
+					top: 0,
+					left: 0,
+					bottom: cell.actualHeight,
+					right: cell.actualWidth
+				};
+			},
+			Wheel: function(cell, entity) {
+				var x = entity.start.x,
+					y = entity.start.y,
+					rad = (entity.radius * entity.scale),
+					hx = (entity.flipReverse) ? -entity.offset.x : entity.offset.x,
+					hy = (entity.flipUpend) ? -entity.offset.y : entity.offset.y,
+					w = cell.actualWidth,
+					h = cell.actualHeight,
+					conv = entity.numberConvert,
+					line = my.ctx[entity.context].lineWidth || 0,
+					ceil = Math.ceil,
+					floor = Math.floor,
+					t, l, b, r,
+					v = my.v;
+				if (x.substring) {
+					x = conv(x, w);
+				}
+				if (y.substring) {
+					y = conv(y, h);
+				}
+				v.set({
+					x: hx,
+					y: hy
+				}).rotate(entity.roll).vectorAdd({
+					x: x,
+					y: y
+				});
+				t = floor(v.y) - line - rad;
+				t = (t < 0) ? 0 : t;
+				b = ceil(v.y) + line + rad;
+				b = (b > h) ? h : b;
+				l = floor(v.x) - line - rad;
+				l = (l < 0) ? 0 : l;
+				r = ceil(v.x) + line + rad;
+				r = (r > w) ? w : r;
+				return {
+					top: t,
+					left: l,
+					bottom: b,
+					right: r
+				};
+			},
+			Block: function(cell, entity) {
+				return {
+					top: 0,
+					left: 0,
+					bottom: cell.actualHeight,
+					right: cell.actualWidth
+				};
+			},
+			Shape: function(cell, entity) {
+				return {
+					top: 0,
+					left: 0,
+					bottom: cell.actualHeight,
+					right: cell.actualWidth
+				};
+			},
+			Path: function(cell, entity) {
+				return {
+					top: 0,
+					left: 0,
+					bottom: cell.actualHeight,
+					right: cell.actualWidth
+				};
+			},
+			Frame: function(cell, entity) {
+				return {
+					top: 0,
+					left: 0,
+					bottom: cell.actualHeight,
+					right: cell.actualWidth
+				};
+			}
+		};
+		/**
 Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
 @method stampFilter
 @private
 **/
-		my.Entity.prototype.stampFilter = function(engine, cellname, cell) {
+		my.Entity.prototype.stampFilter = function(engine, cellname, cell, force) {
 			var imageData,
+				dim,
 				canvas,
+				group = my.group[this.group],
 				composite,
 				localComposite = 'source-over',
 				i,
@@ -739,31 +741,45 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 				cvx = my.cvx,
 				f,
 				filter = my.filter,
-				filters = this.filters,
+				filters = this.filters.concat(group.filters),
 				c,
 				p,
 				xt = my.xt,
-				filterLevel = this.filterLevel,
+				filterLevel,
+				filterOnStroke = group.filterOnStroke || this.filterOnStroke || false,
 				action = this.stampFilterActions;
+			force = (xt(force)) ? force : false;
 			if (filters.length > 0) {
+				c = my.cell[my.group[this.group].cell];
+				p = my.pad[c.pad];
+				if (group.filterLevel === 'pad' || this.filterLevel === 'pad') {
+					filterLevel = 'pad';
+				}
+				else if (group.filterLevel === 'cell' || this.filterLevel === 'cell') {
+					filterLevel = 'cell';
+				}
+				else {
+					filterLevel = 'entity';
+				}
+				if (filterLevel === 'pad' && !force) {
+					p.filters.push(this.name);
+					return;
+				}
+				else if (filterLevel === 'cell' && !force) {
+					c.filters.push(this.name);
+					return;
+				}
 				canvas = my.canvas[cellname];
 				cv.width = canvas.width;
 				cv.height = canvas.height;
 				cvx.save();
-				imageData = action[this.type](this, engine, cellname, cell);
+				imageData = action[this.type](this, engine, cellname, cell, filterOnStroke);
+				dim = (this.getMaxDimensions) ? this.getMaxDimensions(cell) : this.stampFilterDimensionsActions[this.type](cell, this);
 				if (imageData) {
-					c = my.cell[my.group[this.group].cell];
-					p = my.pad[c.pad];
 					for (i = 0, iz = filters.length; i < iz; i++) {
 						f = filter[filters[i]];
-						if (filterLevel === 'pad') {
-							p.filters.push(this.name);
-						}
-						else if (filterLevel === 'cell') {
-							c.filters.push(this.name);
-						}
-						else if (f) {
-							imageData = f.add(imageData);
+						if (f) {
+							imageData = f.add(imageData, dim);
 							localComposite = (xt(f.operation)) ? filter[filters[i]].operation : localComposite;
 						}
 					}
@@ -837,12 +853,12 @@ Entity.stamp hook helper function
 @method stampFilterWheel
 @private
 **/
-		my.Entity.prototype.stampFilterWheel = function(entity, engine, cellname, cell) {
+		my.Entity.prototype.stampFilterWheel = function(entity, engine, cellname, cell, filterOnStroke) {
 			var canvas = my.canvas[cellname],
 				context = my.ctx[entity.context],
 				cvx = my.cvx,
 				cv = my.cv;
-			if (entity.filterOnStroke) {
+			if (filterOnStroke) {
 				cvx.lineWidth = context.lineWidth;
 				cvx.shadowOffsetX = context.shadowOffsetX;
 				cvx.shadowOffsetY = context.shadowOffsetY;
@@ -861,7 +877,7 @@ Entity.stamp hook helper function
 				cvx.globalCompositeOperation = 'source-over';
 			}
 			else {
-				entity.clip(cvx, cell);
+				entity.clip(cvx, cellname, cell);
 				cvx.setTransform(1, 0, 0, 1, 0, 0);
 				cvx.drawImage(canvas, 0, 0);
 			}
@@ -1061,24 +1077,26 @@ Add function - takes data, calculates its greyscale and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.GreyscaleFilter.prototype.add = function(data) {
+		my.GreyscaleFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
 				grey,
-				i,
-				iz;
+				i, j, k;
 			alpha = this.getAlpha();
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					here = i;
-					grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
-					here = i;
-					d[here] = grey;
-					d[++here] = grey;
-					d[++here] = grey;
-					d[++here] *= alpha;
+			for (k = dim.top; k < dim.bottom; k++) {
+				for (j = dim.left; j < dim.right; j++) {
+					i = ((k * data.width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
+						here = i;
+						d[here] = grey;
+						d[++here] = grey;
+						d[++here] = grey;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;

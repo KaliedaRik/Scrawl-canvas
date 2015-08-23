@@ -49,6 +49,8 @@ var mycode = function() {
 		startY: 25,
 	});
 
+	pad.render();
+
 	//build the pattern
 	dotty = scrawl.makePattern({
 		name: 'dotty',

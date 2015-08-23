@@ -498,7 +498,7 @@ Argument can contain the following (optional) attributes:
 				stacknames = my.stacknames,
 				group = my.group;
 			items = my.safeObject(items);
-			if (items.group.substring && group[items.group] && group[items.group].type === 'ElementGroup') {
+			if (items.group && items.group.substring && group[items.group] && group[items.group].type === 'ElementGroup') {
 				group[items.group].update(items);
 			}
 			else {
@@ -1608,8 +1608,7 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				oy,
 				dx,
 				dy,
-				offset = this.offset,
-				start = this.start,
+				offset,
 				device,
 				round = Math.round,
 				rotation = this.rotation,
@@ -1620,17 +1619,18 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 			g = my.group[this.group];
 			pere2[0] = this.getElement();
 			style = pere2[0].style;
-			if (!offset.flag) {
-				offset.set(this.getOffsetStartVector());
-				offset.flag = true;
+			if (!this.offset.flag) {
+				this.offset.set(this.getOffsetStartVector());
+				this.offset.flag = true;
 			}
+			offset = this.offset;
 			if (this.path) {
 				this.setStampUsingPath();
-				pere2[1] = start;
+				pere2[1] = this.start;
 			}
 			else if (this.pivot) {
 				this.setStampUsingPivot();
-				pere2[1] = start;
+				pere2[1] = this.start;
 			}
 			else {
 				pere2[1] = this.getStartValues();
@@ -1640,8 +1640,8 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				this.setDimensions();
 			}
 			this.updateStart();
-			pere2[2] = (start.x.substring) ? true : false;
-			pere2[3] = (start.y.substring) ? true : false;
+			pere2[2] = (this.start.x.substring) ? true : false;
+			pere2[3] = (this.start.y.substring) ? true : false;
 
 			if (rotation.getMagnitude() !== 1) {
 				rotation.normalize();
@@ -1726,8 +1726,6 @@ Calculate start Vector in reference to a entity or Point object's position
 				pEntity,
 				x, y,
 				start = this.start;
-			// if (my.point && my.point[this.pivot]) {
-			// 	myP = my.point[this.pivot];
 			if (my.point) {
 				myP = my.point[this.pivot];
 				if (myP) {
@@ -1738,8 +1736,6 @@ Calculate start Vector in reference to a entity or Point object's position
 					return this;
 				}
 			}
-			// if (my.entity[this.pivot]) {
-			// 	myP = my.entity[this.pivot];
 			myP = my.entity[this.pivot];
 			if (myP) {
 				myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.get('start');
