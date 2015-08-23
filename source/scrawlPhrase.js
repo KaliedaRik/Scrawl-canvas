@@ -115,7 +115,7 @@ A __factory__ function to generate new Phrase entitys
 				this.constructFont();
 			}
 			this.size = this.get('size');
-			this.multiline(items);
+			this.multiline();
 			this.getMetrics();
 			return this;
 		};
@@ -244,21 +244,24 @@ Allows users to:
 @chainable
 **/
 		my.Phrase.prototype.set = function(items) {
+			var xt = my.xt;
 			my.Entity.prototype.set.call(this, items);
 			items = my.safeObject(items);
-			this.lineHeight = my.xtGet(items.lineHeight, this.lineHeight);
-			if (items.text || items.size || items.scale) {
-				this.offset.flag = false;
+			if (my.xto(items.text, items.size, items.scale, items.font, items.style, items.variant, items.metrics, items.family, items.lineHeight)) {
+				this.currentHandle.flag = false;
+				if (xt(items.lineHeight)) {
+					this.lineHeight = items.lineHeight;
+				}
+				if (items.font) {
+					this.checkFont(items.font);
+				}
+				else {
+					this.constructFont();
+				}
+				if (xt(items.text)) {
+					this.multiline(items.text);
+				}
 			}
-			if (items.font) {
-				this.checkFont(items.font);
-				this.offset.flag = false;
-			}
-			else {
-				this.constructFont();
-			}
-			this.size = this.get('size');
-			this.multiline(items);
 			this.getMetrics();
 			return this;
 		};
@@ -270,13 +273,23 @@ Augments Entity.detDelta()
 @chainable
 **/
 		my.Phrase.prototype.setDelta = function(items) {
+			var xt = my.xt;
 			my.Entity.prototype.setDelta.call(this, items);
-			if (items.text) {
-				this.offset.flag = false;
-			}
-			if (items.size || items.scale) {
-				this.constructFont();
-				this.offset.flag = false;
+			items = my.safeObject(items);
+			if (my.xto(items.text, items.size, items.scale, items.font, items.style, items.variant, items.metrics, items.family, items.lineHeight)) {
+				this.currentHandle.flag = false;
+				if (xt(items.lineHeight)) {
+					this.lineHeight += items.lineHeight;
+				}
+				if (items.font) {
+					this.checkFont(items.font);
+				}
+				else {
+					this.constructFont();
+				}
+				if (xt(items.text)) {
+					this.multiline(items.text);
+				}
 			}
 			this.getMetrics();
 			return this;
@@ -300,19 +313,19 @@ Helper function - creates Text objects for each line of text in a multiline Phra
 @chainable
 @private
 **/
-		my.Phrase.prototype.multiline = function(items) {
+		my.Phrase.prototype.multiline = function(newtext) {
 			var text,
 				textArray,
 				textnames = my.textnames,
 				texts = this.texts,
+				items = {},
 				ri = my.removeItem,
 				T = my.Text,
 				i,
 				iz,
 				j,
 				jz;
-			items = JSON.parse(JSON.stringify(items));
-			text = '' + (items.text || this.get('text'));
+			text = '' + my.xtGet(newtext, this.text);
 			textArray = text.split('\n');
 			if (my.xt(texts)) {
 				for (i = 0, iz = texts.length; i < iz; i++) {
@@ -367,21 +380,15 @@ Helper function - creates font-related attributes from entity's Context object's
 				size,
 				metrics,
 				family,
-				arg = {
-					style: '',
-					variant: '',
-					weight: '',
-					size: 0,
-					metrics: '',
-					family: ''
-				};
+				d = my.d.Phrase,
+				get = my.xtGet;
 			myFont = my.ctx[this.context].font;
-			style = this.get('style');
-			variant = this.get('variant');
-			weight = this.get('weight');
-			size = this.get('size');
-			metrics = this.get('metrics');
-			family = this.get('family');
+			style = get(this.style, d.style);
+			variant = get(this.variant, d.variant);
+			weight = get(this.weight, d.weight);
+			size = get(this.size, d.size);
+			metrics = get(this.metrics, d.metrics);
+			family = get(this.family, d.family);
 			if (/italic/i.test(myFont)) {
 				style = 'italic';
 			}
@@ -414,8 +421,8 @@ Helper function - creates font-related attributes from entity's Context object's
 				weight = 'normal';
 			}
 			res.length = 0;
-			if (/(\d+)(%|in|cm|mm|em|ex|pt|pc|ex)?/i.test(myFont)) {
-				res = myFont.match(/(\d+)(%|in|cm|mm|em|ex|pt|pc|ex|px)/i);
+			if (/(\d+)(%|in|cm|mm|em|rem|ex|pt|pc|px|vw|vh|vmin|vmax)?/i.test(myFont)) {
+				res = myFont.match(/(\d+)(%|in|cm|mm|em|rem|ex|pt|pc|px|vw|vh|vmin|vmax)/i);
 				size = parseFloat(res[1]);
 				metrics = res[2];
 			}
@@ -455,13 +462,13 @@ Helper function - creates font-related attributes from entity's Context object's
 			myFontArray = myFont.split(' ');
 			for (i = 0, iz = myFontArray.length; i < iz; i++) {
 				if (!my.contains(exclude, myFontArray[i])) {
-					if (!myFontArray[i].match(/[^\/](\d)+(%|in|cm|mm|em|ex|pt|pc|ex)?/i)) {
+					if (!myFontArray[i].match(/[^\/](\d)+(%|in|cm|mm|em|rem|ex|pt|pc|px|vw|vh|vmin|vmax)?/i)) {
 						myFamily += myFontArray[i] + ' ';
 					}
 				}
 			}
 			if (!myFamily) {
-				myFamily = 'Verdana, Geneva, sans-serif';
+				myFamily = this.family;
 			}
 			this.family = myFamily;
 			this.style = style;

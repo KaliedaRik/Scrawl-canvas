@@ -98,7 +98,9 @@ var mycode = function() {
 		endlinePos = scrawl.entity.endline.getPerimeterPosition(pos, false);
 		scrawl.point.startMidEnd_p2.local.set(endlinePos);
 		startMidEndPos = scrawl.entity.startMidEnd.getPerimeterPosition(pos, false);
-		scrawl.entity.goldwheel.start.set(startMidEndPos);
+		scrawl.entity.goldwheel.set({
+			start: startMidEndPos
+		});
 	};
 
 	//event listeners

@@ -120,7 +120,9 @@ var mycode = function() {
 		midEndPos = scrawl.entity.midEnd.getPerimeterPosition(pos, false);
 		scrawl.point.startMidEnd_p2.local.set(midEndPos);
 		startMidEndPos = scrawl.entity.startMidEnd.getPerimeterPosition(pos, false);
-		scrawl.entity.goldwheel.start.set(startMidEndPos);
+		scrawl.entity.goldwheel.set({
+			start: startMidEndPos
+		});
 	};
 
 	//event listeners

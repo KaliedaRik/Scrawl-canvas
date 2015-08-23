@@ -1918,7 +1918,7 @@ Position calculation helper function
 @private
 **/
 		my.Link.prototype.pointOnLine = function(origin, destination, val) {
-			if (origin && destination && my.isa(val, 'num')) {
+			if (origin && destination && val.toFixed) {
 				return destination.vectorSubtract(origin).scalarMultiply(val).vectorAdd(origin);
 			}
 			return false;
@@ -2020,7 +2020,7 @@ Position calculation helper function
 			entity = my.entity[this.entity];
 			result = this.getLocalPositionOnLink(val);
 			if (result) {
-				return result.rotate(entity.roll).vectorAdd(entity.getStartValues());
+				return result.rotate(entity.roll).vectorAdd(entity.currentStart);
 			}
 			return false;
 		};
@@ -2070,7 +2070,7 @@ Position calculation helper function
 			entity = my.entity[this.entity];
 			result = this.getLocalSteadyPositionOnLink(val);
 			if (result) {
-				result.rotate(entity.roll).vectorAdd(entity.getStartValues());
+				result.rotate(entity.roll).vectorAdd(entity.currentStart);
 				return result;
 			}
 			return false;
@@ -2123,7 +2123,7 @@ Returns length of Link, in pixels
 				for (j = 1; j <= precision; j++) {
 					pos = step * ((j - 1) + 1);
 					here = this.getPositionOnLink(pos); //my.worklink.v1
-					here.vectorSubtract(entity.getStartValues());
+					here.vectorSubtract(entity.currentStart);
 					v3.set(here);
 					dist = here.vectorSubtract(v2).getMagnitude();
 					v2.set(v3);

@@ -3330,7 +3330,6 @@ Convert handle percentage values to numerical values, stored in currentHandle
 				currentHandle.y *= scale;
 			}
 			if (isNaN(currentHandle.x)) {
-				console.log('#4 currentHandleX is NaN', scale, dims.w, currentHandle.x);
 				currentHandle.x = 0;
 			}
 			if (isNaN(currentHandle.y)) {
@@ -6609,7 +6608,8 @@ Remove entitys from the Group
 	/**
 Ask all entitys in the Group to perform a setDelta() operation
 
-The following entity attributes can be amended by this function: startX, startY, scale, roll.
+start delta coordinates can be supplied in the form of __x__ and __y__ attributes in the argument object, in addition to the more normal __startX__ and __startY__ attributes
+
 @method updateEntitysBy
 @param {Object} items Object containing attribute key:value pairs
 @return This
@@ -6617,17 +6617,19 @@ The following entity attributes can be amended by this function: startX, startY,
 **/
 	my.Group.prototype.updateEntitysBy = function(items) {
 		var entitys = this.entitys,
-			get = my.xtGet,
+			entity = my.entity,
+			xt = my.xt,
 			i,
 			iz;
 		items = my.safeObject(items);
+		if (xt(items.x)) {
+			items.startX = items.x;
+		}
+		if (xt(items.y)) {
+			items.startY = items.y;
+		}
 		for (i = 0, iz = entitys.length; i < iz; i++) {
-			my.entity[entitys[i]].setDelta({
-				startX: get(items.x, items.startX, 0),
-				startY: get(items.y, items.startY, 0),
-				scale: get(items.scale, 0),
-				roll: get(items.roll, 0)
-			});
+			entity[entitys[i]].setDelta(items);
 		}
 		return this;
 	};
@@ -7734,7 +7736,7 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 		ctx = my.context[cell.name];
 		//in all cases, the canvas origin will have been translated to the current entity's start
 		if (this.lockTo && this.lockTo !== 'cell') {
-			temp = entity.getOffsetStartVector();
+			temp = entity.currentHandle;
 			switch (entity.type) {
 				case 'Wheel':
 					x = -temp.x + (entity.radius * entity.scale);
