@@ -583,7 +583,6 @@ Alias for Pattern.makeDesign()
 					if (src) {
 						my.Entity.call(this, items);
 						tempV = my.safeObject(items.paste);
-						//start vector already set by the Entity call
 						this.start.x = get(items.pasteX, tempV.x, this.start.x);
 						this.start.y = get(items.pasteY, tempV.y, this.start.y);
 						this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');
@@ -783,6 +782,7 @@ Augments Entity.set()
 				this.copyHeight = get(items.copyHeight, this.copyHeight);
 			}
 			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+				this.currentStart.flag = false;
 				this.setPaste();
 			}
 			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
@@ -845,11 +845,26 @@ Augments Entity.setDelta()
 				this.copyHeight = (this.copyHeight.toFixed) ? this.copyHeight + h : perc(this.copyHeight, h);
 			}
 			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+				this.currentHandle.flag = false;
 				this.setPaste();
 			}
 			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
 				this.setCopy();
 			}
+			return this;
+		};
+		/**
+Convert start percentage values to numerical values, stored in currentStart
+
+@method updateCurrentStart
+@param {Object} reference object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)
+@return This
+@chainable
+@private
+**/
+		my.Picture.prototype.updateCurrentStart = function(reference) {
+			my.Position.prototype.updateCurrentStart.call(this, reference);
+			this.setPaste();
 			return this;
 		};
 		/**
@@ -918,10 +933,11 @@ Picture.setPaste update pasteData object values
 		my.Picture.prototype.setPaste = function() {
 			var cell = my.cell[my.group[this.group].cell],
 				perc = this.numberConvert,
-				start = this.start,
+				start,
 				pasteData = this.pasteData;
-			pasteData.x = (start.x.substring) ? perc(start.x, cell.actualWidth) : start.x;
-			pasteData.y = (start.y.substring) ? perc(start.y, cell.actualHeight) : start.y;
+			start = this.currentStart;
+			pasteData.x = start.x;
+			pasteData.y = start.y;
 			pasteData.w = (this.width.substring) ? perc(this.width, cell.actualWidth) : this.width;
 			pasteData.h = (this.height.substring) ? perc(this.height, cell.actualHeight) : this.height;
 			pasteData.w *= this.scale;
@@ -1003,10 +1019,12 @@ Stamp helper function - perform a 'clip' method draw
 		my.Picture.prototype.clip = function(ctx, cellname, cell) {
 			var here = this.currentHandle,
 				pasteData = this.pasteData;
-			this.rotateCell(ctx, cell);
-			ctx.beginPath();
-			ctx.rect(here.x, here.y, pasteData.w, pasteData.h);
-			ctx.clip();
+			if (this.currentStart.flag) {
+				this.rotateCell(ctx, cell);
+				ctx.beginPath();
+				ctx.rect(here.x, here.y, pasteData.w, pasteData.h);
+				ctx.clip();
+			}
 			return this;
 		};
 		/**
@@ -1033,8 +1051,10 @@ Stamp helper function - perform a 'clear' method draw
 		my.Picture.prototype.clear = function(ctx, cellname, cell) {
 			var here = this.currentHandle,
 				pasteData = this.pasteData;
-			this.rotateCell(ctx, cell);
-			ctx.clearRect(here.x, here.y, pasteData.w, pasteData.h);
+			if (this.currentStart.flag) {
+				this.rotateCell(ctx, cell);
+				ctx.clearRect(here.x, here.y, pasteData.w, pasteData.h);
+			}
 			return this;
 		};
 		/**
@@ -1050,15 +1070,17 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 			var here = this.currentHandle,
 				pasteData = this.pasteData,
 				myctx = my.ctx[cellname];
-			this.rotateCell(ctx, cell);
-			ctx.fillStyle = cell.backgroundColor;
-			ctx.strokeStyle = cell.backgroundColor;
-			ctx.globalAlpha = 1;
-			ctx.strokeRect(here.x, here.y, pasteData.w, pasteData.h);
-			ctx.fillRect(here.x, here.y, pasteData.w, pasteData.h);
-			ctx.fillStyle = myctx.fillStyle;
-			ctx.strokeStyle = myctx.strokeStyle;
-			ctx.globalAlpha = myctx.globalAlpha;
+			if (this.currentStart.flag) {
+				this.rotateCell(ctx, cell);
+				ctx.fillStyle = cell.backgroundColor;
+				ctx.strokeStyle = cell.backgroundColor;
+				ctx.globalAlpha = 1;
+				ctx.strokeRect(here.x, here.y, pasteData.w, pasteData.h);
+				ctx.fillRect(here.x, here.y, pasteData.w, pasteData.h);
+				ctx.fillStyle = myctx.fillStyle;
+				ctx.strokeStyle = myctx.strokeStyle;
+				ctx.globalAlpha = myctx.globalAlpha;
+			}
 			return this;
 		};
 		/**
@@ -1073,9 +1095,11 @@ Stamp helper function - perform a 'draw' method draw
 		my.Picture.prototype.draw = function(ctx, cellname, cell) {
 			var here = this.currentHandle,
 				pasteData = this.pasteData;
-			this.rotateCell(ctx, cell);
-			cell.setEngine(this);
-			ctx.strokeRect(here.x, here.y, pasteData.w, pasteData.h);
+			if (this.currentStart.flag) {
+				this.rotateCell(ctx, cell);
+				cell.setEngine(this);
+				ctx.strokeRect(here.x, here.y, pasteData.w, pasteData.h);
+			}
 			return this;
 		};
 		/**
@@ -1092,7 +1116,7 @@ Stamp helper function - perform a 'fill' method draw
 				data = this.getImage(),
 				cd = this.copyData,
 				pd = this.pasteData;
-			if (data) {
+			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
@@ -1114,7 +1138,7 @@ Stamp helper function - perform a 'drawFill' method draw
 				data = this.getImage(),
 				cd = this.copyData,
 				pd = this.pasteData;
-			if (data) {
+			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
@@ -1138,7 +1162,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 				data = this.getImage(),
 				cd = this.copyData,
 				pd = this.pasteData;
-			if (data) {
+			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
@@ -1162,7 +1186,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 				data = this.getImage(),
 				cd = this.copyData,
 				pd = this.pasteData;
-			if (data) {
+			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
@@ -1185,7 +1209,7 @@ Stamp helper function - perform a 'floatOver' method draw
 				data = this.getImage(),
 				cd = this.copyData,
 				pd = this.pasteData;
-			if (data) {
+			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
@@ -1280,7 +1304,6 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 			v1.vectorSubtract(pd).rotate(-this.roll);
 			v1.x = (this.flipReverse) ? -v1.x : v1.x;
 			v1.y = (this.flipUpend) ? -v1.y : v1.y;
-			// v1.vectorSubtract(this.getPivotOffsetVector(this.handle));
 			v1.vectorSubtract(this.currentHandle);
 			v1.x = Math.round(v1.x * (cd.w / pd.w));
 			v1.y = Math.round(v1.y * (cd.h / pd.h));

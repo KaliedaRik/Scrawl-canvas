@@ -43,10 +43,34 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
-to 150812
+August 2015
 	- refactoring code for efficiency gains
-	- fixed entity ordering bug on chrome/opera
+		- big undertaking - all source files affected
+			- wherever possible:
+				- replaced isa() functions with direct tests eg value.toFixed, value.substring, etc
+				- replaced extended if/else and switch statements with helper objects
+					- so code can directly call the required functionality, instead of having to iterate
+				- get references to functions and objects used repeatedly in a function at start of function
+					- (has a massive efficiency gain in Firefox)
+		- rationalized start and handle attributes for cells and entitys
+			- new currentStart and currentHandle attributes
+				- hold pixel data only, while start and handle attributes can also hold strings
+				- only recalculated when start and handle values change
+					- was previously calculating pixel data for every iteration of the display cycle
+					- calculation on a JIT basis - dirty flags
+				- complex calculation process replaced by 2 new functions
+					- updateCurrentStart()
+					- updateCurrentHandle() 
+				- got rid of multiple instances of conversion functionality with single numberConvert() function
+		- refactoring Phrase entity
+			- was destroying/creating Text elements on every set and setDelta action
+				- now only perform these actions when text attribute changes
+		- rationalized filter operations
+	- fixed long-standing entity ordering bug on chrome/opera
 		- implemented a stable bucket sort algorithm; refactored sorting
+			- sorting on a JIT basis - dirty flags
+				- was prevously sorting (by default) for each display and animation cycle
+			- used for sorting cells, groups, entitys and animations
 
 to 150806
 	- integrated perspective experiments into scrawl
@@ -67,7 +91,7 @@ to 150806
 		- add in collision functionality
 			- treat in a similar manner to Block entitys (edge, corner, center collision points)
 		- testing filters functionality
-			- amend demo101 to add a Frame
+			- amend demo101 to add a Frame - DONE
 		- need demos for path functionality
 			- that individual corners can be made to track separate paths
 			- that 'lockFrameTo' elements can follow a path

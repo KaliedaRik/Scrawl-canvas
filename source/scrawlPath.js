@@ -177,7 +177,6 @@ Entity.stamp hook function - modified by path module
 		my.Entity.prototype.pathStamp = function(method, cell) {
 			var here,
 				e = my.entity[this.path],
-				// start = this.start;
 				start = this.currentStart;
 			if (e && e.type === 'Path') {
 				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);

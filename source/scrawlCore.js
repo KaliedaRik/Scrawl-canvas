@@ -3352,17 +3352,16 @@ Convert start percentage values to numerical values, stored in currentStart
 	my.Position.prototype.updateCurrentStart = function(reference) {
 		var dims, conv, start, currentStart;
 		if (!this.currentStart.flag) {
+			currentStart = this.currentStart;
 			dims = this.getReferenceDimensions[reference.type](reference);
 			conv = this.numberConvert;
 			start = this.start;
-			currentStart = this.currentStart;
 			currentStart.x = (start.x.substring) ? conv(start.x, dims.w) : start.x;
 			currentStart.y = (start.y.substring) ? conv(start.y, dims.h) : start.y;
-			if (isNaN(currentStart.x)) {
+			if (isNaN(currentStart.x) || isNaN(currentStart.y)) {
 				currentStart.x = 0;
-			}
-			if (isNaN(currentStart.y)) {
 				currentStart.y = 0;
+				return this;
 			}
 			currentStart.flag = true;
 		}
@@ -3408,6 +3407,7 @@ Takes into account lock flag settings
 			cell = my.cell[cell];
 			pad = my.pad[cell.pad];
 			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
+			console.log(this.name, 'before', start.x, this.oldX, mouse.x);
 			if (mouse) {
 				if (this.oldX == null && this.oldY == null) { //jshint ignore:line
 					this.oldX = start.x;
@@ -3417,6 +3417,7 @@ Takes into account lock flag settings
 				start.y = (!lockY) ? start.y + mouse.y - this.oldY : start.y;
 				this.oldX = mouse.x;
 				this.oldY = mouse.y;
+				console.log(this.name, 'after', start.x, this.oldX, mouse.x);
 			}
 		}
 		return this.setStampUsingStacksPivot();
@@ -5780,10 +5781,11 @@ Cell.setPaste update pasteData object values
 			conv = this.numberConvert,
 			scale = this.scale,
 			data = this.pasteData,
-			start = this.currentStart;
+			start = this.currentStart,
+			get = my.xtGet;
 		if (my.xta(display, base)) {
-			width = (this.name === pad.base) ? display.actualWidth : base.actualWidth;
-			height = (this.name === pad.base) ? display.actualHeight : base.actualHeight;
+			width = (this.name === pad.base) ? display.actualWidth : get(base.actualWidth, this.actualWidth, 300);
+			height = (this.name === pad.base) ? display.actualHeight : get(base.actualHeight, this.actualHeight, 150);
 			if (!start.flag) {
 				if (!this.reference) {
 					this.setReference();

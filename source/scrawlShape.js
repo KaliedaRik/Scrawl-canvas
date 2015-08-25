@@ -159,7 +159,6 @@ Augments Entity.set()
 			items = my.safeObject(items);
 			if (my.xt(items.data)) {
 				this.dataSet = this.buildDataSet(this.data);
-				this.offset.flag = false;
 			}
 			return this;
 		};

@@ -29,7 +29,7 @@ var mycode = function() {
 		handleY: 'center',
 		pivot: 'mouse',
 		scale: 0.01
-	});
+	}).forceStamp();
 
 	//stop touchmove dragging the page up/down
 	scrawl.addListener(['move', 'down'], function(e) {
