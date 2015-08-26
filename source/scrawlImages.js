@@ -764,11 +764,11 @@ Augments Entity.set()
 				this.start.x = get(items.pasteX, temp.x, this.start.x);
 				this.start.y = get(items.pasteY, temp.y, this.start.y);
 			}
-			if (xt(items.pasteWidth)) {
-				this.width = get(items.pasteWidth, this.width);
+			if (xto(items.pasteWidth, items.width)) {
+				this.width = get(items.pasteWidth, items.width, this.width);
 			}
-			if (xt(items.pasteHeight)) {
-				this.height = get(items.pasteHeight, this.height);
+			if (xto(items.pasteHeight, items.height)) {
+				this.height = get(items.pasteHeight, items.height, this.height);
 			}
 			if (xto(items.copy, items.copyX, items.copyY)) {
 				temp = my.safeObject(items.copy);
@@ -781,8 +781,10 @@ Augments Entity.set()
 			if (xt(items.copyHeight)) {
 				this.copyHeight = get(items.copyHeight, this.copyHeight);
 			}
-			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY)) {
 				this.currentStart.flag = false;
+			}
+			if (xto(items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
 			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
@@ -822,11 +824,11 @@ Augments Entity.setDelta()
 				start.y = (start.y.toFixed) ? start.y + y : perc(start.y, y);
 			}
 			if (xto(items.pasteWidth, items.width)) {
-				w = get(items.pasteWidth, items.width);
+				w = get(items.pasteWidth, items.width, 0);
 				this.width = (this.width.toFixed) ? this.width + w : perc(this.width, w);
 			}
 			if (xto(items.pasteHeight, items.height)) {
-				h = get(items.pasteHeight, items.height);
+				h = get(items.pasteHeight, items.height, 0);
 				this.height = (this.height.toFixed) ? this.height + h : perc(this.height, h);
 			}
 			if (xto(items.copy, items.copyX, items.copyY)) {
@@ -844,27 +846,15 @@ Augments Entity.setDelta()
 				h = get(items.copyHeight, items.height);
 				this.copyHeight = (this.copyHeight.toFixed) ? this.copyHeight + h : perc(this.copyHeight, h);
 			}
-			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
-				this.currentHandle.flag = false;
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY)) {
+				this.currentStart.flag = false;
+			}
+			if (xto(items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
 			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
 				this.setCopy();
 			}
-			return this;
-		};
-		/**
-Convert start percentage values to numerical values, stored in currentStart
-
-@method updateCurrentStart
-@param {Object} reference object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)
-@return This
-@chainable
-@private
-**/
-		my.Picture.prototype.updateCurrentStart = function(reference) {
-			my.Position.prototype.updateCurrentStart.call(this, reference);
-			this.setPaste();
 			return this;
 		};
 		/**
@@ -936,6 +926,9 @@ Picture.setPaste update pasteData object values
 				start,
 				pasteData = this.pasteData;
 			start = this.currentStart;
+			if (!start.flag) {
+				this.updateCurrentStart(cell);
+			}
 			pasteData.x = start.x;
 			pasteData.y = start.y;
 			pasteData.w = (this.width.substring) ? perc(this.width, cell.actualWidth) : this.width;
@@ -1416,7 +1409,7 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 **/
 		my.Picture.prototype.dropEntity = function(item) {
 			my.Entity.prototype.dropEntity.call(this, item);
-			this.setPaste();
+			this.currentStart.flag = false;
 			return this;
 		};
 

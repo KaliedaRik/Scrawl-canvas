@@ -13,6 +13,7 @@ var mycode = function() {
 		path,
 		pathData,
 		buildEntitys,
+		events,
 
 		data = document.getElementById('data'),
 
@@ -24,31 +25,38 @@ var mycode = function() {
 		current_CY2 = 0,
 		current_lineType = 'l',
 
-		input_radius = document.getElementById('radius'),
-		input_angle = document.getElementById('angle'),
-		input_CX1 = document.getElementById('CX1'),
-		input_CY1 = document.getElementById('CY1'),
-		input_CX2 = document.getElementById('CX2'),
-		input_CY2 = document.getElementById('CY2'),
-		input_lineType = document.getElementById('lineType'),
+		// input_radius = document.getElementById('radius'),
+		// input_angle = document.getElementById('angle'),
+		// input_CX1 = document.getElementById('CX1'),
+		// input_CY1 = document.getElementById('CY1'),
+		// input_CX2 = document.getElementById('CX2'),
+		// input_CY2 = document.getElementById('CY2'),
+		// input_lineType = document.getElementById('lineType'),
 
-		event_radius,
-		event_angle,
-		event_CX1,
-		event_CY1,
-		event_CX2,
-		event_CY2,
-		event_lineType,
+		// event_radius,
+		// event_angle,
+		// event_CX1,
+		// event_CY1,
+		// event_CX2,
+		// event_CY2,
+		// event_lineType,
 
 		stopE;
 
-	input_radius.value = 150;
-	input_angle.value = 60;
-	input_CX1.value = 0;
-	input_CX2.value = 0;
-	input_CY1.value = 0;
-	input_CY2.value = 0;
-	input_lineType.value = 'l';
+	// input_radius.value = 150;
+	// input_angle.value = 60;
+	// input_CX1.value = 0;
+	// input_CX2.value = 0;
+	// input_CY1.value = 0;
+	// input_CY2.value = 0;
+	// input_lineType.value = 'l';
+	document.getElementById('radius').value = '150';
+	document.getElementById('angle').value = '60';
+	document.getElementById('CX1').value = '0';
+	document.getElementById('CY1').value = '0';
+	document.getElementById('CX2').value = '0';
+	document.getElementById('CY2').value = '0';
+	document.getElementById('lineType').value = 'l';
 
 	//define gradient
 	scrawl.makeRadialGradient({
@@ -141,60 +149,44 @@ var mycode = function() {
 		e.returnValue = false;
 	};
 
-	event_lineType = function(e) {
+	events = function(e) {
+		var item = false;
 		stopE(e);
-		current_lineType = input_lineType.value;
-		buildEntitys();
+		switch (e.target.id) {
+			case 'lineType':
+				current_lineType = e.target.value;
+				item = true;
+				break;
+			case 'radius':
+				current_radius = Math.round(e.target.value);
+				item = true;
+				break;
+			case 'angle':
+				current_angle = Math.round(e.target.value);
+				item = true;
+				break;
+			case 'CX1':
+				current_CX1 = Math.round(e.target.value);
+				item = true;
+				break;
+			case 'CX2':
+				current_CX2 = Math.round(e.target.value);
+				item = true;
+				break;
+			case 'CY1':
+				current_CY1 = Math.round(e.target.value);
+				item = true;
+				break;
+			case 'CY2':
+				current_CY2 = Math.round(e.target.value);
+				item = true;
+				break;
+		}
+		if (item) {
+			buildEntitys();
+		}
 	};
-	input_lineType.addEventListener('change', event_lineType, false);
-
-	event_radius = function(e) {
-		stopE(e);
-		current_radius = parseInt(input_radius.value, 10);
-		buildEntitys();
-	};
-	input_radius.addEventListener('input', event_radius, false);
-	input_radius.addEventListener('change', event_radius, false);
-
-	event_angle = function(e) {
-		stopE(e);
-		current_angle = parseInt(input_angle.value, 10);
-		buildEntitys();
-	};
-	input_angle.addEventListener('input', event_angle, false);
-	input_angle.addEventListener('change', event_angle, false);
-
-	event_CX1 = function(e) {
-		stopE(e);
-		current_CX1 = parseInt(input_CX1.value, 10);
-		buildEntitys();
-	};
-	input_CX1.addEventListener('input', event_CX1, false);
-	input_CX1.addEventListener('change', event_CX1, false);
-
-	event_CY1 = function(e) {
-		stopE(e);
-		current_CY1 = parseInt(input_CY1.value, 10);
-		buildEntitys();
-	};
-	input_CY1.addEventListener('input', event_CY1, false);
-	input_CY1.addEventListener('change', event_CY1, false);
-
-	event_CX2 = function(e) {
-		stopE(e);
-		current_CX2 = parseInt(input_CX2.value, 10);
-		buildEntitys();
-	};
-	input_CX2.addEventListener('input', event_CX2, false);
-	input_CX2.addEventListener('change', event_CX2, false);
-
-	event_CY2 = function(e) {
-		stopE(e);
-		current_CY2 = parseInt(input_CY2.value, 10);
-		buildEntitys();
-	};
-	input_CY2.addEventListener('input', event_CY2, false);
-	input_CY2.addEventListener('change', event_CY2, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
 	scrawl.makeAnimation({

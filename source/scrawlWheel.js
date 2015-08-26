@@ -239,7 +239,12 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				testRadius,
 				cvx = my.cvx,
 				v1 = my.workwheel.v1,
-				handle;
+				handle,
+				start,
+				scale,
+				roll,
+				reverse,
+				upend;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)];
 			result = false;
@@ -249,14 +254,19 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				if (!handle.flag) {
 					this.updateCurrentHandle();
 				}
+				start = this.currentStart;
+				roll = this.roll;
+				scale = this.scale;
+				reverse = this.flipReverse;
+				upend = this.flipUpend;
 				for (i = 0, iz = tests.length; i < iz; i += 2) {
 					this.resetWork();
 					v1.x = tests[i];
 					v1.y = tests[i + 1];
-					v1.vectorSubtract(this.currentStart).scalarDivide(this.scale).rotate(-this.roll);
-					v1.x = (this.flipReverse) ? -v1.x : v1.x;
-					v1.y = (this.flipUpend) ? -v1.y : v1.y;
-					v1.vectorAdd(handle);
+					v1.vectorSubtract(start).scalarDivide(scale).rotate(-roll);
+					v1.x = (reverse) ? -v1.x : v1.x;
+					v1.y = (upend) ? -v1.y : v1.y;
+					v1.vectorSubtract(handle);
 					result = (v1.getMagnitude() <= testRadius) ? true : false;
 					if (result) {
 						items.x = tests[i];

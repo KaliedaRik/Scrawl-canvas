@@ -830,7 +830,7 @@ Entity.stamp hook helper function
 			test = (e[entity.path] && e[entity.path].type === 'Path');
 			if (entity.pivot || !test || entity.get('textAlongPath') === 'phrase') {
 				o = entity.getOffset();
-				here = entity.prepareStamp();
+				here = entity.currentHandle;
 				textY = entity.size * entity.lineHeight * entity.scale;
 				entity.rotateCell(cvx, cv);
 				tX = here.x + o.x;
@@ -899,7 +899,7 @@ Entity.stamp hook helper function
 			canvas = my.canvas[cellname];
 			data = entity.getImage();
 			if (data) {
-				here = entity.prepareStamp();
+				here = entity.currentHandle;
 				entity.rotateCell(cvx, cv);
 				cvx.drawImage(data, copy.x, copy.y, copy.w, copy.h, here.x, here.y, paste.w, paste.h);
 				cvx.setTransform(1, 0, 0, 1, 0, 0);
@@ -1146,7 +1146,7 @@ Add function - takes data, calculates its invert and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.InvertFilter.prototype.add = function(data) {
+		my.InvertFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1220,7 +1220,7 @@ Add function - takes data, calculates its brightness and replaces the old color 
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.BrightnessFilter.prototype.add = function(data) {
+		my.BrightnessFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1297,7 +1297,7 @@ Add function - takes data, calculates its saturation and replaces the old color 
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.SaturationFilter.prototype.add = function(data) {
+		my.SaturationFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1374,7 +1374,7 @@ Add function - takes data, calculates its threshold and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.ThresholdFilter.prototype.add = function(data) {
+		my.ThresholdFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1386,7 +1386,7 @@ Add function - takes data, calculates its threshold and combines it with data
 			threshold = (this.threshold.substring) ? parseFloat(this.threshold) / 100 : this.threshold;
 			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold > 0.5) ? 1 : 0);
 			threshold *= 255;
-			data = my.GreyscaleFilter.prototype.add.call(this, data);
+			data = my.GreyscaleFilter.prototype.add.call(this, data, dim);
 			d = data.data;
 			for (i = 0, iz = d.length; i < iz; i += 4) {
 				if (d[i + 3]) {
@@ -1474,7 +1474,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.ChannelsFilter.prototype.add = function(data) {
+		my.ChannelsFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1576,7 +1576,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.ChannelStepFilter.prototype.add = function(data) {
+		my.ChannelStepFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1722,7 +1722,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.TintFilter.prototype.add = function(data) {
+		my.TintFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1944,7 +1944,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.MatrixFilter.prototype.add = function(data) {
+		my.MatrixFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d0,
 				dR,
@@ -2134,7 +2134,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.PixelateFilter.prototype.add = function(data) {
+		my.PixelateFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d0,
 				dR,
@@ -2312,7 +2312,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.BlurFilter.prototype.add = function(data) {
+		my.BlurFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d0,
 				result,
@@ -2542,7 +2542,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.LeachFilter.prototype.add = function(data) {
+		my.LeachFilter.prototype.add = function(data, dim) {
 			var r,
 				g,
 				b,
@@ -2638,7 +2638,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.SeparateFilter.prototype.add = function(data) {
+		my.SeparateFilter.prototype.add = function(data, dim) {
 			var alpha,
 				channel,
 				d,
@@ -2788,7 +2788,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.NoiseFilter.prototype.add = function(data) {
+		my.NoiseFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d0,
 				dR,

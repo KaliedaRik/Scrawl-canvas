@@ -67,14 +67,20 @@ Percentage String values are relative to the entity's cell's dimensions
 				cx,
 				cy,
 				dx,
-				dy;
+				dy,
+				conv = my.Position.prototype.numberConvert,
+				get = my.xtGet;
 			items = my.safeObject(items);
 			items.closed = true;
 			cell = my.Entity.prototype.getEntityCell(items);
-			startX = (items.startX && items.startX.substring) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
-			startY = (items.startY && items.startY.substring) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
-			radiusX = (items.radiusX && items.radiusX.substring) ? my.convertPercentage(items.radiusX, cell, true) : items.radiusX || 0;
-			radiusY = (items.radiusY && items.radiusY.substring) ? my.convertPercentage(items.radiusY, cell, false) : items.radiusY || 0;
+			startX = get(items.startX, 0);
+			startY = get(items.startY, 0);
+			radiusX = get(items.radiusX, 0);
+			radiusY = get(items.radiusY, 0);
+			startX = (startX.substring) ? conv(startX, cell.actualWidth) : startX;
+			startY = (startY.substring) ? conv(startY, cell.actualHeight) : startY;
+			radiusX = (radiusX.substring) ? conv(radiusX, cell.actualWidth) : radiusX;
+			radiusY = (radiusY.substring) ? conv(radiusY, cell.actualHeight) : radiusY;
 			myData = 'm';
 			cx = startX;
 			cy = startY;
@@ -166,22 +172,28 @@ Percentage String values are relative to the entity's cell's dimensions
 				cx,
 				cy,
 				dx,
-				dy;
+				dy,
+				conv = my.Position.prototype.numberConvert,
+				get = my.xtGet;
 			items = my.safeObject(items);
 			items.closed = true;
 			cell = my.Entity.prototype.getEntityCell(items);
-			startX = (items.startX && items.startX.substring) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
-			startY = (items.startY && items.startY.substring) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
-			width = (items.width && items.width.substring) ? my.convertPercentage(items.width, cell, true) : items.width || 0;
-			height = (items.height && items.height.substring) ? my.convertPercentage(items.height, cell, false) : items.height || 0;
-			brx = my.xtGet(items.radiusTopLeftX, items.radiusTopLeft, items.radiusTopX, items.radiusLeftX, items.radiusTop, items.radiusLeft, items.radiusX, items.radius, 0);
-			bry = my.xtGet(items.radiusTopLeftY, items.radiusTopLeft, items.radiusTopY, items.radiusLeftY, items.radiusTop, items.radiusLeft, items.radiusY, items.radius, 0);
-			blx = my.xtGet(items.radiusTopRightX, items.radiusTopRight, items.radiusTopX, items.radiusRightX, items.radiusTop, items.radiusRight, items.radiusX, items.radius, 0);
-			bly = my.xtGet(items.radiusTopRightY, items.radiusTopRight, items.radiusTopY, items.radiusRightY, items.radiusTop, items.radiusRight, items.radiusY, items.radius, 0);
-			tlx = my.xtGet(items.radiusBottomRightX, items.radiusBottomRight, items.radiusBottomX, items.radiusRightX, items.radiusBottom, items.radiusRight, items.radiusX, items.radius, 0);
-			tly = my.xtGet(items.radiusBottomRightY, items.radiusBottomRight, items.radiusBottomY, items.radiusRightY, items.radiusBottom, items.radiusRight, items.radiusY, items.radius, 0);
-			trx = my.xtGet(items.radiusBottomLeftX, items.radiusBottomLeft, items.radiusBottomX, items.radiusLeftX, items.radiusBottom, items.radiusLeft, items.radiusX, items.radius, 0);
-			_try = my.xtGet(items.radiusBottomLeftY, items.radiusBottomLeft, items.radiusBottomY, items.radiusLeftY, items.radiusBottom, items.radiusLeft, items.radiusY, items.radius, 0);
+			startX = get(items.startX, 0);
+			startY = get(items.startY, 0);
+			width = get(items.width, 0);
+			height = get(items.height, 0);
+			startX = (startX.substring) ? conv(startX, cell.actualWidth) : startX;
+			startY = (startY.substring) ? conv(startY, cell.actualHeight) : startY;
+			width = (width.substring) ? conv(width, cell.actualWidth) : width;
+			height = (height.substring) ? conv(height, cell.actualHeight) : height;
+			brx = get(items.radiusTopLeftX, items.radiusTopLeft, items.radiusTopX, items.radiusLeftX, items.radiusTop, items.radiusLeft, items.radiusX, items.radius, 0);
+			bry = get(items.radiusTopLeftY, items.radiusTopLeft, items.radiusTopY, items.radiusLeftY, items.radiusTop, items.radiusLeft, items.radiusY, items.radius, 0);
+			blx = get(items.radiusTopRightX, items.radiusTopRight, items.radiusTopX, items.radiusRightX, items.radiusTop, items.radiusRight, items.radiusX, items.radius, 0);
+			bly = get(items.radiusTopRightY, items.radiusTopRight, items.radiusTopY, items.radiusRightY, items.radiusTop, items.radiusRight, items.radiusY, items.radius, 0);
+			tlx = get(items.radiusBottomRightX, items.radiusBottomRight, items.radiusBottomX, items.radiusRightX, items.radiusBottom, items.radiusRight, items.radiusX, items.radius, 0);
+			tly = get(items.radiusBottomRightY, items.radiusBottomRight, items.radiusBottomY, items.radiusRightY, items.radiusBottom, items.radiusRight, items.radiusY, items.radius, 0);
+			trx = get(items.radiusBottomLeftX, items.radiusBottomLeft, items.radiusBottomX, items.radiusLeftX, items.radiusBottom, items.radiusLeft, items.radiusX, items.radius, 0);
+			_try = get(items.radiusBottomLeftY, items.radiusBottomLeft, items.radiusBottomY, items.radiusLeftY, items.radiusBottom, items.radiusLeft, items.radiusY, items.radius, 0);
 			halfWidth = (width / 2);
 			halfHeight = (height / 2);
 			myData = 'm';
@@ -296,21 +308,32 @@ Percentage String values are relative to the entity's cell's dimensions
 				data,
 				myFixed,
 				myShape,
-				tempName;
+				tempName,
+				conv = my.Position.prototype.numberConvert,
+				get = my.xtGet,
+				point = my.point;
 			items = my.safeObject(items);
 			items.closed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
 			items.isLine = true;
 			cell = my.Entity.prototype.getEntityCell(items);
-			startX = (items.startX && items.startX.substring) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
-			startY = (items.startY && items.startY.substring) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
-			startControlX = (items.startControlX && items.startControlX.substring) ? my.convertPercentage(items.startControlX, cell, true) : items.startControlX || 0;
-			startControlY = (items.startControlY && items.startControlY.substring) ? my.convertPercentage(items.startControlY, cell, false) : items.startControlY || 0;
-			endControlX = (items.endControlX && items.endControlX.substring) ? my.convertPercentage(items.endControlX, cell, true) : items.endControlX || 0;
-			endControlY = (items.endControlY && items.endControlY.substring) ? my.convertPercentage(items.endControlY, cell, false) : items.endControlY || 0;
-			endX = (items.endX && items.endX.substring) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0;
-			endY = (items.endY && items.endY.substring) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0;
+			startX = get(items.startX, 0);
+			startY = get(items.startY, 0);
+			startControlX = get(items.startControlX, 0);
+			startControlY = get(items.startControlY, 0);
+			endControlX = get(items.endControlX, 0);
+			endControlY = get(items.endControlY, 0);
+			endX = get(items.endX, 0);
+			endY = get(items.endY, 0);
+			startX = (startX.substring) ? conv(startX, cell.actualWidth) : startX;
+			startY = (startY.substring) ? conv(startY, cell.actualHeight) : startY;
+			startControlX = (startControlX.substring) ? conv(startControlX, cell.actualWidth) : startControlX;
+			startControlY = (startControlY.substring) ? conv(startControlY, cell.actualHeight) : startControlY;
+			endControlX = (endControlX.substring) ? conv(endControlX, cell.actualWidth) : endControlX;
+			endControlY = (endControlY.substring) ? conv(endControlY, cell.actualHeight) : endControlY;
+			endX = (endX.substring) ? conv(endX, cell.actualWidth) : endX;
+			endY = (endY.substring) ? conv(endY, cell.actualHeight) : endY;
 			myFixed = items.fixed || 'none';
 			items.fixed = false;
 			data = 'm0,0c' +
@@ -326,26 +349,26 @@ Percentage String values are relative to the entity's cell's dimensions
 				tempName = myShape.name.replace('~', '_', 'g');
 				switch (myFixed) {
 					case 'all':
-						my.point[tempName + '_p1'].setToFixed(startX, startY);
-						my.point[tempName + '_p2'].setToFixed(startControlX, startControlY);
-						my.point[tempName + '_p3'].setToFixed(endControlX, endControlY);
-						my.point[tempName + '_p4'].setToFixed(endX, endY);
+						point[tempName + '_p1'].setToFixed(startX, startY);
+						point[tempName + '_p2'].setToFixed(startControlX, startControlY);
+						point[tempName + '_p3'].setToFixed(endControlX, endControlY);
+						point[tempName + '_p4'].setToFixed(endX, endY);
 						break;
 					case 'both':
-						my.point[tempName + '_p1'].setToFixed(startX, startY);
-						my.point[tempName + '_p4'].setToFixed(endX, endY);
+						point[tempName + '_p1'].setToFixed(startX, startY);
+						point[tempName + '_p4'].setToFixed(endX, endY);
 						break;
 					case 'start':
-						my.point[tempName + '_p1'].setToFixed(startX, startY);
+						point[tempName + '_p1'].setToFixed(startX, startY);
 						break;
 					case 'startControl':
-						my.point[tempName + '_p2'].setToFixed(startControlX, startControlY);
+						point[tempName + '_p2'].setToFixed(startControlX, startControlY);
 						break;
 					case 'endControl':
-						my.point[tempName + '_p3'].setToFixed(endControlX, endControlY);
+						point[tempName + '_p3'].setToFixed(endControlX, endControlY);
 						break;
 					case 'end':
-						my.point[tempName + '_p4'].setToFixed(endX, endY);
+						point[tempName + '_p4'].setToFixed(endX, endY);
 						break;
 				}
 			}
@@ -381,19 +404,28 @@ Percentage String values are relative to the entity's cell's dimensions
 				data,
 				myFixed,
 				myShape,
-				tempName;
+				tempName,
+				conv = my.Position.prototype.numberConvert,
+				get = my.xtGet,
+				point = my.point;
 			items = my.safeObject(items);
 			items.closed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
 			items.isLine = true;
 			cell = my.Entity.prototype.getEntityCell(items);
-			startX = (items.startX && items.startX.substring) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
-			startY = (items.startY && items.startY.substring) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
-			controlX = (items.controlX && items.controlX.substring) ? my.convertPercentage(items.controlX, cell, true) : items.controlX || 0;
-			controlY = (items.controlY && items.controlY.substring) ? my.convertPercentage(items.controlY, cell, false) : items.controlY || 0;
-			endX = (items.endX && items.endX.substring) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0;
-			endY = (items.endY && items.endY.substring) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0;
+			startX = get(items.startX, 0);
+			startY = get(items.startY, 0);
+			controlX = get(items.controlX, 0);
+			controlY = get(items.controlY, 0);
+			endX = get(items.endX, 0);
+			endY = get(items.endY, 0);
+			startX = (startX.substring) ? conv(startX, cell.actualWidth) : startX;
+			startY = (startY.substring) ? conv(startY, cell.actualHeight) : startY;
+			controlX = (controlX.substring) ? conv(controlX, cell.actualWidth) : controlX;
+			controlY = (controlY.substring) ? conv(controlY, cell.actualHeight) : controlY;
+			endX = (endX.substring) ? conv(endX, cell.actualWidth) : endX;
+			endY = (endY.substring) ? conv(endY, cell.actualHeight) : endY;
 			myFixed = items.fixed || 'none';
 			data = 'm0,0q' +
 				(controlX - startX) + ',' + (controlY - startY) + ' ' +
@@ -408,22 +440,22 @@ Percentage String values are relative to the entity's cell's dimensions
 				tempName = myShape.name.replace('~', '_', 'g');
 				switch (myFixed) {
 					case 'all':
-						my.point[tempName + '_p1'].setToFixed(startX, startY);
-						my.point[tempName + '_p2'].setToFixed(controlX, controlY);
-						my.point[tempName + '_p3'].setToFixed(endX, endY);
+						point[tempName + '_p1'].setToFixed(startX, startY);
+						point[tempName + '_p2'].setToFixed(controlX, controlY);
+						point[tempName + '_p3'].setToFixed(endX, endY);
 						break;
 					case 'both':
-						my.point[tempName + '_p1'].setToFixed(startX, startY);
-						my.point[tempName + '_p3'].setToFixed(endX, endY);
+						point[tempName + '_p1'].setToFixed(startX, startY);
+						point[tempName + '_p3'].setToFixed(endX, endY);
 						break;
 					case 'start':
-						my.point[tempName + '_p1'].setToFixed(startX, startY);
+						point[tempName + '_p1'].setToFixed(startX, startY);
 						break;
 					case 'control':
-						my.point[tempName + '_p2'].setToFixed(controlX, controlY);
+						point[tempName + '_p2'].setToFixed(controlX, controlY);
 						break;
 					case 'end':
-						my.point[tempName + '_p3'].setToFixed(endX, endY);
+						point[tempName + '_p3'].setToFixed(endX, endY);
 						break;
 				}
 			}
@@ -455,17 +487,24 @@ Percentage String values are relative to the entity's cell's dimensions
 				data,
 				myFixed,
 				myShape,
-				tempName;
+				tempName,
+				conv = my.Position.prototype.numberConvert,
+				get = my.xtGet,
+				point = my.point;
 			items = my.safeObject(items);
 			items.isLine = true;
 			items.closed = false;
 			items.handleX = items.handleX || 'left';
 			items.handleY = items.handleY || 'top';
 			cell = my.Entity.prototype.getEntityCell(items);
-			startX = (items.startX && items.startX.substring) ? my.convertPercentage(items.startX, cell, true) : items.startX || 0;
-			startY = (items.startY && items.startY.substring) ? my.convertPercentage(items.startY, cell, false) : items.startY || 0;
-			endX = (items.endX && items.endX.substring) ? my.convertPercentage(items.endX, cell, true) : items.endX || 0;
-			endY = (items.endY && items.endY.substring) ? my.convertPercentage(items.endY, cell, false) : items.endY || 0;
+			startX = get(items.startX, 0);
+			startY = get(items.startY, 0);
+			endX = get(items.endX, 0);
+			endY = get(items.endY, 0);
+			startX = (startX.substring) ? conv(startX, cell.actualWidth) : startX;
+			startY = (startY.substring) ? conv(startY, cell.actualHeight) : startY;
+			endX = (endX.substring) ? conv(endX, cell.actualWidth) : endX;
+			endY = (endY.substring) ? conv(endY, cell.actualHeight) : endY;
 			myFixed = items.fixed || 'none';
 			data = 'm0,0 ' + (endX - startX) + ',' + (endY - startY);
 			items.fixed = false;
@@ -478,14 +517,14 @@ Percentage String values are relative to the entity's cell's dimensions
 				tempName = myShape.name.replace('~', '_', 'g');
 				switch (myFixed) {
 					case 'both':
-						my.point[tempName + '_p1'].setToFixed(startX, startY);
-						my.point[tempName + '_p2'].setToFixed(endX, endY);
+						point[tempName + '_p1'].setToFixed(startX, startY);
+						point[tempName + '_p2'].setToFixed(endX, endY);
 						break;
 					case 'start':
-						my.point[tempName + '_p1'].setToFixed(startX, startY);
+						point[tempName + '_p1'].setToFixed(startX, startY);
 						break;
 					case 'end':
-						my.point[tempName + '_p2'].setToFixed(endX, endY);
+						point[tempName + '_p2'].setToFixed(endX, endY);
 						break;
 				}
 			}
@@ -530,50 +569,49 @@ Percentage String values are relative to the entity's cell's dimensions
 				stat3 = ['c', 's', 'q', 't'],
 				stat4 = ['c', 'q'],
 				cell,
-				startX,
-				startY,
-				radius,
-				turn,
-				currentAngle,
-				count,
-				test,
+				startX, startY, radius,
+				turn, currentAngle,
+				count, test,
 				species,
-				c1x,
-				c1y,
-				c2x,
-				c2y,
-				data;
+				c1x, c1y, c2x, c2y,
+				data,
+				conv = my.Position.prototype.numberConvert,
+				get = my.xtGet,
+				cont = my.contains,
+				wv1 = my.worklink.v1,
+				wv2 = my.worklink.v2,
+				wc1 = my.worklink.control1,
+				wc2 = my.worklink.control2,
+				sides, angle;
 			items = my.safeObject(items);
 			cell = my.Entity.prototype.getEntityCell(items);
-			if (my.xto(items.sides, items.angle)) {
+			sides = items.sides;
+			angle = items.angle;
+			if (my.xto(sides, angle)) {
 				items.closed = true;
 				items.isLine = false;
-				c1x = my.xtGet(items.startControlX, items.controlX, 0);
-				c1y = my.xtGet(items.startControlY, items.controlY, 0);
+				c1x = get(items.startControlX, items.controlX, 0);
+				c1y = get(items.startControlY, items.controlY, 0);
 				c2x = items.endControlX || 0;
 				c2y = items.endControlY || 0;
-				c1x = (c1x.substring) ? my.convertPercentage(c1x, cell, true) : c1x;
-				c1y = (c1y.substring) ? my.convertPercentage(c1y, cell, false) : c1y;
-				c2x = (c2x.substring) ? my.convertPercentage(c2x, cell, true) : c2x;
-				c2y = (c2y.substring) ? my.convertPercentage(c2y, cell, false) : c2y;
-				species = (my.contains(stat1, items.lineType)) ? items.lineType : 'l';
+				c1x = (c1x.substring) ? conv(c1x, cell.actualWidth) : c1x;
+				c1y = (c1y.substring) ? conv(c1y, cell.actualHeight) : c1y;
+				c2x = (c2x.substring) ? conv(c2x, cell.actualWidth) : c2x;
+				c2y = (c2y.substring) ? conv(c2y, cell.actualHeight) : c2y;
+				species = (cont(stat1, items.lineType)) ? items.lineType : 'l';
 				radius = items.radius || 20;
 				// - known bug: items.sides has difficulty exiting the loop, hence the count<1000 limit
-				turn = (items.sides && items.sides.toFixed && items.sides > 1) ? 360 / items.sides : ((items.angle && items.angle.toFixed && items.angle > 0) ? items.angle : 4);
+				turn = (sides && sides.toFixed && sides > 1) ? 360 / sides : ((angle && angle.toFixed && angle > 0) ? angle : 4);
 				currentAngle = 0;
 				count = 0;
-				my.worklink.v1.x = radius;
-				my.worklink.v1.y = 0;
-				my.worklink.v1.z = 0;
-				my.worklink.v2.set(my.worklink.v1);
-				my.worklink.control1.x = c1x;
-				my.worklink.control1.y = c1y;
-				my.worklink.control1.z = 0;
-				my.worklink.control2.x = c2x;
-				my.worklink.control2.y = c2y;
-				my.worklink.control2.z = 0;
-				data = 'm' + my.worklink.v1.x.toFixed(4) + ',' + my.worklink.v1.y.toFixed(4);
-				if (my.contains(stat2, species)) {
+				wv1.x = wv2.x = radius;
+				wv1.y = wv2.y = 0;
+				wc1.x = c1x;
+				wc1.y = c1y;
+				wc2.x = c2x;
+				wc2.y = c2y;
+				data = 'm' + wv1.x.toFixed(1) + ',' + wv1.y.toFixed(1);
+				if (cont(stat2, species)) {
 					data += ('s' === species) ? 'c' : 'q';
 				}
 				else {
@@ -584,37 +622,37 @@ Percentage String values are relative to the entity's cell's dimensions
 					currentAngle += turn;
 					currentAngle = currentAngle % 360;
 					test = currentAngle.toFixed(0);
-					my.worklink.v1.rotate(turn);
-					my.worklink.control1.rotate(turn);
-					my.worklink.control2.rotate(turn);
-					if (my.contains(stat3, species)) {
-						if (1 === count && my.contains(stat2, species)) {
+					wv1.rotate(turn);
+					wc1.rotate(turn);
+					wc2.rotate(turn);
+					if (cont(stat3, species)) {
+						if (1 === count && cont(stat2, species)) {
 							if ('s' === species) {
-								data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ' + my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
+								data += wc1.x.toFixed(1) + ',' + wc1.y.toFixed(1) + ' ' + wc2.x.toFixed(1) + ',' + wc2.y.toFixed(1) + ' ';
 							}
 							else {
-								data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ';
+								data += wc1.x.toFixed(1) + ',' + wc1.y.toFixed(1) + ' ';
 							}
 						}
 						else {
 							if ('s' === species) {
-								data += my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
+								data += wc2.x.toFixed(1) + ',' + wc2.y.toFixed(1) + ' ';
 							}
-							else if (my.contains(stat4, species)) {
-								data += my.worklink.control1.x.toFixed(4) + ',' + my.worklink.control1.y.toFixed(4) + ' ';
+							else if (cont(stat4, species)) {
+								data += wc1.x.toFixed(1) + ',' + wc1.y.toFixed(1) + ' ';
 							}
 						}
 					}
 					if ('c' === species) {
-						data += my.worklink.control2.x.toFixed(4) + ',' + my.worklink.control2.y.toFixed(4) + ' ';
+						data += wc2.x.toFixed(1) + ',' + wc2.y.toFixed(1) + ' ';
 					}
-					data += (my.worklink.v1.x - my.worklink.v2.x).toFixed(4) + ',' + (my.worklink.v1.y - my.worklink.v2.y).toFixed(4) + ' ';
+					data += (wv1.x - wv2.x).toFixed(1) + ',' + (wv1.y - wv2.y).toFixed(1) + ' ';
 					if (1 === count) {
-						if (my.contains(stat2, species)) {
+						if (cont(stat2, species)) {
 							data += ('s' === species) ? 's' : 't';
 						}
 					}
-					my.worklink.v2.set(my.worklink.v1);
+					wv2.set(wv1);
 				} while (test !== '0' && count < 1000);
 				data += 'z';
 				items.data = data;
@@ -648,18 +686,6 @@ Percentage String values are relative to the entity's cell's dimensions
 				}),
 			};
 		}
-		/**
-A __factory__ helper function - convert percentage values to pixel values
-@method convertPercentage
-@param {String} val - the percentage to be converted
-@param {Object} cell - the reference cell
-@param {Boolean} useWidth - true calculates the x point along the cell width; false calculates the y point against height
-@return Number result (px)
-@private
-**/
-		my.convertPercentage = function(val, cell, useWidth) {
-			return (useWidth) ? (parseFloat(val) / 100) * cell.actualWidth : (parseFloat(val) / 100) * cell.actualHeight;
-		};
 
 		return my;
 	}(scrawl));

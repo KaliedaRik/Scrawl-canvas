@@ -306,32 +306,50 @@ Check all entitys in the Group to see if they are colliding with the supplied en
 @return Array of visible entity Objects currently colliding with the reference entity
 **/
 		my.Group.prototype.getEntitysCollidingWith = function(e) {
-			var i,
-				iz,
+			var i, iz, k, kz,
 				homeTemp,
 				awayTemp,
 				entity = my.entity,
 				entitys = this.entitys,
+				regionRadius = this.regionRadius,
+				v1 = my.workcols.v1,
+				v2 = my.workcols.v2,
+				ts1,
+				ts2,
+				tresult,
 				cp,
+				awaycp = [],
 				hits = [],
 				arg = {
 					tests: []
 				},
-				types = ['Block', 'Phrase', 'Picture', 'Path', 'Shape', 'Wheel'];
+				types = ['Block', 'Phrase', 'Picture', 'Path', 'Shape', 'Wheel', 'Frame'];
 			homeTemp = (e.substring) ? entity[e] : e;
 			cp = homeTemp.getCollisionPoints();
+			for (k = 0, kz = entitys.length; k < kz; k++) {
+				awayTemp = entity[entitys[k]];
+				awaycp[awayTemp.name] = awayTemp.getCollisionPoints();
+			}
 			if (my.contains(types, homeTemp.type)) {
 				hits.length = 0;
 				for (i = 0, iz = entitys.length; i < iz; i++) {
 					awayTemp = entity[entitys[i]];
 					if (homeTemp.name !== awayTemp.name) {
 						if (awayTemp.visibility) {
+							if (regionRadius) {
+								ts1 = v1.set(homeTemp.currentStart);
+								ts2 = v2.set(awayTemp.currentStart);
+								tresult = ts1.vectorSubtract(ts2).getMagnitude();
+								if (tresult > regionRadius) {
+									continue;
+								}
+							}
 							arg.tests = cp;
 							if (awayTemp.checkHit(arg)) {
 								hits.push(awayTemp);
 								continue;
 							}
-							arg.tests = awayTemp.getCollisionPoints();
+							arg.tests = awaycp[awayTemp.name];
 							if (homeTemp.checkHit(arg)) {
 								hits.push(awayTemp);
 								continue;
@@ -380,8 +398,8 @@ Check all entitys in the Group against each other to see if they are in collisio
 						awayTemp = entity[entitys[j]];
 						if (awayTemp.visibility) {
 							if (regionRadius) {
-								ts1 = v1.set(homeTemp.start);
-								ts2 = v2.set(awayTemp.start);
+								ts1 = v1.set(homeTemp.currentStart);
+								ts2 = v2.set(awayTemp.currentStart);
 								tresult = ts1.vectorSubtract(ts2).getMagnitude();
 								if (tresult > regionRadius) {
 									continue;
@@ -462,8 +480,8 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 							gTemp = entity[awayentitys[j]];
 							if (gTemp.visibility) {
 								if (regionRadius) {
-									ts1 = v1.set(thisTemp.start);
-									ts2 = v2.set(gTemp.start);
+									ts1 = v1.set(thisTemp.currentStart);
+									ts2 = v2.set(gTemp.currentStart);
 									tresult = ts1.vectorSubtract(ts2).getMagnitude();
 									if (tresult > regionRadius) {
 										continue;
@@ -743,7 +761,12 @@ Calculate the current positions of this entity's collision Vectors, taking into 
 				iz,
 				v = my.v,
 				collisionVectors = this.collisionVectors,
-				collisionArray = this.collisionArray;
+				collisionArray = this.collisionArray,
+				reverse = this.flipReverse,
+				upend = this.flipUpend,
+				roll = this.roll,
+				scale = this.scale,
+				start = this.currentStart;
 			if (collisionVectors.length === 0) {
 				if (my.xt(this.collisionPoints)) {
 					this.buildCollisionVectors();
@@ -752,15 +775,15 @@ Calculate the current positions of this entity's collision Vectors, taking into 
 			}
 			if (collisionArray.length === 0) {
 				for (i = 0, iz = collisionVectors.length; i < iz; i += 2) {
-					v.x = (this.flipReverse) ? -collisionVectors[i] : collisionVectors[i];
-					v.y = (this.flipUpend) ? -collisionVectors[i + 1] : collisionVectors[i + 1];
-					if (this.roll) {
-						v.rotate(this.roll);
+					v.x = (reverse) ? -collisionVectors[i] : collisionVectors[i];
+					v.y = (upend) ? -collisionVectors[i + 1] : collisionVectors[i + 1];
+					if (roll) {
+						v.rotate(roll);
 					}
-					if (this.scale !== 1) {
-						v.scalarMultiply(this.scale);
+					if (scale !== 1) {
+						v.scalarMultiply(scale);
 					}
-					v.vectorAdd(this.start);
+					v.vectorAdd(start);
 					collisionArray.push(v.x);
 					collisionArray.push(v.y);
 				}

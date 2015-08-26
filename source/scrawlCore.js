@@ -3385,39 +3385,38 @@ Takes into account lock flag settings
 			pad,
 			lockX = this.lockX,
 			lockY = this.lockY,
-			start = this.currentStart;
+			start = this.start,
+			current = this.currentStart;
 		if (my.xt(my.pointnames)) {
 			pivot = my.point[this.pivot];
 			if (pivot) {
 				entity = my.entity[pivot.entity];
 				vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.currentStart);
-				start.x = (!lockX) ? vector.x : start.x;
-				start.y = (!lockY) ? vector.y : start.y;
+				current.x = start.x = (!lockX) ? vector.x : start.x;
+				current.y = start.y = (!lockY) ? vector.y : start.y;
 				return this;
 			}
 		}
 		pivot = my.entity[this.pivot];
 		if (pivot) {
 			vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.currentStart;
-			start.x = (!lockX) ? vector.x : start.x;
-			start.y = (!lockY) ? vector.y : start.y;
+			current.x = start.x = (!lockX) ? vector.x : start.x;
+			current.y = start.y = (!lockY) ? vector.y : start.y;
 			return this;
 		}
 		if (this.pivot === 'mouse') {
 			cell = my.cell[cell];
 			pad = my.pad[cell.pad];
 			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
-			console.log(this.name, 'before', start.x, this.oldX, mouse.x);
 			if (mouse) {
 				if (this.oldX == null && this.oldY == null) { //jshint ignore:line
 					this.oldX = start.x;
 					this.oldY = start.y;
 				}
-				start.x = (!lockX) ? start.x + mouse.x - this.oldX : start.x;
-				start.y = (!lockY) ? start.y + mouse.y - this.oldY : start.y;
+				current.x = start.x = (!lockX) ? start.x + mouse.x - this.oldX : start.x;
+				current.y = start.y = (!lockY) ? start.y + mouse.y - this.oldY : start.y;
 				this.oldX = mouse.x;
 				this.oldY = mouse.y;
-				console.log(this.name, 'after', start.x, this.oldX, mouse.x);
 			}
 		}
 		return this.setStampUsingStacksPivot();
@@ -6479,11 +6478,12 @@ Entity sorting routine - entitys are sorted according to their entity.order attr
 
 Order values are treated as integers. The sort routine is a form of bucket sort, and should be stable (entitys with equal order values should not be swapped)
 @method sortEntitys
+@param {Boolean} [force] Force a resort, whatever the settings of the group's entitySort and resort attributes
 @return Nothing
 @private
 **/
-	my.Group.prototype.sortEntitys = function() {
-		if (this.entitySort && this.resort) {
+	my.Group.prototype.sortEntitys = function(force) {
+		if (force || (this.entitySort && this.resort)) {
 			this.resort = false;
 			this.entitys = my.bucketSort('entity', 'order', this.entitys);
 		}
@@ -7178,6 +7178,8 @@ Permitted methods include:
 			here,
 			sCanvas,
 			sEngine,
+			sFlag = !this.currentStart.flag,
+			hFlag = !this.currentHandle.flag,
 			data;
 		if (this.visibility) {
 			if (!cell) {
@@ -7186,11 +7188,14 @@ Permitted methods include:
 			}
 			engine = my.context[cellname];
 			method = method || this.method;
-			if (!this.currentStart.flag) {
-				this.updateCurrentStart(cell);
-			}
-			if (!this.currentHandle.flag) {
-				this.updateCurrentHandle();
+			if (sFlag || hFlag) {
+				if (sFlag) {
+					this.updateCurrentStart(cell);
+				}
+				if (hFlag) {
+					this.updateCurrentHandle();
+				}
+				this.resetCollisionPoints();
 			}
 			if (this.pivot) {
 				this.setStampUsingPivot(cellname);
@@ -7203,6 +7208,13 @@ Permitted methods include:
 		}
 		return this;
 	};
+	/**
+stamp helper function - amended by collisions extension
+@method resetCollisionPoints
+@return this
+@chainable
+**/
+	my.Entity.prototype.resetCollisionPoints = function() {};
 	/**
 Entity.stamp hook function - modified by path extension
 @method pathStamp

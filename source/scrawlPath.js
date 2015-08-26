@@ -160,12 +160,12 @@ Cell.prepareToCopyCell hook function - modified by path module
 		my.Cell.prototype.pathPrepareToCopyCell = function() {
 			var here,
 				e = my.entity[this.path],
-				// start = this.start;
-				start = this.currentStart;
+				start = this.start,
+				current = this.currentStart;
 			if (e && e.type === 'Path') {
 				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
-				start.x = (!this.lockX) ? here.x : start.x;
-				start.y = (!this.lockY) ? here.y : start.y;
+				current.x = start.x = (!this.lockX) ? here.x : current.x;
+				current.y = start.y = (!this.lockY) ? here.y : current.y;
 				this.pathRoll = here.r || 0;
 			}
 		};
@@ -177,11 +177,12 @@ Entity.stamp hook function - modified by path module
 		my.Entity.prototype.pathStamp = function(method, cell) {
 			var here,
 				e = my.entity[this.path],
-				start = this.currentStart;
+				start = this.start,
+				current = this.currentStart;
 			if (e && e.type === 'Path') {
 				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
-				start.x = (!this.lockX) ? here.x : start.x;
-				start.y = (!this.lockY) ? here.y : start.y;
+				current.x = start.x = (!this.lockX) ? here.x : current.x;
+				current.y = start.y = (!this.lockY) ? here.y : current.y;
 				this.pathRoll = here.r || 0;
 			}
 		};
@@ -1363,7 +1364,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 						if (p[i] > 1) {
 							//regular points along the path
 							advance = 1 / p[i];
-							for (j = 0; j < p[i]; j++) {
+							for (j = 0; j <= p[i]; j++) {
 								point = this.getPerimeterPosition(currentPos, true, false, true);
 								this.collisionVectors.push(point.x);
 								this.collisionVectors.push(point.y);
