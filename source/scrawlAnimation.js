@@ -174,9 +174,6 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 				x: get(items.deltaX, temp.x, 0),
 				y: get(items.deltaY, temp.y, 0)
 			});
-			this.work.delta = vec({
-				name: this.type + '.' + this.name + '.work.delta'
-			});
 			this.pathSpeedConstant = get(items.pathSpeedConstant, d.pathSpeedConstant);
 			this.deltaPathPlace = get(items.deltaPathPlace, d.deltaPathPlace);
 		};
@@ -403,9 +400,6 @@ reverse helper object
 				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
 			}
 		};
-		my.PageElement.prototype.updateStartActions = my.Position.prototype.updateStartActions;
-		my.PageElement.prototype.revertStartActions = my.Position.prototype.revertStartActions;
-		my.PageElement.prototype.reverseActions = my.Position.prototype.reverseActions;
 		my.d.Cell.copyDelta = {
 			x: 0,
 			y: 0,
@@ -429,7 +423,6 @@ Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to 
 				x: get(items.copyDeltaX, temp.x, 0),
 				y: get(items.copyDeltaY, temp.y, 0),
 			});
-			this.work.copyDelta = my.makeVector();
 		};
 		/**
 Cell.get hook function - modified by animation module

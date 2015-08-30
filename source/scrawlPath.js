@@ -38,6 +38,33 @@ if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scr
 	var scrawl = (function(my) {
 		'use strict';
 
+		my.worklink = {
+			start: my.makeVector({
+				name: 'scrawl.worklink.start'
+			}),
+			end: my.makeVector({
+				name: 'scrawl.worklink.end'
+			}),
+			control1: my.makeVector({
+				name: 'scrawl.worklink.control1'
+			}),
+			control2: my.makeVector({
+				name: 'scrawl.worklink.control2'
+			}),
+			v1: my.makeVector({
+				name: 'scrawl.worklink.v1'
+			}),
+			v2: my.makeVector({
+				name: 'scrawl.worklink.v2'
+			}),
+			v3: my.makeVector({
+				name: 'scrawl.worklink.v3'
+			}),
+			point: my.makeVector({
+				name: 'scrawl.worklink.point'
+			})
+		};
+
 		/**
 # window.scrawl
 
@@ -1283,6 +1310,7 @@ Calculate coordinates of point at given distance along the Shape entity's path
 					}
 				}
 			}
+			console.log(this);
 			return false;
 		};
 		/**
@@ -1441,9 +1469,6 @@ Path creation factories will all create Point objects automatically as part of t
 				name: this.type + '.' + this.name + '.local',
 				x: get(items.startX, items.currentX, local.x, 0),
 				y: get(items.startY, items.currentY, local.y, 0)
-			});
-			this.work.local = vec({
-				name: this.type + '.' + this.name + '.work.local'
 			});
 			this.startLink = get(items.startLink, '');
 			this.fixed = get(items.fixed, false);
@@ -1634,12 +1659,11 @@ Return object has the following attributes:
 					current: null,
 					startLink: null
 				},
-				vec = this.work.local,
+				vec = my.worklink.point,
 				entity = my.entity,
 				point = my.point;
 			s = entity[this.entity];
 			scale = s.scale;
-			this.resetWork();
 			if (my.xt(this.local) && this.local.type === 'Vector') {
 				if (this.fixed.substring && (entity[this.fixed] || point[this.fixed])) {
 					myPivot = entity[this.fixed] || point[this.fixed];
@@ -1658,9 +1682,11 @@ Return object has the following attributes:
 					}
 				}
 				else if (!this.fixed) {
+					vec.set(this.local);
 					vec.scalarMultiply(scale || 1);
 				}
 				else {
+					vec.set(this.local);
 					// vec.vectorSubtract(s.start || my.o);
 					vec.vectorSubtract(s.currentStart || my.o);
 					vec.scalarMultiply(scale || 1);
@@ -1766,31 +1792,6 @@ Set Point.fixed attribute
 **/
 		my.Link.prototype.type = 'Link';
 		my.Link.prototype.classname = 'linknames';
-		if (!my.xt(my.worklink)) {
-			my.worklink = {
-				start: my.makeVector({
-					name: 'scrawl.worklink.start'
-				}),
-				end: my.makeVector({
-					name: 'scrawl.worklink.end'
-				}),
-				control1: my.makeVector({
-					name: 'scrawl.worklink.control1'
-				}),
-				control2: my.makeVector({
-					name: 'scrawl.worklink.control2'
-				}),
-				v1: my.makeVector({
-					name: 'scrawl.worklink.v1'
-				}),
-				v2: my.makeVector({
-					name: 'scrawl.worklink.v2'
-				}),
-				v3: my.makeVector({
-					name: 'scrawl.worklink.v3'
-				}),
-			};
-		}
 		my.d.Link = {
 			/**
 Type of link - permitted values include: 'line', 'quadratic', 'bezier'

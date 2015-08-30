@@ -62,9 +62,12 @@ August 2015
 					- updateCurrentStart()
 					- updateCurrentHandle() 
 				- got rid of multiple instances of conversion functionality with single numberConvert() function
+		- removed .work.start, .work.handle, etc vector attributes and related reset systems from entitys and cells
+			- no longer relevant
 		- refactoring Phrase entity
 			- was destroying/creating Text elements on every set and setDelta action
 				- now only perform these actions when text attribute changes
+		- refactoring stacks
 		- rationalized filter operations
 	- fixed long-standing entity ordering bug on chrome/opera
 		- implemented a stable bucket sort algorithm; refactored sorting

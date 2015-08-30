@@ -834,18 +834,15 @@ PageElement constructor hook function - modified by stacks module
 				x: get(items.startX, temp.x, 0),
 				y: get(items.startY, temp.y, 0)
 			});
-			this.correctStart();
-			this.work.start = vec({
-				name: this.type + '.' + this.name + '.work.start'
+			this.currentStart = vec({
+				name: this.type + '.' + this.name + '.current.start'
 			});
+			this.currentStart.flag = false;
 			temp = so(items.delta);
 			this.delta = vec({
 				name: this.type + '.' + this.name + '.delta',
 				x: get(items.deltaX, temp.x, 0),
 				y: get(items.deltaY, temp.y, 0)
-			});
-			this.work.delta = vec({
-				name: this.type + '.' + this.name + '.work.delta'
 			});
 			temp = so(items.handle);
 			this.handle = vec({
@@ -853,18 +850,16 @@ PageElement constructor hook function - modified by stacks module
 				x: get(items.handleX, temp.x, 0),
 				y: get(items.handleY, temp.y, 0)
 			});
-			this.work.handle = vec({
-				name: this.type + '.' + this.name + '.work.handle'
-			});
 			temp = so(items.translate);
+			this.currentHandle = vec({
+				name: this.type + '.' + this.name + '.current.handle'
+			});
+			this.currentHandle.flag = false;
 			this.translate = vec({
 				name: this.type + '.' + this.name + '.translate',
 				x: get(items.translateX, temp.x, 0),
 				y: get(items.translateY, temp.y, 0),
 				z: get(items.translateZ, temp.z, 0)
-			});
-			this.work.translate = vec({
-				name: this.type + '.' + this.name + '.work.translate'
 			});
 			temp = so(items.deltaTranslate);
 			this.deltaTranslate = vec({
@@ -872,9 +867,6 @@ PageElement constructor hook function - modified by stacks module
 				x: get(items.deltaTranslateX, temp.x, 0),
 				y: get(items.deltaTranslateY, temp.y, 0),
 				z: get(items.deltaTranslateZ, temp.z, 0)
-			});
-			this.work.deltaTranslate = vec({
-				name: this.type + '.' + this.name + '.work.deltaTranslate'
 			});
 			this.pivot = get(items.pivot, d.pivot);
 			this.path = get(items.path, d.path);
@@ -896,9 +888,6 @@ PageElement constructor hook function - modified by stacks module
 				yaw: items.yaw || 0,
 				roll: items.roll || 0,
 			});
-			this.work.rotation = quat({
-				name: this.type + '.' + this.name + '.work.rotation'
-			});
 			this.deltaRotation = quat({
 				name: this.type + '.' + this.name + '.deltaRotation'
 			}).setFromEuler({
@@ -906,23 +895,16 @@ PageElement constructor hook function - modified by stacks module
 				yaw: items.deltaYaw || 0,
 				roll: items.deltaRoll || 0,
 			});
-			this.work.deltaRotation = quat({
-				name: this.type + '.' + this.name + '.work.deltaRotation'
-			});
 			this.rotationTolerance = get(items.rotationTolerance, d.rotationTolerance);
 			this.group = get(items.group, false);
 			if (this.group) {
 				my.group[this.group].addElementsToGroup(this.name);
 			}
-			this.offset = vec({
-				name: this.type + '.' + this.name + '.offset'
-			});
 			this.includeCornerTrackers = get(items.includeCornerTrackers, false);
 			if (this.includeCornerTrackers) {
 				this.addCornerTrackers();
 			}
 			this.mouseIndex = get(items.mouseIndex, 'mouse');
-			this.offset.flag = false;
 		};
 		/**
 @method addCornerTrackers
@@ -1073,14 +1055,13 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
 			if (xto(items.start, items.startX, items.startY)) {
-				my.Position.prototype.setStart.call(this, items);
+				this.setStart(items);
 			}
-			this.correctStart();
 			if (xto(items.handle, items.handleX, items.handleY)) {
-				my.Position.prototype.setHandle.call(this, items);
+				this.setHandle(items);
 			}
 			if (xto(items.delta, items.deltaX, items.deltaY)) {
-				my.Position.prototype.setDeltaAttribute.call(this, items);
+				this.setDeltaAttribute(this);
 			}
 			if (xto(items.translate, items.translateX, items.translateY, items.translateZ)) {
 				this.setTranslate(items);
@@ -1108,7 +1089,7 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 				this.setDimensions();
 			}
 			if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
-				this.offset.flag = false;
+				this.currentHandle.flag = false;
 			}
 			if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start, items.border, items.borderLeft, items.borderRight, items.borderTop, items.borderBottom, items.borderWidth, items.borderLeftWidth, items.borderRightWidth, items.borderTopWidth, items.borderBottomWidth, items.padding, items.paddingLeft, items.paddingRight, items.paddingTop, items.paddingBottom, items.boxSizing, items.lockTo)) {
 				this.setDisplayOffsets();
@@ -1126,6 +1107,89 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 				this.setAccessibility(items);
 			}
 			this.setStyles(items);
+			return this;
+		};
+		/**
+Augments Base.setStart(), to allow users to set the start attributes using start, startX, startY
+@method setStart
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setStart = function(items) {
+			var temp,
+				so = my.safeObject,
+				get = my.xtGet,
+				vec = my.makeVector,
+				isvec = my.isa_vector;
+			items = so(items);
+			if (!isvec(this.start)) {
+				this.start = vec(items.start || this.start);
+				this.start.name = this.type + '.' + this.name + '.start';
+			}
+			temp = so(items.start);
+			this.start.x = get(items.startX, temp.x, this.start.x);
+			this.start.y = get(items.startY, temp.y, this.start.y);
+			if (!isvec(this.currentStart)) {
+				this.currentStart = vec({
+					name: this.type + '.' + this.name + '.current.start'
+				});
+			}
+			this.currentStart.flag = false;
+			return this;
+		};
+		/**
+Augments Base.setHandle(), to allow users to set the handle attributes using handle, handleX, handleY
+@method setHandle
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setHandle = function(items) {
+			var temp,
+				so = my.safeObject,
+				get = my.xtGet,
+				vec = my.makeVector,
+				isvec = my.isa_vector;
+			items = so(items);
+			if (!isvec(this.handle)) {
+				this.handle = vec(items.handle || this.handle);
+				this.handle.name = this.type + '.' + this.name + '.handle';
+			}
+			temp = so(items.handle);
+			this.handle.x = get(items.handleX, temp.x, this.handle.x);
+			this.handle.y = get(items.handleY, temp.y, this.handle.y);
+			if (!isvec(this.currentHandle)) {
+				this.currentHandle = vec({
+					name: this.type + '.' + this.name + '.current.handle'
+				});
+			}
+			this.currentHandle.flag = false;
+			return this;
+		};
+		/**
+Augments PageElement.set(), to allow users to set the delta attributes using delta, deltaX, deltaY
+
+The scrawlAnimation module adds a __delta__ attribute to Cells and Entitys - this is an inbuilt delta vector which can be used to automatically animate the start vector of these objects - via the updateStart, revertStart and reverse functions - as part of the animation cycle.
+
+Be aware that this is different to the PageElement.setDelta() function inherited by Cells and Entitys. setDelta is used to add a supplied argument value to the existing values of any numerical attribute of a Cell or Entity object, and is thus not limited to the animation cycle.
+
+@method setDeltaAttribute
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setDeltaAttribute = function(items) {
+			var temp,
+				so = my.safeObject,
+				get = my.xtGet;
+			items = so(items);
+			if (!my.isa_vector(this.delta)) {
+				this.delta = my.makeVector(items.delta || this.delta);
+			}
+			temp = so(items.delta);
+			this.delta.x = get(items.deltaX, temp.x, this.delta.x);
+			this.delta.y = get(items.deltaY, temp.y, this.delta.y);
 			return this;
 		};
 		/**
@@ -1294,45 +1358,6 @@ Augments PageElement.set()
 			t.z = get(items.deltaTranslateZ, temp.z, t.z);
 			return this;
 		};
-		/**
-Constructor / set helper function
-@method PageElement.correctStart
-@return This
-@chainable
-@private
-**/
-		my.PageElement.prototype.correctStart = function() {
-			var stat1 = ['left', 'center', 'right'],
-				stat2 = ['top', 'center', 'bottom'],
-				cont = my.contains;
-			if (cont(stat1, this.start.x)) {
-				switch (this.start.x) {
-					case 'left':
-						this.start.x = '0%';
-						break;
-					case 'center':
-						this.start.x = '50%';
-						break;
-					case 'right':
-						this.start.x = '100%';
-						break;
-				}
-			}
-			if (cont(stat2, this.start.y)) {
-				switch (this.start.y) {
-					case 'top':
-						this.start.y = '0%';
-						break;
-					case 'center':
-						this.start.y = '50%';
-						break;
-					case 'bottom':
-						this.start.y = '100%';
-						break;
-				}
-			}
-			return this;
-		};
 		my.css = ['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontKerning', 'fontLanguageOverride', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'hyphens', 'imageRendering', 'imageResolution', 'imageOrientation', 'imeMode', 'inherit', 'initial', 'isolation', 'justifyContent', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'mixBlendMode', 'objectFit', 'objectPosition', 'opacity', 'orphans', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'padding', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'quotes', 'resize', 'rubyAlign', 'rubyMerge', 'rubyPosition', 's', 'scrollBehavior', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'tabSize', 'textAlign', 'textAlignLast', 'textCombineUpright', 'textDecoration', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'touchAction', 'unicodeBidi', 'unicodeRange', 'unset', 'verticalAlign', 'visibility', 'whiteSpace', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'writingMode'];
 		//need to complete this array
 		my.xcss = ['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap'];
@@ -1399,8 +1424,13 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				deltaTranslate = this.deltaTranslate,
 				q1 = my.workquat.q1,
 				group;
-			my.Position.prototype.setDelta.call(this, items);
 			items = my.safeObject(items);
+			if (xto(items.start, items.startX, items.startY)) {
+				this.setDeltaStart(items);
+			}
+			if (xto(items.handle, items.handleX, items.handleY)) {
+				this.setDeltaHandle(items);
+			}
 			if (xto(items.translate, items.translateX, items.translateY)) {
 				temp = my.safeObject(items.translate);
 				translate.x += my.xtGet(items.translateX, temp.x, 0);
@@ -1430,7 +1460,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				this.deltaRotation.quaternionMultiply(temp);
 			}
 			if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale)) {
-				this.offset.flag = false;
+				this.currentHandle.flag = false;
 			}
 			if (xto(items.handleX, items.handleY, items.handle, items.width, items.height, items.scale, items.startX, items.startY, items.start)) {
 				this.setDisplayOffsets();
@@ -1449,6 +1479,52 @@ Adds the value of each attribute supplied in the argument to existing values; on
 			return this;
 		};
 		/**
+Adds the value of each attribute supplied in the argument to existing values; This function accepts start, startX, startY
+@method setDeltaStart
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setDeltaStart = function(items) {
+			var temp,
+				x,
+				y,
+				so = my.safeObject,
+				get = my.xtGet,
+				perc = my.addPercentages;
+			items = so(items);
+			temp = so(items.start);
+			x = get(items.startX, temp.x, 0);
+			y = get(items.startY, temp.y, 0);
+			this.start.x = (this.start.x.toFixed) ? this.start.x + x : perc(this.start.x, x);
+			this.start.y = (this.start.y.toFixed) ? this.start.y + y : perc(this.start.y, y);
+			this.currentStart.flag = false;
+			return this;
+		};
+		/**
+Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY
+@method setDeltaHandle
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setDeltaHandle = function(items) {
+			var temp,
+				x,
+				y,
+				so = my.safeObject,
+				get = my.xtGet,
+				perc = my.addPercentages;
+			items = so(items);
+			temp = so(items.handle);
+			x = get(items.handleX, temp.x, 0);
+			y = get(items.handleY, temp.y, 0);
+			this.handle.x = (this.handle.x.toFixed) ? this.handle.x + x : perc(this.handle.x, x);
+			this.handle.y = (this.handle.y.toFixed) ? this.handle.y + y : perc(this.handle.y, y);
+			this.currentHandle.flag = false;
+			return this;
+		};
+		/**
 Adds delta values to the start vector; adds deltaPathPlace to pathPlace
 
 Permitted argument values include 
@@ -1462,11 +1538,42 @@ Permitted argument values include
 @chainable
 **/
 		my.PageElement.prototype.updateStart = function(item) {
-			if (this.delta.x || this.delta.y || this.deltaPathPlace) {
-				my.Position.prototype.updateStart.call(this, item);
-				this.setDisplayOffsets();
+			item = my.xtGet(item, 'all');
+			this.updateStartActions[item](my.addPercentages, this.start, this.delta, my.addWithinBounds, this);
+			this.currentStart.flag = false;
+			if (my.xt(this.collisionArray)) {
+				this.collisionArray.length = 0;
 			}
+			this.setDisplayOffsets();
 			return this;
+		};
+		/**
+updateStart helper object
+
+@method PageElement.updateStartActions
+@private
+**/
+		my.PageElement.prototype.updateStartActions = {
+			x: function(perc, start, delta, add) {
+				start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+			},
+			y: function(perc, start, delta, add) {
+				start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+			},
+			path: function(perc, start, delta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
+			},
+			all: function(perc, start, delta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+			}
 		};
 		/**
 Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
@@ -1482,11 +1589,98 @@ Permitted argument values include
 @chainable
 **/
 		my.PageElement.prototype.revertStart = function(item) {
-			my.Position.prototype.revertStart.call(this, item);
-			if (this.delta.x || this.delta.y || this.deltaPathPlace) {
+			item = my.xtGet(item, 'all');
+			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, my.addWithinBounds, this);
+			this.currentStart.flag = false;
+			if (my.xt(this.collisionArray)) {
+				this.collisionArray.length = 0;
+			}
+			this.setDisplayOffsets();
+			return this;
+		};
+		/**
+revertStart helper object
+
+@method PageElement.revertStartActions
+@private
+**/
+		my.PageElement.prototype.revertStartActions = {
+			x: function(perc, start, delta, add) {
+				start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+			},
+			y: function(perc, start, delta, add) {
+				start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+			},
+			path: function(perc, start, delta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
+			},
+			all: function(perc, start, delta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+			}
+		};
+		/**
+Swaps the values of an attribute between two objects
+@method PageElement.exchange
+@param {Object} obj Object with which this object will swap attribute values
+@param {String} item Attribute to be swapped
+@return This
+@chainable
+**/
+		my.PageElement.prototype.exchange = function(obj, item) {
+			var temp;
+			if (my.isa_obj(obj)) {
+				temp = this[item] || this.get(item);
+				this[item] = obj[item] || obj.get(item);
+				obj[item] = temp;
 				this.setDisplayOffsets();
 			}
 			return this;
+		};
+		/**
+Changes the sign (+/-) of specified attribute values
+@method PageElement.reverse
+@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
+@return This
+@chainable
+**/
+		my.PageElement.prototype.reverse = function(item) {
+			item = my.xtGet(item, 'all');
+			this.reverseActions[item](this.delta, my.reversePercentage, this);
+			this.setDisplayOffsets();
+			return this;
+		};
+		/**
+reverse helper object
+@method PageElement.reverseActions
+@private
+**/
+		my.PageElement.prototype.reverseActions = {
+			deltaX: function(delta, perc) {
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+			},
+			deltaY: function(delta, perc) {
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			},
+			delta: function(delta, perc) {
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			},
+			deltaPathPlace: function(delta, perc, obj) {
+				obj.deltaPathPlace = -obj.deltaPathPlace;
+			},
+			all: function(delta, perc, obj) {
+				obj.deltaPathPlace = -obj.deltaPathPlace;
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			}
 		};
 		/**
 Rotate and translate a DOM element around a quaternion rotation
@@ -1523,77 +1717,6 @@ Argument can contain the following (optional) attributes:
 			return this;
 		};
 		/**
-Changes the sign (+/-) of specified attribute values
-@method PageElement.reverse
-@param {String} [item] String used to limit this function's actions - permitted values include 'deltaX', 'deltaY', 'delta', 'deltaPathPlace'; default action: all values are amended
-@return This
-@chainable
-**/
-		my.PageElement.prototype.reverse = function(item) {
-			my.Position.prototype.reverse.call(this, item);
-			return this;
-		};
-		/**
-Calculates the pixels value of the object's handle attribute
-
-* doesn't take into account the object's scaling or orientation
-* (badly named function - getPivotOffsetVector has nothing to do with pivots)
-
-@method PageElement.getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity drawing should start
-@private
-**/
-		my.PageElement.prototype.getPivotOffsetVector = function() {
-			return my.Position.prototype.getPivotOffsetVector.call(this);
-		};
-		/**
-Calculates the pixels value of the object's start attribute
-
-* doesn't take into account the object's scaling or orientation
-
-@method PageElement.getStartValues
-@return A Vector of calculated values to help determine where entity drawing should start
-@private
-**/
-		my.PageElement.prototype.getStartValues = function() {
-			var resvec,
-				result,
-				height,
-				width,
-				s,
-				stackname,
-				stack,
-				device = my.device;
-			result = my.v.set(this.start);
-			stackname = my.group[this.group].stack;
-			if (this.viewport) {
-				height = device.height;
-				width = device.width;
-			}
-			else if (stackname) {
-				stack = my.stack[stackname];
-				height = stack.localHeight / this.scale;
-				width = stack.localWidth / this.scale;
-			}
-			else {
-				height = this.localHeight / this.scale;
-				width = this.localWidth / this.scale;
-			}
-			resvec = my.Position.prototype.calculatePOV.call(this, result, width, height, false);
-			if (this.viewport) {
-				resvec.reverse();
-			}
-			return resvec;
-		};
-		/**
-Calculates the pixels value of the object's handle attribute
-@method PageElement.getOffsetStartVector
-@return Final offset values (as a Vector) to determine where entity drawing should start
-**/
-		my.PageElement.prototype.getOffsetStartVector = function() {
-			return my.Position.prototype.getOffsetStartVector.call(this);
-		};
-		/**
 Reposition an element within its stack by changing 'left' and 'top' style attributes; rotate it using matrix3d transform
 @method PageElement.renderElement
 @return This left
@@ -1608,40 +1731,38 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				oy,
 				dx,
 				dy,
-				offset,
+				handle,
+				start,
 				device,
 				round = Math.round,
 				rotation = this.rotation,
 				v = rotation.v,
 				scale = this.scale,
 				style,
-				translate = this.translate;
+				translate = this.translate,
+				el,
+				result;
 			g = my.group[this.group];
-			pere2[0] = this.getElement();
-			style = pere2[0].style;
-			if (!this.offset.flag) {
-				this.offset.set(this.getOffsetStartVector());
-				this.offset.flag = true;
+			el = this.getElement();
+			style = el.style;
+			if (!this.currentHandle.flag) {
+				this.updateCurrentHandle();
 			}
-			offset = this.offset;
+			handle = this.currentHandle;
+			if (!this.currentStart.flag && g.stack) {
+				this.updateCurrentStart(my.stack[g.stack]);
+			}
 			if (this.path) {
 				this.setStampUsingPath();
-				pere2[1] = this.start;
 			}
 			else if (this.pivot) {
 				this.setStampUsingPivot();
-				pere2[1] = this.start;
 			}
-			else {
-				pere2[1] = this.getStartValues();
-			}
+			start = this.currentStart;
 
 			if (g && (g.equalWidth || g.equalHeight)) {
 				this.setDimensions();
 			}
-			this.updateStart();
-			pere2[2] = (this.start.x.substring) ? true : false;
-			pere2[3] = (this.start.y.substring) ? true : false;
 
 			if (rotation.getMagnitude() !== 1) {
 				rotation.normalize();
@@ -1661,28 +1782,122 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				}
 			}
 
-			pere2[4] = 'translate3d(' + pere[0] + 'px,' + pere[1] + 'px,' + pere[2] + 'px) rotate3d(' + pere[3] + ',' + pere[4] + ',' + pere[5] + ',' + pere[6] + 'rad)';
-			style.webkitTransform = pere2[4];
-			style.transform = pere2[4];
+			result = 'translate3d(' + pere[0] + 'px,' + pere[1] + 'px,' + pere[2] + 'px) rotate3d(' + pere[3] + ',' + pere[4] + ',' + pere[5] + ',' + pere[6] + 'rad)';
+			style.webkitTransform = result;
+			style.transform = result;
 
 			style.zIndex = pere[2];
 
 			if (this.viewport) {
 				device = my.device;
-				ox = device.offsetX - this.displayOffsetX + offset.x;
-				oy = device.offsetY - this.displayOffsetY + offset.y;
-				dx = (pere2[2]) ? pere2[1].x * scale : pere2[1].x;
-				dy = (pere2[3]) ? pere2[1].y * scale : pere2[1].y;
+				ox = device.offsetX - this.displayOffsetX + handle.x;
+				oy = device.offsetY - this.displayOffsetY + handle.y;
+				dx = (start.x.substring) ? start.x * scale : start.x;
+				dy = (start.y.substring) ? start.y * scale : start.y;
 				style.left = ox - dx + 'px';
 				style.top = oy - dy + 'px';
 			}
 			else {
-				style.left = (pere2[2]) ? ((pere2[1].x * scale) + offset.x) + 'px' : (pere2[1].x + offset.x) + 'px';
-				style.top = (pere2[3]) ? ((pere2[1].y * scale) + offset.y) + 'px' : (pere2[1].y + offset.y) + 'px';
+				style.left = (start.x.substring) ? ((start.x * scale) + handle.x) + 'px' : (start.x + handle.x) + 'px';
+				style.top = (start.y.substring) ? ((start.y * scale) + handle.y) + 'px' : (start.y + handle.y) + 'px';
 			}
 
 			this.updateCornerTrackers();
 
+			return this;
+		};
+		/**
+updateCurrentHandle helper object
+
+@method getReferenceDimensions
+@param {Object} reference object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)
+@return Object with attributes {w: width, h: height, c: centered}
+@private
+**/
+		my.PageElement.prototype.getReferenceDimensions = {
+			Stack: function(reference) {
+				return {
+					w: reference.localWidth,
+					h: reference.localHeight
+				};
+			},
+			Pad: function(reference) {
+				return {
+					w: reference.localWidth,
+					h: reference.localHeight
+				};
+			},
+			Element: function(reference) {
+				return {
+					w: reference.localWidth,
+					h: reference.localHeight
+				};
+			}
+		};
+		/**
+Convert handle percentage values to numerical values, stored in currentHandle
+
+@method updateCurrentHandle
+@return This
+@chainable
+@private
+**/
+		my.PageElement.prototype.updateCurrentHandle = function() {
+			var dims, cont, conv, handle, test, testx, testy, currentHandle, scale;
+			if (!this.currentHandle.flag) {
+				dims = this.getReferenceDimensions[this.type](this);
+				cont = my.contains;
+				conv = this.numberConvert;
+				handle = this.handle;
+				test = ['top', 'bottom', 'left', 'right', 'center'];
+				testx = handle.x.substring;
+				testy = handle.y.substring;
+				currentHandle = this.currentHandle;
+				scale = this.scale || 1;
+				currentHandle.x = (testx) ? conv(handle.x, dims.w) : handle.x;
+				currentHandle.y = (testy) ? conv(handle.y, dims.h) : handle.y;
+				if (testx) {
+					currentHandle.x *= scale;
+				}
+				if (testy) {
+					currentHandle.y *= scale;
+				}
+				if (isNaN(currentHandle.x)) {
+					currentHandle.x = 0;
+				}
+				if (isNaN(currentHandle.y)) {
+					currentHandle.y = 0;
+				}
+				currentHandle.reverse();
+				currentHandle.flag = true;
+			}
+			return this;
+		};
+		/**
+Convert start percentage values to numerical values, stored in currentStart
+
+@method updateCurrentStart
+@param {Object} reference object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)
+@return This
+@chainable
+@private
+**/
+		my.PageElement.prototype.updateCurrentStart = function(reference) {
+			var dims, conv, start, currentStart;
+			if (!this.currentStart.flag && reference && reference.type) {
+				currentStart = this.currentStart;
+				dims = this.getReferenceDimensions[reference.type](reference);
+				conv = this.numberConvert;
+				start = this.start;
+				currentStart.x = (start.x.substring) ? conv(start.x, dims.w) : start.x;
+				currentStart.y = (start.y.substring) ? conv(start.y, dims.h) : start.y;
+				if (isNaN(currentStart.x) || isNaN(currentStart.y)) {
+					currentStart.x = 0;
+					currentStart.y = 0;
+					return this;
+				}
+				currentStart.flag = true;
+			}
 			return this;
 		};
 		/**
@@ -1718,6 +1933,9 @@ Calculate start Vector in reference to a entity or Point object's position
 @chainable
 @private
 **/
+
+
+		// REDO REDO REDO!!!!
 		my.PageElement.prototype.setStampUsingPivot = function() {
 			var mouse,
 				stack,
@@ -1725,12 +1943,13 @@ Calculate start Vector in reference to a entity or Point object's position
 				myPVector,
 				pEntity,
 				x, y,
-				start = this.start;
+				start = this.currentStart,
+				conv = this.numberConvert;
 			if (my.point) {
 				myP = my.point[this.pivot];
 				if (myP) {
 					pEntity = my.entity[myP.entity];
-					myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.start);
+					myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.currentStart);
 					start.x = (!this.lockX) ? myPVector.x : start.x;
 					start.y = (!this.lockY) ? myPVector.y : start.y;
 					return this;
@@ -1743,17 +1962,7 @@ Calculate start Vector in reference to a entity or Point object's position
 				start.y = (!this.lockY) ? myPVector.y : start.y;
 				return this;
 			}
-			myP = my.pad[this.pivot];
-			if (myP) {
-				this.setStampUsingDomElement(myP);
-				return this;
-			}
-			myP = my.element[this.pivot];
-			if (myP) {
-				this.setStampUsingDomElement(myP);
-				return this;
-			}
-			myP = my.stack[this.pivot];
+			myP = my.xtGet(my.pad[this.pivot], my.element[this.pivot], my.stack[this.pivot]);
 			if (myP) {
 				this.setStampUsingDomElement(myP);
 				return this;
@@ -1761,8 +1970,8 @@ Calculate start Vector in reference to a entity or Point object's position
 			if (this.pivot === 'mouse') {
 				if (this.group) {
 					stack = my.stack[my.group[this.group].stack];
-					x = (start.x.substring) ? my.Position.prototype.convertX.call(this, start.x, stack.localWidth) : start.x;
-					y = (start.y.substring) ? my.Position.prototype.convertY.call(this, start.y, stack.localHeight) : start.y;
+					x = (start.x.substring) ? conv(start.x, stack.localWidth) : start.x;
+					y = (start.y.substring) ? conv(start.y, stack.localHeight) : start.y;
 					x = (isNaN(x)) ? 0 : x;
 					y = (isNaN(y)) ? 0 : y;
 					mouse = stack.mice[this.mouseIndex] || {};
@@ -1790,21 +1999,11 @@ Stamp helper hook function - amended by stacks module
 @return this
 **/
 		my.Position.prototype.setStampUsingStacksPivot = function() {
-			var myP = my.pad[this.pivot];
+			var myP = my.xtGet(my.pad[this.pivot], my.element[this.pivot], my.stack[this.pivot]);
 			if (myP) {
 				this.setStampUsingDomElement(myP);
-				return this;
 			}
-			myP = my.element[this.pivot];
-			if (myP) {
-				this.setStampUsingDomElement(myP);
-				return this;
-			}
-			myP = my.stack[this.pivot];
-			if (myP) {
-				this.setStampUsingDomElement(myP);
-				return this;
-			}
+			return this;
 		};
 		/**
 setStampUsingPivot helper function
@@ -1827,10 +2026,10 @@ setStampUsingPivot helper function
 @private
 **/
 		my.PageElement.prototype.setStampUsingDomElementPivot = function(e) {
-			var myPVector = e.getStartValues(),
+			var estart = e.currentStart,
 				start = this.start;
-			start.x = (!this.lockX) ? myPVector.x : start.x;
-			start.y = (!this.lockY) ? myPVector.y : start.y;
+			start.x = (!this.lockX) ? estart.x : start.x;
+			start.y = (!this.lockY) ? estart.y : start.y;
 		};
 		/**
 setStampUsingPivot helper function
@@ -1839,17 +2038,20 @@ setStampUsingPivot helper function
 @private
 **/
 		my.PageElement.prototype.setStampUsingLockTo = function(e) {
-			var myPVector,
+			var start = e.currentStart,
+				handle = e.currentHandle,
+				current = this.currentStart,
 				g,
 				x,
 				y;
-			myPVector = e.getStartValues();
-			if (!e.offset.flag) {
-				e.offset.set(e.getOffsetStartVector());
-				e.offset.flag = true;
+			if (!start.flag) {
+				e.setStart();
 			}
-			x = myPVector.x + e.offset.x;
-			y = myPVector.y + e.offset.y;
+			if (!handle.flag) {
+				e.setHandle();
+			}
+			x = start.x + handle.x;
+			y = start.y + handle.y;
 			if (this.lockTo) {
 				g = my.group[this.group];
 				switch (this.lockTo) {
@@ -1867,8 +2069,8 @@ setStampUsingPivot helper function
 						break;
 				}
 			}
-			this.start.x = x;
-			this.start.y = y;
+			current.x = x;
+			current.y = y;
 		};
 		/**
 Set the transform origin style attribute
@@ -1909,8 +2111,7 @@ Calculate the element's display offset values
 		my.PageElement.prototype.setDisplayOffsets = function() {
 			var dox,
 				doy,
-				myDisplay,
-				offset = this.offset;
+				myDisplay;
 			dox = 0;
 			doy = 0;
 			if (this.viewport) {
@@ -1926,8 +2127,6 @@ Calculate the element's display offset values
 					myDisplay = myDisplay.offsetParent;
 				} while (myDisplay.offsetParent);
 			}
-			offset.set(this.getOffsetStartVector());
-			offset.flag = true;
 			this.displayOffsetX = dox;
 			this.displayOffsetY = doy;
 			return this;
@@ -2215,53 +2414,25 @@ Stamp helper hook function - amended by stacks module
 @return always true
 **/
 		my.Position.prototype.setStampUsingStacksPivot = function() {
-			var myP,
-				myPVector;
-			myP = my.element[this.pivot] || my.stack[this.pivot] || my.pad[this.pivot] || false;
-			if (myP) {
-				myPVector = myP.getStartValues();
+			var e,
+				estart,
+				ecurrentstart,
+				mystart;
+			e = my.element[this.pivot] || my.stack[this.pivot] || my.pad[this.pivot] || false;
+			if (e) {
+				ecurrentstart = e.currentStart;
+				estart = e.start;
+				mystart = this.currentStart;
 				if (!this.lockX) {
-					this.start.x = (myP.start.x.substring) ? myPVector.x * myP.scale : myPVector.x;
+					mystart.x = (estart.x.substring) ? ecurrentstart.x * e.scale : ecurrentstart.x;
 				}
 				if (!this.lockY) {
-					this.start.y = (myP.start.y.substring) ? myPVector.y * myP.scale : myPVector.y;
+					mystart.y = (estart.y.substring) ? ecurrentstart.y * e.scale : ecurrentstart.y;
 				}
 				return this;
 			}
 		};
-		/**
-Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object's handle attribute, where the object's frame of reference is its top-left corner
 
-* doesn't take into account the object's scaling or orientation
-* (badly named function - getPivotOffsetVector has nothing to do with pivots)
-
-@method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity/cell/element drawing should start
-@private
-**/
-		my.Position.prototype.getPivotOffsetVector = function() {
-			var height,
-				width,
-				scale = this.scale;
-			switch (this.type) {
-				case 'Block':
-				case 'Pad':
-				case 'Stack':
-				case 'Element':
-					height = (this.localHeight / scale) || this.get('height');
-					width = (this.localWidth / scale) || this.get('width');
-					break;
-				case 'Picture':
-				case 'Cell':
-					height = (this.pasteData.h / scale) || this.get('height');
-					width = (this.pasteData.w / scale) || this.get('width');
-					break;
-				default:
-					height = this.height || this.get('height');
-					width = this.width || this.get('width');
-			}
-			return my.Position.prototype.calculatePOV.call(this, this.work.handle, width, height, false);
-		};
 		/**
 # Stack
 
@@ -2313,9 +2484,10 @@ Position.getOffsetStartVector() helper function. Supervises the calculation of t
 					y: get(items.perspectiveY, temp.y, 'center'),
 					z: get(items.perspectiveZ, temp.z, 0)
 				});
-				this.work.perspective = vec({
-					name: this.type + '.' + name + '.work.perspective'
+				this.currentPerspective = vec({
+					name: this.type + '.' + name + '.current.perspective'
 				});
+				this.currentPerspective.flag = false;
 				this.groups = [name];
 				my.makeElementGroup({
 					name: name,
@@ -2370,6 +2542,11 @@ the Stack constructor, and set() function, supports the following 'virtual' attr
 				y: 'center',
 				z: 0
 			},
+			currentPerspective: {
+				x: 0,
+				y: 0,
+				z: 0
+			},
 			/**
 The PADNAME String of a canvas locked to the stack
 
@@ -2417,16 +2594,12 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 			items = so(items);
 			my.PageElement.prototype.set.call(this, items);
 			if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
-				if (!this.perspective.type || this.perspective.type !== 'Vector') {
-					this.perspective = my.makeVector(items.perspective || this.perspective);
-				}
-				if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
-					perspective = this.perspective;
-					temp = so(items.perspective);
-					perspective.x = get(items.perspectiveX, temp.x, perspective.x);
-					perspective.y = get(items.perspectiveY, temp.y, perspective.y);
-					perspective.z = get(items.perspectiveZ, temp.z, perspective.z);
-				}
+				perspective = this.perspective;
+				temp = so(items.perspective);
+				perspective.x = get(items.perspectiveX, temp.x, perspective.x);
+				perspective.y = get(items.perspectiveY, temp.y, perspective.y);
+				perspective.z = get(items.perspectiveZ, temp.z, perspective.z);
+				this.currentPerspective.flag = false;
 				this.setPerspective();
 			}
 			if (xto(items.width, items.height, items.scale)) {
@@ -2454,7 +2627,9 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 				g,
 				i,
 				iz,
+				x, y, z,
 				perspective,
+				perc = my.addPercentages,
 				so = my.safeObject,
 				get = my.xtGet,
 				xto = my.xto,
@@ -2463,16 +2638,14 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 			items = so(items);
 			my.PageElement.prototype.setDelta.call(this, items);
 			if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
-				if (!this.perspective.type || this.perspective.type !== 'Vector') {
-					this.perspective = my.makeVector(items.perspective || this.perspective);
-				}
-				if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
-					perspective = this.perspective;
-					temp = so(items.perspective);
-					perspective.x += get(items.perspectiveX, temp.x, 0);
-					perspective.y += get(items.perspectiveY, temp.y, 0);
-					perspective.z += get(items.perspectiveZ, temp.z, 0);
-				}
+				perspective = this.perspective;
+				temp = so(items.perspective);
+				x = get(items.perspectiveX, temp.x, 0);
+				y = get(items.perspectiveY, temp.y, 0);
+				perspective.x = (perspective.x.substring) ? perc(perspective.x, x) : perspective.x + x;
+				perspective.y = (perspective.y.substring) ? perc(perspective.y, y) : perspective.y + y;
+				perspective.z += get(items.perspectiveZ, temp.z, 0);
+				this.currentPerspective.flag = false;
 				this.setPerspective();
 			}
 			for (i = 0, iz = groupnames.length; i < iz; i++) {
@@ -2656,45 +2829,50 @@ Update element 3d transitions, via the Stack's groups
 			return true;
 		};
 		/**
-Parse the perspective Vector attribute
-@method parsePerspective
-@return Object containing offset values (in pixels)
-@private
-**/
-		my.Stack.prototype.parsePerspective = function() {
-			var height,
-				width;
-			height = this.localHeight || this.height || this.get('height');
-			width = this.localWidth || this.width || this.get('width');
-			return my.Position.prototype.calculatePOV.call(this, this.work.perspective, width, height, false);
-		};
-		/**
 Calculates the pixels value of the object's perspective attribute
 @method setPerspective
 @return Set the Stack element's perspective point
 **/
 		my.Stack.prototype.setPerspective = function() {
-			var sx,
-				sy,
-				myH,
+			var x, y, sx, sy,
 				el,
 				perspective = this.perspective,
-				style;
-			this.resetWork();
-			sx = (perspective.x.substring) ? this.scale : 1;
-			sy = (perspective.y.substring) ? this.scale : 1;
-			myH = this.parsePerspective();
+				current = this.currentPerspective,
+				style,
+				scale = this.scale,
+				result1, result2;
+			sx = (perspective.x.substring) ? scale : 1;
+			sy = (perspective.y.substring) ? scale : 1;
+			if (!current.flag) {
+				this.setCurrentPerspective();
+			}
 			el = this.getElement();
 			style = el.style;
-			myH.x *= sx;
-			myH.y *= sy;
-			//myH.z *= sx;
-			style.mozPerspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
-			style.webkitPerspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
-			style.perspectiveOrigin = myH.x + 'px ' + myH.y + 'px';
-			style.mozPerspective = myH.z + 'px';
-			style.webkitPerspective = myH.z + 'px';
-			style.perspective = myH.z + 'px';
+			x = current.x * sx;
+			y = current.y * sy;
+			result1 = x + 'px ' + y + 'px';
+			result2 = current.z + 'px';
+			style.mozPerspectiveOrigin = result1;
+			style.webkitPerspectiveOrigin = result1;
+			style.perspectiveOrigin = result1;
+			style.mozPerspective = result2;
+			style.webkitPerspective = result2;
+			style.perspective = result2;
+		};
+		/**
+setPerspective helper function
+@method setCurrentPerspective
+@return Set the Stack element's perspective point
+**/
+		my.Stack.prototype.setCurrentPerspective = function() {
+			var given = this.perspective,
+				current = this.currentPerspective,
+				el = (this.group) ? my.stack[my.group[this.group].stack] : this,
+				conv = this.numberConvert;
+			current.x = (given.x.substring) ? conv(given.x, el.localWidth) : given.x;
+			current.y = (given.y.substring) ? conv(given.y, el.localHeight) : given.y;
+			current.z = given.z;
+			return this;
 		};
 
 		my.pushUnique(my.sectionlist, 'element');
@@ -2939,12 +3117,14 @@ Get collective dimensions of ElementGroup elements
 					height: 0
 				},
 				i, iz,
+				handle,
 				elements = this.elements,
 				style;
 			for (i = 0, iz = elements.length; i < iz; i++) {
 				el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				if (el.visibility) {
 					e = el.getElement();
+					handle = el.currentHandle;
 					style = e.style;
 					switch (el.type) {
 						case 'Stack':
@@ -2953,9 +3133,9 @@ Get collective dimensions of ElementGroup elements
 							result.height = (temp.height > result.height) ? temp.height : result.height;
 							break;
 						default:
-							temp = parseFloat(style.left) + el.localWidth - el.offset.x;
+							temp = parseFloat(style.left) + el.localWidth - handle.x;
 							result.width = (temp > result.width) ? temp : result.width;
-							temp = parseFloat(style.top) + el.localHeight - el.offset.y;
+							temp = parseFloat(style.top) + el.localHeight - handle.y;
 							result.height = (temp > result.height) ? temp : result.height;
 					}
 				}
@@ -3221,7 +3401,7 @@ Ask all elements in the Group to perform a dimension update operation
 				temp = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				temp.setLocalDimensions();
 				temp.setDimensions();
-				temp.offset.flag = false;
+				temp.currentHandle.flag = false;
 				if (temp.type === 'Stack') {
 					my.group[temp.name].updateDimensions();
 				}

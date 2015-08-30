@@ -260,7 +260,6 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				reverse = this.flipReverse;
 				upend = this.flipUpend;
 				for (i = 0, iz = tests.length; i < iz; i += 2) {
-					this.resetWork();
 					v1.x = tests[i];
 					v1.y = tests[i + 1];
 					v1.vectorSubtract(start).scalarDivide(scale).rotate(-roll);

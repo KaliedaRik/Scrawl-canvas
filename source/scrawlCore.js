@@ -2137,13 +2137,6 @@ Unique identifier for each object; default: computer-generated String based on O
 			type: this.type,
 			target: this.classname
 		});
-		/**
-Vector work space - not included in defaults
-@property work
-@type Object
-@private
-**/
-		this.work = {};
 		return this;
 	};
 	my.Base.prototype = Object.create(Object.prototype);
@@ -2273,20 +2266,27 @@ Turn the object into a JSON String
 		return JSON.parse(JSON.stringify(this));
 	};
 	/**
-Restore workspece vector values to their current specified values
-@method resetWork
-@return always true
+Stamp helper function - convert string percentage values to numerical values
+@method numberConvert
+@param {String} val coordinate String
+@param {Number} dim dimension value
+@return Number - value
 @private
 **/
-	my.Base.prototype.resetWork = function() {
-		var keys,
-			i,
-			iz;
-		keys = Object.keys(this.work);
-		for (i = 0, iz = keys.length; i < iz; i++) {
-			this.work[keys[i]].set(this[keys[i]]);
+	my.Base.prototype.numberConvert = function(val, dim) {
+		var result = parseFloat(val) / 100;
+		if (isNaN(result)) {
+			switch (val) {
+				case 'right':
+				case 'bottom':
+					return dim;
+				case 'center':
+					return dim / 2;
+				default:
+					return 0;
+			}
 		}
-		return true;
+		return result * dim;
 	};
 
 	/**
@@ -2697,9 +2697,6 @@ SubScrawl, and all Objects that prototype chain to Subscrawl, supports the follo
 			name: this.type + '.' + this.name + '.current.start'
 		});
 		this.currentStart.flag = false;
-		this.work.start = vec({
-			name: this.type + '.' + this.name + '.work.start'
-		});
 		/**
 An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. 
 
@@ -2723,9 +2720,6 @@ Where values are Numbers, handle can be treated like any other Vector
 			name: this.type + '.' + this.name + '.current.handle'
 		});
 		this.currentHandle.flag = false;
-		this.work.handle = vec({
-			name: this.type + '.' + this.name + '.work.handle'
-		});
 		/**
 An object with the following attributes:
 
@@ -3210,24 +3204,10 @@ updateCurrentHandle helper object
 @private
 **/
 	my.Position.prototype.getReferenceDimensions = {
-		Stack: function(reference) {
-			return {
-				w: reference.width,
-				h: reference.height,
-				c: false
-			};
-		},
 		Pad: function(reference) {
 			return {
-				w: reference.width,
-				h: reference.height,
-				c: false
-			};
-		},
-		Element: function(reference) {
-			return {
-				w: reference.width,
-				h: reference.height,
+				w: reference.localWidth,
+				h: reference.localHeight,
 				c: false
 			};
 		},
@@ -3351,7 +3331,7 @@ Convert start percentage values to numerical values, stored in currentStart
 **/
 	my.Position.prototype.updateCurrentStart = function(reference) {
 		var dims, conv, start, currentStart;
-		if (!this.currentStart.flag) {
+		if (!this.currentStart.flag && reference && reference.type) {
 			currentStart = this.currentStart;
 			dims = this.getReferenceDimensions[reference.type](reference);
 			conv = this.numberConvert;
@@ -3455,29 +3435,6 @@ Stamp helper hook function - amended by stacks extension
 **/
 	my.Position.prototype.setStampUsingStacksPivot = function() {
 		return this;
-	};
-	/**
-Stamp helper function - convert string percentage values to numerical values
-@method numberConvert
-@param {String} val coordinate String
-@param {Number} dim dimension value
-@return Number - value
-@private
-**/
-	my.Position.prototype.numberConvert = function(val, dim) {
-		var result = parseFloat(val) / 100;
-		if (isNaN(result)) {
-			switch (val) {
-				case 'right':
-				case 'bottom':
-					return dim;
-				case 'center':
-					return dim / 2;
-				default:
-					return 0;
-			}
-		}
-		return result * dim;
 	};
 
 	/**
@@ -4813,9 +4770,6 @@ Cell constructor hook function - core module
 			y: get(items.copyY, temp.y, 0),
 			name: this.type + '.' + this.name + '.copy'
 		});
-		this.work.copy = vec({
-			name: this.type + '.' + this.name + '.work.copy'
-		});
 		this.actualWidth = canvas.width;
 		this.actualHeight = canvas.height;
 		this.copyWidth = this.actualWidth;
@@ -5740,22 +5694,21 @@ Cell.setPaste helper function
 			pad = so(my.pad[this.pad]),
 			display = so(cell[pad.display]),
 			base = so(cell[pad.base]),
-			stack = (my.xt(pad.group)) ? true : false,
+			isRaw = (!pad.base) ? true : false,
 			isBase = (this.name === pad.base) ? true : false,
+			isDisplay = (this.name === pad.display) ? true : false,
 			isFirstCellInPad = (!pad.display) ? true : false;
 		if (isFirstCellInPad) {
 			this.reference = pad;
 		}
+		else if (isRaw) {
+			this.reference = false;
+		}
 		else if (isBase) {
 			this.reference = display;
 		}
-		else if (display) {
-			if (stack) {
-				this.reference = my.stack[pad.group];
-			}
-			else {
-				this.reference = display;
-			}
+		else if (isDisplay) {
+			this.reference = pad;
 		}
 		else {
 			this.reference = base;
@@ -6701,7 +6654,7 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getEntityAt = function(items) {
 		var entity,
-			vector,
+			vector = my.v,
 			entitys = this.entitys,
 			e = my.entity,
 			rad = this.regionRadius,
@@ -6714,8 +6667,7 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 		for (i = entitys.length - 1; i >= 0; i--) {
 			entity = e[entitys[i]];
 			if (rad) {
-				entity.resetWork();
-				vector = entity.work.start.vectorSubtract(coordinate);
+				vector.set(entity.currentStart).vectorSubtract(coordinate);
 				if (vector.getMagnitude() > rad) {
 					continue;
 				}
@@ -6756,7 +6708,7 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getAllEntitysAt = function(items) {
 		var entity,
-			vector,
+			vector = my.v,
 			coordinate,
 			results,
 			entitys = this.entitys,
@@ -6771,8 +6723,7 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 		for (i = entitys.length - 1; i >= 0; i--) {
 			entity = e[entitys[i]];
 			if (rad) {
-				entity.resetWork();
-				vector = entity.work.start.vectorSubtract(coordinate);
+				vector.set(entity.currentStart).vectorSubtract(coordinate);
 				if (vector.getMagnitude() > rad) {
 					continue;
 				}

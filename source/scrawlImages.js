@@ -598,9 +598,6 @@ Alias for Pattern.makeDesign()
 							y: get(items.copyY, tempV.y, 0),
 							name: this.type + '.' + this.name + '.copy'
 						});
-						this.work.copy = my.makeVector({
-							name: this.type + '.' + this.name + '.work.copy'
-						});
 						this.registerInLibrary();
 						this.copyData = {};
 						this.pasteData = {};
