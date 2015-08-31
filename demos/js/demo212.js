@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
+	// define variables
 	var mystack = scrawl.stack.mystack,
 		actionZone = scrawl.stk.mystack,
 		penguin = scrawl.element.penguin,
@@ -24,12 +24,12 @@ var mycode = function() {
 		mouseIn, mouseOut, triggerTween,
 		here;
 
-	//prepare elements
+	// prepare elements
 	mystack.set({
 		width: 200,
 		height: 200,
 		border: '1px solid red',
-		backgroundColor: 'navy',
+		backgroundColor: 'navy'
 	});
 	penguin.set({
 		width: '99%',
@@ -39,7 +39,7 @@ var mycode = function() {
 		handleX: 'center',
 		handleY: 'center',
 		pointerEvents: 'none',
-		visibility: true,
+		visibility: true
 	});
 
 	// ... save on some typing by using scrawl.mergeInto()
@@ -50,7 +50,7 @@ var mycode = function() {
 		opacity: 0,
 		pointerEvents: 'none',
 		startX: 'center',
-		width: '90%',
+		width: '90%'
 	};
 
 	myrule.set(scrawl.mergeInto({
@@ -58,25 +58,26 @@ var mycode = function() {
 		height: 0,
 		borderWidth: '3px',
 		startY: '48%',
-		borderColor: 'white',
+		borderColor: 'white'
 	}, coreItems));
 
 	mytitle.set(scrawl.mergeInto({
 		startY: '10%',
 		pitch: 90,
-		fontSize: '100%',
+		fontSize: '100%'
 	}, coreItems));
 
 	mycopytext.set(scrawl.mergeInto({
 		textAlign: 'center',
 		startY: '80%',
-		fontSize: '75%',
+		fontSize: '75%'
 	}, coreItems));
 
-	//initial render to position elements
+	// initial render to position elements
 	scrawl.renderElements();
 
-	//define animation tweens
+	// define animation tweens
+	// (needs to be rewritten to make use of timelines)
 	tweenReduce = function() {
 		//check to see if this is the last remaining tween (plus the animation loop) still running
 		if (tweenCounter) {
@@ -105,7 +106,7 @@ var mycode = function() {
 		},
 		targets: [penguin],
 		duration: 800,
-		callback: tweenReduce,
+		callback: tweenReduce
 	});
 	tweenText = scrawl.makeTween({
 		start: {
@@ -124,7 +125,7 @@ var mycode = function() {
 		},
 		targets: [mycopytext],
 		duration: 800,
-		callback: tweenReduce,
+		callback: tweenReduce
 	});
 	tweenTitle = scrawl.makeTween({
 		start: {
@@ -146,7 +147,7 @@ var mycode = function() {
 		},
 		targets: [mytitle],
 		duration: 800,
-		callback: tweenReduce,
+		callback: tweenReduce
 	});
 	tweenGrowStack = scrawl.makeTween({
 		start: {
@@ -160,7 +161,7 @@ var mycode = function() {
 		},
 		targets: [mystack],
 		duration: 800,
-		callback: tweenReduce,
+		callback: tweenReduce
 	});
 	tweenGrowRule = scrawl.makeTween({
 		start: {
@@ -173,14 +174,14 @@ var mycode = function() {
 		},
 		engines: {
 			opacity: 'easeOutIn',
-			width: 'easeOutIn',
+			width: 'easeOutIn'
 		},
 		targets: [myrule],
 		duration: 800,
-		callback: tweenReduce,
+		callback: tweenReduce
 	});
 
-	//define the event listener routines
+	// define the event listener routines
 	triggerTween = function() {
 		tweensActive = true;
 		tweenCounter = 5;
@@ -211,7 +212,7 @@ var mycode = function() {
 		}
 	};
 
-	//animation object
+	// animation object
 	scrawl.makeAnimation({
 		order: 1000,
 		fn: function() {
@@ -240,7 +241,7 @@ var mycode = function() {
 	});
 };
 
-//module loading and initialization function
+// module loading and initialization function
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,

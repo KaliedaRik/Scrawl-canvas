@@ -1918,6 +1918,7 @@ Convert handle percentage values to numerical values, stored in currentHandle
 				}
 				currentHandle.reverse();
 				currentHandle.flag = true;
+				// console.log(this.name, this.scale, this.width, this.localWidth, this.height, this.localHeight, currentHandle.x, currentHandle.y);
 			}
 			return this;
 		};
@@ -1985,8 +1986,6 @@ Calculate start Vector in reference to a entity or Point object's position
 @private
 **/
 
-
-		// REDO REDO REDO!!!!
 		my.PageElement.prototype.setStampUsingPivot = function() {
 			var mouse,
 				stack,
@@ -2633,36 +2632,50 @@ Augments PageElement.set(), to allow users to set the stack perspective using pe
 **/
 		my.Stack.prototype.set = function(items) {
 			var temp,
-				g,
 				i,
 				iz,
 				perspective,
 				so = my.safeObject,
 				get = my.xtGet,
+				xt = my.xt,
 				xto = my.xto,
 				group = my.group,
-				groupnames = my.groupnames;
+				stack = my.stack,
+				g, e;
 			items = so(items);
 			my.PageElement.prototype.set.call(this, items);
-			if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
-				perspective = this.perspective;
-				temp = so(items.perspective);
-				perspective.x = get(items.perspectiveX, temp.x, perspective.x);
-				perspective.y = get(items.perspectiveY, temp.y, perspective.y);
-				perspective.z = get(items.perspectiveZ, temp.z, perspective.z);
-				this.currentPerspective.flag = false;
-				this.setPerspective();
-			}
-			if (xto(items.width, items.height, items.scale)) {
-				for (i = 0, iz = groupnames.length; i < iz; i++) {
-					g = group[groupnames[i]];
-					if (g.type === 'ElementGroup') {
-						if (g.stack === this.name) {
-							g.updateDimensions();
-						}
-					}
+			g = group[this.name];
+			if (xto(items.width, items.height, items.scale, items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
+				if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
+					perspective = this.perspective;
+					temp = so(items.perspective);
+					perspective.x = get(items.perspectiveX, temp.x, perspective.x);
+					perspective.y = get(items.perspectiveY, temp.y, perspective.y);
+					perspective.z = get(items.perspectiveZ, temp.z, perspective.z);
+					this.currentPerspective.flag = false;
 				}
 				this.setPerspective();
+			}
+			if (xto(items.start, items.startX, items.startY, items.width, items.height, items.scale)) {
+				if (g) {
+					g.setDirtyStarts();
+				}
+				else {
+					this.currentStart = false;
+				}
+			}
+			if (xto(items.handle, items.handleX, items.handleY, items.width, items.height, items.scale)) {
+				if (g) {
+					g.setDirtyHandles();
+				}
+				else {
+					this.currentHandle = false;
+				}
+			}
+			if (xto(items.width, items.height, items.scale)) {
+				if (g) {
+					g.updateDimensions();
+				}
 			}
 			return this;
 		};
@@ -2675,7 +2688,6 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 **/
 		my.Stack.prototype.setDelta = function(items) {
 			var temp,
-				g,
 				i,
 				iz,
 				x, y, z,
@@ -2683,28 +2695,46 @@ Augments PageElement.setDelta(), to allow users to set the stack perspective usi
 				perc = my.addPercentages,
 				so = my.safeObject,
 				get = my.xtGet,
+				xt = my.xt,
 				xto = my.xto,
 				group = my.group,
-				groupnames = my.groupnames;
+				stack = my.stack,
+				g, e;
 			items = so(items);
 			my.PageElement.prototype.setDelta.call(this, items);
-			if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
-				perspective = this.perspective;
-				temp = so(items.perspective);
-				x = get(items.perspectiveX, temp.x, 0);
-				y = get(items.perspectiveY, temp.y, 0);
-				perspective.x = (perspective.x.substring) ? perc(perspective.x, x) : perspective.x + x;
-				perspective.y = (perspective.y.substring) ? perc(perspective.y, y) : perspective.y + y;
-				perspective.z += get(items.perspectiveZ, temp.z, 0);
-				this.currentPerspective.flag = false;
+			g = group[this.name];
+			if (xto(items.width, items.height, items.scale, items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
+				if (xto(items.perspective, items.perspectiveX, items.perspectiveY, items.perspectiveZ)) {
+					perspective = this.perspective;
+					temp = so(items.perspective);
+					x = get(items.perspectiveX, temp.x, 0);
+					y = get(items.perspectiveY, temp.y, 0);
+					perspective.x = (perspective.x.substring) ? perc(perspective.x, x) : perspective.x + x;
+					perspective.y = (perspective.y.substring) ? perc(perspective.y, y) : perspective.y + y;
+					perspective.z += get(items.perspectiveZ, temp.z, 0);
+					this.currentPerspective.flag = false;
+				}
 				this.setPerspective();
 			}
-			for (i = 0, iz = groupnames.length; i < iz; i++) {
-				g = group[groupnames[i]];
-				if (g.type === 'ElementGroup') {
-					if (g.stack === this.name) {
-						g.updateDimensions();
-					}
+			if (xto(items.start, items.startX, items.startY, items.width, items.height, items.scale)) {
+				if (g) {
+					g.setDirtyStarts();
+				}
+				else {
+					this.currentStart = false;
+				}
+			}
+			if (xto(items.handle, items.handleX, items.handleY, items.width, items.height, items.scale)) {
+				if (g) {
+					g.setDirtyHandles();
+				}
+				else {
+					this.currentHandle = false;
+				}
+			}
+			if (xto(items.width, items.height, items.scale)) {
+				if (g) {
+					g.updateDimensions();
 				}
 			}
 			return this;
@@ -2938,6 +2968,7 @@ Get dimensions of Stack
 			var g = my.group[this.name];
 			return (g) ? g.getElementGroupDimensions() : my.o;
 		};
+
 		/**
 # Element
 
@@ -3525,6 +3556,76 @@ This has the effect of turning a set of disparate eelements into a single, coord
 							element.set(arg);
 						}
 					}
+				}
+			}
+			return this;
+		};
+		/**
+Augments ElementGroup.set()
+@method setDirtyStarts
+@return This
+@chainable
+@private
+**/
+		my.ElementGroup.prototype.setDirtyStarts = function() {
+			var entity = my.entity,
+				entitys = this.entitys,
+				elements = this.elements,
+				stack = my.stack,
+				pad = my.pad,
+				element = my.element,
+				group = my.group,
+				e,
+				i, iz,
+				xt = my.xt;
+			for (i = 0, iz = entitys.length; i < iz; i++) {
+				e = entity[entitys[i]];
+				if (xt(e)) {
+					e.currentStart.flag = false;
+				}
+			}
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				e = stack[elements[i]] || pad[elements[i]] || element[elements[i]] || false;
+				if (e) {
+					if (e.type === 'Stack' && group[e.name]) {
+						group[e.name].setDirtyStarts();
+					}
+					e.currentStart.flag = false;
+				}
+			}
+			return this;
+		};
+		/**
+Augments ElementGroup.set()
+@method setDirtyHandles
+@return This
+@chainable
+@private
+**/
+		my.ElementGroup.prototype.setDirtyHandles = function() {
+			var entity = my.entity,
+				entitys = this.entitys,
+				elements = this.elements,
+				stack = my.stack,
+				pad = my.pad,
+				element = my.element,
+				group = my.group,
+				e,
+				i, iz,
+				xt = my.xt;
+			for (i = 0, iz = entitys.length; i < iz; i++) {
+				e = entity[entitys[i]];
+				if (xt(e)) {
+					e.currentHandle.flag = false;
+				}
+			}
+			for (i = 0, iz = elements.length; i < iz; i++) {
+				e = stack[elements[i]] || pad[elements[i]] || element[elements[i]] || false;
+				if (e) {
+					if (e.type === 'Stack' && group[e.name]) {
+						group[e.name].setDirtyHandles();
+					}
+					e.currentHandle.flag = false;
 				}
 			}
 			return this;

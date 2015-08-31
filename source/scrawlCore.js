@@ -6744,9 +6744,14 @@ Augments Group.set()
 	my.Group.prototype.setDirtyStarts = function() {
 		var entity = my.entity,
 			entitys = this.entitys,
-			i, iz;
+			e,
+			i, iz,
+			xt = my.xt;
 		for (i = 0, iz = entitys.length; i < iz; i++) {
-			entity[entitys[i]].currentStart.flag = false;
+			e = entity[entitys[i]];
+			if (xt(e)) {
+				e.currentStart.flag = false;
+			}
 		}
 		return this;
 	};
@@ -6760,9 +6765,14 @@ Augments Group.set()
 	my.Group.prototype.setDirtyHandles = function() {
 		var entity = my.entity,
 			entitys = this.entitys,
-			i, iz;
+			e,
+			i, iz,
+			xt = my.xt;
 		for (i = 0, iz = entitys.length; i < iz; i++) {
-			entity[entitys[i]].currentHandle.flag = false;
+			e = entity[entitys[i]];
+			if (xt(e)) {
+				e.currentHandle.flag = false;
+			}
 		}
 		return this;
 	};
