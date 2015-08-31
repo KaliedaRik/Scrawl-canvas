@@ -548,7 +548,7 @@ Argument object can be in the form, where all values (which default to 0) are in
 			});
 		};
 		/**
-Update quaternion with Euler angle values
+Set quaternion with Euler angle values
 
 Argument object can be in the form, where all values (which default to 0) are in degrees:
 * {pitch:Number, yaw:Number, roll:Number}
@@ -616,7 +616,8 @@ Retrieve rotations (Euler angles) from a quaternion
 				tv = this.v,
 				rad = my.radian,
 				tan = Math.atan2,
-				pi = Math.PI;
+				pi = Math.PI,
+				between = my.isBetween;
 			sqw = this.n * this.n;
 			sqx = tv.x * tv.x;
 			sqy = tv.y * tv.y;
@@ -642,7 +643,52 @@ Retrieve rotations (Euler angles) from a quaternion
 			t0 = (2 * tv.x * this.n) - (2 * tv.y * tv.z);
 			t1 = sqy - sqx - sqz + sqw;
 			result.pitch = (tan(t0, t1)) / rad;
+			if (between(result.yaw, -0.00001, 0.00001)) {
+				result.yaw = 0;
+			}
+			if (between(result.roll, -0.00001, 0.00001)) {
+				result.roll = 0;
+			}
+			if (between(result.pitch, -0.00001, 0.00001)) {
+				result.pitch = 0;
+			}
 			return result;
+		};
+		/**
+Retrieve Euler roll value from a quaternion
+@method getEulerRoll
+@return Number
+**/
+		my.Quaternion.prototype.getEulerRoll = function() {
+			var unit,
+				test,
+				tv = this.v,
+				tn = this.n,
+				rad = my.radian,
+				pi = Math.PI,
+				pow = Math.pow,
+				between = my.isBetween,
+				result;
+			unit = pow(this.n, 2) + pow(tv.x, 2) + pow(tv.y, 2) + pow(tv.z, 2);
+			test = (tv.x * tv.y) + (tv.z * this.n);
+			if (test > 0.499999 * unit) {
+				result = (pi / 2) / rad;
+			}
+			else if (test < -0.499999 * unit) {
+				result = (-pi / 2) / rad;
+			}
+			else {
+				result = (Math.asin((2 * test) / unit)) / rad;
+				if (this.name === 'Element.button2.rotation') {
+					console.log(result);
+				}
+			}
+			if (between(result, -0.00001, 0.00001)) {
+				return 0;
+			}
+			else {
+				return parseFloat(result.toFixed(4));
+			}
 		};
 		my.workquat = {
 			q1: my.makeQuaternion({

@@ -694,6 +694,48 @@ When true, element ignores vertical placement data via pivot and path attributes
 **/
 		my.d.PageElement.lockY = false;
 		/**
+Element 2d roll value
+@property PageElement.roll
+@type Number
+@default 0
+**/
+		my.d.PageElement.roll = 0;
+		/**
+Element 2d pitch value
+@property PageElement.pitch
+@type Number
+@default 0
+**/
+		my.d.PageElement.pitch = 0;
+		/**
+Element 2d yaw value
+@property PageElement.yaw
+@type Number
+@default 0
+**/
+		my.d.PageElement.yaw = 0;
+		/**
+Element 2d deltaRoll value
+@property PageElement.deltaRoll
+@type Number
+@default 0
+**/
+		my.d.PageElement.deltaRoll = 0;
+		/**
+Element 2d deltaPitch value
+@property PageElement.deltaPitch
+@type Number
+@default 0
+**/
+		my.d.PageElement.deltaPitch = 0;
+		/**
+Element 2d deltaYaw value
+@property PageElement.deltaYaw
+@type Number
+@default 0
+**/
+		my.d.PageElement.deltaYaw = 0;
+		/**
 Element rotation around its transform (start) coordinate
 @property PageElement.rotation
 @type Quaternion
@@ -881,19 +923,25 @@ PageElement constructor hook function - modified by stacks module
 			this.scale = get(items.scale, 1);
 			this.viewport = get(items.viewport, false);
 			this.visibility = get(items.visibility, d.visibility);
+			this.pitch = items.pitch || 0;
+			this.yaw = items.yaw || 0;
+			this.roll = items.roll || 0;
 			this.rotation = quat({
 				name: this.type + '.' + this.name + '.rotation'
 			}).setFromEuler({
-				pitch: items.pitch || 0,
-				yaw: items.yaw || 0,
-				roll: items.roll || 0,
+				pitch: this.pitch,
+				yaw: this.yaw,
+				roll: this.roll
 			});
+			this.deltaPitch = items.deltaPitch || 0;
+			this.deltaYaw = items.deltaYaw || 0;
+			this.deltaRoll = items.deltaRoll || 0;
 			this.deltaRotation = quat({
 				name: this.type + '.' + this.name + '.deltaRotation'
 			}).setFromEuler({
-				pitch: items.deltaPitch || 0,
-				yaw: items.deltaYaw || 0,
-				roll: items.deltaRoll || 0,
+				pitch: this.deltaPitch,
+				yaw: this.deltaYaw,
+				roll: this.deltaRoll
 			});
 			this.rotationTolerance = get(items.rotationTolerance, d.rotationTolerance);
 			this.group = get(items.group, false);
@@ -1909,19 +1957,22 @@ Calculate start Vector in reference to a Shape entity object's path
 **/
 		my.PageElement.prototype.setStampUsingPath = function() {
 			var here,
-				angles,
+				angle,
 				e = my.entity[this.path],
 				start = this.start;
 			if (e && e.type === 'Path') {
 				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
-				start.x = (!this.lockX) ? here.x : start.x;
-				start.y = (!this.lockY) ? here.y : start.y;
-				this.pathRoll = here.r || 0;
-				if (this.addPathRoll && this.pathRoll) {
-					angles = this.rotation.getEulerAngles();
-					this.setDelta({
-						roll: this.pathRoll - angles.roll,
-					});
+				if (here) {
+					start.x = (!this.lockX) ? here.x : start.x;
+					start.y = (!this.lockY) ? here.y : start.y;
+					this.pathRoll = here.r || 0;
+					if (this.addPathRoll) {
+						this.rotation.setFromEuler({
+							pitch: this.pitch,
+							yaw: this.yaw,
+							roll: this.pathRoll + this.roll
+						});
+					}
 				}
 			}
 			return this;

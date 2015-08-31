@@ -41,13 +41,6 @@ var mycode = function() {
 	canvas = scrawl.canvas.canvas;
 	pad = scrawl.pad.canvas;
 
-	//easing path entity
-	guide = scrawl.makeBezier({
-		name: 'guide',
-		lineWidth: 2,
-		strokeStyle: '#880000',
-		precision: 100,
-	});
 	//dragging entitys to change the curve of the easing path entity
 	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
@@ -65,6 +58,14 @@ var mycode = function() {
 			fillStyle: 'yellow',
 		});
 	}
+
+	//easing path entity
+	guide = scrawl.makeBezier({
+		name: 'guide',
+		lineWidth: 2,
+		strokeStyle: '#880000',
+		precision: 100,
+	});
 	//fix easing path Point objects to dragging entitys
 	scrawl.point.guide_p1.setToFixed('wheel_0');
 	scrawl.point.guide_p2.setToFixed('wheel_1');

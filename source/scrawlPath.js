@@ -1250,7 +1250,8 @@ Calculate coordinates of point at given distance along the Shape entity's path
 				},
 				bool = my.isa_bool,
 				get = my.xtGet,
-				lk = my.link;
+				lk = my.link,
+				between = my.isBetween;
 			val = (val.toFixed) ? val : 1;
 			steady = (bool(steady)) ? steady : true;
 			roll = (bool(roll)) ? roll : false;
@@ -1283,6 +1284,9 @@ Calculate coordinates of point at given distance along the Shape entity's path
 							result.x = here.x;
 							result.y = here.y;
 							result.r = angle;
+							if (between(result.r, -0.00001, 0.00001)) {
+								result.r = 0;
+							}
 							return result;
 						}
 						else {
@@ -1302,6 +1306,9 @@ Calculate coordinates of point at given distance along the Shape entity's path
 							result.x = here.x;
 							result.y = here.y;
 							result.r = angle;
+							if (between(result.r, -0.00001, 0.00001)) {
+								result.r = 0;
+							}
 							return result;
 						}
 						else {
@@ -1310,7 +1317,6 @@ Calculate coordinates of point at given distance along the Shape entity's path
 					}
 				}
 			}
-			console.log(this);
 			return false;
 		};
 		/**
@@ -1650,8 +1656,9 @@ Return object has the following attributes:
 @return Result object
 @private
 **/
-		my.Point.prototype.getData = function() {
-			var s,
+		my.Point.prototype.getData = function(v) {
+			var xt = my.xt,
+				s,
 				myPivot,
 				scale,
 				result = {
@@ -1659,12 +1666,13 @@ Return object has the following attributes:
 					current: null,
 					startLink: null
 				},
-				vec = my.worklink.point,
+				vec = (xt(v) && v.type === 'Vector') ? v : my.worklink.point,
 				entity = my.entity,
-				point = my.point;
+				point = my.point,
+				local = this.local;
 			s = entity[this.entity];
 			scale = s.scale;
-			if (my.xt(this.local) && this.local.type === 'Vector') {
+			if (xt(local) && local.type === 'Vector') {
 				if (this.fixed.substring && (entity[this.fixed] || point[this.fixed])) {
 					myPivot = entity[this.fixed] || point[this.fixed];
 					if (myPivot.type === 'Point') {
@@ -1682,12 +1690,11 @@ Return object has the following attributes:
 					}
 				}
 				else if (!this.fixed) {
-					vec.set(this.local);
+					vec.set(local);
 					vec.scalarMultiply(scale || 1);
 				}
 				else {
-					vec.set(this.local);
-					// vec.vectorSubtract(s.start || my.o);
+					vec.set(local);
 					vec.vectorSubtract(s.currentStart || my.o);
 					vec.scalarMultiply(scale || 1);
 					vec.rotate(-s.roll);
@@ -1707,8 +1714,8 @@ Retrieve Point object's coordinates
 @method getCurrentCoordinates
 @return Coordinate Vector
 **/
-		my.Point.prototype.getCurrentCoordinates = function() {
-			return this.getData().current;
+		my.Point.prototype.getCurrentCoordinates = function(v) {
+			return this.getData(v).current;
 		};
 		/**
 Set Point.fixed attribute
@@ -2201,7 +2208,7 @@ sketch helper object
 			},
 			line: function(ctx, item) {
 				var p = my.point,
-					myEnd = p[item.endPoint].getCurrentCoordinates();
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.worklink.end);
 				ctx.lineTo(
 					myEnd.x,
 					myEnd.y
@@ -2210,8 +2217,8 @@ sketch helper object
 			},
 			quadratic: function(ctx, item) {
 				var p = my.point,
-					myCon1 = p[item.controlPoint1].getCurrentCoordinates(),
-					myEnd = p[item.endPoint].getCurrentCoordinates();
+					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.worklink.control1),
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.worklink.end);
 				ctx.quadraticCurveTo(
 					myCon1.x,
 					myCon1.y,
@@ -2222,9 +2229,9 @@ sketch helper object
 			},
 			bezier: function(ctx, item) {
 				var p = my.point,
-					myCon1 = p[item.controlPoint1].getCurrentCoordinates(),
-					myCon2 = p[item.controlPoint2].getCurrentCoordinates(),
-					myEnd = p[item.endPoint].getCurrentCoordinates();
+					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.worklink.control1),
+					myCon2 = p[item.controlPoint2].getCurrentCoordinates(my.worklink.control2),
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.worklink.end);
 				ctx.bezierCurveTo(
 					myCon1.x,
 					myCon1.y,
