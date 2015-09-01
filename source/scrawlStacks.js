@@ -1838,16 +1838,15 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 
 			if (this.viewport) {
 				device = my.device;
-				ox = device.offsetX - this.displayOffsetX + handle.x;
-				oy = device.offsetY - this.displayOffsetY + handle.y;
-				dx = (start.x.substring) ? start.x * scale : start.x;
-				dy = (start.y.substring) ? start.y * scale : start.y;
-				style.left = ox - dx + 'px';
-				style.top = oy - dy + 'px';
+				style.left = device.offsetX - this.displayOffsetX + handle.x + start.x + 'px';
+				style.top = device.offsetY - this.displayOffsetY + handle.y + start.y + 'px';
 			}
 			else {
-				style.left = (start.x.substring) ? ((start.x * scale) + handle.x) + 'px' : (start.x + handle.x) + 'px';
-				style.top = (start.y.substring) ? ((start.y * scale) + handle.y) + 'px' : (start.y + handle.y) + 'px';
+				// style.left = (this.start.x.substring) ? ((start.x * scale) + handle.x) + 'px' : (start.x + handle.x) + 'px';
+				// style.top = (this.start.y.substring) ? ((start.y * scale) + handle.y) + 'px' : (start.y + handle.y) + 'px';
+				style.left = (start.x + handle.x) + 'px';
+				style.top = (start.y + handle.y) + 'px';
+				console.log(start.x, handle.x, (start.x + handle.x) + 'px', start.y, handle.y, (start.y + handle.y) + 'px');
 			}
 
 			this.updateCornerTrackers();
@@ -1932,10 +1931,20 @@ Convert start percentage values to numerical values, stored in currentStart
 @private
 **/
 		my.PageElement.prototype.updateCurrentStart = function(reference) {
-			var dims, conv, start, currentStart;
+			var dims, conv, start, currentStart,
+				device;
 			if (!this.currentStart.flag && reference && reference.type) {
 				currentStart = this.currentStart;
-				dims = this.getReferenceDimensions[reference.type](reference);
+				if (this.viewport) {
+					device = my.device;
+					dims = {
+						w: device.width,
+						h: device.height
+					};
+				}
+				else {
+					dims = this.getReferenceDimensions[reference.type](reference);
+				}
 				conv = this.numberConvert;
 				start = this.start;
 				currentStart.x = (start.x.substring) ? conv(start.x, dims.w) : start.x;
