@@ -1842,11 +1842,8 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				style.top = device.offsetY - this.displayOffsetY + handle.y + start.y + 'px';
 			}
 			else {
-				// style.left = (this.start.x.substring) ? ((start.x * scale) + handle.x) + 'px' : (start.x + handle.x) + 'px';
-				// style.top = (this.start.y.substring) ? ((start.y * scale) + handle.y) + 'px' : (start.y + handle.y) + 'px';
 				style.left = (start.x + handle.x) + 'px';
 				style.top = (start.y + handle.y) + 'px';
-				console.log(start.x, handle.x, (start.x + handle.x) + 'px', start.y, handle.y, (start.y + handle.y) + 'px');
 			}
 
 			this.updateCornerTrackers();
@@ -1890,7 +1887,7 @@ Convert handle percentage values to numerical values, stored in currentHandle
 @private
 **/
 		my.PageElement.prototype.updateCurrentHandle = function() {
-			var dims, cont, conv, handle, test, testx, testy, currentHandle, scale;
+			var dims, cont, conv, handle, test, testx, testy, currentHandle;
 			if (!this.currentHandle.flag) {
 				dims = this.getReferenceDimensions[this.type](this);
 				cont = my.contains;
@@ -1900,15 +1897,8 @@ Convert handle percentage values to numerical values, stored in currentHandle
 				testx = handle.x.substring;
 				testy = handle.y.substring;
 				currentHandle = this.currentHandle;
-				scale = this.scale || 1;
 				currentHandle.x = (testx) ? conv(handle.x, dims.w) : handle.x;
 				currentHandle.y = (testy) ? conv(handle.y, dims.h) : handle.y;
-				if (testx) {
-					currentHandle.x *= scale;
-				}
-				if (testy) {
-					currentHandle.y *= scale;
-				}
 				if (isNaN(currentHandle.x)) {
 					currentHandle.x = 0;
 				}
@@ -1917,7 +1907,6 @@ Convert handle percentage values to numerical values, stored in currentHandle
 				}
 				currentHandle.reverse();
 				currentHandle.flag = true;
-				// console.log(this.name, this.scale, this.width, this.localWidth, this.height, this.localHeight, currentHandle.x, currentHandle.y);
 			}
 			return this;
 		};
@@ -2086,7 +2075,7 @@ setStampUsingPivot helper function
 **/
 		my.PageElement.prototype.setStampUsingDomElementPivot = function(e) {
 			var estart = e.currentStart,
-				start = this.start;
+				start = this.currentStart;
 			start.x = (!this.lockX) ? estart.x : start.x;
 			start.y = (!this.lockY) ? estart.y : start.y;
 		};
@@ -2112,6 +2101,7 @@ setStampUsingPivot helper function
 			x = start.x + handle.x;
 			y = start.y + handle.y;
 			if (this.lockTo) {
+				e.setLocalDimensions();
 				g = my.group[this.group];
 				switch (this.lockTo) {
 					case 'bottom':
@@ -2121,10 +2111,10 @@ setStampUsingPivot helper function
 						x += (g.equalWidth) ? g.currentWidth : e.localWidth;
 						break;
 					case 'left':
-						x -= (g.equalWidth) ? g.currentWidth : e.localWidth;
+						x -= (g.equalWidth) ? g.currentWidth : this.localWidth;
 						break;
 					case 'top':
-						y -= (g.equalHeight) ? g.currentHeight : e.localHeight;
+						y -= (g.equalHeight) ? g.currentHeight : this.localHeight;
 						break;
 				}
 			}
@@ -2474,19 +2464,17 @@ Stamp helper hook function - amended by stacks module
 **/
 		my.Position.prototype.setStampUsingStacksPivot = function() {
 			var e,
-				estart,
 				ecurrentstart,
 				mystart;
 			e = my.element[this.pivot] || my.stack[this.pivot] || my.pad[this.pivot] || false;
 			if (e) {
 				ecurrentstart = e.currentStart;
-				estart = e.start;
 				mystart = this.currentStart;
 				if (!this.lockX) {
-					mystart.x = (estart.x.substring) ? ecurrentstart.x * e.scale : ecurrentstart.x;
+					mystart.x = ecurrentstart.x;
 				}
 				if (!this.lockY) {
-					mystart.y = (estart.y.substring) ? ecurrentstart.y * e.scale : ecurrentstart.y;
+					mystart.y = ecurrentstart.y;
 				}
 				return this;
 			}
