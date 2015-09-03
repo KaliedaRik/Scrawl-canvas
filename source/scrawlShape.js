@@ -736,6 +736,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 				cvx = my.cvx;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
+			// console.log(items, tests);
 			result = false;
 			cvx.mozFillRule = this.winding;
 			cvx.msFillRule = this.winding;

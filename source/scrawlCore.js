@@ -149,6 +149,20 @@ Work vector, for calculations
 **/
 	my.v = null;
 	/**
+Work vector, for calculations
+@property colv1
+@type {Vector}
+@private
+**/
+	my.colv1 = null;
+	/**
+Work vector, for calculations
+@property colv2
+@type {Vector}
+@private
+**/
+	my.colv2 = null;
+	/**
 Default empty object - passed to various functions, to prevent them generating superfluous objects
 @property o
 @type {Object}
@@ -6654,21 +6668,22 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getEntityAt = function(items) {
 		var entity,
-			vector = my.v,
+			v1 = my.colv1,
+			v2 = my.colv2,
 			entitys = this.entitys,
 			e = my.entity,
 			rad = this.regionRadius,
 			coordinate,
 			i;
 		items = my.safeObject(items);
-		coordinate = my.v.set(items);
-		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
+		coordinate = v1.set(items); //coordinate = my.colv1
+		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.v
 		this.sortEntitys();
 		for (i = entitys.length - 1; i >= 0; i--) {
 			entity = e[entitys[i]];
 			if (rad) {
-				vector.set(entity.currentStart).vectorSubtract(coordinate);
-				if (vector.getMagnitude() > rad) {
+				v2.set(entity.currentStart).vectorSubtract(coordinate);
+				if (v2.getMagnitude() > rad) {
 					continue;
 				}
 			}
@@ -6708,7 +6723,8 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getAllEntitysAt = function(items) {
 		var entity,
-			vector = my.v,
+			v1 = my.colv1,
+			v2 = my.colv2,
 			coordinate,
 			results,
 			entitys = this.entitys,
@@ -6716,15 +6732,15 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 			rad = this.regionRadius,
 			i;
 		items = my.safeObject(items);
-		coordinate = my.v.set(items);
+		coordinate = v1.set(items); //coordinate = my.colv1
 		results = [];
-		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell);
+		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.v
 		this.sortEntitys();
 		for (i = entitys.length - 1; i >= 0; i--) {
 			entity = e[entitys[i]];
 			if (rad) {
-				vector.set(entity.currentStart).vectorSubtract(coordinate);
-				if (vector.getMagnitude() > rad) {
+				v2.set(entity.currentStart).vectorSubtract(coordinate);
+				if (v2.getMagnitude() > rad) {
 					continue;
 				}
 			}
@@ -7971,6 +7987,12 @@ End circle radius, in pixels or percentage of entity/cell width
 
 	my.v = my.makeVector({
 		name: 'scrawl.v'
+	});
+	my.colv1 = my.makeVector({
+		name: 'scrawl.colv'
+	});
+	my.colv2 = my.makeVector({
+		name: 'scrawl.colv'
 	});
 
 	/**

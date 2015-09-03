@@ -142,8 +142,8 @@ Initiates two forces:
 				name: 'drag',
 				fn: function(ball) {
 					var d, s, df;
-					ball.resetWork();
-					d = ball.work.velocity.reverse().normalize();
+					ball.currentVelocity.set(ball.velocity);
+					d = ball.currentVelocity.reverse().normalize();
 					s = ball.velocity.getMagnitude();
 					df = 0.5 * my.physics.airDensity * s * s * ball.get('area') * ball.get('drag');
 					d.scalarMultiply(df);
@@ -230,9 +230,9 @@ A __factory__ function to generate new Force objects
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.place = vec();
-			this.work.place = vec();
+			this.currentPlace = vec();
 			this.velocity = vec();
-			this.work.velocity = vec();
+			this.currentVelocity = vec();
 			this.set(items);
 			this.priorPlace = vec(this.place);
 			this.engine = items.engine || 'euler';
@@ -559,11 +559,12 @@ Calculation cycle engine
 		my.Particle.prototype.updateEuler = function() {
 			var dtime = my.physics.deltaTime,
 				v1 = my.workphys.v1,
-				vel = this.work.velocity;
-			this.resetWork();
+				vel = this.currentVelocity,
+				v = this.velocity;
+			vel.set(v);
 			v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime);
 			vel.vectorAdd(v1);
-			this.velocity.set(vel);
+			v.set(vel);
 			this.priorPlace.set(this.place);
 			this.place.vectorAdd(vel.scalarMultiply(dtime));
 			return this;
@@ -579,15 +580,16 @@ Calculation cycle engine
 			var v1,
 				v2,
 				v3,
-				w = this.work.velocity,
+				w = this.currentVelocity,
+				v = this.velocity,
 				wp = my.workphys,
 				dtime = my.physics.deltaTime;
-			this.resetWork();
+			w.set(v);
 			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime);
 			v2 = wp.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(dtime);
 			v3 = v1.vectorAdd(v2).scalarDivide(2);
 			w.vectorAdd(v3);
-			this.velocity.set(w);
+			v.set(w);
 			this.priorPlace.set(this.place);
 			this.place.vectorAdd(w.scalarMultiply(dtime));
 			return this;
@@ -605,10 +607,11 @@ Calculation cycle engine
 				v3,
 				v4,
 				v5,
-				w = this.work.velocity,
+				v = this.velocity,
+				w = this.currentVelocity,
 				wp = my.workphys,
 				dtime = my.physics.deltaTime;
-			this.resetWork();
+			w.set(v);
 			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime).scalarDivide(2);
 			v2 = wp.v2.set(this.load).vectorAdd(v1).scalarDivide(this.mass).scalarMultiply(dtime).scalarDivide(2);
 			v3 = wp.v3.set(this.load).vectorAdd(v2).scalarDivide(this.mass).scalarMultiply(dtime);
@@ -618,7 +621,7 @@ Calculation cycle engine
 			v3.scalarMultiply(2);
 			v5.set(v1).vectorAdd(v2).vectorAdd(v3).vectorAdd(v4).scalarDivide(6);
 			w.vectorAdd(v5);
-			this.velocity.set(w);
+			v.set(w);
 			this.priorPlace.set(this.place);
 			this.place.vectorAdd(w.scalarMultiply(dtime));
 			return this;
@@ -635,16 +638,17 @@ Calculation cycle engine - linear particle collisions
 				relVelocity,
 				impactScalar,
 				impact,
-				wp = my.workphys;
-			this.resetWork();
+				wp = my.workphys,
+				v = this.velocity,
+				m = this.mass;
 			normal = wp.v1.set(this.place).vectorSubtract(b.place).normalize();
-			relVelocity = wp.v2.set(this.velocity).vectorSubtract(b.velocity);
+			relVelocity = wp.v2.set(v).vectorSubtract(b.velocity);
 			impactScalar = relVelocity.getDotProduct(normal);
 			impact = wp.v3;
 			impactScalar = -impactScalar * (1 + ((this.elasticity + b.elasticity) / 2));
-			impactScalar /= ((1 / this.mass) + (1 / b.mass));
+			impactScalar /= ((1 / m) + (1 / b.mass));
 			impact.set(normal).scalarMultiply(impactScalar);
-			this.velocity.vectorAdd(impact.scalarDivide(this.mass));
+			v.vectorAdd(impact.scalarDivide(m));
 			b.velocity.vectorAdd(impact.scalarDivide(b.mass).reverse());
 			return this;
 		};
@@ -790,7 +794,7 @@ Delete a named Spring object from this Particle
 				}
 				this.currentLength = items.currentLength || this.restLength;
 				this.force = vec();
-				this.work.force = vec();
+				this.currentForce = vec();
 				my.spring[this.name] = this;
 				my.pushUnique(my.springnames, this.name);
 				return this;

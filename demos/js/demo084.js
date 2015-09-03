@@ -198,6 +198,8 @@ var mycode = function() {
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
+			scrawl.render();
+
 			here = myPad.getMouse();
 			if (prepare) {
 				mixTiles();
@@ -208,7 +210,6 @@ var mycode = function() {
 					endTileMove();
 				}
 			}
-			scrawl.render();
 
 			//hide-start
 			testNow = Date.now();

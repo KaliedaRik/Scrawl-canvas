@@ -59,7 +59,7 @@ var mycode = function() {
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			//update display; check if mouse cursor is over an outline
+			//update display; check if mouse cursor is over a shape entity
 			here = mypad.show().getMouse();
 			newCountry = countries.getEntityAt(here);
 
