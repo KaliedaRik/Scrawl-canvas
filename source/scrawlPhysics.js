@@ -101,15 +101,19 @@ A __general__ function to undertake a round of calculations for Spring objects
 				jz,
 				s = [],
 				spring = my.spring,
-				springnames = my.springnames;
+				springnames = my.springnames,
+				temp,
+				isa = my.isa_obj;
 			if (springnames.length > 0) {
 				items = (Array.isArray(items)) ? items : springnames;
 				for (i = 0, iz = items.length; i < iz; i++) {
-					s.push((my.isa_obj(items[i])) ? items[i] : (items[i].substring) ? spring[items[i]] : false);
+					temp = items[i];
+					s.push((isa(temp)) ? temp : (temp.substring) ? spring[temp] : false);
 				}
 				for (j = 0, jz = s.length; j < jz; j++) {
-					if (s[j]) {
-						s[j].update();
+					temp = s[j];
+					if (temp) {
+						temp.update();
 					}
 				}
 				return true;
@@ -877,9 +881,11 @@ Calculate the force exerted by the spring for this calculation cycle iteration
 				r_norm,
 				r_norm2,
 				wp = my.workphys,
-				e = my.entity;
-			vr = wp.v1.set(e[this.end].velocity).vectorSubtract(e[this.start].velocity);
-			r = wp.v2.set(e[this.end].place).vectorSubtract(e[this.start].place);
+				e = my.entity,
+				eStart = e[this.start],
+				eEnd = e[this.end];
+			vr = wp.v1.set(eEnd.velocity).vectorSubtract(eStart.velocity);
+			r = wp.v2.set(eEnd.place).vectorSubtract(eStart.place);
 			r_norm = wp.v3.set(r).normalize();
 			r_norm2 = wp.v4.set(r_norm);
 			this.force.set(r_norm.scalarMultiply(this.springConstant * (r.getMagnitude() - this.restLength)).vectorAdd(vr.vectorMultiply(r_norm2).scalarMultiply(this.damperConstant).vectorMultiply(r_norm2)));
@@ -892,11 +898,12 @@ Remove this Spring from its Particle objects, and from the scrawl library
 **/
 		my.Spring.prototype.kill = function() {
 			var ri = my.removeItem,
-				e = my.entity;
-			ri(e[this.start].springs, this.name);
-			ri(e[this.end].springs, this.name);
-			delete my.spring[this.name];
-			ri(my.springnames, this.name);
+				e = my.entity,
+				name = this.name;
+			ri(e[this.start].springs, name);
+			ri(e[this.end].springs, name);
+			delete my.spring[name];
+			ri(my.springnames, name);
 			return true;
 		};
 
