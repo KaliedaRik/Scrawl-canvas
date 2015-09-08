@@ -76,6 +76,9 @@ scrawlStacks module adaptions to the Scrawl library object
 @class window.scrawl_Stacks
 **/
 
+		my.css = ['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'imageResolution', 'imeMode', 'inherit', 'inlineSize', 'isolation', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBlockStart', 'marginBlockEnd', 'marginInlineStart', 'marginInlineEnd', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'maxWidth', 'maxHeight', 'maxBlockSize', 'maxInlineSize', 'maxZoom', 'minWidth', 'minHeight', 'minBlockSize', 'minInlineSize', 'minZoom', 'mixBlendMode', 'objectFit', 'objectPosition', 'offsetBlockStart', 'offsetBlockEnd', 'offsetInlineStart', 'offsetInlineEnd', 'orphans', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'pad', 'padding', 'paddingBlockStart', 'paddingBlockEnd', 'paddingInlineStart', 'paddingInlineEnd', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'prefix', 'quotes', 'rubyAlign', 'rubyMerge', 'rubyPosition', 'scrollBehavior', 'scrollSnapCoordinate', 'scrollSnapDestination', 'scrollSnapPointsX', 'scrollSnapPointsY', 'scrollSnapType', 'scrollSnapTypeX', 'scrollSnapTypeY', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'textAlign', 'textDecoration', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'unicodeRange', 'unset', 'verticalAlign', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap'];
+		my.xcss = ['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'hyphens', 'imageRendering', 'imageOrientation', 'initial', 'justifyContent', 'linearGradient', 'opacity', 'order', 'orientation', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'resize', 'tabSize', 'textAlignLast', 'textCombineUpright', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'touchAction', 'transformStyle', 'transition', 'transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction', 'unicodeBidi', 'whiteSpace', 'writingMode'];
+
 		/**
 scrawl.init hook function - modified by stacks module
 @method pageInit
@@ -87,6 +90,43 @@ scrawl.init hook function - modified by stacks module
 				my.getCanvases();
 			}
 			my.getElements();
+		};
+		/**
+A __utility__ function for performing bucket sorts on scrawl string arrays eg Group.elements
+@method multiSectionBucketSort
+@param {Array} section Array of scrawl library section names
+@param {String} attribute on which sort will be performed
+@param {Array} a array to be sorted
+@return sorted array
+@private
+**/
+		my.multiSectionBucketSort = function(section, attribute, a) {
+			var b, i, iz, o, f, s, j, jz, temp;
+			b = [[]];
+			for (i = 0, iz = a.length; i < iz; i++) {
+				s = false;
+				for (j = 0, jz = section.length; j < jz; j++) {
+					temp = my[section[j]][a[i]];
+					if (temp) {
+						s = section[j];
+						break;
+					}
+				}
+				if (s) {
+					o = Math.floor(my[s][a[i]][attribute]);
+					if (!b[o]) {
+						b[o] = [];
+					}
+					b[o].push(a[i]);
+				}
+			}
+			f = [];
+			for (i = 0, iz = b.length; i < iz; i++) {
+				if (b[i]) {
+					f.push(b[i]);
+				}
+			}
+			return [].concat.apply([], f);
 		};
 		/**
 A __private__ function that searches the DOM for elements with class="scrawlstack"; generates Stack objects
@@ -426,16 +466,21 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-		my.render = function(pads) {
+		my.render = function(pads, mouse) {
 			var i,
 				iz,
-				p,
+				// p,
+				padnames,
 				pad = my.pad;
 			my.renderElements();
-			p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-			for (i = 0, iz = p.length; i < iz; i++) {
-				pad[p[i]].render();
+			padnames = (pads) ? [].concat(pads) : my.padnames;
+			for (i = 0, iz = padnames.length; i < iz; i++) {
+				pad[padnames[i]].render(mouse);
 			}
+			// p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
+			// for (i = 0, iz = p.length; i < iz; i++) {
+			// 	pad[p[i]].render(mouse);
+			// }
 			return my;
 		};
 		/**
@@ -858,6 +903,20 @@ The Pad/Stack/Element.mice object can hold details of multiple touch events - wh
 @default 'mouse'
 **/
 		my.d.PageElement.mouseIndex = 'mouse';
+		/**
+Sorting order - must be a positive integer
+@property order
+@type Number
+@default 0
+**/
+		my.d.PageElement.order = 0;
+		/**
+Drag boolean - indicates the element can be manipulated via mouse/touch events (eg pickup, drop)
+@property drag
+@type Boolean
+@default false
+**/
+		my.d.PageElement.drag = false;
 		my.mergeInto(my.d.Pad, my.d.PageElement);
 		/**
 PageElement constructor hook function - modified by stacks module
@@ -953,6 +1012,8 @@ PageElement constructor hook function - modified by stacks module
 				this.addCornerTrackers();
 			}
 			this.mouseIndex = get(items.mouseIndex, 'mouse');
+			this.order = get(items.order, 0);
+			this.drag = get(items.drag, false);
 		};
 		/**
 @method addCornerTrackers
@@ -1151,8 +1212,21 @@ Augments Base.set() to allow the setting of DOM element dimension values, and st
 			if (xt(items.pivot)) {
 				this.setPivotAttribute(items);
 			}
+			if (xt(items.drag)) {
+				this.drag = items.drag;
+			}
+			if (xt(items.order)) {
+				this.order = items.order;
+			}
 			if (xto(items.title, items.comment)) {
 				this.setAccessibility(items);
+			}
+			if (xt(items.interactive)) {
+				this.interactive = items.interactive;
+				this.removeMouseMove();
+				if (this.interactive) {
+					this.addMouseMove();
+				}
 			}
 			this.setStyles(items);
 			return this;
@@ -1406,9 +1480,6 @@ Augments PageElement.set()
 			t.z = get(items.deltaTranslateZ, temp.z, t.z);
 			return this;
 		};
-		my.css = ['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontKerning', 'fontLanguageOverride', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'hyphens', 'imageRendering', 'imageResolution', 'imageOrientation', 'imeMode', 'inherit', 'initial', 'isolation', 'justifyContent', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'mixBlendMode', 'objectFit', 'objectPosition', 'opacity', 'orphans', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'padding', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'quotes', 'resize', 'rubyAlign', 'rubyMerge', 'rubyPosition', 's', 'scrollBehavior', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'tabSize', 'textAlign', 'textAlignLast', 'textCombineUpright', 'textDecoration', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'touchAction', 'unicodeBidi', 'unicodeRange', 'unset', 'verticalAlign', 'visibility', 'whiteSpace', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'writingMode'];
-		//need to complete this array
-		my.xcss = ['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap'];
 		/**
 Handles the setting of many CSS attributes
 @method PageElement.setStyles
@@ -1983,61 +2054,48 @@ Calculate start Vector in reference to a entity or Point object's position
 @chainable
 @private
 **/
-
-		my.PageElement.prototype.setStampUsingPivot = function() {
-			var mouse,
+		my.PageElement.prototype.setStampUsingPivot = function(cell) {
+			var pivot,
+				vector,
+				entity,
+				mouse,
 				stack,
-				myP,
-				myPVector,
-				pEntity,
-				x, y,
-				start = this.currentStart,
-				conv = this.numberConvert;
-			if (my.point) {
-				myP = my.point[this.pivot];
-				if (myP) {
-					pEntity = my.entity[myP.entity];
-					myPVector = myP.getCurrentCoordinates().rotate(pEntity.roll).vectorAdd(pEntity.currentStart);
-					start.x = (!this.lockX) ? myPVector.x : start.x;
-					start.y = (!this.lockY) ? myPVector.y : start.y;
+				lockX = this.lockX,
+				lockY = this.lockY,
+				start = this.start,
+				current = this.currentStart;
+			if (my.xt(my.pointnames)) {
+				pivot = my.point[this.pivot];
+				if (pivot) {
+					entity = my.entity[pivot.entity];
+					vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.currentStart);
+					current.x = start.x = (!lockX) ? vector.x : start.x;
+					current.y = start.y = (!lockY) ? vector.y : start.y;
 					return this;
 				}
 			}
-			myP = my.entity[this.pivot];
-			if (myP) {
-				myPVector = (myP.type === 'Particle') ? myP.get('place') : myP.get('start');
-				start.x = (!this.lockX) ? myPVector.x : start.x;
-				start.y = (!this.lockY) ? myPVector.y : start.y;
-				return this;
-			}
-			myP = my.xtGet(my.pad[this.pivot], my.element[this.pivot], my.stack[this.pivot]);
-			if (myP) {
-				this.setStampUsingDomElement(myP);
+			pivot = my.entity[this.pivot];
+			if (pivot) {
+				vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.currentStart;
+				current.x = start.x = (!lockX) ? vector.x : start.x;
+				current.y = start.y = (!lockY) ? vector.y : start.y;
 				return this;
 			}
 			if (this.pivot === 'mouse') {
-				if (this.group) {
-					stack = my.stack[my.group[this.group].stack];
-					x = (start.x.substring) ? conv(start.x, stack.localWidth) : start.x;
-					y = (start.y.substring) ? conv(start.y, stack.localHeight) : start.y;
-					x = (isNaN(x)) ? 0 : x;
-					y = (isNaN(y)) ? 0 : y;
-					mouse = stack.mice[this.mouseIndex] || {};
-					if (!my.xt(mouse)) {
-						mouse.x = 0;
-						mouse.y = false;
-						mouse.active = false;
-					}
+				stack = my.stack[my.group[this.group].stack];
+				mouse = stack.mice[this.mouseIndex] || {};
+				if (mouse) {
 					if (this.oldX == null && this.oldY == null) { //jshint ignore:line
-						this.oldX = x;
-						this.oldY = y;
+						this.oldX = start.x;
+						this.oldY = start.y;
 					}
-					start.x = (!this.lockX) ? x + mouse.x - this.oldX : x;
-					start.y = (!this.lockY) ? y + mouse.y - this.oldY : y;
+					current.x = start.x = (!lockX) ? start.x + mouse.x - this.oldX : start.x;
+					current.y = start.y = (!lockY) ? start.y + mouse.y - this.oldY : start.y;
 					this.oldX = mouse.x;
 					this.oldY = mouse.y;
 				}
 			}
+			// return this.setStampUsingStacksPivot();
 			return this;
 		};
 		/**
@@ -2309,6 +2367,49 @@ Reinitialize element with existing values
 			return this;
 		};
 		/**
+Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999
+@method pickupEntity
+@param {Vector} items Coordinate vector; alternatively an object with {x, y} attributes can be used
+@return This
+@chainable
+**/
+		my.PageElement.prototype.pickupEntity = function(items) {
+			var coordinate;
+			items = my.safeObject(items);
+			coordinate = my.v.set(items);
+			this.oldX = coordinate.x || 0;
+			this.oldY = coordinate.y || 0;
+			this.oldPivot = this.pivot;
+			this.mouseIndex = my.xtGet(items.id || 'mouse');
+			this.pivot = 'mouse';
+			this.order += 9999;
+			my.group[this.group].resort = true;
+			return this;
+		};
+		/**
+Revert pickupEntity() actions, ensuring entity is left where the user drops it
+@method dropEntity
+@param {String} [items] Alternative pivot String
+@return This
+@chainable
+**/
+		my.PageElement.prototype.dropEntity = function(item) {
+			this.pivot = my.xtGet(item, this.oldPivot, null);
+			this.order = (this.order >= 9999) ? this.order - 9999 : 0;
+			delete this.oldPivot;
+			delete this.oldX;
+			delete this.oldY;
+			this.mouseIndex = 'mouse';
+			my.group[this.group].resort = true;
+			this.currentStart.flag = false;
+			this.currentHandle.flag = false;
+			if (this.setPaste) {
+				this.setPaste();
+			}
+			return this;
+		};
+
+		/**
 Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use styling to set their drawing region dimensions
 
 @method setDimensions
@@ -2330,6 +2431,7 @@ Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use stylin
 			}
 			return this;
 		};
+
 		/**
 Alias for makeStack()
 @method newStack
@@ -3162,26 +3264,64 @@ STACKNAME of the default Stack object to which this group is associated
 			stack: ''
 		};
 		my.mergeInto(my.d.ElementGroup, my.d.Base);
+
+		my.ElementGroup.prototype.set = function(items) {
+			return my.Group.prototype.set.call(this, items);
+		};
+		my.ElementGroup.prototype.sortEntitys = function(force) {
+			return my.Group.prototype.sortEntitys.call(this, force);
+		};
+		my.ElementGroup.prototype.forceStamp = function(method, cellname, cell) {
+			return my.Group.prototype.forceStamp.call(this, method, cellname, cell);
+		};
+		my.ElementGroup.prototype.stamp = function(method, cellname, cell) {
+			var get = my.xtGet;
+			cellname = get(cellname, this.stack);
+			cell = get(cell, my.stack[this.stack]);
+			return my.Group.prototype.stamp.call(this, method, cellname, cell);
+		};
+		my.ElementGroup.prototype.filtersGroupInit = function() {
+			return my.Group.prototype.filtersGroupInit.call(this, arguments);
+		};
+		my.ElementGroup.prototype.addEntitysToGroup = function() {
+			return my.Group.prototype.addEntitysToGroup.call(this, arguments);
+		};
+		my.ElementGroup.prototype.removeEntitysFromGroup = function() {
+			return my.Group.prototype.removeEntitysFromGroup.call(this, arguments);
+		};
+		my.ElementGroup.prototype.updateEntitysBy = function(items) {
+			return my.Group.prototype.updateEntitysBy.call(this, items);
+		};
+		my.ElementGroup.prototype.setEntitysTo = function(items) {
+			return my.Group.prototype.setEntitysTo.call(this, items);
+		};
+		my.ElementGroup.prototype.pivotEntitysTo = function(item) {
+			return my.Group.prototype.pivotEntitysTo.call(this, item);
+		};
+		my.ElementGroup.prototype.getEntityAt = function(items) {
+			return my.Group.prototype.getEntityAt.call(this, items);
+		};
+		my.ElementGroup.prototype.getEntitysByMouseIndex = function(item) {
+			return my.Group.prototype.getEntitysByMouseIndex.call(this, item);
+		};
+		my.ElementGroup.prototype.getAllEntitysAt = function(items) {
+			return my.Group.prototype.getAllEntitysAt.call(this, items);
+		};
+
 		/**
-Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas&gt; element; only entitys whose visibility attribute is set to true will comply
-@method stamp
-@param {String} [method] Drawing method String
-@param {String} [cell] CELLNAME of cell on which entitys are to draw themselves
-@return This
-@chainable
+Element sorting routine - elements are sorted according to their element.order attribute value, in ascending order
+
+Order values are treated as integers. The sort routine is a form of bucket sort, and should be stable (elements with equal order values should not be swapped)
+@method sortElements
+@param {Boolean} [force] Force a resort, whatever the settings of the group's entitySort and resort attributes
+@return Nothing
+@private
 **/
-		my.ElementGroup.prototype.stamp = function() {
-			var i,
-				iz,
-				stack,
-				entity = my.entity,
-				entitys = this.entitys;
-			stack = my.stack[this.stack];
-			for (i = 0, iz = entitys.length; i < iz; i++) {
-				//PROBABLY NEED TO amend the varous stamping routines to accommodate using a Stack's data instead of Cell data
-				entity[entitys[i]].stamp('none', stack);
+		my.ElementGroup.prototype.sortElements = function(force) {
+			if (force || (this.entitySort && this.resort)) {
+				this.resort = false;
+				this.elements = my.multiSectionBucketSort(['stack', 'pad', 'element'], 'order', this.elements);
 			}
-			return this;
 		};
 		/**
 Get collective dimensions of ElementGroup elements
@@ -3359,42 +3499,6 @@ Remove elements from the Group
 			return this;
 		};
 		/**
-Add entitys to the Group
-@method addEntitysToGroup
-@param {Array} item Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument
-@return This
-@chainable
-**/
-		my.ElementGroup.prototype.addEntitysToGroup = function(item) {
-			var i,
-				iz,
-				entitys = this.entitys,
-				pu = my.pushUnique;
-			item = (my.xt(item)) ? [].concat(item) : [];
-			for (i = 0, iz = item.length; i < iz; i++) {
-				pu(entitys, item[i]);
-			}
-			return this;
-		};
-		/**
-Remove entitys from the Group
-@method removeEntitysFromGroup
-@param {Array} item Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument
-@return This
-@chainable
-**/
-		my.ElementGroup.prototype.removeEntitysFromGroup = function(item) {
-			var i,
-				iz,
-				entitys = this.entitys,
-				ri = my.removeItem;
-			item = (my.xt(item)) ? [].concat(item) : [];
-			for (i = 0, iz = item.length; i < iz; i++) {
-				ri(entitys, item[i]);
-			}
-			return this;
-		};
-		/**
 Ask all elements in the Group to perform a setDelta() operation
 
 @method updateElementsBy
@@ -3411,25 +3515,6 @@ Ask all elements in the Group to perform a setDelta() operation
 			for (i = 0, iz = elements.length; i < iz; i++) {
 				temp = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 				temp.setDelta(items);
-			}
-			return this;
-		};
-		/**
-Ask all entitys in the Group to perform a setDelta() operation
-
-@method updateEntitysBy
-@param {Object} items Object containing attribute key:value pairs
-@return This
-@chainable
-**/
-		my.ElementGroup.prototype.updateEntitysBy = function(items) {
-			var i,
-				iz,
-				entitys = this.entitys,
-				entity = my.entity;
-			items = my.safeObject(items);
-			for (i = 0, iz = entitys.length; i < iz; i++) {
-				entity[entitys[i]].setDelta(items);
 			}
 			return this;
 		};
@@ -3488,21 +3573,6 @@ Ask all elements in the Group to perform a dimension update operation
 			return this;
 		};
 		/**
-Ask all entitys in the Group to perform a set() operation
-@method setEntitysTo
-@param {Object} items Object containing attribute key:value pairs
-@return This
-@chainable
-**/
-		my.ElementGroup.prototype.setEntitysTo = function(items) {
-			var entitys = this.entitys,
-				entity = my.entity;
-			for (var i = 0, iz = entitys.length; i < iz; i++) {
-				entity[entitys[i]].set(items);
-			}
-			return this;
-		};
-		/**
 Ask all elements and entitys in the Group to perform a set() operation
 @method setEntitysTo
 @param {Object} items Object containing attribute key:value pairs
@@ -3513,6 +3583,94 @@ Ask all elements and entitys in the Group to perform a set() operation
 			this.setElementsTo(items);
 			this.setEntitysTo(items);
 			return this;
+		};
+		/**
+Return the entity or element at a given coordinate (in that order)
+@method getAt
+@param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
+@param {Boolean} if true, elements are checked first; default is false
+@return entity or element, or false
+**/
+		my.ElementGroup.prototype.getAt = function(items, elementsFirst) {
+			var order = my.xtGet(elementsFirst, false),
+				result;
+			if (order) {
+				result = this.getElementAt(items);
+				if (result) {
+					return result;
+				}
+				return this.getEntityAt(items);
+			}
+			result = this.getEntityAt(items);
+			if (result) {
+				return result;
+			}
+			return this.getElementAt(items);
+		};
+		/**
+Check all entitys and elements in the Group to see which one(s) are associated with a particular mouse index
+@method getByMouseIndex
+@param {String} item Mouse index string
+@return Array of Entity, Stack, Pad and Element objects
+**/
+		my.ElementGroup.prototype.getByMouseIndex = function(item) {
+			var result = [];
+			result.concat(this.getEntitysByMouseIndex(item));
+			result.concat(this.getElementsByMouseIndex(item));
+			return result;
+		};
+		/**
+Check all entitys and elements in the Group to see if they are colliding with the supplied coordinate.
+@method getAllAt
+@param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
+@return Entity object, or false if no entitys are colliding with the coordinate
+**/
+		my.ElementGroup.prototype.getAllAt = function(items) {
+			var result = [];
+			result.concat(this.getAllEntitysAt(item));
+			result.concat(this.getAllElementsAt(item));
+			return result;
+		};
+		/**
+Return the element at a given coordinate (in that order)
+@method getElementAt
+@param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
+@return element, or false
+**/
+		my.ElementGroup.prototype.getElementAt = function(items) {
+			var elements = this.elements,
+				element, i, e, mouse,
+				get = my.xtGet;
+			this.sortElements(true);
+			for (i = elements.length - 1; i >= 0; i--) {
+				e = elements[i];
+				element = get(my.stack[e], my.pad[e], my.element[e]);
+				if (element.interactive && element.drag && element.mice) {
+					mouse = element.mice[items.id];
+					if (mouse && mouse.active) {
+						return element;
+					}
+				}
+			}
+			return false;
+		};
+		/**
+Check all elements in the Group to see which one(s) are associated with a particular mouse index
+@method getElementsByMouseIndex
+@param {String} item Mouse index string
+@return Array of Stack, Pad and Element objects
+**/
+		my.ElementGroup.prototype.getElementsByMouseIndex = function(item) {
+			return [];
+		};
+		/**
+Check all elements in the Group to see if they are colliding with the supplied coordinate.
+@method getAllElementsAt
+@param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
+@return Array of Stack, Pad and Element objects
+**/
+		my.ElementGroup.prototype.getAllElementsAt = function(items) {
+			return [];
 		};
 		/**
 Require all elements in the Group to set their pivot attribute to the supplied STACKNAME, PADNAME, ELEMENTNAME, POINTNAME or SPRITENAME string, and set their handle Vector to reflect the current vector between that object's start Vector and their own Vector

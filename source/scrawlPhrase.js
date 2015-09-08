@@ -526,12 +526,12 @@ Augments Entity.stamp()
 @return This
 @chainable
 **/
-		my.Phrase.prototype.stamp = function(method, cellname, cell) {
+		my.Phrase.prototype.stamp = function(method, cellname, cell, mouse) {
 			var test;
 			if (this.visibility) {
 				test = (my.entity[this.path] && my.entity[this.path].type === 'Path');
 				if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
-					my.Entity.prototype.stamp.call(this, method, cellname, cell);
+					my.Entity.prototype.stamp.call(this, method, cellname, cell, mouse);
 				}
 				else {
 					my.text[this.texts[0]].stampAlongPath(this, method, cellname, cell);

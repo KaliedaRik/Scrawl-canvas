@@ -1058,7 +1058,8 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 			items = my.safeObject(items);
 			var tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
 				result = false,
-				cvx = my.cvx;
+				cvx = my.cvx,
+				i, iz;
 			cvx.setTransform(1, 0, 0, 1, 0, 0);
 			this.drawPath(cvx);
 			for (i = 0, iz = tests.length; i < iz; i += 2) {

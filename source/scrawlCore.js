@@ -966,17 +966,18 @@ A __display__ function to ask Pads to get their Cells to clear their &lt;canvas&
 A __display__ function to ask Pads to get their Cells to compile their scenes
 @method compile
 @param {Array} [pads] Array of PADNAMEs - can also be a String
+@param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.compile = function(pads) {
+	my.compile = function(pads, mouse) {
 		var padnames,
 			pad = my.pad,
 			i,
 			iz;
 		padnames = (pads) ? [].concat(pads) : my.padnames;
 		for (i = 0, iz = padnames.length; i < iz; i++) {
-			pad[padnames[i]].compile();
+			pad[padnames[i]].compile(mouse);
 		}
 		return my;
 	};
@@ -1002,17 +1003,18 @@ A __display__ function to ask Pads to show the results of their latest display c
 A __display__ function to ask Pads to undertake a complete clear-compile-show display cycle
 @method render
 @param {Array} [pads] Array of PADNAMEs - can also be a String
+@param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return The Scrawl library object (scrawl)
 @chainable
 **/
-	my.render = function(pads) {
+	my.render = function(pads, mouse) {
 		var padnames,
 			pad = my.pad,
 			i,
 			iz;
 		padnames = (pads) ? [].concat(pads) : my.padnames;
 		for (i = 0, iz = padnames.length; i < iz; i++) {
-			pad[padnames[i]].render();
+			pad[padnames[i]].render(mouse);
 		}
 		return my;
 	};
@@ -3371,17 +3373,17 @@ Takes into account lock flag settings
 @chainable
 @private
 **/
-	my.Position.prototype.setStampUsingPivot = function(cell) {
+	my.Position.prototype.setStampUsingPivot = function(cell, mouse) {
 		var pivot,
 			vector,
 			entity,
-			mouse,
 			pad,
 			lockX = this.lockX,
 			lockY = this.lockY,
 			start = this.start,
-			current = this.currentStart;
-		if (my.xt(my.pointnames)) {
+			current = this.currentStart,
+			xt = my.xt;
+		if (xt(my.pointnames)) {
 			pivot = my.point[this.pivot];
 			if (pivot) {
 				entity = my.entity[pivot.entity];
@@ -3399,9 +3401,11 @@ Takes into account lock flag settings
 			return this;
 		}
 		if (this.pivot === 'mouse') {
-			cell = my.cell[cell];
-			pad = my.pad[cell.pad];
-			mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
+			if (!xt(mouse)) {
+				cell = my.cell[cell];
+				pad = my.pad[cell.pad];
+				mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
+			}
 			if (mouse) {
 				if (this.oldX == null && this.oldY == null) { //jshint ignore:line
 					this.oldX = start.x;
@@ -3425,17 +3429,21 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 **/
 	my.Position.prototype.correctCoordinates = function(coords, cell) {
 		var vector,
-			pad;
+			pad,
+			w, h,
+			get = my.xtGet;
 		coords = my.safeObject(coords);
 		vector = my.v.set(coords);
 		if (scrawl.xta(coords.x, coords.y)) {
 			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
 			pad = my.pad[cell.pad];
-			if (pad.width !== cell.actualWidth) {
-				vector.x /= (pad.width / cell.actualWidth);
+			w = get(pad.localWidth, pad.width, 300);
+			h = get(pad.localHeight, pad.height, 150);
+			if (w !== cell.actualWidth) {
+				vector.x /= (w / cell.actualWidth);
 			}
-			if (pad.height !== cell.actualHeight) {
-				vector.y /= (pad.height / cell.actualHeight);
+			if (h !== cell.actualHeight) {
+				vector.y /= (h / cell.actualHeight);
 			}
 			return vector;
 		}
@@ -3635,6 +3643,13 @@ Augments Base.set() to allow the setting of DOM element dimension values
 		}
 		if (xto(items.title, items.comment)) {
 			this.setAccessibility(items);
+		}
+		if (xt(items.interactive)) {
+			this.interactive = items.interactive;
+			this.removeMouseMove();
+			if (this.interactive) {
+				this.addMouseMove();
+			}
 		}
 		return this;
 	};
@@ -3961,11 +3976,15 @@ mousemove event listener function
 				mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
 				mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 			}
-			maxX = wrapper.displayOffsetX + wrapper.localWidth;
-			maxY = wrapper.displayOffsetY + wrapper.localHeight;
-			wrapper.mice.mouse.active = false;
-			if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
-				wrapper.mice.mouse.active = true;
+			// maxX = wrapper.displayOffsetX + wrapper.localWidth;
+			// maxY = wrapper.displayOffsetY + wrapper.localHeight;
+			// wrapper.mice.mouse.active = false;
+			// if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
+			// 	wrapper.mice.mouse.active = true;
+			// }
+			wrapper.mice.mouse.active = true;
+			if (e.type === 'mouseleave') {
+				wrapper.mice.mouse.active = false;
 			}
 			wrapper.mice.mouse.x = (mouseX - wrapper.displayOffsetX);
 			wrapper.mice.mouse.y = (mouseY - wrapper.displayOffsetY);
@@ -4285,7 +4304,7 @@ By default:
 @return This
 @chainable
 **/
-	my.Pad.prototype.compile = function() {
+	my.Pad.prototype.compile = function(mouse) {
 		var cell = my.cell,
 			cells = this.cellsCompileOrder,
 			current,
@@ -4295,7 +4314,7 @@ By default:
 		for (i = 0, iz = cells.length; i < iz; i++) {
 			current = cell[cells[i]];
 			if (current.rendered && current.compiled) {
-				current.compile();
+				current.compile(mouse);
 			}
 		}
 		return this;
@@ -4342,9 +4361,9 @@ Display function - Pad tells its associated Cell objects to undertake a complete
 @return This
 @chainable
 **/
-	my.Pad.prototype.render = function() {
+	my.Pad.prototype.render = function(mouse) {
 		this.clear();
-		this.compile();
+		this.compile(mouse);
 		this.show();
 		return this;
 	};
@@ -5588,7 +5607,7 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 @return This
 @chainable
 **/
-	my.Cell.prototype.compile = function() {
+	my.Cell.prototype.compile = function(mouse) {
 		var group,
 			i,
 			iz;
@@ -5596,7 +5615,7 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 		for (i = 0, iz = this.groups.length; i < iz; i++) {
 			group = my.group[this.groups[i]];
 			if (group.get('visibility')) {
-				group.stamp(false, this.name, this);
+				group.stamp(false, this.name, this, mouse);
 			}
 		}
 		return this;
@@ -6459,14 +6478,16 @@ Order values are treated as integers. The sort routine is a form of bucket sort,
 Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &lt;canvas&gt; element, regardless of their visibility
 @method forceStamp
 @param {String} [method] Drawing method String
-@param {String} [cell] CELLNAME of cell on which entitys are to draw themselves
+@param {String} [cellname] CELLNAME of cell on which entitys are to draw themselves
+@param {Object} [cell] cell wrapper object
+@param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return This
 @chainable
 **/
-	my.Group.prototype.forceStamp = function(method, cellname, cell) {
+	my.Group.prototype.forceStamp = function(method, cellname, cell, mouse) {
 		var visibility = this.visibility;
 		this.visibility = true;
-		this.stamp(method, cellname, cell);
+		this.stamp(method, cellname, cell, mouse);
 		this.visibility = visibility;
 		return this;
 	};
@@ -6474,11 +6495,13 @@ Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &
 Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas&gt; element; only entitys whose visibility attribute is set to true will comply
 @method stamp
 @param {String} [method] Drawing method String
-@param {String} [cell] CELLNAME of cell on which entitys are to draw themselves
+@param {String} [cellname] CELLNAME of cell on which entitys are to draw themselves
+@param {Object} [cell] cell wrapper object
+@param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return This
 @chainable
 **/
-	my.Group.prototype.stamp = function(method, cellname, cell) {
+	my.Group.prototype.stamp = function(method, cellname, cell, mouse) {
 		var entity,
 			entitys,
 			e = my.entity,
@@ -6492,7 +6515,7 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 				entity = e[entitys[i]];
 				if (entity) {
 					entity.group = this.name;
-					entity.stamp(method, cellname, cell);
+					entity.stamp(method, cellname, cell, mouse);
 				}
 			}
 		}
@@ -6520,7 +6543,12 @@ Add entitys to the Group
 			i,
 			iz,
 			e;
-		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(arguments[0][0])) {
+			slice = Array.prototype.slice.call(arguments[0][0]);
+		}
+		else {
+			slice = Array.prototype.slice.call(arguments);
+		}
 		if (Array.isArray(slice[0])) {
 			slice = slice[0];
 		}
@@ -6554,7 +6582,12 @@ Remove entitys from the Group
 			i,
 			iz,
 			e;
-		slice = Array.prototype.slice.call(arguments);
+		if (Array.isArray(arguments[0][0])) {
+			slice = Array.prototype.slice.call(arguments[0][0]);
+		}
+		else {
+			slice = Array.prototype.slice.call(arguments);
+		}
 		if (Array.isArray(slice[0])) {
 			slice = slice[0];
 		}
@@ -6717,9 +6750,9 @@ Check all entitys in the Group to see which one(s) are associated with a particu
 	};
 	/**
 Check all entitys in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the entitys have been sorted; all entitys (in the group) colliding with the coordinate are returned as an array of entity objects
-@method getEntityAt
+@method getAllEntitysAt
 @param {Vector} items Coordinate vector; alternatively an Object with x and y attributes can be used
-@return Entity object, or false if no entitys are colliding with the coordinate
+@return Array of Entity objects
 **/
 	my.Group.prototype.getAllEntitysAt = function(items) {
 		var entity,
@@ -7116,14 +7149,16 @@ Permitted methods include:
 * 'none' - perform all necessary updates, but do not draw the entity onto the canvas
 @method forceStamp
 @param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
-@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} [cellname] CELLNAME of cell on which entitys are to draw themselves
+@param {Object} [cell] cell wrapper object
+@param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return This
 @chainable
 **/
-	my.Entity.prototype.forceStamp = function(method, cellname, cell) {
+	my.Entity.prototype.forceStamp = function(method, cellname, cell, mouse) {
 		var visibility = this.visibility;
 		this.visibility = true;
-		this.stamp(method, cellname, cell);
+		this.stamp(method, cellname, cell, mouse);
 		this.visibility = visibility;
 		return this;
 	};
@@ -7144,11 +7179,13 @@ Permitted methods include:
 * 'none' - perform all necessary updates, but do not draw the entity onto the canvas
 @method stamp
 @param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
-@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} [cellname] CELLNAME of cell on which entitys are to draw themselves
+@param {Object} [cell] cell wrapper object
+@param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return This
 @chainable
 **/
-	my.Entity.prototype.stamp = function(method, cellname, cell) {
+	my.Entity.prototype.stamp = function(method, cellname, cell, mouse) {
 		var engine,
 			cellCtx,
 			eCtx,
@@ -7175,7 +7212,7 @@ Permitted methods include:
 				this.resetCollisionPoints();
 			}
 			if (this.pivot) {
-				this.setStampUsingPivot(cellname);
+				this.setStampUsingPivot(cellname, mouse);
 			}
 			else {
 				this.pathStamp();
@@ -7444,16 +7481,21 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 @chainable
 **/
 	my.Entity.prototype.dropEntity = function(item) {
-		var order = this.order;
-		this.set({
-			pivot: my.xtGet(item, this.oldPivot, null),
-			order: (order >= 9999) ? order - 9999 : 0
-		});
-		this.oldPivot = null;
-		this.oldX = null;
-		this.oldY = null;
-		this.mouseIndex = null;
+		this.pivot = my.xtGet(item, this.oldPivot, null);
+		this.order = (this.order >= 9999) ? this.order - 9999 : 0;
+		// this.oldPivot = null;
+		// this.oldX = null;
+		// this.oldY = null;
+		delete this.oldPivot;
+		delete this.oldX;
+		delete this.oldY;
+		this.mouseIndex = 'mouse';
 		my.group[this.group].resort = true;
+		this.currentStart.flag = false;
+		this.currentHandle.flag = false;
+		if (this.setPaste) {
+			this.setPaste();
+		}
 		return this;
 	};
 	/**
