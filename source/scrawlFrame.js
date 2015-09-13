@@ -115,11 +115,6 @@ A __factory__ function to generate new Frame entitys
 			this.local = vec({
 				name: this.name + '_local'
 			});
-			this.work = {
-				local: vec({
-					name: this.name + '_work.local'
-				})
-			};
 			this.setReference();
 			this.setLocal();
 		};
@@ -146,13 +141,6 @@ A __factory__ function to generate new Frame entitys
 			pathPlace: false,
 			deltaPathPlace: false,
 			pathSpeedConstant: false,
-			work: {
-				local: {
-					x: 0,
-					y: 0,
-					z: 0
-				}
-			}
 		};
 		my.mergeInto(my.d.FramePoint, my.d.Base);
 		/**
@@ -161,13 +149,7 @@ A __factory__ function to generate new Frame entitys
 @return attribute
 **/
 		my.FramePoint.prototype.get = function(item) {
-			if (!item) {
-				this.work.local.set(this.local);
-				return this.work.local;
-			}
-			else {
-				return my.Base.get.call(this, items);
-			}
+			return my.Base.get.call(this, items);
 		};
 		/**
 @method set
@@ -245,9 +227,6 @@ A __factory__ function to generate new Frame entitys
 		my.FramePoint.prototype.setLocal = function() {
 			if (this.reference === 'data') {
 				this.setLocalFromData();
-			}
-			else if (this.reference === 'lock') {
-				// do nothing - it's up to the entity to set the local value;
 			}
 			else if (this.path) {
 				this.setLocalFromPath();
@@ -354,9 +333,6 @@ Data should always be an array in the form [x, y, z]
 			this.localWidth = 1;
 			this.localHeight = 1;
 			this.start = vec();
-			this.work = {
-				start: vec()
-			};
 
 			this.source = get(items.source, false);
 			this.sourceType = false;
@@ -420,6 +396,7 @@ Data should always be an array in the form [x, y, z]
 			localWidth: 1,
 			localHeight: 1,
 			start: false,
+			currentFrame: false,
 			method: 'fill',
 			visibility: true,
 			order: 0,
@@ -454,9 +431,6 @@ Data should always be an array in the form [x, y, z]
 			redraw: false,
 			interferenceLoops: 2,
 			interferenceFactor: 1.03,
-			work: {
-				start: false
-			}
 		};
 		my.mergeInto(my.d.Frame, my.d.Base);
 		/**
@@ -476,9 +450,9 @@ Augments Base.set()
 **/
 		my.Frame.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
-			this.setCorners(items);
-			this.setEngine(items);
+			// this.setCorners(items);
 			this.redraw = true;
+			this.setEngine(items);
 			return this;
 		};
 		/**
@@ -491,7 +465,8 @@ Augments Base.clone()
 		my.Frame.prototype.clone = function(items) {
 			var c = my.Base.prototype.clone.call(this, items);
 			c.setLockElementAttributes(my.mergeOver(this.lockElementAttributes, my.safeObject(items)));
-			c.setCorners(items);
+			// c.setCorners(items);
+			c.redraw = true;
 			return c;
 		};
 		/**
@@ -503,30 +478,35 @@ Augments Base.clone()
 **/
 		my.Frame.prototype.setCorners = function(items) {
 			var i,
-				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
-				cornersX = ['tlx', 'trx', 'brx', 'blx'],
-				cornersY = ['tly', 'try', 'bry', 'bly'],
+				corners,
+				cornersX,
+				cornersY,
 				corner,
 				temp,
-				makeFramePoint = my.makeFramePoint,
-				get = my.xtGet,
-				order = this.cornersDataArrayOrder;
-
+				makeFramePoint,
+				get,
+				order;
 			items = my.safeObject(items);
+			corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
+			cornersX = ['tlx', 'trx', 'brx', 'blx'];
+			cornersY = ['tly', 'try', 'bry', 'bly'];
+			makeFramePoint = my.makeFramePoint;
+			get = my.xtGet;
+			order = this.cornersDataArrayOrder;
 			for (i = 0; i < 4; i++) {
 				temp = {};
 				corner = corners[i];
 				if (!this[corner]) {
 					this[corner] = makeFramePoint({
 						name: this.name + '_' + corner,
-						host: this.name,
+						host: this.name
 					});
 				}
 				if (items.cornersData && Array.isArray(items.cornersData)) {
 					temp.data = [
-						get(items.cornersData[order.indexOf(cornersX[i])], this[corner].local.x, 0),
-						get(items.cornersData[order.indexOf(cornersY[i])], this[corner].local.y, 0)
-					];
+							get(items.cornersData[order.indexOf(cornersX[i])], this[corner].local.x, 0),
+							get(items.cornersData[order.indexOf(cornersY[i])], this[corner].local.y, 0)
+						];
 					this[corner].set(temp);
 				}
 				else if (items.lockFrameTo) {
@@ -685,27 +665,28 @@ Augments Base.clone()
 				parent, stack, temp,
 				i;
 			if (!el) {
-				temp = document.createElement('div');
-				temp.id = lockFrameTo;
 				parent = my.pad[my.cell[my.group[this.group].cell].pad].group;
 				if (parent) {
 					stack = my.stack[parent];
+					temp = document.createElement('div');
+					temp.id = lockFrameTo;
 					document.body.appendChild(temp);
 					el = stack.addElementById(lockFrameTo);
 					el.set({
-						translateZ: stack.get('translateZ') - 1
+						translateZ: stack.get('translateZ') - 2
 					});
+					this.currentFrame = el;
 				}
 			}
 			if (el) {
 				if (!el.topLeft) {
 					el.addCornerTrackers();
-				}
-				this.setLockElementAttributes(items);
-				el.set(this.lockElementAttributes);
-				for (i = 0; i < 4; i++) {
-					corner = corners[i];
-					this[corner].local = el[corner];
+					this.setLockElementAttributes(items);
+					el.set(this.lockElementAttributes);
+					for (i = 0; i < 4; i++) {
+						corner = corners[i];
+						this[corner].local = el[corner];
+					}
 				}
 			}
 		};
@@ -716,7 +697,7 @@ Augments Base.clone()
 		my.Frame.prototype.setLockElementAttributes = function(items) {
 			var keys = Object.keys(items),
 				key,
-				whitelist = ['start', 'startX', 'startY', 'handle', 'handleX', 'handleY', 'deltaStart', 'deltaStartX', 'deltaStartY', 'deltaHandle', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'deltaPitch', 'deltaYaw', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant', 'translate', 'translateX', 'translateY', 'translateZ', 'mouseIndex'],
+				whitelist = ['start', 'startX', 'startY', 'handle', 'handleX', 'handleY', 'deltaStart', 'deltaStartX', 'deltaStartY', 'deltaHandle', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'deltaPitch', 'deltaYaw', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant', 'translate', 'translateX', 'translateY', 'translateZ', 'mouseIndex', 'cursor'],
 				i, iz,
 				cont = my.contains,
 				lea = this.lockElementAttributes;
@@ -732,7 +713,7 @@ Augments Base.clone()
 @method forceStamp
 @private
 **/
-		my.Frame.prototype.forceStamp = function(method, cellname, cell) {
+		my.Frame.prototype.forceStamp = function(method, cellname, cell, mouse) {
 			var temp = this.visibility;
 			this.visibility = true;
 			this.stamp(method, cell);
@@ -743,14 +724,18 @@ Augments Base.clone()
 @method stamp
 @private
 **/
-		my.Frame.prototype.stamp = function(method, cellname, cell) {
-			var dCell = (cell) ? cell : my.group[this.group].cell,
-				dName = dCell.name,
-				dCtx = my.context[dName],
-				dMethod = (method) ? method : this.method;
+		my.Frame.prototype.stamp = function(method, cellname, cell, mouse) {
+			var dCell,
+				dName,
+				dCtx,
+				dMethod;
 			if (this.visibility) {
-				if (this.redraw) {
-					this.redrawCanvas();
+				dCell = (cell) ? cell : my.group[this.group].cell;
+				dName = dCell.name;
+				dCtx = my.context[dName];
+				dMethod = (method) ? method : this.method;
+				if (this.currentFrame && this.currentFrame.pivot === 'mouse') {
+					this.redraw = true;
 				}
 				this[dMethod](dCtx, dName, dCell);
 				this.stampFilter(dCtx, dName, dCell);
@@ -781,76 +766,99 @@ Entity.stamp hook helper function
 		my.Frame.prototype.stampFilterDefault = function(entity, engine, cellname, cell) {
 			return my.Entity.prototype.stampFilterDefault.call(this, entity, engine, cellname, cell);
 		};
+		my.Frame.prototype.stampFilterDimensionsActions = my.Entity.prototype.stampFilterDimensionsActions;
 		/**
 @method redrawCanvas
 @private
 **/
 		my.Frame.prototype.redrawCanvas = function() {
-			var tlx = this.topLeft.local.x,
-				tly = this.topLeft.local.y,
-				trx = this.topRight.local.x,
-				tryy = this.topRight.local.y,
-				brx = this.bottomRight.local.x,
-				bry = this.bottomRight.local.y,
-				blx = this.bottomLeft.local.x,
-				bly = this.bottomLeft.local.y,
-				min = Math.min,
-				max = Math.max,
-				ceil = Math.ceil,
-				floor = Math.floor,
-				xmin = min.apply(Math, [tlx, trx, brx, blx]),
-				ymin = min.apply(Math, [tly, tryy, bry, bly]),
-				xmax = max.apply(Math, [tlx, trx, brx, blx]),
-				ymax = max.apply(Math, [tly, tryy, bry, bly]),
-				width = xmax - xmin || 1,
-				height = ymax - ymin || 1,
-				dim = max.apply(Math, [width, height]),
-				maxDim = ceil(dim),
-				minDim = floor(dim),
-				src = my.xtGet(my.asset[this.source], my.canvas[this.source], false), //must be an image, canvas or video
+			var tl, tr, br, bl, tlloc, trloc, brloc, blloc, tlx, tly, trx, tryy, brx, bry, blx, bly,
+				min, max, ceil, floor, xmin, ymin, xmax, ymax,
+				width, height, dim, maxDim, minDim,
+				src, //must be an image, canvas or video
 				i, sx, sy, ex, ey, len, angle, val, fw, fh,
-				cv = my.cv,
-				cvx = my.cvx,
-				getPos = this.getPosition,
-				iFac = this.interferenceFactor,
-				cell = this.cell;
+				cv, cvx, getPos, iFac, cell, xta;
 
-			this.width = width;
-			this.localWidth = width;
-			this.height = height;
-			this.localHeight = height;
-			this.start.x = xmin;
-			this.start.y = ymin;
-			if (src && my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
-				cell.width = ceil(width);
-				cell.height = ceil(height);
-				cv.width = maxDim;
-				cv.height = maxDim;
-				cvx.drawImage(src, 0, 0, src.width, src.height, 0, 0, minDim, minDim);
-				for (i = 0; i <= minDim; i++) {
-					val = i / minDim;
-					sx = getPos(tlx, blx, val) - xmin;
-					sy = getPos(tly, bly, val) - ymin;
-					ex = getPos(trx, brx, val) - xmin;
-					ey = getPos(tryy, bry, val) - ymin;
-					len = this.getLength(sx, sy, ex, ey);
-					angle = this.getAngle(sx, sy, ex, ey);
+			xta = my.xta;
+			this.setCorners();
+			tl = this.topLeft;
+			tr = this.topRight;
+			br = this.bottomRight;
+			bl = this.bottomLeft;
 
-					this.setEasel(sx, sy, angle);
-					this.engine.drawImage(cv, 0, i, minDim, 1, 0, 0, len, 1);
-					this.resetEasel();
+			if (xta(tl, tr, br, bl)) {
+				tlloc = tl.local;
+				trloc = tr.local;
+				brloc = br.local;
+				blloc = bl.local;
+
+				if (xta(tlloc, trloc, brloc, blloc)) {
+					tlx = tlloc.x;
+					tly = tlloc.y;
+					trx = trloc.x;
+					tryy = trloc.y;
+					brx = brloc.x;
+					bry = brloc.y;
+					blx = blloc.x;
+					bly = blloc.y;
+					min = Math.min;
+					max = Math.max;
+					ceil = Math.ceil;
+					floor = Math.floor;
+					xmin = min.apply(Math, [tlx, trx, brx, blx]);
+					ymin = min.apply(Math, [tly, tryy, bry, bly]);
+					xmax = max.apply(Math, [tlx, trx, brx, blx]);
+					ymax = max.apply(Math, [tly, tryy, bry, bly]);
+					width = xmax - xmin || 1;
+					height = ymax - ymin || 1;
+					dim = max.apply(Math, [width, height]);
+					maxDim = ceil(dim);
+					minDim = floor(dim);
+					src = my.xtGet(my.asset[this.source], my.canvas[this.source], false); //must be an image, canvas or video
+					cv = my.cv;
+					cvx = my.cvx;
+					getPos = this.getPosition;
+					iFac = this.interferenceFactor;
+					cell = this.cell;
+
+					this.width = width;
+					this.localWidth = width;
+					this.height = height;
+					this.localHeight = height;
+					this.start.x = xmin;
+					this.start.y = ymin;
+					if (src && my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
+						cell.width = ceil(width);
+						cell.height = ceil(height);
+						cv.width = maxDim;
+						cv.height = maxDim;
+						cvx.drawImage(src, 0, 0, src.width, src.height, 0, 0, minDim, minDim);
+						for (i = 0; i <= minDim; i++) {
+							val = i / minDim;
+							sx = getPos(tlx, blx, val) - xmin;
+							sy = getPos(tly, bly, val) - ymin;
+							ex = getPos(trx, brx, val) - xmin;
+							ey = getPos(tryy, bry, val) - ymin;
+							len = this.getLength(sx, sy, ex, ey);
+							angle = this.getAngle(sx, sy, ex, ey);
+
+							this.setEasel(sx, sy, angle);
+							this.engine.drawImage(cv, 0, i, minDim, 1, 0, 0, len, 1);
+							this.resetEasel();
+						}
+						fw = ceil(width);
+						fh = ceil(height);
+						for (i = 0; i < this.interferenceLoops; i++) {
+							fw = ceil(fw * iFac);
+							fh = ceil(fh * iFac);
+							cv.width = fw;
+							cv.height = fh;
+							cvx.drawImage(cell, 0, 0, cell.width, cell.height, 0, 0, fw, fh);
+							this.engine.drawImage(cv, 0, 0, fw, fh, 0, 0, cell.width, cell.height);
+						}
+						this.redraw = false;
+					}
 				}
-				fw = ceil(width);
-				fh = ceil(height);
-				for (i = 0; i < this.interferenceLoops; i++) {
-					fw = ceil(fw * iFac);
-					fh = ceil(fh * iFac);
-					cv.width = fw;
-					cv.height = fh;
-					cvx.drawImage(cell, 0, 0, cell.width, cell.height, 0, 0, fw, fh);
-					this.engine.drawImage(cv, 0, 0, fw, fh, 0, 0, cell.width, cell.height);
-				}
-				this.redraw = false;
 			}
 			return this;
 		};
@@ -891,6 +899,39 @@ Entity.stamp hook helper function
 		my.Frame.prototype.resetEasel = function() {
 			this.engine.setTransform(1, 0, 0, 1, 0, 0);
 		};
+		my.Frame.prototype.correctCoordinates = my.Position.prototype.correctCoordinates;
+		/**
+Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999
+@method pickupEntity
+@param {Vector} items Coordinate vector; alternatively an object with {x, y} attributes can be used
+@return This
+@chainable
+**/
+		my.Frame.prototype.pickupEntity = function(items) {
+			var cf = this.currentFrame;
+			if (cf) {
+				cf.pickupEntity(items);
+				my.group[this.group].resort = true;
+				this.redraw = true;
+			}
+			return this;
+		};
+		/**
+Revert pickupEntity() actions, ensuring entity is left where the user drops it
+@method dropEntity
+@param {String} [items] Alternative pivot String
+@return This
+@chainable
+**/
+		my.Frame.prototype.dropEntity = function(item) {
+			var cf = this.currentFrame;
+			if (cf) {
+				cf.dropEntity(item);
+				my.group[this.group].resort = true;
+				this.redraw = true;
+			}
+			return this;
+		};
 		/**
 Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)
 @method clearShadow
@@ -902,7 +943,6 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 **/
 		my.Frame.prototype.clearShadow = function(ctx, cellname, cell) {
 			if (this.shadowOffsetX || this.shadowOffsetY || this.shadowBlur) {
-				// cell = (cell.substring) ? my.cell[cell] : cell;
 				cell.clearShadow();
 			}
 			return this;
@@ -924,12 +964,14 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 				tr = this.topRight.local,
 				br = this.bottomRight.local,
 				bl = this.bottomLeft.local;
-			ctx.beginPath();
-			ctx.moveTo(tl.x, tl.y);
-			ctx.lineTo(tr.x, tr.y);
-			ctx.lineTo(br.x, br.y);
-			ctx.lineTo(bl.x, bl.y);
-			ctx.closePath();
+			if (my.xta(tl, tr, br, bl)) {
+				ctx.beginPath();
+				ctx.moveTo(tl.x, tl.y);
+				ctx.lineTo(tr.x, tr.y);
+				ctx.lineTo(br.x, br.y);
+				ctx.lineTo(bl.x, bl.y);
+				ctx.closePath();
+			}
 			return this;
 		};
 		/**
@@ -937,7 +979,11 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @private
 **/
 		my.Frame.prototype.drawImage = function(ctx, cellname, cell) {
-			ctx.drawImage(this.cell, this.start.x, this.start.y);
+			var start = this.start;
+			if (this.redraw) {
+				this.redrawCanvas();
+			}
+			ctx.drawImage(this.cell, start.x, start.y);
 			return this;
 		};
 		/**

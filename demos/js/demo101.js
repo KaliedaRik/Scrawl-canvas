@@ -168,6 +168,7 @@ var mycode = function() {
 		endY: 100,
 		controlX: 125,
 		controlY: 40,
+		handleX: 'center',
 		pivot: 'mouse',
 		method: 'none'
 	});
@@ -290,7 +291,6 @@ var mycode = function() {
 		method: 'draw',
 		visibility: false,
 		lockFrameTo: 'myframe',
-		includeCornerTrackers: true,
 		order: 5,
 		filters: [current_filter]
 	});
@@ -345,10 +345,9 @@ var mycode = function() {
 	};
 	input_filter.addEventListener('change', event_filter, false);
 
-	scrawl.addListener(['down', 'move'], function(e) {
+	scrawl.addListener(['down', 'enter'], function(e) {
 		if (e) {
 			e.preventDefault();
-			here = myPad.getMouse();
 			current_entity.set({
 				mouseIndex: here.id,
 				visibility: true
@@ -369,6 +368,7 @@ var mycode = function() {
 	scrawl.makeAnimation({
 		fn: function() {
 
+			here = myPad.getMouse();
 			scrawl.render();
 
 			//hide-start

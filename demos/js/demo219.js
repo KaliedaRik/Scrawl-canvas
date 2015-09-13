@@ -224,7 +224,7 @@ var mycode = function() {
 
 	scrawl.makePhrase({
 		method: 'fill',
-		text: 'No! Clone me! Me!',
+		text: 'No! Drag me! Me!',
 		startX: 500,
 		startY: 300,
 		font: '20pt Arial, Helvetica'
@@ -239,8 +239,7 @@ var mycode = function() {
 		width: 120,
 		height: 95,
 		pitch: 20,
-		yaw: 30,
-		includeCornerTrackers: true
+		yaw: 30
 	});
 
 	// Add entitys to the Stack's group (to simplify functionality)
@@ -255,7 +254,7 @@ var mycode = function() {
 		}
 	};
 	// Apply mouse and touch down events to the Pad and Element DOM elements
-	scrawl.addListener('down', pickupEntity, [myPadEl, myElementEl]);
+	scrawl.addListener('down', pickupEntity, [myPadEl, myStackEl, myElementEl]);
 
 	dropEntity = function(e) {
 		if (e) {

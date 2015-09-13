@@ -522,7 +522,9 @@ Helper function - creates entity's Context object's phrase attribute from other 
 Augments Entity.stamp()
 @method stamp
 @param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
-@param {String} [cell] CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} [cellname] CELLNAME of cell on which entitys are to draw themselves
+@param {Object} [cell] cell wrapper object
+@param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return This
 @chainable
 **/

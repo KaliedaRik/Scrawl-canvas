@@ -2957,6 +2957,9 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 				this.currentHandle.flag = false;
 			}
 		}
+		if (my.xt(items.pivot)) {
+			this.currentPivotIndex = false;
+		}
 		this.animationPositionSet(items);
 		return this;
 	};
@@ -3374,50 +3377,84 @@ Takes into account lock flag settings
 @private
 **/
 	my.Position.prototype.setStampUsingPivot = function(cell, mouse) {
-		var pivot,
-			vector,
+		var p, e,
+			pivot,
+			action = this.setStampUsingPivotCalculations,
+			point,
 			entity,
-			pad,
-			lockX = this.lockX,
-			lockY = this.lockY,
-			start = this.start,
-			current = this.currentStart,
-			xt = my.xt;
-		if (xt(my.pointnames)) {
-			pivot = my.point[this.pivot];
-			if (pivot) {
-				entity = my.entity[pivot.entity];
-				vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.currentStart);
-				current.x = start.x = (!lockX) ? vector.x : start.x;
-				current.y = start.y = (!lockY) ? vector.y : start.y;
-				return this;
+			so,
+			el;
+		if (!this.currentPivotIndex) {
+			pivot = this.pivot;
+			point = my.point;
+			entity = my.entity;
+			so = my.safeObject;
+			if (pivot === 'mouse') {
+				p = 'mouse';
+				e = false;
+			}
+			else if (so(point)[pivot]) {
+				p = 'point';
+				e = point[pivot];
+			}
+			else if (entity[pivot]) {
+				p = 'entity';
+				e = entity[pivot];
+			}
+			else {
+				el = my.xtGet(so(my.stack)[pivot], so(my.pad)[pivot], so(my.element)[pivot], false);
+				if (el) {
+					p = 'stack';
+					e = el;
+				}
+			}
+			if (p) {
+				this.currentPivot = e;
+				this.currentPivotIndex = p;
 			}
 		}
-		pivot = my.entity[this.pivot];
-		if (pivot) {
-			vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.currentStart;
-			current.x = start.x = (!lockX) ? vector.x : start.x;
-			current.y = start.y = (!lockY) ? vector.y : start.y;
-			return this;
+		if (this.currentPivotIndex) {
+			action[this.currentPivotIndex](this, this.currentPivot, cell, mouse);
 		}
-		if (this.pivot === 'mouse') {
-			if (!xt(mouse)) {
+		return this;
+	};
+	/**
+setStampUsingPivot helper object
+**/
+	my.Position.prototype.setStampUsingPivotCalculations = {
+		point: function(obj, pivot) {
+			var entity = my.entity[pivot.entity],
+				current = obj.currentStart,
+				vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.currentStart);
+			current.x = (!obj.lockX) ? vector.x : current.x;
+			current.y = (!obj.lockY) ? vector.y : current.y;
+		},
+		entity: function(obj, pivot) {
+			var vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.currentStart,
+				current = obj.currentStart;
+			current.x = (!obj.lockX) ? vector.x : current.x;
+			current.y = (!obj.lockY) ? vector.y : current.y;
+		},
+		mouse: function(obj, ignore, cell, mouse) {
+			var pad,
+				current = obj.currentStart;
+			if (!my.xt(mouse)) {
 				cell = my.cell[cell];
 				pad = my.pad[cell.pad];
-				mouse = this.correctCoordinates(pad.mice[this.mouseIndex], cell);
+				mouse = obj.correctCoordinates(pad.mice[obj.mouseIndex], cell);
 			}
 			if (mouse) {
-				if (this.oldX == null && this.oldY == null) { //jshint ignore:line
-					this.oldX = start.x;
-					this.oldY = start.y;
+				if (obj.oldX == null && obj.oldY == null) { //jshint ignore:line
+					obj.oldX = current.x;
+					obj.oldY = current.y;
 				}
-				current.x = start.x = (!lockX) ? start.x + mouse.x - this.oldX : start.x;
-				current.y = start.y = (!lockY) ? start.y + mouse.y - this.oldY : start.y;
-				this.oldX = mouse.x;
-				this.oldY = mouse.y;
+				current.x = (!obj.lockX) ? current.x + mouse.x - obj.oldX : current.x;
+				current.y = (!obj.lockY) ? current.y + mouse.y - obj.oldY : current.y;
+				obj.oldX = mouse.x;
+				obj.oldY = mouse.y;
 			}
-		}
-		return this.setStampUsingStacksPivot();
+		},
+		stack: function() {}
 	};
 	/**
 Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions
@@ -3448,15 +3485,6 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 			return vector;
 		}
 		return false;
-	};
-	/**
-Stamp helper hook function - amended by stacks extension
-
-@method setStampUsingStacksPivot
-@return this
-**/
-	my.Position.prototype.setStampUsingStacksPivot = function() {
-		return this;
 	};
 
 	/**
@@ -3996,6 +4024,8 @@ mousemove event listener function
 		wrapper.handleMouseTilt(e);
 		return wrapper;
 	};
+	my.PageElement.prototype.pickupEntity = function(items) {};
+	my.PageElement.prototype.dropEntity = function(items) {};
 	/**
 mouseTilt hook function - amended by scrawlStacks extension
 @method handleMouseTilt
@@ -7241,6 +7271,7 @@ Entity.stamp hook function - modified by filters extension
 @private
 **/
 	my.Entity.prototype.stampFilter = function() {};
+	my.Entity.prototype.stampFilterDimensionsActions = {};
 	/**
 Stamp helper function - rotate and position canvas ready for drawing entity
 @method rotateCell
@@ -7469,6 +7500,7 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		this.oldPivot = this.pivot;
 		this.mouseIndex = my.xtGet(items.id || 'mouse');
 		this.pivot = 'mouse';
+		this.currentPivotIndex = false;
 		this.order += 9999;
 		my.group[this.group].resort = true;
 		return this;
@@ -7482,16 +7514,15 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 **/
 	my.Entity.prototype.dropEntity = function(item) {
 		this.pivot = my.xtGet(item, this.oldPivot, null);
+		this.currentPivotIndex = false;
 		this.order = (this.order >= 9999) ? this.order - 9999 : 0;
-		// this.oldPivot = null;
-		// this.oldX = null;
-		// this.oldY = null;
 		delete this.oldPivot;
 		delete this.oldX;
 		delete this.oldY;
 		this.mouseIndex = 'mouse';
 		my.group[this.group].resort = true;
-		this.currentStart.flag = false;
+		this.start.x = this.currentStart.x;
+		this.start.y = this.currentStart.y;
 		this.currentHandle.flag = false;
 		if (this.setPaste) {
 			this.setPaste();

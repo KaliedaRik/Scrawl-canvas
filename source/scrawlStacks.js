@@ -1027,7 +1027,9 @@ PageElement constructor hook function - modified by stacks module
 				el = this.getElement(),
 				i;
 			for (i = 0; i < 4; i++) {
-				this[corners[i]] = my.makeVector();
+				this[corners[i]] = my.makeVector({
+					name: this.name + '.cornerTracker.' + corners[i]
+				});
 				temp = document.createElement('div');
 				temp.id = this.name + '_' + corners[i];
 				temp.style.width = 0;
@@ -1871,11 +1873,11 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 			if (!this.currentStart.flag && g.stack) {
 				this.updateCurrentStart(my.stack[g.stack]);
 			}
-			if (this.path) {
-				this.setStampUsingPath();
-			}
-			else if (this.pivot) {
+			if (this.pivot) {
 				this.setStampUsingPivot();
+			}
+			else if (this.path) {
+				this.setStampUsingPath();
 			}
 			start = this.currentStart;
 
@@ -2047,82 +2049,38 @@ Calculate start Vector in reference to a Shape entity object's path
 			}
 			return this;
 		};
-		/**
-Calculate start Vector in reference to a entity or Point object's position
-@method PageElement.setStampUsingPivot
-@return This
-@chainable
-@private
-**/
-		my.PageElement.prototype.setStampUsingPivot = function(cell) {
-			var pivot,
-				vector,
-				entity,
-				mouse,
-				stack,
-				lockX = this.lockX,
-				lockY = this.lockY,
-				start = this.start,
-				current = this.currentStart;
-			if (my.xt(my.pointnames)) {
-				pivot = my.point[this.pivot];
-				if (pivot) {
-					entity = my.entity[pivot.entity];
-					vector = pivot.getCurrentCoordinates().rotate(entity.roll).vectorAdd(entity.currentStart);
-					current.x = start.x = (!lockX) ? vector.x : start.x;
-					current.y = start.y = (!lockY) ? vector.y : start.y;
-					return this;
-				}
-			}
-			pivot = my.entity[this.pivot];
-			if (pivot) {
-				vector = (pivot.type === 'Particle') ? pivot.get('place') : pivot.currentStart;
-				current.x = start.x = (!lockX) ? vector.x : start.x;
-				current.y = start.y = (!lockY) ? vector.y : start.y;
-				return this;
-			}
-			if (this.pivot === 'mouse') {
-				stack = my.stack[my.group[this.group].stack];
-				mouse = stack.mice[this.mouseIndex] || {};
-				if (mouse) {
-					if (this.oldX == null && this.oldY == null) { //jshint ignore:line
-						this.oldX = start.x;
-						this.oldY = start.y;
-					}
-					current.x = start.x = (!lockX) ? start.x + mouse.x - this.oldX : start.x;
-					current.y = start.y = (!lockY) ? start.y + mouse.y - this.oldY : start.y;
-					this.oldX = mouse.x;
-					this.oldY = mouse.y;
-				}
-			}
-			// return this.setStampUsingStacksPivot();
-			return this;
-		};
-		/**
-Stamp helper hook function - amended by stacks module
-
-@method setStampUsingStacksPivot
-@return this
-**/
-		my.Position.prototype.setStampUsingStacksPivot = function() {
-			var myP = my.xtGet(my.pad[this.pivot], my.element[this.pivot], my.stack[this.pivot]);
-			if (myP) {
-				this.setStampUsingDomElement(myP);
-			}
-			return this;
-		};
-		/**
-setStampUsingPivot helper function
-@method PageElement.setStampUsingDomElement
-@return nothing
-@private
-**/
-		my.PageElement.prototype.setStampUsingDomElement = function(e) {
-			if (this.lockTo) {
-				this.setStampUsingLockTo(e);
+		my.Position.prototype.setStampUsingPivotCalculations.stack = function(obj, pivot) {
+			if (obj.lockTo) {
+				obj.setStampUsingLockTo(pivot);
 			}
 			else {
-				this.setStampUsingDomElementPivot(e);
+				obj.setStampUsingDomElementPivot(obj, pivot);
+			}
+		};
+		my.PageElement.prototype.setStampUsingPivot = my.Position.prototype.setStampUsingPivot;
+		my.PageElement.prototype.setStampUsingPivotCalculations = {};
+		my.PageElement.prototype.setStampUsingPivotCalculations.point = my.Position.prototype.setStampUsingPivotCalculations.point;
+		my.PageElement.prototype.setStampUsingPivotCalculations.entity = my.Position.prototype.setStampUsingPivotCalculations.entity;
+		my.PageElement.prototype.setStampUsingPivotCalculations.stack = my.Position.prototype.setStampUsingPivotCalculations.stack;
+		my.PageElement.prototype.setStampUsingPivotCalculations.mouse = function(obj, ignore, cell, mouse) {
+			var stack,
+				current = obj.currentStart;
+			if (!my.xt(mouse)) {
+				stack = my.stack[my.group[obj.group].stack];
+				mouse = stack.mice[obj.mouseIndex] || {
+					x: 0,
+					y: 0
+				};
+			}
+			if (mouse) {
+				if (obj.oldX == null && obj.oldY == null) { //jshint ignore:line
+					obj.oldX = current.x;
+					obj.oldY = current.y;
+				}
+				current.x = (!obj.lockX) ? current.x + mouse.x - obj.oldX : current.x;
+				current.y = (!obj.lockY) ? current.y + mouse.y - obj.oldY : current.y;
+				obj.oldX = mouse.x;
+				obj.oldY = mouse.y;
 			}
 		};
 		/**
@@ -2131,12 +2089,13 @@ setStampUsingPivot helper function
 @return nothing
 @private
 **/
-		my.PageElement.prototype.setStampUsingDomElementPivot = function(e) {
-			var estart = e.currentStart,
-				start = this.currentStart;
-			start.x = (!this.lockX) ? estart.x : start.x;
-			start.y = (!this.lockY) ? estart.y : start.y;
+		my.PageElement.prototype.setStampUsingDomElementPivot = function(obj, pivot) {
+			var estart = pivot.currentStart,
+				start = obj.currentStart;
+			start.x = (!obj.lockX) ? estart.x : start.x;
+			start.y = (!obj.lockY) ? estart.y : start.y;
 		};
+		my.Position.prototype.setStampUsingDomElementPivot = my.PageElement.prototype.setStampUsingDomElementPivot;
 		/**
 setStampUsingPivot helper function
 @method PageElement.setStampUsingLockTo
@@ -2367,7 +2326,7 @@ Reinitialize element with existing values
 			return this;
 		};
 		/**
-Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999
+Set element's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999
 @method pickupEntity
 @param {Vector} items Coordinate vector; alternatively an object with {x, y} attributes can be used
 @return This
@@ -2387,7 +2346,7 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 			return this;
 		};
 		/**
-Revert pickupEntity() actions, ensuring entity is left where the user drops it
+Revert pickupEntity() actions, ensuring element is left where the user drops it
 @method dropEntity
 @param {String} [items] Alternative pivot String
 @return This
@@ -2401,7 +2360,8 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 			delete this.oldY;
 			this.mouseIndex = 'mouse';
 			my.group[this.group].resort = true;
-			this.currentStart.flag = false;
+			this.start.x = this.currentStart.x;
+			this.start.y = this.currentStart.y;
 			this.currentHandle.flag = false;
 			if (this.setPaste) {
 				this.setPaste();
