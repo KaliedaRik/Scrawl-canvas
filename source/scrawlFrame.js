@@ -107,6 +107,7 @@ A __factory__ function to generate new Frame entitys
 			this.data = get(items.data, false);
 			this.reference = get(items.reference, false);
 			this.lock = get(items.lock, false);
+			this.lockCorner = get(items.lockCorner, false);
 			this.pivot = get(items.pivot, false);
 			this.path = get(items.path, false);
 			this.pathPlace = get(items.pathPlace, false);
@@ -132,6 +133,7 @@ A __factory__ function to generate new Frame entitys
 			reference: false,
 			pivot: false,
 			lock: false,
+			lockCorner: false,
 			local: {
 				x: 0,
 				y: 0,
@@ -164,6 +166,7 @@ A __factory__ function to generate new Frame entitys
 			this.pivot = get(items.pivot, this.pivot);
 			this.path = get(items.path, this.path);
 			this.lock = get(items.lock, this.lock);
+			this.lockCorner = get(items.lockCorner, this.lockCorner);
 			this.pathPlace = get(items.pathPlace, this.pathPlace);
 			this.deltaPathPlace = get(items.deltaPathPlace, this.deltaPathPlace);
 			this.pathSpeedConstant = get(items.pathSpeedConstant, this.pathSpeedConstant);
@@ -225,8 +228,18 @@ A __factory__ function to generate new Frame entitys
 @private
 **/
 		my.FramePoint.prototype.setLocal = function() {
+			var x, y, e,
+				loc = this.local;
+			this.changed = false;
+			x = loc.x;
+			y = loc.y;
 			if (this.reference === 'data') {
 				this.setLocalFromData();
+			}
+			else if (this.lock) {
+				e = my.element[this.lock][this.lockCorner];
+				loc.x = e.x;
+				loc.y = e.y;
 			}
 			else if (this.path) {
 				this.setLocalFromPath();
@@ -234,15 +247,21 @@ A __factory__ function to generate new Frame entitys
 			else if (this.pivot) {
 				switch (this.reference) {
 					case 'point':
-						this.local = my.point[this.pivot].local;
+						e = my.point[this.pivot].local;
 						break;
 					case 'particle':
-						this.local = my.particle[this.pivot].place;
+						e = my.particle[this.pivot].place;
 						break;
 					default:
-						this.local = my[this.reference][this.pivot].start;
+						e = my[this.reference][this.pivot].start;
 				}
+				loc.x = e.x;
+				loc.y = e.y;
 			}
+			if (x != this.local.x || y != this.local.y) {
+				this.changed = true;
+			}
+			// console.log(this.name, this.reference, this.path, this.pivot, x, y, this.local.x, this.local.y);
 			return this;
 		};
 		/**
@@ -366,8 +385,13 @@ Data should always be an array in the form [x, y, z]
 			my.Entity.prototype.registerInLibrary.call(this, items);
 			my.pushUnique(my.group[this.group].entitys, this.name);
 
-			this.lockFrameTo = get(items.lockFrameTo, false);
 			this.lockElementAttributes = {};
+			this.setLockElementAttributes(items);
+			this.lockFrameTo = false;
+			if (items.lockFrameTo) {
+				this.lockFrameTo = items.lockFrameTo;
+				this.lockOn(items);
+			}
 
 			this.setCorners(items);
 			this.setEngine(this);
@@ -422,6 +446,7 @@ Data should always be an array in the form [x, y, z]
 			filters: [],
 			filterOnStroke: false,
 			pivot: false,
+			path: false,
 			mouseIndex: 'mouse',
 			flipReverse: false,
 			flipUpend: false,
@@ -450,8 +475,14 @@ Augments Base.set()
 **/
 		my.Frame.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
-			// this.setCorners(items);
-			this.redraw = true;
+			if (items.lockFrameTo) {
+				this.lockOn(items);
+				this.lockFrameTo = items.lockFrameTo;
+			}
+			else {
+				this.setLockElementAttributes(items);
+			}
+			this.setCorners(items);
 			this.setEngine(items);
 			return this;
 		};
@@ -465,7 +496,6 @@ Augments Base.clone()
 		my.Frame.prototype.clone = function(items) {
 			var c = my.Base.prototype.clone.call(this, items);
 			c.setLockElementAttributes(my.mergeOver(this.lockElementAttributes, my.safeObject(items)));
-			// c.setCorners(items);
 			c.redraw = true;
 			return c;
 		};
@@ -511,6 +541,7 @@ Augments Base.clone()
 				}
 				else if (items.lockFrameTo) {
 					temp.lock = items.lockFrameTo;
+					temp.lockCorner = corner;
 					this[corner].set(temp);
 				}
 				else {
@@ -522,10 +553,31 @@ Augments Base.clone()
 					this[corner].set(temp);
 				}
 			}
-			if (items.lockFrameTo || this.lockFrameTo) {
-				this.lockOn(items);
-			}
 			return this;
+		};
+		/**
+@method checkCorners
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+@private
+**/
+		my.Frame.prototype.checkCorners = function() {
+			var i,
+				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+				corner,
+				result = false;
+			for (i = 0; i < 4; i++) {
+				corner = corners[i];
+				if (this.lockFrameTo || this.pivot || this.path || this[corner].pivot || this[corner].path) {
+					this[corner].setLocal();
+				}
+				// console.log(this.name, corner, this[corner].changed);
+				if (this[corner].changed) {
+					result = true;
+				}
+			}
+			return result;
 		};
 		/**
 @method setEngine
@@ -694,10 +746,11 @@ Augments Base.clone()
 @method setLockElementAttributes
 @private
 **/
+		my.Frame.prototype.lockElementAttributesList = ['start', 'startX', 'startY', 'handle', 'handleX', 'handleY', 'deltaStart', 'deltaStartX', 'deltaStartY', 'deltaHandle', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'deltaPitch', 'deltaYaw', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant', 'translate', 'translateX', 'translateY', 'translateZ', 'mouseIndex', 'cursor'];
 		my.Frame.prototype.setLockElementAttributes = function(items) {
 			var keys = Object.keys(items),
 				key,
-				whitelist = ['start', 'startX', 'startY', 'handle', 'handleX', 'handleY', 'deltaStart', 'deltaStartX', 'deltaStartY', 'deltaHandle', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'deltaPitch', 'deltaYaw', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant', 'translate', 'translateX', 'translateY', 'translateZ', 'mouseIndex', 'cursor'],
+				whitelist = this.lockElementAttributesList,
 				i, iz,
 				cont = my.contains,
 				lea = this.lockElementAttributes;
@@ -734,9 +787,7 @@ Augments Base.clone()
 				dName = dCell.name;
 				dCtx = my.context[dName];
 				dMethod = (method) ? method : this.method;
-				if (this.currentFrame && this.currentFrame.pivot === 'mouse') {
-					this.redraw = true;
-				}
+				this.redrawCanvas();
 				this[dMethod](dCtx, dName, dCell);
 				this.stampFilter(dCtx, dName, dCell);
 			}
@@ -777,86 +828,92 @@ Entity.stamp hook helper function
 				width, height, dim, maxDim, minDim,
 				src, //must be an image, canvas or video
 				i, sx, sy, ex, ey, len, angle, val, fw, fh,
-				cv, cvx, getPos, iFac, cell, xta;
+				cv, cvx, getPos, iFac, cell, xta,
+				redraw = this.redraw || this.checkCorners();
 
-			xta = my.xta;
-			this.setCorners();
-			tl = this.topLeft;
-			tr = this.topRight;
-			br = this.bottomRight;
-			bl = this.bottomLeft;
+			this.redraw = false;
 
-			if (xta(tl, tr, br, bl)) {
-				tlloc = tl.local;
-				trloc = tr.local;
-				brloc = br.local;
-				blloc = bl.local;
+			if (redraw) {
 
-				if (xta(tlloc, trloc, brloc, blloc)) {
-					tlx = tlloc.x;
-					tly = tlloc.y;
-					trx = trloc.x;
-					tryy = trloc.y;
-					brx = brloc.x;
-					bry = brloc.y;
-					blx = blloc.x;
-					bly = blloc.y;
-					min = Math.min;
-					max = Math.max;
-					ceil = Math.ceil;
-					floor = Math.floor;
-					xmin = min.apply(Math, [tlx, trx, brx, blx]);
-					ymin = min.apply(Math, [tly, tryy, bry, bly]);
-					xmax = max.apply(Math, [tlx, trx, brx, blx]);
-					ymax = max.apply(Math, [tly, tryy, bry, bly]);
-					width = xmax - xmin || 1;
-					height = ymax - ymin || 1;
-					dim = max.apply(Math, [width, height]);
-					maxDim = ceil(dim);
-					minDim = floor(dim);
-					src = my.xtGet(my.asset[this.source], my.canvas[this.source], false); //must be an image, canvas or video
-					cv = my.cv;
-					cvx = my.cvx;
-					getPos = this.getPosition;
-					iFac = this.interferenceFactor;
-					cell = this.cell;
+				xta = my.xta;
+				this.checkCorners();
+				tl = this.topLeft;
+				tr = this.topRight;
+				br = this.bottomRight;
+				bl = this.bottomLeft;
 
-					this.width = width;
-					this.localWidth = width;
-					this.height = height;
-					this.localHeight = height;
-					this.start.x = xmin;
-					this.start.y = ymin;
-					if (src && my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
-						cell.width = ceil(width);
-						cell.height = ceil(height);
-						cv.width = maxDim;
-						cv.height = maxDim;
-						cvx.drawImage(src, 0, 0, src.width, src.height, 0, 0, minDim, minDim);
-						for (i = 0; i <= minDim; i++) {
-							val = i / minDim;
-							sx = getPos(tlx, blx, val) - xmin;
-							sy = getPos(tly, bly, val) - ymin;
-							ex = getPos(trx, brx, val) - xmin;
-							ey = getPos(tryy, bry, val) - ymin;
-							len = this.getLength(sx, sy, ex, ey);
-							angle = this.getAngle(sx, sy, ex, ey);
+				if (xta(tl, tr, br, bl)) {
+					tlloc = tl.local;
+					trloc = tr.local;
+					brloc = br.local;
+					blloc = bl.local;
 
-							this.setEasel(sx, sy, angle);
-							this.engine.drawImage(cv, 0, i, minDim, 1, 0, 0, len, 1);
-							this.resetEasel();
+					if (xta(tlloc, trloc, brloc, blloc)) {
+						tlx = tlloc.x;
+						tly = tlloc.y;
+						trx = trloc.x;
+						tryy = trloc.y;
+						brx = brloc.x;
+						bry = brloc.y;
+						blx = blloc.x;
+						bly = blloc.y;
+						min = Math.min;
+						max = Math.max;
+						ceil = Math.ceil;
+						floor = Math.floor;
+						xmin = min.apply(Math, [tlx, trx, brx, blx]);
+						ymin = min.apply(Math, [tly, tryy, bry, bly]);
+						xmax = max.apply(Math, [tlx, trx, brx, blx]);
+						ymax = max.apply(Math, [tly, tryy, bry, bly]);
+						width = xmax - xmin || 1;
+						height = ymax - ymin || 1;
+						dim = max.apply(Math, [width, height]);
+						maxDim = ceil(dim);
+						minDim = floor(dim);
+						src = my.xtGet(my.asset[this.source], my.canvas[this.source], false); //must be an image, canvas or video
+						cv = my.cv;
+						cvx = my.cvx;
+						getPos = this.getPosition;
+						iFac = this.interferenceFactor;
+						cell = this.cell;
+
+						this.width = width;
+						this.localWidth = width;
+						this.height = height;
+						this.localHeight = height;
+						this.start.x = xmin;
+						this.start.y = ymin;
+						if (src && my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
+							cell.width = ceil(width);
+							cell.height = ceil(height);
+							cv.width = maxDim;
+							cv.height = maxDim;
+							cvx.drawImage(src, 0, 0, src.width, src.height, 0, 0, minDim, minDim);
+							for (i = 0; i <= minDim; i++) {
+								val = i / minDim;
+								sx = getPos(tlx, blx, val) - xmin;
+								sy = getPos(tly, bly, val) - ymin;
+								ex = getPos(trx, brx, val) - xmin;
+								ey = getPos(tryy, bry, val) - ymin;
+								len = this.getLength(sx, sy, ex, ey);
+								angle = this.getAngle(sx, sy, ex, ey);
+
+								this.setEasel(sx, sy, angle);
+								this.engine.drawImage(cv, 0, i, minDim, 1, 0, 0, len, 1);
+								this.resetEasel();
+							}
+							fw = ceil(width);
+							fh = ceil(height);
+							for (i = 0; i < this.interferenceLoops; i++) {
+								fw = ceil(fw * iFac);
+								fh = ceil(fh * iFac);
+								cv.width = fw;
+								cv.height = fh;
+								cvx.drawImage(cell, 0, 0, cell.width, cell.height, 0, 0, fw, fh);
+								this.engine.drawImage(cv, 0, 0, fw, fh, 0, 0, cell.width, cell.height);
+							}
+							this.redraw = false;
 						}
-						fw = ceil(width);
-						fh = ceil(height);
-						for (i = 0; i < this.interferenceLoops; i++) {
-							fw = ceil(fw * iFac);
-							fh = ceil(fh * iFac);
-							cv.width = fw;
-							cv.height = fh;
-							cvx.drawImage(cell, 0, 0, cell.width, cell.height, 0, 0, fw, fh);
-							this.engine.drawImage(cv, 0, 0, fw, fh, 0, 0, cell.width, cell.height);
-						}
-						this.redraw = false;
 					}
 				}
 			}
@@ -911,8 +968,10 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 			var cf = this.currentFrame;
 			if (cf) {
 				cf.pickupEntity(items);
+				this.oldPivot = this.pivot;
+				this.pivot = 'mouse';
 				my.group[this.group].resort = true;
-				this.redraw = true;
+				// this.redraw = true;
 			}
 			return this;
 		};
@@ -927,8 +986,10 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 			var cf = this.currentFrame;
 			if (cf) {
 				cf.dropEntity(item);
+				this.pivot = this.oldPivot;
+				delete this.oldPivot;
 				my.group[this.group].resort = true;
-				this.redraw = true;
+				// this.redraw = true;
 			}
 			return this;
 		};
@@ -980,9 +1041,9 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 **/
 		my.Frame.prototype.drawImage = function(ctx, cellname, cell) {
 			var start = this.start;
-			if (this.redraw) {
-				this.redrawCanvas();
-			}
+			// if (this.redraw) {
+			// 	this.redrawCanvas();
+			// }
 			ctx.drawImage(this.cell, start.x, start.y);
 			return this;
 		};
