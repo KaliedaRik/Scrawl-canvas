@@ -253,7 +253,7 @@ A __factory__ function to generate new Frame entitys
 						e = my.particle[this.pivot].place;
 						break;
 					default:
-						e = my[this.reference][this.pivot].start;
+						e = my[this.reference][this.pivot].currentStart;
 				}
 				loc.x = e.x;
 				loc.y = e.y;
@@ -261,7 +261,6 @@ A __factory__ function to generate new Frame entitys
 			if (x != this.local.x || y != this.local.y) {
 				this.changed = true;
 			}
-			// console.log(this.name, this.reference, this.path, this.pivot, x, y, this.local.x, this.local.y);
 			return this;
 		};
 		/**
@@ -368,7 +367,7 @@ Data should always be an array in the form [x, y, z]
 			this.globalAlpha = get(items.globalAlpha, 1);
 			this.globalCompositeOperation = get(items.globalCompositeOperation, 'source-over');
 
-			this.lineWidth = get(items.lineWidth, 1);
+			this.lineWidth = get(items.lineWidth, 0);
 			this.lineCap = get(items.lineCap, 'butt');
 			this.lineJoin = get(items.lineJoin, 'miter');
 			this.lineDash = get(items.lineDash, []);
@@ -428,7 +427,7 @@ Data should always be an array in the form [x, y, z]
 			lockElementAttributes: false,
 			globalAlpha: 1,
 			globalCompositeOperation: 'source-over',
-			lineWidth: 1,
+			lineWidth: 0,
 			lineCap: 'butt',
 			lineJoin: 'miter',
 			lineDash: [],
@@ -494,8 +493,12 @@ Augments Base.clone()
 @chainable
 **/
 		my.Frame.prototype.clone = function(items) {
-			var c = my.Base.prototype.clone.call(this, items);
-			c.setLockElementAttributes(my.mergeOver(this.lockElementAttributes, my.safeObject(items)));
+			var a,
+				c = my.Base.prototype.clone.call(this, items);
+			if (c.lockFrameTo) {
+				a = my.mergeOver(this.lockElementAttributes, my.safeObject(items));
+				my.element[c.lockFrameTo].set(a);
+			}
 			c.redraw = true;
 			return c;
 		};
@@ -572,7 +575,6 @@ Augments Base.clone()
 				if (this.lockFrameTo || this.pivot || this.path || this[corner].pivot || this[corner].path) {
 					this[corner].setLocal();
 				}
-				// console.log(this.name, corner, this[corner].changed);
 				if (this[corner].changed) {
 					result = true;
 				}
@@ -1178,6 +1180,58 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 				}
 			}
 			return (result) ? items : false;
+		};
+		/**
+Calculate the box position of the entity
+
+Returns an object with the following attributes:
+
+* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+
+@method getMaxDimensions
+@param {Object} cell object
+@param {Object} entity object
+@return dimensions object
+@private
+**/
+		my.Frame.prototype.getMaxDimensions = function(cell) {
+			var tl, tr, br, bl, tlloc, trloc, brloc, blloc, t, l, b, r,
+				min = Math.min,
+				max = Math.max,
+				floor = Math.floor,
+				ceil = Math.ceil,
+				border, paste;
+			tl = this.topLeft;
+			tr = this.topRight;
+			br = this.bottomRight;
+			bl = this.bottomLeft;
+			if (my.xta(tl, tr, br, bl)) {
+				tlloc = tl.local;
+				trloc = tr.local;
+				brloc = br.local;
+				blloc = bl.local;
+				border = (this.lineWidth / 2) + 1;
+				l = floor(min.apply(Math, [tlloc.x, trloc.x, brloc.x, blloc.x]) - border);
+				t = floor(min.apply(Math, [tlloc.y, trloc.y, brloc.y, blloc.y]) - border);
+				r = ceil(max.apply(Math, [tlloc.x, trloc.x, brloc.x, blloc.x]) + border);
+				b = ceil(max.apply(Math, [tlloc.y, trloc.y, brloc.y, blloc.y]) + border);
+			}
+			else {
+				paste = my.safeObject(my.cell[my.group[this.group].cell].pasteData);
+				l = floor(paste.x || 0);
+				t = floor(paste.y || 0);
+				r = ceil(paste.x + paste.w || 1);
+				b = ceil(paste.y + paste.h || 1);
+			}
+			return {
+				top: t,
+				left: l,
+				bottom: b,
+				right: r
+			};
 		};
 
 		/**

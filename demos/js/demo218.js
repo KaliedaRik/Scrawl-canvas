@@ -33,7 +33,7 @@ var mycode = function() {
 		height: 175,
 		pitch: 20,
 		yaw: 30,
-		includeCornerTrackers: true
+		// includeCornerTrackers: true
 	}).clone({
 		lockFrameTo: 'mydiv2',
 		startX: 350
