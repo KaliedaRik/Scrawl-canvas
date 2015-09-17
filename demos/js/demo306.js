@@ -146,7 +146,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['physics', 'animation', 'perspective'],
+	extensions: ['physics', 'animation', 'frame'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -141,7 +141,6 @@ var mycode = function() {
 				items.handleX = currentHandleX;
 				items.handleY = currentHandleY;
 				swan.set(items);
-				// swan.redraw = true;
 			}
 		}
 	};

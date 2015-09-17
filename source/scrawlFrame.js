@@ -354,6 +354,16 @@ Data should always be an array in the form [x, y, z]
 
 			this.source = get(items.source, false);
 			this.sourceType = false;
+			this.copy = {
+				x: get(items.copyX, 0),
+				y: get(items.copyY, 0),
+				w: get(items.copyWidth, '100%'),
+				h: get(items.copyHeight, '100%')
+			};
+			this.currentCopy = {
+				flag: false
+			};
+
 			this.cell = document.createElement('canvas');
 			this.engine = this.cell.getContext('2d');
 
@@ -473,13 +483,29 @@ Augments Base.set()
 @chainable
 **/
 		my.Frame.prototype.set = function(items) {
+			var e,
+				so = my.safeObject,
+				copy = this.copy,
+				get = my.xtGet;
 			my.Base.prototype.set.call(this, items);
+			items = so(items);
 			if (items.lockFrameTo) {
 				this.lockOn(items);
 				this.lockFrameTo = items.lockFrameTo;
 			}
-			else {
+			else if (this.lockFrameTo) {
 				this.setLockElementAttributes(items);
+				e = get(so(my.element)[this.lockFrameTo], so(my.stack)[this.lockFrameTo], so(my.pad)[this.lockFrameTo]);
+				if (e) {
+					e.set(this.lockElementAttributes);
+				}
+			}
+			if (my.xt(items.copyX, items.copyY, items.copyWidth, items.copyHeight)) {
+				copy.x = get(items.copyX, copy.x);
+				copy.y = get(items.copyY, copy.y);
+				copy.w = get(items.copyWidth, copy.w);
+				copy.h = get(items.copyHeight, copy.h);
+				this.currentCopy.flag = false;
 			}
 			this.setCorners(items);
 			this.setEngine(items);
@@ -494,11 +520,22 @@ Augments Base.clone()
 **/
 		my.Frame.prototype.clone = function(items) {
 			var a,
-				c = my.Base.prototype.clone.call(this, items);
+				c = my.Base.prototype.clone.call(this, items),
+				get = my.xtGet,
+				copy = this.copy;
 			if (c.lockFrameTo) {
 				a = my.mergeOver(this.lockElementAttributes, my.safeObject(items));
 				my.element[c.lockFrameTo].set(a);
 			}
+			c.copy = {
+				x: get(items.copyX, copy.x),
+				y: get(items.copyY, copy.y),
+				w: get(items.copyWidth, copy.w),
+				h: get(items.copyHeight, copy.h)
+			};
+			c.currentCopy = {
+				flag: false
+			};
 			c.redraw = true;
 			return c;
 		};
@@ -735,13 +772,13 @@ Augments Base.clone()
 			if (el) {
 				if (!el.topLeft) {
 					el.addCornerTrackers();
-					this.setLockElementAttributes(items);
-					el.set(this.lockElementAttributes);
 					for (i = 0; i < 4; i++) {
 						corner = corners[i];
 						this[corner].local = el[corner];
 					}
 				}
+				this.setLockElementAttributes(items);
+				el.set(this.lockElementAttributes);
 			}
 		};
 		/**
@@ -829,8 +866,9 @@ Entity.stamp hook helper function
 				min, max, ceil, floor, xmin, ymin, xmax, ymax,
 				width, height, dim, maxDim, minDim,
 				src, //must be an image, canvas or video
-				i, sx, sy, ex, ey, len, angle, val, fw, fh,
+				i, sx, sy, ex, ey, len, angle, val, fw, fh, copy,
 				cv, cvx, getPos, iFac, cell, xta,
+				get = my.xtGet,
 				redraw = this.redraw || this.checkCorners();
 
 			this.redraw = false;
@@ -872,7 +910,7 @@ Entity.stamp hook helper function
 						dim = max.apply(Math, [width, height]);
 						maxDim = ceil(dim);
 						minDim = floor(dim);
-						src = my.xtGet(my.asset[this.source], my.canvas[this.source], false); //must be an image, canvas or video
+						src = my.xtGet(my.asset[this.source], my.canvas[this.source], false);
 						cv = my.cv;
 						cvx = my.cvx;
 						getPos = this.getPosition;
@@ -886,11 +924,15 @@ Entity.stamp hook helper function
 						this.start.x = xmin;
 						this.start.y = ymin;
 						if (src && my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
+							copy = this.currentCopy;
+							if (!copy.flag) {
+								this.updateCurrentCopy(src);
+							}
 							cell.width = ceil(width);
 							cell.height = ceil(height);
 							cv.width = maxDim;
 							cv.height = maxDim;
-							cvx.drawImage(src, 0, 0, src.width, src.height, 0, 0, minDim, minDim);
+							cvx.drawImage(src, copy.x, copy.y, copy.w, copy.h, 0, 0, minDim, minDim);
 							for (i = 0; i <= minDim; i++) {
 								val = i / minDim;
 								sx = getPos(tlx, blx, val) - xmin;
@@ -920,6 +962,34 @@ Entity.stamp hook helper function
 				}
 			}
 			return this;
+		};
+		/**
+@method updateCurrentCopy
+@private
+**/
+		my.Frame.prototype.updateCurrentCopy = function(reference) {
+			var copy = this.copy,
+				current = this.currentCopy,
+				width, height, w, h,
+				conv = this.numberConvert,
+				get = my.xtGet;
+			if (reference) {
+				width = get(reference.actualWidth, reference.width);
+				height = get(reference.actualHeight, reference.height);
+				current.x = (copy.x.substring) ? conv(copy.x, width) : copy.x;
+				current.y = (copy.y.substring) ? conv(copy.y, height) : copy.y;
+				current.w = (copy.w.substring) ? conv(copy.w, width) : copy.w;
+				current.h = (copy.h.substring) ? conv(copy.h, height) : copy.h;
+				current.x = (current.x < 0) ? 0 : current.x;
+				current.y = (current.y < 0) ? 0 : current.y;
+				current.w = (current.w < 1) ? 1 : current.w;
+				current.h = (current.h < 1) ? 1 : current.h;
+				w = width - current.x;
+				h = height - current.y;
+				current.w = (current.w > w) ? w : current.w;
+				current.h = (current.h > h) ? h : current.h;
+				current.flag = true;
+			}
 		};
 		/**
 @method getPosition

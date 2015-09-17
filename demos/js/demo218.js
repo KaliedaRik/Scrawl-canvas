@@ -14,12 +14,8 @@ var mycode = function() {
 	scrawl.stack.mystack.set({
 		width: 600,
 		height: 400,
-		perspectiveZ: 1000,
+		perspectiveZ: 800,
 		border: '1px solid red'
-	});
-	scrawl.pad.mystack_canvas.set({
-		translateZ: -1,
-		border: '0'
 	});
 
 	//build entitys
@@ -32,8 +28,7 @@ var mycode = function() {
 		width: 250,
 		height: 175,
 		pitch: 20,
-		yaw: 30,
-		// includeCornerTrackers: true
+		yaw: 30
 	}).clone({
 		lockFrameTo: 'mydiv2',
 		startX: 350
@@ -41,26 +36,23 @@ var mycode = function() {
 
 	scrawl.makeFrame({
 		name: 'staticSwan',
+		copyX: '15%',
+		copyY: '15%',
+		copyWidth: '70%',
+		copyHeight: '70%',
 		cornersData: [50, 250, 250, 250, 200, 350, 100, 350],
 		source: 'swan'
 	}).clone({
 		cornersData: [350, 250, 550, 250, 500, 350, 400, 350]
 	});
 
-	//animation object
-	scrawl.makeAnimation({
-		fn: function() {
+	scrawl.render();
 
-			scrawl.render();
-
-			//hide-start
-			testNow = Date.now();
-			testTime = testNow - testTicker;
-			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
-			//hide-end
-		},
-	});
+	//hide-start
+	testNow = Date.now();
+	testTime = testNow - testTicker;
+	testMessage.innerHTML = 'Render time: ' + Math.ceil(testTime) + 'ms';
+	//hide-end
 };
 
 scrawl.loadExtensions({
