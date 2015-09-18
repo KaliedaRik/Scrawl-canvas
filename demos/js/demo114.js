@@ -86,10 +86,6 @@ var mycode = function() {
 	scrawl.makeAnimation({
 		fn: function() {
 
-			if (myEntity) {
-				test.redraw = true;
-			}
-
 			scrawl.render();
 
 			//hide-start

@@ -113,6 +113,8 @@ A __factory__ function to generate new Frame entitys
 			this.pathPlace = get(items.pathPlace, false);
 			this.deltaPathPlace = get(items.deltaPathPlace, false);
 			this.pathSpeedConstant = get(items.pathSpeedConstant, false);
+			this.lockX = get(items.lockX, false);
+			this.lockY = get(items.lockY, false);
 			this.local = vec({
 				name: this.name + '_local'
 			});
@@ -143,6 +145,8 @@ A __factory__ function to generate new Frame entitys
 			pathPlace: false,
 			deltaPathPlace: false,
 			pathSpeedConstant: false,
+			lockX: false,
+			lockY: false
 		};
 		my.mergeInto(my.d.FramePoint, my.d.Base);
 		/**
@@ -170,6 +174,8 @@ A __factory__ function to generate new Frame entitys
 			this.pathPlace = get(items.pathPlace, this.pathPlace);
 			this.deltaPathPlace = get(items.deltaPathPlace, this.deltaPathPlace);
 			this.pathSpeedConstant = get(items.pathSpeedConstant, this.pathSpeedConstant);
+			this.lockX = get(items.lockX, this.lockX);
+			this.lockY = get(items.lockY, this.lockY);
 			this.setReference();
 			this.setLocal();
 			return this;
@@ -310,6 +316,23 @@ Data should always be an array in the form [x, y, z]
 @private
 **/
 		my.FramePoint.prototype.setLocalFromPath = function() {
+			var here,
+				e = my.entity[this.path],
+				local = this.local;
+			if (e && e.type === 'Path') {
+				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, false);
+				local.x = (!this.lockX) ? here.x : local.x;
+				local.y = (!this.lockY) ? here.y : local.y;
+				if (this.deltaPathPlace) {
+					this.pathPlace += this.deltaPathPlace;
+					if (this.pathPlace > 1) {
+						this.pathPlace -= 1;
+					}
+					else if (this.pathPlace < 0) {
+						this.pathPlace += 1;
+					}
+				}
+			}
 			return this;
 		};
 
@@ -350,7 +373,7 @@ Data should always be an array in the form [x, y, z]
 			this.height = 1;
 			this.localWidth = 1;
 			this.localHeight = 1;
-			this.start = vec();
+			this.referencePoint = vec();
 
 			this.source = get(items.source, false);
 			this.sourceType = false;
@@ -428,7 +451,7 @@ Data should always be an array in the form [x, y, z]
 			height: 1,
 			localWidth: 1,
 			localHeight: 1,
-			start: false,
+			referencePoint: false,
 			currentFrame: false,
 			method: 'fill',
 			visibility: true,
@@ -590,6 +613,8 @@ Augments Base.clone()
 					temp.deltaPathPlace = get(items[corner + 'DeltaPathPlace'], this[corner].deltaPathPlace);
 					temp.pathSpeedConstant = get(items[corner + 'PathSpeedConstant'], this[corner].pathSpeedConstant);
 					temp.pivot = get(items[corner + 'Pivot'], this[corner].pivot);
+					temp.lockX = get(items[corner + 'LockX'], this[corner].lockX);
+					temp.lockY = get(items[corner + 'LockY'], this[corner].lockY);
 					this[corner].set(temp);
 				}
 			}
@@ -921,8 +946,8 @@ Entity.stamp hook helper function
 						this.localWidth = width;
 						this.height = height;
 						this.localHeight = height;
-						this.start.x = xmin;
-						this.start.y = ymin;
+						this.referencePoint.x = xmin;
+						this.referencePoint.y = ymin;
 						if (src && my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
 							copy = this.currentCopy;
 							if (!copy.flag) {
@@ -1043,7 +1068,6 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 				this.oldPivot = this.pivot;
 				this.pivot = 'mouse';
 				my.group[this.group].resort = true;
-				// this.redraw = true;
 			}
 			return this;
 		};
@@ -1061,7 +1085,6 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 				this.pivot = this.oldPivot;
 				delete this.oldPivot;
 				my.group[this.group].resort = true;
-				// this.redraw = true;
 			}
 			return this;
 		};
@@ -1112,11 +1135,8 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 @private
 **/
 		my.Frame.prototype.drawImage = function(ctx, cellname, cell) {
-			var start = this.start;
-			// if (this.redraw) {
-			// 	this.redrawCanvas();
-			// }
-			ctx.drawImage(this.cell, start.x, start.y);
+			var referencePoint = this.referencePoint;
+			ctx.drawImage(this.cell, referencePoint.x, referencePoint.y);
 			return this;
 		};
 		/**

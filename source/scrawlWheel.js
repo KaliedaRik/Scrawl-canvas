@@ -596,14 +596,10 @@ Returns an object with the following attributes:
 @private
 **/
 		my.Wheel.prototype.getMaxDimensions = function(cell) {
-			// if(!this.maxDimensions){
 			console.log(this.name, 'getMaxDimensions');
-			// var x = this.start.x,
-			// 	y = this.start.y,
 			var x = this.currentStart.x,
 				y = this.currentStart.y,
 				rad = (this.radius * this.scale),
-				// o = this.offset,
 				o = this.currentHandle,
 				hx = (this.flipReverse) ? -o.x : o.x,
 				hy = (this.flipUpend) ? -o.y : o.y,
@@ -648,8 +644,6 @@ Returns an object with the following attributes:
 				bottom: b,
 				right: r
 			};
-			// }
-			// return this.maxDimensions;
 		};
 
 		return my;

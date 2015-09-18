@@ -3436,6 +3436,7 @@ setStampUsingPivot helper object
 			current.y = (!obj.lockY) ? vector.y : current.y;
 		},
 		mouse: function(obj, ignore, cell, mouse) {
+			console.log(obj.name, obj.mouseIndex, obj.oldX, obj.oldY, obj.currentStart.x, obj.currentStart.y);
 			var pad,
 				current = obj.currentStart;
 			if (!my.xt(mouse)) {

@@ -358,11 +358,19 @@ var mycode = function() {
 		if (e) {
 			e.preventDefault();
 			current_entity.set({
-				mouseIndex: '',
+				mouseIndex: 'mouse',
 				visibility: false
 			});
 		}
 	}, scrawl.canvas.mycanvas);
+
+	//initialize block
+	// here = myPad.getMouse();
+	// current_entity.set({
+	// 	mouseIndex: '',
+	// 	visibility: false
+	// });
+	// scrawl.render();
 
 	//animation object
 	scrawl.makeAnimation({
@@ -370,6 +378,7 @@ var mycode = function() {
 
 			here = myPad.getMouse();
 			scrawl.render();
+			// console.log(current_entity.name, current_entity.currentStart.x, current_entity.currentStart.y, current_entity.oldX, current_entity.oldY);
 
 			//hide-start
 			testNow = Date.now();
