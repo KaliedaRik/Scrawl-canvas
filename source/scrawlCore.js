@@ -7250,6 +7250,7 @@ Permitted methods include:
 			}
 			if (this.pivot) {
 				this.setStampUsingPivot(cellname, mouse);
+				this.maxDimensions = null;
 			}
 			else {
 				this.pathStamp();

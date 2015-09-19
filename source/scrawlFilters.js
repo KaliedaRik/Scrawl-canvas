@@ -627,103 +627,6 @@ reciprocal assignment - also occurs in scrawlFrame as there's no way to tell whi
 			my.Frame.prototype.stampFilterActions = my.Entity.prototype.stampFilterActions;
 		}
 		/**
-Entity.stampFilterDimensions helper object
-@method stampFilterDimensionsActions
-@private
-**/
-		my.Entity.prototype.stampFilterDimensionsActions = {
-			Phrase: function(cell, entity) {
-				return {
-					top: 0,
-					left: 0,
-					bottom: cell.actualHeight,
-					right: cell.actualWidth
-				};
-			},
-			Picture: function(cell, entity) {
-				return {
-					top: 0,
-					left: 0,
-					bottom: cell.actualHeight,
-					right: cell.actualWidth
-				};
-			},
-			Wheel: function(cell, entity) {
-				var x = entity.start.x,
-					y = entity.start.y,
-					rad = (entity.radius * entity.scale),
-					hx = (entity.flipReverse) ? -entity.offset.x : entity.offset.x,
-					hy = (entity.flipUpend) ? -entity.offset.y : entity.offset.y,
-					w = cell.actualWidth,
-					h = cell.actualHeight,
-					conv = entity.numberConvert,
-					line = my.ctx[entity.context].lineWidth || 0,
-					ceil = Math.ceil,
-					floor = Math.floor,
-					t, l, b, r,
-					v = my.v;
-				if (x.substring) {
-					x = conv(x, w);
-				}
-				if (y.substring) {
-					y = conv(y, h);
-				}
-				v.set({
-					x: hx,
-					y: hy
-				}).rotate(entity.roll).vectorAdd({
-					x: x,
-					y: y
-				});
-				t = floor(v.y) - line - rad;
-				t = (t < 0) ? 0 : t;
-				b = ceil(v.y) + line + rad;
-				b = (b > h) ? h : b;
-				l = floor(v.x) - line - rad;
-				l = (l < 0) ? 0 : l;
-				r = ceil(v.x) + line + rad;
-				r = (r > w) ? w : r;
-				return {
-					top: t,
-					left: l,
-					bottom: b,
-					right: r
-				};
-			},
-			Block: function(cell, entity) {
-				return {
-					top: 0,
-					left: 0,
-					bottom: cell.actualHeight,
-					right: cell.actualWidth
-				};
-			},
-			Shape: function(cell, entity) {
-				return {
-					top: 0,
-					left: 0,
-					bottom: cell.actualHeight,
-					right: cell.actualWidth
-				};
-			},
-			Path: function(cell, entity) {
-				return {
-					top: 0,
-					left: 0,
-					bottom: cell.actualHeight,
-					right: cell.actualWidth
-				};
-			},
-			Frame: function(cell, entity) {
-				return {
-					top: 0,
-					left: 0,
-					bottom: cell.actualHeight,
-					right: cell.actualWidth
-				};
-			}
-		};
-		/**
 Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
 @method stampFilter
 @private
@@ -774,7 +677,7 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 				cv.height = canvas.height;
 				cvx.save();
 				imageData = action[this.type](this, engine, cellname, cell, filterOnStroke);
-				dim = (this.getMaxDimensions) ? this.getMaxDimensions(cell) : this.stampFilterDimensionsActions[this.type](cell, this);
+				dim = this.maxDimensions || this.getMaxDimensions(cell);
 				if (imageData) {
 					for (i = 0, iz = filters.length; i < iz; i++) {
 						f = filter[filters[i]];

@@ -182,9 +182,12 @@ Augments Entity.set()
 **/
 		my.Wheel.prototype.set = function(items) {
 			my.Entity.prototype.set.call(this, items);
-			this.radius = my.xtGet(items.radius, this.radius);
-			this.width = this.radius * 2;
-			this.height = this.width;
+			if (my.xt(items.radius)) {
+				this.radius = items.radius;
+				this.width = this.radius * 2;
+				this.height = this.width;
+				this.maxDimensions = null;
+			}
 			return this;
 		};
 		/**
@@ -202,15 +205,13 @@ Augments Entity.setDelta()
 				this.radius += items.radius;
 				this.width = this.radius * 2;
 				this.height = this.width;
+				this.maxDimensions = null;
 			}
 			if (xt(items.startAngle)) {
 				this.startAngle = this.get('startAngle') + items.startAngle;
 			}
 			if (xt(items.endAngle)) {
 				this.endAngle = this.get('endAngle') + items.endAngle;
-			}
-			if (my.xto(items.radius, items.scale, items.lineWidth)) {
-				this.maxDimensions = null;
 			}
 			return this;
 		};
@@ -637,12 +638,7 @@ Returns an object with the following attributes:
 				bottom: b,
 				right: r
 			};
-			return {
-				top: t,
-				left: l,
-				bottom: b,
-				right: r
-			};
+			return this.maxDimensions;
 		};
 
 		return my;

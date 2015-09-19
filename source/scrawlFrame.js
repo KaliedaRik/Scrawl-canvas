@@ -428,6 +428,7 @@ Data should always be an array in the form [x, y, z]
 			this.setCorners(items);
 			this.setEngine(this);
 			this.filtersEntityInit(items);
+			this.maxDimensions = null;
 
 			this.redraw = true;
 
@@ -488,6 +489,7 @@ Data should always be an array in the form [x, y, z]
 			redraw: false,
 			interferenceLoops: 2,
 			interferenceFactor: 1.03,
+			maxDimensions: null
 		};
 		my.mergeInto(my.d.Frame, my.d.Base);
 		/**
@@ -985,6 +987,7 @@ Entity.stamp hook helper function
 						}
 					}
 				}
+				this.maxDimensions = null;
 			}
 			return this;
 		};
@@ -1335,12 +1338,13 @@ Returns an object with the following attributes:
 			if (!between(r, 0, w, true)) {
 				r = (r > halfW) ? w : 0;
 			}
-			return {
+			this.maxDimensions = {
 				top: t,
 				left: l,
 				bottom: b,
 				right: r
 			};
+			return this.maxDimensions;
 		};
 
 		/**
