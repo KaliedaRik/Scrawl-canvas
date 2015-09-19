@@ -3436,7 +3436,6 @@ setStampUsingPivot helper object
 			current.y = (!obj.lockY) ? vector.y : current.y;
 		},
 		mouse: function(obj, ignore, cell, mouse) {
-			console.log(obj.name, obj.mouseIndex, obj.oldX, obj.oldY, obj.currentStart.x, obj.currentStart.y);
 			var pad,
 				current = obj.currentStart;
 			if (!my.xt(mouse)) {
@@ -3544,7 +3543,14 @@ mice.ui0, mice.ui1 etc - refers to pointer and touch events
 @type Object
 @default {}
 **/
-		this.mice = {};
+		this.mice = {
+			mouse: {
+				id: 'mouse',
+				x: 0,
+				y: 0,
+				active: false
+			}
+		};
 		return this;
 	};
 	my.PageElement.prototype = Object.create(my.Base.prototype);
@@ -3816,12 +3822,12 @@ If an argument is supplied, then all currently existing mouse/touch vectors are 
 				}
 			}
 			else {
-				return false;
+				return [this.mice.mouse];
 			}
 		}
 		else {
-			//item undefined returns a vector, or false
-			return my.xtGet(this.mice.t0, this.mice.p1, this.mice.pen, this.mice.mouse, false);
+			//item undefined returns a vector, default mouse vector
+			return my.xtGet(this.mice.t0, this.mice.p1, this.mice.pen, this.mice.mouse);
 		}
 	};
 	/**

@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
+	// define variables
 	var myPad = scrawl.pad.mycanvas,
 		here,
 
@@ -31,7 +31,7 @@ var mycode = function() {
 
 		stopE;
 
-	//import image into scrawl library
+	// import image into scrawl library
 	scrawl.getImagesByClass('demo101');
 
 	scrawl.stack.mystack.set({
@@ -40,7 +40,7 @@ var mycode = function() {
 		perspectiveZ: 800
 	});
 
-	//define filters
+	// define filters
 	scrawl.makeGreyscaleFilter({
 		name: 'myGreyscale',
 		filterStrength: 0.9
@@ -118,7 +118,7 @@ var mycode = function() {
 
 	current_filter = 'myGreyscale';
 
-	//define entitys
+	// define entitys
 	scrawl.makePicture({
 		name: 'background',
 		width: 600,
@@ -300,7 +300,7 @@ var mycode = function() {
 	input_entity.value = 'blocky';
 	input_filter.value = 'myGreyscale';
 
-	//event listeners
+	// event listeners
 	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
@@ -345,6 +345,7 @@ var mycode = function() {
 	};
 	input_filter.addEventListener('change', event_filter, false);
 
+	// input movement event listeners
 	scrawl.addListener(['down', 'enter'], function(e) {
 		if (e) {
 			e.preventDefault();
@@ -358,27 +359,17 @@ var mycode = function() {
 		if (e) {
 			e.preventDefault();
 			current_entity.set({
-				mouseIndex: 'mouse',
 				visibility: false
 			});
 		}
 	}, scrawl.canvas.mycanvas);
 
-	//initialize block
-	// here = myPad.getMouse();
-	// current_entity.set({
-	// 	mouseIndex: '',
-	// 	visibility: false
-	// });
-	// scrawl.render();
-
-	//animation object
+	// animation object
 	scrawl.makeAnimation({
 		fn: function() {
 
 			here = myPad.getMouse();
 			scrawl.render();
-			// console.log(current_entity.name, current_entity.currentStart.x, current_entity.currentStart.y, current_entity.oldX, current_entity.oldY);
 
 			//hide-start
 			testNow = Date.now();
