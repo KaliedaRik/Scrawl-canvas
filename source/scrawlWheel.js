@@ -596,7 +596,6 @@ Returns an object with the following attributes:
 @private
 **/
 		my.Wheel.prototype.getMaxDimensions = function(cell) {
-			console.log(this.name, 'getMaxDimensions');
 			var x = this.currentStart.x,
 				y = this.currentStart.y,
 				rad = (this.radius * this.scale),

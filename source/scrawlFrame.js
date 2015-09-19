@@ -1293,11 +1293,14 @@ Returns an object with the following attributes:
 				max = Math.max,
 				floor = Math.floor,
 				ceil = Math.ceil,
-				border, paste;
+				border, paste,
+				between = my.isBetween,
+				w, h, halfW, halfH;
 			tl = this.topLeft;
 			tr = this.topRight;
 			br = this.bottomRight;
 			bl = this.bottomLeft;
+			cell = (cell && cell.type === 'Cell') ? cell : my.cell[my.group[this.group].cell];
 			if (my.xta(tl, tr, br, bl)) {
 				tlloc = tl.local;
 				trloc = tr.local;
@@ -1310,11 +1313,27 @@ Returns an object with the following attributes:
 				b = ceil(max.apply(Math, [tlloc.y, trloc.y, brloc.y, blloc.y]) + border);
 			}
 			else {
-				paste = my.safeObject(my.cell[my.group[this.group].cell].pasteData);
+				paste = my.safeObject(cell.pasteData);
 				l = floor(paste.x || 0);
 				t = floor(paste.y || 0);
 				r = ceil(paste.x + paste.w || 1);
 				b = ceil(paste.y + paste.h || 1);
+			}
+			w = cell.actualWidth;
+			h = cell.actualHeight;
+			halfW = w / 2;
+			halfH = h / 2;
+			if (!between(t, 0, h, true)) {
+				t = (t > halfH) ? h : 0;
+			}
+			if (!between(b, 0, h, true)) {
+				b = (b > halfH) ? h : 0;
+			}
+			if (!between(l, 0, w, true)) {
+				l = (l > halfW) ? w : 0;
+			}
+			if (!between(r, 0, w, true)) {
+				r = (r > halfW) ? w : 0;
 			}
 			return {
 				top: t,

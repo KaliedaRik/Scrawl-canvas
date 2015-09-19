@@ -1082,12 +1082,17 @@ Add function - takes data, calculates its greyscale and combines it with data
 				d,
 				here,
 				grey,
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
 				i, j, k;
 			alpha = this.getAlpha();
 			d = data.data;
-			for (k = dim.top; k < dim.bottom; k++) {
-				for (j = dim.left; j < dim.right; j++) {
-					i = ((k * data.width) + j) * 4;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
 					if (d[i + 3]) {
 						here = i;
 						grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
@@ -1150,17 +1155,24 @@ Add function - takes data, calculates its invert and combines it with data
 			var alpha,
 				d,
 				here,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					here = i;
-					d[here] = 255 - d[here];
-					d[++here] = 255 - d[here];
-					d[++here] = 255 - d[here];
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						d[here] = 255 - d[here];
+						d[++here] = 255 - d[here];
+						d[++here] = 255 - d[here];
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1225,19 +1237,26 @@ Add function - takes data, calculates its brightness and replaces the old color 
 				d,
 				here,
 				brightness,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
 			brightness = (this.brightness.substring) ? parseFloat(this.brightness) / 100 : this.brightness;
 			d = data.data;
 			brightness = (brightness < 0) ? 0 : brightness;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					here = i;
-					d[here] *= brightness;
-					d[++here] *= brightness;
-					d[++here] *= brightness;
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						d[here] *= brightness;
+						d[++here] *= brightness;
+						d[++here] *= brightness;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1302,19 +1321,26 @@ Add function - takes data, calculates its saturation and replaces the old color 
 				d,
 				here,
 				saturation,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
 			saturation = (this.saturation.substring) ? parseFloat(this.saturation) / 100 : this.saturation;
 			saturation = (saturation < 0) ? 0 : saturation;
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					here = i;
-					d[here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						d[here] = 127 + ((d[here] - 127) * saturation);
+						d[++here] = 127 + ((d[here] - 127) * saturation);
+						d[++here] = 127 + ((d[here] - 127) * saturation);
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1380,22 +1406,29 @@ Add function - takes data, calculates its threshold and combines it with data
 				here,
 				threshold,
 				t,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
 			threshold = (this.threshold.substring) ? parseFloat(this.threshold) / 100 : this.threshold;
 			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold > 0.5) ? 1 : 0);
 			threshold *= 255;
 			data = my.GreyscaleFilter.prototype.add.call(this, data, dim);
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					here = i;
-					t = (d[here] > threshold) ? 255 : 0;
-					d[here] = t;
-					d[++here] = t;
-					d[++here] = t;
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						t = (d[here] > threshold) ? 255 : 0;
+						d[here] = t;
+						d[++here] = t;
+						d[++here] = t;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1481,8 +1514,12 @@ Add function - takes data, calculates its channels and combines it with data
 				red,
 				green,
 				blue,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
 			red = (this.red.substring) ? parseFloat(this.red) / 100 : this.red;
 			green = (this.green.substring) ? parseFloat(this.green) / 100 : this.green;
@@ -1491,13 +1528,17 @@ Add function - takes data, calculates its channels and combines it with data
 			red = (red < 0) ? 0 : red;
 			green = (green < 0) ? 0 : green;
 			blue = (blue < 0) ? 0 : blue;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					here = i;
-					d[here] *= red;
-					d[++here] *= green;
-					d[++here] *= blue;
-					d[++here] *= alpha;
+			console.log(left, top, right, bottom);
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						d[here] *= red;
+						d[++here] *= green;
+						d[++here] *= blue;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1586,8 +1627,12 @@ Add function - takes data, calculates its channels and combines it with data
 				r,
 				g,
 				b,
-				i,
-				iz,
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k,
 				floor = Math.floor;
 			alpha = this.getAlpha();
 			red = this.red;
@@ -1597,17 +1642,20 @@ Add function - takes data, calculates its channels and combines it with data
 			red = (red < 1) ? 1 : red;
 			green = (green < 1) ? 1 : green;
 			blue = (blue < 1) ? 1 : blue;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					here = i;
-					r = d[here];
-					g = d[++here];
-					b = d[++here];
-					here = i;
-					d[here] = floor(r / red) * red;
-					d[++here] = floor(g / green) * green;
-					d[++here] = floor(b / blue) * blue;
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						r = d[here];
+						g = d[++here];
+						b = d[++here];
+						here = i;
+						d[here] = floor(r / red) * red;
+						d[++here] = floor(g / green) * green;
+						d[++here] = floor(b / blue) * blue;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1738,8 +1786,12 @@ Add function - takes data, calculates its channels and combines it with data
 				br,
 				bg,
 				bb,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
 			rr = (this.redInRed.substring) ? parseFloat(this.redInRed) / 100 : this.redInRed;
 			rg = (this.redInGreen.substring) ? parseFloat(this.redInGreen) / 100 : this.redInGreen;
@@ -1751,17 +1803,20 @@ Add function - takes data, calculates its channels and combines it with data
 			bg = (this.blueInGreen.substring) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen;
 			bb = (this.blueInBlue.substring) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue;
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					here = i;
-					r = d[here];
-					g = d[++here];
-					b = d[++here];
-					here = i;
-					d[here] = (r * rr) + (g * gr) + (b * br);
-					d[++here] = (r * rg) + (g * gg) + (b * bg);
-					d[++here] = (r * rb) + (g * gb) + (b * bb);
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						r = d[here];
+						g = d[++here];
+						b = d[++here];
+						here = i;
+						d[here] = (r * rr) + (g * gr) + (b * br);
+						d[++here] = (r * rg) + (g * gg) + (b * bg);
+						d[++here] = (r * rb) + (g * gb) + (b * bb);
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1964,15 +2019,21 @@ Add function - takes data, calculates its channels and combines it with data
 				e0,
 				x,
 				y,
+				width = data.width,
+				height = data.height,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
 				cells = this.cells;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(data.width, data.height);
+			result = my.cvx.createImageData(width, height);
 			dR = result.data;
 			if (this.includeInvisiblePoints) {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
+				for (i = top, iz = bottom; i < iz; i++) {
+					for (j = left, jz = right; j < jz; j++) {
+						e0 = ((i * width) + j) * 4;
 						if (d0[e0 + 3] > 0) {
 							r = 0;
 							g = 0;
@@ -1981,9 +2042,9 @@ Add function - takes data, calculates its channels and combines it with data
 							for (k = 0, kz = cells.length; k < kz; k++) {
 								x = j + cells[k][0];
 								y = i + cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
+								if (x >= 0 && x < width && y >= 0 && y < height) {
 									w = cells[k][2];
-									e = ((y * jz) + x) * 4;
+									e = ((y * width) + x) * 4;
 									c += w;
 									r += (d0[e] * w);
 									e++;
@@ -2009,9 +2070,9 @@ Add function - takes data, calculates its channels and combines it with data
 				}
 			}
 			else {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
+				for (i = top, iz = bottom; i < iz; i++) {
+					for (j = left, jz = right; j < jz; j++) {
+						e0 = ((i * width) + j) * 4;
 						if (d0[e0 + 3]) {
 							r = 0;
 							g = 0;
@@ -2020,9 +2081,9 @@ Add function - takes data, calculates its channels and combines it with data
 							for (k = 0, kz = cells.length; k < kz; k++) {
 								x = j + cells[k][0];
 								y = i + cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
+								if (x >= 0 && x < width && y >= 0 && y < height) {
 									w = cells[k][2];
-									e = ((y * jz) + x) * 4;
+									e = ((y * width) + x) * 4;
 									if (d0[e + 3] > 0) {
 										c += w;
 										r += (d0[e] * w);
@@ -2160,7 +2221,11 @@ Add function - takes data, calculates its channels and combines it with data
 				count,
 				pos,
 				test,
-				round = Math.round;
+				round = Math.round,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom;
 			alpha = this.getAlpha();
 			d0 = data.data;
 			result = my.cvx.createImageData(data.width, data.height);
@@ -2180,7 +2245,7 @@ Add function - takes data, calculates its channels and combines it with data
 					count = 0;
 					for (i = y, iz = y + h; i < iz; i++) {
 						for (j = x, jz = x + w; j < jz; j++) {
-							test = (j < 0 || j > tW || i < 0 || i > tH) ? true : false;
+							test = (j < left || j > right || i < top || i > bottom) ? true : false;
 							if (!test) {
 								pos = ((i * dW) + j) * 4;
 								if (d0[pos + 3]) {
@@ -2333,17 +2398,23 @@ Add function - takes data, calculates its channels and combines it with data
 				e0,
 				x,
 				y,
-				cells = this.cells;
+				cells = this.cells,
+				width = data.width,
+				height = data.height,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(data.width, data.height);
+			result = my.cvx.createImageData(width, height);
 			dR = result.data;
 			c = cells.length;
 			s = Math.floor(c / this.skip);
 			if (this.includeInvisiblePoints) {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
+				for (i = top, iz = bottom; i < iz; i++) {
+					for (j = left, jz = right; j < jz; j++) {
+						e0 = ((i * width) + j) * 4;
 						if (d0[e0 + 3] > 0) {
 							r = 0;
 							g = 0;
@@ -2351,8 +2422,8 @@ Add function - takes data, calculates its channels and combines it with data
 							for (k = 0, kz = c; k < kz; k += this.skip) {
 								x = j + cells[k][0];
 								y = i + cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									e = ((y * jz) + x) * 4;
+								if (x >= 0 && x < width && y >= 0 && y < height) {
+									e = ((y * width) + x) * 4;
 									r += d0[e];
 									e++;
 									g += d0[e];
@@ -2377,9 +2448,9 @@ Add function - takes data, calculates its channels and combines it with data
 				}
 			}
 			else {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
+				for (i = top, iz = bottom; i < iz; i++) {
+					for (j = left, jz = right; j < jz; j++) {
+						e0 = ((i * width) + j) * 4;
 						if (d0[e0 + 3]) {
 							r = 0;
 							g = 0;
@@ -2388,8 +2459,8 @@ Add function - takes data, calculates its channels and combines it with data
 							for (k = 0, kz = c; k < kz; k += this.skip) {
 								x = j + cells[k][0];
 								y = i + cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									e = ((y * jz) + x) * 4;
+								if (x >= 0 && x < width && y >= 0 && y < height) {
+									e = ((y * width) + x) * 4;
 									if (d0[e + 3] > 0) {
 										count++;
 										r += d0[e];
@@ -2554,31 +2625,39 @@ Add function - takes data, calculates its channels and combines it with data
 				bMin,
 				d,
 				i,
-				iz,
+				k,
 				j,
-				jz,
+				l, lz,
 				flag,
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
 				exclude = this.exclude;
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					flag = false;
-					r = d[i];
-					g = d[i + 1];
-					b = d[i + 2];
-					for (j = 0, jz = exclude.length; j < jz; j++) {
-						rMin = exclude[j][0];
-						gMin = exclude[j][1];
-						bMin = exclude[j][2];
-						rMax = exclude[j][3];
-						gMax = exclude[j][4];
-						bMax = exclude[j][5];
-						if (r >= rMin && r <= rMax && g >= gMin && g <= gMax && b >= bMin && b <= bMax) {
-							flag = true;
-							break;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						flag = false;
+						r = d[i];
+						g = d[i + 1];
+						b = d[i + 2];
+						for (l = 0, lz = exclude.length; l < lz; l++) {
+							rMin = exclude[l][0];
+							gMin = exclude[l][1];
+							bMin = exclude[l][2];
+							rMax = exclude[l][3];
+							gMax = exclude[l][4];
+							bMax = exclude[l][5];
+							if (r >= rMin && r <= rMax && g >= gMin && g <= gMax && b >= bMin && b <= bMax) {
+								flag = true;
+								break;
+							}
 						}
+						d[i + 3] = (flag) ? 255 : 0;
 					}
-					d[i + 3] = (flag) ? 255 : 0;
 				}
 			}
 			return data;
@@ -2622,7 +2701,7 @@ Add function - takes data, calculates its channels and combines it with data
 		my.SeparateFilter.prototype.classname = 'filternames';
 		my.d.SeparateFilter = {
 			/**
-Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'all'
+Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow'
 
 @property channel
 @type String
@@ -2642,47 +2721,57 @@ Add function - takes data, calculates its channels and combines it with data
 			var alpha,
 				channel,
 				d,
-				i,
-				iz,
-				col;
+				i, j, k,
+				col,
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				channels;
+
+			channels = {
+				red: function(d) {
+					d[i + 1] = 0;
+					d[i + 2] = 0;
+				},
+				green: function(d) {
+					d[i] = 0;
+					d[i + 2] = 0;
+				},
+				blue: function(d) {
+					d[i] = 0;
+					d[i + 1] = 0;
+				},
+				cyan: function(d) {
+					var col = (d[i + 1] + d[i + 2]) / 2;
+					d[i] = 0;
+					d[i + 1] = col;
+					d[i + 2] = col;
+				},
+				magenta: function(d) {
+					var col = (d[i] + d[i + 2]) / 2;
+					d[i + 1] = 0;
+					d[i] = col;
+					d[i + 2] = col;
+				},
+				yellow: function(d) {
+					var col = (d[i] + d[i + 1]) / 2;
+					d[i + 2] = 0;
+					d[i + 1] = col;
+					d[i] = col;
+				}
+			};
 			alpha = this.getAlpha();
 			channel = this.channel;
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3]) {
-					switch (channel) {
-						case 'red':
-							d[i + 1] = 0;
-							d[i + 2] = 0;
-							break;
-						case 'green':
-							d[i] = 0;
-							d[i + 2] = 0;
-							break;
-						case 'blue':
-							d[i] = 0;
-							d[i + 1] = 0;
-							break;
-						case 'cyan':
-							col = (d[i + 1] + d[i + 2]) / 2;
-							d[i] = 0;
-							d[i + 1] = col;
-							d[i + 2] = col;
-							break;
-						case 'magenta':
-							col = (d[i] + d[i + 2]) / 2;
-							d[i + 1] = 0;
-							d[i] = col;
-							d[i + 2] = col;
-							break;
-						case 'yellow':
-							col = (d[i] + d[i + 1]) / 2;
-							d[i + 2] = 0;
-							d[i + 1] = col;
-							d[i] = col;
-							break;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						channels[channel](d);
+						d[i + 3] *= alpha;
 					}
-					d[i + 3] *= alpha;
 				}
 			}
 			return data;
@@ -2806,24 +2895,30 @@ Add function - takes data, calculates its channels and combines it with data
 				y,
 				cell,
 				cellLen,
+				width = data.width,
+				height = data.height,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
 				rnd = Math.random,
 				floor = Math.floor;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(data.width, data.height);
+			result = my.cvx.createImageData(width, height);
 			dR = result.data;
 			strength = this.strength;
 			cellLen = this.cells.length;
-			for (i = 0, iz = data.height; i < iz; i++) {
-				for (j = 0, jz = data.width; j < jz; j++) {
-					e0 = ((i * jz) + j) * 4;
+			for (i = top, iz = bottom; i < iz; i++) {
+				for (j = left, jz = right; j < jz; j++) {
+					e0 = ((i * width) + j) * 4;
 					if (d0[e0 + 3]) {
 						if (rnd() < strength) {
 							cell = this.cells[floor(rnd() * cellLen)];
 							x = j + cell[0];
 							y = i + cell[1];
-							if (x >= 0 && x < jz && y >= 0 && y < iz) {
-								e = ((y * jz) + x) * 4;
+							if (x >= 0 && x < width && y >= 0 && y < height) {
+								e = ((y * width) + x) * 4;
 								dR[e0] = d0[e];
 								dR[e0 + 1] = d0[e + 1];
 								dR[e0 + 2] = d0[e + 2];
