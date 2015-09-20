@@ -32,7 +32,7 @@ The Frame module adds PerspectiveCell entitys to the core module
 @module scrawlFrame
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'frame')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'frame')) {
 	var scrawl = (function(my) {
 		'use strict';
 		/**
@@ -428,7 +428,13 @@ Data should always be an array in the form [x, y, z]
 			this.setCorners(items);
 			this.setEngine(this);
 			this.filtersEntityInit(items);
-			this.maxDimensions = null;
+			this.maxDimensions = {
+				top: 0,
+				bottom: 0,
+				left: 0,
+				right: 0,
+				flag: true
+			};
 
 			this.redraw = true;
 
@@ -489,7 +495,13 @@ Data should always be an array in the form [x, y, z]
 			redraw: false,
 			interferenceLoops: 2,
 			interferenceFactor: 1.03,
-			maxDimensions: null
+			maxDimensions: {
+				top: 0,
+				bottom: 0,
+				left: 0,
+				right: 0,
+				flag: true
+			}
 		};
 		my.mergeInto(my.d.Frame, my.d.Base);
 		/**
@@ -987,7 +999,7 @@ Entity.stamp hook helper function
 						}
 					}
 				}
-				this.maxDimensions = null;
+				this.maxDimensions.flag = true;
 			}
 			return this;
 		};
@@ -1338,12 +1350,11 @@ Returns an object with the following attributes:
 			if (!between(r, 0, w, true)) {
 				r = (r > halfW) ? w : 0;
 			}
-			this.maxDimensions = {
-				top: t,
-				left: l,
-				bottom: b,
-				right: r
-			};
+			this.maxDimensions.top = t;
+			this.maxDimensions.bottom = b;
+			this.maxDimensions.left = l;
+			this.maxDimensions.right = r;
+			this.maxDimensions.flag = false;
 			return this.maxDimensions;
 		};
 

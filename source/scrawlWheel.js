@@ -31,7 +31,7 @@ The Wheel module adds Wheel entitys - circles, segments and filled arcs - to the
 
 @module scrawlWheel
 **/
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'wheel')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'wheel')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -70,7 +70,7 @@ A __factory__ function to generate new Wheel entitys
 			return new my.Wheel(items);
 		};
 
-		my.workwheel = {
+		my.work.workwheel = {
 			v1: my.makeVector(),
 		};
 		/**
@@ -186,7 +186,7 @@ Augments Entity.set()
 				this.radius = items.radius;
 				this.width = this.radius * 2;
 				this.height = this.width;
-				this.maxDimensions = null;
+				this.maxDimensions.flag = true;
 			}
 			return this;
 		};
@@ -205,7 +205,7 @@ Augments Entity.setDelta()
 				this.radius += items.radius;
 				this.width = this.radius * 2;
 				this.height = this.width;
-				this.maxDimensions = null;
+				this.maxDimensions.flag = true;
 			}
 			if (xt(items.startAngle)) {
 				this.startAngle = this.get('startAngle') + items.startAngle;
@@ -239,7 +239,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				result,
 				testRadius,
 				cvx = my.cvx,
-				v1 = my.workwheel.v1,
+				v1 = my.work.workwheel.v1,
 				handle,
 				start,
 				scale,
@@ -632,12 +632,11 @@ Returns an object with the following attributes:
 			l = (l < 0) ? 0 : l;
 			r = ceil(v.x) + line + rad;
 			r = (r > w) ? w : r;
-			this.maxDimensions = {
-				top: t,
-				left: l,
-				bottom: b,
-				right: r
-			};
+			this.maxDimensions.top = t;
+			this.maxDimensions.bottom = b;
+			this.maxDimensions.left = l;
+			this.maxDimensions.right = r;
+			this.maxDimensions.flag = false;
 			return this.maxDimensions;
 		};
 

@@ -34,7 +34,7 @@ The Animation module adds support for animation and tweening to the core
 
 @module scrawlAnimation
 **/
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'animation')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'animation')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -1091,7 +1091,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			}
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
-			my.resortAnimations = true;
+			my.work.resortAnimations = true;
 			return this;
 		};
 		my.Tween.prototype = Object.create(my.Base.prototype);
@@ -1304,7 +1304,7 @@ Set tween values
 				}
 			}
 			if (my.xt(items.order)) {
-				my.resortAnimations = true;
+				my.work.resortAnimations = true;
 			}
 			return this;
 		};
@@ -1368,7 +1368,7 @@ Tween animation function
 						}
 					}
 					this.active = false;
-					my.removeItem(my.animate, this.name);
+					my.removeItem(my.work.animate, this.name);
 					if (this.autoReverse || this.autoReverseAndRun) {
 						this.reverse = (this.reverse) ? false : true;
 					}
@@ -1557,7 +1557,7 @@ Run a tween animation
 						}
 					}
 					this.startTime = Date.now();
-					my.pushUnique(my.animate, this.name);
+					my.pushUnique(my.work.animate, this.name);
 					this.active = true;
 					return true;
 				}
@@ -1621,7 +1621,7 @@ Stop a tween animation
 		my.Tween.prototype.halt = function() {
 			this.active = false;
 			this.paused = true;
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			return this;
 		};
 		/**
@@ -1698,7 +1698,7 @@ Start the tween running from the point at which it was halted
 			if (this.paused) {
 				this.currentTime = Date.now();
 				this.startTime = this.currentTime - t0;
-				my.pushUnique(my.animate, this.name);
+				my.pushUnique(my.work.animate, this.name);
 				this.active = true;
 				this.paused = false;
 			}
@@ -1719,10 +1719,10 @@ Remove this tween from the scrawl library
 					}
 				}
 			}
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
-			my.resortAnimations = true;
+			my.work.resortAnimations = true;
 			return true;
 		};
 
@@ -1868,7 +1868,7 @@ Set the timeline duration (for actions with % time strings) or event choke value
 				this.event = items.event;
 			}
 			if (my.xt(items.order)) {
-				my.resortAnimations = true;
+				my.work.resortAnimations = true;
 			}
 			this.resolve();
 			return this;
@@ -1939,7 +1939,7 @@ Start the timeline running from the beginning
 			var i, iz, a, e;
 			if (!this.active) {
 				this.reset();
-				my.pushUnique(my.animate, this.name);
+				my.pushUnique(my.work.animate, this.name);
 				this.active = true;
 				if (this.event) {
 					e = this.makeTimeupdateEvent();
@@ -1966,7 +1966,7 @@ Start the timeline running from the point at which it was halted
 				}
 				this.currentTime = Date.now();
 				this.startTime = this.currentTime - t0;
-				my.pushUnique(my.animate, this.name);
+				my.pushUnique(my.work.animate, this.name);
 				this.paused = false;
 				this.active = true;
 			}
@@ -2004,7 +2004,7 @@ Function triggered by the animation loop
 			}
 			if (this.currentTime >= this.startTime + this.effectiveDuration) {
 				this.active = false;
-				my.removeItem(my.animate, this.name);
+				my.removeItem(my.work.animate, this.name);
 			}
 		};
 		/**
@@ -2023,7 +2023,7 @@ Stop a Timeline; can be resumed using resume() or started again from the beginni
 					a.action.halt();
 				}
 			}
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			return this;
 		};
 		/**
@@ -2049,7 +2049,7 @@ Reset a Timeline animation to its initial conditions
 					a.reset();
 				}
 			}
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			return this;
 		};
 		/**
@@ -2064,7 +2064,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 			if (!this.seeking) {
 				if (item && (item.substring || item.toFixed)) {
 					if (this.active) {
-						my.removeItem(my.animate, this.name);
+						my.removeItem(my.work.animate, this.name);
 					}
 					if (!this.startTime) {
 						this.startTime = this.currentTime = Date.now();
@@ -2084,7 +2084,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 						}
 					}
 					if (this.active) {
-						my.pushUnique(my.animate, this.name);
+						my.pushUnique(my.work.animate, this.name);
 					}
 				}
 			}
@@ -2274,7 +2274,7 @@ Remove this Timeline from the scrawl library
 @return Always true
 **/
 		my.Timeline.prototype.kill = function() {
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
 			return true;
@@ -2318,7 +2318,7 @@ Remove this Timeline from the scrawl library
 			this.skipSeek = my.xtGet(items.skipSeek, false);
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
-			my.resortAnimations = true;
+			my.work.resortAnimations = true;
 			return this;
 		};
 		my.Action.prototype = Object.create(my.Base.prototype);
@@ -2444,7 +2444,7 @@ Remove this Action from the scrawl library
 		my.Action.prototype.kill = function() {
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
-			my.resortAnimations = true;
+			my.work.resortAnimations = true;
 			return true;
 		};
 

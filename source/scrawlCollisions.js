@@ -31,7 +31,7 @@ The Collisions module adds support for detecting collisions between entitys
 
 @module scrawlCollisions
 **/
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'collisions')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'collisions')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -81,7 +81,7 @@ A __general__ function which asks Cell objects to generate field collision table
 				cell = my.cell,
 				i,
 				iz;
-			cells = (my.xt(items)) ? [].concat(items) : [my.pad[my.currentPad].current];
+			cells = (my.xt(items)) ? [].concat(items) : [my.pad[my.work.currentPad].current];
 			if (items === 'all') {
 				cells = my.cellnames;
 			}

@@ -31,7 +31,7 @@ The Filters module adds a set of filter algorithms to the Scrawl library
 @module scrawlFilters
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'filters')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'filters')) {
 	var scrawl = (function(my) {
 		'use strict';
 		/**
@@ -46,8 +46,8 @@ scrawlFilters module adaptions to the Scrawl library object
 
 @class window.scrawl_Filters
 **/
-		my.pushUnique(my.sectionlist, 'filter');
-		my.pushUnique(my.nameslist, 'filternames');
+		my.pushUnique(my.work.sectionlist, 'filter');
+		my.pushUnique(my.work.nameslist, 'filternames');
 		/**
 Utility canvases - never displayed
 @property filterCanvas
@@ -56,16 +56,16 @@ Utility canvases - never displayed
 **/
 		my.filterCanvas = document.createElement('canvas');
 		my.filterCanvas.id = 'filterHiddenCanvasElement';
-		my.f.appendChild(my.filterCanvas);
+		my.work.f.appendChild(my.filterCanvas);
 		my.perspectiveOriginCanvas = document.createElement('canvas');
 		my.perspectiveOriginCanvas.id = 'perspectiveOriginHiddenCanvasElement';
-		my.f.appendChild(my.perspectiveOriginCanvas);
+		my.work.f.appendChild(my.perspectiveOriginCanvas);
 		my.perspectiveSourceCanvas = document.createElement('canvas');
 		my.perspectiveSourceCanvas.id = 'perspectiveSourceHiddenCanvasElement';
-		my.f.appendChild(my.perspectiveSourceCanvas);
+		my.work.f.appendChild(my.perspectiveSourceCanvas);
 		my.perspectiveEaselCanvas = document.createElement('canvas');
 		my.perspectiveEaselCanvas.id = 'perspectiveEaselHiddenCanvasElement';
-		my.f.appendChild(my.perspectiveEaselCanvas);
+		my.work.f.appendChild(my.perspectiveEaselCanvas);
 		/**
 Utility canvas 2d context engine
 @property filterCvx
@@ -676,8 +676,8 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 				cv.width = canvas.width;
 				cv.height = canvas.height;
 				cvx.save();
+				dim = (this.maxDimensions.flag) ? this.getMaxDimensions(cell) : this.maxDimensions;
 				imageData = action[this.type](this, engine, cellname, cell, filterOnStroke);
-				dim = this.maxDimensions || this.getMaxDimensions(cell);
 				if (imageData) {
 					for (i = 0, iz = filters.length; i < iz; i++) {
 						f = filter[filters[i]];
@@ -708,23 +708,23 @@ Entity.stamp hook helper function
 @private
 **/
 		my.Entity.prototype.stampFilterPhrase = function(entity, engine, cellname, cell) {
-			var context,
-				canvas,
+			var canvas,
+				context,
 				test,
-				i,
-				iz,
-				o,
-				here,
-				textY,
-				tX,
-				tY,
+				text = my.text,
+				texts = entity.texts,
+				e = my.entity,
+				w,
+				h,
 				cvx = my.cvx,
 				cv = my.cv,
-				e = my.entity,
-				text = my.text,
-				texts = entity.texts;
+				wrapper = my.cvwrapper;
 			canvas = my.canvas[cellname];
+			w = canvas.width;
+			h = canvas.height;
 			context = my.ctx[entity.context];
+			cv.width = w;
+			cv.height = h;
 			cvx.font = context.font;
 			cvx.fillStyle = 'rgb(0, 0, 0)';
 			cvx.strokeStyle = 'rgb(0, 0, 0)';
@@ -732,15 +732,7 @@ Entity.stamp hook helper function
 			cvx.textBaseline = context.textBaseline;
 			test = (e[entity.path] && e[entity.path].type === 'Path');
 			if (entity.pivot || !test || entity.get('textAlongPath') === 'phrase') {
-				o = entity.getOffset();
-				here = entity.currentHandle;
-				textY = entity.size * entity.lineHeight * entity.scale;
-				entity.rotateCell(cvx, cv);
-				tX = here.x + o.x;
-				for (i = 0, iz = texts.length; i < iz; i++) {
-					tY = here.y + (textY * i) + o.y;
-					text[texts[i]].fill(cvx, cell, tX, tY);
-				}
+				entity.floatOver(cvx, wrapper.name, wrapper);
 			}
 			else {
 				text[texts[0]].clipAlongPath(entity);
@@ -749,7 +741,7 @@ Entity.stamp hook helper function
 			cvx.globalCompositeOperation = 'source-in';
 			cvx.drawImage(canvas, 0, 0);
 			cvx.globalCompositeOperation = 'source-over';
-			return cvx.getImageData(0, 0, canvas.width, canvas.height);
+			return cvx.getImageData(0, 0, w, h);
 		};
 		/**
 Entity.stamp hook helper function

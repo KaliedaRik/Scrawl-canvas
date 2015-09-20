@@ -32,7 +32,7 @@ _This module is experimental and thus likely to change significantly as Scrawl e
 @module scrawlSaveLoad
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'saveload')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'saveload')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -83,7 +83,7 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 							switch (type) {
 								case 'pad':
 									my.addCanvasToPage(a);
-									my.currentPad = a.name;
+									my.work.currentPad = a.name;
 									break;
 								case 'cell':
 									if (my.xt(a.pad) && my.contains(my.padnames, a.pad) && !my.contains(my.pad[a.pad].cells, a.name)) {
@@ -400,14 +400,14 @@ Turn the object into a JSON String; doesn't include name and type attributes
 **/
 		my.Context.prototype.toString = function() {
 			var result = {};
-			for (var i = 0, z = my.contextKeys.length; i < z; i++) {
-				if (my.contextKeys[i] === 'lineDash') {
+			for (var i = 0, z = my.work.contextKeys.length; i < z; i++) {
+				if (my.work.contextKeys[i] === 'lineDash') {
 					if (my.xt(this.lineDash) && this.lineDash.length > 0) {
 						result.lineDash = this.lineDash;
 					}
 				}
-				else if (my.xt(this[my.contextKeys[i]]) && this[my.contextKeys[i]] !== my.d.Context[my.contextKeys[i]]) {
-					result[my.contextKeys[i]] = this[my.contextKeys[i]];
+				else if (my.xt(this[my.work.contextKeys[i]]) && this[my.work.contextKeys[i]] !== my.d.Context[my.work.contextKeys[i]]) {
+					result[my.work.contextKeys[i]] = this[my.work.contextKeys[i]];
 				}
 			}
 			return JSON.stringify(result);

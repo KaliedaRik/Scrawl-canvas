@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 //---------------------------------------------------------------------------------
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'quaternion')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'quaternion')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -471,8 +471,8 @@ _Quaternion multiplication is not comutative - arithmetic is item (representing 
 @chainable
 **/
 		my.Quaternion.prototype.quaternionRotate = function(item) {
-			var q4 = my.workquat.q4,
-				q5 = my.workquat.q5;
+			var q4 = my.work.workquat.q4,
+				q5 = my.work.workquat.q5;
 			if (my.isa_quaternion(item)) {
 				q4.set(item);
 				q5.set(this);
@@ -690,7 +690,7 @@ Retrieve Euler roll value from a quaternion
 				return parseFloat(result.toFixed(4));
 			}
 		};
-		my.workquat = {
+		my.work.workquat = {
 			q1: my.makeQuaternion({
 				name: 'scrawl.workquat.q1'
 			}),

@@ -261,22 +261,14 @@ var mycode = function() {
         }]
 	});
 	piccy = scrawl.makePicture({
-		// handleX: 'center',
-		// handleY: 'center',
+		handleX: 'center',
+		handleY: 'center',
 		width: 400,
 		height: 200,
 		method: 'none',
 		source: 'runningcat',
 		animation: 'animatedCat',
-		// pivot: 'mouse',
-		startX: 300,
-		startY: 150,
-		handleX: '70%',
-		handleY: 40,
-		// flipReverse: true,
-		// flipUpend: true,
-		// roll: 30,
-		scale: 1.3,
+		pivot: 'mouse',
 		visibility: false,
 		order: 17,
 		filters: [current_filter]

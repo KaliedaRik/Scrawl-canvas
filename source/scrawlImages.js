@@ -37,7 +37,7 @@ The Images module adds support for displaying images on canvas elements
 @module scrawlImages
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'images')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'images')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -736,7 +736,7 @@ Augments Entity.get()
 @return Attribute value
 **/
 		my.Picture.prototype.get = function(item) {
-			if (my.contains(my.animKeys, item)) {
+			if (my.contains(my.work.animKeys, item)) {
 				return my.spriteanimation[this.animation].get(item);
 			}
 			else {
@@ -1285,7 +1285,7 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 				index,
 				cd = this.copyData,
 				pd = this.pasteData,
-				v1 = my.workimg.v1,
+				v1 = my.work.workimg.v1,
 				between = my.isBetween,
 				channel;
 			items = my.safeObject(items);
@@ -1426,103 +1426,96 @@ Returns an object with the following attributes:
 @private
 **/
 		my.Picture.prototype.getMaxDimensions = function(cell) {
-			// var cw = cell.actualWidth,
-			// 	ch = cell.actualHeight,
-			// 	halfW = cw / 2,
-			// 	halfH = ch / 2,
-			// 	cx = this.currentStart.x,
-			// 	cy = this.currentStart.y,
-			// 	lw = this.localWidth,
-			// 	lh = this.localHeight,
-			// 	fr = this.flipReverse,
-			// 	fu = this.flipUpend,
-			// 	xtl, xtr, xbr, xbl, ytl, ytr, ybr, ybl,
-			// 	x = (fr) ? cw - cx : cx,
-			// 	y = (fu) ? ch - cy : cy,
-			// 	w = (fr) ? -lw : lw,
-			// 	h = (fu) ? -lh : lh,
-			// 	o = this.currentHandle,
-			// 	hx = (fr) ? -o.x : o.x,
-			// 	hy = (fu) ? -o.y : o.y,
-			// 	line = my.ctx[this.context].lineWidth || 0,
-			// 	max, min, ax, ay, ref,
-			// 	ceil = Math.ceil,
-			// 	floor = Math.floor,
-			// 	t, l, b, r,
-			// 	roll = this.roll,
-			// 	v = my.v,
-			// 	between = my.isBetween;
-			// l = (fr) ? x + hx + w : x + hx;
-			// r = (fr) ? x + hx : x + hx + w;
-			// t = (fu) ? y + hy + h : y + hy;
-			// b = (fu) ? y + hy : y + hy + h;
-			// if (roll) {
-			// 	min = Math.min;
-			// 	max = Math.max;
-			// 	ref = {
-			// 		x: x,
-			// 		y: y
-			// 	};
-			// 	v.set({
-			// 		x: l,
-			// 		y: t
-			// 	}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-			// 	xtl = v.x;
-			// 	ytl = v.y;
-			// 	v.set({
-			// 		x: r,
-			// 		y: t
-			// 	}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-			// 	xtr = v.x;
-			// 	ytr = v.y;
-			// 	v.set({
-			// 		x: r,
-			// 		y: b
-			// 	}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-			// 	xbl = v.x;
-			// 	ybl = v.y;
-			// 	v.set({
-			// 		x: l,
-			// 		y: b
-			// 	}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-			// 	xbr = v.x;
-			// 	ybr = v.y;
-			// 	ax = [xtl, xtr, xbr, xbl];
-			// 	ay = [ytl, ytr, ybr, ybl];
-			// 	t = min.apply(Math, ay);
-			// 	l = min.apply(Math, ax);
-			// 	b = max.apply(Math, ay);
-			// 	r = max.apply(Math, ax);
-			// }
-			// t = floor(t - line);
-			// l = floor(l - line);
-			// b = ceil(b + line);
-			// r = ceil(r + line);
-			// if (!between(t, 0, ch, true)) {
-			// 	t = (t > halfH) ? ch : 0;
-			// }
-			// if (!between(b, 0, ch, true)) {
-			// 	b = (b > halfH) ? ch : 0;
-			// }
-			// if (!between(l, 0, cw, true)) {
-			// 	l = (l > halfW) ? cw : 0;
-			// }
-			// if (!between(r, 0, cw, true)) {
-			// 	r = (r > halfW) ? cw : 0;
-			// }
-			// this.maxDimensions = {
-			// 	top: t,
-			// 	left: l,
-			// 	bottom: b,
-			// 	right: r
-			// };
-			// return this.maxDimensions;
-			return {
-				top: 0,
-				left: 0,
-				bottom: cell.actualHeight,
-				right: cell.actualWidth
-			};
+			var cw = cell.actualWidth,
+				ch = cell.actualHeight,
+				halfW = cw / 2,
+				halfH = ch / 2,
+				cx = this.currentStart.x,
+				cy = this.currentStart.y,
+				lw = this.pasteData.w,
+				lh = this.pasteData.h,
+				fr = this.flipReverse,
+				fu = this.flipUpend,
+				xtl, xtr, xbr, xbl, ytl, ytr, ybr, ybl,
+				x = (fr) ? cw - cx : cx,
+				y = (fu) ? ch - cy : cy,
+				w = (fr) ? -lw : lw,
+				h = (fu) ? -lh : lh,
+				o = this.currentHandle,
+				hx = (fr) ? -o.x : o.x,
+				hy = (fu) ? -o.y : o.y,
+				line = my.ctx[this.context].lineWidth || 0,
+				max, min, ax, ay, ref,
+				ceil = Math.ceil,
+				floor = Math.floor,
+				t, l, b, r,
+				roll = this.roll,
+				v = my.v,
+				between = my.isBetween;
+			l = (fr) ? x + hx + w : x + hx;
+			r = (fr) ? x + hx : x + hx + w;
+			t = (fu) ? y + hy + h : y + hy;
+			b = (fu) ? y + hy : y + hy + h;
+			if (roll) {
+				min = Math.min;
+				max = Math.max;
+				ref = {
+					x: x,
+					y: y
+				};
+				v.set({
+					x: l,
+					y: t
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xtl = v.x;
+				ytl = v.y;
+				v.set({
+					x: r,
+					y: t
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xtr = v.x;
+				ytr = v.y;
+				v.set({
+					x: r,
+					y: b
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xbl = v.x;
+				ybl = v.y;
+				v.set({
+					x: l,
+					y: b
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xbr = v.x;
+				ybr = v.y;
+				ax = [xtl, xtr, xbr, xbl];
+				ay = [ytl, ytr, ybr, ybl];
+				t = min.apply(Math, ay);
+				l = min.apply(Math, ax);
+				b = max.apply(Math, ay);
+				r = max.apply(Math, ax);
+			}
+			t = floor(t - line);
+			l = floor(l - line);
+			b = ceil(b + line);
+			r = ceil(r + line);
+			if (!between(t, 0, ch, true)) {
+				t = (t > halfH) ? ch : 0;
+			}
+			if (!between(b, 0, ch, true)) {
+				b = (b > halfH) ? ch : 0;
+			}
+			if (!between(l, 0, cw, true)) {
+				l = (l > halfW) ? cw : 0;
+			}
+			if (!between(r, 0, cw, true)) {
+				r = (r > halfW) ? cw : 0;
+			}
+			this.maxDimensions.top = t;
+			this.maxDimensions.bottom = b;
+			this.maxDimensions.left = l;
+			this.maxDimensions.right = r;
+			this.maxDimensions.flag = false;
+			return this.maxDimensions;
 		};
 
 		return my;

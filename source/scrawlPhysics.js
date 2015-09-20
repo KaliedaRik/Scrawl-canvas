@@ -33,7 +33,7 @@ Adds an (experimental) physics engine to the core
 @module scrawlPhysics
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'physics')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'physics')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -81,7 +81,7 @@ Change in time since last update, measured in seconds
 **/
 			deltaTime: 0,
 		};
-		my.workphys = {
+		my.work.workphys = {
 			v1: my.makeVector(),
 			v2: my.makeVector(),
 			v3: my.makeVector(),
@@ -558,7 +558,7 @@ Calculation cycle engine
 **/
 		my.Particle.prototype.updateEuler = function() {
 			var dtime = my.physics.deltaTime,
-				v1 = my.workphys.v1,
+				v1 = my.work.workphys.v1,
 				vel = this.currentVelocity,
 				v = this.velocity;
 			vel.set(v);
@@ -582,7 +582,7 @@ Calculation cycle engine
 				v3,
 				w = this.currentVelocity,
 				v = this.velocity,
-				wp = my.workphys,
+				wp = my.work.workphys,
 				dtime = my.physics.deltaTime;
 			w.set(v);
 			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime);
@@ -609,7 +609,7 @@ Calculation cycle engine
 				v5,
 				v = this.velocity,
 				w = this.currentVelocity,
-				wp = my.workphys,
+				wp = my.work.workphys,
 				dtime = my.physics.deltaTime;
 			w.set(v);
 			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime).scalarDivide(2);
@@ -638,7 +638,7 @@ Calculation cycle engine - linear particle collisions
 				relVelocity,
 				impactScalar,
 				impact,
-				wp = my.workphys,
+				wp = my.work.workphys,
 				v = this.velocity,
 				m = this.mass;
 			normal = wp.v1.set(this.place).vectorSubtract(b.place).normalize();
@@ -746,8 +746,8 @@ Delete a named Spring object from this Particle
 			return this;
 		};
 
-		my.pushUnique(my.sectionlist, 'spring');
-		my.pushUnique(my.nameslist, 'springnames');
+		my.pushUnique(my.work.sectionlist, 'spring');
+		my.pushUnique(my.work.nameslist, 'springnames');
 		/**
 # Spring
 
@@ -788,7 +788,7 @@ Delete a named Spring object from this Particle
 					this.restLength = items.restLength;
 				}
 				else {
-					r = my.workphys.v1.set(b2.place);
+					r = my.work.workphys.v1.set(b2.place);
 					r.vectorSubtract(b1.place);
 					this.restLength = r.getMagnitude();
 				}
@@ -884,7 +884,7 @@ Calculate the force exerted by the spring for this calculation cycle iteration
 				r,
 				r_norm,
 				r_norm2,
-				wp = my.workphys,
+				wp = my.work.workphys,
 				e = my.entity,
 				eStart = e[this.start],
 				eEnd = e[this.end];
@@ -911,8 +911,8 @@ Remove this Spring from its Particle objects, and from the scrawl library
 			return true;
 		};
 
-		my.pushUnique(my.sectionlist, 'force');
-		my.pushUnique(my.nameslist, 'forcenames');
+		my.pushUnique(my.work.sectionlist, 'force');
+		my.pushUnique(my.work.nameslist, 'forcenames');
 		/**
 # Force
 

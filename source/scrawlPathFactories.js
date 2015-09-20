@@ -30,7 +30,7 @@ The Factories module adds a set of factory functions to the Scrawl library, whic
 @module scrawlPathFactories
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'factories')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'factories')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -578,10 +578,10 @@ Percentage String values are relative to the entity's cell's dimensions
 				conv = my.Position.prototype.numberConvert,
 				get = my.xtGet,
 				cont = my.contains,
-				wv1 = my.worklink.v1,
-				wv2 = my.worklink.v2,
-				wc1 = my.worklink.control1,
-				wc2 = my.worklink.control2,
+				wv1 = my.work.worklink.v1,
+				wv2 = my.work.worklink.v2,
+				wc1 = my.work.worklink.control1,
+				wc2 = my.work.worklink.control2,
 				sides, angle;
 			items = my.safeObject(items);
 			cell = my.Entity.prototype.getEntityCell(items);
@@ -661,8 +661,8 @@ Percentage String values are relative to the entity's cell's dimensions
 			return false;
 		};
 
-		if (!my.xt(my.worklink)) {
-			my.worklink = {
+		if (!my.xt(my.work.worklink)) {
+			my.work.worklink = {
 				start: my.makeVector({
 					name: 'scrawl.worklink.start'
 				}),

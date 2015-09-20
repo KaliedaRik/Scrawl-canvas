@@ -21,7 +21,7 @@
 //---------------------------------------------------------------------------------
 
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'imageload')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'imageload')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -45,7 +45,7 @@ DOM document fragment
 @type {Object}
 @private
 **/
-		my.imageFragment = document.createDocumentFragment();
+		my.work.imageFragment = document.createDocumentFragment();
 		/**
 Utility canvas - never displayed
 @property imageCanvas
@@ -54,7 +54,7 @@ Utility canvas - never displayed
 **/
 		my.imageCanvas = document.createElement('canvas');
 		my.imageCanvas.id = 'imageHiddenCanvasElement';
-		my.imageFragment.appendChild(my.imageCanvas);
+		my.work.imageFragment.appendChild(my.imageCanvas);
 		/**
 Utility canvas 2d context engine
 @property imageCvx
@@ -118,17 +118,17 @@ A __factory__ function to generate new Video objects
 			return new my.Video(items);
 		};
 
-		my.workimg = {
+		my.work.workimg = {
 			v1: my.makeVector(),
 		};
-		my.pushUnique(my.sectionlist, 'image');
-		my.pushUnique(my.nameslist, 'imagenames');
-		my.pushUnique(my.sectionlist, 'video');
-		my.pushUnique(my.nameslist, 'videonames');
-		my.pushUnique(my.sectionlist, 'spriteanimation');
-		my.pushUnique(my.nameslist, 'spriteanimationnames');
-		my.pushUnique(my.sectionlist, 'asset');
-		my.pushUnique(my.nameslist, 'assetnames');
+		my.pushUnique(my.work.sectionlist, 'image');
+		my.pushUnique(my.work.nameslist, 'imagenames');
+		my.pushUnique(my.work.sectionlist, 'video');
+		my.pushUnique(my.work.nameslist, 'videonames');
+		my.pushUnique(my.work.sectionlist, 'spriteanimation');
+		my.pushUnique(my.work.nameslist, 'spriteanimationnames');
+		my.pushUnique(my.work.sectionlist, 'asset');
+		my.pushUnique(my.work.nameslist, 'assetnames');
 		/**
 A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; elements identified by class string
 @method getImagesByClass
@@ -380,7 +380,7 @@ Adds a DOM &lt;img&gt; element to the library
 			el.id = this.name;
 			this.width = parseFloat(getTrue(el.offsetWidth, el.width, el.style.width, 1));
 			this.height = parseFloat(getTrue(el.offsetHeight, el.height, el.style.height, 1));
-			my.imageFragment.appendChild(el);
+			my.work.imageFragment.appendChild(el);
 			my.asset[this.name] = el;
 			my.pushUnique(my.assetnames, this.name);
 			if (my.isa_fn(items.callback)) {
@@ -410,9 +410,9 @@ Import an image using the supplied url string
 						enames = my.entitynames;
 					that.width = el.width;
 					that.height = el.height;
-					my.imageFragment.appendChild(el);
+					my.work.imageFragment.appendChild(el);
 					temp = '#' + that.name;
-					my.asset[that.name] = my.imageFragment.querySelector(temp);
+					my.asset[that.name] = my.work.imageFragment.querySelector(temp);
 					my.pushUnique(my.assetnames, that.name);
 					for (i = 0, iz = enames.length; i < iz; i++) {
 						entity = e[enames[i]];
@@ -500,7 +500,7 @@ Clone an Image object
 @return new Image object on success; false otherwise
 **/
 		my.Image.prototype.clone = function(items) {
-			items.element = my.imageFragment.getElementById(this.name).cloneNode();
+			items.element = my.work.imageFragment.getElementById(this.name).cloneNode();
 			return my.makeImage(items);
 		};
 
@@ -617,7 +617,7 @@ Datestamp when SpriteAnimation.getData() function was last called
 **/
 			lastCalled: 0,
 		};
-		my.animKeys = Object.keys(my.d.SpriteAnimation);
+		my.work.animKeys = Object.keys(my.d.SpriteAnimation);
 		my.mergeInto(my.d.SpriteAnimation, my.d.Scrawl);
 		/**
 Set attribute values - will also set the __currentFrame__ attribute to the appropriate value when the running __attribute__ is changed
@@ -836,8 +836,8 @@ Adds a DOM &lt;video&gt; element to the library
 				el.id = this.name;
 				this.width = 1;
 				this.height = 1;
-				my.imageFragment.appendChild(el);
-				my.asset[this.name] = my.imageFragment.querySelector('#' + this.name);
+				my.work.imageFragment.appendChild(el);
+				my.asset[this.name] = my.work.imageFragment.querySelector('#' + this.name);
 				my.pushUnique(my.assetnames, this.name);
 				this.api = my.asset[this.name];
 				if (this.api.readyState >= readyState) {

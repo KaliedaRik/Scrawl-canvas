@@ -118,14 +118,15 @@ Array of array object keys used to define the sections of the Scrawl library
 @type {Array}
 @private
 **/
-	my.nameslist = ['objectnames', 'padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'entitynames', 'animate', 'animationnames'];
+	my.work = {};
+	my.work.nameslist = ['padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'entitynames', 'animationnames'];
 	/**
 Array of objects which define the sections of the Scrawl library
 @property sectionlist
 @type {Array}
 @private
 **/
-	my.sectionlist = ['object', 'pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'entity', 'animation'];
+	my.work.sectionlist = ['pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'entity', 'animation'];
 	/**
 For converting between degrees and radians
 @property radian
@@ -154,58 +155,49 @@ Work vector, for calculations
 @type {Vector}
 @private
 **/
-	my.colv1 = null;
+	my.work.colv1 = null;
 	/**
 Work vector, for calculations
 @property colv2
 @type {Vector}
 @private
 **/
-	my.colv2 = null;
+	my.work.colv2 = null;
 	/**
 Default empty object - passed to various functions, to prevent them generating superfluous objects
 @property o
 @type {Object}
 @private
 **/
-	my.o = {};
+	my.work.o = {};
 	/**
 Work quaternions, for calculations
 @property workquat
 @type {Object}
 @private
 **/
-	my.workquat = null;
+	my.work.workquat = null;
 	/**
 DOM document fragment
 @property f
 @type {Object}
 @private
 **/
-	my.f = document.createDocumentFragment();
-	/**
-Utility canvas - never displayed
-@property cv
-@type {CasnvasObject}
-@private
-**/
-	my.cv = document.createElement('canvas');
-	my.cv.id = 'defaultHiddenCanvasElement';
-	my.f.appendChild(my.cv);
+	my.work.f = document.createDocumentFragment();
 	/**
 Utility canvas 2d context engine
 @property cvx
 @type {CasnvasContextObject}
 @private
 **/
-	my.cvx = my.cv.getContext('2d');
+	// my.cvx = my.cv.getContext('2d');
 	/**
 Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensions()
 @property loadAlias
 @type {Object}
 @private
 **/
-	my.loadAlias = {
+	my.work.loadAlias = {
 		block: 'scrawlBlock',
 		wheel: 'scrawlWheel',
 		phrase: 'scrawlPhrase',
@@ -230,7 +222,7 @@ Array of loaded extensions arrays
 @type {Array}
 @private
 **/
-	my.extensions = [];
+	my.work.extensions = [];
 	/**
 Array of loaded extensions arrays (name changed from modules to extensions because Scrawl 'modules' are not modules)
 @property modules
@@ -238,7 +230,7 @@ Array of loaded extensions arrays (name changed from modules to extensions becau
 @private
 @deprecated
 **/
-	my.modules = my.extensions;
+	my.work.modules = my.work.extensions;
 	/**
 Device object - holds details about the browser environment and viewport
 @property device
@@ -251,7 +243,7 @@ Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 @type {Object}
 @private
 **/
-	my.loadDependencies = {
+	my.work.loadDependencies = {
 		block: [],
 		wheel: [],
 		phrase: [],
@@ -282,6 +274,7 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 		my.reset();
 		my.device = new my.Device();
 		my.pageInit();
+		my.createDefaultPad();
 		my.setDisplayOffsets('all');
 		my.physicsInit();
 		my.filtersInit();
@@ -311,6 +304,30 @@ scrawl.init hook function - modified by filters extension
 **/
 	my.filtersInit = function() {};
 	/**
+scrawl.init hook function - modified by stacks extension
+@method pageInit
+@private
+**/
+	my.createDefaultPad = function() {
+		var p, cellname,
+			name = 'defaultHiddenCanvasElement';
+		if (my.device.canvas) {
+			p = my.addCanvasToPage({
+				name: name,
+			});
+			name = p.name;
+			cellname = name + '_base';
+			my.removeItem(my.padnames, name);
+			my.removeItem(my.work.activeListeners, name);
+			my.work.f.appendChild(my.canvas[name]);
+			my.cv = my.canvas[cellname];
+			my.cvx = my.context[cellname];
+			my.cvmodel = my.ctx[cellname];
+			my.cvwrapper = my.cell[cellname];
+			my.cvcontroller = my.pad[name];
+		}
+	};
+	/**
 A __general__ function that resets the Scrawl library to empty arrays and objects
 @method reset
 @return The Scrawl library object (scrawl)
@@ -319,11 +336,11 @@ A __general__ function that resets the Scrawl library to empty arrays and object
     scrawl.reset();
 **/
 	my.reset = function() {
-		for (var i = 0, iz = my.nameslist.length; i < iz; i++) {
-			my[my.nameslist[i]] = [];
+		for (var i = 0, iz = my.work.nameslist.length; i < iz; i++) {
+			my[my.work.nameslist[i]] = [];
 		}
-		for (var j = 0, jz = my.sectionlist.length; j < jz; j++) {
-			my[my.sectionlist[j]] = {};
+		for (var j = 0, jz = my.work.sectionlist.length; j < jz; j++) {
+			my[my.work.sectionlist[j]] = {};
 		}
 		return my;
 	};
@@ -408,8 +425,8 @@ Any supplied callback function will only be run once all extensions have been lo
 			i, iz, j, jz,
 			getExtensions = function(ext) {
 				var scriptTag,
-					myExt = my.loadAlias[ext] || ext;
-				if (!my.contains(my.extensions, myExt)) {
+					myExt = my.work.loadAlias[ext] || ext;
+				if (!my.contains(my.work.extensions, myExt)) {
 					scriptTag = document.createElement('script');
 					scriptTag.type = 'text/javascript';
 					scriptTag.async = 'true';
@@ -429,7 +446,7 @@ Any supplied callback function will only be run once all extensions have been lo
 					error();
 				}
 				else {
-					my.pushUnique(my.extensions, m);
+					my.pushUnique(my.work.extensions, m);
 				}
 				if (loaded.length === 0) {
 					callback();
@@ -442,8 +459,8 @@ Any supplied callback function will only be run once all extensions have been lo
 			exts = exts.concat([].concat(items.modules));
 		}
 		for (i = 0, iz = exts.length; i < iz; i++) {
-			for (j = 0, jz = my.loadDependencies[exts[i]].length; j < jz; j++) {
-				my.pushUnique(required, my.loadDependencies[exts[i]][j]);
+			for (j = 0, jz = my.work.loadDependencies[exts[i]].length; j < jz; j++) {
+				my.pushUnique(required, my.work.loadDependencies[exts[i]][j]);
 			}
 			my.pushUnique(required, exts[i]);
 		}
@@ -717,7 +734,7 @@ Check to see if variable is an Object
 @private
 **/
 	my.safeObject = function(items) {
-		return (Object.prototype.toString.call(items) === '[object Object]') ? items : my.o;
+		return (Object.prototype.toString.call(items) === '[object Object]') ? items : my.work.o;
 	};
 	/**
 A __utility__ function for variable type checking
@@ -843,7 +860,7 @@ Generate unique names for new Scrawl objects
 		var name,
 			nameArray;
 		item = my.safeObject(item);
-		if (my.contains(my.nameslist, item.target)) {
+		if (my.contains(my.work.nameslist, item.target)) {
 			name = my.xtGetTrue(item.name, item.type, 'default');
 			name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, '_');
 			nameArray = name.split('___');
@@ -894,7 +911,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 					canvasElement: elements[i]
 				});
 				if (i === 0) {
-					my.currentPad = pad.name;
+					my.work.currentPad = pad.name;
 				}
 			}
 			return true;
@@ -1059,7 +1076,7 @@ A custom __event listener__ helper array
 @type {Array}
 @private
 **/
-	my.activeListeners = [];
+	my.work.activeListeners = [];
 	if (window.CustomEvent) {
 		/**
 A custom __event listener__ helper array
@@ -1067,14 +1084,14 @@ A custom __event listener__ helper array
 @type {Array}
 @private
 **/
-		my.eventAttributes = ['altKey', 'bubbles', 'cancelBubble', 'cancelable', 'charCode', 'clipboardData', 'ctrlKey', 'currentTarget', 'defaultPrevented', 'detail', 'eventPhase', 'keyCode', 'layerX', 'layerY', 'metaKey', 'pageX', 'pageY', 'returnValue', 'shiftKey', 'srcElement', 'target', 'timestamp', 'view', 'which'];
+		my.work.eventAttributes = ['altKey', 'bubbles', 'cancelBubble', 'cancelable', 'charCode', 'clipboardData', 'ctrlKey', 'currentTarget', 'defaultPrevented', 'detail', 'eventPhase', 'keyCode', 'layerX', 'layerY', 'metaKey', 'pageX', 'pageY', 'returnValue', 'shiftKey', 'srcElement', 'target', 'timestamp', 'view', 'which'];
 		/**
 A custom __event listener__ helper array
 @property touchEventAttributes
 @type {Array}
 @private
 **/
-		my.touchEventAttributes = ['clientX', 'clientY', 'force', 'identifier', 'pageX', 'pageY', 'radiusX', 'radiusY', 'screenX', 'screenY', 'target', 'webkitForce', 'webkitRadiusX', 'webkitRadiusY', 'webkitRotationAngle'];
+		my.work.touchEventAttributes = ['clientX', 'clientY', 'force', 'identifier', 'pageX', 'pageY', 'radiusX', 'radiusY', 'screenX', 'screenY', 'target', 'webkitForce', 'webkitRadiusX', 'webkitRadiusY', 'webkitRotationAngle'];
 		/**
 A custom __event listener__ function
 
@@ -1124,19 +1141,21 @@ A custom __event listener__ helper function
 **/
 		my.updateCustomTouch = function(data, el, evt) {
 			// creates plain objects and arrays, not Touch objects etc. So shoot me!
-			var i, iz, j, jz;
-			for (i = 0, iz = my.eventAttributes.length; i < iz; i++) {
-				if (my.xt(data[my.eventAttributes[i]])) {
-					evt[my.eventAttributes[i]] = data[my.eventAttributes[i]];
+			var i, iz, j, jz,
+				ea = my.work.eventAttributes,
+				tea = my.work.touchEventAttributes;
+			for (i = 0, iz = ea.length; i < iz; i++) {
+				if (my.xt(data[ea[i]])) {
+					evt[ea[i]] = data[ea[i]];
 				}
 			}
 			evt.changedTouches = [];
 			if (my.xt(data.changedTouches)) {
 				for (i = 0, iz = data.changedTouches.length; i < iz; i++) {
 					evt.changedTouches.push({});
-					for (j = 0, jz = my.touchEventAttributes.length; j < jz; j++) {
-						if (my.xt(data.changedTouches[i][my.touchEventAttributes[j]])) {
-							evt.changedTouches[i][my.touchEventAttributes[j]] = data.changedTouches[i][my.touchEventAttributes[j]];
+					for (j = 0, jz = tea.length; j < jz; j++) {
+						if (my.xt(data.changedTouches[i][tea[j]])) {
+							evt.changedTouches[i][tea[j]] = data.changedTouches[i][tea[j]];
 						}
 					}
 				}
@@ -1148,9 +1167,9 @@ A custom __event listener__ helper function
 			if (my.xt(data.targetTouches)) {
 				for (i = 0, iz = data.targetTouches.length; i < iz; i++) {
 					evt.targetTouches.push({});
-					for (j = 0, jz = my.touchEventAttributes.length; j < jz; j++) {
-						if (my.xt(data.targetTouches[i][my.touchEventAttributes[j]])) {
-							evt.targetTouches[i][my.touchEventAttributes[j]] = data.targetTouches[i][my.touchEventAttributes[j]];
+					for (j = 0, jz = tea.length; j < jz; j++) {
+						if (my.xt(data.targetTouches[i][tea[j]])) {
+							evt.targetTouches[i][tea[j]] = data.targetTouches[i][tea[j]];
 						}
 					}
 				}
@@ -1159,9 +1178,9 @@ A custom __event listener__ helper function
 			if (my.xt(data.touches)) {
 				for (i = 0, iz = data.touches.length; i < iz; i++) {
 					evt.touches.push({});
-					for (j = 0, jz = my.touchEventAttributes.length; j < jz; j++) {
-						if (my.xt(data.touches[i][my.touchEventAttributes[j]])) {
-							evt.touches[i][my.touchEventAttributes[j]] = data.touches[i][my.touchEventAttributes[j]];
+					for (j = 0, jz = tea.length; j < jz; j++) {
+						if (my.xt(data.touches[i][tea[j]])) {
+							evt.touches[i][tea[j]] = data.touches[i][tea[j]];
 						}
 					}
 				}
@@ -1421,7 +1440,7 @@ A __general__ function which passes on requests to Pads to generate new &lt;canv
 @return New Cell object
 **/
 	my.addNewCell = function(data, pad) {
-		pad = (pad && pad.substring) ? pad : my.currentPad;
+		pad = (pad && pad.substring) ? pad : my.work.currentPad;
 		return my.pad[pad].addNewCell(data);
 	};
 	/**
@@ -2110,7 +2129,7 @@ Rotate a Vector object by a Quaternion rotation
 			q3,
 			w;
 		if (my.isa_quaternion(item)) {
-			w = my.workquat;
+			w = my.work.workquat;
 			mag = (mag && mag.toFixed) ? mag : this.getMagnitude();
 			q1 = w.q1.set(item);
 			q2 = w.q2.set(this);
@@ -2748,7 +2767,13 @@ An object with the following attributes:
 @default null
 @private
 **/
-		this.maxDimensions = null;
+		this.maxDimensions = {
+			flag: true,
+			left: 0,
+			right: 0,
+			top: 0,
+			bottom: 0
+		};
 		/**
 The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point
 @property pivot
@@ -2837,7 +2862,13 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 			x: 0,
 			y: 0
 		},
-		maxDimensions: null,
+		maxDimensions: {
+			flag: true,
+			left: 0,
+			right: 0,
+			top: 0,
+			bottom: 0
+		},
 		pivot: null,
 		scale: 1,
 		flipReverse: false,
@@ -2952,7 +2983,7 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 			this.setHandle(items);
 		}
 		if (xto(items.flipUpend, items.flipReverse, items.scale, items.width, items.height, items.roll)) {
-			this.maxDimensions = null;
+			this.maxDimensions.flag = true;
 			if (xto(items.scale, items.width, items.height)) {
 				this.currentHandle.flag = false;
 			}
@@ -2990,7 +3021,7 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 			});
 		}
 		this.currentStart.flag = false;
-		this.maxDimensions = null;
+		this.maxDimensions.flag = true;
 		return this;
 	};
 	/**
@@ -3020,7 +3051,7 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 			});
 		}
 		this.currentHandle.flag = false;
-		this.maxDimensions = null;
+		this.maxDimensions.flag = true;
 		return this;
 	};
 	/**
@@ -3064,7 +3095,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 			if (items.height) {
 				this.setDeltaHeight(items);
 			}
-			this.maxDimensions = null;
+			this.maxDimensions.flag = true;
 			if (xto(items.scale, items.width, items.height)) {
 				this.currentHandle.flag = false;
 			}
@@ -3472,7 +3503,7 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 		coords = my.safeObject(coords);
 		vector = my.v.set(coords);
 		if (scrawl.xta(coords.x, coords.y)) {
-			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.currentPad].base];
+			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.work.currentPad].base];
 			pad = my.pad[cell.pad];
 			w = get(pad.localWidth, pad.width, 300);
 			h = get(pad.localHeight, pad.height, 150);
@@ -3873,7 +3904,7 @@ mousemove event listener function
 			pad = my.pad,
 			stack = my.stack,
 			element = my.element,
-			al = my.activeListeners,
+			al = my.work.activeListeners,
 			xt = my.xt,
 			vec = my.makeVector,
 			id2 = this.id;
@@ -4051,7 +4082,7 @@ Adds event listeners to the element
 	my.PageElement.prototype.addMouseMove = function() {
 		var el = this.getElement();
 		my.addListener(['up', 'down', 'move', 'enter', 'leave'], this.handleMouseMove, el);
-		my.pushUnique(my.activeListeners, this.name);
+		my.pushUnique(my.work.activeListeners, this.name);
 		return this;
 	};
 	/**
@@ -4064,7 +4095,7 @@ Remove event listeners from the element
 	my.PageElement.prototype.removeMouseMove = function() {
 		var el = this.getElement();
 		my.removeListener(['up', 'down', 'move', 'enter', 'leave'], this.handleMouseMove, el);
-		my.removeItem(my.activeListeners, this.name);
+		my.removeItem(my.work.activeListeners, this.name);
 		return this;
 	};
 
@@ -4514,7 +4545,7 @@ Set scrawl.currentPad attribute to this Pad's PADNAME String
         }).makeCurrent();
 **/
 	my.Pad.prototype.makeCurrent = function() {
-		my.currentPad = this.name;
+		my.work.currentPad = this.name;
 		return this;
 	};
 	/**
@@ -5485,7 +5516,7 @@ Augments Cell.setDelta
 		return this;
 	};
 	/**
-Set the Cell's &lt;canvas&gt; element's context engine to the specification supplied by the entity about to be drawn on the canvas
+Set the Cell's &lt;canvas&gt; context engine to the specification supplied by the entity about to be drawn on the canvas
 @method setEngine
 @param {Entity} entity Entity object
 @return Entity object
@@ -6246,7 +6277,7 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 **/
 		textBaseline: 'alphabetic'
 	};
-	my.contextKeys = Object.keys(my.d.Context);
+	my.work.contextKeys = Object.keys(my.d.Context);
 	my.mergeInto(my.d.Context, my.d.Base);
 	/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function - lineDashOffset, lineWidth, globalAlpha
@@ -6299,7 +6330,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @private
 **/
 	my.Context.prototype.getContextFromEngine = function(ctx) {
-		var keys = my.contextKeys,
+		var keys = my.work.contextKeys,
 			get = my.xtGet;
 		for (var i = 0, iz = keys.length; i < iz; i++) {
 			this[keys[i]] = ctx[keys[i]];
@@ -6316,7 +6347,7 @@ Interrogates a &lt;canvas&gt; element's context engine and returns an object of 
 	my.Context.prototype.getNonDefaultAttributes = function() {
 		var d = my.d.Context,
 			xt = my.xt,
-			keys = my.contextKeys,
+			keys = my.work.contextKeys,
 			i, iz,
 			result = {};
 		for (i = 0, iz = keys.length; i < iz; i++) {
@@ -6420,7 +6451,7 @@ CELLNAME of the default Cell object to which this group is associated
 @type String
 @default ''
 **/
-		this.cell = items.cell || my.pad[my.currentPad].current;
+		this.cell = items.cell || my.pad[my.work.currentPad].current;
 		/**
 Group order value - lower order Groups are drawn on &lt;canvas&gt; elements before higher order Groups
 @property order
@@ -6738,15 +6769,15 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getEntityAt = function(items) {
 		var entity,
-			v1 = my.colv1,
-			v2 = my.colv2,
+			v1 = my.work.colv1,
+			v2 = my.work.colv2,
 			entitys = this.entitys,
 			e = my.entity,
 			rad = this.regionRadius,
 			coordinate,
 			i;
 		items = my.safeObject(items);
-		coordinate = v1.set(items); //coordinate = my.colv1
+		coordinate = v1.set(items); //coordinate = my.work.colv1
 		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.v
 		this.sortEntitys();
 		for (i = entitys.length - 1; i >= 0; i--) {
@@ -6793,8 +6824,8 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getAllEntitysAt = function(items) {
 		var entity,
-			v1 = my.colv1,
-			v2 = my.colv2,
+			v1 = my.work.colv1,
+			v2 = my.work.colv2,
 			coordinate,
 			results,
 			entitys = this.entitys,
@@ -6802,7 +6833,7 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 			rad = this.regionRadius,
 			i;
 		items = my.safeObject(items);
-		coordinate = v1.set(items); //coordinate = my.colv1
+		coordinate = v1.set(items); //coordinate = my.work.colv1
 		results = [];
 		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.v
 		this.sortEntitys();
@@ -7079,7 +7110,7 @@ Allows users to:
 			group[this.group].resort = true;
 		}
 		if (xt(items.lineWidth)) {
-			this.maxDimensions = null;
+			this.maxDimensions.flag = true;
 		}
 		return this;
 	};
@@ -7106,7 +7137,7 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 		if (xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
 			my.ctx[this.context].setDelta(items);
 			if (xt(items.lineWidth)) {
-				this.maxDimensions = null;
+				this.maxDimensions.flag = true;
 			}
 		}
 		this.collisionsEntitySetDelta(items);
@@ -7157,7 +7188,7 @@ Constructor helper function - discover this entity's default group affiliation
 			return items.group;
 		}
 		else {
-			return my.pad[my.currentPad].current;
+			return my.pad[my.work.currentPad].current;
 		}
 	};
 	/**
@@ -7250,7 +7281,7 @@ Permitted methods include:
 			}
 			if (this.pivot) {
 				this.setStampUsingPivot(cellname, mouse);
-				this.maxDimensions = null;
+				this.maxDimensions.flag = true;
 			}
 			else {
 				this.pathStamp();
@@ -8069,10 +8100,10 @@ End circle radius, in pixels or percentage of entity/cell width
 	my.v = my.makeVector({
 		name: 'scrawl.v'
 	});
-	my.colv1 = my.makeVector({
+	my.work.colv1 = my.makeVector({
 		name: 'scrawl.colv'
 	});
-	my.colv2 = my.makeVector({
+	my.work.colv2 = my.makeVector({
 		name: 'scrawl.colv'
 	});
 
@@ -8093,20 +8124,21 @@ Alias for makeAnimation()
 	my.newAnimation = function(items) {
 		return my.makeAnimation(items);
 	};
+	my.work.animate = [];
 	/**
 Animation flag: set to false to stop animation loop
 @property doAnimation
 @type {Boolean}
 **/
-	my.doAnimation = false;
+	my.work.doAnimation = false;
 	/**
 Animation ordering flag - when set to false, the ordering of animations is skipped; default: true
 @property orderAnimations
 @type {Boolean}
 @default true
 **/
-	my.orderAnimations = true;
-	my.resortAnimations = true;
+	my.work.orderAnimations = true;
+	my.work.resortAnimations = true;
 	/**
 The Scrawl animation loop
 
@@ -8124,9 +8156,9 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 	my.animationLoop = function() {
 		var i,
 			iz,
-			animate = my.animate,
+			animate = my.work.animate,
 			animation = my.animation;
-		if (my.orderAnimations) {
+		if (my.work.orderAnimations) {
 			my.sortAnimations();
 		}
 		for (i = 0, iz = animate.length; i < iz; i++) {
@@ -8134,7 +8166,7 @@ To restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnim
 				animation[animate[i]].fn();
 			}
 		}
-		if (my.doAnimation) {
+		if (my.work.doAnimation) {
 			window.requestAnimFrame(function() {
 				my.animationLoop();
 			});
@@ -8147,9 +8179,9 @@ Animation sorting routine - animation objects are sorted according to their anim
 @private
 **/
 	my.sortAnimations = function() {
-		if (my.resortAnimations) {
-			my.resortAnimations = false;
-			my.animate = my.bucketSort('animation', 'order', my.animate);
+		if (my.work.resortAnimations) {
+			my.work.resortAnimations = false;
+			my.work.animate = my.bucketSort('animation', 'order', my.work.animate);
 		}
 	};
 	/**
@@ -8170,7 +8202,7 @@ Starts the animation loop
 				dev.getViewportPosition();
 			}
 		});
-		my.doAnimation = true;
+		my.work.doAnimation = true;
 		my.animationLoop();
 	};
 
@@ -8203,7 +8235,7 @@ Starts the animation loop
 		this.order = items.order || 0;
 		my.animation[this.name] = this;
 		my.pushUnique(my.animationnames, this.name);
-		my.resortAnimations = true;
+		my.work.resortAnimations = true;
 		/**
 Pseudo-attribute used to prevent immediate running of animation when first created
 
@@ -8249,7 +8281,7 @@ Run an animation
 @return Always true
 **/
 	my.Animation.prototype.run = function() {
-		my.pushUnique(my.animate, this.name);
+		my.pushUnique(my.work.animate, this.name);
 		return true;
 	};
 	/**
@@ -8258,7 +8290,7 @@ Stop an animation
 @return Always true
 **/
 	my.Animation.prototype.halt = function() {
-		my.removeItem(my.animate, this.name);
+		my.removeItem(my.work.animate, this.name);
 		return true;
 	};
 	/**
@@ -8269,8 +8301,8 @@ Remove this Animation from the scrawl library
 	my.Animation.prototype.kill = function() {
 		delete my.animation[this.name];
 		my.removeItem(my.animationnames, this.name);
-		my.removeItem(my.animate, this.name);
-		my.resortAnimations = true;
+		my.removeItem(my.work.animate, this.name);
+		my.work.resortAnimations = true;
 		return true;
 	};
 

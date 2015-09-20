@@ -34,11 +34,11 @@ The Path module adds Path entitys - path-based objects - to the core module
 @module scrawlPath
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'path')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'path')) {
 	var scrawl = (function(my) {
 		'use strict';
 
-		my.worklink = {
+		my.work.worklink = {
 			start: my.makeVector({
 				name: 'scrawl.worklink.start'
 			}),
@@ -213,7 +213,7 @@ Entity.stamp hook function - modified by path module
 				current.x = start.x = (!this.lockX) ? here.x : current.x;
 				current.y = start.y = (!this.lockY) ? here.y : current.y;
 				this.pathRoll = here.r || 0;
-				this.maxDimensions = null;
+				this.maxDimensions.flag = true;
 			}
 		};
 		/**
@@ -675,10 +675,10 @@ A __factory__ function to generate new Path entitys
 			}
 			return false;
 		};
-		my.pushUnique(my.sectionlist, 'point');
-		my.pushUnique(my.nameslist, 'pointnames');
-		my.pushUnique(my.sectionlist, 'link');
-		my.pushUnique(my.nameslist, 'linknames');
+		my.pushUnique(my.work.sectionlist, 'point');
+		my.pushUnique(my.work.nameslist, 'pointnames');
+		my.pushUnique(my.work.sectionlist, 'link');
+		my.pushUnique(my.work.nameslist, 'linknames');
 
 		/**
 # Path
@@ -1448,103 +1448,12 @@ Returns an object with the following attributes:
 @private
 **/
 		my.Path.prototype.getMaxDimensions = function(cell) {
-			// var cw = cell.actualWidth,
-			// 	ch = cell.actualHeight,
-			// 	halfW = cw / 2,
-			// 	halfH = ch / 2,
-			// 	cx = this.currentStart.x,
-			// 	cy = this.currentStart.y,
-			// 	lw = this.localWidth,
-			// 	lh = this.localHeight,
-			// 	fr = this.flipReverse,
-			// 	fu = this.flipUpend,
-			// 	xtl, xtr, xbr, xbl, ytl, ytr, ybr, ybl,
-			// 	x = (fr) ? cw - cx : cx,
-			// 	y = (fu) ? ch - cy : cy,
-			// 	w = (fr) ? -lw : lw,
-			// 	h = (fu) ? -lh : lh,
-			// 	o = this.currentHandle,
-			// 	hx = (fr) ? -o.x : o.x,
-			// 	hy = (fu) ? -o.y : o.y,
-			// 	line = my.ctx[this.context].lineWidth || 0,
-			// 	max, min, ax, ay, ref,
-			// 	ceil = Math.ceil,
-			// 	floor = Math.floor,
-			// 	t, l, b, r,
-			// 	roll = this.roll,
-			// 	v = my.v,
-			// 	between = my.isBetween;
-			// l = (fr) ? x + hx + w : x + hx;
-			// r = (fr) ? x + hx : x + hx + w;
-			// t = (fu) ? y + hy + h : y + hy;
-			// b = (fu) ? y + hy : y + hy + h;
-			// if (roll) {
-			// 	min = Math.min;
-			// 	max = Math.max;
-			// 	ref = {
-			// 		x: x,
-			// 		y: y
-			// 	};
-			// 	v.set({
-			// 		x: l,
-			// 		y: t
-			// 	}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-			// 	xtl = v.x;
-			// 	ytl = v.y;
-			// 	v.set({
-			// 		x: r,
-			// 		y: t
-			// 	}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-			// 	xtr = v.x;
-			// 	ytr = v.y;
-			// 	v.set({
-			// 		x: r,
-			// 		y: b
-			// 	}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-			// 	xbl = v.x;
-			// 	ybl = v.y;
-			// 	v.set({
-			// 		x: l,
-			// 		y: b
-			// 	}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-			// 	xbr = v.x;
-			// 	ybr = v.y;
-			// 	ax = [xtl, xtr, xbr, xbl];
-			// 	ay = [ytl, ytr, ybr, ybl];
-			// 	t = min.apply(Math, ay);
-			// 	l = min.apply(Math, ax);
-			// 	b = max.apply(Math, ay);
-			// 	r = max.apply(Math, ax);
-			// }
-			// t = floor(t - line);
-			// l = floor(l - line);
-			// b = ceil(b + line);
-			// r = ceil(r + line);
-			// if (!between(t, 0, ch, true)) {
-			// 	t = (t > halfH) ? ch : 0;
-			// }
-			// if (!between(b, 0, ch, true)) {
-			// 	b = (b > halfH) ? ch : 0;
-			// }
-			// if (!between(l, 0, cw, true)) {
-			// 	l = (l > halfW) ? cw : 0;
-			// }
-			// if (!between(r, 0, cw, true)) {
-			// 	r = (r > halfW) ? cw : 0;
-			// }
-			// this.maxDimensions = {
-			// 	top: t,
-			// 	left: l,
-			// 	bottom: b,
-			// 	right: r
-			// };
-			// return this.maxDimensions;
-			return {
-				top: 0,
-				left: 0,
-				bottom: cell.actualHeight,
-				right: cell.actualWidth
-			};
+			this.maxDimensions.top = 0;
+			this.maxDimensions.bottom = cell.actualHeight;
+			this.maxDimensions.left = 0;
+			this.maxDimensions.right = cell.actualWidth;
+			this.maxDimensions.flag = false;
+			return this.maxDimensions;
 		};
 
 		/**
@@ -1784,7 +1693,7 @@ Return object has the following attributes:
 					current: null,
 					startLink: null
 				},
-				vec = (xt(v) && v.type === 'Vector') ? v : my.worklink.point,
+				vec = (xt(v) && v.type === 'Vector') ? v : my.work.worklink.point,
 				entity = my.entity,
 				point = my.point,
 				local = this.local;
@@ -1813,7 +1722,7 @@ Return object has the following attributes:
 				}
 				else {
 					vec.set(local);
-					vec.vectorSubtract(s.currentStart || my.o);
+					vec.vectorSubtract(s.currentStart || my.work.o);
 					vec.scalarMultiply(scale || 1);
 					vec.rotate(-s.roll);
 				}
@@ -2064,29 +1973,29 @@ Result Object contains the following attributes:
 **/
 		my.Link.prototype.getPointCoordinates = function() {
 			var vector,
-				worklink = my.worklink,
+				worklink = my.work.worklink,
 				start = worklink.start,
 				end = worklink.end,
 				c1 = worklink.control1,
 				c2 = worklink.control2,
 				point = my.point;
-			vector = (this.startPoint) ? point[this.startPoint].getCurrentCoordinates() : my.o;
+			vector = (this.startPoint) ? point[this.startPoint].getCurrentCoordinates() : my.work.o;
 			start.x = vector.x || 0;
 			start.y = vector.y || 0;
 			start.z = vector.z || 0;
-			vector = (this.endPoint) ? point[this.endPoint].getCurrentCoordinates() : my.o;
+			vector = (this.endPoint) ? point[this.endPoint].getCurrentCoordinates() : my.work.o;
 			end.x = vector.x || 0;
 			end.y = vector.y || 0;
 			end.z = vector.z || 0;
-			vector = (this.controlPoint1) ? point[this.controlPoint1].getCurrentCoordinates() : my.o;
+			vector = (this.controlPoint1) ? point[this.controlPoint1].getCurrentCoordinates() : my.work.o;
 			c1.x = vector.x || 0;
 			c1.y = vector.y || 0;
 			c1.z = vector.z || 0;
-			vector = (this.controlPoint2) ? point[this.controlPoint2].getCurrentCoordinates() : my.o;
+			vector = (this.controlPoint2) ? point[this.controlPoint2].getCurrentCoordinates() : my.work.o;
 			c2.x = vector.x || 0;
 			c2.y = vector.y || 0;
 			c2.z = vector.z || 0;
-			return my.worklink;
+			return my.work.worklink;
 		};
 		/**
 Position calculation helper function
@@ -2108,7 +2017,7 @@ Position calculation helper function
 					y: 0,
 					z: 0
 				},
-				work = my.worklink,
+				work = my.work.worklink,
 				pol = this.pointOnLine,
 				vec = work.v1.zero();
 			val = (my.xt(val) && val.toFixed) ? val : 1;
@@ -2164,8 +2073,8 @@ Position calculation helper function
 				i,
 				iz,
 				pcl = this.positionsCumulativeLength,
-				v1 = my.worklink.v1,
-				v2 = my.worklink.v2;
+				v1 = my.work.worklink.v1,
+				v2 = my.work.worklink.v2;
 			val = (my.xt(val) && val.toFixed) ? val : 1;
 			precision = my.entity[this.entity].get('precision');
 			distance = this.length * val;
@@ -2228,8 +2137,8 @@ Returns length of Link, in pixels
 				entity = my.entity[this.entity],
 				temp,
 				j,
-				v2 = my.worklink.v2,
-				v3 = my.worklink.v3;
+				v2 = my.work.worklink.v2,
+				v3 = my.work.worklink.v3;
 			if (this.action === 'add') {
 				pts = this.getPointCoordinates();
 				precision = (my.xt(val) && val.toFixed && val > 0) ? val : entity.get('precision');
@@ -2248,7 +2157,7 @@ Returns length of Link, in pixels
 				entity.roll = 0;
 				for (j = 1; j <= precision; j++) {
 					pos = step * ((j - 1) + 1);
-					here = this.getPositionOnLink(pos); //my.worklink.v1
+					here = this.getPositionOnLink(pos); //my.work.worklink.v1
 					here.vectorSubtract(entity.currentStart);
 					v3.set(here);
 					dist = here.vectorSubtract(v2).getMagnitude();
@@ -2326,7 +2235,7 @@ sketch helper object
 			},
 			line: function(ctx, item) {
 				var p = my.point,
-					myEnd = p[item.endPoint].getCurrentCoordinates(my.worklink.end);
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
 				ctx.lineTo(
 					myEnd.x,
 					myEnd.y
@@ -2335,8 +2244,8 @@ sketch helper object
 			},
 			quadratic: function(ctx, item) {
 				var p = my.point,
-					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.worklink.control1),
-					myEnd = p[item.endPoint].getCurrentCoordinates(my.worklink.end);
+					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.work.worklink.control1),
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
 				ctx.quadraticCurveTo(
 					myCon1.x,
 					myCon1.y,
@@ -2347,9 +2256,9 @@ sketch helper object
 			},
 			bezier: function(ctx, item) {
 				var p = my.point,
-					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.worklink.control1),
-					myCon2 = p[item.controlPoint2].getCurrentCoordinates(my.worklink.control2),
-					myEnd = p[item.endPoint].getCurrentCoordinates(my.worklink.end);
+					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.work.worklink.control1),
+					myCon2 = p[item.controlPoint2].getCurrentCoordinates(my.work.worklink.control2),
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
 				ctx.bezierCurveTo(
 					myCon1.x,
 					myCon1.y,

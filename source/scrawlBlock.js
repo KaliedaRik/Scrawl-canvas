@@ -33,7 +33,7 @@ The Block module adds Block entitys - squares and rectangles - to the core modul
 @module scrawlBlock
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'block')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'block')) {
 	var scrawl = (function(my) {
 		'use strict';
 		/**
@@ -460,12 +460,11 @@ Returns an object with the following attributes:
 			if (!between(r, 0, cw, true)) {
 				r = (r > halfW) ? cw : 0;
 			}
-			this.maxDimensions = {
-				top: t,
-				left: l,
-				bottom: b,
-				right: r
-			};
+			this.maxDimensions.top = t;
+			this.maxDimensions.bottom = b;
+			this.maxDimensions.left = l;
+			this.maxDimensions.right = r;
+			this.maxDimensions.flag = false;
 			return this.maxDimensions;
 		};
 
