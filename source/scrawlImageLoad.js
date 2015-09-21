@@ -52,16 +52,16 @@ Utility canvas - never displayed
 @type {CasnvasObject}
 @private
 **/
-		my.imageCanvas = document.createElement('canvas');
-		my.imageCanvas.id = 'imageHiddenCanvasElement';
-		my.work.imageFragment.appendChild(my.imageCanvas);
+		my.work.imageCanvas = document.createElement('canvas');
+		my.work.imageCanvas.id = 'imageHiddenCanvasElement';
+		my.work.imageFragment.appendChild(my.work.imageCanvas);
 		/**
 Utility canvas 2d context engine
 @property imageCvx
 @type {CasnvasContextObject}
 @private
 **/
-		my.imageCvx = my.imageCanvas.getContext('2d');
+		my.work.imageCvx = my.work.imageCanvas.getContext('2d');
 		/**
 Alias for makeImage()
 @method newImage
@@ -451,8 +451,8 @@ Creates a new &lt;img&gt; element from a canvas ImageData object - uses Image.ad
 **/
 		my.Image.prototype.addImageByData = function(items) {
 			var data,
-				canvas = my.imageCanvas,
-				cvx = my.imageCvx;
+				canvas = my.work.imageCanvas,
+				cvx = my.work.imageCvx;
 			if (my.xt(items.data)) {
 				data = items.data;
 				canvas.width = data.width;

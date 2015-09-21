@@ -611,7 +611,7 @@ Returns an object with the following attributes:
 				ceil = Math.ceil,
 				floor = Math.floor,
 				t, l, b, r,
-				v = my.v;
+				v = my.work.v;
 			if (x.substring) {
 				x = conv(x, w);
 			}

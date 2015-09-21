@@ -329,10 +329,10 @@ Helper function for convert functions
 @private
 **/
 		my.doConvert = function(image, items) {
-			var cv = my.imageCanvas;
+			var cv = my.work.imageCanvas;
 			cv.width = image.width;
 			cv.height = image.height;
-			my.imageCvx.putImageData(image, 0, 0);
+			my.work.imageCvx.putImageData(image, 0, 0);
 			items.url = cv.toDataURL();
 			items.width = image.width;
 			items.height = image.height;
@@ -1257,8 +1257,8 @@ Load the Picture entity's image data (via JavaScript getImageData() function) in
 **/
 		my.Picture.prototype.getImageData = function(label) {
 			var data,
-				ic = my.imageCanvas,
-				cvx = my.imageCvx,
+				ic = my.work.imageCanvas,
+				cvx = my.work.imageCvx,
 				cd = this.copyData;
 			label = (my.xt(label)) ? label : 'data';
 			data = this.getImage();
@@ -1450,7 +1450,7 @@ Returns an object with the following attributes:
 				floor = Math.floor,
 				t, l, b, r,
 				roll = this.roll,
-				v = my.v,
+				v = my.work.v,
 				between = my.isBetween;
 			l = (fr) ? x + hx + w : x + hx;
 			r = (fr) ? x + hx : x + hx + w;

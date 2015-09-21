@@ -54,28 +54,16 @@ Utility canvases - never displayed
 @type {CasnvasObject}
 @private
 **/
-		my.filterCanvas = document.createElement('canvas');
-		my.filterCanvas.id = 'filterHiddenCanvasElement';
-		my.work.f.appendChild(my.filterCanvas);
-		my.perspectiveOriginCanvas = document.createElement('canvas');
-		my.perspectiveOriginCanvas.id = 'perspectiveOriginHiddenCanvasElement';
-		my.work.f.appendChild(my.perspectiveOriginCanvas);
-		my.perspectiveSourceCanvas = document.createElement('canvas');
-		my.perspectiveSourceCanvas.id = 'perspectiveSourceHiddenCanvasElement';
-		my.work.f.appendChild(my.perspectiveSourceCanvas);
-		my.perspectiveEaselCanvas = document.createElement('canvas');
-		my.perspectiveEaselCanvas.id = 'perspectiveEaselHiddenCanvasElement';
-		my.work.f.appendChild(my.perspectiveEaselCanvas);
+		my.work.filterCanvas = document.createElement('canvas');
+		my.work.filterCanvas.id = 'filterHiddenCanvasElement';
+		my.work.f.appendChild(my.work.filterCanvas);
 		/**
 Utility canvas 2d context engine
 @property filterCvx
 @type {CasnvasContextObject}
 @private
 **/
-		my.filterCvx = my.filterCanvas.getContext('2d');
-		my.perspectiveOriginCvx = my.perspectiveOriginCanvas.getContext('2d');
-		my.perspectiveSourceCvx = my.perspectiveSourceCanvas.getContext('2d');
-		my.perspectiveEaselCvx = my.perspectiveEaselCanvas.getContext('2d');
+		my.work.filterCvx = my.work.filterCanvas.getContext('2d');
 		/**
 Array of FILTERNAME strings, for filters to be applied to the Pad
 @property filters
@@ -897,8 +885,8 @@ cloneImageData function
 		my.Filter.prototype.cloneImageData = function(original) {
 			var w,
 				h,
-				canvas = my.filterCanvas,
-				cvx = my.filterCvx;
+				canvas = my.work.filterCanvas,
+				cvx = my.work.filterCvx;
 			if (my.xt(original)) {
 				if (my.xta(original.width, original.height)) {
 					w = original.width;
@@ -2414,8 +2402,8 @@ Blur helper function
 			cos = Math.cos(r * my.work.radian);
 			sin = Math.sin(r * my.work.radian);
 			brush = [];
-			cv = my.filterCanvas;
-			cvx = my.filterCvx;
+			cv = my.work.filterCanvas;
+			cvx = my.work.filterCvx;
 			cv.width = dim;
 			cv.height = dim;
 			cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);

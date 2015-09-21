@@ -456,7 +456,7 @@ Retrieve axis component of this quaternion
 **/
 		my.Quaternion.prototype.getAxis = function() {
 			var magnitude,
-				v = my.v;
+				v = my.work.v;
 			v.set(this.v);
 			magnitude = this.getMagnitude();
 			return (magnitude !== 0) ? v.scalarDivide(magnitude) : v;

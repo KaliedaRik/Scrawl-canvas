@@ -759,7 +759,7 @@ Calculate the current positions of this entity's collision Vectors, taking into 
 		my.Entity.prototype.getCollisionPoints = function() {
 			var i,
 				iz,
-				v = my.v,
+				v = my.work.v,
 				collisionVectors = this.collisionVectors,
 				collisionArray = this.collisionArray,
 				reverse = this.flipReverse,
@@ -807,11 +807,10 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				w,
 				h,
 				xt = my.xt,
-				v = my.v,
+				v = my.work.v,
 				collisionVectors = this.collisionVectors,
 				collisionPoints = this.collisionPoints,
 				handle = this.currentHandle;
-			// o = this.getOffsetStartVector().reverse();
 			if (!handle.flag) {
 				this.updateCurrentHandle();
 			}

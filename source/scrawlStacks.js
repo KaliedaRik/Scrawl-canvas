@@ -2335,7 +2335,7 @@ Set element's pivot to 'mouse'; set handles to supplied Vector value; set order 
 		my.PageElement.prototype.pickupEntity = function(items) {
 			var coordinate;
 			items = my.safeObject(items);
-			coordinate = my.v.set(items);
+			coordinate = my.work.v.set(items);
 			this.oldX = coordinate.x || 0;
 			this.oldY = coordinate.y || 0;
 			this.oldPivot = this.pivot;
@@ -3653,7 +3653,7 @@ This has the effect of turning a set of disparate eelements into a single, coord
 					handleX: 0,
 					handleY: 0
 				},
-				v = my.v,
+				v = my.work.v,
 				elements = this.elements;
 			item = (item.substring) ? item : false;
 			if (item) {

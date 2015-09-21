@@ -148,7 +148,7 @@ Work vector, for calculations
 @type {Vector}
 @private
 **/
-	my.v = null;
+	my.work.v = null;
 	/**
 Work vector, for calculations
 @property colv1
@@ -3494,7 +3494,7 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 			w, h,
 			get = my.xtGet;
 		coords = my.safeObject(coords);
-		vector = my.v.set(coords);
+		vector = my.work.v.set(coords);
 		if (scrawl.xta(coords.x, coords.y)) {
 			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.work.currentPad].base];
 			pad = my.pad[cell.pad];
@@ -6728,7 +6728,7 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 			entitys = this.entitys,
 			e = my.entity,
 			entityVector,
-			v = my.v,
+			v = my.work.v,
 			i,
 			iz,
 			arg = {
@@ -6771,7 +6771,7 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 			i;
 		items = my.safeObject(items);
 		coordinate = v1.set(items); //coordinate = my.work.colv1
-		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.v
+		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.work.v
 		this.sortEntitys();
 		for (i = entitys.length - 1; i >= 0; i--) {
 			entity = e[entitys[i]];
@@ -6828,7 +6828,7 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 		items = my.safeObject(items);
 		coordinate = v1.set(items); //coordinate = my.work.colv1
 		results = [];
-		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.v
+		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.work.v
 		this.sortEntitys();
 		for (i = entitys.length - 1; i >= 0; i--) {
 			entity = e[entitys[i]];
@@ -7525,7 +7525,7 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		var cell,
 			coordinate;
 		items = my.safeObject(items);
-		coordinate = my.v.set(items);
+		coordinate = my.work.v.set(items);
 		cell = my.cell[my.group[this.group].cell];
 		coordinate = this.correctCoordinates(coordinate, cell);
 		this.oldX = coordinate.x || 0;
@@ -7819,7 +7819,7 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 			w,
 			h,
 			r,
-			v = my.v;
+			v = my.work.v;
 		entity = my.entity[entity] || false;
 		if (xt(cell)) {
 			cell = (c[cell]) ? c[cell] : c[this.get('cell')];
@@ -8091,7 +8091,7 @@ End circle radius, in pixels or percentage of entity/cell width
 	};
 	my.mergeInto(my.work.d.RadialGradient, my.work.d.Design);
 
-	my.v = my.makeVector({
+	my.work.v = my.makeVector({
 		name: 'scrawl.v'
 	});
 	my.work.colv1 = my.makeVector({

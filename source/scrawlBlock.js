@@ -400,7 +400,7 @@ Returns an object with the following attributes:
 				floor = Math.floor,
 				t, l, b, r,
 				roll = this.roll,
-				v = my.v,
+				v = my.work.v,
 				between = my.isBetween;
 			l = (fr) ? x + hx + w : x + hx;
 			r = (fr) ? x + hx : x + hx + w;
