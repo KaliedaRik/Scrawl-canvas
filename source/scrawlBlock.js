@@ -96,7 +96,7 @@ A __factory__ function to generate new Block entitys
 **/
 		my.Block = function Block(items) {
 			var get = my.xtGet,
-			d = my.d.Block;
+			d = my.work.d.Block;
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
@@ -116,7 +116,7 @@ A __factory__ function to generate new Block entitys
 **/
 		my.Block.prototype.type = 'Block';
 		my.Block.prototype.classname = 'entitynames';
-		my.d.Block = {
+		my.work.d.Block = {
 			/**
 Block display - width, in pixels
 @property localWidth
@@ -134,7 +134,7 @@ Block display - height, in pixels
 **/
 			localHeight: 0,
 		};
-		my.mergeInto(my.d.Block, my.d.Entity);
+		my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		/**
 Augments Entity.set()
 @method set

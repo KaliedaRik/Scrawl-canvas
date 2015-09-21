@@ -105,7 +105,7 @@ A __factory__ function to generate new Color objects
 **/
 		my.Color.prototype.type = 'Color';
 		my.Color.prototype.classname = 'designnames';
-		my.d.Color = {
+		my.work.d.Color = {
 			/**
 Red channel value: 0 - 255
 @property r
@@ -262,7 +262,7 @@ This attribute is not retained by the color object, and can only be used in the 
 @default false
 **/
 		};
-		my.mergeInto(my.d.Color, my.d.Base);
+		my.mergeInto(my.work.d.Color, my.work.d.Base);
 		/**
 Augments Base.get()
 

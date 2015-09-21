@@ -129,7 +129,7 @@ A __factory__ function to generate new Frame entitys
 @final
 **/
 		my.FramePoint.prototype.type = 'FramePoint';
-		my.d.FramePoint = {
+		my.work.d.FramePoint = {
 			host: false,
 			data: false,
 			reference: false,
@@ -148,7 +148,7 @@ A __factory__ function to generate new Frame entitys
 			lockX: false,
 			lockY: false
 		};
-		my.mergeInto(my.d.FramePoint, my.d.Base);
+		my.mergeInto(my.work.d.FramePoint, my.work.d.Base);
 		/**
 @method get
 @param {String} item Name of attribute to return
@@ -449,7 +449,7 @@ Data should always be an array in the form [x, y, z]
 **/
 		my.Frame.prototype.type = 'Frame';
 		my.Frame.prototype.classname = 'entitynames';
-		my.d.Frame = {
+		my.work.d.Frame = {
 			topLeft: false,
 			topRight: false,
 			bottomRight: false,
@@ -503,7 +503,7 @@ Data should always be an array in the form [x, y, z]
 				flag: true
 			}
 		};
-		my.mergeInto(my.d.Frame, my.d.Base);
+		my.mergeInto(my.work.d.Frame, my.work.d.Base);
 		/**
 Frame.registerInLibrary hook function - modified by collisions extension
 @method collisionsEntityRegisterInLibrary
@@ -950,8 +950,8 @@ Entity.stamp hook helper function
 						maxDim = ceil(dim);
 						minDim = floor(dim);
 						src = my.xtGet(my.asset[this.source], my.canvas[this.source], false);
-						cv = my.cv;
-						cvx = my.cvx;
+						cv = my.work.cv;
+						cvx = my.work.cvx;
 						getPos = this.getPosition;
 						iFac = this.interferenceFactor;
 						cell = this.cell;
@@ -1272,7 +1272,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 			items = my.safeObject(items);
 			var tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)],
 				result = false,
-				cvx = my.cvx,
+				cvx = my.work.cvx,
 				i, iz;
 			cvx.setTransform(1, 0, 0, 1, 0, 0);
 			this.drawPath(cvx);

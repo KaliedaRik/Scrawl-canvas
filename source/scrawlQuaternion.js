@@ -91,7 +91,7 @@ Argument object can be in the following form, where all values (which default to
 @final
 **/
 		my.Quaternion.prototype.type = 'Quaternion';
-		my.d.Quaternion = {
+		my.work.d.Quaternion = {
 			/**
 Quaternion name
 @property name
@@ -447,7 +447,7 @@ Retrieve rotational component of this quaternion
 			var result;
 			degree = (my.xt(degree)) ? degree : false;
 			result = 2 * Math.acos(this.n);
-			return (degree) ? result * (1 / my.radian) : result;
+			return (degree) ? result * (1 / my.work.radian) : result;
 		};
 		/**
 Retrieve axis component of this quaternion
@@ -523,7 +523,7 @@ Argument object can be in the form, where all values (which default to 0) are in
 				x,
 				y,
 				z,
-				rad = my.radian,
+				rad = my.work.radian,
 				cos = Math.cos,
 				sin = Math.sin;
 			items = my.safeObject(items);
@@ -574,7 +574,7 @@ Argument object can be in the form, where all values (which default to 0) are in
 				s1,
 				s2,
 				s3,
-				rad = my.radian,
+				rad = my.work.radian,
 				cos = Math.cos,
 				sin = Math.sin,
 				tv = this.v;
@@ -614,7 +614,7 @@ Retrieve rotations (Euler angles) from a quaternion
 				t0,
 				t1,
 				tv = this.v,
-				rad = my.radian,
+				rad = my.work.radian,
 				tan = Math.atan2,
 				pi = Math.PI,
 				between = my.isBetween;
@@ -664,7 +664,7 @@ Retrieve Euler roll value from a quaternion
 				test,
 				tv = this.v,
 				tn = this.n,
-				rad = my.radian,
+				rad = my.work.radian,
 				pi = Math.PI,
 				pow = Math.pow,
 				between = my.isBetween,

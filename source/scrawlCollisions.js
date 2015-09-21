@@ -130,7 +130,7 @@ Cell constructor hook function - modified by collisions module
 			}
 		};
 
-		my.d.Cell.fieldLabel = '';
+		my.work.d.Cell.fieldLabel = '';
 		/**
 Builds a collision map image from entitys, for use in entity field collision detection functions
 @method Cell.buildField
@@ -534,28 +534,28 @@ An Array of Arrays is returned, with each constituent array consisting of the th
 			return hits;
 		};
 
-		my.d.Entity.fieldChannel = 'anycolor';
-		my.d.Entity.fieldTest = 0;
-		my.d.Entity.collisionVectors = [];
-		my.d.Entity.collisionPoints = [];
-		my.d.Entity.collisionArray = [];
-		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Entity);
+		my.work.d.Entity.fieldChannel = 'anycolor';
+		my.work.d.Entity.fieldTest = 0;
+		my.work.d.Entity.collisionVectors = [];
+		my.work.d.Entity.collisionPoints = [];
+		my.work.d.Entity.collisionArray = [];
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Entity);
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Entity);
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Entity);
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Entity);
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Path)) {
-			my.mergeInto(my.d.Path, my.d.Entity);
+		if (my.xt(my.work.d.Path)) {
+			my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		}
 		/**
 Recalculate the current collision point positions for all entitys in the group

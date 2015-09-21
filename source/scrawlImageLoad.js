@@ -300,7 +300,7 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 **/
 		my.Image.prototype.type = 'Image';
 		my.Image.prototype.classname = 'imagenames';
-		my.d.Image = {
+		my.work.d.Image = {
 			/**
 DOM image actual width, in pixels
 @property width
@@ -356,7 +356,7 @@ _This attribute is not retained by the object_
 @default undefined
 **/
 		};
-		my.mergeInto(my.d.Image, my.d.Base);
+		my.mergeInto(my.work.d.Image, my.work.d.Base);
 		/**
 Adds a DOM &lt;img&gt; element to the library
 
@@ -553,7 +553,7 @@ SpriteAnimation attributes can also be set and retrieved directly using Picture.
 **/
 		my.SpriteAnimation.prototype.type = 'SpriteAnimation';
 		my.SpriteAnimation.prototype.classname = 'spriteanimationnames';
-		my.d.SpriteAnimation = {
+		my.work.d.SpriteAnimation = {
 			/**
 An Array of animation frame data Objects, to be used for producing an animation sequence. Each Object in the Array has the following form:
 
@@ -617,8 +617,8 @@ Datestamp when SpriteAnimation.getData() function was last called
 **/
 			lastCalled: 0,
 		};
-		my.work.animKeys = Object.keys(my.d.SpriteAnimation);
-		my.mergeInto(my.d.SpriteAnimation, my.d.Scrawl);
+		my.work.animKeys = Object.keys(my.work.d.SpriteAnimation);
+		my.mergeInto(my.work.d.SpriteAnimation, my.work.d.Scrawl);
 		/**
 Set attribute values - will also set the __currentFrame__ attribute to the appropriate value when the running __attribute__ is changed
 
@@ -784,7 +784,7 @@ getData helper object
     **/
 		my.Video.prototype.type = 'Video';
 		my.Video.prototype.classname = 'videonames';
-		my.d.Video = {
+		my.work.d.Video = {
 			/**
     DOM image actual width, in pixels
     @property width
@@ -816,7 +816,7 @@ _This attribute is not retained by the object_
 @default undefined
 **/
 		};
-		my.mergeInto(my.d.Video, my.d.Base);
+		my.mergeInto(my.work.d.Video, my.work.d.Base);
 		/**
 Adds a DOM &lt;video&gt; element to the library
 

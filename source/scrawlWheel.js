@@ -96,7 +96,7 @@ A __factory__ function to generate new Wheel entitys
 **/
 		my.Wheel = function Wheel(items) {
 			var get = my.xtGet,
-			d = my.d.Wheel;
+			d = my.work.d.Wheel;
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
@@ -120,7 +120,7 @@ A __factory__ function to generate new Wheel entitys
 **/
 		my.Wheel.prototype.type = 'Wheel';
 		my.Wheel.prototype.classname = 'entitynames';
-		my.d.Wheel = {
+		my.work.d.Wheel = {
 			/**
 Angle of the path's start point, from due east, in degrees
 @property startAngle
@@ -171,7 +171,7 @@ Collision calculation value - collision radius, from start vector
 **/
 			checkHitRadius: 0,
 		};
-		my.mergeInto(my.d.Wheel, my.d.Entity);
+		my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 
 		/**
 Augments Entity.set()
@@ -238,7 +238,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				tests,
 				result,
 				testRadius,
-				cvx = my.cvx,
+				cvx = my.work.cvx,
 				v1 = my.work.workwheel.v1,
 				handle,
 				start,
@@ -300,10 +300,11 @@ Stamp helper function - define the entity's path on the &lt;canvas&gt; element's
 		my.Wheel.prototype.buildPath = function(ctx, cell) {
 			var here = this.currentHandle,
 				startAngle = this.startAngle || 0,
-				endAngle = this.endAngle || 360;
+				endAngle = this.endAngle || 360,
+				rad = my.work.radian;
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
-			ctx.arc(here.x, here.y, (this.radius * this.scale), (startAngle * my.radian), (endAngle * my.radian), this.clockwise);
+			ctx.arc(here.x, here.y, (this.radius * this.scale), (startAngle * rad), (endAngle * rad), this.clockwise);
 			if (this.includeCenter) {
 				ctx.lineTo(here.x, here.y);
 			}

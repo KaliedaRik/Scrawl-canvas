@@ -565,7 +565,7 @@ True if the CSS2 3d functionality is supported; false otherwise
 @type Boolean
 @default false
 **/
-		my.d.Device.transform = false;
+		my.work.d.Device.transform = false;
 
 		/**
 Check if device supports CSS3 3d transforms
@@ -594,7 +594,7 @@ Where values are Numbers, handle can be treated like any other Vector
 @property PageElement.start
 @type Vector
 **/
-		my.d.PageElement.start = {
+		my.work.d.PageElement.start = {
 			x: 0,
 			y: 0,
 			z: 0
@@ -610,7 +610,7 @@ PageElement, and all Objects that prototype chain to PageElement, supports the f
 @property PageElement.delta
 @type Vector
 **/
-		my.d.PageElement.delta = {
+		my.work.d.PageElement.delta = {
 			x: 0,
 			y: 0,
 			z: 0
@@ -627,7 +627,7 @@ PageElement, and all Objects that prototype chain to PageElement, supports the f
 @property PageElement.translate
 @type Vector
 **/
-		my.d.PageElement.translate = {
+		my.work.d.PageElement.translate = {
 			x: 0,
 			y: 0,
 			z: 0
@@ -636,7 +636,7 @@ PageElement, and all Objects that prototype chain to PageElement, supports the f
 @property PageElement.deltaTranslate
 @type Vector
 **/
-		my.d.PageElement.deltaTranslate = {
+		my.work.d.PageElement.deltaTranslate = {
 			x: 0,
 			y: 0,
 			z: 0
@@ -654,7 +654,7 @@ Where values are Numbers, handle can be treated like any other Vector
 @property PageElement.handle
 @type Object
 **/
-		my.d.PageElement.handle = {
+		my.work.d.PageElement.handle = {
 			x: 'center',
 			y: 'center',
 			z: 0
@@ -665,56 +665,56 @@ The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting t
 @type String
 @default ''
 **/
-		my.d.PageElement.pivot = '';
+		my.work.d.PageElement.pivot = '';
 		/**
 The element's current ELEMENTGROUPNAME
 @property PageElement.group
 @type String
 @default ''
 **/
-		my.d.PageElement.group = '';
+		my.work.d.PageElement.group = '';
 		/**
 The SPRITENAME of a Shape entity whose path is used to calculate this object's start point
 @property PageElement.path
 @type String
 @default ''
 **/
-		my.d.PageElement.path = '';
+		my.work.d.PageElement.path = '';
 		/**
 A value between 0 and 1 to represent the distance along a Shape object's path, where 0 is the path start and 1 is the path end
 @property PageElement.pathPlace
 @type Number
 @default 0
 **/
-		my.d.PageElement.pathPlace = 0;
+		my.work.d.PageElement.pathPlace = 0;
 		/**
 A change value which can be applied to the object's pathPlace attribute
 @property PageElement.deltaPathPlace
 @type Number
 @default 0
 **/
-		my.d.PageElement.deltaPathPlace = 0;
+		my.work.d.PageElement.deltaPathPlace = 0;
 		/**
 A flag to determine whether the object will calculate its position along a Shape path in a regular (true), or simple (false), manner
 @property PageElement.pathSpeedConstant
 @type Boolean
 @default true
 **/
-		my.d.PageElement.pathSpeedConstant = true;
+		my.work.d.PageElement.pathSpeedConstant = true;
 		/**
 The rotation value (in degrees) of an object's current position along a Shape path
 @property PageElement.pathRoll
 @type Number
 @default 0
 **/
-		my.d.PageElement.pathRoll = 0;
+		my.work.d.PageElement.pathRoll = 0;
 		/**
 A flag to determine whether the object will calculate the rotation value of its current position along a Shape path
 @property PageElement.addPathRoll
 @type Boolean
 @default false
 **/
-		my.d.PageElement.addPathRoll = false;
+		my.work.d.PageElement.addPathRoll = false;
 		/**
 When element is pivoted to another element, determines placement in relation to that element
 
@@ -723,70 +723,70 @@ Permitted values: 'top', 'right', 'bottom', 'left', '' (default)
 @type String
 @default ''
 **/
-		my.d.PageElement.lockTo = '';
+		my.work.d.PageElement.lockTo = '';
 		/**
 When true, element ignores horizontal placement data via pivot and path attributes
 @property PageElement.lockX
 @type Boolean
 @default false
 **/
-		my.d.PageElement.lockX = false;
+		my.work.d.PageElement.lockX = false;
 		/**
 When true, element ignores vertical placement data via pivot and path attributes
 @property PageElement.lockY
 @type Boolean
 @default false
 **/
-		my.d.PageElement.lockY = false;
+		my.work.d.PageElement.lockY = false;
 		/**
 Element 2d roll value
 @property PageElement.roll
 @type Number
 @default 0
 **/
-		my.d.PageElement.roll = 0;
+		my.work.d.PageElement.roll = 0;
 		/**
 Element 2d pitch value
 @property PageElement.pitch
 @type Number
 @default 0
 **/
-		my.d.PageElement.pitch = 0;
+		my.work.d.PageElement.pitch = 0;
 		/**
 Element 2d yaw value
 @property PageElement.yaw
 @type Number
 @default 0
 **/
-		my.d.PageElement.yaw = 0;
+		my.work.d.PageElement.yaw = 0;
 		/**
 Element 2d deltaRoll value
 @property PageElement.deltaRoll
 @type Number
 @default 0
 **/
-		my.d.PageElement.deltaRoll = 0;
+		my.work.d.PageElement.deltaRoll = 0;
 		/**
 Element 2d deltaPitch value
 @property PageElement.deltaPitch
 @type Number
 @default 0
 **/
-		my.d.PageElement.deltaPitch = 0;
+		my.work.d.PageElement.deltaPitch = 0;
 		/**
 Element 2d deltaYaw value
 @property PageElement.deltaYaw
 @type Number
 @default 0
 **/
-		my.d.PageElement.deltaYaw = 0;
+		my.work.d.PageElement.deltaYaw = 0;
 		/**
 Element rotation around its transform (start) coordinate
 @property PageElement.rotation
 @type Quaternion
 @default Unit quaternion with no rotation
 **/
-		my.d.PageElement.rotation = {
+		my.work.d.PageElement.rotation = {
 			n: 1,
 			v: {
 				x: 0,
@@ -800,7 +800,7 @@ Element's delta (change in) rotation around its transform (start) coordinate
 @type Quaternion
 @default Unit quaternion with no rotation
 **/
-		my.d.PageElement.deltaRotation = {
+		my.work.d.PageElement.deltaRotation = {
 			n: 1,
 			v: {
 				x: 0,
@@ -814,21 +814,21 @@ Element's rotation tolerance - all Quaternions need to be unit quaternions; this
 @type Number
 @default 0.001
 **/
-		my.d.PageElement.rotationTolerance = 0.001;
+		my.work.d.PageElement.rotationTolerance = 0.001;
 		/**
 A flag to determine whether an element displays itself
 @property PageElement.visibility
 @type Boolean
 @default true
 **/
-		my.d.PageElement.visibility = true;
+		my.work.d.PageElement.visibility = true;
 		/**
 A flag to determine whether an element uses the browser viewport for its position and dimensions reference
 @property PageElement.viewport
 @type Boolean
 @default false
 **/
-		my.d.PageElement.viewport = false;
+		my.work.d.PageElement.viewport = false;
 		/**
 A flag to tell scrawl to add corner trackers to the element
 
@@ -837,63 +837,63 @@ Corner trackers can be used by the PerspectiveCornersCell entity to bind its cor
 @type Boolean
 @default false
 **/
-		my.d.PageElement.includeCornerTrackers = false;
+		my.work.d.PageElement.includeCornerTrackers = false;
 		/**
 Corner tracker vector
 @property PageElement.topLeft
 @type Vector
 @default false
 **/
-		my.d.PageElement.topLeft = false;
+		my.work.d.PageElement.topLeft = false;
 		/**
 Corner tracker vector
 @property PageElement.topRight
 @type Vector
 @default false
 **/
-		my.d.PageElement.topRight = false;
+		my.work.d.PageElement.topRight = false;
 		/**
 Corner tracker vector
 @property PageElement.bottomRight
 @type Vector
 @default false
 **/
-		my.d.PageElement.bottomRight = false;
+		my.work.d.PageElement.bottomRight = false;
 		/**
 Corner tracker vector
 @property PageElement.bottomLeft
 @type Vector
 @default false
 **/
-		my.d.PageElement.bottomLeft = false;
+		my.work.d.PageElement.bottomLeft = false;
 		/**
 Corner tracker div element
 @property PageElement.topLeftDiv
 @type DOM element object
 @default false
 **/
-		my.d.PageElement.topLeftDiv = false;
+		my.work.d.PageElement.topLeftDiv = false;
 		/**
 Corner tracker div element
 @property PageElement.topRightDiv
 @type DOM element object
 @default false
 **/
-		my.d.PageElement.topRightDiv = false;
+		my.work.d.PageElement.topRightDiv = false;
 		/**
 Corner tracker div element
 @property PageElement.bottomRightDiv
 @type DOM element object
 @default false
 **/
-		my.d.PageElement.bottomRightDiv = false;
+		my.work.d.PageElement.bottomRightDiv = false;
 		/**
 Corner tracker div element
 @property PageElement.bottomLeftDiv
 @type DOM element object
 @default false
 **/
-		my.d.PageElement.bottomLeftDiv = false;
+		my.work.d.PageElement.bottomLeftDiv = false;
 		/**
 Index of mouse vector to use when pivot === 'mouse'
 
@@ -902,22 +902,22 @@ The Pad/Stack/Element.mice object can hold details of multiple touch events - wh
 @type String
 @default 'mouse'
 **/
-		my.d.PageElement.mouseIndex = 'mouse';
+		my.work.d.PageElement.mouseIndex = 'mouse';
 		/**
 Sorting order - must be a positive integer
 @property order
 @type Number
 @default 0
 **/
-		my.d.PageElement.order = 0;
+		my.work.d.PageElement.order = 0;
 		/**
 Drag boolean - indicates the element can be manipulated via mouse/touch events (eg pickup, drop)
 @property drag
 @type Boolean
 @default false
 **/
-		my.d.PageElement.drag = false;
-		my.mergeInto(my.d.Pad, my.d.PageElement);
+		my.work.d.PageElement.drag = false;
+		my.mergeInto(my.work.d.Pad, my.work.d.PageElement);
 		/**
 PageElement constructor hook function - modified by stacks module
 @method stacksPageElementConstructor
@@ -929,7 +929,7 @@ PageElement constructor hook function - modified by stacks module
 				vec = my.makeVector,
 				get = my.xtGet,
 				quat = my.makeQuaternion,
-				d = my.d[this.type];
+				d = my.work.d[this.type];
 			this.start = vec({
 				name: this.type + '.' + this.name + '.start',
 				x: get(items.startX, temp.x, 0),
@@ -1107,18 +1107,18 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 				switch (this.type) {
 					case 'Pad':
 						if ('width' === item) {
-							return this.localWidth || this.width || parseFloat(el.width) || my.d[this.type].width;
+							return this.localWidth || this.width || parseFloat(el.width) || my.work.d[this.type].width;
 						}
 						if ('height' === item) {
-							return this.localHeight || this.height || parseFloat(el.height) || my.d[this.type].height;
+							return this.localHeight || this.height || parseFloat(el.height) || my.work.d[this.type].height;
 						}
 						break;
 					default:
 						if ('width' === item) {
-							return this.localWidth || this.width || parseFloat(el.style.width) || parseFloat(el.clientWidth) || my.d[this.type].width;
+							return this.localWidth || this.width || parseFloat(el.style.width) || parseFloat(el.clientWidth) || my.work.d[this.type].width;
 						}
 						if ('height' === item) {
-							return this.localHeight || this.height || parseFloat(el.style.height) || parseFloat(el.clientHeight) || my.d[this.type].height;
+							return this.localHeight || this.height || parseFloat(el.style.height) || parseFloat(el.clientHeight) || my.work.d[this.type].height;
 						}
 				}
 			}
@@ -2313,7 +2313,7 @@ Reinitialize element with existing values
 		my.PageElement.prototype.domInitialize = function() {
 			var start = this.start,
 				handle = this.handle,
-				d = my.d[this.type];
+				d = my.work.d[this.type];
 			this.set({
 				startX: start.x || 0,
 				startY: start.y || 0,
@@ -2571,8 +2571,8 @@ Stamp helper hook function - amended by stacks module
 				get = my.xtGet;
 			items = my.safeObject(items);
 			if (my.xt(items.stackElement)) {
-				items.width = get(items.width, items.stackElement.style.width, my.d.Stack.width);
-				items.height = get(items.height, items.stackElement.style.height, my.d.Stack.height);
+				items.width = get(items.width, items.stackElement.style.width, my.work.d.Stack.width);
+				items.height = get(items.height, items.stackElement.style.height, my.work.d.Stack.height);
 				items.name = get(items.stackName, items.name, items.stackElement.id, items.stackElement.name, 'Stack');
 				my.PageElement.call(this, items);
 				if (this.name.match(/~~~/)) {
@@ -2634,7 +2634,7 @@ Stamp helper hook function - amended by stacks module
 **/
 		my.Stack.prototype.type = 'Stack';
 		my.Stack.prototype.classname = 'stacknames';
-		my.d.Stack = {
+		my.work.d.Stack = {
 			/**
 An Object (in fact, a Vector) containing perspective details for the stack element. 
 
@@ -2673,7 +2673,7 @@ Groups array
 **/
 			groups: []
 		};
-		my.mergeInto(my.d.Stack, my.d.PageElement);
+		my.mergeInto(my.work.d.Stack, my.work.d.PageElement);
 		/**
 Return the DOM element wrapped by this object
 @method getElement
@@ -3055,8 +3055,8 @@ Get dimensions of Stack
 			style;
 			items = my.safeObject(items);
 			if (my.xt(items.domElement)) {
-				items.width = get(items.width, items.domElement.style.width, my.d.Stack.width);
-				items.height = get(items.height, items.domElement.style.height, my.d.Stack.height);
+				items.width = get(items.width, items.domElement.style.width, my.work.d.Stack.width);
+				items.height = get(items.height, items.domElement.style.height, my.work.d.Stack.height);
 				items.name = get(items.elementName, items.name, items.domElement.id, items.domElement.name, 'Element');
 				my.PageElement.call(this, items);
 				if (this.name.match(/~~~/)) {
@@ -3094,7 +3094,7 @@ Get dimensions of Stack
 **/
 		my.Element.prototype.type = 'Element';
 		my.Element.prototype.classname = 'elementnames';
-		my.d.Element = {
+		my.work.d.Element = {
 			/**
 Element's default height
 @property height
@@ -3103,7 +3103,7 @@ Element's default height
 **/
 			height: 'auto'
 		};
-		my.mergeInto(my.d.Element, my.d.PageElement);
+		my.mergeInto(my.work.d.Element, my.work.d.PageElement);
 		/**
 Return the DOM element wrapped by this object
 @method getElement
@@ -3165,7 +3165,7 @@ Return the DOM element wrapped by this object
 **/
 		my.ElementGroup.prototype.type = 'ElementGroup';
 		my.ElementGroup.prototype.classname = 'groupnames';
-		my.d.ElementGroup = {
+		my.work.d.ElementGroup = {
 			/**
 Array of SPRITENAME Strings of entitys that complement this ElementGroup
 @property entitys
@@ -3223,7 +3223,7 @@ STACKNAME of the default Stack object to which this group is associated
 **/
 			stack: ''
 		};
-		my.mergeInto(my.d.ElementGroup, my.d.Base);
+		my.mergeInto(my.work.d.ElementGroup, my.work.d.Base);
 
 		my.ElementGroup.prototype.set = function(items) {
 			return my.Group.prototype.set.call(this, items);

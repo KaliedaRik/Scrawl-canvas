@@ -69,7 +69,7 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 						if (my.contains(my[a.classname], a.name)) {
 							//update
 							b = my[type][a.name].parse();
-							c = my.d[a.type];
+							c = my.work.d[a.type];
 							k = Object.keys(b);
 							for (var j = 0, w = k.length; j < w; j++) {
 								if (!my.xt(a[k])) {
@@ -174,13 +174,13 @@ Turn the object into a JSON String
 @return JSON string of non-default value attributes
 **/
 		my.Base.prototype.toString = function() {
-			var keys = Object.keys(my.d[this.type]),
+			var keys = Object.keys(my.work.d[this.type]),
 				result = {};
 			result.type = this.type;
 			result.classname = this.classname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i < z; i++) {
-				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
+				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -193,7 +193,7 @@ Turn the object into a JSON String
 @return JSON string of non-default value attributes
 **/
 		my.Position.prototype.toString = function() {
-			var keys = Object.keys(my.d[this.type]),
+			var keys = Object.keys(my.work.d[this.type]),
 				result = {},
 				blacklist = [];
 			result.type = this.type;
@@ -201,11 +201,11 @@ Turn the object into a JSON String
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i < z; i++) {
 				if (my.contains(['start', 'delta', 'handle'], keys[i])) {
-					if (!this[keys[i]].isLike(my.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
 						result[keys[i]] = this[keys[i]];
 					}
 				}
-				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -218,7 +218,7 @@ Turn the object into a JSON String
 @return JSON string of non-default value attributes
 **/
 		my.PageElement.prototype.toString = function() {
-			var keys = Object.keys(my.d[this.type]),
+			var keys = Object.keys(my.work.d[this.type]),
 				result = {},
 				temp;
 			result.type = this.type;
@@ -226,7 +226,7 @@ Turn the object into a JSON String
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i < z; i++) {
 				if (my.contains(['start', 'delta', 'handle', 'perspective', 'translate'], keys[i])) {
-					if (!this[keys[i]].isLike(my.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
 						result[keys[i]] = this[keys[i]];
 					}
 				}
@@ -254,7 +254,7 @@ Turn the object into a JSON String
 						result.deltaRoll = temp.roll;
 					}
 				}
-				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -268,7 +268,7 @@ Turn the object into a JSON String
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Pad.prototype.toString = function(noexternalobjects) {
-			var keys = Object.keys(my.d[this.type]),
+			var keys = Object.keys(my.work.d[this.type]),
 				result = {},
 				resarray = [],
 				groups = [],
@@ -283,14 +283,14 @@ Turn the object into a JSON String
 			result.parentElement = my.canvas[this.name].parentElement.id;
 			for (i = 0, iz = keys.length; i < iz; i++) {
 				if (my.contains(['start', 'delta', 'handle'], keys[i])) {
-					if (!this[keys[i]].isLike(my.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
 						result[keys[i]] = this[keys[i]];
 					}
 				}
 				else if (my.contains(blacklist, keys[i])) {
 					//do nothing
 				}
-				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -337,7 +337,7 @@ Turn the object into a JSON String
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Cell.prototype.toString = function(noexternalobjects) {
-			var keys = Object.keys(my.d[this.type]),
+			var keys = Object.keys(my.work.d[this.type]),
 				result = {},
 				resarray = [],
 				entitys = [],
@@ -350,7 +350,7 @@ Turn the object into a JSON String
 			result.name = this.name;
 			for (i = 0, iz = keys.length; i < iz; i++) {
 				if (my.contains(['start', 'delta', 'handle', 'copy', 'copyDelta'], keys[i])) {
-					if (!this[keys[i]].isLike(my.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
 						result[keys[i]] = {
 							x: this[keys[i]].x,
 							y: this[keys[i]].y
@@ -360,7 +360,7 @@ Turn the object into a JSON String
 				else if (my.contains(blacklist, keys[i])) {
 					//do nothing
 				}
-				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -406,7 +406,7 @@ Turn the object into a JSON String; doesn't include name and type attributes
 						result.lineDash = this.lineDash;
 					}
 				}
-				else if (my.xt(this[my.work.contextKeys[i]]) && this[my.work.contextKeys[i]] !== my.d.Context[my.work.contextKeys[i]]) {
+				else if (my.xt(this[my.work.contextKeys[i]]) && this[my.work.contextKeys[i]] !== my.work.d.Context[my.work.contextKeys[i]]) {
 					result[my.work.contextKeys[i]] = this[my.work.contextKeys[i]];
 				}
 			}
@@ -421,7 +421,7 @@ Automatically removes the entitys attribute from the result; when loading, exist
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Group.prototype.toString = function(noentitys) {
-			var keys = Object.keys(my.d[this.type]),
+			var keys = Object.keys(my.work.d[this.type]),
 				result = {},
 				resarray = [],
 				ctx,
@@ -431,7 +431,7 @@ Automatically removes the entitys attribute from the result; when loading, exist
 			result.classname = this.classname;
 			result.name = this.name;
 			for (i = 0, iz = keys.length; i < iz; i++) {
-				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
+				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -468,13 +468,13 @@ Retains the entitys attribute Array; does not include any other objects in the r
 @return Array of JSON Strings
 **/
 		my.Group.prototype.save = function() {
-			var keys = Object.keys(my.d[this.type]),
+			var keys = Object.keys(my.work.d[this.type]),
 				result = {};
 			result.type = this.type;
 			result.classname = this.classname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i < z; i++) {
-				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
+				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -488,7 +488,7 @@ Turn the object into a JSON String
 **/
 		my.Entity.prototype.toString = function(noexternalobjects) {
 			noexternalobjects = (my.xt(noexternalobjects)) ? noexternalobjects : false;
-			var keys = Object.keys(my.d[this.type]),
+			var keys = Object.keys(my.work.d[this.type]),
 				result = {},
 				ctx = my.ctx[this.context],
 				ctxArray,
@@ -515,7 +515,7 @@ Turn the object into a JSON String
 			}
 			for (var i = 0, iz = keys.length; i < iz; i++) {
 				if (my.contains(vectorslist, keys[i])) {
-					if (!this[keys[i]].isLike(my.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
 						result[keys[i]] = {
 							x: this[keys[i]].x,
 							y: this[keys[i]].y
@@ -532,7 +532,7 @@ Turn the object into a JSON String
 				else if (my.contains(blacklist, keys[i])) {
 					//do nothing
 				}
-				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}

@@ -135,26 +135,26 @@ Clone a Scrawl.js object, optionally altering attribute values in the cloned obj
 			delete b.context; //required for successful cloning of entitys
 			return (this.type === 'Path') ? my.makePath(b) : new my[this.type](b);
 		};
-		my.d.Position.pathPlace = 0;
-		my.d.Position.pathRoll = 0;
-		my.d.Position.addPathRoll = false;
-		my.d.Position.path = '';
-		my.mergeInto(my.d.Cell, my.d.Position);
-		my.mergeInto(my.d.Entity, my.d.Position);
-		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Entity);
+		my.work.d.Position.pathPlace = 0;
+		my.work.d.Position.pathRoll = 0;
+		my.work.d.Position.addPathRoll = false;
+		my.work.d.Position.path = '';
+		my.mergeInto(my.work.d.Cell, my.work.d.Position);
+		my.mergeInto(my.work.d.Entity, my.work.d.Position);
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Entity);
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Entity);
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Entity);
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Entity);
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		}
 		/**
 Position constructor hook function - modified by path module
@@ -163,7 +163,7 @@ Position constructor hook function - modified by path module
 **/
 		my.Position.prototype.pathPositionInit = function(items) {
 			var get = my.xtGet,
-			d = my.d[this.type];
+			d = my.work.d[this.type];
 			this.path = get(items.path, d.path);
 			this.pathRoll = get(items.pathRoll, d.pathRoll);
 			this.addPathRoll = get(items.addPathRoll, d.addPathRoll);
@@ -728,7 +728,7 @@ Additional factory functions to instantiate Path objects are available in the __
 **/
 		my.Path.prototype.type = 'Path';
 		my.Path.prototype.classname = 'entitynames';
-		my.d.Path = {
+		my.work.d.Path = {
 			/**
 POINTNAME of the Point object that commences the drawing operation
 
@@ -840,7 +840,7 @@ Set the iterations required for calculating path length and positioning data - h
 **/
 			precision: 10,
 		};
-		my.mergeInto(my.d.Path, my.d.Entity);
+		my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		/**
 Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
 @method prepareShape
@@ -1282,7 +1282,7 @@ Calculate coordinates of point at given distance along the Shape entity's path
 							temp = (local) ? link.getLocalSteadyPositionOnLink(aVal) : link.getSteadyPositionOnLink(aVal);
 							afterx = temp.x;
 							aftery = temp.y;
-							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
+							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.work.radian;
 							here = (local) ? link.getLocalSteadyPositionOnLink(linkVal) : link.getSteadyPositionOnLink(linkVal);
 							result.x = here.x;
 							result.y = here.y;
@@ -1304,7 +1304,7 @@ Calculate coordinates of point at given distance along the Shape entity's path
 							temp = (local) ? link.getLocalPositionOnLink(aVal) : link.getPositionOnLink(aVal);
 							afterx = temp.x;
 							aftery = temp.y;
-							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
+							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.work.radian;
 							here = (local) ? link.getLocalPositionOnLink(linkVal) : link.getPositionOnLink(linkVal);
 							result.x = here.x;
 							result.y = here.y;
@@ -1346,7 +1346,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 					x: 0,
 					y: 0
 				},
-				cvx = my.cvx;
+				cvx = my.work.cvx;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
 			result = false;
@@ -1392,7 +1392,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				currentPos,
 				xt = my.xt,
 				vec = my.isa_vector;
-			if (xt(my.d.Path.fieldChannel)) {
+			if (xt(my.work.d.Path.fieldChannel)) {
 				p = (xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
 				this.collisionVectors.length = 0;
 				currentPos = 0;
@@ -1524,7 +1524,7 @@ Path creation factories will all create Point objects automatically as part of t
 **/
 		my.Point.prototype.type = 'Point';
 		my.Point.prototype.classname = 'pointnames';
-		my.d.Point = {
+		my.work.d.Point = {
 			/**
 SPRITENAME String of point object's parent entity
 @property entity
@@ -1564,7 +1564,7 @@ Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (t
 **/
 			fixed: false,
 		};
-		my.mergeInto(my.d.Point, my.d.Base);
+		my.mergeInto(my.work.d.Point, my.work.d.Base);
 		/**
 Augments Base.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
 @method set
@@ -1622,7 +1622,7 @@ Add values to the local attribute. Permitted attributes of the argument object i
 			if (xt(items.angle)) {
 				d = loc.getMagnitude();
 				a = Math.atan2(loc.y, loc.x);
-				a += (items.angle * my.radian);
+				a += (items.angle * my.work.radian);
 				loc.x = d * Math.cos(a);
 				loc.y = d * Math.sin(a);
 			}
@@ -1644,7 +1644,7 @@ Sets the local attribute using angle and/or distance parameters:
 				a,
 				xt = my.xt,
 				loc = this.local,
-				rad = my.radian;
+				rad = my.work.radian;
 			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
 			if (my.xta(items.distance, items.angle)) {
@@ -1796,7 +1796,7 @@ Set Point.fixed attribute
 **/
 		my.Link = function(items) {
 			var get = my.xtGet,
-			d = my.d.Link,
+			d = my.work.d.Link,
 			pu = my.pushUnique;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
@@ -1826,7 +1826,7 @@ Set Point.fixed attribute
 **/
 		my.Link.prototype.type = 'Link';
 		my.Link.prototype.classname = 'linknames';
-		my.d.Link = {
+		my.work.d.Link = {
 			/**
 Type of link - permitted values include: 'line', 'quadratic', 'bezier'
 @property species
@@ -1917,7 +1917,7 @@ Positions Arrays along the length of the Link's path - these values will be affe
 **/
 			positionsCumulativeLength: []
 		};
-		my.mergeInto(my.d.Link, my.d.Base);
+		my.mergeInto(my.work.d.Link, my.work.d.Base);
 		/**
 Augments Base.set()
 @method set

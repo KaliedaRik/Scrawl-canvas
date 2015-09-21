@@ -82,28 +82,28 @@ Array of FILTERNAME strings, for filters to be applied to the Pad
 @type Array
 @default []
 **/
-		my.d.Pad.filters = [];
+		my.work.d.Pad.filters = [];
 		/**
 Array of FILTERNAME strings, for filters to be applied to the Cell
 @property filters
 @type Array
 @default []
 **/
-		my.d.Cell.filters = [];
+		my.work.d.Cell.filters = [];
 		/**
 Array of FILTERNAME strings, for filters to be applied to Entitys in this group
 @property filters
 @type Array
 @default []
 **/
-		my.d.Group.filters = [];
+		my.work.d.Group.filters = [];
 		/**
 Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
 @property filterOnStroke
 @type Boolean
 @default false
 **/
-		my.d.Group.filterOnStroke = false;
+		my.work.d.Group.filterOnStroke = false;
 		/**
 The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
 
@@ -115,21 +115,21 @@ The filterLevel attribute determines at which point in the display cycle the fil
 @type String
 @default 'entity'
 **/
-		my.d.Group.filterLevel = 'entity';
+		my.work.d.Group.filterLevel = 'entity';
 		/**
 Array of FILTERNAME strings, for filters to be applied to this entity
 @property filters
 @type Array
 @default []
 **/
-		my.d.Entity.filters = [];
+		my.work.d.Entity.filters = [];
 		/**
 Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
 @property filterOnStroke
 @type Boolean
 @default false
 **/
-		my.d.Entity.filterOnStroke = false;
+		my.work.d.Entity.filterOnStroke = false;
 		/**
 The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
 
@@ -141,24 +141,24 @@ The filterLevel attribute determines at which point in the display cycle the fil
 @type String
 @default 'entity'
 **/
-		my.d.Entity.filterLevel = 'entity';
-		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Entity);
+		my.work.d.Entity.filterLevel = 'entity';
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Entity);
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Entity);
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Entity);
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Entity);
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Path)) {
-			my.mergeInto(my.d.Path, my.d.Entity);
+		if (my.xt(my.work.d.Path)) {
+			my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		}
 		/**
 Pad constructor hook function - modified by filters module
@@ -640,8 +640,8 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 				localComposite = 'source-over',
 				i,
 				iz,
-				cv = my.cv,
-				cvx = my.cvx,
+				cv = my.work.cv,
+				cvx = my.work.cvx,
 				f,
 				filter = my.filter,
 				filters = this.filters.concat(group.filters),
@@ -716,9 +716,9 @@ Entity.stamp hook helper function
 				e = my.entity,
 				w,
 				h,
-				cvx = my.cvx,
-				cv = my.cv,
-				wrapper = my.cvwrapper;
+				cvx = my.work.cvx,
+				cv = my.work.cv,
+				wrapper = my.work.cvwrapper;
 			canvas = my.canvas[cellname];
 			w = canvas.width;
 			h = canvas.height;
@@ -751,8 +751,8 @@ Entity.stamp hook helper function
 		my.Entity.prototype.stampFilterWheel = function(entity, engine, cellname, cell, filterOnStroke) {
 			var canvas = my.canvas[cellname],
 				context = my.ctx[entity.context],
-				cvx = my.cvx,
-				cv = my.cv;
+				cvx = my.work.cvx,
+				cv = my.work.cv;
 			if (filterOnStroke) {
 				cvx.lineWidth = context.lineWidth;
 				cvx.shadowOffsetX = context.shadowOffsetX;
@@ -787,8 +787,8 @@ Entity.stamp hook helper function
 			var canvas,
 				data,
 				here,
-				cvx = my.cvx,
-				cv = my.cv,
+				cvx = my.work.cvx,
+				cv = my.work.cv,
 				copy = entity.copyData,
 				paste = entity.pasteData;
 			canvas = my.canvas[cellname];
@@ -812,7 +812,7 @@ Entity.stamp hook helper function
 **/
 		my.Entity.prototype.stampFilterDefault = function(entity, engine, cellname, cell) {
 			var canvas = my.canvas[cellname],
-				cvx = my.cvx;
+				cvx = my.work.cvx;
 			entity.clip(cvx, cellname, cell);
 			cvx.setTransform(1, 0, 0, 1, 0, 0);
 			cvx.drawImage(canvas, 0, 0);
@@ -856,7 +856,7 @@ Entity.stamp hook helper function
 **/
 		my.Filter.prototype.type = 'Filter';
 		my.Filter.prototype.classname = 'filternames';
-		my.d.Filter = {
+		my.work.d.Filter = {
 			/**
 Filter alpha
 
@@ -876,7 +876,7 @@ Only the final filter in an array of filters will determine the composite operat
 **/
 			composite: 'source-over'
 		};
-		my.mergeInto(my.d.Filter, my.d.Base);
+		my.mergeInto(my.work.d.Filter, my.work.d.Base);
 		/**
 Add function - overwritten by individual filters
 
@@ -963,8 +963,8 @@ getAlpha function
 **/
 		my.GreyscaleFilter.prototype.type = 'GreyscaleFilter';
 		my.GreyscaleFilter.prototype.classname = 'filternames';
-		my.d.GreyscaleFilter = {};
-		my.mergeInto(my.d.GreyscaleFilter, my.d.Filter);
+		my.work.d.GreyscaleFilter = {};
+		my.mergeInto(my.work.d.GreyscaleFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its greyscale and combines it with data
 
@@ -1037,8 +1037,8 @@ Add function - takes data, calculates its greyscale and combines it with data
 **/
 		my.InvertFilter.prototype.type = 'InvertFilter';
 		my.InvertFilter.prototype.classname = 'filternames';
-		my.d.InvertFilter = {};
-		my.mergeInto(my.d.InvertFilter, my.d.Filter);
+		my.work.d.InvertFilter = {};
+		my.mergeInto(my.work.d.InvertFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its invert and combines it with data
 
@@ -1109,7 +1109,7 @@ Add function - takes data, calculates its invert and combines it with data
 **/
 		my.BrightnessFilter.prototype.type = 'BrightnessFilter';
 		my.BrightnessFilter.prototype.classname = 'filternames';
-		my.d.BrightnessFilter = {
+		my.work.d.BrightnessFilter = {
 			/**
 Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1 or 100%
 
@@ -1119,7 +1119,7 @@ Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no 
 **/
 			brightness: 1,
 		};
-		my.mergeInto(my.d.BrightnessFilter, my.d.Filter);
+		my.mergeInto(my.work.d.BrightnessFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its brightness and replaces the old color data with new
 
@@ -1193,7 +1193,7 @@ Add function - takes data, calculates its brightness and replaces the old color 
 **/
 		my.SaturationFilter.prototype.type = 'SaturationFilter';
 		my.SaturationFilter.prototype.classname = 'filternames';
-		my.d.SaturationFilter = {
+		my.work.d.SaturationFilter = {
 			/**
 Percentage value of saturation effect: as a Number, between 0 (uniform grey) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1 or 100%
 
@@ -1203,7 +1203,7 @@ Percentage value of saturation effect: as a Number, between 0 (uniform grey) and
 **/
 			saturation: 1,
 		};
-		my.mergeInto(my.d.SaturationFilter, my.d.Filter);
+		my.mergeInto(my.work.d.SaturationFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its saturation and replaces the old color data with new
 
@@ -1277,7 +1277,7 @@ Add function - takes data, calculates its saturation and replaces the old color 
 **/
 		my.ThresholdFilter.prototype.type = 'ThresholdFilter';
 		my.ThresholdFilter.prototype.classname = 'filternames';
-		my.d.ThresholdFilter = {
+		my.work.d.ThresholdFilter = {
 			/**
 Percentage value of threshold effect: as a Number, between 0 (all black) and 1 (all white); as a String, between '0%' and '100%' (default: 0.5).
 
@@ -1287,7 +1287,7 @@ Percentage value of threshold effect: as a Number, between 0 (all black) and 1 (
 **/
 			threshold: 0.5,
 		};
-		my.mergeInto(my.d.ThresholdFilter, my.d.Filter);
+		my.mergeInto(my.work.d.ThresholdFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its threshold and combines it with data
 
@@ -1368,7 +1368,7 @@ Add function - takes data, calculates its threshold and combines it with data
 **/
 		my.ChannelsFilter.prototype.type = 'ChannelsFilter';
 		my.ChannelsFilter.prototype.classname = 'filternames';
-		my.d.ChannelsFilter = {
+		my.work.d.ChannelsFilter = {
 			/**
 value of red channel, from 0 or 0% upwards beyond 1 or 100%
 
@@ -1394,7 +1394,7 @@ value of blue channel, from 0 or 0% upwards beyond 1 or 100%
 **/
 			blue: 1,
 		};
-		my.mergeInto(my.d.ChannelsFilter, my.d.Filter);
+		my.mergeInto(my.work.d.ChannelsFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -1478,7 +1478,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.ChannelStepFilter.prototype.type = 'ChannelStepFilter';
 		my.ChannelStepFilter.prototype.classname = 'filternames';
-		my.d.ChannelStepFilter = {
+		my.work.d.ChannelStepFilter = {
 			/**
 Step value of red channel, between 1 (256 steps, default) and 128 (2 steps)
 
@@ -1504,7 +1504,7 @@ Step value of blue channel, between 1 (256 steps, default) and 128 (2 steps)
 **/
 			blue: 1,
 		};
-		my.mergeInto(my.d.ChannelStepFilter, my.d.Filter);
+		my.mergeInto(my.work.d.ChannelStepFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -1601,7 +1601,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.TintFilter.prototype.type = 'TintFilter';
 		my.TintFilter.prototype.classname = 'filternames';
-		my.d.TintFilter = {
+		my.work.d.TintFilter = {
 			/**
 @property redInRed
 @type Number - or alternatively percentage String
@@ -1657,7 +1657,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 			blueInBlue: 1,
 		};
-		my.mergeInto(my.d.TintFilter, my.d.Filter);
+		my.mergeInto(my.work.d.TintFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -1761,7 +1761,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.MatrixFilter.prototype.type = 'MatrixFilter';
 		my.MatrixFilter.prototype.classname = 'filternames';
-		my.d.MatrixFilter = {
+		my.work.d.MatrixFilter = {
 			/**
 Matrix maximum width
 
@@ -1811,7 +1811,7 @@ The data array has no meaning without width and height dimensions - if no dimens
 **/
 			data: false
 		};
-		my.mergeInto(my.d.MatrixFilter, my.d.Filter);
+		my.mergeInto(my.work.d.MatrixFilter, my.work.d.Filter);
 		/**
 Set attribute values.
 
@@ -1923,7 +1923,7 @@ Add function - takes data, calculates its channels and combines it with data
 				cells = this.cells;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(width, height);
+			result = my.work.cvx.createImageData(width, height);
 			dR = result.data;
 			if (this.includeInvisiblePoints) {
 				for (i = top, iz = bottom; i < iz; i++) {
@@ -2048,7 +2048,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.PixelateFilter.prototype.type = 'PixelateFilter';
 		my.PixelateFilter.prototype.classname = 'filternames';
-		my.d.PixelateFilter = {
+		my.work.d.PixelateFilter = {
 			/**
 Pixelization width
 
@@ -2082,7 +2082,7 @@ Vertical coordinate from which to begin pexelization
 **/
 			offsetY: 0,
 		};
-		my.mergeInto(my.d.PixelateFilter, my.d.Filter);
+		my.mergeInto(my.work.d.PixelateFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2123,7 +2123,7 @@ Add function - takes data, calculates its channels and combines it with data
 				bottom = dim.bottom;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(data.width, data.height);
+			result = my.work.cvx.createImageData(data.width, data.height);
 			dR = result.data;
 			dW = data.width;
 			dH = data.height;
@@ -2218,7 +2218,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.BlurFilter.prototype.type = 'BlurFilter';
 		my.BlurFilter.prototype.classname = 'filternames';
-		my.d.BlurFilter = {
+		my.work.d.BlurFilter = {
 			/**
 @property radiusX
 @type Number
@@ -2250,7 +2250,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 			includeInvisiblePoints: false
 		};
-		my.mergeInto(my.d.BlurFilter, my.d.Filter);
+		my.mergeInto(my.work.d.BlurFilter, my.work.d.Filter);
 		/**
 Set attribute values.
 
@@ -2302,7 +2302,7 @@ Add function - takes data, calculates its channels and combines it with data
 				bottom = dim.bottom;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(width, height);
+			result = my.work.cvx.createImageData(width, height);
 			dR = result.data;
 			c = cells.length;
 			s = Math.floor(c / this.skip);
@@ -2411,8 +2411,8 @@ Blur helper function
 			r = this.roll;
 			dim = (x > y) ? x + 2 : y + 2;
 			hDim = Math.floor(dim / 2);
-			cos = Math.cos(r * my.radian);
-			sin = Math.sin(r * my.radian);
+			cos = Math.cos(r * my.work.radian);
+			sin = Math.sin(r * my.work.radian);
 			brush = [];
 			cv = my.filterCanvas;
 			cvx = my.filterCvx;
@@ -2478,7 +2478,7 @@ Blur helper function
 **/
 		my.LeachFilter.prototype.type = 'LeachFilter';
 		my.LeachFilter.prototype.classname = 'filternames';
-		my.d.LeachFilter = {
+		my.work.d.LeachFilter = {
 			/**
 Unlike other filters, the leach filter uses an 'xor' GCO to stamp itself onto the canvas - this is changeable, if necessary
 
@@ -2500,7 +2500,7 @@ The exclude array should contain a set of arrays defining the color ranges to be
 **/
 			exclude: []
 		};
-		my.mergeInto(my.d.LeachFilter, my.d.Filter);
+		my.mergeInto(my.work.d.LeachFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2594,7 +2594,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.SeparateFilter.prototype.type = 'SeparateFilter';
 		my.SeparateFilter.prototype.classname = 'filternames';
-		my.d.SeparateFilter = {
+		my.work.d.SeparateFilter = {
 			/**
 Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow'
 
@@ -2604,7 +2604,7 @@ Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow'
 **/
 			channel: 'all',
 		};
-		my.mergeInto(my.d.SeparateFilter, my.d.Filter);
+		my.mergeInto(my.work.d.SeparateFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2716,7 +2716,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.NoiseFilter.prototype.type = 'NoiseFilter';
 		my.NoiseFilter.prototype.classname = 'filternames';
-		my.d.NoiseFilter = {
+		my.work.d.NoiseFilter = {
 			/**
 @property radiusX
 @type Number
@@ -2742,7 +2742,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 			strength: 0.3,
 		};
-		my.mergeInto(my.d.NoiseFilter, my.d.Filter);
+		my.mergeInto(my.work.d.NoiseFilter, my.work.d.Filter);
 		/**
 Set attribute values.
 
@@ -2800,7 +2800,7 @@ Add function - takes data, calculates its channels and combines it with data
 				floor = Math.floor;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(width, height);
+			result = my.work.cvx.createImageData(width, height);
 			dR = result.data;
 			strength = this.strength;
 			cellLen = this.cells.length;

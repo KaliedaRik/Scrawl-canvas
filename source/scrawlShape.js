@@ -113,7 +113,7 @@ Additional factory functions to instantiate Shape objects are available in the _
 **/
 		my.Shape.prototype.type = 'Shape';
 		my.Shape.prototype.classname = 'entitynames';
-		my.d.Shape = {
+		my.work.d.Shape = {
 			/**
 Interpreted path data - calculated by scrawl from the data attribute
 @property dataSet
@@ -146,7 +146,7 @@ Winding value
 **/
 			winding: 'nonzero'
 		};
-		my.mergeInto(my.d.Shape, my.d.Entity);
+		my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		/**
 Augments Entity.set()
 @method set
@@ -733,7 +733,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 				result,
 				i,
 				iz,
-				cvx = my.cvx;
+				cvx = my.work.cvx;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
 			// console.log(items, tests);

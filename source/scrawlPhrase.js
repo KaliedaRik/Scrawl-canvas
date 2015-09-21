@@ -107,7 +107,7 @@ A __factory__ function to generate new Phrase entitys
 			my.Position.prototype.set.call(this, items);
 			this.registerInLibrary();
 			this.texts = [];
-			this.lineHeight = my.xtGet(items.lineHeight, my.d.Phrase.lineHeight);
+			this.lineHeight = my.xtGet(items.lineHeight, my.work.d.Phrase.lineHeight);
 			if (items.font) {
 				this.checkFont(items.font);
 			}
@@ -128,7 +128,7 @@ A __factory__ function to generate new Phrase entitys
 **/
 		my.Phrase.prototype.type = 'Phrase';
 		my.Phrase.prototype.classname = 'entitynames';
-		my.d.Phrase = {
+		my.work.d.Phrase = {
 			/**
 Text string to be displayed - for multiline text, insert __\n__ where the text line breaks
 @property text
@@ -230,7 +230,7 @@ Users should never interfere with Text objects, as they are destroyed and recrea
 **/
 			texts: [],
 		};
-		my.mergeInto(my.d.Phrase, my.d.Entity);
+		my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		/**
 Augments Entity.set()
 
@@ -380,7 +380,7 @@ Helper function - creates font-related attributes from entity's Context object's
 				size,
 				metrics,
 				family,
-				d = my.d.Phrase,
+				d = my.work.d.Phrase,
 				get = my.xtGet;
 			myFont = my.ctx[this.context].font;
 			style = get(this.style, d.style);
@@ -496,7 +496,7 @@ Helper function - creates entity's Context object's phrase attribute from other 
 				metrics,
 				family,
 				get = my.xtGet,
-				d = my.d.Phrase;
+				d = my.work.d.Phrase;
 			myFont = '';
 			style = get(this.style, d.style);
 			variant = get(this.variant, d.variant);
@@ -925,7 +925,7 @@ Returns an object with the following attributes:
 		my.Text = function Text(items) {
 			var get = my.xtGet,
 			pu = my.pushUnique,
-			d = my.d.Text,
+			d = my.work.d.Text,
 			e;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
@@ -952,7 +952,7 @@ Returns an object with the following attributes:
 **/
 		my.Text.prototype.type = 'Text';
 		my.Text.prototype.classname = 'textnames';
-		my.d.Text = {
+		my.work.d.Text = {
 			/**
 Text to be displayed
 @property text
@@ -1026,7 +1026,7 @@ Glyph widths array
 **/
 			glyphWidths: [],
 		};
-		my.mergeInto(my.d.Text, my.d.Base);
+		my.mergeInto(my.work.d.Text, my.work.d.Base);
 		/**
 Stamp function - stamp phrases, words or individual glyphs (letters and spaces) along a Shape entity path
 
@@ -1068,7 +1068,7 @@ Permitted methods include:
 				xt = my.xt,
 				e = my.entity,
 				between = my.isBetween,
-				rad = my.radian;
+				rad = my.work.radian;
 			method = (method.substring) ? method : p.method;
 			engine = my.context[cellname];
 			pathLength = my.entity[p.path].getPerimeterLength();
@@ -1134,8 +1134,8 @@ Filter function - prepare the clip for the filter
 				e = my.entity,
 				between = my.isBetween,
 				method = 'floatOver',
-				rad = my.radian;
-			engine = my.cvx;
+				rad = my.work.radian;
+			engine = my.work.cvx;
 			pathLength = my.entity[p.path].getPerimeterLength();
 			width = this.width * p.scale;
 			ratio = width / pathLength;
@@ -1344,7 +1344,7 @@ Calculate metrics for each phrase, word or glyph in the glyphs array
 				k,
 				kz;
 			p = my.entity[this.phrase];
-			myContext = my.cvx;
+			myContext = my.work.cvx;
 			myEngine = my.ctx[this.context];
 			tempFont = myContext.font;
 			tempBaseline = myContext.textBaseline;

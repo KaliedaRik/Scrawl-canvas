@@ -225,7 +225,7 @@ A __factory__ function to generate new Force objects
 **/
 		my.Particle = function(items) {
 			var vec = my.makeVector,
-				d = my.d.Particle,
+				d = my.work.d.Particle,
 				r;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
@@ -264,7 +264,7 @@ A __factory__ function to generate new Force objects
 		my.Particle.prototype.type = 'Particle';
 		my.Particle.prototype.classname = 'entitynames';
 		my.Particle.prototype.order = 0; //included to allow normal entitys to sort themselves properly
-		my.d.Particle = {
+		my.work.d.Particle = {
 			/**
 Current group
 @property group
@@ -386,7 +386,7 @@ Load Vector - recreated at the start of every calculation cycle iteration
 **/
 			load: my.makeVector(),
 		};
-		my.mergeInto(my.d.Particle, my.d.Scrawl);
+		my.mergeInto(my.work.d.Particle, my.work.d.Scrawl);
 		/**
 Augments Base.set()
 
@@ -810,7 +810,7 @@ Delete a named Spring object from this Particle
 **/
 		my.Spring.prototype.type = 'Spring';
 		my.Spring.prototype.classname = 'springnames';
-		my.d.Spring = {
+		my.work.d.Spring = {
 			/**
 First Particle PARTICLENAME
 @property start
@@ -871,7 +871,7 @@ Recalculated as part of each  calculation cycle iteration
 				z: 0
 			},
 		};
-		my.mergeInto(my.d.Spring, my.d.Scrawl);
+		my.mergeInto(my.work.d.Spring, my.work.d.Scrawl);
 		/**
 Calculate the force exerted by the spring for this calculation cycle iteration
 @method update
@@ -950,7 +950,7 @@ Two forces are pre-defined by scrawl:
 **/
 		my.Force.prototype.type = 'Force';
 		my.Force.prototype.classname = 'forcenames';
-		my.d.Force = {
+		my.work.d.Force = {
 			/**
 Anonymous function for calculating a force on a Particle
 
@@ -973,7 +973,7 @@ Functions need to be in the form:
 **/
 			fn: function() {},
 		};
-		my.mergeInto(my.d.Force, my.d.Scrawl);
+		my.mergeInto(my.work.d.Force, my.work.d.Scrawl);
 		/**
 Calculate the force for this calculation cycle iteration
 @method run

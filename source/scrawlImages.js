@@ -98,7 +98,7 @@ False if device does not support the video element; true otherwise
 @type Boolean
 @default false
 **/
-		my.d.Device.video = false;
+		my.work.d.Device.video = false;
 		/**
 video autoplay support
 
@@ -107,7 +107,7 @@ False if device does not support video autoplay element; true otherwise
 @type Boolean
 @default false
 **/
-		my.d.Device.videoAutoplay = false;
+		my.work.d.Device.videoAutoplay = false;
 		/**
 video fullscreen restraint
 
@@ -116,7 +116,7 @@ False if device does not force videos to play in fullscreen mode; true otherwise
 @type Boolean
 @default false
 **/
-		my.d.Device.videoForceFullScreen = false;
+		my.work.d.Device.videoForceFullScreen = false;
 		/**
 video as canvas source
 
@@ -125,7 +125,7 @@ False if device does not permit video elements to be used as sources for canvas 
 @type Boolean
 @default false
 **/
-		my.d.Device.videoAsCanvasSource = false;
+		my.work.d.Device.videoAsCanvasSource = false;
 
 		/**
 Check if device supports various video functionalities
@@ -393,7 +393,7 @@ Patterns are not restricted to images. A pattern can also be sourced from anothe
 **/
 		my.Pattern.prototype.type = 'Pattern';
 		my.Pattern.prototype.classname = 'designnames';
-		my.d.Pattern = {
+		my.work.d.Pattern = {
 			/**
 Drawing parameter
 @property repeat
@@ -433,7 +433,7 @@ Used only with __scrawl.makePattern()__ and __Pattern.clone()__ operations. This
 **/
 			callback: false,
 		};
-		my.mergeInto(my.d.Pattern, my.d.Base);
+		my.mergeInto(my.work.d.Pattern, my.work.d.Base);
 		/**
 Constructor/set helper
 @method getSourceType
@@ -618,7 +618,7 @@ Alias for Pattern.makeDesign()
 **/
 		my.Picture.prototype.type = 'Picture';
 		my.Picture.prototype.classname = 'entitynames';
-		my.d.Picture = {
+		my.work.d.Picture = {
 			/**
 SCRAWLIMAGE String - source image for this entity
 @property source
@@ -728,7 +728,7 @@ Used only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This
 **/
 			callback: false,
 		};
-		my.mergeInto(my.d.Picture, my.d.Entity);
+		my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		/**
 Augments Entity.get()
 @method get

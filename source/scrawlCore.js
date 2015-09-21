@@ -134,14 +134,14 @@ For converting between degrees and radians
 @default Math.PI/180
 @final
 **/
-	my.radian = Math.PI / 180;
+	my.work.radian = Math.PI / 180;
 	/**
 An Object containing OBJECTTYPE:Object pairs which in turn contain default attribute values for each Scrawl object constructor
 @property d
 @type {Object}
 @private
 **/
-	my.d = {};
+	my.work.d = {};
 	/**
 Work vector, for calculations
 @property v
@@ -184,13 +184,6 @@ DOM document fragment
 @private
 **/
 	my.work.f = document.createDocumentFragment();
-	/**
-Utility canvas 2d context engine
-@property cvx
-@type {CasnvasContextObject}
-@private
-**/
-	// my.cvx = my.cv.getContext('2d');
 	/**
 Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensions()
 @property loadAlias
@@ -320,11 +313,11 @@ scrawl.init hook function - modified by stacks extension
 			my.removeItem(my.padnames, name);
 			my.removeItem(my.work.activeListeners, name);
 			my.work.f.appendChild(my.canvas[name]);
-			my.cv = my.canvas[cellname];
-			my.cvx = my.context[cellname];
-			my.cvmodel = my.ctx[cellname];
-			my.cvwrapper = my.cell[cellname];
-			my.cvcontroller = my.pad[name];
+			my.work.cv = my.canvas[cellname];
+			my.work.cvx = my.context[cellname];
+			my.work.cvmodel = my.ctx[cellname];
+			my.work.cvwrapper = my.cell[cellname];
+			my.work.cvcontroller = my.pad[name];
 		}
 	};
 	/**
@@ -1766,7 +1759,7 @@ Vector name - not guaranteed to be unique
 @final
 **/
 	my.Vector.prototype.type = 'Vector';
-	my.d.Vector = {
+	my.work.d.Vector = {
 		x: 0,
 		y: 0,
 		z: 0,
@@ -2183,7 +2176,7 @@ Unique identifier for each object; default: computer-generated String based on O
 **/
 	my.Base.prototype.type = 'Base';
 	my.Base.prototype.classname = 'objectnames';
-	my.d.Base = {
+	my.work.d.Base = {
 		/**
 Comment, for accessibility
 @property comment
@@ -2220,7 +2213,7 @@ Retrieve an attribute value. If the attribute value has not been set, then the d
     box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.get = function(item) {
-		return my.xtGet(this[item], my.d[this.type][item]);
+		return my.xtGet(this[item], my.work.d[this.type][item]);
 	};
 	/**
 Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.
@@ -2244,7 +2237,7 @@ An attribute value will only be set if the object already has a default value fo
     box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.set = function(items) {
-		var d = my.d[this.type],
+		var d = my.work.d[this.type],
 			xt = my.xt;
 		for (var i in items) {
 			if (xt(d[i])) {
@@ -2453,7 +2446,7 @@ False if device does not support the canvas dashed line functionality; true othe
 **/
 	my.Device.prototype.type = 'Device';
 	my.Device.prototype.classname = 'objectnames';
-	my.d.Device = {
+	my.work.d.Device = {
 		width: null,
 		height: null,
 		offsetX: null,
@@ -2470,7 +2463,7 @@ False if device does not support the canvas dashed line functionality; true othe
 		videoAutoplay: false,
 		videoForceFullScreen: false
 	};
-	my.mergeInto(my.d.Device, my.d.Base);
+	my.mergeInto(my.work.d.Device, my.work.d.Base);
 
 	/**
 Feature detection
@@ -2706,7 +2699,7 @@ Certain Scrawl extensions will add functionality to this object, for instance sc
 **/
 	my.Position = function(items) {
 		var so = my.safeObject,
-			d = my.d[this.type],
+			d = my.work.d[this.type],
 			get = my.xtGet,
 			vec = my.makeVector;
 		my.Base.call(this, items);
@@ -2845,7 +2838,7 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 **/
 	my.Position.prototype.type = 'Position';
 	my.Position.prototype.classname = 'objectnames';
-	my.d.Position = {
+	my.work.d.Position = {
 		start: {
 			x: 0,
 			y: 0
@@ -2920,7 +2913,7 @@ A flag to determine whether the object will calculate its position along a Shape
 @default true
 **/
 	};
-	my.mergeInto(my.d.Position, my.d.Base);
+	my.mergeInto(my.work.d.Position, my.work.d.Base);
 	/**
 Position constructor hook function - modified by animation extension
 @method animationPositionInit
@@ -3538,7 +3531,7 @@ The core implementation of this object is a stub that supplies Pad objects with 
 **/
 	my.PageElement = function(items) {
 		var get = my.xtGet,
-		d = my.d[this.type];
+		d = my.work.d[this.type];
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		/**
@@ -3593,7 +3586,7 @@ mice.ui0, mice.ui1 etc - refers to pointer and touch events
 **/
 	my.PageElement.prototype.type = 'PageElement';
 	my.PageElement.prototype.classname = 'objectnames';
-	my.d.PageElement = {
+	my.work.d.PageElement = {
 		width: 300,
 		height: 150,
 		/**
@@ -3641,7 +3634,7 @@ Element CSS position styling attribute
 **/
 		position: 'static'
 	};
-	my.mergeInto(my.d.PageElement, my.d.Base);
+	my.mergeInto(my.work.d.PageElement, my.work.d.Base);
 	/**
 PageElement constructor hook function - modified by stacks extension
 @method stacksPageElementConstructor
@@ -3661,7 +3654,7 @@ Augments Base.get() to retrieve DOM element width and height values
 		var element = this.getElement(),
 			stat_pageElementGet = ['width', 'height', 'position'],
 			get = my.xtGet,
-			d = my.d[this.type];
+			d = my.work.d[this.type];
 		if (my.contains(stat_pageElementGet, item)) {
 			switch (item) {
 				case 'width':
@@ -4133,7 +4126,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			base,
 			canvas,
 			get = my.xtGet,
-			d = my.d.Pad,
+			d = my.work.d.Pad,
 			pu = my.pushUnique,
 			makeCell = my.makeCell;
 		items = my.safeObject(items);
@@ -4228,13 +4221,13 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 **/
 	my.Pad.prototype.type = 'Pad';
 	my.Pad.prototype.classname = 'padnames';
-	my.d.Pad = {
+	my.work.d.Pad = {
 		cells: [],
 		display: '',
 		base: '',
 		current: ''
 	};
-	my.mergeInto(my.d.Pad, my.d.PageElement);
+	my.mergeInto(my.work.d.Pad, my.work.d.PageElement);
 	/**
 Retrieve Pad's visible &lt;canvas&gt; element object
 @method getElement
@@ -4653,7 +4646,7 @@ Cell supports the following 'virtual' attributes for this attribute:
 **/
 	my.Cell.prototype.type = 'Cell';
 	my.Cell.prototype.classname = 'cellnames';
-	my.d.Cell = {
+	my.work.d.Cell = {
 		/**
 PADNAME of the Pad object to which this Cell belongs
 @property pad
@@ -4842,7 +4835,7 @@ Display cycle attribute - order in which the cell will show itself (if show attr
 **/
 		showOrder: 0
 	};
-	my.mergeInto(my.d.Cell, my.d.Position);
+	my.mergeInto(my.work.d.Cell, my.work.d.Position);
 	/**
 Cell constructor hook function - core module
 @method coreCellInit
@@ -4851,7 +4844,7 @@ Cell constructor hook function - core module
 	my.Cell.prototype.coreCellInit = function(items) {
 		var temp,
 			context,
-			d = my.d.Cell,
+			d = my.work.d.Cell,
 			xt = my.xt,
 			xto = my.xto,
 			get = my.xtGet,
@@ -6090,7 +6083,7 @@ Default values are:
 **/
 	my.Context.prototype.type = 'Context';
 	my.Context.prototype.classname = 'ctxnames';
-	my.d.Context = {
+	my.work.d.Context = {
 		/**
 Color, gradient or pattern used to fill a entity. Can be:
 
@@ -6277,8 +6270,8 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 **/
 		textBaseline: 'alphabetic'
 	};
-	my.work.contextKeys = Object.keys(my.d.Context);
-	my.mergeInto(my.d.Context, my.d.Base);
+	my.work.contextKeys = Object.keys(my.work.d.Context);
+	my.mergeInto(my.work.d.Context, my.work.d.Base);
 	/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function - lineDashOffset, lineWidth, globalAlpha
 
@@ -6291,7 +6284,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 **/
 	my.Context.prototype.setDelta = function(items) {
 		var xt = my.xt,
-			d = my.d.Context;
+			d = my.work.d.Context;
 		items = my.safeObject(items);
 		if (xt(items.lineDashOffset)) {
 			if (!xt(this.lineDashOffset)) {
@@ -6345,7 +6338,7 @@ Interrogates a &lt;canvas&gt; element's context engine and returns an object of 
 @private
 **/
 	my.Context.prototype.getNonDefaultAttributes = function() {
-		var d = my.d.Context,
+		var d = my.work.d.Context,
 			xt = my.xt,
 			keys = my.work.contextKeys,
 			i, iz,
@@ -6376,7 +6369,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 			e = this.getNonDefaultAttributes(),
 			ea = Object.keys(e),
 			d, color,
-			df = my.d.Context,
+			df = my.work.d.Context,
 			result = {},
 			contains = my.contains,
 			i, iz;
@@ -6503,7 +6496,7 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 **/
 	my.Group.prototype.type = 'Group';
 	my.Group.prototype.classname = 'groupnames';
-	my.d.Group = {
+	my.work.d.Group = {
 		entitys: [],
 		cell: '',
 		order: 0,
@@ -6512,7 +6505,7 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 		resort: false,
 		regionRadius: 0
 	};
-	my.mergeInto(my.d.Group, my.d.Base);
+	my.mergeInto(my.work.d.Group, my.work.d.Base);
 	/**
 set
 @method set
@@ -6994,7 +6987,7 @@ _Note: not all entitys support all of these operations_
 @type String
 @default 'fill'
 **/
-		this.method = get(items.method, my.d[this.type].method);
+		this.method = get(items.method, my.work.d[this.type].method);
 		this.collisionsEntityConstructor(items);
 		this.filtersEntityInit(items);
 		return this;
@@ -7008,7 +7001,7 @@ _Note: not all entitys support all of these operations_
 **/
 	my.Entity.prototype.type = 'Entity';
 	my.Entity.prototype.classname = 'entitynames';
-	my.d.Entity = {
+	my.work.d.Entity = {
 		order: 0,
 		visibility: true,
 		method: 'fill',
@@ -7031,7 +7024,7 @@ Entity radius, in pixels - not supported by all entity objects
 		context: '',
 		group: ''
 	};
-	my.mergeInto(my.d.Entity, my.d.Position);
+	my.mergeInto(my.work.d.Entity, my.work.d.Position);
 	/**
 Entity constructor hook function - modified by filters extension
 @method filtersEntityInit
@@ -7073,11 +7066,12 @@ Allows users to retrieve a entity's Context object's values via the entity
 @return Attribute value
 **/
 	my.Entity.prototype.get = function(item) {
-		var xt = my.xt;
-		if (xt(my.d.Base[item])) {
+		var xt = my.xt,
+			d = my.work.d;
+		if (xt(d.Base[item])) {
 			return my.Base.prototype.get.call(this, item);
 		}
-		if (xt(my.d.Context[item])) {
+		if (xt(d.Context[item])) {
 			return my.ctx[this.context].get(item);
 		}
 		return my.Position.prototype.get.call(this, item);
@@ -7594,7 +7588,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 			lw = this.localWidth,
 			lh = this.localHeight,
 			scale = this.scale,
-			cvx = my.cvx;
+			cvx = my.work.cvx;
 		items = my.safeObject(items);
 		if (my.xt(items.tests)) {
 			tests = items.tests;
@@ -7651,7 +7645,7 @@ Drawing flag - when set to 'entity' (or true), will use entity-based coordinates
 @type String - or alternatively Boolean
 @default 'cell'
 **/
-		this.lockTo = my.xtGet(items.lockTo, my.d[this.type].lockTo);
+		this.lockTo = my.xtGet(items.lockTo, my.work.d[this.type].lockTo);
 		return this;
 	};
 	my.Design.prototype = Object.create(my.Base.prototype);
@@ -7663,7 +7657,7 @@ Drawing flag - when set to 'entity' (or true), will use entity-based coordinates
 **/
 	my.Design.prototype.type = 'Design';
 	my.Design.prototype.classname = 'designnames';
-	my.d.Design = {
+	my.work.d.Design = {
 		/**
 Array of JavaScript Objects representing color stop data
 
@@ -7726,7 +7720,7 @@ Vertical end coordinate, in pixels, from the top-left corner of the gradient's &
 **/
 		endY: 0
 	};
-	my.mergeInto(my.d.Design, my.d.Base);
+	my.mergeInto(my.work.d.Design, my.work.d.Base);
 	/**
 Add values to Number attributes
 @method setDelta
@@ -7762,7 +7756,7 @@ Add values to Number attributes
 			temp = this.get('endRadius');
 			this.endRadius = temp + items.endRadius;
 		}
-		if (items.shift && my.xt(my.d.Design.shift)) {
+		if (items.shift && my.xt(my.work.d.Design.shift)) {
 			temp = this.get('shift');
 			this.shift = temp + items.shift;
 		}
@@ -8038,8 +8032,8 @@ Remove this gradient from the scrawl library
 **/
 	my.Gradient.prototype.type = 'Gradient';
 	my.Gradient.prototype.classname = 'designnames';
-	my.d.Gradient = {};
-	my.mergeInto(my.d.Gradient, my.d.Design);
+	my.work.d.Gradient = {};
+	my.mergeInto(my.work.d.Gradient, my.work.d.Design);
 
 	/**
 # RadialGradient
@@ -8079,7 +8073,7 @@ Remove this gradient from the scrawl library
 **/
 	my.RadialGradient.prototype.type = 'RadialGradient';
 	my.RadialGradient.prototype.classname = 'designnames';
-	my.d.RadialGradient = {
+	my.work.d.RadialGradient = {
 		/**
 Start circle radius, in pixels or percentage of entity/cell width
 @property startRadius
@@ -8095,7 +8089,7 @@ End circle radius, in pixels or percentage of entity/cell width
 **/
 		endRadius: 0
 	};
-	my.mergeInto(my.d.RadialGradient, my.d.Design);
+	my.mergeInto(my.work.d.RadialGradient, my.work.d.Design);
 
 	my.v = my.makeVector({
 		name: 'scrawl.v'
@@ -8258,7 +8252,7 @@ _This attribute is not retained by the Animation object_
 **/
 	my.Animation.prototype.type = 'Animation';
 	my.Animation.prototype.classname = 'animationnames';
-	my.d.Animation = {
+	my.work.d.Animation = {
 		/**
 Anonymous function for an animation routine
 @property fn
@@ -8274,7 +8268,7 @@ Lower order animations are run during each frame before higher order ones
 **/
 		order: 0,
 	};
-	my.mergeInto(my.d.Animation, my.d.Base);
+	my.mergeInto(my.work.d.Animation, my.work.d.Base);
 	/**
 Run an animation
 @method run

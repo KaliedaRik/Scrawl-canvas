@@ -64,42 +64,42 @@ scrawlAnimation extension adaptions to the Scrawl library object
 @class window.scrawl_Animation
 **/
 
-		my.d.Position.delta = {
+		my.work.d.Position.delta = {
 			x: 0,
 			y: 0,
 			z: 0
 		};
-		my.d.Position.deltaPathPlace = 0;
-		my.d.Position.pathSpeedConstant = true;
-		my.d.Position.tweenLock = false;
-		my.mergeInto(my.d.Cell, my.d.Position);
-		my.mergeInto(my.d.Entity, my.d.Position);
-		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Entity);
+		my.work.d.Position.deltaPathPlace = 0;
+		my.work.d.Position.pathSpeedConstant = true;
+		my.work.d.Position.tweenLock = false;
+		my.mergeInto(my.work.d.Cell, my.work.d.Position);
+		my.mergeInto(my.work.d.Entity, my.work.d.Position);
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Entity);
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Entity);
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Entity);
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Entity);
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Path)) {
-			my.mergeInto(my.d.Path, my.d.Entity);
+		if (my.xt(my.work.d.Path)) {
+			my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		}
 
-		my.d.PageElement.tweenLock = false;
-		my.mergeInto(my.d.Pad, my.d.PageElement);
-		if (my.xt(my.d.Stack)) {
-			my.mergeInto(my.d.Stack, my.d.PageElement);
+		my.work.d.PageElement.tweenLock = false;
+		my.mergeInto(my.work.d.Pad, my.work.d.PageElement);
+		if (my.xt(my.work.d.Stack)) {
+			my.mergeInto(my.work.d.Stack, my.work.d.PageElement);
 		}
-		if (my.xt(my.d.Element)) {
-			my.mergeInto(my.d.Element, my.d.PageElement);
+		if (my.xt(my.work.d.Element)) {
+			my.mergeInto(my.work.d.Element, my.work.d.PageElement);
 		}
 
 		/**
@@ -168,7 +168,7 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 			var temp = my.safeObject(items.delta),
 				vec = my.makeVector,
 				get = my.xtGet,
-				d = my.d[this.type];
+				d = my.work.d[this.type];
 			this.delta = vec({
 				name: this.type + '.' + this.name + '.delta',
 				x: get(items.deltaX, temp.x, 0),
@@ -400,14 +400,14 @@ reverse helper object
 				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
 			}
 		};
-		my.d.Cell.copyDelta = {
+		my.work.d.Cell.copyDelta = {
 			x: 0,
 			y: 0,
 		};
-		my.d.Cell.copyMinWidth = 0;
-		my.d.Cell.copyMaxWidth = 0;
-		my.d.Cell.copyMinHeight = 0;
-		my.d.Cell.copyMaxHeight = 0;
+		my.work.d.Cell.copyMinWidth = 0;
+		my.work.d.Cell.copyMaxWidth = 0;
+		my.work.d.Cell.copyMinHeight = 0;
+		my.work.d.Cell.copyMaxHeight = 0;
 		/**
 Cell constructor hook function
 
@@ -728,8 +728,8 @@ _Note that this function is only effective in achieving a parallax effect if the
 				width,
 				ctx,
 				c,
-				cv = my.cv,
-				cvx = my.cvx;
+				cv = my.work.cv,
+				cvx = my.work.cvx;
 			items = my.safeObject(items);
 			if (my.contains(stat, items.edge)) {
 				myShift = my.xtGet(items.shiftCopy, false);
@@ -851,18 +851,18 @@ A value for shifting the color stops (was __roll__ in versions prior to v4.0)
 @type Number
 @default 0
 **/
-		my.d.Design.shift = 0;
+		my.work.d.Design.shift = 0;
 		/**
 A flag to indicate that stop color shifts should be automatically applied
 @property autoUpdate
 @type Boolean
 @default false
 **/
-		my.d.Design.autoUpdate = false;
-		my.mergeInto(my.d.Gradient, my.d.Design);
-		my.mergeInto(my.d.RadialGradient, my.d.Design);
-		if (my.xt(my.d.Pattern)) {
-			my.mergeInto(my.d.Pattern, my.d.Design);
+		my.work.d.Design.autoUpdate = false;
+		my.mergeInto(my.work.d.Gradient, my.work.d.Design);
+		my.mergeInto(my.work.d.RadialGradient, my.work.d.Design);
+		if (my.xt(my.work.d.Pattern)) {
+			my.mergeInto(my.work.d.Pattern, my.work.d.Design);
 		}
 		/**
 Creates the gradient
@@ -1103,7 +1103,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 **/
 		my.Tween.prototype.type = 'Tween';
 		my.Tween.prototype.classname = 'animationnames';
-		my.d.Tween = {
+		my.work.d.Tween = {
 			/**
 Array of entitys, cells, etc to be animated using this tween; expects to be passed handles to the entity objects, not SPRITENAME strings
 @property targets
@@ -1282,7 +1282,7 @@ Lower order animations are run during each frame before higher order ones
 **/
 			order: 0,
 		};
-		my.mergeInto(my.d.Tween, my.d.Base);
+		my.mergeInto(my.work.d.Tween, my.work.d.Base);
 		/**
 Set tween values
 @method set
@@ -1419,10 +1419,10 @@ Tween engine helper object
 		my.Tween.prototype.engineActions = {
 			out: function(start, change, position, reverse) {
 				var temp = 1 - position;
-				return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
+				return (start + change) + (Math.cos((position * 90) * my.work.radian) * -change);
 			},
 			in : function(start, change, position, reverse) {
-				return start + (Math.sin((position * 90) * my.radian) * change);
+				return start + (Math.sin((position * 90) * my.work.radian) * change);
 			},
 			easeIn: function(start, change, position, reverse) {
 				var temp = 1 - position;
@@ -1785,7 +1785,7 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 **/
 		my.Timeline.prototype.type = 'Timeline';
 		my.Timeline.prototype.classname = 'animationnames';
-		my.d.Timeline = {
+		my.work.d.Timeline = {
 			/**
 Timeline length, in milliseconds
 
@@ -2330,7 +2330,7 @@ Remove this Timeline from the scrawl library
 **/
 		my.Action.prototype.type = 'Action';
 		my.Action.prototype.classname = 'animationnames';
-		my.d.Action = {
+		my.work.d.Action = {
 			/**
 Keyframe time - may be expressed as a Number (in milliseconds), or as a string:
 * '10ms' - ten milliseconds
