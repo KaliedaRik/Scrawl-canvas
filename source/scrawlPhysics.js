@@ -121,6 +121,19 @@ A __general__ function to undertake a round of calculations for Spring objects
 			return false;
 		};
 		/**
+A __general__ function to update Physics elapsed deltaTime
+@method updateDeltaTime
+@param {Number} [item] new time
+@return True on success; false otherwise
+**/
+		my.updateDeltaTime = function(item) {
+			if (my.xt(item)) {
+				my.physics.deltaTime = item;
+				return true;
+			}
+			return false;
+		};
+		/**
 scrawl.init hook function - modified by physics module
 
 Initiates two forces:
@@ -226,7 +239,8 @@ A __factory__ function to generate new Force objects
 		my.Particle = function(items) {
 			var vec = my.makeVector,
 				d = my.work.d.Particle,
-				r;
+				r,
+				get = my.xtGet;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.place = vec();
@@ -235,18 +249,20 @@ A __factory__ function to generate new Force objects
 			this.currentVelocity = vec();
 			this.set(items);
 			this.priorPlace = vec(this.place);
-			this.engine = items.engine || 'euler';
-			this.userVar = items.userVar || {};
+			this.engine = get(items.engine, 'euler');
+			this.userVar = get(items.userVar, {});
 			this.mobile = (my.isa_bool(items.mobile)) ? items.mobile : true;
-			this.forces = items.forces || [];
-			this.springs = items.springs || [];
-			this.mass = items.mass || d.mass;
-			this.elasticity = items.elasticity || d.elasticity;
-			this.radius = items.radius || d.radius;
-			if (items.radius || items.area) {
+			this.forces = get(items.forces, []);
+			this.springs = get(items.springs, []);
+			this.mass = get(items.mass, d.mass);
+			this.elasticity = get(items.elasticity, d.elasticity);
+			this.radius = get(items.radius, d.radius);
+			this.area = get(items.area, d.area);
+			if (my.xto(items.radius, items.area)) {
 				r = this.radius;
 				this.area = items.area || 2 * Math.PI * r * r || d.area;
 			}
+			this.drag = get(items.drag, d.drag);
 			this.load = vec();
 			my.entity[this.name] = this;
 			my.pushUnique(my.entitynames, this.name);

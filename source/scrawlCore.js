@@ -229,7 +229,7 @@ Device object - holds details about the browser environment and viewport
 @property device
 @type {Object}
 **/
-	my.device = null;
+	my.device = {};
 	/**
 Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 @property loadDependencies
@@ -302,9 +302,9 @@ scrawl.init hook function - modified by stacks extension
 @private
 **/
 	my.createDefaultPad = function() {
-		var p, cellname,
-			name = 'defaultHiddenCanvasElement';
+		var p, cellname, name;
 		if (my.device.canvas) {
+			name = 'defaultHiddenCanvasElement';
 			p = my.addCanvasToPage({
 				name: name,
 			});
@@ -599,8 +599,7 @@ A __utility__ function that removes a value from an array
     scrawl.removeItem(myarray, 'apple');    //returns ['orange']
 **/
 	my.removeItem = function(item, o) {
-		var index;
-		index = item.indexOf(o);
+		var index = item.indexOf(o);
 		if (index >= 0) {
 			item.splice(index, 1);
 		}
@@ -2949,6 +2948,22 @@ For 'start' and 'handle', returns a copy of the Vector
 			}
 		}
 		return (this.animationPositionGet(item) || my.Base.prototype.get.call(this, item));
+	};
+	/**
+Get the current start x coordinate
+@method getX
+@return Attribute value
+**/
+	my.Position.prototype.getX = function() {
+		return this.currentStart.x;
+	};
+	/**
+Get the current start y coordinate
+@method getY
+@return Attribute value
+**/
+	my.Position.prototype.getY = function() {
+		return this.currentStart.y;
 	};
 	/**
 Position.get hook function - modified by animation extension

@@ -28,6 +28,7 @@ var mycode = function() {
 		calculatePositions,
 		updateWind,
 		drawNet,
+		deltaTime = scrawl.updateDeltaTime,
 		msg1 = document.getElementById('msg1'),
 		msg2 = document.getElementById('msg2'),
 		msg3 = document.getElementById('msg3'),
@@ -36,16 +37,18 @@ var mycode = function() {
 	//define physics - forces
 	scrawl.physics.windSpeedX = 3;
 	scrawl.physics.windSpeedY = -0.2;
+	scrawl.physics.wind = scrawl.makeVector();
 	scrawl.makeForce({
 		name: 'wind',
 		fn: function(ball) {
 			// constant = 0.5 * 1.23 [default airDensity] * 6.428 [half surface area of 1m radius sphere] * 0.42 [default drag]
-			var constant = 1.6603524,
-				wx = scrawl.physics.windSpeedX,
-				wy = scrawl.physics.windSpeedY,
-				wind = scrawl.v.set({ //generic work vector
+			var p = scrawl.physics,
+				constant = 1.6603524,
+				wx = p.windSpeedX,
+				wy = p.windSpeedY,
+				wind = p.wind.set({ //generic work vector
 					x: constant * wx * wx,
-					y: constant * wy * wy,
+					y: constant * wy * wy
 				});
 			ball.load.vectorAdd(wind);
 		},
@@ -59,16 +62,16 @@ var mycode = function() {
 				startX: 200.5 + (i * holeW),
 				startY: 150.5 + (j * holeH),
 				mass: 2,
-				radius: 1,
+				radius: 1
 			}).addForce('gravity').addForce('wind');
 		}
 	}
 
 	scrawl.entity.b_0_0.set({
-		mobile: false,
+		mobile: false
 	});
 	scrawl.entity['b_0_' + (cols - 1)].set({
-		mobile: false,
+		mobile: false
 	});
 
 	//define physics - springs
@@ -79,7 +82,7 @@ var mycode = function() {
 					name: 's_' + i + '_' + j + '_across',
 					end: 'b_' + (i + 1) + '_' + j,
 					springConstant: spring,
-					damperConstant: damper,
+					damperConstant: damper
 				});
 			}
 			if (j < (cols - 1)) {
@@ -87,7 +90,7 @@ var mycode = function() {
 					name: 's_' + i + '_' + j + '_down',
 					end: 'b_' + i + '_' + (j + 1),
 					springConstant: spring,
-					damperConstant: damper,
+					damperConstant: damper
 				});
 			}
 		}
@@ -99,7 +102,7 @@ var mycode = function() {
 		sTime = now - ticker;
 		ticker = now;
 		dTime = (sTime > maxTime) ? maxTime : sTime;
-		scrawl.physics.deltaTime = dTime / 1000;
+		deltaTime(dTime / 1000);
 		scrawl.updateSprings();
 	};
 
@@ -146,7 +149,7 @@ var mycode = function() {
 			msg1.innerHTML = 'Milliseconds per physics refresh: ' + Math.ceil(dTime);
 			msg2.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(sTime);
 			msg3.innerHTML = 'Frames per second: ' + Math.floor(1000 / sTime);
-		},
+		}
 	});
 };
 
@@ -159,5 +162,5 @@ scrawl.loadExtensions({
 			scrawl.init();
 			mycode();
 		}, false);
-	},
+	}
 });

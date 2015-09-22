@@ -12,28 +12,32 @@ var mycode = function() {
 		message = document.getElementById('message'),
 		tkr = Date.now(),
 		dTime = 0,
+		deltaTime = scrawl.updateDeltaTime,
 		pBall,
 		dBall,
 		checkPositions;
 
 	//add attributes to the physics object
 	scrawl.physics.windSpeed = 15; //meters per second, blowing horizontally left-to-right
+	scrawl.physics.myWindVector = scrawl.makeVector();
 
 	//define physics objects
 	pBall = scrawl.makeParticle({
 		name: 'myball',
 		startX: 300,
-		startY: 20,
+		startY: 20
 	});
 
 	//add forces to the particle object
 	pBall.addForce('gravity').addForce('drag');
+
 	pBall.addForce(function(ball) {
-		var c = 0.5 * scrawl.physics.airDensity * scrawl.physics.windSpeed * scrawl.physics.windSpeed,
-			wind = scrawl.v.set({
-				x: c * ball.get('area') * ball.get('drag'),
+		var p = scrawl.physics,
+			c = 0.5 * p.airDensity * p.windSpeed * p.windSpeed,
+			wind = p.myWindVector.set({
+				x: c * ball.area * ball.drag,
 				y: 0,
-				z: 0,
+				z: 0
 			});
 		ball.load.vectorAdd(wind);
 	});
@@ -41,7 +45,7 @@ var mycode = function() {
 	//define entitys
 	dBall = scrawl.makeWheel({
 		pivot: 'myball',
-		radius: 10,
+		radius: 10
 	});
 
 	//iteration function
@@ -56,12 +60,12 @@ var mycode = function() {
 				startX: 300,
 				startY: 20,
 				deltaX: 0, //reset velocity to zero
-				deltaY: 0,
+				deltaY: 0
 			});
 		}
 
 		//updating stuff
-		scrawl.physics.deltaTime = dTime / 1000;
+		deltaTime(dTime / 1000);
 	};
 
 	//animation object
@@ -78,7 +82,7 @@ var mycode = function() {
 			ticker = now;
 			msg.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(sTime) + '; fps: ' + Math.floor(1000 / sTime);
 			//hide-end
-		},
+		}
 	});
 };
 
@@ -91,5 +95,5 @@ scrawl.loadExtensions({
 			scrawl.init();
 			mycode();
 		}, false);
-	},
+	}
 });

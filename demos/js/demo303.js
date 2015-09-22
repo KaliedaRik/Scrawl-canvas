@@ -19,12 +19,14 @@ var mycode = function() {
 		getColor,
 		inflateBalls,
 		checkBounds,
-		checkCollisions;
+		checkCollisions,
+		deltaTime = scrawl.updateDeltaTime,
+		jet;
 
 	//define groups
 	group = scrawl.makeGroup({
 		name: 'colsGroup',
-		regionRadius: 25,
+		regionRadius: 25
 	});
 
 	//define cell collision zone
@@ -35,13 +37,13 @@ var mycode = function() {
 		height: 580,
 		method: 'draw',
 		order: 10,
-		field: true,
+		field: true
 	});
 	scrawl.makeWheel({
 		radius: 90,
 		startX: 300,
 		startY: 300,
-		fence: true,
+		fence: true
 	});
 	scrawl.makeLine({
 		startX: 50,
@@ -52,50 +54,56 @@ var mycode = function() {
 		lineWidth: 10,
 		lineDash: [60, 40],
 		fence: true,
-		shape: true,
+		shape: true
 	});
 	scrawl.buildFields();
 
 	//add attributes to the physics object
 	scrawl.physics.windSpeed = 40;
 	scrawl.physics.jetSpeed = 300;
+	scrawl.physics.wind = scrawl.makeVector();
+	scrawl.physics.jet1 = scrawl.makeVector();
+	scrawl.physics.jet2 = scrawl.makeVector();
 
 	//define physics objects - forces
 	scrawl.makeForce({
 		name: 'wind',
 		fn: function(ball) {
-			var c = 0.5 * scrawl.physics.airDensity * scrawl.physics.windSpeed * scrawl.physics.windSpeed,
-				wind = scrawl.workphys.v1.set({
-					x: c * ball.get('area') * ball.get('drag'),
+			var p = scrawl.physics,
+				c = 0.5 * p.airDensity * p.windSpeed * p.windSpeed,
+				wind = p.wind.set({
+					x: c * ball.area * ball.drag,
 					y: 0,
-					z: 0,
+					z: 0
 				});
 			ball.load.vectorAdd(wind);
-		},
+		}
 	});
 	scrawl.makeForce({
 		name: 'jet',
 		fn: function(ball) {
-			if (scrawl.entity.jet.checkHit(ball.place)) {
-				var c = 0.5 * scrawl.physics.airDensity * scrawl.physics.jetSpeed * scrawl.physics.jetSpeed,
-					j = c * ball.get('area') * ball.get('drag'),
-					wind = scrawl.workphys.v1.set({
+			if (jet.checkHit(ball.place)) {
+				var p = scrawl.physics,
+					c = 0.5 * p.airDensity * p.jetSpeed * p.jetSpeed,
+					j = c * ball.area * ball.drag,
+					place = ball.place,
+					wind = p.jet1.set({
 						x: j,
-						y: j,
+						y: j
 					}),
-					effect = scrawl.workphys.v2.set({
-						x: (1 - ((scrawl.entity.jet.start.x - ball.place.x) / scrawl.entity.jet.radius)) * 0.1,
-						y: 1 - ((scrawl.entity.jet.start.y - ball.place.y) / scrawl.entity.jet.radius),
+					effect = p.jet2.set({
+						x: (1 - ((jet.getX() - place.x) / jet.radius)) * 0.1,
+						y: 1 - ((jet.getY() - place.y) / jet.radius)
 					});
 				wind.vectorMultiply(effect).reverse();
 				ball.load.vectorAdd(wind);
 			}
-		},
+		}
 	});
 
 	fieldBall = scrawl.makeParticle({
 		mass: 1000000,
-		elasticity: 1.21,
+		elasticity: 1.21
 	});
 
 	pBall = scrawl.makeParticle({
@@ -104,12 +112,12 @@ var mycode = function() {
 		startY: 30,
 		mass: 0.5 + Math.random(),
 		elasticity: 0.8,
-		radius: 0.02,
+		radius: 0.02
 	});
 	pBall.addForce('gravity').addForce('drag').addForce('wind').addForce('jet');
 
 	//define entitys
-	scrawl.makeWheel({
+	jet = scrawl.makeWheel({
 		name: 'jet',
 		startX: 590,
 		startY: 600,
@@ -119,7 +127,7 @@ var mycode = function() {
 		method: 'fillDraw',
 		fillStyle: '#ffcccc',
 		includeCenter: true,
-		checkHitUsingRadius: false,
+		checkHitUsingRadius: false
 	});
 
 	getColor = function(mass) { //ball color generator function
@@ -134,19 +142,19 @@ var mycode = function() {
 		collisionPoints: 'perimeter',
 		method: 'fillDraw',
 		fillStyle: getColor(scrawl.entity.pBall_0.get('mass')),
-		strokeStyle: 'orange',
+		strokeStyle: 'orange'
 	});
 
 	for (var i = 1; i < 19; i++) {
 		pBall.clone({
 			name: 'pBall_' + i,
 			startX: 30 + (i * 30),
-			mass: 0.5 + Math.random(),
+			mass: 0.5 + Math.random()
 		});
 		dWheel.clone({
 			name: 'dWheel_' + i,
 			pivot: 'pBall_' + i,
-			fillStyle: getColor(scrawl.entity['pBall_' + i].get('mass')),
+			fillStyle: getColor(scrawl.entity['pBall_' + i].get('mass'))
 		});
 	}
 	group.resetCollisionPoints();
@@ -156,7 +164,7 @@ var mycode = function() {
 		dTime = Date.now() - tkr;
 		dTime = (dTime > 10) ? 10 : dTime;
 		tkr = Date.now();
-		scrawl.physics.deltaTime = dTime / 1000;
+		deltaTime(dTime / 1000);
 	};
 
 	inflateBalls = function() {
@@ -224,7 +232,7 @@ var mycode = function() {
 			ticker = now;
 			msg.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(sTime) + '; fps: ' + Math.floor(1000 / sTime);
 			//hide-end
-		},
+		}
 	});
 };
 
@@ -237,5 +245,5 @@ scrawl.loadExtensions({
 			scrawl.init();
 			mycode();
 		}, false);
-	},
+	}
 });
