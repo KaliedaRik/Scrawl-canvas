@@ -14,6 +14,8 @@ Currently working on ...
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
+- new grid entity
+- frame backface visibility
 - improving the code base (always)
 - user accessibility issues
 - touch/pointer events on mobile/handheld devices
@@ -43,6 +45,29 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+September 2015
+	- refactoring code for efficiency gains
+		- implemented a set of dirty flags
+			- currentStart, currentHandle only update when required
+		- rewrite stacks for efficiency gains
+			- extended functionality of ElementGroups
+				- now replicates Group for entities
+				- new demo219
+			- drag and drop functionality extended to stack Elements
+		- rewrite of filters for efficiency gains
+			- new maxDimensions functionality to cut down on work filters need to do
+		- refactored Frame code
+			- frame corners now follow paths - new demo115
+			- frames locked to Elements can be dragged/dropped
+			- redraw dirty flag - so frame only reconstructed when required
+			- stamping functionality completely rewritten
+		- refactored Physics code for further efficiencies
+		- tidied up scrawl library object
+			- all the non-user-centered bits and bobs now found in scrawl.work section
+	- bugfixing
+		- the changes in the perspectives branch have damaged too many demos
+		- next release will have to be major - 5.0.0
+
 August 2015
 	- refactoring code for efficiency gains
 		- big undertaking - all source files affected
@@ -158,6 +183,7 @@ July - August 2015
 				- developed in Firefox
 				- not yet tested in any other browser or device
 
+------------------------------------------------------------------------------------
 150719
 	- testing all demos:
 		- general:
@@ -185,6 +211,7 @@ July - August 2015
 					- all the above filters are using the 'matrix' algorithm
 				- all others PASS
 	- move to version 4.3.0
+		- website updated; release completed
 
 July 2015
 	- reviewed and updated functionality for loading video
@@ -236,6 +263,7 @@ May - June 2015
 			- eg: no require(), no exports{}, no imports(), etc
 	- minor release version 4.2.1
 
+------------------------------------------------------------------------------------
 150329
 	- version 4.2 released
 	
@@ -267,6 +295,7 @@ February - March 2015
 			- particularly important for multitouch events
 			- Android tablet, Android phone, iPad, iPhone, windows touch devices
 
+------------------------------------------------------------------------------------
 150127
 	- version 4.1.0 released
 
@@ -293,6 +322,7 @@ February - March 2015
 		- Path entity cloning
 		- numerous smaller bugfixes
 
+------------------------------------------------------------------------------------
 150107
 	- version 4.0.0 released
 
@@ -667,7 +697,7 @@ December 2014 - 150107
 	- test all demos in Firefox
 		- fixed broken demos (037 magnifier, 046 zoom, 051 setDelta, 052, parallax scroller)
 	- new utility helper scrawl.xtGet([])
-		- used in particular inb constructors
+		- used in particular in constructors
 		- replaces a=x||y||default code
 
 141017-19

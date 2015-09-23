@@ -437,7 +437,9 @@ var mycode = function() {
 				});
 			}
 			hoverPin = tempPin;
-			details.pivot = hoverPin.name;
+			details.set({
+				pivot: hoverPin.name
+			});
 			detailsYear.set({
 				text: yearLabels[hoverPin.name],
 			});

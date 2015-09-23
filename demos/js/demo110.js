@@ -25,31 +25,8 @@ var mycode = function() {
 		current_CY2 = 0,
 		current_lineType = 'l',
 
-		// input_radius = document.getElementById('radius'),
-		// input_angle = document.getElementById('angle'),
-		// input_CX1 = document.getElementById('CX1'),
-		// input_CY1 = document.getElementById('CY1'),
-		// input_CX2 = document.getElementById('CX2'),
-		// input_CY2 = document.getElementById('CY2'),
-		// input_lineType = document.getElementById('lineType'),
-
-		// event_radius,
-		// event_angle,
-		// event_CX1,
-		// event_CY1,
-		// event_CX2,
-		// event_CY2,
-		// event_lineType,
-
 		stopE;
 
-	// input_radius.value = 150;
-	// input_angle.value = 60;
-	// input_CX1.value = 0;
-	// input_CX2.value = 0;
-	// input_CY1.value = 0;
-	// input_CY2.value = 0;
-	// input_lineType.value = 'l';
 	document.getElementById('radius').value = '150';
 	document.getElementById('angle').value = '60';
 	document.getElementById('CX1').value = '0';

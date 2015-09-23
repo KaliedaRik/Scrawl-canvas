@@ -3583,13 +3583,10 @@ mice.ui0, mice.ui1 etc - refers to pointer and touch events
 @default {}
 **/
 		this.mice = {
-			mouse: {
-				id: 'mouse',
-				x: 0,
-				y: 0,
-				active: false
-			}
+			mouse: my.makeVector()
 		};
+		this.mice.mouse.id = 'mouse';
+		this.mice.mouse.active = false;
 		return this;
 	};
 	my.PageElement.prototype = Object.create(my.Base.prototype);
@@ -6619,13 +6616,12 @@ Add entitys to the Group
 			i,
 			iz,
 			e;
-		if (Array.isArray(arguments[0][0])) {
+		if (Array.isArray(arguments[0]) && Array.isArray(arguments[0][0])) {
 			slice = Array.prototype.slice.call(arguments[0][0]);
 		}
 		else {
 			slice = Array.prototype.slice.call(arguments);
-		}
-		if (Array.isArray(slice[0])) {
+		} if (Array.isArray(slice[0])) {
 			slice = slice[0];
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
@@ -6658,7 +6654,7 @@ Remove entitys from the Group
 			i,
 			iz,
 			e;
-		if (Array.isArray(arguments[0][0])) {
+		if (Array.isArray(arguments[0]) && Array.isArray(arguments[0][0])) {
 			slice = Array.prototype.slice.call(arguments[0][0]);
 		}
 		else {

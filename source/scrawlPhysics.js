@@ -95,24 +95,19 @@ A __general__ function to undertake a round of calculations for Spring objects
 @return True on success; false otherwise
 **/
 		my.updateSprings = function(items) {
-			var i,
-				iz,
-				j,
-				jz,
-				s = [],
-				spring = my.spring,
+			var i, iz,
+				spring,
 				springnames = my.springnames,
-				temp,
-				isa = my.isa_obj;
+				temp;
 			if (springnames.length > 0) {
+				spring = my.spring;
 				items = (Array.isArray(items)) ? items : springnames;
 				for (i = 0, iz = items.length; i < iz; i++) {
 					temp = items[i];
-					s.push((isa(temp)) ? temp : (temp.substring) ? spring[temp] : false);
-				}
-				for (j = 0, jz = s.length; j < jz; j++) {
-					temp = s[j];
-					if (temp) {
+					if (temp.substring) {
+						temp = spring[temp];
+					}
+					if (temp.type === 'Spring') {
 						temp.update();
 					}
 				}

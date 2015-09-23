@@ -15,7 +15,8 @@ var mycode = function() {
 		myAngle,
 		myArrow,
 		report,
-		mouse;
+		mouse,
+		radian = Math.PI / 180;
 
 	//build entitys
 	scrawl.makeLine({
@@ -82,7 +83,7 @@ var mycode = function() {
 			niceDistance,
 			niceRotation,
 			msgOrientation;
-		cellRotation = Math.atan2(myO, myA) / scrawl.radian;
+		cellRotation = Math.atan2(myO, myA) / radian;
 		myArrow.set({
 			roll: cellRotation,
 			mouseIndex: myPad.getMouseIdFromEvent(e)
