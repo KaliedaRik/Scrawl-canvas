@@ -598,47 +598,39 @@ Returns an object with the following attributes:
 @private
 **/
 		my.Wheel.prototype.getMaxDimensions = function(cell) {
-			var x = this.currentStart.x,
-				y = this.currentStart.y,
-				rad = (this.radius * this.scale),
-				o = this.currentHandle,
-				hx = (this.flipReverse) ? -o.x : o.x,
-				hy = (this.flipUpend) ? -o.y : o.y,
+			var rad = (this.radius * this.scale),
 				w = cell.actualWidth,
 				h = cell.actualHeight,
-				conv = this.numberConvert,
 				line = my.ctx[this.context].lineWidth || 0,
 				ceil = Math.ceil,
 				floor = Math.floor,
+				md = this.maxDimensions,
+				roll = this.roll,
 				t, l, b, r,
 				v = my.work.v;
-			if (x.substring) {
-				x = conv(x, w);
+			v.set(this.currentHandle);
+			v.x = (this.flipReverse) ? -v.x : v.x;
+			v.y = (this.flipUpend) ? -v.y : v.y;
+			if (roll) {
+				v.rotate(roll).vectorAdd(this.currentStart);
 			}
-			if (y.substring) {
-				y = conv(y, h);
+			else {
+				v.vectorAdd(this.currentStart);
 			}
-			v.set({
-				x: hx,
-				y: hy
-			}).rotate(this.roll).vectorAdd({
-				x: x,
-				y: y
-			});
-			t = floor(v.y) - line - rad;
+			t = v.y - line - rad;
 			t = (t < 0) ? 0 : t;
-			b = ceil(v.y) + line + rad;
+			b = v.y + line + rad;
 			b = (b > h) ? h : b;
-			l = floor(v.x) - line - rad;
+			l = v.x - line - rad;
 			l = (l < 0) ? 0 : l;
-			r = ceil(v.x) + line + rad;
+			r = v.x + line + rad;
 			r = (r > w) ? w : r;
-			this.maxDimensions.top = t;
-			this.maxDimensions.bottom = b;
-			this.maxDimensions.left = l;
-			this.maxDimensions.right = r;
-			this.maxDimensions.flag = false;
-			return this.maxDimensions;
+			md.top = floor(t);
+			md.bottom = ceil(b);
+			md.left = floor(l);
+			md.right = ceil(r);
+			md.flag = false;
+			return md;
 		};
 
 		return my;

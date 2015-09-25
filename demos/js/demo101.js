@@ -13,6 +13,7 @@ var mycode = function() {
 
 		blocky,
 		wheely,
+		hollow,
 		texty,
 		pathy,
 		shapy,
@@ -42,8 +43,7 @@ var mycode = function() {
 
 	// define filters
 	scrawl.makeGreyscaleFilter({
-		name: 'myGreyscale',
-		filterStrength: 0.9
+		name: 'myGreyscale'
 	});
 	scrawl.makeInvertFilter({
 		name: 'myInvert'
@@ -58,7 +58,6 @@ var mycode = function() {
 	});
 	scrawl.makeThresholdFilter({
 		name: 'myThreshold',
-		filterStrength: 0.8,
 		threshold: 0.6
 	});
 	scrawl.makeChannelsFilter({
@@ -151,6 +150,20 @@ var mycode = function() {
 		pivot: 'mouse',
 		visibility: false,
 		roll: 90,
+		order: 2,
+		filters: [current_filter]
+	});
+	hollow = scrawl.makeWheel({
+		startAngle: 20,
+		endAngle: 340,
+		includeCenter: true,
+		lineWidth: 20,
+		radius: 85,
+		filterOnStroke: true,
+		method: 'none',
+		pivot: 'mouse',
+		visibility: false,
+		roll: 145,
 		order: 2,
 		filters: [current_filter]
 	});
@@ -290,7 +303,7 @@ var mycode = function() {
 	});
 
 	current_entity = blocky;
-	entitys = [blocky, wheely, texty, pathy, shapy, piccy, framy];
+	entitys = [blocky, wheely, hollow, texty, pathy, shapy, piccy, framy];
 	input_entity.value = 'blocky';
 	input_filter.value = 'myGreyscale';
 
@@ -305,6 +318,9 @@ var mycode = function() {
 		switch (input_entity.value) {
 			case 'wheely':
 				current_entity = wheely;
+				break;
+			case 'hollow':
+				current_entity = hollow;
 				break;
 			case 'texty':
 				current_entity = texty;

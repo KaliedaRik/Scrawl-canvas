@@ -781,7 +781,7 @@ Augments Entity.set()
 			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY)) {
 				this.currentStart.flag = false;
 			}
-			if (xto(items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
 			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
@@ -846,7 +846,7 @@ Augments Entity.setDelta()
 			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY)) {
 				this.currentStart.flag = false;
 			}
-			if (xto(items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
 			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {

@@ -12,6 +12,7 @@ var mycode = function() {
 		pad,
 		here,
 		currentEntity,
+		group,
 		kill = [],
 		counter = 0,
 		filterEntitys,
@@ -22,7 +23,7 @@ var mycode = function() {
 		name: 'myCanvas',
 		parentElement: 'canvasHolder',
 		width: 600,
-		height: 400,
+		height: 400
 	}).makeCurrent();
 	canvas = scrawl.canvas.myCanvas;
 	pad = scrawl.pad.myCanvas;
@@ -30,15 +31,13 @@ var mycode = function() {
 	//define filters
 	scrawl.makeSaturationFilter({
 		name: 'sat',
-		saturation: 3,
+		saturation: 3
 	});
 
 	//define groups
-	scrawl.makeGroup({
+	group = scrawl.makeGroup({
 		name: 'ripples',
-		order: 1,
-		filters: ['sat'],
-		filterOnStroke: true,
+		order: 1
 	});
 
 	//define entitys
@@ -46,7 +45,7 @@ var mycode = function() {
 		name: 'myImage',
 		width: 600,
 		height: 400,
-		url: 'img/carousel/kookaburra.png',
+		url: 'img/carousel/kookaburra.png'
 	});
 
 	//event listener - creates entitys
@@ -58,13 +57,16 @@ var mycode = function() {
 		counter++;
 		scrawl.makeWheel({
 			name: 'drop' + counter,
-			startX: here.x,
-			startY: here.y,
+			start: here,
 			radius: 1,
 			method: 'none',
-			lineWidth: 4,
+			handleX: 10,
+			handleY: 10,
+			lineWidth: 1,
 			group: 'ripples',
 			order: counter,
+			filters: ['sat'],
+			filterOnStroke: true
 		});
 	};
 	scrawl.addListener('up', newRing, canvas);
@@ -81,16 +83,14 @@ var mycode = function() {
 	scrawl.makeAnimation({
 		fn: function() {
 			here = pad.getMouse();
-			filterEntitys = scrawl.group.ripples.entitys;
-			for (var i = 0, z = filterEntitys.length; i < z; i++) {
-				currentEntity = scrawl.entity[filterEntitys[i]];
-				currentEntity.setDelta({
-					radius: 1,
-					lineWidth: 0.2,
-					globalAlpha: -0.006,
-					order: 1,
-				});
-				if (currentEntity.get('radius') > 180) {
+			group.updateEntitysBy({
+				radius: 1,
+				lineWidth: 0.2,
+				globalAlpha: -0.006,
+			});
+			for (var i = 0, z = group.entitys.length; i < z; i++) {
+				currentEntity = scrawl.entity[group.entitys[i]];
+				if (currentEntity.radius > 120) {
 					kill.push(currentEntity.name);
 				}
 			}

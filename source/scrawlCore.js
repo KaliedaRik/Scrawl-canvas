@@ -4047,12 +4047,6 @@ mousemove event listener function
 				mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
 				mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 			}
-			// maxX = wrapper.displayOffsetX + wrapper.localWidth;
-			// maxY = wrapper.displayOffsetY + wrapper.localHeight;
-			// wrapper.mice.mouse.active = false;
-			// if (mouseX >= wrapper.displayOffsetX && mouseX <= maxX && mouseY >= wrapper.displayOffsetY && mouseY <= maxY) {
-			// 	wrapper.mice.mouse.active = true;
-			// }
 			wrapper.mice.mouse.active = true;
 			if (e.type === 'mouseleave') {
 				wrapper.mice.mouse.active = false;
@@ -5075,9 +5069,12 @@ Augments Cell.set()
 	my.Cell.prototype.setDirtyStarts = function() {
 		var group = my.group,
 			groups = this.groups,
-			i, iz;
+			g, i, iz;
 		for (i = 0, iz = groups.length; i < iz; i++) {
-			group[groups[i]].setDirtyStarts();
+			g = groups[i];
+			if (group[g]) {
+				group[g].setDirtyStarts();
+			}
 		}
 		this.currentStart.flag = false;
 		return this;
@@ -5092,9 +5089,12 @@ Augments Cell.set()
 	my.Cell.prototype.setDirtyHandles = function() {
 		var group = my.group,
 			groups = this.groups,
-			i, iz;
+			g, i, iz;
 		for (i = 0, iz = groups.length; i < iz; i++) {
-			group[groups[i]].setDirtyHandles();
+			g = groups[i];
+			if (group[g]) {
+				group[g].setDirtyHandles();
+			}
 		}
 		this.currentHandle.flag = false;
 		return this;
@@ -6494,7 +6494,6 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 **/
 		this.regionRadius = get(items.regionRadius, 0);
 		my.group[this.name] = this;
-		this.filtersGroupInit(items);
 		pu(my.groupnames, this.name);
 		pu(my.cell[this.cell].groups, this.name);
 		return this;
@@ -6594,14 +6593,6 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 		}
 		return this;
 	};
-	/**
-Group constructor hook helper function
-
-(Replaced by Filters extension)
-@method filtersGroupInit
-@private
-**/
-	my.Group.prototype.filtersGroupInit = function() {};
 	/**
 Add entitys to the Group
 @method addEntitysToGroup

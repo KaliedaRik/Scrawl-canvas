@@ -79,32 +79,6 @@ Array of FILTERNAME strings, for filters to be applied to the Cell
 **/
 		my.work.d.Cell.filters = [];
 		/**
-Array of FILTERNAME strings, for filters to be applied to Entitys in this group
-@property filters
-@type Array
-@default []
-**/
-		my.work.d.Group.filters = [];
-		/**
-Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
-@property filterOnStroke
-@type Boolean
-@default false
-**/
-		my.work.d.Group.filterOnStroke = false;
-		/**
-The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
-
-* '__entity__' - filter is applied immediately after the Entity has stamped itself onto a cell
-* '__cell__' - filter is applied after all Entites have completed stamping themselves onto the cell
-* '__pad__' - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
-
-@property filterLevel
-@type String
-@default 'entity'
-**/
-		my.work.d.Group.filterLevel = 'entity';
-		/**
 Array of FILTERNAME strings, for filters to be applied to this entity
 @property filters
 @type Array
@@ -163,18 +137,6 @@ Cell constructor hook function - modified by filters module
 **/
 		my.Cell.prototype.filtersCellInit = function(items) {
 			this.filters = [];
-		};
-		/**
-Group constructor hook function - modified by filters module
-@method filtersGroupInit
-@private
-**/
-		my.Group.prototype.filtersGroupInit = function(items) {
-			var get = my.xtGet;
-			items = my.safeObject(items);
-			this.filters = (my.xt(items.filters)) ? items.filters : [];
-			this.filterOnStroke = get(items.filterOnStroke, false);
-			this.filterLevel = get(items.filterLevel, 'entity');
 		};
 		/**
 Entity constructor hook function - modified by filters module
@@ -632,26 +594,17 @@ Entity.stamp hook function - add a filter to an Entity, and any background detai
 				cvx = my.work.cvx,
 				f,
 				filter = my.filter,
-				filters = this.filters.concat(group.filters),
+				filters = this.filters,
 				c,
 				p,
 				xt = my.xt,
-				filterLevel,
-				filterOnStroke = group.filterOnStroke || this.filterOnStroke || false,
+				filterLevel = this.filterLevel,
+				filterOnStroke = this.filterOnStroke || false,
 				action = this.stampFilterActions;
 			force = (xt(force)) ? force : false;
 			if (filters.length > 0) {
 				c = my.cell[my.group[this.group].cell];
 				p = my.pad[c.pad];
-				if (group.filterLevel === 'pad' || this.filterLevel === 'pad') {
-					filterLevel = 'pad';
-				}
-				else if (group.filterLevel === 'cell' || this.filterLevel === 'cell') {
-					filterLevel = 'cell';
-				}
-				else {
-					filterLevel = 'entity';
-				}
 				if (filterLevel === 'pad' && !force) {
 					p.filters.push(this.name);
 					return;
@@ -740,19 +693,17 @@ Entity.stamp hook helper function
 			var canvas = my.canvas[cellname],
 				context = my.ctx[entity.context],
 				cvx = my.work.cvx,
-				cv = my.work.cv;
+				wrapper = my.work.cvwrapper;
 			if (filterOnStroke) {
 				cvx.lineWidth = context.lineWidth;
-				cvx.shadowOffsetX = context.shadowOffsetX;
-				cvx.shadowOffsetY = context.shadowOffsetY;
-				cvx.shadowBlur = context.shadowBlur;
 				cvx.lineJoin = context.lineJoin;
 				cvx.lineCap = context.lineCap;
 				cvx.miterLimit = context.miterLimit;
 				cvx.lineDash = context.lineDash;
 				cvx.lineDashOffset = context.lineDashOffset;
 				cvx.globalAlpha = context.globalAlpha;
-				entity.buildPath(cvx, cv);
+				cvx.strokeStyle = '#000000';
+				entity.buildPath(cvx, wrapper);
 				cvx.stroke();
 				cvx.setTransform(1, 0, 0, 1, 0, 0);
 				cvx.globalCompositeOperation = 'source-in';
@@ -760,7 +711,7 @@ Entity.stamp hook helper function
 				cvx.globalCompositeOperation = 'source-over';
 			}
 			else {
-				entity.clip(cvx, cellname, cell);
+				entity.clip(cvx, wrapper.name, wrapper);
 				cvx.setTransform(1, 0, 0, 1, 0, 0);
 				cvx.drawImage(canvas, 0, 0);
 			}
