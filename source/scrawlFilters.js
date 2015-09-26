@@ -1362,7 +1362,6 @@ Add function - takes data, calculates its channels and combines it with data
 			red = (red < 0) ? 0 : red;
 			green = (green < 0) ? 0 : green;
 			blue = (blue < 0) ? 0 : blue;
-			console.log(left, top, right, bottom);
 			for (k = top; k < bottom; k++) {
 				for (j = left; j < right; j++) {
 					i = ((k * width) + j) * 4;

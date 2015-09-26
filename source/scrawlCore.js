@@ -6602,18 +6602,30 @@ Add entitys to the Group
 **/
 	my.Group.prototype.addEntitysToGroup = function() {
 		var slice,
+			sliceFlag = false,
 			pu = my.pushUnique,
 			entitys = this.entitys,
 			i,
 			iz,
 			e;
-		if (Array.isArray(arguments[0]) && Array.isArray(arguments[0][0])) {
-			slice = Array.prototype.slice.call(arguments[0][0]);
-		}
-		else {
-			slice = Array.prototype.slice.call(arguments);
-		} if (Array.isArray(slice[0])) {
-			slice = slice[0];
+		slice = Array.prototype.slice.call(arguments);
+		while (!sliceFlag) {
+			if (slice[0]) {
+				if (Array.isArray(slice[0])) {
+					slice = slice[0];
+				}
+				if (slice[0]) {
+					if (slice[0].substring) {
+						sliceFlag = true;
+					}
+					if (slice[0].type && slice[0].name) {
+						sliceFlag = true;
+					}
+				}
+			}
+			else {
+				sliceFlag = true;
+			}
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
 			e = slice[i];
@@ -6640,19 +6652,30 @@ Remove entitys from the Group
 **/
 	my.Group.prototype.removeEntitysFromGroup = function() {
 		var slice,
+			sliceFlag = false,
 			ri = my.removeItem,
 			entitys = this.entitys,
 			i,
 			iz,
 			e;
-		if (Array.isArray(arguments[0]) && Array.isArray(arguments[0][0])) {
-			slice = Array.prototype.slice.call(arguments[0][0]);
-		}
-		else {
-			slice = Array.prototype.slice.call(arguments);
-		}
-		if (Array.isArray(slice[0])) {
-			slice = slice[0];
+		slice = Array.prototype.slice.call(arguments);
+		while (!sliceFlag) {
+			if (slice[0]) {
+				if (Array.isArray(slice[0])) {
+					slice = slice[0];
+				}
+				if (slice[0]) {
+					if (slice[0].substring) {
+						sliceFlag = true;
+					}
+					if (slice[0].type && slice[0].name) {
+						sliceFlag = true;
+					}
+				}
+			}
+			else {
+				sliceFlag = true;
+			}
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
 			e = slice[i];

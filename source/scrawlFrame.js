@@ -813,7 +813,9 @@ Augments Base.clone()
 					el.addCornerTrackers();
 					for (i = 0; i < 4; i++) {
 						corner = corners[i];
-						this[corner].local = el[corner];
+						if (this[corner].local) {
+							this[corner].local = el[corner];
+						}
 					}
 				}
 				this.setLockElementAttributes(items);
