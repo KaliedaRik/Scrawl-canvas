@@ -803,7 +803,8 @@ Augments Base.clone()
 					document.body.appendChild(temp);
 					el = stack.addElementById(lockFrameTo);
 					el.set({
-						translateZ: stack.get('translateZ') - 2
+						translateZ: stack.get('translateZ') - 2,
+						//pointerEvents: 'none'
 					});
 					this.currentFrame = el;
 				}

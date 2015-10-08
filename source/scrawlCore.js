@@ -667,9 +667,8 @@ Valid identifier Strings include:
     scrawl.isa(myboolean, 'str');   //returns false
 **/
 	my.isa = function() {
-		var slice = Array.prototype.slice.call(arguments);
-		if (slice.length == 2 && typeof slice[0] != 'undefined') {
-			return my['isa_' + slice[1]](slice[0]);
+		if (arguments.length == 2 && typeof arguments[0] != 'undefined') {
+			return my['isa_' + arguments[1]](arguments[0]);
 		}
 		return false;
 	};
@@ -751,11 +750,10 @@ A __utility__ function that checks an argument list of values and returns the fi
 		var slice,
 			i,
 			iz;
-		slice = Array.prototype.slice.call(arguments);
-		if (slice.length > 0) {
-			for (i = 0, iz = slice.length; i < iz; i++) {
-				if (typeof slice[i] !== 'undefined') {
-					return slice[i];
+		if (arguments.length > 0) {
+			for (i = 0, iz = arguments.length; i < iz; i++) {
+				if (typeof arguments[i] !== 'undefined') {
+					return arguments[i];
 				}
 			}
 		}
@@ -773,11 +771,10 @@ False: 0, -0, '', undefined, null, false, NaN
 		var slice,
 			i,
 			iz;
-		slice = Array.prototype.slice.call(arguments);
-		if (slice.length > 0) {
-			for (i = 0, iz = slice.length; i < iz; i++) {
-				if (slice[i]) {
-					return slice[i];
+		if (arguments.length > 0) {
+			for (i = 0, iz = arguments.length; i < iz; i++) {
+				if (arguments[i]) {
+					return arguments[i];
 				}
 			}
 		}
@@ -799,9 +796,9 @@ A __utility__ function for variable type checking
 		var slice,
 			i,
 			iz;
-		slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(slice[0])) {
-			slice = slice[0];
+		slice = arguments;
+		if (Array.isArray(arguments[0])) {
+			slice = arguments[0];
 		}
 		if (slice.length > 0) {
 			for (i = 0, iz = slice.length; i < iz; i++) {
@@ -828,9 +825,9 @@ A __utility__ function for variable type checking
 		var slice,
 			i,
 			iz;
-		slice = Array.prototype.slice.call(arguments);
-		if (Array.isArray(slice[0])) {
-			slice = slice[0];
+		slice = arguments;
+		if (Array.isArray(arguments[0])) {
+			slice = arguments[0];
 		}
 		if (slice.length > 0) {
 			for (i = 0, iz = slice.length; i < iz; i++) {
@@ -3587,6 +3584,7 @@ mice.ui0, mice.ui1 etc - refers to pointer and touch events
 		};
 		this.mice.mouse.id = 'mouse';
 		this.mice.mouse.active = false;
+		this.mice.mouse.name = this.type + '.' + this.name + '.ui.mouse';
 		return this;
 	};
 	my.PageElement.prototype = Object.create(my.Base.prototype);
@@ -3909,6 +3907,7 @@ mousemove event listener function
 			pad = my.pad,
 			stack = my.stack,
 			element = my.element,
+			parent, child, elid, localMouse, childStart,
 			al = my.work.activeListeners,
 			xt = my.xt,
 			vec = my.makeVector,
@@ -4006,6 +4005,7 @@ mousemove event listener function
 		}
 		//pointer event
 		else if (e.pointerType) {
+			elid = e.target.id;
 			id = (e.pointerType !== 'touch') ? e.pointerType : 'p' + e.pointerId;
 
 			//determine if a vector already exists for this pointer
@@ -4016,17 +4016,42 @@ mousemove event listener function
 				wrapper.mice[id].active = null;
 				wrapper.mice[id].id = id;
 			}
+			localMouse = wrapper.mice[id];
 
-			//pointer coordinates
-			wrapper.mice[id].active = false;
-			if (e.offsetX >= 0 && e.offsetX <= wrapper.localWidth && e.offsetY >= 0 && e.offsetY <= wrapper.localHeight) {
-				wrapper.mice[id].active = true;
+			if (elid === wrapper.name) {
+
+				//pointer coordinates
+				localMouse.active = false;
+				if (e.offsetX >= 0 && e.offsetX <= wrapper.localWidth && e.offsetY >= 0 && e.offsetY <= wrapper.localHeight) {
+					localMouse.active = true;
+				}
+				localMouse.x = Math.round(e.offsetX);
+				localMouse.y = Math.round(e.offsetY);
+				if (wrapper.type === 'Pad') {
+					localMouse.x = Math.round(localMouse.x / (wrapper.scale || 1));
+					localMouse.y = Math.round(localMouse.y / (wrapper.scale || 1));
+				}
 			}
-			wrapper.mice[id].x = Math.round(e.offsetX);
-			wrapper.mice[id].y = Math.round(e.offsetY);
-			if (wrapper.type === 'Pad') {
-				wrapper.mice[id].x = Math.round(wrapper.mice[id].x / (wrapper.scale || 1));
-				wrapper.mice[id].y = Math.round(wrapper.mice[id].y / (wrapper.scale || 1));
+			else {
+				// dealing with a stack - 
+				// pointer events don't seem to propogate to stacks when the stack includes canvases or elements
+				if (elid) {
+					parent = e.target.parentNode;
+					if (parent.id === wrapper.name) {
+
+						//pointer coordinates
+						localMouse.x = Math.round(e.pageX - wrapper.displayOffsetX);
+						localMouse.y = Math.round(e.pageY - wrapper.displayOffsetY);
+						localMouse.active = false;
+						if (localMouse.x >= 0 && localMouse.x <= wrapper.localWidth && localMouse.y >= 0 && localMouse.y <= wrapper.localHeight) {
+							localMouse.active = true;
+						}
+						if (wrapper.type === 'Pad') {
+							localMouse.x = Math.round(localMouse.x / (wrapper.scale || 1));
+							localMouse.y = Math.round(localMouse.y / (wrapper.scale || 1));
+						}
+					}
+				}
 			}
 		}
 		//mouse/pen event
@@ -6601,30 +6626,21 @@ Add entitys to the Group
 @chainable
 **/
 	my.Group.prototype.addEntitysToGroup = function() {
-		var slice,
-			sliceFlag = false,
+		var slice = [],
 			pu = my.pushUnique,
 			entitys = this.entitys,
 			i,
 			iz,
 			e;
-		slice = Array.prototype.slice.call(arguments);
-		while (!sliceFlag) {
-			if (slice[0]) {
-				if (Array.isArray(slice[0])) {
-					slice = slice[0];
-				}
-				if (slice[0]) {
-					if (slice[0].substring) {
-						sliceFlag = true;
-					}
-					if (slice[0].type && slice[0].name) {
-						sliceFlag = true;
-					}
-				}
+		for (i = 0, iz = arguments.length; i < iz; i++) {
+			if (Array.isArray(arguments[i])) {
+				slice = slice.concat(arguments[i]);
+			}
+			else if (Array.isArray(arguments[i][0])) {
+				slice = slice.concat(arguments[i][0]);
 			}
 			else {
-				sliceFlag = true;
+				slice.push(arguments[i]);
 			}
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
@@ -6651,30 +6667,21 @@ Remove entitys from the Group
 @chainable
 **/
 	my.Group.prototype.removeEntitysFromGroup = function() {
-		var slice,
-			sliceFlag = false,
+		var slice = [],
 			ri = my.removeItem,
 			entitys = this.entitys,
 			i,
 			iz,
 			e;
-		slice = Array.prototype.slice.call(arguments);
-		while (!sliceFlag) {
-			if (slice[0]) {
-				if (Array.isArray(slice[0])) {
-					slice = slice[0];
-				}
-				if (slice[0]) {
-					if (slice[0].substring) {
-						sliceFlag = true;
-					}
-					if (slice[0].type && slice[0].name) {
-						sliceFlag = true;
-					}
-				}
+		for (i = 0, iz = arguments.length; i < iz; i++) {
+			if (Array.isArray(arguments[i])) {
+				slice = slice.concat(arguments[i]);
+			}
+			else if (Array.isArray(arguments[i][0])) {
+				slice = slice.concat(arguments[i][0]);
 			}
 			else {
-				sliceFlag = true;
+				slice.push(arguments[i]);
 			}
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
@@ -7149,13 +7156,11 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 @chainable
 **/
 	my.Entity.prototype.setDelta = function(items) {
-		var xt = my.xt,
-			xto = my.xto;
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
-		if (xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
+		if (my.xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
 			my.ctx[this.context].setDelta(items);
-			if (xt(items.lineWidth)) {
+			if (my.xt(items.lineWidth)) {
 				this.maxDimensions.flag = true;
 			}
 		}
