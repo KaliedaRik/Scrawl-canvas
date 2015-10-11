@@ -556,7 +556,10 @@ A __utility__ function that checks an array to see if it contains a given value
     scrawl.contains(myarray, 'banana'); //false
 **/
 	my.contains = function(item, k) {
-		return (item.indexOf(k) >= 0) ? true : false;
+		if (Array.isArray(item)) {
+			return (item.indexOf(k) >= 0) ? true : false;
+		}
+		return false;
 	};
 	/**
 A __utility__ function to convert strings (such as percentages) to integer values
@@ -6631,16 +6634,19 @@ Add entitys to the Group
 			entitys = this.entitys,
 			i,
 			iz,
-			e;
+			e,
+			xt = my.xt;
 		for (i = 0, iz = arguments.length; i < iz; i++) {
-			if (Array.isArray(arguments[i])) {
-				slice = slice.concat(arguments[i]);
-			}
-			else if (Array.isArray(arguments[i][0])) {
-				slice = slice.concat(arguments[i][0]);
-			}
-			else {
-				slice.push(arguments[i]);
+			if (xt(arguments[i])) {
+				if (Array.isArray(arguments[i])) {
+					slice = slice.concat(arguments[i]);
+				}
+				else if (Array.isArray(arguments[i][0])) {
+					slice = slice.concat(arguments[i][0]);
+				}
+				else {
+					slice.push(arguments[i]);
+				}
 			}
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {
@@ -6672,16 +6678,19 @@ Remove entitys from the Group
 			entitys = this.entitys,
 			i,
 			iz,
-			e;
+			e,
+			xt = my.xt;
 		for (i = 0, iz = arguments.length; i < iz; i++) {
-			if (Array.isArray(arguments[i])) {
-				slice = slice.concat(arguments[i]);
-			}
-			else if (Array.isArray(arguments[i][0])) {
-				slice = slice.concat(arguments[i][0]);
-			}
-			else {
-				slice.push(arguments[i]);
+			if (xt(arguments[i])) {
+				if (Array.isArray(arguments[i])) {
+					slice = slice.concat(arguments[i]);
+				}
+				else if (Array.isArray(arguments[i][0])) {
+					slice = slice.concat(arguments[i][0]);
+				}
+				else {
+					slice.push(arguments[i]);
+				}
 			}
 		}
 		for (i = 0, iz = slice.length; i < iz; i++) {

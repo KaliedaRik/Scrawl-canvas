@@ -1859,15 +1859,17 @@ Set the timeline duration (for actions with % time strings) or event choke value
 @return this
 **/
 		my.Timeline.prototype.set = function(items) {
-			var i, iz, a;
+			var i, iz, a,
+				xt = my.xt;
 			items = my.safeObject(items);
-			if (items.duration.toFixed) {
+			if (xt(items.duration) && items.duration.toFixed) {
 				this.duration = items.duration;
 			}
-			if (items.event.toFixed) {
+			if (xt(items.event) && items.event.toFixed) {
 				this.event = items.event;
 			}
-			if (my.xt(items.order)) {
+			if (xt(items.order)) {
+				this.order = items.order;
 				my.work.resortAnimations = true;
 			}
 			this.resolve();
