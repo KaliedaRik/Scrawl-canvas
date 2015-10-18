@@ -8237,13 +8237,13 @@ Starts the animation loop
 		my.makeAnimation({
 			fn: function() {
 				var dev = my.device,
-				testDims, testPos;
+					testDims, testPos;
 				testDims = dev.getViewportDimensions();
 				testPos = dev.getViewportPosition();
-				if(testDims){
+				if (testDims) {
 					my.setPerspectives();
 				}
-				if(testDims || testPos){
+				if (testDims || testPos) {
 					my.setDisplayOffsets('all');
 				}
 			}

@@ -475,7 +475,7 @@ Set the perspective for all stacks
 			sn = (stacks) ? [].concat(stacks) : my.stacknames;
 			for (i = 0, iz = sn.length; i < iz; i++) {
 				s = stack[sn[i]];
-				if(s){
+				if (s) {
 					s.currentPerspective.flag = false;
 					s.setPerspective();
 				}
