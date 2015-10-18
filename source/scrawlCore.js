@@ -1703,6 +1703,7 @@ A __factory__ function to generate new RadialGradient objects
 	my.makeRadialGradient = function(items) {
 		return new my.RadialGradient(items);
 	};
+	my.setPerspectives = function() {};
 
 	/**
 # Vector
@@ -2616,37 +2617,47 @@ Check if device supports various global composition operation functionalities
 	/**
 Determine viewport dimensions
 @method getViewportDimensions
+@return Boolean - true if dimensions have changed; false otherwise
 @private
 **/
 	my.Device.prototype.getViewportDimensions = function(e) {
-		var d;
+		var d, w, h;
 		if (e) {
 			d = my.device;
+			w = d.width;
+			h = d.height;
 			d.width = document.documentElement.clientWidth - 1;
 			d.height = document.documentElement.clientHeight - 1;
-			return true;
+			return (w != d.width || h != d.height) ? true : false;
 		}
+		w = this.width;
+		h = this.height;
 		this.width = document.documentElement.clientWidth - 1;
 		this.height = document.documentElement.clientHeight - 1;
-		return false;
+		return (w != this.width || h != this.height) ? true : false;
 	};
 	/**
 Determine viewport position within the page
 @method getViewportPosition
+@return Boolean - true if scrolling has occurred; false otherwise
 @private
 **/
 	my.Device.prototype.getViewportPosition = function(e) {
-		var d, get;
+		var d, get, ox, oy;
 		if (e) {
 			d = my.device;
 			get = my.xtGet;
+			ox = d.offsetX;
+			oy = d.offsetY;
 			d.offsetX = get(e.pageX, e.target.offsetX, 0);
 			d.offsetY = get(e.pageY, e.target.offsetY, 0);
-			return true;
+			return (ox != d.offsetX || oy != d.offsetY) ? true : false;
 		}
+		ox = this.offsetX;
+		oy = this.offsetY;
 		this.offsetX = document.documentElement.scrollLeft || window.pageXOffset;
 		this.offsetY = document.documentElement.scrollTop || window.pageYOffset;
-		return false;
+		return (ox != this.offsetX || oy != this.offsetY) ? true : false;
 	};
 	/**
 Feature detection - hook function
@@ -8226,13 +8237,15 @@ Starts the animation loop
 		my.makeAnimation({
 			fn: function() {
 				var dev = my.device,
-					w = dev.width,
-					h = dev.height;
-				dev.getViewportDimensions();
-				if (w - dev.width || h - dev.height) {
+				testDims, testPos;
+				testDims = dev.getViewportDimensions();
+				testPos = dev.getViewportPosition();
+				if(testDims){
+					my.setPerspectives();
+				}
+				if(testDims || testPos){
 					my.setDisplayOffsets('all');
 				}
-				dev.getViewportPosition();
 			}
 		});
 		my.work.doAnimation = true;

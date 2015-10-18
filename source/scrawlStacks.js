@@ -457,6 +457,32 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 			return true;
 		};
 		/**
+Set the perspective for all stacks
+
+(Replaces Core.setPerspectives)
+
+@method setPerspectives
+@param {Array} [stacks] Array of STACKNAMEs - can also be a String - if null, all stacks will be processed
+@return The Scrawl library object (scrawl)
+@chainable
+**/
+		my.setPerspectives = function(stacks) {
+			var i,
+				iz,
+				sn,
+				stack = my.stack,
+				s;
+			sn = (stacks) ? [].concat(stacks) : my.stacknames;
+			for (i = 0, iz = sn.length; i < iz; i++) {
+				s = stack[sn[i]];
+				if(s){
+					s.currentPerspective.flag = false;
+					s.setPerspective();
+				}
+			}
+			return my;
+		};
+		/**
 A __display__ function to ask Pads to undertake a complete clear-compile-show display cycle, and stacks to undertake a render cycle
 
 (Replaces Core.render)
@@ -477,10 +503,6 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 			for (i = 0, iz = padnames.length; i < iz; i++) {
 				pad[padnames[i]].render(mouse);
 			}
-			// p = (my.xt(pads)) ? [].concat(pads) : my.padnames;
-			// for (i = 0, iz = p.length; i < iz; i++) {
-			// 	pad[p[i]].render(mouse);
-			// }
 			return my;
 		};
 		/**
@@ -3000,7 +3022,7 @@ Calculates the pixels value of the object's perspective attribute
 			style.perspective = result2;
 		};
 		/**
-setPerspective helper function
+setCurrentPerspective helper function
 @method setCurrentPerspective
 @return Set the Stack element's perspective point
 **/
@@ -3009,9 +3031,11 @@ setPerspective helper function
 				current = this.currentPerspective,
 				el = (this.group) ? my.stack[my.group[this.group].stack] : this,
 				conv = this.numberConvert;
-			current.x = (given.x.substring) ? conv(given.x, el.localWidth) : given.x;
-			current.y = (given.y.substring) ? conv(given.y, el.localHeight) : given.y;
+			current.x = (given.x.substring) ? conv(given.x, this.localWidth) : given.x;
+			current.y = (given.y.substring) ? conv(given.y, this.localHeight) : given.y;
+			// this next line is wrong - need to work out how to scale perspective depth effectively
 			current.z = given.z;
+			current.flag = true;
 			return this;
 		};
 
