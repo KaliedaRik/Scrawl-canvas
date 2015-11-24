@@ -8272,10 +8272,10 @@ Starts the animation loop
 					testDims, testPos;
 				testDims = dev.getViewportDimensions();
 				testPos = dev.getViewportPosition();
-				if(testDims){
+				if (testDims) {
 					my.setPerspectives();
 				}
-				if(testDims || testPos){
+				if (testDims || testPos) {
 					my.setDisplayOffsets('all');
 				}
 			}

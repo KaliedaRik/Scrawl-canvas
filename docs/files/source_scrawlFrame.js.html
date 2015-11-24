@@ -1,8 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>source\scrawlFrame.js - scrawl-canvas</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="scrawl-canvas"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 5.0.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
+            
+                <li><a href="../classes/Animation.html">Animation</a></li>
+            
+                <li><a href="../classes/Base.html">Base</a></li>
+            
+                <li><a href="../classes/Block.html">Block</a></li>
+            
+                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
+            
+                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
+            
+                <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
+            
+                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/Context.html">Context</a></li>
+            
+                <li><a href="../classes/Design.html">Design</a></li>
+            
+                <li><a href="../classes/Device.html">Device</a></li>
+            
+                <li><a href="../classes/Element.html">Element</a></li>
+            
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
+                <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
+            
+                <li><a href="../classes/Gradient.html">Gradient</a></li>
+            
+                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
+            
+                <li><a href="../classes/Group.html">Group</a></li>
+            
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
+            
+                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
+            
+                <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
+            
+                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+            
+                <li><a href="../classes/Pad.html">Pad</a></li>
+            
+                <li><a href="../classes/PageElement.html">PageElement</a></li>
+            
+                <li><a href="../classes/Particle.html">Particle</a></li>
+            
+                <li><a href="../classes/Path.html">Path</a></li>
+            
+                <li><a href="../classes/Pattern.html">Pattern</a></li>
+            
+                <li><a href="../classes/Phrase.html">Phrase</a></li>
+            
+                <li><a href="../classes/Picture.html">Picture</a></li>
+            
+                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Position.html">Position</a></li>
+            
+                <li><a href="../classes/Quaternion.html">Quaternion</a></li>
+            
+                <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
+            
+                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
+            
+                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
+            
+                <li><a href="../classes/Shape.html">Shape</a></li>
+            
+                <li><a href="../classes/Spring.html">Spring</a></li>
+            
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
+            
+                <li><a href="../classes/Stack.html">Stack</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
+            
+                <li><a href="../classes/Timeline.html">Timeline</a></li>
+            
+                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
+            
+                <li><a href="../classes/Tween.html">Tween</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
+            
+                <li><a href="../classes/Wheel.html">Wheel</a></li>
+            
+                <li><a href="../classes/window.scrawl.html">window.scrawl</a></li>
+            
+                <li><a href="../classes/window.scrawl_Animation.html">window.scrawl_Animation</a></li>
+            
+                <li><a href="../classes/window.scrawl_Block.html">window.scrawl_Block</a></li>
+            
+                <li><a href="../classes/window.scrawl_Collisions.html">window.scrawl_Collisions</a></li>
+            
+                <li><a href="../classes/window.scrawl_Color.html">window.scrawl_Color</a></li>
+            
+                <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
+            
+                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
+            
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
+                <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
+            
+                <li><a href="../classes/window.scrawl_Phrase.html">window.scrawl_Phrase</a></li>
+            
+                <li><a href="../classes/window.scrawl_Physics.html">window.scrawl_Physics</a></li>
+            
+                <li><a href="../classes/window.scrawl_SaveLoad.html">window.scrawl_SaveLoad</a></li>
+            
+                <li><a href="../classes/window.scrawl_Shape.html">window.scrawl_Shape</a></li>
+            
+                <li><a href="../classes/window.scrawl_Stacks.html">window.scrawl_Stacks</a></li>
+            
+                <li><a href="../classes/window.scrawl_Wheel.html">window.scrawl_Wheel</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/scrawlAnimation.html">scrawlAnimation</a></li>
+            
+                <li><a href="../modules/scrawlBlock.html">scrawlBlock</a></li>
+            
+                <li><a href="../modules/scrawlCollisions.html">scrawlCollisions</a></li>
+            
+                <li><a href="../modules/scrawlColor.html">scrawlColor</a></li>
+            
+                <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
+            
+                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
+            
+                <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
+            
+                <li><a href="../modules/scrawlPathFactories.html">scrawlPathFactories</a></li>
+            
+                <li><a href="../modules/scrawlPhrase.html">scrawlPhrase</a></li>
+            
+                <li><a href="../modules/scrawlPhysics.html">scrawlPhysics</a></li>
+            
+                <li><a href="../modules/scrawlSaveLoad.html">scrawlSaveLoad</a></li>
+            
+                <li><a href="../modules/scrawlShape.html">scrawlShape</a></li>
+            
+                <li><a href="../modules/scrawlStacks.html">scrawlStacks</a></li>
+            
+                <li><a href="../modules/scrawlWheel.html">scrawlWheel</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: source\scrawlFrame.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
+// of this software and associated documentation files (the &quot;Software&quot;), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
@@ -11,7 +271,7 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 // 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -32,9 +292,9 @@ The Frame module adds PerspectiveCell entitys to the core module
 @module scrawlFrame
 **/
 
-if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'frame')) {
+if (window.scrawl &amp;&amp; window.scrawl.work.extensions &amp;&amp; !window.scrawl.contains(window.scrawl.work.extensions, &#x27;frame&#x27;)) {
 	var scrawl = (function(my) {
-		'use strict';
+		&#x27;use strict&#x27;;
 		/**
 # window.scrawl
 
@@ -77,7 +337,7 @@ A __factory__ function to generate new Frame entitys
 		my.makeFrame = function(items) {
 			return new my.Frame(items);
 		};
-		my.pushUnique(my.work.nameslist, 'framepointnames');
+		my.pushUnique(my.work.nameslist, &#x27;framepointnames&#x27;);
 
 		/**
 # FramePoint
@@ -117,7 +377,7 @@ A __factory__ function to generate new Frame entitys
 			this.lockX = get(items.lockX, false);
 			this.lockY = get(items.lockY, false);
 			this.local = vec({
-				name: this.name + '_local'
+				name: this.name + &#x27;_local&#x27;
 			});
 			this.setReference();
 			this.setLocal();
@@ -126,10 +386,10 @@ A __factory__ function to generate new Frame entitys
 		/**
 @property type
 @type String
-@default 'FramePoint'
+@default &#x27;FramePoint&#x27;
 @final
 **/
-		my.FramePoint.prototype.type = 'FramePoint';
+		my.FramePoint.prototype.type = &#x27;FramePoint&#x27;;
 		my.work.d.FramePoint = {
 			host: false,
 			data: false,
@@ -150,7 +410,7 @@ A __factory__ function to generate new Frame entitys
 			lockY: false
 		};
 		my.mergeInto(my.work.d.FramePoint, my.work.d.Base);
-		my.FramePoint.prototype.classname = 'framepointnames';
+		my.FramePoint.prototype.classname = &#x27;framepointnames&#x27;;
 		/**
 @method get
 @param {String} item Name of attribute to return
@@ -190,35 +450,35 @@ A __factory__ function to generate new Frame entitys
 **/
 		my.FramePoint.prototype.setReference = function() {
 			if (this.data) {
-				this.reference = 'data';
+				this.reference = &#x27;data&#x27;;
 			}
 			else if (this.lock) {
-				this.reference = 'lock';
+				this.reference = &#x27;lock&#x27;;
 			}
-			else if (this.path && my.contains(my.entitynames, this.path)) {
-				this.reference = 'entity';
+			else if (this.path &amp;&amp; my.contains(my.entitynames, this.path)) {
+				this.reference = &#x27;entity&#x27;;
 			}
 			else if (this.pivot) {
 				if (my.contains(my.entitynames, this.pivot)) {
-					this.reference = 'entity';
+					this.reference = &#x27;entity&#x27;;
 				}
 				else if (my.contains(my.cellnames, this.pivot)) {
-					this.reference = 'cell';
+					this.reference = &#x27;cell&#x27;;
 				}
 				else if (my.contains(my.pointnames, this.pivot)) {
-					this.reference = 'point';
+					this.reference = &#x27;point&#x27;;
 				}
-				else if (my.stack && my.contains(my.stacknames, this.pivot)) {
-					this.reference = 'stack';
+				else if (my.stack &amp;&amp; my.contains(my.stacknames, this.pivot)) {
+					this.reference = &#x27;stack&#x27;;
 				}
-				else if (my.pad && my.contains(my.padnames, this.pivot)) {
-					this.reference = 'pad';
+				else if (my.pad &amp;&amp; my.contains(my.padnames, this.pivot)) {
+					this.reference = &#x27;pad&#x27;;
 				}
-				else if (my.element && my.contains(my.elementnames, this.pivot)) {
-					this.reference = 'element';
+				else if (my.element &amp;&amp; my.contains(my.elementnames, this.pivot)) {
+					this.reference = &#x27;element&#x27;;
 				}
-				else if (my.particle && my.contains(my.particlenames, this.pivot)) {
-					this.reference = 'particle';
+				else if (my.particle &amp;&amp; my.contains(my.particlenames, this.pivot)) {
+					this.reference = &#x27;particle&#x27;;
 				}
 				else {
 					this.reference = false;
@@ -243,7 +503,7 @@ A __factory__ function to generate new Frame entitys
 			this.changed = false;
 			x = loc.x;
 			y = loc.y;
-			if (this.reference === 'data') {
+			if (this.reference === &#x27;data&#x27;) {
 				this.setLocalFromData();
 			}
 			else if (this.lock) {
@@ -262,10 +522,10 @@ A __factory__ function to generate new Frame entitys
 			}
 			else if (this.pivot) {
 				switch (this.reference) {
-					case 'point':
+					case &#x27;point&#x27;:
 						e = my.point[this.pivot].local;
 						break;
-					case 'particle':
+					case &#x27;particle&#x27;:
 						e = my.particle[this.pivot].place;
 						break;
 					default:
@@ -300,20 +560,20 @@ Data should always be an array in the form [x, y, z]
 		/**
 @method setLocalFromDataString
 @param {String} item percentage string or string position value
-@param {Number} dimension Host's cell's actualWidth or actualHeight
+@param {Number} dimension Host&#x27;s cell&#x27;s actualWidth or actualHeight
 @return Number calculated position value
 @chainable
 @private
 **/
 		my.FramePoint.prototype.setLocalFromDataString = function(item, dimension) {
 			switch (item) {
-				case 'top':
-				case 'left':
+				case &#x27;top&#x27;:
+				case &#x27;left&#x27;:
 					return 0;
-				case 'right':
-				case 'bottom':
+				case &#x27;right&#x27;:
+				case &#x27;bottom&#x27;:
 					return dimension;
-				case 'center':
+				case &#x27;center&#x27;:
 					return dimension / 2;
 				default:
 					return (parseFloat(item) / 100) * dimension;
@@ -329,13 +589,13 @@ Data should always be an array in the form [x, y, z]
 			var here,
 				e = my.entity[this.path],
 				local = this.local;
-			if (e && e.type === 'Path') {
+			if (e &amp;&amp; e.type === &#x27;Path&#x27;) {
 				if (this.deltaPathPlace) {
 					this.pathPlace += this.deltaPathPlace;
-					if (this.pathPlace > 1) {
+					if (this.pathPlace &gt; 1) {
 						this.pathPlace -= 1;
 					}
-					else if (this.pathPlace < 0) {
+					else if (this.pathPlace &lt; 0) {
 						this.pathPlace += 1;
 					}
 				}
@@ -372,7 +632,7 @@ Data should always be an array in the form [x, y, z]
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 
-			this.cornersDataArrayOrder = my.xtGet(items.cornersDataArrayOrder, ['tlx', 'tly', 'trx', 'try', 'brx', 'bry', 'blx', 'bly']);
+			this.cornersDataArrayOrder = my.xtGet(items.cornersDataArrayOrder, [&#x27;tlx&#x27;, &#x27;tly&#x27;, &#x27;trx&#x27;, &#x27;try&#x27;, &#x27;brx&#x27;, &#x27;bry&#x27;, &#x27;blx&#x27;, &#x27;bly&#x27;]);
 
 			this.topLeft = false;
 			this.topRight = false;
@@ -390,37 +650,37 @@ Data should always be an array in the form [x, y, z]
 			this.copy = {
 				x: get(items.copyX, 0),
 				y: get(items.copyY, 0),
-				w: get(items.copyWidth, '100%'),
-				h: get(items.copyHeight, '100%')
+				w: get(items.copyWidth, &#x27;100%&#x27;),
+				h: get(items.copyHeight, &#x27;100%&#x27;)
 			};
 			this.currentCopy = {
 				flag: false
 			};
 
-			this.cell = document.createElement('canvas');
-			this.engine = this.cell.getContext('2d');
+			this.cell = document.createElement(&#x27;canvas&#x27;);
+			this.engine = this.cell.getContext(&#x27;2d&#x27;);
 
 			this.interferenceLoops = get(items.interferenceLoops, 2);
 			this.interferenceFactor = get(items.interferenceFactor, 1.03);
 
-			this.method = get(items.method, 'fill');
+			this.method = get(items.method, &#x27;fill&#x27;);
 			this.visibility = get(items.visibility, true);
 			this.order = get(items.order, 0);
 
 			this.globalAlpha = get(items.globalAlpha, 1);
-			this.globalCompositeOperation = get(items.globalCompositeOperation, 'source-over');
+			this.globalCompositeOperation = get(items.globalCompositeOperation, &#x27;source-over&#x27;);
 
 			this.lineWidth = get(items.lineWidth, 0);
-			this.lineCap = get(items.lineCap, 'butt');
-			this.lineJoin = get(items.lineJoin, 'miter');
+			this.lineCap = get(items.lineCap, &#x27;butt&#x27;);
+			this.lineJoin = get(items.lineJoin, &#x27;miter&#x27;);
 			this.lineDash = get(items.lineDash, []);
 			this.lineDashOffset = get(items.lineDashOffset, 0);
 			this.miterLimit = get(items.miterLimit, 10);
-			this.strokeStyle = get(items.strokeStyle, '#000000');
+			this.strokeStyle = get(items.strokeStyle, &#x27;#000000&#x27;);
 			this.shadowOffsetX = get(items.shadowOffsetX, 0);
 			this.shadowOffsetY = get(items.shadowOffsetY, 0);
 			this.shadowBlur = get(items.shadowBlur, 0);
-			this.shadowColor = get(items.shadowColor, '#000000');
+			this.shadowColor = get(items.shadowColor, &#x27;#000000&#x27;);
 
 			this.group = my.Entity.prototype.getGroup.call(this, items);
 
@@ -454,11 +714,11 @@ Data should always be an array in the form [x, y, z]
 		/**
 @property type
 @type String
-@default 'Frame'
+@default &#x27;Frame&#x27;
 @final
 **/
-		my.Frame.prototype.type = 'Frame';
-		my.Frame.prototype.classname = 'entitynames';
+		my.Frame.prototype.type = &#x27;Frame&#x27;;
+		my.Frame.prototype.classname = &#x27;entitynames&#x27;;
 		my.work.d.Frame = {
 			topLeft: false,
 			topRight: false,
@@ -470,24 +730,24 @@ Data should always be an array in the form [x, y, z]
 			localHeight: 1,
 			referencePoint: false,
 			currentFrame: false,
-			method: 'fill',
+			method: &#x27;fill&#x27;,
 			visibility: true,
 			order: 0,
 			lockFrameTo: false,
 			lockElementAttributes: false,
 			globalAlpha: 1,
-			globalCompositeOperation: 'source-over',
+			globalCompositeOperation: &#x27;source-over&#x27;,
 			lineWidth: 0,
-			lineCap: 'butt',
-			lineJoin: 'miter',
+			lineCap: &#x27;butt&#x27;,
+			lineJoin: &#x27;miter&#x27;,
 			lineDash: [],
 			lineDashOffset: 0,
 			miterLimit: 10,
-			strokeStyle: '#000000',
+			strokeStyle: &#x27;#000000&#x27;,
 			shadowOffsetX: 0,
 			shadowOffsetY: 0,
 			shadowBlur: 0,
-			shadowColor: '#000000',
+			shadowColor: &#x27;#000000&#x27;,
 			source: false,
 			sourceType: false,
 			cell: false,
@@ -496,7 +756,7 @@ Data should always be an array in the form [x, y, z]
 			filterOnStroke: false,
 			pivot: false,
 			path: false,
-			mouseIndex: 'mouse',
+			mouseIndex: &#x27;mouse&#x27;,
 			flipReverse: false,
 			flipUpend: false,
 			lockX: false,
@@ -610,21 +870,21 @@ Augments Base.clone()
 				order,
 				cell;
 			items = my.safeObject(items);
-			corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
-			cornersX = ['tlx', 'trx', 'brx', 'blx'];
-			cornersY = ['tly', 'try', 'bry', 'bly'];
+			corners = [&#x27;topLeft&#x27;, &#x27;topRight&#x27;, &#x27;bottomRight&#x27;, &#x27;bottomLeft&#x27;];
+			cornersX = [&#x27;tlx&#x27;, &#x27;trx&#x27;, &#x27;brx&#x27;, &#x27;blx&#x27;];
+			cornersY = [&#x27;tly&#x27;, &#x27;try&#x27;, &#x27;bry&#x27;, &#x27;bly&#x27;];
 			makeFramePoint = my.makeFramePoint;
 			cell = my.cell[my.group[this.group].cell];
 			get = my.xtGet;
 			xt = my.xt;
 			xto = my.xto;
 			order = this.cornersDataArrayOrder;
-			for (i = 0; i < 4; i++) {
+			for (i = 0; i &lt; 4; i++) {
 				temp = {};
 				corner = corners[i];
 				if (!this[corner]) {
 					this[corner] = makeFramePoint({
-						name: this.name + '_' + corner,
+						name: this.name + &#x27;_&#x27; + corner,
 						host: this.name
 					});
 				}
@@ -645,15 +905,15 @@ Augments Base.clone()
 					temp.lockCorner = corner;
 					this.redraw = true;
 				}
-				temp.path = get(items[corner + 'Path'], this[corner].path);
-				temp.pathPlace = get(items[corner + 'PathPlace'], this[corner].pathPlace);
-				temp.deltaPathPlace = get(items[corner + 'DeltaPathPlace'], this[corner].deltaPathPlace);
-				temp.pathSpeedConstant = get(items[corner + 'PathSpeedConstant'], this[corner].pathSpeedConstant);
-				temp.pivot = get(items[corner + 'Pivot'], this[corner].pivot);
-				temp.lockX = get(items[corner + 'LockX'], this[corner].lockX);
-				temp.lockY = get(items[corner + 'LockY'], this[corner].lockY);
+				temp.path = get(items[corner + &#x27;Path&#x27;], this[corner].path);
+				temp.pathPlace = get(items[corner + &#x27;PathPlace&#x27;], this[corner].pathPlace);
+				temp.deltaPathPlace = get(items[corner + &#x27;DeltaPathPlace&#x27;], this[corner].deltaPathPlace);
+				temp.pathSpeedConstant = get(items[corner + &#x27;PathSpeedConstant&#x27;], this[corner].pathSpeedConstant);
+				temp.pivot = get(items[corner + &#x27;Pivot&#x27;], this[corner].pivot);
+				temp.lockX = get(items[corner + &#x27;LockX&#x27;], this[corner].lockX);
+				temp.lockY = get(items[corner + &#x27;LockY&#x27;], this[corner].lockY);
 				this[corner].set(temp);
-				if (xto(items[corner + 'Path'], items[corner + 'PathPlace'], items[corner + 'Pivot'])) {
+				if (xto(items[corner + &#x27;Path&#x27;], items[corner + &#x27;PathPlace&#x27;], items[corner + &#x27;Pivot&#x27;])) {
 					this.redraw = true;
 				}
 			}
@@ -679,9 +939,9 @@ Augments Base.clone()
 					bottomRight: {},
 					bottomLeft: {}
 				},
-				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+				corners = [&#x27;topLeft&#x27;, &#x27;topRight&#x27;, &#x27;bottomRight&#x27;, &#x27;bottomLeft&#x27;],
 				corner;
-			for (var i = 0; i < 4; i++) {
+			for (var i = 0; i &lt; 4; i++) {
 				corner = corners[i];
 				result[corner].x = this[corner].local.x || 0;
 				result[corner].y = this[corner].local.y || 0;
@@ -697,10 +957,10 @@ Augments Base.clone()
 **/
 		my.Frame.prototype.checkCorners = function() {
 			var i,
-				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+				corners = [&#x27;topLeft&#x27;, &#x27;topRight&#x27;, &#x27;bottomRight&#x27;, &#x27;bottomLeft&#x27;],
 				corner,
 				result = false;
-			for (i = 0; i < 4; i++) {
+			for (i = 0; i &lt; 4; i++) {
 				corner = corners[i];
 				if (this.lockFrameTo || this.pivot || this.path || this[corner].pivot || this[corner].path) {
 					this[corner].setLocal();
@@ -762,7 +1022,7 @@ Augments Base.clone()
 			if (items.strokeStyle) {
 				design = my.design[items.strokeStyle];
 				if (my.xt(design)) {
-					if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], design.type)) {
+					if (my.contains([&#x27;Gradient&#x27;, &#x27;RadialGradient&#x27;, &#x27;Pattern&#x27;], design.type)) {
 						design.update(this.name, my.group[this.group].cell);
 					}
 					strokeStyle = design.getData();
@@ -829,7 +1089,7 @@ Augments Base.clone()
 			if (record.strokeStyle != this.strokeStyle) {
 				if (my.xt(my.design[this.strokeStyle])) {
 					design = my.design[this.strokeStyle];
-					if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], design.type)) {
+					if (my.contains([&#x27;Gradient&#x27;, &#x27;RadialGradient&#x27;, &#x27;Pattern&#x27;], design.type)) {
 						design.update(this.name, my.group[this.group].cell);
 					}
 					strokeStyle = design.getData();
@@ -858,7 +1118,7 @@ Augments Base.clone()
 			var so = my.safeObject,
 				lockFrameTo = this.lockFrameTo,
 				el = my.xtGet(so(my.stack)[lockFrameTo], so(my.pad)[lockFrameTo], so(my.element)[lockFrameTo], false),
-				corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+				corners = [&#x27;topLeft&#x27;, &#x27;topRight&#x27;, &#x27;bottomRight&#x27;, &#x27;bottomLeft&#x27;],
 				corner,
 				parent, stack, temp,
 				i;
@@ -866,12 +1126,12 @@ Augments Base.clone()
 				parent = my.pad[my.cell[my.group[this.group].cell].pad].group;
 				if (parent) {
 					stack = my.stack[parent];
-					temp = document.createElement('div');
+					temp = document.createElement(&#x27;div&#x27;);
 					temp.id = lockFrameTo;
 					document.body.appendChild(temp);
 					el = stack.addElementById(lockFrameTo);
 					el.set({
-						translateZ: stack.get('translateZ') - 2,
+						translateZ: stack.get(&#x27;translateZ&#x27;) - 2,
 					});
 					this.currentFrame = el;
 				}
@@ -879,7 +1139,7 @@ Augments Base.clone()
 			if (el) {
 				if (!el.topLeft) {
 					el.addCornerTrackers();
-					for (i = 0; i < 4; i++) {
+					for (i = 0; i &lt; 4; i++) {
 						corner = corners[i];
 						if (this[corner].local) {
 							this[corner].local = el[corner];
@@ -894,7 +1154,7 @@ Augments Base.clone()
 @method setLockElementAttributes
 @private
 **/
-		my.Frame.prototype.lockElementAttributesList = ['start', 'startX', 'startY', 'handle', 'handleX', 'handleY', 'deltaStart', 'deltaStartX', 'deltaStartY', 'deltaHandle', 'deltaHandleX', 'deltaHandleY', 'width', 'height', 'scale', 'deltaScale', 'deltaRoll', 'deltaPitch', 'deltaYaw', 'roll', 'pitch', 'yaw', 'includeCornerTrackers', 'pivot', 'path', 'pathPlace', 'deltaPathPlace', 'pathSpeedConstant', 'translate', 'translateX', 'translateY', 'translateZ', 'mouseIndex', 'cursor'];
+		my.Frame.prototype.lockElementAttributesList = [&#x27;start&#x27;, &#x27;startX&#x27;, &#x27;startY&#x27;, &#x27;handle&#x27;, &#x27;handleX&#x27;, &#x27;handleY&#x27;, &#x27;deltaStart&#x27;, &#x27;deltaStartX&#x27;, &#x27;deltaStartY&#x27;, &#x27;deltaHandle&#x27;, &#x27;deltaHandleX&#x27;, &#x27;deltaHandleY&#x27;, &#x27;width&#x27;, &#x27;height&#x27;, &#x27;scale&#x27;, &#x27;deltaScale&#x27;, &#x27;deltaRoll&#x27;, &#x27;deltaPitch&#x27;, &#x27;deltaYaw&#x27;, &#x27;roll&#x27;, &#x27;pitch&#x27;, &#x27;yaw&#x27;, &#x27;includeCornerTrackers&#x27;, &#x27;pivot&#x27;, &#x27;path&#x27;, &#x27;pathPlace&#x27;, &#x27;deltaPathPlace&#x27;, &#x27;pathSpeedConstant&#x27;, &#x27;translate&#x27;, &#x27;translateX&#x27;, &#x27;translateY&#x27;, &#x27;translateZ&#x27;, &#x27;mouseIndex&#x27;, &#x27;cursor&#x27;];
 		my.Frame.prototype.setLockElementAttributes = function(items) {
 			var keys = Object.keys(items),
 				key,
@@ -902,7 +1162,7 @@ Augments Base.clone()
 				i, iz,
 				cont = my.contains,
 				lea = this.lockElementAttributes;
-			for (i = 0, iz = keys.length; i < iz; i++) {
+			for (i = 0, iz = keys.length; i &lt; iz; i++) {
 				key = keys[i];
 				if (cont(whitelist, key)) {
 					lea[key] = items[key];
@@ -1033,7 +1293,7 @@ Entity.stamp hook helper function
 							this.localHeight = height;
 							this.referencePoint.x = xmin;
 							this.referencePoint.y = ymin;
-							if (my.contains(['fill', 'drawFill', 'fillDraw', 'sinkInto', 'floatOver'], this.method)) {
+							if (my.contains([&#x27;fill&#x27;, &#x27;drawFill&#x27;, &#x27;fillDraw&#x27;, &#x27;sinkInto&#x27;, &#x27;floatOver&#x27;], this.method)) {
 
 								this.redraw = false;
 								copy = this.currentCopy;
@@ -1045,7 +1305,7 @@ Entity.stamp hook helper function
 								cv.width = maxDim;
 								cv.height = maxDim;
 								cvx.drawImage(src, copy.x, copy.y, copy.w, copy.h, 0, 0, minDim, minDim);
-								for (i = 0; i <= minDim; i++) {
+								for (i = 0; i &lt;= minDim; i++) {
 									val = i / minDim;
 									sx = getPos(tlx, blx, val) - xmin;
 									sy = getPos(tly, bly, val) - ymin;
@@ -1060,7 +1320,7 @@ Entity.stamp hook helper function
 								}
 								fw = ceil(width);
 								fh = ceil(height);
-								for (i = 0; i < this.interferenceLoops; i++) {
+								for (i = 0; i &lt; this.interferenceLoops; i++) {
 									fw = ceil(fw * iFac);
 									fh = ceil(fh * iFac);
 									cv.width = fw;
@@ -1094,14 +1354,14 @@ Entity.stamp hook helper function
 				current.y = (copy.y.substring) ? conv(copy.y, height) : copy.y;
 				current.w = (copy.w.substring) ? conv(copy.w, width) : copy.w;
 				current.h = (copy.h.substring) ? conv(copy.h, height) : copy.h;
-				current.x = (current.x < 0) ? 0 : current.x;
-				current.y = (current.y < 0) ? 0 : current.y;
-				current.w = (current.w < 1) ? 1 : current.w;
-				current.h = (current.h < 1) ? 1 : current.h;
+				current.x = (current.x &lt; 0) ? 0 : current.x;
+				current.y = (current.y &lt; 0) ? 0 : current.y;
+				current.w = (current.w &lt; 1) ? 1 : current.w;
+				current.h = (current.h &lt; 1) ? 1 : current.h;
 				w = width - current.x;
 				h = height - current.y;
-				current.w = (current.w > w) ? w : current.w;
-				current.h = (current.h > h) ? h : current.h;
+				current.w = (current.w &gt; w) ? w : current.w;
+				current.h = (current.h &gt; h) ? h : current.h;
 				current.flag = true;
 			}
 		};
@@ -1144,7 +1404,7 @@ Entity.stamp hook helper function
 		};
 		my.Frame.prototype.correctCoordinates = my.Position.prototype.correctCoordinates;
 		/**
-Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999
+Set entity&#x27;s pivot to &#x27;mouse&#x27;; set handles to supplied Vector value; set order to +9999
 @method pickupEntity
 @param {Vector} items Coordinate vector; alternatively an object with {x, y} attributes can be used
 @return This
@@ -1155,7 +1415,7 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 			if (cf) {
 				cf.pickupEntity(items);
 				this.oldPivot = this.pivot;
-				this.pivot = 'mouse';
+				this.pivot = &#x27;mouse&#x27;;
 				my.group[this.group].resort = true;
 			}
 			return this;
@@ -1180,8 +1440,8 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 		/**
 Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)
 @method clearShadow
-@param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
+@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
 @return This
 @chainable
 @private
@@ -1244,14 +1504,14 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 			var engine = my.ctx[cellname];
 			this.prepareStamp(ctx, cellname, cell);
 			this.drawPath(ctx, cellname, cell);
-			ctx.globalCompositeOperation = 'destination-out';
-			ctx.fillStyle = '#000000';
-			ctx.strokeStyle = '#000000';
+			ctx.globalCompositeOperation = &#x27;destination-out&#x27;;
+			ctx.fillStyle = &#x27;#000000&#x27;;
+			ctx.strokeStyle = &#x27;#000000&#x27;;
 			ctx.fill();
 			ctx.stroke();
-			ctx.fillStyle = engine.get('fillStyle');
-			ctx.strokeStyle = engine.get('strokeStyle');
-			ctx.globalCompositeOperation = engine.get('globalCompositeOperation');
+			ctx.fillStyle = engine.get(&#x27;fillStyle&#x27;);
+			ctx.strokeStyle = engine.get(&#x27;strokeStyle&#x27;);
+			ctx.globalCompositeOperation = engine.get(&#x27;globalCompositeOperation&#x27;);
 			return this;
 		};
 		/**
@@ -1259,17 +1519,17 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 **/
 		my.Frame.prototype.clearWithBackground = function(ctx, cellname, cell) {
 			var engine = my.ctx[cellname],
-				color = my.cell[cellname].get('backgroundColor');
+				color = my.cell[cellname].get(&#x27;backgroundColor&#x27;);
 			this.prepareStamp(ctx, cellname, cell);
 			this.drawPath(ctx, cellname, cell);
-			ctx.globalCompositeOperation = 'destination-out';
+			ctx.globalCompositeOperation = &#x27;destination-out&#x27;;
 			ctx.fillStyle = color;
 			ctx.strokeStyle = color;
 			ctx.fill();
 			ctx.stroke();
-			ctx.fillStyle = engine.get('fillStyle');
-			ctx.strokeStyle = engine.get('strokeStyle');
-			ctx.globalCompositeOperation = engine.get('globalCompositeOperation');
+			ctx.fillStyle = engine.get(&#x27;fillStyle&#x27;);
+			ctx.strokeStyle = engine.get(&#x27;strokeStyle&#x27;);
+			ctx.globalCompositeOperation = engine.get(&#x27;globalCompositeOperation&#x27;);
 			return this;
 		};
 		/**
@@ -1350,7 +1610,7 @@ Stamp helper function - clear shadow parameters during a multi draw operation (d
 				i, iz;
 			cvx.setTransform(1, 0, 0, 1, 0, 0);
 			this.drawPath(cvx);
-			for (i = 0, iz = tests.length; i < iz; i += 2) {
+			for (i = 0, iz = tests.length; i &lt; iz; i += 2) {
 				result = cvx.isPointInPath(tests[i], tests[i + 1]);
 				if (result) {
 					items.x = tests[i];
@@ -1365,10 +1625,10 @@ Calculate the box position of the entity
 
 Returns an object with the following attributes:
 
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
 
 @method getMaxDimensions
 @param {Object} cell object
@@ -1389,7 +1649,7 @@ Returns an object with the following attributes:
 			tr = this.topRight;
 			br = this.bottomRight;
 			bl = this.bottomLeft;
-			cell = (cell && cell.type === 'Cell') ? cell : my.cell[my.group[this.group].cell];
+			cell = (cell &amp;&amp; cell.type === &#x27;Cell&#x27;) ? cell : my.cell[my.group[this.group].cell];
 			if (my.xta(tl, tr, br, bl)) {
 				tlloc = tl.local;
 				trloc = tr.local;
@@ -1413,16 +1673,16 @@ Returns an object with the following attributes:
 			halfW = w / 2;
 			halfH = h / 2;
 			if (!between(t, 0, h, true)) {
-				t = (t > halfH) ? h : 0;
+				t = (t &gt; halfH) ? h : 0;
 			}
 			if (!between(b, 0, h, true)) {
-				b = (b > halfH) ? h : 0;
+				b = (b &gt; halfH) ? h : 0;
 			}
 			if (!between(l, 0, w, true)) {
-				l = (l > halfW) ? w : 0;
+				l = (l &gt; halfW) ? w : 0;
 			}
 			if (!between(r, 0, w, true)) {
-				r = (r > halfW) ? w : 0;
+				r = (r &gt; halfW) ? w : 0;
 			}
 			this.maxDimensions.top = t;
 			this.maxDimensions.bottom = b;
@@ -1433,7 +1693,7 @@ Returns an object with the following attributes:
 		};
 
 		/**
-reciprocal assignment - also occurs in scrawlFilters as there's no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first
+reciprocal assignment - also occurs in scrawlFilters as there&#x27;s no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first
 @method stampFilterActions
 @private
 **/
@@ -1445,3 +1705,23 @@ reciprocal assignment - also occurs in scrawlFilters as there's no way to tell w
 		return my;
 	}(scrawl));
 }
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

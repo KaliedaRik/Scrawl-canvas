@@ -1629,11 +1629,11 @@ Set helpere function
 				conv = this.numberConvert,
 				cell = my.cell[my.group[e.group].cell];
 			loc.x = (curr.x.substring) ? conv(curr.x, cell.actualWidth) : curr.x;
-			if(isNaN(loc.x)){
+			if (isNaN(loc.x)) {
 				loc.x = 0;
 			}
 			loc.y = (curr.y.substring) ? conv(curr.y, cell.actualHeight) : curr.y;
-			if(isNaN(loc.y)){
+			if (isNaN(loc.y)) {
 				loc.y = 0;
 			}
 			this.fixed = (curr.x.substring || curr.y.substring) ? true : this.fixed;

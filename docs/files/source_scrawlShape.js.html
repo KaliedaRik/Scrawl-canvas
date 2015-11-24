@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -285,7 +293,7 @@ The Shape module adds Shape entitys - path-based objects - to the core module
 @module scrawlShape
 **/
 
-if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.contains(window.scrawl.modules, &#x27;shape&#x27;)) {
+if (window.scrawl &amp;&amp; window.scrawl.work.extensions &amp;&amp; !window.scrawl.contains(window.scrawl.work.extensions, &#x27;shape&#x27;)) {
 	var scrawl = (function(my) {
 		&#x27;use strict&#x27;;
 
@@ -346,11 +354,12 @@ Additional factory functions to instantiate Shape objects are available in the _
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Shape = function Shape(items) {
-			items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
+			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
-			this.isLine = (my.isa(items.isLine, &#x27;bool&#x27;)) ? items.isLine : true;
+			this.isLine = (my.isa_bool(items.isLine)) ? items.isLine : true;
 			this.dataSet = (my.xt(this.data)) ? this.buildDataSet(this.data) : &#x27;&#x27;;
+			this.winding = my.xtGet(items.winding, &#x27;nonzero&#x27;);
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
@@ -364,7 +373,7 @@ Additional factory functions to instantiate Shape objects are available in the _
 **/
 		my.Shape.prototype.type = &#x27;Shape&#x27;;
 		my.Shape.prototype.classname = &#x27;entitynames&#x27;;
-		my.d.Shape = {
+		my.work.d.Shape = {
 			/**
 Interpreted path data - calculated by scrawl from the data attribute
 @property dataSet
@@ -389,8 +398,15 @@ Shape entity default method attribute is &#x27;draw&#x27;, not &#x27;fill&#x27;
 @default &#x27;draw&#x27;
 **/
 			method: &#x27;draw&#x27;,
+			/**
+Winding value
+@property winding
+@type String
+@default &#x27;non-zero&#x27;
+**/
+			winding: &#x27;nonzero&#x27;
 		};
-		my.mergeInto(my.d.Shape, my.d.Entity);
+		my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		/**
 Augments Entity.set()
 @method set
@@ -400,21 +416,11 @@ Augments Entity.set()
 **/
 		my.Shape.prototype.set = function(items) {
 			my.Entity.prototype.set.call(this, items);
-			items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
-			if (my.xt(items.data)) {
+			items = my.safeObject(items);
+			if (my.xt(items.data &amp;&amp; items.data.substring)) {
 				this.dataSet = this.buildDataSet(this.data);
-				this.offset.flag = false;
 			}
 			return this;
-		};
-		/**
-Augments Position.getPivotOffsetVector()
-@method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity drawing should start
-@private
-**/
-		my.Shape.prototype.getPivotOffsetVector = function() {
-			return (this.isLine) ? my.Entity.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
 		};
 		/**
 Constructor, clone and set helper function
@@ -584,7 +590,7 @@ Helper function - define the entity&#x27;s path on the &amp;lt;canvas&amp;gt; el
 @private
 **/
 		my.Shape.prototype.doOutline = function(ctx, cell) {
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			if (!this.dataSet &amp;&amp; this.data) {
 				this.buildDataSet(this.data);
 			}
@@ -613,8 +619,194 @@ Helper function - define the entity&#x27;s path on the &amp;lt;canvas&amp;gt; el
 				d,
 				tempX,
 				tempY;
+			var myshape = {
+				M: function(item) {
+					currentX = d.p[0];
+					currentY = d.p[1];
+					reflectX = currentX;
+					reflectY = currentY;
+					ctx.moveTo((currentX * item.scale), (currentY * item.scale));
+					for (k = 2, kz = d.p.length; k &lt; kz; k += 2) {
+						currentX = d.p[k];
+						currentY = d.p[k + 1];
+						reflectX = currentX;
+						reflectY = currentY;
+						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
+					}
+				},
+				m: function(item) {
+					currentX += d.p[0];
+					currentY += d.p[1];
+					reflectX = currentX;
+					reflectY = currentY;
+					ctx.moveTo((currentX * item.scale), (currentY * item.scale));
+					for (k = 2, kz = d.p.length; k &lt; kz; k += 2) {
+						currentX += d.p[k];
+						currentY += d.p[k + 1];
+						reflectX = currentX;
+						reflectY = currentY;
+						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
+					}
+				},
+				Z: function(item) {
+					ctx.closePath();
+				},
+				z: function(item) {
+					ctx.closePath();
+				},
+				L: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 2) {
+						currentX = d.p[k];
+						currentY = d.p[k + 1];
+						reflectX = currentX;
+						reflectY = currentY;
+						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
+					}
+				},
+				l: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 2) {
+						currentX += d.p[k];
+						currentY += d.p[k + 1];
+						reflectX = currentX;
+						reflectY = currentY;
+						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
+					}
+				},
+				H: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k++) {
+						currentX = d.p[k];
+						reflectX = currentX;
+						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
+					}
+				},
+				h: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k++) {
+						currentX += d.p[k];
+						reflectX = currentX;
+						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
+					}
+				},
+				V: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k++) {
+						currentY = d.p[k];
+						reflectY = currentY;
+						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
+					}
+				},
+				v: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k++) {
+						currentY += d.p[k];
+						reflectY = currentY;
+						ctx.lineTo((currentX * item.scale), (currentY * item.scale));
+					}
+				},
+				C: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 6) {
+						ctx.bezierCurveTo((d.p[k] * item.scale), (d.p[k + 1] * item.scale), (d.p[k + 2] * item.scale), (d.p[k + 3] * item.scale), (d.p[k + 4] * item.scale), (d.p[k + 5] * item.scale));
+						reflectX = d.p[k + 2];
+						reflectY = d.p[k + 3];
+						currentX = d.p[k + 4];
+						currentY = d.p[k + 5];
+					}
+				},
+				c: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 6) {
+						ctx.bezierCurveTo(((currentX + d.p[k]) * item.scale), ((currentY + d.p[k + 1]) * item.scale), ((currentX + d.p[k + 2]) * item.scale), ((currentY + d.p[k + 3]) * item.scale), ((currentX + d.p[k + 4]) * item.scale), ((currentY + d.p[k + 5]) * item.scale));
+						reflectX = currentX + d.p[k + 2];
+						reflectY = currentY + d.p[k + 3];
+						currentX += d.p[k + 4];
+						currentY += d.p[k + 5];
+					}
+				},
+				S: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 4) {
+						if (i &gt; 0 &amp;&amp; my.contains(stat2, item.dataSet[i - 1].c)) {
+							tempX = currentX + (currentX - reflectX);
+							tempY = currentY + (currentY - reflectY);
+						}
+						else {
+							tempX = currentX;
+							tempY = currentY;
+						}
+						ctx.bezierCurveTo((tempX * item.scale), (tempY * item.scale), (d.p[k] * item.scale), (d.p[k + 1] * item.scale), (d.p[k + 2] * item.scale), (d.p[k + 3] * item.scale));
+						reflectX = d.p[k];
+						reflectY = d.p[k + 1];
+						currentX = d.p[k + 2];
+						currentY = d.p[k + 3];
+					}
+				},
+				s: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 4) {
+						if (i &gt; 0 &amp;&amp; my.contains(stat2, item.dataSet[i - 1].c)) {
+							tempX = currentX + (currentX - reflectX);
+							tempY = currentY + (currentY - reflectY);
+						}
+						else {
+							tempX = currentX;
+							tempY = currentY;
+						}
+						ctx.bezierCurveTo((tempX * item.scale), (tempY * item.scale), ((currentX + d.p[k]) * item.scale), ((currentY + d.p[k + 1]) * item.scale), ((currentX + d.p[k + 2]) * item.scale), ((currentY + d.p[k + 3]) * item.scale));
+						reflectX = currentX + d.p[k];
+						reflectY = currentY + d.p[k + 1];
+						currentX += d.p[k + 2];
+						currentY += d.p[k + 3];
+					}
+				},
+				Q: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 4) {
+						ctx.quadraticCurveTo((d.p[k] * item.scale), (d.p[k + 1] * item.scale), (d.p[k + 2] * item.scale), (d.p[k + 3] * item.scale));
+						reflectX = d.p[k];
+						reflectY = d.p[k + 1];
+						currentX = d.p[k + 2];
+						currentY = d.p[k + 3];
+					}
+				},
+				q: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 4) {
+						ctx.quadraticCurveTo(((currentX + d.p[k]) * item.scale), ((currentY + d.p[k + 1]) * item.scale), ((currentX + d.p[k + 2]) * item.scale), ((currentY + d.p[k + 3]) * item.scale));
+						reflectX = currentX + d.p[k];
+						reflectY = currentY + d.p[k + 1];
+						currentX += d.p[k + 2];
+						currentY += d.p[k + 3];
+					}
+				},
+				T: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 2) {
+						if (i &gt; 0 &amp;&amp; my.contains(stat3, item.dataSet[i - 1].c)) {
+							tempX = currentX + (currentX - reflectX);
+							tempY = currentY + (currentY - reflectY);
+						}
+						else {
+							tempX = currentX;
+							tempY = currentY;
+						}
+						ctx.quadraticCurveTo((tempX * item.scale), (tempY * item.scale), (d.p[k] * item.scale), (d.p[k + 1] * item.scale));
+						reflectX = tempX;
+						reflectY = tempY;
+						currentX = d.p[k];
+						currentY = d.p[k + 1];
+					}
+				},
+				t: function(item) {
+					for (k = 0, kz = d.p.length; k &lt; kz; k += 2) {
+						if (i &gt; 0 &amp;&amp; my.contains(stat3, item.dataSet[i - 1].c)) {
+							tempX = currentX + (currentX - reflectX);
+							tempY = currentY + (currentY - reflectY);
+						}
+						else {
+							tempX = currentX;
+							tempY = currentY;
+						}
+						ctx.quadraticCurveTo((tempX * item.scale), (tempY * item.scale), ((currentX + d.p[k]) * item.scale), ((currentY + d.p[k + 1]) * item.scale));
+						reflectX = tempX;
+						reflectY = tempY;
+						currentX += d.p[k];
+						currentY += d.p[k + 1];
+					}
+				}
+			};
 			if (this.dataSet) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				currentX = 0;
 				currentY = 0;
 				reflectX = 0;
@@ -627,190 +819,7 @@ Helper function - define the entity&#x27;s path on the &amp;lt;canvas&amp;gt; el
 				}
 				for (i = 0, iz = this.dataSet.length; i &lt; iz; i++) {
 					d = this.dataSet[i];
-					switch (d.c) {
-						case &#x27;M&#x27;:
-							currentX = d.p[0];
-							currentY = d.p[1];
-							reflectX = currentX;
-							reflectY = currentY;
-							ctx.moveTo((currentX * this.scale), (currentY * this.scale));
-							for (k = 2, kz = d.p.length; k &lt; kz; k += 2) {
-								currentX = d.p[k];
-								currentY = d.p[k + 1];
-								reflectX = currentX;
-								reflectY = currentY;
-								ctx.lineTo((currentX * this.scale), (currentY * this.scale));
-							}
-							break;
-						case &#x27;m&#x27;:
-							currentX += d.p[0];
-							currentY += d.p[1];
-							reflectX = currentX;
-							reflectY = currentY;
-							ctx.moveTo((currentX * this.scale), (currentY * this.scale));
-							for (k = 2, kz = d.p.length; k &lt; kz; k += 2) {
-								currentX += d.p[k];
-								currentY += d.p[k + 1];
-								reflectX = currentX;
-								reflectY = currentY;
-								ctx.lineTo((currentX * this.scale), (currentY * this.scale));
-							}
-							break;
-						case &#x27;Z&#x27;:
-						case &#x27;z&#x27;:
-							ctx.closePath();
-							break;
-						case &#x27;L&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 2) {
-								currentX = d.p[k];
-								currentY = d.p[k + 1];
-								reflectX = currentX;
-								reflectY = currentY;
-								ctx.lineTo((currentX * this.scale), (currentY * this.scale));
-							}
-							break;
-						case &#x27;l&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 2) {
-								currentX += d.p[k];
-								currentY += d.p[k + 1];
-								reflectX = currentX;
-								reflectY = currentY;
-								ctx.lineTo((currentX * this.scale), (currentY * this.scale));
-							}
-							break;
-						case &#x27;H&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k++) {
-								currentX = d.p[k];
-								reflectX = currentX;
-								ctx.lineTo((currentX * this.scale), (currentY * this.scale));
-							}
-							break;
-						case &#x27;h&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k++) {
-								currentX += d.p[k];
-								reflectX = currentX;
-								ctx.lineTo((currentX * this.scale), (currentY * this.scale));
-							}
-							break;
-						case &#x27;V&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k++) {
-								currentY = d.p[k];
-								reflectY = currentY;
-								ctx.lineTo((currentX * this.scale), (currentY * this.scale));
-							}
-							break;
-						case &#x27;v&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k++) {
-								currentY += d.p[k];
-								reflectY = currentY;
-								ctx.lineTo((currentX * this.scale), (currentY * this.scale));
-							}
-							break;
-						case &#x27;C&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 6) {
-								ctx.bezierCurveTo((d.p[k] * this.scale), (d.p[k + 1] * this.scale), (d.p[k + 2] * this.scale), (d.p[k + 3] * this.scale), (d.p[k + 4] * this.scale), (d.p[k + 5] * this.scale));
-								reflectX = d.p[k + 2];
-								reflectY = d.p[k + 3];
-								currentX = d.p[k + 4];
-								currentY = d.p[k + 5];
-							}
-							break;
-						case &#x27;c&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 6) {
-								ctx.bezierCurveTo(((currentX + d.p[k]) * this.scale), ((currentY + d.p[k + 1]) * this.scale), ((currentX + d.p[k + 2]) * this.scale), ((currentY + d.p[k + 3]) * this.scale), ((currentX + d.p[k + 4]) * this.scale), ((currentY + d.p[k + 5]) * this.scale));
-								reflectX = currentX + d.p[k + 2];
-								reflectY = currentY + d.p[k + 3];
-								currentX += d.p[k + 4];
-								currentY += d.p[k + 5];
-							}
-							break;
-						case &#x27;S&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 4) {
-								if (i &gt; 0 &amp;&amp; my.contains(stat2, this.dataSet[i - 1].c)) {
-									tempX = currentX + (currentX - reflectX);
-									tempY = currentY + (currentY - reflectY);
-								}
-								else {
-									tempX = currentX;
-									tempY = currentY;
-								}
-								ctx.bezierCurveTo((tempX * this.scale), (tempY * this.scale), (d.p[k] * this.scale), (d.p[k + 1] * this.scale), (d.p[k + 2] * this.scale), (d.p[k + 3] * this.scale));
-								reflectX = d.p[k];
-								reflectY = d.p[k + 1];
-								currentX = d.p[k + 2];
-								currentY = d.p[k + 3];
-							}
-							break;
-						case &#x27;s&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 4) {
-								if (i &gt; 0 &amp;&amp; my.contains(stat2, this.dataSet[i - 1].c)) {
-									tempX = currentX + (currentX - reflectX);
-									tempY = currentY + (currentY - reflectY);
-								}
-								else {
-									tempX = currentX;
-									tempY = currentY;
-								}
-								ctx.bezierCurveTo((tempX * this.scale), (tempY * this.scale), ((currentX + d.p[k]) * this.scale), ((currentY + d.p[k + 1]) * this.scale), ((currentX + d.p[k + 2]) * this.scale), ((currentY + d.p[k + 3]) * this.scale));
-								reflectX = currentX + d.p[k];
-								reflectY = currentY + d.p[k + 1];
-								currentX += d.p[k + 2];
-								currentY += d.p[k + 3];
-							}
-							break;
-						case &#x27;Q&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 4) {
-								ctx.quadraticCurveTo((d.p[k] * this.scale), (d.p[k + 1] * this.scale), (d.p[k + 2] * this.scale), (d.p[k + 3] * this.scale));
-								reflectX = d.p[k];
-								reflectY = d.p[k + 1];
-								currentX = d.p[k + 2];
-								currentY = d.p[k + 3];
-							}
-							break;
-						case &#x27;q&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 4) {
-								ctx.quadraticCurveTo(((currentX + d.p[k]) * this.scale), ((currentY + d.p[k + 1]) * this.scale), ((currentX + d.p[k + 2]) * this.scale), ((currentY + d.p[k + 3]) * this.scale));
-								reflectX = currentX + d.p[k];
-								reflectY = currentY + d.p[k + 1];
-								currentX += d.p[k + 2];
-								currentY += d.p[k + 3];
-							}
-							break;
-						case &#x27;T&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 2) {
-								if (i &gt; 0 &amp;&amp; my.contains(stat3, this.dataSet[i - 1].c)) {
-									tempX = currentX + (currentX - reflectX);
-									tempY = currentY + (currentY - reflectY);
-								}
-								else {
-									tempX = currentX;
-									tempY = currentY;
-								}
-								ctx.quadraticCurveTo((tempX * this.scale), (tempY * this.scale), (d.p[k] * this.scale), (d.p[k + 1] * this.scale));
-								reflectX = tempX;
-								reflectY = tempY;
-								currentX = d.p[k];
-								currentY = d.p[k + 1];
-							}
-							break;
-						case &#x27;t&#x27;:
-							for (k = 0, kz = d.p.length; k &lt; kz; k += 2) {
-								if (i &gt; 0 &amp;&amp; my.contains(stat3, this.dataSet[i - 1].c)) {
-									tempX = currentX + (currentX - reflectX);
-									tempY = currentY + (currentY - reflectY);
-								}
-								else {
-									tempX = currentX;
-									tempY = currentY;
-								}
-								ctx.quadraticCurveTo((tempX * this.scale), (tempY * this.scale), ((currentX + d.p[k]) * this.scale), ((currentY + d.p[k + 1]) * this.scale));
-								reflectX = tempX;
-								reflectY = tempY;
-								currentX += d.p[k];
-								currentY += d.p[k + 1];
-							}
-							break;
-					}
+					myshape[d.c](this);
 				}
 			}
 			return this;
@@ -824,10 +833,10 @@ Stamp helper function - perform a &#x27;clip&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.clip = function(ctx, cell) {
+		my.Shape.prototype.clip = function(ctx, cellname, cell) {
 			ctx.save();
 			this.doOutline(ctx, cell);
-			ctx.clip(my.ctx[this.context].get(&#x27;winding&#x27;));
+			ctx.clip(this.winding);
 			return this;
 		};
 		/**
@@ -839,9 +848,8 @@ Stamp helper function - perform a &#x27;clear&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.clear = function(ctx, cell) {
-			cell = my.cell[cell];
-			this.clip(ctx, cell);
+		my.Shape.prototype.clear = function(ctx, cellname, cell) {
+			this.clip(ctx, cellname, cell);
 			ctx.clearRect(0, 0, cell.get(&#x27;actualWidth&#x27;), cell.get(&#x27;.actualHeight&#x27;));
 			ctx.restore();
 			return this;
@@ -855,12 +863,11 @@ Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.clearWithBackground = function(ctx, cell) {
-			cell = my.cell[cell];
-			this.clip(ctx, cell);
-			ctx.fillStyle = c.backgroundColor;
-			ctx.fillRect(0, 0, cell.get(&#x27;actualWidth&#x27;), cell.get(&#x27;actualHeight&#x27;));
-			ctx.fillStyle = my.ctx[cell].get(&#x27;fillStyle&#x27;);
+		my.Shape.prototype.clearWithBackground = function(ctx, cellname, cell) {
+			this.clip(ctx, cellname, cell);
+			ctx.fillStyle = cell.backgroundColor;
+			ctx.fillRect(0, 0, cellactualWidth, cell.actualHeight);
+			ctx.fillStyle = my.ctx[cellname].get(&#x27;fillStyle&#x27;);
 			ctx.restore();
 			return this;
 		};
@@ -873,7 +880,7 @@ Stamp helper function - perform a &#x27;draw&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.draw = function(ctx, cell) {
+		my.Shape.prototype.draw = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
 			ctx.stroke();
 			return this;
@@ -887,9 +894,9 @@ Stamp helper function - perform a &#x27;fill&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.fill = function(ctx, cell) {
+		my.Shape.prototype.fill = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			ctx.fill(this.winding);
 			return this;
 		};
 		/**
@@ -901,11 +908,11 @@ Stamp helper function - perform a &#x27;drawFill&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.drawFill = function(ctx, cell) {
+		my.Shape.prototype.drawFill = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
 			ctx.stroke();
 			this.clearShadow(ctx, cell);
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			ctx.fill(this.winding);
 			return this;
 		};
 		/**
@@ -917,9 +924,9 @@ Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.fillDraw = function(ctx, cell) {
+		my.Shape.prototype.fillDraw = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			ctx.fill(this.winding);
 			this.clearShadow(ctx, cell);
 			ctx.stroke();
 			return this;
@@ -933,9 +940,9 @@ Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.sinkInto = function(ctx, cell) {
+		my.Shape.prototype.sinkInto = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			ctx.fill(this.winding);
 			ctx.stroke();
 			return this;
 		};
@@ -948,10 +955,10 @@ Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.floatOver = function(ctx, cell) {
+		my.Shape.prototype.floatOver = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
 			ctx.stroke();
-			ctx.fill(my.ctx[this.context].get(&#x27;winding&#x27;));
+			ctx.fill(this.winding);
 			return this;
 		};
 		/**
@@ -963,7 +970,7 @@ Stamp helper function - perform a &#x27;none&#x27; method draw
 @chainable
 @private
 **/
-		my.Shape.prototype.none = function(ctx, cell) {
+		my.Shape.prototype.none = function(ctx, cellname, cell) {
 			this.doOutline(ctx, cell);
 			return this;
 		};
@@ -984,18 +991,17 @@ Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of v
 		my.Shape.prototype.checkHit = function(items) {
 			var tests,
 				result,
-				winding,
 				i,
-				iz;
-			items = (my.isa(items, &#x27;obj&#x27;)) ? items : {};
+				iz,
+				cvx = my.work.cvx;
+			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
 			result = false;
-			winding = my.ctx[this.context].winding;
-			my.cvx.mozFillRule = winding;
-			my.cvx.msFillRule = winding;
-			this.completeOutline(my.cvx, my.group[this.group].cell);
+			cvx.mozFillRule = this.winding;
+			cvx.msFillRule = this.winding;
+			this.completeOutline(cvx, my.group[this.group].cell);
 			for (i = 0, iz = tests.length; i &lt; iz; i += 2) {
-				result = my.cvx.isPointInPath(tests[i], tests[i + 1], my.ctx[this.context].get(&#x27;winding&#x27;));
+				result = cvx.isPointInPath(tests[i], tests[i + 1], this.winding);
 				if (result) {
 					items.x = tests[i];
 					items.y = tests[i + 1];
@@ -1031,7 +1037,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				h = this.height / 2;
 				this.collisionVectors.length = 0;
 				for (i = 0, iz = p.length; i &lt; iz; i++) {
-					if (my.isa(p[i], &#x27;str&#x27;)) {
+					if (p[i].substring) {
 						switch (p[i]) {
 							case &#x27;start&#x27;:
 								this.collisionVectors.push(0);
@@ -1075,13 +1081,37 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 								break;
 						}
 					}
-					else if (my.isa(p[i], &#x27;vector&#x27;)) {
+					else if (my.isa_vector(p[i])) {
 						this.collisionVectors.push(p[i].x);
 						this.collisionVectors.push(p[i].y);
 					}
 				}
 			}
 			return this;
+		};
+		/**
+Calculate the box position of the entity
+
+Returns an object with the following attributes:
+
+* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
+
+@method getMaxDimensions
+@param {Object} cell object
+@param {Object} entity object
+@return dimensions object
+@private
+**/
+		my.Shape.prototype.getMaxDimensions = function(cell) {
+			this.maxDimensions.top = 0;
+			this.maxDimensions.bottom = cell.actualHeight;
+			this.maxDimensions.left = 0;
+			this.maxDimensions.right = cell.actualWidth;
+			this.maxDimensions.flag = false;
+			return this.maxDimensions;
 		};
 
 		return my;

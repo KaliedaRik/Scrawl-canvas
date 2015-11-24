@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -344,6 +352,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_addCornerTrackers">addCornerTrackers</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_addStackToPage">addStackToPage</a>
 
@@ -365,6 +380,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_dropEntity">dropEntity</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private">
                                 <a href="#method_getCanvases">getCanvases</a>
 
@@ -380,7 +402,7 @@
                             </li>
                         
                             <li class="index-item method private">
-                                <a href="#method_getPivotOffsetVector">getPivotOffsetVector</a>
+                                <a href="#method_getReferenceDimensions">getReferenceDimensions</a>
 
                                 
                                 
@@ -415,6 +437,13 @@
                             </li>
                         
                             <li class="index-item method private">
+                                <a href="#method_multiSectionBucketSort">multiSectionBucketSort</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method_newElement">newElement</a>
 
                                 
@@ -442,8 +471,8 @@
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_PageElement.correctStart">PageElement.correctStart</a>
+                            <li class="index-item method">
+                                <a href="#method_PageElement.exchange">PageElement.exchange</a>
 
                                 
                                 
@@ -451,27 +480,6 @@
                         
                             <li class="index-item method">
                                 <a href="#method_PageElement.get">PageElement.get</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_PageElement.getOffsetStartVector">PageElement.getOffsetStartVector</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_PageElement.getPivotOffsetVector">PageElement.getPivotOffsetVector</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_PageElement.getStartValues">PageElement.getStartValues</a>
 
                                 
                                 
@@ -491,8 +499,22 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_PageElement.reverseActions">PageElement.reverseActions</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_PageElement.revertStart">PageElement.revertStart</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_PageElement.revertStartActions">PageElement.revertStartActions</a>
 
                                 
                                 
@@ -520,13 +542,6 @@
                             </li>
                         
                             <li class="index-item method private">
-                                <a href="#method_PageElement.setStampUsingDomElement">PageElement.setStampUsingDomElement</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
                                 <a href="#method_PageElement.setStampUsingDomElementPivot">PageElement.setStampUsingDomElementPivot</a>
 
                                 
@@ -542,13 +557,6 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_PageElement.setStampUsingPath">PageElement.setStampUsingPath</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_PageElement.setStampUsingPivot">PageElement.setStampUsingPivot</a>
 
                                 
                                 
@@ -583,7 +591,21 @@
                             </li>
                         
                             <li class="index-item method private">
+                                <a href="#method_PageElement.updateStartActions">PageElement.updateStartActions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method_pageInit">pageInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_pickupEntity">pickupEntity</a>
 
                                 
                                 
@@ -618,7 +640,28 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_setDeltaAttribute">setDeltaAttribute</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setDeltaHandle">setDeltaHandle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_setDeltaRotation">setDeltaRotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setDeltaStart">setDeltaStart</a>
 
                                 
                                 
@@ -659,8 +702,22 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_setHandle">setHandle</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private">
                                 <a href="#method_setLocalDimensions">setLocalDimensions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setPerspectives">setPerspectives</a>
 
                                 
                                 
@@ -688,7 +745,7 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_setStampUsingStacksPivot">setStampUsingStacksPivot</a>
+                                <a href="#method_setStart">setStart</a>
 
                                 
                                 
@@ -722,6 +779,27 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_updateCornerTrackers">updateCornerTrackers</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_updateCurrentHandle">updateCurrentHandle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_updateCurrentStart">updateCurrentStart</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -733,6 +811,13 @@
                     <ul class="index-list properties">
                         
                             <li class="index-item property">
+                                <a href="#property_drag">drag</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_mouseIndex">mouseIndex</a>
 
                                 
@@ -740,7 +825,42 @@
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_order">order</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_PageElement.addPathRoll">PageElement.addPathRoll</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.bottomLeft">PageElement.bottomLeft</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.bottomLeftDiv">PageElement.bottomLeftDiv</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.bottomRight">PageElement.bottomRight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.bottomRightDiv">PageElement.bottomRightDiv</a>
 
                                 
                                 
@@ -761,6 +881,20 @@
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_PageElement.deltaPitch">PageElement.deltaPitch</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.deltaRoll">PageElement.deltaRoll</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_PageElement.deltaRotation">PageElement.deltaRotation</a>
 
                                 
@@ -775,6 +909,13 @@
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_PageElement.deltaYaw">PageElement.deltaYaw</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_PageElement.group">PageElement.group</a>
 
                                 
@@ -783,6 +924,13 @@
                         
                             <li class="index-item property">
                                 <a href="#property_PageElement.handle">PageElement.handle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.includeCornerTrackers">PageElement.includeCornerTrackers</a>
 
                                 
                                 
@@ -838,7 +986,21 @@
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_PageElement.pitch">PageElement.pitch</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_PageElement.pivot">PageElement.pivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.roll">PageElement.roll</a>
 
                                 
                                 
@@ -866,6 +1028,34 @@
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_PageElement.topLeft">PageElement.topLeft</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.topLeftDiv">PageElement.topLeftDiv</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.topRight">PageElement.topRight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.topRightDiv">PageElement.topRightDiv</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_PageElement.translate">PageElement.translate</a>
 
                                 
@@ -881,6 +1071,13 @@
                         
                             <li class="index-item property">
                                 <a href="#property_PageElement.visibility">PageElement.visibility</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_PageElement.yaw">PageElement.yaw</a>
 
                                 
                                 
@@ -953,7 +1150,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l267"><code>source\scrawlStacks.js:267</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l314"><code>source\scrawlStacks.js:314</code></a>
         
         </p>
 
@@ -1088,7 +1285,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1042"><code>source\scrawlStacks.js:1042</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1438"><code>source\scrawlStacks.js:1438</code></a>
         
         </p>
 
@@ -1127,6 +1324,80 @@
             
             </ul>
         </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_addCornerTrackers" class="method item private">
+    <h3 class="name"><code>addCornerTrackers</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1040"><code>source\scrawlStacks.js:1040</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
     
 
     
@@ -1193,7 +1464,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l339"><code>source\scrawlStacks.js:339</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l389"><code>source\scrawlStacks.js:389</code></a>
         
         </p>
 
@@ -1294,7 +1565,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l440"><code>source\scrawlStacks.js:440</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l527"><code>source\scrawlStacks.js:527</code></a>
         
         </p>
 
@@ -1367,7 +1638,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1805"><code>source\scrawlStacks.js:1805</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2330"><code>source\scrawlStacks.js:2330</code></a>
         
         </p>
 
@@ -1382,6 +1653,114 @@
 
     </div>
 
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_dropEntity" class="method item">
+    <h3 class="name"><code>dropEntity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l2371"><code>source\scrawlStacks.js:2371</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Revert pickupEntity() actions, ensuring element is left where the user drops it</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Alternative pivot String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1440,7 +1819,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l150"><code>source\scrawlStacks.js:150</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l191"><code>source\scrawlStacks.js:191</code></a>
         
         </p>
 
@@ -1514,7 +1893,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l229"><code>source\scrawlStacks.js:229</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l270"><code>source\scrawlStacks.js:270</code></a>
         
         </p>
 
@@ -1549,16 +1928,26 @@
 </div>
 
                 
-                    <div id="method_getPivotOffsetVector" class="method item private">
-    <h3 class="name"><code>getPivotOffsetVector</code></h3>
+                    <div id="method_getReferenceDimensions" class="method item private">
+    <h3 class="name"><code>getReferenceDimensions</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>reference</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
         <span class="returns-inline">
-            <span class="type"></span>
+            <span class="type">W: width, h: height, c: centered</span>
         </span>
     
 
@@ -1587,7 +1976,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1988"><code>source\scrawlStacks.js:1988</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1949"><code>source\scrawlStacks.js:1949</code></a>
         
         </p>
 
@@ -1598,14 +1987,34 @@
     </div>
 
     <div class="description">
-        <p>Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object&#39;s handle attribute, where the object&#39;s frame of reference is its top-left corner</p>
-<ul>
-<li>doesn&#39;t take into account the object&#39;s scaling or orientation</li>
-<li>(badly named function - getPivotOffsetVector has nothing to do with pivots)</li>
-</ul>
+        <p>updateCurrentHandle helper object</p>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">reference</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1615,7 +2024,9 @@
             <div class="returns-description">
                 
                     
-                    <p>A Vector of calculated offset values to help determine where entity/cell/element drawing should start</p>
+                        <span class="type">W: width, h: height, c: centered</span>:
+                    
+                    <p>Object with attributes</p>
 
                 
             </div>
@@ -1664,7 +2075,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l95"><code>source\scrawlStacks.js:95</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l131"><code>source\scrawlStacks.js:131</code></a>
         
         </p>
 
@@ -1733,7 +2144,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l500"><code>source\scrawlStacks.js:500</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l592"><code>source\scrawlStacks.js:592</code></a>
         
         </p>
 
@@ -1804,7 +2215,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1895"><code>source\scrawlStacks.js:1895</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2468"><code>source\scrawlStacks.js:2468</code></a>
         
         </p>
 
@@ -1911,7 +2322,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1875"><code>source\scrawlStacks.js:1875</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2448"><code>source\scrawlStacks.js:2448</code></a>
         
         </p>
 
@@ -1970,6 +2381,157 @@
 </div>
 
                 
+                    <div id="method_multiSectionBucketSort" class="method item private">
+    <h3 class="name"><code>multiSectionBucketSort</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>section</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>attribute</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>a</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l94"><code>source\scrawlStacks.js:94</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>utility</strong> function for performing bucket sorts on scrawl string arrays eg Group.elements</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">section</code>
+                        <span class="type">Array</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of scrawl library section names</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">attribute</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>on which sort will be performed</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">a</code>
+                        <span class="type">Array</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>array to be sorted</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>sorted array</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_newElement" class="method item private">
     <h3 class="name"><code>newElement</code></h3>
 
@@ -2018,7 +2580,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1855"><code>source\scrawlStacks.js:1855</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2428"><code>source\scrawlStacks.js:2428</code></a>
         
         </p>
 
@@ -2125,7 +2687,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1865"><code>source\scrawlStacks.js:1865</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2438"><code>source\scrawlStacks.js:2438</code></a>
         
         </p>
 
@@ -2232,7 +2794,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1845"><code>source\scrawlStacks.js:1845</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2418"><code>source\scrawlStacks.js:2418</code></a>
         
         </p>
 
@@ -2329,7 +2891,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1919"><code>source\scrawlStacks.js:1919</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2492"><code>source\scrawlStacks.js:2492</code></a>
         
         </p>
 
@@ -2364,11 +2926,27 @@
 </div>
 
                 
-                    <div id="method_PageElement.correctStart" class="method item private">
-    <h3 class="name"><code>PageElement.correctStart</code></h3>
+                    <div id="method_PageElement.exchange" class="method item">
+    <h3 class="name"><code>PageElement.exchange</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>item</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -2379,8 +2957,6 @@
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -2404,7 +2980,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1109"><code>source\scrawlStacks.js:1109</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1773"><code>source\scrawlStacks.js:1773</code></a>
         
         </p>
 
@@ -2415,10 +2991,50 @@
     </div>
 
     <div class="description">
-        <p>Constructor / set helper function</p>
+        <p>Swaps the values of an attribute between two objects</p>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object with which this object will swap attribute values</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">item</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Attribute to be swapped</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -2485,7 +3101,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l828"><code>source\scrawlStacks.js:828</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1114"><code>source\scrawlStacks.js:1114</code></a>
         
         </p>
 
@@ -2545,230 +3161,6 @@
 </div>
 
                 
-                    <div id="method_PageElement.getOffsetStartVector" class="method item">
-    <h3 class="name"><code>PageElement.getOffsetStartVector</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l1389"><code>source\scrawlStacks.js:1389</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Calculates the pixels value of the object&#39;s handle attribute</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Final offset values (as a Vector) to determine where entity drawing should start</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_PageElement.getPivotOffsetVector" class="method item private">
-    <h3 class="name"><code>PageElement.getPivotOffsetVector</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l1338"><code>source\scrawlStacks.js:1338</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Calculates the pixels value of the object&#39;s handle attribute</p>
-<ul>
-<li>doesn&#39;t take into account the object&#39;s scaling or orientation</li>
-<li>(badly named function - getPivotOffsetVector has nothing to do with pivots)</li>
-</ul>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>A Vector of calculated offset values to help determine where entity drawing should start</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_PageElement.getStartValues" class="method item private">
-    <h3 class="name"><code>PageElement.getStartValues</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l1351"><code>source\scrawlStacks.js:1351</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Calculates the pixels value of the object&#39;s start attribute</p>
-<ul>
-<li>doesn&#39;t take into account the object&#39;s scaling or orientation</li>
-</ul>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>A Vector of calculated values to help determine where entity drawing should start</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_PageElement.renderElement" class="method item">
     <h3 class="name"><code>PageElement.renderElement</code></h3>
 
@@ -2807,7 +3199,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1397"><code>source\scrawlStacks.js:1397</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1863"><code>source\scrawlStacks.js:1863</code></a>
         
         </p>
 
@@ -2890,7 +3282,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1327"><code>source\scrawlStacks.js:1327</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1791"><code>source\scrawlStacks.js:1791</code></a>
         
         </p>
 
@@ -2950,6 +3342,63 @@
 </div>
 
                 
+                    <div id="method_PageElement.reverseActions" class="method item private">
+    <h3 class="name"><code>PageElement.reverseActions</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1804"><code>source\scrawlStacks.js:1804</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>reverse helper object</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_PageElement.revertStart" class="method item">
     <h3 class="name"><code>PageElement.revertStart</code></h3>
 
@@ -2998,7 +3447,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1275"><code>source\scrawlStacks.js:1275</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1722"><code>source\scrawlStacks.js:1722</code></a>
         
         </p>
 
@@ -3065,6 +3514,63 @@
 </div>
 
                 
+                    <div id="method_PageElement.revertStartActions" class="method item private">
+    <h3 class="name"><code>PageElement.revertStartActions</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1745"><code>source\scrawlStacks.js:1745</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>revertStart helper object</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_PageElement.set" class="method item">
     <h3 class="name"><code>PageElement.set</code></h3>
 
@@ -3113,7 +3619,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l889"><code>source\scrawlStacks.js:889</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1176"><code>source\scrawlStacks.js:1176</code></a>
         
         </p>
 
@@ -3221,7 +3727,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1198"><code>source\scrawlStacks.js:1198</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1557"><code>source\scrawlStacks.js:1557</code></a>
         
         </p>
 
@@ -3318,7 +3824,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1672"><code>source\scrawlStacks.js:1672</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2194"><code>source\scrawlStacks.js:2194</code></a>
         
         </p>
 
@@ -3343,79 +3849,6 @@
                 
                     
                     <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_PageElement.setStampUsingDomElement" class="method item private">
-    <h3 class="name"><code>PageElement.setStampUsingDomElement</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l1585"><code>source\scrawlStacks.js:1585</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>setStampUsingPivot helper function</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>nothing</p>
 
                 
             </div>
@@ -3464,7 +3897,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1599"><code>source\scrawlStacks.js:1599</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2109"><code>source\scrawlStacks.js:2109</code></a>
         
         </p>
 
@@ -3537,7 +3970,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1610"><code>source\scrawlStacks.js:1610</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2122"><code>source\scrawlStacks.js:2122</code></a>
         
         </p>
 
@@ -3612,7 +4045,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1475"><code>source\scrawlStacks.js:1475</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2046"><code>source\scrawlStacks.js:2046</code></a>
         
         </p>
 
@@ -3624,81 +4057,6 @@
 
     <div class="description">
         <p>Calculate start Vector in reference to a Shape entity object&#39;s path</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_PageElement.setStampUsingPivot" class="method item private">
-    <h3 class="name"><code>PageElement.setStampUsingPivot</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l1499"><code>source\scrawlStacks.js:1499</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Calculate start Vector in reference to a entity or Point object&#39;s position</p>
 
     </div>
 
@@ -3770,7 +4128,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1150"><code>source\scrawlStacks.js:1150</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1508"><code>source\scrawlStacks.js:1508</code></a>
         
         </p>
 
@@ -3867,7 +4225,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1648"><code>source\scrawlStacks.js:1648</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2164"><code>source\scrawlStacks.js:2164</code></a>
         
         </p>
 
@@ -3950,7 +4308,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1295"><code>source\scrawlStacks.js:1295</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1829"><code>source\scrawlStacks.js:1829</code></a>
         
         </p>
 
@@ -4069,7 +4427,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1255"><code>source\scrawlStacks.js:1255</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1671"><code>source\scrawlStacks.js:1671</code></a>
         
         </p>
 
@@ -4136,6 +4494,63 @@
 </div>
 
                 
+                    <div id="method_PageElement.updateStartActions" class="method item private">
+    <h3 class="name"><code>PageElement.updateStartActions</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1694"><code>source\scrawlStacks.js:1694</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>updateStart helper object</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_pageInit" class="method item private">
     <h3 class="name"><code>pageInit</code></h3>
 
@@ -4170,7 +4585,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l79"><code>source\scrawlStacks.js:79</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l82"><code>source\scrawlStacks.js:82</code></a>
         
         </p>
 
@@ -4187,6 +4602,113 @@
 
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_pickupEntity" class="method item">
+    <h3 class="name"><code>pickupEntity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l2351"><code>source\scrawlStacks.js:2351</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Set element&#39;s pivot to &#39;mouse&#39;; set handles to supplied Vector value; set order to +9999</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Coordinate vector; alternatively an object with {x, y} attributes can be used</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -4241,7 +4763,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1065"><code>source\scrawlStacks.js:1065</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1461"><code>source\scrawlStacks.js:1461</code></a>
         
         </p>
 
@@ -4348,7 +4870,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l402"><code>source\scrawlStacks.js:402</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l485"><code>source\scrawlStacks.js:485</code></a>
         
         </p>
 
@@ -4445,7 +4967,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l423"><code>source\scrawlStacks.js:423</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l508"><code>source\scrawlStacks.js:508</code></a>
         
         </p>
 
@@ -4518,7 +5040,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1939"><code>source\scrawlStacks.js:1939</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2514"><code>source\scrawlStacks.js:2514</code></a>
         
         </p>
 
@@ -4543,6 +5065,222 @@
                 
                     
                     <p>Nothing</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaAttribute" class="method item">
+    <h3 class="name"><code>setDeltaAttribute</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1317"><code>source\scrawlStacks.js:1317</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments PageElement.set(), to allow users to set the delta attributes using delta, deltaX, deltaY</p>
+<p>The scrawlAnimation module adds a <strong>delta</strong> attribute to Cells and Entitys - this is an inbuilt delta vector which can be used to automatically animate the start vector of these objects - via the updateStart, revertStart and reverse functions - as part of the animation cycle.</p>
+<p>Be aware that this is different to the PageElement.setDelta() function inherited by Cells and Entitys. setDelta is used to add a supplied argument value to the existing values of any numerical attribute of a Cell or Entity object, and is thus not limited to the animation cycle.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaHandle" class="method item">
+    <h3 class="name"><code>setDeltaHandle</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1648"><code>source\scrawlStacks.js:1648</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
 
                 
             </div>
@@ -4601,7 +5339,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1008"><code>source\scrawlStacks.js:1008</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1401"><code>source\scrawlStacks.js:1401</code></a>
         
         </p>
 
@@ -4613,6 +5351,113 @@
 
     <div class="description">
         <p>Augments PageElement.set()</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaStart" class="method item">
+    <h3 class="name"><code>setDeltaStart</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1625"><code>source\scrawlStacks.js:1625</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds the value of each attribute supplied in the argument to existing values; This function accepts start, startX, startY</p>
 
     </div>
 
@@ -4708,7 +5553,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1090"><code>source\scrawlStacks.js:1090</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1486"><code>source\scrawlStacks.js:1486</code></a>
         
         </p>
 
@@ -4807,7 +5652,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1781"><code>source\scrawlStacks.js:1781</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2304"><code>source\scrawlStacks.js:2304</code></a>
         
         </p>
 
@@ -4881,7 +5726,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1823"><code>source\scrawlStacks.js:1823</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2395"><code>source\scrawlStacks.js:2395</code></a>
         
         </p>
 
@@ -4964,7 +5809,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l368"><code>source\scrawlStacks.js:368</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l419"><code>source\scrawlStacks.js:419</code></a>
         
         </p>
 
@@ -5083,7 +5928,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l967"><code>source\scrawlStacks.js:967</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1357"><code>source\scrawlStacks.js:1357</code></a>
         
         </p>
 
@@ -5095,6 +5940,113 @@
 
     <div class="description">
         <p>Augments PageElement.set()</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setHandle" class="method item">
+    <h3 class="name"><code>setHandle</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1288"><code>source\scrawlStacks.js:1288</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments Base.setHandle(), to allow users to set the handle attributes using handle, handleX, handleY</p>
 
     </div>
 
@@ -5182,7 +6134,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1703"><code>source\scrawlStacks.js:1703</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2223"><code>source\scrawlStacks.js:2223</code></a>
         
         </p>
 
@@ -5207,6 +6159,115 @@
                 
                     
                     <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setPerspectives" class="method item">
+    <h3 class="name"><code>setPerspectives</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[stacks]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l459"><code>source\scrawlStacks.js:459</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Set the perspective for all stacks</p>
+<p>(Replaces Core.setPerspectives)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[stacks]</code>
+                        <span class="type">Array</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of STACKNAMEs - can also be a String - if null, all stacks will be processed</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>The Scrawl library object (scrawl)</p>
 
                 
             </div>
@@ -5265,7 +6326,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l952"><code>source\scrawlStacks.js:952</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1342"><code>source\scrawlStacks.js:1342</code></a>
         
         </p>
 
@@ -5372,7 +6433,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l993"><code>source\scrawlStacks.js:993</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1386"><code>source\scrawlStacks.js:1386</code></a>
         
         </p>
 
@@ -5467,7 +6528,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1967"><code>source\scrawlStacks.js:1967</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2544"><code>source\scrawlStacks.js:2544</code></a>
         
         </p>
 
@@ -5502,11 +6563,21 @@
 </div>
 
                 
-                    <div id="method_setStampUsingStacksPivot" class="method item">
-    <h3 class="name"><code>setStampUsingStacksPivot</code></h3>
+                    <div id="method_setStart" class="method item">
+    <h3 class="name"><code>setStart</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -5524,6 +6595,8 @@
     
 
     
+        <span class="flag chainable">chainable</span>
+    
 
     
 
@@ -5538,7 +6611,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1565"><code>source\scrawlStacks.js:1565</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1259"><code>source\scrawlStacks.js:1259</code></a>
         
         </p>
 
@@ -5549,10 +6622,34 @@
     </div>
 
     <div class="description">
-        <p>Stamp helper hook function - amended by stacks module</p>
+        <p>Augments Base.setStart(), to allow users to set the start attributes using start, startX, startY</p>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -5562,7 +6659,7 @@
             <div class="returns-description">
                 
                     
-                    <p>this</p>
+                    <p>This</p>
 
                 
             </div>
@@ -5621,7 +6718,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1023"><code>source\scrawlStacks.js:1023</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l1416"><code>source\scrawlStacks.js:1416</code></a>
         
         </p>
 
@@ -5718,7 +6815,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l1909"><code>source\scrawlStacks.js:1909</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l2482"><code>source\scrawlStacks.js:2482</code></a>
         
         </p>
 
@@ -5787,7 +6884,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l730"><code>source\scrawlStacks.js:730</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l943"><code>source\scrawlStacks.js:943</code></a>
         
         </p>
 
@@ -5856,7 +6953,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l458"><code>source\scrawlStacks.js:458</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l547"><code>source\scrawlStacks.js:547</code></a>
         
         </p>
 
@@ -5922,12 +7019,317 @@
 </div>
 
                 
+                    <div id="method_updateCornerTrackers" class="method item private">
+    <h3 class="name"><code>updateCornerTrackers</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1087"><code>source\scrawlStacks.js:1087</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_updateCurrentHandle" class="method item private">
+    <h3 class="name"><code>updateCurrentHandle</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l1977"><code>source\scrawlStacks.js:1977</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Convert handle percentage values to numerical values, stored in currentHandle</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_updateCurrentStart" class="method item private">
+    <h3 class="name"><code>updateCurrentStart</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>reference</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l2009"><code>source\scrawlStacks.js:2009</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Convert start percentage values to numerical values, stored in currentStart</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">reference</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
             </div>
         
 
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_drag" class="property item">
+    <h3 class="name"><code>drag</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l935"><code>source\scrawlStacks.js:935</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Drag boolean - indicates the element can be manipulated via mouse/touch events (eg pickup, drop)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="property_mouseIndex" class="property item">
@@ -5953,7 +7355,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l720"><code>source\scrawlStacks.js:720</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l919"><code>source\scrawlStacks.js:919</code></a>
         
         </p>
 
@@ -5970,6 +7372,53 @@
 
     
         <p><strong>Default:</strong> &#x27;mouse&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_order" class="property item">
+    <h3 class="name"><code>order</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l928"><code>source\scrawlStacks.js:928</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sorting order - must be a positive integer</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -6001,7 +7450,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l641"><code>source\scrawlStacks.js:641</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l733"><code>source\scrawlStacks.js:733</code></a>
         
         </p>
 
@@ -6012,6 +7461,194 @@
 
     <div class="description">
         <p>A flag to determine whether the object will calculate the rotation value of its current position along a Shape path</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.bottomLeft" class="property item">
+    <h3 class="name"><code>PageElement.bottomLeft</code></h3>
+    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l884"><code>source\scrawlStacks.js:884</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Corner tracker vector</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.bottomLeftDiv" class="property item">
+    <h3 class="name"><code>PageElement.bottomLeftDiv</code></h3>
+    <span class="type">DOM element object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l912"><code>source\scrawlStacks.js:912</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Corner tracker div element</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.bottomRight" class="property item">
+    <h3 class="name"><code>PageElement.bottomRight</code></h3>
+    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l877"><code>source\scrawlStacks.js:877</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Corner tracker vector</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.bottomRightDiv" class="property item">
+    <h3 class="name"><code>PageElement.bottomRightDiv</code></h3>
+    <span class="type">DOM element object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l905"><code>source\scrawlStacks.js:905</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Corner tracker div element</p>
 
     </div>
 
@@ -6048,7 +7685,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l532"><code>source\scrawlStacks.js:532</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l624"><code>source\scrawlStacks.js:624</code></a>
         
         </p>
 
@@ -6098,7 +7735,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l620"><code>source\scrawlStacks.js:620</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l712"><code>source\scrawlStacks.js:712</code></a>
         
         </p>
 
@@ -6109,6 +7746,100 @@
 
     <div class="description">
         <p>A change value which can be applied to the object&#39;s pathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.deltaPitch" class="property item">
+    <h3 class="name"><code>PageElement.deltaPitch</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l791"><code>source\scrawlStacks.js:791</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Element 2d deltaPitch value</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.deltaRoll" class="property item">
+    <h3 class="name"><code>PageElement.deltaRoll</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l784"><code>source\scrawlStacks.js:784</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Element 2d deltaRoll value</p>
 
     </div>
 
@@ -6145,7 +7876,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l685"><code>source\scrawlStacks.js:685</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l819"><code>source\scrawlStacks.js:819</code></a>
         
         </p>
 
@@ -6192,7 +7923,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l565"><code>source\scrawlStacks.js:565</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l657"><code>source\scrawlStacks.js:657</code></a>
         
         </p>
 
@@ -6205,6 +7936,53 @@
         
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.deltaYaw" class="property item">
+    <h3 class="name"><code>PageElement.deltaYaw</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l798"><code>source\scrawlStacks.js:798</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Element 2d deltaYaw value</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -6236,7 +8014,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l599"><code>source\scrawlStacks.js:599</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l691"><code>source\scrawlStacks.js:691</code></a>
         
         </p>
 
@@ -6283,7 +8061,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l574"><code>source\scrawlStacks.js:574</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l666"><code>source\scrawlStacks.js:666</code></a>
         
         </p>
 
@@ -6303,6 +8081,54 @@
 
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.includeCornerTrackers" class="property item">
+    <h3 class="name"><code>PageElement.includeCornerTrackers</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l854"><code>source\scrawlStacks.js:854</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A flag to tell scrawl to add corner trackers to the element</p>
+<p>Corner trackers can be used by the PerspectiveCornersCell entity to bind its corners to a DOM element within a stack</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
     
 
     
@@ -6334,7 +8160,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l648"><code>source\scrawlStacks.js:648</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l740"><code>source\scrawlStacks.js:740</code></a>
         
         </p>
 
@@ -6382,7 +8208,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l657"><code>source\scrawlStacks.js:657</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l749"><code>source\scrawlStacks.js:749</code></a>
         
         </p>
 
@@ -6429,7 +8255,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l664"><code>source\scrawlStacks.js:664</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l756"><code>source\scrawlStacks.js:756</code></a>
         
         </p>
 
@@ -6476,7 +8302,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l606"><code>source\scrawlStacks.js:606</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l698"><code>source\scrawlStacks.js:698</code></a>
         
         </p>
 
@@ -6523,7 +8349,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l613"><code>source\scrawlStacks.js:613</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l705"><code>source\scrawlStacks.js:705</code></a>
         
         </p>
 
@@ -6570,7 +8396,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l634"><code>source\scrawlStacks.js:634</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l726"><code>source\scrawlStacks.js:726</code></a>
         
         </p>
 
@@ -6617,7 +8443,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l627"><code>source\scrawlStacks.js:627</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l719"><code>source\scrawlStacks.js:719</code></a>
         
         </p>
 
@@ -6633,6 +8459,53 @@
 
     
         <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.pitch" class="property item">
+    <h3 class="name"><code>PageElement.pitch</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l770"><code>source\scrawlStacks.js:770</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Element 2d pitch value</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -6664,7 +8537,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l592"><code>source\scrawlStacks.js:592</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l684"><code>source\scrawlStacks.js:684</code></a>
         
         </p>
 
@@ -6680,6 +8553,53 @@
 
     
         <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.roll" class="property item">
+    <h3 class="name"><code>PageElement.roll</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l763"><code>source\scrawlStacks.js:763</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Element 2d roll value</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -6711,7 +8631,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l671"><code>source\scrawlStacks.js:671</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l805"><code>source\scrawlStacks.js:805</code></a>
         
         </p>
 
@@ -6758,7 +8678,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l699"><code>source\scrawlStacks.js:699</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l833"><code>source\scrawlStacks.js:833</code></a>
         
         </p>
 
@@ -6805,7 +8725,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l510"><code>source\scrawlStacks.js:510</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l602"><code>source\scrawlStacks.js:602</code></a>
         
         </p>
 
@@ -6838,6 +8758,194 @@
 </div>
 
                 
+                    <div id="property_PageElement.topLeft" class="property item">
+    <h3 class="name"><code>PageElement.topLeft</code></h3>
+    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l863"><code>source\scrawlStacks.js:863</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Corner tracker vector</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.topLeftDiv" class="property item">
+    <h3 class="name"><code>PageElement.topLeftDiv</code></h3>
+    <span class="type">DOM element object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l891"><code>source\scrawlStacks.js:891</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Corner tracker div element</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.topRight" class="property item">
+    <h3 class="name"><code>PageElement.topRight</code></h3>
+    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l870"><code>source\scrawlStacks.js:870</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Corner tracker vector</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.topRightDiv" class="property item">
+    <h3 class="name"><code>PageElement.topRightDiv</code></h3>
+    <span class="type">DOM element object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l898"><code>source\scrawlStacks.js:898</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Corner tracker div element</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_PageElement.translate" class="property item">
     <h3 class="name"><code>PageElement.translate</code></h3>
     <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
@@ -6861,7 +8969,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l548"><code>source\scrawlStacks.js:548</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l640"><code>source\scrawlStacks.js:640</code></a>
         
         </p>
 
@@ -6912,7 +9020,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l713"><code>source\scrawlStacks.js:713</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l847"><code>source\scrawlStacks.js:847</code></a>
         
         </p>
 
@@ -6959,7 +9067,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l706"><code>source\scrawlStacks.js:706</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l840"><code>source\scrawlStacks.js:840</code></a>
         
         </p>
 
@@ -6975,6 +9083,53 @@
 
     
         <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_PageElement.yaw" class="property item">
+    <h3 class="name"><code>PageElement.yaw</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l777"><code>source\scrawlStacks.js:777</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Element 2d yaw value</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -7006,7 +9161,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l490"><code>source\scrawlStacks.js:490</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l582"><code>source\scrawlStacks.js:582</code></a>
         
         </p>
 

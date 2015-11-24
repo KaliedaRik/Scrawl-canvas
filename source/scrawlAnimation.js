@@ -1381,7 +1381,7 @@ Tween animation function
 									keys[k],
 									this,
 									entity);
-								if(argSet[keys[k]].toFixed){
+								if (argSet[keys[k]].toFixed) {
 									argSet[keys[k]] = argSet[keys[k]] + unit;
 								}
 							}
@@ -1440,8 +1440,12 @@ Tween engines
 **/
 		my.Tween.prototype.engine = function(start, change, position, engine, reverse, key, tween, obj) {
 			engine = my.xtGet(engine, 'linear');
-			if(engine === 'calc'){
-				return tween.calculations[key]({start: start, change: change, position: position}, tween, obj);
+			if (engine === 'calc') {
+				return tween.calculations[key]({
+					start: start,
+					change: change,
+					position: position
+				}, tween, obj);
 			}
 			return my.Tween.prototype.engineActions[engine](start, change, position, reverse);
 		};
@@ -1978,48 +1982,48 @@ The argument object must include the following attributes, otherwise the command
 		my.Timeline.prototype.changeComposition = function(items) {
 			var act, obj, fAction, fRollback, fReset;
 			items = my.safeObject(items);
-			if(my.xta(items.target, items.type, items.time, items.name, items.from, items.to)){
-				if(my.contains(my.work.sectionlist, items.type)){
+			if (my.xta(items.target, items.type, items.time, items.name, items.from, items.to)) {
+				if (my.contains(my.work.sectionlist, items.type)) {
 					obj = my[items.type][items.target];
-					if(my.xt(obj)){
-						switch(items.type){
-							case 'entity' :
-							case 'cell' :
-								fAction = function(){
+					if (my.xt(obj)) {
+						switch (items.type) {
+							case 'entity':
+							case 'cell':
+								fAction = function() {
 									obj.set({
 										globalCompositeOperation: items.to
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										globalCompositeOperation: items.from
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										globalCompositeOperation: items.from
 									});
 								};
 								break;
-							case 'group' :
-								fAction = function(){
+							case 'group':
+								fAction = function() {
 									obj.setEntitysTo({
 										globalCompositeOperation: items.to
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.setEntitysTo({
 										globalCompositeOperation: items.from
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.setEntitysTo({
 										globalCompositeOperation: items.from
 									});
 								};
 								break;
 						}
-						if(my.xt(fAction)){
+						if (my.xt(fAction)) {
 							act = my.makeAction({
 								name: items.name + '_changeCompositeAction',
 								time: items.time,
@@ -2054,48 +2058,48 @@ The argument object must include the following attributes, otherwise the command
 		my.Timeline.prototype.changeOrder = function(items) {
 			var act, obj, fAction, fRollback, fReset;
 			items = my.safeObject(items);
-			if(my.xta(items.target, items.type, items.time, items.name, items.from, items.to)){
-				if(my.contains(my.work.sectionlist, items.type)){
+			if (my.xta(items.target, items.type, items.time, items.name, items.from, items.to)) {
+				if (my.contains(my.work.sectionlist, items.type)) {
 					obj = my[items.type][items.target];
-					if(my.xt(obj)){
-						switch(items.type){
-							case 'entity' :
-							case 'group' :
-								fAction = function(){
+					if (my.xt(obj)) {
+						switch (items.type) {
+							case 'entity':
+							case 'group':
+								fAction = function() {
 									obj.set({
 										order: items.to
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										order: items.from
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										order: items.from
 									});
 								};
 								break;
-							case 'cell' :
-								fAction = function(){
+							case 'cell':
+								fAction = function() {
 									obj.set({
 										showOrder: items.to
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										showOrder: items.from
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										showOrder: items.from
 									});
 								};
 								break;
 						}
-						if(my.xt(fAction)){
+						if (my.xt(fAction)) {
 							act = my.makeAction({
 								name: items.name + '_changeOrderAction',
 								time: items.time,
@@ -2129,20 +2133,20 @@ The argument object must include the following attributes, otherwise the command
 		my.Timeline.prototype.changeGroupEntitysOrderTo = function(items) {
 			var act, obj, fAction, fRollback, fReset;
 			items = my.safeObject(items);
-			if(my.xta(items.target, items.time, items.name, items.from, items.to)){
+			if (my.xta(items.target, items.time, items.name, items.from, items.to)) {
 				obj = my.group[items.target];
-				if(my.xt(obj)){
-					fAction = function(){
+				if (my.xt(obj)) {
+					fAction = function() {
 						obj.setEntitysTo({
 							order: items.to
 						});
 					};
-					fRollback = function(){
+					fRollback = function() {
 						obj.setEntitysTo({
 							order: items.from
 						});
 					};
-					fReset = function(){
+					fReset = function() {
 						obj.setEntitysTo({
 							order: items.from
 						});
@@ -2179,7 +2183,7 @@ The argument object must include the following attributes (engine is optional), 
 			var e;
 			items = my.safeObject(items);
 			e = items.engine || 'linear';
-			if(my.xta(items.targets, items.time, items.duration, items.name)){
+			if (my.xta(items.targets, items.time, items.duration, items.name)) {
 				this.addAction({
 					name: items.name,
 					time: items.time,
@@ -2227,7 +2231,7 @@ The argument object must include the following attributes (engine is optional), 
 			var e;
 			items = my.safeObject(items);
 			e = items.engine || 'linear';
-			if(my.xta(items.targets, items.time, items.duration, items.name)){
+			if (my.xta(items.targets, items.time, items.duration, items.name)) {
 				this.addAction({
 					name: items.name,
 					time: items.time,
@@ -2284,7 +2288,7 @@ For the start, end, engines and calculations Objects, the keys should be the att
 			items = my.safeObject(items);
 			e = items.engines || {};
 			c = items.calculations || {};
-			if(my.xta(items.targets, items.time, items.duration, items.name, items.start, items.end)){
+			if (my.xta(items.targets, items.time, items.duration, items.name, items.start, items.end)) {
 				this.addAction({
 					name: items.name,
 					time: items.time,
@@ -2321,30 +2325,30 @@ The argument object must include the following attributes, otherwise the command
 		my.Timeline.prototype.addShow = function(items) {
 			var act, obj, fAction, fRollback, fReset;
 			items = my.safeObject(items);
-			if(my.xta(items.target, items.type, items.time, items.name)){
-				if(my.contains(my.work.sectionlist, items.type)){
+			if (my.xta(items.target, items.type, items.time, items.name)) {
+				if (my.contains(my.work.sectionlist, items.type)) {
 					obj = my[items.type][items.target];
-					if(my.xt(obj)){
-						switch(items.type){
-							case 'entity' :
-								fAction = function(){
+					if (my.xt(obj)) {
+						switch (items.type) {
+							case 'entity':
+								fAction = function() {
 									obj.set({
 										visibility: true
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										visibility: false
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										visibility: false
 									});
 								};
 								break;
-							case 'group' :
-								fAction = function(){
+							case 'group':
+								fAction = function() {
 									obj.set({
 										visibility: true
 									});
@@ -2352,7 +2356,7 @@ The argument object must include the following attributes, otherwise the command
 										visibility: true
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										visibility: false
 									});
@@ -2360,7 +2364,7 @@ The argument object must include the following attributes, otherwise the command
 										visibility: false
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										visibility: false
 									});
@@ -2369,25 +2373,25 @@ The argument object must include the following attributes, otherwise the command
 									});
 								};
 								break;
-							case 'cell' :
-								fAction = function(){
+							case 'cell':
+								fAction = function() {
 									obj.set({
 										rendered: true
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										rendered: false
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										rendered: false
 									});
 								};
 								break;
 						}
-						if(my.xt(fAction)){
+						if (my.xt(fAction)) {
 							act = my.makeAction({
 								name: items.name + '_showAction',
 								time: items.time,
@@ -2422,14 +2426,14 @@ The argument object must include the following attributes, otherwise the command
 				cell = my.cell,
 				get = my.xtGet;
 			items = my.safeObject(items);
-			if(my.xta(items.targets, items.time, items.name)){
+			if (my.xta(items.targets, items.time, items.name)) {
 				obj = {
 					time: items.time
 				};
-				for(i = 0, iz = items.targets.length; i < iz; i++){
+				for (i = 0, iz = items.targets.length; i < iz; i++) {
 					t = items.targets[i];
 					target = get(entity[t], cell[t], false);
-					if(target){
+					if (target) {
 						obj.name = items.name + '_' + i;
 						obj.target = t;
 						obj.type = (target.type === 'Cell') ? 'cell' : 'entity';
@@ -2457,30 +2461,30 @@ The argument object must include the following attributes, otherwise the command
 		my.Timeline.prototype.addHide = function(items) {
 			var act, obj, fAction, fRollback, fReset;
 			items = my.safeObject(items);
-			if(my.xta(items.target, items.type, items.time, items.name)){
-				if(my.contains(my.work.sectionlist, items.type)){
+			if (my.xta(items.target, items.type, items.time, items.name)) {
+				if (my.contains(my.work.sectionlist, items.type)) {
 					obj = my[items.type][items.target];
-					if(my.xt(obj)){
-						switch(items.type){
-							case 'entity' :
-								fAction = function(){
+					if (my.xt(obj)) {
+						switch (items.type) {
+							case 'entity':
+								fAction = function() {
 									obj.set({
 										visibility: false
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										visibility: true
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										visibility: true
 									});
 								};
 								break;
-							case 'group' :
-								fAction = function(){
+							case 'group':
+								fAction = function() {
 									obj.set({
 										visibility: false
 									});
@@ -2488,7 +2492,7 @@ The argument object must include the following attributes, otherwise the command
 										visibility: false
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										visibility: true
 									});
@@ -2496,7 +2500,7 @@ The argument object must include the following attributes, otherwise the command
 										visibility: true
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										visibility: true
 									});
@@ -2505,25 +2509,25 @@ The argument object must include the following attributes, otherwise the command
 									});
 								};
 								break;
-							case 'cell' :
-								fAction = function(){
+							case 'cell':
+								fAction = function() {
 									obj.set({
 										rendered: false
 									});
 								};
-								fRollback = function(){
+								fRollback = function() {
 									obj.set({
 										rendered: true
 									});
 								};
-								fReset = function(){
+								fReset = function() {
 									obj.set({
 										rendered: true
 									});
 								};
 								break;
 						}
-						if(my.xt(fAction)){
+						if (my.xt(fAction)) {
 							act = my.makeAction({
 								name: items.name + '_hideAction',
 								time: items.time,
@@ -2558,14 +2562,14 @@ The argument object must include the following attributes, otherwise the command
 				cell = my.cell,
 				get = my.xtGet;
 			items = my.safeObject(items);
-			if(my.xta(items.targets, items.time, items.name)){
+			if (my.xta(items.targets, items.time, items.name)) {
 				obj = {
 					time: items.time
 				};
-				for(i = 0, iz = items.targets.length; i < iz; i++){
+				for (i = 0, iz = items.targets.length; i < iz; i++) {
 					t = items.targets[i];
 					target = get(entity[t], cell[t], false);
-					if(target){
+					if (target) {
 						obj.name = items.name + '_' + i;
 						obj.target = t;
 						obj.type = (t.type === 'Cell') ? 'cell' : 'entity';

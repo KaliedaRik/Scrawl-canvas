@@ -475,7 +475,7 @@ Set the perspective for all stacks
 			sn = (stacks) ? [].concat(stacks) : my.stacknames;
 			for (i = 0, iz = sn.length; i < iz; i++) {
 				s = stack[sn[i]];
-				if(s){
+				if (s) {
 					s.currentPerspective.flag = false;
 					s.setPerspective();
 				}
@@ -1095,7 +1095,7 @@ PageElement constructor hook function - modified by stacks module
 				el, top, left, i, iz, stack, stackRect, stackLeft, stackTop;
 			el = this.getElement();
 			stack = my.stk[my.group[this.group].stack];
-			if(stack){
+			if (stack) {
 				stackRect = stack.getBoundingClientRect();
 				stackLeft = parseInt(stackRect.left, 10);
 				stackTop = parseInt(stackRect.top, 10);
@@ -3376,7 +3376,7 @@ Tell the Group to ask its constituent elements to render
 			if (this.recalculateDimensions) {
 				for (i = 0, iz = elements.length; i < iz; i++) {
 					el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
-					if(el){
+					if (el) {
 						el.setLocalDimensions();
 					}
 				}
@@ -3387,7 +3387,7 @@ Tell the Group to ask its constituent elements to render
 				this.currentHeight = 0;
 				for (i = 0, iz = elements.length; i < iz; i++) {
 					el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
-					if(el){
+					if (el) {
 						if (el.localWidth > this.currentWidth) {
 							this.currentWidth = el.localWidth;
 						}
@@ -3399,7 +3399,7 @@ Tell the Group to ask its constituent elements to render
 			}
 			for (i = 0, iz = elements.length; i < iz; i++) {
 				el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
-				if(el){
+				if (el) {
 					el.renderElement();
 					if (el.type === 'Stack') {
 						group[el.name].render();
@@ -3425,7 +3425,7 @@ Tell the Group to ask its constituent pads to render - will cascade through to s
 				pad = my.pad;
 			for (i = 0, iz = elements.length; i < iz; i++) {
 				el = stack[elements[i]] || pad[elements[i]] || element[elements[i]] || false;
-				if(el){
+				if (el) {
 					if (el.type === 'Stack') {
 						group[el.name].renderPads();
 					}

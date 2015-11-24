@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -364,6 +372,13 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_updateDeltaTime">updateDeltaTime</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_updateSprings">updateSprings</a>
 
                                 
@@ -468,7 +483,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l190"><code>source\scrawlPhysics.js:190</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l204"><code>source\scrawlPhysics.js:204</code></a>
         
         </p>
 
@@ -573,7 +588,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l172"><code>source\scrawlPhysics.js:172</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l186"><code>source\scrawlPhysics.js:186</code></a>
         
         </p>
 
@@ -678,7 +693,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l181"><code>source\scrawlPhysics.js:181</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l195"><code>source\scrawlPhysics.js:195</code></a>
         
         </p>
 
@@ -771,7 +786,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l164"><code>source\scrawlPhysics.js:164</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l178"><code>source\scrawlPhysics.js:178</code></a>
         
         </p>
 
@@ -828,7 +843,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l148"><code>source\scrawlPhysics.js:148</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l162"><code>source\scrawlPhysics.js:162</code></a>
         
         </p>
 
@@ -885,7 +900,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l156"><code>source\scrawlPhysics.js:156</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l170"><code>source\scrawlPhysics.js:170</code></a>
         
         </p>
 
@@ -940,7 +955,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l117"><code>source\scrawlPhysics.js:117</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l131"><code>source\scrawlPhysics.js:131</code></a>
         
         </p>
 
@@ -962,6 +977,112 @@
 
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_updateDeltaTime" class="method item">
+    <h3 class="name"><code>updateDeltaTime</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[item]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlPhysics.js.html#l118"><code>source\scrawlPhysics.js:118</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>general</strong> function to update Physics elapsed deltaTime</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[item]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>new time</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>True on success; false otherwise</p>
+
+                
+            </div>
+        </div>
     
 
     

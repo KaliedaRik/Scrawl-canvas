@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>ElementGroup - scrawl-canvas</title>
+    <title>Frame - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -254,7 +254,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>ElementGroup Class</h1>
+                        <h1>Frame Class</h1>
 <div class="box meta">
     
 
@@ -266,13 +266,13 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlStacks.js.html#l3155"><code>source\scrawlStacks.js:3155</code></a>
+            Defined in: <a href="../files/source_scrawlFrame.js.html#l349"><code>source\scrawlFrame.js:349</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/scrawlStacks.html">scrawlStacks</a>
+            Module: <a href="../modules/scrawlFrame.html">scrawlFrame</a>
         
     
 
@@ -282,20 +282,18 @@
 
 
 <div class="box intro">
-    <h1 id="elementgroup">ElementGroup</h1>
+    <h1 id="frame">Frame</h1>
 <h2 id="instantiation">Instantiation</h2>
 <ul>
-<li>scrawl.makeElementGroup()</li>
+<li>scrawl.Frame()</li>
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>associates DOM elements with a Stack object, for rendering the stack scene</li>
-<li>groups DOM elements for specific purposes</li>
+<li>...</li>
 </ul>
 <h2 id="access">Access</h2>
 <ul>
-<li>scrawl.group.GROUPNAME - for the ElementGroup object</li>
-<li>scrawl.stack[scrawl.group.ELEMENTGROUPNAME.stack] - for the ElementGroup object&#39;s default Stack object</li>
+<li>scrawl.entity.FRAMENAME - for the Frame entity object</li>
 </ul>
 
 </div>
@@ -303,8 +301,8 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_ElementGroup" class="method item">
-    <h3 class="name"><code>ElementGroup</code></h3>
+        <div id="method_Frame" class="method item">
+    <h3 class="name"><code>Frame</code></h3>
 
     
         <div class="args">
@@ -345,7 +343,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3155"><code>source\scrawlStacks.js:3155</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l349"><code>source\scrawlFrame.js:349</code></a>
         
         </p>
 
@@ -418,15 +416,43 @@
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method">
-                                <a href="#method_addElementsToGroup">addElementsToGroup</a>
+                            <li class="index-item method private">
+                                <a href="#method_checkCorners">checkCorners</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_checkEqualDimensions">checkEqualDimensions</a>
+                                <a href="#method_checkHit">checkHit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_clear">clear</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_clearShadow">clearShadow</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_clearWithBackground">clearWithBackground</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_clip">clip</a>
 
                                 
                                 
@@ -439,8 +465,78 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_collisionsEntityRegisterInLibrary">collisionsEntityRegisterInLibrary</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
-                                <a href="#method_domInit">domInit</a>
+                                <a href="#method_draw">draw</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_drawFill">drawFill</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_drawImage">drawImage</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_drawPath">drawPath</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_dropEntity">dropEntity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_fill">fill</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_fillDraw">fillDraw</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_filtersEntityInit">filtersEntityInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_floatOver">floatOver</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_forceStamp">forceStamp</a>
 
                                 
                                 
@@ -453,50 +549,50 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_getAllAt">getAllAt</a>
+                            <li class="index-item method private">
+                                <a href="#method_getAngle">getAngle</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_getAllElementsAt">getAllElementsAt</a>
+                                <a href="#method_getCorners">getCorners</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getLength">getLength</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getMaxDimensions">getMaxDimensions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getPosition">getPosition</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_lockOn">lockOn</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_getAt">getAt</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_getByMouseIndex">getByMouseIndex</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_getElementAt">getElementAt</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_getElementGroupDimensions">getElementGroupDimensions</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_getElementsByMouseIndex">getElementsByMouseIndex</a>
+                                <a href="#method_none">none</a>
 
                                 
                                 
@@ -517,28 +613,28 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_pivotElementsTo">pivotElementsTo</a>
+                                <a href="#method_pickupEntity">pickupEntity</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_removeElementsFromGroup">removeElementsFromGroup</a>
+                            <li class="index-item method private">
+                                <a href="#method_prepareStamp">prepareStamp</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_render">render</a>
+                            <li class="index-item method private">
+                                <a href="#method_redrawCanvas">redrawCanvas</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_renderPads">renderPads</a>
+                            <li class="index-item method private">
+                                <a href="#method_resetEasel">resetEasel</a>
 
                                 
                                 
@@ -552,63 +648,77 @@
                             </li>
                         
                             <li class="index-item method private">
-                                <a href="#method_setDirtyHandles">setDirtyHandles</a>
+                                <a href="#method_setCorners">setCorners</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method private">
-                                <a href="#method_setDirtyStarts">setDirtyStarts</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_setElementsTo">setElementsTo</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_setEntitysTo">setEntitysTo</a>
+                                <a href="#method_setDestinationEngine">setDestinationEngine</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method private">
-                                <a href="#method_sortElements">sortElements</a>
+                                <a href="#method_setEasel">setEasel</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setEngine">setEngine</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setLockElementAttributes">setLockElementAttributes</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_update">update</a>
+                                <a href="#method_sinkInto">sinkInto</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_updateBy">updateBy</a>
+                            <li class="index-item method private">
+                                <a href="#method_stamp">stamp</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_updateDimensions">updateDimensions</a>
+                            <li class="index-item method private">
+                                <a href="#method_stampFilter">stampFilter</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_updateElementsBy">updateElementsBy</a>
+                            <li class="index-item method private">
+                                <a href="#method_stampFilterActions">stampFilterActions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_stampFilterDefault">stampFilterDefault</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_updateCurrentCopy">updateCurrentCopy</a>
 
                                 
                                 
@@ -631,64 +741,8 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_currentHeight">currentHeight</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_currentWidth">currentWidth</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_elements">elements</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_entitys">entitys</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_equalHeight">equalHeight</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_equalWidth">equalWidth</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item property inherited">
                                 <a href="#property_name">name</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_recalculateDimensions">recalculateDimensions</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_stack">stack</a>
 
                                 
                                 
@@ -729,8 +783,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_addElementsToGroup" class="method item">
-    <h3 class="name"><code>addElementsToGroup</code></h3>
+                    <div id="method_checkCorners" class="method item private">
+    <h3 class="name"><code>checkCorners</code></h3>
 
     
         <div class="args">
@@ -738,7 +792,7 @@
             
                 <li class="arg">
                     
-                        <code>item</code>
+                        <code>items</code>
                     
                 </li>
             
@@ -754,6 +808,8 @@
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -777,7 +833,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3497"><code>source\scrawlStacks.js:3497</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l691"><code>source\scrawlFrame.js:691</code></a>
         
         </p>
 
@@ -788,8 +844,7 @@
     </div>
 
     <div class="description">
-        <p>Add elements to the Group</p>
-
+        
     </div>
 
     
@@ -800,14 +855,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">item</code>
-                        <span class="type">Array</span>
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Array of ELEMENTNAME Strings; alternatively, a single ELEMENTNAME String can be supplied as the argument</p>
+                        <p>Object consisting of key:value attributes</p>
 
                     </div>
 
@@ -836,17 +891,13 @@
 </div>
 
                 
-                    <div id="method_checkEqualDimensions" class="method item">
-    <h3 class="name"><code>checkEqualDimensions</code></h3>
+                    <div id="method_checkHit" class="method item">
+    <h3 class="name"><code>checkHit</code></h3>
 
     
         <span class="paren">()</span>
     
 
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
     
 
     
@@ -872,7 +923,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3488"><code>source\scrawlStacks.js:3488</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1342"><code>source\scrawlFrame.js:1342</code></a>
         
         </p>
 
@@ -883,10 +934,182 @@
     </div>
 
     <div class="description">
-        <p>check whether this.equalHeight or this.equalWidth has been set to true</p>
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_clear" class="method item">
+    <h3 class="name"><code>clear</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1240"><code>source\scrawlFrame.js:1240</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_clearShadow" class="method item private">
+    <h3 class="name"><code>clearShadow</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1180"><code>source\scrawlFrame.js:1180</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)</p>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -896,7 +1119,7 @@
             <div class="returns-description">
                 
                     
-                    <p>True if either equalWidth or equalHeight is true; false otherwise</p>
+                    <p>This</p>
 
                 
             </div>
@@ -907,7 +1130,115 @@
 </div>
 
                 
-                    <div id="method_clone" class="method item inherited">
+                    <div id="method_clearWithBackground" class="method item">
+    <h3 class="name"><code>clearWithBackground</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1257"><code>source\scrawlFrame.js:1257</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_clip" class="method item">
+    <h3 class="name"><code>clip</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1231"><code>source\scrawlFrame.js:1231</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_clone" class="method item">
     <h3 class="name"><code>clone</code></h3>
 
     
@@ -946,13 +1277,16 @@
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="../classes/Base.html#method_clone">
+                Base
+            </a>
             
-                <p>Inherited from
-                <a href="../classes/Base.html#method_clone">Base</a>:
+            but overwritten in
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2249"><code>source\scrawlCore.js:2249</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l564"><code>source\scrawlFrame.js:564</code></a>
         
         </p>
 
@@ -963,9 +1297,7 @@
     </div>
 
     <div class="description">
-        <p>Clone a Scrawl.js object, optionally altering attribute values in the cloned object</p>
-<p>Note that any callback or fn attribute functions will be referenced by the clone, not copied to the clone; these can be overwritten with new anonymous functions by including them in the items argument object</p>
-<p>(This function is replaced by the path extension)</p>
+        <p>Augments Base.clone()</p>
 
     </div>
 
@@ -984,7 +1316,7 @@
                     
 
                     <div class="param-description">
-                        <p>Object containing attribute key:value pairs; will overwrite existing values in the cloned, but not the source, Object</p>
+                        <p>Object consisting of key:value attributes</p>
 
                     </div>
 
@@ -1002,39 +1334,309 @@
             <div class="returns-description">
                 
                     
-                    <p>Cloned object</p>
+                    <p>This</p>
 
                 
             </div>
         </div>
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
-    width: 50,
-    height: 50
-    });
-var newBox = box.clone({
-    height: 100
-    });
-newBox.get(&#39;width&#39;);        //returns 50
-newBox.get(&#39;height&#39;);       //returns 100</code></pre>
-
-            </div>
-        </div>
     
 </div>
 
                 
-                    <div id="method_domInit" class="method item">
-    <h3 class="name"><code>domInit</code></h3>
+                    <div id="method_collisionsEntityRegisterInLibrary" class="method item private">
+    <h3 class="name"><code>collisionsEntityRegisterInLibrary</code></h3>
 
     
         <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l517"><code>source\scrawlFrame.js:517</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Frame.registerInLibrary hook function - modified by collisions extension</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_draw" class="method item">
+    <h3 class="name"><code>draw</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1275"><code>source\scrawlFrame.js:1275</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_drawFill" class="method item">
+    <h3 class="name"><code>drawFill</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1292"><code>source\scrawlFrame.js:1292</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_drawImage" class="method item private">
+    <h3 class="name"><code>drawImage</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1222"><code>source\scrawlFrame.js:1222</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_drawPath" class="method item private">
+    <h3 class="name"><code>drawPath</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1203"><code>source\scrawlFrame.js:1203</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_dropEntity" class="method item">
+    <h3 class="name"><code>dropEntity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[items]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -1068,7 +1670,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3439"><code>source\scrawlStacks.js:3439</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1163"><code>source\scrawlFrame.js:1163</code></a>
         
         </p>
 
@@ -1079,10 +1681,35 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>Reinitialize group elements with existing values</p>
+        <p>Revert pickupEntity() actions, ensuring entity is left where the user drops it</p>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[items]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Alternative pivot String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1097,6 +1724,281 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_fill" class="method item">
+    <h3 class="name"><code>fill</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1284"><code>source\scrawlFrame.js:1284</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_fillDraw" class="method item">
+    <h3 class="name"><code>fillDraw</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1303"><code>source\scrawlFrame.js:1303</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_filtersEntityInit" class="method item private">
+    <h3 class="name"><code>filtersEntityInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l944"><code>source\scrawlFrame.js:944</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity constructor hook function - modified by filters module</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_floatOver" class="method item">
+    <h3 class="name"><code>floatOver</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1324"><code>source\scrawlFrame.js:1324</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_forceStamp" class="method item private">
+    <h3 class="name"><code>forceStamp</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l913"><code>source\scrawlFrame.js:913</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
     
 
     
@@ -1219,31 +2121,19 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_getAllAt" class="method item">
-    <h3 class="name"><code>getAllAt</code></h3>
+                    <div id="method_getAngle" class="method item private">
+    <h3 class="name"><code>getAngle</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
+        <span class="paren">()</span>
     
 
     
 
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1265,7 +2155,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3654"><code>source\scrawlStacks.js:3654</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1122"><code>source\scrawlFrame.js:1122</code></a>
         
         </p>
 
@@ -1276,498 +2166,19 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Check all entitys and elements in the Group to see if they are colliding with the supplied coordinate.</p>
-
+        
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Coordinate vector; alternatively an Object with x and y attributes can be used</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Entity object, or false if no entitys are colliding with the coordinate</p>
-
-                
-            </div>
-        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_getAllElementsAt" class="method item">
-    <h3 class="name"><code>getAllElementsAt</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3698"><code>source\scrawlStacks.js:3698</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Check all elements in the Group to see if they are colliding with the supplied coordinate.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Coordinate vector; alternatively an Object with x and y attributes can be used</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Array of Stack, Pad and Element objects</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_getAt" class="method item">
-    <h3 class="name"><code>getAt</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>if</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3619"><code>source\scrawlStacks.js:3619</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Return the entity or element at a given coordinate (in that order)</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Coordinate vector; alternatively an Object with x and y attributes can be used</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">if</code>
-                        <span class="type">Boolean</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>true, elements are checked first; default is false</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>entity or element, or false</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_getByMouseIndex" class="method item">
-    <h3 class="name"><code>getByMouseIndex</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>item</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3642"><code>source\scrawlStacks.js:3642</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Check all entitys and elements in the Group to see which one(s) are associated with a particular mouse index</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">item</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Mouse index string</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Array of Entity, Stack, Pad and Element objects</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_getElementAt" class="method item">
-    <h3 class="name"><code>getElementAt</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3666"><code>source\scrawlStacks.js:3666</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Return the element at a given coordinate (in that order)</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Coordinate vector; alternatively an Object with x and y attributes can be used</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>element, or false</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_getElementGroupDimensions" class="method item">
-    <h3 class="name"><code>getElementGroupDimensions</code></h3>
+                    <div id="method_getCorners" class="method item">
+    <h3 class="name"><code>getCorners</code></h3>
 
     
         <span class="paren">()</span>
@@ -1802,7 +2213,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3324"><code>source\scrawlStacks.js:3324</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l662"><code>source\scrawlFrame.js:662</code></a>
         
         </p>
 
@@ -1813,8 +2224,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Get collective dimensions of ElementGroup elements</p>
-
+        
     </div>
 
     
@@ -1826,7 +2236,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>Object with width and height attributes</p>
+                    <p>Object containing x/y coordinate objects for each corner</p>
 
                 
             </div>
@@ -1834,11 +2244,83 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>Returns an object with the following structure:
+
+{
+    topLeft: {x: 0, y:0},
+    topRight: {x: 0, y:0},
+    bottomRight: {x: 0, y:0},
+    bottomLeft: {x: 0, y:0}
+}</code></pre>
+
+            </div>
+        </div>
+    
 </div>
 
                 
-                    <div id="method_getElementsByMouseIndex" class="method item">
-    <h3 class="name"><code>getElementsByMouseIndex</code></h3>
+                    <div id="method_getLength" class="method item private">
+    <h3 class="name"><code>getLength</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1115"><code>source\scrawlFrame.js:1115</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_getMaxDimensions" class="method item private">
+    <h3 class="name"><code>getMaxDimensions</code></h3>
 
     
         <div class="args">
@@ -1846,7 +2328,13 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
                 <li class="arg">
                     
-                        <code>item</code>
+                        <code>cell</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>entity</code>
                     
                 </li>
             
@@ -1858,6 +2346,234 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
         <span class="returns-inline">
             <span class="type"></span>
         </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1363"><code>source\scrawlFrame.js:1363</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Calculate the box position of the entity</p>
+<p>Returns an object with the following attributes:</p>
+<ul>
+<li><strong>left</strong> - x coordinate of top-left corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>top</strong> - y coordinate of top-left corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>bottom</strong> - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>left</strong> - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+</ul>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">entity</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>dimensions object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getPosition" class="method item private">
+    <h3 class="name"><code>getPosition</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1108"><code>source\scrawlFrame.js:1108</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_lockOn" class="method item private">
+    <h3 class="name"><code>lockOn</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l853"><code>source\scrawlFrame.js:853</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_none" class="method item">
+    <h3 class="name"><code>none</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
     
 
     
@@ -1883,7 +2599,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3689"><code>source\scrawlStacks.js:3689</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1334"><code>source\scrawlFrame.js:1334</code></a>
         
         </p>
 
@@ -1894,48 +2610,11 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Check all elements in the Group to see which one(s) are associated with a particular mouse index</p>
-
+        
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">item</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Mouse index string</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Array of Stack, Pad and Element objects</p>
-
-                
-            </div>
-        </div>
     
 
     
@@ -2136,8 +2815,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_pivotElementsTo" class="method item">
-    <h3 class="name"><code>pivotElementsTo</code></h3>
+                    <div id="method_pickupEntity" class="method item">
+    <h3 class="name"><code>pickupEntity</code></h3>
 
     
         <div class="args">
@@ -2145,7 +2824,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
                 <li class="arg">
                     
-                        <code>item</code>
+                        <code>items</code>
                     
                 </li>
             
@@ -2184,7 +2863,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3707"><code>source\scrawlStacks.js:3707</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1146"><code>source\scrawlFrame.js:1146</code></a>
         
         </p>
 
@@ -2195,8 +2874,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Require all elements in the Group to set their pivot attribute to the supplied STACKNAME, PADNAME, ELEMENTNAME, POINTNAME or SPRITENAME string, and set their handle Vector to reflect the current vector between that object&#39;s start Vector and their own Vector</p>
-<p>This has the effect of turning a set of disparate eelements into a single, coordinated group.</p>
+        <p>Set entity&#39;s pivot to &#39;mouse&#39;; set handles to supplied Vector value; set order to +9999</p>
 
     </div>
 
@@ -2208,14 +2886,14 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
                 <li class="param">
                     
-                        <code class="param-name">item</code>
-                        <span class="type">String</span>
+                        <code class="param-name">items</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>STACKNAME, PADNAME, ELEMENTNAME, POINTNAME or SPRITENAME String</p>
+                        <p>Coordinate vector; alternatively an object with {x, y} attributes can be used</p>
 
                     </div>
 
@@ -2244,136 +2922,25 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_removeElementsFromGroup" class="method item">
-    <h3 class="name"><code>removeElementsFromGroup</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>item</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3515"><code>source\scrawlStacks.js:3515</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Remove elements from the Group</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">item</code>
-                        <span class="type">Array</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of ELEMENTNAME Strings; alternatively, a single ELEMENTNAME String can be supplied as the argument</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_render" class="method item">
-    <h3 class="name"><code>render</code></h3>
+                    <div id="method_prepareStamp" class="method item private">
+    <h3 class="name"><code>prepareStamp</code></h3>
 
     
         <span class="paren">()</span>
     
 
     
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
 
     
 
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
     
 
     
@@ -2389,7 +2956,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3362"><code>source\scrawlStacks.js:3362</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1195"><code>source\scrawlFrame.js:1195</code></a>
         
         </p>
 
@@ -2400,53 +2967,36 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Tell the Group to ask its constituent elements to render</p>
-
+        
     </div>
 
     
 
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_renderPads" class="method item">
-    <h3 class="name"><code>renderPads</code></h3>
+                    <div id="method_redrawCanvas" class="method item private">
+    <h3 class="name"><code>redrawCanvas</code></h3>
 
     
         <span class="paren">()</span>
     
 
     
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
 
     
 
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
     
 
     
@@ -2462,7 +3012,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3411"><code>source\scrawlStacks.js:3411</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l969"><code>source\scrawlFrame.js:969</code></a>
         
         </p>
 
@@ -2473,31 +3023,74 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Tell the Group to ask its constituent pads to render - will cascade through to sub-stacks</p>
-
+        
     </div>
 
     
 
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_set" class="method item inherited">
+                    <div id="method_resetEasel" class="method item private">
+    <h3 class="name"><code>resetEasel</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1138"><code>source\scrawlFrame.js:1138</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_set" class="method item">
     <h3 class="name"><code>set</code></h3>
 
     
@@ -2536,13 +3129,16 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="../classes/Base.html#method_set">
+                Base
+            </a>
             
-                <p>Inherited from
-                <a href="../classes/Base.html#method_set">Base</a>:
+            but overwritten in
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2218"><code>source\scrawlCore.js:2218</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l525"><code>source\scrawlFrame.js:525</code></a>
         
         </p>
 
@@ -2553,612 +3149,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.</p>
-<p>An attribute value will only be set if the object already has a default value for that attribute. This restricts the ability of coders to add attributes to Scrawl objects.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
-    width: 50,
-    height: 50
-    });
-box.set({
-    height: 100,
-    favouriteAnimal: &#39;cat&#39;
-    });
-box.get(&#39;width&#39;);               //returns 50
-box.get(&#39;height&#39;);              //returns 100
-box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
-
-            </div>
-        </div>
-    
-</div>
-
-                
-                    <div id="method_setDirtyHandles" class="method item private">
-    <h3 class="name"><code>setDirtyHandles</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3785"><code>source\scrawlStacks.js:3785</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Augments ElementGroup.set()</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setDirtyStarts" class="method item private">
-    <h3 class="name"><code>setDirtyStarts</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3750"><code>source\scrawlStacks.js:3750</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Augments ElementGroup.set()</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setElementsTo" class="method item">
-    <h3 class="name"><code>setElementsTo</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3566"><code>source\scrawlStacks.js:3566</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Ask all elements in the Group to perform a set() operation</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setEntitysTo" class="method item">
-    <h3 class="name"><code>setEntitysTo</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3607"><code>source\scrawlStacks.js:3607</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Ask all elements and entitys in the Group to perform a set() operation</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_sortElements" class="method item private">
-    <h3 class="name"><code>sortElements</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[force]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3309"><code>source\scrawlStacks.js:3309</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Element sorting routine - elements are sorted according to their element.order attribute value, in ascending order</p>
-<p>Order values are treated as integers. The sort routine is a form of bucket sort, and should be stable (elements with equal order values should not be swapped)</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[force]</code>
-                        <span class="type">Boolean</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Force a resort, whatever the settings of the group&#39;s entitySort and resort attributes</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Nothing</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_update" class="method item">
-    <h3 class="name"><code>update</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3460"><code>source\scrawlStacks.js:3460</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A <strong>display</strong> function to update DOM elements&#39; 3d position/rotation</p>
-<p>Argument can contain the following (optional) attributes:</p>
-<ul>
-<li><strong>quaternion</strong> - quaternion representing the rotation to be applied to the element</li>
-<li><strong>distance</strong> - distance of element from the rotation origin</li>
-</ul>
+        <p>Augments Base.set()</p>
 
     </div>
 
@@ -3206,8 +3197,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_updateBy" class="method item">
-    <h3 class="name"><code>updateBy</code></h3>
+                    <div id="method_setCorners" class="method item private">
+    <h3 class="name"><code>setCorners</code></h3>
 
     
         <div class="args">
@@ -3232,6 +3223,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
+        <span class="flag private">private</span>
+    
 
     
 
@@ -3254,7 +3247,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3553"><code>source\scrawlStacks.js:3553</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l592"><code>source\scrawlFrame.js:592</code></a>
         
         </p>
 
@@ -3265,8 +3258,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Ask all elements and entitys in the Group to perform a setDelta() operation</p>
-
+        
     </div>
 
     
@@ -3284,7 +3276,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                     
 
                     <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
+                        <p>Object consisting of key:value attributes</p>
 
                     </div>
 
@@ -3313,27 +3305,11 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_updateDimensions" class="method item">
-    <h3 class="name"><code>updateDimensions</code></h3>
+                    <div id="method_setDestinationEngine" class="method item private">
+    <h3 class="name"><code>setDestinationEngine</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
+        <span class="paren">()</span>
     
 
     
@@ -3341,11 +3317,13 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-
+        <span class="flag private">private</span>
     
 
     
-        <span class="flag chainable">chainable</span>
+
+    
+
     
 
     
@@ -3361,7 +3339,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3584"><code>source\scrawlStacks.js:3584</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l777"><code>source\scrawlFrame.js:777</code></a>
         
         </p>
 
@@ -3372,75 +3350,22 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Ask all elements in the Group to perform a dimension update operation</p>
-
+        
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_updateElementsBy" class="method item">
-    <h3 class="name"><code>updateElementsBy</code></h3>
+                    <div id="method_setEasel" class="method item private">
+    <h3 class="name"><code>setEasel</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
+        <span class="paren">()</span>
     
 
     
@@ -3448,11 +3373,13 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-
+        <span class="flag private">private</span>
     
 
     
-        <span class="flag chainable">chainable</span>
+
+    
+
     
 
     
@@ -3468,7 +3395,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3533"><code>source\scrawlStacks.js:3533</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1129"><code>source\scrawlFrame.js:1129</code></a>
         
         </p>
 
@@ -3479,48 +3406,460 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Ask all elements in the Group to perform a setDelta() operation</p>
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setEngine" class="method item private">
+    <h3 class="name"><code>setEngine</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l714"><code>source\scrawlFrame.js:714</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setLockElementAttributes" class="method item private">
+    <h3 class="name"><code>setLockElementAttributes</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l893"><code>source\scrawlFrame.js:893</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_sinkInto" class="method item">
+    <h3 class="name"><code>sinkInto</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1314"><code>source\scrawlFrame.js:1314</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_stamp" class="method item private">
+    <h3 class="name"><code>stamp</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l924"><code>source\scrawlFrame.js:924</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_stampFilter" class="method item private">
+    <h3 class="name"><code>stampFilter</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l952"><code>source\scrawlFrame.js:952</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity</p>
 
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
+</div>
 
                 
-            </div>
-        </div>
+                    <div id="method_stampFilterActions" class="method item private">
+    <h3 class="name"><code>stampFilterActions</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1435"><code>source\scrawlFrame.js:1435</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>reciprocal assignment - also occurs in scrawlFilters as there&#39;s no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_stampFilterDefault" class="method item private">
+    <h3 class="name"><code>stampFilterDefault</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l960"><code>source\scrawlFrame.js:960</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.stamp hook helper function</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_updateCurrentCopy" class="method item private">
+    <h3 class="name"><code>updateCurrentCopy</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1080"><code>source\scrawlFrame.js:1080</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
     
 
     
@@ -3579,288 +3918,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_currentHeight" class="property item">
-    <h3 class="name"><code>currentHeight</code></h3>
-    <span class="type">Number</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3228"><code>source\scrawlStacks.js:3228</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Current value of takkest element height</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> 0</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_currentWidth" class="property item">
-    <h3 class="name"><code>currentWidth</code></h3>
-    <span class="type">Number</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3221"><code>source\scrawlStacks.js:3221</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>current value of widest element width</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> 0</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_elements" class="property item">
-    <h3 class="name"><code>elements</code></h3>
-    <span class="type">Array</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3214"><code>source\scrawlStacks.js:3214</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Array of ELEMENTNAME Strings of elements that complement this ElementGroup</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> []</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_entitys" class="property item">
-    <h3 class="name"><code>entitys</code></h3>
-    <span class="type">Array</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3207"><code>source\scrawlStacks.js:3207</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Array of SPRITENAME Strings of entitys that complement this ElementGroup</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> []</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_equalHeight" class="property item">
-    <h3 class="name"><code>equalHeight</code></h3>
-    <span class="type">Boolean</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3242"><code>source\scrawlStacks.js:3242</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>When true, forces all elements (including stacks, pads) to use the height of the currently tallest element; default: false</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> false</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_equalWidth" class="property item">
-    <h3 class="name"><code>equalWidth</code></h3>
-    <span class="type">Boolean</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3235"><code>source\scrawlStacks.js:3235</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>When true, forces all elements (including stacks, pads) to use the width of the currently widest element; default: false</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> false</p>
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="property_name" class="property item inherited">
     <h3 class="name"><code>name</code></h3>
     <span class="type">String</span>
@@ -3895,100 +3952,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     </div>
 
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_recalculateDimensions" class="property item">
-    <h3 class="name"><code>recalculateDimensions</code></h3>
-    <span class="type">Boolean</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3249"><code>source\scrawlStacks.js:3249</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>STACKNAME of the default Stack object to which this group is associated</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> false</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_stack" class="property item">
-    <h3 class="name"><code>stack</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l3256"><code>source\scrawlStacks.js:3256</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>STACKNAME of the default Stack object to which this group is associated</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> &#x27;&#x27;</p>
     
 
     
@@ -4110,7 +4073,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l3198"><code>source\scrawlStacks.js:3198</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l454"><code>source\scrawlFrame.js:454</code></a>
         
         </p>
 
@@ -4124,7 +4087,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;ElementGroup&#x27;</p>
+        <p><strong>Default:</strong> &#x27;Frame&#x27;</p>
     
 
     

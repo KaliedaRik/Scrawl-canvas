@@ -403,13 +403,13 @@ Particle.getStartValues
 @method getStartValues
 @return Object containing x and y Number attributes representing the particle's current position with respect to its Cell's top left hand corner
 **/
-	my.Particle.prototype.getStartValues = function() {
-		var start = this.place;
-		return {
-			x: start.x,
-			y: start.y
+		my.Particle.prototype.getStartValues = function() {
+			var start = this.place;
+			return {
+				x: start.x,
+				y: start.y
+			};
 		};
-	};
 		/**
 Augments Base.set()
 

@@ -217,7 +217,7 @@ Augments Entity.set()
 				this.height = this.width;
 				this.maxDimensions.flag = true;
 			}
-			if(xt(items.checkHitRadius)){
+			if (xt(items.checkHitRadius)) {
 				this.localCheckHitRadius = this.setRadius(this.checkHitRadius);
 			}
 			return this;
@@ -230,11 +230,11 @@ set helper function
 **/
 		my.Wheel.prototype.setRadius = function(item) {
 			var cell;
-			if(item.toFixed){
+			if (item.toFixed) {
 				return item;
 			}
 			cell = my.cell[my.group[this.group].cell];
-			if(my.xt(cell, cell.actualWidth)){
+			if (my.xt(cell, cell.actualWidth)) {
 				return (parseFloat(item) / 100) * cell.actualWidth;
 			}
 			return 0;
@@ -253,7 +253,7 @@ Augments Entity.setDelta()
 			items = my.safeObject(items);
 			if (xt(items.radius)) {
 				r = this.setRadius(items.radius);
-				if(items.radius.substring){
+				if (items.radius.substring) {
 					this.radius = my.addPercentages(this.radius, items.radius);
 				}
 				this.localRadius += r;
@@ -263,7 +263,7 @@ Augments Entity.setDelta()
 			}
 			if (xt(items.checkHitRadius)) {
 				r = this.setRadius(items.checkHitRadius);
-				if(items.checkHitRadius.substring){
+				if (items.checkHitRadius.substring) {
 					this.checkHitRadius = my.addPercentages(this.checkHitRadius, items.checkHitRadius);
 				}
 				this.localCheckHitRadius += r;

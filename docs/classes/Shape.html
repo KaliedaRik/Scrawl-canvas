@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -452,20 +460,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_calculatePOV">calculatePOV</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
-                                <a href="#method_callMethod">callMethod</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item method inherited">
                                 <a href="#method_checkHit">checkHit</a>
 
@@ -538,20 +532,6 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_completeOutline">completeOutline</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
-                                <a href="#method_convertX">convertX</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
-                                <a href="#method_convertY">convertY</a>
 
                                 
                                 
@@ -635,13 +615,6 @@
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_getCenteredPivotOffsetVector">getCenteredPivotOffsetVector</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
                                 <a href="#method_getChanges">getChanges</a>
 
                                 
@@ -669,15 +642,29 @@
                                 
                             </li>
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_getOffsetStartVector">getOffsetStartVector</a>
+                            <li class="index-item method private inherited">
+                                <a href="#method_getHandleValues">getHandleValues</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getMaxDimensions">getMaxDimensions</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_getPivotOffsetVector">getPivotOffsetVector</a>
+                                <a href="#method_getReferenceDimensions">getReferenceDimensions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_getStart">getStart</a>
 
                                 
                                 
@@ -690,8 +677,29 @@
                                 
                             </li>
                         
+                            <li class="index-item method inherited">
+                                <a href="#method_getX">getX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_getY">getY</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private inherited">
                                 <a href="#method_none">none</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_numberConvert">numberConvert</a>
 
                                 
                                 
@@ -733,21 +741,14 @@
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_prepareStamp">prepareStamp</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
                                 <a href="#method_registerInLibrary">registerInLibrary</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_resetWork">resetWork</a>
+                            <li class="index-item method inherited">
+                                <a href="#method_resetCollisionPoints">resetCollisionPoints</a>
 
                                 
                                 
@@ -789,6 +790,20 @@
                             </li>
                         
                             <li class="index-item method inherited">
+                                <a href="#method_setDeltaHeight">setDeltaHeight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setDeltaRoll">setDeltaRoll</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
                                 <a href="#method_setDeltaScale">setDeltaScale</a>
 
                                 
@@ -803,6 +818,13 @@
                             </li>
                         
                             <li class="index-item method inherited">
+                                <a href="#method_setDeltaWidth">setDeltaWidth</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
                                 <a href="#method_setHandle">setHandle</a>
 
                                 
@@ -811,13 +833,6 @@
                         
                             <li class="index-item method private inherited">
                                 <a href="#method_setStampUsingPivot">setStampUsingPivot</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_setStampUsingStacksPivot">setStampUsingStacksPivot</a>
 
                                 
                                 
@@ -846,6 +861,20 @@
                         
                             <li class="index-item method private inherited">
                                 <a href="#method_stampFilter">stampFilter</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_updateCurrentHandle">updateCurrentHandle</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_updateCurrentStart">updateCurrentStart</a>
 
                                 
                                 
@@ -1022,6 +1051,13 @@
                                 
                             </li>
                         
+                            <li class="index-item property private inherited">
+                                <a href="#property_maxDimensions">maxDimensions</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_method">method</a>
 
@@ -1045,13 +1081,6 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_name">name</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private inherited">
-                                <a href="#property_offset">offset</a>
 
                                 
                                 
@@ -1218,13 +1247,6 @@
                                 
                             </li>
                         
-                            <li class="index-item property private inherited">
-                                <a href="#property_work">work</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -1270,7 +1292,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3141"><code>source\scrawlCore.js:3141</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3260"><code>source\scrawlCore.js:3260</code></a>
         
         </p>
 
@@ -1324,7 +1346,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2963"><code>source\scrawlCore.js:2963</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2980"><code>source\scrawlCore.js:2980</code></a>
         
         </p>
 
@@ -1378,7 +1400,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2927"><code>source\scrawlCore.js:2927</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2928"><code>source\scrawlCore.js:2928</code></a>
         
         </p>
 
@@ -1432,7 +1454,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3026"><code>source\scrawlCore.js:3026</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3077"><code>source\scrawlCore.js:3077</code></a>
         
         </p>
 
@@ -1505,7 +1527,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l755"><code>source\scrawlShape.js:755</code></a>
+        <a href="../files/source_scrawlShape.js.html#l753"><code>source\scrawlShape.js:753</code></a>
         
         </p>
 
@@ -1614,7 +1636,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l167"><code>source\scrawlShape.js:167</code></a>
+        <a href="../files/source_scrawlShape.js.html#l165"><code>source\scrawlShape.js:165</code></a>
         
         </p>
 
@@ -1674,335 +1696,6 @@
 </div>
 
                 
-                    <div id="method_calculatePOV" class="method item private inherited">
-    <h3 class="name"><code>calculatePOV</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>result</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>width</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>height</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>centered</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Position.html#method_calculatePOV">Position</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l3195"><code>source\scrawlCore.js:3195</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Position.getOffsetStartVector() helper function. Calculates the pixel values for the object&#39;s handle attribute</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">result</code>
-                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>object&#39;s handle vector</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">width</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>object&#39;s width (pixels)</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">height</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>object&#39;s height (pixels)</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">centered</code>
-                        <span class="type">Boolean</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>true if object&#39;s frame of reference is its center point; false otherwise</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>A Vector of calculated offset values</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_callMethod" class="method item private inherited">
-    <h3 class="name"><code>callMethod</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>cell</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>engine</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[method]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Entity.html#method_callMethod">Entity</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l6993"><code>source\scrawlCore.js:6993</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stamp helper function - direct entity to the required drawing method function</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">cell</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">engine</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[method]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Permitted method attribute String; by default, will use entity&#39;s own method setting</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_checkHit" class="method item">
     <h3 class="name"><code>checkHit</code></h3>
 
@@ -2049,7 +1742,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l718"><code>source\scrawlShape.js:718</code></a>
+        <a href="../files/source_scrawlShape.js.html#l717"><code>source\scrawlShape.js:717</code></a>
         
         </p>
 
@@ -2171,7 +1864,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l581"><code>source\scrawlShape.js:581</code></a>
+        <a href="../files/source_scrawlShape.js.html#l582"><code>source\scrawlShape.js:582</code></a>
         
         </p>
 
@@ -2299,7 +1992,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7240"><code>source\scrawlCore.js:7240</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7567"><code>source\scrawlCore.js:7567</code></a>
         
         </p>
 
@@ -2561,7 +2254,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l566"><code>source\scrawlShape.js:566</code></a>
+        <a href="../files/source_scrawlShape.js.html#l567"><code>source\scrawlShape.js:567</code></a>
         
         </p>
 
@@ -2684,7 +2377,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6848"><code>source\scrawlCore.js:6848</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7205"><code>source\scrawlCore.js:7205</code></a>
         
         </p>
 
@@ -2774,7 +2467,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6734"><code>source\scrawlCore.js:6734</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7095"><code>source\scrawlCore.js:7095</code></a>
         
         </p>
 
@@ -2828,7 +2521,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6754"><code>source\scrawlCore.js:6754</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7115"><code>source\scrawlCore.js:7115</code></a>
         
         </p>
 
@@ -2882,7 +2575,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6806"><code>source\scrawlCore.js:6806</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7172"><code>source\scrawlCore.js:7172</code></a>
         
         </p>
 
@@ -2936,7 +2629,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6842"><code>source\scrawlCore.js:6842</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7199"><code>source\scrawlCore.js:7199</code></a>
         
         </p>
 
@@ -3007,7 +2700,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l341"><code>source\scrawlShape.js:341</code></a>
+        <a href="../files/source_scrawlShape.js.html#l339"><code>source\scrawlShape.js:339</code></a>
         
         </p>
 
@@ -3056,258 +2749,6 @@
                 
                     
                     <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_convertX" class="method item private inherited">
-    <h3 class="name"><code>convertX</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>x</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>cell</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Position.html#method_convertX">Position</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l3350"><code>source\scrawlCore.js:3350</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stamp helper function - convert string start.x values to numerical values</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">x</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>coordinate String</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">cell</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>reference cell name String; or alternatively DOM canvas object</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Number - x value</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_convertY" class="method item private inherited">
-    <h3 class="name"><code>convertY</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>y</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>cell</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Position.html#method_convertY">Position</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l3385"><code>source\scrawlCore.js:3385</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stamp helper function - convert string start.y values to numerical values</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">y</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>coordinate String</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">cell</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>reference cell name String</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Number - y value</p>
 
                 
             </div>
@@ -3367,7 +2808,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3315"><code>source\scrawlCore.js:3315</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3508"><code>source\scrawlCore.js:3508</code></a>
         
         </p>
 
@@ -3497,7 +2938,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l326"><code>source\scrawlShape.js:326</code></a>
+        <a href="../files/source_scrawlShape.js.html#l324"><code>source\scrawlShape.js:324</code></a>
         
         </p>
 
@@ -3628,7 +3069,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l615"><code>source\scrawlShape.js:615</code></a>
+        <a href="../files/source_scrawlShape.js.html#l614"><code>source\scrawlShape.js:614</code></a>
         
         </p>
 
@@ -3759,7 +3200,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l643"><code>source\scrawlShape.js:643</code></a>
+        <a href="../files/source_scrawlShape.js.html#l642"><code>source\scrawlShape.js:642</code></a>
         
         </p>
 
@@ -3879,7 +3320,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7296"><code>source\scrawlCore.js:7296</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7623"><code>source\scrawlCore.js:7623</code></a>
         
         </p>
 
@@ -3995,7 +3436,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l629"><code>source\scrawlShape.js:629</code></a>
+        <a href="../files/source_scrawlShape.js.html#l628"><code>source\scrawlShape.js:628</code></a>
         
         </p>
 
@@ -4126,7 +3567,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l659"><code>source\scrawlShape.js:659</code></a>
+        <a href="../files/source_scrawlShape.js.html#l658"><code>source\scrawlShape.js:658</code></a>
         
         </p>
 
@@ -4232,7 +3673,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6728"><code>source\scrawlCore.js:6728</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7089"><code>source\scrawlCore.js:7089</code></a>
         
         </p>
 
@@ -4311,7 +3752,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l690"><code>source\scrawlShape.js:690</code></a>
+        <a href="../files/source_scrawlShape.js.html#l689"><code>source\scrawlShape.js:689</code></a>
         
         </p>
 
@@ -4401,7 +3842,19 @@
             
                 <li class="arg">
                     
+                        <code class="optional">[cellname]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
                         <code class="optional">[cell]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[mouse]</code>
                     
                 </li>
             
@@ -4437,7 +3890,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6899"><code>source\scrawlCore.js:6899</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7256"><code>source\scrawlCore.js:7256</code></a>
         
         </p>
 
@@ -4490,7 +3943,7 @@
             
                 <li class="param">
                     
-                        <code class="param-name optional">[cell]</code>
+                        <code class="param-name optional">[cellname]</code>
                         <span class="type">String</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
@@ -4498,7 +3951,41 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+                        <p>CELLNAME of cell on which entitys are to draw themselves</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>cell wrapper object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[mouse]</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinates to be used for any entity currently pivoted to a mouse/touch event</p>
 
                     </div>
 
@@ -4573,7 +4060,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6760"><code>source\scrawlCore.js:6760</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7121"><code>source\scrawlCore.js:7121</code></a>
         
         </p>
 
@@ -4633,80 +4120,6 @@
 </div>
 
                 
-                    <div id="method_getCenteredPivotOffsetVector" class="method item private inherited">
-    <h3 class="name"><code>getCenteredPivotOffsetVector</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Position.html#method_getCenteredPivotOffsetVector">Position</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l3178"><code>source\scrawlCore.js:3178</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p><p>Position.getOffsetStartVector() helper function. Supervises the calculation of the pixel values for the object&#39;s handle attribute, where the object&#39;s frame of reference is its center</p></p>
-<ul>
-<li>doesn&#39;t take into account the object&#39;s scaling or orientation</li>
-<li>(badly named function - getPivotOffsetVector has nothing to do with pivots)</li>
-</ul>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>A Vector of calculated offset values to help determine where entity/cell/element drawing should start</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_getChanges" class="method item private inherited">
     <h3 class="name"><code>getChanges</code></h3>
 
@@ -4754,7 +4167,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6123"><code>source\scrawlCore.js:6123</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6416"><code>source\scrawlCore.js:6416</code></a>
         
         </p>
 
@@ -4861,7 +4274,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6104"><code>source\scrawlCore.js:6104</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6375"><code>source\scrawlCore.js:6375</code></a>
         
         </p>
 
@@ -4956,7 +4369,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6890"><code>source\scrawlCore.js:6890</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7247"><code>source\scrawlCore.js:7247</code></a>
         
         </p>
 
@@ -5036,7 +4449,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6874"><code>source\scrawlCore.js:6874</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7231"><code>source\scrawlCore.js:7231</code></a>
         
         </p>
 
@@ -5096,21 +4509,19 @@
 </div>
 
                 
-                    <div id="method_getOffsetStartVector" class="method item inherited">
-    <h3 class="name"><code>getOffsetStartVector</code></h3>
+                    <div id="method_getHandleValues" class="method item private inherited">
+    <h3 class="name"><code>getHandleValues</code></h3>
 
     
         <span class="paren">()</span>
     
 
     
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -5125,11 +4536,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Position.html#method_getOffsetStartVector">Position</a>:
+                <a href="../classes/Entity.html#method_getHandleValues">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3245"><code>source\scrawlCore.js:3245</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7405"><code>source\scrawlCore.js:7405</code></a>
         
         </p>
 
@@ -5140,35 +4551,39 @@
     </div>
 
     <div class="description">
-        <p>Calculates the pixel values of the object&#39;s handle attribute</p>
+        <p>Entity.getHandleValues</p>
 
     </div>
 
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Final offset values (as a Vector) to determine where entity, cell or element drawing should start</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_getPivotOffsetVector" class="method item private">
-    <h3 class="name"><code>getPivotOffsetVector</code></h3>
+                    <div id="method_getMaxDimensions" class="method item private">
+    <h3 class="name"><code>getMaxDimensions</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>entity</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -5193,16 +4608,16 @@
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/Position.html#method_getPivotOffsetVector">
-                Position
-            </a>
             
-            but overwritten in
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l158"><code>source\scrawlShape.js:158</code></a>
+        <a href="../files/source_scrawlShape.js.html#l832"><code>source\scrawlShape.js:832</code></a>
         
         </p>
 
@@ -5213,10 +4628,57 @@
     </div>
 
     <div class="description">
-        <p>Augments Position.getPivotOffsetVector()</p>
+        <p>Calculate the box position of the entity</p>
+<p>Returns an object with the following attributes:</p>
+<ul>
+<li><strong>left</strong> - x coordinate of top-left corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>top</strong> - y coordinate of top-left corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>bottom</strong> - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>left</strong> - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+</ul>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">entity</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -5226,11 +4688,169 @@
             <div class="returns-description">
                 
                     
-                    <p>A Vector of calculated offset values to help determine where entity drawing should start</p>
+                    <p>dimensions object</p>
 
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getReferenceDimensions" class="method item private inherited">
+    <h3 class="name"><code>getReferenceDimensions</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>reference</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">W: width, h: height, c: centered</span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_getReferenceDimensions">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3268"><code>source\scrawlCore.js:3268</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>updateCurrentHandle helper object</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">reference</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">W: width, h: height, c: centered</span>:
+                    
+                    <p>Object with attributes</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getStart" class="method item inherited">
+    <h3 class="name"><code>getStart</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Entity.html#method_getStart">Entity</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l7417"><code>source\scrawlCore.js:7417</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.getStart</p>
+
+    </div>
+
+    
+
     
 
     
@@ -5268,7 +4888,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7086"><code>source\scrawlCore.js:7086</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7393"><code>source\scrawlCore.js:7393</code></a>
         
         </p>
 
@@ -5285,6 +4905,142 @@
 
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_getX" class="method item inherited">
+    <h3 class="name"><code>getX</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_getX">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2964"><code>source\scrawlCore.js:2964</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Get the current start x coordinate</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Attribute value</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getY" class="method item inherited">
+    <h3 class="name"><code>getY</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_getY">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2972"><code>source\scrawlCore.js:2972</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Get the current start y coordinate</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Attribute value</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -5347,7 +5103,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l705"><code>source\scrawlShape.js:705</code></a>
+        <a href="../files/source_scrawlShape.js.html#l704"><code>source\scrawlShape.js:704</code></a>
         
         </p>
 
@@ -5422,6 +5178,132 @@
 </div>
 
                 
+                    <div id="method_numberConvert" class="method item private inherited">
+    <h3 class="name"><code>numberConvert</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>val</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>dim</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_numberConvert">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2296"><code>source\scrawlCore.js:2296</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - convert string percentage values to numerical values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">val</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinate String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">dim</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>dimension value</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number - value</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_parse" class="method item inherited">
     <h3 class="name"><code>parse</code></h3>
 
@@ -5455,7 +5337,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2332"><code>source\scrawlCore.js:2332</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2288"><code>source\scrawlCore.js:2288</code></a>
         
         </p>
 
@@ -5521,7 +5403,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2933"><code>source\scrawlCore.js:2933</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2934"><code>source\scrawlCore.js:2934</code></a>
         
         </p>
 
@@ -5575,7 +5457,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3107"><code>source\scrawlCore.js:3107</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3223"><code>source\scrawlCore.js:3223</code></a>
         
         </p>
 
@@ -5629,7 +5511,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6981"><code>source\scrawlCore.js:6981</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7354"><code>source\scrawlCore.js:7354</code></a>
         
         </p>
 
@@ -5697,7 +5579,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7274"><code>source\scrawlCore.js:7274</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7599"><code>source\scrawlCore.js:7599</code></a>
         
         </p>
 
@@ -5756,78 +5638,6 @@
 </div>
 
                 
-                    <div id="method_prepareStamp" class="method item private inherited">
-    <h3 class="name"><code>prepareStamp</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Entity.html#method_prepareStamp">Entity</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l6927"><code>source\scrawlCore.js:6927</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stamp helper function - get handle offset values</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_registerInLibrary" class="method item private inherited">
     <h3 class="name"><code>registerInLibrary</code></h3>
 
@@ -5865,7 +5675,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6740"><code>source\scrawlCore.js:6740</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7101"><code>source\scrawlCore.js:7101</code></a>
         
         </p>
 
@@ -5900,8 +5710,8 @@
 </div>
 
                 
-                    <div id="method_resetWork" class="method item private inherited">
-    <h3 class="name"><code>resetWork</code></h3>
+                    <div id="method_resetCollisionPoints" class="method item inherited">
+    <h3 class="name"><code>resetCollisionPoints</code></h3>
 
     
         <span class="paren">()</span>
@@ -5916,13 +5726,13 @@
     
 
     
-        <span class="flag private">private</span>
-    
 
     
 
     
 
+    
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -5931,11 +5741,11 @@
         
             
                 <p>Inherited from
-                <a href="../classes/Base.html#method_resetWork">Base</a>:
+                <a href="../classes/Entity.html#method_resetCollisionPoints">Entity</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2340"><code>source\scrawlCore.js:2340</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7347"><code>source\scrawlCore.js:7347</code></a>
         
         </p>
 
@@ -5946,7 +5756,7 @@
     </div>
 
     <div class="description">
-        <p>Restore workspece vector values to their current specified values</p>
+        <p>stamp helper function - amended by collisions extension</p>
 
     </div>
 
@@ -5959,7 +5769,7 @@
             <div class="returns-description">
                 
                     
-                    <p>always true</p>
+                    <p>this</p>
 
                 
             </div>
@@ -6023,7 +5833,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7257"><code>source\scrawlCore.js:7257</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7583"><code>source\scrawlCore.js:7583</code></a>
         
         </p>
 
@@ -6151,7 +5961,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7057"><code>source\scrawlCore.js:7057</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7367"><code>source\scrawlCore.js:7367</code></a>
         
         </p>
 
@@ -6274,7 +6084,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l142"><code>source\scrawlShape.js:142</code></a>
+        <a href="../files/source_scrawlShape.js.html#l150"><code>source\scrawlShape.js:150</code></a>
         
         </p>
 
@@ -6381,7 +6191,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6812"><code>source\scrawlCore.js:6812</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7178"><code>source\scrawlCore.js:7178</code></a>
         
         </p>
 
@@ -6486,7 +6296,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3076"><code>source\scrawlCore.js:3076</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3148"><code>source\scrawlCore.js:3148</code></a>
         
         </p>
 
@@ -6498,6 +6308,214 @@
 
     <div class="description">
         <p>Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaHeight" class="method item inherited">
+    <h3 class="name"><code>setDeltaHeight</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setDeltaHeight">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3209"><code>source\scrawlCore.js:3209</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds the value of each attribute supplied in the argument to existing values. This function accepts height</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaRoll" class="method item inherited">
+    <h3 class="name"><code>setDeltaRoll</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setDeltaRoll">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3183"><code>source\scrawlCore.js:3183</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds the value of each attribute supplied in the argument to existing values. This function accepts roll</p>
 
     </div>
 
@@ -6590,7 +6608,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3095"><code>source\scrawlCore.js:3095</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3171"><code>source\scrawlCore.js:3171</code></a>
         
         </p>
 
@@ -6694,7 +6712,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3058"><code>source\scrawlCore.js:3058</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3125"><code>source\scrawlCore.js:3125</code></a>
         
         </p>
 
@@ -6706,6 +6724,110 @@
 
     <div class="description">
         <p>Adds the value of each attribute supplied in the argument to existing values; This function accepts start, startX, startY</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDeltaWidth" class="method item inherited">
+    <h3 class="name"><code>setDeltaWidth</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_setDeltaWidth">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3195"><code>source\scrawlCore.js:3195</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds the value of each attribute supplied in the argument to existing values. This function accepts width</p>
 
     </div>
 
@@ -6798,7 +6920,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3008"><code>source\scrawlCore.js:3008</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3047"><code>source\scrawlCore.js:3047</code></a>
         
         </p>
 
@@ -6904,7 +7026,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3262"><code>source\scrawlCore.js:3262</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3418"><code>source\scrawlCore.js:3418</code></a>
         
         </p>
 
@@ -6965,74 +7087,6 @@
 </div>
 
                 
-                    <div id="method_setStampUsingStacksPivot" class="method item inherited">
-    <h3 class="name"><code>setStampUsingStacksPivot</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Position.html#method_setStampUsingStacksPivot">Position</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l3341"><code>source\scrawlCore.js:3341</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stamp helper hook function - amended by stacks extension</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>this</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_setStart" class="method item inherited">
     <h3 class="name"><code>setStart</code></h3>
 
@@ -7078,7 +7132,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2990"><code>source\scrawlCore.js:2990</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3017"><code>source\scrawlCore.js:3017</code></a>
         
         </p>
 
@@ -7193,7 +7247,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l675"><code>source\scrawlShape.js:675</code></a>
+        <a href="../files/source_scrawlShape.js.html#l674"><code>source\scrawlShape.js:674</code></a>
         
         </p>
 
@@ -7283,7 +7337,19 @@
             
                 <li class="arg">
                     
+                        <code class="optional">[cellname]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
                         <code class="optional">[cell]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[mouse]</code>
                     
                 </li>
             
@@ -7319,7 +7385,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6941"><code>source\scrawlCore.js:6941</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7286"><code>source\scrawlCore.js:7286</code></a>
         
         </p>
 
@@ -7372,7 +7438,7 @@
             
                 <li class="param">
                     
-                        <code class="param-name optional">[cell]</code>
+                        <code class="param-name optional">[cellname]</code>
                         <span class="type">String</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
@@ -7380,7 +7446,41 @@
                     
 
                     <div class="param-description">
-                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+                        <p>CELLNAME of cell on which entitys are to draw themselves</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>cell wrapper object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[mouse]</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinates to be used for any entity currently pivoted to a mouse/touch event</p>
 
                     </div>
 
@@ -7440,7 +7540,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6987"><code>source\scrawlCore.js:6987</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7360"><code>source\scrawlCore.js:7360</code></a>
         
         </p>
 
@@ -7457,6 +7557,184 @@
 
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_updateCurrentHandle" class="method item private inherited">
+    <h3 class="name"><code>updateCurrentHandle</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_updateCurrentHandle">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3344"><code>source\scrawlCore.js:3344</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Convert handle percentage values to numerical values, stored in currentHandle</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_updateCurrentStart" class="method item private inherited">
+    <h3 class="name"><code>updateCurrentStart</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>reference</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#method_updateCurrentStart">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l3391"><code>source\scrawlCore.js:3391</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Convert start percentage values to numerical values, stored in currentStart</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">reference</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>object - Stack, Pad, Element, Cell or Entity (Block, Wheel, Phrase, Picture, Path, Shape or Frame)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -7491,7 +7769,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2226"><code>source\scrawlCore.js:2226</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2180"><code>source\scrawlCore.js:2180</code></a>
         
         </p>
 
@@ -7537,7 +7815,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6626"><code>source\scrawlCore.js:6626</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6987"><code>source\scrawlCore.js:6987</code></a>
         
         </p>
 
@@ -7581,7 +7859,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6708"><code>source\scrawlCore.js:6708</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7069"><code>source\scrawlCore.js:7069</code></a>
         
         </p>
 
@@ -7630,7 +7908,7 @@
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l116"><code>source\scrawlShape.js:116</code></a>
+        <a href="../files/source_scrawlShape.js.html#l117"><code>source\scrawlShape.js:117</code></a>
         
         </p>
 
@@ -7674,7 +7952,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2911"><code>source\scrawlCore.js:2911</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2912"><code>source\scrawlCore.js:2912</code></a>
         
         </p>
 
@@ -7719,7 +7997,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6643"><code>source\scrawlCore.js:6643</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7004"><code>source\scrawlCore.js:7004</code></a>
         
         </p>
 
@@ -7763,7 +8041,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5878"><code>source\scrawlCore.js:5878</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6147"><code>source\scrawlCore.js:6147</code></a>
         
         </p>
 
@@ -7814,7 +8092,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2805"><code>source\scrawlCore.js:2805</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2802"><code>source\scrawlCore.js:2802</code></a>
         
         </p>
 
@@ -7858,7 +8136,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2812"><code>source\scrawlCore.js:2812</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2809"><code>source\scrawlCore.js:2809</code></a>
         
         </p>
 
@@ -7902,7 +8180,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6027"><code>source\scrawlCore.js:6027</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6296"><code>source\scrawlCore.js:6296</code></a>
         
         </p>
 
@@ -7946,7 +8224,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5914"><code>source\scrawlCore.js:5914</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6183"><code>source\scrawlCore.js:6183</code></a>
         
         </p>
 
@@ -7990,7 +8268,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5921"><code>source\scrawlCore.js:5921</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6190"><code>source\scrawlCore.js:6190</code></a>
         
         </p>
 
@@ -8049,7 +8327,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6634"><code>source\scrawlCore.js:6634</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6995"><code>source\scrawlCore.js:6995</code></a>
         
         </p>
 
@@ -8094,7 +8372,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2762"><code>source\scrawlCore.js:2762</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2739"><code>source\scrawlCore.js:2739</code></a>
         
         </p>
 
@@ -8142,7 +8420,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2890"><code>source\scrawlCore.js:2890</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2891"><code>source\scrawlCore.js:2891</code></a>
         
         </p>
 
@@ -8189,7 +8467,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l124"><code>source\scrawlShape.js:124</code></a>
+        <a href="../files/source_scrawlShape.js.html#l125"><code>source\scrawlShape.js:125</code></a>
         
         </p>
 
@@ -8234,7 +8512,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5951"><code>source\scrawlCore.js:5951</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6220"><code>source\scrawlCore.js:6220</code></a>
         
         </p>
 
@@ -8283,7 +8561,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5975"><code>source\scrawlCore.js:5975</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6244"><code>source\scrawlCore.js:6244</code></a>
         
         </p>
 
@@ -8327,7 +8605,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5982"><code>source\scrawlCore.js:5982</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6251"><code>source\scrawlCore.js:6251</code></a>
         
         </p>
 
@@ -8371,7 +8649,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5963"><code>source\scrawlCore.js:5963</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6232"><code>source\scrawlCore.js:6232</code></a>
         
         </p>
 
@@ -8420,7 +8698,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5944"><code>source\scrawlCore.js:5944</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6213"><code>source\scrawlCore.js:6213</code></a>
         
         </p>
 
@@ -8464,7 +8742,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2819"><code>source\scrawlCore.js:2819</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2816"><code>source\scrawlCore.js:2816</code></a>
         
         </p>
 
@@ -8508,7 +8786,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2826"><code>source\scrawlCore.js:2826</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2823"><code>source\scrawlCore.js:2823</code></a>
         
         </p>
 
@@ -8524,6 +8802,58 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
 
     
         <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_maxDimensions" class="property item private inherited">
+    <h3 class="name"><code>maxDimensions</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Position.html#property_maxDimensions">Position</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2762"><code>source\scrawlCore.js:2762</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><p>An object with the following attributes:</p></p>
+<ul>
+<li><strong>left</strong> - x coordinate of top-left corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>top</strong> - y coordinate of top-left corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>bottom</strong> - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+<li><strong>left</strong> - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> null</p>
     
 
     
@@ -8555,7 +8885,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l133"><code>source\scrawlShape.js:133</code></a>
+        <a href="../files/source_scrawlShape.js.html#l134"><code>source\scrawlShape.js:134</code></a>
         
         </p>
 
@@ -8599,7 +8929,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5989"><code>source\scrawlCore.js:5989</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6258"><code>source\scrawlCore.js:6258</code></a>
         
         </p>
 
@@ -8643,7 +8973,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2844"><code>source\scrawlCore.js:2844</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2830"><code>source\scrawlCore.js:2830</code></a>
         
         </p>
 
@@ -8688,7 +9018,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2197"><code>source\scrawlCore.js:2197</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2158"><code>source\scrawlCore.js:2158</code></a>
         
         </p>
 
@@ -8702,52 +9032,6 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
 
     </div>
 
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_offset" class="property item private inherited">
-    <h3 class="name"><code>offset</code></h3>
-    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Position.html#property_offset">Position</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2833"><code>source\scrawlCore.js:2833</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Positioning helper vector - includes a flag attribute for dirty checking</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> zero vector</p>
     
 
     
@@ -8776,7 +9060,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6657"><code>source\scrawlCore.js:6657</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7018"><code>source\scrawlCore.js:7018</code></a>
         
         </p>
 
@@ -8820,7 +9104,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2897"><code>source\scrawlCore.js:2897</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2898"><code>source\scrawlCore.js:2898</code></a>
         
         </p>
 
@@ -8865,7 +9149,7 @@ The SPRITENAME of a Shape entity whose path is used to calculate this object&#39
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2904"><code>source\scrawlCore.js:2904</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2905"><code>source\scrawlCore.js:2905</code></a>
         
         </p>
 
@@ -8910,7 +9194,7 @@ A value between 0 and 1 to represent the distance along a Shape object&#39;s pat
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2918"><code>source\scrawlCore.js:2918</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2919"><code>source\scrawlCore.js:2919</code></a>
         
         </p>
 
@@ -8955,7 +9239,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2784"><code>source\scrawlCore.js:2784</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2781"><code>source\scrawlCore.js:2781</code></a>
         
         </p>
 
@@ -8999,7 +9283,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6715"><code>source\scrawlCore.js:6715</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7076"><code>source\scrawlCore.js:7076</code></a>
         
         </p>
 
@@ -9043,7 +9327,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2798"><code>source\scrawlCore.js:2798</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2795"><code>source\scrawlCore.js:2795</code></a>
         
         </p>
 
@@ -9087,7 +9371,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2791"><code>source\scrawlCore.js:2791</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2788"><code>source\scrawlCore.js:2788</code></a>
         
         </p>
 
@@ -9131,7 +9415,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6650"><code>source\scrawlCore.js:6650</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7011"><code>source\scrawlCore.js:7011</code></a>
         
         </p>
 
@@ -9175,7 +9459,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6010"><code>source\scrawlCore.js:6010</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6279"><code>source\scrawlCore.js:6279</code></a>
         
         </p>
 
@@ -9219,7 +9503,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6017"><code>source\scrawlCore.js:6017</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6286"><code>source\scrawlCore.js:6286</code></a>
         
         </p>
 
@@ -9267,7 +9551,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5996"><code>source\scrawlCore.js:5996</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6265"><code>source\scrawlCore.js:6265</code></a>
         
         </p>
 
@@ -9311,7 +9595,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6003"><code>source\scrawlCore.js:6003</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6272"><code>source\scrawlCore.js:6272</code></a>
         
         </p>
 
@@ -9355,7 +9639,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2742"><code>source\scrawlCore.js:2742</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2718"><code>source\scrawlCore.js:2718</code></a>
         
         </p>
 
@@ -9402,7 +9686,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5901"><code>source\scrawlCore.js:5901</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6170"><code>source\scrawlCore.js:6170</code></a>
         
         </p>
 
@@ -9453,7 +9737,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6034"><code>source\scrawlCore.js:6034</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6303"><code>source\scrawlCore.js:6303</code></a>
         
         </p>
 
@@ -9504,7 +9788,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6048"><code>source\scrawlCore.js:6048</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6317"><code>source\scrawlCore.js:6317</code></a>
         
         </p>
 
@@ -9556,7 +9840,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2240"><code>source\scrawlCore.js:2240</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2194"><code>source\scrawlCore.js:2194</code></a>
         
         </p>
 
@@ -9600,7 +9884,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2233"><code>source\scrawlCore.js:2233</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2187"><code>source\scrawlCore.js:2187</code></a>
         
         </p>
 
@@ -9649,7 +9933,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlShape.js.html#l107"><code>source\scrawlShape.js:107</code></a>
+        <a href="../files/source_scrawlShape.js.html#l108"><code>source\scrawlShape.js:108</code></a>
         
         </p>
 
@@ -9692,7 +9976,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6664"><code>source\scrawlCore.js:6664</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7025"><code>source\scrawlCore.js:7025</code></a>
         
         </p>
 
@@ -9736,7 +10020,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2883"><code>source\scrawlCore.js:2883</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2884"><code>source\scrawlCore.js:2884</code></a>
         
         </p>
 
@@ -9760,7 +10044,7 @@ A flag to determine whether the object will calculate its position along a Shape
 </div>
 
                 
-                    <div id="property_winding" class="property item inherited">
+                    <div id="property_winding" class="property item">
     <h3 class="name"><code>winding</code></h3>
     <span class="type">String</span>
 
@@ -9774,13 +10058,16 @@ A flag to determine whether the object will calculate its position along a Shape
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="../classes/Context.html#property_winding">
+                Context
+            </a>
             
-                <p>Inherited from
-                <a href="../classes/Context.html#property_winding">Context</a>:
+            but overwritten in
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5891"><code>source\scrawlCore.js:5891</code></a>
+        <a href="../files/source_scrawlShape.js.html#l141"><code>source\scrawlShape.js:141</code></a>
         
         </p>
 
@@ -9790,60 +10077,12 @@ A flag to determine whether the object will calculate its position along a Shape
     </div>
 
     <div class="description">
-        <p><p>Shape and Path entity fill method. Can be:</p></p>
-<ul>
-<li>&#39;nonzero&#39; - all areas enclosed by the entity&#39;s path are flooded</li>
-<li>&#39;evenodd&#39; - only &#39;odd&#39; areas of the entity&#39;s path are flooded</li>
-</ul>
+        <p>Winding value</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;nonzero&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_work" class="property item private inherited">
-    <h3 class="name"><code>work</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#property_work">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2207"><code>source\scrawlCore.js:2207</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Vector work space - not included in defaults</p>
-
-    </div>
-
+        <p><strong>Default:</strong> &#x27;non-zero&#x27;</p>
     
 
     

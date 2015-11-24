@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>InvertFilter - scrawl-canvas</title>
+    <title>FramePoint - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -254,25 +254,25 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>InvertFilter Class</h1>
+                        <h1>FramePoint Class</h1>
 <div class="box meta">
     
 
     
         <div class="extends">
-            Extends <a href="../classes/Filter.html" class="crosslink">Filter</a>
+            Extends <a href="../classes/Base.html" class="crosslink">Base</a>
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlFilters.js.html#l943"><code>source\scrawlFilters.js:943</code></a>
+            Defined in: <a href="../files/source_scrawlFrame.js.html#l82"><code>source\scrawlFrame.js:82</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/scrawlFilters.html">scrawlFilters</a>
+            Module: <a href="../modules/scrawlFrame.html">scrawlFrame</a>
         
     
 
@@ -282,18 +282,18 @@
 
 
 <div class="box intro">
-    <h1 id="invertfilter">InvertFilter</h1>
+    <h1 id="framepoint">FramePoint</h1>
 <h2 id="instantiation">Instantiation</h2>
 <ul>
-<li>scrawl.makeInvertFilter()</li>
+<li>scrawl.makeFramePoint()</li>
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>Adds an invert filter effect to an Entity or cell</li>
+<li>Defines the corner points for a Frame entity</li>
 </ul>
 <h2 id="access">Access</h2>
 <ul>
-<li>scrawl.filter.FILTERNAME - for the InvertFilter object</li>
+<li>none - like Vectors, only stored locally</li>
 </ul>
 
 </div>
@@ -301,8 +301,8 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_InvertFilter" class="method item">
-    <h3 class="name"><code>InvertFilter</code></h3>
+        <div id="method_FramePoint" class="method item">
+    <h3 class="name"><code>FramePoint</code></h3>
 
     
         <div class="args">
@@ -343,7 +343,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l943"><code>source\scrawlFilters.js:943</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l82"><code>source\scrawlFrame.js:82</code></a>
         
         </p>
 
@@ -417,13 +417,6 @@
                     <ul class="index-list methods extends">
                         
                             <li class="index-item method inherited">
-                                <a href="#method_add">add</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
                                 <a href="#method_clone">clone</a>
 
                                 
@@ -431,21 +424,7 @@
                             </li>
                         
                             <li class="index-item method inherited">
-                                <a href="#method_cloneImageData">cloneImageData</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
                                 <a href="#method_get">get</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
-                                <a href="#method_getAlpha">getAlpha</a>
 
                                 
                                 
@@ -472,6 +451,41 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_setLocal">setLocal</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setLocalFromData">setLocalFromData</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setLocalFromDataString">setLocalFromDataString</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setLocalFromPath">setLocalFromPath</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setReference">setReference</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -483,21 +497,7 @@
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property inherited">
-                                <a href="#property_alpha">alpha</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property inherited">
                                 <a href="#property_comment">comment</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property inherited">
-                                <a href="#property_composite">composite</a>
 
                                 
                                 
@@ -543,113 +543,6 @@
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
-
-                
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>data</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            <p>Inherited from
-            <a href="../classes/Filter.html#method_add">
-                Filter
-            </a>
-            
-            but overwritten in
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l981"><code>source\scrawlFilters.js:981</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Add function - takes data, calculates its invert and combines it with data</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">data</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>amended image data object</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
 
                 
                     <div id="method_clone" class="method item inherited">
@@ -775,111 +668,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_cloneImageData" class="method item inherited">
-    <h3 class="name"><code>cloneImageData</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>original</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_cloneImageData">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l829"><code>source\scrawlFilters.js:829</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>cloneImageData function</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">original</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>cloned image data object; false on error</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_get" class="method item inherited">
+                    <div id="method_get" class="method item">
     <h3 class="name"><code>get</code></h3>
 
     
@@ -916,13 +705,16 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="../classes/Base.html#method_get">
+                Base
+            </a>
             
-                <p>Inherited from
-                <a href="../classes/Base.html#method_get">Base</a>:
+            but overwritten in
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2202"><code>source\scrawlCore.js:2202</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l154"><code>source\scrawlFrame.js:154</code></a>
         
         </p>
 
@@ -933,8 +725,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
     </div>
 
     <div class="description">
-        <p>Retrieve an attribute value. If the attribute value has not been set, then the default value for that attribute will be returned.</p>
-
+        
     </div>
 
     
@@ -952,7 +743,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
                     
 
                     <div class="param-description">
-                        <p>Attribute key</p>
+                        <p>Name of attribute to return</p>
 
                     </div>
 
@@ -970,91 +761,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>Attribute value</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
-    width: 50,
-    });
-box.get(&#39;width&#39;);               //returns 50
-box.get(&#39;height&#39;);              //returns 0
-box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
-
-            </div>
-        </div>
-    
-</div>
-
-                
-                    <div id="method_getAlpha" class="method item private inherited">
-    <h3 class="name"><code>getAlpha</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_getAlpha">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l853"><code>source\scrawlFilters.js:853</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>getAlpha function</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>numerical strength value, between 0 and 1</p>
+                    <p>attribute</p>
 
                 
             </div>
@@ -1259,7 +966,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_set" class="method item inherited">
+                    <div id="method_set" class="method item">
     <h3 class="name"><code>set</code></h3>
 
     
@@ -1298,13 +1005,16 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="../classes/Base.html#method_set">
+                Base
+            </a>
             
-                <p>Inherited from
-                <a href="../classes/Base.html#method_set">Base</a>:
+            but overwritten in
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2218"><code>source\scrawlCore.js:2218</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l162"><code>source\scrawlFrame.js:162</code></a>
         
         </p>
 
@@ -1315,9 +1025,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.</p>
-<p>An attribute value will only be set if the object already has a default value for that attribute. This restricts the ability of coders to add attributes to Scrawl objects.</p>
-
+        
     </div>
 
     
@@ -1335,7 +1043,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                     
 
                     <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
+                        <p>Object consisting of key:value attributes</p>
 
                     </div>
 
@@ -1361,24 +1069,432 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-        <div class="example">
-            <h4>Example:</h4>
+</div>
 
-            <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
-    width: 50,
-    height: 50
-    });
-box.set({
-    height: 100,
-    favouriteAnimal: &#39;cat&#39;
-    });
-box.get(&#39;width&#39;);               //returns 50
-box.get(&#39;height&#39;);              //returns 100
-box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
+                
+                    <div id="method_setLocal" class="method item private">
+    <h3 class="name"><code>setLocal</code></h3>
 
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l232"><code>source\scrawlFrame.js:232</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setLocalFromData" class="method item private">
+    <h3 class="name"><code>setLocalFromData</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l282"><code>source\scrawlFrame.js:282</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Data should always be an array in the form [x, y, z]</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setLocalFromDataString" class="method item private">
+    <h3 class="name"><code>setLocalFromDataString</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>item</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>dimension</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l300"><code>source\scrawlFrame.js:300</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">item</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>percentage string or string position value</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">dimension</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Host&#39;s cell&#39;s actualWidth or actualHeight</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number calculated position value</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setLocalFromPath" class="method item private">
+    <h3 class="name"><code>setLocalFromPath</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l322"><code>source\scrawlFrame.js:322</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setReference" class="method item private">
+    <h3 class="name"><code>setReference</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l185"><code>source\scrawlFrame.js:185</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
     
 </div>
 
@@ -1389,51 +1505,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
-
-                
-                    <div id="property_alpha" class="property item inherited">
-    <h3 class="name"><code>alpha</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_alpha">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l799"><code>source\scrawlFilters.js:799</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Filter alpha</p>
-<p>values between 0 (transparent) and 1 (current alpha values); or &#39;0%&#39; and &#39;100%&#39;</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> 1</p>
-    
-
-    
-
-    
-</div>
 
                 
                     <div id="property_comment" class="property item inherited">
@@ -1472,51 +1543,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     
         <p><strong>Default:</strong> &#x27;&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_composite" class="property item inherited">
-    <h3 class="name"><code>composite</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_composite">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l808"><code>source\scrawlFilters.js:808</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Filter composite operation</p>
-<p>Only the final filter in an array of filters will determine the composite operation to be used on the cell</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> &#x27;source-over&#x27;</p>
     
 
     
@@ -1680,7 +1706,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l971"><code>source\scrawlFilters.js:971</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l126"><code>source\scrawlFrame.js:126</code></a>
         
         </p>
 
@@ -1694,7 +1720,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;Filter&#x27;</p>
+        <p><strong>Default:</strong> &#x27;FramePoint&#x27;</p>
     
 
     

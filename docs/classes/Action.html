@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -258,7 +266,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlAnimation.js.html#l2139"><code>source\scrawlAnimation.js:2139</code></a>
+            Defined in: <a href="../files/source_scrawlAnimation.js.html#l2952"><code>source\scrawlAnimation.js:2952</code></a>
         </div>
     
 
@@ -340,7 +348,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2139"><code>source\scrawlAnimation.js:2139</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l2952"><code>source\scrawlAnimation.js:2952</code></a>
         
         </p>
 
@@ -441,15 +449,15 @@
                                 
                             </li>
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_parse">parse</a>
+                            <li class="index-item method private inherited">
+                                <a href="#method_numberConvert">numberConvert</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_resetWork">resetWork</a>
+                            <li class="index-item method inherited">
+                                <a href="#method_parse">parse</a>
 
                                 
                                 
@@ -570,13 +578,6 @@
                                 
                             </li>
                         
-                            <li class="index-item property private inherited">
-                                <a href="#property_work">work</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -636,7 +637,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2293"><code>source\scrawlCore.js:2293</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2249"><code>source\scrawlCore.js:2249</code></a>
         
         </p>
 
@@ -752,7 +753,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2257"><code>source\scrawlAnimation.js:2257</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3072"><code>source\scrawlAnimation.js:3072</code></a>
         
         </p>
 
@@ -830,7 +831,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2248"><code>source\scrawlCore.js:2248</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2202"><code>source\scrawlCore.js:2202</code></a>
         
         </p>
 
@@ -939,7 +940,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2293"><code>source\scrawlAnimation.js:2293</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3108"><code>source\scrawlAnimation.js:3108</code></a>
         
         </p>
 
@@ -964,6 +965,132 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 
                     
                     <p>Always true</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_numberConvert" class="method item private inherited">
+    <h3 class="name"><code>numberConvert</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>val</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>dim</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_numberConvert">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2296"><code>source\scrawlCore.js:2296</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - convert string percentage values to numerical values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">val</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinate String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">dim</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>dimension value</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number - value</p>
 
                 
             </div>
@@ -1007,7 +1134,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2332"><code>source\scrawlCore.js:2332</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2288"><code>source\scrawlCore.js:2288</code></a>
         
         </p>
 
@@ -1032,76 +1159,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 
                     
                     <p>object of object&#39;s currently set attributes</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_resetWork" class="method item private inherited">
-    <h3 class="name"><code>resetWork</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#method_resetWork">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2340"><code>source\scrawlCore.js:2340</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Restore workspece vector values to their current specified values</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>always true</p>
 
                 
             </div>
@@ -1148,7 +1205,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2275"><code>source\scrawlAnimation.js:2275</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3090"><code>source\scrawlAnimation.js:3090</code></a>
         
         </p>
 
@@ -1228,7 +1285,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2264"><code>source\scrawlCore.js:2264</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2218"><code>source\scrawlCore.js:2218</code></a>
         
         </p>
 
@@ -1338,7 +1395,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2212"><code>source\scrawlAnimation.js:2212</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3027"><code>source\scrawlAnimation.js:3027</code></a>
         
         </p>
 
@@ -1382,7 +1439,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2226"><code>source\scrawlCore.js:2226</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2180"><code>source\scrawlCore.js:2180</code></a>
         
         </p>
 
@@ -1429,7 +1486,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2229"><code>source\scrawlAnimation.js:2229</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3044"><code>source\scrawlAnimation.js:3044</code></a>
         
         </p>
 
@@ -1474,7 +1531,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2197"><code>source\scrawlCore.js:2197</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2158"><code>source\scrawlCore.js:2158</code></a>
         
         </p>
 
@@ -1519,7 +1576,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2219"><code>source\scrawlAnimation.js:2219</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3034"><code>source\scrawlAnimation.js:3034</code></a>
         
         </p>
 
@@ -1567,7 +1624,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2239"><code>source\scrawlAnimation.js:2239</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3054"><code>source\scrawlAnimation.js:3054</code></a>
         
         </p>
 
@@ -1614,7 +1671,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2246"><code>source\scrawlAnimation.js:2246</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3061"><code>source\scrawlAnimation.js:3061</code></a>
         
         </p>
 
@@ -1662,7 +1719,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2188"><code>source\scrawlAnimation.js:2188</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3003"><code>source\scrawlAnimation.js:3003</code></a>
         
         </p>
 
@@ -1711,7 +1768,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2240"><code>source\scrawlCore.js:2240</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2194"><code>source\scrawlCore.js:2194</code></a>
         
         </p>
 
@@ -1758,7 +1815,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2205"><code>source\scrawlAnimation.js:2205</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3020"><code>source\scrawlAnimation.js:3020</code></a>
         
         </p>
 
@@ -1805,7 +1862,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2198"><code>source\scrawlAnimation.js:2198</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l3013"><code>source\scrawlAnimation.js:3013</code></a>
         
         </p>
 
@@ -1849,7 +1906,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2233"><code>source\scrawlCore.js:2233</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2187"><code>source\scrawlCore.js:2187</code></a>
         
         </p>
 
@@ -1898,7 +1955,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l2179"><code>source\scrawlAnimation.js:2179</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l2994"><code>source\scrawlAnimation.js:2994</code></a>
         
         </p>
 
@@ -1913,50 +1970,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     
         <p><strong>Default:</strong> &#x27;Action&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_work" class="property item private inherited">
-    <h3 class="name"><code>work</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#property_work">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2207"><code>source\scrawlCore.js:2207</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Vector work space - not included in defaults</p>
-
-    </div>
-
     
 
     

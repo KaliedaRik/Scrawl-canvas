@@ -19,6 +19,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "Entity",
         "Filter",
         "Force",
+        "Frame",
+        "FramePoint",
         "Gradient",
         "GreyscaleFilter",
         "Group",
@@ -61,6 +63,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "window.scrawl_Color",
         "window.scrawl_Factories",
         "window.scrawl_Filters",
+        "window.scrawl_Frame",
         "window.scrawl_Images",
         "window.scrawl_Path",
         "window.scrawl_Phrase",
@@ -77,6 +80,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "scrawlColor",
         "scrawlCore",
         "scrawlFilters",
+        "scrawlFrame",
         "scrawlImages",
         "scrawlPath",
         "scrawlPathFactories",
@@ -111,12 +115,17 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "scrawlCore",
             "name": "scrawlCore",
-            "description": "# scrawlCore\n\n## Version 4.3.0 - 19 July 2015\n\nDeveloped by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>\n\nScrawl demo website: <http://scrawl.rikweb.org.uk>\n\n## Purpose and features\n\nThe core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. \n\n* Defines the Scrawl scope - __window.scrawl__\n\n* Defines a number of utility methods used throughout Scrawl.js\n\n* Defines the Scrawl library - all significant objects created by Scrawl can be found here\n\n* Searches the DOM for &lt;canvas&gt; elements, and imports them into the Scrawl library\n\n* Instantiates controllers (Pad objects) and wrappers (Cell objects) for each &lt;canvas&gt; element\n\n* Instantiates Context engine objects for each Cell object\n\n* Defines mouse functionality in relation to &lt;canvas&gt; elements\n\n* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core\n\n* Defines Group objects, used to group entitys together for display and interaction purposes\n\n* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions\n\n## Loading the module"
+            "description": "# scrawlCore\n\n## Version 5.0.0 - 24 November 2015\n\nDeveloped by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>\n\nScrawl demo website: <http://scrawl.rikweb.org.uk>\n\n## Purpose and features\n\nThe core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. \n\n* Defines the Scrawl scope - __window.scrawl__\n\n* Defines a number of utility methods used throughout Scrawl.js\n\n* Defines the Scrawl library - all significant objects created by Scrawl can be found here\n\n* Searches the DOM for &lt;canvas&gt; elements, and imports them into the Scrawl library\n\n* Instantiates controllers (Pad objects) and wrappers (Cell objects) for each &lt;canvas&gt; element\n\n* Instantiates Context engine objects for each Cell object\n\n* Defines mouse functionality in relation to &lt;canvas&gt; elements\n\n* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core\n\n* Defines Group objects, used to group entitys together for display and interaction purposes\n\n* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions\n\n## Loading the module"
         },
         {
             "displayName": "scrawlFilters",
             "name": "scrawlFilters",
             "description": "# scrawlFilters\n\n## Purpose and features\n\nThe Filters module adds a set of filter algorithms to the Scrawl library"
+        },
+        {
+            "displayName": "scrawlFrame",
+            "name": "scrawlFrame",
+            "description": "# scrawlFrame\n\n## Purpose and features\n\nThe Frame module adds PerspectiveCell entitys to the core module\n\n* ..."
         },
         {
             "displayName": "scrawlImages",

@@ -581,29 +581,29 @@ Alias for Pattern.makeDesign()
 				if (xt(items.source)) {
 					src = get(my.image[items.source], my.video[items.source], my.cell[items.source], false);
 					// if (src) {
-						my.Entity.call(this, items);
-						tempV = my.safeObject(items.paste);
-						this.start.x = get(items.pasteX, tempV.x, this.start.x);
-						this.start.y = get(items.pasteY, tempV.y, this.start.y);
-						this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');
-						this.copyHeight = my.xtGetTrue(items.copyHeight, src.actualHeight, src.height, '100%');
-						this.width = get(items.pasteWidth, items.width, this.copyWidth);
-						this.height = get(items.pasteHeight, items.height, this.copyHeight);
-						my.Position.prototype.set.call(this, items);
-						this.source = items.source;
-						this.imageType = this.sourceImage();
-						tempV = my.safeObject(items.copy);
-						this.copy = my.makeVector({
-							x: get(items.copyX, tempV.x, 0),
-							y: get(items.copyY, tempV.y, 0),
-							name: this.type + '.' + this.name + '.copy'
-						});
-						this.registerInLibrary();
-						this.copyData = {};
-						this.pasteData = {};
-						this.setCopy();
-						this.setPaste();
-						return this;
+					my.Entity.call(this, items);
+					tempV = my.safeObject(items.paste);
+					this.start.x = get(items.pasteX, tempV.x, this.start.x);
+					this.start.y = get(items.pasteY, tempV.y, this.start.y);
+					this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');
+					this.copyHeight = my.xtGetTrue(items.copyHeight, src.actualHeight, src.height, '100%');
+					this.width = get(items.pasteWidth, items.width, this.copyWidth);
+					this.height = get(items.pasteHeight, items.height, this.copyHeight);
+					my.Position.prototype.set.call(this, items);
+					this.source = items.source;
+					this.imageType = this.sourceImage();
+					tempV = my.safeObject(items.copy);
+					this.copy = my.makeVector({
+						x: get(items.copyX, tempV.x, 0),
+						y: get(items.copyY, tempV.y, 0),
+						name: this.type + '.' + this.name + '.copy'
+					});
+					this.registerInLibrary();
+					this.copyData = {};
+					this.pasteData = {};
+					this.setCopy();
+					this.setPaste();
+					return this;
 					// }
 				}
 			}
@@ -739,10 +739,10 @@ Augments Entity.get()
 			if (my.contains(my.work.animKeys, item)) {
 				return my.spriteanimation[this.animation].get(item);
 			}
-			else if(item === 'width'){
+			else if (item === 'width') {
 				return this.pasteData.w;
 			}
-			else if(item === 'height'){
+			else if (item === 'height') {
 				return this.pasteData.h;
 			}
 			else {
@@ -1011,7 +1011,7 @@ Stamp helper function - update source and copy (for dynamically loading images)
 @private
 **/
 		my.Picture.prototype.checkSource = function() {
-			if(!this.imageType){
+			if (!this.imageType) {
 				this.imageType = this.sourceImage();
 				this.setCopy();
 			}
@@ -1124,8 +1124,8 @@ Stamp helper function - perform a 'fill' method draw
 **/
 		my.Picture.prototype.fill = function(ctx, cellname, cell) {
 			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
+			data = this.getImage();
+			cd = this.copyData;
 			pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
@@ -1146,8 +1146,8 @@ Stamp helper function - perform a 'drawFill' method draw
 **/
 		my.Picture.prototype.drawFill = function(ctx, cellname, cell) {
 			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
+			data = this.getImage();
+			cd = this.copyData;
 			pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
@@ -1170,8 +1170,8 @@ Stamp helper function - perform a 'fillDraw' method draw
 **/
 		my.Picture.prototype.fillDraw = function(ctx, cellname, cell) {
 			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
+			data = this.getImage();
+			cd = this.copyData;
 			pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
@@ -1194,8 +1194,8 @@ Stamp helper function - perform a 'sinkInto' method draw
 **/
 		my.Picture.prototype.sinkInto = function(ctx, cellname, cell) {
 			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
+			data = this.getImage();
+			cd = this.copyData;
 			pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
@@ -1217,8 +1217,8 @@ Stamp helper function - perform a 'floatOver' method draw
 **/
 		my.Picture.prototype.floatOver = function(ctx, cellname, cell) {
 			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
+			data = this.getImage();
+			cd = this.copyData;
 			pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
