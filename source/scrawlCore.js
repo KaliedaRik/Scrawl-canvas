@@ -23,7 +23,7 @@
 /**
 # scrawlCore
 
-## Version 5.0.0 - 25 October 2015
+## Version 5.0.0 - 24 November 2015
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 

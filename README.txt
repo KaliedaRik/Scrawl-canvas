@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.0 - 25 October 2015
+*	version 5.0.0 - 24 November 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -86,7 +86,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 5.0.0 released 25 October 2015
+VERSION 5.0.0 released 24 November 2015
 
     - the zip file includes:
 		
@@ -147,7 +147,7 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
-VERSION 5.0.0 uploaded 25 October 2015
+VERSION 5.0.0 uploaded 24 November 2015
 	- major overhaul of library
 	- major new functionality including: 
 		- emulate 3d perspectives in 2d canvases
