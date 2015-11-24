@@ -100,19 +100,10 @@ A __factory__ function to generate new Wheel entitys
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
-			/**
-Circle radius - can be an absolute Numbewr value, or a percentage String value (relative to the Cell's width)
-@property radius
-@type Number (or String)
-@default 0
-**/
 			this.radius = get(items.radius, d.radius);
-			this.localRadius = this.setRadius(this.radius);
-			this.width = this.localRadius * 2;
+			this.width = this.radius * 2;
 			this.height = this.width;
 			this.checkHitUsingRadius = get(items.checkHitUsingRadius, d.checkHitUsingRadius);
-			this.checkHitRadius = get(items.checkHitRadius, 0);
-			this.localCheckHitRadius = this.setRadius(this.checkHitRadius);
 			this.closed = get(items.closed, d.closed);
 			this.includeCenter = get(items.includeCenter, d.includeCenter);
 			this.clockwise = get(items.clockwise, d.clockwise);
@@ -174,29 +165,11 @@ Collision calculation flag - true to use a simple radius check; false to use the
 			checkHitUsingRadius: true,
 			/**
 Collision calculation value - collision radius, from start vector
-
-May be an absolute number value, or a percentage String (relative to the Cell's width)
 @property checkHitRadius
-@type Number (or String)
+@type Number
 @default 0
 **/
 			checkHitRadius: 0,
-			/**
-Calculated radius value
-@property localRadius
-@type Number
-@default 0
-@private
-**/
-			localRadius: 0,
-			/**
-Collision calculation value - collision radius, from start vector
-@property localCheckHitRadius
-@type Number
-@default 0
-@private
-**/
-			localCheckHitRadius: 0
 		};
 		my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 
@@ -208,36 +181,14 @@ Augments Entity.set()
 @chainable
 **/
 		my.Wheel.prototype.set = function(items) {
-			var xt = my.xt;
 			my.Entity.prototype.set.call(this, items);
-			if (xt(items.radius)) {
+			if (my.xt(items.radius)) {
 				this.radius = items.radius;
-				this.localRadius = this.setRadius(this.radius);
-				this.width = this.localRadius * 2;
+				this.width = this.radius * 2;
 				this.height = this.width;
 				this.maxDimensions.flag = true;
 			}
-			if(xt(items.checkHitRadius)){
-				this.localCheckHitRadius = this.setRadius(this.checkHitRadius);
-			}
 			return this;
-		};
-		/**
-set helper function
-@method setRadius
-@return Number - local radius value
-@private
-**/
-		my.Wheel.prototype.setRadius = function(item) {
-			var cell;
-			if(item.toFixed){
-				return item;
-			}
-			cell = my.cell[my.group[this.group].cell];
-			if(my.xt(cell, cell.actualWidth)){
-				return (parseFloat(item) / 100) * cell.actualWidth;
-			}
-			return 0;
 		};
 		/**
 Augments Entity.setDelta()
@@ -247,26 +198,14 @@ Augments Entity.setDelta()
 @chainable
 **/
 		my.Wheel.prototype.setDelta = function(items) {
-			var xt = my.xt,
-				r;
+			var xt = my.xt;
 			my.Entity.prototype.setDelta.call(this, items);
 			items = my.safeObject(items);
 			if (xt(items.radius)) {
-				r = this.setRadius(items.radius);
-				if(items.radius.substring){
-					this.radius = my.addPercentages(this.radius, items.radius);
-				}
-				this.localRadius += r;
-				this.width = this.localRadius * 2;
+				this.radius += items.radius;
+				this.width = this.radius * 2;
 				this.height = this.width;
 				this.maxDimensions.flag = true;
-			}
-			if (xt(items.checkHitRadius)) {
-				r = this.setRadius(items.checkHitRadius);
-				if(items.checkHitRadius.substring){
-					this.checkHitRadius = my.addPercentages(this.checkHitRadius, items.checkHitRadius);
-				}
-				this.localCheckHitRadius += r;
 			}
 			if (xt(items.startAngle)) {
 				this.startAngle = this.get('startAngle') + items.startAngle;
@@ -311,7 +250,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 			tests = (my.xt(items.tests)) ? items.tests : [(items.x || false), (items.y || false)];
 			result = false;
 			if (this.checkHitUsingRadius) {
-				testRadius = (this.localCheckHitRadius) ? this.localCheckHitRadius : this.localRadius * this.scale;
+				testRadius = (this.checkHitRadius) ? this.checkHitRadius : this.radius * this.scale;
 				handle = this.currentHandle;
 				if (!handle.flag) {
 					this.updateCurrentHandle();
@@ -365,7 +304,7 @@ Stamp helper function - define the entity's path on the &lt;canvas&gt; element's
 				rad = my.work.radian;
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
-			ctx.arc(here.x, here.y, (this.localRadius * this.scale), (startAngle * rad), (endAngle * rad), this.clockwise);
+			ctx.arc(here.x, here.y, (this.radius * this.scale), (startAngle * rad), (endAngle * rad), this.clockwise);
 			if (this.includeCenter) {
 				ctx.lineTo(here.x, here.y);
 			}
@@ -568,7 +507,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				v1 = my.workcols.v1;
 				v2 = my.workcols.v2;
 				this.collisionVectors.length = 0;
-				v1.x = this.localRadius;
+				v1.x = this.radius;
 				v1.y = 0;
 				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
 				for (i = 0, iz = p.length; i < iz; i++) {
@@ -659,7 +598,7 @@ Returns an object with the following attributes:
 @private
 **/
 		my.Wheel.prototype.getMaxDimensions = function(cell) {
-			var rad = (this.localRadius * this.scale),
+			var rad = (this.radius * this.scale),
 				w = cell.actualWidth,
 				h = cell.actualHeight,
 				line = my.ctx[this.context].lineWidth || 0,

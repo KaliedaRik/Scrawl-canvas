@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.3.0 - 19 July 2015
+*	version 5.0.0 - 25 October 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -10,7 +10,7 @@
 
 Currently working on ...
 ------------------------------------------------------------------------------------
-- bugtracking following release of v4.3.0
+- bugtracking following release of v5.0.0
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
@@ -45,6 +45,14 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+October 2015
+	- testing and bugfixing
+	- preparation for release of new major version 5.0.0
+		- updating website
+			- tour page
+			- writing docs for new functionality
+			- updating tutorial page to include new functionality
+			
 September 2015
 	- refactoring code for efficiency gains
 		- implemented a set of dirty flags

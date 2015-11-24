@@ -1,6 +1,6 @@
 {
   "name": "scrawl-canvas",
-  "version": "4.3.0",
+  "version": "5.0.0",
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas",
   "authors": [
     "Rik Roots <rik.roots@gmail.com>"
@@ -8,7 +8,7 @@
   "main": [
     "min/scrawlCore-min.js"
   ],
-  "description": "A JavaScript library designed to make using the HTML5 canvas element a bit easier, and a bit more fun!",
+  "description": "Responsive, integrated and interactive HTML5 canvas elements",
   "license": "MIT",
   "ignore": [
     "package.json",

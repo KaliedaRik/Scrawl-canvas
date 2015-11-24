@@ -2643,7 +2643,7 @@ Determine viewport position within the page
 @private
 **/
 	my.Device.prototype.getViewportPosition = function(e) {
-		var d, get, ox, oy, doc;
+		var d, get, ox, oy;
 		if (e) {
 			d = my.device;
 			get = my.xtGet;
@@ -2653,11 +2653,10 @@ Determine viewport position within the page
 			d.offsetY = get(e.pageY, e.target.offsetY, 0);
 			return (ox != d.offsetX || oy != d.offsetY) ? true : false;
 		}
-		doc = document.documentElement;
 		ox = this.offsetX;
 		oy = this.offsetY;
-		this.offsetX = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-		this.offsetY = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
+		this.offsetX = document.documentElement.scrollLeft || window.pageXOffset;
+		this.offsetY = document.documentElement.scrollTop || window.pageYOffset;
 		return (ox != this.offsetX || oy != this.offsetY) ? true : false;
 	};
 	/**
@@ -3282,9 +3281,11 @@ updateCurrentHandle helper object
 			};
 		},
 		Cell: function(reference) {
+			var scale = reference.scale,
+				data = reference.pasteData;
 			return {
-				w: reference.actualWidth,
-				h: reference.actualHeight,
+				w: data.w / scale,
+				h: data.h / scale,
 				c: false
 			};
 		},
@@ -5044,8 +5045,7 @@ Note - setting the argument attribute __resolve__ to true will force a recalcula
 **/
 	my.Cell.prototype.set = function(items) {
 		var xt = my.xt,
-			xto = my.xto,
-			i, iz;
+			xto = my.xto;
 		my.Position.prototype.set.call(this, items);
 		items = my.safeObject(items);
 		if (xto(items.paste, items.pasteX, items.pasteY)) {
@@ -5075,9 +5075,6 @@ Note - setting the argument attribute __resolve__ to true will force a recalcula
 		if (xto(items.actualWidth, items.actualHeight, items.width, items.height)) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
-			// for(i = 0, iz = this.groups.length; i < iz; i++){
-			// 	my.group[this.groups[i]].setDirtyStarts()
-			// }
 		}
 		if (xto(items.actualWidth, items.actualHeight, items.pasteWidth, items.pasteHeight, items.width, items.height, items.handle, items.handleX, items.handleY, items.scale)) {
 			this.setDirtyHandles();
@@ -5307,8 +5304,7 @@ Note - setting the argument attribute __resolve__ to true will force a recalcula
 **/
 	my.Cell.prototype.setDelta = function(items) {
 		var xt = my.xt,
-			xto = my.xto,
-			i, iz;
+			xto = my.xto;
 		my.Position.prototype.setDelta.call(this, items);
 		items = my.safeObject(items);
 		if (xto(items.copy, items.copyX, items.copyY)) {
@@ -5335,11 +5331,6 @@ Note - setting the argument attribute __resolve__ to true will force a recalcula
 		if (xto(items.actualHeight, items.height)) {
 			this.setDeltaActualHeight(items, false);
 		}
-		// if (xto(items.actualHeight, items.height, items.actualWidth, items.width)){
-		// 	for(i = 0, iz = this.groups.length; i < iz; i++){
-		// 		my.group[this.groups[i]].setDirtyStarts()
-		// 	}
-		// }
 		if (xt(items.roll)) {
 			this.setDeltaRoll(items);
 		}
@@ -7251,7 +7242,7 @@ Helper function - get a entity's cell onbject
 @private
 **/
 	my.Entity.prototype.getEntityCell = function(items) {
-		return my.cell[my.group[this.getGroup(items)].cell];
+		return my.cell[this.getGroup(items)];
 	};
 	/**
 Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, regardless of the setting of its visibility attribute
@@ -7397,29 +7388,6 @@ Entity.getStartValues
 **/
 	my.Entity.prototype.getStartValues = function() {
 		var start = this.currentStart;
-		return {
-			x: start.x,
-			y: start.y
-		};
-	};
-	/**
-Entity.getHandleValues
-@method getHandleValues
-@private
-**/
-	my.Entity.prototype.getHandleValues = function() {
-		var handle = this.currentHandle;
-		return {
-			x: handle.x,
-			y: handle.y
-		};
-	};
-	/**
-Entity.getStart
-@method getStart
-**/
-	my.Entity.prototype.getStart = function() {
-		var start = my.work.v.set(this.currentStart).vectorAdd(this.currentHandle);
 		return {
 			x: start.x,
 			y: start.y
@@ -8272,10 +8240,10 @@ Starts the animation loop
 					testDims, testPos;
 				testDims = dev.getViewportDimensions();
 				testPos = dev.getViewportPosition();
-				if(testDims){
+				if (testDims) {
 					my.setPerspectives();
 				}
-				if(testDims || testPos){
+				if (testDims || testPos) {
 					my.setDisplayOffsets('all');
 				}
 			}

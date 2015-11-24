@@ -580,7 +580,7 @@ Alias for Pattern.makeDesign()
 				items = my.safeObject(items);
 				if (xt(items.source)) {
 					src = get(my.image[items.source], my.video[items.source], my.cell[items.source], false);
-					// if (src) {
+					if (src) {
 						my.Entity.call(this, items);
 						tempV = my.safeObject(items.paste);
 						this.start.x = get(items.pasteX, tempV.x, this.start.x);
@@ -604,7 +604,7 @@ Alias for Pattern.makeDesign()
 						this.setCopy();
 						this.setPaste();
 						return this;
-					// }
+					}
 				}
 			}
 			return false;
@@ -739,12 +739,6 @@ Augments Entity.get()
 			if (my.contains(my.work.animKeys, item)) {
 				return my.spriteanimation[this.animation].get(item);
 			}
-			else if(item === 'width'){
-				return this.pasteData.w;
-			}
-			else if(item === 'height'){
-				return this.pasteData.h;
-			}
 			else {
 				return my.Entity.prototype.get.call(this, item);
 			}
@@ -862,7 +856,7 @@ Augments Entity.setDelta()
 		};
 		/**
 Picture.setCopy update copyData object values
-@method setCopy
+@method setSource
 @chainable
 @private
 **/
@@ -1004,20 +998,6 @@ Constructor and clone helper function
 			return false;
 		};
 		/**
-Stamp helper function - update source and copy (for dynamically loading images)
-@method checkSource
-@return This
-@chainable
-@private
-**/
-		my.Picture.prototype.checkSource = function() {
-			if(!this.imageType){
-				this.imageType = this.sourceImage();
-				this.setCopy();
-			}
-			return this;
-		};
-		/**
 Stamp helper function - perform a 'clip' method draw
 @method clip
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -1030,7 +1010,6 @@ Stamp helper function - perform a 'clip' method draw
 			var here = this.currentHandle,
 				pasteData = this.pasteData;
 			if (this.currentStart.flag) {
-				this.checkSource();
 				this.rotateCell(ctx, cell);
 				ctx.beginPath();
 				ctx.rect(here.x, here.y, pasteData.w, pasteData.h);
@@ -1123,10 +1102,10 @@ Stamp helper function - perform a 'fill' method draw
 @private
 **/
 		my.Picture.prototype.fill = function(ctx, cellname, cell) {
-			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
-			pd = this.pasteData;
+			var here,
+				data = this.getImage(),
+				cd = this.copyData,
+				pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
@@ -1145,10 +1124,10 @@ Stamp helper function - perform a 'drawFill' method draw
 @private
 **/
 		my.Picture.prototype.drawFill = function(ctx, cellname, cell) {
-			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
-			pd = this.pasteData;
+			var here,
+				data = this.getImage(),
+				cd = this.copyData,
+				pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
@@ -1169,10 +1148,10 @@ Stamp helper function - perform a 'fillDraw' method draw
 @private
 **/
 		my.Picture.prototype.fillDraw = function(ctx, cellname, cell) {
-			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
-			pd = this.pasteData;
+			var here,
+				data = this.getImage(),
+				cd = this.copyData,
+				pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
@@ -1193,10 +1172,10 @@ Stamp helper function - perform a 'sinkInto' method draw
 @private
 **/
 		my.Picture.prototype.sinkInto = function(ctx, cellname, cell) {
-			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
-			pd = this.pasteData;
+			var here,
+				data = this.getImage(),
+				cd = this.copyData,
+				pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
@@ -1216,10 +1195,10 @@ Stamp helper function - perform a 'floatOver' method draw
 @private
 **/
 		my.Picture.prototype.floatOver = function(ctx, cellname, cell) {
-			var here, data, cd, pd;
-			data = this.getImage(),
-			cd = this.copyData,
-			pd = this.pasteData;
+			var here,
+				data = this.getImage(),
+				cd = this.copyData,
+				pd = this.pasteData;
 			if (this.currentStart.flag && data) {
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
@@ -1239,9 +1218,7 @@ Also generates new filtered images, when necessary
 @private
 **/
 		my.Picture.prototype.getImage = function() {
-			var type;
-			this.checkSource();
-			type = (my.contains(['img', 'animation', 'canvas', 'video'], this.imageType)) ? this.imageType : 'none';
+			var type = (my.contains(['img', 'animation', 'canvas', 'video'], this.imageType)) ? this.imageType : 'none';
 			return this.getImageActions[type](this.source, this.animation, this.copyData);
 		};
 		/**
@@ -1254,13 +1231,11 @@ getImage helper object
 				return my.asset[src];
 			},
 			animation: function(src, animation, copyData) {
-				var anim = my.spriteanimation[animation].getData(),
-					img = my.image[src],
-					perc = my.Picture.prototype.numberConvert;
-				copyData.x = (anim.x.substring) ? perc(anim.x, img.width) : anim.x;
-				copyData.y = (anim.y.substring) ? perc(anim.y, img.height) : anim.y;
-				copyData.w = (anim.w.substring) ? perc(anim.w, img.width) : anim.w;
-				copyData.h = (anim.h.substring) ? perc(anim.h, img.height) : anim.h;
+				var anim = my.spriteanimation[animation].getData();
+				copyData.x = anim.x;
+				copyData.y = anim.y;
+				copyData.w = anim.w;
+				copyData.h = anim.h;
 				return my.asset[src];
 			},
 			canvas: function(src) {
@@ -1284,9 +1259,7 @@ Load the Picture entity's image data (via JavaScript getImageData() function) in
 			var data,
 				ic = my.work.imageCanvas,
 				cvx = my.work.imageCvx,
-				cd;
-			this.checkSource();
-			cd = this.copyData;
+				cd = this.copyData;
 			label = (my.xt(label)) ? label : 'data';
 			data = this.getImage();
 			if (data) {
@@ -1310,14 +1283,12 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 			var data,
 				array,
 				index,
-				cd,
+				cd = this.copyData,
 				pd = this.pasteData,
 				v1 = my.work.workimg.v1,
 				between = my.isBetween,
 				channel;
 			items = my.safeObject(items);
-			this.checkSource();
-			cd = this.copyData;
 			v1.x = items.x || 0;
 			v1.y = items.y || 0;
 			v1.vectorSubtract(pd).rotate(-this.roll);

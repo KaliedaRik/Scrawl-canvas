@@ -475,7 +475,7 @@ Set the perspective for all stacks
 			sn = (stacks) ? [].concat(stacks) : my.stacknames;
 			for (i = 0, iz = sn.length; i < iz; i++) {
 				s = stack[sn[i]];
-				if(s){
+				if (s) {
 					s.currentPerspective.flag = false;
 					s.setPerspective();
 				}
@@ -1092,21 +1092,20 @@ PageElement constructor hook function - modified by stacks module
 **/
 		my.PageElement.prototype.updateCornerTrackers = function() {
 			var corners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
-				el, top, left, i, iz, stack, stackRect, stackLeft, stackTop;
-			el = this.getElement();
-			stack = my.stk[my.group[this.group].stack];
-			if(stack){
-				stackRect = stack.getBoundingClientRect();
-				stackLeft = parseInt(stackRect.left, 10);
-				stackTop = parseInt(stackRect.top, 10);
-				for (i = 0; i < 4; i++) {
-					if (this[corners[i]] && this[corners[i] + 'Div']) {
-						el = this[corners[i] + 'Div'].getBoundingClientRect();
-						left = parseInt(el.left, 10);
-						top = parseInt(el.top, 10);
-						this[corners[i]].x = left - stackLeft;
-						this[corners[i]].y = top - stackTop;
-					}
+				temp, left, top,
+				stack = my.stack[my.group[this.group].stack],
+				device = my.device,
+				el = this.getElement(),
+				i;
+			for (i = 0; i < 4; i++) {
+				if (this[corners[i]] && this[corners[i] + 'Div']) {
+					temp = this[corners[i] + 'Div'].getBoundingClientRect();
+					left = parseFloat(el.style.borderLeftWidth);
+					left = isNaN(left) ? 0 : left;
+					top = parseFloat(el.style.borderTopWidth);
+					top = isNaN(top) ? 0 : top;
+					this[corners[i]].x = temp.left + device.offsetX - stack.displayOffsetX - left;
+					this[corners[i]].y = temp.top + device.offsetY - stack.displayOffsetY - top;
 				}
 			}
 			return this;
@@ -2992,19 +2991,6 @@ Update element 3d transitions, via the Stack's groups
 			return true;
 		};
 		/**
-Update Pads via the Stack's groups
-@method renderPads
-@return Always true
-**/
-		my.Stack.prototype.renderPads = function() {
-			var group = my.group,
-				groups = this.groups;
-			for (var i = 0, iz = groups.length; i < iz; i++) {
-				group[groups[i]].renderPads();
-			}
-			return true;
-		};
-		/**
 Calculates the pixels value of the object's perspective attribute
 @method setPerspective
 @return Set the Stack element's perspective point
@@ -3376,9 +3362,7 @@ Tell the Group to ask its constituent elements to render
 			if (this.recalculateDimensions) {
 				for (i = 0, iz = elements.length; i < iz; i++) {
 					el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
-					if(el){
-						el.setLocalDimensions();
-					}
+					el.setLocalDimensions();
 				}
 				this.recalculateDimensions = false;
 			}
@@ -3387,51 +3371,19 @@ Tell the Group to ask its constituent elements to render
 				this.currentHeight = 0;
 				for (i = 0, iz = elements.length; i < iz; i++) {
 					el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
-					if(el){
-						if (el.localWidth > this.currentWidth) {
-							this.currentWidth = el.localWidth;
-						}
-						if (el.localHeight > this.currentHeight) {
-							this.currentHeight = el.localHeight;
-						}
+					if (el.localWidth > this.currentWidth) {
+						this.currentWidth = el.localWidth;
+					}
+					if (el.localHeight > this.currentHeight) {
+						this.currentHeight = el.localHeight;
 					}
 				}
 			}
 			for (i = 0, iz = elements.length; i < iz; i++) {
 				el = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
-				if(el){
-					el.renderElement();
-					if (el.type === 'Stack') {
-						group[el.name].render();
-					}
-				}
-			}
-			return this;
-		};
-		/**
-Tell the Group to ask its constituent pads to render - will cascade through to sub-stacks
-@method renderPads
-@return This
-@chainable
-**/
-		my.ElementGroup.prototype.renderPads = function() {
-			var i,
-				iz,
-				el,
-				elements = this.elements,
-				group = my.group,
-				stack = my.stack,
-				element = my.element,
-				pad = my.pad;
-			for (i = 0, iz = elements.length; i < iz; i++) {
-				el = stack[elements[i]] || pad[elements[i]] || element[elements[i]] || false;
-				if(el){
-					if (el.type === 'Stack') {
-						group[el.name].renderPads();
-					}
-					if (el.type === 'Pad') {
-						pad[el.name].render();
-					}
+				el.renderElement();
+				if (el.type === 'Stack') {
+					group[el.name].render();
 				}
 			}
 			return this;
@@ -3767,7 +3719,7 @@ Augments ElementGroup.set()
 				xt = my.xt;
 			for (i = 0, iz = entitys.length; i < iz; i++) {
 				e = entity[entitys[i]];
-				if (xt(e) && e.currentStart) {
+				if (xt(e)) {
 					e.currentStart.flag = false;
 				}
 			}
@@ -3802,7 +3754,7 @@ Augments ElementGroup.set()
 				xt = my.xt;
 			for (i = 0, iz = entitys.length; i < iz; i++) {
 				e = entity[entitys[i]];
-				if (xt(e) && e.currentHandle) {
+				if (xt(e)) {
 					e.currentHandle.flag = false;
 				}
 			}

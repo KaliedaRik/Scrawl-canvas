@@ -449,18 +449,18 @@ By default:
 @return This
 @chainable
 **/
-		my.Pad.prototype.compile = function(mouse) {
+		my.Pad.prototype.compile = function() {
 			var c,
 				i,
 				iz,
 				cell = my.cell,
-				cells = this.cellsCompileOrder;
+				cells = this.cells;
 			this.filters.length = 0;
 			this.sortCellsCompile();
 			for (i = 0, iz = cells.length; i < iz; i++) {
 				c = cell[cells[i]];
 				if (c.rendered && c.compiled) {
-					c.compile(mouse);
+					c.compile();
 				}
 			}
 			return this;

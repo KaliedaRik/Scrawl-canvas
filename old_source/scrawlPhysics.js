@@ -144,7 +144,7 @@ Initiates two forces:
 					ball.load.vectorAdd({
 						y: ball.mass * my.physics.gravity
 					});
-				}
+				},
 			});
 			my.makeForce({
 				name: 'drag',
@@ -153,10 +153,10 @@ Initiates two forces:
 					ball.currentVelocity.set(ball.velocity);
 					d = ball.currentVelocity.reverse().normalize();
 					s = ball.velocity.getMagnitude();
-					df = 0.5 * my.physics.airDensity * s * s * ball.area * ball.drag;
+					df = 0.5 * my.physics.airDensity * s * s * ball.get('area') * ball.get('drag');
 					d.scalarMultiply(df);
 					ball.load.vectorAdd(d);
-				}
+				},
 			});
 		};
 		/**
@@ -399,28 +399,16 @@ Load Vector - recreated at the start of every calculation cycle iteration
 		};
 		my.mergeInto(my.work.d.Particle, my.work.d.Scrawl);
 		/**
-Particle.getStartValues
-@method getStartValues
-@return Object containing x and y Number attributes representing the particle's current position with respect to its Cell's top left hand corner
-**/
-	my.Particle.prototype.getStartValues = function() {
-		var start = this.place;
-		return {
-			x: start.x,
-			y: start.y
-		};
-	};
-		/**
 Augments Base.set()
 
-Allows users to set the Particle's position and velocity attributes using startX, startY, start, deltaX, deltaY, delta or velocity, velocityX, velocityY values (delta and velocity are synonyms for each other)
+Allows users to set the Particle's position and velocity attributes using startX, startY, start, deltaX, deltaY, delta values
 @method set
 @param {Object} items Object consisting of key:value attributes
 @return This
 @chainable
 **/
 		my.Particle.prototype.set = function(items) {
-			var temp, temp2,
+			var temp,
 				xto = my.xto,
 				vec = my.makeVector,
 				get = my.xtGet,
@@ -428,9 +416,7 @@ Allows users to set the Particle's position and velocity attributes using startX
 				place,
 				so = my.safeObject;
 			items = so(items);
-			temp = this.velocity;
 			my.Base.prototype.set.call(this, items);
-			this.velocity = temp;
 			if (!this.place.type || this.place.type !== 'Vector') {
 				this.place = vec(items.place || this.place);
 			}
@@ -443,12 +429,11 @@ Allows users to set the Particle's position and velocity attributes using startX
 			if (!this.velocity.type || this.velocity.type !== 'Vector') {
 				this.velocity = vec(items.velocity || this.velocity);
 			}
-			if (xto(items.delta, items.deltaX, items.deltaY, items.velocity, items.velocityX, items.velocityY)) {
+			if (xto(items.delta, items.deltaX, items.deltaY, items.velocity)) {
 				temp = so(items.delta);
-				temp2 = so(items.velocity);
 				velocity = this.velocity;
-				velocity.x = get(items.velocityX, items.deltaX, temp.x, temp2.x, velocity.x);
-				velocity.y = get(items.velocityY, items.deltaY, temp.y, temp2.y, velocity.y);
+				velocity.x = get(items.deltaX, temp.x, velocity.x);
+				velocity.y = get(items.deltaY, temp.y, velocity.y);
 			}
 			return this;
 		};

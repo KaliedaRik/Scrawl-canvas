@@ -179,7 +179,7 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 			kill = my.xtGet(kill, true);
 			if (idtag) {
 				myImg = document.getElementById(idtag);
-				if (myImg && myImg.width && myImg.height) {
+				if (myImg.width && myImg.height) {
 					mi({
 						element: myImg,
 						removeImageFromDOM: kill,
@@ -894,7 +894,7 @@ Video constructor helper function
 			return true;
 		};
 		/**
-Import a video using the supplied url string - not yet coded
+Import a video using the supplied url string
 
 @method addImageByUrl
 @param {Object} [items] Key:value Object argument for setting attributes

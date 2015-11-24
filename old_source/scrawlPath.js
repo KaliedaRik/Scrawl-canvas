@@ -1495,19 +1495,14 @@ Path creation factories will all create Point objects automatically as part of t
 				pu = my.pushUnique;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
+			local = my.safeObject(items.local);
 			this.entity = get(items.entity, '');
 			e = my.entity[this.entity];
-			this.local = vec();
-			this.current = vec();
-			local = my.safeObject(items.local);
-			this.current.x = get(items.startX, items.currentX, local.x, 0);
-			this.current.y = get(items.startY, items.currentY, local.y, 0);
-			this.setLocal(items);
-			// this.local = vec({
-			// 	name: this.type + '.' + this.name + '.local',
-			// 	x: get(items.startX, items.currentX, local.x, 0),
-			// 	y: get(items.startY, items.currentY, local.y, 0)
-			// });
+			this.local = vec({
+				name: this.type + '.' + this.name + '.local',
+				x: get(items.startX, items.currentX, local.x, 0),
+				y: get(items.startY, items.currentY, local.y, 0)
+			});
 			this.startLink = get(items.startLink, '');
 			this.fixed = get(items.fixed, false);
 			if (my.xto(items.angle, items.distance)) {
@@ -1554,23 +1549,6 @@ The following argument attributes can be used to initialize, set and get this at
 				z: 0
 			},
 			/**
-Point's coordinate current Vector - generally the Vector marks the Point's position (in pixels) from the Parent entity's start coordinates, though this can be changed by setting the __fixed__ attribute to true.
-
-The following argument attributes can be used to initialize, set and get this attribute's component values:
-
-* __startX__ or __currentX__ to set the x coordinate value
-* __startY__ or __currentY__ to set the y coordinate value
-@property current
-@type Vector
-@default zero value Vector
-@private
-**/
-			current: {
-				x: 0,
-				y: 0,
-				z: 0
-			},
-			/**
 LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
 @property startLink
 @type String
@@ -1596,10 +1574,8 @@ Augments Base.set(), to allow users to set the local attributes using startX, st
 **/
 		my.Point.prototype.set = function(items) {
 			var local,
-				curr = this.current,
 				so = my.safeObject,
 				xt = my.xt,
-				get = my.xtGet,
 				xto = my.xto;
 			my.Base.prototype.set.call(this, items);
 			items = so(items);
@@ -1608,35 +1584,9 @@ Augments Base.set(), to allow users to set the local attributes using startX, st
 				this.setPolar(items);
 			}
 			else if (xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
-				curr.x = get(items.startX, items.currentX, local.x, curr.x);
-				curr.y = get(items.startY, items.currentY, local.y, curr.y);
-				this.setLocal();
+				this.local.x = (xt(items.startX)) ? items.startX : ((xt(items.currentX)) ? items.currentX : ((xt(local.x)) ? local.x : this.local.x));
+				this.local.y = (xt(items.startY)) ? items.startY : ((xt(items.currentY)) ? items.currentY : ((xt(local.y)) ? local.y : this.local.y));
 			}
-			return this;
-		};
-		/**
-Set helpere function
-@method setLocal
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-@private
-**/
-		my.Point.prototype.setLocal = function() {
-			var curr = this.current,
-				loc = this.local,
-				e = my.entity[this.entity],
-				conv = this.numberConvert,
-				cell = my.cell[my.group[e.group].cell];
-			loc.x = (curr.x.substring) ? conv(curr.x, cell.actualWidth) : curr.x;
-			if(isNaN(loc.x)){
-				loc.x = 0;
-			}
-			loc.y = (curr.y.substring) ? conv(curr.y, cell.actualHeight) : curr.y;
-			if(isNaN(loc.y)){
-				loc.y = 0;
-			}
-			this.fixed = (curr.x.substring || curr.y.substring) ? true : this.fixed;
 			return this;
 		};
 		/**
@@ -1653,25 +1603,17 @@ Add values to the local attribute. Permitted attributes of the argument object i
 **/
 		my.Point.prototype.setDelta = function(items) {
 			var local,
-				curr = this.current,
 				loc = this.local,
 				m,
 				d,
 				a,
-				x,
-				y,
 				so = my.safeObject,
-				xt = my.xt,
-				perc = my.addPercentages,
-				get = my.xtGet;
+				xt = my.xt;
 			items = so(items);
 			local = so(items.local);
 			if (my.xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
-				x = get(items.startX, items.currentX, local.x, 0);
-				y = get(items.startY, items.currentY, local.y, 0);
-				curr.x = (x.substring) ? perc(curr.x, x) : curr.x + x;
-				curr.y = (y.substring) ? perc(curr.y, y) : curr.y + y;
-				this.setLocal();
+				loc.x += (xt(items.startX)) ? items.startX : ((xt(items.currentX)) ? items.currentX : ((xt(local.x)) ? local.x : 0));
+				loc.y += (xt(items.startY)) ? items.startY : ((xt(items.currentY)) ? items.currentY : ((xt(local.y)) ? local.y : 0));
 			}
 			if (xt(items.distance)) {
 				m = loc.getMagnitude();

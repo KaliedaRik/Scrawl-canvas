@@ -157,7 +157,7 @@ Augments Entity.set()
 		my.Shape.prototype.set = function(items) {
 			my.Entity.prototype.set.call(this, items);
 			items = my.safeObject(items);
-			if (my.xt(items.data && items.data.substring)) {
+			if (my.xt(items.data)) {
 				this.dataSet = this.buildDataSet(this.data);
 			}
 			return this;
@@ -736,6 +736,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 				cvx = my.work.cvx;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
+			// console.log(items, tests);
 			result = false;
 			cvx.mozFillRule = this.winding;
 			cvx.msFillRule = this.winding;
