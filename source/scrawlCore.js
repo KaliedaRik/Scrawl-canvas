@@ -23,7 +23,7 @@
 /**
 # scrawlCore
 
-## Version 5.0.0 - 24 November 2015
+## Version 5.0.0 - 26 November 2015
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -108,7 +108,7 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 4.3.0
+@default 5.0.0
 @final
 **/
 	my.version = '5.0.0';

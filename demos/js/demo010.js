@@ -12,7 +12,7 @@ var mycode = function() {
 		name: 'mywheel',
 		startX: 100,
 		startY: 100,
-		radius: 80,
+		radius: '20%', // String percentage radius values are relative to the Cell width
 		fillStyle: 'Gold',
 		strokeStyle: 'rgb(0,190,0)',
 		lineWidth: 10,
@@ -22,13 +22,13 @@ var mycode = function() {
 		shadowOffsetY: 3,
 		shadowBlur: 2,
 		shadowColor: 'Black',
-		method: 'sinkInto',
+		method: 'sinkInto'
 	}).clone({
 		startX: 300,
 		startAngle: 30,
 		endAngle: 325,
 		includeCenter: true,
-		scale: 0.7,
+		scale: 0.7
 	});
 
 	//display canvas
@@ -50,5 +50,5 @@ scrawl.loadExtensions({
 			scrawl.init();
 			mycode();
 		}, false);
-	},
+	}
 });
