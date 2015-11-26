@@ -34,7 +34,7 @@ The Animation module adds support for animation and tweening to the core
 
 @module scrawlAnimation
 **/
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'animation')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'animation')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -64,42 +64,42 @@ scrawlAnimation extension adaptions to the Scrawl library object
 @class window.scrawl_Animation
 **/
 
-		my.d.Position.delta = {
+		my.work.d.Position.delta = {
 			x: 0,
 			y: 0,
 			z: 0
 		};
-		my.d.Position.deltaPathPlace = 0;
-		my.d.Position.pathSpeedConstant = true;
-		my.d.Position.tweenLock = false;
-		my.mergeInto(my.d.Cell, my.d.Position);
-		my.mergeInto(my.d.Entity, my.d.Position);
-		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Entity);
+		my.work.d.Position.deltaPathPlace = 0;
+		my.work.d.Position.pathSpeedConstant = true;
+		my.work.d.Position.tweenLock = false;
+		my.mergeInto(my.work.d.Cell, my.work.d.Position);
+		my.mergeInto(my.work.d.Entity, my.work.d.Position);
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Entity);
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Entity);
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Entity);
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Entity);
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Path)) {
-			my.mergeInto(my.d.Path, my.d.Entity);
+		if (my.xt(my.work.d.Path)) {
+			my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		}
 
-		my.d.PageElement.tweenLock = false;
-		my.mergeInto(my.d.Pad, my.d.PageElement);
-		if (my.xt(my.d.Stack)) {
-			my.mergeInto(my.d.Stack, my.d.PageElement);
+		my.work.d.PageElement.tweenLock = false;
+		my.mergeInto(my.work.d.Pad, my.work.d.PageElement);
+		if (my.xt(my.work.d.Stack)) {
+			my.mergeInto(my.work.d.Stack, my.work.d.PageElement);
 		}
-		if (my.xt(my.d.Element)) {
-			my.mergeInto(my.d.Element, my.d.PageElement);
+		if (my.xt(my.work.d.Element)) {
+			my.mergeInto(my.work.d.Element, my.work.d.PageElement);
 		}
 
 		/**
@@ -139,6 +139,24 @@ Expected values:
 			return false;
 		};
 		/**
+A __utility__ function that adds two numbers between 0 and 1, keeping them within bounds
+
+@method addWithinBounds
+@param {Number} a first number
+@param {Number} b second number
+@return result of calculation
+**/
+		my.addWithinBounds = function(a, b) {
+			var result = a + b;
+			if (result > 1) {
+				return result - 1;
+			}
+			if (result < 0) {
+				return result + 1;
+			}
+			return result;
+		};
+		/**
 Position constructor hook function
 
 Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a 'velocity'
@@ -147,16 +165,17 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 @private
 **/
 		my.Position.prototype.animationPositionInit = function(items) {
-			var temp = my.safeObject(items.delta);
-			this.delta = my.makeVector({
-				x: my.xtGet(items.deltaX, temp.x, 0),
-				y: my.xtGet(items.deltaY, temp.y, 0),
+			var temp = my.safeObject(items.delta),
+				vec = my.makeVector,
+				get = my.xtGet,
+				d = my.work.d[this.type];
+			this.delta = vec({
+				name: this.type + '.' + this.name + '.delta',
+				x: get(items.deltaX, temp.x, 0),
+				y: get(items.deltaY, temp.y, 0)
 			});
-			this.work.delta = my.makeVector({
-				name: this.type + '.' + this.name + '.work.delta'
-			});
-			this.pathSpeedConstant = my.xtGet(items.pathSpeedConstant, my.d[this.type].pathSpeedConstant);
-			this.deltaPathPlace = my.xtGet(items.deltaPathPlace, my.d[this.type].deltaPathPlace);
+			this.pathSpeedConstant = get(items.pathSpeedConstant, d.pathSpeedConstant);
+			this.deltaPathPlace = get(items.deltaPathPlace, d.deltaPathPlace);
 		};
 		/**
 Position.get hook function - modified by animation module
@@ -201,14 +220,16 @@ Be aware that this is different to the Position.setDelta() function inherited by
 @chainable
 **/
 		my.Position.prototype.setDeltaAttribute = function(items) {
-			var temp;
-			items = my.safeObject(items);
-			if (!my.isa(this.delta, 'vector')) {
+			var temp,
+				so = my.safeObject,
+				get = my.xtGet;
+			items = so(items);
+			if (!my.isa_vector(this.delta)) {
 				this.delta = my.makeVector(items.delta || this.delta);
 			}
-			temp = my.safeObject(items.delta);
-			this.delta.x = my.xtGet(items.deltaX, temp.x, this.delta.x);
-			this.delta.y = my.xtGet(items.deltaY, temp.y, this.delta.y);
+			temp = so(items.delta);
+			this.delta.x = get(items.deltaX, temp.x, this.delta.x);
+			this.delta.y = get(items.deltaY, temp.y, this.delta.y);
 			return this;
 		};
 		/**
@@ -217,10 +238,11 @@ Position.clone hook function - modified by animation module
 @private
 **/
 		my.Position.prototype.animationPositionClone = function(a, items) {
-			var temp = my.safeObject(items.delta);
+			var temp = my.safeObject(items.delta),
+				get = my.xtGet;
 			a.delta = my.makeVector({
-				x: my.xtGet(items.deltaX, temp.x, a.delta.x),
-				y: my.xtGet(items.deltaY, temp.y, a.delta.y),
+				x: get(items.deltaX, temp.x, a.delta.x),
+				y: get(items.deltaY, temp.y, a.delta.y),
 			});
 			return a;
 		};
@@ -238,29 +260,41 @@ Permitted argument values include
 @chainable
 **/
 		my.Position.prototype.updateStart = function(item) {
-			switch (item) {
-				case 'x':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					break;
-				case 'y':
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					break;
-				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
-						action: 'loop'
-					});
-					break;
-				default:
-					this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
-						action: 'loop'
-					});
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-			}
+			item = my.xtGet(item, 'all');
+			this.updateStartActions[item](my.addPercentages, this.start, this.delta, my.addWithinBounds, this);
+			this.currentStart.flag = false;
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
 			}
 			return this;
+		};
+		/**
+updateStart helper object
+
+@method Position.updateStartActions
+@private
+**/
+		my.Position.prototype.updateStartActions = {
+			x: function(perc, start, delta, add) {
+				start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+			},
+			y: function(perc, start, delta, add) {
+				start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+			},
+			path: function(perc, start, delta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
+			},
+			all: function(perc, start, delta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+			}
 		};
 		/**
 Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace
@@ -276,31 +310,41 @@ Permitted argument values include
 @chainable
 **/
 		my.Position.prototype.revertStart = function(item) {
-			switch (item) {
-				case 'x':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
-					break;
-				case 'y':
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
-					break;
-				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
-						action: 'loop',
-						operation: '-'
-					});
-					break;
-				default:
-					this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
-						action: 'loop',
-						operation: '-'
-					});
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : my.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : my.subtractPercentages(this.start.y, this.delta.y || 0);
-			}
+			item = my.xtGet(item, 'all');
+			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, my.addWithinBounds, this);
+			this.currentStart.flag = false;
 			if (my.xt(this.collisionArray)) {
 				this.collisionArray.length = 0;
 			}
 			return this;
+		};
+		/**
+revertStart helper object
+
+@method Position.revertStartActions
+@private
+**/
+		my.Position.prototype.revertStartActions = {
+			x: function(perc, start, delta, add) {
+				start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+			},
+			y: function(perc, start, delta, add) {
+				start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+			},
+			path: function(perc, start, delta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
+			},
+			all: function(perc, start, delta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+			}
 		};
 		/**
 Swaps the values of an attribute between two objects
@@ -312,7 +356,7 @@ Swaps the values of an attribute between two objects
 **/
 		my.Position.prototype.exchange = function(obj, item) {
 			var temp;
-			if (my.isa(obj, 'obj')) {
+			if (my.isa_obj(obj)) {
 				temp = this[item] || this.get(item);
 				this[item] = obj[item] || obj.get(item);
 				obj[item] = temp;
@@ -327,35 +371,43 @@ Changes the sign (+/-) of specified attribute values
 @chainable
 **/
 		my.Position.prototype.reverse = function(item) {
-			switch (item) {
-				case 'deltaX':
-					this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
-					break;
-				case 'deltaY':
-					this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
-					break;
-				case 'delta':
-					this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
-					this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
-					break;
-				case 'deltaPathPlace':
-					this.deltaPathPlace = -this.deltaPathPlace;
-					break;
-				default:
-					this.deltaPathPlace = -this.deltaPathPlace;
-					this.delta.x = (my.isa(this.delta.x, 'num')) ? -this.delta.x : my.reversePercentage(this.delta.x);
-					this.delta.y = (my.isa(this.delta.y, 'num')) ? -this.delta.y : my.reversePercentage(this.delta.y);
-			}
+			item = my.xtGet(item, 'all');
+			this.reverseActions[item](this.delta, my.reversePercentage, this);
 			return this;
 		};
-		my.d.Cell.copyDelta = {
+		/**
+reverse helper object
+@method Position.reverseActions
+@private
+**/
+		my.Position.prototype.reverseActions = {
+			deltaX: function(delta, perc) {
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+			},
+			deltaY: function(delta, perc) {
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			},
+			delta: function(delta, perc) {
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			},
+			deltaPathPlace: function(delta, perc, obj) {
+				obj.deltaPathPlace = -obj.deltaPathPlace;
+			},
+			all: function(delta, perc, obj) {
+				obj.deltaPathPlace = -obj.deltaPathPlace;
+				delta.x = (delta.x.toFixed) ? -delta.x : perc(delta.x);
+				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
+			}
+		};
+		my.work.d.Cell.copyDelta = {
 			x: 0,
 			y: 0,
 		};
-		my.d.Cell.copyMinWidth = 0;
-		my.d.Cell.copyMaxWidth = 0;
-		my.d.Cell.copyMinHeight = 0;
-		my.d.Cell.copyMaxHeight = 0;
+		my.work.d.Cell.copyMinWidth = 0;
+		my.work.d.Cell.copyMaxWidth = 0;
+		my.work.d.Cell.copyMinHeight = 0;
+		my.work.d.Cell.copyMaxHeight = 0;
 		/**
 Cell constructor hook function
 
@@ -365,12 +417,12 @@ Adds a __sourceDelta__ (sourceDeltaX, sourceDeltaY) Vector to the cell, used to 
 @private
 **/
 		my.Cell.prototype.animationCellInit = function(items) {
-			var temp = my.safeObject(items.copyDelta);
+			var temp = my.safeObject(items.copyDelta),
+				get = my.xtGet;
 			this.copyDelta = my.makeVector({
-				x: my.xtGet(items.copyDeltaX, temp.x, 0),
-				y: my.xtGet(items.copyDeltaY, temp.y, 0),
+				x: get(items.copyDeltaX, temp.x, 0),
+				y: get(items.copyDeltaY, temp.y, 0),
 			});
-			this.work.copyDelta = my.makeVector();
 		};
 		/**
 Cell.get hook function - modified by animation module
@@ -395,11 +447,12 @@ Cell.set hook function - modified by animation module
 @private
 **/
 		my.Cell.prototype.animationCellSet = function(items) {
-			var temp;
+			var temp,
+				get = my.xtGet;
 			if (my.xto(items.copyDelta, items.copyDeltaX, items.copyDeltaY)) {
 				temp = my.safeObject(items.copyDelta);
-				this.copyDelta.x = my.xtGet(items.copyDeltaX, temp.x, this.copyDelta.x);
-				this.copyDelta.y = my.xtGet(items.copyDeltaY, temp.y, this.copyDelta.y);
+				this.copyDelta.x = get(items.copyDeltaX, temp.x, this.copyDelta.x);
+				this.copyDelta.y = get(items.copyDeltaY, temp.y, this.copyDelta.y);
 			}
 		};
 		/**
@@ -418,43 +471,78 @@ Permitted argument values include
 @chainable
 **/
 		my.Cell.prototype.updateStart = function(item) {
-			switch (item) {
-				case 'x':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
-					break;
-				case 'y':
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
-					break;
-				case 'start':
-				case 'paste':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					break;
-				case 'copy':
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
-					break;
-				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
-						action: 'loop'
-					});
-					break;
-				default:
-					if (my.xt(this.pathPlace)) {
-						this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
-							action: 'loop'
-						});
-					}
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + this.delta.x : my.addPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + this.delta.y : my.addPercentages(this.start.y, this.delta.y || 0);
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + this.copyDelta.x : my.addPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + this.copyDelta.y : my.addPercentages(this.copy.y, this.copyDelta.y || 0);
-			}
-			this.setCopy();
-			this.setPaste();
+			item = my.xtGet(item, 'all');
+			this.updateStartActions[item](my.addPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds, this);
+			this.currentStart.flag = false;
 			return this;
+		};
+		/**
+updateStart helper object
+
+@method Cell.updateStartActions
+@private
+**/
+		my.Cell.prototype.updateStartActions = {
+			x: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x + copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+			},
+			y: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y + copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			},
+			start: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+			},
+			paste: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+			},
+			copy: function(perc, start, delta, copy, copyDelta, add) {
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x + copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y + copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			},
+			path: function(perc, start, delta, copy, copyDelta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
+			},
+			all: function(perc, start, delta, copy, copyDelta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, obj.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x + delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y + delta.y : perc(start.y, delta.y);
+				}
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x + copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y + copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			}
 		};
 		/**
 Subtracts delta values from the start vector; subtracts sourceDelta values from the source vector; subtracts deltaPathPlace to pathPlace
@@ -472,45 +560,77 @@ Permitted argument values include
 @chainable
 **/
 		my.Cell.prototype.revertStart = function(item) {
-			switch (item) {
-				case 'x':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
-					break;
-				case 'y':
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
-					break;
-				case 'start':
-				case 'paste':
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					break;
-				case 'copy':
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
-					break;
-				case 'path':
-					this.pathPlace = my.addWithinBounds(this.pathPlace, this.deltaPathPlace, {
-						action: 'loop',
-						operation: '-'
-					});
-					break;
-				default:
-					if (my.xt(this.pathPlace)) {
-						this.pathPlace = my.addWithinBounds(this.pathPlace, (this.deltaPathPlace || 0), {
-							action: 'loop',
-							operation: '-'
-						});
-					}
-					this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x - this.delta.x : this.subtractPercentages(this.start.x, this.delta.x || 0);
-					this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y - this.delta.y : this.subtractPercentages(this.start.y, this.delta.y || 0);
-					this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x - this.copyDelta.x : this.subtractPercentages(this.copy.x, this.copyDelta.x || 0);
-					this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y - this.copyDelta.y : this.subtractPercentages(this.copy.y, this.copyDelta.y || 0);
-			}
-			this.setCopy();
-			this.setPaste();
+			item = my.xtGet(item, 'all');
+			this.revertStartActions[item](my.subtractPercentages, this.start, this.delta, this.copy, this.copyDelta, my.addWithinBounds, this);
+			this.currentStart.flag = false;
 			return this;
+		};
+		/**
+revertStart helper object
+@method Cell.revertStartActions
+@private
+**/
+		my.Cell.prototype.revertStartActions = {
+			x: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x - copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+			},
+			y: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y - copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			},
+			start: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+			},
+			paste: function(perc, start, delta, copy, copyDelta, add) {
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+			},
+			copy: function(perc, start, delta, copy, copyDelta, add) {
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x - copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y - copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			},
+			path: function(perc, start, delta, copy, copyDelta, add, obj) {
+				obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
+			},
+			all: function(perc, start, delta, copy, copyDelta, add, obj) {
+				if (obj.deltaPathPlace) {
+					obj.pathPlace = add(obj.pathPlace, -obj.deltaPathPlace);
+				}
+				if (delta.x) {
+					start.x = (start.x.toFixed) ? start.x - delta.x : perc(start.x, delta.x);
+				}
+				if (delta.y) {
+					start.y = (start.y.toFixed) ? start.y - delta.y : perc(start.y, delta.y);
+				}
+				if (copyDelta.x) {
+					copy.x = (copy.x.toFixed) ? copy.x - copyDelta.x : perc(copy.x, copyDelta.x);
+				}
+				if (copyDelta.y) {
+					copy.y = (copy.y.toFixed) ? copy.y - copyDelta.y : perc(copy.y, copyDelta.y);
+				}
+			}
 		};
 		/**
 Zooms one cell in relation to another cell
@@ -534,7 +654,7 @@ Zooms one cell in relation to another cell
 				myH,
 				myX,
 				myY;
-			if (my.isa(item, 'num')) {
+			if (item.toFixed) {
 				sWidth = this.copyWidth;
 				sHeight = this.copyHeight;
 				aWidth = this.actualWidth;
@@ -607,7 +727,9 @@ _Note that this function is only effective in achieving a parallax effect if the
 				height,
 				width,
 				ctx,
-				c;
+				c,
+				cv = my.work.cv,
+				cvx = my.work.cvx;
 			items = my.safeObject(items);
 			if (my.contains(stat, items.edge)) {
 				myShift = my.xtGet(items.shiftCopy, false);
@@ -615,8 +737,8 @@ _Note that this function is only effective in achieving a parallax effect if the
 				width = this.actualWidth;
 				ctx = my.context[this.name];
 				c = my.canvas[this.name];
-				my.cv.width = width;
-				my.cv.height = height;
+				cv.width = width;
+				cv.height = height;
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 				switch (items.edge) {
 					case 'horizontal':
@@ -644,28 +766,28 @@ _Note that this function is only effective in achieving a parallax effect if the
 				}
 				switch (myEdge) {
 					case 'top':
-						my.cvx.drawImage(c, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
-						my.cvx.drawImage(c, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
+						cvx.drawImage(c, 0, 0, width, myStrip, 0, myRemains, width, myStrip);
+						cvx.drawImage(c, 0, myStrip, width, myRemains, 0, 0, width, myRemains);
 						this.copy.y -= (myShift) ? myStrip : 0;
 						break;
 					case 'bottom':
-						my.cvx.drawImage(c, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
-						my.cvx.drawImage(c, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
+						cvx.drawImage(c, 0, 0, width, myRemains, 0, myStrip, width, myRemains);
+						cvx.drawImage(c, 0, myRemains, width, myStrip, 0, 0, width, myStrip);
 						this.copy.y += (myShift) ? myStrip : 0;
 						break;
 					case 'left':
-						my.cvx.drawImage(c, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
-						my.cvx.drawImage(c, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
+						cvx.drawImage(c, 0, 0, myStrip, height, myRemains, 0, myStrip, height);
+						cvx.drawImage(c, myStrip, 0, myRemains, height, 0, 0, myRemains, height);
 						this.copy.x -= (myShift) ? myStrip : 0;
 						break;
 					case 'right':
-						my.cvx.drawImage(c, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
-						my.cvx.drawImage(c, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
+						cvx.drawImage(c, 0, 0, myRemains, height, myStrip, 0, myRemains, height);
+						cvx.drawImage(c, myRemains, 0, myStrip, height, 0, 0, myStrip, height);
 						this.copy.x += (myShift) ? myStrip : 0;
 						break;
 				}
 				ctx.clearRect(0, 0, width, height);
-				ctx.drawImage(my.cv, 0, 0, width, height);
+				ctx.drawImage(cv, 0, 0, width, height);
 				if (myShift) {
 					this.setCopy();
 				}
@@ -682,8 +804,10 @@ Each entity will add their delta values to their start Vector, and/or add deltaP
 @chainable
 **/
 		my.Group.prototype.updateStart = function(item) {
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].updateStart(item);
+			var entitys = this.entitys,
+				e = my.entity;
+			for (var i = 0, iz = entitys.length; i < iz; i++) {
+				e[entitys[i]].updateStart(item);
 			}
 			return this;
 		};
@@ -697,8 +821,10 @@ Each entity will subtract their delta values to their start Vector, and/or subtr
 @chainable
 **/
 		my.Group.prototype.revertStart = function(item) {
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].revertStart(item);
+			var entitys = this.entitys,
+				e = my.entity;
+			for (var i = 0, iz = entitys.length; i < iz; i++) {
+				e[entitys[i]].revertStart(item);
 			}
 			return this;
 		};
@@ -712,8 +838,10 @@ Each entity will change the sign (+/-) of specified attribute values
 @chainable
 **/
 		my.Group.prototype.reverse = function(item) {
-			for (var i = 0, iz = this.entitys.length; i < iz; i++) {
-				my.entity[this.entitys[i]].reverse(item);
+			var entitys = this.entitys,
+				e = my.entity;
+			for (var i = 0, iz = entitys.length; i < iz; i++) {
+				e[entitys[i]].reverse(item);
 			}
 			return this;
 		};
@@ -723,18 +851,18 @@ A value for shifting the color stops (was __roll__ in versions prior to v4.0)
 @type Number
 @default 0
 **/
-		my.d.Design.shift = 0;
+		my.work.d.Design.shift = 0;
 		/**
 A flag to indicate that stop color shifts should be automatically applied
 @property autoUpdate
 @type Boolean
 @default false
 **/
-		my.d.Design.autoUpdate = false;
-		my.mergeInto(my.d.Gradient, my.d.Design);
-		my.mergeInto(my.d.RadialGradient, my.d.Design);
-		if (my.xt(my.d.Pattern)) {
-			my.mergeInto(my.d.Pattern, my.d.Design);
+		my.work.d.Design.autoUpdate = false;
+		my.mergeInto(my.work.d.Gradient, my.work.d.Design);
+		my.mergeInto(my.work.d.RadialGradient, my.work.d.Design);
+		if (my.xt(my.work.d.Pattern)) {
+			my.mergeInto(my.work.d.Pattern, my.work.d.Design);
 		}
 		/**
 Creates the gradient
@@ -895,12 +1023,13 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			var i, iz, temp;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.targets = (my.isa(items.targets, 'arr')) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
+			this.targets = (my.isa_arr(items.targets)) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
 			this.currentTargets = [];
 			this.initVals = [];
-			this.start = (my.isa(items.start, 'obj')) ? items.start : {};
-			this.engines = (my.isa(items.engines, 'obj')) ? items.engines : {};
-			this.end = (my.isa(items.end, 'obj')) ? items.end : {};
+			this.start = (my.isa_obj(items.start)) ? items.start : {};
+			this.engines = (my.isa_obj(items.engines)) ? items.engines : {};
+			this.calculations = (my.isa_obj(items.calculations)) ? items.calculations : {};
+			this.end = (my.isa_obj(items.end)) ? items.end : {};
 			this.startTime = Date.now();
 			this.currentTime = Date.now();
 			this.duration = items.duration || 0;
@@ -915,10 +1044,10 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			this.nextTween = items.nextTween || '';
 			this.lockObjects = items.lockObjects || false;
 			this.killOnComplete = items.killOnComplete || false;
-			this.callback = (my.isa(items.callback, 'fn')) ? items.callback : false;
+			this.callback = (my.isa_fn(items.callback)) ? items.callback : false;
 			this.order = items.order || 0;
 			for (i = 0, iz = this.targets.length; i < iz; i++) {
-				if (my.isa(this.targets[i], 'str')) {
+				if (this.targets[i].substring) {
 					temp = false;
 					if (my.entity[this.targets[i]]) {
 						temp = my.entity[this.targets[i]];
@@ -956,6 +1085,9 @@ Tweens can run a callback function on completion by setting the __callback__ att
 					else if (my.physics && my.physics[this.targets[i]]) {
 						temp = my.physics[this.targets[i]];
 					}
+					else if (my.filter && my.filter[this.targets[i]]) {
+						temp = my.filter[this.targets[i]];
+					}
 					if (temp) {
 						this.targets[i] = temp;
 					}
@@ -963,6 +1095,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			}
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
+			my.work.resortAnimations = true;
 			return this;
 		};
 		my.Tween.prototype = Object.create(my.Base.prototype);
@@ -974,7 +1107,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 **/
 		my.Tween.prototype.type = 'Tween';
 		my.Tween.prototype.classname = 'animationnames';
-		my.d.Tween = {
+		my.work.d.Tween = {
 			/**
 Array of entitys, cells, etc to be animated using this tween; expects to be passed handles to the entity objects, not SPRITENAME strings
 @property targets
@@ -1006,11 +1139,30 @@ Currently, Scrawl offers the following easing engines. _Out_ signifies that the 
 * __out__, __easeOut__, __easeOut3__, __easeOut4__, __easeOut5__
 * __easeOutIn__, __easeOutIn3__, __easeOutIn4__, __easeOutIn5__
 * __linear__ (default) - an even speed throughout the duration of the tween
+* __calc__ to tell the tween to use a function (set in the calculations object) to determine the tween value
 @property engines
 @type Object
 @default {}
 **/
 			engines: {},
+			/**
+Object containing attribute: function pairs
+
+The attribute must be the key of the attribute being tweened; the function can be anonymous or named. The function should return a value which the tween engine can then assign to the attribute. 
+
+The function should accept three arguments. The first argument will be an object containing the following attributes:
+
+* __start__ Start point for tween action
+* __change__ Total change required for tween action
+* __position__ Normalized time (time elapsed/duration)
+
+The second argument will be the tween object itself, while the third will be the Entity (or Cell, etc) being tweened
+
+@property calculations
+@type Object
+@default {}
+**/
+			calculations: {},
 			/**
 Object containing the end positions for given settable (ie: Number) attributes
 @property end
@@ -1153,7 +1305,7 @@ Lower order animations are run during each frame before higher order ones
 **/
 			order: 0,
 		};
-		my.mergeInto(my.d.Tween, my.d.Base);
+		my.mergeInto(my.work.d.Tween, my.work.d.Base);
 		/**
 Set tween values
 @method set
@@ -1161,15 +1313,21 @@ Set tween values
 @chainable
 **/
 		my.Tween.prototype.set = function(items) {
-			var i, iz, a;
+			var i, iz, a,
+				animationnames = my.animationnames,
+				animation = my.animation,
+				contains = my.contains;
 			my.Base.prototype.set.call(this, items);
-			for (i = 0, iz = my.animationnames.length; i < iz; i++) {
-				a = my.animation[my.animationnames[i]];
+			for (i = 0, iz = animationnames.length; i < iz; i++) {
+				a = animation[animationnames[i]];
 				if (a.type === 'Timeline') {
-					if (my.contains(a.actionsList, this.name)) {
+					if (contains(a.actionsList, this.name)) {
 						a.resolve();
 					}
 				}
+			}
+			if (my.xt(items.order)) {
+				my.work.resortAnimations = true;
 			}
 			return this;
 		};
@@ -1190,51 +1348,60 @@ Tween animation function
 				t,
 				tz,
 				k,
-				kz;
+				kz,
+				xt = my.xt,
+				currentTargets = this.currentTargets,
+				engine = this.engine,
+				engines = this.engines;
 			this.currentTime = Date.now();
 			progress = (this.currentTime - this.startTime) / this.duration;
 			keys = Object.keys(this.end);
 			if (this.active) {
 				if (progress < 1) {
-					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
-						entity = this.currentTargets[t];
-						if (my.xt(entity)) {
+					for (t = 0, tz = currentTargets.length; t < tz; t++) {
+						entity = currentTargets[t];
+						if (xt(entity)) {
 							argSet = {};
 							for (k = 0, kz = keys.length; k < kz; k++) {
 								temp = this.initVals[t][keys[k]];
 								unit = 0;
-								if (my.isa(temp.change, 'str')) {
+								if (temp.change.substring) {
 									measure = temp.change.match(/^-?\d+\.?\d*(\D*)/);
 									unit = measure[1];
-									if (!my.xt(unit)) {
+									if (!xt(unit)) {
 										unit = '%';
 									}
 								}
-								argSet[keys[k]] = this.engine(
+								argSet[keys[k]] = engine(
 									parseFloat(temp.start),
 									parseFloat(temp.change),
 									progress,
-									this.engines[keys[k]],
-									this.reverse);
-								argSet[keys[k]] = argSet[keys[k]] + unit;
+									engines[keys[k]],
+									this.reverse,
+									keys[k],
+									this,
+									entity);
+								if (argSet[keys[k]].toFixed) {
+									argSet[keys[k]] = argSet[keys[k]] + unit;
+								}
 							}
 							entity.set(argSet);
 						}
 					}
 				}
 				else {
-					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
-						if (my.xt(this.currentTargets[t])) {
-							this.currentTargets[t].tweenLock = false;
+					for (t = 0, tz = currentTargets.length; t < tz; t++) {
+						if (xt(currentTargets[t])) {
+							currentTargets[t].tweenLock = false;
 						}
 					}
 					this.active = false;
-					my.removeItem(my.animate, this.name);
+					my.removeItem(my.work.animate, this.name);
 					if (this.autoReverse || this.autoReverseAndRun) {
 						this.reverse = (this.reverse) ? false : true;
 					}
 					if (this.autoReverseAndRun) {
-						if (my.isa(this.currentCount, 'num')) {
+						if (this.currentCount.toFixed) {
 							this.currentCount--;
 							if (this.currentCount > 0) {
 								this.run();
@@ -1247,7 +1414,7 @@ Tween animation function
 							this.run();
 						}
 					}
-					else if (my.isa(this.count, 'bool') && this.count) {
+					else if (my.isa_bool(this.count) && this.count) {
 						this.run();
 					}
 					else {
@@ -1266,77 +1433,89 @@ Tween engines
 @param {Number} position Normalized time (time elapsed/duration)
 @param {String} engine Calculation engine to be used
 @param {Boolean} reverse Reverse flag - true if tween is reversed
+@param {String} Attribute key
+@param {Tween} Tween object
+@param {Object} Entity (or Cell, etc) being tweened
 @private
 **/
-		my.Tween.prototype.engine = function(start, change, position, engine, reverse) {
-			var temp;
-			engine = my.xtGet(engine, 'x');
-			if (engine.length < 4) {
-				switch (engine) {
-					case 'out':
-						temp = 1 - position;
-						return (start + change) + (Math.cos((position * 90) * my.radian) * -change);
-					case 'in':
-						return start + (Math.sin((position * 90) * my.radian) * change);
-					default:
-						return start + (position * change);
-				}
+		my.Tween.prototype.engine = function(start, change, position, engine, reverse, key, tween, obj) {
+			engine = my.xtGet(engine, 'linear');
+			if (engine === 'calc') {
+				return tween.calculations[key]({
+					start: start,
+					change: change,
+					position: position
+				}, tween, obj);
 			}
-			if (engine[4] == 'I') {
-				switch (engine) {
-					case 'easeIn': //OPPOSITE of Flash easeIn - slow at end, not start
-						temp = 1 - position;
-						return (start + change) + ((temp * temp) * -change);
-					case 'easeIn3':
-						temp = 1 - position;
-						return (start + change) + ((temp * temp * temp) * -change);
-					case 'easeIn4':
-						temp = 1 - position;
-						return (start + change) + ((temp * temp * temp * temp) * -change);
-					case 'easeIn5':
-						temp = 1 - position;
-						return (start + change) + ((temp * temp * temp * temp * temp) * -change);
-					default:
-						return start + (position * change);
-				}
-			}
-			if (engine.length > 8) {
-				switch (engine) {
-					case 'easeOutIn':
-						temp = 1 - position;
-						return (position < 0.5) ?
-							start + ((position * position) * change * 2) :
-							(start + change) + ((temp * temp) * -change * 2);
-					case 'easeOutIn3':
-						temp = 1 - position;
-						return (position < 0.5) ?
-							start + ((position * position * position) * change * 4) :
-							(start + change) + ((temp * temp * temp) * -change * 4);
-					case 'easeOutIn4':
-						temp = 1 - position;
-						return (position < 0.5) ?
-							start + ((position * position * position * position) * change * 8) :
-							(start + change) + ((temp * temp * temp * temp) * -change * 8);
-					case 'easeOutIn5':
-						temp = 1 - position;
-						return (position < 0.5) ?
-							start + ((position * position * position * position * position) * change * 16) :
-							(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
-					default:
-						return start + (position * change);
-				}
-			}
-			switch (engine) {
-				case 'easeOut': //OPPOSITE of Flash easeOut - slow at start, not end
-					return start + ((position * position) * change);
-				case 'easeOut3':
-					return start + ((position * position * position) * change);
-				case 'easeOut4':
-					return start + ((position * position * position * position) * change);
-				case 'easeOut5':
-					return start + ((position * position * position * position * position) * change);
-				default:
-					return start + (position * change);
+			return my.Tween.prototype.engineActions[engine](start, change, position, reverse);
+		};
+		/**
+Tween engine helper object
+@method engineActions
+@private
+**/
+		my.Tween.prototype.engineActions = {
+			out: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + (Math.cos((position * 90) * my.work.radian) * -change);
+			},
+			in : function(start, change, position, reverse) {
+				return start + (Math.sin((position * 90) * my.work.radian) * change);
+			},
+			easeIn: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp) * -change);
+			},
+			easeIn3: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp) * -change);
+			},
+			easeIn4: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp * temp) * -change);
+			},
+			easeIn5: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp * temp * temp) * -change);
+			},
+			easeOutIn: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position) * change * 2) :
+					(start + change) + ((temp * temp) * -change * 2);
+			},
+			easeOutIn3: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position) * change * 4) :
+					(start + change) + ((temp * temp * temp) * -change * 4);
+			},
+			easeOutIn4: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position * position) * change * 8) :
+					(start + change) + ((temp * temp * temp * temp) * -change * 8);
+			},
+			easeOutIn5: function(start, change, position, reverse) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position * position * position) * change * 16) :
+					(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
+			},
+			easeOut: function(start, change, position, reverse) {
+				return start + ((position * position) * change);
+			},
+			easeOut3: function(start, change, position, reverse) {
+				return start + ((position * position * position) * change);
+			},
+			easeOut4: function(start, change, position, reverse) {
+				return start + ((position * position * position * position) * change);
+			},
+			easeOut5: function(start, change, position, reverse) {
+				return start + ((position * position * position * position * position) * change);
+			},
+			linear: function(start, change, position, reverse) {
+				return start + (position * change);
 			}
 		};
 		/**
@@ -1398,7 +1577,7 @@ Run a tween animation
 								end = this.end[keys[m]];
 								temp = parseFloat(end) - parseFloat(start);
 								unit = 0;
-								if (my.isa(end, 'str')) {
+								if (end.substring) {
 									measure = end.match(/^-?\d+\.?\d*(\D*)/);
 									unit = measure[1];
 									if (!my.xt(unit)) {
@@ -1416,7 +1595,7 @@ Run a tween animation
 						}
 					}
 					this.startTime = Date.now();
-					my.pushUnique(my.animate, this.name);
+					my.pushUnique(my.work.animate, this.name);
 					this.active = true;
 					return true;
 				}
@@ -1480,7 +1659,7 @@ Stop a tween animation
 		my.Tween.prototype.halt = function() {
 			this.active = false;
 			this.paused = true;
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			return this;
 		};
 		/**
@@ -1557,7 +1736,7 @@ Start the tween running from the point at which it was halted
 			if (this.paused) {
 				this.currentTime = Date.now();
 				this.startTime = this.currentTime - t0;
-				my.pushUnique(my.animate, this.name);
+				my.pushUnique(my.work.animate, this.name);
 				this.active = true;
 				this.paused = false;
 			}
@@ -1578,9 +1757,10 @@ Remove this tween from the scrawl library
 					}
 				}
 			}
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
+			my.work.resortAnimations = true;
 			return true;
 		};
 
@@ -1619,6 +1799,7 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.duration = my.xtGet(items.duration, 1000);
+			this.order = my.xtGet(items.order, 0);
 			this.effectiveDuration = 0;
 			this.counter = 0;
 			this.startTime = 0;
@@ -1642,7 +1823,7 @@ Note: Timelines need to be defined before Actions can be added to them. Because 
 **/
 		my.Timeline.prototype.type = 'Timeline';
 		my.Timeline.prototype.classname = 'animationnames';
-		my.d.Timeline = {
+		my.work.d.Timeline = {
 			/**
 Timeline length, in milliseconds
 
@@ -1676,9 +1857,7 @@ Sort the actions based on their timeValue values
 @return nothing
 **/
 		my.Timeline.prototype.sortActions = function() {
-			this.actionsList.sort(function(a, b) {
-				return my.animation[a].timeValue - my.animation[b].timeValue;
-			});
+			this.actionsList = my.bucketSort('animation', 'timeValue', this.actionsList);
 		};
 		/**
 Make a new timeupdate customEvent object
@@ -1718,13 +1897,18 @@ Set the timeline duration (for actions with % time strings) or event choke value
 @return this
 **/
 		my.Timeline.prototype.set = function(items) {
-			var i, iz, a;
+			var i, iz, a,
+				xt = my.xt;
 			items = my.safeObject(items);
-			if (my.isa(items.duration, 'num')) {
+			if (xt(items.duration) && items.duration.toFixed) {
 				this.duration = items.duration;
 			}
-			if (my.isa(items.event, 'num')) {
+			if (xt(items.event) && items.event.toFixed) {
 				this.event = items.event;
+			}
+			if (xt(items.order)) {
+				this.order = items.order;
+				my.work.resortAnimations = true;
 			}
 			this.resolve();
 			return this;
@@ -1757,13 +1941,642 @@ Add Actions to the timeline - list Actions as one or more arguments to this func
 		my.Timeline.prototype.add = function() {
 			var i, iz,
 				slice = Array.prototype.slice.call(arguments);
-			if (my.isa(slice[0], 'arr')) {
+			if (my.isa_arr(slice[0])) {
 				slice = slice[0];
 			}
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				my.pushUnique(this.actionsList, slice[i]);
 			}
 			this.resolve();
+			return this;
+		};
+		/**
+Add an Action to the timeline - creates an action and adds it to the timeline
+@method addAction
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.addAction = function(items) {
+			var a = my.makeAction(items);
+			this.add(a.name);
+			return this;
+		};
+		/**
+Change the globalCompositionOperation for an entity, group or cell on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __target__ - String name of the entity, group or cell
+* __type__ - String - one from 'entity', 'group', 'cell'
+* __from__ - String - globalCompositionObject value
+* __to__ - String - globalCompositionObject value
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method changeComposition
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.changeComposition = function(items) {
+			var act, obj, fAction, fRollback, fReset;
+			items = my.safeObject(items);
+			if (my.xta(items.target, items.type, items.time, items.name, items.from, items.to)) {
+				if (my.contains(my.work.sectionlist, items.type)) {
+					obj = my[items.type][items.target];
+					if (my.xt(obj)) {
+						switch (items.type) {
+							case 'entity':
+							case 'cell':
+								fAction = function() {
+									obj.set({
+										globalCompositeOperation: items.to
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										globalCompositeOperation: items.from
+									});
+								};
+								fReset = function() {
+									obj.set({
+										globalCompositeOperation: items.from
+									});
+								};
+								break;
+							case 'group':
+								fAction = function() {
+									obj.setEntitysTo({
+										globalCompositeOperation: items.to
+									});
+								};
+								fRollback = function() {
+									obj.setEntitysTo({
+										globalCompositeOperation: items.from
+									});
+								};
+								fReset = function() {
+									obj.setEntitysTo({
+										globalCompositeOperation: items.from
+									});
+								};
+								break;
+						}
+						if (my.xt(fAction)) {
+							act = my.makeAction({
+								name: items.name + '_changeCompositeAction',
+								time: items.time,
+								action: fAction,
+								rollback: fRollback,
+								reset: fReset
+							});
+							this.add(act.name);
+						}
+					}
+				}
+			}
+			return this;
+		};
+		/**
+Change the stamp/show order command for an entity, group or cell on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __target__ - String name of the entity, group or cell
+* __type__ - String - one from 'entity', 'group', 'cell'
+* __from__ - Integer - old order/show number
+* __to__ - Integer - new order/show number
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method changeOrder
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.changeOrder = function(items) {
+			var act, obj, fAction, fRollback, fReset;
+			items = my.safeObject(items);
+			if (my.xta(items.target, items.type, items.time, items.name, items.from, items.to)) {
+				if (my.contains(my.work.sectionlist, items.type)) {
+					obj = my[items.type][items.target];
+					if (my.xt(obj)) {
+						switch (items.type) {
+							case 'entity':
+							case 'group':
+								fAction = function() {
+									obj.set({
+										order: items.to
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										order: items.from
+									});
+								};
+								fReset = function() {
+									obj.set({
+										order: items.from
+									});
+								};
+								break;
+							case 'cell':
+								fAction = function() {
+									obj.set({
+										showOrder: items.to
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										showOrder: items.from
+									});
+								};
+								fReset = function() {
+									obj.set({
+										showOrder: items.from
+									});
+								};
+								break;
+						}
+						if (my.xt(fAction)) {
+							act = my.makeAction({
+								name: items.name + '_changeOrderAction',
+								time: items.time,
+								action: fAction,
+								rollback: fRollback,
+								reset: fReset
+							});
+							this.add(act.name);
+						}
+					}
+				}
+			}
+			return this;
+		};
+		/**
+Change the stamp order command for all entitys in a group on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __target__ - String name of the group
+* __from__ - Integer - old order number
+* __to__ - Integer - new order number
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method changeGroupEntitysOrderTo
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.changeGroupEntitysOrderTo = function(items) {
+			var act, obj, fAction, fRollback, fReset;
+			items = my.safeObject(items);
+			if (my.xta(items.target, items.time, items.name, items.from, items.to)) {
+				obj = my.group[items.target];
+				if (my.xt(obj)) {
+					fAction = function() {
+						obj.setEntitysTo({
+							order: items.to
+						});
+					};
+					fRollback = function() {
+						obj.setEntitysTo({
+							order: items.from
+						});
+					};
+					fReset = function() {
+						obj.setEntitysTo({
+							order: items.from
+						});
+					};
+					act = my.makeAction({
+						name: items.name + '_changeGEOrderAction',
+						time: items.time,
+						action: fAction,
+						rollback: fRollback,
+						reset: fReset
+					});
+					this.add(act.name);
+				}
+			}
+			return this;
+		};
+		/**
+Fade in a set of entitys
+
+The argument object must include the following attributes (engine is optional), otherwise the command will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __targets__ - Array of entity String names
+* __engine__ - easing engine String (eg 'linear')
+* __duration__ - Number length of tween, in milliseconds
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method fadeIn
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.fadeIn = function(items) {
+			var e;
+			items = my.safeObject(items);
+			e = items.engine || 'linear';
+			if (my.xta(items.targets, items.time, items.duration, items.name)) {
+				this.addAction({
+					name: items.name,
+					time: items.time,
+					action: my.makeTween({
+						name: items.name + '_fadeInTween',
+						targets: items.targets,
+						onCommence: {
+							globalAlpha: 0
+						},
+						start: {
+							globalAlpha: 0
+						},
+						end: {
+							globalAlpha: 1
+						},
+						onComplete: {
+							globalAlpha: 1
+						},
+						engines: {
+							globalAlpha: e
+						},
+						duration: items.duration
+					})
+				});
+			}
+			return this;
+		};
+		/**
+Fade out a set of entitys
+
+The argument object must include the following attributes (engine is optional), otherwise the command will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __targets__ - Array of entity String names
+* __engine__ - easing engine String (eg 'linear')
+* __duration__ - Number length of tween, in milliseconds
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method fadeOut
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.fadeOut = function(items) {
+			var e;
+			items = my.safeObject(items);
+			e = items.engine || 'linear';
+			if (my.xta(items.targets, items.time, items.duration, items.name)) {
+				this.addAction({
+					name: items.name,
+					time: items.time,
+					action: my.makeTween({
+						name: items.name + '_fadeOutTween',
+						targets: items.targets,
+						onCommence: {
+							globalAlpha: 1
+						},
+						start: {
+							globalAlpha: 1
+						},
+						end: {
+							globalAlpha: 0
+						},
+						onComplete: {
+							globalAlpha: 0
+						},
+						engines: {
+							globalAlpha: e
+						},
+						duration: items.duration
+					})
+				});
+			}
+			return this;
+		};
+		/**
+Tween a set of entity attributes
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __targets__ - Array of entity String names
+* __start__ - Object containing attriburte start values
+* __end__ - Object containing attribute end values
+* __duration__ - Number length of tween, in milliseconds
+* __time__ - time either a String % value, or a number in milliseconds
+
+The following attributes are optional:
+
+* __engines__ - Object containing easing engine Strings (eg 'linear') - all engines default to 'linear'
+* __calculations__ - Object containing easing engine functions
+
+For the start, end, engines and calculations Objects, the keys should be the attributes being tweened, supplied with appropriate values
+
+@method addTween
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.addTween = function(items) {
+			var e, c;
+			items = my.safeObject(items);
+			e = items.engines || {};
+			c = items.calculations || {};
+			if (my.xta(items.targets, items.time, items.duration, items.name, items.start, items.end)) {
+				this.addAction({
+					name: items.name,
+					time: items.time,
+					action: my.makeTween({
+						name: items.name + '_tween',
+						targets: items.targets,
+						onCommence: items.start,
+						start: items.start,
+						end: items.end,
+						onComplete: items.end,
+						engines: e,
+						calculations: c,
+						duration: items.duration
+					})
+				});
+			}
+			return this;
+		};
+		/**
+Add a visibility: true command for an entity, group or cell (rendered: true) to the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __target__ - String name of the entity, group or cell
+* __type__ - String - one from 'entity', 'group', 'cell'
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method addShow
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.addShow = function(items) {
+			var act, obj, fAction, fRollback, fReset;
+			items = my.safeObject(items);
+			if (my.xta(items.target, items.type, items.time, items.name)) {
+				if (my.contains(my.work.sectionlist, items.type)) {
+					obj = my[items.type][items.target];
+					if (my.xt(obj)) {
+						switch (items.type) {
+							case 'entity':
+								fAction = function() {
+									obj.set({
+										visibility: true
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										visibility: false
+									});
+								};
+								fReset = function() {
+									obj.set({
+										visibility: false
+									});
+								};
+								break;
+							case 'group':
+								fAction = function() {
+									obj.set({
+										visibility: true
+									});
+									obj.setEntitysTo({
+										visibility: true
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										visibility: false
+									});
+									obj.setEntitysTo({
+										visibility: false
+									});
+								};
+								fReset = function() {
+									obj.set({
+										visibility: false
+									});
+									obj.setEntitysTo({
+										visibility: false
+									});
+								};
+								break;
+							case 'cell':
+								fAction = function() {
+									obj.set({
+										rendered: true
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										rendered: false
+									});
+								};
+								fReset = function() {
+									obj.set({
+										rendered: false
+									});
+								};
+								break;
+						}
+						if (my.xt(fAction)) {
+							act = my.makeAction({
+								name: items.name + '_showAction',
+								time: items.time,
+								action: fAction,
+								rollback: fRollback,
+								reset: fReset
+							});
+							this.add(act.name);
+						}
+					}
+				}
+			}
+			return this;
+		};
+		/**
+Add a visibility: true command for a set of entitys and/or cells (rendered: true) to the timeline
+
+The argument object must include the following attributes, otherwise the commands will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __targets__ - Array of String names of entitys and/or cells
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method showMany
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.showMany = function(items) {
+			var type, t, target, i, iz, obj,
+				entity = my.entity,
+				cell = my.cell,
+				get = my.xtGet;
+			items = my.safeObject(items);
+			if (my.xta(items.targets, items.time, items.name)) {
+				obj = {
+					time: items.time
+				};
+				for (i = 0, iz = items.targets.length; i < iz; i++) {
+					t = items.targets[i];
+					target = get(entity[t], cell[t], false);
+					if (target) {
+						obj.name = items.name + '_' + i;
+						obj.target = t;
+						obj.type = (target.type === 'Cell') ? 'cell' : 'entity';
+						this.addShow(obj);
+					}
+				}
+			}
+			return this;
+		};
+		/**
+Add a visibility: false command for an entity, group or cell (rendered: false) to the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __item__ - String name of the entity, group or cell
+* __type__ - String - one from 'entity', 'group', 'cell'
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method addHide
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.addHide = function(items) {
+			var act, obj, fAction, fRollback, fReset;
+			items = my.safeObject(items);
+			if (my.xta(items.target, items.type, items.time, items.name)) {
+				if (my.contains(my.work.sectionlist, items.type)) {
+					obj = my[items.type][items.target];
+					if (my.xt(obj)) {
+						switch (items.type) {
+							case 'entity':
+								fAction = function() {
+									obj.set({
+										visibility: false
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										visibility: true
+									});
+								};
+								fReset = function() {
+									obj.set({
+										visibility: true
+									});
+								};
+								break;
+							case 'group':
+								fAction = function() {
+									obj.set({
+										visibility: false
+									});
+									obj.setEntitysTo({
+										visibility: false
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										visibility: true
+									});
+									obj.setEntitysTo({
+										visibility: true
+									});
+								};
+								fReset = function() {
+									obj.set({
+										visibility: true
+									});
+									obj.setEntitysTo({
+										visibility: true
+									});
+								};
+								break;
+							case 'cell':
+								fAction = function() {
+									obj.set({
+										rendered: false
+									});
+								};
+								fRollback = function() {
+									obj.set({
+										rendered: true
+									});
+								};
+								fReset = function() {
+									obj.set({
+										rendered: true
+									});
+								};
+								break;
+						}
+						if (my.xt(fAction)) {
+							act = my.makeAction({
+								name: items.name + '_hideAction',
+								time: items.time,
+								action: fAction,
+								rollback: fRollback,
+								reset: fReset
+							});
+							this.add(act.name);
+						}
+					}
+				}
+			}
+			return this;
+		};
+		/**
+Add a visibility: false command for a set of entitys and/or cells (rendered: false) to the timeline
+
+The argument object must include the following attributes, otherwise the commands will not be added to the timeline:
+
+* __name__ - String name of the new action
+* __targets__ - Array of String names of entitys and/or cells
+* __time__ - time either a String % value, or a number in milliseconds
+
+@method hideMany
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.hideMany = function(items) {
+			var type, t, target, i, iz, obj,
+				entity = my.entity,
+				cell = my.cell,
+				get = my.xtGet;
+			items = my.safeObject(items);
+			if (my.xta(items.targets, items.time, items.name)) {
+				obj = {
+					time: items.time
+				};
+				for (i = 0, iz = items.targets.length; i < iz; i++) {
+					t = items.targets[i];
+					target = get(entity[t], cell[t], false);
+					if (target) {
+						obj.name = items.name + '_' + i;
+						obj.target = t;
+						obj.type = (t.type === 'Cell') ? 'cell' : 'entity';
+						this.addHide(obj);
+					}
+				}
+			}
 			return this;
 		};
 		/**
@@ -1776,7 +2589,7 @@ Remove Actions from the timeline - list Actions as one or more arguments to this
 		my.Timeline.prototype.remove = function() {
 			var i, iz,
 				slice = Array.prototype.slice.call(arguments);
-			if (my.isa(slice[0], 'arr')) {
+			if (my.isa_arr(slice[0])) {
 				slice = slice[0];
 			}
 			for (i = 0, iz = slice.length; i < iz; i++) {
@@ -1795,7 +2608,7 @@ Start the timeline running from the beginning
 			var i, iz, a, e;
 			if (!this.active) {
 				this.reset();
-				my.pushUnique(my.animate, this.name);
+				my.pushUnique(my.work.animate, this.name);
 				this.active = true;
 				if (this.event) {
 					e = this.makeTimeupdateEvent();
@@ -1822,7 +2635,7 @@ Start the timeline running from the point at which it was halted
 				}
 				this.currentTime = Date.now();
 				this.startTime = this.currentTime - t0;
-				my.pushUnique(my.animate, this.name);
+				my.pushUnique(my.work.animate, this.name);
 				this.paused = false;
 				this.active = true;
 			}
@@ -1860,7 +2673,7 @@ Function triggered by the animation loop
 			}
 			if (this.currentTime >= this.startTime + this.effectiveDuration) {
 				this.active = false;
-				my.removeItem(my.animate, this.name);
+				my.removeItem(my.work.animate, this.name);
 			}
 		};
 		/**
@@ -1879,7 +2692,7 @@ Stop a Timeline; can be resumed using resume() or started again from the beginni
 					a.action.halt();
 				}
 			}
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			return this;
 		};
 		/**
@@ -1905,7 +2718,7 @@ Reset a Timeline animation to its initial conditions
 					a.reset();
 				}
 			}
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			return this;
 		};
 		/**
@@ -1920,7 +2733,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 			if (!this.seeking) {
 				if (item && (item.substring || item.toFixed)) {
 					if (this.active) {
-						my.removeItem(my.animate, this.name);
+						my.removeItem(my.work.animate, this.name);
 					}
 					if (!this.startTime) {
 						this.startTime = this.currentTime = Date.now();
@@ -1940,7 +2753,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 						}
 					}
 					if (this.active) {
-						my.pushUnique(my.animate, this.name);
+						my.pushUnique(my.work.animate, this.name);
 					}
 				}
 			}
@@ -1970,7 +2783,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 						actionStart = actionTimes[0] + this.startTime;
 						actionEnd = actionTimes[1] + this.startTime;
 						if (actionStart && actionEnd) {
-							if (my.isa(a.action, 'fn')) {
+							if (my.isa_fn(a.action)) {
 								//raw function action wrapper
 								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
 									a.action();
@@ -2083,7 +2896,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 					actionStart = actionTimes[0] + this.startTime;
 					actionEnd = actionTimes[1] + this.startTime;
 					if (actionStart && actionEnd) {
-						if (my.isa(a.action, 'fn')) {
+						if (my.isa_fn(a.action)) {
 							//raw function action wrapper
 							if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
 								if (a.rollback) {
@@ -2105,7 +2918,6 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 							//timeline action wrapper
 							else {
 								if (a.skipSeek) {
-									console.log(a.action.name, 'skipseek');
 									if (a.rollback) {
 										a.rollback();
 									}
@@ -2131,7 +2943,7 @@ Remove this Timeline from the scrawl library
 @return Always true
 **/
 		my.Timeline.prototype.kill = function() {
-			my.removeItem(my.animate, this.name);
+			my.removeItem(my.work.animate, this.name);
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
 			return true;
@@ -2166,6 +2978,7 @@ Remove this Timeline from the scrawl library
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.time = items.time || 0;
+			this.order = my.xtGet(items.order, 0);
 			this.convertTime();
 			this.action = my.xtGet(items.action, false);
 			this.reset = my.xtGet(items.reset, false);
@@ -2174,6 +2987,7 @@ Remove this Timeline from the scrawl library
 			this.skipSeek = my.xtGet(items.skipSeek, false);
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
+			my.work.resortAnimations = true;
 			return this;
 		};
 		my.Action.prototype = Object.create(my.Base.prototype);
@@ -2185,7 +2999,7 @@ Remove this Timeline from the scrawl library
 **/
 		my.Action.prototype.type = 'Action';
 		my.Action.prototype.classname = 'animationnames';
-		my.d.Action = {
+		my.work.d.Action = {
 			/**
 Keyframe time - may be expressed as a Number (in milliseconds), or as a string:
 * '10ms' - ten milliseconds
@@ -2299,6 +3113,7 @@ Remove this Action from the scrawl library
 		my.Action.prototype.kill = function() {
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
+			my.work.resortAnimations = true;
 			return true;
 		};
 

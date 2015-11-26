@@ -17,6 +17,7 @@ var mycode = function() {
 		startX: 210,
 		scale: 0.8,
 		lineWidth: 5,
+		globalAlpha: 0.5,
 		method: 'draw',
 	});
 

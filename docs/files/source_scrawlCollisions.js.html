@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -283,7 +291,7 @@ The Collisions module adds support for detecting collisions between entitys
 
 @module scrawlCollisions
 **/
-if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.contains(window.scrawl.modules, &#x27;collisions&#x27;)) {
+if (window.scrawl &amp;&amp; window.scrawl.work.extensions &amp;&amp; !window.scrawl.contains(window.scrawl.work.extensions, &#x27;collisions&#x27;)) {
 	var scrawl = (function(my) {
 		&#x27;use strict&#x27;;
 
@@ -330,14 +338,15 @@ A __general__ function which asks Cell objects to generate field collision table
 **/
 		my.buildFields = function(items) {
 			var cells,
+				cell = my.cell,
 				i,
 				iz;
-			cells = (my.xt(items)) ? [].concat(items) : [my.pad[my.currentPad].current];
+			cells = (my.xt(items)) ? [].concat(items) : [my.pad[my.work.currentPad].current];
 			if (items === &#x27;all&#x27;) {
 				cells = my.cellnames;
 			}
 			for (i = 0, iz = cells.length; i &lt; iz; i++) {
-				my.cell[cells[i]].buildField();
+				cell[cells[i]].buildField();
 			}
 			return true;
 		};
@@ -349,8 +358,10 @@ Orders all Cell objects associated with this Pad to (re)create their field colli
 @chainable
 **/
 		my.Pad.prototype.buildFields = function() {
-			for (var i = 0, iz = this.cells.length; i &lt; iz; i++) {
-				my.cell[this.cells[i]].buildField();
+			var cell = my.cell,
+				cells = this.cells;
+			for (var i = 0, iz = cells.length; i &lt; iz; i++) {
+				cell[cells[i]].buildField();
 			}
 			return this;
 		};
@@ -379,7 +390,7 @@ Cell constructor hook function - modified by collisions module
 			}
 		};
 
-		my.d.Cell.fieldLabel = &#x27;&#x27;;
+		my.work.d.Cell.fieldLabel = &#x27;&#x27;;
 		/**
 Builds a collision map image from entitys, for use in entity field collision detection functions
 @method Cell.buildField
@@ -475,7 +486,9 @@ Test will return:
 				coords,
 				pos,
 				d,
-				fieldLabel;
+				fieldLabel,
+				between = my.isBetween,
+				temp;
 			items = my.safeObject(items);
 			myChannel = items.channel || &#x27;anycolor&#x27;;
 			myTest = items.test || 0;
@@ -485,50 +498,65 @@ Test will return:
 			for (i = 0, iz = coords.length; i &lt; iz; i += 2) {
 				x = Math.round(coords[i]);
 				y = Math.round(coords[i + 1]);
-				if (!my.isBetween(x, 0, d.width, true) || !my.isBetween(y, 0, d.height, true)) {
+				if (!between(x, 0, d.width, true) || !between(y, 0, d.height, true)) {
 					return false;
 				}
 				else {
 					pos = ((y * d.width) + x) * 4;
-					switch (myChannel) {
-						case &#x27;red&#x27;:
-							if (d.data[pos] &lt;= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
-							break;
-						case &#x27;green&#x27;:
-							if (d.data[pos + 1] &lt;= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
-							break;
-						case &#x27;blue&#x27;:
-							if (d.data[pos + 2] &lt;= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
-							break;
-						case &#x27;alpha&#x27;:
-							if (d.data[pos + 3] &lt;= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
-							break;
-						default:
-							if (d.data[pos] &lt;= myTest || d.data[pos + 1] &lt;= myTest || d.data[pos + 2] &lt;= myTest) {
-								items.x = x;
-								items.y = y;
-								return items;
-							}
+					temp = this.checkFieldAtActions[myChannel](d.data, pos, myTest, items, x, y);
+					if (temp) {
+						return temp;
 					}
 				}
 			}
 			return true;
+		};
+		/**
+checkFieldAt helper object
+@method Cell.checkFieldAtActions
+@private
+**/
+		my.Cell.prototype.checkFieldAtActions = {
+			red: function(data, pos, test, items, x, y) {
+				if (data[pos] &lt;= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			},
+			green: function(data, pos, test, items, x, y) {
+				if (data[pos + 1] &lt;= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			},
+			blue: function(data, pos, test, items, x, y) {
+				if (data[pos + 2] &lt;= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			},
+			alpha: function(data, pos, test, items, x, y) {
+				if (data[pos + 3] &lt;= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			},
+			anycolor: function(data, pos, test, items, x, y) {
+				if (data[pos] &lt;= test || data[pos + 1] &lt;= test || data[pos + 2] &lt;= test) {
+					items.x = x;
+					items.y = y;
+					return items;
+				}
+				return false;
+			}
 		};
 
 		/**
@@ -537,29 +565,51 @@ Check all entitys in the Group to see if they are colliding with the supplied en
 @param {String} entity SPRITENAME String of the reference entity; alternatively the entity Object itself can be passed as the argument
 @return Array of visible entity Objects currently colliding with the reference entity
 **/
-		my.Group.prototype.getEntitysCollidingWith = function(entity) {
-			var i,
-				iz,
+		my.Group.prototype.getEntitysCollidingWith = function(e) {
+			var i, iz, k, kz,
 				homeTemp,
 				awayTemp,
+				entity = my.entity,
+				entitys = this.entitys,
+				regionRadius = this.regionRadius,
+				v1 = my.workcols.v1,
+				v2 = my.workcols.v2,
+				ts1,
+				ts2,
+				tresult,
+				cp,
+				awaycp = [],
 				hits = [],
 				arg = {
 					tests: []
 				},
-				types = [&#x27;Block&#x27;, &#x27;Phrase&#x27;, &#x27;Picture&#x27;, &#x27;Path&#x27;, &#x27;Shape&#x27;, &#x27;Wheel&#x27;];
-			homeTemp = (my.isa(entity, &#x27;str&#x27;)) ? my.entity[entity] : entity;
+				types = [&#x27;Block&#x27;, &#x27;Phrase&#x27;, &#x27;Picture&#x27;, &#x27;Path&#x27;, &#x27;Shape&#x27;, &#x27;Wheel&#x27;, &#x27;Frame&#x27;];
+			homeTemp = (e.substring) ? entity[e] : e;
+			cp = homeTemp.getCollisionPoints();
+			for (k = 0, kz = entitys.length; k &lt; kz; k++) {
+				awayTemp = entity[entitys[k]];
+				awaycp[awayTemp.name] = awayTemp.getCollisionPoints();
+			}
 			if (my.contains(types, homeTemp.type)) {
 				hits.length = 0;
-				for (i = 0, iz = this.entitys.length; i &lt; iz; i++) {
-					awayTemp = my.entity[this.entitys[i]];
+				for (i = 0, iz = entitys.length; i &lt; iz; i++) {
+					awayTemp = entity[entitys[i]];
 					if (homeTemp.name !== awayTemp.name) {
 						if (awayTemp.visibility) {
-							arg.tests = homeTemp.getCollisionPoints();
+							if (regionRadius) {
+								ts1 = v1.set(homeTemp.currentStart);
+								ts2 = v2.set(awayTemp.currentStart);
+								tresult = ts1.vectorSubtract(ts2).getMagnitude();
+								if (tresult &gt; regionRadius) {
+									continue;
+								}
+							}
+							arg.tests = cp;
 							if (awayTemp.checkHit(arg)) {
 								hits.push(awayTemp);
 								continue;
 							}
-							arg.tests = awayTemp.getCollisionPoints();
+							arg.tests = awaycp[awayTemp.name];
 							if (homeTemp.checkHit(arg)) {
 								hits.push(awayTemp);
 								continue;
@@ -584,33 +634,43 @@ Check all entitys in the Group against each other to see if they are in collisio
 				hits = [],
 				homeTemp,
 				awayTemp,
+				entity = my.entity,
+				entitys = this.entitys,
+				regionRadius = this.regionRadius,
+				v1 = my.workcols.v1,
+				v2 = my.workcols.v2,
 				ts1,
 				ts2,
 				tresult,
+				cp = {},
 				arg = {
 					tests: []
 				};
 			hits.length = 0;
-			for (k = 0, kz = this.entitys.length; k &lt; kz; k++) {
-				homeTemp = my.entity[this.entitys[k]];
+			for (k = 0, kz = entitys.length; k &lt; kz; k++) {
+				homeTemp = entity[entitys[k]];
+				cp[homeTemp.name] = homeTemp.getCollisionPoints();
+			}
+			for (k = 0, kz = entitys.length; k &lt; kz; k++) {
+				homeTemp = entity[entitys[k]];
 				if (homeTemp.visibility) {
-					for (j = k + 1, jz = this.entitys.length; j &lt; jz; j++) {
-						awayTemp = my.entity[this.entitys[j]];
+					for (j = k + 1, jz = entitys.length; j &lt; jz; j++) {
+						awayTemp = entity[entitys[j]];
 						if (awayTemp.visibility) {
-							if (this.regionRadius) {
-								ts1 = my.workcols.v1.set(homeTemp.start);
-								ts2 = my.workcols.v2.set(awayTemp.start);
+							if (regionRadius) {
+								ts1 = v1.set(homeTemp.currentStart);
+								ts2 = v2.set(awayTemp.currentStart);
 								tresult = ts1.vectorSubtract(ts2).getMagnitude();
-								if (tresult &gt; this.regionRadius) {
+								if (tresult &gt; regionRadius) {
 									continue;
 								}
 							}
-							arg.tests = homeTemp.getCollisionPoints();
+							arg.tests = cp[homeTemp.name];
 							if (awayTemp.checkHit(arg)) {
 								hits.push([homeTemp.name, awayTemp.name]);
 								continue;
 							}
-							arg.tests = awayTemp.getCollisionPoints();
+							arg.tests = cp[awayTemp.name];
 							if (homeTemp.checkHit(arg)) {
 								hits.push([homeTemp.name, awayTemp.name]);
 								continue;
@@ -635,14 +695,22 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 				hits = [],
 				thisTemp,
 				gTemp,
+				xt = my.xt,
+				entity = my.entity,
+				homeentitys = this.entitys,
+				awayentitys,
+				v1 = my.workcols.v1,
+				v2 = my.workcols.v2,
+				regionRadius = this.regionRadius,
 				arg = {
 					tests: []
 				},
 				ts1,
 				ts2,
+				cp = {},
 				tresult;
-			if (my.xt(g)) {
-				if (my.isa(g, &#x27;str&#x27;)) {
+			if (xt(g)) {
+				if (g.substring) {
 					if (my.group[g]) {
 						g = my.group[g];
 					}
@@ -651,31 +719,40 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 					}
 				}
 				else {
-					if (!my.xt(g.type) || g.type !== &#x27;Group&#x27;) {
+					if (!xt(g.type) || g.type !== &#x27;Group&#x27;) {
 						return false;
 					}
 				}
+				awayentitys = g.entitys;
 				hits.length = 0;
-				for (k = 0, kz = this.entitys.length; k &lt; kz; k++) {
-					thisTemp = my.entity[this.entitys[k]];
+				for (k = 0, kz = homeentitys.length; k &lt; kz; k++) {
+					thisTemp = entity[homeentitys[k]];
+					cp[thisTemp.name] = thisTemp.getCollisionPoints();
+				}
+				for (k = 0, kz = awayentitys.length; k &lt; kz; k++) {
+					thisTemp = entity[awayentitys[k]];
+					cp[thisTemp.name] = thisTemp.getCollisionPoints();
+				}
+				for (k = 0, kz = homeentitys.length; k &lt; kz; k++) {
+					thisTemp = entity[homeentitys[k]];
 					if (thisTemp.visibility) {
-						for (j = 0, jz = g.entitys.length; j &lt; jz; j++) {
-							gTemp = my.entity[g.entitys[j]];
+						for (j = 0, jz = awayentitys.length; j &lt; jz; j++) {
+							gTemp = entity[awayentitys[j]];
 							if (gTemp.visibility) {
-								if (this.regionRadius) {
-									ts1 = my.workcols.v1.set(thisTemp.start);
-									ts2 = my.workcols.v2.set(gTemp.start);
+								if (regionRadius) {
+									ts1 = v1.set(thisTemp.currentStart);
+									ts2 = v2.set(gTemp.currentStart);
 									tresult = ts1.vectorSubtract(ts2).getMagnitude();
-									if (tresult &gt; this.regionRadius) {
+									if (tresult &gt; regionRadius) {
 										continue;
 									}
 								}
-								arg.tests = thisTemp.getCollisionPoints();
+								arg.tests = cp[thisTemp.name];
 								if (gTemp.checkHit(arg)) {
 									hits.push([thisTemp.name, gTemp.name]);
 									continue;
 								}
-								arg.tests = gTemp.getCollisionPoints();
+								arg.tests = cp[gTemp.name];
 								if (thisTemp.checkHit(arg)) {
 									hits.push([thisTemp.name, gTemp.name]);
 									continue;
@@ -701,41 +778,44 @@ An Array of Arrays is returned, with each constituent array consisting of the th
 		my.Group.prototype.getFieldEntityHits = function(cell) {
 			var j,
 				jz,
+				entity = my.entity,
+				entitys = this.entitys,
+				bool = my.isa_bool,
 				hits = [],
 				result;
 			cell = (my.xt(cell)) ? cell : this.cell;
 			hits.length = 0;
-			for (j = 0, jz = this.entitys.length; j &lt; jz; j++) {
-				result = my.entity[this.entitys[j]].checkField(cell);
-				if (!my.isa(result, &#x27;bool&#x27;)) {
-					hits.push([this.entitys[j], result]);
+			for (j = 0, jz = entitys.length; j &lt; jz; j++) {
+				result = entity[entitys[j]].checkField(cell);
+				if (!bool(result)) {
+					hits.push([entitys[j], result]);
 				}
 			}
 			return hits;
 		};
 
-		my.d.Entity.fieldChannel = &#x27;anycolor&#x27;;
-		my.d.Entity.fieldTest = 0;
-		my.d.Entity.collisionVectors = [];
-		my.d.Entity.collisionPoints = [];
-		my.d.Entity.collisionArray = [];
-		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Entity);
+		my.work.d.Entity.fieldChannel = &#x27;anycolor&#x27;;
+		my.work.d.Entity.fieldTest = 0;
+		my.work.d.Entity.collisionVectors = [];
+		my.work.d.Entity.collisionPoints = [];
+		my.work.d.Entity.collisionArray = [];
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Entity);
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Entity);
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Entity);
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Entity);
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Path)) {
-			my.mergeInto(my.d.Path, my.d.Entity);
+		if (my.xt(my.work.d.Path)) {
+			my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		}
 		/**
 Recalculate the current collision point positions for all entitys in the group
@@ -745,8 +825,10 @@ Recalculate the current collision point positions for all entitys in the group
 @chainable
 **/
 		my.Group.prototype.resetCollisionPoints = function() {
-			for (var i = 0, iz = this.entitys.length; i &lt; iz; i++) {
-				my.entity[this.entitys[i]].resetCollisionPoints();
+			var entity = my.entity,
+				entitys = this.entitys;
+			for (var i = 0, iz = entitys.length; i &lt; iz; i++) {
+				entity[entitys[i]].resetCollisionPoints();
 			}
 			return this;
 		};
@@ -756,10 +838,11 @@ Entity constructor hook function - modified by collisions module
 @private
 **/
 		my.Entity.prototype.collisionsEntityConstructor = function(items) {
-			if (my.xt(items.field)) {
+			var xt = my.xt;
+			if (xt(items.field)) {
 				this.addEntityToCellFields();
 			}
-			if (my.xt(items.fence)) {
+			if (xt(items.fence)) {
 				this.addEntityToCellFences();
 			}
 		};
@@ -780,20 +863,22 @@ Entity.set hook function - modified by collisions module
 @private
 **/
 		my.Entity.prototype.collisionsEntitySet = function(items) {
-			if (my.xt(items.collisionPoints)) {
+			var xt = my.xt,
+				xto = my.xto;
+			if (xt(items.collisionPoints)) {
 				this.parseCollisionPoints();
 			}
-			if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
+			if (xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
 				this.collisionArray.length = 0;
 			}
-			if (my.xto(items.collisionPoints, items.width, items.height, items.radius, items.pasteWidth, items.pasteHeight)) {
+			if (xto(items.collisionPoints, items.width, items.height, items.radius, items.pasteWidth, items.pasteHeight)) {
 				this.collisionVectors.length = 0;
 			}
-			if (my.xto(items.field, items.fence)) {
-				if (my.xt(items.field)) {
+			if (xto(items.field, items.fence)) {
+				if (xt(items.field)) {
 					this.addEntityToCellFields();
 				}
-				if (my.xt(items.fence)) {
+				if (xt(items.fence)) {
 					this.addEntityToCellFences();
 				}
 			}
@@ -820,10 +905,11 @@ Entity.setDelta hook function - modified by collisions module
 @private
 **/
 		my.Entity.prototype.collisionsEntitySetDelta = function(items) {
-			if (my.xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
+			var xto = my.xto;
+			if (xto(items.start, items.startX, items.startY, items.handle, items.handleX, items.handleY, items.scale, items.roll)) {
 				this.collisionArray.length = 0;
 			}
-			if (my.xto(items.width, items.height, items.radius, items.pasteWidth, items.pasteHeight)) {
+			if (xto(items.width, items.height, items.radius, items.pasteWidth, items.pasteHeight)) {
 				this.collisionVectors.length = 0;
 			}
 		};
@@ -836,11 +922,13 @@ Add this entity to a (range of) Cell object field groups
 **/
 		my.Entity.prototype.addEntityToCellFields = function(cells) {
 			var i,
-				iz;
+				iz,
+				cell = my.cell,
+				group = my.group;
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (i = 0, iz = cells.length; i &lt; iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + &#x27;_field&#x27;].addEntitysToGroup(this.name);
+				if (cell[cells[i]]) {
+					group[cells[i] + &#x27;_field&#x27;].addEntitysToGroup(this.name);
 				}
 			}
 			return this;
@@ -854,11 +942,13 @@ Add this entity to a (range of) Cell object fence groups
 **/
 		my.Entity.prototype.addEntityToCellFences = function(cells) {
 			var i,
-				iz;
+				iz,
+				cell = my.cell,
+				group = my.group;
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (i = 0, iz = cells.length; i &lt; iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + &#x27;_fence&#x27;].addEntitysToGroup(this.name);
+				if (cell[cells[i]]) {
+					group[cells[i] + &#x27;_fence&#x27;].addEntitysToGroup(this.name);
 				}
 			}
 			return this;
@@ -872,11 +962,13 @@ Remove this entity from a (range of) Cell object field groups
 **/
 		my.Entity.prototype.removeEntityFromCellFields = function(cells) {
 			var i,
-				iz;
+				iz,
+				cell = my.cell,
+				group = my.group;
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (i = 0, iz = cells.length; i &lt; iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + &#x27;_field&#x27;].removeEntitysFromGroup(this.name);
+				if (cell[cells[i]]) {
+					group[cells[i] + &#x27;_field&#x27;].removeEntitysFromGroup(this.name);
 				}
 			}
 			return this;
@@ -890,11 +982,13 @@ Remove this entity from a (range of) Cell object fence groups
 **/
 		my.Entity.prototype.removeEntityFromCellFences = function(cells) {
 			var i,
-				iz;
+				iz,
+				cell = my.cell,
+				group = my.group;
 			cells = (my.xt(cells)) ? [].concat(cells) : [this.group];
 			for (i = 0, iz = cells.length; i &lt; iz; i++) {
-				if (my.cell[cells[i]]) {
-					my.group[cells[i] + &#x27;_fence&#x27;].removeEntitysFromGroup(this.name);
+				if (cell[cells[i]]) {
+					group[cells[i] + &#x27;_fence&#x27;].removeEntitysFromGroup(this.name);
 				}
 			}
 			return this;
@@ -924,29 +1018,37 @@ Calculate the current positions of this entity&#x27;s collision Vectors, taking 
 **/
 		my.Entity.prototype.getCollisionPoints = function() {
 			var i,
-				iz;
-			if (this.collisionVectors.length === 0) {
+				iz,
+				v = my.work.v,
+				collisionVectors = this.collisionVectors,
+				collisionArray = this.collisionArray,
+				reverse = this.flipReverse,
+				upend = this.flipUpend,
+				roll = this.roll,
+				scale = this.scale,
+				start = this.currentStart;
+			if (collisionVectors.length === 0) {
 				if (my.xt(this.collisionPoints)) {
 					this.buildCollisionVectors();
-					this.collisionArray.length = 0;
+					collisionArray.length = 0;
 				}
 			}
-			if (this.collisionArray.length === 0) {
-				for (i = 0, iz = this.collisionVectors.length; i &lt; iz; i += 2) {
-					my.v.x = (this.flipReverse) ? -this.collisionVectors[i] : this.collisionVectors[i];
-					my.v.y = (this.flipReverse) ? -this.collisionVectors[i + 1] : this.collisionVectors[i + 1];
-					if (this.roll) {
-						my.v.rotate(this.roll);
+			if (collisionArray.length === 0) {
+				for (i = 0, iz = collisionVectors.length; i &lt; iz; i += 2) {
+					v.x = (reverse) ? -collisionVectors[i] : collisionVectors[i];
+					v.y = (upend) ? -collisionVectors[i + 1] : collisionVectors[i + 1];
+					if (roll) {
+						v.rotate(roll);
 					}
-					if (this.scale !== 1) {
-						my.v.scalarMultiply(this.scale);
+					if (scale !== 1) {
+						v.scalarMultiply(scale);
 					}
-					my.v.vectorAdd(this.start);
-					this.collisionArray.push(my.v.x);
-					this.collisionArray.push(my.v.y);
+					v.vectorAdd(start);
+					collisionArray.push(v.x);
+					collisionArray.push(v.y);
 				}
 			}
-			return this.collisionArray;
+			return collisionArray;
 		};
 		/**
 Collision detection helper function
@@ -963,13 +1065,21 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				iz,
 				o,
 				w,
-				h;
-			o = this.getOffsetStartVector().reverse();
-			if (my.xt(this.localWidth)) {
+				h,
+				xt = my.xt,
+				v = my.work.v,
+				collisionVectors = this.collisionVectors,
+				collisionPoints = this.collisionPoints,
+				handle = this.currentHandle;
+			if (!handle.flag) {
+				this.updateCurrentHandle();
+			}
+			o = v.set(handle).reverse();
+			if (xt(this.localWidth)) {
 				w = this.localWidth / this.scale || 0;
 				h = this.localHeight / this.scale || 0;
 			}
-			else if (my.xt(this.pasteData)) {
+			else if (xt(this.pasteData)) {
 				w = this.pasteData.w / this.scale || 0;
 				h = this.pasteData.h / this.scale || 0;
 			}
@@ -978,54 +1088,54 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				h = this.height || 0;
 			}
 			this.collisionVectors.length = 0;
-			for (i = 0, iz = this.collisionPoints.length; i &lt; iz; i++) {
-				if (my.isa(this.collisionPoints[i], &#x27;str&#x27;)) {
-					switch (this.collisionPoints[i]) {
+			for (i = 0, iz = collisionPoints.length; i &lt; iz; i++) {
+				if (collisionPoints[i].substring) {
+					switch (collisionPoints[i]) {
 						case &#x27;start&#x27;:
-							this.collisionVectors.push(0);
-							this.collisionVectors.push(0);
+							collisionVectors.push(0);
+							collisionVectors.push(0);
 							break;
 						case &#x27;N&#x27;:
-							this.collisionVectors.push((w / 2) - o.x);
-							this.collisionVectors.push(-o.y);
+							collisionVectors.push((w / 2) - o.x);
+							collisionVectors.push(-o.y);
 							break;
 						case &#x27;NE&#x27;:
-							this.collisionVectors.push(w - o.x);
-							this.collisionVectors.push(-o.y);
+							collisionVectors.push(w - o.x);
+							collisionVectors.push(-o.y);
 							break;
 						case &#x27;E&#x27;:
-							this.collisionVectors.push(w - o.x);
-							this.collisionVectors.push((h / 2) - o.y);
+							collisionVectors.push(w - o.x);
+							collisionVectors.push((h / 2) - o.y);
 							break;
 						case &#x27;SE&#x27;:
-							this.collisionVectors.push(w - o.x);
-							this.collisionVectors.push(h - o.y);
+							collisionVectors.push(w - o.x);
+							collisionVectors.push(h - o.y);
 							break;
 						case &#x27;S&#x27;:
-							this.collisionVectors.push((w / 2) - o.x);
-							this.collisionVectors.push(h - o.y);
+							collisionVectors.push((w / 2) - o.x);
+							collisionVectors.push(h - o.y);
 							break;
 						case &#x27;SW&#x27;:
-							this.collisionVectors.push(-o.x);
-							this.collisionVectors.push(h - o.y);
+							collisionVectors.push(-o.x);
+							collisionVectors.push(h - o.y);
 							break;
 						case &#x27;W&#x27;:
-							this.collisionVectors.push(-o.x);
-							this.collisionVectors.push((h / 2) - o.y);
+							collisionVectors.push(-o.x);
+							collisionVectors.push((h / 2) - o.y);
 							break;
 						case &#x27;NW&#x27;:
-							this.collisionVectors.push(-o.x);
-							this.collisionVectors.push(-o.y);
+							collisionVectors.push(-o.x);
+							collisionVectors.push(-o.y);
 							break;
 						case &#x27;center&#x27;:
-							this.collisionVectors.push((w / 2) - o.x);
-							this.collisionVectors.push((h / 2) - o.y);
+							collisionVectors.push((w / 2) - o.x);
+							collisionVectors.push((h / 2) - o.y);
 							break;
 					}
 				}
-				else if (my.isa(this.collisionPoints[i], &#x27;vector&#x27;)) {
-					this.collisionVectors.push(this.collisionPoints[i].x);
-					this.collisionVectors.push(this.collisionPoints[i].y);
+				else if (my.isa_vector(collisionPoints[i])) {
+					collisionVectors.push(collisionPoints[i].x);
+					collisionVectors.push(collisionPoints[i].y);
 				}
 			}
 			return this;
@@ -1045,100 +1155,105 @@ Parses user input for the collisionPoint attribute
 				iz,
 				j,
 				jz,
-				myItems = [];
-			this.collisionPoints = (my.isa(this.collisionPoints, &#x27;arr&#x27;)) ? this.collisionPoints : [this.collisionPoints];
-			myItems.length = 0;
-			for (j = 0, jz = this.collisionPoints.length; j &lt; jz; j++) {
-				myItems.push(this.collisionPoints[j]);
-			}
-			this.collisionPoints.length = 0;
-			if (my.xt(myItems)) {
-				for (i = 0, iz = myItems.length; i &lt; iz; i++) {
-					if (my.isa(myItems[i], &#x27;str&#x27;)) {
-						switch (myItems[i].toLowerCase()) {
-							case &#x27;all&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;N&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;NE&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;E&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;SE&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;S&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;SW&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;W&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;NW&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;start&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;center&#x27;);
-								break;
-							case &#x27;corners&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;NE&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;SE&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;SW&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;NW&#x27;);
-								break;
-							case &#x27;edges&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;N&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;E&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;S&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;W&#x27;);
-								break;
-							case &#x27;perimeter&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;N&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;NE&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;E&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;SE&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;S&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;SW&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;W&#x27;);
-								my.pushUnique(this.collisionPoints, &#x27;NW&#x27;);
-								break;
-							case &#x27;north&#x27;:
-							case &#x27;n&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;N&#x27;);
-								break;
-							case &#x27;northeast&#x27;:
-							case &#x27;ne&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;NE&#x27;);
-								break;
-							case &#x27;east&#x27;:
-							case &#x27;e&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;E&#x27;);
-								break;
-							case &#x27;southeast&#x27;:
-							case &#x27;se&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;SE&#x27;);
-								break;
-							case &#x27;south&#x27;:
-							case &#x27;s&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;S&#x27;);
-								break;
-							case &#x27;southwest&#x27;:
-							case &#x27;sw&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;SW&#x27;);
-								break;
-							case &#x27;west&#x27;:
-							case &#x27;w&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;W&#x27;);
-								break;
-							case &#x27;northwest&#x27;:
-							case &#x27;nw&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;NW&#x27;);
-								break;
-							case &#x27;start&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;start&#x27;);
-								break;
-							case &#x27;center&#x27;:
-								my.pushUnique(this.collisionPoints, &#x27;center&#x27;);
-								break;
+				myItems = [],
+				collisionPoints,
+				pu = my.pushUnique;
+			if (this.collisionPoints) {
+				this.collisionPoints = (Array.isArray(this.collisionPoints)) ? this.collisionPoints : [this.collisionPoints];
+				collisionPoints = this.collisionPoints;
+				myItems.length = 0;
+				for (j = 0, jz = collisionPoints.length; j &lt; jz; j++) {
+					myItems.push(collisionPoints[j]);
+				}
+				collisionPoints.length = 0;
+				if (my.xt(myItems)) {
+					for (i = 0, iz = myItems.length; i &lt; iz; i++) {
+						if (myItems[i].substring) {
+							switch (myItems[i].toLowerCase()) {
+								case &#x27;all&#x27;:
+									pu(collisionPoints, &#x27;N&#x27;);
+									pu(collisionPoints, &#x27;NE&#x27;);
+									pu(collisionPoints, &#x27;E&#x27;);
+									pu(collisionPoints, &#x27;SE&#x27;);
+									pu(collisionPoints, &#x27;S&#x27;);
+									pu(collisionPoints, &#x27;SW&#x27;);
+									pu(collisionPoints, &#x27;W&#x27;);
+									pu(collisionPoints, &#x27;NW&#x27;);
+									pu(collisionPoints, &#x27;start&#x27;);
+									pu(collisionPoints, &#x27;center&#x27;);
+									break;
+								case &#x27;corners&#x27;:
+									pu(collisionPoints, &#x27;NE&#x27;);
+									pu(collisionPoints, &#x27;SE&#x27;);
+									pu(collisionPoints, &#x27;SW&#x27;);
+									pu(collisionPoints, &#x27;NW&#x27;);
+									break;
+								case &#x27;edges&#x27;:
+									pu(collisionPoints, &#x27;N&#x27;);
+									pu(collisionPoints, &#x27;E&#x27;);
+									pu(collisionPoints, &#x27;S&#x27;);
+									pu(collisionPoints, &#x27;W&#x27;);
+									break;
+								case &#x27;perimeter&#x27;:
+									pu(collisionPoints, &#x27;N&#x27;);
+									pu(collisionPoints, &#x27;NE&#x27;);
+									pu(collisionPoints, &#x27;E&#x27;);
+									pu(collisionPoints, &#x27;SE&#x27;);
+									pu(collisionPoints, &#x27;S&#x27;);
+									pu(collisionPoints, &#x27;SW&#x27;);
+									pu(collisionPoints, &#x27;W&#x27;);
+									pu(collisionPoints, &#x27;NW&#x27;);
+									break;
+								case &#x27;north&#x27;:
+								case &#x27;n&#x27;:
+									pu(collisionPoints, &#x27;N&#x27;);
+									break;
+								case &#x27;northeast&#x27;:
+								case &#x27;ne&#x27;:
+									pu(collisionPoints, &#x27;NE&#x27;);
+									break;
+								case &#x27;east&#x27;:
+								case &#x27;e&#x27;:
+									pu(collisionPoints, &#x27;E&#x27;);
+									break;
+								case &#x27;southeast&#x27;:
+								case &#x27;se&#x27;:
+									pu(collisionPoints, &#x27;SE&#x27;);
+									break;
+								case &#x27;south&#x27;:
+								case &#x27;s&#x27;:
+									pu(collisionPoints, &#x27;S&#x27;);
+									break;
+								case &#x27;southwest&#x27;:
+								case &#x27;sw&#x27;:
+									pu(collisionPoints, &#x27;SW&#x27;);
+									break;
+								case &#x27;west&#x27;:
+								case &#x27;w&#x27;:
+									pu(collisionPoints, &#x27;W&#x27;);
+									break;
+								case &#x27;northwest&#x27;:
+								case &#x27;nw&#x27;:
+									pu(collisionPoints, &#x27;NW&#x27;);
+									break;
+								case &#x27;start&#x27;:
+									pu(collisionPoints, &#x27;start&#x27;);
+									break;
+								case &#x27;center&#x27;:
+									pu(collisionPoints, &#x27;center&#x27;);
+									break;
+							}
 						}
-					}
-					else if (my.isa(myItems[i], &#x27;num&#x27;)) {
-						this.collisionPoints.push(myItems[i]);
-					}
-					else if (my.isa(myItems[i], &#x27;vector&#x27;)) {
-						this.collisionPoints.push(myItems[i]);
+						else if (myItems[i].toFixed) {
+							collisionPoints.push(myItems[i]);
+						}
+						else if (my.isa_vector(myItems[i])) {
+							collisionPoints.push(myItems[i]);
+						}
 					}
 				}
 			}
-			return this.collisionPoints;
+			return (collisionPoints) ? collisionPoints : [];
 		};
 
 		return my;

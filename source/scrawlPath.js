@@ -34,9 +34,36 @@ The Path module adds Path entitys - path-based objects - to the core module
 @module scrawlPath
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'path')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'path')) {
 	var scrawl = (function(my) {
 		'use strict';
+
+		my.work.worklink = {
+			start: my.makeVector({
+				name: 'scrawl.worklink.start'
+			}),
+			end: my.makeVector({
+				name: 'scrawl.worklink.end'
+			}),
+			control1: my.makeVector({
+				name: 'scrawl.worklink.control1'
+			}),
+			control2: my.makeVector({
+				name: 'scrawl.worklink.control2'
+			}),
+			v1: my.makeVector({
+				name: 'scrawl.worklink.v1'
+			}),
+			v2: my.makeVector({
+				name: 'scrawl.worklink.v2'
+			}),
+			v3: my.makeVector({
+				name: 'scrawl.worklink.v3'
+			}),
+			point: my.makeVector({
+				name: 'scrawl.worklink.point'
+			})
+		};
 
 		/**
 # window.scrawl
@@ -108,26 +135,26 @@ Clone a Scrawl.js object, optionally altering attribute values in the cloned obj
 			delete b.context; //required for successful cloning of entitys
 			return (this.type === 'Path') ? my.makePath(b) : new my[this.type](b);
 		};
-		my.d.Position.pathPlace = 0;
-		my.d.Position.pathRoll = 0;
-		my.d.Position.addPathRoll = false;
-		my.d.Position.path = '';
-		my.mergeInto(my.d.Cell, my.d.Position);
-		my.mergeInto(my.d.Entity, my.d.Position);
-		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Entity);
+		my.work.d.Position.pathPlace = 0;
+		my.work.d.Position.pathRoll = 0;
+		my.work.d.Position.addPathRoll = false;
+		my.work.d.Position.path = '';
+		my.mergeInto(my.work.d.Cell, my.work.d.Position);
+		my.mergeInto(my.work.d.Entity, my.work.d.Position);
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Entity);
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Entity);
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Entity);
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Entity);
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		}
 		/**
 Position constructor hook function - modified by path module
@@ -135,10 +162,12 @@ Position constructor hook function - modified by path module
 @private
 **/
 		my.Position.prototype.pathPositionInit = function(items) {
-			this.path = my.xtGet(items.path, my.d[this.type].path);
-			this.pathRoll = my.xtGet(items.pathRoll, my.d[this.type].pathRoll);
-			this.addPathRoll = my.xtGet(items.addPathRoll, my.d[this.type].addPathRoll);
-			this.pathPlace = my.xtGet(items.pathPlace, my.d[this.type].pathPlace);
+			var get = my.xtGet,
+			d = my.work.d[this.type];
+			this.path = get(items.path, d.path);
+			this.pathRoll = get(items.pathRoll, d.pathRoll);
+			this.addPathRoll = get(items.addPathRoll, d.addPathRoll);
+			this.pathPlace = get(items.pathPlace, d.pathPlace);
 		};
 		/**
 Position.setDelta hook function - modified by path module
@@ -156,11 +185,14 @@ Cell.prepareToCopyCell hook function - modified by path module
 @private
 **/
 		my.Cell.prototype.pathPrepareToCopyCell = function() {
-			var here;
-			if (my.entity[this.path] && my.entity[this.path].type === 'Path') {
-				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
-				this.start.x = (!this.lockX) ? here.x : this.start.x;
-				this.start.y = (!this.lockY) ? here.y : this.start.y;
+			var here,
+				e = my.entity[this.path],
+				start = this.start,
+				current = this.currentStart;
+			if (e && e.type === 'Path') {
+				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+				current.x = start.x = (!this.lockX) ? here.x : current.x;
+				current.y = start.y = (!this.lockY) ? here.y : current.y;
 				this.pathRoll = here.r || 0;
 			}
 		};
@@ -170,12 +202,18 @@ Entity.stamp hook function - modified by path module
 @private
 **/
 		my.Entity.prototype.pathStamp = function(method, cell) {
-			var here;
-			if (my.entity[this.path] && my.entity[this.path].type === 'Path') {
-				here = my.entity[this.path].getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
-				this.start.x = (!this.lockX) ? here.x : this.start.x;
-				this.start.y = (!this.lockY) ? here.y : this.start.y;
+			var here,
+				e = my.entity[this.path],
+				start,
+				current;
+			if (e && e.type === 'Path') {
+				start = this.start;
+				current = this.currentStart;
+				here = e.getPerimeterPosition(this.pathPlace, this.pathSpeedConstant, this.addPathRoll);
+				current.x = start.x = (!this.lockX) ? here.x : current.x;
+				current.y = start.y = (!this.lockY) ? here.y : current.y;
 				this.pathRoll = here.r || 0;
+				this.maxDimensions.flag = true;
 			}
 		};
 		/**
@@ -267,7 +305,9 @@ A __factory__ function to generate new Path entitys
 				temp,
 				i,
 				iz,
-				search = new RegExp('_', 'g');
+				search = new RegExp('_', 'g'),
+				get = my.xtGet,
+				so = my.safeObject;
 			items = (my.isa(items, 'obj')) ? items : {};
 			minX = 999999;
 			minY = 999999;
@@ -279,22 +319,23 @@ A __factory__ function to generate new Path entitys
 			cy = 0;
 			k = 0;
 			v = 0;
-			myPivot = my.xtGet(my.point[items.pivot], my.entity[items.pivot], false);
+			myPivot = get(my.point[items.pivot], my.entity[items.pivot], false);
 			if (myPivot) {
-				temp = my.xtGet(myPivot.local, myPivot.place, myPivot.start, false);
-				temp = my.safeObject(temp);
-				items.startX = my.xtGet(temp.x, 0);
-				items.startY = my.xtGet(temp.y, 0);
+				// temp = get(myPivot.local, myPivot.place, myPivot.start, false);
+				temp = get(myPivot.local, myPivot.place, myPivot.currentStart, false);
+				temp = so(temp);
+				items.startX = get(temp.x, 0);
+				items.startY = get(temp.y, 0);
 			}
 			else {
-				temp = my.safeObject(items.start);
-				items.startX = my.xtGet(items.startX, temp.x, 0);
-				items.startY = my.xtGet(items.startY, temp.y, 0);
+				temp = so(items.start);
+				items.startX = get(items.startX, temp.x, 0);
+				items.startY = get(items.startY, temp.y, 0);
 			}
-			items.start = (my.xt(items.start)) ? items.start : {};
+			items.start = so(items.start);
 			items.scaleX = items.scaleX || 1;
 			items.scaleY = items.scaleY || 1;
-			items.isLine = my.xtGet(items.isLine, true);
+			items.isLine = get(items.isLine, true);
 			var checkMinMax = function(_cx, _cy) {
 				minX = (minX > _cx) ? _cx : minX;
 				minY = (minY > _cy) ? _cy : minY;
@@ -634,10 +675,10 @@ A __factory__ function to generate new Path entitys
 			}
 			return false;
 		};
-		my.pushUnique(my.sectionlist, 'point');
-		my.pushUnique(my.nameslist, 'pointnames');
-		my.pushUnique(my.sectionlist, 'link');
-		my.pushUnique(my.nameslist, 'linknames');
+		my.pushUnique(my.work.sectionlist, 'point');
+		my.pushUnique(my.work.nameslist, 'pointnames');
+		my.pushUnique(my.work.sectionlist, 'link');
+		my.pushUnique(my.work.nameslist, 'linknames');
 
 		/**
 # Path
@@ -668,11 +709,12 @@ Additional factory functions to instantiate Path objects are available in the __
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
-			this.isLine = (my.isa(items.isLine, 'bool')) ? items.isLine : true;
+			this.isLine = (my.isa_bool(items.isLine)) ? items.isLine : true;
 			this.linkList = [];
 			this.linkDurations = [];
 			this.pointList = [];
 			this.perimeterLength = 0;
+			this.winding = my.xtGet(items.winding, 'nonzero');
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
 			return this;
@@ -686,7 +728,7 @@ Additional factory functions to instantiate Path objects are available in the __
 **/
 		my.Path.prototype.type = 'Path';
 		my.Path.prototype.classname = 'entitynames';
-		my.d.Path = {
+		my.work.d.Path = {
 			/**
 POINTNAME of the Point object that commences the drawing operation
 
@@ -784,6 +826,13 @@ Path entity default method attribute is 'draw', not 'fill'
 **/
 			method: 'draw',
 			/**
+Winding value
+@property winding
+@type String
+@default 'non-zero'
+**/
+			winding: 'nonzero',
+			/**
 Set the iterations required for calculating path length and positioning data - higher figures (eg 100) ensure entitys will follow the path more accurately
 @property precision
 @type Number
@@ -791,7 +840,7 @@ Set the iterations required for calculating path length and positioning data - h
 **/
 			precision: 10,
 		};
-		my.mergeInto(my.d.Path, my.d.Entity);
+		my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		/**
 Helper function - define the entity's path on the &lt;canvas&gt; element's context engine
 @method prepareShape
@@ -803,24 +852,15 @@ Helper function - define the entity's path on the &lt;canvas&gt; element's conte
 **/
 		my.Path.prototype.prepareShape = function(ctx, cell) {
 			var here;
-			my.cell[cell].setEngine(this);
+			cell.setEngine(this);
 			if (this.firstPoint) {
-				here = this.prepareStamp();
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				ctx.translate(here.x, here.y);
 				ctx.beginPath();
 				my.link[my.point[this.firstPoint].startLink].sketch(ctx);
 			}
 			return this;
-		};
-		/**
-Augments Position.getPivotOffsetVector()
-@method getPivotOffsetVector
-@return A Vector of calculated offset values to help determine where entity drawing should start
-@private
-**/
-		my.Path.prototype.getPivotOffsetVector = function() {
-			return (this.isLine) ? my.Entity.prototype.getPivotOffsetVector.call(this) : this.getCenteredPivotOffsetVector();
 		};
 		/**
 Display helper function
@@ -855,7 +895,7 @@ Stamp mark entitys onto Path
 			arg.pathPlace = pos;
 			arg.group = cell;
 			arg.handle = this.handle;
-			entity.set(arg).forceStamp();
+			entity.set(arg).forceStamp(null, cell.name, cell);
 			arg.path = path;
 			arg.pathPlace = place;
 			arg.group = group;
@@ -880,25 +920,27 @@ Prepare mark entitys for stamping onto Path
 				entity,
 				link,
 				i,
-				iz;
+				iz,
+				e = my.entity,
+				get = my.xtGetTrue;
 			mark = false;
 			if (my.xtGet(this.mark, this.markStart, this.markMid, this.markEnd)) {
 				this.buildPositions();
 				link = this.get('linkDurations');
-				mark = my.xtGetTrue(this.markStart, this.mark);
-				if (mark && my.entity[mark]) {
-					this.stampMark(my.entity[mark], 0, ctx, cell);
+				mark = get(this.markStart, this.mark);
+				if (mark && e[mark]) {
+					this.stampMark(e[mark], 0, ctx, cell);
 				}
-				mark = my.xtGetTrue(this.markMid, this.mark);
-				if (mark && my.entity[mark]) {
-					entity = my.entity[mark];
+				mark = get(this.markMid, this.mark);
+				if (mark && e[mark]) {
+					entity = e[mark];
 					for (i = 0, iz = link.length - 1; i < iz; i++) {
 						this.stampMark(entity, link[i], ctx, cell);
 					}
 				}
-				mark = my.xtGetTrue(this.markEnd, this.mark);
-				if (mark && my.entity[mark]) {
-					this.stampMark(my.entity[mark], 1, ctx, cell);
+				mark = get(this.markEnd, this.mark);
+				if (mark && e[mark]) {
+					this.stampMark(e[mark], 1, ctx, cell);
 				}
 			}
 			return this;
@@ -912,10 +954,10 @@ Stamp helper function - perform a 'clip' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.clip = function(ctx, cell) {
+		my.Path.prototype.clip = function(ctx, cellname, cell) {
 			if (this.closed) {
 				this.prepareShape(ctx, cell);
-				ctx.clip(my.ctx[this.context].get('winding'));
+				ctx.clip(this.winding);
 			}
 			return this;
 		};
@@ -928,11 +970,11 @@ Stamp helper function - perform a 'clear' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.clear = function(ctx, cell) {
+		my.Path.prototype.clear = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			ctx.globalCompositeOperation = 'destination-out';
 			ctx.stroke();
-			ctx.fill(my.ctx[this.context].get('winding'));
+			ctx.fill(this.winding);
 			ctx.globalCompositeOperation = my.ctx[cell].get('globalCompositeOperation');
 			return this;
 		};
@@ -945,7 +987,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.clearWithBackground = function(ctx, cell) {
+		my.Path.prototype.clearWithBackground = function(ctx, cellname, cell) {
 			var context,
 				background,
 				fill,
@@ -962,7 +1004,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 			ctx.strokeStyle = background;
 			ctx.globalAlpha = 1;
 			ctx.stroke();
-			ctx.fill(my.ctx[this.context].get('winding'));
+			ctx.fill(this.winding);
 			ctx.fillStyle = fill;
 			ctx.strokeStyle = stroke;
 			ctx.globalAlpha = alpha;
@@ -977,10 +1019,10 @@ Stamp helper function - perform a 'fill' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.fill = function(ctx, cell) {
+		my.Path.prototype.fill = function(ctx, cellname, cell) {
 			if (this.get('closed')) {
 				this.prepareShape(ctx, cell);
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 				this.addMarks(ctx, cell);
 			}
 			return this;
@@ -994,7 +1036,7 @@ Stamp helper function - perform a 'draw' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.draw = function(ctx, cell) {
+		my.Path.prototype.draw = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			ctx.stroke();
 			this.addMarks(ctx, cell);
@@ -1009,12 +1051,12 @@ Stamp helper function - perform a 'drawFill' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.drawFill = function(ctx, cell) {
+		my.Path.prototype.drawFill = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			ctx.stroke();
 			if (this.get('closed')) {
 				this.clearShadow(ctx, cell);
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 			}
 			this.addMarks(ctx, cell);
 			return this;
@@ -1028,10 +1070,10 @@ Stamp helper function - perform a 'fillDraw' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.fillDraw = function(ctx, cell) {
+		my.Path.prototype.fillDraw = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			if (this.get('closed')) {
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 				this.clearShadow(ctx, cell);
 			}
 			ctx.stroke();
@@ -1047,10 +1089,10 @@ Stamp helper function - perform a 'sinkInto' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.sinkInto = function(ctx, cell) {
+		my.Path.prototype.sinkInto = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			if (this.get('closed')) {
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 			}
 			ctx.stroke();
 			this.addMarks(ctx, cell);
@@ -1065,11 +1107,11 @@ Stamp helper function - perform a 'floatOver' method draw
 @chainable
 @private
 **/
-		my.Path.prototype.floatOver = function(ctx, cell) {
+		my.Path.prototype.floatOver = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			ctx.stroke();
 			if (this.get('closed')) {
-				ctx.fill(my.ctx[this.context].get('winding'));
+				ctx.fill(this.winding);
 			}
 			this.addMarks(ctx, cell);
 			return this;
@@ -1083,7 +1125,7 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 @chainable
 @private
 **/
-		my.Path.prototype.none = function(ctx, cell) {
+		my.Path.prototype.none = function(ctx, cellname, cell) {
 			this.prepareShape(ctx, cell);
 			return this;
 		};
@@ -1095,12 +1137,13 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 			var search,
 				list,
 				i,
-				iz;
+				iz,
+				pn = my.pointnames;
 			list = [];
 			search = new RegExp(this.name + '_.*');
-			for (i = 0, iz = my.pointnames.length; i < iz; i++) {
-				if (search.test(my.pointnames[i])) {
-					list.push(my.pointnames[i]);
+			for (i = 0, iz = pn.length; i < iz; i++) {
+				if (search.test(pn[i])) {
+					list.push(pn[i]);
 				}
 			}
 			return list;
@@ -1113,12 +1156,13 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 			var search,
 				list,
 				i,
-				iz;
+				iz,
+				ln = my.linknames;
 			list = [];
 			search = new RegExp(this.name + '_.*');
-			for (i = 0, iz = my.linknames.length; i < iz; i++) {
-				if (search.test(my.linknames[i])) {
-					list.push(my.linknames[i]);
+			for (i = 0, iz = ln.length; i < iz; i++) {
+				if (search.test(ln[i])) {
+					list.push(ln[i]);
 				}
 			}
 			return list;
@@ -1152,15 +1196,16 @@ Helper function - calculate the positions and lengths of the Path's constituent 
 				len,
 				cumlen,
 				link,
+				lk = my.link,
 				pos;
 			links = this.get('linkList');
 			durations = [];
 			cumlen = 0;
 			for (i = 0, iz = links.length; i < iz; i++) {
-				my.link[links[i]].setPositions();
+				lk[links[i]].setPositions();
 			}
 			for (i = 0, iz = links.length; i < iz; i++) {
-				link = my.link[links[i]];
+				link = lk[links[i]];
 				pos = link.get('positionsCumulativeLength');
 				len = pos[pos.length - 1];
 				cumlen += len;
@@ -1205,16 +1250,20 @@ Calculate coordinates of point at given distance along the Shape entity's path
 					x: 0,
 					y: 0,
 					r: 0
-				};
-			val = (my.isa(val, 'num')) ? val : 1;
-			steady = (my.isa(steady, 'bool')) ? steady : true;
-			roll = (my.isa(roll, 'bool')) ? roll : false;
-			local = (my.isa(local, 'bool')) ? local : false;
+				},
+				bool = my.isa_bool,
+				get = my.xtGet,
+				lk = my.link,
+				between = my.isBetween;
+			val = (val.toFixed) ? val : 1;
+			steady = (bool(steady)) ? steady : true;
+			roll = (bool(roll)) ? roll : false;
+			local = (bool(local)) ? local : false;
 			this.getPerimeterLength();
-			links = this.get('linkList');
-			durations = this.get('linkDurations');
+			links = get(this.linkList, []);
+			durations = get(this.linkDurations, []);
 			for (i = 0, iz = links.length; i < iz; i++) {
-				link = my.link[links[i]];
+				link = lk[links[i]];
 				if (durations[i] >= val) {
 					if (i === 0) {
 						linkVal = val / durations[i];
@@ -1222,7 +1271,7 @@ Calculate coordinates of point at given distance along the Shape entity's path
 					else {
 						linkVal = ((val - durations[i - 1]) / (durations[i] - durations[i - 1]));
 					}
-					linkVal = (linkVal < 0) ? 0 : ((linkVal > 1) ? 1 : linkVal);
+					linkVal = (linkVal <= 0) ? 0.00000005 : ((linkVal >= 1) ? 1 - 0.00000005 : linkVal);
 					bVal = (linkVal - 0.0000001 < 0) ? 0 : linkVal - 0.0000001;
 					aVal = (linkVal + 0.0000001 > 1) ? 1 : linkVal + 0.0000001;
 					if (steady) {
@@ -1233,11 +1282,14 @@ Calculate coordinates of point at given distance along the Shape entity's path
 							temp = (local) ? link.getLocalSteadyPositionOnLink(aVal) : link.getSteadyPositionOnLink(aVal);
 							afterx = temp.x;
 							aftery = temp.y;
-							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
+							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.work.radian;
 							here = (local) ? link.getLocalSteadyPositionOnLink(linkVal) : link.getSteadyPositionOnLink(linkVal);
 							result.x = here.x;
 							result.y = here.y;
 							result.r = angle;
+							if (between(result.r, -0.00001, 0.00001)) {
+								result.r = 0;
+							}
 							return result;
 						}
 						else {
@@ -1252,11 +1304,14 @@ Calculate coordinates of point at given distance along the Shape entity's path
 							temp = (local) ? link.getLocalPositionOnLink(aVal) : link.getPositionOnLink(aVal);
 							afterx = temp.x;
 							aftery = temp.y;
-							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.radian;
+							angle = Math.atan2(aftery - beforey, afterx - beforex) / my.work.radian;
 							here = (local) ? link.getLocalPositionOnLink(linkVal) : link.getPositionOnLink(linkVal);
 							result.x = here.x;
 							result.y = here.y;
 							result.r = angle;
+							if (between(result.r, -0.00001, 0.00001)) {
+								result.r = 0;
+							}
 							return result;
 						}
 						else {
@@ -1287,26 +1342,25 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 				tests,
 				result,
 				here,
-				winding,
 				returnCoord = {
 					x: 0,
 					y: 0
-				};
+				},
+				cvx = my.work.cvx;
 			items = my.safeObject(items);
 			tests = (my.xt(items.tests)) ? [].concat(items.tests) : [(items.x || false), (items.y || false)];
 			result = false;
-			winding = my.ctx[this.context].winding;
-			my.cvx.mozFillRule = winding;
-			my.cvx.msFillRule = winding;
+			cvx.mozFillRule = this.winding;
+			cvx.msFillRule = this.winding;
 			if (this.firstPoint) {
-				here = this.prepareStamp();
-				this.rotateCell(my.cvx, my.group[this.group].cell);
-				my.cvx.translate(here.x, here.y);
-				my.cvx.beginPath();
-				my.link[my.point[this.firstPoint].startLink].sketch(my.cvx);
+				here = this.currentHandle;
+				this.rotateCell(cvx, my.group[this.group].cell);
+				cvx.translate(here.x, here.y);
+				cvx.beginPath();
+				my.link[my.point[this.firstPoint].startLink].sketch(cvx);
 			}
 			for (i = 0, iz = tests.length; i < iz; i += 2) {
-				result = my.cvx.isPointInPath(tests[i], tests[i + 1], my.ctx[this.context].get('winding'));
+				result = cvx.isPointInPath(tests[i], tests[i + 1], this.winding);
 				if (result) {
 					break;
 				}
@@ -1335,19 +1389,19 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				p = [],
 				advance,
 				point,
-				currentPos;
-			if (my.xt(my.d.Path.fieldChannel)) {
-				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
-				//advance,
-				//point,
+				currentPos,
+				xt = my.xt,
+				vec = my.isa_vector;
+			if (xt(my.work.d.Path.fieldChannel)) {
+				p = (xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
 				this.collisionVectors.length = 0;
 				currentPos = 0;
 				for (i = 0, iz = p.length; i < iz; i++) {
-					if (my.isa(p[i], 'num') && p[i] >= 0) {
+					if (p[i].toFixed && p[i] >= 0) {
 						if (p[i] > 1) {
 							//regular points along the path
 							advance = 1 / p[i];
-							for (j = 0; j < p[i]; j++) {
+							for (j = 0; j <= p[i]; j++) {
 								point = this.getPerimeterPosition(currentPos, true, false, true);
 								this.collisionVectors.push(point.x);
 								this.collisionVectors.push(point.y);
@@ -1361,7 +1415,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 							this.collisionVectors.push(point.y);
 						}
 					}
-					else if (my.isa(p[i], 'str')) {
+					else if (p[i].substring) {
 						switch (p[i]) {
 							case 'start':
 								this.collisionVectors.push(0);
@@ -1369,13 +1423,37 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 								break;
 						}
 					}
-					else if (my.isa(p[i], 'vector')) {
+					else if (vec(p[i])) {
 						this.collisionVectors.push(p[i].x);
 						this.collisionVectors.push(p[i].y);
 					}
 				}
 			}
 			return this;
+		};
+		/**
+Calculate the box position of the entity
+
+Returns an object with the following attributes:
+
+* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+
+@method getMaxDimensions
+@param {Object} cell object
+@param {Object} entity object
+@return dimensions object
+@private
+**/
+		my.Path.prototype.getMaxDimensions = function(cell) {
+			this.maxDimensions.top = 0;
+			this.maxDimensions.bottom = cell.actualHeight;
+			this.maxDimensions.left = 0;
+			this.maxDimensions.right = cell.actualWidth;
+			this.maxDimensions.flag = false;
+			return this.maxDimensions;
 		};
 
 		/**
@@ -1410,28 +1488,35 @@ Path creation factories will all create Point objects automatically as part of t
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Point = function(items) {
-			var local;
+			var local,
+				get = my.xtGet,
+				e,
+				vec = my.makeVector,
+				pu = my.pushUnique;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
+			this.entity = get(items.entity, '');
+			e = my.entity[this.entity];
+			this.local = vec();
+			this.current = vec();
 			local = my.safeObject(items.local);
-			this.entity = my.xtGet(items.entity, '');
-			this.local = my.makeVector({
-				x: my.xtGet(items.startX, items.currentX, local.x, 0),
-				y: my.xtGet(items.startY, items.currentY, local.y, 0),
-			});
-			this.work.local = my.makeVector({
-				name: this.type + '.' + this.name + '.work.local'
-			});
-			this.work.local.name = this.type + '.' + this.name + '.work.local';
-			this.startLink = my.xtGet(items.startLink, '');
-			this.fixed = my.xtGet(items.fixed, false);
+			this.current.x = get(items.startX, items.currentX, local.x, 0);
+			this.current.y = get(items.startY, items.currentY, local.y, 0);
+			this.setLocal(items);
+			// this.local = vec({
+			// 	name: this.type + '.' + this.name + '.local',
+			// 	x: get(items.startX, items.currentX, local.x, 0),
+			// 	y: get(items.startY, items.currentY, local.y, 0)
+			// });
+			this.startLink = get(items.startLink, '');
+			this.fixed = get(items.fixed, false);
 			if (my.xto(items.angle, items.distance)) {
 				this.setPolar(items);
 			}
 			my.point[this.name] = this;
-			my.pushUnique(my.pointnames, this.name);
-			if (this.entity && my.entity[this.entity].type === 'Path') {
-				my.pushUnique(my.entity[this.entity].pointList, this.name);
+			pu(my.pointnames, this.name);
+			if (this.entity && e.type === 'Path') {
+				pu(e.pointList, this.name);
 			}
 			return this;
 		};
@@ -1444,7 +1529,7 @@ Path creation factories will all create Point objects automatically as part of t
 **/
 		my.Point.prototype.type = 'Point';
 		my.Point.prototype.classname = 'pointnames';
-		my.d.Point = {
+		my.work.d.Point = {
 			/**
 SPRITENAME String of point object's parent entity
 @property entity
@@ -1469,6 +1554,23 @@ The following argument attributes can be used to initialize, set and get this at
 				z: 0
 			},
 			/**
+Point's coordinate current Vector - generally the Vector marks the Point's position (in pixels) from the Parent entity's start coordinates, though this can be changed by setting the __fixed__ attribute to true.
+
+The following argument attributes can be used to initialize, set and get this attribute's component values:
+
+* __startX__ or __currentX__ to set the x coordinate value
+* __startY__ or __currentY__ to set the y coordinate value
+@property current
+@type Vector
+@default zero value Vector
+@private
+**/
+			current: {
+				x: 0,
+				y: 0,
+				z: 0
+			},
+			/**
 LINKNAME of Link object for which this Point acts as the start coordinate; generated automatically by the Shape creation factory functions
 @property startLink
 @type String
@@ -1484,7 +1586,7 @@ Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (t
 **/
 			fixed: false,
 		};
-		my.mergeInto(my.d.Point, my.d.Base);
+		my.mergeInto(my.work.d.Point, my.work.d.Base);
 		/**
 Augments Base.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
 @method set
@@ -1493,17 +1595,48 @@ Augments Base.set(), to allow users to set the local attributes using startX, st
 @chainable
 **/
 		my.Point.prototype.set = function(items) {
-			var local;
+			var local,
+				curr = this.current,
+				so = my.safeObject,
+				xt = my.xt,
+				get = my.xtGet,
+				xto = my.xto;
 			my.Base.prototype.set.call(this, items);
-			items = my.safeObject(items);
-			local = my.safeObject(items.local);
-			if (my.xto(items.distance, items.angle)) {
+			items = so(items);
+			local = so(items.local);
+			if (xto(items.distance, items.angle)) {
 				this.setPolar(items);
 			}
-			else if (my.xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
-				this.local.x = (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : this.local.x));
-				this.local.y = (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : this.local.y));
+			else if (xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
+				curr.x = get(items.startX, items.currentX, local.x, curr.x);
+				curr.y = get(items.startY, items.currentY, local.y, curr.y);
+				this.setLocal();
 			}
+			return this;
+		};
+		/**
+Set helpere function
+@method setLocal
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+@private
+**/
+		my.Point.prototype.setLocal = function() {
+			var curr = this.current,
+				loc = this.local,
+				e = my.entity[this.entity],
+				conv = this.numberConvert,
+				cell = my.cell[my.group[e.group].cell];
+			loc.x = (curr.x.substring) ? conv(curr.x, cell.actualWidth) : curr.x;
+			if (isNaN(loc.x)) {
+				loc.x = 0;
+			}
+			loc.y = (curr.y.substring) ? conv(curr.y, cell.actualHeight) : curr.y;
+			if (isNaN(loc.y)) {
+				loc.y = 0;
+			}
+			this.fixed = (curr.x.substring || curr.y.substring) ? true : this.fixed;
 			return this;
 		};
 		/**
@@ -1520,25 +1653,36 @@ Add values to the local attribute. Permitted attributes of the argument object i
 **/
 		my.Point.prototype.setDelta = function(items) {
 			var local,
+				curr = this.current,
+				loc = this.local,
 				m,
 				d,
-				a;
-			items = my.safeObject(items);
-			local = my.safeObject(items.local);
+				a,
+				x,
+				y,
+				so = my.safeObject,
+				xt = my.xt,
+				perc = my.addPercentages,
+				get = my.xtGet;
+			items = so(items);
+			local = so(items.local);
 			if (my.xto(items.startX, items.startY, items.currentX, items.currentY, items.local)) {
-				this.local.x += (my.xt(items.startX)) ? items.startX : ((my.xt(items.currentX)) ? items.currentX : ((my.xt(local.x)) ? local.x : 0));
-				this.local.y += (my.xt(items.startY)) ? items.startY : ((my.xt(items.currentY)) ? items.currentY : ((my.xt(local.y)) ? local.y : 0));
+				x = get(items.startX, items.currentX, local.x, 0);
+				y = get(items.startY, items.currentY, local.y, 0);
+				curr.x = (x.substring) ? perc(curr.x, x) : curr.x + x;
+				curr.y = (y.substring) ? perc(curr.y, y) : curr.y + y;
+				this.setLocal();
 			}
-			if (my.xt(items.distance)) {
-				m = this.local.getMagnitude();
-				this.local.scalarMultiply((items.distance + m) / m);
+			if (xt(items.distance)) {
+				m = loc.getMagnitude();
+				loc.scalarMultiply((items.distance + m) / m);
 			}
-			if (my.xt(items.angle)) {
-				d = this.local.getMagnitude();
-				a = Math.atan2(this.local.y, this.local.x);
-				a += (items.angle * my.radian);
-				this.local.x = d * Math.cos(a);
-				this.local.y = d * Math.sin(a);
+			if (xt(items.angle)) {
+				d = loc.getMagnitude();
+				a = Math.atan2(loc.y, loc.x);
+				a += (items.angle * my.work.radian);
+				loc.x = d * Math.cos(a);
+				loc.y = d * Math.sin(a);
 			}
 			return this;
 		};
@@ -1555,25 +1699,28 @@ Sets the local attribute using angle and/or distance parameters:
 		my.Point.prototype.setPolar = function(items) {
 			var m,
 				d,
-				a;
+				a,
+				xt = my.xt,
+				loc = this.local,
+				rad = my.work.radian;
 			items = my.safeObject(items);
 			my.Base.prototype.set.call(this, items);
 			if (my.xta(items.distance, items.angle)) {
-				a = items.angle * my.radian;
-				this.local.x = items.distance * Math.cos(a);
-				this.local.y = items.distance * Math.sin(a);
+				a = items.angle * rad;
+				loc.x = items.distance * Math.cos(a);
+				loc.y = items.distance * Math.sin(a);
 			}
 			else {
-				if (my.xt(items.distance)) {
-					m = this.local.getMagnitude();
-					m = (my.xt(m) && m > 0.0000001) ? m : 1;
-					this.local.scalarMultiply(items.distance / m);
+				if (xt(items.distance)) {
+					m = loc.getMagnitude();
+					m = (xt(m) && m > 0.0000001) ? m : 1;
+					loc.scalarMultiply(items.distance / m);
 				}
-				if (my.xt(items.angle)) {
-					d = this.local.getMagnitude();
-					a = items.angle * my.radian;
-					this.local.x = d * Math.cos(a);
-					this.local.y = d * Math.sin(a);
+				if (xt(items.angle)) {
+					d = loc.getMagnitude();
+					a = items.angle * rad;
+					loc.x = d * Math.cos(a);
+					loc.y = d * Math.sin(a);
 				}
 			}
 			return this;
@@ -1594,44 +1741,51 @@ Return object has the following attributes:
 @return Result object
 @private
 **/
-		my.Point.prototype.getData = function() {
-			var s,
+		my.Point.prototype.getData = function(v) {
+			var xt = my.xt,
+				s,
 				myPivot,
 				scale,
 				result = {
 					name: '',
 					current: null,
 					startLink: null
-				};
-			s = my.entity[this.entity];
+				},
+				vec = (xt(v) && v.type === 'Vector') ? v : my.work.worklink.point,
+				entity = my.entity,
+				point = my.point,
+				local = this.local;
+			s = entity[this.entity];
 			scale = s.scale;
-			this.resetWork();
-			if (my.xt(this.local) && this.local.type === 'Vector') {
-				if (my.isa(this.fixed, 'str') && (my.entity[this.fixed] || my.point[this.fixed])) {
-					myPivot = my.entity[this.fixed] || my.point[this.fixed];
+			if (xt(local) && local.type === 'Vector') {
+				if (this.fixed.substring && (entity[this.fixed] || point[this.fixed])) {
+					myPivot = entity[this.fixed] || point[this.fixed];
 					if (myPivot.type === 'Point') {
-						this.work.local.set(myPivot.local);
-						this.work.local.scalarMultiply(scale || 1);
+						vec.set(myPivot.local);
+						vec.scalarMultiply(scale || 1);
 					}
 					else {
 						if (myPivot.type === 'Particle') {
-							this.work.local.set(myPivot.get('place'));
+							vec.set(myPivot.get('place'));
 						}
 						else {
-							this.work.local.set(myPivot.start);
+							// vec.set(myPivot.start);
+							vec.set(myPivot.currentStart);
 						}
 					}
 				}
 				else if (!this.fixed) {
-					this.work.local.scalarMultiply(scale || 1);
+					vec.set(local);
+					vec.scalarMultiply(scale || 1);
 				}
 				else {
-					this.work.local.vectorSubtract(s.start || my.o);
-					this.work.local.scalarMultiply(scale || 1);
-					this.work.local.rotate(-s.roll);
+					vec.set(local);
+					vec.vectorSubtract(s.currentStart || my.work.o);
+					vec.scalarMultiply(scale || 1);
+					vec.rotate(-s.roll);
 				}
 				result.name = this.name;
-				result.current = this.work.local;
+				result.current = vec;
 				result.startLink = this.startLink;
 				return result;
 			}
@@ -1645,8 +1799,8 @@ Retrieve Point object's coordinates
 @method getCurrentCoordinates
 @return Coordinate Vector
 **/
-		my.Point.prototype.getCurrentCoordinates = function() {
-			return this.getData().current;
+		my.Point.prototype.getCurrentCoordinates = function(v) {
+			return this.getData(v).current;
 		};
 		/**
 Set Point.fixed attribute
@@ -1657,15 +1811,18 @@ Set Point.fixed attribute
 @chainable
 **/
 		my.Point.prototype.setToFixed = function(items, y) {
-			var x;
-			if (my.isa(items, 'str')) {
+			var x,
+				isa_obj = my.isa_obj,
+				xt = my.xt,
+				loc = this.local;
+			if (items.substring) {
 				this.fixed = items;
 			}
 			else {
-				x = (my.isa(items, 'obj') && my.xt(items.x)) ? items.x : ((my.isa(items, 'num')) ? items : 0);
-				y = (my.isa(items, 'obj') && my.xt(items.y)) ? items.y : ((my.isa(y, 'num')) ? y : 0);
-				this.local.x = x;
-				this.local.y = y;
+				x = (isa_obj(items) && xt(items.x)) ? items.x : (items.toFixed) ? items : 0;
+				y = (isa_obj(items) && xt(items.y)) ? items.y : (y && y.toFixed) ? y : 0;
+				loc.x = x;
+				loc.y = y;
 				this.fixed = true;
 			}
 			return this;
@@ -1696,22 +1853,25 @@ Set Point.fixed attribute
 @private
 **/
 		my.Link = function(items) {
+			var get = my.xtGet,
+			d = my.work.d.Link,
+			pu = my.pushUnique;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
 			my.Base.prototype.set.call(this, items);
-			this.startPoint = my.xtGet(items.startPoint, my.d.Link.startPoint);
-			this.entity = (my.xt(my.point[this.startPoint])) ? my.point[this.startPoint].entity : my.d.Link.entity;
-			this.endPoint = my.xtGet(items.endPoint, my.d.Link.endPoint);
-			this.species = my.xtGet(items.species, my.d.Link.species);
-			this.action = my.xtGet(items.action, my.d.Link.action);
+			this.startPoint = get(items.startPoint, d.startPoint);
+			this.entity = (my.xt(my.point[this.startPoint])) ? my.point[this.startPoint].entity : d.entity;
+			this.endPoint = get(items.endPoint, d.endPoint);
+			this.species = get(items.species, d.species);
+			this.action = get(items.action, d.action);
 			my.link[this.name] = this;
-			my.pushUnique(my.linknames, this.name);
+			pu(my.linknames, this.name);
 			this.positionsX = [];
 			this.positionsY = [];
 			this.positionsLength = [];
 			this.positionsCumulativeLength = [];
 			if (this.startPoint && this.entity && this.action === 'add') {
-				my.pushUnique(my.entity[this.entity].linkList, this.name);
+				pu(my.entity[this.entity].linkList, this.name);
 			}
 			return this;
 		};
@@ -1724,32 +1884,7 @@ Set Point.fixed attribute
 **/
 		my.Link.prototype.type = 'Link';
 		my.Link.prototype.classname = 'linknames';
-		if (!my.xt(my.worklink)) {
-			my.worklink = {
-				start: my.makeVector({
-					name: 'scrawl.worklink.start'
-				}),
-				end: my.makeVector({
-					name: 'scrawl.worklink.end'
-				}),
-				control1: my.makeVector({
-					name: 'scrawl.worklink.control1'
-				}),
-				control2: my.makeVector({
-					name: 'scrawl.worklink.control2'
-				}),
-				v1: my.makeVector({
-					name: 'scrawl.worklink.v1'
-				}),
-				v2: my.makeVector({
-					name: 'scrawl.worklink.v2'
-				}),
-				v3: my.makeVector({
-					name: 'scrawl.worklink.v3'
-				}),
-			};
-		}
-		my.d.Link = {
+		my.work.d.Link = {
 			/**
 Type of link - permitted values include: 'line', 'quadratic', 'bezier'
 @property species
@@ -1840,7 +1975,7 @@ Positions Arrays along the length of the Link's path - these values will be affe
 **/
 			positionsCumulativeLength: []
 		};
-		my.mergeInto(my.d.Link, my.d.Base);
+		my.mergeInto(my.work.d.Link, my.work.d.Base);
 		/**
 Augments Base.set()
 @method set
@@ -1849,17 +1984,19 @@ Augments Base.set()
 @chainable
 **/
 		my.Link.prototype.set = function(items) {
+			var e = my.entity[this.entity],
+				ri = my.removeItem;
 			my.Base.prototype.set.call(this, items);
 			items = my.safeObject(items);
-			if (my.isa(items.entity, 'str') && items.entity !== this.entity && this.entity) {
-				my.removeItem(my.entity[this.entity].linkList, this.name);
+			if (items.entity.substring && items.entity !== this.entity && this.entity) {
+				ri(e.linkList, this.name);
 			}
-			if (my.isa(items.action, 'str') && this.entity && my.entity[this.entity]) {
+			if (items.action.substring && this.entity && e) {
 				if (items.action === 'add') {
-					my.pushUnique(my.entity[this.entity].linkList, this.name);
+					my.pushUnique(e.linkList, this.name);
 				}
 				else {
-					my.removeItem(my.entity[this.entity].linkList, this.name);
+					ri(e.linkList, this.name);
 				}
 			}
 			return this;
@@ -1874,7 +2011,7 @@ Position calculation helper function
 @private
 **/
 		my.Link.prototype.pointOnLine = function(origin, destination, val) {
-			if (origin && destination && my.isa(val, 'num')) {
+			if (origin && destination && val.toFixed) {
 				return destination.vectorSubtract(origin).scalarMultiply(val).vectorAdd(origin);
 			}
 			return false;
@@ -1893,24 +2030,30 @@ Result Object contains the following attributes:
 @private
 **/
 		my.Link.prototype.getPointCoordinates = function() {
-			var vector;
-			vector = (this.startPoint) ? my.point[this.startPoint].getCurrentCoordinates() : my.o;
-			my.worklink.start.x = vector.x || 0;
-			my.worklink.start.y = vector.y || 0;
-			my.worklink.start.z = vector.z || 0;
-			vector = (this.endPoint) ? my.point[this.endPoint].getCurrentCoordinates() : my.o;
-			my.worklink.end.x = vector.x || 0;
-			my.worklink.end.y = vector.y || 0;
-			my.worklink.end.z = vector.z || 0;
-			vector = (this.controlPoint1) ? my.point[this.controlPoint1].getCurrentCoordinates() : my.o;
-			my.worklink.control1.x = vector.x || 0;
-			my.worklink.control1.y = vector.y || 0;
-			my.worklink.control1.z = vector.z || 0;
-			vector = (this.controlPoint2) ? my.point[this.controlPoint2].getCurrentCoordinates() : my.o;
-			my.worklink.control2.x = vector.x || 0;
-			my.worklink.control2.y = vector.y || 0;
-			my.worklink.control2.z = vector.z || 0;
-			return my.worklink;
+			var vector,
+				worklink = my.work.worklink,
+				start = worklink.start,
+				end = worklink.end,
+				c1 = worklink.control1,
+				c2 = worklink.control2,
+				point = my.point;
+			vector = (this.startPoint) ? point[this.startPoint].getCurrentCoordinates() : my.work.o;
+			start.x = vector.x || 0;
+			start.y = vector.y || 0;
+			start.z = vector.z || 0;
+			vector = (this.endPoint) ? point[this.endPoint].getCurrentCoordinates() : my.work.o;
+			end.x = vector.x || 0;
+			end.y = vector.y || 0;
+			end.z = vector.z || 0;
+			vector = (this.controlPoint1) ? point[this.controlPoint1].getCurrentCoordinates() : my.work.o;
+			c1.x = vector.x || 0;
+			c1.y = vector.y || 0;
+			c1.z = vector.z || 0;
+			vector = (this.controlPoint2) ? point[this.controlPoint2].getCurrentCoordinates() : my.work.o;
+			c2.x = vector.x || 0;
+			c2.y = vector.y || 0;
+			c2.z = vector.z || 0;
+			return my.work.worklink;
 		};
 		/**
 Position calculation helper function
@@ -1931,30 +2074,31 @@ Position calculation helper function
 					x: 0,
 					y: 0,
 					z: 0
-				};
-			val = (my.isa(val, 'num')) ? val : 1;
+				},
+				work = my.work.worklink,
+				pol = this.pointOnLine,
+				vec = work.v1.zero();
+			val = (my.xt(val) && val.toFixed) ? val : 1;
 			this.getPointCoordinates();
 			switch (this.species) {
 				case 'line':
-					my.worklink.v1.set(this.pointOnLine(my.worklink.start, my.worklink.end, val));
-					break;
+					vec.set(pol(work.start, work.end, val));
+					return vec;
 				case 'quadratic':
-					mid2 = this.pointOnLine(my.worklink.control1, my.worklink.end, val);
-					mid1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
-					my.worklink.v1.set(this.pointOnLine(mid1, mid2, val));
-					break;
+					mid2 = pol(work.control1, work.end, val);
+					mid1 = pol(work.start, work.control1, val);
+					vec.set(pol(mid1, mid2, val));
+					return vec;
 				case 'bezier':
-					fst3 = this.pointOnLine(my.worklink.control2, my.worklink.end, val);
-					fst2 = this.pointOnLine(my.worklink.control1, my.worklink.control2, val);
-					fst1 = this.pointOnLine(my.worklink.start, my.worklink.control1, val);
-					sec2 = this.pointOnLine(fst2, fst3, val);
-					sec1 = this.pointOnLine(fst1, fst2, val);
-					my.worklink.v1.set(this.pointOnLine(sec1, sec2, val));
-					break;
-				default:
-					my.worklink.v1.set(result);
+					fst3 = pol(work.control2, work.end, val);
+					fst2 = pol(work.control1, work.control2, val);
+					fst1 = pol(work.start, work.control1, val);
+					sec2 = pol(fst2, fst3, val);
+					sec1 = pol(fst1, fst2, val);
+					vec.set(pol(sec1, sec2, val));
+					return vec;
 			}
-			return my.worklink.v1;
+			return result;
 		};
 		/**
 Position calculation helper function
@@ -1967,9 +2111,9 @@ Position calculation helper function
 			var entity,
 				result;
 			entity = my.entity[this.entity];
-			if (my.isa(val, 'num')) {
-				result = this.getLocalPositionOnLink(val);
-				return result.rotate(entity.roll).vectorAdd(entity.getStartValues());
+			result = this.getLocalPositionOnLink(val);
+			if (result) {
+				return result.rotate(entity.roll).vectorAdd(entity.currentStart);
 			}
 			return false;
 		};
@@ -1985,20 +2129,23 @@ Position calculation helper function
 				precision,
 				distance,
 				i,
-				iz;
-			val = (my.isa(val, 'num')) ? val : 1;
+				iz,
+				pcl = this.positionsCumulativeLength,
+				v1 = my.work.worklink.v1,
+				v2 = my.work.worklink.v2;
+			val = (my.xt(val) && val.toFixed) ? val : 1;
 			precision = my.entity[this.entity].get('precision');
 			distance = this.length * val;
-			distance = (distance > this.positionsCumulativeLength[precision]) ? this.positionsCumulativeLength[precision] : ((distance < 0) ? 0 : distance);
+			distance = (distance > pcl[precision]) ? pcl[precision] : ((distance < 0) ? 0 : distance);
 			for (i = 1; i <= precision; i++) {
-				if (distance <= this.positionsCumulativeLength[i]) {
-					my.worklink.v1.x = this.positionsX[i - 1];
-					my.worklink.v1.y = this.positionsY[i - 1];
-					my.worklink.v2.x = this.positionsX[i];
-					my.worklink.v2.y = this.positionsY[i];
-					my.worklink.v2.vectorSubtract(my.worklink.v1);
-					dPos = (distance - this.positionsCumulativeLength[i - 1]) / this.positionsLength[i];
-					return my.worklink.v2.scalarMultiply(dPos).vectorAdd(my.worklink.v1);
+				if (distance <= pcl[i]) {
+					v1.x = this.positionsX[i - 1];
+					v1.y = this.positionsY[i - 1];
+					v2.x = this.positionsX[i];
+					v2.y = this.positionsY[i];
+					v2.vectorSubtract(v1);
+					dPos = (distance - pcl[i - 1]) / this.positionsLength[i];
+					return v2.scalarMultiply(dPos).vectorAdd(v1);
 				}
 			}
 			return false;
@@ -2015,8 +2162,11 @@ Position calculation helper function
 				result;
 			entity = my.entity[this.entity];
 			result = this.getLocalSteadyPositionOnLink(val);
-			result.rotate(entity.roll).vectorAdd(entity.getStartValues());
-			return result;
+			if (result) {
+				result.rotate(entity.roll).vectorAdd(entity.currentStart);
+				return result;
+			}
+			return false;
 		};
 		/**
 Returns length of Link, in pixels
@@ -2042,36 +2192,37 @@ Returns length of Link, in pixels
 				here,
 				dist,
 				cumLen,
-				entity,
+				entity = my.entity[this.entity],
 				temp,
-				j;
+				j,
+				v2 = my.work.worklink.v2,
+				v3 = my.work.worklink.v3;
 			if (this.action === 'add') {
 				pts = this.getPointCoordinates();
-				precision = (my.isa(val, 'num') && val > 0) ? val : (my.entity[this.entity].get('precision'));
+				precision = (my.xt(val) && val.toFixed && val > 0) ? val : entity.get('precision');
 				step = 1 / precision;
 				cumLen = 0;
-				my.worklink.v2.set(pts.start);
-				entity = my.entity[this.entity];
+				v2.set(pts.start);
 				temp = entity.roll;
 				this.positionsX.length = 0;
 				this.positionsY.length = 0;
 				this.positionsLength.length = 0;
 				this.positionsCumulativeLength.length = 0;
-				this.positionsX[0] = my.worklink.v2.x;
-				this.positionsY[0] = my.worklink.v2.y;
+				this.positionsX[0] = v2.x;
+				this.positionsY[0] = v2.y;
 				this.positionsLength[0] = 0;
 				this.positionsCumulativeLength[0] = 0;
 				entity.roll = 0;
 				for (j = 1; j <= precision; j++) {
 					pos = step * ((j - 1) + 1);
-					here = this.getPositionOnLink(pos); //my.worklink.v1
-					here.vectorSubtract(entity.getStartValues());
-					my.worklink.v3.set(here);
-					dist = here.vectorSubtract(my.worklink.v2).getMagnitude();
-					my.worklink.v2.set(my.worklink.v3);
+					here = this.getPositionOnLink(pos); //my.work.worklink.v1
+					here.vectorSubtract(entity.currentStart);
+					v3.set(here);
+					dist = here.vectorSubtract(v2).getMagnitude();
+					v2.set(v3);
 					cumLen += dist;
-					this.positionsX[j] = my.worklink.v2.x;
-					this.positionsY[j] = my.worklink.v2.y;
+					this.positionsX[j] = v2.x;
+					this.positionsY[j] = v2.y;
 					this.positionsLength[j] = dist;
 					this.positionsCumulativeLength[j] = cumLen;
 				}
@@ -2091,61 +2242,91 @@ _Note: this function is recursive_
 @private
 **/
 		my.Link.prototype.sketch = function(ctx) {
-			var myEnd,
-				myCon1,
-				myCon2;
-			switch (this.action) {
-				case 'close':
-					ctx.closePath();
-					break;
-				case 'move':
-					myEnd = my.point[this.endPoint].getCurrentCoordinates();
-					ctx.moveTo(
-						myEnd.x,
-						myEnd.y
-					);
-					break;
-				case 'add':
-					switch (this.species) {
-						case 'line':
-							myEnd = my.point[this.endPoint].getCurrentCoordinates();
-							ctx.lineTo(
-								myEnd.x,
-								myEnd.y
-							);
-							break;
-						case 'quadratic':
-							myCon1 = my.point[this.get('controlPoint1')].getCurrentCoordinates();
-							myEnd = my.point[this.endPoint].getCurrentCoordinates();
-							ctx.quadraticCurveTo(
-								myCon1.x,
-								myCon1.y,
-								myEnd.x,
-								myEnd.y
-							);
-							break;
-						case 'bezier':
-							myCon1 = my.point[this.get('controlPoint1')].getCurrentCoordinates();
-							myCon2 = my.point[this.get('controlPoint2')].getCurrentCoordinates();
-							myEnd = my.point[this.endPoint].getCurrentCoordinates();
-							ctx.bezierCurveTo(
-								myCon1.x,
-								myCon1.y,
-								myCon2.x,
-								myCon2.y,
-								myEnd.x,
-								myEnd.y
-							);
-							break;
-						default:
-							return true;
-					}
-					break;
-				default:
+			var actions = this.sketchActions,
+				result;
+			if (this.action) {
+				result = actions[this.action](ctx, this, actions);
+				if (result) {
 					return true;
+				}
+			}
+			else {
+				return true;
 			}
 			my.link[my.point[this.endPoint].startLink].sketch(ctx);
 			return true;
+		};
+		/**
+sketch helper object
+@method sketchActions
+@private
+**/
+		my.Link.prototype.sketchActions = {
+			close: function(ctx, item) {
+				ctx.closePath();
+				return false;
+			},
+			end: function(ctx, item) {
+				return true;
+			},
+			move: function(ctx, item) {
+				var p = my.point,
+					myEnd = p[item.endPoint].getCurrentCoordinates();
+				ctx.moveTo(
+					myEnd.x,
+					myEnd.y
+				);
+				return false;
+			},
+			add: function(ctx, item, actions) {
+				var result;
+				if (item.species) {
+					result = actions[item.species](ctx, item, actions);
+					if (result) {
+						return true;
+					}
+				}
+				else {
+					return true;
+				}
+				return false;
+			},
+			line: function(ctx, item) {
+				var p = my.point,
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
+				ctx.lineTo(
+					myEnd.x,
+					myEnd.y
+				);
+				return false;
+			},
+			quadratic: function(ctx, item) {
+				var p = my.point,
+					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.work.worklink.control1),
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
+				ctx.quadraticCurveTo(
+					myCon1.x,
+					myCon1.y,
+					myEnd.x,
+					myEnd.y
+				);
+				return false;
+			},
+			bezier: function(ctx, item) {
+				var p = my.point,
+					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.work.worklink.control1),
+					myCon2 = p[item.controlPoint2].getCurrentCoordinates(my.work.worklink.control2),
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
+				ctx.bezierCurveTo(
+					myCon1.x,
+					myCon1.y,
+					myCon2.x,
+					myCon2.y,
+					myEnd.x,
+					myEnd.y
+				);
+				return false;
+			}
 		};
 
 		return my;

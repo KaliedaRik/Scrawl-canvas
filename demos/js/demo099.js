@@ -11,8 +11,8 @@ var mycode = function() {
 	var myBlocks,
 		gradientTween,
 		colorTween,
-		myPad = scrawl.pad[scrawl.currentPad],
-		myCanvas = scrawl.canvas[scrawl.currentPad],
+		myPad = scrawl.pad.mycanvas,
+		myCanvas = scrawl.canvas.mycanvas,
 		startNewTween,
 		myEntity,
 		here;

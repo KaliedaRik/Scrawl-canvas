@@ -90,17 +90,19 @@ var mycode = function() {
 		}
 
 		// show or hide the dragged block - will only display on current active pad
-		if (activePad < 0) {
-			group1.addEntitysToGroup(currentEntity.name);
-			group2.removeEntitysFromGroup(currentEntity.name);
-		}
-		else if (activePad > 0) {
-			group2.addEntitysToGroup(currentEntity.name);
-			group1.removeEntitysFromGroup(currentEntity.name);
-		}
-		else {
-			group1.removeEntitysFromGroup(currentEntity.name);
-			group2.removeEntitysFromGroup(currentEntity.name);
+		if (currentEntity) {
+			if (activePad < 0) {
+				group1.addEntitysToGroup(currentEntity.name);
+				group2.removeEntitysFromGroup(currentEntity.name);
+			}
+			else if (activePad > 0) {
+				group2.addEntitysToGroup(currentEntity.name);
+				group1.removeEntitysFromGroup(currentEntity.name);
+			}
+			else {
+				group1.removeEntitysFromGroup(currentEntity.name);
+				group2.removeEntitysFromGroup(currentEntity.name);
+			}
 		}
 
 		//change the background color of the current active pad

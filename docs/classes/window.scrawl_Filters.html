@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -329,13 +337,6 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_filtersEntityInit">filtersEntityInit</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_filtersGroupInit">filtersGroupInit</a>
 
                                 
                                 
@@ -619,7 +620,14 @@
                             </li>
                         
                             <li class="index-item method private">
-                                <a href="#method_stampFilter">stampFilter</a>
+                                <a href="#method_stampFilterActions">stampFilterActions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_stampFilterActions">stampFilterActions</a>
 
                                 
                                 
@@ -685,28 +693,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_filterLevel">filterLevel</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
                                 <a href="#property_filterOnStroke">filterOnStroke</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_filterOnStroke">filterOnStroke</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_filters">filters</a>
 
                                 
                                 
@@ -785,7 +772,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l473"><code>source\scrawlFilters.js:473</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l437"><code>source\scrawlFilters.js:437</code></a>
         
         </p>
 
@@ -865,7 +852,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l543"><code>source\scrawlFilters.js:543</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l512"><code>source\scrawlFilters.js:512</code></a>
         
         </p>
 
@@ -935,7 +922,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l159"><code>source\scrawlFilters.js:159</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l133"><code>source\scrawlFilters.js:133</code></a>
         
         </p>
 
@@ -992,7 +979,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l178"><code>source\scrawlFilters.js:178</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l141"><code>source\scrawlFilters.js:141</code></a>
         
         </p>
 
@@ -1004,63 +991,6 @@
 
     <div class="description">
         <p>Entity constructor hook function - modified by filters module</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_filtersGroupInit" class="method item private">
-    <h3 class="name"><code>filtersGroupInit</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l167"><code>source\scrawlFilters.js:167</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Group constructor hook function - modified by filters module</p>
 
     </div>
 
@@ -1106,7 +1036,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l151"><code>source\scrawlFilters.js:151</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l125"><code>source\scrawlFilters.js:125</code></a>
         
         </p>
 
@@ -1175,7 +1105,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l436"><code>source\scrawlFilters.js:436</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l400"><code>source\scrawlFilters.js:400</code></a>
         
         </p>
 
@@ -1280,7 +1210,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l336"><code>source\scrawlFilters.js:336</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l300"><code>source\scrawlFilters.js:300</code></a>
         
         </p>
 
@@ -1385,7 +1315,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l363"><code>source\scrawlFilters.js:363</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l327"><code>source\scrawlFilters.js:327</code></a>
         
         </p>
 
@@ -1490,7 +1420,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l372"><code>source\scrawlFilters.js:372</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l336"><code>source\scrawlFilters.js:336</code></a>
         
         </p>
 
@@ -1595,7 +1525,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l318"><code>source\scrawlFilters.js:318</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l282"><code>source\scrawlFilters.js:282</code></a>
         
         </p>
 
@@ -1700,7 +1630,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l327"><code>source\scrawlFilters.js:327</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l291"><code>source\scrawlFilters.js:291</code></a>
         
         </p>
 
@@ -1805,7 +1735,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l445"><code>source\scrawlFilters.js:445</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l409"><code>source\scrawlFilters.js:409</code></a>
         
         </p>
 
@@ -1910,7 +1840,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l408"><code>source\scrawlFilters.js:408</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l372"><code>source\scrawlFilters.js:372</code></a>
         
         </p>
 
@@ -2015,7 +1945,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l463"><code>source\scrawlFilters.js:463</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l427"><code>source\scrawlFilters.js:427</code></a>
         
         </p>
 
@@ -2120,7 +2050,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l427"><code>source\scrawlFilters.js:427</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l391"><code>source\scrawlFilters.js:391</code></a>
         
         </p>
 
@@ -2225,7 +2155,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l345"><code>source\scrawlFilters.js:345</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l309"><code>source\scrawlFilters.js:309</code></a>
         
         </p>
 
@@ -2330,7 +2260,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l454"><code>source\scrawlFilters.js:454</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l418"><code>source\scrawlFilters.js:418</code></a>
         
         </p>
 
@@ -2435,7 +2365,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l417"><code>source\scrawlFilters.js:417</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l381"><code>source\scrawlFilters.js:381</code></a>
         
         </p>
 
@@ -2540,7 +2470,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l354"><code>source\scrawlFilters.js:354</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l318"><code>source\scrawlFilters.js:318</code></a>
         
         </p>
 
@@ -2645,7 +2575,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l381"><code>source\scrawlFilters.js:381</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l345"><code>source\scrawlFilters.js:345</code></a>
         
         </p>
 
@@ -2738,7 +2668,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l286"><code>source\scrawlFilters.js:286</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l250"><code>source\scrawlFilters.js:250</code></a>
         
         </p>
 
@@ -2795,7 +2725,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l206"><code>source\scrawlFilters.js:206</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l170"><code>source\scrawlFilters.js:170</code></a>
         
         </p>
 
@@ -2852,7 +2782,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l230"><code>source\scrawlFilters.js:230</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l194"><code>source\scrawlFilters.js:194</code></a>
         
         </p>
 
@@ -2909,7 +2839,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l238"><code>source\scrawlFilters.js:238</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l202"><code>source\scrawlFilters.js:202</code></a>
         
         </p>
 
@@ -2966,7 +2896,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l190"><code>source\scrawlFilters.js:190</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l154"><code>source\scrawlFilters.js:154</code></a>
         
         </p>
 
@@ -3023,7 +2953,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l198"><code>source\scrawlFilters.js:198</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l162"><code>source\scrawlFilters.js:162</code></a>
         
         </p>
 
@@ -3080,7 +3010,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l294"><code>source\scrawlFilters.js:294</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l258"><code>source\scrawlFilters.js:258</code></a>
         
         </p>
 
@@ -3137,7 +3067,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l262"><code>source\scrawlFilters.js:262</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l226"><code>source\scrawlFilters.js:226</code></a>
         
         </p>
 
@@ -3194,7 +3124,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l310"><code>source\scrawlFilters.js:310</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l274"><code>source\scrawlFilters.js:274</code></a>
         
         </p>
 
@@ -3251,7 +3181,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l278"><code>source\scrawlFilters.js:278</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l242"><code>source\scrawlFilters.js:242</code></a>
         
         </p>
 
@@ -3308,7 +3238,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l214"><code>source\scrawlFilters.js:214</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l178"><code>source\scrawlFilters.js:178</code></a>
         
         </p>
 
@@ -3365,7 +3295,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l302"><code>source\scrawlFilters.js:302</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l266"><code>source\scrawlFilters.js:266</code></a>
         
         </p>
 
@@ -3434,7 +3364,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l390"><code>source\scrawlFilters.js:390</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l354"><code>source\scrawlFilters.js:354</code></a>
         
         </p>
 
@@ -3527,7 +3457,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l254"><code>source\scrawlFilters.js:254</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l218"><code>source\scrawlFilters.js:218</code></a>
         
         </p>
 
@@ -3584,7 +3514,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l270"><code>source\scrawlFilters.js:270</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l234"><code>source\scrawlFilters.js:234</code></a>
         
         </p>
 
@@ -3641,7 +3571,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l222"><code>source\scrawlFilters.js:222</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l186"><code>source\scrawlFilters.js:186</code></a>
         
         </p>
 
@@ -3698,7 +3628,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l246"><code>source\scrawlFilters.js:246</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l210"><code>source\scrawlFilters.js:210</code></a>
         
         </p>
 
@@ -3759,7 +3689,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l502"><code>source\scrawlFilters.js:502</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l468"><code>source\scrawlFilters.js:468</code></a>
         
         </p>
 
@@ -3835,7 +3765,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l575"><code>source\scrawlFilters.js:575</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l579"><code>source\scrawlFilters.js:579</code></a>
         
         </p>
 
@@ -3846,7 +3776,7 @@
     </div>
 
     <div class="description">
-        <p>Group.stamp hook function - add a filter to a group of Entitys, and any background detail enclosed by them</p>
+        <p>Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity</p>
 
     </div>
 
@@ -3858,8 +3788,8 @@
 </div>
 
                 
-                    <div id="method_stampFilter" class="method item private">
-    <h3 class="name"><code>stampFilter</code></h3>
+                    <div id="method_stampFilterActions" class="method item private">
+    <h3 class="name"><code>stampFilterActions</code></h3>
 
     
         <span class="paren">()</span>
@@ -3892,7 +3822,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l648"><code>source\scrawlFilters.js:648</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l543"><code>source\scrawlFilters.js:543</code></a>
         
         </p>
 
@@ -3903,7 +3833,64 @@
     </div>
 
     <div class="description">
-        <p>Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity</p>
+        <p>Entity.stampFilter helper object</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_stampFilterActions" class="method item private">
+    <h3 class="name"><code>stampFilterActions</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFilters.js.html#l571"><code>source\scrawlFilters.js:571</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>reciprocal assignment - also occurs in scrawlFrame as there&#39;s no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first</p>
 
     </div>
 
@@ -3949,7 +3936,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l807"><code>source\scrawlFilters.js:807</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l747"><code>source\scrawlFilters.js:747</code></a>
         
         </p>
 
@@ -4006,7 +3993,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l708"><code>source\scrawlFilters.js:708</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l646"><code>source\scrawlFilters.js:646</code></a>
         
         </p>
 
@@ -4063,7 +4050,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l784"><code>source\scrawlFilters.js:784</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l720"><code>source\scrawlFilters.js:720</code></a>
         
         </p>
 
@@ -4120,7 +4107,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l751"><code>source\scrawlFilters.js:751</code></a>
+        <a href="../files/source_scrawlFilters.js.html#l687"><code>source\scrawlFilters.js:687</code></a>
         
         </p>
 
@@ -4297,58 +4284,6 @@
 </div>
 
                 
-                    <div id="property_filterLevel" class="property item">
-    <h3 class="name"><code>filterLevel</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l121"><code>source\scrawlFilters.js:121</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:</p>
-<ul>
-<li>&#39;<strong>entity</strong>&#39; - filter is applied immediately after the Entity has stamped itself onto a cell</li>
-<li>&#39;<strong>cell</strong>&#39; - filter is applied after all Entites have completed stamping themselves onto the cell</li>
-<li>&#39;<strong>pad</strong>&#39; - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell</li>
-</ul>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> &#x27;entity&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="property_filterOnStroke" class="property item">
     <h3 class="name"><code>filterOnStroke</code></h3>
     <span class="type">Boolean</span>
@@ -4373,53 +4308,6 @@
         
         
         <a href="../files/source_scrawlFilters.js.html#l88"><code>source\scrawlFilters.js:88</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Filter flag - when true, will draw the entity; on false (default), the clip method is used instead</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> false</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_filterOnStroke" class="property item">
-    <h3 class="name"><code>filterOnStroke</code></h3>
-    <span class="type">Boolean</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l114"><code>source\scrawlFilters.js:114</code></a>
         
         </p>
 
@@ -4561,53 +4449,6 @@
         
         
         <a href="../files/source_scrawlFilters.js.html#l81"><code>source\scrawlFilters.js:81</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Array of FILTERNAME strings, for filters to be applied to Entitys in this group</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> []</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_filters" class="property item">
-    <h3 class="name"><code>filters</code></h3>
-    <span class="type">Array</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l107"><code>source\scrawlFilters.js:107</code></a>
         
         </p>
 

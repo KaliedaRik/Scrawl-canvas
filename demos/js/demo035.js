@@ -363,7 +363,7 @@ var mycode = function() {
 	scrawl.makeAnimation({
 		fn: function() {
 			myEntitys.updateEntitysBy({
-				roll: 1,
+				roll: 1
 			});
 			scrawl.render();
 

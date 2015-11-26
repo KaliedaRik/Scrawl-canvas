@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -373,8 +381,8 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_addWithinBounds">addWithinBounds</a>
+                            <li class="index-item method private">
+                                <a href="#method_bucketSort">bucketSort</a>
 
                                 
                                 
@@ -607,6 +615,13 @@
                             </li>
                         
                             <li class="index-item method private">
+                                <a href="#method_pageInit">pageInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method_pathDeleteEntity">pathDeleteEntity</a>
 
                                 
@@ -785,14 +800,14 @@
                             </li>
                         
                             <li class="index-item property private">
-                                <a href="#property_cv">cv</a>
+                                <a href="#property_colv1">colv1</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property private">
-                                <a href="#property_cvx">cvx</a>
+                                <a href="#property_colv2">colv2</a>
 
                                 
                                 
@@ -972,7 +987,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l996"><code>source\scrawlCore.js:996</code></a>
+        <a href="../files/source_scrawlCore.js.html#l913"><code>source\scrawlCore.js:913</code></a>
         
         </p>
 
@@ -1112,7 +1127,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1521"><code>source\scrawlCore.js:1521</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1477"><code>source\scrawlCore.js:1477</code></a>
         
         </p>
 
@@ -1245,7 +1260,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1314"><code>source\scrawlCore.js:1314</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1240"><code>source\scrawlCore.js:1240</code></a>
         
         </p>
 
@@ -1400,7 +1415,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1286"><code>source\scrawlCore.js:1286</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1212"><code>source\scrawlCore.js:1212</code></a>
         
         </p>
 
@@ -1555,7 +1570,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1257"><code>source\scrawlCore.js:1257</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1183"><code>source\scrawlCore.js:1183</code></a>
         
         </p>
 
@@ -1704,7 +1719,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1474"><code>source\scrawlCore.js:1474</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1427"><code>source\scrawlCore.js:1427</code></a>
         
         </p>
 
@@ -1831,7 +1846,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1106"><code>source\scrawlCore.js:1106</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1030"><code>source\scrawlCore.js:1030</code></a>
         
         </p>
 
@@ -1910,8 +1925,8 @@
 </div>
 
                 
-                    <div id="method_addWithinBounds" class="method item">
-    <h3 class="name"><code>addWithinBounds</code></h3>
+                    <div id="method_bucketSort" class="method item private">
+    <h3 class="name"><code>bucketSort</code></h3>
 
     
         <div class="args">
@@ -1919,19 +1934,19 @@
             
                 <li class="arg">
                     
+                        <code>section</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>attribute</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
                         <code>a</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>b</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>object</code>
                     
                 </li>
             
@@ -1947,6 +1962,8 @@
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1968,7 +1985,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l616"><code>source\scrawlCore.js:616</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1400"><code>source\scrawlCore.js:1400</code></a>
         
         </p>
 
@@ -1979,20 +1996,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>utility</strong> function that adds two numbers, keeping them within bounds</p>
-<p>The argument object can take the following attributes:</p>
-<ul>
-<li><strong>min</strong> - Number - minimum bound; default 0</li>
-<li><strong>max</strong> - Number - maximum bound; default 1</li>
-<li><strong>action</strong> - String - &#39;bounce&#39;, &#39;loop&#39;, &#39;stick&#39; (default)</li>
-<li><strong>operation</strong> - String - &#39;add&#39; or &#39;+&#39; (default), &#39;subtract&#39; or &#39;-&#39;, &#39;multiply&#39; or &#39;*&#39;, &#39;divide&#39; or &#39;/&#39;</li>
-</ul>
-<p>The action attribute refers to the action taken when the result of the operation falls beyond the set bounds:</p>
-<ul>
-<li><strong>bounce</strong> - the value is reversed eg 3 + 4 (max bound: 5) = 3 </li>
-<li><strong>loop</strong> - &#39;clock&#39; calculation eg 3 + 4 (min bound: 0; max bound: 5) = 1 </li>
-<li><strong>stick</strong> - maximum or minimum value is applied eg 3 + 4 (max bound: 5) = 5</li>
-</ul>
+        <p>A <strong>utility</strong> function for performing bucket sorts on scrawl string arrays eg Group.entitys</p>
 
     </div>
 
@@ -2004,46 +2008,46 @@
             
                 <li class="param">
                     
+                        <code class="param-name">section</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl library section name</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">attribute</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>on which sort will be performed</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
                         <code class="param-name">a</code>
-                        <span class="type">Number</span>
+                        <span class="type">Array</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>first number</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">b</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>second number (order is important for subtraction or division)</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">object</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>consisting of key:value pairs</p>
+                        <p>array to be sorted</p>
 
                     </div>
 
@@ -2061,7 +2065,7 @@
             <div class="returns-description">
                 
                     
-                    <p>result of calculation</p>
+                    <p>sorted array</p>
 
                 
             </div>
@@ -2120,7 +2124,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1038"><code>source\scrawlCore.js:1038</code></a>
+        <a href="../files/source_scrawlCore.js.html#l956"><code>source\scrawlCore.js:956</code></a>
         
         </p>
 
@@ -2193,6 +2197,12 @@
                     
                 </li>
             
+                <li class="arg">
+                    
+                        <code class="optional">[mouse]</code>
+                    
+                </li>
+            
             </ul><span class="paren">)</span>
         </div>
     
@@ -2228,7 +2238,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1055"><code>source\scrawlCore.js:1055</code></a>
+        <a href="../files/source_scrawlCore.js.html#l974"><code>source\scrawlCore.js:974</code></a>
         
         </p>
 
@@ -2260,6 +2270,23 @@
 
                     <div class="param-description">
                         <p>Array of PADNAMEs - can also be a String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[mouse]</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinates to be used for any entity currently pivoted to a mouse/touch event</p>
 
                     </div>
 
@@ -2340,7 +2367,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l521"><code>source\scrawlCore.js:521</code></a>
+        <a href="../files/source_scrawlCore.js.html#l547"><code>source\scrawlCore.js:547</code></a>
         
         </p>
 
@@ -2474,7 +2501,7 @@ scrawl.contains(myarray, &#39;banana&#39;); //false</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1485"><code>source\scrawlCore.js:1485</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1438"><code>source\scrawlCore.js:1438</code></a>
         
         </p>
 
@@ -2581,7 +2608,7 @@ scrawl.contains(myarray, &#39;banana&#39;); //false</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1573"><code>source\scrawlCore.js:1573</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1529"><code>source\scrawlCore.js:1529</code></a>
         
         </p>
 
@@ -2686,7 +2713,7 @@ scrawl.deleteEntity([&#39;myblock&#39;]);</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l292"><code>source\scrawlCore.js:292</code></a>
+        <a href="../files/source_scrawlCore.js.html#l293"><code>source\scrawlCore.js:293</code></a>
         
         </p>
 
@@ -2747,7 +2774,7 @@ scrawl.deleteEntity([&#39;myblock&#39;]);</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l969"><code>source\scrawlCore.js:969</code></a>
+        <a href="../files/source_scrawlCore.js.html#l886"><code>source\scrawlCore.js:886</code></a>
         
         </p>
 
@@ -2917,7 +2944,7 @@ scrawl.deleteEntity([&#39;myblock&#39;]);</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l695"><code>source\scrawlCore.js:695</code></a>
+        <a href="../files/source_scrawlCore.js.html#l644"><code>source\scrawlCore.js:644</code></a>
         
         </p>
 
@@ -3084,7 +3111,7 @@ scrawl.isa(myboolean, &#39;str&#39;);   //returns false</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l583"><code>source\scrawlCore.js:583</code></a>
+        <a href="../files/source_scrawlCore.js.html#l611"><code>source\scrawlCore.js:611</code></a>
         
         </p>
 
@@ -3269,7 +3296,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l315"><code>source\scrawlCore.js:315</code></a>
+        <a href="../files/source_scrawlCore.js.html#l340"><code>source\scrawlCore.js:340</code></a>
         
         </p>
 
@@ -3294,6 +3321,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
 <li><strong>scrawlPath.js</strong> - alias <strong>path</strong> - adds <em>Path</em> (SVGTiny path data) entitys to the core</li>
 <li><strong>scrawlPathFactories.js</strong> - alias <strong>factories</strong> - adds user-friendly Path and Shape factory functions (for lines, quadratic and bezier curves, ellipses, round-corner rectangles, regular shapes such as stars, triangles, etc) to the core</li>
 <li><strong>scrawlPhrase.js</strong> - alias <strong>phrase</strong> - adds <em>Phrase</em> (single and multiline text) entitys to the core</li>
+<li><strong>scrawlPerspective.js</strong> - alias <strong>perspective</strong> - adds <em>Perspective</em> functionality to the core (experimental)</li>
 <li><strong>scrawlPhysics.js</strong> - alias <strong>physics</strong> - adds a physics engine to the core (experimental)</li>
 <li><strong>scrawlSaveLoad.js</strong> - alias <strong>saveload</strong> - adds JSON object save and load functionality to the core (experimental)</li>
 <li><strong>scrawlShape.js</strong> - alias <strong>shape</strong> - adds <em>Shape</em> (path-like shapes) entitys to the core</li>
@@ -3506,7 +3534,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l440"><code>source\scrawlCore.js:440</code></a>
+        <a href="../files/source_scrawlCore.js.html#l466"><code>source\scrawlCore.js:466</code></a>
         
         </p>
 
@@ -3665,7 +3693,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1702"><code>source\scrawlCore.js:1702</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1659"><code>source\scrawlCore.js:1659</code></a>
         
         </p>
 
@@ -3772,7 +3800,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1712"><code>source\scrawlCore.js:1712</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1669"><code>source\scrawlCore.js:1669</code></a>
         
         </p>
 
@@ -3877,7 +3905,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1731"><code>source\scrawlCore.js:1731</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1688"><code>source\scrawlCore.js:1688</code></a>
         
         </p>
 
@@ -3982,7 +4010,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1722"><code>source\scrawlCore.js:1722</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1679"><code>source\scrawlCore.js:1679</code></a>
         
         </p>
 
@@ -4089,7 +4117,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l913"><code>source\scrawlCore.js:913</code></a>
+        <a href="../files/source_scrawlCore.js.html#l844"><code>source\scrawlCore.js:844</code></a>
         
         </p>
 
@@ -4197,7 +4225,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1692"><code>source\scrawlCore.js:1692</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1649"><code>source\scrawlCore.js:1649</code></a>
         
         </p>
 
@@ -4302,7 +4330,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1740"><code>source\scrawlCore.js:1740</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1697"><code>source\scrawlCore.js:1697</code></a>
         
         </p>
 
@@ -4407,7 +4435,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1678"><code>source\scrawlCore.js:1678</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1635"><code>source\scrawlCore.js:1635</code></a>
         
         </p>
 
@@ -4530,7 +4558,7 @@ scrawl.isBetween(3, 3, 5, true);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l455"><code>source\scrawlCore.js:455</code></a>
+        <a href="../files/source_scrawlCore.js.html#l481"><code>source\scrawlCore.js:481</code></a>
         
         </p>
 
@@ -4682,7 +4710,7 @@ scrawl.mergeInto(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l488"><code>source\scrawlCore.js:488</code></a>
+        <a href="../files/source_scrawlCore.js.html#l514"><code>source\scrawlCore.js:514</code></a>
         
         </p>
 
@@ -4818,7 +4846,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1636"><code>source\scrawlCore.js:1636</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1593"><code>source\scrawlCore.js:1593</code></a>
         
         </p>
 
@@ -4877,7 +4905,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1645"><code>source\scrawlCore.js:1645</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1602"><code>source\scrawlCore.js:1602</code></a>
         
         </p>
 
@@ -4934,7 +4962,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1662"><code>source\scrawlCore.js:1662</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1619"><code>source\scrawlCore.js:1619</code></a>
         
         </p>
 
@@ -4991,7 +5019,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1654"><code>source\scrawlCore.js:1654</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1611"><code>source\scrawlCore.js:1611</code></a>
         
         </p>
 
@@ -5050,7 +5078,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1627"><code>source\scrawlCore.js:1627</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1584"><code>source\scrawlCore.js:1584</code></a>
         
         </p>
 
@@ -5107,7 +5135,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1670"><code>source\scrawlCore.js:1670</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1627"><code>source\scrawlCore.js:1627</code></a>
         
         </p>
 
@@ -5164,7 +5192,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1619"><code>source\scrawlCore.js:1619</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1576"><code>source\scrawlCore.js:1576</code></a>
         
         </p>
 
@@ -5221,7 +5249,64 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l276"><code>source\scrawlCore.js:276</code></a>
+        <a href="../files/source_scrawlCore.js.html#l299"><code>source\scrawlCore.js:299</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>scrawl.init hook function - modified by stacks extension</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_pageInit" class="method item private">
+    <h3 class="name"><code>pageInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l277"><code>source\scrawlCore.js:277</code></a>
         
         </p>
 
@@ -5278,7 +5363,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1613"><code>source\scrawlCore.js:1613</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1570"><code>source\scrawlCore.js:1570</code></a>
         
         </p>
 
@@ -5335,7 +5420,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l286"><code>source\scrawlCore.js:286</code></a>
+        <a href="../files/source_scrawlCore.js.html#l287"><code>source\scrawlCore.js:287</code></a>
         
         </p>
 
@@ -5410,7 +5495,7 @@ scrawl.mergeOver(old, new);
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l547"><code>source\scrawlCore.js:547</code></a>
+        <a href="../files/source_scrawlCore.js.html#l576"><code>source\scrawlCore.js:576</code></a>
         
         </p>
 
@@ -5550,7 +5635,7 @@ scrawl.pushUnique(myarray, &#39;banana&#39;);   //returns [&#39;apple&#39;, &#39
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1547"><code>source\scrawlCore.js:1547</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1503"><code>source\scrawlCore.js:1503</code></a>
         
         </p>
 
@@ -5677,7 +5762,7 @@ scrawl.pushUnique(myarray, &#39;banana&#39;);   //returns [&#39;apple&#39;, &#39
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l564"><code>source\scrawlCore.js:564</code></a>
+        <a href="../files/source_scrawlCore.js.html#l593"><code>source\scrawlCore.js:593</code></a>
         
         </p>
 
@@ -5821,7 +5906,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1394"><code>source\scrawlCore.js:1394</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1320"><code>source\scrawlCore.js:1320</code></a>
         
         </p>
 
@@ -5931,6 +6016,12 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
                     
                 </li>
             
+                <li class="arg">
+                    
+                        <code class="optional">[mouse]</code>
+                    
+                </li>
+            
             </ul><span class="paren">)</span>
         </div>
     
@@ -5966,7 +6057,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1089"><code>source\scrawlCore.js:1089</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1011"><code>source\scrawlCore.js:1011</code></a>
         
         </p>
 
@@ -5998,6 +6089,23 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
 
                     <div class="param-description">
                         <p>Array of PADNAMEs - can also be a String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[mouse]</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinates to be used for any entity currently pivoted to a mouse/touch event</p>
 
                     </div>
 
@@ -6064,7 +6172,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l298"><code>source\scrawlCore.js:298</code></a>
+        <a href="../files/source_scrawlCore.js.html#l323"><code>source\scrawlCore.js:323</code></a>
         
         </p>
 
@@ -6154,7 +6262,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1118"><code>source\scrawlCore.js:1118</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1042"><code>source\scrawlCore.js:1042</code></a>
         
         </p>
 
@@ -6263,7 +6371,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l790"><code>source\scrawlCore.js:790</code></a>
+        <a href="../files/source_scrawlCore.js.html#l723"><code>source\scrawlCore.js:723</code></a>
         
         </p>
 
@@ -6370,7 +6478,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l948"><code>source\scrawlCore.js:948</code></a>
+        <a href="../files/source_scrawlCore.js.html#l863"><code>source\scrawlCore.js:863</code></a>
         
         </p>
 
@@ -6489,7 +6597,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1072"><code>source\scrawlCore.js:1072</code></a>
+        <a href="../files/source_scrawlCore.js.html#l993"><code>source\scrawlCore.js:993</code></a>
         
         </p>
 
@@ -6601,7 +6709,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1129"><code>source\scrawlCore.js:1129</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1053"><code>source\scrawlCore.js:1053</code></a>
         
         </p>
 
@@ -6726,7 +6834,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l535"><code>source\scrawlCore.js:535</code></a>
+        <a href="../files/source_scrawlCore.js.html#l564"><code>source\scrawlCore.js:564</code></a>
         
         </p>
 
@@ -6818,7 +6926,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1163"><code>source\scrawlCore.js:1163</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1087"><code>source\scrawlCore.js:1087</code></a>
         
         </p>
 
@@ -6876,7 +6984,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1191"><code>source\scrawlCore.js:1191</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1115"><code>source\scrawlCore.js:1115</code></a>
         
         </p>
 
@@ -6934,7 +7042,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1177"><code>source\scrawlCore.js:1177</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1101"><code>source\scrawlCore.js:1101</code></a>
         
         </p>
 
@@ -6992,7 +7100,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1205"><code>source\scrawlCore.js:1205</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1129"><code>source\scrawlCore.js:1129</code></a>
         
         </p>
 
@@ -7061,7 +7169,7 @@ scrawl.removeItem(myarray, &#39;apple&#39;);    //returns [&#39;orange&#39;]</co
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l800"><code>source\scrawlCore.js:800</code></a>
+        <a href="../files/source_scrawlCore.js.html#l733"><code>source\scrawlCore.js:733</code></a>
         
         </p>
 
@@ -7178,7 +7286,7 @@ scrawl.xt(myboolean);   //returns false</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l855"><code>source\scrawlCore.js:855</code></a>
+        <a href="../files/source_scrawlCore.js.html#l786"><code>source\scrawlCore.js:786</code></a>
         
         </p>
 
@@ -7286,7 +7394,7 @@ scrawl.xta([mystring, myboolean]);  //returns false</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l814"><code>source\scrawlCore.js:814</code></a>
+        <a href="../files/source_scrawlCore.js.html#l747"><code>source\scrawlCore.js:747</code></a>
         
         </p>
 
@@ -7357,7 +7465,7 @@ scrawl.xta([mystring, myboolean]);  //returns false</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l833"><code>source\scrawlCore.js:833</code></a>
+        <a href="../files/source_scrawlCore.js.html#l765"><code>source\scrawlCore.js:765</code></a>
         
         </p>
 
@@ -7429,7 +7537,7 @@ scrawl.xta([mystring, myboolean]);  //returns false</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l885"><code>source\scrawlCore.js:885</code></a>
+        <a href="../files/source_scrawlCore.js.html#l816"><code>source\scrawlCore.js:816</code></a>
         
         </p>
 
@@ -7510,7 +7618,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1141"><code>source\scrawlCore.js:1141</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1065"><code>source\scrawlCore.js:1065</code></a>
         
         </p>
 
@@ -7532,9 +7640,9 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
 </div>
 
                 
-                    <div id="property_cv" class="property item private">
-    <h3 class="name"><code>cv</code></h3>
-    <span class="type">CasnvasObject</span>
+                    <div id="property_colv1" class="property item private">
+    <h3 class="name"><code>colv1</code></h3>
+    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -7557,7 +7665,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l172"><code>source\scrawlCore.js:172</code></a>
+        <a href="../files/source_scrawlCore.js.html#l152"><code>source\scrawlCore.js:152</code></a>
         
         </p>
 
@@ -7567,7 +7675,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
     </div>
 
     <div class="description">
-        <p>Utility canvas - never displayed</p>
+        <p>Work vector, for calculations</p>
 
     </div>
 
@@ -7579,9 +7687,9 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
 </div>
 
                 
-                    <div id="property_cvx" class="property item private">
-    <h3 class="name"><code>cvx</code></h3>
-    <span class="type">CasnvasContextObject</span>
+                    <div id="property_colv2" class="property item private">
+    <h3 class="name"><code>colv2</code></h3>
+    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -7604,7 +7712,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l181"><code>source\scrawlCore.js:181</code></a>
+        <a href="../files/source_scrawlCore.js.html#l159"><code>source\scrawlCore.js:159</code></a>
         
         </p>
 
@@ -7614,7 +7722,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
     </div>
 
     <div class="description">
-        <p>Utility canvas 2d context engine</p>
+        <p>Work vector, for calculations</p>
 
     </div>
 
@@ -7651,7 +7759,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l137"><code>source\scrawlCore.js:137</code></a>
+        <a href="../files/source_scrawlCore.js.html#l138"><code>source\scrawlCore.js:138</code></a>
         
         </p>
 
@@ -7696,7 +7804,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l228"><code>source\scrawlCore.js:228</code></a>
+        <a href="../files/source_scrawlCore.js.html#l227"><code>source\scrawlCore.js:227</code></a>
         
         </p>
 
@@ -7743,7 +7851,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1149"><code>source\scrawlCore.js:1149</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1073"><code>source\scrawlCore.js:1073</code></a>
         
         </p>
 
@@ -7790,7 +7898,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l213"><code>source\scrawlCore.js:213</code></a>
+        <a href="../files/source_scrawlCore.js.html#l212"><code>source\scrawlCore.js:212</code></a>
         
         </p>
 
@@ -7837,7 +7945,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l165"><code>source\scrawlCore.js:165</code></a>
+        <a href="../files/source_scrawlCore.js.html#l180"><code>source\scrawlCore.js:180</code></a>
         
         </p>
 
@@ -7884,7 +7992,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l188"><code>source\scrawlCore.js:188</code></a>
+        <a href="../files/source_scrawlCore.js.html#l187"><code>source\scrawlCore.js:187</code></a>
         
         </p>
 
@@ -7931,7 +8039,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l234"><code>source\scrawlCore.js:234</code></a>
+        <a href="../files/source_scrawlCore.js.html#l233"><code>source\scrawlCore.js:233</code></a>
         
         </p>
 
@@ -7980,7 +8088,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l220"><code>source\scrawlCore.js:220</code></a>
+        <a href="../files/source_scrawlCore.js.html#l219"><code>source\scrawlCore.js:219</code></a>
         
         </p>
 
@@ -8074,7 +8182,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l151"><code>source\scrawlCore.js:151</code></a>
+        <a href="../files/source_scrawlCore.js.html#l166"><code>source\scrawlCore.js:166</code></a>
         
         </p>
 
@@ -8121,7 +8229,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l129"><code>source\scrawlCore.js:129</code></a>
+        <a href="../files/source_scrawlCore.js.html#l130"><code>source\scrawlCore.js:130</code></a>
         
         </p>
 
@@ -8170,7 +8278,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l122"><code>source\scrawlCore.js:122</code></a>
+        <a href="../files/source_scrawlCore.js.html#l123"><code>source\scrawlCore.js:123</code></a>
         
         </p>
 
@@ -8217,7 +8325,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l1156"><code>source\scrawlCore.js:1156</code></a>
+        <a href="../files/source_scrawlCore.js.html#l1080"><code>source\scrawlCore.js:1080</code></a>
         
         </p>
 
@@ -8264,7 +8372,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l144"><code>source\scrawlCore.js:144</code></a>
+        <a href="../files/source_scrawlCore.js.html#l145"><code>source\scrawlCore.js:145</code></a>
         
         </p>
 
@@ -8360,7 +8468,7 @@ scrawl.xto(mystring, myboolean);    //returns true</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l158"><code>source\scrawlCore.js:158</code></a>
+        <a href="../files/source_scrawlCore.js.html#l173"><code>source\scrawlCore.js:173</code></a>
         
         </p>
 

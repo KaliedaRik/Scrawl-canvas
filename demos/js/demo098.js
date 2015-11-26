@@ -10,8 +10,8 @@ var mycode = function() {
 	//variables
 	var myBlocks,
 		myTween,
-		myPad = scrawl.pad[scrawl.currentPad],
-		myCanvas = scrawl.canvas[scrawl.currentPad],
+		myPad = scrawl.pad.mycanvas,
+		myCanvas = scrawl.canvas.mycanvas,
 		startNewTween,
 		myEntity,
 		myClone,

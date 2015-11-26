@@ -67,22 +67,22 @@ var mycode = function() {
 		fn: function() {
 			var entity = entitys[count];
 			checkBounds();
-			entity.start.set({
-				x: positions[0],
-				y: positions[1],
+			entity.set({
+				startX: positions[0],
+				startY: positions[1]
 			});
 			//scrawl bezier curve points are measured relative to the start point
 			scrawl.point[entity.name + '_p2'].local.set({
 				x: positions[2] - positions[0],
-				y: positions[3] - positions[1],
+				y: positions[3] - positions[1]
 			});
 			scrawl.point[entity.name + '_p3'].local.set({
 				x: positions[4] - positions[0],
-				y: positions[5] - positions[1],
+				y: positions[5] - positions[1]
 			});
 			scrawl.point[entity.name + '_p4'].local.set({
 				x: positions[6] - positions[0],
-				y: positions[7] - positions[1],
+				y: positions[7] - positions[1]
 			});
 			count++;
 			if (count >= noOfLines) {
@@ -103,7 +103,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['animation', 'path', 'factories'],
+	extensions: ['path', 'factories'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

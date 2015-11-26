@@ -25,7 +25,11 @@ var mycode = function() {
 		background,
 		myBlob,
 		blobPositions = [],
-		moveBlobs;
+		moveBlobs,
+		random = Math.random,
+		cos = Math.cos,
+		sin = Math.sin,
+		atan2 = Math.atan2;
 
 	//load images into scrawl library
 	scrawl.getImagesByClass('demo087');
@@ -33,19 +37,19 @@ var mycode = function() {
 	//define entitys
 	background = scrawl.makePicture({
 		source: 'background',
-		fastStamp: true,
+		fastStamp: true
 	});
 
 	myBlob = scrawl.makePicture({
 		source: 'blob',
-		fastStamp: true,
+		fastStamp: true
 	});
 	for (var i = 0; i < 999; i++) {
 		blobPositions.push({
-			x: Math.random() * maxX,
-			y: Math.random() * maxY,
+			x: random() * maxX,
+			y: random() * maxY,
 			mx: 0,
-			my: 0,
+			my: 0
 		});
 	}
 
@@ -65,21 +69,22 @@ var mycode = function() {
 			}
 			vx *= 0.95;
 			vy *= 0.95;
-			vx += Math.random() - 0.5;
-			vy += Math.random() - 0.5;
+			vx += random() - 0.5;
+			vy += random() - 0.5;
 
 			x = blobPositions[i].x += vx;
 			y = blobPositions[i].y += vy;
 
 			if (x < 0 || x > maxX || y < 0 || y > maxY) {
-				r = Math.atan2(y - (maxY / 2), x - (maxX / 2));
-				vx = -Math.cos(r);
-				vy = -Math.sin(r);
+				r = atan2(y - (maxY / 2), x - (maxX / 2));
+				vx = -cos(r);
+				vy = -sin(r);
 			}
 			blobPositions[i].mx = vx;
 			blobPositions[i].my = vy;
-			myBlob.start.x = blobPositions[i].x;
-			myBlob.start.y = blobPositions[i].y;
+			// It's dangerous to set the currentStart variables directly unles you know exactly what you're doing!
+			myBlob.currentStart.x = blobPositions[i].x;
+			myBlob.currentStart.y = blobPositions[i].y;
 			myBlob.stamp();
 		}
 		pad.show();
@@ -112,7 +117,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'animation'],
+	extensions: ['images'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

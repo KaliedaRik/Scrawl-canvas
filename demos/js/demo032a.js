@@ -14,6 +14,7 @@ var mycode = function() {
 		f,
 		p,
 		result,
+		fails = 0,
 		running = true,
 		average = 0;
 
@@ -98,6 +99,9 @@ var mycode = function() {
 				run.length = 0;
 				average = 0;
 				if (result < 20) {
+					fails++;
+				}
+				if (fails > 2) {
 					running = false;
 					f = document.getElementById('results');
 					p = '';

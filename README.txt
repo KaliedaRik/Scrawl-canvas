@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.3.0 - 19 July 2015
+*	version 5.0.0 - 24 November 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -86,47 +86,49 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 4.3.0 released 19 July 2015
+VERSION 5.0.0 released 24 November 2015
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (78kb)
-		- scrawlAnimation-min.js (27kb)
-		- scrawlBlock-min.js (4kb)
-		- scrawlCollisions-min.js (12kb)
+		- scrawlCore-min.js (77kb)
+		- scrawlAnimation-min.js (25kb)
+		- scrawlBlock-min.js (5kb)
+		- scrawlCollisions-min.js (11kb)
 		- scrawlColor-min.js (5kb)
-		- scrawlFilters-min.js (26kb)
+		- scrawlFilters-min.js (25kb)
+		- scrawlFrame-min.js (19kb)
 		- scrawlImageLoad-min.js (9kb)
 		- scrawlImages-min.js (39kb)
 		- scrawlPath-min.js (24kb)
-		- scrawlPathFactories-min.js (10kb)
+		- scrawlPathFactories-min.js (9kb)
 		- scrawlPhrase-min.js (13kb)
-		- scrawlPhysics-min.js (10kb)
+		- scrawlPhysics-min.js (9kb)
 		- scrawlQuaternion-min.js (6kb)
-		- scrawlSaveLoad-min.js (8kb)
+		- scrawlSaveLoad-min.js (9kb)
 		- scrawlShape-min.js (9kb)
-		- scrawlStacks-min.js (42kb)
+		- scrawlStacks-min.js (48kb)
 		- scrawlWheel-min.js (6kb)
 
 		Development:
-		- scrawlCore.js (227kb)
-		- scrawlAnimation.js (68kb)
-		- scrawlBlock.js (11kb)
-		- scrawlCollisions.js (27kb)
-		- scrawlColor.js (15kb)
-		- scrawlFilters.js (67kb)
-		- scrawlImages.js (63kb)
-		- scrawlImageLoad.js (25kb)
-		- scrawlPath.js (65kb)
+		- scrawlCore.js (229kb)
+		- scrawlAnimation.js (70kb)
+		- scrawlBlock.js (15kb)
+		- scrawlCollisions.js (30kb)
+		- scrawlColor.js (16kb)
+		- scrawlFilters.js (69kb)
+		- scrawlFrame (39kb)
+		- scrawlImageLoad.js (26kb)
+		- scrawlImages.js (68kb)
+		- scrawlPath.js (69kb)
 		- scrawlPathFactories.js (25kb)
-		- scrawlPhrase.js (37kb)
-		- scrawlPhysics.js (24kb)
-		- scrawlQuaternion.js (17kb)
+		- scrawlPhrase.js (40kb)
+		- scrawlPhysics.js (26kb)
+		- scrawlQuaternion.js (18kb)
 		- scrawlSaveLoad.js (18kb)
-		- scrawlShape.js (25kb)
-		- scrawlStacks.js (92kb)
-		- scrawlWheel.js (17kb)
+		- scrawlShape.js (27kb)
+		- scrawlStacks.js (115kb)
+		- scrawlWheel.js (19kb)
 
 		Documentation:
 		- changelog.txt
@@ -145,6 +147,13 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+VERSION 5.0.0 uploaded 24 November 2015
+	- major overhaul of library
+	- major new functionality including: 
+		- emulate 3d perspectives in 2d canvases
+		- root-and-branch code efficiency drive
+	- this version may break functionality of existing Scrawl-based code
+
 Version 4.3.0 uploaded 19 July 2015
 	- updated video loading functionality
 	- revamped Timeline and Tween functionality

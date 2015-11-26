@@ -56,12 +56,10 @@ var mycode = function() {
 	});
 	for (var i = 1; i < 10; i++) {
 		goldie.clone({
-			pathPlace: i / 80,
-			order: 20 + i,
+			pathPlace: i / 80
 		});
 		pinkie.clone({
-			pathPlace: (i / 80) + 0.5,
-			order: 40 + i,
+			pathPlace: (i / 80) + 0.5
 		});
 	}
 

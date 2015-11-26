@@ -13,7 +13,8 @@ var mycode = function() {
 		minR = 120,
 		maxR = 250,
 		x = 375,
-		y = 160;
+		y = 160,
+		radian = Math.PI / 180;
 
 	//import images into scrawl library
 	scrawl.getImagesByClass('demo056');
@@ -44,8 +45,8 @@ var mycode = function() {
 		fn: function() {
 			delta = (delta > 180) ? delta - 359 : delta + 1;
 			hello.set({
-				startX: x + (maxR * Math.cos(delta * scrawl.radian)),
-				startY: y + (minR * Math.sin(delta * scrawl.radian)),
+				startX: x + (maxR * Math.cos(delta * radian)),
+				startY: y + (minR * Math.sin(delta * radian)),
 				scale: (hello.start.y / 100) + 0.4,
 			});
 			scrawl.render();

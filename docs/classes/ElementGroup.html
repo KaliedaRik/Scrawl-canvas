@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -258,7 +266,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlStacks.js.html#l2521"><code>source\scrawlStacks.js:2521</code></a>
+            Defined in: <a href="../files/source_scrawlStacks.js.html#l3155"><code>source\scrawlStacks.js:3155</code></a>
         </div>
     
 
@@ -337,7 +345,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2521"><code>source\scrawlStacks.js:2521</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3155"><code>source\scrawlStacks.js:3155</code></a>
         
         </p>
 
@@ -418,13 +426,6 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_addEntitysToGroup">addEntitysToGroup</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
                                 <a href="#method_checkEqualDimensions">checkEqualDimensions</a>
 
                                 
@@ -453,7 +454,56 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_getAllAt">getAllAt</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getAllElementsAt">getAllElementsAt</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getAt">getAt</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getByMouseIndex">getByMouseIndex</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getElementAt">getElementAt</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_getElementGroupDimensions">getElementGroupDimensions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getElementsByMouseIndex">getElementsByMouseIndex</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_numberConvert">numberConvert</a>
 
                                 
                                 
@@ -481,21 +531,14 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_removeEntitysFromGroup">removeEntitysFromGroup</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
                                 <a href="#method_render">render</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_resetWork">resetWork</a>
+                            <li class="index-item method">
+                                <a href="#method_renderPads">renderPads</a>
 
                                 
                                 
@@ -503,6 +546,20 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_set">set</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setDirtyHandles">setDirtyHandles</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setDirtyStarts">setDirtyStarts</a>
 
                                 
                                 
@@ -522,15 +579,8 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_setEntitysTo">setEntitysTo</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_stamp">stamp</a>
+                            <li class="index-item method private">
+                                <a href="#method_sortElements">sortElements</a>
 
                                 
                                 
@@ -559,13 +609,6 @@
                         
                             <li class="index-item method">
                                 <a href="#method_updateElementsBy">updateElementsBy</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_updateEntitysBy">updateEntitysBy</a>
 
                                 
                                 
@@ -672,13 +715,6 @@
                                 
                             </li>
                         
-                            <li class="index-item property private inherited">
-                                <a href="#property_work">work</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -741,7 +777,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2776"><code>source\scrawlStacks.js:2776</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3497"><code>source\scrawlStacks.js:3497</code></a>
         
         </p>
 
@@ -772,113 +808,6 @@
 
                     <div class="param-description">
                         <p>Array of ELEMENTNAME Strings; alternatively, a single ELEMENTNAME String can be supplied as the argument</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_addEntitysToGroup" class="method item">
-    <h3 class="name"><code>addEntitysToGroup</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>item</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l2808"><code>source\scrawlStacks.js:2808</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Add entitys to the Group</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">item</code>
-                        <span class="type">Array</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument</p>
 
                     </div>
 
@@ -943,7 +872,7 @@
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2767"><code>source\scrawlStacks.js:2767</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3488"><code>source\scrawlStacks.js:3488</code></a>
         
         </p>
 
@@ -1023,7 +952,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2293"><code>source\scrawlCore.js:2293</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2249"><code>source\scrawlCore.js:2249</code></a>
         
         </p>
 
@@ -1139,7 +1068,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2722"><code>source\scrawlStacks.js:2722</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3439"><code>source\scrawlStacks.js:3439</code></a>
         
         </p>
 
@@ -1217,7 +1146,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2248"><code>source\scrawlCore.js:2248</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2202"><code>source\scrawlCore.js:2202</code></a>
         
         </p>
 
@@ -1290,6 +1219,553 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
+                    <div id="method_getAllAt" class="method item">
+    <h3 class="name"><code>getAllAt</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l3654"><code>source\scrawlStacks.js:3654</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check all entitys and elements in the Group to see if they are colliding with the supplied coordinate.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Coordinate vector; alternatively an Object with x and y attributes can be used</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Entity object, or false if no entitys are colliding with the coordinate</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getAllElementsAt" class="method item">
+    <h3 class="name"><code>getAllElementsAt</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l3698"><code>source\scrawlStacks.js:3698</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check all elements in the Group to see if they are colliding with the supplied coordinate.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Coordinate vector; alternatively an Object with x and y attributes can be used</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Array of Stack, Pad and Element objects</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getAt" class="method item">
+    <h3 class="name"><code>getAt</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>if</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l3619"><code>source\scrawlStacks.js:3619</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Return the entity or element at a given coordinate (in that order)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Coordinate vector; alternatively an Object with x and y attributes can be used</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">if</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>true, elements are checked first; default is false</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>entity or element, or false</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getByMouseIndex" class="method item">
+    <h3 class="name"><code>getByMouseIndex</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>item</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l3642"><code>source\scrawlStacks.js:3642</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check all entitys and elements in the Group to see which one(s) are associated with a particular mouse index</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">item</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Mouse index string</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Array of Entity, Stack, Pad and Element objects</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getElementAt" class="method item">
+    <h3 class="name"><code>getElementAt</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l3666"><code>source\scrawlStacks.js:3666</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Return the element at a given coordinate (in that order)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Coordinate vector; alternatively an Object with x and y attributes can be used</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>element, or false</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_getElementGroupDimensions" class="method item">
     <h3 class="name"><code>getElementGroupDimensions</code></h3>
 
@@ -1326,7 +1802,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2647"><code>source\scrawlStacks.js:2647</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3324"><code>source\scrawlStacks.js:3324</code></a>
         
         </p>
 
@@ -1351,6 +1827,237 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 
                     
                     <p>Object with width and height attributes</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getElementsByMouseIndex" class="method item">
+    <h3 class="name"><code>getElementsByMouseIndex</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>item</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l3689"><code>source\scrawlStacks.js:3689</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Check all elements in the Group to see which one(s) are associated with a particular mouse index</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">item</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Mouse index string</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Array of Stack, Pad and Element objects</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_numberConvert" class="method item private inherited">
+    <h3 class="name"><code>numberConvert</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>val</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>dim</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_numberConvert">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2296"><code>source\scrawlCore.js:2296</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - convert string percentage values to numerical values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">val</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinate String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">dim</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>dimension value</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number - value</p>
 
                 
             </div>
@@ -1394,7 +2101,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2332"><code>source\scrawlCore.js:2332</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2288"><code>source\scrawlCore.js:2288</code></a>
         
         </p>
 
@@ -1477,7 +2184,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2953"><code>source\scrawlStacks.js:2953</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3707"><code>source\scrawlStacks.js:3707</code></a>
         
         </p>
 
@@ -1585,7 +2292,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2792"><code>source\scrawlStacks.js:2792</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3515"><code>source\scrawlStacks.js:3515</code></a>
         
         </p>
 
@@ -1616,113 +2323,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
                     <div class="param-description">
                         <p>Array of ELEMENTNAME Strings; alternatively, a single ELEMENTNAME String can be supplied as the argument</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_removeEntitysFromGroup" class="method item">
-    <h3 class="name"><code>removeEntitysFromGroup</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>item</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l2824"><code>source\scrawlStacks.js:2824</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Remove entitys from the Group</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">item</code>
-                        <span class="type">Array</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Array of SPRITENAME Strings; alternatively, a single SPRITENAME String can be supplied as the argument</p>
 
                     </div>
 
@@ -1789,7 +2389,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2680"><code>source\scrawlStacks.js:2680</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3362"><code>source\scrawlStacks.js:3362</code></a>
         
         </p>
 
@@ -1824,8 +2424,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_resetWork" class="method item private inherited">
-    <h3 class="name"><code>resetWork</code></h3>
+                    <div id="method_renderPads" class="method item">
+    <h3 class="name"><code>renderPads</code></h3>
 
     
         <span class="paren">()</span>
@@ -1840,13 +2440,13 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-        <span class="flag private">private</span>
-    
 
     
 
     
 
+    
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -1854,12 +2454,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Base.html#method_resetWork">Base</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2340"><code>source\scrawlCore.js:2340</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3411"><code>source\scrawlStacks.js:3411</code></a>
         
         </p>
 
@@ -1870,7 +2473,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Restore workspece vector values to their current specified values</p>
+        <p>Tell the Group to ask its constituent pads to render - will cascade through to sub-stacks</p>
 
     </div>
 
@@ -1883,7 +2486,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>always true</p>
+                    <p>This</p>
 
                 
             </div>
@@ -1939,7 +2542,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2264"><code>source\scrawlCore.js:2264</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2218"><code>source\scrawlCore.js:2218</code></a>
         
         </p>
 
@@ -2018,6 +2621,156 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
+                    <div id="method_setDirtyHandles" class="method item private">
+    <h3 class="name"><code>setDirtyHandles</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l3785"><code>source\scrawlStacks.js:3785</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments ElementGroup.set()</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDirtyStarts" class="method item private">
+    <h3 class="name"><code>setDirtyStarts</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlStacks.js.html#l3750"><code>source\scrawlStacks.js:3750</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Augments ElementGroup.set()</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_setElementsTo" class="method item">
     <h3 class="name"><code>setElementsTo</code></h3>
 
@@ -2066,7 +2819,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2889"><code>source\scrawlStacks.js:2889</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3566"><code>source\scrawlStacks.js:3566</code></a>
         
         </p>
 
@@ -2173,114 +2926,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2928"><code>source\scrawlStacks.js:2928</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Ask all entitys in the Group to perform a set() operation</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setEntitysTo" class="method item">
-    <h3 class="name"><code>setEntitysTo</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l2941"><code>source\scrawlStacks.js:2941</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3607"><code>source\scrawlStacks.js:3607</code></a>
         
         </p>
 
@@ -2339,8 +2985,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_stamp" class="method item">
-    <h3 class="name"><code>stamp</code></h3>
+                    <div id="method_sortElements" class="method item private">
+    <h3 class="name"><code>sortElements</code></h3>
 
     
         <div class="args">
@@ -2348,13 +2994,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
                 <li class="arg">
                     
-                        <code class="optional">[method]</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[cell]</code>
+                        <code class="optional">[force]</code>
                     
                 </li>
             
@@ -2371,13 +3011,13 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-
+        <span class="flag private">private</span>
     
 
     
 
     
-        <span class="flag chainable">chainable</span>
+
     
 
     
@@ -2393,7 +3033,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2628"><code>source\scrawlStacks.js:2628</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3309"><code>source\scrawlStacks.js:3309</code></a>
         
         </p>
 
@@ -2404,7 +3044,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas&gt; element; only entitys whose visibility attribute is set to true will comply</p>
+        <p>Element sorting routine - elements are sorted according to their element.order attribute value, in ascending order</p>
+<p>Order values are treated as integers. The sort routine is a form of bucket sort, and should be stable (elements with equal order values should not be swapped)</p>
 
     </div>
 
@@ -2416,32 +3057,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
                 <li class="param">
                     
-                        <code class="param-name optional">[method]</code>
-                        <span class="type">String</span>
+                        <code class="param-name optional">[force]</code>
+                        <span class="type">Boolean</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Drawing method String</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[cell]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>CELLNAME of cell on which entitys are to draw themselves</p>
+                        <p>Force a resort, whatever the settings of the group&#39;s entitySort and resort attributes</p>
 
                     </div>
 
@@ -2459,7 +3083,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>This</p>
+                    <p>Nothing</p>
 
                 
             </div>
@@ -2518,7 +3142,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2741"><code>source\scrawlStacks.js:2741</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3460"><code>source\scrawlStacks.js:3460</code></a>
         
         </p>
 
@@ -2630,7 +3254,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2876"><code>source\scrawlStacks.js:2876</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3553"><code>source\scrawlStacks.js:3553</code></a>
         
         </p>
 
@@ -2737,7 +3361,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2906"><code>source\scrawlStacks.js:2906</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3584"><code>source\scrawlStacks.js:3584</code></a>
         
         </p>
 
@@ -2844,7 +3468,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2840"><code>source\scrawlStacks.js:2840</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3533"><code>source\scrawlStacks.js:3533</code></a>
         
         </p>
 
@@ -2856,113 +3480,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     <div class="description">
         <p>Ask all elements in the Group to perform a setDelta() operation</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>This</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_updateEntitysBy" class="method item">
-    <h3 class="name"><code>updateEntitysBy</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag chainable">chainable</span>
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlStacks.js.html#l2859"><code>source\scrawlStacks.js:2859</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Ask all entitys in the Group to perform a setDelta() operation</p>
 
     </div>
 
@@ -3038,7 +3555,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2226"><code>source\scrawlCore.js:2226</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2180"><code>source\scrawlCore.js:2180</code></a>
         
         </p>
 
@@ -3085,7 +3602,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2591"><code>source\scrawlStacks.js:2591</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3228"><code>source\scrawlStacks.js:3228</code></a>
         
         </p>
 
@@ -3132,7 +3649,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2584"><code>source\scrawlStacks.js:2584</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3221"><code>source\scrawlStacks.js:3221</code></a>
         
         </p>
 
@@ -3179,7 +3696,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2577"><code>source\scrawlStacks.js:2577</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3214"><code>source\scrawlStacks.js:3214</code></a>
         
         </p>
 
@@ -3226,7 +3743,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2570"><code>source\scrawlStacks.js:2570</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3207"><code>source\scrawlStacks.js:3207</code></a>
         
         </p>
 
@@ -3273,7 +3790,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2605"><code>source\scrawlStacks.js:2605</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3242"><code>source\scrawlStacks.js:3242</code></a>
         
         </p>
 
@@ -3320,7 +3837,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2598"><code>source\scrawlStacks.js:2598</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3235"><code>source\scrawlStacks.js:3235</code></a>
         
         </p>
 
@@ -3364,7 +3881,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2197"><code>source\scrawlCore.js:2197</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2158"><code>source\scrawlCore.js:2158</code></a>
         
         </p>
 
@@ -3409,7 +3926,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2612"><code>source\scrawlStacks.js:2612</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3249"><code>source\scrawlStacks.js:3249</code></a>
         
         </p>
 
@@ -3456,7 +3973,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2619"><code>source\scrawlStacks.js:2619</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3256"><code>source\scrawlStacks.js:3256</code></a>
         
         </p>
 
@@ -3500,7 +4017,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2240"><code>source\scrawlCore.js:2240</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2194"><code>source\scrawlCore.js:2194</code></a>
         
         </p>
 
@@ -3544,7 +4061,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2233"><code>source\scrawlCore.js:2233</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2187"><code>source\scrawlCore.js:2187</code></a>
         
         </p>
 
@@ -3593,7 +4110,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlStacks.js.html#l2561"><code>source\scrawlStacks.js:2561</code></a>
+        <a href="../files/source_scrawlStacks.js.html#l3198"><code>source\scrawlStacks.js:3198</code></a>
         
         </p>
 
@@ -3608,50 +4125,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     
         <p><strong>Default:</strong> &#x27;ElementGroup&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_work" class="property item private inherited">
-    <h3 class="name"><code>work</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#property_work">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2207"><code>source\scrawlCore.js:2207</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Vector work space - not included in defaults</p>
-
-    </div>
-
     
 
     

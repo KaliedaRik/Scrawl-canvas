@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -258,7 +266,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlPhysics.js.html#l200"><code>source\scrawlPhysics.js:200</code></a>
+            Defined in: <a href="../files/source_scrawlPhysics.js.html#l214"><code>source\scrawlPhysics.js:214</code></a>
         </div>
     
 
@@ -335,7 +343,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l200"><code>source\scrawlPhysics.js:200</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l214"><code>source\scrawlPhysics.js:214</code></a>
         
         </p>
 
@@ -450,8 +458,22 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_getStartValues">getStartValues</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private">
                                 <a href="#method_linearCollide">linearCollide</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_numberConvert">numberConvert</a>
 
                                 
                                 
@@ -478,13 +500,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_resetWork">resetWork</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item method inherited">
                                 <a href="#method_set">set</a>
 
@@ -494,6 +509,13 @@
                         
                             <li class="index-item method">
                                 <a href="#method_stamp">stamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_stampActions">stampActions</a>
 
                                 
                                 
@@ -670,13 +692,6 @@
                                 
                             </li>
                         
-                            <li class="index-item property private inherited">
-                                <a href="#property_work">work</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -739,7 +754,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l431"><code>source\scrawlPhysics.js:431</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l475"><code>source\scrawlPhysics.js:475</code></a>
         
         </p>
 
@@ -846,7 +861,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l606"><code>source\scrawlPhysics.js:606</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l681"><code>source\scrawlPhysics.js:681</code></a>
         
         </p>
 
@@ -946,7 +961,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l488"><code>source\scrawlPhysics.js:488</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l541"><code>source\scrawlPhysics.js:541</code></a>
         
         </p>
 
@@ -1029,7 +1044,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l411"><code>source\scrawlPhysics.js:411</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l455"><code>source\scrawlPhysics.js:455</code></a>
         
         </p>
 
@@ -1126,7 +1141,7 @@
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l470"><code>source\scrawlPhysics.js:470</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l523"><code>source\scrawlPhysics.js:523</code></a>
         
         </p>
 
@@ -1204,7 +1219,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2248"><code>source\scrawlCore.js:2248</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2202"><code>source\scrawlCore.js:2202</code></a>
         
         </p>
 
@@ -1277,6 +1292,77 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
+                    <div id="method_getStartValues" class="method item">
+    <h3 class="name"><code>getStartValues</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlPhysics.js.html#l401"><code>source\scrawlPhysics.js:401</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Particle.getStartValues</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Object containing x and y Number attributes representing the particle&#39;s current position with respect to its Cell&#39;s top left hand corner</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_linearCollide" class="method item private">
     <h3 class="name"><code>linearCollide</code></h3>
 
@@ -1317,7 +1403,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l582"><code>source\scrawlPhysics.js:582</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l655"><code>source\scrawlPhysics.js:655</code></a>
         
         </p>
 
@@ -1342,6 +1428,132 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 
                     
                     <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_numberConvert" class="method item private inherited">
+    <h3 class="name"><code>numberConvert</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>val</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>dim</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_numberConvert">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2296"><code>source\scrawlCore.js:2296</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - convert string percentage values to numerical values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">val</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinate String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">dim</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>dimension value</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number - value</p>
 
                 
             </div>
@@ -1385,7 +1597,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2332"><code>source\scrawlCore.js:2332</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2288"><code>source\scrawlCore.js:2288</code></a>
         
         </p>
 
@@ -1458,7 +1670,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l642"><code>source\scrawlPhysics.js:642</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l720"><code>source\scrawlPhysics.js:720</code></a>
         
         </p>
 
@@ -1541,7 +1753,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l658"><code>source\scrawlPhysics.js:658</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l737"><code>source\scrawlPhysics.js:737</code></a>
         
         </p>
 
@@ -1600,76 +1812,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_resetWork" class="method item private inherited">
-    <h3 class="name"><code>resetWork</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#method_resetWork">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2340"><code>source\scrawlCore.js:2340</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Restore workspece vector values to their current specified values</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>always true</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_set" class="method item">
     <h3 class="name"><code>set</code></h3>
 
@@ -1718,7 +1860,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l380"><code>source\scrawlPhysics.js:380</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l413"><code>source\scrawlPhysics.js:413</code></a>
         
         </p>
 
@@ -1730,7 +1872,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     <div class="description">
         <p>Augments Base.set()</p>
-<p>Allows users to set the Particle&#39;s position and velocity attributes using startX, startY, start, deltaX, deltaY, delta values</p>
+<p>Allows users to set the Particle&#39;s position and velocity attributes using startX, startY, start, deltaX, deltaY, delta or velocity, velocityX, velocityY values (delta and velocity are synonyms for each other)</p>
 
     </div>
 
@@ -1816,7 +1958,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l448"><code>source\scrawlPhysics.js:448</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l492"><code>source\scrawlPhysics.js:492</code></a>
         
         </p>
 
@@ -1828,6 +1970,79 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     <div class="description">
         <p>Undertake a calculation cycle iteration</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_stampActions" class="method item">
+    <h3 class="name"><code>stampActions</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlPhysics.js.html#l506"><code>source\scrawlPhysics.js:506</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>stamp helper object</p>
 
     </div>
 
@@ -1889,7 +2104,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l479"><code>source\scrawlPhysics.js:479</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l532"><code>source\scrawlPhysics.js:532</code></a>
         
         </p>
 
@@ -1964,7 +2179,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l517"><code>source\scrawlPhysics.js:517</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l578"><code>source\scrawlPhysics.js:578</code></a>
         
         </p>
 
@@ -2039,7 +2254,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l533"><code>source\scrawlPhysics.js:533</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l598"><code>source\scrawlPhysics.js:598</code></a>
         
         </p>
 
@@ -2114,7 +2329,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l554"><code>source\scrawlPhysics.js:554</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l623"><code>source\scrawlPhysics.js:623</code></a>
         
         </p>
 
@@ -2180,7 +2395,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l287"><code>source\scrawlPhysics.js:287</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l308"><code>source\scrawlPhysics.js:308</code></a>
         
         </p>
 
@@ -2224,7 +2439,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2226"><code>source\scrawlCore.js:2226</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2180"><code>source\scrawlCore.js:2180</code></a>
         
         </p>
 
@@ -2271,7 +2486,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l294"><code>source\scrawlPhysics.js:294</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l315"><code>source\scrawlPhysics.js:315</code></a>
         
         </p>
 
@@ -2318,7 +2533,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l301"><code>source\scrawlPhysics.js:301</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l322"><code>source\scrawlPhysics.js:322</code></a>
         
         </p>
 
@@ -2365,7 +2580,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l347"><code>source\scrawlPhysics.js:347</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l368"><code>source\scrawlPhysics.js:368</code></a>
         
         </p>
 
@@ -2413,7 +2628,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l356"><code>source\scrawlPhysics.js:356</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l377"><code>source\scrawlPhysics.js:377</code></a>
         
         </p>
 
@@ -2460,7 +2675,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l258"><code>source\scrawlPhysics.js:258</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l279"><code>source\scrawlPhysics.js:279</code></a>
         
         </p>
 
@@ -2509,7 +2724,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l370"><code>source\scrawlPhysics.js:370</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l391"><code>source\scrawlPhysics.js:391</code></a>
         
         </p>
 
@@ -2556,7 +2771,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l273"><code>source\scrawlPhysics.js:273</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l294"><code>source\scrawlPhysics.js:294</code></a>
         
         </p>
 
@@ -2603,7 +2818,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l266"><code>source\scrawlPhysics.js:266</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l287"><code>source\scrawlPhysics.js:287</code></a>
         
         </p>
 
@@ -2647,7 +2862,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2197"><code>source\scrawlCore.js:2197</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2158"><code>source\scrawlCore.js:2158</code></a>
         
         </p>
 
@@ -2692,7 +2907,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l315"><code>source\scrawlPhysics.js:315</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l336"><code>source\scrawlPhysics.js:336</code></a>
         
         </p>
 
@@ -2744,7 +2959,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l280"><code>source\scrawlPhysics.js:280</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l301"><code>source\scrawlPhysics.js:301</code></a>
         
         </p>
 
@@ -2791,7 +3006,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l363"><code>source\scrawlPhysics.js:363</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l384"><code>source\scrawlPhysics.js:384</code></a>
         
         </p>
 
@@ -2835,7 +3050,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2240"><code>source\scrawlCore.js:2240</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2194"><code>source\scrawlCore.js:2194</code></a>
         
         </p>
 
@@ -2879,7 +3094,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2233"><code>source\scrawlCore.js:2233</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2187"><code>source\scrawlCore.js:2187</code></a>
         
         </p>
 
@@ -2928,7 +3143,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l248"><code>source\scrawlPhysics.js:248</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l269"><code>source\scrawlPhysics.js:269</code></a>
         
         </p>
 
@@ -2974,7 +3189,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l308"><code>source\scrawlPhysics.js:308</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l329"><code>source\scrawlPhysics.js:329</code></a>
         
         </p>
 
@@ -3021,7 +3236,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPhysics.js.html#l331"><code>source\scrawlPhysics.js:331</code></a>
+        <a href="../files/source_scrawlPhysics.js.html#l352"><code>source\scrawlPhysics.js:352</code></a>
         
         </p>
 
@@ -3042,50 +3257,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     
         <p><strong>Default:</strong> Zero values vector</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_work" class="property item private inherited">
-    <h3 class="name"><code>work</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#property_work">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2207"><code>source\scrawlCore.js:2207</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Vector work space - not included in defaults</p>
-
-    </div>
-
     
 
     

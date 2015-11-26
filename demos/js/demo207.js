@@ -21,7 +21,7 @@ var mycode = function() {
 		dropWheel,
 		moveButton,
 		myButton,
-		i;
+		i, iz;
 
 	//add stack to web page
 	scrawl.addStackToPage({
@@ -41,13 +41,6 @@ var mycode = function() {
 	canvas = scrawl.canvas.canvas;
 	pad = scrawl.pad.canvas;
 
-	//easing path entity
-	guide = scrawl.makeBezier({
-		name: 'guide',
-		lineWidth: 2,
-		strokeStyle: '#880000',
-		precision: 100,
-	});
 	//dragging entitys to change the curve of the easing path entity
 	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
@@ -65,6 +58,14 @@ var mycode = function() {
 			fillStyle: 'yellow',
 		});
 	}
+
+	//easing path entity
+	guide = scrawl.makeBezier({
+		name: 'guide',
+		lineWidth: 2,
+		strokeStyle: '#880000',
+		precision: 100,
+	});
 	//fix easing path Point objects to dragging entitys
 	scrawl.point.guide_p1.setToFixed('wheel_0');
 	scrawl.point.guide_p2.setToFixed('wheel_1');
@@ -79,7 +80,7 @@ var mycode = function() {
 	buttons.push(scrawl.element.button3);
 
 	//position and size buttons
-	for (i = 0; i < 4; i++) {
+	for (i = 0, iz = buttons.length; i < iz; i++) {
 		buttons[i].set({
 			startX: 30,
 			startY: (i * 100) + 50,
@@ -97,18 +98,18 @@ var mycode = function() {
 
 	//button animation function
 	doButtons = function() {
-		for (var i = 0; i < 4; i++) {
-			buttons[i].updateStart();
-			if (buttons[i].deltaPathPlace) {
+		for (var j = 0, jz = buttons.length; j < iz; j++) {
+			buttons[j].updateStart();
+			if (buttons[j].deltaPathPlace) {
 				//check to see if animation needs to be stopped
-				if (!scrawl.isBetween((buttons[i].pathPlace + buttons[i].deltaPathPlace), 0, 1)) {
-					buttons[i].set({
-						pathPlace: (buttons[i].pathPlace < 0.5) ? 0 : 1,
+				if (!scrawl.isBetween((buttons[j].pathPlace + buttons[j].deltaPathPlace), 0, 1)) {
+					buttons[j].set({
+						pathPlace: (buttons[j].pathPlace < 0.5) ? 0 : 1,
 						deltaPathPlace: 0,
 					});
 				}
 			}
-			buttons[i].renderElement();
+			buttons[j].renderElement();
 		}
 	};
 
@@ -147,7 +148,7 @@ var mycode = function() {
 			deltaPathPlace: (myButton.pathPlace < 0.5) ? 0.0065 : -0.0065,
 		});
 	};
-	for (i = 0; i < 4; i++) {
+	for (i = 0, iz = buttons.length; i < iz; i++) {
 		scrawl.elm[buttons[i].name].addEventListener('click', moveButton, false);
 	}
 

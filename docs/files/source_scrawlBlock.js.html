@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -285,7 +293,7 @@ The Block module adds Block entitys - squares and rectangles - to the core modul
 @module scrawlBlock
 **/
 
-if (window.scrawl &amp;&amp; window.scrawl.modules &amp;&amp; !window.scrawl.contains(window.scrawl.modules, &#x27;block&#x27;)) {
+if (window.scrawl &amp;&amp; window.scrawl.work.extensions &amp;&amp; !window.scrawl.contains(window.scrawl.work.extensions, &#x27;block&#x27;)) {
 	var scrawl = (function(my) {
 		&#x27;use strict&#x27;;
 		/**
@@ -347,11 +355,13 @@ A __factory__ function to generate new Block entitys
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Block = function Block(items) {
+			var get = my.xtGet,
+			d = my.work.d.Block;
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
-			this.width = my.xtGet(items.width, my.d.Block.width);
-			this.height = my.xtGet(items.height, my.d.Block.height);
+			this.width = get(items.width, d.width);
+			this.height = get(items.height, d.height);
 			this.setLocalDimensions();
 			this.registerInLibrary();
 			my.pushUnique(my.group[this.group].entitys, this.name);
@@ -366,12 +376,13 @@ A __factory__ function to generate new Block entitys
 **/
 		my.Block.prototype.type = &#x27;Block&#x27;;
 		my.Block.prototype.classname = &#x27;entitynames&#x27;;
-		my.d.Block = {
+		my.work.d.Block = {
 			/**
 Block display - width, in pixels
 @property localWidth
 @type Number
 @default 0
+@private
 **/
 			localWidth: 0,
 			/**
@@ -379,10 +390,11 @@ Block display - height, in pixels
 @property localHeight
 @type Number
 @default 0
+@private
 **/
 			localHeight: 0,
 		};
-		my.mergeInto(my.d.Block, my.d.Entity);
+		my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		/**
 Augments Entity.set()
 @method set
@@ -419,13 +431,13 @@ Augments Entity.set() - sets the local dimensions
 **/
 		my.Block.prototype.setLocalDimensions = function() {
 			var cell = my.cell[my.group[this.group].cell];
-			if (my.isa(this.width, &#x27;str&#x27;)) {
+			if (this.width.substring) {
 				this.localWidth = (parseFloat(this.width) / 100) * cell.actualWidth * this.scale;
 			}
 			else {
 				this.localWidth = this.width * this.scale || 0;
 			}
-			if (my.isa(this.height, &#x27;str&#x27;)) {
+			if (this.height.substring) {
 				this.localHeight = (parseFloat(this.height) / 100) * cell.actualHeight * this.scale;
 			}
 			else {
@@ -442,8 +454,8 @@ Stamp helper function - perform a &#x27;clip&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.clip = function(ctx, cell) {
-			var here = this.prepareStamp();
+		my.Block.prototype.clip = function(ctx, cellname, cell) {
+			var here = this.currentHandle;
 			this.rotateCell(ctx, cell);
 			ctx.beginPath();
 			ctx.rect(here.x, here.y, this.localWidth, this.localHeight);
@@ -459,9 +471,9 @@ Stamp helper function - perform a &#x27;clear&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.clear = function(ctx, cell) {
-			var here = this.prepareStamp();
-			my.cell[cell].setToClearShape();
+		my.Block.prototype.clear = function(ctx, cellname, cell) {
+			var here = this.currentHandle;
+			cell.setToClearShape();
 			this.rotateCell(ctx, cell);
 			ctx.clearRect(here.x, here.y, this.localWidth, this.localHeight);
 			return this;
@@ -475,14 +487,13 @@ Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.clearWithBackground = function(ctx, cell) {
-			var myCell = my.cell[cell],
-				bg = myCell.get(&#x27;backgroundColor&#x27;),
-				myCellCtx = my.ctx[cell],
+		my.Block.prototype.clearWithBackground = function(ctx, cellname, cell) {
+			var bg = cell.get(&#x27;backgroundColor&#x27;),
+				myCellCtx = my.ctx[cellname],
 				fillStyle = myCellCtx.get(&#x27;fillStyle&#x27;),
 				strokeStyle = myCellCtx.get(&#x27;strokeStyle&#x27;),
 				globalAlpha = myCellCtx.get(&#x27;globalAlpha&#x27;),
-				here = this.prepareStamp();
+				here = this.currentHandle;
 			this.rotateCell(ctx, cell);
 			ctx.fillStyle = bg;
 			ctx.strokeStyle = bg;
@@ -503,9 +514,9 @@ Stamp helper function - perform a &#x27;draw&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.draw = function(ctx, cell) {
-			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+		my.Block.prototype.draw = function(ctx, cellname, cell) {
+			var here = this.currentHandle;
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 			return this;
@@ -519,9 +530,9 @@ Stamp helper function - perform a &#x27;fill&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.fill = function(ctx, cell) {
-			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+		my.Block.prototype.fill = function(ctx, cellname, cell) {
+			var here = this.currentHandle;
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 			return this;
@@ -535,9 +546,9 @@ Stamp helper function - perform a &#x27;drawFill&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.drawFill = function(ctx, cell) {
-			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+		my.Block.prototype.drawFill = function(ctx, cellname, cell) {
+			var here = this.currentHandle;
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 			this.clearShadow(ctx, cell);
@@ -553,9 +564,9 @@ Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.fillDraw = function(ctx, cell) {
-			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+		my.Block.prototype.fillDraw = function(ctx, cellname, cell) {
+			var here = this.currentHandle;
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 			this.clearShadow(ctx, cell);
@@ -571,9 +582,9 @@ Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.sinkInto = function(ctx, cell) {
-			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+		my.Block.prototype.sinkInto = function(ctx, cellname, cell) {
+			var here = this.currentHandle;
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -588,9 +599,9 @@ Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.floatOver = function(ctx, cell) {
-			var here = this.prepareStamp();
-			my.cell[cell].setEngine(this);
+		my.Block.prototype.floatOver = function(ctx, cellname, cell) {
+			var here = this.currentHandle;
+			cell.setEngine(this);
 			this.rotateCell(ctx, cell);
 			ctx.strokeRect(here.x, here.y, this.localWidth, this.localHeight);
 			ctx.fillRect(here.x, here.y, this.localWidth, this.localHeight);
@@ -605,9 +616,116 @@ Stamp helper function - perform a &#x27;none&#x27; method draw
 @chainable
 @private
 **/
-		my.Block.prototype.none = function(ctx, cell) {
-			this.prepareStamp();
+		my.Block.prototype.none = function(ctx, cellname, cell) {
 			return this;
+		};
+		/**
+Calculate the box position of the entity
+
+Returns an object with the following attributes:
+
+* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
+* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
+
+@method getMaxDimensions
+@param {Object} cell object
+@param {Object} entity object
+@return dimensions object
+@private
+**/
+		my.Block.prototype.getMaxDimensions = function(cell) {
+			var cw = cell.actualWidth,
+				ch = cell.actualHeight,
+				halfW = cw / 2,
+				halfH = ch / 2,
+				cx = this.currentStart.x,
+				cy = this.currentStart.y,
+				lw = this.localWidth,
+				lh = this.localHeight,
+				fr = this.flipReverse,
+				fu = this.flipUpend,
+				xtl, xtr, xbr, xbl, ytl, ytr, ybr, ybl,
+				x = (fr) ? cw - cx : cx,
+				y = (fu) ? ch - cy : cy,
+				w = (fr) ? -lw : lw,
+				h = (fu) ? -lh : lh,
+				o = this.currentHandle,
+				hx = (fr) ? -o.x : o.x,
+				hy = (fu) ? -o.y : o.y,
+				line = my.ctx[this.context].lineWidth || 0,
+				max, min, ax, ay, ref,
+				ceil = Math.ceil,
+				floor = Math.floor,
+				t, l, b, r,
+				roll = this.roll,
+				v = my.work.v,
+				between = my.isBetween;
+			l = (fr) ? x + hx + w : x + hx;
+			r = (fr) ? x + hx : x + hx + w;
+			t = (fu) ? y + hy + h : y + hy;
+			b = (fu) ? y + hy : y + hy + h;
+			if (roll) {
+				min = Math.min;
+				max = Math.max;
+				ref = {
+					x: x,
+					y: y
+				};
+				v.set({
+					x: l,
+					y: t
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xtl = v.x;
+				ytl = v.y;
+				v.set({
+					x: r,
+					y: t
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xtr = v.x;
+				ytr = v.y;
+				v.set({
+					x: r,
+					y: b
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xbl = v.x;
+				ybl = v.y;
+				v.set({
+					x: l,
+					y: b
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xbr = v.x;
+				ybr = v.y;
+				ax = [xtl, xtr, xbr, xbl];
+				ay = [ytl, ytr, ybr, ybl];
+				t = min.apply(Math, ay);
+				l = min.apply(Math, ax);
+				b = max.apply(Math, ay);
+				r = max.apply(Math, ax);
+			}
+			t = floor(t - line);
+			l = floor(l - line);
+			b = ceil(b + line);
+			r = ceil(r + line);
+			if (!between(t, 0, ch, true)) {
+				t = (t &gt; halfH) ? ch : 0;
+			}
+			if (!between(b, 0, ch, true)) {
+				b = (b &gt; halfH) ? ch : 0;
+			}
+			if (!between(l, 0, cw, true)) {
+				l = (l &gt; halfW) ? cw : 0;
+			}
+			if (!between(r, 0, cw, true)) {
+				r = (r &gt; halfW) ? cw : 0;
+			}
+			this.maxDimensions.top = t;
+			this.maxDimensions.bottom = b;
+			this.maxDimensions.left = l;
+			this.maxDimensions.right = r;
+			this.maxDimensions.flag = false;
+			return this.maxDimensions;
 		};
 
 		return my;

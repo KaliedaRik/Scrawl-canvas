@@ -37,8 +37,8 @@ var mycode = function() {
 		startY: 25,
 		endX: 75,
 		endY: 25,
-		visibility: false,
-		group: 'myCell',
+		method: 'none',
+		group: pad.base //guide doesn't need to be in same cell
 	});
 	scrawl.makeWheel({
 		radius: 10,
@@ -48,18 +48,18 @@ var mycode = function() {
 		pathPlace: 0.25,
 		deltaPathPlace: 0.005,
 		handleY: -25,
-		group: 'myCell',
+		group: 'myCell'
 	}).clone({
-		pathPlace: 0.75,
+		pathPlace: 0.75
 	}).clone({
-		handleY: 25,
+		handleY: 25
 	}).clone({
-		pathPlace: 0.25,
+		pathPlace: 0.25
 	}).clone({
 		handleY: 0,
-		pathPlace: 0.5,
+		pathPlace: 0.5
 	}).clone({
-		pathPlace: 0,
+		pathPlace: 0
 	});
 
 	//build the pattern

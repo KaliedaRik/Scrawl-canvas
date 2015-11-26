@@ -2,7 +2,8 @@ var mycode = function() {
 	'use strict';
 
 	//define variables
-	var myPad = scrawl.pad.mycanvas;
+	var myPad = scrawl.pad.mycanvas,
+		radian = Math.PI / 180;
 
 	//define entitys
 	scrawl.makePath({
@@ -56,7 +57,7 @@ var mycode = function() {
 			here = myPad.getMouse();
 			if (here.active) {
 				scrawl.entity.arrow.set({
-					roll: Math.atan2(here.y - 200, here.x - 200) / scrawl.radian,
+					roll: Math.atan2(here.y - 200, here.x - 200) / radian,
 					mouseIndex: myPad.getMouseIdFromEvent(e)
 				});
 				scrawl.render();

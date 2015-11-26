@@ -7,16 +7,18 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
+	// define variables
 	var myPad = scrawl.pad.mycanvas,
 		here,
 
 		blocky,
 		wheely,
+		hollow,
 		texty,
 		pathy,
 		shapy,
 		piccy,
+		framy,
 
 		current_entity,
 		entitys,
@@ -30,88 +32,92 @@ var mycode = function() {
 
 		stopE;
 
-	//import image into scrawl library
+	// import image into scrawl library
 	scrawl.getImagesByClass('demo101');
 
-	//define filters
+	scrawl.stack.mystack.set({
+		width: 600,
+		height: 300,
+		perspectiveZ: 800
+	});
+
+	// define filters
 	scrawl.makeGreyscaleFilter({
-		name: 'myGreyscale',
-		filterStrength: 0.9,
+		name: 'myGreyscale'
 	});
 	scrawl.makeInvertFilter({
-		name: 'myInvert',
+		name: 'myInvert'
 	});
 	scrawl.makeBrightnessFilter({
 		name: 'myBrightness',
-		brightness: 0.4,
+		brightness: 0.4
 	});
 	scrawl.makeSaturationFilter({
 		name: 'mySaturation',
-		saturation: 0.4,
+		saturation: 0.4
 	});
 	scrawl.makeThresholdFilter({
 		name: 'myThreshold',
-		filterStrength: 0.8,
-		threshold: 0.6,
+		threshold: 0.6
 	});
 	scrawl.makeChannelsFilter({
 		name: 'myChannels',
 		red: 1.3,
 		green: '120%',
-		blue: 0,
+		blue: 0
 	});
 	scrawl.makeChannelStepFilter({
 		name: 'myChannelStep',
 		red: 64,
 		green: 64,
-		blue: 64,
+		blue: 64
 	});
 	scrawl.makeTintFilter({
 		name: 'myTint',
 		greenInGreen: 0,
-		blueInGreen: 1,
+		blueInGreen: 1
 	});
 	scrawl.makeSepiaFilter({
-		name: 'mySepia',
+		name: 'mySepia'
 	});
 	scrawl.makeMatrixFilter({
 		name: 'myMatrix',
-		data: [-2, -1, 0, -1, 0, 1, 0, 1, 2],
+		data: [-2, -1, 0, -1, 0, 1, 0, 1, 2]
 	});
 	scrawl.makeSharpenFilter({
-		name: 'mySharpen',
+		name: 'mySharpen'
 	});
 	scrawl.makePixelateFilter({
 		name: 'myPixelate',
 		width: 8,
-		height: 8,
+		height: 8
 	});
 	scrawl.makeBlurFilter({
 		name: 'myBlur',
 		radiusX: 12,
 		radiusY: 4,
 		roll: 45,
-		includeInvisiblePoints: true,
+		includeInvisiblePoints: true
 	});
 	scrawl.makeLeachFilter({
 		name: 'myLeach',
-		exclude: [[0, 40, 0, 200, 255, 100]],
+		exclude: [[0, 40, 0, 200, 255, 100]]
 	});
 	scrawl.makeSeparateFilter({
 		name: 'mySeparate',
-		channel: 'yellow',
+		channel: 'yellow'
 	});
 	scrawl.makeNoiseFilter({
 		name: 'myNoise',
 		radiusX: 12,
 		radiusY: 4,
 		roll: 45,
-		noise: 1,
+		noise: 1
 	});
 
 	current_filter = 'myGreyscale';
 
-	//define entitys
+	// define entitys
 	scrawl.makePicture({
 		name: 'background',
 		width: 600,
@@ -120,7 +126,8 @@ var mycode = function() {
 		copyY: 50,
 		copyWidth: 600,
 		copyHeight: 300,
-		source: 'flower',
+		order: 0,
+		source: 'flower'
 	});
 	blocky = scrawl.makeBlock({
 		width: 100,
@@ -131,18 +138,34 @@ var mycode = function() {
 		handleY: 'center',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [current_filter],
+		order: 5,
+		filters: [current_filter]
 	});
 	wheely = scrawl.makeWheel({
 		radius: 70,
 		startAngle: 20,
 		endAngle: 340,
 		includeCenter: true,
-		roll: 90,
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [current_filter],
+		roll: 90,
+		order: 2,
+		filters: [current_filter]
+	});
+	hollow = scrawl.makeWheel({
+		startAngle: 20,
+		endAngle: 340,
+		includeCenter: true,
+		lineWidth: 20,
+		radius: 85,
+		filterOnStroke: true,
+		method: 'none',
+		pivot: 'mouse',
+		visibility: false,
+		roll: 145,
+		order: 2,
+		filters: [current_filter]
 	});
 	scrawl.makeQuadratic({
 		name: 'phrasepath',
@@ -152,8 +175,9 @@ var mycode = function() {
 		endY: 100,
 		controlX: 125,
 		controlY: 40,
+		handleX: 'center',
 		pivot: 'mouse',
-		method: 'none',
+		method: 'none'
 	});
 	texty = scrawl.makePhrase({
 		method: 'draw',
@@ -164,7 +188,8 @@ var mycode = function() {
 		pathPlace: 0,
 		textAlongPath: 'glyph',
 		visibility: false,
-		filters: [current_filter],
+		order: 2,
+		filters: [current_filter]
 	});
 	pathy = scrawl.makeRegularShape({
 		radius: 70,
@@ -175,7 +200,8 @@ var mycode = function() {
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [current_filter],
+		order: 5,
+		filters: [current_filter]
 	});
 	shapy = scrawl.makeRegularShape({
 		radius: 70,
@@ -189,7 +215,8 @@ var mycode = function() {
 		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [current_filter],
+		order: 2,
+		filters: [current_filter]
 	});
 	scrawl.makeSpriteAnimation({
 		name: 'animatedCat',
@@ -244,7 +271,7 @@ var mycode = function() {
 			w: 512,
 			h: 256,
 			d: 100,
-        }, ],
+        }]
 	});
 	piccy = scrawl.makePicture({
 		handleX: 'center',
@@ -256,15 +283,31 @@ var mycode = function() {
 		animation: 'animatedCat',
 		pivot: 'mouse',
 		visibility: false,
-		filters: [current_filter],
+		order: 17,
+		filters: [current_filter]
+	});
+	framy = scrawl.makeFrame({
+		handleX: 'center',
+		handleY: 'center',
+		width: 200,
+		height: 100,
+		pitch: 30,
+		yaw: 60,
+		source: 'swan',
+		pivot: 'mouse',
+		method: 'draw',
+		visibility: false,
+		lockFrameTo: 'myframe',
+		order: 5,
+		filters: [current_filter]
 	});
 
 	current_entity = blocky;
-	entitys = [blocky, wheely, texty, pathy, shapy, piccy];
+	entitys = [blocky, wheely, hollow, texty, pathy, shapy, piccy, framy];
 	input_entity.value = 'blocky';
 	input_filter.value = 'myGreyscale';
 
-	//event listeners
+	// event listeners
 	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
@@ -275,6 +318,9 @@ var mycode = function() {
 		switch (input_entity.value) {
 			case 'wheely':
 				current_entity = wheely;
+				break;
+			case 'hollow':
+				current_entity = hollow;
 				break;
 			case 'texty':
 				current_entity = texty;
@@ -287,6 +333,9 @@ var mycode = function() {
 				break;
 			case 'piccy':
 				current_entity = piccy;
+				break;
+			case 'framy':
+				current_entity = framy;
 				break;
 			default:
 				current_entity = blocky;
@@ -306,11 +355,10 @@ var mycode = function() {
 	};
 	input_filter.addEventListener('change', event_filter, false);
 
-	scrawl.addListener(['down', 'move'], function(e) {
+	// input movement event listeners
+	scrawl.addListener(['down', 'enter'], function(e) {
 		if (e) {
-			e.stopPropagation();
 			e.preventDefault();
-			here = myPad.getMouse();
 			current_entity.set({
 				mouseIndex: here.id,
 				visibility: true
@@ -319,24 +367,19 @@ var mycode = function() {
 	}, scrawl.canvas.mycanvas);
 	scrawl.addListener(['up', 'leave'], function(e) {
 		if (e) {
-			e.stopPropagation();
 			e.preventDefault();
 			current_entity.set({
-				mouseIndex: '',
 				visibility: false
 			});
 		}
 	}, scrawl.canvas.mycanvas);
 
-	//animation object
+	// animation object
 	scrawl.makeAnimation({
 		fn: function() {
 
+			here = myPad.getMouse();
 			scrawl.render();
-
-			//TEMPORARY, for testing
-			scrawl.canvas.tempcanvas.width = 600;
-			scrawl.context.tempcanvas.drawImage(scrawl.cv, 0, 0, 600, 300);
 
 			//hide-start
 			testNow = Date.now();
@@ -351,7 +394,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'animation', 'filters', 'block', 'wheel', 'phrase', 'path', 'shape', 'factories'],
+	extensions: ['images', 'animation', 'filters', 'block', 'wheel', 'phrase', 'path', 'shape', 'factories', 'stacks', 'frame'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

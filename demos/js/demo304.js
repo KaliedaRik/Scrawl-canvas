@@ -12,6 +12,7 @@ var mycode = function() {
 		msg1 = document.getElementById('msg1'),
 		msg2 = document.getElementById('msg2'),
 		msg3 = document.getElementById('msg3'),
+		deltaTime = scrawl.updateDeltaTime,
 		i;
 
 	//define entitys
@@ -23,14 +24,14 @@ var mycode = function() {
 		data: 'm0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0',
 		markStart: 'pin',
 		mark: 'joint',
-		precision: 1,
+		precision: 1
 	});
 
 	scrawl.makeWheel({
 		name: 'joint',
 		radius: 3,
 		fillStyle: 'gold',
-		visibility: 'false',
+		visibility: 'false'
 	});
 
 	scrawl.makeWheel({
@@ -39,7 +40,7 @@ var mycode = function() {
 		radius: 10,
 		fillStyle: 'red',
 		lineWidth: 2,
-		visibility: 'false',
+		visibility: 'false'
 	});
 
 	//define physics objects
@@ -49,18 +50,18 @@ var mycode = function() {
 			startX: 300 + (i * 15),
 			startY: 100,
 			mass: 50,
-			radius: 0.1,
+			radius: 0.1
 		}).addForce('gravity');
 		scrawl.point['rope_p' + (i + 1)].fixed = 'b_' + i; //assign rope points to particle objects
 	}
 	scrawl.entity.b_0.set({ //fix top of rope to display
-		mobile: false,
+		mobile: false
 	});
 
 	for (i = 0; i < 19; i++) { //add in springs between particles
 		scrawl.entity['b_' + i].addSpring({
 			end: 'b_' + (i + 1),
-			springConstant: 8000,
+			springConstant: 8000
 		});
 	}
 
@@ -71,7 +72,7 @@ var mycode = function() {
 		sTime = now - ticker;
 		ticker = now;
 		dTime = (sTime > timeSpeed) ? timeSpeed : sTime;
-		scrawl.physics.deltaTime = dTime / 1000;
+		deltaTime(dTime / 1000);
 		//calculate springs
 		scrawl.updateSprings();
 		//calculate particle positions and display results
@@ -86,7 +87,7 @@ var mycode = function() {
 			msg1.innerHTML = 'Milliseconds per physics refresh: ' + Math.ceil(dTime);
 			msg2.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(sTime);
 			msg3.innerHTML = 'Frames per second: ' + Math.floor(1000 / sTime);
-		},
+		}
 	});
 };
 
@@ -99,5 +100,5 @@ scrawl.loadExtensions({
 			scrawl.init();
 			mycode();
 		}, false);
-	},
+	}
 });

@@ -30,7 +30,7 @@ var mycode = function() {
 
 	//set background color for canvas
 	scrawl.cell[myPad.base].set({
-		backgroundColor: 'black',
+		backgroundColor: 'black'
 	});
 
 	//import images into scrawl library
@@ -39,11 +39,11 @@ var mycode = function() {
 	//define groups
 	myGroup = scrawl.makeGroup({
 		name: 'myGroup',
-		order: 2,
+		order: 2
 	});
 	myReflections = scrawl.makeGroup({
 		name: 'myReflections',
-		order: 1,
+		order: 1
 	});
 
 	//define entitys - carousel
@@ -53,8 +53,8 @@ var mycode = function() {
 		startY: 200,
 		radiusX: 300,
 		radiusY: 100,
-		method: 'none',
-	});
+		method: 'none'
+	}).stamp();
 
 	//define entitys - display photos
 	for (var i = 0, z = items.length; i < z; i++) {
@@ -71,13 +71,13 @@ var mycode = function() {
 			pathPlace: i / z,
 			pathSpeedConstant: false,
 			handleX: 'center',
-			handleY: '101%',
+			handleY: '101%'
 		}).clone({
 			//and their reflections
 			name: items[i] + '_r',
 			group: 'myReflections',
 			globalAlpha: 0.32,
-			flipUpend: true,
+			flipUpend: true
 		});
 	}
 
@@ -93,10 +93,10 @@ var mycode = function() {
 				path: false,
 				scale: 3.7,
 				order: 1000,
-				handleY: 'center',
+				handleY: 'center'
 			});
 			scrawl.entity[myPic.name + '_r'].set({
-				visibility: false,
+				visibility: false
 			});
 			scrawl.render();
 		}
@@ -105,10 +105,10 @@ var mycode = function() {
 		if (myPic) {
 			myPic.set({
 				handleY: '101%',
-				path: myPicPath,
+				path: myPicPath
 			});
 			scrawl.entity[myPic.name + '_r'].set({
-				visibility: true,
+				visibility: true
 			});
 		}
 		details = false;
@@ -138,21 +138,21 @@ var mycode = function() {
 				myEntity = scrawl.entity[items[i]];
 				myEntity.set({
 					scale: (myEntity.start.y / 250) + 0.5,
-					order: myEntity.start.y,
-					deltaPathPlace: mySpeed,
+					order: Math.floor(myEntity.start.y),
+					deltaPathPlace: mySpeed
 				});
 				myEntity = scrawl.entity[items[i] + '_r'];
 				myEntity.set({
 					scale: (myEntity.start.y / 250) + 0.5,
-					order: myEntity.start.y,
-					deltaPathPlace: mySpeed,
+					order: Math.floor(myEntity.start.y),
+					deltaPathPlace: mySpeed
 				});
 			}
 			myGroup.updateStart();
 			myReflections.updateStart();
 		}
-		myReflections.sortEntitys();
-		myGroup.sortEntitys();
+		myReflections.sortEntitys(true);
+		myGroup.sortEntitys(true);
 		myPad.clear();
 		for (i = 0, iz = items.length; i < iz; i++) {
 			scrawl.entity[myReflections.entitys[i]].stamp('clearWithBackground');

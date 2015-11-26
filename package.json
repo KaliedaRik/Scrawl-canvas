@@ -1,6 +1,6 @@
 {
 	"name": "scrawl-canvas",
-	"version": "4.3.0",
+	"version": "5.0.0",
 	"main": "min/scrawlCore-min.js",
 	"repository": {
 		"type": "git",
@@ -10,7 +10,7 @@
 		"lib": "min",
 		"example": "demos"
 	},
-	"description": "Scrawl.js is a JavaScript library designed to make using the HTML5 canvas element a bit easier, and a bit more fun",
+	"description": "Responsive, integrated and interactive HTML5 canvas elements",
 	"license": "MIT",
 	"homepage": "http://scrawl.rikweb.org.uk",
 	"dependencies": {},

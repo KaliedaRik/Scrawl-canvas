@@ -12,7 +12,6 @@ var mycode = function() {
 		elstack = scrawl.stk.mystack,
 		cw = 280,
 		ch = 315,
-		mypad = scrawl.pad.mycanvas,
 		mycow = scrawl.element.cow,
 		here,
 		myScale;
@@ -30,6 +29,7 @@ var mycode = function() {
 		handleY: 'center',
 		pivot: 'mouse',
 		pointerEvents: 'none',
+		visibility: false
 	});
 
 	//stop touchmove dragging the page up/down
@@ -48,14 +48,15 @@ var mycode = function() {
 		});
 	}, elstack);
 
-	scrawl.addListener('leave', function(e) {
-		mycow.visibility = false;
-	}, elstack);
+	here = mystack.getMouse();
 
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
 
+			mycow.set({
+				visibility: (here.active) ? true : false,
+			});
 			scrawl.render();
 
 			//hide-start

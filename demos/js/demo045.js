@@ -14,15 +14,15 @@ var mycode = function() {
 		radius = 10,
 		snake,
 		vector = scrawl.makeVector(),
-		updateSnake;
+		updateSnake,
+		i;
 
 	//define entitys
-	for (var i = 0; i < 29; i++) {
+	for (i = 0; i < 29; i++) {
 		scrawl.makeWheel({
 			name: 'seg_' + i,
 			startX: 350,
 			startY: 187,
-			pivot: 'seg_' + (i + 1),
 			radius: radius,
 			fillStyle: 'rgba(0,' + (255 - (i * 8)) + ',0,1)',
 			method: 'fillDraw',
@@ -47,6 +47,13 @@ var mycode = function() {
 	snake.forceStamp();
 	scrawl.show();
 
+	//update entitys
+	for (i = 0; i < 29; i++) {
+		scrawl.entity['seg_' + i].set({
+			pivot: 'seg_' + (i + 1)
+		});
+	}
+
 	//stop touchmove dragging the page up/down
 	scrawl.addListener('move', function(e) {
 		if (e) {
@@ -60,7 +67,6 @@ var mycode = function() {
 		if (chokeTime + choke < Date.now()) {
 			chokeTime = Date.now();
 			scrawl.clear();
-			scrawl.compile();
 			vector.set(here);
 			vector.vectorSubtract(snake.start);
 			if (vector.getMagnitude() > radius) {
@@ -70,6 +76,7 @@ var mycode = function() {
 				});
 			}
 			snake.forceStamp();
+			scrawl.compile();
 			scrawl.show();
 		}
 	};

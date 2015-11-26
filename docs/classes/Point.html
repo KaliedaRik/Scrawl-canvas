@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 4.3.0</em>
+            <em>API Docs for: 5.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -76,6 +76,10 @@
                 <li><a href="../classes/Filter.html">Filter</a></li>
             
                 <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
@@ -161,6 +165,8 @@
             
                 <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
             
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
@@ -192,6 +198,8 @@
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
                 <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
             
@@ -258,7 +266,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlPath.js.html#l1381"><code>source\scrawlPath.js:1381</code></a>
+            Defined in: <a href="../files/source_scrawlPath.js.html#l1459"><code>source\scrawlPath.js:1459</code></a>
         </div>
     
 
@@ -346,7 +354,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1381"><code>source\scrawlPath.js:1381</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1459"><code>source\scrawlPath.js:1459</code></a>
         
         </p>
 
@@ -447,15 +455,15 @@
                                 
                             </li>
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_parse">parse</a>
+                            <li class="index-item method private inherited">
+                                <a href="#method_numberConvert">numberConvert</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_resetWork">resetWork</a>
+                            <li class="index-item method inherited">
+                                <a href="#method_parse">parse</a>
 
                                 
                                 
@@ -470,6 +478,13 @@
                         
                             <li class="index-item method">
                                 <a href="#method_setDelta">setDelta</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_setLocal">setLocal</a>
 
                                 
                                 
@@ -501,6 +516,13 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_comment">comment</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_current">current</a>
 
                                 
                                 
@@ -557,13 +579,6 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_type">type</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private inherited">
-                                <a href="#property_work">work</a>
 
                                 
                                 
@@ -628,7 +643,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2293"><code>source\scrawlCore.js:2293</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2249"><code>source\scrawlCore.js:2249</code></a>
         
         </p>
 
@@ -749,7 +764,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2248"><code>source\scrawlCore.js:2248</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2202"><code>source\scrawlCore.js:2202</code></a>
         
         </p>
 
@@ -858,7 +873,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1640"><code>source\scrawlPath.js:1640</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1794"><code>source\scrawlPath.js:1794</code></a>
         
         </p>
 
@@ -935,7 +950,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1581"><code>source\scrawlPath.js:1581</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1728"><code>source\scrawlPath.js:1728</code></a>
         
         </p>
 
@@ -980,6 +995,132 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
+                    <div id="method_numberConvert" class="method item private inherited">
+    <h3 class="name"><code>numberConvert</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>val</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>dim</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_numberConvert">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2296"><code>source\scrawlCore.js:2296</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - convert string percentage values to numerical values</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">val</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinate String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">dim</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>dimension value</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Number - value</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_parse" class="method item inherited">
     <h3 class="name"><code>parse</code></h3>
 
@@ -1013,7 +1154,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2332"><code>source\scrawlCore.js:2332</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2288"><code>source\scrawlCore.js:2288</code></a>
         
         </p>
 
@@ -1038,76 +1179,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 
                     
                     <p>object of object&#39;s currently set attributes</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_resetWork" class="method item private inherited">
-    <h3 class="name"><code>resetWork</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#method_resetWork">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2340"><code>source\scrawlCore.js:2340</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Restore workspece vector values to their current specified values</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>always true</p>
 
                 
             </div>
@@ -1166,7 +1237,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1488"><code>source\scrawlPath.js:1488</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1590"><code>source\scrawlPath.js:1590</code></a>
         
         </p>
 
@@ -1273,7 +1344,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1509"><code>source\scrawlPath.js:1509</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1642"><code>source\scrawlPath.js:1642</code></a>
         
         </p>
 
@@ -1291,6 +1362,115 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 <li><strong>distance</strong> - recalculates the <em>local</em> vector to set its values to equal vector&#39;s current magnitude + distance (in pixels)</li>
 <li><strong>angle</strong> - recalculates the <em>local</em> vector to rotate it by the angle value (in degrees)</li>
 </ul>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setLocal" class="method item private">
+    <h3 class="name"><code>setLocal</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlPath.js.html#l1617"><code>source\scrawlPath.js:1617</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Set helpere function</p>
 
     </div>
 
@@ -1386,7 +1566,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1545"><code>source\scrawlPath.js:1545</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1689"><code>source\scrawlPath.js:1689</code></a>
         
         </p>
 
@@ -1503,7 +1683,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1651"><code>source\scrawlPath.js:1651</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1805"><code>source\scrawlPath.js:1805</code></a>
         
         </p>
 
@@ -1611,7 +1791,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2226"><code>source\scrawlCore.js:2226</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2180"><code>source\scrawlCore.js:2180</code></a>
         
         </p>
 
@@ -1627,6 +1807,60 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     
         <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_current" class="property item private">
+    <h3 class="name"><code>current</code></h3>
+    <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlPath.js.html#l1556"><code>source\scrawlPath.js:1556</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Point&#39;s coordinate current Vector - generally the Vector marks the Point&#39;s position (in pixels) from the Parent entity&#39;s start coordinates, though this can be changed by setting the <strong>fixed</strong> attribute to true.</p>
+<p>The following argument attributes can be used to initialize, set and get this attribute&#39;s component values:</p>
+<ul>
+<li><strong>startX</strong> or <strong>currentX</strong> to set the x coordinate value</li>
+<li><strong>startY</strong> or <strong>currentY</strong> to set the y coordinate value</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> zero value Vector</p>
     
 
     
@@ -1658,7 +1892,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1448"><code>source\scrawlPath.js:1448</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1533"><code>source\scrawlPath.js:1533</code></a>
         
         </p>
 
@@ -1705,7 +1939,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1479"><code>source\scrawlPath.js:1479</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1581"><code>source\scrawlPath.js:1581</code></a>
         
         </p>
 
@@ -1752,7 +1986,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1455"><code>source\scrawlPath.js:1455</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1540"><code>source\scrawlPath.js:1540</code></a>
         
         </p>
 
@@ -1801,7 +2035,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2197"><code>source\scrawlCore.js:2197</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2158"><code>source\scrawlCore.js:2158</code></a>
         
         </p>
 
@@ -1848,7 +2082,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1471"><code>source\scrawlPath.js:1471</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1573"><code>source\scrawlPath.js:1573</code></a>
         
         </p>
 
@@ -1892,7 +2126,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2240"><code>source\scrawlCore.js:2240</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2194"><code>source\scrawlCore.js:2194</code></a>
         
         </p>
 
@@ -1936,7 +2170,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2233"><code>source\scrawlCore.js:2233</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2187"><code>source\scrawlCore.js:2187</code></a>
         
         </p>
 
@@ -1985,7 +2219,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l1439"><code>source\scrawlPath.js:1439</code></a>
+        <a href="../files/source_scrawlPath.js.html#l1524"><code>source\scrawlPath.js:1524</code></a>
         
         </p>
 
@@ -2000,50 +2234,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     
         <p><strong>Default:</strong> &#x27;Point&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_work" class="property item private inherited">
-    <h3 class="name"><code>work</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Base.html#property_work">Base</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2207"><code>source\scrawlCore.js:2207</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Vector work space - not included in defaults</p>
-
-    </div>
-
     
 
     

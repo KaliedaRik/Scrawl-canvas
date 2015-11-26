@@ -37,7 +37,7 @@ The Images module adds support for displaying images on canvas elements
 @module scrawlImages
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'images')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'images')) {
 	var scrawl = (function(my) {
 		'use strict';
 
@@ -98,7 +98,7 @@ False if device does not support the video element; true otherwise
 @type Boolean
 @default false
 **/
-		my.d.Device.video = false;
+		my.work.d.Device.video = false;
 		/**
 video autoplay support
 
@@ -107,7 +107,7 @@ False if device does not support video autoplay element; true otherwise
 @type Boolean
 @default false
 **/
-		my.d.Device.videoAutoplay = false;
+		my.work.d.Device.videoAutoplay = false;
 		/**
 video fullscreen restraint
 
@@ -116,7 +116,7 @@ False if device does not force videos to play in fullscreen mode; true otherwise
 @type Boolean
 @default false
 **/
-		my.d.Device.videoForceFullScreen = false;
+		my.work.d.Device.videoForceFullScreen = false;
 		/**
 video as canvas source
 
@@ -125,7 +125,7 @@ False if device does not permit video elements to be used as sources for canvas 
 @type Boolean
 @default false
 **/
-		my.d.Device.videoAsCanvasSource = false;
+		my.work.d.Device.videoAsCanvasSource = false;
 
 		/**
 Check if device supports various video functionalities
@@ -238,10 +238,11 @@ If no name attribute is supplied in the argument object, the new Picture entity 
 		my.Entity.prototype.convertToPicture = function(items) {
 			var image,
 				cell,
-				engine;
+				engine,
+				cellname = my.group[this.group].cell;
 			items = my.safeObject(items);
-			cell = my.cell[my.group[this.group].cell];
-			engine = my.context[my.group[this.group].cell];
+			cell = my.cell[cellname];
+			engine = my.context[cellname];
 			image = my.prepareConvert(cell, engine, this);
 			items.name = items.name || this.name + '_picture';
 			items.group = items.group || this.group;
@@ -328,10 +329,11 @@ Helper function for convert functions
 @private
 **/
 		my.doConvert = function(image, items) {
-			my.imageCanvas.width = image.width;
-			my.imageCanvas.height = image.height;
-			my.imageCvx.putImageData(image, 0, 0);
-			items.url = my.imageCanvas.toDataURL();
+			var cv = my.work.imageCanvas;
+			cv.width = image.width;
+			cv.height = image.height;
+			my.work.imageCvx.putImageData(image, 0, 0);
+			items.url = cv.toDataURL();
 			items.width = image.width;
 			items.height = image.height;
 			image = my.makeImage(items);
@@ -391,7 +393,7 @@ Patterns are not restricted to images. A pattern can also be sourced from anothe
 **/
 		my.Pattern.prototype.type = 'Pattern';
 		my.Pattern.prototype.classname = 'designnames';
-		my.d.Pattern = {
+		my.work.d.Pattern = {
 			/**
 Drawing parameter
 @property repeat
@@ -431,20 +433,22 @@ Used only with __scrawl.makePattern()__ and __Pattern.clone()__ operations. This
 **/
 			callback: false,
 		};
-		my.mergeInto(my.d.Pattern, my.d.Base);
+		my.mergeInto(my.work.d.Pattern, my.work.d.Base);
 		/**
 Constructor/set helper
 @method getSourceType
 @return String - one from: 'image', 'cell', 'video'; false on failure to identify source type
 **/
 		my.Pattern.prototype.getSourceType = function() {
-			if (my.contains(my.imagenames, this.source)) {
+			var contains = my.contains,
+				source = this.source;
+			if (contains(my.imagenames, source)) {
 				return 'image';
 			}
-			if (my.contains(my.cellnames, this.source)) {
+			if (contains(my.cellnames, source)) {
 				return 'cell';
 			}
-			if (my.contains(my.videonames, this.source)) {
+			if (contains(my.videonames, source)) {
 				return 'video';
 			}
 			return false;
@@ -563,8 +567,10 @@ Alias for Pattern.makeDesign()
 		my.Picture = function(items) {
 			var temp,
 				tempV,
-				src;
-			if (my.isa(items, 'obj') && my.xt(items.url) && !my.xt(items.dynamic)) {
+				src,
+				get = my.xtGet,
+				xt = my.xt;
+			if (my.isa(items, 'obj') && xt(items.url) && !xt(items.dynamic)) {
 				items.dynamic = true;
 				temp = my.makeImage(items);
 				items.source = temp.name;
@@ -572,37 +578,33 @@ Alias for Pattern.makeDesign()
 			}
 			else {
 				items = my.safeObject(items);
-				if (my.xt(items.source)) {
-					src = my.xtGet(my.image[items.source], my.video[items.source], my.cell[items.source], false);
-					if (src) {
-						my.Entity.call(this, items);
-						tempV = my.safeObject(items.paste);
-						//start vector already set by the Entity call
-						this.start.x = my.xtGet(items.pasteX, tempV.x, this.start.x);
-						this.start.y = my.xtGet(items.pasteY, tempV.y, this.start.y);
-						this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');
-						this.copyHeight = my.xtGetTrue(items.copyHeight, src.actualHeight, src.height, '100%');
-						this.width = my.xtGet(items.pasteWidth, items.width, this.copyWidth);
-						this.height = my.xtGet(items.pasteHeight, items.height, this.copyHeight);
-						my.Position.prototype.set.call(this, items);
-						this.source = items.source;
-						this.imageType = this.sourceImage();
-						tempV = my.safeObject(items.copy);
-						this.copy = my.makeVector({
-							x: my.xtGet(items.copyX, tempV.x, 0),
-							y: my.xtGet(items.copyY, tempV.y, 0),
-							name: this.type + '.' + this.name + '.copy'
-						});
-						this.work.copy = my.makeVector({
-							name: this.type + '.' + this.name + '.work.copy'
-						});
-						this.registerInLibrary();
-						this.copyData = {};
-						this.pasteData = {};
-						this.setCopy();
-						this.setPaste();
-						return this;
-					}
+				if (xt(items.source)) {
+					src = get(my.image[items.source], my.video[items.source], my.cell[items.source], false);
+					// if (src) {
+					my.Entity.call(this, items);
+					tempV = my.safeObject(items.paste);
+					this.start.x = get(items.pasteX, tempV.x, this.start.x);
+					this.start.y = get(items.pasteY, tempV.y, this.start.y);
+					this.copyWidth = my.xtGetTrue(items.copyWidth, src.actualWidth, src.width, '100%');
+					this.copyHeight = my.xtGetTrue(items.copyHeight, src.actualHeight, src.height, '100%');
+					this.width = get(items.pasteWidth, items.width, this.copyWidth);
+					this.height = get(items.pasteHeight, items.height, this.copyHeight);
+					my.Position.prototype.set.call(this, items);
+					this.source = items.source;
+					this.imageType = this.sourceImage();
+					tempV = my.safeObject(items.copy);
+					this.copy = my.makeVector({
+						x: get(items.copyX, tempV.x, 0),
+						y: get(items.copyY, tempV.y, 0),
+						name: this.type + '.' + this.name + '.copy'
+					});
+					this.registerInLibrary();
+					this.copyData = {};
+					this.pasteData = {};
+					this.setCopy();
+					this.setPaste();
+					return this;
+					// }
 				}
 			}
 			return false;
@@ -616,7 +618,7 @@ Alias for Pattern.makeDesign()
 **/
 		my.Picture.prototype.type = 'Picture';
 		my.Picture.prototype.classname = 'entitynames';
-		my.d.Picture = {
+		my.work.d.Picture = {
 			/**
 SCRAWLIMAGE String - source image for this entity
 @property source
@@ -726,7 +728,7 @@ Used only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This
 **/
 			callback: false,
 		};
-		my.mergeInto(my.d.Picture, my.d.Entity);
+		my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		/**
 Augments Entity.get()
 @method get
@@ -734,8 +736,14 @@ Augments Entity.get()
 @return Attribute value
 **/
 		my.Picture.prototype.get = function(item) {
-			if (my.contains(my.animKeys, item)) {
+			if (my.contains(my.work.animKeys, item)) {
 				return my.spriteanimation[this.animation].get(item);
+			}
+			else if (item === 'width') {
+				return this.pasteData.w;
+			}
+			else if (item === 'height') {
+				return this.pasteData.h;
 			}
 			else {
 				return my.Entity.prototype.get.call(this, item);
@@ -749,37 +757,43 @@ Augments Entity.set()
 @chainable
 **/
 		my.Picture.prototype.set = function(items) {
-			var temp;
+			var temp,
+				xt = my.xt,
+				xto = my.xto,
+				get = my.xtGet;
 			my.Entity.prototype.set.call(this, items);
-			if (my.xto(items.paste, items.pasteX, items.pasteY)) {
+			if (xto(items.paste, items.pasteX, items.pasteY)) {
 				temp = my.safeObject(items.paste);
-				this.start.x = my.xtGet(items.pasteX, temp.x, this.start.x);
-				this.start.y = my.xtGet(items.pasteY, temp.y, this.start.y);
+				this.start.x = get(items.pasteX, temp.x, this.start.x);
+				this.start.y = get(items.pasteY, temp.y, this.start.y);
 			}
-			if (my.xt(items.pasteWidth)) {
-				this.width = my.xtGet(items.pasteWidth, this.width);
+			if (xto(items.pasteWidth, items.width)) {
+				this.width = get(items.pasteWidth, items.width, this.width);
 			}
-			if (my.xt(items.pasteHeight)) {
-				this.height = my.xtGet(items.pasteHeight, this.height);
+			if (xto(items.pasteHeight, items.height)) {
+				this.height = get(items.pasteHeight, items.height, this.height);
 			}
-			if (my.xto(items.copy, items.copyX, items.copyY)) {
+			if (xto(items.copy, items.copyX, items.copyY)) {
 				temp = my.safeObject(items.copy);
-				this.copy.x = my.xtGet(items.copyX, temp.x, this.copy.x);
-				this.copy.y = my.xtGet(items.copyY, temp.y, this.copy.y);
+				this.copy.x = get(items.copyX, temp.x, this.copy.x);
+				this.copy.y = get(items.copyY, temp.y, this.copy.y);
 			}
-			if (my.xt(items.copyWidth)) {
-				this.copyWidth = my.xtGet(items.copyWidth, this.copyWidth);
+			if (xt(items.copyWidth)) {
+				this.copyWidth = get(items.copyWidth, this.copyWidth);
 			}
-			if (my.xt(items.copyHeight)) {
-				this.copyHeight = my.xtGet(items.copyHeight, this.copyHeight);
+			if (xt(items.copyHeight)) {
+				this.copyHeight = get(items.copyHeight, this.copyHeight);
 			}
-			if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY)) {
+				this.currentStart.flag = false;
+			}
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
-			if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
+			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
 				this.setCopy();
 			}
-			if (my.xt(this.animation)) {
+			if (xt(this.animation)) {
 				my.spriteanimation[this.animation].set(items);
 			}
 			return this;
@@ -796,94 +810,108 @@ Augments Entity.setDelta()
 				x,
 				y,
 				w,
-				h;
+				h,
+				perc = my.addPercentages,
+				start = this.start,
+				copy = this.copy,
+				xto = my.xto,
+				get = my.xtGet,
+				so = my.safeObject;
 			my.Entity.prototype.setDelta.call(this, items);
-			items = my.safeObject(items);
-			if (my.xto(items.paste, items.pasteX, items.pasteY)) {
-				temp = my.safeObject(items.paste);
-				x = my.xtGet(items.pasteX, temp.x, 0);
-				y = my.xtGet(items.pasteY, temp.y, 0);
-				this.start.x = (my.isa(this.start.x, 'num')) ? this.start.x + x : my.addPercentages(this.start.x, x);
-				this.start.y = (my.isa(this.start.y, 'num')) ? this.start.y + y : my.addPercentages(this.start.y, y);
+			items = so(items);
+			if (xto(items.paste, items.pasteX, items.pasteY)) {
+				temp = so(items.paste);
+				x = get(items.pasteX, temp.x, 0);
+				y = get(items.pasteY, temp.y, 0);
+				start.x = (start.x.toFixed) ? start.x + x : perc(start.x, x);
+				start.y = (start.y.toFixed) ? start.y + y : perc(start.y, y);
 			}
-			if (my.xto(items.pasteWidth, items.width)) {
-				w = my.xtGet(items.pasteWidth, items.width);
-				this.width = (my.isa(this.width, 'num')) ? this.width + w : my.addPercentages(this.width, w);
+			if (xto(items.pasteWidth, items.width)) {
+				w = get(items.pasteWidth, items.width, 0);
+				this.width = (this.width.toFixed) ? this.width + w : perc(this.width, w);
 			}
-			if (my.xto(items.pasteHeight, items.height)) {
-				h = my.xtGet(items.pasteHeight, items.height);
-				this.height = (my.isa(this.height, 'num')) ? this.height + h : my.addPercentages(this.height, h);
+			if (xto(items.pasteHeight, items.height)) {
+				h = get(items.pasteHeight, items.height, 0);
+				this.height = (this.height.toFixed) ? this.height + h : perc(this.height, h);
 			}
-			if (my.xto(items.copy, items.copyX, items.copyY)) {
-				temp = my.safeObject(items.copy);
-				x = my.xtGet(items.copyX, temp.x, 0);
-				y = my.xtGet(items.copyY, temp.y, 0);
-				this.copy.x = (my.isa(this.copy.x, 'num')) ? this.copy.x + x : my.addPercentages(this.copy.x, x);
-				this.copy.y = (my.isa(this.copy.y, 'num')) ? this.copy.y + y : my.addPercentages(this.copy.y, y);
+			if (xto(items.copy, items.copyX, items.copyY)) {
+				temp = so(items.copy);
+				x = get(items.copyX, temp.x, 0);
+				y = get(items.copyY, temp.y, 0);
+				copy.x = (copy.x.toFixed) ? copy.x + x : perc(copy.x, x);
+				copy.y = (copy.y.toFixed) ? copy.y + y : perc(copy.y, y);
 			}
-			if (my.xto(items.copyWidth, items.width)) {
-				w = my.xtGet(items.copyWidth, items.width);
-				this.copyWidth = (my.isa(this.copyWidth, 'num')) ? this.copyWidth + w : my.addPercentages(this.copyWidth, w);
+			if (xto(items.copyWidth, items.width)) {
+				w = get(items.copyWidth, items.width);
+				this.copyWidth = (this.copyWidth.toFixed) ? this.copyWidth + w : perc(this.copyWidth, w);
 			}
-			if (my.xto(items.copyHeight, items.height)) {
-				h = my.xtGet(items.copyHeight, items.height);
-				this.copyHeight = (my.isa(this.copyHeight, 'num')) ? this.copyHeight + h : my.addPercentages(this.copyHeight, h);
+			if (xto(items.copyHeight, items.height)) {
+				h = get(items.copyHeight, items.height);
+				this.copyHeight = (this.copyHeight.toFixed) ? this.copyHeight + h : perc(this.copyHeight, h);
 			}
-			if (my.xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY)) {
+				this.currentStart.flag = false;
+			}
+			if (xto(items.start, items.startX, items.startY, items.paste, items.pasteX, items.pasteY, items.pasteWidth, items.pasteHeight, items.width, items.height, items.scale)) {
 				this.setPaste();
 			}
-			if (my.xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
+			if (xto(items.copy, items.copyX, items.copyY, items.copyWidth, items.copyHeight, items.width, items.height)) {
 				this.setCopy();
 			}
 			return this;
 		};
 		/**
 Picture.setCopy update copyData object values
-@method setSource
+@method setCopy
 @chainable
 @private
 **/
 		my.Picture.prototype.setCopy = function() {
 			var w,
-				h;
+				h,
+				perc = this.numberConvert,
+				src = this.source,
+				copy = this.copy,
+				copyData = this.copyData,
+				between = my.isBetween;
 			switch (this.imageType) {
-				case 'canvas':
-					w = my.cell[this.source].actualWidth;
-					h = my.cell[this.source].actualHeight;
-					break;
 				case 'video':
-					w = my.video[this.source].width;
-					h = my.video[this.source].height;
+					w = my.video[src].width;
+					h = my.video[src].height;
 					break;
 				case 'img':
-					w = my.image[this.source].width;
-					h = my.image[this.source].height;
+					w = my.image[src].width;
+					h = my.image[src].height;
+					break;
+				case 'canvas':
+					w = my.cell[src].actualWidth;
+					h = my.cell[src].actualHeight;
 					break;
 				default:
 					//do nothing for animations
 			}
 			if (this.imageType !== 'animation') {
-				this.copyData.x = (my.isa(this.copy.x, 'str')) ? this.convertX(this.copy.x, w) : this.copy.x;
-				this.copyData.y = (my.isa(this.copy.y, 'str')) ? this.convertY(this.copy.y, h) : this.copy.y;
-				if (!my.isBetween(this.copyData.x, 0, w - 1, true)) {
-					this.copyData.x = (this.copyData.x < 0) ? 0 : w - 1;
+				copyData.x = (copy.x.substring) ? perc(copy.x, w) : copy.x;
+				copyData.y = (copy.y.substring) ? perc(copy.y, h) : copy.y;
+				if (!between(copyData.x, 0, w - 1, true)) {
+					copyData.x = (copyData.x < 0) ? 0 : w - 1;
 				}
-				if (!my.isBetween(this.copyData.y, 0, h - 1, true)) {
-					this.copyData.y = (this.copyData.y < 0) ? 0 : h - 1;
+				if (!between(copyData.y, 0, h - 1, true)) {
+					copyData.y = (copyData.y < 0) ? 0 : h - 1;
 				}
-				this.copyData.w = (my.isa(this.copyWidth, 'str')) ? this.convertX(this.copyWidth, w) : this.copyWidth;
-				this.copyData.h = (my.isa(this.copyHeight, 'str')) ? this.convertY(this.copyHeight, h) : this.copyHeight;
-				if (!my.isBetween(this.copyData.w, 1, w, true)) {
-					this.copyData.w = (this.copyData.w < 1) ? 1 : w;
+				copyData.w = (this.copyWidth.substring) ? perc(this.copyWidth, w) : this.copyWidth;
+				copyData.h = (this.copyHeight.substring) ? perc(this.copyHeight, h) : this.copyHeight;
+				if (!between(copyData.w, 1, w, true)) {
+					copyData.w = (copyData.w < 1) ? 1 : w;
 				}
-				if (!my.isBetween(this.copyData.h, 1, h, true)) {
-					this.copyData.h = (this.copyData.h < 1) ? 1 : h;
+				if (!between(copyData.h, 1, h, true)) {
+					copyData.h = (copyData.h < 1) ? 1 : h;
 				}
-				if (this.copyData.x + this.copyData.w > w) {
-					this.copyData.x = w - this.copyData.w;
+				if (copyData.x + copyData.w > w) {
+					copyData.x = w - copyData.w;
 				}
-				if (this.copyData.y + this.copyData.h > h) {
-					this.copyData.y = h - this.copyData.h;
+				if (copyData.y + copyData.h > h) {
+					copyData.y = h - copyData.h;
 				}
 			}
 			this.imageData = false;
@@ -896,18 +924,25 @@ Picture.setPaste update pasteData object values
 @private
 **/
 		my.Picture.prototype.setPaste = function() {
-			var cell = my.cell[my.group[this.group].cell];
-			this.pasteData.x = (my.isa(this.start.x, 'str')) ? this.convertX(this.start.x, cell.actualWidth) : this.start.x;
-			this.pasteData.y = (my.isa(this.start.y, 'str')) ? this.convertY(this.start.y, cell.actualHeight) : this.start.y;
-			this.pasteData.w = (my.isa(this.width, 'str')) ? this.convertX(this.width, cell.actualWidth) : this.width;
-			this.pasteData.h = (my.isa(this.height, 'str')) ? this.convertY(this.height, cell.actualHeight) : this.height;
-			this.pasteData.w *= this.scale;
-			this.pasteData.h *= this.scale;
-			if (this.pasteData.w < 1) {
-				this.pasteData.w = 1;
+			var cell = my.cell[my.group[this.group].cell],
+				perc = this.numberConvert,
+				start,
+				pasteData = this.pasteData;
+			start = this.currentStart;
+			if (!start.flag) {
+				this.updateCurrentStart(cell);
 			}
-			if (this.pasteData.h < 1) {
-				this.pasteData.h = 1;
+			pasteData.x = start.x;
+			pasteData.y = start.y;
+			pasteData.w = (this.width.substring) ? perc(this.width, cell.actualWidth) : this.width;
+			pasteData.h = (this.height.substring) ? perc(this.height, cell.actualHeight) : this.height;
+			pasteData.w *= this.scale;
+			pasteData.h *= this.scale;
+			if (pasteData.w < 1) {
+				pasteData.w = 1;
+			}
+			if (pasteData.h < 1) {
+				pasteData.h = 1;
 			}
 			return this;
 		};
@@ -953,20 +988,34 @@ Constructor and clone helper function
 @private
 **/
 		my.Picture.prototype.sourceImage = function() {
-			if (my.contains(my.videonames, this.source)) {
+			var cont = my.contains;
+			if (cont(my.videonames, this.source)) {
 				return 'video';
 			}
-			if (my.contains(my.imagenames, this.source)) {
-				if (my.contains(my.spriteanimationnames, this.animation)) {
+			if (cont(my.imagenames, this.source)) {
+				if (cont(my.spriteanimationnames, this.animation)) {
 					return 'animation';
 				}
 				return 'img';
 			}
-			if (my.contains(my.cellnames, this.source)) {
+			if (cont(my.cellnames, this.source)) {
 				return 'canvas';
 			}
-
 			return false;
+		};
+		/**
+Stamp helper function - update source and copy (for dynamically loading images)
+@method checkSource
+@return This
+@chainable
+@private
+**/
+		my.Picture.prototype.checkSource = function() {
+			if (!this.imageType) {
+				this.imageType = this.sourceImage();
+				this.setCopy();
+			}
+			return this;
 		};
 		/**
 Stamp helper function - perform a 'clip' method draw
@@ -977,12 +1026,16 @@ Stamp helper function - perform a 'clip' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.clip = function(ctx, cell) {
-			var here = this.prepareStamp();
-			this.rotateCell(ctx, cell);
-			ctx.beginPath();
-			ctx.rect(here.x, here.y, this.pasteData.w, this.pasteData.h);
-			ctx.clip();
+		my.Picture.prototype.clip = function(ctx, cellname, cell) {
+			var here = this.currentHandle,
+				pasteData = this.pasteData;
+			if (this.currentStart.flag) {
+				this.checkSource();
+				this.rotateCell(ctx, cell);
+				ctx.beginPath();
+				ctx.rect(here.x, here.y, pasteData.w, pasteData.h);
+				ctx.clip();
+			}
 			return this;
 		};
 		/**
@@ -994,8 +1047,7 @@ Stamp helper function - perform a 'none' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.none = function(ctx, cell) {
-			this.prepareStamp();
+		my.Picture.prototype.none = function(ctx, cellname, cell) {
 			return this;
 		};
 		/**
@@ -1007,10 +1059,13 @@ Stamp helper function - perform a 'clear' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.clear = function(ctx, cell) {
-			var here = this.prepareStamp();
-			this.rotateCell(ctx, cell);
-			ctx.clearRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+		my.Picture.prototype.clear = function(ctx, cellname, cell) {
+			var here = this.currentHandle,
+				pasteData = this.pasteData;
+			if (this.currentStart.flag) {
+				this.rotateCell(ctx, cell);
+				ctx.clearRect(here.x, here.y, pasteData.w, pasteData.h);
+			}
 			return this;
 		};
 		/**
@@ -1022,17 +1077,21 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.clearWithBackground = function(ctx, cell) {
-			var here = this.prepareStamp();
-			this.rotateCell(ctx, cell);
-			ctx.fillStyle = my.cell[cell].backgroundColor;
-			ctx.strokeStyle = my.cell[cell].backgroundColor;
-			ctx.globalAlpha = 1;
-			ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
-			ctx.fillRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
-			ctx.fillStyle = my.ctx[cell].fillStyle;
-			ctx.strokeStyle = my.ctx[cell].strokeStyle;
-			ctx.globalAlpha = my.ctx[cell].globalAlpha;
+		my.Picture.prototype.clearWithBackground = function(ctx, cellname, cell) {
+			var here = this.currentHandle,
+				pasteData = this.pasteData,
+				myctx = my.ctx[cellname];
+			if (this.currentStart.flag) {
+				this.rotateCell(ctx, cell);
+				ctx.fillStyle = cell.backgroundColor;
+				ctx.strokeStyle = cell.backgroundColor;
+				ctx.globalAlpha = 1;
+				ctx.strokeRect(here.x, here.y, pasteData.w, pasteData.h);
+				ctx.fillRect(here.x, here.y, pasteData.w, pasteData.h);
+				ctx.fillStyle = myctx.fillStyle;
+				ctx.strokeStyle = myctx.strokeStyle;
+				ctx.globalAlpha = myctx.globalAlpha;
+			}
 			return this;
 		};
 		/**
@@ -1044,11 +1103,14 @@ Stamp helper function - perform a 'draw' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.draw = function(ctx, cell) {
-			var here = this.prepareStamp();
-			this.rotateCell(ctx, cell);
-			my.cell[cell].setEngine(this);
-			ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+		my.Picture.prototype.draw = function(ctx, cellname, cell) {
+			var here = this.currentHandle,
+				pasteData = this.pasteData;
+			if (this.currentStart.flag) {
+				this.rotateCell(ctx, cell);
+				cell.setEngine(this);
+				ctx.strokeRect(here.x, here.y, pasteData.w, pasteData.h);
+			}
 			return this;
 		};
 		/**
@@ -1060,14 +1122,16 @@ Stamp helper function - perform a 'fill' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.fill = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+		my.Picture.prototype.fill = function(ctx, cellname, cell) {
+			var here, data, cd, pd;
+			data = this.getImage();
+			cd = this.copyData;
+			pd = this.pasteData;
+			if (this.currentStart.flag && data) {
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
-				my.cell[cell].setEngine(this);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				cell.setEngine(this);
+				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
 			}
 			return this;
 		};
@@ -1080,16 +1144,18 @@ Stamp helper function - perform a 'drawFill' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.drawFill = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+		my.Picture.prototype.drawFill = function(ctx, cellname, cell) {
+			var here, data, cd, pd;
+			data = this.getImage();
+			cd = this.copyData;
+			pd = this.pasteData;
+			if (this.currentStart.flag && data) {
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
-				my.cell[cell].setEngine(this);
-				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+				cell.setEngine(this);
+				ctx.strokeRect(here.x, here.y, pd.w, pd.h);
 				this.clearShadow(ctx, cell);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
 			}
 			return this;
 		};
@@ -1102,16 +1168,18 @@ Stamp helper function - perform a 'fillDraw' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.fillDraw = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+		my.Picture.prototype.fillDraw = function(ctx, cellname, cell) {
+			var here, data, cd, pd;
+			data = this.getImage();
+			cd = this.copyData;
+			pd = this.pasteData;
+			if (this.currentStart.flag && data) {
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
-				my.cell[cell].setEngine(this);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				cell.setEngine(this);
+				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
 				this.clearShadow(ctx, cell);
-				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+				ctx.strokeRect(here.x, here.y, pd.w, pd.h);
 			}
 			return this;
 		};
@@ -1124,15 +1192,17 @@ Stamp helper function - perform a 'sinkInto' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.sinkInto = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+		my.Picture.prototype.sinkInto = function(ctx, cellname, cell) {
+			var here, data, cd, pd;
+			data = this.getImage();
+			cd = this.copyData;
+			pd = this.pasteData;
+			if (this.currentStart.flag && data) {
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
-				my.cell[cell].setEngine(this);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
+				cell.setEngine(this);
+				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
+				ctx.strokeRect(here.x, here.y, pd.w, pd.h);
 			}
 			return this;
 		};
@@ -1145,15 +1215,17 @@ Stamp helper function - perform a 'floatOver' method draw
 @chainable
 @private
 **/
-		my.Picture.prototype.floatOver = function(ctx, cell) {
-			var here,
-				data = this.getImage();
-			if (data) {
-				here = this.prepareStamp();
+		my.Picture.prototype.floatOver = function(ctx, cellname, cell) {
+			var here, data, cd, pd;
+			data = this.getImage();
+			cd = this.copyData;
+			pd = this.pasteData;
+			if (this.currentStart.flag && data) {
+				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
-				my.cell[cell].setEngine(this);
-				ctx.strokeRect(here.x, here.y, this.pasteData.w, this.pasteData.h);
-				ctx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
+				cell.setEngine(this);
+				ctx.strokeRect(here.x, here.y, pd.w, pd.h);
+				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
 			}
 			return this;
 		};
@@ -1167,23 +1239,38 @@ Also generates new filtered images, when necessary
 @private
 **/
 		my.Picture.prototype.getImage = function() {
-			var anim;
-			switch (this.imageType) {
-				case 'img':
-					return my.asset[this.source];
-				case 'animation':
-					anim = my.spriteanimation[this.animation].getData();
-					this.copyData.x = anim.x;
-					this.copyData.y = anim.y;
-					this.copyData.w = anim.w;
-					this.copyData.h = anim.h;
-					return my.asset[this.source];
-				case 'canvas':
-					return my.canvas[this.source];
-				case 'video':
-					return my.asset[this.source];
-				default:
-					return false;
+			var type;
+			this.checkSource();
+			type = (my.contains(['img', 'animation', 'canvas', 'video'], this.imageType)) ? this.imageType : 'none';
+			return this.getImageActions[type](this.source, this.animation, this.copyData);
+		};
+		/**
+getImage helper object
+@method getImageActions
+@private
+**/
+		my.Picture.prototype.getImageActions = {
+			img: function(src) {
+				return my.asset[src];
+			},
+			animation: function(src, animation, copyData) {
+				var anim = my.spriteanimation[animation].getData(),
+					img = my.image[src],
+					perc = my.Picture.prototype.numberConvert;
+				copyData.x = (anim.x.substring) ? perc(anim.x, img.width) : anim.x;
+				copyData.y = (anim.y.substring) ? perc(anim.y, img.height) : anim.y;
+				copyData.w = (anim.w.substring) ? perc(anim.w, img.width) : anim.w;
+				copyData.h = (anim.h.substring) ? perc(anim.h, img.height) : anim.h;
+				return my.asset[src];
+			},
+			canvas: function(src) {
+				return my.canvas[src];
+			},
+			video: function(src) {
+				return my.asset[src];
+			},
+			none: function(src) {
+				return false;
 			}
 		};
 		/**
@@ -1194,15 +1281,20 @@ Load the Picture entity's image data (via JavaScript getImageData() function) in
 @chainable
 **/
 		my.Picture.prototype.getImageData = function(label) {
-			var data;
+			var data,
+				ic = my.work.imageCanvas,
+				cvx = my.work.imageCvx,
+				cd;
+			this.checkSource();
+			cd = this.copyData;
 			label = (my.xt(label)) ? label : 'data';
 			data = this.getImage();
 			if (data) {
-				my.imageCanvas.width = this.copyData.w;
-				my.imageCanvas.height = this.copyData.h;
-				my.imageCvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, 0, 0, this.copyData.w, this.copyData.h);
+				ic.width = cd.w;
+				ic.height = cd.h;
+				cvx.drawImage(data, cd.x, cd.y, cd.w, cd.h, 0, 0, cd.w, cd.h);
 				this.imageData = this.name + '_' + label;
-				my.imageData[this.imageData] = my.imageCvx.getImageData(0, 0, this.copyData.w, this.copyData.h);
+				my.imageData[this.imageData] = cvx.getImageData(0, 0, cd.w, cd.h);
 			}
 			return this;
 		};
@@ -1217,37 +1309,56 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 		my.Picture.prototype.getImageDataValue = function(items) {
 			var data,
 				array,
-				index;
+				index,
+				cd,
+				pd = this.pasteData,
+				v1 = my.work.workimg.v1,
+				between = my.isBetween,
+				channel;
 			items = my.safeObject(items);
-			my.workimg.v1.x = items.x || 0;
-			my.workimg.v1.y = items.y || 0;
-			my.workimg.v1.vectorSubtract(this.pasteData).rotate(-this.roll);
-			my.workimg.v1.x = (this.flipReverse) ? -my.workimg.v1.x : my.workimg.v1.x;
-			my.workimg.v1.y = (this.flipUpend) ? -my.workimg.v1.y : my.workimg.v1.y;
-			my.workimg.v1.vectorSubtract(this.getPivotOffsetVector(this.handle));
-			my.workimg.v1.x = Math.round(my.workimg.v1.x * (this.copyData.w / this.pasteData.w));
-			my.workimg.v1.y = Math.round(my.workimg.v1.y * (this.copyData.h / this.pasteData.h));
+			this.checkSource();
+			cd = this.copyData;
+			v1.x = items.x || 0;
+			v1.y = items.y || 0;
+			v1.vectorSubtract(pd).rotate(-this.roll);
+			v1.x = (this.flipReverse) ? -v1.x : v1.x;
+			v1.y = (this.flipUpend) ? -v1.y : v1.y;
+			v1.vectorSubtract(this.currentHandle);
+			v1.x = Math.round(v1.x * (cd.w / pd.w));
+			v1.y = Math.round(v1.y * (cd.h / pd.h));
 			if (!this.imageData) {
 				this.getImageData();
 			}
 			data = my.imageData[this.imageData];
-			index = ((my.workimg.v1.y * data.width) + my.workimg.v1.x) * 4;
-			if (my.isBetween(my.workimg.v1.x, 0, data.width - 1, true) && my.isBetween(my.workimg.v1.y, 0, data.height - 1, true)) {
+			index = ((v1.y * data.width) + v1.x) * 4;
+			if (between(v1.x, 0, data.width - 1, true) && between(v1.y, 0, data.height - 1, true)) {
 				array = data.data;
-				switch (items.channel || this.get('imageDataChannel')) {
-					case 'red':
-						return (my.xt(array[index])) ? array[index] : false;
-					case 'green':
-						return (my.xt(array[index + 1])) ? array[index + 1] : false;
-					case 'blue':
-						return (my.xt(array[index + 2])) ? array[index + 2] : false;
-					case 'color':
-						return (my.xta([array[index], array[index + 1], array[index + 2], array[index + 3]])) ? 'rgba(' + array[index] + ',' + array[index + 1] + ',' + array[index + 2] + ',' + array[index + 3] + ')' : false;
-					default: // alpha
-						return (my.xt(array[index + 3])) ? array[index + 3] : false;
-				}
+				channel = items.channel || this.get('imageDataChannel');
+				channel = (my.contains(['red', 'green', 'blue', 'color', 'alpha'], channel)) ? channel : 'alpha';
+				return this.getImageDataValueActions[channel](array, index);
 			}
 			return false;
+		};
+		/**
+getImageDataValue helper object
+@method getImageDataValueActions
+**/
+		my.Picture.prototype.getImageDataValueActions = {
+			red: function(array, index) {
+				return (my.xt(array[index])) ? array[index] : false;
+			},
+			green: function(array, index) {
+				return (my.xt(array[index + 1])) ? array[index + 1] : false;
+			},
+			blue: function(array, index) {
+				return (my.xt(array[index + 2])) ? array[index + 2] : false;
+			},
+			color: function(array, index) {
+				return (my.xta([array[index], array[index + 1], array[index + 2], array[index + 3]])) ? 'rgba(' + array[index] + ',' + array[index + 1] + ',' + array[index + 2] + ',' + array[index + 3] + ')' : false;
+			},
+			alpha: function(array, index) {
+				return (my.xt(array[index + 3])) ? array[index + 3] : false;
+			}
 		};
 		/**
 Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
@@ -1324,10 +1435,117 @@ Revert pickupEntity() actions, ensuring entity is left where the user drops it
 **/
 		my.Picture.prototype.dropEntity = function(item) {
 			my.Entity.prototype.dropEntity.call(this, item);
-			this.setPaste();
+			this.currentStart.flag = false;
 			return this;
 		};
+		/**
+Calculate the box position of the entity
 
+Returns an object with the following attributes:
+
+* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
+* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
+
+@method getMaxDimensions
+@param {Object} cell object
+@param {Object} entity object
+@return dimensions object
+@private
+**/
+		my.Picture.prototype.getMaxDimensions = function(cell) {
+			var cw = cell.actualWidth,
+				ch = cell.actualHeight,
+				halfW = cw / 2,
+				halfH = ch / 2,
+				cx = this.currentStart.x,
+				cy = this.currentStart.y,
+				lw = this.pasteData.w,
+				lh = this.pasteData.h,
+				fr = this.flipReverse,
+				fu = this.flipUpend,
+				xtl, xtr, xbr, xbl, ytl, ytr, ybr, ybl,
+				x = (fr) ? cw - cx : cx,
+				y = (fu) ? ch - cy : cy,
+				w = (fr) ? -lw : lw,
+				h = (fu) ? -lh : lh,
+				o = this.currentHandle,
+				hx = (fr) ? -o.x : o.x,
+				hy = (fu) ? -o.y : o.y,
+				line = my.ctx[this.context].lineWidth || 0,
+				max, min, ax, ay, ref,
+				ceil = Math.ceil,
+				floor = Math.floor,
+				t, l, b, r,
+				roll = this.roll,
+				v = my.work.v,
+				between = my.isBetween;
+			l = (fr) ? x + hx + w : x + hx;
+			r = (fr) ? x + hx : x + hx + w;
+			t = (fu) ? y + hy + h : y + hy;
+			b = (fu) ? y + hy : y + hy + h;
+			if (roll) {
+				min = Math.min;
+				max = Math.max;
+				ref = {
+					x: x,
+					y: y
+				};
+				v.set({
+					x: l,
+					y: t
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xtl = v.x;
+				ytl = v.y;
+				v.set({
+					x: r,
+					y: t
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xtr = v.x;
+				ytr = v.y;
+				v.set({
+					x: r,
+					y: b
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xbl = v.x;
+				ybl = v.y;
+				v.set({
+					x: l,
+					y: b
+				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
+				xbr = v.x;
+				ybr = v.y;
+				ax = [xtl, xtr, xbr, xbl];
+				ay = [ytl, ytr, ybr, ybl];
+				t = min.apply(Math, ay);
+				l = min.apply(Math, ax);
+				b = max.apply(Math, ay);
+				r = max.apply(Math, ax);
+			}
+			t = floor(t - line);
+			l = floor(l - line);
+			b = ceil(b + line);
+			r = ceil(r + line);
+			if (!between(t, 0, ch, true)) {
+				t = (t > halfH) ? ch : 0;
+			}
+			if (!between(b, 0, ch, true)) {
+				b = (b > halfH) ? ch : 0;
+			}
+			if (!between(l, 0, cw, true)) {
+				l = (l > halfW) ? cw : 0;
+			}
+			if (!between(r, 0, cw, true)) {
+				r = (r > halfW) ? cw : 0;
+			}
+			this.maxDimensions.top = t;
+			this.maxDimensions.bottom = b;
+			this.maxDimensions.left = l;
+			this.maxDimensions.right = r;
+			this.maxDimensions.flag = false;
+			return this.maxDimensions;
+		};
 
 		return my;
 	}(scrawl));

@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 4.3.0 - 19 July 2015
+*	version 5.0.0 - 24 November 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -10,10 +10,12 @@
 
 Currently working on ...
 ------------------------------------------------------------------------------------
-- bugtracking following release of v4.3.0
+- bugtracking following release of v5.0.0
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
+- new grid entity
+- frame backface visibility
 - improving the code base (always)
 - user accessibility issues
 - touch/pointer events on mobile/handheld devices
@@ -28,7 +30,7 @@ Topics that I want|need to look at (in no particular order) ...
 	
 Currently known bugs
 ------------------------------------------------------------------------------------
-- tracking of touch/pointer events 
+- tracking of touch/pointer events
 	- on mobile is less than satisfactory
 
 - Composite operations
@@ -38,14 +40,164 @@ Currently known bugs
 - Older browsers with canvas support do not support 'evenodd' winding or dashed strokes
 	- feature detection added to scrawl.device object
 	
-- Entity ordering
-	- Entitys with the same order value, in the same group, may occasionally flicker when overlapping (Chrome, Opera)
-		- solution: give entitys (and groups) unique order values
-
 - Text along path
 	- The text does not yet take into account any path handle offsets
 
 CHANGE LOG
+------------------------------------------------------------------------------------
+November 2015
+	- redesign and recode website tour page
+	- update scrawl in light of development issues
+		- enhanced timeline functionality
+		- adding wheel radius percentage (of width) option
+		- bug fixing
+		
+October 2015
+	- testing and bugfixing
+	- preparation for release of new major version 5.0.0
+		- updating website
+			- tour page
+			- writing docs for new functionality
+			- updating tutorial page to include new functionality
+			
+September 2015
+	- refactoring code for efficiency gains
+		- implemented a set of dirty flags
+			- currentStart, currentHandle only update when required
+		- rewrite stacks for efficiency gains
+			- extended functionality of ElementGroups
+				- now replicates Group for entities
+				- new demo219
+			- drag and drop functionality extended to stack Elements
+		- rewrite of filters for efficiency gains
+			- new maxDimensions functionality to cut down on work filters need to do
+		- refactored Frame code
+			- frame corners now follow paths - new demo115
+			- frames locked to Elements can be dragged/dropped
+			- redraw dirty flag - so frame only reconstructed when required
+			- stamping functionality completely rewritten
+		- refactored Physics code for further efficiencies
+		- tidied up scrawl library object
+			- all the non-user-centered bits and bobs now found in scrawl.work section
+	- bugfixing
+		- the changes in the perspectives branch have damaged too many demos
+		- next release will have to be major - 5.0.0
+
+August 2015
+	- refactoring code for efficiency gains
+		- big undertaking - all source files affected
+			- wherever possible:
+				- replaced isa() functions with direct tests eg value.toFixed, value.substring, etc
+				- replaced extended if/else and switch statements with helper objects
+					- so code can directly call the required functionality, instead of having to iterate
+				- get references to functions and objects used repeatedly in a function at start of function
+					- (has a massive efficiency gain in Firefox)
+		- rationalized start and handle attributes for cells and entitys
+			- new currentStart and currentHandle attributes
+				- hold pixel data only, while start and handle attributes can also hold strings
+				- only recalculated when start and handle values change
+					- was previously calculating pixel data for every iteration of the display cycle
+					- calculation on a JIT basis - dirty flags
+				- complex calculation process replaced by 2 new functions
+					- updateCurrentStart()
+					- updateCurrentHandle() 
+				- got rid of multiple instances of conversion functionality with single numberConvert() function
+		- removed .work.start, .work.handle, etc vector attributes and related reset systems from entitys and cells
+			- no longer relevant
+		- refactoring Phrase entity
+			- was destroying/creating Text elements on every set and setDelta action
+				- now only perform these actions when text attribute changes
+		- refactoring stacks
+		- rationalized filter operations
+	- fixed long-standing entity ordering bug on chrome/opera
+		- implemented a stable bucket sort algorithm; refactored sorting
+			- sorting on a JIT basis - dirty flags
+				- was prevously sorting (by default) for each display and animation cycle
+			- used for sorting cells, groups, entitys and animations
+
+to 150806
+	- integrated perspective experiments into scrawl
+		- changed extension name to 'scrawlFrame.js' alias 'frame'
+		- changed entity name to 'Frame'
+			- created with scrawl.makeFrame() factory function
+		- changed corners object name to FramePoint
+		- added cloning functionality to Frame entity
+		- added functionality to allow attributes of underlying 'lockFrameTo' element to be set via the Frame.set() function
+		- underlying frame element can be created as part of the Frame construction process
+			- if the 'lockFrameTo' element doesn't already exist, it will be generated automatically
+			- tested in demo218
+	- TODO
+		- add in copyXYWH functionality to allow frame to display just a portion of its image/video/cell
+			- remember to check for bounds - can't copy if ref points < 0 or > width/height of source
+		- new demo (306?) - flag in breeze
+			- to test copy functionality, and that Frames will use physics particles as pivots
+		- add in collision functionality
+			- treat in a similar manner to Block entitys (edge, corner, center collision points)
+		- testing filters functionality
+			- amend demo101 to add a Frame - DONE
+		- need demos for path functionality
+			- that individual corners can be made to track separate paths
+			- that 'lockFrameTo' elements can follow a path
+		- add in drag/drop functionality
+			- only for 'lockFrameTo' Frames?
+				- experiment with drag/drop for basic Frames, but not required functionality
+		- add test to make sure Frame GCO and globalAlpha settings are respected
+		- possibly experiment with adding emulation for backfaceVisibility = false ???
+		- investigate best methods for ease of integrating Frame updating as part of a timeline animation 
+			- use case: personalized video
+				- need to keep Frame (and all other) updates in sync with video playback speeds
+				- also need to work out methods of getting corner point data from Adobe
+		- start thinking about spline functionality
+			- can it be built on top of Frames?
+		- ALL FRAME FUNCTIONALITY NEEDS PROPER DOCUMENTATION
+			- and needs to be added to the tutorial page
+
+July - August 2015
+	- Experiments in perspective
+		- work being carried out in new 'perspectives' git branch
+		- added a new Extension - scrawl.perspective.js, alias 'perspective'
+			- currently defines two objects
+				- PerspectivePoint - for defining the attributes of a corner point
+				- PerspectiveCornersCell - actually a new Entity
+					- a bit different from the other Entitys
+						- positioning is by means of corner points, not a single start Vector attribute
+						- doesn't understand, or care about, the handle Vector attribute
+						- doesn't take into account roll or scale attributes
+							- these can be simulated by positioning the corner points appropriately
+						- doesn't have a context object, and only takes account of the following context attributes:
+							- globalAlpha, globalCompositeOperation
+							- lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit
+							- strokeStyle
+							- shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor
+						- can in theory detect collisions on its shape, but:
+							- doesn't yet have a set of collision points
+								- probably restrict these to its corner points
+								- but as it uses a canvas (not Entity) path for its outline, could set collision points along that
+							- no work done (yet) on drag-and-drop functionality
+					- takes as its source either:
+						- an image element - tested in new Demo114
+						- a video - NOT YET TESTED
+						- another cell (canvas element) - NOT YET TESTED
+					- using four perspective points, deforms the image to mimic a perspective view
+					- understands all the current Entity methods (draw, fill, drawFill, etc)
+					- can take raw data to define the position of its corner points on the host cell (NOT FULLY TESTED YET)
+						- data can be absolute (numbers) or relative to the host cell (percentage strings, 'top', 'center', etc)
+					- can use other entities as pivots for its corner points
+						- tested in new Demo114
+					- can use paths to calculate the positions of its corner points (NOT TESTED YET)
+					- can be locked to DOM elements within a scrawl stack
+						- will act like a background to the element, and follow its CSS3 3d transformations
+						- tested in new Demo217
+		- TODO:
+			- consider further positioning issues
+				- in particular relating to drag-and-drop
+				- adding/accounting for handle Vector attribute - DONE
+			- test new Entity in as many different scenarios as possible
+				- to see what current Scrawl, Group and Entity functionality breaks when applied to PerspectiveCornersCell
+			- test in various browser environments
+				- developed in Firefox
+				- not yet tested in any other browser or device
+
 ------------------------------------------------------------------------------------
 150719
 	- testing all demos:
@@ -74,6 +226,7 @@ CHANGE LOG
 					- all the above filters are using the 'matrix' algorithm
 				- all others PASS
 	- move to version 4.3.0
+		- website updated; release completed
 
 July 2015
 	- reviewed and updated functionality for loading video
@@ -125,6 +278,7 @@ May - June 2015
 			- eg: no require(), no exports{}, no imports(), etc
 	- minor release version 4.2.1
 
+------------------------------------------------------------------------------------
 150329
 	- version 4.2 released
 	
@@ -156,6 +310,7 @@ February - March 2015
 			- particularly important for multitouch events
 			- Android tablet, Android phone, iPad, iPhone, windows touch devices
 
+------------------------------------------------------------------------------------
 150127
 	- version 4.1.0 released
 
@@ -182,6 +337,7 @@ February - March 2015
 		- Path entity cloning
 		- numerous smaller bugfixes
 
+------------------------------------------------------------------------------------
 150107
 	- version 4.0.0 released
 
@@ -556,7 +712,7 @@ December 2014 - 150107
 	- test all demos in Firefox
 		- fixed broken demos (037 magnifier, 046 zoom, 051 setDelta, 052, parallax scroller)
 	- new utility helper scrawl.xtGet([])
-		- used in particular inb constructors
+		- used in particular in constructors
 		- replaces a=x||y||default code
 
 141017-19

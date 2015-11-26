@@ -31,7 +31,7 @@ The Filters module adds a set of filter algorithms to the Scrawl library
 @module scrawlFilters
 **/
 
-if (window.scrawl && window.scrawl.modules && !window.scrawl.contains(window.scrawl.modules, 'filters')) {
+if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'filters')) {
 	var scrawl = (function(my) {
 		'use strict';
 		/**
@@ -46,78 +46,52 @@ scrawlFilters module adaptions to the Scrawl library object
 
 @class window.scrawl_Filters
 **/
-		my.pushUnique(my.sectionlist, 'filter');
-		my.pushUnique(my.nameslist, 'filternames');
+		my.pushUnique(my.work.sectionlist, 'filter');
+		my.pushUnique(my.work.nameslist, 'filternames');
 		/**
 Utility canvases - never displayed
 @property filterCanvas
 @type {CasnvasObject}
 @private
 **/
-		my.filterCanvas = document.createElement('canvas');
-		my.filterCanvas.id = 'filterHiddenCanvasElement';
-		my.f.appendChild(my.filterCanvas);
+		my.work.filterCanvas = document.createElement('canvas');
+		my.work.filterCanvas.id = 'filterHiddenCanvasElement';
+		my.work.f.appendChild(my.work.filterCanvas);
 		/**
 Utility canvas 2d context engine
 @property filterCvx
 @type {CasnvasContextObject}
 @private
 **/
-		my.filterCvx = my.filterCanvas.getContext('2d');
+		my.work.filterCvx = my.work.filterCanvas.getContext('2d');
 		/**
 Array of FILTERNAME strings, for filters to be applied to the Pad
 @property filters
 @type Array
 @default []
 **/
-		my.d.Pad.filters = [];
+		my.work.d.Pad.filters = [];
 		/**
 Array of FILTERNAME strings, for filters to be applied to the Cell
 @property filters
 @type Array
 @default []
 **/
-		my.d.Cell.filters = [];
-		/**
-Array of FILTERNAME strings, for filters to be applied to Entitys in this group
-@property filters
-@type Array
-@default []
-**/
-		my.d.Group.filters = [];
-		/**
-Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
-@property filterOnStroke
-@type Boolean
-@default false
-**/
-		my.d.Group.filterOnStroke = false;
-		/**
-The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
-
-* '__entity__' - filter is applied immediately after the Entity has stamped itself onto a cell
-* '__cell__' - filter is applied after all Entites have completed stamping themselves onto the cell
-* '__pad__' - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
-
-@property filterLevel
-@type String
-@default 'entity'
-**/
-		my.d.Group.filterLevel = 'entity';
+		my.work.d.Cell.filters = [];
 		/**
 Array of FILTERNAME strings, for filters to be applied to this entity
 @property filters
 @type Array
 @default []
 **/
-		my.d.Entity.filters = [];
+		my.work.d.Entity.filters = [];
 		/**
 Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
 @property filterOnStroke
 @type Boolean
 @default false
 **/
-		my.d.Entity.filterOnStroke = false;
+		my.work.d.Entity.filterOnStroke = false;
 		/**
 The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
 
@@ -129,24 +103,24 @@ The filterLevel attribute determines at which point in the display cycle the fil
 @type String
 @default 'entity'
 **/
-		my.d.Entity.filterLevel = 'entity';
-		if (my.xt(my.d.Block)) {
-			my.mergeInto(my.d.Block, my.d.Entity);
+		my.work.d.Entity.filterLevel = 'entity';
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Shape)) {
-			my.mergeInto(my.d.Shape, my.d.Entity);
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Wheel)) {
-			my.mergeInto(my.d.Wheel, my.d.Entity);
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Picture)) {
-			my.mergeInto(my.d.Picture, my.d.Entity);
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Phrase)) {
-			my.mergeInto(my.d.Phrase, my.d.Entity);
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
 		}
-		if (my.xt(my.d.Path)) {
-			my.mergeInto(my.d.Path, my.d.Entity);
+		if (my.xt(my.work.d.Path)) {
+			my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		}
 		/**
 Pad constructor hook function - modified by filters module
@@ -165,26 +139,16 @@ Cell constructor hook function - modified by filters module
 			this.filters = [];
 		};
 		/**
-Group constructor hook function - modified by filters module
-@method filtersGroupInit
-@private
-**/
-		my.Group.prototype.filtersGroupInit = function(items) {
-			items = my.safeObject(items);
-			this.filters = (my.xt(items.filters)) ? items.filters : [];
-			this.filterOnStroke = my.xtGet(items.filterOnStroke, false);
-			this.filterLevel = my.xtGet(items.filterLevel, 'entity');
-		};
-		/**
 Entity constructor hook function - modified by filters module
 @method filtersEntityInit
 @private
 **/
 		my.Entity.prototype.filtersEntityInit = function(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			this.filters = (my.xt(items.filters)) ? items.filters : [];
-			this.filterOnStroke = my.xtGet(items.filterOnStroke, false);
-			this.filterLevel = my.xtGet(items.filterLevel, 'entity');
+			this.filterOnStroke = get(items.filterOnStroke, false);
+			this.filterLevel = get(items.filterLevel, 'entity');
 		};
 
 		/**
@@ -485,16 +449,18 @@ By default:
 @return This
 @chainable
 **/
-		my.Pad.prototype.compile = function() {
+		my.Pad.prototype.compile = function(mouse) {
 			var c,
 				i,
-				iz;
+				iz,
+				cell = my.cell,
+				cells = this.cellsCompileOrder;
 			this.filters.length = 0;
 			this.sortCellsCompile();
-			for (i = 0, iz = this.cells.length; i < iz; i++) {
-				c = my.cell[this.cells[i]];
+			for (i = 0, iz = cells.length; i < iz; i++) {
+				c = cell[cells[i]];
 				if (c.rendered && c.compiled) {
-					c.compile();
+					c.compile(mouse);
 				}
 			}
 			return this;
@@ -519,23 +485,26 @@ By default, the initial base and display canvases have shown = false:
 				b,
 				c,
 				i,
-				iz;
-			d = my.cell[this.display];
-			b = my.cell[this.base];
+				iz,
+				cell = my.cell,
+				cells = this.cells,
+				context = my.context,
+				xt = my.xt,
+				g = my.group,
+				e = my.entity,
+				filters = this.filters,
+				temp;
+			d = cell[this.display];
+			b = cell[this.base];
 			this.sortCellsShow();
-			for (i = 0, iz = this.cells.length; i < iz; i++) {
-				c = my.cell[this.cells[i]];
+			for (i = 0, iz = cells.length; i < iz; i++) {
+				c = cell[cells[i]];
 				if (c.rendered && c.shown) {
 					b.copyCellToSelf(c);
 				}
 			}
-			for (i = 0, iz = this.filters.length; i < iz; i++) {
-				if (my.xt(my.entity[this.filters[i]])) {
-					my.entity[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
-				}
-				if (my.xt(my.group[this.filters[i]])) {
-					my.group[this.filters[i]].stampFilter(my.context[b.name], b.name, true);
-				}
+			for (i = 0, iz = filters.length; i < iz; i++) {
+				e[filters[i]].stampFilter(context[b.name], b.name, b, true);
 			}
 			d.copyCellToSelf(b, true);
 			return this;
@@ -551,158 +520,127 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 		my.Cell.prototype.compile = function() {
 			var g,
 				i,
-				iz;
-			this.filters.length = 0;
-			this.groups.sort(function(a, b) {
-				return my.group[a].order - my.group[b].order;
-			});
-			for (i = 0, iz = this.groups.length; i < iz; i++) {
-				g = my.group[this.groups[i]];
-				if (g.get('visibility')) {
+				iz,
+				group = my.group,
+				groups = this.groups,
+				filters = this.filters,
+				xt = my.xt,
+				ctx = my.context[this.name],
+				e = my.entity;
+			filters.length = 0;
+			this.groupSort();
+			for (i = 0, iz = groups.length; i < iz; i++) {
+				g = group[groups[i]];
+				if (g.visibility) {
 					g.stamp(false, this.name);
 				}
 			}
-			for (i = 0, iz = this.filters.length; i < iz; i++) {
-				if (my.xt(my.entity[this.filters[i]])) {
-					my.entity[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
-				}
-				else if (my.xt(my.group[this.filters[i]])) {
-					my.group[this.filters[i]].stampFilter(my.context[this.name], this.name, true);
-				}
+			for (i = 0, iz = filters.length; i < iz; i++) {
+				e[filters[i]].stampFilter(ctx, this.name, this, true);
 			}
 			return true;
 		};
 		/**
-Group.stamp hook function - add a filter to a group of Entitys, and any background detail enclosed by them
-@method stampFilter
+Entity.stampFilter helper object
+@method stampFilterActions
 @private
 **/
-		my.Group.prototype.stampFilter = function(engine, cell, force) {
-			var imageData,
-				canvas,
-				composite,
-				localComposite = 'source-over',
-				e,
-				eStroke,
-				i,
-				iz;
-			force = my.xtGet(force, false);
-			if (this.filters.length > 0) {
-				canvas = my.canvas[cell];
-				my.cv.width = canvas.width;
-				my.cv.height = canvas.height;
-				my.filterCanvas.width = canvas.width;
-				my.filterCanvas.height = canvas.height;
-				my.filterCvx.clearRect(0, 0, canvas.width, canvas.height);
-				for (i = 0, iz = this.entitys.length; i < iz; i++) {
-					e = my.entity[this.entitys[i]];
-					eStroke = e.filterOnStroke;
-					e.filterOnStroke = this.filterOnStroke;
-					my.cvx.save();
-					switch (e.type) {
-						case 'Phrase':
-							imageData = e.stampFilterPhrase(engine, cell, force);
-							break;
-						case 'Picture':
-							imageData = e.stampFilterPicture(engine, cell, force);
-							break;
-						case 'Wheel':
-							imageData = e.stampFilterWheel(engine, cell, force);
-							break;
-						default:
-							imageData = e.stampFilterDefault(engine, cell, force);
-					}
-					e.filterOnStroke = eStroke;
-					my.filterCvx.putImageData(imageData, 0, 0);
-					my.cvx.restore();
-				}
-				imageData = my.filterCvx.getImageData(0, 0, canvas.width, canvas.height);
-				if (imageData) {
-					for (i = 0, iz = this.filters.length; i < iz; i++) {
-						if (this.filterLevel === 'pad' && !force) {
-							my.pad[my.cell[this.cell].pad].filters.push(this.name);
-						}
-						else if (this.filterLevel === 'cell' && !force) {
-							my.cell[this.cell].filters.push(this.name);
-						}
-						else if (my.filter[this.filters[i]]) {
-							imageData = my.filter[this.filters[i]].add(imageData);
-							localComposite = (my.xt(my.filter[this.filters[i]].operation)) ? my.filter[this.filters[i]].operation : localComposite;
-						}
-					}
-				}
-				my.cvx.putImageData(imageData, 0, 0);
-				if (engine.globalCompositeOperation !== localComposite) {
-					composite = engine.globalCompositeOperation;
-					engine.globalCompositeOperation = localComposite;
-					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-					engine.globalCompositeOperation = composite;
-				}
-				else {
-					engine.setTransform(1, 0, 0, 1, 0, 0);
-					engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
-				}
+		my.Entity.prototype.stampFilterActions = {
+			Phrase: function(entity, engine, cellname, cell) {
+				return entity.stampFilterPhrase(entity, engine, cellname, cell);
+			},
+			Picture: function(entity, engine, cellname, cell) {
+				return entity.stampFilterPicture(entity, engine, cellname, cell);
+			},
+			Wheel: function(entity, engine, cellname, cell, filterOnStroke) {
+				return entity.stampFilterWheel(entity, engine, cellname, cell, filterOnStroke);
+			},
+			Block: function(entity, engine, cellname, cell) {
+				return entity.stampFilterDefault(entity, engine, cellname, cell);
+			},
+			Shape: function(entity, engine, cellname, cell) {
+				return entity.stampFilterDefault(entity, engine, cellname, cell);
+			},
+			Path: function(entity, engine, cellname, cell) {
+				return entity.stampFilterDefault(entity, engine, cellname, cell);
+			},
+			Frame: function(entity, engine, cellname, cell) {
+				return entity.stampFilterDefault(entity, engine, cellname, cell);
 			}
 		};
+		/**
+reciprocal assignment - also occurs in scrawlFrame as there's no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first
+@method stampFilterActions
+@private
+**/
+		if (my.Frame) {
+			my.Frame.prototype.stampFilterActions = my.Entity.prototype.stampFilterActions;
+		}
 		/**
 Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
 @method stampFilter
 @private
 **/
-		my.Entity.prototype.stampFilter = function(engine, cell, force) {
+		my.Entity.prototype.stampFilter = function(engine, cellname, cell, force) {
 			var imageData,
+				dim,
 				canvas,
+				group = my.group[this.group],
 				composite,
 				localComposite = 'source-over',
 				i,
-				iz;
-			force = my.xtGet(force, false);
-			if (this.filters.length > 0) {
-				canvas = my.canvas[cell];
-				my.cv.width = canvas.width;
-				my.cv.height = canvas.height;
-				my.cvx.save();
-				switch (this.type) {
-					case 'Phrase':
-						imageData = this.stampFilterPhrase(engine, cell, force);
-						break;
-					case 'Picture':
-						imageData = this.stampFilterPicture(engine, cell, force);
-						break;
-					case 'Wheel':
-						imageData = this.stampFilterWheel(engine, cell, force);
-						break;
-					default:
-						imageData = this.stampFilterDefault(engine, cell, force);
+				iz,
+				cv = my.work.cv,
+				cvx = my.work.cvx,
+				f,
+				filter = my.filter,
+				filters = this.filters,
+				c,
+				p,
+				xt = my.xt,
+				filterLevel = this.filterLevel,
+				filterOnStroke = this.filterOnStroke || false,
+				action = this.stampFilterActions;
+			force = (xt(force)) ? force : false;
+			if (filters.length > 0) {
+				c = my.cell[my.group[this.group].cell];
+				p = my.pad[c.pad];
+				if (filterLevel === 'pad' && !force) {
+					p.filters.push(this.name);
+					return;
 				}
+				else if (filterLevel === 'cell' && !force) {
+					c.filters.push(this.name);
+					return;
+				}
+				canvas = my.canvas[cellname];
+				cv.width = canvas.width;
+				cv.height = canvas.height;
+				cvx.save();
+				dim = (this.maxDimensions.flag) ? this.getMaxDimensions(cell) : this.maxDimensions;
+				imageData = action[this.type](this, engine, cellname, cell, filterOnStroke);
 				if (imageData) {
-					for (i = 0, iz = this.filters.length; i < iz; i++) {
-						if (this.filterLevel === 'pad' && !force) {
-							my.pad[my.cell[my.group[this.group].cell].pad].filters.push(this.name);
-						}
-						else if (this.filterLevel === 'cell' && !force) {
-							my.cell[my.group[this.group].cell].filters.push(this.name);
-						}
-						else if (my.filter[this.filters[i]]) {
-							imageData = my.filter[this.filters[i]].add(imageData);
-							localComposite = (my.xt(my.filter[this.filters[i]].operation)) ? my.filter[this.filters[i]].operation : localComposite;
+					for (i = 0, iz = filters.length; i < iz; i++) {
+						f = filter[filters[i]];
+						if (f) {
+							imageData = f.add(imageData, dim);
+							localComposite = (xt(f.operation)) ? filter[filters[i]].operation : localComposite;
 						}
 					}
-					my.cvx.putImageData(imageData, 0, 0);
+					cvx.putImageData(imageData, 0, 0);
 					if (engine.globalCompositeOperation !== localComposite) {
 						composite = engine.globalCompositeOperation;
 						engine.globalCompositeOperation = localComposite;
 						engine.setTransform(1, 0, 0, 1, 0, 0);
-						engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+						engine.drawImage(cv, 0, 0, canvas.width, canvas.height);
 						engine.globalCompositeOperation = composite;
 					}
 					else {
 						engine.setTransform(1, 0, 0, 1, 0, 0);
-						engine.drawImage(my.cv, 0, 0, canvas.width, canvas.height);
+						engine.drawImage(cv, 0, 0, canvas.width, canvas.height);
 					}
 				}
-				my.cvx.restore();
+				cvx.restore();
 			}
 		};
 		/**
@@ -710,97 +648,99 @@ Entity.stamp hook helper function
 @method stampFilterPhrase
 @private
 **/
-		my.Entity.prototype.stampFilterPhrase = function(engine, cell, force) {
-			var context,
-				canvas,
+		my.Entity.prototype.stampFilterPhrase = function(entity, engine, cellname, cell) {
+			var canvas,
+				context,
 				test,
-				i,
-				iz,
-				o,
-				here,
-				textY,
-				tX,
-				tY;
-			canvas = my.canvas[cell];
-			context = my.ctx[this.context];
-			my.cvx.font = context.font;
-			my.cvx.fillStyle = 'rgb(0, 0, 0)';
-			my.cvx.textAlign = context.textAlign;
-			my.cvx.textBaseline = context.textBaseline;
-			test = (my.entity[this.path] && my.entity[this.path].type === 'Path');
-			if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
-				o = this.getOffset();
-				here = this.prepareStamp();
-				textY = this.size * this.lineHeight * this.scale;
-				this.rotateCell(my.cvx, my.cv);
-				tX = here.x + o.x;
-				for (i = 0, iz = this.texts.length; i < iz; i++) {
-					tY = here.y + (textY * i) + o.y;
-					my.text[this.texts[i]].fill(my.cvx, cell, tX, tY);
-				}
+				text = my.text,
+				texts = entity.texts,
+				e = my.entity,
+				w,
+				h,
+				cvx = my.work.cvx,
+				cv = my.work.cv,
+				wrapper = my.work.cvwrapper;
+			canvas = my.canvas[cellname];
+			w = canvas.width;
+			h = canvas.height;
+			context = my.ctx[entity.context];
+			cv.width = w;
+			cv.height = h;
+			cvx.font = context.font;
+			cvx.fillStyle = 'rgb(0, 0, 0)';
+			cvx.strokeStyle = 'rgb(0, 0, 0)';
+			cvx.textAlign = context.textAlign;
+			cvx.textBaseline = context.textBaseline;
+			test = (e[entity.path] && e[entity.path].type === 'Path');
+			if (entity.pivot || !test || entity.get('textAlongPath') === 'phrase') {
+				entity.floatOver(cvx, wrapper.name, wrapper);
 			}
 			else {
-				my.text[this.texts[0]].clipAlongPath();
+				text[texts[0]].clipAlongPath(entity);
 			}
-			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-			my.cvx.globalCompositeOperation = 'source-in';
-			my.cvx.drawImage(canvas, 0, 0);
-			my.cvx.globalCompositeOperation = 'source-over';
-			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+			cvx.setTransform(1, 0, 0, 1, 0, 0);
+			cvx.globalCompositeOperation = 'source-in';
+			cvx.drawImage(canvas, 0, 0);
+			cvx.globalCompositeOperation = 'source-over';
+			return cvx.getImageData(0, 0, w, h);
 		};
 		/**
 Entity.stamp hook helper function
 @method stampFilterWheel
 @private
 **/
-		my.Entity.prototype.stampFilterWheel = function(engine, cell, force) {
-			var canvas = my.canvas[cell],
-				context = my.ctx[this.context];
-			if (this.filterOnStroke) {
-				my.cvx.lineWidth = context.lineWidth;
-				my.cvx.shadowOffsetX = context.shadowOffsetX;
-				my.cvx.shadowOffsetY = context.shadowOffsetY;
-				my.cvx.shadowBlur = context.shadowBlur;
-				my.cvx.lineJoin = context.lineJoin;
-				my.cvx.lineCap = context.lineCap;
-				my.cvx.miterLimit = context.miterLimit;
-				my.cvx.lineDash = context.lineDash;
-				my.cvx.lineDashOffset = context.lineDashOffset;
-				my.cvx.globalAlpha = context.globalAlpha;
-				this.buildPath(my.cvx, my.cv);
-				my.cvx.stroke();
-				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-				my.cvx.globalCompositeOperation = 'source-in';
-				my.cvx.drawImage(canvas, 0, 0);
-				my.cvx.globalCompositeOperation = 'source-over';
+		my.Entity.prototype.stampFilterWheel = function(entity, engine, cellname, cell, filterOnStroke) {
+			var canvas = my.canvas[cellname],
+				context = my.ctx[entity.context],
+				cvx = my.work.cvx,
+				wrapper = my.work.cvwrapper;
+			if (filterOnStroke) {
+				cvx.lineWidth = context.lineWidth;
+				cvx.lineJoin = context.lineJoin;
+				cvx.lineCap = context.lineCap;
+				cvx.miterLimit = context.miterLimit;
+				cvx.lineDash = context.lineDash;
+				cvx.lineDashOffset = context.lineDashOffset;
+				cvx.globalAlpha = context.globalAlpha;
+				cvx.strokeStyle = '#000000';
+				entity.buildPath(cvx, wrapper);
+				cvx.stroke();
+				cvx.setTransform(1, 0, 0, 1, 0, 0);
+				cvx.globalCompositeOperation = 'source-in';
+				cvx.drawImage(canvas, 0, 0);
+				cvx.globalCompositeOperation = 'source-over';
 			}
 			else {
-				this.clip(my.cvx, cell);
-				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-				my.cvx.drawImage(canvas, 0, 0);
+				entity.clip(cvx, wrapper.name, wrapper);
+				cvx.setTransform(1, 0, 0, 1, 0, 0);
+				cvx.drawImage(canvas, 0, 0);
 			}
-			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+			return cvx.getImageData(0, 0, canvas.width, canvas.height);
 		};
 		/**
 Entity.stamp hook helper function
 @method stampFilterPicture
 @private
 **/
-		my.Entity.prototype.stampFilterPicture = function(engine, cell, force) {
+		my.Entity.prototype.stampFilterPicture = function(entity, engine, cellname, cell) {
 			var canvas,
 				data,
-				here;
-			canvas = my.canvas[cell];
-			data = this.getImage();
+				here,
+				cvx = my.work.cvx,
+				cv = my.work.cv,
+				copy = entity.copyData,
+				paste = entity.pasteData;
+			canvas = my.canvas[cellname];
+			data = entity.getImage();
 			if (data) {
-				here = this.prepareStamp();
-				this.rotateCell(my.cvx, my.cv);
-				my.cvx.drawImage(data, this.copyData.x, this.copyData.y, this.copyData.w, this.copyData.h, here.x, here.y, this.pasteData.w, this.pasteData.h);
-				my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-				my.cvx.globalCompositeOperation = 'source-in';
-				my.cvx.drawImage(canvas, 0, 0);
-				my.cvx.globalCompositeOperation = 'source-over';
-				return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+				here = entity.currentHandle;
+				entity.rotateCell(cvx, cv);
+				cvx.drawImage(data, copy.x, copy.y, copy.w, copy.h, here.x, here.y, paste.w, paste.h);
+				cvx.setTransform(1, 0, 0, 1, 0, 0);
+				cvx.globalCompositeOperation = 'source-in';
+				cvx.drawImage(canvas, 0, 0);
+				cvx.globalCompositeOperation = 'source-over';
+				return cvx.getImageData(0, 0, canvas.width, canvas.height);
 			}
 			return false;
 		};
@@ -809,12 +749,13 @@ Entity.stamp hook helper function
 @method stampFilterDefault
 @private
 **/
-		my.Entity.prototype.stampFilterDefault = function(engine, cell, force) {
-			var canvas = my.canvas[cell];
-			this.clip(my.cvx, cell);
-			my.cvx.setTransform(1, 0, 0, 1, 0, 0);
-			my.cvx.drawImage(canvas, 0, 0);
-			return my.cvx.getImageData(0, 0, canvas.width, canvas.height);
+		my.Entity.prototype.stampFilterDefault = function(entity, engine, cellname, cell) {
+			var canvas = my.canvas[cellname],
+				cvx = my.work.cvx;
+			entity.clip(cvx, cellname, cell);
+			cvx.setTransform(1, 0, 0, 1, 0, 0);
+			cvx.drawImage(canvas, 0, 0);
+			return cvx.getImageData(0, 0, canvas.width, canvas.height);
 		};
 
 		/**
@@ -838,10 +779,11 @@ Entity.stamp hook helper function
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Filter = function Filter(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
-			this.alpha = my.xtGet(items.alpha, 1);
-			this.composite = my.xtGet(items.composite, 'source-over');
+			this.alpha = get(items.alpha, 1);
+			this.composite = get(items.composite, 'source-over');
 			return this;
 		};
 		my.Filter.prototype = Object.create(my.Base.prototype);
@@ -853,7 +795,7 @@ Entity.stamp hook helper function
 **/
 		my.Filter.prototype.type = 'Filter';
 		my.Filter.prototype.classname = 'filternames';
-		my.d.Filter = {
+		my.work.d.Filter = {
 			/**
 Filter alpha
 
@@ -873,7 +815,7 @@ Only the final filter in an array of filters will determine the composite operat
 **/
 			composite: 'source-over'
 		};
-		my.mergeInto(my.d.Filter, my.d.Base);
+		my.mergeInto(my.work.d.Filter, my.work.d.Base);
 		/**
 Add function - overwritten by individual filters
 
@@ -893,15 +835,17 @@ cloneImageData function
 **/
 		my.Filter.prototype.cloneImageData = function(original) {
 			var w,
-				h;
+				h,
+				canvas = my.work.filterCanvas,
+				cvx = my.work.filterCvx;
 			if (my.xt(original)) {
 				if (my.xta(original.width, original.height)) {
 					w = original.width;
 					h = original.height;
-					my.filterCanvas.width = w;
-					my.filterCanvas.height = h;
-					my.filterCvx.putImageData(original, 0, 0);
-					return my.filterCvx.getImageData(0, 0, w, h);
+					canvas.width = w;
+					canvas.height = h;
+					cvx.putImageData(original, 0, 0);
+					return cvx.getImageData(0, 0, w, h);
 				}
 			}
 			return false;
@@ -914,7 +858,7 @@ getAlpha function
 @private
 **/
 		my.Filter.prototype.getAlpha = function() {
-			var a = (my.isa(this.alpha, 'str')) ? parseFloat(this.alpha) / 100 : this.alpha;
+			var a = (this.alpha.substring) ? parseFloat(this.alpha) / 100 : this.alpha;
 			if (a >= 0 && a <= 1) {
 				return a;
 			}
@@ -958,8 +902,8 @@ getAlpha function
 **/
 		my.GreyscaleFilter.prototype.type = 'GreyscaleFilter';
 		my.GreyscaleFilter.prototype.classname = 'filternames';
-		my.d.GreyscaleFilter = {};
-		my.mergeInto(my.d.GreyscaleFilter, my.d.Filter);
+		my.work.d.GreyscaleFilter = {};
+		my.mergeInto(my.work.d.GreyscaleFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its greyscale and combines it with data
 
@@ -967,24 +911,31 @@ Add function - takes data, calculates its greyscale and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.GreyscaleFilter.prototype.add = function(data) {
+		my.GreyscaleFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
 				grey,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
-					here = i;
-					d[here] = grey;
-					d[++here] = grey;
-					d[++here] = grey;
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						grey = Math.floor((0.2126 * d[here]) + (0.7152 * d[++here]) + (0.0722 * d[++here]));
+						here = i;
+						d[here] = grey;
+						d[++here] = grey;
+						d[++here] = grey;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1025,8 +976,8 @@ Add function - takes data, calculates its greyscale and combines it with data
 **/
 		my.InvertFilter.prototype.type = 'InvertFilter';
 		my.InvertFilter.prototype.classname = 'filternames';
-		my.d.InvertFilter = {};
-		my.mergeInto(my.d.InvertFilter, my.d.Filter);
+		my.work.d.InvertFilter = {};
+		my.mergeInto(my.work.d.InvertFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its invert and combines it with data
 
@@ -1034,21 +985,28 @@ Add function - takes data, calculates its invert and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.InvertFilter.prototype.add = function(data) {
+		my.InvertFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] = 255 - d[here];
-					d[++here] = 255 - d[here];
-					d[++here] = 255 - d[here];
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						d[here] = 255 - d[here];
+						d[++here] = 255 - d[here];
+						d[++here] = 255 - d[here];
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1090,7 +1048,7 @@ Add function - takes data, calculates its invert and combines it with data
 **/
 		my.BrightnessFilter.prototype.type = 'BrightnessFilter';
 		my.BrightnessFilter.prototype.classname = 'filternames';
-		my.d.BrightnessFilter = {
+		my.work.d.BrightnessFilter = {
 			/**
 Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1 or 100%
 
@@ -1100,7 +1058,7 @@ Percentage value of brightness effect: as a Number, between 0 (black) and 1 (no 
 **/
 			brightness: 1,
 		};
-		my.mergeInto(my.d.BrightnessFilter, my.d.Filter);
+		my.mergeInto(my.work.d.BrightnessFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its brightness and replaces the old color data with new
 
@@ -1108,24 +1066,31 @@ Add function - takes data, calculates its brightness and replaces the old color 
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.BrightnessFilter.prototype.add = function(data) {
+		my.BrightnessFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
 				brightness,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
-			brightness = (my.isa(this.brightness, 'str')) ? parseFloat(this.brightness) / 100 : this.brightness;
+			brightness = (this.brightness.substring) ? parseFloat(this.brightness) / 100 : this.brightness;
 			d = data.data;
 			brightness = (brightness < 0) ? 0 : brightness;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] *= brightness;
-					d[++here] *= brightness;
-					d[++here] *= brightness;
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						d[here] *= brightness;
+						d[++here] *= brightness;
+						d[++here] *= brightness;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1167,7 +1132,7 @@ Add function - takes data, calculates its brightness and replaces the old color 
 **/
 		my.SaturationFilter.prototype.type = 'SaturationFilter';
 		my.SaturationFilter.prototype.classname = 'filternames';
-		my.d.SaturationFilter = {
+		my.work.d.SaturationFilter = {
 			/**
 Percentage value of saturation effect: as a Number, between 0 (uniform grey) and 1 (no effect); as a String, between '0%' and '100%' (default: 1). Values can go above 1 or 100%
 
@@ -1177,7 +1142,7 @@ Percentage value of saturation effect: as a Number, between 0 (uniform grey) and
 **/
 			saturation: 1,
 		};
-		my.mergeInto(my.d.SaturationFilter, my.d.Filter);
+		my.mergeInto(my.work.d.SaturationFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its saturation and replaces the old color data with new
 
@@ -1185,24 +1150,31 @@ Add function - takes data, calculates its saturation and replaces the old color 
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.SaturationFilter.prototype.add = function(data) {
+		my.SaturationFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
 				saturation,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
-			saturation = (my.isa(this.saturation, 'str')) ? parseFloat(this.saturation) / 100 : this.saturation;
-			d = data.data;
+			saturation = (this.saturation.substring) ? parseFloat(this.saturation) / 100 : this.saturation;
 			saturation = (saturation < 0) ? 0 : saturation;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] = 127 + ((d[here] - 127) * saturation);
-					d[++here] *= alpha;
+			d = data.data;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						d[here] = 127 + ((d[here] - 127) * saturation);
+						d[++here] = 127 + ((d[here] - 127) * saturation);
+						d[++here] = 127 + ((d[here] - 127) * saturation);
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1244,7 +1216,7 @@ Add function - takes data, calculates its saturation and replaces the old color 
 **/
 		my.ThresholdFilter.prototype.type = 'ThresholdFilter';
 		my.ThresholdFilter.prototype.classname = 'filternames';
-		my.d.ThresholdFilter = {
+		my.work.d.ThresholdFilter = {
 			/**
 Percentage value of threshold effect: as a Number, between 0 (all black) and 1 (all white); as a String, between '0%' and '100%' (default: 0.5).
 
@@ -1254,7 +1226,7 @@ Percentage value of threshold effect: as a Number, between 0 (all black) and 1 (
 **/
 			threshold: 0.5,
 		};
-		my.mergeInto(my.d.ThresholdFilter, my.d.Filter);
+		my.mergeInto(my.work.d.ThresholdFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its threshold and combines it with data
 
@@ -1262,26 +1234,35 @@ Add function - takes data, calculates its threshold and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.ThresholdFilter.prototype.add = function(data) {
+		my.ThresholdFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
 				threshold,
-				i,
-				iz;
+				t,
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
-			threshold = (my.isa(this.threshold, 'str')) ? parseFloat(this.threshold) / 100 : this.threshold;
+			threshold = (this.threshold.substring) ? parseFloat(this.threshold) / 100 : this.threshold;
 			threshold = (my.isBetween(threshold, 0, 1, true)) ? threshold : ((threshold > 0.5) ? 1 : 0);
 			threshold *= 255;
-			data = my.GreyscaleFilter.prototype.add.call(this, data);
+			data = my.GreyscaleFilter.prototype.add.call(this, data, dim);
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] = (d[here] > threshold) ? 255 : 0;
-					d[++here] = (d[here] > threshold) ? 255 : 0;
-					d[++here] = (d[here] > threshold) ? 255 : 0;
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						t = (d[here] > threshold) ? 255 : 0;
+						d[here] = t;
+						d[++here] = t;
+						d[++here] = t;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1307,11 +1288,12 @@ Add function - takes data, calculates its threshold and combines it with data
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.ChannelsFilter = function(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.red = my.xtGet(items.red, 1);
-			this.green = my.xtGet(items.green, 1);
-			this.blue = my.xtGet(items.blue, 1);
+			this.red = get(items.red, 1);
+			this.green = get(items.green, 1);
+			this.blue = get(items.blue, 1);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1325,7 +1307,7 @@ Add function - takes data, calculates its threshold and combines it with data
 **/
 		my.ChannelsFilter.prototype.type = 'ChannelsFilter';
 		my.ChannelsFilter.prototype.classname = 'filternames';
-		my.d.ChannelsFilter = {
+		my.work.d.ChannelsFilter = {
 			/**
 value of red channel, from 0 or 0% upwards beyond 1 or 100%
 
@@ -1351,7 +1333,7 @@ value of blue channel, from 0 or 0% upwards beyond 1 or 100%
 **/
 			blue: 1,
 		};
-		my.mergeInto(my.d.ChannelsFilter, my.d.Filter);
+		my.mergeInto(my.work.d.ChannelsFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -1359,30 +1341,37 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.ChannelsFilter.prototype.add = function(data) {
+		my.ChannelsFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
 				red,
 				green,
 				blue,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
-			red = (my.isa(this.red, 'str')) ? parseFloat(this.red) / 100 : this.red;
-			green = (my.isa(this.green, 'str')) ? parseFloat(this.green) / 100 : this.green;
-			blue = (my.isa(this.blue, 'str')) ? parseFloat(this.blue) / 100 : this.blue;
+			red = (this.red.substring) ? parseFloat(this.red) / 100 : this.red;
+			green = (this.green.substring) ? parseFloat(this.green) / 100 : this.green;
+			blue = (this.blue.substring) ? parseFloat(this.blue) / 100 : this.blue;
 			d = data.data;
 			red = (red < 0) ? 0 : red;
 			green = (green < 0) ? 0 : green;
 			blue = (blue < 0) ? 0 : blue;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					d[here] *= red;
-					d[++here] *= green;
-					d[++here] *= blue;
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						d[here] *= red;
+						d[++here] *= green;
+						d[++here] *= blue;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1408,11 +1397,12 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.ChannelStepFilter = function(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.red = my.xtGet(items.red, 1);
-			this.green = my.xtGet(items.green, 1);
-			this.blue = my.xtGet(items.blue, 1);
+			this.red = get(items.red, 1);
+			this.green = get(items.green, 1);
+			this.blue = get(items.blue, 1);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1426,7 +1416,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.ChannelStepFilter.prototype.type = 'ChannelStepFilter';
 		my.ChannelStepFilter.prototype.classname = 'filternames';
-		my.d.ChannelStepFilter = {
+		my.work.d.ChannelStepFilter = {
 			/**
 Step value of red channel, between 1 (256 steps, default) and 128 (2 steps)
 
@@ -1452,7 +1442,7 @@ Step value of blue channel, between 1 (256 steps, default) and 128 (2 steps)
 **/
 			blue: 1,
 		};
-		my.mergeInto(my.d.ChannelStepFilter, my.d.Filter);
+		my.mergeInto(my.work.d.ChannelStepFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -1460,7 +1450,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.ChannelStepFilter.prototype.add = function(data) {
+		my.ChannelStepFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1470,8 +1460,13 @@ Add function - takes data, calculates its channels and combines it with data
 				r,
 				g,
 				b,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k,
+				floor = Math.floor;
 			alpha = this.getAlpha();
 			red = this.red;
 			green = this.green;
@@ -1480,17 +1475,20 @@ Add function - takes data, calculates its channels and combines it with data
 			red = (red < 1) ? 1 : red;
 			green = (green < 1) ? 1 : green;
 			blue = (blue < 1) ? 1 : blue;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					r = d[here];
-					g = d[++here];
-					b = d[++here];
-					here = i;
-					d[here] = Math.floor(r / red) * red;
-					d[++here] = Math.floor(g / green) * green;
-					d[++here] = Math.floor(b / blue) * blue;
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						r = d[here];
+						g = d[++here];
+						b = d[++here];
+						here = i;
+						d[here] = floor(r / red) * red;
+						d[++here] = floor(g / green) * green;
+						d[++here] = floor(b / blue) * blue;
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1516,17 +1514,18 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.TintFilter = function(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.redInRed = my.xtGet(items.redInRed, 1);
-			this.redInGreen = my.xtGet(items.redInGreen, 0);
-			this.redInBlue = my.xtGet(items.redInBlue, 0);
-			this.greenInRed = my.xtGet(items.greenInRed, 0);
-			this.greenInGreen = my.xtGet(items.greenInGreen, 1);
-			this.greenInBlue = my.xtGet(items.greenInBlue, 0);
-			this.blueInRed = my.xtGet(items.blueInRed, 0);
-			this.blueInGreen = my.xtGet(items.blueInGreen, 0);
-			this.blueInBlue = my.xtGet(items.blueInBlue, 1);
+			this.redInRed = get(items.redInRed, 1);
+			this.redInGreen = get(items.redInGreen, 0);
+			this.redInBlue = get(items.redInBlue, 0);
+			this.greenInRed = get(items.greenInRed, 0);
+			this.greenInGreen = get(items.greenInGreen, 1);
+			this.greenInBlue = get(items.greenInBlue, 0);
+			this.blueInRed = get(items.blueInRed, 0);
+			this.blueInGreen = get(items.blueInGreen, 0);
+			this.blueInBlue = get(items.blueInBlue, 1);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1540,7 +1539,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.TintFilter.prototype.type = 'TintFilter';
 		my.TintFilter.prototype.classname = 'filternames';
-		my.d.TintFilter = {
+		my.work.d.TintFilter = {
 			/**
 @property redInRed
 @type Number - or alternatively percentage String
@@ -1596,7 +1595,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 			blueInBlue: 1,
 		};
-		my.mergeInto(my.d.TintFilter, my.d.Filter);
+		my.mergeInto(my.work.d.TintFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -1604,7 +1603,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.TintFilter.prototype.add = function(data) {
+		my.TintFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d,
 				here,
@@ -1620,30 +1619,37 @@ Add function - takes data, calculates its channels and combines it with data
 				br,
 				bg,
 				bb,
-				i,
-				iz;
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				i, j, k;
 			alpha = this.getAlpha();
-			rr = (my.isa(this.redInRed, 'str')) ? parseFloat(this.redInRed) / 100 : this.redInRed;
-			rg = (my.isa(this.redInGreen, 'str')) ? parseFloat(this.redInGreen) / 100 : this.redInGreen;
-			rb = (my.isa(this.redInBlue, 'str')) ? parseFloat(this.redInBlue) / 100 : this.redInBlue;
-			gr = (my.isa(this.greenInRed, 'str')) ? parseFloat(this.greenInRed) / 100 : this.greenInRed;
-			gg = (my.isa(this.greenInGreen, 'str')) ? parseFloat(this.greenInGreen) / 100 : this.greenInGreen;
-			gb = (my.isa(this.greenInBlue, 'str')) ? parseFloat(this.greenInBlue) / 100 : this.greenInBlue;
-			br = (my.isa(this.blueInRed, 'str')) ? parseFloat(this.blueInRed) / 100 : this.blueInRed;
-			bg = (my.isa(this.blueInGreen, 'str')) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen;
-			bb = (my.isa(this.blueInBlue, 'str')) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue;
+			rr = (this.redInRed.substring) ? parseFloat(this.redInRed) / 100 : this.redInRed;
+			rg = (this.redInGreen.substring) ? parseFloat(this.redInGreen) / 100 : this.redInGreen;
+			rb = (this.redInBlue.substring) ? parseFloat(this.redInBlue) / 100 : this.redInBlue;
+			gr = (this.greenInRed.substring) ? parseFloat(this.greenInRed) / 100 : this.greenInRed;
+			gg = (this.greenInGreen.substring) ? parseFloat(this.greenInGreen) / 100 : this.greenInGreen;
+			gb = (this.greenInBlue.substring) ? parseFloat(this.greenInBlue) / 100 : this.greenInBlue;
+			br = (this.blueInRed.substring) ? parseFloat(this.blueInRed) / 100 : this.blueInRed;
+			bg = (this.blueInGreen.substring) ? parseFloat(this.blueInGreen) / 100 : this.blueInGreen;
+			bb = (this.blueInBlue.substring) ? parseFloat(this.blueInBlue) / 100 : this.blueInBlue;
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] !== 0) {
-					here = i;
-					r = d[here];
-					g = d[++here];
-					b = d[++here];
-					here = i;
-					d[here] = (r * rr) + (g * gr) + (b * br);
-					d[++here] = (r * rg) + (g * gg) + (b * bg);
-					d[++here] = (r * rb) + (g * gb) + (b * bb);
-					d[++here] *= alpha;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						here = i;
+						r = d[here];
+						g = d[++here];
+						b = d[++here];
+						here = i;
+						d[here] = (r * rr) + (g * gr) + (b * br);
+						d[++here] = (r * rg) + (g * gg) + (b * bg);
+						d[++here] = (r * rb) + (g * gb) + (b * bb);
+						d[++here] *= alpha;
+					}
 				}
 			}
 			return data;
@@ -1669,14 +1675,16 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.MatrixFilter = function(items) {
+			var get = my.xtGet,
+			floor = Math.floor;
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.width = my.xtGet(items.width, false);
-			this.height = my.xtGet(items.height, false);
+			this.width = get(items.width, false);
+			this.height = get(items.height, false);
 			this.data = (my.xt(items.data)) ? items.data : [1];
-			this.x = my.xtGet(items.x, Math.floor(this.width / 2));
-			this.y = my.xtGet(items.y, Math.floor(this.height / 2));
-			this.includeInvisiblePoints = my.xtGet(items.includeInvisiblePoints, false);
+			this.x = get(items.x, floor(this.width / 2));
+			this.y = get(items.y, floor(this.height / 2));
+			this.includeInvisiblePoints = get(items.includeInvisiblePoints, false);
 			this.setFilter();
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
@@ -1691,7 +1699,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.MatrixFilter.prototype.type = 'MatrixFilter';
 		my.MatrixFilter.prototype.classname = 'filternames';
-		my.d.MatrixFilter = {
+		my.work.d.MatrixFilter = {
 			/**
 Matrix maximum width
 
@@ -1741,7 +1749,7 @@ The data array has no meaning without width and height dimensions - if no dimens
 **/
 			data: false
 		};
-		my.mergeInto(my.d.MatrixFilter, my.d.Filter);
+		my.mergeInto(my.work.d.MatrixFilter, my.work.d.Filter);
 		/**
 Set attribute values.
 
@@ -1751,9 +1759,10 @@ Set attribute values.
 @chainable
 **/
 		my.MatrixFilter.prototype.set = function(items) {
+			var get = my.xtGet;
 			my.Base.prototype.set.call(this, items);
-			this.width = my.xtGet(items.width, false);
-			this.height = my.xtGet(items.height, false);
+			this.width = get(items.width, false);
+			this.height = get(items.height, false);
 			this.setFilter();
 		};
 		/**
@@ -1769,39 +1778,47 @@ SetFilter builds the matrix from width, height and data attributes already suppl
 				j,
 				k,
 				reqLen,
-				counter = 0;
-			if (!this.height && this.width && my.isa(this.width, 'num') && this.width >= 1) {
-				this.width = Math.floor(this.width);
-				reqLen = Math.ceil(this.data.length / this.width);
+				counter = 0,
+				floor = Math.floor,
+				ceil = Math.ceil,
+				round = Math.round,
+				pow = Math.pow,
+				sqrt = Math.sqrt,
+				data = this.data,
+				cells;
+			if (!this.height && this.width && this.width.toFixed && this.width >= 1) {
+				this.width = floor(this.width);
+				reqLen = ceil(data.length / this.width);
 				this.height = reqLen;
 				reqLen = this.width * this.height;
 			}
-			else if (!this.width && this.height && my.isa(this.height, 'num') && this.height >= 1) {
-				this.height = Math.floor(this.height);
-				reqLen = Math.ceil(this.data.length / this.height);
+			else if (!this.width && this.height && this.height.toFixed && this.height >= 1) {
+				this.height = floor(this.height);
+				reqLen = ceil(data.length / this.height);
 				this.width = reqLen;
 				reqLen = this.width * this.height;
 			}
-			else if (this.width && my.isa(this.width, 'num') && this.width >= 1 && this.height && my.isa(this.height, 'num') && this.height >= 1) {
-				this.width = Math.round(this.width);
-				this.height = Math.round(this.height);
+			else if (this.width && this.width.toFixed && this.width >= 1 && this.height && this.height.toFixed && this.height >= 1) {
+				this.width = round(this.width);
+				this.height = round(this.height);
 				reqLen = this.width * this.height;
 			}
 			else {
-				reqLen = Math.ceil(Math.sqrt(this.data.length));
-				reqLen = (reqLen % 2 === 1) ? Math.pow(reqLen, 2) : Math.pow(reqLen + 1, 2);
-				this.width = Math.round(Math.sqrt(reqLen));
+				reqLen = ceil(sqrt(data.length));
+				reqLen = (reqLen % 2 === 1) ? pow(reqLen, 2) : pow(reqLen + 1, 2);
+				this.width = round(sqrt(reqLen));
 				this.height = this.width;
 			}
 			for (k = 0; k < reqLen; k++) {
-				this.data[k] = (my.xt(this.data[k])) ? parseFloat(this.data[k]) : 0;
-				this.data[k] = (isNaN(this.data[k])) ? 0 : this.data[k];
+				data[k] = (my.xt(data[k])) ? parseFloat(data[k]) : 0;
+				data[k] = (isNaN(data[k])) ? 0 : data[k];
 			}
 			this.cells = [];
+			cells = this.cells;
 			for (i = 0; i < this.height; i++) { //col (y)
 				for (j = 0; j < this.width; j++) { //row (x)
-					if (this.data[counter] !== 0) {
-						this.cells.push([j - this.x, i - this.y, this.data[counter]]);
+					if (data[counter] !== 0) {
+						cells.push([j - this.x, i - this.y, data[counter]]);
 					}
 					counter++;
 				}
@@ -1815,7 +1832,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.MatrixFilter.prototype.add = function(data) {
+		my.MatrixFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d0,
 				dR,
@@ -1834,26 +1851,33 @@ Add function - takes data, calculates its channels and combines it with data
 				e,
 				e0,
 				x,
-				y;
+				y,
+				width = data.width,
+				height = data.height,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				cells = this.cells;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(data.width, data.height);
+			result = my.work.cvx.createImageData(width, height);
 			dR = result.data;
 			if (this.includeInvisiblePoints) {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
+				for (i = top, iz = bottom; i < iz; i++) {
+					for (j = left, jz = right; j < jz; j++) {
+						e0 = ((i * width) + j) * 4;
 						if (d0[e0 + 3] > 0) {
 							r = 0;
 							g = 0;
 							b = 0;
 							c = 0;
-							for (k = 0, kz = this.cells.length; k < kz; k++) {
-								x = j + this.cells[k][0];
-								y = i + this.cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									w = this.cells[k][2];
-									e = ((y * jz) + x) * 4;
+							for (k = 0, kz = cells.length; k < kz; k++) {
+								x = j + cells[k][0];
+								y = i + cells[k][1];
+								if (x >= 0 && x < width && y >= 0 && y < height) {
+									w = cells[k][2];
+									e = ((y * width) + x) * 4;
 									c += w;
 									r += (d0[e] * w);
 									e++;
@@ -1879,20 +1903,20 @@ Add function - takes data, calculates its channels and combines it with data
 				}
 			}
 			else {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
-						if (d0[e0 + 3] > 0) {
+				for (i = top, iz = bottom; i < iz; i++) {
+					for (j = left, jz = right; j < jz; j++) {
+						e0 = ((i * width) + j) * 4;
+						if (d0[e0 + 3]) {
 							r = 0;
 							g = 0;
 							b = 0;
 							c = 0;
-							for (k = 0, kz = this.cells.length; k < kz; k++) {
-								x = j + this.cells[k][0];
-								y = i + this.cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									w = this.cells[k][2];
-									e = ((y * jz) + x) * 4;
+							for (k = 0, kz = cells.length; k < kz; k++) {
+								x = j + cells[k][0];
+								y = i + cells[k][1];
+								if (x >= 0 && x < width && y >= 0 && y < height) {
+									w = cells[k][2];
+									e = ((y * width) + x) * 4;
 									if (d0[e + 3] > 0) {
 										c += w;
 										r += (d0[e] * w);
@@ -1942,12 +1966,13 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.PixelateFilter = function(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.width = my.xtGet(items.width, 5);
-			this.height = my.xtGet(items.height, 5);
-			this.offsetX = my.xtGet(items.offsetX, 0);
-			this.offsetY = my.xtGet(items.offsetY, 0);
+			this.width = get(items.width, 5);
+			this.height = get(items.height, 5);
+			this.offsetX = get(items.offsetX, 0);
+			this.offsetY = get(items.offsetY, 0);
 			my.filter[this.name] = this;
 			my.pushUnique(my.filternames, this.name);
 			return this;
@@ -1961,7 +1986,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.PixelateFilter.prototype.type = 'PixelateFilter';
 		my.PixelateFilter.prototype.classname = 'filternames';
-		my.d.PixelateFilter = {
+		my.work.d.PixelateFilter = {
 			/**
 Pixelization width
 
@@ -1995,7 +2020,7 @@ Vertical coordinate from which to begin pexelization
 **/
 			offsetY: 0,
 		};
-		my.mergeInto(my.d.PixelateFilter, my.d.Filter);
+		my.mergeInto(my.work.d.PixelateFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2003,7 +2028,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.PixelateFilter.prototype.add = function(data) {
+		my.PixelateFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d0,
 				dR,
@@ -2028,10 +2053,15 @@ Add function - takes data, calculates its channels and combines it with data
 				tH,
 				count,
 				pos,
-				test;
+				test,
+				round = Math.round,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(data.width, data.height);
+			result = my.work.cvx.createImageData(data.width, data.height);
 			dR = result.data;
 			dW = data.width;
 			dH = data.height;
@@ -2048,10 +2078,10 @@ Add function - takes data, calculates its channels and combines it with data
 					count = 0;
 					for (i = y, iz = y + h; i < iz; i++) {
 						for (j = x, jz = x + w; j < jz; j++) {
-							test = (j < 0 || j > tW || i < 0 || i > tH) ? true : false;
+							test = (j < left || j > right || i < top || i > bottom) ? true : false;
 							if (!test) {
 								pos = ((i * dW) + j) * 4;
-								if (d0[pos + 3] > 0) {
+								if (d0[pos + 3]) {
 									r += d0[pos];
 									g += d0[++pos];
 									b += d0[++pos];
@@ -2061,10 +2091,10 @@ Add function - takes data, calculates its channels and combines it with data
 							}
 						}
 					}
-					if (count > 0 && a > 0) {
-						r = Math.round(r / count);
-						g = Math.round(g / count);
-						b = Math.round(b / count);
+					if (count && a) {
+						r = round(r / count);
+						g = round(g / count);
+						b = round(b / count);
 						pos = ((y * dW) + x) * 4;
 						for (i = y, iz = y + h; i < iz; i++) {
 							for (j = x, jz = x + w; j < jz; j++) {
@@ -2101,15 +2131,16 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.BlurFilter = function(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.radiusX = my.xtGet(items.radiusX, 2);
-			this.radiusY = my.xtGet(items.radiusY, 2);
-			this.roll = my.xtGet(items.roll, 2);
-			this.skip = my.xtGet(items.skip, 1);
+			this.radiusX = get(items.radiusX, 2);
+			this.radiusY = get(items.radiusY, 2);
+			this.roll = get(items.roll, 2);
+			this.skip = get(items.skip, 1);
 			this.cells = (my.xt(items.cells)) ? items.cells : false;
-			this.includeInvisiblePoints = my.xtGet(items.includeInvisiblePoints, false);
-			if (!my.isa(this.cells, 'arr')) {
+			this.includeInvisiblePoints = get(items.includeInvisiblePoints, false);
+			if (!Array.isArray(this.cells)) {
 				this.cells = this.getBrush();
 			}
 			my.filter[this.name] = this;
@@ -2125,7 +2156,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.BlurFilter.prototype.type = 'BlurFilter';
 		my.BlurFilter.prototype.classname = 'filternames';
-		my.d.BlurFilter = {
+		my.work.d.BlurFilter = {
 			/**
 @property radiusX
 @type Number
@@ -2157,7 +2188,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 			includeInvisiblePoints: false
 		};
-		my.mergeInto(my.d.BlurFilter, my.d.Filter);
+		my.mergeInto(my.work.d.BlurFilter, my.work.d.Filter);
 		/**
 Set attribute values.
 
@@ -2168,7 +2199,7 @@ Set attribute values.
 **/
 		my.BlurFilter.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
-			if (!my.isa(items.cells, 'arr')) {
+			if (!Array.isArray(items.cells)) {
 				this.cells = this.getBrush();
 			}
 		};
@@ -2179,7 +2210,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.BlurFilter.prototype.add = function(data) {
+		my.BlurFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d0,
 				result,
@@ -2199,26 +2230,33 @@ Add function - takes data, calculates its channels and combines it with data
 				e,
 				e0,
 				x,
-				y;
+				y,
+				cells = this.cells,
+				width = data.width,
+				height = data.height,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(data.width, data.height);
+			result = my.work.cvx.createImageData(width, height);
 			dR = result.data;
-			c = this.cells.length;
+			c = cells.length;
 			s = Math.floor(c / this.skip);
 			if (this.includeInvisiblePoints) {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
+				for (i = top, iz = bottom; i < iz; i++) {
+					for (j = left, jz = right; j < jz; j++) {
+						e0 = ((i * width) + j) * 4;
 						if (d0[e0 + 3] > 0) {
 							r = 0;
 							g = 0;
 							b = 0;
 							for (k = 0, kz = c; k < kz; k += this.skip) {
-								x = j + this.cells[k][0];
-								y = i + this.cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									e = ((y * jz) + x) * 4;
+								x = j + cells[k][0];
+								y = i + cells[k][1];
+								if (x >= 0 && x < width && y >= 0 && y < height) {
+									e = ((y * width) + x) * 4;
 									r += d0[e];
 									e++;
 									g += d0[e];
@@ -2243,19 +2281,19 @@ Add function - takes data, calculates its channels and combines it with data
 				}
 			}
 			else {
-				for (i = 0, iz = data.height; i < iz; i++) {
-					for (j = 0, jz = data.width; j < jz; j++) {
-						e0 = ((i * jz) + j) * 4;
-						if (d0[e0 + 3] > 0) {
+				for (i = top, iz = bottom; i < iz; i++) {
+					for (j = left, jz = right; j < jz; j++) {
+						e0 = ((i * width) + j) * 4;
+						if (d0[e0 + 3]) {
 							r = 0;
 							g = 0;
 							b = 0;
 							count = 0;
 							for (k = 0, kz = c; k < kz; k += this.skip) {
-								x = j + this.cells[k][0];
-								y = i + this.cells[k][1];
-								if (x >= 0 && x < jz && y >= 0 && y < iz) {
-									e = ((y * jz) + x) * 4;
+								x = j + cells[k][0];
+								y = i + cells[k][1];
+								if (x >= 0 && x < width && y >= 0 && y < height) {
+									e = ((y * width) + x) * 4;
 									if (d0[e + 3] > 0) {
 										count++;
 										r += d0[e];
@@ -2311,11 +2349,11 @@ Blur helper function
 			r = this.roll;
 			dim = (x > y) ? x + 2 : y + 2;
 			hDim = Math.floor(dim / 2);
-			cos = Math.cos(r * my.radian);
-			sin = Math.sin(r * my.radian);
+			cos = Math.cos(r * my.work.radian);
+			sin = Math.sin(r * my.work.radian);
 			brush = [];
-			cv = my.filterCanvas;
-			cvx = my.filterCvx;
+			cv = my.work.filterCanvas;
+			cvx = my.work.filterCvx;
 			cv.width = dim;
 			cv.height = dim;
 			cvx.setTransform(cos, sin, -sin, cos, hDim, hDim);
@@ -2378,7 +2416,7 @@ Blur helper function
 **/
 		my.LeachFilter.prototype.type = 'LeachFilter';
 		my.LeachFilter.prototype.classname = 'filternames';
-		my.d.LeachFilter = {
+		my.work.d.LeachFilter = {
 			/**
 Unlike other filters, the leach filter uses an 'xor' GCO to stamp itself onto the canvas - this is changeable, if necessary
 
@@ -2400,7 +2438,7 @@ The exclude array should contain a set of arrays defining the color ranges to be
 **/
 			exclude: []
 		};
-		my.mergeInto(my.d.LeachFilter, my.d.Filter);
+		my.mergeInto(my.work.d.LeachFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2408,7 +2446,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.LeachFilter.prototype.add = function(data) {
+		my.LeachFilter.prototype.add = function(data, dim) {
 			var r,
 				g,
 				b,
@@ -2420,30 +2458,39 @@ Add function - takes data, calculates its channels and combines it with data
 				bMin,
 				d,
 				i,
-				iz,
+				k,
 				j,
-				jz,
-				flag;
+				l, lz,
+				flag,
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				exclude = this.exclude;
 			d = data.data;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] > 0) {
-					flag = false;
-					r = d[i];
-					g = d[i + 1];
-					b = d[i + 2];
-					for (j = 0, jz = this.exclude.length; j < jz; j++) {
-						rMin = this.exclude[j][0];
-						gMin = this.exclude[j][1];
-						bMin = this.exclude[j][2];
-						rMax = this.exclude[j][3];
-						gMax = this.exclude[j][4];
-						bMax = this.exclude[j][5];
-						if (r >= rMin && r <= rMax && g >= gMin && g <= gMax && b >= bMin && b <= bMax) {
-							flag = true;
-							break;
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						flag = false;
+						r = d[i];
+						g = d[i + 1];
+						b = d[i + 2];
+						for (l = 0, lz = exclude.length; l < lz; l++) {
+							rMin = exclude[l][0];
+							gMin = exclude[l][1];
+							bMin = exclude[l][2];
+							rMax = exclude[l][3];
+							gMax = exclude[l][4];
+							bMax = exclude[l][5];
+							if (r >= rMin && r <= rMax && g >= gMin && g <= gMax && b >= bMin && b <= bMax) {
+								flag = true;
+								break;
+							}
 						}
+						d[i + 3] = (flag) ? 255 : 0;
 					}
-					d[i + 3] = (flag) ? 255 : 0;
 				}
 			}
 			return data;
@@ -2485,9 +2532,9 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.SeparateFilter.prototype.type = 'SeparateFilter';
 		my.SeparateFilter.prototype.classname = 'filternames';
-		my.d.SeparateFilter = {
+		my.work.d.SeparateFilter = {
 			/**
-Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'all'
+Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow'
 
 @property channel
 @type String
@@ -2495,7 +2542,7 @@ Can be one of: 'red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'all'
 **/
 			channel: 'all',
 		};
-		my.mergeInto(my.d.SeparateFilter, my.d.Filter);
+		my.mergeInto(my.work.d.SeparateFilter, my.work.d.Filter);
 		/**
 Add function - takes data, calculates its channels and combines it with data
 
@@ -2503,54 +2550,61 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.SeparateFilter.prototype.add = function(data) {
+		my.SeparateFilter.prototype.add = function(data, dim) {
 			var alpha,
 				channel,
 				d,
-				i,
-				iz,
-				col;
+				i, j, k,
+				col,
+				width = data.width,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				channels;
+
+			channels = {
+				red: function(d) {
+					d[i + 1] = 0;
+					d[i + 2] = 0;
+				},
+				green: function(d) {
+					d[i] = 0;
+					d[i + 2] = 0;
+				},
+				blue: function(d) {
+					d[i] = 0;
+					d[i + 1] = 0;
+				},
+				cyan: function(d) {
+					var col = (d[i + 1] + d[i + 2]) / 2;
+					d[i] = 0;
+					d[i + 1] = col;
+					d[i + 2] = col;
+				},
+				magenta: function(d) {
+					var col = (d[i] + d[i + 2]) / 2;
+					d[i + 1] = 0;
+					d[i] = col;
+					d[i + 2] = col;
+				},
+				yellow: function(d) {
+					var col = (d[i] + d[i + 1]) / 2;
+					d[i + 2] = 0;
+					d[i + 1] = col;
+					d[i] = col;
+				}
+			};
 			alpha = this.getAlpha();
 			channel = this.channel;
 			d = data.data;
-			//i, iz, col;
-			for (i = 0, iz = d.length; i < iz; i += 4) {
-				if (d[i + 3] > 0) {
-					switch (channel) {
-						case 'red':
-							d[i + 1] = 0;
-							d[i + 2] = 0;
-							break;
-						case 'green':
-							d[i] = 0;
-							d[i + 2] = 0;
-							break;
-						case 'blue':
-							d[i] = 0;
-							d[i + 1] = 0;
-							break;
-						case 'cyan':
-							col = (d[i + 1] + d[i + 2]) / 2;
-							d[i] = 0;
-							d[i + 1] = col;
-							d[i + 2] = col;
-							break;
-						case 'magenta':
-							col = (d[i] + d[i + 2]) / 2;
-							d[i + 1] = 0;
-							d[i] = col;
-							d[i + 2] = col;
-							break;
-						case 'yellow':
-							col = (d[i] + d[i + 1]) / 2;
-							d[i + 2] = 0;
-							d[i + 1] = col;
-							d[i] = col;
-							break;
-						default:
-							// case 'all' - do nothing
+			for (k = top; k < bottom; k++) {
+				for (j = left; j < right; j++) {
+					i = ((k * width) + j) * 4;
+					if (d[i + 3]) {
+						channels[channel](d);
+						d[i + 3] *= alpha;
 					}
-					d[i + 3] *= alpha;
 				}
 			}
 			return data;
@@ -2576,14 +2630,15 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.NoiseFilter = function(items) {
+			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Filter.call(this, items);
-			this.radiusX = my.xtGet(items.radiusX, 2);
-			this.radiusY = my.xtGet(items.radiusY, 2);
-			this.roll = my.xtGet(items.roll, 2);
+			this.radiusX = get(items.radiusX, 2);
+			this.radiusY = get(items.radiusY, 2);
+			this.roll = get(items.roll, 2);
 			this.cells = (my.xt(items.cells)) ? items.cells : false;
-			this.strength = my.xtGet(items.strength, 0.3);
-			if (!my.isa(this.cells, 'arr')) {
+			this.strength = get(items.strength, 0.3);
+			if (!Array.isArray(this.cells)) {
 				this.cells = this.getBrush();
 			}
 			my.filter[this.name] = this;
@@ -2599,7 +2654,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 		my.NoiseFilter.prototype.type = 'NoiseFilter';
 		my.NoiseFilter.prototype.classname = 'filternames';
-		my.d.NoiseFilter = {
+		my.work.d.NoiseFilter = {
 			/**
 @property radiusX
 @type Number
@@ -2625,7 +2680,7 @@ Add function - takes data, calculates its channels and combines it with data
 **/
 			strength: 0.3,
 		};
-		my.mergeInto(my.d.NoiseFilter, my.d.Filter);
+		my.mergeInto(my.work.d.NoiseFilter, my.work.d.Filter);
 		/**
 Set attribute values.
 
@@ -2655,7 +2710,7 @@ Add function - takes data, calculates its channels and combines it with data
 @param {Object} data - canvas getImageData object
 @return amended image data object
 **/
-		my.NoiseFilter.prototype.add = function(data) {
+		my.NoiseFilter.prototype.add = function(data, dim) {
 			var alpha,
 				d0,
 				dR,
@@ -2672,23 +2727,31 @@ Add function - takes data, calculates its channels and combines it with data
 				x,
 				y,
 				cell,
-				cellLen;
+				cellLen,
+				width = data.width,
+				height = data.height,
+				left = dim.left,
+				right = dim.right,
+				top = dim.top,
+				bottom = dim.bottom,
+				rnd = Math.random,
+				floor = Math.floor;
 			alpha = this.getAlpha();
 			d0 = data.data;
-			result = my.cvx.createImageData(data.width, data.height);
+			result = my.work.cvx.createImageData(width, height);
 			dR = result.data;
 			strength = this.strength;
 			cellLen = this.cells.length;
-			for (i = 0, iz = data.height; i < iz; i++) {
-				for (j = 0, jz = data.width; j < jz; j++) {
-					e0 = ((i * jz) + j) * 4;
-					if (d0[e0 + 3] > 0) {
-						if (Math.random() < strength) {
-							cell = this.cells[Math.floor(Math.random() * cellLen)];
+			for (i = top, iz = bottom; i < iz; i++) {
+				for (j = left, jz = right; j < jz; j++) {
+					e0 = ((i * width) + j) * 4;
+					if (d0[e0 + 3]) {
+						if (rnd() < strength) {
+							cell = this.cells[floor(rnd() * cellLen)];
 							x = j + cell[0];
 							y = i + cell[1];
-							if (x >= 0 && x < jz && y >= 0 && y < iz) {
-								e = ((y * jz) + x) * 4;
+							if (x >= 0 && x < width && y >= 0 && y < height) {
+								e = ((y * width) + x) * 4;
 								dR[e0] = d0[e];
 								dR[e0 + 1] = d0[e + 1];
 								dR[e0 + 2] = d0[e + 2];
