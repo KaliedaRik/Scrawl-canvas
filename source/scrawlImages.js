@@ -580,7 +580,6 @@ Alias for Pattern.makeDesign()
 				items = my.safeObject(items);
 				if (xt(items.source)) {
 					src = get(my.image[items.source], my.video[items.source], my.cell[items.source], false);
-					// if (src) {
 					my.Entity.call(this, items);
 					tempV = my.safeObject(items.paste);
 					this.start.x = get(items.pasteX, tempV.x, this.start.x);
@@ -604,7 +603,6 @@ Alias for Pattern.makeDesign()
 					this.setCopy();
 					this.setPaste();
 					return this;
-					// }
 				}
 			}
 			return false;
@@ -1251,12 +1249,20 @@ getImage helper object
 **/
 		my.Picture.prototype.getImageActions = {
 			img: function(src) {
-				return my.asset[src];
+				var a = my.asset[src],
+					img = my.image[src];
+				if(img.width < 2 && img.height < 2){
+					img.checkNaturalDimensions();
+				}
+				return a;
 			},
 			animation: function(src, animation, copyData) {
 				var anim = my.spriteanimation[animation].getData(),
 					img = my.image[src],
 					perc = my.Picture.prototype.numberConvert;
+				if(img.width < 2 && img.height < 2){
+					img.checkNaturalDimensions();
+				}
 				copyData.x = (anim.x.substring) ? perc(anim.x, img.width) : anim.x;
 				copyData.y = (anim.y.substring) ? perc(anim.y, img.height) : anim.y;
 				copyData.w = (anim.w.substring) ? perc(anim.w, img.width) : anim.w;

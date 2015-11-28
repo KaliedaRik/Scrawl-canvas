@@ -168,6 +168,9 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 		};
 		/**
 A __general__ function to generate a Image wrapper object for an &lt;img&gt; or &lt;svg&gt; element identified by an id string
+
+Note: if an &lt;img&gt; (or &lt;picture&gt;) element uses the srcset attribute some browsers (eg chrome) will attempt to reload the image during browser resize. For this reason it is good policy to set this function's second argument (kill) to false, particularly if it is being used within an image load event listener. By default, the kill argument is set to true.
+
 @method getImageById
 @param {String} idtag Id string value of DOM object to be imported into the scrawl library
 @param {Boolean} [kill] when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library
@@ -260,7 +263,8 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 		my.Image = function(items) {
 			var tempname,
 				xt = my.xt,
-				get = my.xtGet;
+				get = my.xtGet,
+				updatesRequired = false;
 			items = my.safeObject(items);
 			this.width = 0;
 			this.height = 0;
@@ -276,6 +280,10 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 					items.name = get(items.name, tempname, '');
 				}
 				my.Base.call(this, items);
+				if(xt(my.image[items.name])){
+					this.name = items.name;
+					updatesRequired = true;
+				}
 				my.image[this.name] = this;
 				my.pushUnique(my.imagenames, this.name);
 				if (xt(items.element)) {
@@ -286,6 +294,9 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 				}
 				else if (xt(items.url)) {
 					this.addImageByUrl(items);
+				}
+				if(updatesRequired){
+					this.updateDependentEntitys();
 				}
 				return this;
 			}
@@ -314,7 +325,7 @@ DOM image actual height, in pixels
 @type Number
 @default 0
 **/
-			height: 0,
+			height: 0
 			/**
 Constructor/clone flag - if set to true (default), will remove the &lt;img&gt; element from the web page DOM
 
@@ -502,6 +513,55 @@ Clone an Image object
 		my.Image.prototype.clone = function(items) {
 			items.element = my.work.imageFragment.getElementById(this.name).cloneNode();
 			return my.makeImage(items);
+		};
+		/**
+Check whether image's natural dimensions have changed and, if they have, update any relevant Picture entity copy data
+
+@method checkNaturalDimensions
+@return true if dimensions have changed; false otherwise
+**/
+		my.Image.prototype.checkNaturalDimensions = function() {
+			var el = my.asset[this.name],
+				getTrue = my.xtGetTrue,
+				changed = false,
+				w, h;
+			if(el){
+				w = parseFloat(getTrue(el.offsetWidth, el.width, el.style.width, 1));
+				h = parseFloat(getTrue(el.offsetHeight, el.height, el.style.height, 1));
+				if(w !== this.width){
+					this.width = w;
+					changed = true;
+				}
+				if(h !== this.height){
+					this.height = h;
+					changed = true;
+				}
+			}
+			if(changed){
+				this.updateDependentEntitys();
+			}
+			return changed;
+		};
+		/**
+Update the copyData of entitys that use this image as their source
+
+@method updateDependentEntitys
+@return Always true
+**/
+		my.Image.prototype.updateDependentEntitys = function() {
+			var e = scrawl.entity,
+				ent,
+				eNames = scrawl.entitynames,
+				i, iz;
+			for(i = 0, iz = eNames.length; i < iz; i++){
+				ent = e[eNames[i]];
+				if(ent.type === 'Picture'){
+					if(ent.source === this.name){
+						ent.setCopy();
+					}
+				}
+			}
+			return true;
 		};
 
 		/**
