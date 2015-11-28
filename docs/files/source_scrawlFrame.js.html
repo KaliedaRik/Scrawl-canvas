@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.0</em>
+            <em>API Docs for: 5.0.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -1692,6 +1692,10 @@ Returns an object with the following attributes:
 			return this.maxDimensions;
 		};
 
+		my.Frame.prototype.parseCollisionPoints = function() {
+			return [];
+		};
+		
 		/**
 reciprocal assignment - also occurs in scrawlFilters as there&#x27;s no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first
 @method stampFilterActions
