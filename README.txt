@@ -91,44 +91,44 @@ VERSION 5.0.0 released 24 November 2015
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (77kb)
-		- scrawlAnimation-min.js (25kb)
+		- scrawlCore-min.js (78kb)
+		- scrawlAnimation-min.js (31kb)
 		- scrawlBlock-min.js (5kb)
 		- scrawlCollisions-min.js (11kb)
 		- scrawlColor-min.js (5kb)
 		- scrawlFilters-min.js (25kb)
-		- scrawlFrame-min.js (19kb)
+		- scrawlFrame-min.js (20kb)
 		- scrawlImageLoad-min.js (9kb)
-		- scrawlImages-min.js (39kb)
+		- scrawlImages-min.js (40kb)
 		- scrawlPath-min.js (24kb)
 		- scrawlPathFactories-min.js (9kb)
 		- scrawlPhrase-min.js (13kb)
-		- scrawlPhysics-min.js (9kb)
+		- scrawlPhysics-min.js (10kb)
 		- scrawlQuaternion-min.js (6kb)
 		- scrawlSaveLoad-min.js (9kb)
 		- scrawlShape-min.js (9kb)
-		- scrawlStacks-min.js (48kb)
-		- scrawlWheel-min.js (6kb)
+		- scrawlStacks-min.js (49kb)
+		- scrawlWheel-min.js (7kb)
 
 		Development:
-		- scrawlCore.js (229kb)
-		- scrawlAnimation.js (70kb)
-		- scrawlBlock.js (15kb)
-		- scrawlCollisions.js (30kb)
-		- scrawlColor.js (16kb)
-		- scrawlFilters.js (69kb)
-		- scrawlFrame (39kb)
-		- scrawlImageLoad.js (26kb)
+		- scrawlCore.js (238kb)
+		- scrawlAnimation.js (88kb)
+		- scrawlBlock.js (14kb)
+		- scrawlCollisions.js (29kb)
+		- scrawlColor.js (15kb)
+		- scrawlFilters.js (67kb)
+		- scrawlFrame (40kb)
+		- scrawlImageLoad.js (25kb)
 		- scrawlImages.js (68kb)
-		- scrawlPath.js (69kb)
+		- scrawlPath.js (68kb)
 		- scrawlPathFactories.js (25kb)
-		- scrawlPhrase.js (40kb)
+		- scrawlPhrase.js (39kb)
 		- scrawlPhysics.js (26kb)
 		- scrawlQuaternion.js (18kb)
 		- scrawlSaveLoad.js (18kb)
-		- scrawlShape.js (27kb)
-		- scrawlStacks.js (115kb)
-		- scrawlWheel.js (19kb)
+		- scrawlShape.js (26kb)
+		- scrawlStacks.js (112kb)
+		- scrawlWheel.js (20kb)
 
 		Documentation:
 		- changelog.txt
@@ -147,7 +147,7 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
-VERSION 5.0.0 uploaded 24 November 2015
+VERSION 5.0.0 uploaded 26 November 2015
 	- major overhaul of library
 	- major new functionality including: 
 		- emulate 3d perspectives in 2d canvases

@@ -1432,6 +1432,10 @@ Returns an object with the following attributes:
 			return this.maxDimensions;
 		};
 
+		my.Frame.prototype.parseCollisionPoints = function() {
+			return [];
+		};
+		
 		/**
 reciprocal assignment - also occurs in scrawlFilters as there's no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first
 @method stampFilterActions
