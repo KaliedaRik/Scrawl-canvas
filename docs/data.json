@@ -385,7 +385,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "source\\scrawlImageLoad.js",
-            "line": 732,
+            "line": 792,
             "description": "# scrawlFrame\n\n## Purpose and features\n\nThe Frame module adds PerspectiveCell entitys to the core module\n\n* ..."
         },
         "scrawlImages": {
@@ -1505,7 +1505,7 @@
             "module": "scrawlFrame",
             "namespace": "",
             "file": "source\\scrawlImageLoad.js",
-            "line": 238,
+            "line": 241,
             "description": "# Image\n\n## Instantiation\n\n* scrawl.getImagesByClass()\n\n## Purpose\n\n* Wraps DOM &lt;img&gt; elements imported into the scrawl library\n* Used by __Picture__ entitys and __Pattern__ designs\n\n## Access\n\n* scrawl.image.IMAGENAME - for the Image object\n* scrawl.asset.IMAGENAME - for a link to the original &lt;img&gt; element",
             "is_constructor": 1,
             "extends": "Base",
@@ -1529,7 +1529,7 @@
             "module": "scrawlFrame",
             "namespace": "",
             "file": "source\\scrawlImageLoad.js",
-            "line": 507,
+            "line": 567,
             "description": "# SpriteAnimation\n\n## Instantiation\n\n* scrawl.makeSpriteAnimation()\n\n## Purpose\n\n* wraps a entity sheet image\n* acts as the link between a Picture object and the entity images on the entity sheet\n* holds data about cells in the entitysheet animation\n* controls the animation playback\n\n## Access\n\n* scrawl.spriteanimation.SPRITEANIMATIONNAME\n* scrawl.spriteanimation.[scrawl.entity.PICTURENAME.spriteAnimation]\n\nSpriteAnimation attributes can also be set and retrieved directly using Picture.get() and Picture.set() functions, where a Picture entity is associated with the SpriteAnimation object via its .animSheet attribute",
             "is_constructor": 1,
             "extends": "Base",
@@ -1553,7 +1553,7 @@
             "module": "scrawlFrame",
             "namespace": "",
             "file": "source\\scrawlImageLoad.js",
-            "line": 732,
+            "line": 792,
             "description": "# Video\n\n## Instantiation\n\n* scrawl.getVideoById()\n* scrawl.makeVideo()\n\n## Purpose\n\n* Wraps DOM &lt;video&gt; elements imported into the scrawl library\n* Used by __Picture__ entitys and __Pattern__ designs\n\n## Access\n\n* scrawl.video.VIDEONAME - for the Video object\n* scrawl.asset.IMAGENAME - for a link to the original &lt;video&gt; element",
             "is_constructor": 1,
             "extends": "Base",
@@ -14567,7 +14567,7 @@
         {
             "file": "source\\scrawlImageLoad.js",
             "line": 169,
-            "description": "A __general__ function to generate a Image wrapper object for an &lt;img&gt; or &lt;svg&gt; element identified by an id string",
+            "description": "A __general__ function to generate a Image wrapper object for an &lt;img&gt; or &lt;svg&gt; element identified by an id string\n\nNote: if an &lt;img&gt; (or &lt;picture&gt;) element uses the srcset attribute some browsers (eg chrome) will attempt to reload the image during browser resize. For this reason it is good policy to set this function's second argument (kill) to false, particularly if it is being used within an image load event listener. By default, the kill argument is set to true.",
             "itemtype": "method",
             "name": "getImageById",
             "params": [
@@ -14591,7 +14591,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 201,
+            "line": 204,
             "description": "Helper function",
             "itemtype": "method",
             "name": "getVideoCallback",
@@ -14602,7 +14602,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 212,
+            "line": 215,
             "description": "A __general__ function to generate a Video wrapper object for a &lt;video&gt; element identified by an id string",
             "itemtype": "method",
             "name": "getVideoById",
@@ -14627,7 +14627,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 295,
+            "line": 306,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -14638,7 +14638,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 304,
+            "line": 315,
             "description": "DOM image actual width, in pixels",
             "itemtype": "property",
             "name": "width",
@@ -14649,7 +14649,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 311,
+            "line": 322,
             "description": "DOM image actual height, in pixels",
             "itemtype": "property",
             "name": "height",
@@ -14660,7 +14660,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 318,
+            "line": 329,
             "description": "Constructor/clone flag - if set to true (default), will remove the &lt;img&gt; element from the web page DOM\n\n_This attribute is not retained by the object_",
             "itemtype": "property",
             "name": "removeImageFromDOM",
@@ -14671,7 +14671,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 326,
+            "line": 337,
             "description": "Constructor/clone function - some functions can call the Image constructor with a callback function\n\n_This attribute is not retained by the object_",
             "itemtype": "property",
             "name": "callback",
@@ -14682,7 +14682,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 334,
+            "line": 345,
             "description": "Constructor argument attribute - a DOM &lt;img&gt; element\n\n_This attribute is not retained by the object_",
             "itemtype": "property",
             "name": "element",
@@ -14693,7 +14693,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 342,
+            "line": 353,
             "description": "Constructor argument attribute - a canvas imageData object\n\n_This attribute is not retained by the object_",
             "itemtype": "property",
             "name": "data",
@@ -14704,7 +14704,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 350,
+            "line": 361,
             "description": "Constructor argument attribute - a String URL for dynamically loading an image\n\n_This attribute is not retained by the object_",
             "itemtype": "property",
             "name": "url",
@@ -14715,7 +14715,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 360,
+            "line": 371,
             "description": "Adds a DOM &lt;img&gt; element to the library\n\n* items.element MUST be a reference to the element, and the element MUST be present in the DOM",
             "itemtype": "method",
             "name": "addImageByElement",
@@ -14737,7 +14737,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 391,
+            "line": 402,
             "description": "Import an image using the supplied url string",
             "itemtype": "method",
             "name": "addImageByUrl",
@@ -14759,7 +14759,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 444,
+            "line": 455,
             "description": "Creates a new &lt;img&gt; element from a canvas ImageData object - uses Image.addImageByUrl() to achieve this",
             "itemtype": "method",
             "name": "addImageByData",
@@ -14781,7 +14781,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 467,
+            "line": 478,
             "description": "Creates a new &lt;img&gt; element from an existing cell's current display - uses Image.addImageByUrl() to achieve this",
             "itemtype": "method",
             "name": "createImageFromCell",
@@ -14806,7 +14806,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 495,
+            "line": 506,
             "description": "Clone an Image object",
             "itemtype": "method",
             "name": "clone",
@@ -14826,7 +14826,31 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 548,
+            "line": 517,
+            "description": "Check whether image's natural dimensions have changed and, if they have, update any relevant Picture entity copy data",
+            "itemtype": "method",
+            "name": "checkNaturalDimensions",
+            "return": {
+                "description": "true if dimensions have changed; false otherwise"
+            },
+            "class": "Image",
+            "module": "scrawlFrame"
+        },
+        {
+            "file": "source\\scrawlImageLoad.js",
+            "line": 545,
+            "description": "Update the copyData of entitys that use this image as their source",
+            "itemtype": "method",
+            "name": "updateDependentEntitys",
+            "return": {
+                "description": "Always true"
+            },
+            "class": "Image",
+            "module": "scrawlFrame"
+        },
+        {
+            "file": "source\\scrawlImageLoad.js",
+            "line": 608,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -14837,7 +14861,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 557,
+            "line": 617,
             "description": "An Array of animation frame data Objects, to be used for producing an animation sequence. Each Object in the Array has the following form:\n\n* {x:Number, y:Number, w:Number, h:Number, d:Number}\n\n... where:\n\n* __x__ and __y__ represent the starting coordinates for the animation frame, in pixels, from the top left corner of the image\n* __w__ and __h__ represent the dimensions of the animation frame, in pixels\n* __d__ is the duration for each frame, in milliseconds\n\nAnimation frames are played in the order they are presented in this Array",
             "itemtype": "property",
             "name": "frames",
@@ -14848,7 +14872,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 574,
+            "line": 634,
             "description": "The current frame of the animation, from frame 0",
             "itemtype": "property",
             "name": "currentFrame",
@@ -14859,7 +14883,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 581,
+            "line": 641,
             "description": "The speed at which the animation is to play. Values less than 1 will slow the animation, while values greater than one will speed it up. Setting the speed to 0 will pause the animation",
             "itemtype": "property",
             "name": "speed",
@@ -14870,7 +14894,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 588,
+            "line": 648,
             "description": "Playback String; permitted values include:\n\n* 'pause' - pause the animation on the current frame\n* 'end' - play the animation once (default)\n* 'loop' - play the animation continuously \n* 'reverse' - reverse the direction in which the animation runs",
             "itemtype": "property",
             "name": "loop",
@@ -14881,7 +14905,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 600,
+            "line": 660,
             "description": "Animation running String: permitted values include:\n\n* 'forward' - play the animation from the first frame towards the last frame\n* 'backward' - play the animation from the last frame towards the first frame\n* 'complete' - animation has reached the last (or first) frame and has completed",
             "itemtype": "property",
             "name": "running",
@@ -14892,7 +14916,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 611,
+            "line": 671,
             "description": "Datestamp when SpriteAnimation.getData() function was last called",
             "itemtype": "property",
             "name": "lastCalled",
@@ -14905,7 +14929,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 622,
+            "line": 682,
             "description": "Set attribute values - will also set the __currentFrame__ attribute to the appropriate value when the running __attribute__ is changed\n\n(Only used by SpriteAnimation objects)",
             "itemtype": "method",
             "name": "set",
@@ -14927,7 +14951,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 659,
+            "line": 719,
             "description": "Returns an Object in the form {copyX:Number, copyY:Number, copyWidth:Number, copyHeight:Number}, representing the coordinates and dimensions of the current frame to be displayed by a Picture entity\n\n(Only used by SpriteAnimation objects)",
             "itemtype": "method",
             "name": "getData",
@@ -14941,7 +14965,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 693,
+            "line": 753,
             "description": "getData helper object",
             "itemtype": "method",
             "name": "getDataForward",
@@ -14952,7 +14976,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 712,
+            "line": 772,
             "description": "getData helper object",
             "itemtype": "method",
             "name": "getDataBackward",
@@ -14963,7 +14987,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 779,
+            "line": 839,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -14974,7 +14998,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 788,
+            "line": 848,
             "description": "DOM image actual width, in pixels",
             "itemtype": "property",
             "name": "width",
@@ -14985,7 +15009,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 795,
+            "line": 855,
             "description": "DOM image actual height, in pixels",
             "itemtype": "property",
             "name": "height",
@@ -14996,7 +15020,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 802,
+            "line": 862,
             "description": "Constructor/clone function - some functions can call the Video constructor with a callback function\n\n_This attribute is not retained by the object_",
             "itemtype": "property",
             "name": "callback",
@@ -15007,7 +15031,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 810,
+            "line": 870,
             "description": "Constructor argument attribute - a DOM &lt;video&gt; element\n\n_This attribute is not retained by the object_",
             "itemtype": "property",
             "name": "element",
@@ -15018,7 +15042,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 820,
+            "line": 880,
             "description": "Adds a DOM &lt;video&gt; element to the library\n\n* items.element MUST be a reference to the element, and the element MUST be present in the DOM\n* items.readyState is the readystate value (integer between 0 and 4) which must be reached before dimensions are set and any callback function triggered - default: 1 (HAVE_METADATA, loadedmetadata)",
             "itemtype": "method",
             "name": "addVideoByElement",
@@ -15040,7 +15064,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 861,
+            "line": 921,
             "description": "Video constructor helper function",
             "itemtype": "method",
             "name": "setIntrinsicDimensions",
@@ -15054,7 +15078,7 @@
         },
         {
             "file": "source\\scrawlImageLoad.js",
-            "line": 896,
+            "line": 956,
             "description": "Import a video using the supplied url string - not yet coded",
             "itemtype": "method",
             "name": "addImageByUrl",
@@ -15407,7 +15431,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 613,
+            "line": 611,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -15418,7 +15442,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 622,
+            "line": 620,
             "description": "SCRAWLIMAGE String - source image for this entity",
             "itemtype": "property",
             "name": "source",
@@ -15429,7 +15453,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 629,
+            "line": 627,
             "description": "IMAGEDATANAME String - name of the Image Data object\n\nCalculated automatically by Scrawl following a .getImageData() call",
             "itemtype": "property",
             "name": "imageData",
@@ -15440,7 +15464,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 638,
+            "line": 636,
             "description": "Collision attribute - name of channel to be checked against during collision detection\n\nPermitted values: 'red', 'blue', 'green', 'alpha'",
             "itemtype": "property",
             "name": "imageDataChannel",
@@ -15451,7 +15475,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 647,
+            "line": 645,
             "description": "SPRITEANIMATIONNAME String - Entity sheet image linked to this entity",
             "itemtype": "property",
             "name": "animSheet",
@@ -15462,7 +15486,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 654,
+            "line": 652,
             "description": "Identifier String - permitted values include: 'animation', 'canvas', 'img'\n\nDetected automatically by scrawl during entity construction",
             "itemtype": "property",
             "name": "imageType",
@@ -15475,7 +15499,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 664,
+            "line": 662,
             "description": "Collision flag - when true, Picture entity will use imageData to determine whether a collision has occured; when false, a simpler box collision system is used",
             "itemtype": "property",
             "name": "checkHitUsingImageData",
@@ -15486,7 +15510,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 671,
+            "line": 669,
             "description": "The coordinate Vector representing the Picture's copy source position on its source;\n\nPicture supports the following 'virtual' attributes for this attribute:\n\n* __copyX__ - (Number) the x coordinate on the source\n* __copyY__ - (Number) the y coordinate on the sourcecopy",
             "itemtype": "property",
             "name": "copy",
@@ -15496,7 +15520,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 683,
+            "line": 681,
             "description": "Copy width, in pixels. Determines which portion of this Picture's source will be copied",
             "itemtype": "property",
             "name": "copyWidth",
@@ -15507,7 +15531,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 690,
+            "line": 688,
             "description": "Copy height, in pixels. Determines which portion of this Picture's source will be copied",
             "itemtype": "property",
             "name": "copyHeight",
@@ -15518,7 +15542,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 697,
+            "line": 695,
             "description": "Local source data",
             "itemtype": "property",
             "name": "copyData",
@@ -15531,7 +15555,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 705,
+            "line": 703,
             "description": "Local target data",
             "itemtype": "property",
             "name": "pasteData",
@@ -15544,7 +15568,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 713,
+            "line": 711,
             "description": "Asynchronous loading of image file from the server - path/to/image file\n\nUsed only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This attribute is not retained",
             "itemtype": "property",
             "name": "url",
@@ -15555,7 +15579,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 721,
+            "line": 719,
             "description": "Asynchronous loading of image file from the server - function to run once image has successfully loaded\n\nUsed only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This attribute is not retained",
             "itemtype": "property",
             "name": "callback",
@@ -15566,7 +15590,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 732,
+            "line": 730,
             "description": "Augments Entity.get()",
             "itemtype": "method",
             "name": "get",
@@ -15585,7 +15609,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 752,
+            "line": 750,
             "description": "Augments Entity.set()",
             "itemtype": "method",
             "name": "set",
@@ -15605,7 +15629,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 801,
+            "line": 799,
             "description": "Augments Entity.setDelta()",
             "itemtype": "method",
             "name": "setDelta",
@@ -15625,7 +15649,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 863,
+            "line": 861,
             "description": "Picture.setCopy update copyData object values",
             "itemtype": "method",
             "name": "setCopy",
@@ -15637,7 +15661,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 920,
+            "line": 918,
             "description": "Picture.setPaste update pasteData object values",
             "itemtype": "method",
             "name": "setPaste",
@@ -15649,7 +15673,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 949,
+            "line": 947,
             "description": "Augments Entity.clone()",
             "itemtype": "method",
             "name": "clone",
@@ -15669,7 +15693,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 964,
+            "line": 962,
             "description": "Clone helper function",
             "itemtype": "method",
             "name": "fitToImageSize",
@@ -15684,7 +15708,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 984,
+            "line": 982,
             "description": "Constructor and clone helper function",
             "itemtype": "method",
             "name": "sourceImage",
@@ -15698,7 +15722,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1006,
+            "line": 1004,
             "description": "Stamp helper function - update source and copy (for dynamically loading images)",
             "itemtype": "method",
             "name": "checkSource",
@@ -15713,7 +15737,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1020,
+            "line": 1018,
             "description": "Stamp helper function - perform a 'clip' method draw",
             "itemtype": "method",
             "name": "clip",
@@ -15740,7 +15764,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1041,
+            "line": 1039,
             "description": "Stamp helper function - perform a 'none' method draw",
             "itemtype": "method",
             "name": "none",
@@ -15767,7 +15791,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1053,
+            "line": 1051,
             "description": "Stamp helper function - perform a 'clear' method draw",
             "itemtype": "method",
             "name": "clear",
@@ -15794,7 +15818,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1071,
+            "line": 1069,
             "description": "Stamp helper function - perform a 'clearWithBackground' method draw",
             "itemtype": "method",
             "name": "clearWithBackground",
@@ -15821,7 +15845,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1097,
+            "line": 1095,
             "description": "Stamp helper function - perform a 'draw' method draw",
             "itemtype": "method",
             "name": "draw",
@@ -15848,7 +15872,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1116,
+            "line": 1114,
             "description": "Stamp helper function - perform a 'fill' method draw",
             "itemtype": "method",
             "name": "fill",
@@ -15875,7 +15899,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1138,
+            "line": 1136,
             "description": "Stamp helper function - perform a 'drawFill' method draw",
             "itemtype": "method",
             "name": "drawFill",
@@ -15902,7 +15926,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1162,
+            "line": 1160,
             "description": "Stamp helper function - perform a 'fillDraw' method draw",
             "itemtype": "method",
             "name": "fillDraw",
@@ -15929,7 +15953,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1186,
+            "line": 1184,
             "description": "Stamp helper function - perform a 'sinkInto' method draw",
             "itemtype": "method",
             "name": "sinkInto",
@@ -15956,7 +15980,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1209,
+            "line": 1207,
             "description": "Stamp helper function - perform a 'floatOver' method draw",
             "itemtype": "method",
             "name": "floatOver",
@@ -15983,7 +16007,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1233,
+            "line": 1231,
             "description": "Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for entity sheet images\n\nAlso generates new filtered images, when necessary",
             "itemtype": "method",
             "name": "getImage",
@@ -15997,7 +16021,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1247,
+            "line": 1245,
             "description": "getImage helper object",
             "itemtype": "method",
             "name": "getImageActions",
@@ -16008,7 +16032,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1276,
+            "line": 1282,
             "description": "Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library",
             "itemtype": "method",
             "name": "getImageData",
@@ -16029,7 +16053,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1301,
+            "line": 1307,
             "description": "Get the pixel color or channel data from Picture object's image at given coordinate\n\nArgument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha' (default), 'color'",
             "itemtype": "method",
             "name": "getImageDataValue",
@@ -16048,7 +16072,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1342,
+            "line": 1348,
             "description": "getImageDataValue helper object",
             "itemtype": "method",
             "name": "getImageDataValueActions",
@@ -16057,7 +16081,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1363,
+            "line": 1369,
             "description": "Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function\n\nArgument object contains the following attributes:\n\n* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector\n* __x__ - X coordinate\n* __y__ - Y coordinate\n\nEither the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values",
             "itemtype": "method",
             "name": "checkHit",
@@ -16076,7 +16100,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1429,
+            "line": 1435,
             "description": "Revert pickupEntity() actions, ensuring entity is left where the user drops it",
             "itemtype": "method",
             "name": "dropEntity",
@@ -16097,7 +16121,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1441,
+            "line": 1447,
             "description": "Calculate the box position of the entity\n\nReturns an object with the following attributes:\n\n* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner\n* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner",
             "itemtype": "method",
             "name": "getMaxDimensions",

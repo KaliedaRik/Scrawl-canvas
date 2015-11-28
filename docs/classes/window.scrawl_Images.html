@@ -771,6 +771,7 @@
 
     <div class="description">
         <p>A <strong>general</strong> function to generate a Image wrapper object for an &lt;img&gt; or &lt;svg&gt; element identified by an id string</p>
+<p>Note: if an &lt;img&gt; (or &lt;picture&gt;) element uses the srcset attribute some browsers (eg chrome) will attempt to reload the image during browser resize. For this reason it is good policy to set this function&#39;s second argument (kill) to false, particularly if it is being used within an image load event listener. By default, the kill argument is set to true.</p>
 
     </div>
 
@@ -1076,7 +1077,7 @@
             
         
         
-        <a href="../files/source_scrawlImageLoad.js.html#l212"><code>source\scrawlImageLoad.js:212</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l215"><code>source\scrawlImageLoad.js:215</code></a>
         
         </p>
 
@@ -1188,7 +1189,7 @@
             
         
         
-        <a href="../files/source_scrawlImageLoad.js.html#l201"><code>source\scrawlImageLoad.js:201</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l204"><code>source\scrawlImageLoad.js:204</code></a>
         
         </p>
 
