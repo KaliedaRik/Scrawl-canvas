@@ -1129,6 +1129,7 @@ Stamp helper function - perform a 'fill' method draw
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
+				// console.log(data);
 				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
 			}
 			return this;

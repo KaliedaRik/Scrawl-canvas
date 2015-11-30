@@ -1071,20 +1071,6 @@ A custom __event listener__ helper array
 	my.work.activeListeners = [];
 	if (window.CustomEvent) {
 		/**
-A custom __event listener__ helper array
-@property eventAttributes
-@type {Array}
-@private
-**/
-		my.work.eventAttributes = ['altKey', 'bubbles', 'cancelBubble', 'cancelable', 'charCode', 'clipboardData', 'ctrlKey', 'currentTarget', 'defaultPrevented', 'detail', 'eventPhase', 'keyCode', 'layerX', 'layerY', 'metaKey', 'pageX', 'pageY', 'returnValue', 'shiftKey', 'srcElement', 'target', 'timestamp', 'view', 'which'];
-		/**
-A custom __event listener__ helper array
-@property touchEventAttributes
-@type {Array}
-@private
-**/
-		my.work.touchEventAttributes = ['clientX', 'clientY', 'force', 'identifier', 'pageX', 'pageY', 'radiusX', 'radiusY', 'screenX', 'screenY', 'target', 'webkitForce', 'webkitRadiusX', 'webkitRadiusY', 'webkitRotationAngle'];
-		/**
 A custom __event listener__ function
 
 The touchenter event is deprecated, but necessary for scrawl functionality
@@ -1093,10 +1079,7 @@ The touchenter event is deprecated, but necessary for scrawl functionality
 @private
 **/
 		my.triggerTouchEnter = function(e, el) {
-			my.updateCustomTouch(e, el, new CustomEvent('touchenter', {
-				detail: {},
-				type: 'touchenter'
-			}));
+			my.updateCustomTouch(e, el, 'touchenter');
 		};
 		/**
 A custom __event listener__ function
@@ -1107,10 +1090,7 @@ The touchleave event is deprecated, but necessary for scrawl functionality
 @private
 **/
 		my.triggerTouchLeave = function(e, el) {
-			my.updateCustomTouch(e, el, new CustomEvent('touchleave', {
-				detail: {},
-				type: 'touchenter'
-			}));
+			my.updateCustomTouch(e, el, 'touchleave');
 		};
 		/**
 A custom __event listener__ function
@@ -1121,62 +1101,87 @@ The touchfollow event is entirely custom, designed to allow elements to subscrib
 @private
 **/
 		my.triggerTouchFollow = function(e, el) {
-			my.updateCustomTouch(e, el, new CustomEvent('touchfollow', {
-				detail: {},
-				type: 'touchfollow'
-			}));
+			my.updateCustomTouch(e, el, 'touchfollow');
+		};
+		/**
+A custom __event listener__ helper function
+
+@method cloneTouchEventItem
+@private
+**/
+		my.cloneTouchEventItem = function(oT) {
+			var nT = {};
+			nT.clientX = oT.clientX;
+			nT.clientY = oT.clientY;
+			nT.force = oT.force;
+			nT.identifier = oT.identifier;
+			nT.pageX = oT.pageX;
+			nT.pageY = oT.pageY;
+			nT.radiusX = oT.radiusX;
+			nT.radiusY = oT.radiusY;
+			nT.screenX = oT.screenX;
+			nT.screenY = oT.screenY;
+			nT.target = oT.target;
+			return nT;
 		};
 		/**
 A custom __event listener__ helper function
 @method updateCustomTouch
 @private
 **/
-		my.updateCustomTouch = function(data, el, evt) {
-			// creates plain objects and arrays, not Touch objects etc. So shoot me!
-			var i, iz, j, jz,
-				ea = my.work.eventAttributes,
-				tea = my.work.touchEventAttributes;
-			for (i = 0, iz = ea.length; i < iz; i++) {
-				if (my.xt(data[ea[i]])) {
-					evt[ea[i]] = data[ea[i]];
+		my.updateCustomTouch = function(e, el, type) {
+			var evt,
+				changedTouches = [],
+				targetTouches = [],
+				touches = [],
+				i, iz,
+				xt = my.xt,
+				getTouch = my.cloneTouchEventItem;
+			if (xt(e.changedTouches)) {
+				for (i = 0, iz = e.changedTouches.length; i < iz; i++) {
+					changedTouches.push(getTouch(e.changedTouches[i]));
 				}
 			}
-			evt.changedTouches = [];
-			if (my.xt(data.changedTouches)) {
-				for (i = 0, iz = data.changedTouches.length; i < iz; i++) {
-					evt.changedTouches.push({});
-					for (j = 0, jz = tea.length; j < jz; j++) {
-						if (my.xt(data.changedTouches[i][tea[j]])) {
-							evt.changedTouches[i][tea[j]] = data.changedTouches[i][tea[j]];
-						}
-					}
+			if (xt(e.targetTouches)) {
+				for (i = 0, iz = e.targetTouches.length; i < iz; i++) {
+					targetTouches.push(getTouch(e.targetTouches[i]));
 				}
 			}
-			if (my.xt(data.path)) {
-				evt.path = data.path;
-			}
-			evt.targetTouches = [];
-			if (my.xt(data.targetTouches)) {
-				for (i = 0, iz = data.targetTouches.length; i < iz; i++) {
-					evt.targetTouches.push({});
-					for (j = 0, jz = tea.length; j < jz; j++) {
-						if (my.xt(data.targetTouches[i][tea[j]])) {
-							evt.targetTouches[i][tea[j]] = data.targetTouches[i][tea[j]];
-						}
-					}
+			if (xt(e.touches)) {
+				for (i = 0, iz = e.touches.length; i < iz; i++) {
+					touches.push(getTouch(e.touches[i]));
 				}
 			}
-			evt.touches = [];
-			if (my.xt(data.touches)) {
-				for (i = 0, iz = data.touches.length; i < iz; i++) {
-					evt.touches.push({});
-					for (j = 0, jz = tea.length; j < jz; j++) {
-						if (my.xt(data.touches[i][tea[j]])) {
-							evt.touches[i][tea[j]] = data.touches[i][tea[j]];
-						}
-					}
-				}
-			}
+			evt = new CustomEvent(type, {
+				altKey: e.altKey,
+				bubbles: e.bubbles,
+				cancelBubble: e.cancelBubble,
+				cancelable: e.cancelable,
+				changedTouches: changedTouches,
+				charCode: e.charCode,
+				clipboardData: e.clipboardData,
+				ctrlKey: e.ctrlKey,
+				currentTarget: e.currentTarget,
+				defaultPrevented: e.defaultPrevented,
+				detail: {},
+				eventPhase: e.eventPhase,
+				keyCode: e.eventPhase,
+				layerX: e.layerX,
+				layerY: e.layerY,
+				metaKey: e.metaKey,
+				pageX: e.pageX,
+				pageY: e.pageY,
+				path: e.path,
+				returnValue: e.returnValue,
+				shiftKey: e.shiftKey,
+				srcElement: e.srcElement,
+				target: e.target,
+				targetTouches: targetTouches,
+				timestamp: e.timestamp,
+				touches: touches,
+				view: e.view,
+				which: e.which
+			});
 			el.dispatchEvent(evt);
 		};
 	}
@@ -2363,6 +2368,13 @@ viewport offset from the left side of the document
 **/
 		this.offsetY = null;
 		/**
+Device/browser is touch-enabled and we should expect to receive touch events
+@property expectTouch
+@type Number
+@default calculated automatically
+**/
+		this.expectTouch = false;
+		/**
 canvas support
 
 False if device does not support the canvas element; true otherwise
@@ -2451,6 +2463,7 @@ False if device does not support the canvas dashed line functionality; true othe
 		height: null,
 		offsetX: null,
 		offsetY: null,
+		expectTouch: false,
 		canvas: false,
 		canvasEvenOddWinding: false,
 		canvasDashedLine: false,
@@ -2481,6 +2494,25 @@ Feature detection
 		this.getViewportPosition();
 		this.getStacksDeviceData();
 		this.getImagesDeviceData();
+		this.checkTouch();
+	};
+	/**
+Check if we should expect to receive touch events
+
+Modern IE uses pointer events, so Device will not check for IE specific touch-enabled devices
+
+@method checkTouch
+@private
+**/
+	my.Device.prototype.checkTouch = function() {
+		var test = false;
+		if('ontouchstart' in window){
+			test = true;
+		}
+		else if(window.DocumentTouch && document instanceof DocumentTouch){
+			test = true;
+		}
+	    this.expectTouch = test;
 	};
 	/**
 Check if device supports canvas element
@@ -8363,6 +8395,14 @@ Run an animation
 		return true;
 	};
 	/**
+Check to see if animation is running
+@method isRunning
+@return true if active; false otherwise
+**/
+	my.Animation.prototype.isRunning = function() {
+		return my.contains(my.work.animate, this.name);
+	};
+	/**
 Stop an animation
 @method halt
 @return Always true
@@ -8386,3 +8426,5 @@ Remove this Animation from the scrawl library
 
 	return my;
 }());
+
+module.exports = scrawl;
