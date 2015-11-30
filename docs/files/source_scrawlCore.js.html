@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.1</em>
+            <em>API Docs for: 5.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -283,7 +283,7 @@
 /**
 # scrawlCore
 
-## Version 5.0.1 - 28 November 2015
+## Version 5.0.2 - 30 November 2015
 
 Developed by Rik Roots - &lt;rik.roots@gmail.com&gt;, &lt;rik@rikweb.org.uk&gt;
 
@@ -368,10 +368,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 5.0.1
+@default 5.0.2
 @final
 **/
-	my.version = &#x27;5.0.1&#x27;;
+	my.version = &#x27;5.0.2&#x27;;
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -1331,20 +1331,6 @@ A custom __event listener__ helper array
 	my.work.activeListeners = [];
 	if (window.CustomEvent) {
 		/**
-A custom __event listener__ helper array
-@property eventAttributes
-@type {Array}
-@private
-**/
-		my.work.eventAttributes = [&#x27;altKey&#x27;, &#x27;bubbles&#x27;, &#x27;cancelBubble&#x27;, &#x27;cancelable&#x27;, &#x27;charCode&#x27;, &#x27;clipboardData&#x27;, &#x27;ctrlKey&#x27;, &#x27;currentTarget&#x27;, &#x27;defaultPrevented&#x27;, &#x27;detail&#x27;, &#x27;eventPhase&#x27;, &#x27;keyCode&#x27;, &#x27;layerX&#x27;, &#x27;layerY&#x27;, &#x27;metaKey&#x27;, &#x27;pageX&#x27;, &#x27;pageY&#x27;, &#x27;returnValue&#x27;, &#x27;shiftKey&#x27;, &#x27;srcElement&#x27;, &#x27;target&#x27;, &#x27;timestamp&#x27;, &#x27;view&#x27;, &#x27;which&#x27;];
-		/**
-A custom __event listener__ helper array
-@property touchEventAttributes
-@type {Array}
-@private
-**/
-		my.work.touchEventAttributes = [&#x27;clientX&#x27;, &#x27;clientY&#x27;, &#x27;force&#x27;, &#x27;identifier&#x27;, &#x27;pageX&#x27;, &#x27;pageY&#x27;, &#x27;radiusX&#x27;, &#x27;radiusY&#x27;, &#x27;screenX&#x27;, &#x27;screenY&#x27;, &#x27;target&#x27;, &#x27;webkitForce&#x27;, &#x27;webkitRadiusX&#x27;, &#x27;webkitRadiusY&#x27;, &#x27;webkitRotationAngle&#x27;];
-		/**
 A custom __event listener__ function
 
 The touchenter event is deprecated, but necessary for scrawl functionality
@@ -1353,10 +1339,7 @@ The touchenter event is deprecated, but necessary for scrawl functionality
 @private
 **/
 		my.triggerTouchEnter = function(e, el) {
-			my.updateCustomTouch(e, el, new CustomEvent(&#x27;touchenter&#x27;, {
-				detail: {},
-				type: &#x27;touchenter&#x27;
-			}));
+			my.updateCustomTouch(e, el, &#x27;touchenter&#x27;);
 		};
 		/**
 A custom __event listener__ function
@@ -1367,10 +1350,7 @@ The touchleave event is deprecated, but necessary for scrawl functionality
 @private
 **/
 		my.triggerTouchLeave = function(e, el) {
-			my.updateCustomTouch(e, el, new CustomEvent(&#x27;touchleave&#x27;, {
-				detail: {},
-				type: &#x27;touchenter&#x27;
-			}));
+			my.updateCustomTouch(e, el, &#x27;touchleave&#x27;);
 		};
 		/**
 A custom __event listener__ function
@@ -1381,62 +1361,87 @@ The touchfollow event is entirely custom, designed to allow elements to subscrib
 @private
 **/
 		my.triggerTouchFollow = function(e, el) {
-			my.updateCustomTouch(e, el, new CustomEvent(&#x27;touchfollow&#x27;, {
-				detail: {},
-				type: &#x27;touchfollow&#x27;
-			}));
+			my.updateCustomTouch(e, el, &#x27;touchfollow&#x27;);
+		};
+		/**
+A custom __event listener__ helper function
+
+@method cloneTouchEventItem
+@private
+**/
+		my.cloneTouchEventItem = function(oT) {
+			var nT = {};
+			nT.clientX = oT.clientX;
+			nT.clientY = oT.clientY;
+			nT.force = oT.force;
+			nT.identifier = oT.identifier;
+			nT.pageX = oT.pageX;
+			nT.pageY = oT.pageY;
+			nT.radiusX = oT.radiusX;
+			nT.radiusY = oT.radiusY;
+			nT.screenX = oT.screenX;
+			nT.screenY = oT.screenY;
+			nT.target = oT.target;
+			return nT;
 		};
 		/**
 A custom __event listener__ helper function
 @method updateCustomTouch
 @private
 **/
-		my.updateCustomTouch = function(data, el, evt) {
-			// creates plain objects and arrays, not Touch objects etc. So shoot me!
-			var i, iz, j, jz,
-				ea = my.work.eventAttributes,
-				tea = my.work.touchEventAttributes;
-			for (i = 0, iz = ea.length; i &lt; iz; i++) {
-				if (my.xt(data[ea[i]])) {
-					evt[ea[i]] = data[ea[i]];
+		my.updateCustomTouch = function(e, el, type) {
+			var evt,
+				changedTouches = [],
+				targetTouches = [],
+				touches = [],
+				i, iz,
+				xt = my.xt,
+				getTouch = my.cloneTouchEventItem;
+			if (xt(e.changedTouches)) {
+				for (i = 0, iz = e.changedTouches.length; i &lt; iz; i++) {
+					changedTouches.push(getTouch(e.changedTouches[i]));
 				}
 			}
-			evt.changedTouches = [];
-			if (my.xt(data.changedTouches)) {
-				for (i = 0, iz = data.changedTouches.length; i &lt; iz; i++) {
-					evt.changedTouches.push({});
-					for (j = 0, jz = tea.length; j &lt; jz; j++) {
-						if (my.xt(data.changedTouches[i][tea[j]])) {
-							evt.changedTouches[i][tea[j]] = data.changedTouches[i][tea[j]];
-						}
-					}
+			if (xt(e.targetTouches)) {
+				for (i = 0, iz = e.targetTouches.length; i &lt; iz; i++) {
+					targetTouches.push(getTouch(e.targetTouches[i]));
 				}
 			}
-			if (my.xt(data.path)) {
-				evt.path = data.path;
-			}
-			evt.targetTouches = [];
-			if (my.xt(data.targetTouches)) {
-				for (i = 0, iz = data.targetTouches.length; i &lt; iz; i++) {
-					evt.targetTouches.push({});
-					for (j = 0, jz = tea.length; j &lt; jz; j++) {
-						if (my.xt(data.targetTouches[i][tea[j]])) {
-							evt.targetTouches[i][tea[j]] = data.targetTouches[i][tea[j]];
-						}
-					}
+			if (xt(e.touches)) {
+				for (i = 0, iz = e.touches.length; i &lt; iz; i++) {
+					touches.push(getTouch(e.touches[i]));
 				}
 			}
-			evt.touches = [];
-			if (my.xt(data.touches)) {
-				for (i = 0, iz = data.touches.length; i &lt; iz; i++) {
-					evt.touches.push({});
-					for (j = 0, jz = tea.length; j &lt; jz; j++) {
-						if (my.xt(data.touches[i][tea[j]])) {
-							evt.touches[i][tea[j]] = data.touches[i][tea[j]];
-						}
-					}
-				}
-			}
+			evt = new CustomEvent(type, {
+				altKey: e.altKey,
+				bubbles: e.bubbles,
+				cancelBubble: e.cancelBubble,
+				cancelable: e.cancelable,
+				changedTouches: changedTouches,
+				charCode: e.charCode,
+				clipboardData: e.clipboardData,
+				ctrlKey: e.ctrlKey,
+				currentTarget: e.currentTarget,
+				defaultPrevented: e.defaultPrevented,
+				detail: {},
+				eventPhase: e.eventPhase,
+				keyCode: e.eventPhase,
+				layerX: e.layerX,
+				layerY: e.layerY,
+				metaKey: e.metaKey,
+				pageX: e.pageX,
+				pageY: e.pageY,
+				path: e.path,
+				returnValue: e.returnValue,
+				shiftKey: e.shiftKey,
+				srcElement: e.srcElement,
+				target: e.target,
+				targetTouches: targetTouches,
+				timestamp: e.timestamp,
+				touches: touches,
+				view: e.view,
+				which: e.which
+			});
 			el.dispatchEvent(evt);
 		};
 	}
@@ -2623,6 +2628,13 @@ viewport offset from the left side of the document
 **/
 		this.offsetY = null;
 		/**
+Device/browser is touch-enabled and we should expect to receive touch events
+@property expectTouch
+@type Number
+@default calculated automatically
+**/
+		this.expectTouch = false;
+		/**
 canvas support
 
 False if device does not support the canvas element; true otherwise
@@ -2711,6 +2723,7 @@ False if device does not support the canvas dashed line functionality; true othe
 		height: null,
 		offsetX: null,
 		offsetY: null,
+		expectTouch: false,
 		canvas: false,
 		canvasEvenOddWinding: false,
 		canvasDashedLine: false,
@@ -2741,6 +2754,25 @@ Feature detection
 		this.getViewportPosition();
 		this.getStacksDeviceData();
 		this.getImagesDeviceData();
+		this.checkTouch();
+	};
+	/**
+Check if we should expect to receive touch events
+
+Modern IE uses pointer events, so Device will not check for IE specific touch-enabled devices
+
+@method checkTouch
+@private
+**/
+	my.Device.prototype.checkTouch = function() {
+		var test = false;
+		if(&#x27;ontouchstart&#x27; in window){
+			test = true;
+		}
+		else if(window.DocumentTouch &amp;&amp; document instanceof DocumentTouch){
+			test = true;
+		}
+	    this.expectTouch = test;
 	};
 	/**
 Check if device supports canvas element
@@ -8623,6 +8655,14 @@ Run an animation
 		return true;
 	};
 	/**
+Check to see if animation is running
+@method isRunning
+@return true if active; false otherwise
+**/
+	my.Animation.prototype.isRunning = function() {
+		return my.contains(my.work.animate, this.name);
+	};
+	/**
 Stop an animation
 @method halt
 @return Always true
@@ -8646,6 +8686,8 @@ Remove this Animation from the scrawl library
 
 	return my;
 }());
+
+module.exports = scrawl;
 
     </pre>
 </div>

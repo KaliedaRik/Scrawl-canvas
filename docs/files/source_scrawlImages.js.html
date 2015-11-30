@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.1</em>
+            <em>API Docs for: 5.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -1389,6 +1389,7 @@ Stamp helper function - perform a &#x27;fill&#x27; method draw
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
+				// console.log(data);
 				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
 			}
 			return this;

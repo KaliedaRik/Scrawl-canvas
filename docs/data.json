@@ -2,7 +2,7 @@
     "project": {
         "name": "scrawl-canvas",
         "description": "Responsive, integrated and interactive HTML5 canvas elements",
-        "version": "5.0.1",
+        "version": "5.0.2",
         "url": "http://scrawl.rikweb.org.uk"
     },
     "files": {
@@ -336,8 +336,8 @@
             "namespaces": {},
             "tag": "module",
             "file": "source\\scrawlCore.js",
-            "line": 8287,
-            "description": "# scrawlCore\n\n## Version 5.0.1 - 28 November 2015\n\nDeveloped by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>\n\nScrawl demo website: <http://scrawl.rikweb.org.uk>\n\n## Purpose and features\n\nThe core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. \n\n* Defines the Scrawl scope - __window.scrawl__\n\n* Defines a number of utility methods used throughout Scrawl.js\n\n* Defines the Scrawl library - all significant objects created by Scrawl can be found here\n\n* Searches the DOM for &lt;canvas&gt; elements, and imports them into the Scrawl library\n\n* Instantiates controllers (Pad objects) and wrappers (Cell objects) for each &lt;canvas&gt; element\n\n* Instantiates Context engine objects for each Cell object\n\n* Defines mouse functionality in relation to &lt;canvas&gt; elements\n\n* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core\n\n* Defines Group objects, used to group entitys together for display and interaction purposes\n\n* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions\n\n## Loading the module",
+            "line": 8319,
+            "description": "# scrawlCore\n\n## Version 5.0.2 - 30 November 2015\n\nDeveloped by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>\n\nScrawl demo website: <http://scrawl.rikweb.org.uk>\n\n## Purpose and features\n\nThe core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. \n\n* Defines the Scrawl scope - __window.scrawl__\n\n* Defines a number of utility methods used throughout Scrawl.js\n\n* Defines the Scrawl library - all significant objects created by Scrawl can be found here\n\n* Searches the DOM for &lt;canvas&gt; elements, and imports them into the Scrawl library\n\n* Instantiates controllers (Pad objects) and wrappers (Cell objects) for each &lt;canvas&gt; element\n\n* Instantiates Context engine objects for each Cell object\n\n* Defines mouse functionality in relation to &lt;canvas&gt; elements\n\n* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core\n\n* Defines Group objects, used to group entitys together for display and interaction purposes\n\n* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions\n\n## Loading the module",
             "example": [
                 "\n    <script src=\"path/to/scrawlCore-min.js\"></script>"
             ]
@@ -724,7 +724,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 1708,
+            "line": 1713,
             "description": "# Vector\n\n## Instantiation\n\n* scrawl.makeVector()\n\n## Purpose\n\n* To hold vector (coordinate, movement) data",
             "is_constructor": 1,
             "params": [
@@ -747,7 +747,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 2138,
+            "line": 2143,
             "description": "# Base \n\n## Instantiation\n\n* This object should never be instantiated by users\n\n## Purpose\n\n* the root object for all other Scrawl objects (except Vectors, Quaternions)\n* gives every object its (unique) name attribute\n* also supplies title and comment attributes (very basic assistive technology)\n* provides basic getter and setter functions, and a JSON-based toString function\n* sets out the cloning strategy for other objects, and restricts which object types can be cloned",
             "is_constructor": 1,
             "params": [
@@ -770,7 +770,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 2320,
+            "line": 2325,
             "description": "# Device\n\n## Instantiation\n\n* This object should never be instantiated by users\n\n## Purpose\n\n* Wraps the browser's viewport, and includes basic information about the device",
             "is_constructor": 1,
             "extends": "Base"
@@ -786,7 +786,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 2692,
+            "line": 2724,
             "description": "# Position\n\n## Instantiation\n\n* This object should never be instantiated by users\n\n## Purpose\n\n* supplies objects with basic positional and scaling attributes, and methods for manipulating them\n* start coordinates are relative to the top left corner of the object's Cell\n* handle coordinates are relative to the object's start coordinate\n\nCertain Scrawl extensions will add functionality to this object, for instance scrawlAnimation adds delta attributes which can be used to automatically update the position of a Scrawl entity.",
             "is_constructor": 1,
             "extends": "Base",
@@ -810,7 +810,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 3539,
+            "line": 3571,
             "description": "# PageElement\n\n## Instantiation\n\n* This object should never be instantiated by users\n\n## Purpose\n\n* supplies DOM elements with basic dimensional, positional and scaling attributes, and methods for manipulating them\n\nThe core implementation of this object is a stub that supplies Pad objects with basic mouse position support. The stacks extension will substantially modify it to provide CSS3 3d positioning and animation functionality for Stack, Element and Pad objects.",
             "is_constructor": 1,
             "extends": "Base",
@@ -834,7 +834,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 4139,
+            "line": 4171,
             "description": "# Pad\n\n## Instantiation\n\n* created automatically for any &lt;canvas&gt; element found on the web page when it loads\n* also, scrawl.addCanvasToPage()\n* should not be instantiated directly by users\n\n## Purpose\n\n* controller (not wrapper) object for canvas elements included in the DOM\n* coordinates activity between visible canvas element and other (non-DOM) canvas elements that contribute to it\n\nBecause the Pad constructor calls the Cell constructor as part of the construction process (Cell objects __wrap__ &lt;canvas&gt; elements; Pad objects __control__ &lt;canvas&gt; elements), Cell attributes can be included in the Pad constructor object and picked up by the resultant Cell objects.\n\n## Access\n\n* scrawl.pad.PADNAME - for the Pad object\n* scrawl.canvas.PADNAME - for the Pad object's visible (display) &lt;canvas&gt; element\n* scrawl.context.PADNAME - for the visible (display) &ltcanvas&gt; element's 2d context engine\n* scrawl.cell[scrawl.pad.PADNAME.display] - for the Pad object's display cell\n* scrawl.cell[scrawl.pad.PADNAME.base] - for the Pad object's base cell",
             "is_constructor": 1,
             "extends": "PageElement",
@@ -858,7 +858,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 4629,
+            "line": 4661,
             "description": "# Cell\n\n## Instantiation\n\n* created automatically for any &lt;canvas&gt; element found on the web page when it loads\n* scrawl.addCanvasToPage()\n* scrawl.addNewCell()\n* Pad.addNewCell()\n* should not be instantiated directly by users\n\n## Purpose\n\n* Acts as a wrapper for each &lt;canvas&gt; element - whether that canvas is part of the DOM or not\n* Oversees manipulation of the &lt;canvas&gt; element's context engine\n* Responsible clearing &lt;canvas&gt; elements, and for copying one &lt;canvas&gt; to another\n* Includes functionality to pivot, path, flip, lock and roll cell positioning in the display scene\n* Controls scrolling and zoom effects between &lt;canvas&gt; elements\n* Builds &lt;canvas&gt; element collision fields from entity data\n* Undertakes collision detection between entitys and a collision field\n\n_Note: A Cell is entirely responsible for determining what portion of its &lt;canvas&gt; element's content will be copied to another &lt;canvas&gt; and where that copy will appear on the destination &lt;canvas&gt;._\n\n## Access\n\n* scrawl.cell.CELLNAME - for the Cell object\n* scrawl.pad[scrawl.cell.CELLNAME.pad] - for the Cell object's Pad object",
             "is_constructor": 1,
             "extends": "Position",
@@ -884,7 +884,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 6106,
+            "line": 6138,
             "description": "# Context\n\n## Instantiation\n\n* This object should never be instantiated by users\n\n## Purpose\n\n* wraps a given context for a Cell or Entity object\n* responsible for comparing contexts and listing changes that need to be made for successful Entity stamping on a canvas\n* all updates to a Context object's attributes should be performed via the Entity object's set() function",
             "is_constructor": 1,
             "extends": "Base",
@@ -908,7 +908,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 6466,
+            "line": 6498,
             "description": "# Group\n\n## Instantiation\n\n* scrawl.makeGroup()\n\n## Purpose\n\n* associates entity objects with a cell object, for stamping/compiling the &lt;canvas&gt; scene\n* groups Entity objects for specific purposes\n* (with collisions extension) plays a key role in collision detection between Entitys\n\n## Access\n\n* scrawl.group.GROUPNAME - for the Group object\n* scrawl.cell[scrawl.group.GROUPNAME.cell] - for the Group object's default Cell object",
             "is_constructor": 1,
             "extends": "Base",
@@ -932,7 +932,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 6951,
+            "line": 6983,
             "description": "# Entity\n\n## Instantiation\n\n* This object should never be instantiated by users\n\n## Purpose\n\n* Supplies the common methodology for all Scrawl entitys: Phrase, Block, Wheel, Picture, Path, Shape\n* Sets up the attributes for holding a entity's current state: position, visibility, rotation, drawing order, context\n* Describes how entitys should be stamped onto a Cell's canvas\n* Provides drag-and-drop functionality\n\n__Scrawl core does not include any entity type constructors.__ Each entity type used on a web page canvas needs to be added to the core by loading its associated extension:\n\n* __Block__ entitys are defined in the _scrawlBlock_ extension (alias: block)\n* __Wheel__ entitys are defined in the _scrawlWheel_ extension (alias: wheel)\n* __Phrase__ entitys are defined in the _scrawlPhrase_ extension (alias: phrase)\n* __Picture__ entitys are defined as part of the _scrawlImages_ extension (alias: images)\n* __Path__ entitys are defined in the _scrawlPath_ extension (alias: path)\n* __Shape__ entitys are defined in the _scrawlShape_ extension (alias: shape)\n* additional factory functions for defining common Path and Shape objects (lines, curves, ovals, triangles, stars, etc) are supplied by the _scrawlPathFactories_ extension (alias: factories)",
             "is_constructor": 1,
             "extends": "Position",
@@ -959,7 +959,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 7706,
+            "line": 7738,
             "description": "# Design\n\n## Instantiation\n\n* This object should never be instantiated by users\n\n## Purpose\n\n* Defines gradients and radial gradients used with entity objects' strokeStyle and fillStyle attributes",
             "is_constructor": 1,
             "extends": "Base",
@@ -983,7 +983,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 8079,
+            "line": 8111,
             "description": "# Gradient\n\n## Instantiation\n\n* scrawl.makeGradient()\n\n## Purpose\n\n* Defines a linear gradient\n* Used with entity.strokeStyle and entity.fillStyle attributes\n\n## Access\n\n* scrawl.design.GRADIENTNAME - for the Gradient object",
             "is_constructor": 1,
             "extends": "Design",
@@ -1007,7 +1007,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 8120,
+            "line": 8152,
             "description": "# RadialGradient\n\n## Instantiation\n\n* scrawl.makeRadialGradient()\n\n## Purpose\n\n* Defines a radial gradient\n* Used with entity.strokeStyle and entity.fillStyle attributes\n\n## Access\n\n* scrawl.design.RADIALGRADIENTNAME - for the RadialGradient object",
             "is_constructor": 1,
             "extends": "Design",
@@ -1031,7 +1031,7 @@
             "module": "scrawlCore",
             "namespace": "",
             "file": "source\\scrawlCore.js",
-            "line": 8287,
+            "line": 8319,
             "description": "# Animation\n\n## Instantiation\n\n* scrawl.makeAnimation()\n\n## Purpose\n\n* Defines an animation function to be run by the scrawl.animationLoop() function\n\n## Access\n\n* scrawl.animation.ANIMATIONNAME - for the Animation object",
             "is_constructor": 1,
             "extends": "Base",
@@ -5132,7 +5132,7 @@
             "itemtype": "property",
             "name": "version",
             "type": "{String}",
-            "default": "5.0.1",
+            "default": "5.0.2",
             "final": 1,
             "class": "window.scrawl",
             "module": "scrawlCore"
@@ -6055,30 +6055,6 @@
         {
             "file": "source\\scrawlCore.js",
             "line": 1073,
-            "description": "A custom __event listener__ helper array",
-            "itemtype": "property",
-            "name": "eventAttributes",
-            "type": "{Array}",
-            "access": "private",
-            "tagname": "",
-            "class": "window.scrawl",
-            "module": "scrawlCore"
-        },
-        {
-            "file": "source\\scrawlCore.js",
-            "line": 1080,
-            "description": "A custom __event listener__ helper array",
-            "itemtype": "property",
-            "name": "touchEventAttributes",
-            "type": "{Array}",
-            "access": "private",
-            "tagname": "",
-            "class": "window.scrawl",
-            "module": "scrawlCore"
-        },
-        {
-            "file": "source\\scrawlCore.js",
-            "line": 1087,
             "description": "A custom __event listener__ function\n\nThe touchenter event is deprecated, but necessary for scrawl functionality",
             "itemtype": "method",
             "name": "triggerTouchEnter",
@@ -6089,7 +6065,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1101,
+            "line": 1084,
             "description": "A custom __event listener__ function\n\nThe touchleave event is deprecated, but necessary for scrawl functionality",
             "itemtype": "method",
             "name": "triggerTouchLeave",
@@ -6100,7 +6076,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1115,
+            "line": 1095,
             "description": "A custom __event listener__ function\n\nThe touchfollow event is entirely custom, designed to allow elements to subscribe to an event that started in a different element",
             "itemtype": "method",
             "name": "triggerTouchFollow",
@@ -6111,7 +6087,18 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1129,
+            "line": 1106,
+            "description": "A custom __event listener__ helper function",
+            "itemtype": "method",
+            "name": "cloneTouchEventItem",
+            "access": "private",
+            "tagname": "",
+            "class": "window.scrawl",
+            "module": "scrawlCore"
+        },
+        {
+            "file": "source\\scrawlCore.js",
+            "line": 1127,
             "description": "A custom __event listener__ helper function",
             "itemtype": "method",
             "name": "updateCustomTouch",
@@ -6122,7 +6109,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1183,
+            "line": 1188,
             "description": "A utility function for adding JavaScript event listeners to multiple elements",
             "itemtype": "method",
             "name": "addNativeListener",
@@ -6151,7 +6138,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1212,
+            "line": 1217,
             "description": "A utility function for adding JavaScript event listeners to multiple elements",
             "itemtype": "method",
             "name": "addNativeListener",
@@ -6180,7 +6167,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1240,
+            "line": 1245,
             "description": "Adds event listeners to the element",
             "itemtype": "method",
             "name": "addListener",
@@ -6209,7 +6196,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1320,
+            "line": 1325,
             "description": "Remove event listeners from the element",
             "itemtype": "method",
             "name": "removeListener",
@@ -6238,7 +6225,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1400,
+            "line": 1405,
             "description": "A __utility__ function for performing bucket sorts on scrawl string arrays eg Group.entitys",
             "itemtype": "method",
             "name": "bucketSort",
@@ -6269,7 +6256,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1427,
+            "line": 1432,
             "description": "A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects - see Pad.addNewCell() for more details",
             "itemtype": "method",
             "name": "addNewCell",
@@ -6293,7 +6280,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1438,
+            "line": 1443,
             "description": "A __general__ function which deletes Cell objects and their associated paraphinalia - see Pad.deleteCells() for more details",
             "itemtype": "method",
             "name": "deleteCells",
@@ -6313,7 +6300,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1477,
+            "line": 1482,
             "description": "A __general__ function which adds supplied entitynames to Group.entitys attribute",
             "itemtype": "method",
             "name": "addEntitysToGroups",
@@ -6338,7 +6325,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1503,
+            "line": 1508,
             "description": "A __general__ function which removes supplied entitynames from Group.entitys attribute",
             "itemtype": "method",
             "name": "removeEntitysFromGroups",
@@ -6363,7 +6350,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1529,
+            "line": 1534,
             "description": "A __general__ function to delete entity objects",
             "itemtype": "method",
             "name": "deleteEntity",
@@ -6386,7 +6373,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1570,
+            "line": 1575,
             "description": "scrawl.deleteEntity hook function - modified by path extension",
             "itemtype": "method",
             "name": "pathDeleteEntity",
@@ -6397,7 +6384,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1576,
+            "line": 1581,
             "description": "Alias for makeVector()",
             "itemtype": "method",
             "name": "newVector",
@@ -6407,7 +6394,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1584,
+            "line": 1589,
             "description": "Alias for makePad()",
             "itemtype": "method",
             "name": "newPad",
@@ -6419,7 +6406,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1593,
+            "line": 1598,
             "description": "Alias for makeCell()",
             "itemtype": "method",
             "name": "newCell",
@@ -6431,7 +6418,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1602,
+            "line": 1607,
             "description": "Alias for makeContext()",
             "itemtype": "method",
             "name": "newContext",
@@ -6443,7 +6430,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1611,
+            "line": 1616,
             "description": "Alias for makeGroup()",
             "itemtype": "method",
             "name": "newGroup",
@@ -6453,7 +6440,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1619,
+            "line": 1624,
             "description": "Alias for makeGradient()",
             "itemtype": "method",
             "name": "newGradient",
@@ -6463,7 +6450,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1627,
+            "line": 1632,
             "description": "Alias for makeRadialGradient()",
             "itemtype": "method",
             "name": "newRadialGradient",
@@ -6473,7 +6460,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1635,
+            "line": 1640,
             "description": "A __factory__ function to generate new Vector objects",
             "itemtype": "method",
             "name": "makeVector",
@@ -6495,7 +6482,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1649,
+            "line": 1654,
             "description": "A __factory__ function to generate new Pad objects",
             "itemtype": "method",
             "name": "makePad",
@@ -6516,7 +6503,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1659,
+            "line": 1664,
             "description": "A __factory__ function to generate new Cell objects",
             "itemtype": "method",
             "name": "makeCell",
@@ -6537,7 +6524,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1669,
+            "line": 1674,
             "description": "A __factory__ function to generate new Context objects",
             "itemtype": "method",
             "name": "makeContext",
@@ -6558,7 +6545,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1679,
+            "line": 1684,
             "description": "A __factory__ function to generate new Group objects",
             "itemtype": "method",
             "name": "makeGroup",
@@ -6577,7 +6564,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1688,
+            "line": 1693,
             "description": "A __factory__ function to generate new Gradient objects",
             "itemtype": "method",
             "name": "makeGradient",
@@ -6596,7 +6583,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1697,
+            "line": 1702,
             "description": "A __factory__ function to generate new RadialGradient objects",
             "itemtype": "method",
             "name": "makeRadialGradient",
@@ -6615,7 +6602,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1724,
+            "line": 1729,
             "description": "X coordinate (px)",
             "itemtype": "property",
             "name": "x",
@@ -6626,7 +6613,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1731,
+            "line": 1736,
             "description": "Y coodinate (px)",
             "itemtype": "property",
             "name": "y",
@@ -6637,7 +6624,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1738,
+            "line": 1743,
             "description": "Z coordinate (px)",
             "itemtype": "property",
             "name": "z",
@@ -6648,7 +6635,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1745,
+            "line": 1750,
             "description": "Vector name - not guaranteed to be unique",
             "itemtype": "property",
             "name": "name",
@@ -6659,7 +6646,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1755,
+            "line": 1760,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -6670,7 +6657,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1768,
+            "line": 1773,
             "description": "Set the Vector's coordinates to values that will result in the given magnitude",
             "itemtype": "method",
             "name": "setMagnitudeTo",
@@ -6690,7 +6677,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1788,
+            "line": 1793,
             "description": "Normalize the Vector to a unit vector",
             "itemtype": "method",
             "name": "normalize",
@@ -6703,7 +6690,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1803,
+            "line": 1808,
             "description": "Set all attributes to zero",
             "itemtype": "method",
             "name": "zero",
@@ -6716,7 +6703,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1815,
+            "line": 1820,
             "description": "Set attributes to new values",
             "itemtype": "method",
             "name": "set",
@@ -6736,7 +6723,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1830,
+            "line": 1835,
             "description": "Compare two Vector objects for equality",
             "itemtype": "method",
             "name": "isEqual",
@@ -6755,7 +6742,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1844,
+            "line": 1849,
             "description": "Comparea vector-like object to this one for equality",
             "itemtype": "method",
             "name": "isLike",
@@ -6774,7 +6761,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1858,
+            "line": 1863,
             "description": "extracts x and y data",
             "itemtype": "method",
             "name": "getData",
@@ -6786,7 +6773,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1870,
+            "line": 1875,
             "description": "Check if x and y attributes are set",
             "itemtype": "method",
             "name": "hasCoordinates",
@@ -6805,7 +6792,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1879,
+            "line": 1884,
             "description": "Add a Vector to this Vector",
             "itemtype": "method",
             "name": "vectorAdd",
@@ -6825,7 +6812,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1894,
+            "line": 1899,
             "description": "Subtract a Vector from this Vector",
             "itemtype": "method",
             "name": "vectorSubtract",
@@ -6845,7 +6832,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1908,
+            "line": 1913,
             "description": "Multiply a Vector with this Vector",
             "itemtype": "method",
             "name": "vectorMultiply",
@@ -6865,7 +6852,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1922,
+            "line": 1927,
             "description": "Divide a Vector into this Vector",
             "itemtype": "method",
             "name": "vectorDivide",
@@ -6885,7 +6872,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1936,
+            "line": 1941,
             "description": "Multiply this Vector by a scalar value",
             "itemtype": "method",
             "name": "scalarMultiply",
@@ -6905,7 +6892,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1952,
+            "line": 1957,
             "description": "Divide this Vector by a scalar value",
             "itemtype": "method",
             "name": "scalarDivide",
@@ -6925,7 +6912,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1968,
+            "line": 1973,
             "description": "Retrieve Vector's magnitude value",
             "itemtype": "method",
             "name": "getMagnitude",
@@ -6937,7 +6924,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1976,
+            "line": 1981,
             "description": "Check to see if Vector is a zero vector",
             "itemtype": "method",
             "name": "checkNotZero",
@@ -6949,7 +6936,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1984,
+            "line": 1989,
             "description": "Return a clone of this Vector",
             "itemtype": "method",
             "name": "getVector",
@@ -6961,7 +6948,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 1996,
+            "line": 2001,
             "description": "Obtain the cross product of one Vector and a copy of this, or another, Vector\n\nArithmetic is v(crossProduct)u, not u(crossProduct)v",
             "itemtype": "method",
             "name": "getCrossProduct",
@@ -6987,7 +6974,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2030,
+            "line": 2035,
             "description": "Obtain the dot product of one Vector and this, or another, Vector\n\nArithmetic is v(dotProduct)u, not u(dotProduct)v",
             "itemtype": "method",
             "name": "getDotProduct",
@@ -7012,7 +6999,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2047,
+            "line": 2052,
             "description": "Obtain the triple scalar product of two Vectors and this, or a third, Vector",
             "itemtype": "method",
             "name": "getTripleScalarProduct",
@@ -7042,7 +7029,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2080,
+            "line": 2085,
             "description": "Rotate the Vector by a given angle",
             "itemtype": "method",
             "name": "rotate",
@@ -7062,7 +7049,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2099,
+            "line": 2104,
             "description": "Rotate the Vector by 180 degrees",
             "itemtype": "method",
             "name": "reverse",
@@ -7075,7 +7062,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2111,
+            "line": 2116,
             "description": "Rotate a Vector object by a Quaternion rotation",
             "itemtype": "method",
             "name": "quaternionMultiply",
@@ -7101,7 +7088,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2158,
+            "line": 2163,
             "description": "Unique identifier for each object; default: computer-generated String based on Object's type",
             "itemtype": "property",
             "name": "name",
@@ -7111,7 +7098,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2171,
+            "line": 2176,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -7122,7 +7109,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2180,
+            "line": 2185,
             "description": "Comment, for accessibility",
             "itemtype": "property",
             "name": "comment",
@@ -7133,7 +7120,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2187,
+            "line": 2192,
             "description": "Title, for accessibility",
             "itemtype": "property",
             "name": "title",
@@ -7144,7 +7131,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2194,
+            "line": 2199,
             "description": "Creation timestamp",
             "itemtype": "property",
             "name": "timestamp",
@@ -7155,7 +7142,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2202,
+            "line": 2207,
             "description": "Retrieve an attribute value. If the attribute value has not been set, then the default value for that attribute will be returned.",
             "itemtype": "method",
             "name": "get",
@@ -7177,7 +7164,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2218,
+            "line": 2223,
             "description": "Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.\n\nAn attribute value will only be set if the object already has a default value for that attribute. This restricts the ability of coders to add attributes to Scrawl objects.",
             "itemtype": "method",
             "name": "set",
@@ -7200,7 +7187,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2249,
+            "line": 2254,
             "description": "Clone a Scrawl.js object, optionally altering attribute values in the cloned object\n\nNote that any callback or fn attribute functions will be referenced by the clone, not copied to the clone; these can be overwritten with new anonymous functions by including them in the items argument object\n\n(This function is replaced by the path extension)",
             "itemtype": "method",
             "name": "clone",
@@ -7223,7 +7210,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2288,
+            "line": 2293,
             "description": "Turn the object into a JSON String",
             "itemtype": "method",
             "name": "parse",
@@ -7235,7 +7222,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2296,
+            "line": 2301,
             "description": "Stamp helper function - convert string percentage values to numerical values",
             "itemtype": "method",
             "name": "numberConvert",
@@ -7261,7 +7248,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2337,
+            "line": 2342,
             "description": "viewport width",
             "itemtype": "property",
             "name": "width",
@@ -7272,7 +7259,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2344,
+            "line": 2349,
             "description": "viewport height",
             "itemtype": "property",
             "name": "height",
@@ -7283,7 +7270,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2351,
+            "line": 2356,
             "description": "viewport offset from the top of the document",
             "itemtype": "property",
             "name": "offsetX",
@@ -7294,7 +7281,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2358,
+            "line": 2363,
             "description": "viewport offset from the left side of the document",
             "itemtype": "property",
             "name": "offsetY",
@@ -7305,7 +7292,18 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2365,
+            "line": 2370,
+            "description": "Device/browser is touch-enabled and we should expect to receive touch events",
+            "itemtype": "property",
+            "name": "expectTouch",
+            "type": "Number",
+            "default": "calculated automatically",
+            "class": "Device",
+            "module": "scrawlCore"
+        },
+        {
+            "file": "source\\scrawlCore.js",
+            "line": 2377,
             "description": "canvas support\n\nFalse if device does not support the canvas element; true otherwise",
             "itemtype": "property",
             "name": "canvas",
@@ -7316,7 +7314,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2374,
+            "line": 2386,
             "description": "canvas global composite operation support: source-in\n\nFalse if device incorrectly supports the GCO source-in functionality",
             "itemtype": "property",
             "name": "canvasGcoSourceIn",
@@ -7327,7 +7325,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2383,
+            "line": 2395,
             "description": "canvas global composite operation support: source-out\n\nFalse if device incorrectly supports the GCO source-out functionality",
             "itemtype": "property",
             "name": "canvasGcoSourceOut",
@@ -7338,7 +7336,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2392,
+            "line": 2404,
             "description": "canvas global composite operation support: destination-atop\n\nFalse if device incorrectly supports the GCO destination-atop functionality",
             "itemtype": "property",
             "name": "canvasGcoDestinationAtop",
@@ -7349,7 +7347,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2401,
+            "line": 2413,
             "description": "canvas global composite operation support: destination-in\n\nFalse if device incorrectly supports the GCO destination-in functionality",
             "itemtype": "property",
             "name": "canvasGcoDestinationIn",
@@ -7360,7 +7358,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2410,
+            "line": 2422,
             "description": "canvas global composite operation support: copy\n\nFalse if device incorrectly supports the GCO copy functionality",
             "itemtype": "property",
             "name": "canvasGcoCopy",
@@ -7371,7 +7369,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2419,
+            "line": 2431,
             "description": "canvas even-odd winding functionality\n\nFalse if device does not support the canvas even-odd winding functionality; true otherwise",
             "itemtype": "property",
             "name": "canvasEvenOddWinding",
@@ -7382,7 +7380,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2428,
+            "line": 2440,
             "description": "canvas dashed line functionality\n\nFalse if device does not support the canvas dashed line functionality; true otherwise",
             "itemtype": "property",
             "name": "canvasDashedLine",
@@ -7393,7 +7391,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2441,
+            "line": 2453,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -7404,7 +7402,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2468,
+            "line": 2481,
             "description": "Feature detection",
             "itemtype": "method",
             "name": "getDeviceData",
@@ -7415,7 +7413,18 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2485,
+            "line": 2499,
+            "description": "Check if we should expect to receive touch events\n\nModern IE uses pointer events, so Device will not check for IE specific touch-enabled devices",
+            "itemtype": "method",
+            "name": "checkTouch",
+            "access": "private",
+            "tagname": "",
+            "class": "Device",
+            "module": "scrawlCore"
+        },
+        {
+            "file": "source\\scrawlCore.js",
+            "line": 2517,
             "description": "Check if device supports canvas element",
             "itemtype": "method",
             "name": "checkCanvas",
@@ -7426,7 +7435,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2495,
+            "line": 2527,
             "description": "Check if device supports canvas evenOdd winding",
             "itemtype": "method",
             "name": "checkCanvasEvenOddWinding",
@@ -7437,7 +7446,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2526,
+            "line": 2558,
             "description": "Check if device supports dashed line functionality",
             "itemtype": "method",
             "name": "checkCanvasDashedLine",
@@ -7448,7 +7457,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2552,
+            "line": 2584,
             "description": "Check if device supports various global composition operation functionalities",
             "itemtype": "method",
             "name": "checkCanvasGco",
@@ -7459,7 +7468,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2617,
+            "line": 2649,
             "description": "Determine viewport dimensions",
             "itemtype": "method",
             "name": "getViewportDimensions",
@@ -7473,7 +7482,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2639,
+            "line": 2671,
             "description": "Determine viewport position within the page",
             "itemtype": "method",
             "name": "getViewportPosition",
@@ -7487,7 +7496,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2663,
+            "line": 2695,
             "description": "Feature detection - hook function",
             "itemtype": "method",
             "name": "getStacksDeviceData",
@@ -7498,7 +7507,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2669,
+            "line": 2701,
             "description": "Feature detection - hook function",
             "itemtype": "method",
             "name": "getImagesDeviceData",
@@ -7509,7 +7518,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2675,
+            "line": 2707,
             "description": "Determine if viewport is in landscape mode - if width and height arte equal, landscape mode is assumend",
             "itemtype": "method",
             "name": "isLandscape",
@@ -7520,7 +7529,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2683,
+            "line": 2715,
             "description": "Determine if viewport is in portrait mode - if width and height arte equal, landscape mode is assumend",
             "itemtype": "method",
             "name": "isPortrait",
@@ -7531,7 +7540,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2718,
+            "line": 2750,
             "description": "The coordinate Vector representing the object's rotation/flip point\n\nSubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:\n\n* __startX__ - (Number) the x coordinate of the object's rotation/flip point, in pixels, from the left side of the object's cell\n* __startY__ - (Number) the y coordinate of the object's rotation/flip point, in pixels, from the top side of the object's cell",
             "itemtype": "property",
             "name": "start",
@@ -7541,7 +7550,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2739,
+            "line": 2771,
             "description": "An Object (in fact, a Vector) containing offset instructions from the object's rotation/flip point, where drawing commences. \n\nSubScrawl, and all Objects that prototype chain to Subscrawl, supports the following 'virtual' attributes for this attribute:\n\n* __handleX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'\n* __handleY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'\n\nWhere values are Numbers, handle can be treated like any other Vector",
             "itemtype": "property",
             "name": "handle",
@@ -7551,7 +7560,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2762,
+            "line": 2794,
             "description": "An object with the following attributes:\n\n* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner\n* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner",
             "itemtype": "property",
             "name": "maxDimensions",
@@ -7564,7 +7573,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2781,
+            "line": 2813,
             "description": "The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point",
             "itemtype": "property",
             "name": "pivot",
@@ -7575,7 +7584,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2788,
+            "line": 2820,
             "description": "The object's scale value - larger values increase the object's size",
             "itemtype": "property",
             "name": "scale",
@@ -7586,7 +7595,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2795,
+            "line": 2827,
             "description": "Current rotation of the entity, cell or element (in degrees)",
             "itemtype": "property",
             "name": "roll",
@@ -7597,7 +7606,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2802,
+            "line": 2834,
             "description": "Reflection flag; set to true to flip entity, cell or element along the Y axis",
             "itemtype": "property",
             "name": "flipReverse",
@@ -7608,7 +7617,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2809,
+            "line": 2841,
             "description": "Reflection flag; set to true to flip entity, cell or element along the X axis",
             "itemtype": "property",
             "name": "flipUpend",
@@ -7619,7 +7628,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2816,
+            "line": 2848,
             "description": "Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis",
             "itemtype": "property",
             "name": "lockX",
@@ -7630,7 +7639,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2823,
+            "line": 2855,
             "description": "Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis",
             "itemtype": "property",
             "name": "lockY",
@@ -7641,7 +7650,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2830,
+            "line": 2862,
             "description": "Index of mouse vector to use when pivot === 'mouse'\n\nThe Pad.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)",
             "itemtype": "property",
             "name": "mouseIndex",
@@ -7652,7 +7661,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2844,
+            "line": 2876,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -7663,7 +7672,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2884,
+            "line": 2916,
             "description": "Entity, cell or element width (in pixels)",
             "itemtype": "property",
             "name": "width",
@@ -7674,7 +7683,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2891,
+            "line": 2923,
             "description": "Entity, cell or element height (in pixels)",
             "itemtype": "property",
             "name": "height",
@@ -7685,7 +7694,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2898,
+            "line": 2930,
             "description": "(Added by the path extension)\nThe SPRITENAME of a Shape entity whose path is used to calculate this object's start point",
             "itemtype": "property",
             "name": "path",
@@ -7696,7 +7705,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2905,
+            "line": 2937,
             "description": "(Added by the path extension)\nA value between 0 and 1 to represent the distance along a Shape object's path, where 0 is the path start and 1 is the path end",
             "itemtype": "property",
             "name": "pathPlace",
@@ -7707,7 +7716,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2912,
+            "line": 2944,
             "description": "(Added by the path extension)\nA change value which can be applied to the object's pathPlace attribute",
             "itemtype": "property",
             "name": "deltaPathPlace",
@@ -7718,7 +7727,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2919,
+            "line": 2951,
             "description": "(Added by the path extension)\nA flag to determine whether the object will calculate its position along a Shape path in a regular (true), or simple (false), manner",
             "itemtype": "property",
             "name": "pathSpeedConstant",
@@ -7729,7 +7738,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2928,
+            "line": 2960,
             "description": "Position constructor hook function - modified by animation extension",
             "itemtype": "method",
             "name": "animationPositionInit",
@@ -7740,7 +7749,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2934,
+            "line": 2966,
             "description": "Position constructor hook function - modified by path extension",
             "itemtype": "method",
             "name": "pathPositionInit",
@@ -7751,7 +7760,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2940,
+            "line": 2972,
             "description": "Augments Base.get(), to allow users to get values for start, startX, startY, handle, handleX, handleY\n\nFor 'start' and 'handle', returns a copy of the Vector",
             "itemtype": "method",
             "name": "get",
@@ -7770,7 +7779,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2964,
+            "line": 2996,
             "description": "Get the current start x coordinate",
             "itemtype": "method",
             "name": "getX",
@@ -7782,7 +7791,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2972,
+            "line": 3004,
             "description": "Get the current start y coordinate",
             "itemtype": "method",
             "name": "getY",
@@ -7794,7 +7803,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2980,
+            "line": 3012,
             "description": "Position.get hook function - modified by animation extension",
             "itemtype": "method",
             "name": "animationPositionGet",
@@ -7805,7 +7814,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 2988,
+            "line": 3020,
             "description": "Augments Base.set(), to allow users to set the start and handle attributes using startX, startY, handleX, handleY",
             "itemtype": "method",
             "name": "set",
@@ -7825,7 +7834,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3017,
+            "line": 3049,
             "description": "Augments Base.setStart(), to allow users to set the start attributes using start, startX, startY",
             "itemtype": "method",
             "name": "setStart",
@@ -7845,7 +7854,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3047,
+            "line": 3079,
             "description": "Augments Base.setHandle(), to allow users to set the handle attributes using handle, handleX, handleY",
             "itemtype": "method",
             "name": "setHandle",
@@ -7865,7 +7874,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3077,
+            "line": 3109,
             "description": "Position.set hook function - modified by animation extension",
             "itemtype": "method",
             "name": "animationPositionSet",
@@ -7876,7 +7885,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3088,
+            "line": 3120,
             "description": "Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function. This function also accepts startX, startY, handleX, handleY",
             "itemtype": "method",
             "name": "setDelta",
@@ -7896,7 +7905,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3125,
+            "line": 3157,
             "description": "Adds the value of each attribute supplied in the argument to existing values; This function accepts start, startX, startY",
             "itemtype": "method",
             "name": "setDeltaStart",
@@ -7916,7 +7925,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3148,
+            "line": 3180,
             "description": "Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY",
             "itemtype": "method",
             "name": "setDeltaHandle",
@@ -7936,7 +7945,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3171,
+            "line": 3203,
             "description": "Adds the value of each attribute supplied in the argument to existing values. This function accepts scale",
             "itemtype": "method",
             "name": "setDeltaScale",
@@ -7956,7 +7965,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3183,
+            "line": 3215,
             "description": "Adds the value of each attribute supplied in the argument to existing values. This function accepts roll",
             "itemtype": "method",
             "name": "setDeltaRoll",
@@ -7976,7 +7985,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3195,
+            "line": 3227,
             "description": "Adds the value of each attribute supplied in the argument to existing values. This function accepts width",
             "itemtype": "method",
             "name": "setDeltaWidth",
@@ -7996,7 +8005,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3209,
+            "line": 3241,
             "description": "Adds the value of each attribute supplied in the argument to existing values. This function accepts height",
             "itemtype": "method",
             "name": "setDeltaHeight",
@@ -8016,7 +8025,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3223,
+            "line": 3255,
             "description": "Position.setDelta hook function - modified by path extension",
             "itemtype": "method",
             "name": "pathPositionSetDelta",
@@ -8027,7 +8036,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3229,
+            "line": 3261,
             "description": "Augments Base.clone(), to allow users to set the start and handle attributes using startX, startY, handleX, handleY",
             "itemtype": "method",
             "name": "clone",
@@ -8047,7 +8056,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3260,
+            "line": 3292,
             "description": "Position.setDelta hook function - modified by animation extension",
             "itemtype": "method",
             "name": "animationPositionClone",
@@ -8058,7 +8067,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3268,
+            "line": 3300,
             "description": "updateCurrentHandle helper object",
             "itemtype": "method",
             "name": "getReferenceDimensions",
@@ -8080,7 +8089,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3344,
+            "line": 3376,
             "description": "Convert handle percentage values to numerical values, stored in currentHandle",
             "itemtype": "method",
             "name": "updateCurrentHandle",
@@ -8095,7 +8104,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3391,
+            "line": 3423,
             "description": "Convert start percentage values to numerical values, stored in currentStart",
             "itemtype": "method",
             "name": "updateCurrentStart",
@@ -8117,7 +8126,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3418,
+            "line": 3450,
             "description": "Stamp helper function - set this entity, cell or element start values to its pivot entity/point start value, or to the current mouse coordinates\n\nTakes into account lock flag settings",
             "itemtype": "method",
             "name": "setStampUsingPivot",
@@ -8140,14 +8149,14 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3470,
+            "line": 3502,
             "description": "setStampUsingPivot helper object",
             "class": "Position",
             "module": "scrawlCore"
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3508,
+            "line": 3540,
             "description": "Stamp helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions",
             "itemtype": "method",
             "name": "correctCoordinates",
@@ -8172,7 +8181,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3562,
+            "line": 3594,
             "description": "DOM element width",
             "itemtype": "property",
             "name": "width",
@@ -8183,7 +8192,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3569,
+            "line": 3601,
             "description": "DOM element height",
             "itemtype": "property",
             "name": "height",
@@ -8194,7 +8203,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3576,
+            "line": 3608,
             "description": "The object's scale value - larger values increase the object's size",
             "itemtype": "property",
             "name": "scale",
@@ -8205,7 +8214,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3585,
+            "line": 3617,
             "description": "The mice attribute is an object containing supplemented vectors which hold real-time information about the current coordinates of the mouse pointer and any other pointer or touch instances occurring over the element\n\nmice.mouse - always refers to the mouse pointer\nmice.ui0, mice.ui1 etc - refers to pointer and touch events",
             "itemtype": "property",
             "name": "mice",
@@ -8216,7 +8225,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3604,
+            "line": 3636,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -8227,7 +8236,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3615,
+            "line": 3647,
             "description": "DOM element localWidth",
             "itemtype": "property",
             "name": "localWidth",
@@ -8238,7 +8247,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3622,
+            "line": 3654,
             "description": "DOM element localHeight",
             "itemtype": "property",
             "name": "localHeight",
@@ -8249,7 +8258,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3629,
+            "line": 3661,
             "description": "DOM element's current horizontal offset from the top of the web page",
             "itemtype": "property",
             "name": "displayOffsetX",
@@ -8260,7 +8269,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3636,
+            "line": 3668,
             "description": "DOM element's current vertical offset from the left side of the web page",
             "itemtype": "property",
             "name": "displayOffsetY",
@@ -8271,7 +8280,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3645,
+            "line": 3677,
             "description": "Set the interactive attribute to true to track mouse/pointer/touch events on the element. By default Pad and Stack objects set their element's interactivity to true, while Element objects set it to false",
             "itemtype": "property",
             "name": "interactive",
@@ -8282,7 +8291,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3652,
+            "line": 3684,
             "description": "Element CSS position styling attribute",
             "itemtype": "property",
             "name": "position",
@@ -8293,7 +8302,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3661,
+            "line": 3693,
             "description": "PageElement constructor hook function - modified by stacks extension",
             "itemtype": "method",
             "name": "stacksPageElementConstructor",
@@ -8304,7 +8313,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3667,
+            "line": 3699,
             "description": "Augments Base.get() to retrieve DOM element width and height values\n\n(The stack extension replaces this core function rather than augmenting it via a hook function)",
             "itemtype": "method",
             "name": "get",
@@ -8323,7 +8332,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3693,
+            "line": 3725,
             "description": "Augments Base.set() to allow the setting of DOM element dimension values\n\n(The stack extension replaces this core function rather than augmenting it via a hook function)",
             "itemtype": "method",
             "name": "set",
@@ -8343,7 +8352,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3738,
+            "line": 3770,
             "description": "Handles the setting of DOM element title and data-comment attributes",
             "itemtype": "method",
             "name": "setAccessibility",
@@ -8363,7 +8372,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3760,
+            "line": 3792,
             "description": "Calculate the DOM element's current display offset values",
             "itemtype": "method",
             "name": "setDisplayOffsets",
@@ -8376,7 +8385,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3781,
+            "line": 3813,
             "description": "Scale DOM element dimensions (width, height)",
             "itemtype": "method",
             "name": "scaleDimensions",
@@ -8396,7 +8405,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3795,
+            "line": 3827,
             "description": "Helper function - set local dimensions (width, height)",
             "itemtype": "method",
             "name": "setLocalDimensions",
@@ -8411,7 +8420,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3808,
+            "line": 3840,
             "description": "Helper function - set DOM element dimensions (width, height)",
             "itemtype": "method",
             "name": "setDimensions",
@@ -8426,7 +8435,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3821,
+            "line": 3853,
             "description": "Retrieve details of the Mouse cursor position in relation to the DOM element's top left hand corner. Most useful for determining mouse cursor position over Stack and Pad (visible &lt;canvas&gt;) elements.\n\nThis function is also used to retrieve details of touch positions.\n\n_Note: if changes are made elsewhere to the web page (DOM) after the page loads, the function .getDisplayOffsets() will need to be called to recalculate the element's position within the page - failure to do so will lead to this function returning incorrect data. getDisplayOffsets() does not need to be called during/after page scrolling._\n\nBy default, the function returns a single Vector containing either the first touch position or the current mouse cursor position.\n\nThe returned object is a Vector containing the mouse cursor's current x and y coordinates in relation to the DOM element's top left corner, together with the following additional attributes:\n\n* __active__ - set to true if mouse is hovering over the element; false otherwise\n* __id__ - event vector id (-1: mouse; 0+ touch or pointer)\n* __order__ - event order (0: mouse; 1+ touch or pointer)\n\nIf an argument is supplied, then all currently existing mouse/touch vectors are returned as an array, with index 0 representing the mouse pointer, index 1 representing the first touch coordinate and additional indexes representing additional touch coordinates",
             "itemtype": "method",
             "name": "getMouse",
@@ -8445,7 +8454,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3880,
+            "line": 3912,
             "itemtype": "method",
             "name": "getMouseIdFromEvent",
             "params": [
@@ -8463,7 +8472,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 3910,
+            "line": 3942,
             "description": "mousemove event listener function",
             "itemtype": "method",
             "name": "handleMouseMove",
@@ -8489,7 +8498,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4104,
+            "line": 4136,
             "description": "mouseTilt hook function - amended by scrawlStacks extension",
             "itemtype": "method",
             "name": "handleMouseTilt",
@@ -8510,7 +8519,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4112,
+            "line": 4144,
             "description": "Adds event listeners to the element",
             "itemtype": "method",
             "name": "addMouseMove",
@@ -8525,7 +8534,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4125,
+            "line": 4157,
             "description": "Remove event listeners from the element",
             "itemtype": "method",
             "name": "removeMouseMove",
@@ -8540,7 +8549,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4189,
+            "line": 4221,
             "description": "Array of CELLNAME Strings associated with this Pad",
             "itemtype": "property",
             "name": "cells",
@@ -8551,7 +8560,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4206,
+            "line": 4238,
             "description": "Pad's display (visible) &lt;canvas&gt; element - CELLNAME",
             "itemtype": "property",
             "name": "display",
@@ -8562,7 +8571,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4225,
+            "line": 4257,
             "description": "Pad's base (hidden) &lt;canvas&gt; element - CELLNAME",
             "itemtype": "property",
             "name": "base",
@@ -8573,7 +8582,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4232,
+            "line": 4264,
             "description": "Pad's currently active &lt;canvas&gt; element - CELLNAME\n\n//not convinced there's any point in keeping this attribute anymore - take it out?",
             "itemtype": "property",
             "name": "current",
@@ -8585,7 +8594,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4260,
+            "line": 4292,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -8596,7 +8605,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4275,
+            "line": 4307,
             "description": "Retrieve Pad's visible &lt;canvas&gt; element object",
             "itemtype": "method",
             "name": "getElement",
@@ -8610,7 +8619,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4284,
+            "line": 4316,
             "description": "Pad constructor hook function - modified by filters extension",
             "itemtype": "method",
             "name": "filtersPadInit",
@@ -8621,7 +8630,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4290,
+            "line": 4322,
             "description": "Pad constructor hook function - modified by stacks extension",
             "itemtype": "method",
             "name": "stacksPadInit",
@@ -8632,7 +8641,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4296,
+            "line": 4328,
             "description": "Augments PageElement.set(), to cascade scale, backgroundColor, globalAlpha and globalCompositeOperation changes to associated Cell objects",
             "itemtype": "method",
             "name": "set",
@@ -8652,7 +8661,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4336,
+            "line": 4368,
             "description": "Pad constructor hook function - amended by Stacks extension",
             "itemtype": "method",
             "name": "padStacksConstructor",
@@ -8666,7 +8675,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4343,
+            "line": 4375,
             "description": "Pad set hook function - amended by Stacks extension",
             "itemtype": "method",
             "name": "padStacksSet",
@@ -8680,7 +8689,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4350,
+            "line": 4382,
             "description": "Display function sorting routine - cells are sorted according to their compileOrder attribute value, in ascending order",
             "itemtype": "method",
             "name": "sortCellsCompile",
@@ -8694,7 +8703,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4362,
+            "line": 4394,
             "description": "Display function sorting routine - cells are sorted according to their showOrder attribute value, in ascending order",
             "itemtype": "method",
             "name": "sortCellsShow",
@@ -8708,7 +8717,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4374,
+            "line": 4406,
             "description": "Display function - requests Cells to clear their &lt;canvas&gt; element\n\nCells with cleared = true will clear theid displays in preparation for compile/stamp operations",
             "itemtype": "method",
             "name": "clear",
@@ -8721,7 +8730,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4397,
+            "line": 4429,
             "description": "Display function - requests Cells to compile their &lt;canvas&gt; element\n\nCells will compile in ascending order of their compileOrder attributes, if their compiled attribute = true\n\nBy default:\n* the initial base canvas has a compileOrder of 9999 and compiles last\n* the initial display canvas has compiled = false and will not compile\n\n(This function is replaced by the Filters extension)",
             "itemtype": "method",
             "name": "compile",
@@ -8734,7 +8743,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4427,
+            "line": 4459,
             "description": "Display function - requests Cells to show their &lt;canvas&gt; element \n\nCells will show in ascending order of their showOrder attributes, if their show attribute = true\n\nBy default, the initial base and display canvases have shown = false:\n* 'show' involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself\n* the last action is to copy the base cell onto the display cell\n\n(This function is replaced by the Filters extension)",
             "itemtype": "method",
             "name": "show",
@@ -8747,7 +8756,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4462,
+            "line": 4494,
             "description": "Display function - Pad tells its associated Cell objects to undertake a complete clear-compile-show display cycle",
             "itemtype": "method",
             "name": "render",
@@ -8760,7 +8769,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4475,
+            "line": 4507,
             "description": "Create a new (hidden) &lt;canvas&gt; element and associated Cell wrapper, and add it to this Pad",
             "itemtype": "method",
             "name": "addNewCell",
@@ -8782,7 +8791,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4515,
+            "line": 4547,
             "description": "Associate existing &lt;canvas&gt; elements, and their Cell wrappers, with this Pad",
             "itemtype": "method",
             "name": "addCells",
@@ -8802,7 +8811,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4542,
+            "line": 4574,
             "description": "Remove a Cell wrapper object from this Pad\n\n_Note: does not delete the canvas, or the Cell object, from the scrawl library_",
             "itemtype": "method",
             "name": "deleteCell",
@@ -8822,7 +8831,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4572,
+            "line": 4604,
             "description": "Set scrawl.currentPad attribute to this Pad's PADNAME String",
             "itemtype": "method",
             "name": "makeCurrent",
@@ -8838,7 +8847,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4588,
+            "line": 4620,
             "description": "Augments PageElement.setAccessibility(); handles the setting of &lt;canvas&gt; element title and data-comment attributes\n\n* Title text is assigned to the display canvas's title attribute\n* Comments are placed between the display canvas element's tags, within &lt;p&gt; tags - this will remove any existing content between the canvas tags",
             "itemtype": "method",
             "name": "setAccessibility",
@@ -8858,7 +8867,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4615,
+            "line": 4647,
             "description": "Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use styling to set their drawing region dimensions",
             "itemtype": "method",
             "name": "setDimensions",
@@ -8871,7 +8880,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4665,
+            "line": 4697,
             "description": "The coordinate Vector representing the Cell's target position on the &lt;canvas&gt; to which it is to be copied\n\nCell supports the following 'virtual' attributes for this attribute:\n\n* __startX__ or __targetX__ - (Number) the x coordinate on the destination &lt;canvas&gt;\n* __startY__ or __targetY__ - (Number) the y coordinate on the destination &lt;canvas&gt;",
             "itemtype": "property",
             "name": "start",
@@ -8881,7 +8890,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4685,
+            "line": 4717,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -8892,7 +8901,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4694,
+            "line": 4726,
             "description": "PADNAME of the Pad object to which this Cell belongs",
             "itemtype": "property",
             "name": "pad",
@@ -8903,7 +8912,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4701,
+            "line": 4733,
             "description": "The coordinate Vector representing the Cell's copy source position on its &lt;canvas&gt;\n\nCell supports the following 'virtual' attributes for this attribute:\n\n* __copyX__ - (Number) the x coordinate on the source &lt;canvas&gt;\n* __copyY__ - (Number) the y coordinate on the source &lt;canvas&gt;",
             "itemtype": "property",
             "name": "copy",
@@ -8913,7 +8922,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4716,
+            "line": 4748,
             "description": "Copy width, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;",
             "itemtype": "property",
             "name": "copyWidth",
@@ -8924,7 +8933,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4723,
+            "line": 4755,
             "description": "Copy height, in pixels. Determines which portion of this Cell's &lt;canvas&gt; element will be copied to another &lt;canvas&gt;",
             "itemtype": "property",
             "name": "copyHeight",
@@ -8935,7 +8944,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4730,
+            "line": 4762,
             "description": "Local source data",
             "itemtype": "property",
             "name": "copyData",
@@ -8948,7 +8957,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4738,
+            "line": 4770,
             "description": "Local target data",
             "itemtype": "property",
             "name": "pasteData",
@@ -8961,7 +8970,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4746,
+            "line": 4778,
             "description": "Paste width, in pixels. Determines where, and at what scale, the copied portion of this Cell's &lt;canvas&gt; will appear on the target Cell's &lt;canvas&gt;",
             "itemtype": "property",
             "name": "pasteWidth",
@@ -8972,7 +8981,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4753,
+            "line": 4785,
             "description": "Paste height, in pixels. Determines where, and at what scale, the copied portion of this Cell's &lt;canvas&gt; will appear on the target Cell's &lt;canvas&gt;",
             "itemtype": "property",
             "name": "pasteHeight",
@@ -8983,7 +8992,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4760,
+            "line": 4792,
             "description": "DOM &lt;canvas&gt; element's width (not CSS width)\n\n_Never change this attribute directly_",
             "itemtype": "property",
             "name": "actualWidth",
@@ -8994,7 +9003,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4769,
+            "line": 4801,
             "description": "DOM &lt;canvas&gt; element's height (not CSS height)\n\n_Never change this attribute directly_",
             "itemtype": "property",
             "name": "actualHeight",
@@ -9005,7 +9014,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4778,
+            "line": 4810,
             "itemtype": "property",
             "name": "fieldLabel",
             "type": "String",
@@ -9015,7 +9024,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4784,
+            "line": 4816,
             "description": "Transparency level to be used when copying this Cell's &lt;canvas&gt; element to another &lt;canvas&gt;. Permitted values are between 0 (fully transparent) and 1 (fully opaque)",
             "itemtype": "property",
             "name": "globalAlpha",
@@ -9026,7 +9035,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4791,
+            "line": 4823,
             "description": "Composition method to be used when copying this Cell's &lt;canvas&gt; element to another &lt;canvas&gt;. Permitted values include\n\n* 'source-over'\n* 'source-atop'\n* 'source-in'\n* 'source-out'\n* 'destination-over'\n* 'destination-atop'\n* 'destination-in'\n* 'destination-out'\n* 'lighter'\n* 'darker'\n* 'copy'\n* 'xor'\n\n_Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers. The scrawl.device object includes details of which operations the browser supports._",
             "itemtype": "property",
             "name": "globalCompositeOperation",
@@ -9037,7 +9046,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4813,
+            "line": 4845,
             "description": "DOM &lt;canvas&gt; element's background color; use any permitted CSS color String\n\n_Background colors are achieved via JavaScript canvas API drawing methods. Setting the CSS backgroundColor attribute on a &lt;canvas&gt; element is not recommended_",
             "itemtype": "property",
             "name": "backgroundColor",
@@ -9048,7 +9057,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4822,
+            "line": 4854,
             "description": "CTXNAME of this Cell's Context object\n\n_Cells use a Context object to keep track of the settings supplied to its &lt;canvas&gt; element's 2d context engine_",
             "itemtype": "property",
             "name": "context",
@@ -9061,7 +9070,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4832,
+            "line": 4864,
             "description": "Array of GROUPNAMES that contribute to building this Cell's scene",
             "itemtype": "property",
             "name": "groups",
@@ -9072,7 +9081,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4839,
+            "line": 4871,
             "description": "Display cycle flag - on true (default), the cell will take part in the display cycle",
             "itemtype": "property",
             "name": "rendered",
@@ -9083,7 +9092,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4846,
+            "line": 4878,
             "description": "Display cycle flag - on true (default), the cell will clear itself as part of the display cycle",
             "itemtype": "property",
             "name": "cleared",
@@ -9094,7 +9103,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4853,
+            "line": 4885,
             "description": "Display cycle flag - on true (default), the cell will compile itself as part of the display cycle",
             "itemtype": "property",
             "name": "compiled",
@@ -9105,7 +9114,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4860,
+            "line": 4892,
             "description": "Display cycle flag - on true (default), the cell will show itself as part of the display cycle",
             "itemtype": "property",
             "name": "shown",
@@ -9116,7 +9125,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4867,
+            "line": 4899,
             "description": "Display cycle attribute - order in which the cell will compile itself (if compile attribute = true)",
             "itemtype": "property",
             "name": "compileOrder",
@@ -9127,7 +9136,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4874,
+            "line": 4906,
             "description": "Display cycle attribute - order in which the cell will show itself (if show attribute = true)",
             "itemtype": "property",
             "name": "showOrder",
@@ -9138,7 +9147,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4883,
+            "line": 4915,
             "description": "Cell constructor hook function - core module",
             "itemtype": "method",
             "name": "coreCellInit",
@@ -9149,7 +9158,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4968,
+            "line": 5000,
             "description": "Cell constructor hook function - modified by collisions extension",
             "itemtype": "method",
             "name": "collisionsCellInit",
@@ -9160,7 +9169,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4974,
+            "line": 5006,
             "description": "Cell constructor hook function - modified by filters extension",
             "itemtype": "method",
             "name": "filtersCellInit",
@@ -9171,7 +9180,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4980,
+            "line": 5012,
             "description": "Cell constructor hook function - modified by animation extension",
             "itemtype": "method",
             "name": "animationCellInit",
@@ -9182,7 +9191,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 4986,
+            "line": 5018,
             "description": "Augments Position.get(), to allow users to get values for sourceX, sourceY, startX, startY, targetX, targetY, handleX, handleY, width, height",
             "itemtype": "method",
             "name": "get",
@@ -9201,7 +9210,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5027,
+            "line": 5059,
             "description": "Cell.get hook function - modified by animation extension",
             "itemtype": "method",
             "name": "animationCellGet",
@@ -9212,7 +9221,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5035,
+            "line": 5067,
             "description": "Augments Position.set(), to allow users to set the start, handle, and source attributes using startX, startY, targetX, targetY, handleX, handleY, sourceX, sourceY.\n\nNote - setting the argument attribute __resolve__ to true will force a recalculation of the cell's copy and passte data; this is useful in particular for cells that do not undertake a full display cycle (when their cleared or compiled attributes have been set to false)",
             "itemtype": "method",
             "name": "set",
@@ -9232,7 +9241,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5104,
+            "line": 5136,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setDirtyStarts",
@@ -9247,7 +9256,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5124,
+            "line": 5156,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setDirtyHandles",
@@ -9262,7 +9271,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5144,
+            "line": 5176,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setActualHeight",
@@ -9287,7 +9296,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5164,
+            "line": 5196,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setActualWidth",
@@ -9312,7 +9321,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5184,
+            "line": 5216,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setPasteHeight",
@@ -9337,7 +9346,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5202,
+            "line": 5234,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setPasteWidth",
@@ -9362,7 +9371,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5220,
+            "line": 5252,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setCopyHeight",
@@ -9387,7 +9396,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5234,
+            "line": 5266,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setCopyWidth",
@@ -9412,7 +9421,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5248,
+            "line": 5280,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setPasteVector",
@@ -9437,7 +9446,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5271,
+            "line": 5303,
             "description": "Augments Cell.set()",
             "itemtype": "method",
             "name": "setCopyVector",
@@ -9462,7 +9471,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5290,
+            "line": 5322,
             "description": "Cell.set hook function - modified by animation extension",
             "itemtype": "method",
             "name": "animationCellSet",
@@ -9473,7 +9482,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5296,
+            "line": 5328,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Position.setDelta to allow changes to be made using attributes: source, sourceX, sourceY, sourceWidth, sourceHeight, start, startX, startY, target, targetX, targetY, targetWidth, targetHeight, globalAlpha\n\nNote - setting the argument attribute __resolve__ to true will force a recalculation of the cell's copy and passte data; this is useful in particular for cells that do not undertake a full display cycle (when their cleared or compiled attributes have been set to false)",
             "itemtype": "method",
             "name": "setDelta",
@@ -9493,7 +9502,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5365,
+            "line": 5397,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaGlobalAlpha",
@@ -9513,7 +9522,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5379,
+            "line": 5411,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaRoll",
@@ -9533,7 +9542,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5393,
+            "line": 5425,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaActualHeight",
@@ -9558,7 +9567,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5417,
+            "line": 5449,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaActualWidth",
@@ -9583,7 +9592,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5441,
+            "line": 5473,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaPasteHeight",
@@ -9608,7 +9617,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5463,
+            "line": 5495,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaCopyHeight",
@@ -9633,7 +9642,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5478,
+            "line": 5510,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaPasteWidth",
@@ -9658,7 +9667,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5500,
+            "line": 5532,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaCopyWidth",
@@ -9683,7 +9692,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5515,
+            "line": 5547,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaPaste",
@@ -9708,7 +9717,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5545,
+            "line": 5577,
             "description": "Adds the value of each attribute supplied in the argument to existing values\n\nAugments Cell.setDelta",
             "itemtype": "method",
             "name": "setDeltaCopy",
@@ -9733,7 +9742,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5571,
+            "line": 5603,
             "description": "Set the Cell's &lt;canvas&gt; context engine to the specification supplied by the entity about to be drawn on the canvas",
             "itemtype": "method",
             "name": "setEngine",
@@ -9754,7 +9763,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5688,
+            "line": 5720,
             "description": "groupSort",
             "itemtype": "method",
             "name": "groupSort",
@@ -9768,7 +9777,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5700,
+            "line": 5732,
             "description": "Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()",
             "itemtype": "method",
             "name": "clear",
@@ -9781,7 +9790,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5723,
+            "line": 5755,
             "description": "Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array\n\n(This function is replaced by the Filters extension)",
             "itemtype": "method",
             "name": "compile",
@@ -9794,7 +9803,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5744,
+            "line": 5776,
             "description": "Cell copy helper function",
             "itemtype": "method",
             "name": "rotateDestination",
@@ -9816,7 +9825,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5769,
+            "line": 5801,
             "description": "Cell copy helper function",
             "itemtype": "method",
             "name": "prepareToCopyCell",
@@ -9838,7 +9847,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5790,
+            "line": 5822,
             "description": "Cell.prepareToCopyCell hook function - modified by path extension",
             "itemtype": "method",
             "name": "pathPrepareToCopyCell",
@@ -9849,7 +9858,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5796,
+            "line": 5828,
             "description": "Cell.setCopy update copyData object values",
             "itemtype": "method",
             "name": "setCopy",
@@ -9861,7 +9870,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5840,
+            "line": 5872,
             "description": "Cell.setPaste helper function",
             "itemtype": "method",
             "name": "setReference",
@@ -9872,7 +9881,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5871,
+            "line": 5903,
             "description": "Cell.setPaste update pasteData object values",
             "itemtype": "method",
             "name": "setPaste",
@@ -9884,7 +9893,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5930,
+            "line": 5962,
             "description": "Cell copy helper function",
             "itemtype": "method",
             "name": "copyCellToSelf",
@@ -9906,7 +9915,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5970,
+            "line": 6002,
             "description": "Entity stamp helper function",
             "itemtype": "method",
             "name": "clearShadow",
@@ -9921,7 +9930,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 5987,
+            "line": 6019,
             "description": "Entity stamp helper function",
             "itemtype": "method",
             "name": "restoreShadow",
@@ -9936,7 +9945,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6006,
+            "line": 6038,
             "description": "Entity stamp helper function",
             "itemtype": "method",
             "name": "setToClearShape",
@@ -9951,7 +9960,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6026,
+            "line": 6058,
             "description": "Amend the physical dimensions of the Cell's &lt;canvas&gt; element\n\nOmitting the argument will force the &lt;canvas&gt; to set itself to its Pad object's dimensions",
             "itemtype": "method",
             "name": "setDimensions",
@@ -9972,7 +9981,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6054,
+            "line": 6086,
             "description": "Perform a JavaScript ctx.save() operation",
             "itemtype": "method",
             "name": "saveContext",
@@ -9985,7 +9994,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6064,
+            "line": 6096,
             "description": "Perform a JavaScript ctx.restore() operation",
             "itemtype": "method",
             "name": "restoreContext",
@@ -9998,7 +10007,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6074,
+            "line": 6106,
             "description": "Capture an image of the cell's &lt;canvas&gt; element using the JavaScript ctx.getImageData() operation\n\nArgument is an Object in the form:\n\n* {x:Number, y:Number, width:Number, height:Number}\n\nDefault values are:\n\n* {0, 0, this.actualWidth, this.actualHeight}",
             "itemtype": "method",
             "name": "getImageData",
@@ -10017,7 +10026,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6138,
+            "line": 6170,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -10028,7 +10037,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6147,
+            "line": 6179,
             "description": "Color, gradient or pattern used to fill a entity. Can be:\n\n* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'\n* COLORNAME String\n* GRADIENTNAME String\n* RADIALGRADIENTNAME String\n* PATTERNNAME String",
             "itemtype": "property",
             "name": "fillStyle",
@@ -10039,7 +10048,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6160,
+            "line": 6192,
             "description": "Shape and Path entity fill method. Can be:\n\n* 'nonzero' - all areas enclosed by the entity's path are flooded\n* 'evenodd' - only 'odd' areas of the entity's path are flooded",
             "itemtype": "property",
             "name": "winding",
@@ -10050,7 +10059,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6170,
+            "line": 6202,
             "description": "Color, gradient or pattern used to outline a entity. Can be:\n\n* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'\n* COLORNAME String\n* GRADIENTNAME String\n* RADIALGRADIENTNAME String\n* PATTERNNAME String",
             "itemtype": "property",
             "name": "strokeStyle",
@@ -10061,7 +10070,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6183,
+            "line": 6215,
             "description": "Entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque",
             "itemtype": "property",
             "name": "globalAlpha",
@@ -10072,7 +10081,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6190,
+            "line": 6222,
             "description": "Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include\n\n* 'source-over'\n* 'source-atop'\n* 'source-in'\n* 'source-out'\n* 'destination-over'\n* 'destination-atop'\n* 'destination-in'\n* 'destination-out'\n* 'lighter'\n* 'darker'\n* 'copy'\n* 'xor'\n\n_Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers_",
             "itemtype": "property",
             "name": "globalCompositeOperation",
@@ -10083,7 +10092,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6213,
+            "line": 6245,
             "description": "Line width, in pixels",
             "itemtype": "property",
             "name": "lineWidth",
@@ -10094,7 +10103,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6220,
+            "line": 6252,
             "description": "Line cap styling. Permitted values include:\n\n* 'butt'\n* 'round'\n* 'square'",
             "itemtype": "property",
             "name": "lineCap",
@@ -10105,7 +10114,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6232,
+            "line": 6264,
             "description": "Line join styling. Permitted values include:\n\n* 'miter'\n* 'round'\n* 'bevel'",
             "itemtype": "property",
             "name": "lineJoin",
@@ -10116,7 +10125,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6244,
+            "line": 6276,
             "description": "Line dash format - an array of Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern",
             "itemtype": "property",
             "name": "lineDash",
@@ -10127,7 +10136,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6251,
+            "line": 6283,
             "description": "Line dash offset - distance along the entity's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect",
             "itemtype": "property",
             "name": "lineDashOffset",
@@ -10138,7 +10147,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6258,
+            "line": 6290,
             "description": "miterLimit - affecting the 'pointiness' of the line join where two lines join at an acute angle",
             "itemtype": "property",
             "name": "miterLimit",
@@ -10149,7 +10158,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6265,
+            "line": 6297,
             "description": "Horizontal offset of a entity's shadow, in pixels",
             "itemtype": "property",
             "name": "shadowOffsetX",
@@ -10160,7 +10169,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6272,
+            "line": 6304,
             "description": "Vertical offset of a entity's shadow, in pixels",
             "itemtype": "property",
             "name": "shadowOffsetY",
@@ -10171,7 +10180,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6279,
+            "line": 6311,
             "description": "Blur border for a entity's shadow, in pixels",
             "itemtype": "property",
             "name": "shadowBlur",
@@ -10182,7 +10191,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6286,
+            "line": 6318,
             "description": "Color, gradient or pattern used for entity shadow effect. Can be:\n\n* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'\n* COLORNAME String",
             "itemtype": "property",
             "name": "shadowColor",
@@ -10193,7 +10202,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6296,
+            "line": 6328,
             "description": "Cascading Style Sheet font String, for Phrase entitys",
             "itemtype": "property",
             "name": "font",
@@ -10204,7 +10213,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6303,
+            "line": 6335,
             "description": "Text alignment for multi-line Phrase entitys. Permitted values include:\n\n* 'start'\n* 'left'\n* 'center'\n* 'right'\n* 'end'",
             "itemtype": "property",
             "name": "textAlign",
@@ -10215,7 +10224,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6317,
+            "line": 6349,
             "description": "Text baseline value for single-line Phrase entitys set to follow a Path entity path. Permitted values include:\n\n* 'alphabetic'\n* 'top'\n* 'hanging'\n* 'middle'\n* 'ideographic'\n* 'bottom'",
             "itemtype": "property",
             "name": "textBaseline",
@@ -10226,7 +10235,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6335,
+            "line": 6367,
             "description": "Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function - lineDashOffset, lineWidth, globalAlpha\n\n(Only for use by Context objects)",
             "itemtype": "method",
             "name": "setDelta",
@@ -10248,7 +10257,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6375,
+            "line": 6407,
             "description": "Interrogates a &lt;canvas&gt; element's context engine and populates its own attributes with returned values\n\n(Only for use by Context objects)",
             "itemtype": "method",
             "name": "getContextFromEngine",
@@ -10270,7 +10279,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6396,
+            "line": 6428,
             "description": "Interrogates a &lt;canvas&gt; element's context engine and returns an object of non-default attributes",
             "access": "private",
             "tagname": "",
@@ -10279,7 +10288,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6416,
+            "line": 6448,
             "description": "Interrogates a &lt;canvas&gt; element's context engine and populates its own attributes with returned values\n\n(Only for use by Context objects)",
             "itemtype": "method",
             "name": "getChanges",
@@ -10301,7 +10310,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6494,
+            "line": 6526,
             "description": "Array of SPRITENAME Strings of entitys that comprise this Group",
             "itemtype": "property",
             "name": "entitys",
@@ -10312,7 +10321,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6501,
+            "line": 6533,
             "description": "CELLNAME of the default Cell object to which this group is associated",
             "itemtype": "property",
             "name": "cell",
@@ -10323,7 +10332,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6508,
+            "line": 6540,
             "description": "Group order value - lower order Groups are drawn on &lt;canvas&gt; elements before higher order Groups",
             "itemtype": "property",
             "name": "order",
@@ -10334,7 +10343,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6515,
+            "line": 6547,
             "description": "Resort flag",
             "itemtype": "property",
             "name": "resort",
@@ -10347,7 +10356,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6523,
+            "line": 6555,
             "description": "Visibility flag - Group entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false",
             "itemtype": "property",
             "name": "visibility",
@@ -10358,7 +10367,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6530,
+            "line": 6562,
             "description": "Sorting flag - when set to true, Groups will sort their constituent entity object according to their entity.order attribute for each iteration of the display cycle",
             "itemtype": "property",
             "name": "entitySort",
@@ -10369,7 +10378,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6537,
+            "line": 6569,
             "description": "Collision checking radius, in pixels - as a first step in a collision check, the Group will winnow potential collisions according to how close the checked entity is to the current reference entity or mouse coordinate; when set to 0, this collision check step is skipped and all entitys move on to the next step",
             "itemtype": "property",
             "name": "regionRadius",
@@ -10380,7 +10389,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6550,
+            "line": 6582,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -10391,7 +10400,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6568,
+            "line": 6600,
             "description": "set",
             "itemtype": "method",
             "name": "set",
@@ -10411,7 +10420,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6582,
+            "line": 6614,
             "description": "Entity sorting routine - entitys are sorted according to their entity.order attribute value, in ascending order\n\nOrder values are treated as integers. The sort routine is a form of bucket sort, and should be stable (entitys with equal order values should not be swapped)",
             "itemtype": "method",
             "name": "sortEntitys",
@@ -10433,7 +10442,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6597,
+            "line": 6629,
             "description": "Tell the Group to ask _all_ of its constituent entitys to draw themselves on a &lt;canvas&gt; element, regardless of their visibility",
             "itemtype": "method",
             "name": "forceStamp",
@@ -10472,7 +10481,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6614,
+            "line": 6646,
             "description": "Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas&gt; element; only entitys whose visibility attribute is set to true will comply",
             "itemtype": "method",
             "name": "stamp",
@@ -10511,7 +10520,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6644,
+            "line": 6676,
             "description": "Add entitys to the Group",
             "itemtype": "method",
             "name": "addEntitysToGroup",
@@ -10531,7 +10540,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6688,
+            "line": 6720,
             "description": "Remove entitys from the Group",
             "itemtype": "method",
             "name": "removeEntitysFromGroup",
@@ -10551,7 +10560,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6732,
+            "line": 6764,
             "description": "Ask all entitys in the Group to perform a setDelta() operation\n\nstart delta coordinates can be supplied in the form of __x__ and __y__ attributes in the argument object, in addition to the more normal __startX__ and __startY__ attributes",
             "itemtype": "method",
             "name": "updateEntitysBy",
@@ -10571,7 +10580,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6760,
+            "line": 6792,
             "description": "Ask all entitys in the Group to perform a set() operation",
             "itemtype": "method",
             "name": "setEntitysTo",
@@ -10591,7 +10600,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6776,
+            "line": 6808,
             "description": "Require all entitys in the Group to set their pivot attribute to the supplied POINTNAME or SPRITENAME string, and set their handle Vector to reflect the current vector between that entity or Point object's start Vector and their own Vector\n\nThis has the effect of turning a set of disparate entitys into a single, coordinated group.",
             "itemtype": "method",
             "name": "pivotEntitysTo",
@@ -10611,7 +10620,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6818,
+            "line": 6850,
             "description": "Check all entitys in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the entitys have been sorted; the entity Object with the highest order value that is colliding with the coordinate is returned",
             "itemtype": "method",
             "name": "getEntityAt",
@@ -10630,7 +10639,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6851,
+            "line": 6883,
             "description": "Check all entitys in the Group to see which one(s) are associated with a particular mouse index",
             "itemtype": "method",
             "name": "getEntitysByMouseIndex",
@@ -10649,7 +10658,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6873,
+            "line": 6905,
             "description": "Check all entitys in the Group to see if they are colliding with the supplied coordinate. The check is done in reverse order after the entitys have been sorted; all entitys (in the group) colliding with the coordinate are returned as an array of entity objects",
             "itemtype": "method",
             "name": "getAllEntitysAt",
@@ -10668,7 +10677,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6908,
+            "line": 6940,
             "description": "Augments Group.set()",
             "itemtype": "method",
             "name": "setDirtyStarts",
@@ -10683,7 +10692,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6929,
+            "line": 6961,
             "description": "Augments Group.set()",
             "itemtype": "method",
             "name": "setDirtyHandles",
@@ -10698,7 +10707,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6987,
+            "line": 7019,
             "description": "CTXNAME of this Entity's Context object",
             "itemtype": "property",
             "name": "context",
@@ -10711,7 +10720,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 6995,
+            "line": 7027,
             "description": "GROUPNAME String for this entity's default group\n\n_Note: a entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_",
             "itemtype": "property",
             "name": "group",
@@ -10722,7 +10731,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7004,
+            "line": 7036,
             "description": "Display cycle flag; if set to true, entity will not change the &lt;canvas&gt; element's context engine's settings before drawing itself on the cell",
             "itemtype": "property",
             "name": "fastStamp",
@@ -10733,7 +10742,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7011,
+            "line": 7043,
             "description": "Scaling flag; set to true to ensure lineWidth scales in line with the scale attribute value",
             "itemtype": "property",
             "name": "scaleOutline",
@@ -10744,7 +10753,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7018,
+            "line": 7050,
             "description": "Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys",
             "itemtype": "property",
             "name": "order",
@@ -10755,7 +10764,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7025,
+            "line": 7057,
             "description": "Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false",
             "itemtype": "property",
             "name": "visibility",
@@ -10766,7 +10775,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7032,
+            "line": 7064,
             "description": "Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:\n\n* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient\n* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient\n* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action\n* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action\n* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions\n* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions\n* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'\n* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor\n* 'clip' - clip the drawing zone to the entity's path (not tested)\n* 'none' - perform all necessary updates, but do not draw the entity onto the canvas\n\n_Note: not all entitys support all of these operations_",
             "itemtype": "property",
             "name": "method",
@@ -10777,7 +10786,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7057,
+            "line": 7089,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -10788,7 +10797,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7069,
+            "line": 7101,
             "description": "Current SVGTiny data string for the entity (only supported by Path and Shape entitys)",
             "itemtype": "property",
             "name": "data",
@@ -10799,7 +10808,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7076,
+            "line": 7108,
             "description": "Entity radius, in pixels - not supported by all entity objects",
             "itemtype": "property",
             "name": "radius",
@@ -10810,7 +10819,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7089,
+            "line": 7121,
             "description": "Entity constructor hook function - modified by filters extension",
             "itemtype": "method",
             "name": "filtersEntityInit",
@@ -10821,7 +10830,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7095,
+            "line": 7127,
             "description": "Entity constructor hook function - modified by collisions extension",
             "itemtype": "method",
             "name": "collisionsEntityConstructor",
@@ -10832,7 +10841,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7101,
+            "line": 7133,
             "description": "Constructor helper function - register entity object in the scrawl library",
             "itemtype": "method",
             "name": "registerInLibrary",
@@ -10847,7 +10856,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7115,
+            "line": 7147,
             "description": "Entity.registerInLibrary hook function - modified by collisions extension",
             "itemtype": "method",
             "name": "collisionsEntityRegisterInLibrary",
@@ -10858,7 +10867,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7121,
+            "line": 7153,
             "description": "Augments Position.get()\n\nAllows users to retrieve a entity's Context object's values via the entity",
             "itemtype": "method",
             "name": "get",
@@ -10877,7 +10886,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7140,
+            "line": 7172,
             "description": "Augments Position.set()\n\nAllows users to:\n* set a entity's Context object's values via the entity\n* shift a entity between groups",
             "itemtype": "method",
             "name": "set",
@@ -10897,7 +10906,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7172,
+            "line": 7204,
             "description": "Entity.set hook function - modified by collisions extension",
             "itemtype": "method",
             "name": "collisionsEntitySet",
@@ -10908,7 +10917,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7178,
+            "line": 7210,
             "description": "Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function\n\nAllows users to amend a entity's Context object's values via the entity, in addition to its own attribute values",
             "itemtype": "method",
             "name": "setDelta",
@@ -10928,7 +10937,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7199,
+            "line": 7231,
             "description": "Entity.setDelta hook function - modified by collisions extension",
             "itemtype": "method",
             "name": "collisionsEntitySetDelta",
@@ -10939,7 +10948,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7205,
+            "line": 7237,
             "description": "Augments Position.clone()",
             "itemtype": "method",
             "name": "clone",
@@ -10959,7 +10968,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7231,
+            "line": 7263,
             "description": "Constructor helper function - discover this entity's default group affiliation",
             "itemtype": "method",
             "name": "getGroup",
@@ -10981,7 +10990,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7247,
+            "line": 7279,
             "description": "Helper function - get a entity's cell onbject",
             "itemtype": "method",
             "name": "getEntityCell",
@@ -10995,7 +11004,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7256,
+            "line": 7288,
             "description": "Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, regardless of the setting of its visibility attribute\n\nPermitted methods include:\n\n* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient\n* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient\n* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action\n* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action\n* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions\n* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions\n* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'\n* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor\n* 'clip' - clip the drawing zone to the entity's path (not tested)\n* 'none' - perform all necessary updates, but do not draw the entity onto the canvas",
             "itemtype": "method",
             "name": "forceStamp",
@@ -11034,7 +11043,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7286,
+            "line": 7318,
             "description": "Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true\n\nPermitted methods include:\n\n* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient\n* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient\n* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action\n* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action\n* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions\n* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions\n* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'\n* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor\n* 'clip' - clip the drawing zone to the entity's path (not tested)\n* 'none' - perform all necessary updates, but do not draw the entity onto the canvas",
             "itemtype": "method",
             "name": "stamp",
@@ -11073,7 +11082,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7347,
+            "line": 7379,
             "description": "stamp helper function - amended by collisions extension",
             "itemtype": "method",
             "name": "resetCollisionPoints",
@@ -11086,7 +11095,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7354,
+            "line": 7386,
             "description": "Entity.stamp hook function - modified by path extension",
             "itemtype": "method",
             "name": "pathStamp",
@@ -11097,7 +11106,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7360,
+            "line": 7392,
             "description": "Entity.stamp hook function - modified by filters extension",
             "itemtype": "method",
             "name": "stampFilter",
@@ -11108,7 +11117,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7367,
+            "line": 7399,
             "description": "Stamp helper function - rotate and position canvas ready for drawing entity",
             "itemtype": "method",
             "name": "rotateCell",
@@ -11135,7 +11144,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7393,
+            "line": 7425,
             "description": "Entity.getStartValues",
             "itemtype": "method",
             "name": "getStartValues",
@@ -11146,7 +11155,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7405,
+            "line": 7437,
             "description": "Entity.getHandleValues",
             "itemtype": "method",
             "name": "getHandleValues",
@@ -11157,7 +11166,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7417,
+            "line": 7449,
             "description": "Entity.getStart",
             "itemtype": "method",
             "name": "getStart",
@@ -11166,7 +11175,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7428,
+            "line": 7460,
             "description": "Stamp helper function - perform a 'clear' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "clear",
@@ -11193,7 +11202,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7442,
+            "line": 7474,
             "description": "Stamp helper function - perform a 'clearWithBackground' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "clearWithBackground",
@@ -11220,7 +11229,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7456,
+            "line": 7488,
             "description": "Stamp helper function - perform a 'draw' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "draw",
@@ -11247,7 +11256,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7470,
+            "line": 7502,
             "description": "Stamp helper function - perform a 'fill' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "fill",
@@ -11274,7 +11283,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7484,
+            "line": 7516,
             "description": "Stamp helper function - perform a 'drawFill' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "drawFill",
@@ -11301,7 +11310,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7498,
+            "line": 7530,
             "description": "Stamp helper function - perform a 'fillDraw' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "fillDraw",
@@ -11328,7 +11337,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7512,
+            "line": 7544,
             "description": "Stamp helper function - perform a 'sinkInto' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "sinkInto",
@@ -11355,7 +11364,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7526,
+            "line": 7558,
             "description": "Stamp helper function - perform a 'floatOver' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "floatOver",
@@ -11382,7 +11391,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7540,
+            "line": 7572,
             "description": "Stamp helper function - perform a 'clip' method draw\n\n_Note: not supported by this entity_",
             "itemtype": "method",
             "name": "clip",
@@ -11409,7 +11418,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7554,
+            "line": 7586,
             "description": "Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this entity's context values, but not defining or drawing the entity on the canvas.",
             "itemtype": "method",
             "name": "none",
@@ -11436,7 +11445,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7567,
+            "line": 7599,
             "description": "Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)",
             "itemtype": "method",
             "name": "clearShadow",
@@ -11463,7 +11472,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7583,
+            "line": 7615,
             "description": "Stamp helper function - clear shadow parameters during a multi draw operation (Phrase text-along-path drawFill and fillDraw methods)",
             "itemtype": "method",
             "name": "restoreShadow",
@@ -11490,7 +11499,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7599,
+            "line": 7631,
             "description": "Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999",
             "itemtype": "method",
             "name": "pickupEntity",
@@ -11510,7 +11519,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7623,
+            "line": 7655,
             "description": "Revert pickupEntity() actions, ensuring entity is left where the user drops it",
             "itemtype": "method",
             "name": "dropEntity",
@@ -11531,7 +11540,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7647,
+            "line": 7679,
             "description": "Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function\n\nArgument object contains the following attributes:\n\n* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector\n* __x__ - X coordinate\n* __y__ - Y coordinate\n\nEither the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values",
             "itemtype": "method",
             "name": "checkHit",
@@ -11550,7 +11559,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7724,
+            "line": 7756,
             "description": "Drawing flag - when set to 'entity' (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to 'cell' (or false - default), will use Cell-based coordinates",
             "itemtype": "property",
             "name": "lockTo",
@@ -11561,7 +11570,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7734,
+            "line": 7766,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -11572,7 +11581,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7743,
+            "line": 7775,
             "description": "Array of JavaScript Objects representing color stop data\n\nObjects take the form {color:String, stop:Number} where:\n\n* __color__ attribute can be any legitimate CSS color string\n* __stop can be any number between O and 0.999999 (not 1)",
             "itemtype": "property",
             "name": "color",
@@ -11583,7 +11592,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7762,
+            "line": 7794,
             "description": "Drawing flag - when set to true, force the gradient to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities",
             "itemtype": "property",
             "name": "autoUpdate",
@@ -11594,7 +11603,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7769,
+            "line": 7801,
             "description": "CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set",
             "itemtype": "property",
             "name": "cell",
@@ -11605,7 +11614,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7776,
+            "line": 7808,
             "description": "Horizontal start coordinate, in pixels, from the top-left corner of the gradient's &lt;canvas&gt; element",
             "itemtype": "property",
             "name": "startX",
@@ -11616,7 +11625,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7783,
+            "line": 7815,
             "description": "Vertical start coordinate, in pixels, from the top-left corner of the gradient's &lt;canvas&gt; element",
             "itemtype": "property",
             "name": "startY",
@@ -11627,7 +11636,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7790,
+            "line": 7822,
             "description": "Horizontal end coordinate, in pixels, from the top-left corner of the gradient's &lt;canvas&gt; element",
             "itemtype": "property",
             "name": "endX",
@@ -11638,7 +11647,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7797,
+            "line": 7829,
             "description": "Vertical end coordinate, in pixels, from the top-left corner of the gradient's &lt;canvas&gt; element",
             "itemtype": "property",
             "name": "endY",
@@ -11649,7 +11658,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7806,
+            "line": 7838,
             "description": "Add values to Number attributes",
             "itemtype": "method",
             "name": "setDelta",
@@ -11669,7 +11678,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7847,
+            "line": 7879,
             "description": "Creates the gradient\n\n_This function is replaced by the animation extension_",
             "itemtype": "method",
             "name": "update",
@@ -11696,7 +11705,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7862,
+            "line": 7894,
             "description": "Returns &lt;canvas&gt; element's contenxt engine's gradient object, or 'rgba(0,0,0,0)' on failure",
             "itemtype": "method",
             "name": "getData",
@@ -11710,7 +11719,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 7871,
+            "line": 7903,
             "description": "Design.update() helper function - builds &lt;canvas&gt; element's contenxt engine's gradient object",
             "itemtype": "method",
             "name": "makeGradient",
@@ -11739,7 +11748,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8048,
+            "line": 8080,
             "description": "Design.update() helper function - applies color attribute objects to the gradient",
             "itemtype": "method",
             "name": "applyStops",
@@ -11754,7 +11763,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8067,
+            "line": 8099,
             "description": "Remove this gradient from the scrawl library",
             "itemtype": "method",
             "name": "remove",
@@ -11766,7 +11775,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8109,
+            "line": 8141,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -11777,7 +11786,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8150,
+            "line": 8182,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -11788,7 +11797,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8159,
+            "line": 8191,
             "description": "Start circle radius, in pixels or percentage of entity/cell width",
             "itemtype": "property",
             "name": "startRadius",
@@ -11799,7 +11808,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8166,
+            "line": 8198,
             "description": "End circle radius, in pixels or percentage of entity/cell width",
             "itemtype": "property",
             "name": "endRadius",
@@ -11810,7 +11819,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8186,
+            "line": 8218,
             "description": "A __factory__ function to generate new Animation objects",
             "itemtype": "method",
             "name": "makeAnimation",
@@ -11829,7 +11838,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8195,
+            "line": 8227,
             "description": "Alias for makeAnimation()",
             "itemtype": "method",
             "name": "newAnimation",
@@ -11839,7 +11848,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8204,
+            "line": 8236,
             "description": "Animation flag: set to false to stop animation loop",
             "itemtype": "property",
             "name": "doAnimation",
@@ -11849,7 +11858,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8210,
+            "line": 8242,
             "description": "Animation ordering flag - when set to false, the ordering of animations is skipped; default: true",
             "itemtype": "property",
             "name": "orderAnimations",
@@ -11860,7 +11869,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8218,
+            "line": 8250,
             "description": "The Scrawl animation loop\n\nAnimation loop is invoked automatically as part of the initialization process\n\nScrawl will run all Animation objects whose ANIMATIONNAME Strings are included in the __scrawl.animate__ Array\n\nAll animation can be halted by setting the __scrawl.doAnimation__ flag to false\n\nTo restart animation, either call __scrawl.initialize()__, or set _scrawl.doAnimation_ to true and call __scrawl.animationLoop()",
             "itemtype": "method",
             "name": "animationLoop",
@@ -11872,7 +11881,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8251,
+            "line": 8283,
             "description": "Animation sorting routine - animation objects are sorted according to their animation.order attribute value, in ascending order",
             "itemtype": "method",
             "name": "sortAnimations",
@@ -11886,7 +11895,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8263,
+            "line": 8295,
             "description": "Starts the animation loop",
             "itemtype": "method",
             "name": "animationInit",
@@ -11897,7 +11906,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8317,
+            "line": 8349,
             "description": "Pseudo-attribute used to prevent immediate running of animation when first created\n\n_This attribute is not retained by the Animation object_",
             "itemtype": "property",
             "name": "delay",
@@ -11908,7 +11917,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8331,
+            "line": 8363,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -11919,7 +11928,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8340,
+            "line": 8372,
             "description": "Anonymous function for an animation routine",
             "itemtype": "property",
             "name": "fn",
@@ -11930,7 +11939,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8347,
+            "line": 8379,
             "description": "Lower order animations are run during each frame before higher order ones",
             "itemtype": "property",
             "name": "order",
@@ -11941,7 +11950,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8356,
+            "line": 8388,
             "description": "Run an animation",
             "itemtype": "method",
             "name": "run",
@@ -11953,7 +11962,19 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8365,
+            "line": 8397,
+            "description": "Check to see if animation is running",
+            "itemtype": "method",
+            "name": "isRunning",
+            "return": {
+                "description": "true if active; false otherwise"
+            },
+            "class": "Animation",
+            "module": "scrawlCore"
+        },
+        {
+            "file": "source\\scrawlCore.js",
+            "line": 8405,
             "description": "Stop an animation",
             "itemtype": "method",
             "name": "halt",
@@ -11965,7 +11986,7 @@
         },
         {
             "file": "source\\scrawlCore.js",
-            "line": 8374,
+            "line": 8414,
             "description": "Remove this Animation from the scrawl library",
             "itemtype": "method",
             "name": "kill",
@@ -15899,7 +15920,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1136,
+            "line": 1137,
             "description": "Stamp helper function - perform a 'drawFill' method draw",
             "itemtype": "method",
             "name": "drawFill",
@@ -15926,7 +15947,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1160,
+            "line": 1161,
             "description": "Stamp helper function - perform a 'fillDraw' method draw",
             "itemtype": "method",
             "name": "fillDraw",
@@ -15953,7 +15974,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1184,
+            "line": 1185,
             "description": "Stamp helper function - perform a 'sinkInto' method draw",
             "itemtype": "method",
             "name": "sinkInto",
@@ -15980,7 +16001,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1207,
+            "line": 1208,
             "description": "Stamp helper function - perform a 'floatOver' method draw",
             "itemtype": "method",
             "name": "floatOver",
@@ -16007,7 +16028,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1231,
+            "line": 1232,
             "description": "Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for entity sheet images\n\nAlso generates new filtered images, when necessary",
             "itemtype": "method",
             "name": "getImage",
@@ -16021,7 +16042,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1245,
+            "line": 1246,
             "description": "getImage helper object",
             "itemtype": "method",
             "name": "getImageActions",
@@ -16032,7 +16053,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1282,
+            "line": 1283,
             "description": "Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library",
             "itemtype": "method",
             "name": "getImageData",
@@ -16053,7 +16074,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1307,
+            "line": 1308,
             "description": "Get the pixel color or channel data from Picture object's image at given coordinate\n\nArgument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha' (default), 'color'",
             "itemtype": "method",
             "name": "getImageDataValue",
@@ -16072,7 +16093,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1348,
+            "line": 1349,
             "description": "getImageDataValue helper object",
             "itemtype": "method",
             "name": "getImageDataValueActions",
@@ -16081,7 +16102,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1369,
+            "line": 1370,
             "description": "Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function\n\nArgument object contains the following attributes:\n\n* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector\n* __x__ - X coordinate\n* __y__ - Y coordinate\n\nEither the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values",
             "itemtype": "method",
             "name": "checkHit",
@@ -16100,7 +16121,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1435,
+            "line": 1436,
             "description": "Revert pickupEntity() actions, ensuring entity is left where the user drops it",
             "itemtype": "method",
             "name": "dropEntity",
@@ -16121,7 +16142,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1447,
+            "line": 1448,
             "description": "Calculate the box position of the entity\n\nReturns an object with the following attributes:\n\n* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner\n* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner",
             "itemtype": "method",
             "name": "getMaxDimensions",
@@ -23881,11 +23902,11 @@
         },
         {
             "message": "Missing item type\nsetStampUsingPivot helper object",
-            "line": " source\\scrawlCore.js:3470"
+            "line": " source\\scrawlCore.js:3502"
         },
         {
             "message": "Missing item type\nInterrogates a &lt;canvas&gt; element's context engine and returns an object of non-default attributes",
-            "line": " source\\scrawlCore.js:6396"
+            "line": " source\\scrawlCore.js:6428"
         },
         {
             "message": "Missing item type\nAlias for makeVideo()\nmethod newVideo",

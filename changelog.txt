@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.1 - 28 November 2015
+*	version 5.0.2 - 30 November 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -44,6 +44,16 @@ Currently known bugs
 	- The text does not yet take into account any path handle offsets
 
 CHANGE LOG
+------------------------------------------------------------------------------------
+151130
+	- version 5.0.2 released
+
+151128
+	- version 5.0.1 released
+
+151126
+	- version 5.0.0 released
+
 ------------------------------------------------------------------------------------
 November 2015
 	- redesign and recode website tour page

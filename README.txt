@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.1 - 28 November 2015
+*	version 5.0.2 - 30 November 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -86,7 +86,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 5.0.1 released 28 November 2015
+VERSION 5.0.2 released 30 November 2015
 
     - the zip file includes:
 		
@@ -111,15 +111,15 @@ VERSION 5.0.1 released 28 November 2015
 		- scrawlWheel-min.js (7kb)
 
 		Development:
-		- scrawlCore.js (238kb)
+		- scrawlCore.js (239kb)
 		- scrawlAnimation.js (88kb)
 		- scrawlBlock.js (14kb)
 		- scrawlCollisions.js (29kb)
 		- scrawlColor.js (15kb)
 		- scrawlFilters.js (67kb)
-		- scrawlFrame (40kb)
-		- scrawlImageLoad.js (25kb)
-		- scrawlImages.js (68kb)
+		- scrawlFrame (41kb)
+		- scrawlImageLoad.js (28kb)
+		- scrawlImages.js (69kb)
 		- scrawlPath.js (68kb)
 		- scrawlPathFactories.js (25kb)
 		- scrawlPhrase.js (39kb)
@@ -147,6 +147,8 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 5.0.2 uploaded 30 November 2015
+	- minor bugfix
 Version 5.0.1 uploaded 28 November 2015
 	- minor bugfix
 VERSION 5.0.0 uploaded 26 November 2015
