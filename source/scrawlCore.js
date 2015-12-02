@@ -1430,6 +1430,36 @@ A __utility__ function for performing bucket sorts on scrawl string arrays eg Gr
 		return [].concat.apply([], f);
 	};
 	/**
+General helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions
+
+@method correctCoordinates
+@param {Object} coords An object containing x and y attributes
+@param {String} [cell] CELLNAME String
+@return Amended coordinate object; false on error
+**/
+	my.correctCoordinates = function(coords, cell) {
+		var vector,
+			pad,
+			w, h,
+			get = my.xtGet;
+		coords = my.safeObject(coords);
+		vector = my.makeVector(coords);
+		if (my.xta(coords.x, coords.y)) {
+			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.work.currentPad].base];
+			pad = my.pad[cell.pad];
+			w = get(pad.localWidth, pad.width, 300);
+			h = get(pad.localHeight, pad.height, 150);
+			if (w !== cell.actualWidth) {
+				vector.x /= (w / cell.actualWidth);
+			}
+			if (h !== cell.actualHeight) {
+				vector.y /= (h / cell.actualHeight);
+			}
+			return vector;
+		}
+		return false;
+	};
+	/**
 A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects - see Pad.addNewCell() for more details
 @method addNewCell
 @param {Object} data Initial attribute values for new object
@@ -3522,8 +3552,9 @@ setStampUsingPivot helper object
 			if (!my.xt(mouse)) {
 				cell = my.cell[cell];
 				pad = my.pad[cell.pad];
-				mouse = obj.correctCoordinates(pad.mice[obj.mouseIndex], cell);
+				mouse = pad.mice[obj.mouseIndex];
 			}
+			mouse = obj.correctCoordinates(mouse, cell);
 			if (mouse) {
 				if (obj.oldX == null && obj.oldY == null) { //jshint ignore:line
 					obj.oldX = current.x;
@@ -3612,6 +3643,7 @@ The object's scale value - larger values increase the object's size
 @default 1
 **/
 		this.scale = get(items.scale, d.scale);
+		this.propogateTouch = get(items.propogateTouch, d.propogateTouch);
 		this.setLocalDimensions();
 		this.stacksPageElementConstructor(items);
 		/**
@@ -3681,6 +3713,13 @@ Set the interactive attribute to true to track mouse/pointer/touch events on the
 @default true (false for Element objects)
 **/
 		interactive: true,
+		/**
+Boolean - if set to trye, a touchmove event will be propogated to other stacks, pads and elements; default false
+@property propogateTouch
+@type Boolean
+@default false
+**/
+		propogateTouch: false,
 		/**
 Element CSS position styling attribute
 @property position
@@ -4008,7 +4047,7 @@ mousemove event listener function
 				maxY = wrapper.displayOffsetY + wrapper.localHeight;
 
 				//touchmove doesn't propogate beyond its triggering element
-				if (e.type === 'touchmove') {
+				if (this.propogateTouch && e.type === 'touchmove') {
 					for (j = 0, jz = al.length; j < jz; j++) {
 						if (this.name !== al[j]) {
 							altEl = my.canvas[al[j]] || my.stk[al[j]] || my.elm[al[j]] || false;
@@ -4151,7 +4190,9 @@ Adds event listeners to the element
 	my.PageElement.prototype.addMouseMove = function() {
 		var el = this.getElement();
 		my.addListener(['up', 'down', 'move', 'enter', 'leave'], this.handleMouseMove, el);
-		my.pushUnique(my.work.activeListeners, this.name);
+		if(this.propogateTouch){
+			my.pushUnique(my.work.activeListeners, this.name);
+		}
 		return this;
 	};
 	/**
@@ -4164,7 +4205,9 @@ Remove event listeners from the element
 	my.PageElement.prototype.removeMouseMove = function() {
 		var el = this.getElement();
 		my.removeListener(['up', 'down', 'move', 'enter', 'leave'], this.handleMouseMove, el);
-		my.removeItem(my.work.activeListeners, this.name);
+		if(this.propogateTouch){
+			my.removeItem(my.work.activeListeners, this.name);
+		}
 		return this;
 	};
 
@@ -5767,7 +5810,7 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 		this.groupSort();
 		for (i = 0, iz = this.groups.length; i < iz; i++) {
 			group = my.group[this.groups[i]];
-			if (group.get('visibility')) {
+			if (group.visibility) {
 				group.stamp(false, this.name, this, mouse);
 			}
 		}
@@ -7836,6 +7879,39 @@ Vertical end coordinate, in pixels, from the top-left corner of the gradient's &
 	};
 	my.mergeInto(my.work.d.Design, my.work.d.Base);
 	/**
+Update values to Number attributes
+
+Will also accept an object containing start and end attributes, each of which can include x, y, startX, startY, r, startRadius and/or endRadius attributes
+
+@method set
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+	my.Design.prototype.set = function(items) {
+		var temp, x, y,
+			xto = my.xto,
+			so = my.safeObject,
+			get = my.xtGet;
+		items = my.safeObject(items);
+		if(xto(items.startX, items.startY, items.startRadius, items.start)){
+			temp = so(items.start);
+			this.startX = get(temp.x, temp.startX, items.startX, this.startX);
+			this.startY = get(temp.y, temp.startY, items.startY, this.startY);
+			this.startRadius = get(temp.r, temp.startRadius, items.startRadius, this.startRadius);
+		}
+		if(xto(items.endX, items.endY, items.endRadius, items.end)){
+			temp = so(items.end);
+			this.endX = get(temp.x, temp.endX, items.endX, this.endX);
+			this.endY = get(temp.y, temp.endY, items.endY, this.endY);
+			this.endRadius = get(temp.r, temp.endRadius, items.endRadius, this.endRadius);
+		}
+		if (items.shift && my.xt(my.work.d.Design.shift)) {
+			this.shift = items.shift;
+		}
+		return this;
+	};
+	/**
 Add values to Number attributes
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
@@ -8424,7 +8500,7 @@ Remove this Animation from the scrawl library
 		return true;
 	};
 
+	var exports = my;
+
 	return my;
 }());
-
-module.exports = scrawl;

@@ -517,7 +517,7 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 @return always true
 @chainable
 **/
-		my.Cell.prototype.compile = function() {
+		my.Cell.prototype.compile = function(mouse) {
 			var g,
 				i,
 				iz,
@@ -532,7 +532,7 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 			for (i = 0, iz = groups.length; i < iz; i++) {
 				g = group[groups[i]];
 				if (g.visibility) {
-					g.stamp(false, this.name);
+					g.stamp(false, this.name, this, mouse);
 				}
 			}
 			for (i = 0, iz = filters.length; i < iz; i++) {

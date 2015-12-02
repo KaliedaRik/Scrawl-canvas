@@ -181,7 +181,7 @@ Check if device supports various video functionalities
 				window.addEventListener('mouseup', function myautoplayvideochecker() {
 					autoplay = false;
 					v.play();
-					v.removeEventListener('mouseup', myautoplayvideochecker, false);
+					window.removeEventListener('mouseup', myautoplayvideochecker, false);
 				}, false);
 				v.addEventListener('playing', function myautoplayvideo() {
 					if (autoplay) {
@@ -196,9 +196,11 @@ Check if device supports various video functionalities
 						v.pause();
 						v.currentTime = 0.5;
 						x.drawImage(v, 50, 50, 10, 10, 0, 0, 10, 10);
-						test = x.getImageData(0, 0, 1, 1);
-						my.device.videoAsCanvasSource = (test.data[3] > 0) ? true : false;
-						v.removeEventListener('playing', myusevideo, false);
+						setTimeout(function(){
+							test = x.getImageData(0, 0, 1, 1);
+							my.device.videoAsCanvasSource = (test.data[3] > 0) ? true : false;
+							v.removeEventListener('playing', myusevideo, false);
+						}, 50);
 					}
 					catch (e) {
 						my.device.videoAsCanvasSource = false;
@@ -1129,7 +1131,6 @@ Stamp helper function - perform a 'fill' method draw
 				here = this.currentHandle;
 				this.rotateCell(ctx, cell);
 				cell.setEngine(this);
-				// console.log(data);
 				ctx.drawImage(data, cd.x, cd.y, cd.w, cd.h, here.x, here.y, pd.w, pd.h);
 			}
 			return this;
