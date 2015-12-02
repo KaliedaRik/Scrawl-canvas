@@ -264,7 +264,7 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
     scrawl.init();
 **/
 	my.init = function() {
-		if(!my.device){
+		if(!my.entity){
 			my.reset();
 			my.device = new my.Device();
 			my.pageInit();
