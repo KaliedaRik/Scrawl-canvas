@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.2 - 30 November 2015
+*	version 5.0.3 - 2 December 2015
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -86,7 +86,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 5.0.2 released 30 November 2015
+VERSION 5.0.3 released 2 December 2015
 
     - the zip file includes:
 		
@@ -147,6 +147,8 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 5.0.3 uploaded 2 December 2015
+	- minor bugfix
 Version 5.0.2 uploaded 30 November 2015
 	- minor bugfix
 Version 5.0.1 uploaded 28 November 2015

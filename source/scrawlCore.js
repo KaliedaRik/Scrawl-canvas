@@ -23,7 +23,7 @@
 /**
 # scrawlCore
 
-## Version 5.0.2 - 30 November 2015
+## Version 5.0.3 - 2 December 2015
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -108,10 +108,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 5.0.2
+@default 5.0.3
 @final
 **/
-	my.version = '5.0.2';
+	my.version = '5.0.3';
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -264,14 +264,16 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
     scrawl.init();
 **/
 	my.init = function() {
-		my.reset();
-		my.device = new my.Device();
-		my.pageInit();
-		my.createDefaultPad();
-		my.setDisplayOffsets('all');
-		my.physicsInit();
-		my.filtersInit();
-		my.animationInit();
+		if(!my.device){
+			my.reset();
+			my.device = new my.Device();
+			my.pageInit();
+			my.createDefaultPad();
+			my.setDisplayOffsets('all');
+			my.physicsInit();
+			my.filtersInit();
+			my.animationInit();
+		}
 		return my;
 	};
 	/**

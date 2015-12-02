@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.2</em>
+            <em>API Docs for: 5.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -777,7 +777,7 @@ Prepare to draw entitys onto the Cell&#x27;s &amp;lt;canvas&amp;gt; element, in 
 @return always true
 @chainable
 **/
-		my.Cell.prototype.compile = function() {
+		my.Cell.prototype.compile = function(mouse) {
 			var g,
 				i,
 				iz,
@@ -792,7 +792,7 @@ Prepare to draw entitys onto the Cell&#x27;s &amp;lt;canvas&amp;gt; element, in 
 			for (i = 0, iz = groups.length; i &lt; iz; i++) {
 				g = group[groups[i]];
 				if (g.visibility) {
-					g.stamp(false, this.name);
+					g.stamp(false, this.name, this, mouse);
 				}
 			}
 			for (i = 0, iz = filters.length; i &lt; iz; i++) {
