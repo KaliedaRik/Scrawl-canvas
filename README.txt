@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.3 - 2 December 2015
+*	version 5.0.4 - 14 February 2016
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -86,20 +86,20 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 5.0.3 released 2 December 2015
+VERSION 5.0.4 released 14 February 2016
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (78kb)
+		- scrawlCore-min.js (79kb)
 		- scrawlAnimation-min.js (31kb)
 		- scrawlBlock-min.js (5kb)
 		- scrawlCollisions-min.js (11kb)
-		- scrawlColor-min.js (5kb)
+		- scrawlColor-min.js (18kb)
 		- scrawlFilters-min.js (25kb)
 		- scrawlFrame-min.js (20kb)
 		- scrawlImageLoad-min.js (9kb)
-		- scrawlImages-min.js (40kb)
+		- scrawlImages-min.js (39kb)
 		- scrawlPath-min.js (24kb)
 		- scrawlPathFactories-min.js (9kb)
 		- scrawlPhrase-min.js (13kb)
@@ -111,15 +111,15 @@ VERSION 5.0.3 released 2 December 2015
 		- scrawlWheel-min.js (7kb)
 
 		Development:
-		- scrawlCore.js (239kb)
+		- scrawlCore.js (233kb)
 		- scrawlAnimation.js (88kb)
 		- scrawlBlock.js (14kb)
 		- scrawlCollisions.js (29kb)
-		- scrawlColor.js (15kb)
+		- scrawlColor.js (36kb)
 		- scrawlFilters.js (67kb)
-		- scrawlFrame (41kb)
+		- scrawlFrame (67kb)
 		- scrawlImageLoad.js (28kb)
-		- scrawlImages.js (69kb)
+		- scrawlImages.js (68kb)
 		- scrawlPath.js (68kb)
 		- scrawlPathFactories.js (25kb)
 		- scrawlPhrase.js (39kb)
@@ -127,7 +127,7 @@ VERSION 5.0.3 released 2 December 2015
 		- scrawlQuaternion.js (18kb)
 		- scrawlSaveLoad.js (18kb)
 		- scrawlShape.js (26kb)
-		- scrawlStacks.js (112kb)
+		- scrawlStacks.js (114kb)
 		- scrawlWheel.js (20kb)
 
 		Documentation:
@@ -147,6 +147,9 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 5.0.4 uploaded 14 February 2016
+	- minor bugfix
+	- updated documentation
 Version 5.0.3 uploaded 2 December 2015
 	- minor bugfix
 Version 5.0.2 uploaded 30 November 2015

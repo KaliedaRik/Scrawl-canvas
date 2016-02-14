@@ -642,7 +642,7 @@ If present, the DOM &lt;div&gt; element being used to position entity within the
 @private
 **/
 			currentFrame: false,
-		/**
+			/**
 Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
 
 * 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient
@@ -662,28 +662,28 @@ _Note: not all entitys support all of these operations_
 @default 'fill'
 **/
 			method: 'fill',
-		/**
+			/**
 Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false
 @property visibility
 @type Boolean
 @default true
 **/
 			visibility: true,
-		/**
+			/**
 Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys
 @property order
 @type Number
 @default 0
 **/
 			order: 0,
-		/**
+			/**
 ELEMENTNAME of stack element which frame entity will use for positioning data
 @property lockFrameTo
 @type String
 @default false
 **/
 			lockFrameTo: false,
-		/**
+			/**
 JavaScript Object containing key:value pairs - used to cascade data to underlying stack element (if present)
 @property lockElementAttributes
 @type Object
@@ -691,7 +691,7 @@ JavaScript Object containing key:value pairs - used to cascade data to underlyin
 @private
 **/
 			lockElementAttributes: false,
-		/**
+			/**
 Entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
 @property globalAlpha
 @type Number
@@ -699,7 +699,7 @@ Entity transparency - a value between 0 and 1, where 0 is completely transparent
 @private
 **/
 			globalAlpha: 1,
-		/**
+			/**
 Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include
 
 * 'source-over'
@@ -722,14 +722,14 @@ _Be aware that different browsers render these operations in different ways, and
 @default 'source-over'
 **/
 			globalCompositeOperation: 'source-over',
-		/**
+			/**
 Outline width, in pixels
 @property lineWidth
 @type Number
 @default 0
 **/
 			lineWidth: 0,
-		/**
+			/**
 Outline cap styling. Permitted values include:
 
 * 'butt'
@@ -741,7 +741,7 @@ Outline cap styling. Permitted values include:
 @default 'butt'
 **/
 			lineCap: 'butt',
-		/**
+			/**
 Outline join styling. Permitted values include:
 
 * 'miter'
@@ -753,28 +753,28 @@ Outline join styling. Permitted values include:
 @default 'miter'
 **/
 			lineJoin: 'miter',
-		/**
+			/**
 Outline dash format - an array of Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern
 @property lineDash
 @type Array
 @default []
 **/
 			lineDash: [],
-		/**
+			/**
 Outline dash offset - distance along the entity's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect
 @property lineDashOffset
 @type Number
 @default 0
 **/
 			lineDashOffset: 0,
-		/**
+			/**
 miterLimit - affecting the 'pointiness' of the outline join where two lines join at an acute angle
 @property miterLimit
 @type Number
 @default 10
 **/
 			miterLimit: 10,
-		/**
+			/**
 Color, gradient or pattern used to outline a entity. Can be:
 
 * Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
@@ -787,28 +787,28 @@ Color, gradient or pattern used to outline a entity. Can be:
 @default '#000000'
 **/
 			strokeStyle: '#000000',
-		/**
+			/**
 Horizontal offset of a entity's shadow, in pixels
 @property shadowOffsetX
 @type Number
 @default 0
 **/
 			shadowOffsetX: 0,
-		/**
+			/**
 Vertical offset of a entity's shadow, in pixels
 @property shadowOffsetY
 @type Number
 @default 0
 **/
 			shadowOffsetY: 0,
-		/**
+			/**
 Blur border for a entity's shadow, in pixels
 @property shadowBlur
 @type Number
 @default 0
 **/
 			shadowBlur: 0,
-		/**
+			/**
 Color used for entity shadow effect. Can be:
 
 * Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
@@ -818,7 +818,7 @@ Color used for entity shadow effect. Can be:
 @default '#000000'
 **/
 			shadowColor: '#000000',
-		/**
+			/**
 ASSETNAME or CANVASNAME of source asset used to fill frame
 @property source
 @type String
@@ -826,7 +826,7 @@ ASSETNAME or CANVASNAME of source asset used to fill frame
 **/
 			source: false,
 			// sourceType: false,
-		/**
+			/**
 Every Frame entity includes its own personal &lt;canvas&gt; element, which is not part of the DOM and which can only be accessed through this attribute
 @property cell
 @type DOM canvas element
@@ -834,7 +834,7 @@ Every Frame entity includes its own personal &lt;canvas&gt; element, which is no
 @private
 **/
 			cell: false,
-		/**
+			/**
 The Frame entity's &lt;canvas&gt; element's 2d context engine - not stored in the scrawl library and can only be accessed through this attribute
 @property engine
 @type CanvasRenderingContext2D interface
@@ -842,21 +842,21 @@ The Frame entity's &lt;canvas&gt; element's 2d context engine - not stored in th
 @private
 **/
 			engine: false,
-		/**
+			/**
 Array of FILTERNAME strings, for filters to be applied to this entity
 @property filters
 @type Array
 @default []
 **/
 			filters: [],
-		/**
+			/**
 Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
 @property filterOnStroke
 @type Boolean
 @default false
 **/
 			filterOnStroke: false,
-		/**
+			/**
 The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:
 
 * '__entity__' - filter is applied immediately after the Entity has stamped itself onto a cell
@@ -868,7 +868,7 @@ The filterLevel attribute determines at which point in the display cycle the fil
 @default 'entity'
 **/
 			filterLevel: 'entity',
-		/**
+			/**
 The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point - will only affect any underlying stack div element used for positioning the frame entity. 
 
 Note that each corner can also have its own pivot reference
@@ -877,7 +877,7 @@ Note that each corner can also have its own pivot reference
 @default null
 **/
 			pivot: null,
-		/**
+			/**
 The ENTITYNAME of a Path entity to be used for setting this entity's start point - will only affect any underlying stack div element used for positioning the frame entity. 
 
 Note that each corner can also have its own path reference
@@ -886,7 +886,7 @@ Note that each corner can also have its own path reference
 @default null
 **/
 			path: false,
-		/**
+			/**
 Index of mouse vector to use when pivot === 'mouse'
 
 The Pad.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)
@@ -895,35 +895,35 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 @default 'mouse'
 **/
 			mouseIndex: 'mouse',
-		/**
+			/**
 Reflection flag; set to true to flip entity, cell or element along the Y axis - this has no meaning to Frame entitys (which can be repositioned either by directly repositioning corners, or by rotating any associated stack element), but has to be included for compatibility with core entity functionality
 @property flipReverse
 @type Boolean
 @default false
 **/
 			flipReverse: false,
-		/**
+			/**
 Reflection flag; set to true to flip entity, cell or element along the X axis - this has no meaning to Frame entitys (which can be repositioned either by directly repositioning corners, or by rotating any associated stack element), but has to be included for compatibility with core entity functionality
 @property flipUpend
 @type Boolean
 @default false
 **/
 			flipUpend: false,
-		/**
+			/**
 Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis - will only affect any underlying stack div element used for positioning the frame entity. Note that each corner can also be individually restricted
 @property lockX
 @type Boolean
 @default false
 **/
 			lockX: false,
-		/**
+			/**
 Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis - will only affect any underlying stack div element used for positioning the frame entity. Note that each corner can also be individually restricted
 @property lockY
 @type Boolean
 @default false
 **/
 			lockY: false,
-		/**
+			/**
 GROUPNAME String for this entity's default group
 
 _Note: an entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_
@@ -932,7 +932,7 @@ _Note: an entity can belong to more than one group by being added to other Group
 @default false
 **/
 			group: false,
-		/**
+			/**
 Dirty flag - sets to true when certain entity attributes change
 @property redraw
 @type Boolean
@@ -940,21 +940,21 @@ Dirty flag - sets to true when certain entity attributes change
 @private
 **/
 			redraw: false,
-		/**
+			/**
 The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. The interferenceLoops attribute sets the number of times the image gets resized; if patterns still appear in the final image, increase this value
 @property interferenceLoops
 @type Number
 @default 2
 **/
 			interferenceLoops: 2,
-		/**
+			/**
 The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. The interferenceFactor attribute sets the resizing ratio; if patterns still appear in the final image, change this value to something more appropriate
 @property interferenceFactor
 @type Number
 @default 1.03
 **/
 			interferenceFactor: 1.03,
-		/**
+			/**
 Maximum dimensions - used as part of entity filter and collision detection functionality
 @property maxDimensions
 @type Object
@@ -1550,7 +1550,7 @@ Array of key Strings used to whitelist the permitted attributes for cascade to s
 			}
 			return this;
 		};
-	/**
+		/**
 Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, regardless of the setting of its visibility attribute
 
 Permitted methods include:
@@ -1580,7 +1580,7 @@ Permitted methods include:
 			this.visibility = temp;
 			return this;
 		};
-	/**
+		/**
 Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true
 
 Permitted methods include:
@@ -1926,7 +1926,7 @@ stamp helper function - fill thge entity
 			ctx.drawImage(this.cell, referencePoint.x, referencePoint.y);
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'clip' method draw
 @method clip
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -1942,7 +1942,7 @@ Stamp helper function - perform a 'clip' method draw
 			ctx.clip();
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'clear' method draw
 @method clear
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -1966,7 +1966,7 @@ Stamp helper function - perform a 'clear' method draw
 			ctx.globalCompositeOperation = engine.get('globalCompositeOperation');
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'clearWithBackground' method draw
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -1991,7 +1991,7 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 			ctx.globalCompositeOperation = engine.get('globalCompositeOperation');
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'draw' method draw
 @method draw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -2007,7 +2007,7 @@ Stamp helper function - perform a 'draw' method draw
 			ctx.stroke();
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'fill' method draw
 @method fill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -2022,7 +2022,7 @@ Stamp helper function - perform a 'fill' method draw
 			this.drawImage(ctx, cellname, cell);
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'drawFill' method draw
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -2040,7 +2040,7 @@ Stamp helper function - perform a 'drawFill' method draw
 			this.drawImage(ctx, cellname, cell);
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'fillDraw' method draw
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -2058,7 +2058,7 @@ Stamp helper function - perform a 'fillDraw' method draw
 			ctx.stroke();
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'sinkInto' method draw
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -2075,7 +2075,7 @@ Stamp helper function - perform a 'sinkInto' method draw
 			ctx.stroke();
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'floatOver' method draw
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -2092,7 +2092,7 @@ Stamp helper function - perform a 'floatOver' method draw
 			this.drawImage(ctx, cellname, cell);
 			return this;
 		};
-	/**
+		/**
 Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this entity's context values, but not defining or drawing the entity on the canvas.
 @method none
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
@@ -2107,7 +2107,7 @@ Stamp helper function - perform a 'none' method draw. This involves setting the 
 			this.drawPath(ctx, cellname, cell);
 			return this;
 		};
-	/**
+		/**
 Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function
 
 Argument object contains the following attributes:
@@ -2214,7 +2214,7 @@ Returns an object with the following attributes:
 		my.Frame.prototype.parseCollisionPoints = function() {
 			return [];
 		};
-		
+
 		/**
 reciprocal assignment - also occurs in scrawlFilters as there's no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first
 @method stampFilterActions

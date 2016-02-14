@@ -264,7 +264,7 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
     scrawl.init();
 **/
 	my.init = function() {
-		if(!my.entity){
+		if (!my.entity) {
 			my.reset();
 			my.device = new my.Device();
 			my.pageInit();
@@ -2538,13 +2538,13 @@ Modern IE uses pointer events, so Device will not check for IE specific touch-en
 **/
 	my.Device.prototype.checkTouch = function() {
 		var test = false;
-		if('ontouchstart' in window){
+		if ('ontouchstart' in window) {
 			test = true;
 		}
-		else if(window.DocumentTouch && document instanceof DocumentTouch){
+		else if (window.DocumentTouch && document instanceof DocumentTouch) {
 			test = true;
 		}
-	    this.expectTouch = test;
+		this.expectTouch = test;
 	};
 	/**
 Check if device supports canvas element
@@ -4192,7 +4192,7 @@ Adds event listeners to the element
 	my.PageElement.prototype.addMouseMove = function() {
 		var el = this.getElement();
 		my.addListener(['up', 'down', 'move', 'enter', 'leave'], this.handleMouseMove, el);
-		if(this.propogateTouch){
+		if (this.propogateTouch) {
 			my.pushUnique(my.work.activeListeners, this.name);
 		}
 		return this;
@@ -4207,7 +4207,7 @@ Remove event listeners from the element
 	my.PageElement.prototype.removeMouseMove = function() {
 		var el = this.getElement();
 		my.removeListener(['up', 'down', 'move', 'enter', 'leave'], this.handleMouseMove, el);
-		if(this.propogateTouch){
+		if (this.propogateTouch) {
 			my.removeItem(my.work.activeListeners, this.name);
 		}
 		return this;
@@ -7906,13 +7906,13 @@ Will also accept an object containing start and end attributes, each of which ca
 			so = my.safeObject,
 			get = my.xtGet;
 		items = my.safeObject(items);
-		if(xto(items.startX, items.startY, items.startRadius, items.start)){
+		if (xto(items.startX, items.startY, items.startRadius, items.start)) {
 			temp = so(items.start);
 			this.startX = get(temp.x, temp.startX, items.startX, this.startX);
 			this.startY = get(temp.y, temp.startY, items.startY, this.startY);
 			this.startRadius = get(temp.r, temp.startRadius, items.startRadius, this.startRadius);
 		}
-		if(xto(items.endX, items.endY, items.endRadius, items.end)){
+		if (xto(items.endX, items.endY, items.endRadius, items.end)) {
 			temp = so(items.end);
 			this.endX = get(temp.x, temp.endX, items.endX, this.endX);
 			this.endY = get(temp.y, temp.endY, items.endY, this.endY);

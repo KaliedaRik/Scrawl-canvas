@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.3</em>
+            <em>API Docs for: 5.0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -262,7 +262,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlImageLoad.js.html#l792"><code>source\scrawlImageLoad.js:792</code></a>
+            Defined in: <a href="../files/source_scrawlImageLoad.js.html#l809"><code>source\scrawlImageLoad.js:809</code></a>
         </div>
     
 
@@ -274,10 +274,15 @@
 <div class="box intro">
     <h1 id="scrawlframe">scrawlFrame</h1>
 <h2 id="purpose-and-features">Purpose and features</h2>
-<p>The Frame module adds PerspectiveCell entitys to the core module</p>
+<p>The Frame module adds &#39;Frame&#39; entitys to the core module:</p>
 <ul>
-<li>...</li>
+<li>Replicates functionality of Picture entity</li>
+<li>Can use &lt;img&gt;, &lt;canvas&gt; or &lt;video&gt; for source image</li>
+<li>Simulates 3d perspective in a 2d canvas element</li>
+<li>Corners can be moved independently of each other</li>
+<li>Alternatively, frame can be locked to a stack element which can then be manipulated in 3d space </li>
 </ul>
+<p>Note that Frame entity code, being a combination of classic entity and stack element functionalities, bypasses the existing Core code. Thus much of the frame code replicates Position, Cell, Context and Entity code. Changes to the code for these core Objects MUST be ported over to the frame code, where applicable. Changes are made to the frame code will also need to be checked against core code to see if that, too, needs to be updated.</p>
 
 </div>
 

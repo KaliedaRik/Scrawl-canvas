@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.3</em>
+            <em>API Docs for: 5.0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -300,7 +300,7 @@ if (window.scrawl &amp;&amp; window.scrawl.work.extensions &amp;&amp; !window.sc
 		/**
 # window.scrawl
 
-scrawlPhysics module adaptions to the Scrawl library object
+scrawlPhysics extension adaptions to the scrawl-canvas library object
 
 ## New library sections
 
@@ -341,6 +341,12 @@ Change in time since last update, measured in seconds
 **/
 			deltaTime: 0,
 		};
+		/**
+Object containing a set of vectors, for physics calculations
+@property scrawl.work.workphys
+@type {Object}
+@private
+**/
 		my.work.workphys = {
 			v1: my.makeVector(),
 			v2: my.makeVector(),
@@ -543,6 +549,12 @@ Current group
 @default &#x27;&#x27;
 **/
 			group: &#x27;&#x27;,
+			/**
+Current order
+@property order
+@type Number
+@default 0
+**/
 			order: 0,
 			/**
 Mobility flag; when false, particle is fixed to the Cell at its position attribute coordinate vector
@@ -588,6 +600,7 @@ Elasticity coefficient, where 0.0 = 100% elastic and 1.0 is 100% inelastic
 			elasticity: 1,
 			/**
 Object in which user key:value pairs can be stored - clonable
+
 @property userVar
 @type Object
 @default {}
@@ -765,7 +778,7 @@ Undertake a calculation cycle iteration
 		};
 		/**
 stamp helper object
-@method stampActions
+@method stampActions (not a function)
 @return This
 @chainable
 **/
@@ -1022,12 +1035,30 @@ Delete a named Spring object from this Particle
 			return this;
 		};
 		//the following dummy functions allow Particle objects to play nicely as part of a wider entity Group object
+		/**
+Dummy function - required to allow Particles to be processed alongside Entity objects
+@method pickupEntity
+@return This
+@chainable
+**/
 		my.Particle.prototype.pickupEntity = function(item) {
 			return this;
 		};
+		/**
+Dummy function - required to allow Particles to be processed alongside Entity objects
+@method dropEntity
+@return This
+@chainable
+**/
 		my.Particle.prototype.dropEntity = function(item) {
 			return this;
 		};
+		/**
+Dummy function - required to allow Particles to be processed alongside Entity objects
+@method updateStart
+@return This
+@chainable
+**/
 		my.Particle.prototype.updateStart = function() {
 			return this;
 		};
@@ -1182,7 +1213,7 @@ Calculate the force exerted by the spring for this calculation cycle iteration
 			return this;
 		};
 		/**
-Remove this Spring from its Particle objects, and from the scrawl library
+Remove this Spring from its Particle objects, and from the scrawl-canvas library
 @method kill
 @return Always true
 **/
@@ -1210,7 +1241,7 @@ Remove this Spring from its Particle objects, and from the scrawl library
 
 * Defines a Force function that can calculate forces on Particle objects
 
-Two forces are pre-defined by scrawl:
+Two forces are pre-defined by scrawl-canvas:
 
 * __scrawl.force.gravity__ - calculates the gravitational force acting on a Particle, as determined by the _scrawl.physics.gravity_ value and the Particle&#x27;s _mass_
 * __scrawl.force.drag__ - calculates the air drag force acting on a Particle, as determined by the scrawl.physics.airDensity value, and the Particle&#x27;s _area_ and _drag_ attribute values
@@ -1245,7 +1276,7 @@ Functions need to be in the form:
 	function(ball){
 		//get or build a Vector object to hold the result
 		var result = scrawl.makeVector();	//creating the vector
-		var result = scrawl.workphys.v1;	//using an existing work vector: scrawl.workphys.v1 to v5
+		var result = scrawl.work.workphys.v1;	//using an existing work vector: scrawl.work.workphys.v1 to v5
 
 		//calculate the force - Particle attributes are available via the _ball_ argument
 		
@@ -1269,7 +1300,7 @@ Calculate the force for this calculation cycle iteration
 			return this.fn(item);
 		};
 		/**
-Remove this Force from the scrawl library
+Remove this Force from the scrawl-canvas library
 @method kill
 @return Always true
 **/

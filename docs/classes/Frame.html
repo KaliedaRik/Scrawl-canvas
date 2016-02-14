@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.3</em>
+            <em>API Docs for: 5.0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -266,7 +266,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlFrame.js.html#l349"><code>source\scrawlFrame.js:349</code></a>
+            Defined in: <a href="../files/source_scrawlFrame.js.html#l452"><code>source\scrawlFrame.js:452</code></a>
         </div>
     
 
@@ -285,11 +285,11 @@
     <h1 id="frame">Frame</h1>
 <h2 id="instantiation">Instantiation</h2>
 <ul>
-<li>scrawl.Frame()</li>
+<li>scrawl.makeFrame()</li>
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>...</li>
+<li>Defines a Frame entity</li>
 </ul>
 <h2 id="access">Access</h2>
 <ul>
@@ -343,7 +343,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l349"><code>source\scrawlFrame.js:349</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l452"><code>source\scrawlFrame.js:452</code></a>
         
         </p>
 
@@ -430,7 +430,7 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_clear">clear</a>
 
                                 
@@ -444,14 +444,14 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_clearWithBackground">clearWithBackground</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_clip">clip</a>
 
                                 
@@ -472,14 +472,14 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_draw">draw</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_drawFill">drawFill</a>
 
                                 
@@ -507,14 +507,14 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_fill">fill</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_fillDraw">fillDraw</a>
 
                                 
@@ -528,14 +528,14 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_floatOver">floatOver</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private">
+                            <li class="index-item method">
                                 <a href="#method_forceStamp">forceStamp</a>
 
                                 
@@ -591,7 +591,7 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_none">none</a>
 
                                 
@@ -682,14 +682,14 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_sinkInto">sinkInto</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private">
+                            <li class="index-item method">
                                 <a href="#method_stamp">stamp</a>
 
                                 
@@ -734,6 +734,125 @@
 
                     <ul class="index-list properties extends">
                         
+                            <li class="index-item property private">
+                                <a href="#property_bottomLeft">bottomLeft</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomLeftDeltaPathPlace">bottomLeftDeltaPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomLeftLockX">bottomLeftLockX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomLeftLockY">bottomLeftLockY</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomLeftPath">bottomLeftPath</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomLeftPathPlace">bottomLeftPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomLeftPathSpeedConstant">bottomLeftPathSpeedConstant</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomLeftPivot">bottomLeftPivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_bottomRight">bottomRight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomRightDeltaPathPlace">bottomRightDeltaPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomRightLockX">bottomRightLockX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomRightLockY">bottomRightLockY</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomRightPath">bottomRightPath</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomRightPathPlace">bottomRightPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomRightPathSpeedConstant">bottomRightPathSpeedConstant</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_bottomRightPivot">bottomRightPivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_cell">cell</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_comment">comment</a>
 
@@ -741,8 +860,288 @@
                                 
                             </li>
                         
+                            <li class="index-item property private">
+                                <a href="#property_currentFrame">currentFrame</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_engine">engine</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_filterLevel">filterLevel</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_filterOnStroke">filterOnStroke</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_filters">filters</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_flipReverse">flipReverse</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_flipUpend">flipUpend</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_globalAlpha">globalAlpha</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_globalCompositeOperation">globalCompositeOperation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_group">group</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_height">height</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_height">height</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_interferenceFactor">interferenceFactor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_interferenceLoops">interferenceLoops</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lineCap">lineCap</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lineDash">lineDash</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lineDashOffset">lineDashOffset</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lineJoin">lineJoin</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lineWidth">lineWidth</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_localHeight">localHeight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_localWidth">localWidth</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_lockElementAttributes">lockElementAttributes</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_lockElementAttributesList">lockElementAttributesList</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lockFrameTo">lockFrameTo</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lockX">lockX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lockY">lockY</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_maxDimensions">maxDimensions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_method">method</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_miterLimit">miterLimit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_mouseIndex">mouseIndex</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_name">name</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_order">order</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_path">path</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_pivot">pivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_redraw">redraw</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_shadowBlur">shadowBlur</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_shadowColor">shadowColor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_shadowOffsetX">shadowOffsetX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_shadowOffsetY">shadowOffsetY</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_source">source</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_strokeStyle">strokeStyle</a>
 
                                 
                                 
@@ -762,8 +1161,134 @@
                                 
                             </li>
                         
+                            <li class="index-item property private">
+                                <a href="#property_topLeft">topLeft</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topLeftDeltaPathPlace">topLeftDeltaPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topLeftLockX">topLeftLockX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topLeftLockY">topLeftLockY</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topLeftPath">topLeftPath</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topLeftPathPlace">topLeftPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topLeftPathSpeedConstant">topLeftPathSpeedConstant</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topLeftPivot">topLeftPivot</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_topRight">topRight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topRightDeltaPathPlace">topRightDeltaPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topRightLockX">topRightLockX</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topRightLockY">topRightLockY</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topRightPath">topRightPath</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topRightPathPlace">topRightPathPlace</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topRightPathSpeedConstant">topRightPathSpeedConstant</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_topRightPivot">topRightPivot</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_type">type</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_visibility">visibility</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_width">width</a>
 
                                 
                                 
@@ -833,7 +1358,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l691"><code>source\scrawlFrame.js:691</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1315"><code>source\scrawlFrame.js:1315</code></a>
         
         </p>
 
@@ -895,9 +1420,23 @@
     <h3 class="name"><code>checkHit</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
     
 
     
@@ -923,7 +1462,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1342"><code>source\scrawlFrame.js:1342</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2110"><code>source\scrawlFrame.js:2110</code></a>
         
         </p>
 
@@ -934,73 +1473,63 @@
     </div>
 
     <div class="description">
-        
+        <p>Check Cell coordinates to see if any of them fall within this entity&#39;s path - uses JavaScript&#39;s <em>isPointInPath</em> function</p>
+<p>Argument object contains the following attributes:</p>
+<ul>
+<li><strong>tests</strong> - an array of Vector coordinates to be checked; alternatively can be a single Vector</li>
+<li><strong>x</strong> - X coordinate</li>
+<li><strong>y</strong> - Y coordinate</li>
+</ul>
+<p>Either the &#39;tests&#39; attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Argument object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>The first coordinate to fall within the entity&#39;s path; false if none fall within the path</p>
+
+                
+            </div>
+        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_clear" class="method item">
+                    <div id="method_clear" class="method item private">
     <h3 class="name"><code>clear</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFrame.js.html#l1240"><code>source\scrawlFrame.js:1240</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_clearShadow" class="method item private">
-    <h3 class="name"><code>clearShadow</code></h3>
 
     
         <div class="args">
@@ -1009,6 +1538,12 @@
                 <li class="arg">
                     
                         <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
                     
                 </li>
             
@@ -1055,7 +1590,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1180"><code>source\scrawlFrame.js:1180</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1945"><code>source\scrawlFrame.js:1945</code></a>
         
         </p>
 
@@ -1066,7 +1601,7 @@
     </div>
 
     <div class="description">
-        <p>Stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)</p>
+        <p>Stamp helper function - perform a &#39;clear&#39; method draw</p>
 
     </div>
 
@@ -1094,7 +1629,7 @@
             
                 <li class="param">
                     
-                        <code class="param-name">cell</code>
+                        <code class="param-name">cellname</code>
                         <span class="type">String</span>
                     
 
@@ -1102,6 +1637,22 @@
 
                     <div class="param-description">
                         <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
 
                     </div>
 
@@ -1130,11 +1681,45 @@
 </div>
 
                 
-                    <div id="method_clearWithBackground" class="method item">
-    <h3 class="name"><code>clearWithBackground</code></h3>
+                    <div id="method_clearShadow" class="method item private">
+    <h3 class="name"><code>clearShadow</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1142,11 +1727,7 @@
     
 
     
-
-    
-
-    
-
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -1162,7 +1743,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1257"><code>source\scrawlFrame.js:1257</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1865"><code>source\scrawlFrame.js:1865</code></a>
         
         </p>
 
@@ -1173,22 +1754,125 @@
     </div>
 
     <div class="description">
-        
+        <p>stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_clip" class="method item">
-    <h3 class="name"><code>clip</code></h3>
+                    <div id="method_clearWithBackground" class="method item private">
+    <h3 class="name"><code>clearWithBackground</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1196,11 +1880,7 @@
     
 
     
-
-    
-
-    
-
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -1216,7 +1896,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1231"><code>source\scrawlFrame.js:1231</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1969"><code>source\scrawlFrame.js:1969</code></a>
         
         </p>
 
@@ -1227,11 +1907,233 @@
     </div>
 
     <div class="description">
-        
+        <p>Stamp helper function - perform a &#39;clearWithBackground&#39; method draw</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_clip" class="method item private">
+    <h3 class="name"><code>clip</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1929"><code>source\scrawlFrame.js:1929</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp helper function - perform a &#39;clip&#39; method draw</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -1286,7 +2188,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l564"><code>source\scrawlFrame.js:564</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1188"><code>source\scrawlFrame.js:1188</code></a>
         
         </p>
 
@@ -1379,7 +2281,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l517"><code>source\scrawlFrame.js:517</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1141"><code>source\scrawlFrame.js:1141</code></a>
         
         </p>
 
@@ -1402,11 +2304,45 @@
 </div>
 
                 
-                    <div id="method_draw" class="method item">
+                    <div id="method_draw" class="method item private">
     <h3 class="name"><code>draw</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1414,11 +2350,7 @@
     
 
     
-
-    
-
-    
-
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -1434,7 +2366,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1275"><code>source\scrawlFrame.js:1275</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1994"><code>source\scrawlFrame.js:1994</code></a>
         
         </p>
 
@@ -1445,22 +2377,125 @@
     </div>
 
     <div class="description">
-        
+        <p>Stamp helper function - perform a &#39;draw&#39; method draw</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_drawFill" class="method item">
+                    <div id="method_drawFill" class="method item private">
     <h3 class="name"><code>drawFill</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1468,11 +2503,7 @@
     
 
     
-
-    
-
-    
-
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -1488,7 +2519,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1292"><code>source\scrawlFrame.js:1292</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2025"><code>source\scrawlFrame.js:2025</code></a>
         
         </p>
 
@@ -1499,11 +2530,80 @@
     </div>
 
     <div class="description">
-        
+        <p>Stamp helper function - perform a &#39;drawFill&#39; method draw</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -1514,7 +2614,29 @@
     <h3 class="name"><code>drawImage</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -1544,7 +2666,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1222"><code>source\scrawlFrame.js:1222</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1916"><code>source\scrawlFrame.js:1916</code></a>
         
         </p>
 
@@ -1555,9 +2677,66 @@
     </div>
 
     <div class="description">
-        
+        <p>stamp helper function - fill thge entity</p>
+
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1570,7 +2749,29 @@
     <h3 class="name"><code>drawPath</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -1600,7 +2801,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1203"><code>source\scrawlFrame.js:1203</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1893"><code>source\scrawlFrame.js:1893</code></a>
         
         </p>
 
@@ -1611,9 +2812,66 @@
     </div>
 
     <div class="description">
-        
+        <p>stamp helper function - draw the path between the corner points</p>
+
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1670,7 +2928,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1163"><code>source\scrawlFrame.js:1163</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1848"><code>source\scrawlFrame.js:1848</code></a>
         
         </p>
 
@@ -1730,11 +2988,45 @@
 </div>
 
                 
-                    <div id="method_fill" class="method item">
+                    <div id="method_fill" class="method item private">
     <h3 class="name"><code>fill</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1742,11 +3034,7 @@
     
 
     
-
-    
-
-    
-
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -1762,7 +3050,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1284"><code>source\scrawlFrame.js:1284</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2010"><code>source\scrawlFrame.js:2010</code></a>
         
         </p>
 
@@ -1773,22 +3061,125 @@
     </div>
 
     <div class="description">
-        
+        <p>Stamp helper function - perform a &#39;fill&#39; method draw</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_fillDraw" class="method item">
+                    <div id="method_fillDraw" class="method item private">
     <h3 class="name"><code>fillDraw</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1796,11 +3187,7 @@
     
 
     
-
-    
-
-    
-
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -1816,7 +3203,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1303"><code>source\scrawlFrame.js:1303</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2043"><code>source\scrawlFrame.js:2043</code></a>
         
         </p>
 
@@ -1827,11 +3214,80 @@
     </div>
 
     <div class="description">
-        
+        <p>Stamp helper function - perform a &#39;fillDraw&#39; method draw</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -1872,7 +3328,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l944"><code>source\scrawlFrame.js:944</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1622"><code>source\scrawlFrame.js:1622</code></a>
         
         </p>
 
@@ -1895,67 +3351,39 @@
 </div>
 
                 
-                    <div id="method_floatOver" class="method item">
+                    <div id="method_floatOver" class="method item private">
     <h3 class="name"><code>floatOver</code></h3>
 
     
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
             
-                
-                <p>
-                
-                Defined in
-                
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
             
-        
-        
-        <a href="../files/source_scrawlFrame.js.html#l1324"><code>source\scrawlFrame.js:1324</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
-
-    
-</div>
-
-                
-                    <div id="method_forceStamp" class="method item private">
-    <h3 class="name"><code>forceStamp</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
     
 
     
@@ -1969,6 +3397,8 @@
     
 
     
+        <span class="flag chainable">chainable</span>
+    
 
     
 
@@ -1983,7 +3413,7 @@
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l913"><code>source\scrawlFrame.js:913</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2078"><code>source\scrawlFrame.js:2078</code></a>
         
         </p>
 
@@ -1994,11 +3424,270 @@
     </div>
 
     <div class="description">
-        
+        <p>Stamp helper function - perform a &#39;floatOver&#39; method draw</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_forceStamp" class="method item">
+    <h3 class="name"><code>forceStamp</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[method]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cellname]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[mouse]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1553"><code>source\scrawlFrame.js:1553</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp function - instruct entity to draw itself on a Cell&#39;s &lt;canvas&gt; element, regardless of the setting of its visibility attribute</p>
+<p>Permitted methods include:</p>
+<ul>
+<li>&#39;draw&#39; - stroke the entity&#39;s path with the entity&#39;s strokeStyle color, pattern or gradient</li>
+<li>&#39;fill&#39; - fill the entity&#39;s path with the entity&#39;s fillStyle color, pattern or gradient</li>
+<li>&#39;drawFill&#39; - stroke, and then fill, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
+<li>&#39;fillDraw&#39; - fill, and then stroke, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
+<li>&#39;floatOver&#39; - stroke, and then fill, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;sinkInto&#39; - fill, and then stroke, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;clear&#39; - fill the entity&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
+<li>&#39;clearWithBackground&#39; - fill the entity&#39;s path with the Cell&#39;s current backgroundColor</li>
+<li>&#39;clip&#39; - clip the drawing zone to the entity&#39;s path (not tested)</li>
+<li>&#39;none&#39; - perform all necessary updates, but do not draw the entity onto the canvas</li>
+</ul>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[method]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Permitted method attribute String; by default, will use entity&#39;s own method setting</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cellname]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME of cell on which entitys are to draw themselves</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>cell wrapper object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[mouse]</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinates to be used for any entity currently pivoted to a mouse/touch event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -2155,7 +3844,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1122"><code>source\scrawlFrame.js:1122</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1804"><code>source\scrawlFrame.js:1804</code></a>
         
         </p>
 
@@ -2166,7 +3855,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>redrawCanvas helper function</p>
+
     </div>
 
     
@@ -2213,7 +3903,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l662"><code>source\scrawlFrame.js:662</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1286"><code>source\scrawlFrame.js:1286</code></a>
         
         </p>
 
@@ -2297,7 +3987,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1115"><code>source\scrawlFrame.js:1115</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1796"><code>source\scrawlFrame.js:1796</code></a>
         
         </p>
 
@@ -2308,7 +3998,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>redrawCanvas helper function</p>
+
     </div>
 
     
@@ -2373,7 +4064,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1363"><code>source\scrawlFrame.js:1363</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2142"><code>source\scrawlFrame.js:2142</code></a>
         
         </p>
 
@@ -2489,7 +4180,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1108"><code>source\scrawlFrame.js:1108</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1788"><code>source\scrawlFrame.js:1788</code></a>
         
         </p>
 
@@ -2500,7 +4191,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>redrawCanvas helper function</p>
+
     </div>
 
     
@@ -2515,7 +4207,17 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <h3 class="name"><code>lockOn</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -2545,7 +4247,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l853"><code>source\scrawlFrame.js:853</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1481"><code>source\scrawlFrame.js:1481</code></a>
         
         </p>
 
@@ -2556,9 +4258,34 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Attach a Frame entity to an existing stack element, or create a new stack &lt;div&gt; element</p>
+
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -2567,11 +4294,45 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_none" class="method item">
+                    <div id="method_none" class="method item private">
     <h3 class="name"><code>none</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
     
 
     
@@ -2579,11 +4340,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-
-    
-
-    
-
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -2599,7 +4356,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1334"><code>source\scrawlFrame.js:1334</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2095"><code>source\scrawlFrame.js:2095</code></a>
         
         </p>
 
@@ -2610,11 +4367,80 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Stamp helper function - perform a &#39;none&#39; method draw. This involves setting the &lt;canvas&gt; element&#39;s context engine&#39;s values with this entity&#39;s context values, but not defining or drawing the entity on the canvas.</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -2863,7 +4689,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1146"><code>source\scrawlFrame.js:1146</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1831"><code>source\scrawlFrame.js:1831</code></a>
         
         </p>
 
@@ -2926,7 +4752,29 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <h3 class="name"><code>prepareStamp</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -2956,7 +4804,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1195"><code>source\scrawlFrame.js:1195</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1881"><code>source\scrawlFrame.js:1881</code></a>
         
         </p>
 
@@ -2967,9 +4815,66 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>stamp helper function</p>
+
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -3012,7 +4917,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l969"><code>source\scrawlFrame.js:969</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1647"><code>source\scrawlFrame.js:1647</code></a>
         
         </p>
 
@@ -3023,7 +4928,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Draw Frame entity in its own local canvas, then copy over to destimation canvas</p>
+
     </div>
 
     
@@ -3068,7 +4974,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1138"><code>source\scrawlFrame.js:1138</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1822"><code>source\scrawlFrame.js:1822</code></a>
         
         </p>
 
@@ -3079,7 +4985,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>redrawCanvas helper function</p>
+
     </div>
 
     
@@ -3138,7 +5045,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l525"><code>source\scrawlFrame.js:525</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1149"><code>source\scrawlFrame.js:1149</code></a>
         
         </p>
 
@@ -3247,7 +5154,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l592"><code>source\scrawlFrame.js:592</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1216"><code>source\scrawlFrame.js:1216</code></a>
         
         </p>
 
@@ -3309,7 +5216,29 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <h3 class="name"><code>setDestinationEngine</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>Object</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>String</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>Object</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -3339,7 +5268,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l777"><code>source\scrawlFrame.js:777</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1402"><code>source\scrawlFrame.js:1402</code></a>
         
         </p>
 
@@ -3353,6 +5282,66 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
         
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">Object</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>ctx - 2d context engine</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">String</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>CELLNAME</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">Object</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>scrawl Cell object</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -3395,7 +5384,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1129"><code>source\scrawlFrame.js:1129</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1812"><code>source\scrawlFrame.js:1812</code></a>
         
         </p>
 
@@ -3406,7 +5395,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>redrawCanvas helper function</p>
+
     </div>
 
     
@@ -3421,7 +5411,17 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <h3 class="name"><code>setEngine</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -3451,7 +5451,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l714"><code>source\scrawlFrame.js:714</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1338"><code>source\scrawlFrame.js:1338</code></a>
         
         </p>
 
@@ -3465,6 +5465,30 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
         
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -3477,9 +5501,23 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <h3 class="name"><code>setLockElementAttributes</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
     
 
     
@@ -3492,6 +5530,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     
 
+    
+        <span class="flag chainable">chainable</span>
     
 
     
@@ -3507,7 +5547,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l893"><code>source\scrawlFrame.js:893</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1531"><code>source\scrawlFrame.js:1531</code></a>
         
         </p>
 
@@ -3522,74 +5562,82 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_sinkInto" class="method item">
+                    <div id="method_sinkInto" class="method item private">
     <h3 class="name"><code>sinkInto</code></h3>
 
     
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
             
-                
-                <p>
-                
-                Defined in
-                
+                <li class="arg">
+                    
+                        <code>ctx</code>
+                    
+                </li>
             
-        
-        
-        <a href="../files/source_scrawlFrame.js.html#l1314"><code>source\scrawlFrame.js:1314</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
+                <li class="arg">
+                    
+                        <code>cellname</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cell</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
-
-    
-</div>
-
-                
-                    <div id="method_stamp" class="method item private">
-    <h3 class="name"><code>stamp</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
     
 
     
@@ -3603,6 +5651,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
+        <span class="flag chainable">chainable</span>
+    
 
     
 
@@ -3617,7 +5667,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l924"><code>source\scrawlFrame.js:924</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2061"><code>source\scrawlFrame.js:2061</code></a>
         
         </p>
 
@@ -3628,11 +5678,270 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Stamp helper function - perform a &#39;sinkInto&#39; method draw</p>
+
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
 
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">ctx</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>JavaScript context engine for Cell&#39;s &lt;canvas&gt; element</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cellname</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#39;s Group object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cell</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>scrawl Cell object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_stamp" class="method item">
+    <h3 class="name"><code>stamp</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[method]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cellname]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[mouse]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1583"><code>source\scrawlFrame.js:1583</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stamp function - instruct entity to draw itself on a Cell&#39;s &lt;canvas&gt; element, if its visibility attribute is true</p>
+<p>Permitted methods include:</p>
+<ul>
+<li>&#39;draw&#39; - stroke the entity&#39;s path with the entity&#39;s strokeStyle color, pattern or gradient</li>
+<li>&#39;fill&#39; - fill the entity&#39;s path with the entity&#39;s fillStyle color, pattern or gradient</li>
+<li>&#39;drawFill&#39; - stroke, and then fill, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
+<li>&#39;fillDraw&#39; - fill, and then stroke, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
+<li>&#39;floatOver&#39; - stroke, and then fill, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;sinkInto&#39; - fill, and then stroke, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;clear&#39; - fill the entity&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
+<li>&#39;clearWithBackground&#39; - fill the entity&#39;s path with the Cell&#39;s current backgroundColor</li>
+<li>&#39;clip&#39; - clip the drawing zone to the entity&#39;s path (not tested)</li>
+<li>&#39;none&#39; - perform all necessary updates, but do not draw the entity onto the canvas</li>
+</ul>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[method]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Permitted method attribute String; by default, will use entity&#39;s own method setting</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cellname]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME of cell on which entitys are to draw themselves</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>cell wrapper object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[mouse]</code>
+                        <span class="type"><a href="../classes/Vector.html" class="crosslink">Vector</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>coordinates to be used for any entity currently pivoted to a mouse/touch event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -3673,7 +5982,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l952"><code>source\scrawlFrame.js:952</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1630"><code>source\scrawlFrame.js:1630</code></a>
         
         </p>
 
@@ -3730,7 +6039,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1439"><code>source\scrawlFrame.js:1439</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l2218"><code>source\scrawlFrame.js:2218</code></a>
         
         </p>
 
@@ -3787,7 +6096,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l960"><code>source\scrawlFrame.js:960</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1638"><code>source\scrawlFrame.js:1638</code></a>
         
         </p>
 
@@ -3844,7 +6153,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l1080"><code>source\scrawlFrame.js:1080</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l1759"><code>source\scrawlFrame.js:1759</code></a>
         
         </p>
 
@@ -3855,7 +6164,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>redrawCanvas helper function - updates copy parameters</p>
+
     </div>
 
     
@@ -3872,6 +6182,811 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_bottomLeft" class="property item private">
+    <h3 class="name"><code>bottomLeft</code></h3>
+    <span class="type">Object - x:Number, y:Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l590"><code>source\scrawlFrame.js:590</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Current coordinate for bottom left corner</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomLeftDeltaPathPlace" class="property item">
+    <h3 class="name"><code>bottomLeftDeltaPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1038"><code>source\scrawlFrame.js:1038</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object deltaPathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomLeftLockX" class="property item">
+    <h3 class="name"><code>bottomLeftLockX</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1110"><code>source\scrawlFrame.js:1110</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object lockX attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomLeftLockY" class="property item">
+    <h3 class="name"><code>bottomLeftLockY</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1134"><code>source\scrawlFrame.js:1134</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object lockY attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomLeftPath" class="property item">
+    <h3 class="name"><code>bottomLeftPath</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l990"><code>source\scrawlFrame.js:990</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object path attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomLeftPathPlace" class="property item">
+    <h3 class="name"><code>bottomLeftPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1014"><code>source\scrawlFrame.js:1014</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomLeftPathSpeedConstant" class="property item">
+    <h3 class="name"><code>bottomLeftPathSpeedConstant</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1062"><code>source\scrawlFrame.js:1062</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pathSpeedConstant attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomLeftPivot" class="property item">
+    <h3 class="name"><code>bottomLeftPivot</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1086"><code>source\scrawlFrame.js:1086</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pivot attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomRight" class="property item private">
+    <h3 class="name"><code>bottomRight</code></h3>
+    <span class="type">Object - x:Number, y:Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l582"><code>source\scrawlFrame.js:582</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Current coordinate for bottom right corner</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomRightDeltaPathPlace" class="property item">
+    <h3 class="name"><code>bottomRightDeltaPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1032"><code>source\scrawlFrame.js:1032</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object deltaPathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomRightLockX" class="property item">
+    <h3 class="name"><code>bottomRightLockX</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1104"><code>source\scrawlFrame.js:1104</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object lockX attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomRightLockY" class="property item">
+    <h3 class="name"><code>bottomRightLockY</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1128"><code>source\scrawlFrame.js:1128</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object lockY attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomRightPath" class="property item">
+    <h3 class="name"><code>bottomRightPath</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l984"><code>source\scrawlFrame.js:984</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object path attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomRightPathPlace" class="property item">
+    <h3 class="name"><code>bottomRightPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1008"><code>source\scrawlFrame.js:1008</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomRightPathSpeedConstant" class="property item">
+    <h3 class="name"><code>bottomRightPathSpeedConstant</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1056"><code>source\scrawlFrame.js:1056</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pathSpeedConstant attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_bottomRightPivot" class="property item">
+    <h3 class="name"><code>bottomRightPivot</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1080"><code>source\scrawlFrame.js:1080</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pivot attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_cell" class="property item private">
+    <h3 class="name"><code>cell</code></h3>
+    <span class="type">DOM canvas element</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l829"><code>source\scrawlFrame.js:829</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Every Frame entity includes its own personal &lt;canvas&gt; element, which is not part of the DOM and which can only be accessed through this attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="property_comment" class="property item inherited">
@@ -3918,6 +7033,1479 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
+                    <div id="property_currentFrame" class="property item private">
+    <h3 class="name"><code>currentFrame</code></h3>
+    <span class="type">DOM element object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l637"><code>source\scrawlFrame.js:637</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>If present, the DOM &lt;div&gt; element being used to position entity within the stack</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_engine" class="property item private">
+    <h3 class="name"><code>engine</code></h3>
+    <span class="type">CanvasRenderingContext2D interface</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l837"><code>source\scrawlFrame.js:837</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The Frame entity&#39;s &lt;canvas&gt; element&#39;s 2d context engine - not stored in the scrawl library and can only be accessed through this attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_filterLevel" class="property item">
+    <h3 class="name"><code>filterLevel</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l859"><code>source\scrawlFrame.js:859</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:</p>
+<ul>
+<li>&#39;<strong>entity</strong>&#39; - filter is applied immediately after the Entity has stamped itself onto a cell</li>
+<li>&#39;<strong>cell</strong>&#39; - filter is applied after all Entites have completed stamping themselves onto the cell</li>
+<li>&#39;<strong>pad</strong>&#39; - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;entity&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_filterOnStroke" class="property item">
+    <h3 class="name"><code>filterOnStroke</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l852"><code>source\scrawlFrame.js:852</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Filter flag - when true, will draw the entity; on false (default), the clip method is used instead</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_filters" class="property item">
+    <h3 class="name"><code>filters</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l845"><code>source\scrawlFrame.js:845</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Array of FILTERNAME strings, for filters to be applied to this entity</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> []</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_flipReverse" class="property item">
+    <h3 class="name"><code>flipReverse</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l898"><code>source\scrawlFrame.js:898</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Reflection flag; set to true to flip entity, cell or element along the Y axis - this has no meaning to Frame entitys (which can be repositioned either by directly repositioning corners, or by rotating any associated stack element), but has to be included for compatibility with core entity functionality</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_flipUpend" class="property item">
+    <h3 class="name"><code>flipUpend</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l905"><code>source\scrawlFrame.js:905</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Reflection flag; set to true to flip entity, cell or element along the X axis - this has no meaning to Frame entitys (which can be repositioned either by directly repositioning corners, or by rotating any associated stack element), but has to be included for compatibility with core entity functionality</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_globalAlpha" class="property item private">
+    <h3 class="name"><code>globalAlpha</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l694"><code>source\scrawlFrame.js:694</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_globalCompositeOperation" class="property item">
+    <h3 class="name"><code>globalCompositeOperation</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l702"><code>source\scrawlFrame.js:702</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include</p>
+<ul>
+<li>&#39;source-over&#39;</li>
+<li>&#39;source-atop&#39;</li>
+<li>&#39;source-in&#39;</li>
+<li>&#39;source-out&#39;</li>
+<li>&#39;destination-over&#39;</li>
+<li>&#39;destination-atop&#39;</li>
+<li>&#39;destination-in&#39;</li>
+<li>&#39;destination-out&#39;</li>
+<li>&#39;lighter&#39;</li>
+<li>&#39;darker&#39;</li>
+<li>&#39;copy&#39;</li>
+<li>&#39;xor&#39;</li>
+</ul>
+<p><em>Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers</em></p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;source-over&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_group" class="property item">
+    <h3 class="name"><code>group</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l926"><code>source\scrawlFrame.js:926</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>GROUPNAME String for this entity&#39;s default group</p>
+<p><em>Note: an entity can belong to more than one group by being added to other Group objects via the <strong>scrawl.addEntitysToGroups()</strong> and <strong>Group.addEntityToGroup()</strong> functions</em></p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_height" class="property item private">
+    <h3 class="name"><code>height</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l606"><code>source\scrawlFrame.js:606</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Enclosing height of entity</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_height" class="property item">
+    <h3 class="name"><code>height</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l630"><code>source\scrawlFrame.js:630</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Top left corner reference point for enclosing dimension box of entity</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_interferenceFactor" class="property item">
+    <h3 class="name"><code>interferenceFactor</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l950"><code>source\scrawlFrame.js:950</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. The interferenceFactor attribute sets the resizing ratio; if patterns still appear in the final image, change this value to something more appropriate</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1.03</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_interferenceLoops" class="property item">
+    <h3 class="name"><code>interferenceLoops</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l943"><code>source\scrawlFrame.js:943</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. The interferenceLoops attribute sets the number of times the image gets resized; if patterns still appear in the final image, increase this value</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 2</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineCap" class="property item">
+    <h3 class="name"><code>lineCap</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l732"><code>source\scrawlFrame.js:732</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Outline cap styling. Permitted values include:</p>
+<ul>
+<li>&#39;butt&#39;</li>
+<li>&#39;round&#39;</li>
+<li>&#39;square&#39;</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;butt&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineDash" class="property item">
+    <h3 class="name"><code>lineDash</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l756"><code>source\scrawlFrame.js:756</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Outline dash format - an array of Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> []</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineDashOffset" class="property item">
+    <h3 class="name"><code>lineDashOffset</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l763"><code>source\scrawlFrame.js:763</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Outline dash offset - distance along the entity&#39;s outline at which to start the line dash. Changing this value can be used to create a &#39;marching ants effect</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineJoin" class="property item">
+    <h3 class="name"><code>lineJoin</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l744"><code>source\scrawlFrame.js:744</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Outline join styling. Permitted values include:</p>
+<ul>
+<li>&#39;miter&#39;</li>
+<li>&#39;round&#39;</li>
+<li>&#39;bevel&#39;</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;miter&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineWidth" class="property item">
+    <h3 class="name"><code>lineWidth</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l725"><code>source\scrawlFrame.js:725</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Outline width, in pixels</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_localHeight" class="property item private">
+    <h3 class="name"><code>localHeight</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l622"><code>source\scrawlFrame.js:622</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Used as part of core entity collision detection functionality - must always be the same as height attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_localWidth" class="property item private">
+    <h3 class="name"><code>localWidth</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l614"><code>source\scrawlFrame.js:614</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Used as part of core entity collision detection functionality - must always be the same as width attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lockElementAttributes" class="property item private">
+    <h3 class="name"><code>lockElementAttributes</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l686"><code>source\scrawlFrame.js:686</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>JavaScript Object containing key:value pairs - used to cascade data to underlying stack element (if present)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lockElementAttributesList" class="property item private">
+    <h3 class="name"><code>lockElementAttributesList</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1523"><code>source\scrawlFrame.js:1523</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Array of key Strings used to whitelist the permitted attributes for cascade to stack element, if present. Used by lockElementAttributes attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> [&#x27;start&#x27;, &#x27;startX&#x27;, &#x27;startY&#x27;, &#x27;handle&#x27;, &#x27;handleX&#x27;, &#x27;handleY&#x27;, &#x27;deltaStart&#x27;, &#x27;deltaStartX&#x27;, &#x27;deltaStartY&#x27;, &#x27;deltaHandle&#x27;, &#x27;deltaHandleX&#x27;, &#x27;deltaHandleY&#x27;, &#x27;width&#x27;, &#x27;height&#x27;, &#x27;scale&#x27;, &#x27;deltaScale&#x27;, &#x27;deltaRoll&#x27;, &#x27;deltaPitch&#x27;, &#x27;deltaYaw&#x27;, &#x27;roll&#x27;, &#x27;pitch&#x27;, &#x27;yaw&#x27;, &#x27;includeCornerTrackers&#x27;, &#x27;pivot&#x27;, &#x27;path&#x27;, &#x27;pathPlace&#x27;, &#x27;deltaPathPlace&#x27;, &#x27;pathSpeedConstant&#x27;, &#x27;translate&#x27;, &#x27;translateX&#x27;, &#x27;translateY&#x27;, &#x27;translateZ&#x27;, &#x27;mouseIndex&#x27;, &#x27;cursor&#x27;]</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lockFrameTo" class="property item">
+    <h3 class="name"><code>lockFrameTo</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l679"><code>source\scrawlFrame.js:679</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>ELEMENTNAME of stack element which frame entity will use for positioning data</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lockX" class="property item">
+    <h3 class="name"><code>lockX</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l912"><code>source\scrawlFrame.js:912</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis - will only affect any underlying stack div element used for positioning the frame entity. Note that each corner can also be individually restricted</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lockY" class="property item">
+    <h3 class="name"><code>lockY</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l919"><code>source\scrawlFrame.js:919</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis - will only affect any underlying stack div element used for positioning the frame entity. Note that each corner can also be individually restricted</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_maxDimensions" class="property item private">
+    <h3 class="name"><code>maxDimensions</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l957"><code>source\scrawlFrame.js:957</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Maximum dimensions - used as part of entity filter and collision detection functionality</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> {top:0, bottom:0, left:0, right:0, flag:true}</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_method" class="property item">
+    <h3 class="name"><code>method</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l645"><code>source\scrawlFrame.js:645</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:</p>
+<ul>
+<li>&#39;draw&#39; - stroke the entity&#39;s path with the entity&#39;s strokeStyle color, pattern or gradient</li>
+<li>&#39;fill&#39; - fill the entity&#39;s path with the entity&#39;s fillStyle color, pattern or gradient</li>
+<li>&#39;drawFill&#39; - stroke, and then fill, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the stroke action</li>
+<li>&#39;fillDraw&#39; - fill, and then stroke, the entity&#39;s path; if a shadow offset is present, the shadow is added only to the fill action</li>
+<li>&#39;floatOver&#39; - stroke, and then fill, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;sinkInto&#39; - fill, and then stroke, the entity&#39;s path; shadow offset is added to both actions</li>
+<li>&#39;clear&#39; - fill the entity&#39;s path with transparent color &#39;rgba(0, 0, 0, 0)&#39;</li>
+<li>&#39;clearWithBackground&#39; - fill the entity&#39;s path with the Cell&#39;s current backgroundColor</li>
+<li>&#39;clip&#39; - clip the drawing zone to the entity&#39;s path (not tested)</li>
+<li>&#39;none&#39; - perform all necessary updates, but do not draw the entity onto the canvas</li>
+</ul>
+<p><em>Note: not all entitys support all of these operations</em></p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;fill&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_miterLimit" class="property item">
+    <h3 class="name"><code>miterLimit</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l770"><code>source\scrawlFrame.js:770</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>miterLimit - affecting the &#39;pointiness&#39; of the outline join where two lines join at an acute angle</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 10</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_mouseIndex" class="property item">
+    <h3 class="name"><code>mouseIndex</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l889"><code>source\scrawlFrame.js:889</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Index of mouse vector to use when pivot === &#39;mouse&#39;</p>
+<p>The Pad.mice object can hold details of multiple touch events - when an entity is assigned to a &#39;mouse&#39;, it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;mouse&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_name" class="property item inherited">
     <h3 class="name"><code>name</code></h3>
     <span class="type">String</span>
@@ -3952,6 +8540,491 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_order" class="property item">
+    <h3 class="name"><code>order</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l672"><code>source\scrawlFrame.js:672</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_path" class="property item">
+    <h3 class="name"><code>path</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l880"><code>source\scrawlFrame.js:880</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The ENTITYNAME of a Path entity to be used for setting this entity&#39;s start point - will only affect any underlying stack div element used for positioning the frame entity. </p>
+<p>Note that each corner can also have its own path reference</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> null</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_pivot" class="property item">
+    <h3 class="name"><code>pivot</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l871"><code>source\scrawlFrame.js:871</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object&#39;s start point - will only affect any underlying stack div element used for positioning the frame entity. </p>
+<p>Note that each corner can also have its own pivot reference</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> null</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_redraw" class="property item private">
+    <h3 class="name"><code>redraw</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l935"><code>source\scrawlFrame.js:935</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Dirty flag - sets to true when certain entity attributes change</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_shadowBlur" class="property item">
+    <h3 class="name"><code>shadowBlur</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l804"><code>source\scrawlFrame.js:804</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Blur border for a entity&#39;s shadow, in pixels</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_shadowColor" class="property item">
+    <h3 class="name"><code>shadowColor</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l811"><code>source\scrawlFrame.js:811</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Color used for entity shadow effect. Can be:</p>
+<ul>
+<li>Cascading Style Sheet format color String - &#39;#fff&#39;, &#39;#ffffff&#39;, &#39;rgb(255,255,255)&#39;, &#39;rgba(255,255,255,1)&#39;, &#39;white&#39;</li>
+<li>COLORNAME String</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;#000000&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_shadowOffsetX" class="property item">
+    <h3 class="name"><code>shadowOffsetX</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l790"><code>source\scrawlFrame.js:790</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Horizontal offset of a entity&#39;s shadow, in pixels</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_shadowOffsetY" class="property item">
+    <h3 class="name"><code>shadowOffsetY</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l797"><code>source\scrawlFrame.js:797</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Vertical offset of a entity&#39;s shadow, in pixels</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_source" class="property item">
+    <h3 class="name"><code>source</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l821"><code>source\scrawlFrame.js:821</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>ASSETNAME or CANVASNAME of source asset used to fill frame</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_strokeStyle" class="property item">
+    <h3 class="name"><code>strokeStyle</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l777"><code>source\scrawlFrame.js:777</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Color, gradient or pattern used to outline a entity. Can be:</p>
+<ul>
+<li>Cascading Style Sheet format color String - &#39;#fff&#39;, &#39;#ffffff&#39;, &#39;rgb(255,255,255)&#39;, &#39;rgba(255,255,255,1)&#39;, &#39;white&#39;</li>
+<li>COLORNAME String</li>
+<li>GRADIENTNAME String</li>
+<li>RADIALGRADIENTNAME String</li>
+<li>PATTERNNAME String</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;#000000&#x27;</p>
     
 
     
@@ -4048,6 +9121,762 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
+                    <div id="property_topLeft" class="property item private">
+    <h3 class="name"><code>topLeft</code></h3>
+    <span class="type">Object - x:Number, y:Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l566"><code>source\scrawlFrame.js:566</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Current coordinate for top left corner</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topLeftDeltaPathPlace" class="property item">
+    <h3 class="name"><code>topLeftDeltaPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1020"><code>source\scrawlFrame.js:1020</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object deltaPathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topLeftLockX" class="property item">
+    <h3 class="name"><code>topLeftLockX</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1092"><code>source\scrawlFrame.js:1092</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object lockX attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topLeftLockY" class="property item">
+    <h3 class="name"><code>topLeftLockY</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1116"><code>source\scrawlFrame.js:1116</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object lockY attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topLeftPath" class="property item">
+    <h3 class="name"><code>topLeftPath</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l972"><code>source\scrawlFrame.js:972</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object path attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topLeftPathPlace" class="property item">
+    <h3 class="name"><code>topLeftPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l996"><code>source\scrawlFrame.js:996</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topLeftPathSpeedConstant" class="property item">
+    <h3 class="name"><code>topLeftPathSpeedConstant</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1044"><code>source\scrawlFrame.js:1044</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pathSpeedConstant attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topLeftPivot" class="property item">
+    <h3 class="name"><code>topLeftPivot</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1068"><code>source\scrawlFrame.js:1068</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pivot attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topRight" class="property item private">
+    <h3 class="name"><code>topRight</code></h3>
+    <span class="type">Object - x:Number, y:Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l574"><code>source\scrawlFrame.js:574</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Current coordinate for top right corner</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topRightDeltaPathPlace" class="property item">
+    <h3 class="name"><code>topRightDeltaPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1026"><code>source\scrawlFrame.js:1026</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object deltaPathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topRightLockX" class="property item">
+    <h3 class="name"><code>topRightLockX</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1098"><code>source\scrawlFrame.js:1098</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object lockX attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topRightLockY" class="property item">
+    <h3 class="name"><code>topRightLockY</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1122"><code>source\scrawlFrame.js:1122</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object lockY attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topRightPath" class="property item">
+    <h3 class="name"><code>topRightPath</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l978"><code>source\scrawlFrame.js:978</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object path attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topRightPathPlace" class="property item">
+    <h3 class="name"><code>topRightPathPlace</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1002"><code>source\scrawlFrame.js:1002</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pathPlace attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topRightPathSpeedConstant" class="property item">
+    <h3 class="name"><code>topRightPathSpeedConstant</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1050"><code>source\scrawlFrame.js:1050</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pathSpeedConstant attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_topRightPivot" class="property item">
+    <h3 class="name"><code>topRightPivot</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l1074"><code>source\scrawlFrame.js:1074</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attribute cascaded to appropriate FramePoint object pivot attribute</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_type" class="property item">
     <h3 class="name"><code>type</code></h3>
     <span class="type">String</span>
@@ -4073,7 +9902,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFrame.js.html#l454"><code>source\scrawlFrame.js:454</code></a>
+        <a href="../files/source_scrawlFrame.js.html#l557"><code>source\scrawlFrame.js:557</code></a>
         
         </p>
 
@@ -4088,6 +9917,102 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     
         <p><strong>Default:</strong> &#x27;Frame&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_visibility" class="property item">
+    <h3 class="name"><code>visibility</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l665"><code>source\scrawlFrame.js:665</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_width" class="property item private">
+    <h3 class="name"><code>width</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlFrame.js.html#l598"><code>source\scrawlFrame.js:598</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Enclosing width of entity</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
     
 
     

@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.3</em>
+            <em>API Docs for: 5.0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -524,7 +524,7 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
     scrawl.init();
 **/
 	my.init = function() {
-		if(!my.device){
+		if (!my.entity) {
 			my.reset();
 			my.device = new my.Device();
 			my.pageInit();
@@ -2798,13 +2798,13 @@ Modern IE uses pointer events, so Device will not check for IE specific touch-en
 **/
 	my.Device.prototype.checkTouch = function() {
 		var test = false;
-		if(&#x27;ontouchstart&#x27; in window){
+		if (&#x27;ontouchstart&#x27; in window) {
 			test = true;
 		}
-		else if(window.DocumentTouch &amp;&amp; document instanceof DocumentTouch){
+		else if (window.DocumentTouch &amp;&amp; document instanceof DocumentTouch) {
 			test = true;
 		}
-	    this.expectTouch = test;
+		this.expectTouch = test;
 	};
 	/**
 Check if device supports canvas element
@@ -3221,14 +3221,14 @@ Entity, cell or element height (in pixels)
 		height: 0
 		/**
 (Added by the path extension)
-The SPRITENAME of a Shape entity whose path is used to calculate this object&#x27;s start point
+The ENTITYNAME of a Shape entity whose path is used to calculate this object&#x27;s start point
 @property path
 @type String
 @default &#x27;&#x27;
 **/
 		/**
 (Added by the path extension)
-A value between 0 and 1 to represent the distance along a Shape object&#x27;s path, where 0 is the path start and 1 is the path end
+A value between 0 and 1 to represent the distance along a Path object&#x27;s path, where 0 is the path start and 1 is the path end
 @property pathPlace
 @type Number
 @default 0
@@ -4452,7 +4452,7 @@ Adds event listeners to the element
 	my.PageElement.prototype.addMouseMove = function() {
 		var el = this.getElement();
 		my.addListener([&#x27;up&#x27;, &#x27;down&#x27;, &#x27;move&#x27;, &#x27;enter&#x27;, &#x27;leave&#x27;], this.handleMouseMove, el);
-		if(this.propogateTouch){
+		if (this.propogateTouch) {
 			my.pushUnique(my.work.activeListeners, this.name);
 		}
 		return this;
@@ -4467,7 +4467,7 @@ Remove event listeners from the element
 	my.PageElement.prototype.removeMouseMove = function() {
 		var el = this.getElement();
 		my.removeListener([&#x27;up&#x27;, &#x27;down&#x27;, &#x27;move&#x27;, &#x27;enter&#x27;, &#x27;leave&#x27;], this.handleMouseMove, el);
-		if(this.propogateTouch){
+		if (this.propogateTouch) {
 			my.removeItem(my.work.activeListeners, this.name);
 		}
 		return this;
@@ -4493,7 +4493,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 
 * scrawl.pad.PADNAME - for the Pad object
 * scrawl.canvas.PADNAME - for the Pad object&#x27;s visible (display) &amp;lt;canvas&amp;gt; element
-* scrawl.context.PADNAME - for the visible (display) &amp;ltcanvas&amp;gt; element&#x27;s 2d context engine
+* scrawl.context.PADNAME - for the visible (display) &amp;ltcanvas&amp;gt; element&#x27;s 2d context engine (CanvasRenderingContext2D interface)
 * scrawl.cell[scrawl.pad.PADNAME.display] - for the Pad object&#x27;s display cell
 * scrawl.cell[scrawl.pad.PADNAME.base] - for the Pad object&#x27;s base cell
 
@@ -6621,7 +6621,7 @@ Blur border for a entity&#x27;s shadow, in pixels
 **/
 		shadowBlur: 0,
 		/**
-Color, gradient or pattern used for entity shadow effect. Can be:
+Color used for entity shadow effect. Can be:
 
 * Cascading Style Sheet format color String - &#x27;#fff&#x27;, &#x27;#ffffff&#x27;, &#x27;rgb(255,255,255)&#x27;, &#x27;rgba(255,255,255,1)&#x27;, &#x27;white&#x27;
 * COLORNAME String
@@ -7768,7 +7768,8 @@ Stamp helper function - perform a &#x27;clear&#x27; method draw
 _Note: not supported by this entity_
 @method clear
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7782,7 +7783,8 @@ Stamp helper function - perform a &#x27;clearWithBackground&#x27; method draw
 _Note: not supported by this entity_
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7796,7 +7798,8 @@ Stamp helper function - perform a &#x27;draw&#x27; method draw
 _Note: not supported by this entity_
 @method draw
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7810,7 +7813,8 @@ Stamp helper function - perform a &#x27;fill&#x27; method draw
 _Note: not supported by this entity_
 @method fill
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7824,7 +7828,8 @@ Stamp helper function - perform a &#x27;drawFill&#x27; method draw
 _Note: not supported by this entity_
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7838,7 +7843,8 @@ Stamp helper function - perform a &#x27;fillDraw&#x27; method draw
 _Note: not supported by this entity_
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7852,7 +7858,8 @@ Stamp helper function - perform a &#x27;sinkInto&#x27; method draw
 _Note: not supported by this entity_
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7866,7 +7873,8 @@ Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 _Note: not supported by this entity_
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7880,7 +7888,8 @@ Stamp helper function - perform a &#x27;clip&#x27; method draw
 _Note: not supported by this entity_
 @method clip
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7892,7 +7901,8 @@ _Note: not supported by this entity_
 Stamp helper function - perform a &#x27;none&#x27; method draw. This involves setting the &amp;lt;canvas&amp;gt; element&#x27;s context engine&#x27;s values with this entity&#x27;s context values, but not defining or drawing the entity on the canvas.
 @method none
 @param {Object} ctx JavaScript context engine for Cell&#x27;s &amp;lt;canvas&amp;gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity&#x27;s Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -8156,13 +8166,13 @@ Will also accept an object containing start and end attributes, each of which ca
 			so = my.safeObject,
 			get = my.xtGet;
 		items = my.safeObject(items);
-		if(xto(items.startX, items.startY, items.startRadius, items.start)){
+		if (xto(items.startX, items.startY, items.startRadius, items.start)) {
 			temp = so(items.start);
 			this.startX = get(temp.x, temp.startX, items.startX, this.startX);
 			this.startY = get(temp.y, temp.startY, items.startY, this.startY);
 			this.startRadius = get(temp.r, temp.startRadius, items.startRadius, this.startRadius);
 		}
-		if(xto(items.endX, items.endY, items.endRadius, items.end)){
+		if (xto(items.endX, items.endY, items.endRadius, items.end)) {
 			temp = so(items.end);
 			this.endX = get(temp.x, temp.endX, items.endX, this.endX);
 			this.endY = get(temp.y, temp.endY, items.endY, this.endY);

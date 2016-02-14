@@ -3289,28 +3289,28 @@ STACKNAME of the default Stack object to which this group is associated
 		};
 		my.mergeInto(my.work.d.ElementGroup, my.work.d.Base);
 
-			/**
+		/**
 Directly calls the equivalent Group function
 @method set
 **/
 		my.ElementGroup.prototype.set = function(items) {
 			return my.Group.prototype.set.call(this, items);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method sortEntitys
 **/
 		my.ElementGroup.prototype.sortEntitys = function(force) {
 			return my.Group.prototype.sortEntitys.call(this, force);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method forceStamp
 **/
 		my.ElementGroup.prototype.forceStamp = function(method, cellname, cell) {
 			return my.Group.prototype.forceStamp.call(this, method, cellname, cell);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method stamp
 **/
@@ -3320,63 +3320,63 @@ Directly calls the equivalent Group function
 			cell = get(cell, my.stack[this.stack]);
 			return my.Group.prototype.stamp.call(this, method, cellname, cell);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method filtersGroupInit
 **/
 		my.ElementGroup.prototype.filtersGroupInit = function() {
 			return my.Group.prototype.filtersGroupInit.call(this, arguments);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method addEntitysToGroup
 **/
 		my.ElementGroup.prototype.addEntitysToGroup = function() {
 			return my.Group.prototype.addEntitysToGroup.call(this, arguments);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method removeEntitysFromGroup
 **/
 		my.ElementGroup.prototype.removeEntitysFromGroup = function() {
 			return my.Group.prototype.removeEntitysFromGroup.call(this, arguments);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method updateEntitysBy
 **/
 		my.ElementGroup.prototype.updateEntitysBy = function(items) {
 			return my.Group.prototype.updateEntitysBy.call(this, items);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method setEntitysTo
 **/
 		my.ElementGroup.prototype.setEntitysTo = function(items) {
 			return my.Group.prototype.setEntitysTo.call(this, items);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method pivotEntitysTo
 **/
 		my.ElementGroup.prototype.pivotEntitysTo = function(item) {
 			return my.Group.prototype.pivotEntitysTo.call(this, item);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method getEntityAt
 **/
 		my.ElementGroup.prototype.getEntityAt = function(items) {
 			return my.Group.prototype.getEntityAt.call(this, items);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method getEntitysByMouseIndex
 **/
 		my.ElementGroup.prototype.getEntitysByMouseIndex = function(item) {
 			return my.Group.prototype.getEntitysByMouseIndex.call(this, item);
 		};
-			/**
+		/**
 Directly calls the equivalent Group function
 @method getAllEntitysAt
 **/

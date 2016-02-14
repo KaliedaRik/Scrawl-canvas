@@ -100,17 +100,17 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "scrawlBlock",
             "name": "scrawlBlock",
-            "description": "# scrawlBlock\n\n## Purpose and features\n\nThe Block module adds Block entitys - squares and rectangles - to the core module\n\n* Defines 'rect' objects for displaying on a Cell's canvas\n* Performs 'rect' based drawing operations on canvases"
+            "description": "# scrawlBlock\n\n## Purpose and features\n\nThe Block extension adds Block entitys - squares and rectangles - to the core module\n\n* Defines 'rect' objects for displaying on a Cell's canvas\n* Performs 'rect' based drawing operations on canvases"
         },
         {
             "displayName": "scrawlCollisions",
             "name": "scrawlCollisions",
-            "description": "# scrawlCollisions\n\n## Purpose and features\n\nThe Collisions module adds support for detecting collisions between entitys\n\n* Adds functionality to various core objects and functions so they can take detect collisions"
+            "description": "# scrawlCollisions\n\n## Purpose and features\n\nThe Collisions extension adds support for detecting collisions between entitys\n\n* Adds functionality to various core objects and functions so they can take detect collisions"
         },
         {
             "displayName": "scrawlColor",
             "name": "scrawlColor",
-            "description": "# scrawlColor\n\n## Purpose and features\n\nThe Color module adds a controllable color object that can be used with entity fillStyle and strokeStyle attributes"
+            "description": "# scrawlColor\n\n## Purpose and features\n\nThe Color extension adds a controllable color object that can be used with entity fillStyle and strokeStyle attributes"
         },
         {
             "displayName": "scrawlCore",
@@ -120,32 +120,32 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "scrawlFilters",
             "name": "scrawlFilters",
-            "description": "# scrawlFilters\n\n## Purpose and features\n\nThe Filters module adds a set of filter algorithms to the Scrawl library"
+            "description": "# scrawlFilters\n\n## Purpose and features\n\nThe Filters extension adds a set of filter algorithms to the scrawl-canvas library"
         },
         {
             "displayName": "scrawlFrame",
             "name": "scrawlFrame",
-            "description": "# scrawlFrame\n\n## Purpose and features\n\nThe Frame module adds PerspectiveCell entitys to the core module\n\n* ..."
+            "description": "# scrawlFrame\n\n## Purpose and features\n\nThe Frame module adds 'Frame' entitys to the core module:\n\n* Replicates functionality of Picture entity\n* Can use &lt;img&gt;, &lt;canvas&gt; or &lt;video&gt; for source image\n* Simulates 3d perspective in a 2d canvas element\n* Corners can be moved independently of each other\n* Alternatively, frame can be locked to a stack element which can then be manipulated in 3d space \n\nNote that Frame entity code, being a combination of classic entity and stack element functionalities, bypasses the existing Core code. Thus much of the frame code replicates Position, Cell, Context and Entity code. Changes to the code for these core Objects MUST be ported over to the frame code, where applicable. Changes are made to the frame code will also need to be checked against core code to see if that, too, needs to be updated."
         },
         {
             "displayName": "scrawlImages",
             "name": "scrawlImages",
-            "description": "# scrawlImages\n\n## Purpose and features\n\nThe Images module adds support for displaying images on canvas elements\n\n* Defines the EntityImage object, which wraps &lt;img&gt; and &lt;svg&gt; elements\n* Adds functionality to load images into the Scrawl library dynamically (after the web page hads loaded)\n* Defines the Picture entity, which can be used to display file images (including animated entity sheets), other &lt;canvas&gt; elements, and &lt;video&gt; elements (experimental)\n* Defines the AnimSheet object, which in turn define and control action sequences from entity sheet images\n* Defines the Pattern design, which uses images for entity fillStyle and strokeStyle attributes"
+            "description": "# scrawlImages\n\n## Purpose and features\n\nThe Images module adds support for displaying images on canvas elements\n\n* Defines the Picture entity, which can be used to display file images (including animated entity sheets), other &lt;canvas&gt; elements, and &lt;video&gt; elements (experimental)\n* Defines the Pattern design, which uses images for entity fillStyle and strokeStyle attributes"
         },
         {
             "displayName": "scrawlPath",
             "name": "scrawlPath",
-            "description": "# scrawlPath\n\n## Purpose and features\n\nThe Path module adds Path entitys - path-based objects - to the core module\n\n* Defines a entity composed of lines, quadratic and bezier curves, etc\n* Can act as a path along which other entitys can be positioned and animated\n* See also Shape object, which achieves a similar thing in a different way"
+            "description": "# scrawlPath\n\n## Purpose and features\n\nThe Path extension adds Path entitys - path-based objects - to the core module\n\n* Defines a entity composed of lines, quadratic and bezier curves, etc\n* Can act as a path along which other entitys can be positioned and animated\n* See also Shape object, which achieves a similar thing in a different way"
         },
         {
             "displayName": "scrawlPathFactories",
             "name": "scrawlPathFactories",
-            "description": "# scrawlPathFactories\n\n## Purpose and features\n\nThe Factories module adds a set of factory functions to the Scrawl library, which can be used to generate both Path and Shape entitys"
+            "description": "# scrawlPathFactories\n\n## Purpose and features\n\nThe Factories extension adds a set of factory functions to the scrawl-canvas library, which can be used to generate both Path and Shape entitys"
         },
         {
             "displayName": "scrawlPhrase",
             "name": "scrawlPhrase",
-            "description": "# scrawlPhrase\n\n## Purpose and features\n\nThe Phrase module adds Phrase entitys - single and multi-line text objects - to the core module\n\n* Defines text objects for displaying on a Cell's canvas\n* Handles all related font functionality\n* Performs text drawing operations on canvases"
+            "description": "# scrawlPhrase\n\n## Purpose and features\n\nThe Phrase extension adds Phrase entitys - single and multi-line text objects - to the core module\n\n* Defines text objects for displaying on a Cell's canvas\n* Handles all related font functionality\n* Performs text drawing operations on canvases"
         },
         {
             "displayName": "scrawlPhysics",
@@ -155,22 +155,22 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "scrawlSaveLoad",
             "name": "scrawlSaveLoad",
-            "description": "# scrawlSaveLoad\n\n## Purpose and features\n\nAdds the ability to save and load Scrawl objects and scenes as JSON strings\n\n_This module is experimental and thus likely to change significantly as Scrawl evolves_"
+            "description": "# scrawlSaveLoad\n\n## Purpose and features\n\nAdds the ability to save and load Scrawl objects and scenes as JSON strings\n\n_This extension is experimental and thus likely to change significantly as scrawl-canvas evolves_"
         },
         {
             "displayName": "scrawlShape",
             "name": "scrawlShape",
-            "description": "# scrawlShape\n\n## Purpose and features\n\nThe Shape module adds Shape entitys - path-based objects - to the core module\n\n* Defines a entity composed of lines, quadratic and bezier curves, etc\n* See also Path object, which achieves a similar thing in a different way"
+            "description": "# scrawlShape\n\n## Purpose and features\n\nThe Shape extension adds Shape entitys - path-based objects - to the core module\n\n* Defines a entity composed of lines, quadratic and bezier curves, etc\n* See also Path object, which achieves a similar thing in a different way"
         },
         {
             "displayName": "scrawlStacks",
             "name": "scrawlStacks",
-            "description": "# scrawlStacks\n\n## Purpose and features\n\nThe Stacks module adds support for CSS3 3d transformations to visible &lt;canvas&gt;, and other, elements\n\n* Significantly amends the PageElement object and functions\n* Adds core functions for detecting and including Scrawl stacks and associated elements in the library\n* Defines the Stack object, which contains all DOM elements to be manipulated by this stack\n* Defines the Element object, which wrap DOM elements (excluding &lt;canvas&gt; elements) included in a stack"
+            "description": "# scrawlStacks\n\n## Purpose and features\n\nThe Stacks extension adds support for CSS3 3d transformations to visible &lt;canvas&gt;, and other, elements\n\n* Significantly amends the PageElement object and functions\n* Adds core functions for detecting and including scrawl-canvas stacks and associated elements in the library\n* Defines the Stack object, which contains all DOM elements to be manipulated by this stack\n* Defines the Element object, which wrap DOM elements (excluding &lt;canvas&gt; elements) included in a stack"
         },
         {
             "displayName": "scrawlWheel",
             "name": "scrawlWheel",
-            "description": "# scrawlWheel\n\n## Purpose and features\n\nThe Wheel module adds Wheel entitys - circles, segments and filled arcs - to the core module\n\n* Defines 'arc' objects for displaying on a Cell's canvas\n* Performs 'arc' based drawing operations on canvases"
+            "description": "# scrawlWheel\n\n## Purpose and features\n\nThe Wheel extension adds Wheel entitys - circles, segments and filled arcs - to the core module\n\n* Defines 'arc' objects for displaying on a Cell's canvas\n* Performs 'arc' based drawing operations on canvases"
         }
     ]
 } };

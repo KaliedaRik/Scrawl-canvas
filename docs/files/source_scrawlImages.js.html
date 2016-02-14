@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.3</em>
+            <em>API Docs for: 5.0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -288,10 +288,7 @@
 
 The Images module adds support for displaying images on canvas elements
 
-* Defines the EntityImage object, which wraps &amp;lt;img&amp;gt; and &amp;lt;svg&amp;gt; elements
-* Adds functionality to load images into the Scrawl library dynamically (after the web page hads loaded)
 * Defines the Picture entity, which can be used to display file images (including animated entity sheets), other &amp;lt;canvas&amp;gt; elements, and &amp;lt;video&amp;gt; elements (experimental)
-* Defines the AnimSheet object, which in turn define and control action sequences from entity sheet images
 * Defines the Pattern design, which uses images for entity fillStyle and strokeStyle attributes
 
 @module scrawlImages
@@ -354,7 +351,7 @@ A __factory__ function to generate new Picture entitys
 video support
 
 False if device does not support the video element; true otherwise
-@property video
+@property Device.video
 @type Boolean
 @default false
 **/
@@ -363,7 +360,7 @@ False if device does not support the video element; true otherwise
 video autoplay support
 
 False if device does not support video autoplay element; true otherwise
-@property videoAutoplay
+@property Device.videoAutoplay
 @type Boolean
 @default false
 **/
@@ -372,7 +369,7 @@ False if device does not support video autoplay element; true otherwise
 video fullscreen restraint
 
 False if device does not force videos to play in fullscreen mode; true otherwise
-@property videoForceFullScreen
+@property Device.videoForceFullScreen
 @type Boolean
 @default false
 **/
@@ -381,7 +378,7 @@ False if device does not force videos to play in fullscreen mode; true otherwise
 video as canvas source
 
 False if device does not permit video elements to be used as sources for canvas draw functions
-@property videoAsCanvasSource
+@property Device.videoAsCanvasSource
 @type Boolean
 @default false
 **/
@@ -456,7 +453,7 @@ Check if device supports various video functionalities
 						v.pause();
 						v.currentTime = 0.5;
 						x.drawImage(v, 50, 50, 10, 10, 0, 0, 10, 10);
-						setTimeout(function(){
+						setTimeout(function() {
 							test = x.getImageData(0, 0, 1, 1);
 							my.device.videoAsCanvasSource = (test.data[3] &gt; 0) ? true : false;
 							v.removeEventListener(&#x27;playing&#x27;, myusevideo, false);
@@ -781,7 +778,7 @@ Builds &amp;lt;canvas&amp;gt; element&#x27;s contenxt engine&#x27;s pattern obje
 			return this;
 		};
 		/**
-Remove this pattern from the scrawl library
+Remove this pattern from the scrawl-canvas library
 @method remove
 @return Always true
 **/
@@ -880,7 +877,7 @@ Alias for Pattern.makeDesign()
 		my.Picture.prototype.classname = &#x27;entitynames&#x27;;
 		my.work.d.Picture = {
 			/**
-SCRAWLIMAGE String - source image for this entity
+IMAGENAME String - source image for this entity
 @property source
 @type String
 @default &#x27;&#x27;
@@ -889,7 +886,7 @@ SCRAWLIMAGE String - source image for this entity
 			/**
 IMAGEDATANAME String - name of the Image Data object
 
-Calculated automatically by Scrawl following a .getImageData() call
+Calculated automatically by scrawl-canvas following a .getImageData() call
 @property imageData
 @type String
 @default &#x27;&#x27;
@@ -914,7 +911,7 @@ SPRITEANIMATIONNAME String - Entity sheet image linked to this entity
 			/**
 Identifier String - permitted values include: &#x27;animation&#x27;, &#x27;canvas&#x27;, &#x27;img&#x27;
 
-Detected automatically by scrawl during entity construction
+Detected automatically by scrawl-canvas during entity construction
 @property imageType
 @type String
 @default &#x27;&#x27;
@@ -1491,7 +1488,7 @@ Stamp helper function - perform a &#x27;floatOver&#x27; method draw
 		};
 
 		/**
-Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for entity sheet images
+Display helper function - retrieve copy attributes for Image object, taking into account the current frame for entity sheet images
 
 Also generates new filtered images, when necessary
 @method getImage
@@ -1513,7 +1510,7 @@ getImage helper object
 			img: function(src) {
 				var a = my.asset[src],
 					img = my.image[src];
-				if(img.width &lt; 2 &amp;&amp; img.height &lt; 2){
+				if (img.width &lt; 2 &amp;&amp; img.height &lt; 2) {
 					img.checkNaturalDimensions();
 				}
 				return a;
@@ -1522,7 +1519,7 @@ getImage helper object
 				var anim = my.spriteanimation[animation].getData(),
 					img = my.image[src],
 					perc = my.Picture.prototype.numberConvert;
-				if(img.width &lt; 2 &amp;&amp; img.height &lt; 2){
+				if (img.width &lt; 2 &amp;&amp; img.height &lt; 2) {
 					img.checkNaturalDimensions();
 				}
 				copyData.x = (anim.x.substring) ? perc(anim.x, img.width) : anim.x;
@@ -1542,7 +1539,7 @@ getImage helper object
 			}
 		};
 		/**
-Load the Picture entity&#x27;s image data (via JavaScript getImageData() function) into the scrawl library
+Load the Picture entity&#x27;s image data (via JavaScript getImageData() function) into the scrawl-canvas library
 @method getImageData
 @param {String} [label] IMAGEDATANAME - default: PICTURENAME_data
 @return This
